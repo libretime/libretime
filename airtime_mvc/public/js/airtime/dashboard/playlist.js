@@ -148,7 +148,13 @@ function updatePlaybar(){
         else
             $('#current').text(currentSong.name+",");
     }else{
-        $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
+		if (master_dj_on_air) {
+            $('#current').html("Current: <span style='color:red; font-weight:bold'>Master DJ On Air</span>");
+        } else if (scheduled_play_on_air) {
+			$('#current').html("Current: <span style='color:red; font-weight:bold'>Show DJ On Air</span>");
+        } else if (live_dj_on_air) {
+            $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
+        }
     }
 
     if (nextSong !== null){
