@@ -36,21 +36,38 @@ class PypoFile(Thread):
     def copy_file(self, media_item):
         """
         Copy media_item from local library directory to local cache directory.
-        """
-        
-        if media_item is None:
-            return
-        
+        """            
+        src = media_item['uri']
         dst = media_item['dst']
         
-        if not os.path.isfile(dst):
-            self.logger.debug("copying from %s to local cache %s" % (media_item['uri'], dst))
-            try:
-                shutil.copy(media_item['uri'], dst)
-            except:
-                self.logger.error("Could not copy from %s to %s" % (media_item['uri'], dst))
+        try:
+            src_size = os.path.getsize(src)
+        except Exception, e:
+            self.logger.error("Could not get size of source file: %s", src)
+            return
+
+        dst_exists = True
+        try:
+            dst_size = os.path.getsize(dst)
+        except Exception, e:
+            dst_exists = False
+            
+        do_copy = False
+        if dst_exists:
+            if src_size != dst_size:
+                do_copy = True
         else:
-            self.logger.debug("Destination %s already exists. Not copying", dst)    
+            do_copy = True
+        
+        if do_copy:
+            self.logger.debug("copying from %s to local cache %s" % (src, dst))
+            try:
+                """
+                copy will overwrite dst if it already exists
+                """
+                shutil.copy(src, dst)
+            except:
+                self.logger.error("Could not copy from %s to %s" % (src, dst))
     
     def get_highest_priority_media_item(self, schedule):
         """
@@ -107,7 +124,10 @@ class PypoFile(Thread):
                 media_item = self.get_highest_priority_media_item(self.media)
                 self.copy_file(media_item)
             except Exception, e:
+                import traceback
+                top = traceback.format_exc()
                 self.logger.error(str(e))
+                self.logger.error(top)
                 raise
             
     def run(self):
