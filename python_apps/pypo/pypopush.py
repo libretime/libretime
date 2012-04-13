@@ -40,23 +40,10 @@ class PypoPush(Thread):
         self.api_client = api_client.api_client_factory(config)
         self.queue = q
 
-        self.media = dict()
-        
         self.telnet_lock = telnet_lock
 
-        self.push_ahead = 5
-        self.last_end_time = 0
-                
         self.pushed_objects = {}
-                
         self.logger = logging.getLogger('push')
-        
-    def is_media(self, item):
-        return item["type"] == "file"
-        
-    def is_event(self, item):
-        return item["type"] == "event"
-        
         
     def main(self):
         loops = 0
@@ -85,7 +72,7 @@ class PypoPush(Thread):
                     next_media_item_chain = current_event_chain
                     time_until_next_play = 0
                 else:
-                    media_chain = filter(self.is_media, current_event_chain)
+                    media_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
                     self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, media_chain)
                     chains = self.get_all_chains(media_schedule) 
                     next_media_item_chain = self.get_next_schedule_chain(chains)
