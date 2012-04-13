@@ -520,7 +520,7 @@ class Application_Model_Show {
         $timestamp = gmdate("Y-m-d H:i:s");
 
         if(is_null($p_date)) {
-            $date = new Application_Model_DateHelper;
+            $date = new Application_Common_DateHelper;
             $p_date = $date->getDate();
         }
 
@@ -663,7 +663,7 @@ class Application_Model_Show {
      *      true if the StartDate is in the past, false otherwise
      */
     public function isStartDateTimeInPast(){
-        $date = new Application_Model_DateHelper;
+        $date = new Application_Common_DateHelper;
         $current_timestamp = $date->getUtcTimestamp();
         return ($current_timestamp > ($this->getStartDate()." ".$this->getStartTime()));
     }
@@ -678,7 +678,7 @@ class Application_Model_Show {
     public function getAllFutureInstanceIds(){
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
+        $date = new Application_Common_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $showId = $this->getId();
@@ -708,7 +708,7 @@ class Application_Model_Show {
 
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
+        $date = new Application_Common_DateHelper;
         $timestamp = $date->getTimestamp();
 
         $sql = "UPDATE cc_show_days "
@@ -729,7 +729,7 @@ class Application_Model_Show {
 
         global $CC_DBC;
 
-        $date = new Application_Model_DateHelper;
+        $date = new Application_Common_DateHelper;
         $timestamp = $date->getTimestamp();
 
         //TODO fix this from overwriting info.
@@ -1313,9 +1313,9 @@ class Application_Model_Show {
             $start = $first_show." ".$start_time;
         }
 
-        $utcStartDateTime = Application_Model_DateHelper::ConvertToUtcDateTime($start, $timezone);
+        $utcStartDateTime = Application_Common_DateHelper::ConvertToUtcDateTime($start, $timezone);
         //convert $last_show into a UTC DateTime object, or null if there is no last show.
-        $utcLastShowDateTime = $last_show ? Application_Model_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
+        $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
         $rebroadcasts = $CC_DBC->GetAll($sql);
@@ -1736,7 +1736,7 @@ class Application_Model_Show {
     {
         global $CC_CONFIG, $CC_DBC;
         if($timeNow == null){
-            $date = new Application_Model_DateHelper;
+            $date = new Application_Common_DateHelper;
             $timeNow = $date->getUtcTimestamp(); 
         }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
@@ -1896,7 +1896,7 @@ class Application_Model_Show {
         }
         foreach($rows as &$row) {
             foreach($columnsToConvert as $column) {
-                $row[$column] = Application_Model_DateHelper::ConvertToLocalDateTimeString($row[$column]);
+                $row[$column] = Application_Common_DateHelper::ConvertToLocalDateTimeString($row[$column]);
             }
         }
     }

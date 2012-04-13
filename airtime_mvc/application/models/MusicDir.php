@@ -175,7 +175,7 @@ class Application_Model_MusicDir {
         if(!is_dir($p_path)){
             return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
         }
-        $real_path = realpath($p_path)."/";
+        $real_path = Application_Common_OsPath::normpath($p_path)."/";
         if($real_path != "/"){
             $p_path = $real_path;
         }
@@ -190,7 +190,7 @@ class Application_Model_MusicDir {
         }
         
         $dir->setType($p_type);
-        $p_path = realpath($p_path)."/";
+        $p_path = Application_Common_OsPath::normpath($p_path)."/";
 
 
         try {
@@ -245,7 +245,7 @@ class Application_Model_MusicDir {
 
                 //newly added watched directory object
                 $propel_new_watch = CcMusicDirsQuery::create()
-                   ->filterByDirectory(realpath($p_path)."/")
+                   ->filterByDirectory(Application_Common_OsPath::normpath($p_path)."/")
                    ->findOne();
 
                 //any files of the deprecated "link" type.
@@ -344,7 +344,7 @@ class Application_Model_MusicDir {
     {
         // we want to be consistent when storing dir path.
         // path should always ends with trailing '/'
-        $p_dir = realpath($p_dir)."/";
+        $p_dir = Application_Common_OsPath::normpath($p_dir)."/";
         if(!is_dir($p_dir)){
             return array("code"=>2, "error"=>"'$p_dir' is not a valid directory.");
         }else if(Application_Model_Preference::GetImportTimestamp()+10 > time()){
@@ -396,7 +396,7 @@ class Application_Model_MusicDir {
      *  otherwise, it will set "Exists" flag to true
     **/ 
     public static function removeWatchedDir($p_dir, $userAddedWatchedDir=true){
-        $real_path = realpath($p_dir)."/";
+        $real_path = Application_Common_OsPath::normpath($p_dir)."/";
         if($real_path != "/"){
             $p_dir = $real_path;
         }
