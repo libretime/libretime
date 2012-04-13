@@ -22,6 +22,10 @@ base_port = 80
 ;cache scheduled media files.
 cache_ahead_hours = 1
 
+[monit]
+user = guest
+password = airtime
+
 [soundcloud]
 connection_retries = 3
 time_between_retries = 60
