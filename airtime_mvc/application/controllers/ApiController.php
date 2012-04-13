@@ -882,12 +882,12 @@ class ApiController extends Zend_Controller_Action
                     // if mount path itself was watched
                     if($dirPath == $ad){
                         Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                        break;
+                        continue;
                     }
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                     else if(substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false){
                         Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                        break;
+                        continue;
                     }
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we add this mount point as
@@ -895,7 +895,7 @@ class ApiController extends Zend_Controller_Action
                     else if(substr($ad, 0, strlen($dirPath)) === $dirPath){
                         // bypass nested loop check
                         Application_Model_MusicDir::addWatchedDir($ad, false, true);
-                        break;
+                        continue;
                     }
                 }
             }
@@ -906,7 +906,7 @@ class ApiController extends Zend_Controller_Action
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                     if(substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true){
                         Application_Model_MusicDir::removeWatchedDir($dirPath, false);
-                        break;
+                        continue;
                     }
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we walk through all files within
@@ -926,7 +926,7 @@ class ApiController extends Zend_Controller_Action
                         if($watchDir){
                             Application_Model_MusicDir::removeWatchedDir($rd, false);
                         }
-                        break;
+                        continue;
                     }
                 }
             }
