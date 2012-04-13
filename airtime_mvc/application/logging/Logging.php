@@ -17,15 +17,23 @@ class Logging {
         self::$_path = $path;
     }
     
+    public static function toString($p_msg){
+        if (is_array($p_msg)){
+            return print_r($p_msg, true);
+        } else {
+            return $p_msg;
+        }
+    }
+    
     public static function log($p_msg){
         $logger = self::getLogger();
-        $logger->info($p_msg);
+        $logger->info(self::toString($p_msg));
     }
     
     public static function debug($p_msg){
         if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development"){
             $logger = self::getLogger();
-            $logger->debug($p_msg);            
+            $logger->debug(self::toString($p_msg));            
         }
     }
 }
