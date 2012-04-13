@@ -224,8 +224,8 @@ class ScheduleController extends Zend_Controller_Action
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
         $isDJ = $user->isHost($instance->getShowId());
 
-        $showStartLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
-        $showEndLocalDT = Application_Model_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
+        $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
+        $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
 		if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
@@ -338,16 +338,16 @@ class ScheduleController extends Zend_Controller_Action
 
         /* Convert all UTC times to localtime before sending back to user. */
         if (isset($range["previous"])){
-            $range["previous"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["starts"]);
-            $range["previous"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["previous"]["ends"]);
+            $range["previous"]["starts"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["previous"]["starts"]);
+            $range["previous"]["ends"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["previous"]["ends"]);
         }
         if (isset($range["current"])){
-            $range["current"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["current"]["starts"]);
-            $range["current"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["current"]["ends"]);
+            $range["current"]["starts"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["current"]["starts"]);
+            $range["current"]["ends"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["current"]["ends"]);
         }
         if (isset($range["next"])){
-            $range["next"]["starts"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["next"]["starts"]);
-            $range["next"]["ends"] = Application_Model_DateHelper::ConvertToLocalDateTimeString($range["next"]["ends"]);
+            $range["next"]["starts"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["next"]["starts"]);
+            $range["next"]["ends"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["next"]["ends"]);
         }
 
         Application_Model_Show::ConvertToLocalTimeZone($range["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
@@ -425,7 +425,7 @@ class ScheduleController extends Zend_Controller_Action
             //convert from UTC to user's timezone for display.
             $originalDateTime = new DateTime($originalShowStart, new DateTimeZone("UTC"));
             $originalDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-            //$timestamp  = Application_Model_DateHelper::ConvertToLocalDateTimeString($originalDateTime->format("Y-m-d H:i:s"));
+            //$timestamp  = Application_Common_DateHelper::ConvertToLocalDateTimeString($originalDateTime->format("Y-m-d H:i:s"));
             $this->view->additionalShowInfo =
                 "Rebroadcast of show \"$originalShowName\" from "
                 .$originalDateTime->format("l, F jS")." at ".$originalDateTime->format("G:i");
@@ -643,7 +643,7 @@ class ScheduleController extends Zend_Controller_Action
             $i = 1;
             foreach ($rebroadcastsRelative as $rebroadcast){
                 $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
-                $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Application_Model_DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
+                $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Application_Common_DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
                 $i++;
             }
             $formRebroadcast->populate($rebroadcastFormValues);
@@ -761,7 +761,7 @@ class ScheduleController extends Zend_Controller_Action
             //Changing the start date was disabled, since the
             //array key does not exist. We need to repopulate this entry from the db.
             //The start date will be returned in UTC time, so lets convert it to local time.
-            $dt = Application_Model_DateHelper::ConvertToLocalDateTime($show->getStartDate());
+            $dt = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDate());
             $data['add_show_start_date'] = $dt->format("Y-m-d");
             $validateStartDate = false;
         }

@@ -34,7 +34,7 @@ class Application_Model_Schedule {
             return array();
         }
 
-        $date = new Application_Model_DateHelper;
+        $date = new Application_Common_DateHelper;
         $timeNow = $date->getTimestamp();
         $utcTimeNow = $date->getUtcTimestamp();
         
@@ -563,8 +563,8 @@ class Application_Model_Schedule {
                 'uri' => $uri,
                 'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
                 'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
-                'cue_in' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-                'cue_out' => Application_Model_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+                'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+                'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                 'start' => $start,
                 'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
                 'show_name' => $showName

@@ -1,6 +1,6 @@
 <?php
 
-class Application_Model_DateHelper
+class Application_Common_DateHelper
 {
     private $_dateTime;
 
@@ -83,8 +83,8 @@ class Application_Model_DateHelper
     }
     
     public static function GetDayEndTimestampInUtc($time = "") {
-        $dayEndTimestamp = Application_Model_DateHelper::GetDayEndTimestamp($time);
-        return Application_Model_DateHelper::ConvertToUtcDateTimeString($dayEndTimestamp);
+        $dayEndTimestamp = Application_Common_DateHelper::GetDayEndTimestamp($time);
+        return Application_Common_DateHelper::ConvertToUtcDateTimeString($dayEndTimestamp);
     }
 
     /**

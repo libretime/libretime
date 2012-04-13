@@ -258,7 +258,7 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $date = new Application_Model_DateHelper;
+            $date = new Application_Common_DateHelper;
             $utcTimeNow = $date->getUtcTimestamp();
             $utcTimeEnd = "";   // if empty, GetNextShows will use interval instead of end of day
 
@@ -266,7 +266,7 @@ class ApiController extends Zend_Controller_Action
             $type = $request->getParam('type');
             if($type == "endofday") {
                 // make GetNextShows use end of day
-                $utcTimeEnd = Application_Model_DateHelper::GetDayEndTimestampInUtc();
+                $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
             }
 
             $limit = $request->getParam('limit');
@@ -298,15 +298,15 @@ class ApiController extends Zend_Controller_Action
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
 
-            $date = new Application_Model_DateHelper;
+            $date = new Application_Common_DateHelper;
             $dayStart = $date->getWeekStartDate();
-            $utcDayStart = Application_Model_DateHelper::ConvertToUtcDateTimeString($dayStart);
+            $utcDayStart = Application_Common_DateHelper::ConvertToUtcDateTimeString($dayStart);
 
             $dow = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
 
             $result = array();
             for ($i=0; $i<7; $i++){
-                $utcDayEnd = Application_Model_DateHelper::GetDayEndTimestamp($utcDayStart);
+                $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
                 $shows = Application_Model_Show::GetNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 
@@ -394,8 +394,8 @@ class ApiController extends Zend_Controller_Action
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
 
-        $this->view->shows = Application_Model_Show::getShows(Application_Model_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
-                                                                Application_Model_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
+        $this->view->shows = Application_Model_Show::getShows(Application_Common_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
+                                                                Application_Common_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
                                                                 $excludeInstance=NULL, $onlyRecord=TRUE);
 
 
@@ -467,7 +467,7 @@ class ApiController extends Zend_Controller_Action
             $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
-            $show_start_time = Application_Model_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
+            $show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
          } catch (Exception $e){
             //we've reached here probably because the show was
