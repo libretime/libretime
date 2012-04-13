@@ -581,8 +581,10 @@ class Application_Model_Schedule {
     }
     
     public static function deleteWithFileId($fileId){
-        global $CC_CONFIG, $CC_DBC;
-        $CC_DBC->query("DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=$fileId");
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+        $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=$fileId";
+        $res = $con->query($sql);
     }
 
     public static function createNewFormSections($p_view){
