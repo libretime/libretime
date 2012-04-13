@@ -132,7 +132,7 @@ class Application_Model_Scheduler {
                 $data["cueout"] = $file->getDbLength();
 
                 $defaultFade = Application_Model_Preference::GetDefaultFade();
-                if ($defaultFade !== "") {
+                if (isset($defaultFade)) {
                     //fade is in format SS.uuuuuu
                     $data["fadein"] = $defaultFade;
                     $data["fadeout"] = $defaultFade;

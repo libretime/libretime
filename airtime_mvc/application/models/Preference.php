@@ -151,7 +151,14 @@ class Application_Model_Preference
     }
 
     public static function GetDefaultFade() {
-        return self::GetValue("default_fade");
+        $fade = self::GetValue("default_fade");
+        
+        if ($fade === "") {
+            return null;
+        } 
+        
+        $fade = number_format($fade, 6);
+        return $fade;
     }
     
     public static function SetDefaultTransitionFade($fade) {
