@@ -46,7 +46,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
         if ($v instanceof DateTime) {
             $dt = $v;
         }
-        else if (preg_match('/^[0-5][0-9](\.\d{1,6})?$/', $v)) {
+        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
             $dt = DateTime::createFromFormat("s.u", $v);
         }
         else {
@@ -74,7 +74,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
         if ($v instanceof DateTime) {
             $dt = $v;
         }
-        else if (preg_match('/^[0-5][0-9](\.\d{1,6})?$/', $v)) {
+        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
             $dt = DateTime::createFromFormat("s.u", $v);
         }
         else {

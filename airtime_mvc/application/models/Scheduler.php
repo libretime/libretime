@@ -321,7 +321,7 @@ class Application_Model_Scheduler {
                     else {
                         $sched = new CcSchedule();
                     }
-                   
+                   Logging::log(print_r($file,true));
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
                         ->setDbFileId($file['id'])

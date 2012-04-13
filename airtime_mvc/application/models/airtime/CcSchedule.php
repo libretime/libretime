@@ -110,7 +110,7 @@ class CcSchedule extends BaseCcSchedule {
         if ($v instanceof DateTime) {
             $dt = $v;
         }
-        else if (preg_match('/^[0-5][0-9](\.\d{1,6})?$/', $v)) {
+        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
             $dt = DateTime::createFromFormat("s.u", $v);
         }
         else {
@@ -120,7 +120,6 @@ class CcSchedule extends BaseCcSchedule {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
             }
         }
-
         $this->fade_in = $dt->format('H:i:s.u');
         $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
 
@@ -138,7 +137,7 @@ class CcSchedule extends BaseCcSchedule {
         if ($v instanceof DateTime) {
             $dt = $v;
         }
-        else if (preg_match('/^[0-5][0-9](\.\d{1,6})?$/', $v)) {
+        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
             $dt = DateTime::createFromFormat("s.u", $v);
         }
         else {
