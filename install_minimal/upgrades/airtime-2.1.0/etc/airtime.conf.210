@@ -23,8 +23,8 @@ base_port = 80
 cache_ahead_hours = 1
 
 [monit]
-user = guest
-password = airtime
+monit_user = guest
+monit_password = airtime
 
 [soundcloud]
 connection_retries = 3
