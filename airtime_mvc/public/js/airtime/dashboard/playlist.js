@@ -157,7 +157,11 @@ function updatePlaybar(){
                 $('#current').html("Current: <span style='color:red; font-weight:bold'>Master Stream</span>");
             }
         } else if (live_dj_on_air) {
-            $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - Live Stream</span>");
+            if (showName) {
+                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - Live Stream</span>");
+            } else {
+                $('#current').html("Current: <span style='color:red; font-weight:bold'>Live Stream</span>");
+            }
         } else {
             $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
         }
