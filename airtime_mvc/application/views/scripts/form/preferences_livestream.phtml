@@ -77,11 +77,11 @@
         </dt>
         <dd id="master_dj_connection_url-element">
             <span id="stream_url"><?php echo $this->master_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
-                <span class='info-tooltip'>
-                    <span>
-                        This is the URL used by remote sources to connect to Airtime. If Airtime is behind a router or firewall, you may need to configure port forwarding. For details, please read the <a target="_blank" href="http://manuals.sourcefabric.org/">Airtime manual</a>.
-                    </span>
-                </span><br>
+            <span class='info-tooltip'>
+                <span>
+                    <?php echo $this->overrideDescription ?>
+                </span>
+            </span><br>
             <div id="master_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
         </dd>
         <dt id="dj_harbor_input_port-label">
@@ -117,7 +117,12 @@
             </label>
         </dt>
         <dd id="live_dj_connection_url-element">
-            <span id="stream_url"><?php echo $this->live_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a>
+            <span id="stream_url"><?php echo $this->live_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
+            <span class='info-tooltip'>
+                <span>
+                    <?php echo $this->overrideDescription?>
+                </span>
+            </span><br>
             <div id="live_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
         </dd>
     </dl>
