@@ -131,5 +131,16 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $element->setAttrib('disabled','disabled');
         }
     }
+    
+    public function disableStartDateAndTime(){
+        $elements = array($this->getElement('add_show_start_date'), $this->getElement('add_show_start_time'));
+        foreach ($elements as $element)
+        {
+            if ($element->getType() != 'Zend_Form_Element_Hidden')
+            {
+                $element->setAttrib('disabled','disabled');
+            }
+        }
+    }
 }
 
