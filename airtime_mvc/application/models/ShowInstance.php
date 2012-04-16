@@ -569,8 +569,10 @@ class Application_Model_ShowInstance {
         $time = $this->_showInstance->getDbTimeFilled();
 		
         if ($time != "00:00:00") {
-            $milliseconds = substr(round(substr($time, 8), 2), 1);
-            $time = substr($time, 0, 8) . $milliseconds;
+            $time_arr = explode(".", $time);
+            $time_arr[1] = "." . $time_arr[1];
+            $milliseconds = number_format(round($time_arr[1], 2), 2);
+            $time = $time_arr[0] . substr($milliseconds, 1);
         } else {
             $time = "00:00:00.00";
         }
