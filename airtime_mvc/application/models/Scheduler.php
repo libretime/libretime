@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Log.php';
+
 class Application_Model_Scheduler {
 
     private $con;
@@ -251,11 +253,12 @@ class Application_Model_Scheduler {
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
     
             $item->setDbStarts($itemStartDT)
-                ->setDbEnds($itemEndDT)
-                ->save($this->con);
+                ->setDbEnds($itemEndDT);
     
             $itemStartDT = $itemEndDT;
         }
+        
+        $schedule->save($this->con);
     }
 
     /*
@@ -277,6 +280,8 @@ class Application_Model_Scheduler {
                 }
             }
 
+            $startProfile = microtime(true);
+            
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
                
@@ -301,12 +306,19 @@ class Application_Model_Scheduler {
                 }
 
                 if ($adjustSched === true) {
+                    
+                    $pstart = microtime(true);
+                    
                     $followingSchedItems = CcScheduleQuery::create()
                         ->filterByDBStarts($nextStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
                         ->filterByDbInstanceId($instance->getDbId())
                         ->filterByDbId($excludeIds, Criteria::NOT_IN)
                         ->orderByDbStarts()
                         ->find($this->con);
+                    
+                    $pend = microtime(true);
+                    Logging::debug("finding all following items.");
+                    Logging::debug(floatval($pend) - floatval($pstart));
                 }
 
                 foreach($schedFiles as $file) {
@@ -337,34 +349,55 @@ class Application_Model_Scheduler {
                 }
 
                 if ($adjustSched === true) {
-
+                    
+                    $pstart = microtime(true);
+                    
                     //recalculate the start/end times after the inserted items.
                     foreach ($followingSchedItems as $item) {
-
+ 
                         $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
 
                         $item->setDbStarts($nextStartDT);
                         $item->setDbEnds($endTimeDT);
                         $item->save($this->con);
-
-                        $nextStartDT = $endTimeDT;
+                        $nextStartDT = $endTimeDT;          
                     }
+                    
+                    $pend = microtime(true);
+                    Logging::debug("adjusting all following items.");
+                    Logging::debug(floatval($pend) - floatval($pstart));
                 }
             }
+            
+            $endProfile = microtime(true);
+            Logging::debug("finished adding scheduled items.");
+            Logging::debug(floatval($endProfile) - floatval($startProfile));
 
             //update the status flag in cc_schedule.
             $instances = CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
                 ->find($this->con);
 
+            $startProfile = microtime(true);
+            
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
             }
+            
+            $endProfile = microtime(true);
+            Logging::debug("updating show instances status.");
+            Logging::debug(floatval($endProfile) - floatval($startProfile));
 
+            $startProfile = microtime(true);
+            
             //update the last scheduled timestamp.
             CcShowInstancesQuery::create()
                 ->filterByPrimaryKeys($affectedShowInstances)
                 ->update(array('DbLastScheduled' => new DateTime("now", new DateTimeZone("UTC"))), $this->con);
+            
+            $endProfile = microtime(true);
+            Logging::debug("updating last scheduled timestamp.");
+            Logging::debug(floatval($endProfile) - floatval($startProfile));
         }
         catch (Exception $e) {
             Logging::debug($e->getMessage());
@@ -407,12 +440,19 @@ class Application_Model_Scheduler {
      */
     public function moveItem($selectedItems, $afterItems, $adjustSched = true) {
 
+        $startProfile = microtime(true);
+        
         $this->con->beginTransaction();
+        $this->con->useDebug(true);
       
         try {
             
             $this->validateRequest($selectedItems);
             $this->validateRequest($afterItems);
+            
+            $endProfile = microtime(true);
+            Logging::debug("validating move request took:");
+            Logging::debug(floatval($endProfile) - floatval($startProfile));
  
             $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]["instance"], $this->con);
            
@@ -450,10 +490,33 @@ class Application_Model_Scheduler {
 
             //calculate times excluding the to be moved items.
             foreach ($modifiedMap as $instance => $schedIds) {
+                $startProfile = microtime(true);
+                
                 $this->removeGaps($instance, $schedIds);
+                
+                $endProfile = microtime(true);
+                Logging::debug("removing gaps from instance $instance:");
+                Logging::debug(floatval($endProfile) - floatval($startProfile));
             }
   
+            $startProfile = microtime(true);
+            
             $this->insertAfter($afterItems, $movedData, $adjustSched);
+            
+            $endProfile = microtime(true);
+            Logging::debug("inserting after removing gaps.");
+            Logging::debug(floatval($endProfile) - floatval($startProfile));
+            
+            $afterInstanceId = $afterInstance->getDbId();
+            $modified = array_keys($modifiedMap);
+            //need to adjust shows we have moved items from.
+            foreach($modified as $instanceId) {
+                
+                $instance = CcShowInstancesQuery::create()->findPK($instanceId, $this->con);
+                $instance->updateScheduleStatus($this->con);
+            }
+            
+            $this->con->useDebug(false);
             $this->con->commit();
 
             Application_Model_RabbitMq::PushSchedule();

@@ -206,6 +206,7 @@ AIRTIME = (function(AIRTIME) {
 			}
 		});
 		
+		/*
 		//check if the timeline viewed needs updating.
 		setInterval(function(){
 			var data = {},
@@ -237,6 +238,7 @@ AIRTIME = (function(AIRTIME) {
 			} );
 			
 		}, 5 * 1000); //need refresh in milliseconds
+		*/
 	};
 	
 	mod.onResize = function() {

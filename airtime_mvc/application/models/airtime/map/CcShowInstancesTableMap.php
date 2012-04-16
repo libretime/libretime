@@ -65,17 +65,4 @@ class CcShowInstancesTableMap extends TableMap {
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
 	} // buildRelations()
 
-	/**
-	 * 
-	 * Gets the list of behaviors registered for this table
-	 * 
-	 * @return array Associative array (name => parameters) of behaviors
-	 */
-	public function getBehaviors()
-	{
-		return array(
-			'aggregate_column' => array('name' => 'time_filled', 'expression' => 'SUM(clip_length)', 'foreign_table' => 'cc_schedule', ),
-		);
-	} // getBehaviors()
-
 } // CcShowInstancesTableMap
