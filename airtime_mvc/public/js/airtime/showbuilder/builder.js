@@ -177,8 +177,10 @@ var AIRTIME = (function(AIRTIME){
 	    		delete oData.oSearch;
 	    		delete oData.aoSearchCols;
 		    },
-	        "fnStateSave": function (oSettings, oData) {
+	        "fnStateSave": function fnStateSave(oSettings, oData) {
 	           
+	        	localStorage.setItem('datatables-timeline', JSON.stringify(oData));
+	        	
 	    		$.ajax({
 				  url: "/usersettings/set-timeline-datatable",
 				  type: "POST",
@@ -186,21 +188,12 @@ var AIRTIME = (function(AIRTIME){
 				  dataType: "json"
 				});
 	        },
-	        "fnStateLoad": function (oSettings) {
-	        	var o;
-
-	        	$.ajax({
-	  			  url: "/usersettings/get-timeline-datatable",
-	  			  type: "GET",
-	  			  data: {format: "json"},
-	  			  dataType: "json",
-	  			  async: false,
-	  			  success: function(json){
-	  				  o = json.settings;
-	  			  }
-	  			});
-	        	
-	        	return o;
+	        "fnStateLoad": function fnBuilderStateLoad(oSettings) {
+	        	var settings = localStorage.getItem('datatables-timeline');
+            	
+            	if (settings !== "") {
+            		return JSON.parse(settings);
+            	} 	
 	        },
 	        "fnStateLoadParams": function (oSettings, oData) {
 	        	var i,
@@ -210,19 +203,23 @@ var AIRTIME = (function(AIRTIME){
 	        	//putting serialized data back into the correct js type to make
 	        	//sure everything works properly.
 		        for (i = 0, length = a.length; i < length; i++) {	
-		        	a[i] = (a[i] === "true") ? true : false;
+		        	if (typeof(a[i]) === "string") {
+                		a[i] = (a[i] === "true") ? true : false;
+                	}
 		        }
 		        
 		        a = oData.ColReorder;
 		        for (i = 0, length = a.length; i < length; i++) {	
-		        	a[i] = parseInt(a[i], 10);
+		        	if (typeof(a[i]) === "string") {
+                		a[i] = parseInt(a[i], 10);
+                	}
 		        }
 		       
 		        oData.iCreate = parseInt(oData.iCreate, 10);
 	        },
 	        
 			"fnServerData": AIRTIME.showbuilder.fnServerData,
-			"fnRowCallback": function ( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+			"fnRowCallback": function fnRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 				var i,
 					sSeparatorHTML,
 					fnPrepareSeparatorRow,
@@ -233,7 +230,7 @@ var AIRTIME = (function(AIRTIME){
 					$nRow = $(nRow),
 					$image;
 				
-				fnPrepareSeparatorRow = function(sRowContent, sClass, iNodeIndex) {
+				fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
 					
 					node = nRow.children[iNodeIndex];
 					node.innerHTML = sRowContent;
@@ -413,7 +410,7 @@ var AIRTIME = (function(AIRTIME){
 				//disable cancelling current show.
 				AIRTIME.button.disableButton("sb-button-cancel");
 		    },
-			"fnDrawCallback": function(oSettings, json) {
+			"fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
 				var wrapperDiv,
 					markerDiv,
 					$td,
@@ -421,26 +418,40 @@ var AIRTIME = (function(AIRTIME){
 					aData,
 					elements,
 					i, length, temp,
-					$cursorRows;
+					$cursorRows,
+					$table = $(this),
+					$parent = $table.parent(),
+					//use this array to cache DOM heights then we can detach the table to manipulate it to increase speed.
+					heights = [];
 				
 				clearTimeout(AIRTIME.showbuilder.timeout);
 				
 				//only create the cursor arrows if the library is on the page.
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
+
+					$cursorRows = $sbTable.find("tbody tr.sb-future.sb-allowed:not(.sb-header, .sb-empty)");
 					
-					$cursorRows = $sbTable.find("tbody tr:not(.sb-header, .sb-empty, .sb-now-playing, .sb-past, .sb-not-allowed)");
+					//need to get heights of tds while elements are still in the DOM.
+					for (i = 0, length = $cursorRows.length; i < length; i++) {
+						$td = $($cursorRows.get(i)).find("td:first");
+						heights.push($td.height());
+					}
 					
-					//create cursor arrows.
-					$cursorRows.each(function(i, el) {
-				    	$td = $(el).find("td:first");
+					//detach the table to increase speed.
+					$table.detach();
+					
+					for (i = 0, length = $cursorRows.length; i < length; i++) {
+						
+						$td = $($cursorRows.get(i)).find("td:first");
 				    	if ($td.hasClass("dataTables_empty")) {
+				    		$parent.append($table);
 				    		return false;
 				    	}
 				    	
 				    	wrapperDiv = $("<div />", {
 				    		"class": "innerWrapper",
 				    		"css": {
-				    			"height": $td.height()
+				    			"height": heights[i]
 				    		}
 				    	});
 				    	markerDiv = $("<div />", {
@@ -448,7 +459,7 @@ var AIRTIME = (function(AIRTIME){
 				    	});
 				    	
 			    		$td.append(markerDiv).wrapInner(wrapperDiv);
-				    });
+					}
 					
 					//if there is only 1 cursor on the page highlight it by default.
 					if ($cursorRows.length === 1) {
@@ -457,6 +468,8 @@ var AIRTIME = (function(AIRTIME){
 				    		$cursorRows.addClass("cursor-selected-row");
 				    	}
 					}
+					
+					$parent.append($table);
 				}
 				
 				//order of importance of elements for setting the next timeout.

@@ -23,6 +23,24 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         
+        $data = Application_Model_Preference::GetValue("library_datatable", true);
+        if ($data != "") {
+            $libraryTable = json_encode(unserialize($data));
+            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
+        }
+        else {
+            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
+        }
+        
+        $data = Application_Model_Preference::GetValue("timeline_datatable", true);
+        if ($data != "") {
+            $timelineTable = json_encode(unserialize($data));
+            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
+        }
+        else {
+            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
+        }
+         
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -239,6 +257,8 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function builderFeedAction() {
 
+        $start = microtime(true);
+        
         $request = $this->getRequest();
         $current_time = time();
 
@@ -257,6 +277,11 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->schedule = $showBuilder->GetItems();
         $this->view->timestamp = $current_time;
+        
+        $end = microtime(true);
+        
+        Logging::debug("getting builder feed info took:");
+        Logging::debug(floatval($end) - floatval($start));
     }
 
     public function scheduleAddAction() {
