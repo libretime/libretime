@@ -176,7 +176,7 @@ class Application_Model_Show {
 
         //update all cc_show_instances that are in the future.
         $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                WHERE (show_id = {$this->_showId} AND starts > '$current_timestamp')
+                WHERE (show_id = {$this->_showId} AND ends > '$current_timestamp')
                 AND ((ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}' - starts) <= interval '24:00');";
 
         //update cc_show_days so future shows can be created with the new duration.
@@ -1133,7 +1133,7 @@ class Application_Model_Show {
             try {
                 //update the status flag in cc_schedule.
                 $instances = CcShowInstancesQuery::create()
-                    ->filterByDbStarts($current_timestamp, Criteria::GREATER_EQUAL)
+                    ->filterByDbEnds($current_timestamp, Criteria::GREATER_THAN)
                     ->filterByDbShowId($data['add_show_id'])
                     ->find($con);
 
@@ -1618,7 +1618,7 @@ class Application_Model_Show {
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
 
-            if ($p_editable && (strtotime($today_timestamp) < strtotime($show["starts"]))) {
+            if ($p_editable && (strtotime($today_timestamp) < strtotime($show["ends"]))) {
                 $options["editable"] = true;
             }
 
