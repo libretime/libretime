@@ -213,6 +213,12 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 
+                $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
+                $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
+                
+                Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
+                Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
+                
                 // extra info that goes into cc_stream_setting
                 Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);
                 Application_Model_StreamSetting::SetMasterLiveSteamMountPoint($values["master_harbor_input_mount_point"]);
