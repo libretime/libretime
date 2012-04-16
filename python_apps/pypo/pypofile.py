@@ -74,7 +74,7 @@ class PypoFile(Thread):
         Get highest priority media_item in the queue. Currently the highest
         priority is decided by how close the start time is to "now".
         """
-        if schedule is None:
+        if schedule is None or len(schedule) == 0:
             return None
             
         sorted_keys = sorted(schedule.keys())
@@ -121,8 +121,10 @@ class PypoFile(Thread):
                     except Empty, e:
                         pass
                                 
+
                 media_item = self.get_highest_priority_media_item(self.media)
-                self.copy_file(media_item)
+                if media_item is not None:
+                    self.copy_file(media_item)
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()
