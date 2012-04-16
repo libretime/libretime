@@ -227,7 +227,7 @@ class ScheduleController extends Zend_Controller_Action
         $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
-		if ($epochNow < $showStartLocalDT->getTimestamp()) {
+		if ($epochNow < $showEndLocalDT->getTimestamp()) {
 
             if ( ($isAdminOrPM || $isDJ) 
                 && !$instance->isRecorded()
