@@ -1,7 +1,5 @@
 <?php
 
-require_once 'Log.php';
-
 class Application_Model_Scheduler {
 
     private $con;
