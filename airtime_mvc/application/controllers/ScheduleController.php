@@ -586,6 +586,8 @@ class ScheduleController extends Zend_Controller_Action
                                   'add_show_repeats' => $show->isRepeating() ? 1 : 0));
 
         if ($show->isStartDateTimeInPast()){
+            // for a non-repeating show, we should never allow user to change the start time.
+            // for the repeating show, we should allow because the form works as repeating template form
             if(!$showInstance->getShow()->isRepeating()){
                 $formWhen->disableStartDateAndTime();
             }else{
