@@ -298,7 +298,12 @@ def test_file_playability(pathname):
     """
     liquidsoap_found = subprocess.call("which liquidsoap", shell=True)
     if liquidsoap_found == 0:
-        return_code = subprocess.call("liquidsoap -r \"%s\"" % pathname.replace('"', '\\"'), shell=True)
+        #return_code = subprocess.call("liquidsoap -r \"%s\"" % pathname.replace('"', '\\"'), shell=True)
+        
+        #when there is an single apostrophe inside of a string quoted by apostrophes, we can only escape it by replace that apostrophe
+        #with '\''. This breaks the string into two, and inserts an escaped single quote in between them.
+        command = "liquidsoap -c 'output.dummy(single(\"%s\"))'" % pathname.replace("'", "'\\''")
+        return_code = subprocess.call(command, shell=True)
     else:
         return_code = 0
 
