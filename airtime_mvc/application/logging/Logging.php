@@ -18,7 +18,7 @@ class Logging {
     }
     
     public static function toString($p_msg){
-        if (is_array($p_msg)){
+        if (is_array($p_msg) || is_object($p_msg)){
             return print_r($p_msg, true);
         } else {
             return $p_msg;
