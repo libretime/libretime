@@ -116,9 +116,9 @@ function setLiveSourceConnectionOverrideListener(){
     
     // set action for "OK" and "X"
     var live_dj_input = $("#live_dj_connection_url_tb")
-    var live_dj_label = live_dj_input.parent().find("span")
+    var live_dj_label = live_dj_input.parent().find("#stream_url")
     var master_dj_input = $("#master_dj_connection_url_tb")
-    var master_dj_label = master_dj_input.parent().find("span")
+    var master_dj_label = master_dj_input.parent().find("#stream_url")
     
     live_dj_input.find("#ok").click(function(event){
     	event.preventDefault()
