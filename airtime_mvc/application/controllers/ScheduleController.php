@@ -89,12 +89,12 @@ class ScheduleController extends Zend_Controller_Action
 
         Application_Model_Schedule::createNewFormSections($this->view);
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
+        $user = Application_Model_User::GetCurrentUser();
+        
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))){
             $this->view->preloadShowForm = true;
         }
-
+        
         $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
     }
 
@@ -227,7 +227,7 @@ class ScheduleController extends Zend_Controller_Action
         $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
-		if ($epochNow < $showStartLocalDT->getTimestamp()) {
+		if ($epochNow < $showEndLocalDT->getTimestamp()) {
 
             if ( ($isAdminOrPM || $isDJ) 
                 && !$instance->isRecorded()
@@ -586,7 +586,13 @@ class ScheduleController extends Zend_Controller_Action
                                   'add_show_repeats' => $show->isRepeating() ? 1 : 0));
 
         if ($show->isStartDateTimeInPast()){
-            $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+            // for a non-repeating show, we should never allow user to change the start time.
+            // for the repeating show, we should allow because the form works as repeating template form
+            if(!$showInstance->getShow()->isRepeating()){
+                $formWhen->disableStartDateAndTime();
+            }else{
+                $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+            }
         }
 
         //need to get the days of the week in the php timezone (for the front end).
@@ -684,7 +690,7 @@ class ScheduleController extends Zend_Controller_Action
         
         $user = Application_Model_User::GetCurrentUser();
         
-        if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))){
             Application_Model_Schedule::createNewFormSections($this->view);
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
@@ -765,7 +771,9 @@ class ScheduleController extends Zend_Controller_Action
             //array key does not exist. We need to repopulate this entry from the db.
             //The start date will be returned in UTC time, so lets convert it to local time.
             $dt = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDate());
+            $startTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartTime());
             $data['add_show_start_date'] = $dt->format("Y-m-d");
+            $data['add_show_start_time'] = $startTime->format("H:i");
             $validateStartDate = false;
         }
         

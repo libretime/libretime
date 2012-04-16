@@ -78,26 +78,9 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($live_dj_mount);
-        
-        $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
-        $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
-        
-        $master_dj_connection_url = ($master_dj_connection_url == "")?("http://".$_SERVER['SERVER_NAME'].":".$m_port."/".$m_mount):$master_dj_connection_url;
-        $live_dj_connection_url = ($live_dj_connection_url == "")?"http://".$_SERVER['SERVER_NAME'].":".$l_port."/".$l_mount:$live_dj_connection_url;
-        
-        if($m_port=="" || $m_mount==""){
-            $master_dj_connection_url = "N/A";
-        }
-        if($l_port=="" || $l_mount==""){
-            $live_dj_connection_url = "N/A";
-        }
-        
-        $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url,))
-        ));
     }
     
-    public function updateConnectionURLs(){
+    public function updateVariables(){
         $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
         $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
         $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
@@ -116,8 +99,10 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $live_dj_connection_url = "N/A";
         }
         
+        $overrideDescription = "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. For more detail, please read the <a target=\"_blank\" href=\"http://manuals.sourcefabric.org/\">Airtime manual</a>.";
+        
         $this->setDecorators(array(
-        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url,))
+        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url,'overrideDescription' => $overrideDescription))
         ));
     }
     
