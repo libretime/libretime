@@ -1133,7 +1133,7 @@ class Application_Model_Show {
             try {
                 //update the status flag in cc_schedule.
                 $instances = CcShowInstancesQuery::create()
-                    ->filterByDbStarts($current_timestamp, Criteria::GREATER_EQUAL)
+                    ->filterByDbEnds($current_timestamp, Criteria::GREATER_THAN)
                     ->filterByDbShowId($data['add_show_id'])
                     ->find($con);
 
