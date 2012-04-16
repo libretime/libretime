@@ -272,6 +272,8 @@ class Application_Model_Schedule {
         }
 
         $sql .= " ORDER BY si.starts, sched.starts;";
+        
+        Logging::debug($sql);
 
         $rows = $CC_DBC->GetAll($sql);
         return $rows;

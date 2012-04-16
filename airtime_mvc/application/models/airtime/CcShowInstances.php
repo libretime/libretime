@@ -110,6 +110,8 @@ class CcShowInstances extends BaseCcShowInstances {
 
     //post save hook to update the cc_schedule status column for the tracks in the show.
     public function updateScheduleStatus(PropelPDO $con) {
+        
+        $this->updateDbTimeFilled($con);
 
         //scheduled track is in the show
         CcScheduleQuery::create()
@@ -132,6 +134,32 @@ class CcShowInstances extends BaseCcShowInstances {
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
             ->filterByDbStarts($this->ends, Criteria::GREATER_THAN)
             ->update(array('DbPlayoutStatus' => 0), $con);
+    }
+    
+    /**
+     * Computes the value of the aggregate column time_filled
+     *
+     * @param PropelPDO $con A connection object
+     *
+     * @return mixed The scalar result from the aggregate query
+     */
+    public function computeDbTimeFilled(PropelPDO $con)
+    {
+        $stmt = $con->prepare('SELECT SUM(clip_length) FROM "cc_schedule" WHERE cc_schedule.INSTANCE_ID = :p1');
+        $stmt->bindValue(':p1', $this->getDbId());
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    
+    /**
+     * Updates the aggregate column time_filled
+     *
+     * @param PropelPDO $con A connection object
+     */
+    public function updateDbTimeFilled(PropelPDO $con)
+    {
+        $this->setDbTimeFilled($this->computeDbTimeFilled($con));
+        $this->save($con);
     }
     
     public function preInsert(PropelPDO $con = null) {

@@ -34,7 +34,7 @@ var AIRTIME = (function(AIRTIME){
 	    	.data("screen", "timeline");
 	};
 	
-	mod.fnDrawCallback = function() {
+	mod.fnDrawCallback = function fnLibDrawCallback() {
 		
 		$('#library_display tr:not(:first)').draggable({
 			helper: function(){

@@ -2049,34 +2049,6 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$this->aCcFiles = null;
 	}
 
-	// aggregate_column behavior
-	
-	/**
-	 * Computes the value of the aggregate column time_filled 
-	 *
-	 * @param PropelPDO $con A connection object
-	 *
-	 * @return mixed The scalar result from the aggregate query
-	 */
-	public function computeDbTimeFilled(PropelPDO $con)
-	{
-		$stmt = $con->prepare('SELECT SUM(clip_length) FROM "cc_schedule" WHERE cc_schedule.INSTANCE_ID = :p1');
-	  $stmt->bindValue(':p1', $this->getDbId());
-		$stmt->execute();
-		return $stmt->fetchColumn();
-	}
-	
-	/**
-	 * Updates the aggregate column time_filled 
-	 *
-	 * @param PropelPDO $con A connection object
-	 */
-	public function updateDbTimeFilled(PropelPDO $con)
-	{
-		$this->setDbTimeFilled($this->computeDbTimeFilled($con));
-		$this->save($con);
-	}
-
 	/**
 	 * Catches calls to virtual methods
 	 */

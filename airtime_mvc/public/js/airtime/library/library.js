@@ -118,28 +118,21 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateSave": function (oSettings, oData) {
                
-                $.ajax({
-                  url: "/usersettings/set-library-datatable",
-                  type: "POST",
-                  data: {settings : oData, format: "json"},
-                  dataType: "json"
-                });
+            	localStorage.setItem('datatables-library', JSON.stringify(oData));
+            	
+            	$.ajax({
+                    url: "/usersettings/set-library-datatable",
+                    type: "POST",
+                    data: {settings : oData, format: "json"},
+                    dataType: "json"
+                  });
             },
-            "fnStateLoad": function (oSettings) {
-                var o;
-    
-                $.ajax({
-                  url: "/usersettings/get-library-datatable",
-                  type: "GET",
-                  data: {format: "json"},
-                  dataType: "json",
-                  async: false,
-                  success: function(json){
-                      o = json.settings;
-                  }
-                });
-                
-                return o;
+            "fnStateLoad": function fnLibStateLoad(oSettings) {
+            	var settings = localStorage.getItem('datatables-library');
+            	
+            	if (settings !== "") {
+            		return JSON.parse(settings);
+            	}
             },
             "fnStateLoadParams": function (oSettings, oData) {
                 var i,
@@ -148,13 +141,17 @@ var AIRTIME = (function(AIRTIME) {
             
                 //putting serialized data back into the correct js type to make
                 //sure everything works properly.
-                for (i = 0, length = a.length; i < length; i++) {	
-                    a[i] = (a[i] === "true") ? true : false;
+                for (i = 0, length = a.length; i < length; i++) {
+                	if (typeof(a[i]) === "string") {
+                		a[i] = (a[i] === "true") ? true : false;
+                	} 
                 }
                 
                 a = oData.ColReorder;
-                for (i = 0, length = a.length; i < length; i++) {	
-                    a[i] = parseInt(a[i], 10);
+                for (i = 0, length = a.length; i < length; i++) {
+                	if (typeof(a[i]) === "string") {
+                		a[i] = parseInt(a[i], 10);
+                	}
                 }
                
                 oData.iEnd = parseInt(oData.iEnd, 10);
@@ -516,7 +513,7 @@ var AIRTIME = (function(AIRTIME) {
     return AIRTIME;
     
 }(AIRTIME || {}));
-    
+
 function checkImportStatus(){
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');

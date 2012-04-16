@@ -680,7 +680,10 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->entries = 5;
     }
 
-    public function getFormAction(){
+    public function getFormAction() {
+        
+        $user = Application_Model_User::GetCurrentUser();
+        
         if($user->isUserType(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)){
             Application_Model_Schedule::createNewFormSections($this->view);
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
