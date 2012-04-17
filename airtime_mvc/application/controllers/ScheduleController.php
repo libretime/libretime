@@ -227,8 +227,7 @@ class ScheduleController extends Zend_Controller_Action
         $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
 
-		if ($epochNow < $showEndLocalDT->getTimestamp()) {
-
+        if ($epochNow < $showStartLocalDT->getTimestamp()) {
             if ( ($isAdminOrPM || $isDJ) 
                 && !$instance->isRecorded()
                 && !$instance->isRebroadcast()) {
@@ -239,7 +238,6 @@ class ScheduleController extends Zend_Controller_Action
                 $menu["clear"] = array("name"=> "Remove All Content", "icon" => "remove-all-content",
                     "url" => "/schedule/clear-show");
             }
-
         }
 
         if (!$instance->isRecorded()) {
