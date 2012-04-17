@@ -709,7 +709,7 @@ class Application_Model_Show {
         global $CC_DBC;
 
         $date = new Application_Common_DateHelper;
-        $timestamp = $date->getTimestamp();
+        $timestamp = $date->getUtcTimestamp();
 
         $sql = "UPDATE cc_show_days "
                 ."SET duration = '$p_data[add_show_duration]' "
@@ -719,7 +719,7 @@ class Application_Model_Show {
         $sql = "UPDATE cc_show_instances "
                 ."SET ends = starts + INTERVAL '$p_data[add_show_duration]' "
                 ."WHERE show_id = $p_data[add_show_id] "
-                ."AND starts > TIMESTAMP '$timestamp'";
+                ."AND ends > TIMESTAMP '$timestamp'";
         $CC_DBC->query($sql);
 
     }
@@ -1157,33 +1157,28 @@ class Application_Model_Show {
 
     /**
      * Generate repeating show instances for a single show up to the given date.
-     * If no date is given, use the one in the user's preferences, which is stored
-     * automatically by FullCalendar as the furthest date in the future the user
-     * has looked at.
+     * It will always try to use enddate from DB but if that's empty, it will use
+     * time now.
      *
      * @param int $p_showId
-     * @param DateTime $p_dateTime
-     *        DateTime object in UTC time.
      */
-    public static function populateShowUntil($p_showId, $p_dateTime = NULL)
+    public static function populateShowUntil($p_showId)
     {
         global $CC_DBC;
-        if (is_null($p_dateTime)) {
-            $date = Application_Model_Preference::GetShowsPopulatedUntil();
+        $date = Application_Model_Preference::GetShowsPopulatedUntil();
 
-            if (is_null($date)) {
-                $p_dateTime = new DateTime("now", new DateTimeZone('UTC'));
-                Application_Model_Preference::SetShowsPopulatedUntil($p_dateTime);
-            } else {
-                $p_dateTime = $date;
-            }
+        if (is_null($date)) {
+            $p_populateUntilDateTime = new DateTime("now", new DateTimeZone('UTC'));
+            Application_Model_Preference::SetShowsPopulatedUntil($p_populateUntilDateTime);
+        } else {
+            $p_populateUntilDateTime = $date;
         }
 
         $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
         $res = $CC_DBC->GetAll($sql);
 
         foreach ($res as $showRow) {
-            Application_Model_Show::populateShow($showRow, $p_dateTime);
+            Application_Model_Show::populateShow($showRow, $p_populateUntilDateTime);
         }
     }
 
@@ -1195,21 +1190,21 @@ class Application_Model_Show {
      *
      * @param array $p_showRow
      *        A row from cc_show_days table
-     * @param DateTime $p_dateTime
+     * @param DateTime $p_populateUntilDateTime
      *        DateTime object in UTC time.
      */
-    private static function populateShow($p_showRow, $p_dateTime) {
+    private static function populateShow($p_showRow, $p_populateUntilDateTime) {
         if($p_showRow["repeat_type"] == -1) {
-            Application_Model_Show::populateNonRepeatingShow($p_showRow, $p_dateTime);
+            Application_Model_Show::populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime);
         }
         else if($p_showRow["repeat_type"] == 0) {
-            Application_Model_Show::populateRepeatingShow($p_showRow, $p_dateTime, 'P7D');
+            Application_Model_Show::populateRepeatingShow($p_showRow, $p_populateUntilDateTime, 'P7D');
         }
         else if($p_showRow["repeat_type"] == 1) {
-            Application_Model_Show::populateRepeatingShow($p_showRow, $p_dateTime, 'P14D');
+            Application_Model_Show::populateRepeatingShow($p_showRow, $p_populateUntilDateTime, 'P14D');
         }
         else if($p_showRow["repeat_type"] == 2) {
-            Application_Model_Show::populateRepeatingShow($p_showRow, $p_dateTime, 'P1M');
+            Application_Model_Show::populateRepeatingShow($p_showRow, $p_populateUntilDateTime, 'P1M');
         }
         Application_Model_RabbitMq::PushSchedule();
     }
@@ -1220,13 +1215,13 @@ class Application_Model_Show {
      *
      * @param array $p_showRow
      *        A row from cc_show_days table
-     * @param DateTime $p_dateTime
+     * @param DateTime $p_populateUntilDateTime
      *        DateTime object in UTC time.
      */
-    private static function populateNonRepeatingShow($p_showRow, $p_dateTime)
+    private static function populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime)
     {
         global $CC_DBC;
-
+        
         $show_id = $p_showRow["show_id"];
         $first_show = $p_showRow["first_show"]; //non-UTC
         $start_time = $p_showRow["start_time"]; //non-UTC
@@ -1234,14 +1229,11 @@ class Application_Model_Show {
         $day = $p_showRow["day"];
         $record = $p_showRow["record"];
         $timezone = $p_showRow["timezone"];
-
         $start = $first_show." ".$start_time;
 
         //start & end UTC DateTimes for the show.
         list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
-
-        if ($utcStartDateTime->getTimestamp() < $p_dateTime->getTimestamp()) {
-
+        if ($utcStartDateTime->getTimestamp() < $p_populateUntilDateTime->getTimestamp()) {
             $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
 
             $show = new Application_Model_Show($show_id);
@@ -1286,12 +1278,12 @@ class Application_Model_Show {
      *
      * @param array $p_showRow
      *        A row from cc_show_days table
-     * @param DateTime $p_dateTime
+     * @param DateTime $p_populateUntilDateTime
      *        DateTime object in UTC time. "shows_populated_until" date YY-mm-dd in cc_pref
      * @param string $p_interval
      *        Period of time between repeating shows (in php DateInterval notation 'P7D')
      */
-    private static function populateRepeatingShow($p_showRow, $p_dateTime, $p_interval)
+    private static function populateRepeatingShow($p_showRow, $p_populateUntilDateTime, $p_interval)
     {
         global $CC_DBC;
 
@@ -1427,7 +1419,6 @@ class Application_Model_Show {
         $duration = explode(":", $p_duration);
         list($hours, $mins) = array_slice($duration, 0, 2);
         $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
-
         return array($startDateTime, $endDateTime);
     }
 
@@ -1621,7 +1612,6 @@ class Application_Model_Show {
             if ($p_editable && (strtotime($today_timestamp) < strtotime($show["ends"]))) {
                 $options["editable"] = true;
             }
-
             $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
         }
         

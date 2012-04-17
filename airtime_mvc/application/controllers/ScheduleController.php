@@ -763,18 +763,19 @@ class ScheduleController extends Zend_Controller_Action
         
         $show = new Application_Model_Show($data['add_show_id']);
         $validateStartDate = true;
-        
         if (!array_key_exists('add_show_start_date', $data)){
             //Changing the start date was disabled, since the
             //array key does not exist. We need to repopulate this entry from the db.
             //The start date will be returned in UTC time, so lets convert it to local time.
             $dt = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDate());
-            $startTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartTime());
             $data['add_show_start_date'] = $dt->format("Y-m-d");
-            $data['add_show_start_time'] = $startTime->format("H:i");
+            
+            if (!array_key_exists('add_show_start_time', $data)){
+                $startTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartTime());
+                $data['add_show_start_time'] = $startTime->format("H:i");
+            }
             $validateStartDate = false;
         }
-        
         $data['add_show_record'] = $show->isRecorded();
         
         $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate);
