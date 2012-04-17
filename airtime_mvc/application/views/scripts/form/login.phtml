@@ -1,0 +1,33 @@
+<form enctype="application/x-www-form-urlencoded" method="post" action="">
+  <dl class="zend_form">
+  
+    <dt id="username-label">
+      <label for="username" class="required">
+          <?php echo $this->element->getElement('username')->getLabel() ?>
+      </label>
+    </dt>
+    <dd id="username-element">
+      <?php echo $this->element->getElement('username') ?>
+    </dd>
+    
+    <dt id="password-label">
+      <label for="password" class="required">
+          <?php echo $this->element->getElement('password')->getLabel() ?>
+      </label>
+    </dt>
+    <dd id="password-element">
+      <?php echo $this->element->getElement('password') ?>
+    </dd>
+    
+    <dt id="reset-label" class="hidden">&nbsp;</dt>
+    <dd id="reset-element" class="text-right">
+      <a href="<?php echo $this->baseUrl('login/password-restore'); ?>" class="link reset">Reset password</a>
+    </dd>
+  
+    <dt id="submit-label">&nbsp;</dt>
+    <dd id="submit-element">
+      <?php echo $this->element->getElement('submit') ?>
+    </dd>
+    
+  </dl>
+</form>
