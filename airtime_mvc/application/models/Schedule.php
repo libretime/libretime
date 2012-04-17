@@ -446,7 +446,7 @@ class Application_Model_Schedule {
             Logging::debug("Get Schedule: Less than 3 results returned. Do another query in an attempt to get 3.");
             
             $dt = new DateTime("@".time());
-            $dt->add(new DateInterval("PT30M"));
+            $dt->add(new DateInterval("PT24H"));
             $range_end = $dt->format("Y-m-d H:i:s");
                       
             $predicates = " WHERE st.ends > '$p_startTime'"

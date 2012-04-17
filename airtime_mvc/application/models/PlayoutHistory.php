@@ -66,6 +66,7 @@ class Application_Model_PlayoutHistory {
 			select count(schedule.file_id) as played, schedule.file_id as file_id
 			from cc_schedule as schedule
 			where schedule.starts >= '{$start}' and schedule.starts < '{$end}'
+			    and schedule.playout_status > 0 and schedule.media_item_played != FALSE
 			group by schedule.file_id
 			)
 			AS playout left join cc_files as file on (file.id = playout.file_id)";
