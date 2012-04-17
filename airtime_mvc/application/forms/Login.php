@@ -9,6 +9,10 @@ class Application_Form_Login extends Zend_Form
         
 		// Set the method for the display form to POST
         $this->setMethod('post');
+        
+        $this->setDecorators(array(
+            array('ViewScript', array('viewScript' => 'form/login.phtml'))
+        ));
 
 		// Add username element
         $this->addElement('text', 'username', array(
@@ -19,9 +23,12 @@ class Application_Form_Login extends Zend_Form
             'filters'    => array('StringTrim'),
             'validators' => array(
                 'NotEmpty',
+            ),
+            'decorators' => array(
+                'ViewHelper'
             )
         ));
-        
+       
 		// Add password element
         $this->addElement('password', 'password', array(
             'label'      => 'Password:',
@@ -31,6 +38,9 @@ class Application_Form_Login extends Zend_Form
             'filters'    => array('StringTrim'),
             'validators' => array(
                 'NotEmpty',
+            ),
+            'decorators' => array(
+                'ViewHelper'
             )
         ));
         
@@ -47,7 +57,10 @@ class Application_Form_Login extends Zend_Form
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
             'label'    => 'Login',
-            'class'      => 'ui-button ui-widget ui-state-default ui-button-text-only center'
+            'class'      => 'ui-button ui-widget ui-state-default ui-button-text-only center',
+            'decorators' => array(
+                'ViewHelper'
+            )
         ));
 
     }
