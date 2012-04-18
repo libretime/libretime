@@ -154,10 +154,13 @@ class Application_Model_Preference
         $fade = self::GetValue("default_fade");
         
         if ($fade === "") {
-            return null;
+            // the default value of the fade is 00.500000
+            return "00.500000";
         } 
         
         $fade = number_format($fade, 6);
+        //fades need 2 leading zeros for DateTime conversion
+        $fade = str_pad($fade, 9, "0", STR_PAD_LEFT);
         return $fade;
     }
     
