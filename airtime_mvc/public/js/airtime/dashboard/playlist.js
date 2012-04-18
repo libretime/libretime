@@ -8,6 +8,8 @@ var nextSong = null;
 var currentShow = new Array();
 var nextShow = new Array();
 
+var showName = null;
+
 var currentElem;
 
 var serverUpdateInterval = 5000;
@@ -148,7 +150,21 @@ function updatePlaybar(){
         else
             $('#current').text(currentSong.name+",");
     }else{
-        $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
+        if (master_dj_on_air) {
+            if (showName) {
+                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - Master Stream</span>");
+            } else {
+                $('#current').html("Current: <span style='color:red; font-weight:bold'>Master Stream</span>");
+            }
+        } else if (live_dj_on_air) {
+            if (showName) {
+                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - Live Stream</span>");
+            } else {
+                $('#current').html("Current: <span style='color:red; font-weight:bold'>Live Stream</span>");
+            }
+        } else {
+            $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
+        }
     }
 
     if (nextSong !== null){
@@ -346,6 +362,7 @@ function getScheduleFromServer(){
                 parseItems(data.entries);
                 parseSourceStatus(data.source_status);
                 parseSwitchStatus(data.switch_status);
+                showName = data.show_name;
           }, error:function(jqXHR, textStatus, errorThrown){}});
     setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
