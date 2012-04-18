@@ -1687,8 +1687,8 @@ class Application_Model_Show {
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
-
-        $showDay->setDbFirstShow($dt)
+        
+        $showDay->setDbFirstShow($dt)->setDbStartTime($dt)
         ->save();
 
         Logging::log("setting show's first show.");
