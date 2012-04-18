@@ -105,12 +105,16 @@ span.playlistID {
 span.playlistIndex {
     display:none; 
 }
+
+/* Not sure if this should be here. Daniel Franklin added this but not
+ * sure if it is actually needed. Commenting out for now...
 span.showID {
     display:none; 
 }
 span.showIndex {
     display:none; 
 }
+* */
 /* @group CONTROLS */
 
 div.jp-controls-holder {
