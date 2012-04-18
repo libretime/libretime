@@ -154,7 +154,8 @@ class Application_Model_Preference
         $fade = self::GetValue("default_fade");
         
         if ($fade === "") {
-            return null;
+            // the default value of the fade is 00.500000
+            return "00.500000";
         } 
         
         $fade = number_format($fade, 6);
