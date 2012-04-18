@@ -570,9 +570,14 @@ class Application_Model_ShowInstance {
 		
         if ($time != "00:00:00") {
             $time_arr = explode(".", $time);
-            $time_arr[1] = "." . $time_arr[1];
-            $milliseconds = number_format(round($time_arr[1], 2), 2);
-            $time = $time_arr[0] . substr($milliseconds, 1);
+            if (count($time_arr) > 1) {
+                $time_arr[1] = "." . $time_arr[1];
+                $milliseconds = number_format(round($time_arr[1], 2), 2);
+                $time = $time_arr[0] . substr($milliseconds, 1);
+            }
+            else {
+                $time = $time_arr[0] . ".00";
+            }
         } else {
             $time = "00:00:00.00";
         }

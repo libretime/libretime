@@ -333,6 +333,7 @@ class ScheduleController extends Zend_Controller_Action
     public function getCurrentPlaylistAction()
     {
         $range = Application_Model_Schedule::GetPlayOrderRange();
+        $show = Application_Model_Show::GetCurrentShow();
 
         /* Convert all UTC times to localtime before sending back to user. */
         if (isset($range["previous"])){
@@ -371,6 +372,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->switch_status = $switch_status;
         
         $this->view->entries = $range;
+        $this->view->show_name = $show[0]["name"];
     }
 
     public function removeGroupAction()
@@ -851,6 +853,9 @@ class ScheduleController extends Zend_Controller_Action
             try {
                 $scheduler = new Application_Model_Scheduler();
                 $scheduler->cancelShow($id);
+                // send kick out source stream signal to pypo
+                $data = array("sourcename"=>"live_dj");
+                Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
             }
             catch (Exception $e) {
                 $this->view->error = $e->getMessage();

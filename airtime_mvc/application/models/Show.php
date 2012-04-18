@@ -1314,7 +1314,7 @@ class Application_Model_Show {
 
         $show = new Application_Model_Show($show_id);
 
-        while($utcStartDateTime->getTimestamp() <= $p_dateTime->getTimestamp()
+        while($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
                 && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){
 
             list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
@@ -1687,8 +1687,8 @@ class Application_Model_Show {
         $showDay = CcShowDaysQuery::create()
         ->filterByDbShowId($this->_showId)
         ->findOne();
-
-        $showDay->setDbFirstShow($dt)
+        
+        $showDay->setDbFirstShow($dt)->setDbStartTime($dt)
         ->save();
 
         Logging::log("setting show's first show.");
