@@ -111,7 +111,6 @@ class CcSchedule extends BaseCcSchedule {
             $dt = $v;
         }
         else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            $v = str_pad($v, 9, "0", STR_PAD_LEFT);
             $dt = DateTime::createFromFormat("s.u", $v);
         }
         else {
@@ -139,7 +138,6 @@ class CcSchedule extends BaseCcSchedule {
             $dt = $v;
         }
         else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            $v = str_pad($v, 9, "0", STR_PAD_LEFT);
             $dt = DateTime::createFromFormat("s.u", $v);
         }
         else {

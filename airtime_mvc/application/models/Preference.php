@@ -159,6 +159,8 @@ class Application_Model_Preference
         } 
         
         $fade = number_format($fade, 6);
+        //fades need 2 leading zeros for DateTime conversion
+        $fade = str_pad($fade, 9, "0", STR_PAD_LEFT);
         return $fade;
     }
     
