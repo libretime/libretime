@@ -45,8 +45,8 @@ class CcShowTableMap extends TableMap {
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
 		$this->addColumn('COLOR', 'DbColor', 'VARCHAR', false, 6, null);
 		$this->addColumn('BACKGROUND_COLOR', 'DbBackgroundColor', 'VARCHAR', false, 6, null);
-		$this->addColumn('LIVE_STREAM_USING_AIRTIME_AUTH', 'DbLiveStreamUsingAirtimeAuth', 'BOOLEAN', false, null, null);
-		$this->addColumn('LIVE_STREAM_USING_CUSTOM_AUTH', 'DbLiveStreamUsingCustomAuth', 'BOOLEAN', false, null, null);
+		$this->addColumn('LIVE_STREAM_USING_AIRTIME_AUTH', 'DbLiveStreamUsingAirtimeAuth', 'BOOLEAN', false, null, false);
+		$this->addColumn('LIVE_STREAM_USING_CUSTOM_AUTH', 'DbLiveStreamUsingCustomAuth', 'BOOLEAN', false, null, false);
 		$this->addColumn('LIVE_STREAM_USER', 'DbLiveStreamUser', 'VARCHAR', false, 255, null);
 		$this->addColumn('LIVE_STREAM_PASS', 'DbLiveStreamPass', 'VARCHAR', false, 255, null);
 		// validators

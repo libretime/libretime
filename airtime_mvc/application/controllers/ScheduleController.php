@@ -263,9 +263,10 @@ class ScheduleController extends Zend_Controller_Action
                 }
             } else {
                 if($instance->isRepeating()){
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
+                    /*$menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
                     $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-instance-form");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");*/
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
                 }else{
                     if($instance->isRebroadcast()){
                         $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
@@ -284,9 +285,10 @@ class ScheduleController extends Zend_Controller_Action
             if ($isAdminOrPM || $isDJ) {
 
                 if($instance->isRepeating()){
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
+                    /*$menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
                     $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-instance-form");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");*/
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
                 }else{
                     if($instance->isRebroadcast()){
                         $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
@@ -726,7 +728,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->edit = true;
     }
     
-    public function editShowInstanceAction(){
+    /*public function editShowInstanceAction(){
         $js = $this->_getParam('data');
         $data = array();
 
@@ -743,7 +745,7 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->addNewShow = false;
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
-    }
+    }*/
     
     public function editShowAction(){
         
