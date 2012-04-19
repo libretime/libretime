@@ -107,7 +107,7 @@ function dayClick(date, allDay, jsEvent, view){
             today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
             selected = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
         }
-    
+        
         if(selected >= today) {
             var addShow = $('.add-button');
     
@@ -131,11 +131,19 @@ function dayClick(date, allDay, jsEvent, view){
             }
             // duration in milisec
             var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
-            
+        
+            var startTime_string, startTime
             // get start time value on the form
-            var startTime_string = $("#add_show_start_time").val();
-            var startTime_info = startTime_string.split(':');
-            var startTime = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) + (parseInt(startTime_info[1], 10) * 60 * 1000);
+            if(view.name === "month") {
+                startTime_string = $("#add_show_start_time").val();
+                var startTime_info = startTime_string.split(':');
+                startTime = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) + (parseInt(startTime_info[1], 10) * 60 * 1000);
+            }else{
+                // if in day or week view, selected has all the time info as well
+                // so we don't ahve to calculate it explicitly
+                startTime_string = selected.getHours()+":"+selected.getMinutes()
+                startTime = 0
+            }
             
             // calculate endDateTime
             var endDateTime = new Date(selected.getTime() + startTime + duration);
@@ -146,6 +154,11 @@ function dayClick(date, allDay, jsEvent, view){
             $("#add_show_start_date").val(chosenDate);
             $("#add_show_end_date_no_repeat").val(endDateFormat);
             $("#add_show_end_date").val(endDateFormat);
+            if(view.name !== "month") {
+                var endTimeString = endDateTime.getHours()+":"+endDateTime.getMinutes();
+                $("#add_show_start_time").val(startTime_string)
+                $("#add_show_end_time").val(endTimeString)
+            }
             $("#schedule-show-when").show();
     
             openAddShowForm();
