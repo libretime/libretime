@@ -1165,15 +1165,8 @@ class Application_Model_Show {
      */
     public static function populateShowUntil($p_showId)
     {
-<<<<<<< HEAD
-        global $CC_DBC;
-        $date = Application_Model_Preference::GetShowsPopulatedUntil();
-=======
         $con = Propel::getConnection();
-
-        if (is_null($p_dateTime)) {
-            $date = Application_Model_Preference::GetShowsPopulatedUntil();
->>>>>>> CC-1927: Remove PEAR DB
+        $date = Application_Model_Preference::GetShowsPopulatedUntil();
 
         if (is_null($date)) {
             $p_populateUntilDateTime = new DateTime("now", new DateTimeZone('UTC'));
@@ -1228,13 +1221,8 @@ class Application_Model_Show {
      */
     private static function populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime)
     {
-<<<<<<< HEAD
-        global $CC_DBC;
-        
-=======
         $con = Propel::getConnection();
 
->>>>>>> CC-1927: Remove PEAR DB
         $show_id = $p_showRow["show_id"];
         $first_show = $p_showRow["first_show"]; //non-UTC
         $start_time = $p_showRow["start_time"]; //non-UTC
@@ -1278,13 +1266,7 @@ class Application_Model_Show {
 
             //Logging::log('$start time of non repeating record '.$start);
 
-<<<<<<< HEAD
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-=======
-            if ($newInstance) {
-                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            }
->>>>>>> CC-1927: Remove PEAR DB
         }
     }
 
@@ -1331,11 +1313,7 @@ class Application_Model_Show {
 
         $show = new Application_Model_Show($show_id);
 
-<<<<<<< HEAD
-        while($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
-=======
-        while ($utcStartDateTime->getTimestamp() <= $p_dateTime->getTimestamp()
->>>>>>> CC-1927: Remove PEAR DB
+        while ($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
                 && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){
 
             list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
@@ -1743,13 +1721,8 @@ class Application_Model_Show {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         if($timeNow == null){
-<<<<<<< HEAD
             $date = new Application_Common_DateHelper;
             $timeNow = $date->getUtcTimestamp(); 
-=======
-            $date = new Application_Model_DateHelper;
-            $timeNow = $date->getUtcTimestamp();
->>>>>>> CC-1927: Remove PEAR DB
         }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
