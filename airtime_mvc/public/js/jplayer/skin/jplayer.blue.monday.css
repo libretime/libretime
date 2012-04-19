@@ -100,7 +100,7 @@ div.jp-interface {
     border-bottom: 1px solid #1a1a1a;
 }
 div.jp-audio div.jp-type-single div.jp-interface {
-    height: 70px;
+    height: 50px;
 }
 div.jp-audio div.jp-type-playlist div.jp-interface {
     height: 80px;
@@ -282,12 +282,16 @@ div.jp-seeking-bg {
     background: url(pbar-ani.gif);
 }
 a.jp-mute, a.jp-unmute, a.jp-volume-max {
-    width: 20px;
+    width: 25px;
     height: 20px;
 }
-div.jp-audio div.jp-type-single a.jp-mute, div.jp-audio div.jp-type-single a.jp-unmute {
-    top: 45clearpx;
-    left: 210px;
+div.jp-audio div.jp-type-single a.jp-mute{
+    top: 15px;
+    left: 102px;
+}
+div.jp-audio div.jp-type-single a.jp-unmute {
+    top: 15px;
+    left: 90px;
 }
 div.jp-audio div.jp-type-playlist a.jp-mute, div.jp-audio div.jp-type-playlist a.jp-unmute {
     top: 32px;
@@ -309,17 +313,17 @@ div.jp-video-360p div.jp-type-playlist a.jp-mute, div.jp-video-360p div.jp-type-
     left: 443px;
 }
 a.jp-mute {
-    background: url(jplayer.png) 0 -90px no-repeat;
+    background: url(jplayer-mute-unmute.png) 0 0 no-repeat;
 }
 a.jp-mute:hover {
-    background: url(jplayer.png) -30px -90px no-repeat;
+    background: url(jplayer-mute-unmute.png) -42px 0 no-repeat;
 }
 a.jp-unmute {
-    background: url(jplayer.png) -61px -90px no-repeat;
+    background: url(jplayer-mute-unmute.png) -84px 0 no-repeat;
     display: none;
 }
 a.jp-unmute:hover {
-    background: url(jplayer.png) -91px -90px no-repeat;
+    background: url(jplayer-mute-unmute.png) -124px 0 no-repeat;
 }
 div.jp-interface ul.jp-controls a.jp-volume-max {
      background: url(jplayer.png) no-repeat scroll 0 -110px transparent;
@@ -342,12 +346,12 @@ div.jp-volume-bar {
     border-left: 1px solid #262526;
     border-right: 1px solid #262526;
     width: 160px;
-    height: 4px;
+    height: 7px;
     cursor: pointer;
 }
 div.jp-audio div.jp-type-single div.jp-volume-bar {
-    top: 48px;
-    left: 225px;
+    top: 24px;
+    left: 120px;
 }
 div.jp-audio div.jp-type-playlist div.jp-volume-bar {
     top: 37px;
@@ -373,7 +377,7 @@ div.jp-volume-bar-value {
     background: -moz-linear-gradient(top, #fc9318 0, #e56815 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fc9318), color-stop(100%, #e56815));
     width: 0px;
-    height: 3px;
+    height: 6px;
 }
 div.jp-current-time, div.jp-duration {
     position: absolute;
