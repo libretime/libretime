@@ -19,6 +19,8 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function audioPreviewAction()
     {
+        global $CC_CONFIG;
+        
         $audioFileID = $this->_getParam('audioFileID');
         $audioFileArtist = $this->_getParam('audioFileArtist');
         $audioFileTitle = $this->_getParam('audioFileTitle');
@@ -52,6 +54,8 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function playlistPreviewAction()
     {
+        global $CC_CONFIG;
+        
         $playlistIndex = $this->_getParam('playlistIndex');
         $playlistID = $this->_getParam('playlistID');
 
@@ -121,6 +125,8 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function showPreviewAction()
     {
+        global $CC_CONFIG;
+        
         $showID = $this->_getParam('showID');
         $showIndex = $this->_getParam('showIndex');
         
