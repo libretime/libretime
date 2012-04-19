@@ -46,7 +46,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
         $master_dj_port->setLabel("Master Source Port")
                 ->setValue($m_port)
-                ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
+                ->setValidators(array(new Zend_Validate_Between(array('min'=>1024, 'max'=>49151))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($master_dj_port);
@@ -65,7 +65,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $live_dj_port = new Zend_Form_Element_Text('dj_harbor_input_port');
         $live_dj_port->setLabel("Show Source Port")
                 ->setValue($l_port)
-                ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
+                ->setValidators(array(new Zend_Validate_Between(array('min'=>1024, 'max'=>49151))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($live_dj_port);
@@ -117,27 +117,35 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $element->addError("You cannot use same port as Master DJ port.");
         }
         if($master_harbor_input_port != ""){
-            if($master_harbor_input_port != Application_Model_StreamSetting::GetMasterLiveSteamPort()){
-                $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                $res = socket_bind($sock, 0, $master_harbor_input_port);
-                if(!$res){
-                    $element = $this->getElement("master_harbor_input_port");
-                    $element->addError("Port '$master_harbor_input_port' is not available.");
-                    $isValid = false;
+            if(is_numeric($master_harbor_input_port)){
+                if($master_harbor_input_port != Application_Model_StreamSetting::GetMasterLiveSteamPort()){
+                    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+                    $res = socket_bind($sock, 0, $master_harbor_input_port);
+                    if(!$res){
+                        $element = $this->getElement("master_harbor_input_port");
+                        $element->addError("Port '$master_harbor_input_port' is not available.");
+                        $isValid = false;
+                    }
+                    socket_close($sock);
                 }
-                socket_close($sock);
+            }else{
+                $isValid = false;
             }
         }
         if($dj_harbor_input_port != ""){
-            if($dj_harbor_input_port != Application_Model_StreamSetting::GetDJLiveSteamPort()){
-                $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                $res = socket_bind($sock, 0, $dj_harbor_input_port);
-                if(!$res){
-                    $element = $this->getElement("dj_harbor_input_port");
-                    $element->addError("Port '$dj_harbor_input_port' is not available.");
-                    $isValid = false;
+            if(is_numeric($dj_harbor_input_port)){
+                if($dj_harbor_input_port != Application_Model_StreamSetting::GetDJLiveSteamPort()){
+                    $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+                    $res = socket_bind($sock, 0, $dj_harbor_input_port);
+                    if(!$res){
+                        $element = $this->getElement("dj_harbor_input_port");
+                        $element->addError("Port '$dj_harbor_input_port' is not available.");
+                        $isValid = false;
+                    }
+                    socket_close($sock);
                 }
-                socket_close($sock);
+            }else{
+                $isValid = false;
             }
         }
         return $isValid;
