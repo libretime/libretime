@@ -15,7 +15,6 @@ set_include_path(APPLICATION_PATH . get_include_path() . PATH_SEPARATOR . '/cont
 
 
 require_once APPLICATION_PATH.'/configs/conf.php';
-require_once 'DB.php';
 require_once(APPLICATION_PATH.'/../library/propel/runtime/lib/Propel.php');
 
 require_once 'Soundcloud.php';
@@ -30,17 +29,6 @@ require_once 'Preference.php';
 
 // Initialize Propel with the runtime configuration
 Propel::init(__DIR__."/../../../application/configs/airtime-conf.php");
-
-
-$dsn = $CC_CONFIG['dsn'];
-
-$CC_DBC = DB::connect($dsn, FALSE);
-if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-
 
 $playlistName = "pypo_playlist_test";
 $secondsFromNow = 30;
@@ -70,10 +58,6 @@ if (is_null($mediaFile)) {
     echo "Adding test audio clip to the database.\n";
     $v = array("filepath" => __DIR__."/../../../audio_samples/vorbis.com/Hydrate-Kenny_Beltrey.ogg");
     $mediaFile = Application_Model_StoredFile::Insert($v);
-    if (PEAR::isError($mediaFile)) {
-    	var_dump($mediaFile);
-    	exit();
-    }
 }
 $pl->addAudioClip($mediaFile->getId());
 echo "done.\n";

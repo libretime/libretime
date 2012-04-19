@@ -238,20 +238,18 @@ class Application_Model_StoredFile {
      * 		'empty'|'incomplete'|'ready'|'edited'
      * @param int $p_editedby
      * 		 user id | 'NULL' for clear editedBy field
-     * @return TRUE|PEAR_Error
+     * @return TRUE
      */
     public function setState($p_state, $p_editedby=NULL)
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $escapedState = pg_escape_string($p_state);
         $eb = (!is_null($p_editedby) ? ", editedBy=$p_editedby" : '');
         $sql = "UPDATE ".$CC_CONFIG['filesTable']
-        ." SET state='$escapedState'$eb, mtime=now()"
-        ." WHERE gunid='{$this->gunid}'";
-        $res = $CC_DBC->query($sql);
-        if (PEAR::isError($res)) {
-            return $res;
-        }
+            ." SET state='$escapedState'$eb, mtime=now()"
+            ." WHERE gunid='{$this->gunid}'";
+        $res = $con->exec($sql);
         $this->state = $p_state;
         $this->editedby = $p_editedby;
         return TRUE;
@@ -262,11 +260,12 @@ class Application_Model_StoredFile {
      * @return array
      */
     public function getPlaylists() {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT playlist_id "
-        ." FROM ".$CC_CONFIG['playistTable']
-        ." WHERE file_id='{$this->id}'";
-        $ids = $CC_DBC->getAll($sql);
+            ." FROM ".$CC_CONFIG['playistTable']
+            ." WHERE file_id='{$this->id}'";
+        $ids = $con->query($sql)->fetchAll();
         $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
             foreach ($ids as $id) {
@@ -583,7 +582,7 @@ Logging::log("getting media! - 2");
     }
 
     public static function searchLibraryFiles($datatables) {
-    	
+
     	$con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
@@ -656,7 +655,7 @@ Logging::log("getting media! - 2");
             default:
                 $fromTable = $unionTable;
         }
-        
+
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         //Used by the audio preview functionality in the library.
@@ -803,7 +802,7 @@ Logging::log("getting media! - 2");
         //check to see if we have enough space in the /organize directory to copy the file
         $freeSpace = disk_free_space($destination_folder);
         $fileSize = filesize($audio_file);
-        
+
         if ( $freeSpace < $fileSize){
             $freeSpace = ceil($freeSpace/1024/1024);
             $fileSize = ceil($fileSize/1024/1024);
@@ -820,11 +819,9 @@ Logging::log("getting media! - 2");
         $md5 = md5_file($audio_file);
         $duplicate = Application_Model_StoredFile::RecallByMd5($md5, true);
         
+
         $result = null;
         if ($duplicate) {
-            if (PEAR::isError($duplicate)) {
-                $result = array("code" => 105, "message" => $duplicate->getMessage());
-            }
             if (file_exists($duplicate->getFilePath())) {
                 $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
                 $result = array( "code" => 106, "message" => "An identical audioclip named '$duplicateName' already exists on the server.");
@@ -865,9 +862,11 @@ Logging::log("getting media! - 2");
 
     public static function getFileCount()
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE file_exists";
-        return $CC_DBC->GetOne($sql);
+        return $con->query($sql)->fetchColumn(0);
     }
 
     /**
@@ -876,26 +875,27 @@ Logging::log("getting media! - 2");
      * @param $dir_id - if this is not provided, it returns all files with full path constructed.
      * @param $propelObj - if this is true, it returns array of proepl obj
      */
-    public static function listAllFiles($dir_id=null, $propelObj=false){
-        global $CC_DBC;
+    public static function listAllFiles($dir_id=null, $propelObj=false)
+    {
+        $con = Propel::getConnection();
 
-        if($propelObj){
+        if ($propelObj) {
             $sql = "SELECT m.directory || f.filepath as fp"
                     ." FROM CC_MUSIC_DIRS m"
                     ." LEFT JOIN CC_FILES f"
                     ." ON m.id = f.directory WHERE m.id = $dir_id and f.file_exists = 'TRUE'";
-        }else{
+        } else {
             $sql = "SELECT filepath as fp"
                     ." FROM CC_FILES"
                     ." WHERE directory = $dir_id and file_exists = 'TRUE'";
         }
-        $rows = $CC_DBC->getAll($sql);
+        $rows = $con->query($sql)->fetchAll();
 
         $results = array();
-        foreach ($rows as $row){
-            if($propelObj){
+        foreach ($rows as $row) {
+            if ($propelObj) {
                 $results[] = Application_Model_StoredFile::RecallByFilepath($row["fp"]);
-            }else{
+            } else {
                 $results[] = $row["fp"];
             }
         }

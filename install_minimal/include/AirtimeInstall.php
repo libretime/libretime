@@ -5,7 +5,6 @@ if (file_exists('/usr/share/php/libzend-framework-php')){
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
 }
 require_once('Zend/Loader/Autoloader.php');
-require_once('DB.php');
 
 class AirtimeInstall
 {
@@ -39,63 +38,57 @@ class AirtimeInstall
         }
     }
 
+    /**
+     * Return the version of Airtime currently installed.
+     * If not installed, return null.
+     *
+     * @return NULL|string
+     */
     public static function GetVersionInstalled()
     {
-        global $CC_DBC, $CC_CONFIG;
+        global $CC_CONFIG;
+        try {
+            $con = Propel::getConnection();
+        } catch (PropelException $e) {
+            return null;
+        }
 
-        if(file_exists('/etc/airtime/airtime.conf')) {
+        if (file_exists('/etc/airtime/airtime.conf')) {
             $values = parse_ini_file('/etc/airtime/airtime.conf', true);
         }
         else {
-            //echo "New Airtime Install.".PHP_EOL;
             return null;
         }
 
-	    // Database config
-        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
-        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
-        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
-        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
-        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version' LIMIT 1";
+        $version = $con->query($sql)->fetchColumn(0);
 
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-        if (PEAR::isError($CC_DBC)) {
-            //echo "New Airtime Install.".PHP_EOL;
+        if (!$version) {
+            // no pref table something is wrong.
             return null;
         }
-        else {
-            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
 
-            $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
-            $version = $CC_DBC->GetOne($sql);
-            
-            if (PEAR::isError($version)) {
-                // no pref table something is wrong.
-                return null;
-            }
-
-            if ($version == '') {
+        if ($version == '') {
+            try {
+                // If this table exists, then it's 1.7.0
                 $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
-                $result = $CC_DBC->GetOne($sql);
-                if (!PEAR::isError($result)) {
-                    $version = "1.7.0";
-                    //echo "Airtime Version: ".$version." ".PHP_EOL;
-                }
-                else {
-                    $version = false;
-                }
+                $result = $con->query($sql)->fetchColumn(0);
+                $version = "1.7.0";
+            } catch (Exception $e) {
+                $version = null;
             }
-
-            return $version;
         }
+
+        return $version;
     }
 
     public static function DbTableExists($p_name)
     {
-        global $CC_DBC;
-        $sql = "SELECT * FROM ".$p_name;
-        $result = $CC_DBC->GetOne($sql);
-        if (PEAR::isError($result)) {
+        $con = Propel::getConnection();
+        try {
+            $sql = "SELECT * FROM ".$p_name." LIMIT 1";
+            $con->query($sql);
+        } catch (PDOException $e){
             return false;
         }
         return true;
@@ -103,35 +96,46 @@ class AirtimeInstall
 
     public static function InstallQuery($sql, $verbose = true)
     {
-        global $CC_DBC;
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
-            echo "Error! ".$result->getMessage()."\n";
-            echo "   SQL statement was:\n";
-            echo "   ".$sql."\n\n";
-        } else {
+        $con = Propel::getConnection();
+        try {
+            $con->exec($sql);
             if ($verbose) {
                 echo "done.\n";
             }
+        } catch (Exception $e) {
+            echo "Error!\n".$e->getMessage()."\n";
+            echo "   SQL statement was:\n";
+            echo "   ".$sql."\n\n";
         }
     }
 
+    public static function DropSequence($p_sequenceName)
+    {
+        AirtimeInstall::InstallQuery("DROP SEQUENCE IF EXISTS $p_sequenceName");
+    }
+
+    /**
+     * Try to connect to the database.  Return true on success, false on failure.
+     * @param boolean $p_exitOnError
+     *     Exit the program on failure.
+     * @return boolean
+     */
     public static function DbConnect($p_exitOnError = true)
     {
-        global $CC_DBC, $CC_CONFIG;
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-        if (PEAR::isError($CC_DBC)) {
-            echo $CC_DBC->getMessage().PHP_EOL;
-            echo $CC_DBC->getUserInfo().PHP_EOL;
+        global $CC_CONFIG;
+        try {
+            $con = Propel::getConnection();
+        } catch (Exception $e) {
+            echo $e->getMessage().PHP_EOL;
             echo "Database connection problem.".PHP_EOL;
             echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-                 " with corresponding permissions.".PHP_EOL;
+                " with corresponding permissions.".PHP_EOL;
             if ($p_exitOnError) {
                 exit(1);
             }
-        } else {
-            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+            return false;
         }
+        return true;
     }
 
 
@@ -139,7 +143,7 @@ class AirtimeInstall
      * install script. */
     public static function InstallStorageDirectory()
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
         echo "* Storage directory setup".PHP_EOL;
 
         $ini = parse_ini_file(__DIR__."/airtime-install.ini");
@@ -231,10 +235,11 @@ class AirtimeInstall
 
     public static function InstallPostgresScriptingLanguage()
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         // Install postgres scripting language
-        $langIsInstalled = $CC_DBC->GetOne('SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'');
+        $sql = 'SELECT COUNT(*) FROM pg_language WHERE lanname = \'plpgsql\'';
+        $langIsInstalled = $con->query($sql)->fetchColumn(0);
         if ($langIsInstalled == '0') {
             echo " * Installing Postgres scripting language".PHP_EOL;
             $sql = "CREATE LANGUAGE 'plpgsql'";
@@ -250,15 +255,15 @@ class AirtimeInstall
 
         // Put Propel sql files in Database
         //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
-        
+
         $dir = AirtimeInstall::CONF_DIR_WWW."/build/sql/";
         $files = array("schema.sql", "sequences.sql", "views.sql", "triggers.sql", "defaultdata.sql");
-        
+
         foreach ($files as $f){
             $command = "export PGPASSWORD=$p_dbpasswd && psql --username $p_dbuser --dbname $p_dbname --host $p_dbhost --file $dir$f 2>/dev/null";
             @exec($command, $output, $results);
         }
-        
+
         AirtimeInstall::$databaseTablesCreated = true;
     }
 
@@ -284,13 +289,13 @@ class AirtimeInstall
 
     public static function SetAirtimeVersion($p_version)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
         $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$p_version')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        $result = $con->exec($sql);
+        if ($result < 1) {
             return false;
         }
         return true;
@@ -298,54 +303,46 @@ class AirtimeInstall
 
     public static function SetUniqueId()
     {
-        global $CC_DBC;
-
+        $con = Propel::getConnection();
         $uniqueId = md5(uniqid("", true));
 
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('uniqueId', '$uniqueId')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        $result = $con->exec($sql);
+        if ($result < 1) {
             return false;
         }
         return true;
     }
-    
+
     public static function SetDefaultTimezone()
     {
-        global $CC_DBC;
-        
+        $con = Propel::getConnection();
         $defaultTimezone = exec("cat /etc/timezone");
-
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', '$defaultTimezone')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        $result = $con->exec($sql);
+        if ($result < 1) {
             return false;
         }
         return true;
     }
-    
+
     public static function SetImportTimestamp()
     {
-        global $CC_DBC;
-        
+        $con = Propel::getConnection();
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        $result = $con->exec($sql);
+        if ($result < 1) {
             return false;
         }
         return true;
     }
-    
+
 
     public static function GetAirtimeVersion()
     {
-        global $CC_DBC;
-        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version'";
-        $version = $CC_DBC->GetOne($sql);
-
-        if (PEAR::isError($version)) {
-            return false;
-        }
+        $con = Propel::getConnection();
+        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version' LIMIT 1";
+        $version = $con->query($sql)->fetchColumn(0);
         return $version;
     }
 
@@ -473,21 +470,21 @@ class AirtimeInstall
         fwrite($fp, "$minute $hour * * * root /usr/lib/airtime/utils/phone_home_stat\n");
         fclose($fp);
     }
-    
+
     public static function removeVirtualEnvDistributeFile(){
         echo "* Removing distribute-0.6.10.tar.gz".PHP_EOL;
         if(file_exists('/usr/share/python-virtualenv/distribute-0.6.10.tar.gz')){
             exec("rm -f /usr/share/python-virtualenv/distribute-0.6.10.tar.gz");
         }
     }
-    
+
     public static function printUsage($opts)
     {
         $msg = $opts->getUsageMessage();
         echo PHP_EOL."Usage: airtime-install [options]";
         echo substr($msg, strpos($msg, "\n")).PHP_EOL;
     }
-    
+
     public static function getOpts()
     {
         try {

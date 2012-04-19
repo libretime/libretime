@@ -9,10 +9,11 @@ class Application_Model_Schedule {
      */
     public function IsFileScheduledInTheFuture($p_fileId)
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE file_id = {$p_fileId} AND starts > NOW()";
-        $count = $CC_DBC->GetOne($sql);
+        $count = $con->query($sql)->fetchColumn(0);
         if (is_numeric($count) && ($count != '0')) {
             return TRUE;
         } else {
@@ -37,13 +38,13 @@ class Application_Model_Schedule {
         $date = new Application_Common_DateHelper;
         $timeNow = $date->getTimestamp();
         $utcTimeNow = $date->getUtcTimestamp();
-        
+
         $shows = Application_Model_Show::getPrevCurrentNext($utcTimeNow);
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
         $results = Application_Model_Schedule::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
-        
+
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
@@ -53,10 +54,10 @@ class Application_Model_Schedule {
             "nextShow"=>$shows['nextShow'],
             "timezone"=> date("T"),
             "timezoneOffset"=> date("Z"));
-        
+
         return $range;
     }
-    
+
     /**
      * Queries the database for the set of schedules one hour before and after the given time.
      * If a show starts and ends within that time that is considered the current show. Then the
@@ -69,19 +70,20 @@ class Application_Model_Schedule {
     {
         if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null)
             return;
-        
-        global $CC_CONFIG, $CC_DBC;
-        $sql = 'Select ft.artist_name, 
-                ft.track_title, 
-                st.starts as starts, 
-                st.ends as ends, 
-                st.media_item_played as media_item_played,
-                si.ends as show_ends
-                FROM cc_schedule st 
-                LEFT JOIN cc_files ft ON st.file_id = ft.id
-                LEFT JOIN cc_show_instances si on st.instance_id = si.id
+
+
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+        $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played, si.ends as show_ends
+                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id LEFT JOIN cc_show_instances si on st.instance_id = si.id
                 WHERE ';
-                
+
+        /* Alternate SQL...merge conflict and I'm not sure which on is right.... -MK
+        $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played, si.ends as show_ends
+                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
+                WHERE ';
+                */
+
          if (isset($p_previousShowID)){
             if (isset($p_nextShowID) || isset($p_currentShowID))
                 $sql .= '(';
@@ -102,17 +104,17 @@ class Application_Model_Schedule {
                 $sql .= ')';
         } else if($p_previousShowID != null && $p_currentShowID != null)
             $sql .= ')';
-        
+
         $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
-        
-        $rows = $CC_DBC->GetAll($sql);
-        
+
+
+        $rows = $con->query($sql)->fetchAll();
         $numberOfRows = count($rows);
 
         $results['previous'] = null;
         $results['current'] = null;
         $results['next'] = null;
-        
+
         $timeNowAsMillis = strtotime($p_timeNow);
         for( $i = 0; $i < $numberOfRows; ++$i ){
             // if the show is overbooked, then update the track end time to the end of the show time.
@@ -130,7 +132,6 @@ class Application_Model_Schedule {
                             "ends"=> (($rows[$i]["ends"] > $rows[$i]["show_ends"]) ? $rows[$i]["show_ends"]: $rows[$i]["ends"]),
                             "media_item_played"=>$rows[$i]["media_item_played"],
                             "record"=>0);
-                            
                 if ( isset($rows[$i+1])){
                     $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
                             "starts"=>$rows[$i+1]["starts"],
@@ -157,10 +158,10 @@ class Application_Model_Schedule {
         }
         return $results;
     }
-    
-    public static function GetLastScheduleItem($p_timeNow){
-        global $CC_CONFIG, $CC_DBC;
 
+    public static function GetLastScheduleItem($p_timeNow){
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT"
         ." ft.artist_name, ft.track_title,"
         ." st.starts as starts, st.ends as ends"
@@ -175,14 +176,14 @@ class Application_Model_Schedule {
         ." ORDER BY st.ends DESC"
         ." LIMIT 1";
 
-        $row = $CC_DBC->GetAll($sql);
+        $row = $con->query($sql)->fetchAll();
         return $row;
     }
 
 
     public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId){
-        global $CC_CONFIG, $CC_DBC;
-
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         /* Note that usually there will be one result returned. In some
          * rare cases two songs are returned. This happens when a track
          * that was overbooked from a previous show appears as if it
@@ -200,13 +201,13 @@ class Application_Model_Schedule {
         ." ORDER BY st.starts DESC"
         ." LIMIT 1";
 
-        $row = $CC_DBC->GetAll($sql);
+        $row = $con->query($sql)->fetchAll();
         return $row;
     }
 
     public static function GetNextScheduleItem($p_timeNow){
-        global $CC_CONFIG, $CC_DBC;
-
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT"
         ." ft.artist_name, ft.track_title,"
         ." st.starts as starts, st.ends as ends"
@@ -221,7 +222,7 @@ class Application_Model_Schedule {
         ." ORDER BY st.starts"
         ." LIMIT 1";
 
-        $row = $CC_DBC->GetAll($sql);
+        $row = $con->query($sql)->fetchAll();
         return $row;
     }
 
@@ -236,8 +237,8 @@ class Application_Model_Schedule {
 	 */
     public static function GetScheduleDetailItems($p_start, $p_end, $p_shows)
     {
-        global $CC_CONFIG, $CC_DBC;
-
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT DISTINCT
 
         showt.name AS show_name, showt.color AS show_color,
@@ -265,34 +266,35 @@ class Application_Model_Schedule {
         ((si.starts >= '{$p_start}' AND si.starts < '{$p_end}')
         OR (si.ends > '{$p_start}' AND si.ends <= '{$p_end}')
         OR (si.starts <= '{$p_start}' AND si.ends >= '{$p_end}'))";
-        
-        
+
+
         if (count($p_shows) > 0) {
             $sql .= " AND show_id IN (".implode(",", $p_shows).")";
         }
 
         $sql .= " ORDER BY si.starts, sched.starts;";
-        
-        Logging::debug($sql);
 
-        $rows = $CC_DBC->GetAll($sql);
+        $rows = $con->query($sql)->fetchAll();
         return $rows;
     }
 
     public static function UpdateMediaPlayedStatus($p_id)
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
                 ." SET media_item_played=TRUE"
                 ." WHERE id=$p_id";
-        $retVal = $CC_DBC->query($sql);
+        $retVal = $con->exec($sql);
         return $retVal;
     }
 
-    public static function getSchduledPlaylistCount(){
-       	global $CC_CONFIG, $CC_DBC;
+    public static function getSchduledPlaylistCount()
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
-        return $CC_DBC->GetOne($sql);
+        return $con->query($sql)->fetchColumn(0);
     }
 
 
@@ -400,7 +402,7 @@ class Application_Model_Schedule {
      * $p_startTime and $p_endTime specify the range. Schedule items returned
      * do not have to be entirely within this range. It is enough that the end
      * or beginning of the scheduled item is in the range.
-     * 
+     *
      *
      * @param string $p_startTime
      *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
@@ -411,8 +413,9 @@ class Application_Model_Schedule {
      *    arrays representing each row.
      */
     public static function GetItems($p_startTime, $p_endTime) {
-        global $CC_CONFIG, $CC_DBC;
-        
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+
         $baseQuery = "SELECT st.file_id AS file_id,"
             ." st.id as id,"
             ." st.instance_id as instance_id,"
@@ -427,48 +430,42 @@ class Application_Model_Schedule {
             ." FROM $CC_CONFIG[scheduleTable] as st"
             ." LEFT JOIN $CC_CONFIG[showInstances] as si"
             ." ON st.instance_id = si.id";
-   
+
 
         $predicates = " WHERE st.ends > '$p_startTime'"
         ." AND st.starts < '$p_endTime'"
         ." AND st.playout_status > 0"
         ." AND si.ends > '$p_startTime'"
         ." ORDER BY st.starts";
-        
+
         $sql = $baseQuery.$predicates;
 
-        $rows = $CC_DBC->GetAll($sql);
-        if (PEAR::isError($rows)) {
-            return null;
-        }
-        
+        $rows = $con->query($sql)->fetchAll();
+
         if (count($rows) < 3){
-            Logging::debug("Get Schedule: Less than 3 results returned. Do another query in an attempt to get 3.");
-            
+            Logging::debug("Get Schedule: Less than 3 results returned. Doing another query since we need a minimum of 3 results.");
+
             $dt = new DateTime("@".time());
             $dt->add(new DateInterval("PT24H"));
             $range_end = $dt->format("Y-m-d H:i:s");
-                      
+
             $predicates = " WHERE st.ends > '$p_startTime'"
             ." AND st.starts < '$range_end'"
             ." AND st.playout_status > 0"
             ." AND si.ends > '$p_startTime'"
             ." ORDER BY st.starts"
             ." LIMIT 3";
-            
+
             $sql = $baseQuery.$predicates;
-            $rows = $CC_DBC->GetAll($sql);
-            if (PEAR::isError($rows)) {
-                return null;
-            }
+            $rows = $con->query($sql)->fetchAll();
         }
-        
+
         return $rows;
     }
 
     public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null){
 
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
 
         /* if $p_fromDateTime and $p_toDateTime function parameters are null, then set range
          * from "now" to "now + 24 hours". */
@@ -480,16 +477,16 @@ class Application_Model_Schedule {
         }
         if (is_null($p_fromDateTime)) {
             $t2 = new DateTime("@".time());
-            
+
             $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
-            
+
             if (is_numeric($cache_ahead_hours)){
                 //make sure we are not dealing with a float
                 $cache_ahead_hours = intval($cache_ahead_hours);
             } else {
                 $cache_ahead_hours = 1;
             }
-                        
+
             $t2->add(new DateInterval("PT".$cache_ahead_hours."H"));
             $range_end = $t2->format("Y-m-d H:i:s");
         } else {
@@ -504,7 +501,7 @@ class Application_Model_Schedule {
 
         $data["status"] = array();
         $data["media"] = array();
-        
+
         $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
         foreach($kick_times as $kick_time_info){
             $kick_time = $kick_time_info['ends'];
@@ -515,13 +512,13 @@ class Application_Model_Schedule {
             $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
             $switch_off_time = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
             $switch_off_time = $switch_off_time->format("Y-m-d H:i:s");
-            
+
             $kick_start = Application_Model_Schedule::AirtimeTimeToPypoTime($kick_time);
             $data["media"][$kick_start]['start'] = $kick_start;
             $data["media"][$kick_start]['end'] = $kick_start;
             $data["media"][$kick_start]['event_type'] = "kick_out";
             $data["media"][$kick_start]['type'] = "event";
-            
+
             if($kick_time !== $switch_off_time){
                 $data["media"][$switch_start]['start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
                 $data["media"][$switch_start]['end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
@@ -549,7 +546,7 @@ class Application_Model_Schedule {
             /* TODO: Not all tracks will have "show_end" */
             if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
                 $di = $trackStartDateTime->diff($showEndDateTime);
-                
+
                 $item["cue_out"] = $di->format("%H:%i:%s").".000";
                 $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
             }
@@ -578,8 +575,9 @@ class Application_Model_Schedule {
 
     public static function deleteAll()
     {
-        global $CC_CONFIG, $CC_DBC;
-        $CC_DBC->query("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+        $con->exec("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
     
     public static function deleteWithFileId($fileId){

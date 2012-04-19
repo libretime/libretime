@@ -1,11 +1,4 @@
 <?php
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- */
- 
 /*
  * In the future, most Airtime upgrades will involve just mutating the
  * data that is stored on the system. For example, The only data
@@ -27,14 +20,15 @@ require_once 'UpgradeCommon.php';
 /* All functions other than start() should be marked as
  * private.
  */
-class AirtimeDatabaseUpgrade{
+class AirtimeDatabaseUpgrade {
 
-    public static function start(){
+    public static function start()
+    {
         self::doDbMigration();
 
         self::setPhpDefaultTimeZoneToSystemTimezone();
         self::SetDefaultTimezone();
-        
+
         echo "* Converting database to store all schedule times in UTC. This may take a a while...".PHP_EOL;
         self::convert_cc_playlist();
         self::convert_cc_schedule();
@@ -47,13 +41,14 @@ class AirtimeDatabaseUpgrade{
 
     private static function SetDefaultTimezone()
     {
-        global $CC_DBC;
-        
+        $con = Propel::getConnection();
+
         $defaultTimezone = date_default_timezone_get();
 
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', '$defaultTimezone')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        try {
+            $result = $con->exec($sql);
+        } catch (Exception $e) {
             return false;
         }
         return true;
@@ -72,45 +67,45 @@ class AirtimeDatabaseUpgrade{
 
     private static function convert_cc_playlist(){
         echo " * Converting playlists to UTC".PHP_EOL;
-        
+
         $sql = "SELECT * FROM cc_playlist";
         $result = UpgradeCommon::queryDb($sql);
 
         while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
             $dt = new DateTime($row['mtime'], new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
-            
+
             $id = $row['id'];
             $mtime = $dt->format("Y-m-d H:i:s");
-            
+
             $sql = "UPDATE cc_playlist SET mtime = '$mtime' WHERE id = $id";
             UpgradeCommon::queryDb($sql);
             //echo ".";
             //flush();
             //usleep(100000);
         }
-        
-        
+
+
         /*
         echo " * Converting playlists to UTC".PHP_EOL;
         // cc_playlist has a field that keeps track of when the playlist was last modified.
         $playlists = CcPlaylistQuery::create()->find();
-        
+
         foreach ($playlists as $pl){
             $dt = new DateTime($pl->getDbMtime(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $pl->setDbMtime($dt);
-            
+
             $pl->save();
-            
+
         }
         */
     }
 
     private static function convert_cc_schedule(){
-        
+
         echo " * Converting schedule to UTC".PHP_EOL;
-        
+
         $sql = "SELECT * FROM cc_schedule";
         $result = UpgradeCommon::queryDb($sql);
 
@@ -120,11 +115,11 @@ class AirtimeDatabaseUpgrade{
 
             $dtEnds = new DateTime($row['ends'], new DateTimeZone(date_default_timezone_get()));
             $dtEnds->setTimezone(new DateTimeZone("UTC"));
-            
+
             $id = $row['id'];
             $starts = $dtStarts->format("Y-m-d H:i:s");
             $ends = $dtEnds->format("Y-m-d H:i:s");
-            
+
             $sql = "UPDATE cc_schedule SET starts = '$starts', ends = '$ends' WHERE id = $id";
             UpgradeCommon::queryDb($sql);
             //echo ".";
@@ -132,62 +127,62 @@ class AirtimeDatabaseUpgrade{
             //usleep(100000);
         }
         /*
-        
+
         echo " * Converting schedule to UTC".PHP_EOL;
         //cc_schedule has start and end fields that need to be changed to UTC.
         $schedules = CcScheduleQuery::create()->find();
-        
+
         foreach ($schedules as $s){
             $dt = new DateTime($s->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $s->setDbStarts($dt);
-            
+
             $dt = new DateTime($s->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $s->setDbEnds($dt);
-            
+
             $s->save();
             echo ".";
         }
         * */
     }
-    
+
     private static function convert_cc_show_days(){
 
         echo " * Converting show days to UTC".PHP_EOL;
-        
+
         $sql = "SELECT * FROM cc_show_days";
         $result = UpgradeCommon::queryDb($sql);
 
         while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
-            
+
             $id = $row['id'];
             $timezone = date_default_timezone_get();
-            
+
             $sql = "UPDATE cc_show_days SET timezone = '$timezone' WHERE id = $id";
             UpgradeCommon::queryDb($sql);
             //echo ".";
             //flush();
             //usleep(100000);
         }
-        
+
         /*
         // cc_show_days has first_show, last_show and start_time fields that need to be changed to UTC.
         $showDays = CcShowDaysQuery::create()->find();
-        
-        foreach ($showDays as $sd){            
+
+        foreach ($showDays as $sd){
             $sd->setDbTimezone(date_default_timezone_get())->save();
-            
+
             echo ".";
         }
         */
     }
-    
+
     private static function convert_cc_show_instances(){
         echo " * Converting show instances to UTC".PHP_EOL;
-        
+
         // convert_cc_show_instances has starts and ends fields that need to be changed to UTC.
-        
+
         $sql = "SELECT * FROM cc_show_instances";
         $result = UpgradeCommon::queryDb($sql);
 
@@ -197,32 +192,32 @@ class AirtimeDatabaseUpgrade{
 
             $dtEnds = new DateTime($row['ends'], new DateTimeZone(date_default_timezone_get()));
             $dtEnds->setTimezone(new DateTimeZone("UTC"));
-            
+
             $id = $row['id'];
             $starts = $dtStarts->format("Y-m-d H:i:s");
             $ends = $dtEnds->format("Y-m-d H:i:s");
-            
+
             $sql = "UPDATE cc_show_instances SET starts = '$starts', ends = '$ends' WHERE id = $id";
             UpgradeCommon::queryDb($sql);
             //echo ".";
             //flush();
             //usleep(100000);
-        }        
-        
+        }
+
         /*
         $showInstances = CcShowInstancesQuery::create()->find();
-        
+
         foreach ($showInstances as $si){
             $dt = new DateTime($si->getDbStarts(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $si->setDbStarts($dt);
-            
+
             $dt = new DateTime($si->getDbEnds(), new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
             $si->setDbEnds($dt);
-            
+
             $si->save();
-            
+
             echo ".";
         }
         * */
@@ -241,19 +236,19 @@ class AirtimeDatabaseUpgrade{
 
     private static function SetDefaultStreamSetting()
     {
-        global $CC_DBC;
-        
+        $con = Propel::getConnection();
+
         echo "* Setting up default stream setting".PHP_EOL;
         $sql = "INSERT INTO cc_pref(keystr, valstr) VALUES('stream_type', 'ogg, mp3');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('num_of_streams', '3');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('max_bitrate', '320');
                 INSERT INTO cc_pref(keystr, valstr) VALUES('plan_level', 'disabled');
-                
+
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device', 'false', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('output_sound_device_type', 'ALSA', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('icecast_vorbis_metadata', 'false', 'boolean');
-                
+
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_enable', 'true', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_type', 'ogg', 'string');
@@ -266,7 +261,7 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_genre', 'genre', 'string');
-                
+
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_enable', 'false', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_type', '', 'string');
@@ -279,7 +274,7 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_url', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_description', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_genre', '', 'string');
-                
+
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_enable', 'false', 'boolean');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_output', 'icecast', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_type', '', 'string');
@@ -292,21 +287,24 @@ class AirtimeDatabaseUpgrade{
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_url', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_description', '', 'string');
                 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_genre', '', 'string');";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        try {
+            $con->exec($sql);
+        } catch (Exception $e) {
             return false;
         }
         return true;
     }
 
-    private static function GetOldLiquidsoapCfgAndUpdate(){
-        global $CC_DBC;
+    private static function GetOldLiquidsoapCfgAndUpdate()
+    {
+        $con = Propel::getConnection();
+
         echo "* Retrieving old liquidsoap configuration".PHP_EOL;
         $map = array();
         $fh = fopen("/etc/airtime/liquidsoap.cfg", 'r');
         $newConfigMap = array();
-        
-        while(!feof($fh)){
+
+        while (!feof($fh)) {
             $line = fgets($fh);
             if(substr(trim($line), 0, 1) == '#' || trim($line) == ""){
                 continue;
@@ -318,7 +316,7 @@ class AirtimeDatabaseUpgrade{
         $newConfigMap['output_sound_device'] = $map['output_sound_device'];
         $newConfigMap['icecast_vorbis_metadata'] = $map['output_icecast_vorbis_metadata'];
         $newConfigMap['log_file'] = $map['log_file'];
-        
+
         $count = 1;
         if( $map['output_icecast_vorbis'] == 'true'){
             $newConfigMap['s'.$count.'_output'] = 'icecast';
@@ -366,8 +364,9 @@ class AirtimeDatabaseUpgrade{
             }
             $sql .= "UPDATE cc_stream_setting SET value='$val' WHERE keyname='$key';";
         }
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        try {
+            $con->exec($sql);
+        } catch (Exception $e) {
             return false;
         }
         return true;

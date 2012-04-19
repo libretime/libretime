@@ -7,7 +7,7 @@
  * our custom changes requires the database parameters to be loaded from /etc/airtime/airtime.conf so
  * that the user can customize these.
  */
- 
+
 
 global $CC_CONFIG;
 
@@ -17,12 +17,12 @@ $dbuser = $CC_CONFIG['dsn']['username'];
 $dbpass = $CC_CONFIG['dsn']['password'];
 
 $conf = array (
-  'datasources' => 
+  'datasources' =>
   array (
-    'airtime' => 
+    'airtime' =>
     array (
       'adapter' => 'pgsql',
-      'connection' => 
+      'connection' =>
       array (
         'dsn' => "pgsql:host=$dbhost;port=5432;dbname=$dbname;user=$dbuser;password=$dbpass",
       ),

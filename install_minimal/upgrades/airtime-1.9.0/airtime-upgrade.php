@@ -1,17 +1,7 @@
 <?php
-/**
- * @package Airtime
- * @subpackage StorageServer
- * @copyright 2010 Sourcefabric O.P.S.
- * @license http://www.gnu.org/licenses/gpl.txt
- */
-
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 require_once 'conf.php';
-require_once 'DB.php';
-
 require_once 'propel/runtime/lib/Propel.php';
-
 set_include_path(__DIR__.'/propel' . PATH_SEPARATOR . get_include_path());
 Propel::init(__DIR__."/propel/airtime-conf.php");
 
@@ -75,10 +65,11 @@ class AirtimeInstall{
 
     public static function DbTableExists($p_name)
     {
-        global $CC_DBC;
-        $sql = "SELECT * FROM ".$p_name;
-        $result = $CC_DBC->GetOne($sql);
-        if (PEAR::isError($result)) {
+        $con = Propel::getConnection();
+        try {
+            $sql = "SELECT * FROM ".$p_name." LIMIT 1";
+            $con->query($sql);
+        } catch (PDOException $e){
             return false;
         }
         return true;
@@ -99,7 +90,7 @@ class AirtimeInstall{
     public static function MigrateTablesToVersion($dir, $version)
     {
         echo "Upgrading database, may take several minutes, please wait".PHP_EOL;
-        
+
         $appDir = AirtimeInstall::GetAirtimeSrcDir();
         $SCRIPTPATH = __DIR__;
         $command = "php --php-ini $SCRIPTPATH/../../airtime-php.ini ".
@@ -368,28 +359,26 @@ class AirtimeInstall{
         echo "* Inserting data into country table".PHP_EOL;
         Airtime190Upgrade::execSqlQuery($sql);
     }
-    
+
     public static function SetUniqueId()
     {
-        global $CC_DBC;
-
+        $con = Propel::getConnection();
         $uniqueId = md5(uniqid("", true));
 
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('uniqueId', '$uniqueId')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        $result = $con->exec($sql);
+        if ($result < 1) {
             return false;
         }
         return true;
     }
-    
+
     public static function SetImportTimestamp()
     {
-        global $CC_DBC;
-        
+        $con = Propel::getConnection();
         $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0')";
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+        $result = $con->exec($sql);
+        if ($result < 1) {
             return false;
         }
         return true;
@@ -586,31 +575,30 @@ class Airtime190Upgrade{
     }
 
 
-    public static function execSqlQuery($sql){
-        global $CC_DBC;
-
-        $result = $CC_DBC->query($sql);
-        if (PEAR::isError($result)) {
+    public static function execSqlQuery($sql)
+    {
+        $result = 0;
+        try {
+            $con = Propel::getConnection();
+            $result = $con->exec($sql);
+        } catch (Exception $e) {
             echo "* Failed sql query: $sql".PHP_EOL;
-            echo "* Message {$result->getMessage()}".PHP_EOL;
+            echo "* Message {$e->getMessage()}".PHP_EOL;
         }
-
         return $result;
     }
 
-    public static function connectToDatabase(){
-        global $CC_DBC, $CC_CONFIG;
-
-        $values = parse_ini_file('/etc/airtime/airtime.conf', true);
-
-        // Database config
-        $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
-        $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
-        $CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
-        $CC_CONFIG['dsn']['phptype'] = 'pgsql';
-        $CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
-
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
+    public static function connectToDatabase()
+    {
+        try {
+            $con = Propel::getConnection();
+        } catch (Exception $e) {
+            echo $e->getMessage().PHP_EOL;
+            echo "Database connection problem.".PHP_EOL;
+            echo "Check if database exists with corresponding permissions.".PHP_EOL;
+            return false;
+        }
+        return true;
     }
 
     public static function backupFileInfoInStorToFile($values) {
@@ -626,7 +614,7 @@ class Airtime190Upgrade{
         if ($baseDir[strlen($baseDir)-1] != '/'){
             $baseDir.='/';
         }
-        
+
         $stor_dir = $baseDir.'stor';
 
 
@@ -696,7 +684,7 @@ class Airtime190Upgrade{
 
         $pi = pathinfo($values['general']['base_files_dir']);
         $stor_dir = $pi["dirname"].DIRECTORY_SEPARATOR.$pi["basename"].DIRECTORY_SEPARATOR."stor".DIRECTORY_SEPARATOR;
-        
+
         echo "* Inserting stor directory location $stor_dir into music_dirs table".PHP_EOL;
         $propel_stor_dir->setDirectory($stor_dir);
         $propel_stor_dir->save();

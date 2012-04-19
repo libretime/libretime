@@ -15,12 +15,13 @@ require_once __DIR__.'/../../../library/propel/runtime/lib/Propel.php';
 Propel::init(__DIR__.'/../../configs/airtime-conf.php');
 
 AirtimeInstall::DbConnect(true);
+$con = Propel::getConnection();
 $sql = "DELETE FROM cc_show";
-$CC_DBC->query($sql);
+$con->exec($sql);
 $sql = "DELETE FROM cc_show_days";
-$CC_DBC->query($sql);
+$con->exec($sql);
 $sql = "DELETE FROM cc_show_instances";
-$CC_DBC->query($sql);
+$con->exec($sql);
 
 /*
 // Create a playlist
@@ -88,10 +89,10 @@ echo "End date: ".$endDate->format("Y-m-d H:i")."\n";
 while ($showTime < $endDate) {
     echo $showTime->format("Y-m-d H:i")." < " .$endDate->format("Y-m-d H:i")."\n";
     if ($resolution == "minute") {
-        createTestShow($showNumber, $showTime, "0:01");	
+        createTestShow($showNumber, $showTime, "0:01");
         $showTime->add(new DateInterval("PT1M"));
     } elseif ($resolution == "hour") {
-        createTestShow($showNumber, $showTime);	
+        createTestShow($showNumber, $showTime);
         $showTime->add(new DateInterval("PT1H"));
     }
     $showNumber = $showNumber + 1;

@@ -113,36 +113,38 @@ class Application_Model_Show {
 
     public function getHosts()
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $sql = "SELECT first_name, last_name
                 FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
                     WHERE show_id = {$this->_showId}";
 
-        $hosts = $CC_DBC->GetAll($sql);
+        $hosts = $con->query($sql)->fetchAll();
 
         $res = array();
-        foreach($hosts as $host) {
+        foreach ($hosts as $host) {
             $res[] = $host['first_name']." ".$host['last_name'];
         }
 
         return $res;
     }
-    
+
     public function getHostsIds()
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $sql = "SELECT subjs_id
                 FROM cc_show_hosts
                 WHERE show_id = {$this->_showId}";
 
-        $hosts = $CC_DBC->GetAll($sql);
+        $hosts = $con->query($sql)->fetchAll();
 
         return $hosts;
     }
 
-    //remove everything about this show.
+    /**
+     * remove everything about this show.
+     */
     public function delete()
     {
         //usually we hide the show-instance, but in this case we are deleting the show template
@@ -155,7 +157,7 @@ class Application_Model_Show {
 
     public function resizeShow($deltaDay, $deltaMin)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         if ($deltaDay > 0) {
             return "Shows can have a max length of 24 hours.";
@@ -186,7 +188,7 @@ class Application_Model_Show {
                 AND ((CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}') <= interval '24:00')";
 
         //do both the queries at once.
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $con->beginTransaction();
@@ -215,7 +217,7 @@ class Application_Model_Show {
 
     public function cancelShow($day_timestamp)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $timeinfo = explode(" ", $day_timestamp);
 
@@ -227,7 +229,7 @@ class Application_Model_Show {
                 SET modified_instance = TRUE
                     WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
 
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
@@ -237,7 +239,7 @@ class Application_Model_Show {
 
         if(is_null($showInstancesRow)){
             $sql = "DELETE FROM cc_show WHERE id = {$this->_showId}";
-            $CC_DBC->query($sql);
+            $con->exec($sql);
         }
 
         Application_Model_RabbitMq::PushSchedule();
@@ -258,7 +260,7 @@ class Application_Model_Show {
      */
     public function removeUncheckedDaysInstances($p_uncheckedDays)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         //need to convert local doftw to UTC doftw (change made for 2.0 since shows are stored in UTC)
         $daysRemovedUTC = array();
@@ -273,9 +275,9 @@ class Application_Model_Show {
         }
 
         foreach($showDays as $showDay) {
-            Logging::log("Local show day is: {$showDay->getDbDay()}");
-            Logging::log("First show day is: {$showDay->getDbFirstShow()}");
-            Logging::log("Id show days is: {$showDay->getDbId()}");
+            //Logging::log("Local show day is: {$showDay->getDbDay()}");
+            //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
+            //Logging::log("Id show days is: {$showDay->getDbId()}");
 
             if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
                $showDay->reload();
@@ -283,11 +285,11 @@ class Application_Model_Show {
                //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
                //Logging::log("Id show days is: {$showDay->getDbId()}");
                $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
-               Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
+               //Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
                $startDay->setTimezone(new DateTimeZone("UTC"));
-               Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
+               //Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
                $daysRemovedUTC[] = $startDay->format('w');
-               Logging::log("UTC show day is: {$startDay->format('w')}");
+               //Logging::log("UTC show day is: {$startDay->format('w')}");
             }
         }
 
@@ -301,9 +303,9 @@ class Application_Model_Show {
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND show_id = $showId";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
-        $CC_DBC->query($sql);
+        $con->exec($sql);
     }
 
     /**
@@ -315,10 +317,10 @@ class Application_Model_Show {
      */
     public function isRecorded(){
         $showInstancesRow = CcShowInstancesQuery::create()
-        ->filterByDbShowId($this->getId())
-        ->filterByDbRecord(1)
-        ->filterByDbModifiedInstance(false)
-        ->findOne();
+            ->filterByDbShowId($this->getId())
+            ->filterByDbRecord(1)
+            ->filterByDbModifiedInstance(false)
+            ->findOne();
 
         return !is_null($showInstancesRow);
     }
@@ -351,7 +353,7 @@ class Application_Model_Show {
      */
     public function getRebroadcastsAbsolute()
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $showId = $this->getId();
 
@@ -359,9 +361,9 @@ class Application_Model_Show {
             ."WHERE instance_id = (SELECT id FROM cc_show_instances WHERE show_id = $showId ORDER BY starts LIMIT 1) AND rebroadcast = 1 "
             ."ORDER BY starts";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
-        $rebroadcasts = $CC_DBC->GetAll($sql);
+        $rebroadcasts = $con->query($sql)->fetchAll();
 
         $rebroadcastsLocal = array();
         //get each rebroadcast show in cc_show_instances, convert to current timezone to get start date/time.
@@ -389,14 +391,14 @@ class Application_Model_Show {
      */
     public function getRebroadcastsRelative()
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $showId = $this->getId();
         $sql = "SELECT day_offset, start_time FROM cc_show_rebroadcast "
             ."WHERE show_id = $showId "
             ."ORDER BY day_offset";
 
-        return $CC_DBC->GetAll($sql);
+        return $con->query($sql)->fetchAll();
     }
 
     /**
@@ -431,8 +433,8 @@ class Application_Model_Show {
     public function getRepeatType()
     {
         $showDaysRow = CcShowDaysQuery::create()
-        ->filterByDbShowId($this->_showId)
-        ->findOne();
+            ->filterByDbShowId($this->_showId)
+            ->findOne();
 
         if (!is_null($showDaysRow)){
             return $showDaysRow->getDbRepeatType();
@@ -447,21 +449,17 @@ class Application_Model_Show {
      *      Return the end date for the repeating show or the empty
      *      string if there is no end.
      */
-    public function getRepeatingEndDate(){
-        global $CC_DBC;
+    public function getRepeatingEndDate()
+    {
+        $con = Propel::getConnection();
 
         $showId = $this->getId();
         $sql = "SELECT last_show FROM cc_show_days"
             ." WHERE show_id = $showId"
             ." ORDER BY last_show DESC";
 
-        $endDate = $CC_DBC->GetOne($sql);
-
-        if (is_null($endDate)){
-            return "";
-        } else {
-            return $endDate;
-        }
+        $query = $con->query($sql)->fetchColumn(0);
+        return ($query !== false) ? $query : "";
     }
 
     /**
@@ -475,7 +473,7 @@ class Application_Model_Show {
      * be gone for good.
      */
     public function deleteAllInstances(){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $timestamp = gmdate("Y-m-d H:i:s");
 
@@ -484,7 +482,7 @@ class Application_Model_Show {
                 ." WHERE starts > TIMESTAMP '$timestamp'"
                 ." AND show_id = $showId";
 
-        $CC_DBC->query($sql);
+        $con->exec($sql);
     }
 
     /**
@@ -492,7 +490,7 @@ class Application_Model_Show {
      * show object from the show_instances table.
      */
     public function deleteAllRebroadcasts(){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $timestamp = gmdate("Y-m-d H:i:s");
 
@@ -502,7 +500,7 @@ class Application_Model_Show {
                 ." AND show_id = $showId"
                 ." AND rebroadcast = 1";
 
-        $CC_DBC->query($sql);
+        $con->exec($sql);
     }
 
     /**
@@ -515,7 +513,7 @@ class Application_Model_Show {
      *      The date which to delete after, if null deletes from the current timestamp.
      */
     public function removeAllInstancesFromDate($p_date=null){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $timestamp = gmdate("Y-m-d H:i:s");
 
@@ -530,7 +528,7 @@ class Application_Model_Show {
                 ." AND starts > TIMESTAMP '$timestamp'"
                 ." AND show_id = $showId";
 
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
     }
 
@@ -547,7 +545,7 @@ class Application_Model_Show {
      *      The date which to delete before
      */
     public function removeAllInstancesBeforeDate($p_date){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $timestamp = gmdate("Y-m-d H:i:s");
 
@@ -557,7 +555,7 @@ class Application_Model_Show {
                 ." AND starts > TIMESTAMP '$timestamp'"
                 ." AND show_id = $showId";
 
-        $CC_DBC->query($sql);
+        $con->exec($sql);
     }
 
     /**
@@ -567,7 +565,7 @@ class Application_Model_Show {
      *      The start date in the format YYYY-MM-DD
      */
     public function getStartDate(){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $showId = $this->getId();
         $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
@@ -575,11 +573,12 @@ class Application_Model_Show {
             ." ORDER BY first_show"
             ." LIMIT 1";
 
-        $rows = $CC_DBC->GetAll($sql);
+        $query = $con->query($sql);
 
-        if (count($rows) == 0){
+        if ($query->rowCount() == 0){
             return "";
         } else {
+            $rows = $query->fetchAll();
             $row = $rows[0];
 
             $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
@@ -596,7 +595,7 @@ class Application_Model_Show {
      */
 
     public function getStartTime(){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $showId = $this->getId();
         $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
@@ -604,11 +603,12 @@ class Application_Model_Show {
             ." ORDER BY first_show"
             ." LIMIT 1";
 
-        $rows = $CC_DBC->GetAll($sql);
+        $query = $con->query($sql);
 
-        if (count($rows) == 0){
+        if ($query->rowCount() == 0){
             return "";
         } else {
+            $rows = $query->fetchAll();
             $row = $rows[0];
             $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
             $dt->setTimezone(new DateTimeZone("UTC"));
@@ -676,7 +676,7 @@ class Application_Model_Show {
      *  scheduled in the future.
      */
     public function getAllFutureInstanceIds(){
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $date = new Application_Common_DateHelper;
         $timestamp = $date->getTimestamp();
@@ -687,10 +687,10 @@ class Application_Model_Show {
             ." AND starts > TIMESTAMP '$timestamp'"
             ." AND modified_instance != TRUE";
 
-        $rows = $CC_DBC->GetAll($sql);
+        $rows = $con->query($sql)->fetchAll();
 
         $instance_ids = array();
-        foreach ($rows as $row){
+        foreach ($rows as $row) {
             $instance_ids[] = $row["id"];
         }
         return $instance_ids;
@@ -705,8 +705,7 @@ class Application_Model_Show {
      */
     private function updateDurationTime($p_data){
         //need to update cc_show_instances, cc_show_days
-
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $date = new Application_Common_DateHelper;
         $timestamp = $date->getUtcTimestamp();
@@ -714,20 +713,20 @@ class Application_Model_Show {
         $sql = "UPDATE cc_show_days "
                 ."SET duration = '$p_data[add_show_duration]' "
                 ."WHERE show_id = $p_data[add_show_id]";
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
         $sql = "UPDATE cc_show_instances "
                 ."SET ends = starts + INTERVAL '$p_data[add_show_duration]' "
                 ."WHERE show_id = $p_data[add_show_id] "
                 ."AND ends > TIMESTAMP '$timestamp'";
-        $CC_DBC->query($sql);
+        $con->exec($sql);
+
 
     }
 
     private function updateStartDateTime($p_data, $p_endDate){
         //need to update cc_schedule, cc_show_instances, cc_show_days
-
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $date = new Application_Common_DateHelper;
         $timestamp = $date->getTimestamp();
@@ -742,7 +741,7 @@ class Application_Model_Show {
             $sql .= "last_show = DATE '$p_endDate' ";
         }
         $sql .= "WHERE show_id = $p_data[add_show_id]";
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
         $dtOld = new DateTime($this->getStartDate()." ".$this->getStartTime(), new DateTimeZone("UTC"));
         $dtNew = new DateTime($p_data['add_show_start_date']." ".$p_data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
@@ -753,7 +752,7 @@ class Application_Model_Show {
                 ."ends = ends + INTERVAL '$diff sec' "
                 ."WHERE show_id = $p_data[add_show_id] "
                 ."AND starts > TIMESTAMP '$timestamp'";
-        $CC_DBC->query($sql);
+        $con->exec($sql);
 
         $showInstanceIds = $this->getAllFutureInstanceIds();
         if (count($showInstanceIds) > 0 && $diff != 0){
@@ -762,7 +761,7 @@ class Application_Model_Show {
                     ."SET starts = starts + INTERVAL '$diff sec', "
                     ."ends = ends + INTERVAL '$diff sec' "
                     ."WHERE instance_id IN ($showIdsImploded)";
-            $CC_DBC->query($sql);
+            $con->exec($sql);
         }
     }
 
@@ -805,7 +804,7 @@ class Application_Model_Show {
 
         return $showInstance;
     }
-    
+
     /**
      *  returns info about live stream override info
      */
@@ -848,7 +847,8 @@ class Application_Model_Show {
      * @return CcShowInstancesQuery: An propel object representing a
      *      row in the cc_show_instances table. */
     public function getInstanceOnDate($p_dateTime){
-        global $CC_DBC;
+        $con = Propel::getConnection();
+
         $timestamp = $p_dateTime->format("Y-m-d H:i:s");
 
         $showId = $this->getId();
@@ -856,7 +856,8 @@ class Application_Model_Show {
             ." WHERE date(starts) = date(TIMESTAMP '$timestamp') "
             ." AND show_id = $showId";
 
-        $row = $CC_DBC->GetOne($sql);
+        $query = $con->query();
+        $row = $query ? $query->fetchColumn(0) : null;
         return CcShowInstancesQuery::create()
             ->findPk($row);
     }
@@ -1164,7 +1165,7 @@ class Application_Model_Show {
      */
     public static function populateShowUntil($p_showId)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
         $date = Application_Model_Preference::GetShowsPopulatedUntil();
 
         if (is_null($date)) {
@@ -1175,7 +1176,7 @@ class Application_Model_Show {
         }
 
         $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
-        $res = $CC_DBC->GetAll($sql);
+        $res = $con->query($sql)->fetchAll();
 
         foreach ($res as $showRow) {
             Application_Model_Show::populateShow($showRow, $p_populateUntilDateTime);
@@ -1220,8 +1221,8 @@ class Application_Model_Show {
      */
     private static function populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime)
     {
-        global $CC_DBC;
-        
+        $con = Propel::getConnection();
+
         $show_id = $p_showRow["show_id"];
         $first_show = $p_showRow["first_show"]; //non-UTC
         $start_time = $p_showRow["start_time"]; //non-UTC
@@ -1261,9 +1262,9 @@ class Application_Model_Show {
             }
 
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-            $rebroadcasts = $CC_DBC->GetAll($sql);
+            $rebroadcasts = $con->query($sql)->fetchAll();
 
-            Logging::log('$start time of non repeating record '.$start);
+            //Logging::log('$start time of non repeating record '.$start);
 
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
         }
@@ -1283,7 +1284,7 @@ class Application_Model_Show {
      */
     private static function populateRepeatingShow($p_showRow, $p_populateUntilDateTime, $p_interval)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $show_id = $p_showRow["show_id"];
         $next_pop_date = $p_showRow["next_pop_date"];
@@ -1308,11 +1309,11 @@ class Application_Model_Show {
         $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-        $rebroadcasts = $CC_DBC->GetAll($sql);
+        $rebroadcasts = $con->query($sql)->fetchAll();
 
         $show = new Application_Model_Show($show_id);
 
-        while($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
+        while ($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
                 && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){
 
             list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
@@ -1481,7 +1482,7 @@ class Application_Model_Show {
      */
     public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
@@ -1527,8 +1528,8 @@ class Application_Model_Show {
 
         //Logging::log("getShows");
         //Logging::log($sql);
-
-        return $CC_DBC->GetAll($sql);
+        $result = $con->query($sql)->fetchAll();
+        return $result;
     }
 
     private static function setNextPop($next_date, $show_id, $day)
@@ -1554,7 +1555,7 @@ class Application_Model_Show {
      */
     public static function populateAllShowsInRange($p_startTimestamp, $p_endTimestamp)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $endTimeString = $p_endTimestamp->format("Y-m-d H:i:s");
         if (!is_null($p_startTimestamp)) {
@@ -1569,9 +1570,8 @@ class Application_Model_Show {
                 WHERE last_show IS NULL
                 OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
 
-        Logging::log($sql);
-
-        $res = $CC_DBC->GetAll($sql);
+        //Logging::log($sql);
+        $res = $con->query($sql)->fetchAll();
 
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
@@ -1588,22 +1588,18 @@ class Application_Model_Show {
      */
     public static function getFullCalendarEvents($p_start, $p_end, $p_editable=false)
     {
-        
         $events = array();
-
         $interval = $p_start->diff($p_end);
         $days =  $interval->format('%a');
-
         $shows = Application_Model_Show::getShows($p_start, $p_end);
-
         $today_timestamp = gmdate("Y-m-d H:i:s");
 
         foreach ($shows as $show) {
             $options = array();
 
             //only bother calculating percent for week or day view.
-            
-            if(intval($days) <= 7) {                
+
+            if (intval($days) <= 7) {
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
 
@@ -1612,19 +1608,19 @@ class Application_Model_Show {
             }
             $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
         }
-        
+
         return $events;
     }
-    
+
     /**
      * Calculates the percentage of a show scheduled given the start and end times in date/time format
      * and the time_filled as the total time the schow is scheduled for in time format.
      **/
     private static function getPercentScheduled($p_starts, $p_ends, $p_time_filled){
-        $durationSeconds = (strtotime($p_ends) - strtotime($p_starts)); 
-        $time_filled = Application_Model_Schedule::WallTimeToMillisecs($p_time_filled) / 1000; 
+        $durationSeconds = (strtotime($p_ends) - strtotime($p_starts));
+        $time_filled = Application_Model_Schedule::WallTimeToMillisecs($p_time_filled) / 1000;
         $percent = ceil(( $time_filled / $durationSeconds) * 100);
-        
+
         return $percent;
     }
 
@@ -1689,7 +1685,7 @@ class Application_Model_Show {
         $showDay->setDbFirstShow($dt)->setDbStartTime($dt)
         ->save();
 
-        Logging::log("setting show's first show.");
+        //Logging::log("setting show's first show.");
     }
 
     /* Takes in a UTC DateTime object
@@ -1722,7 +1718,8 @@ class Application_Model_Show {
      */
     public static function GetCurrentShow($timeNow=null)
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         if($timeNow == null){
             $date = new Application_Common_DateHelper;
             $timeNow = $date->getUtcTimestamp(); 
@@ -1736,8 +1733,7 @@ class Application_Model_Show {
         ." AND modified_instance != TRUE";
 
         // Convert back to local timezone
-        $rows = $CC_DBC->GetAll($sql);
-
+        $rows = $con->query($sql)->fetchAll();
         return $rows;
     }
 
@@ -1746,7 +1742,8 @@ class Application_Model_Show {
      */
     public static function getPrevCurrentNext($p_timeNow)
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
@@ -1757,15 +1754,15 @@ class Application_Model_Show {
         ." ORDER BY si.starts";
         
         // Convert back to local timezone
-        $rows = $CC_DBC->GetAll($sql);
+        $rows = $con->query($sql)->fetchAll();
         $numberOfRows = count($rows);
-        
+
         $results['previousShow'] = array();
         $results['currentShow'] =  array();
         $results['nextShow'] =  array();
-        
+
         $timeNowAsMillis = strtotime($p_timeNow);
-        
+
         for( $i = 0; $i < $numberOfRows; ++$i ){
             //Find the show that is within the current time.
             if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
@@ -1779,9 +1776,9 @@ class Application_Model_Show {
                                 "starts"=>$rows[$i-1]['starts'],
                                 "ends"=>$rows[$i-1]['ends']);
                 }
-                
+
                 $results['currentShow'][0] =  $rows[$i];
-                
+
                 if ( isset($rows[$i+1])){
                     $results['nextShow'][0] =  array(
                                 "id"=>$rows[$i+1]['id'],
@@ -1791,7 +1788,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
                                 "starts"=>$rows[$i+1]['starts'],
                                 "ends"=>$rows[$i+1]['ends']);
-                   
+
                 }
                 break;
             }
@@ -1826,6 +1823,7 @@ class Application_Model_Show {
         }
         return $results;
     }
+
     /**
      * Given a start time $timeStart and end time $timeEnd, returns the next $limit
      * number of shows within the time interval;
@@ -1840,11 +1838,12 @@ class Application_Model_Show {
      */
     public static function GetNextShows($timeStart, $limit = "0", $timeEnd = "")
     {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
 
         // defaults to retrieving shows from next 2 days if no end time has
         // been specified
-        if($timeEnd == "") {
+        if ($timeEnd == "") {
             $timeEnd = "'$timeStart' + INTERVAL '2 days'";
         } else {
             $timeEnd = "'$timeEnd'";
@@ -1864,8 +1863,7 @@ class Application_Model_Show {
             $sql = $sql . " LIMIT $limit";
         }
 
-        $rows = $CC_DBC->GetAll($sql);
-
+        $rows = $con->query($sql)->fetchAll();
         return $rows;
     }
 
@@ -1890,14 +1888,16 @@ class Application_Model_Show {
     }
 
     public static function GetMaxLengths() {
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+
         $sql = "SELECT column_name, character_maximum_length FROM information_schema.columns"
         ." WHERE table_name = 'cc_show' AND character_maximum_length > 0";
-        $result = $CC_DBC->GetAll($sql);
+        $result = $con->query($sql)->fetchAll();
 
         // store result into assoc array
         $assocArray = array();
-        foreach($result as $row) {
+        foreach ($result as $row) {
             $assocArray[$row['column_name']] = $row['character_maximum_length'];
         }
 

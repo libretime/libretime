@@ -1,14 +1,6 @@
 <?php
 require_once(dirname(__FILE__).'/../StoredFile.php');
 
-$dsn = $CC_CONFIG['dsn'];
-$CC_DBC = DB::connect($dsn, FALSE);
-if (PEAR::isError($CC_DBC)) {
-	echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-	exit(1);
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-
 class StoredFileTest extends PHPUnit_TestCase {
 
     function __construct($name) {
@@ -21,10 +13,6 @@ class StoredFileTest extends PHPUnit_TestCase {
     function testGetAudioMetadata() {
         $filePath = dirname(__FILE__)."/ex1.mp3";
         $metadata = Metadata::LoadFromFile($filePath);
-        if (PEAR::isError($metadata)) {
-            $this->fail($metadata->getMessage());
-            return;
-        }
         if (($metadata["dc:description"] != "Tmu sem tam videla ...")
             || ($metadata["audio"]["dataformat"] != "mp3")
             || ($metadata["dc:type"] != "Speech")) {
@@ -52,10 +40,6 @@ class StoredFileTest extends PHPUnit_TestCase {
         $values = array("filepath" => $filePath,
                         "dc:description" => "Unit test ".time());
         $storedFile = Application_Model_StoredFile::Insert($values, false);
-        if (PEAR::isError($storedFile)) {
-          $this->fail("Failed to create StoredFile: ".$storedFile->getMessage());
-          return;
-        }
         //var_dump($storedFile);
         $id = $storedFile->getId();
         if (!is_numeric($id)) {

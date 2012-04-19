@@ -24,6 +24,12 @@ require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
 
 $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+        get_include_path(),
+        realpath($CC_CONFIG['phpDir'] . '/library')
+)));
+
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/MusicDir.php');
@@ -35,21 +41,8 @@ set_include_path($CC_CONFIG['phpDir']."/application/models" . PATH_SEPARATOR . g
 require_once($CC_CONFIG['phpDir']."/library/propel/runtime/lib/Propel.php");
 Propel::init($CC_CONFIG['phpDir']."/application/configs/airtime-conf.php");
 
-require_once('DB.php');
-$CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-if (PEAR::isError($CC_DBC)) {
-    /*echo $CC_DBC->getMessage().PHP_EOL;
-    echo $CC_DBC->getUserInfo().PHP_EOL;
-    echo "Database connection problem.".PHP_EOL;
-    echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-        " with corresponding permissions.".PHP_EOL;*/
-    if ($p_exitOnError) {
-        exit(1);
-    }
-} else {
-    //echo "* Connected to database".PHP_EOL;
-    $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-}
+require_once 'propel/runtime/lib/Propel.php';
+Propel::init($CC_CONFIG['phpDir']."/application/configs/airtime-conf-production.php");
 
 if(count($argv) != 2){
     exit;

@@ -58,7 +58,8 @@ class Application_Model_MusicDir {
         return $this->_dir->getExists();
     }
     
-    /** There are 2 cases where this function can be called.
+    /** 
+     * There are 2 cases where this function can be called.
      * 1. When watched dir was removed
      * 2. When some dir was watched, but it was unmounted
      * 
@@ -67,24 +68,26 @@ class Application_Model_MusicDir {
      *  
      *  When $userAddedWatchedDir is true, it will set "Watched" flag to false
      *  otherwise, it will set "Exists" flag to true
-    **/ 
+     */ 
     public function remove($userAddedWatchedDir=true)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
         
         $music_dir_id = $this->getId();
 
-        $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id
-        RIGHT JOIN cc_schedule as s on s.file_id = f.id WHERE md.id = $music_dir_id";
+        $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md "
+             ." LEFT JOIN cc_files as f on f.directory = md.id"
+             ." RIGHT JOIN cc_schedule as s on s.file_id = f.id WHERE md.id = $music_dir_id";
 
-        $show_instances = $CC_DBC->GetAll($sql);
+        $show_instances = $con->query($sql)->fetchAll();
         
         // get all the files on this dir
-        $sql = "SELECT f.id FROM cc_music_dirs as md LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id";
-        $files = $CC_DBC->GetAll($sql);
+        $sql = "SELECT f.id FROM cc_music_dirs as md "
+            ." LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id";
+        $files = $con->query($sql)->fetchAll();
         
         // set file_exist flag to false
-        foreach( $files as $file_row ){
+        foreach ($files as $file_row) {
             $temp_file = Application_Model_StoredFile::Recall($file_row['id']);
             if($temp_file != null){
                 $temp_file->setFileExistsFlag(false);
@@ -92,9 +95,9 @@ class Application_Model_MusicDir {
         }
         
         // set RemovedFlag to true
-        if($userAddedWatchedDir){
+        if ($userAddedWatchedDir) {
             self::setWatchedFlag(false);
-        }else{
+        } else {
             self::setExistsFlag(false);
         }
         //$res = $this->_dir->delete();

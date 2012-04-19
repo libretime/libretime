@@ -1,11 +1,10 @@
 <?php
 
-require_once('DB.php');
-
-/* These are helper functions that are common to each upgrade such as
+/*
+ * These are helper functions that are common to each upgrade such as
  * creating connections to a database, backing up config files etc.
  */
-class UpgradeCommon{
+class UpgradeCommon {
     const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
     const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
     const CONF_FILE_RECORDER = "/etc/airtime/recorder.cfg";
@@ -17,32 +16,38 @@ class UpgradeCommon{
     const CONF_WWW_DATA_GRP = "www-data";
     const CONF_BACKUP_SUFFIX = "200";
     const VERSION_NUMBER = "2.0.0";
-    
+
+    /**
+     * Check if the connection to the database is working.
+     * Return true if it is working, false if not.
+     *
+     * @param boolean $p_exitOnError
+     * $return boolean
+     */
     public static function connectToDatabase($p_exitOnError = true)
     {
-        global $CC_DBC, $CC_CONFIG;
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-        if (PEAR::isError($CC_DBC)) {
-            echo $CC_DBC->getMessage().PHP_EOL;
-            echo $CC_DBC->getUserInfo().PHP_EOL;
+        try {
+            $con = Propel::getConnection();
+        } catch (Exception $e) {
+            echo $e->getMessage().PHP_EOL;
             echo "Database connection problem.".PHP_EOL;
-            echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-                 " with corresponding permissions.".PHP_EOL;
+            echo "Check if database exists with corresponding permissions.".PHP_EOL;
             if ($p_exitOnError) {
                 exit(1);
             }
-        } else {
-            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+            return false;
         }
+        return true;
     }
 
-    
+
     public static function DbTableExists($p_name)
     {
-        global $CC_DBC;
-        $sql = "SELECT * FROM ".$p_name;
-        $result = $CC_DBC->GetOne($sql);
-        if (PEAR::isError($result)) {
+        $con = Propel::getConnection();
+        try {
+            $sql = "SELECT * FROM ".$p_name." LIMIT 1";
+            $con->query($sql);
+        } catch (PDOException $e){
             return false;
         }
         return true;
@@ -176,9 +181,9 @@ class UpgradeCommon{
     private static function ReadPythonConfig($p_filename)
     {
         $values = array();
-        
+
         $fh = fopen($p_filename, 'r');
-        
+
         while(!feof($fh)){
             $line = fgets($fh);
             if(substr(trim($line), 0, 1) == '#' || trim($line) == ""){

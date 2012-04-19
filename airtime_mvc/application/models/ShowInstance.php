@@ -146,8 +146,9 @@ class Application_Model_ShowInstance {
         $this->_showInstance->getDbModifiedInstance();
     }
 
-    public function correctScheduleStartTimes(){
-        global $CC_DBC;
+    public function correctScheduleStartTimes()
+    {
+        $con = Propel::getConnection();
 
         $instance_id = $this->getShowInstanceId();
         $sql = "SELECT starts from cc_schedule"
@@ -155,9 +156,9 @@ class Application_Model_ShowInstance {
             ." ORDER BY starts"
             ." LIMIT 1";
 
-        $scheduleStarts = $CC_DBC->GetOne($sql);
+        $scheduleStarts = $con->query($sql)->fetchColumn(0);
 
-        if (!is_null($scheduleStarts)){
+        if ($scheduleStarts) {
             $scheduleStartsEpoch = strtotime($scheduleStarts);
             $showStartsEpoch = strtotime($this->getShowInstanceStart());
 
@@ -169,7 +170,7 @@ class Application_Model_ShowInstance {
                 ." ends = ends + INTERVAL '$diff' second"
                 ." WHERE instance_id = $instance_id";
 
-                $CC_DBC->query($sql);
+                $con->exec($sql);
             }
         }
         Application_Model_RabbitMq::PushSchedule();
@@ -300,7 +301,7 @@ class Application_Model_ShowInstance {
      */
     public function resizeShow($deltaDay, $deltaMin)
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $hours = $deltaMin/60;
         if($hours > 0)
@@ -319,10 +320,10 @@ class Application_Model_ShowInstance {
         }
 
         $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $new_ends = $CC_DBC->GetOne($sql);
+        $new_ends = $con->query($sql)->fetchColumn(0);
 
         //only need to check overlap if show increased in size.
-        if(strtotime($new_ends) > strtotime($ends)) {
+        if (strtotime($new_ends) > strtotime($ends)) {
 
             $utcStartDateTime = new DateTime($ends, new DateTimeZone("UTC"));
             $utcEndDateTime = new DateTime($new_ends, new DateTimeZone("UTC"));
@@ -339,7 +340,7 @@ class Application_Model_ShowInstance {
         if($this->isRecorded()) {
             $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
                     WHERE rebroadcast = 1 AND instance_id = {$this->_instanceId}";
-            $CC_DBC->query($sql);
+            $con->exec($sql);
         }
 
         $this->setShowEnd($new_ends);
@@ -481,8 +482,6 @@ class Application_Model_ShowInstance {
 
     public function delete()
     {
-        global $CC_DBC;
-
         // see if it was recording show
         $recording = $this->isRecorded();
         // get show id
@@ -631,16 +630,16 @@ class Application_Model_ShowInstance {
 
     public function getShowListContent()
     {
-        global $CC_DBC;
+        $con = Propel::getConnection();
 
         $sql = "SELECT *
             FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id)
             WHERE s.instance_id = '{$this->_instanceId}' AND s.playout_status >= 0
             ORDER BY starts";
 
-        Logging::log($sql);
+        //Logging::log($sql);
 
-        $results = $CC_DBC->GetAll($sql);
+        $results = $con->query($sql)->fetchAll();
 
         foreach ($results as &$row) {
 
@@ -655,16 +654,18 @@ class Application_Model_ShowInstance {
 
         return $results;
     }
-    
-    public function getLastAudioItemEnd(){
-		global $CC_DBC;
+
+    public function getLastAudioItemEnd()
+    {
+		$con = Propel::getConnection();
 
 		$sql = "SELECT ends FROM cc_schedule "
 			."WHERE instance_id = {$this->_instanceId} "
 			."ORDER BY ends DESC "
 			."LIMIT 1";
 
-		return $CC_DBC->GetOne($sql);
+		$query = $con->query($sql)->fetchColumn(0);
+        return ($query !== false) ? $query : NULL;
 	}
 
     public function getShowEndGapTime(){
@@ -682,25 +683,28 @@ class Application_Model_ShowInstance {
 	}
 
     public static function GetLastShowInstance($p_timeNow){
-        global $CC_CONFIG, $CC_DBC;
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
 
         $sql = "SELECT si.id"
-        ." FROM $CC_CONFIG[showInstances] si"
-        ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
-        ." AND si.modified_instance = 'f'"
-        ." ORDER BY si.ends DESC"
-        ." LIMIT 1";
+            ." FROM $CC_CONFIG[showInstances] si"
+            ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
+            ." AND si.modified_instance = 'f'"
+            ." ORDER BY si.ends DESC"
+            ." LIMIT 1";
 
-        $id = $CC_DBC->GetOne($sql);
-        if (is_null($id)){
-            return null;
-        } else {
+        $id = $con->query($sql)->fetchColumn(0);
+        if ($id) {
             return new Application_Model_ShowInstance($id);
+        } else {
+            return null;
         }
     }
 
-    public static function GetCurrentShowInstance($p_timeNow){
-        global $CC_CONFIG, $CC_DBC;
+    public static function GetCurrentShowInstance($p_timeNow)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
 
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
@@ -709,57 +713,63 @@ class Application_Model_ShowInstance {
          */
 
         $sql = "SELECT si.id"
-        ." FROM $CC_CONFIG[showInstances] si"
-        ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
-        ." AND si.ends > TIMESTAMP '$p_timeNow'"
-        ." AND si.modified_instance = 'f'"
-        ." ORDER BY si.starts DESC"
-        ." LIMIT 1";
+            ." FROM $CC_CONFIG[showInstances] si"
+            ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
+            ." AND si.ends > TIMESTAMP '$p_timeNow'"
+            ." AND si.modified_instance = 'f'"
+            ." ORDER BY si.starts DESC"
+            ." LIMIT 1";
 
-        $id = $CC_DBC->GetOne($sql);
-        if (is_null($id)){
-            return null;
-        } else {
+        $id = $con->query($sql)->fetchColumn(0);
+        if ($id) {
             return new Application_Model_ShowInstance($id);
+        } else {
+            return null;
         }
     }
 
-    public static function GetNextShowInstance($p_timeNow){
-        global $CC_CONFIG, $CC_DBC;
+    public static function GetNextShowInstance($p_timeNow)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
 
         $sql = "SELECT si.id"
-        ." FROM $CC_CONFIG[showInstances] si"
-        ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
-        ." AND si.modified_instance = 'f'"
-        ." ORDER BY si.starts"
-        ." LIMIT 1";
+            ." FROM $CC_CONFIG[showInstances] si"
+            ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
+            ." AND si.modified_instance = 'f'"
+            ." ORDER BY si.starts"
+            ." LIMIT 1";
 
-        $id = $CC_DBC->GetOne($sql);
-        if (is_null($id)){
-            return null;
-        } else {
+        $id = $con->query($sql)->fetchColumn(0);
+        if ($id) {
             return new Application_Model_ShowInstance($id);
+        } else {
+            return null;
         }
     }
 
     // returns number of show instances that ends later than $day
-    public static function GetShowInstanceCount($day){
-        global $CC_CONFIG, $CC_DBC;
+    public static function GetShowInstanceCount($day)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
         $sql = "SELECT count(*) as cnt FROM $CC_CONFIG[showInstances] WHERE ends < '$day'";
-        return $CC_DBC->GetOne($sql);
+        return $con->query($sql)->fetchColumn(0);
     }
-    
+
     // this returns end timestamp of all shows that are in the range and has live DJ set up
-    public static function GetEndTimeOfNextShowWithLiveDJ($p_startTime, $p_endTime){
-        global $CC_CONFIG, $CC_DBC;
-        
+    public static function GetEndTimeOfNextShowWithLiveDJ($p_startTime, $p_endTime)
+    {
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+
         $sql = "SELECT ends
 				FROM cc_show_instances as si
                 JOIN cc_show as sh ON si.show_id = sh.id
         		WHERE si.ends > '$p_startTime' and si.ends < '$p_endTime' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
         		ORDER BY si.ends";
-        
-        return $CC_DBC->GetAll($sql);
+
+        return $con->query($sql)->fetchAll();
     }
     
     function isRepeating(){

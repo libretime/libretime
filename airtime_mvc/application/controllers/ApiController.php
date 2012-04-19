@@ -123,7 +123,7 @@ class ApiController extends Zend_Controller_Action
         if (ctype_alnum($file_id) && strlen($file_id) == 32)
         {
             $media = Application_Model_StoredFile::RecallByGunid($file_id);
-            if ( $media != null && !PEAR::isError($media))
+            if ( $media != null )
             {
                 $filepath = $media->getFilePath();
                 if(is_file($filepath)){
@@ -164,13 +164,13 @@ class ApiController extends Zend_Controller_Action
 
     /**
     * Reads the requested portion of a file and sends its contents to the client with the appropriate headers.
-    * 
+    *
     * This HTTP_RANGE compatible read file function is necessary for allowing streaming media to be skipped around in.
-    * 
+    *
     * @param string $location
     * @param string $mimeType
     * @return void
-    * 
+    *
     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
     * @link http://php.net/manual/en/function.readfile.php#86244
     */
@@ -178,17 +178,17 @@ class ApiController extends Zend_Controller_Action
     {
         $size= filesize($location);
         $time= date('r', filemtime($location));
-        
+
         $fm = @fopen($location, 'rb');
         if (!$fm)
         {
             header ("HTTP/1.1 505 Internal server error");
             return;
         }
-        
+
         $begin= 0;
         $end= $size - 1;
-        
+
         if (isset($_SERVER['HTTP_RANGE']))
         {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches))
@@ -200,7 +200,7 @@ class ApiController extends Zend_Controller_Action
                 }
             }
         }
-   
+
         if (isset($_SERVER['HTTP_RANGE']))
         {
             header('HTTP/1.1 206 Partial Content');
@@ -209,9 +209,9 @@ class ApiController extends Zend_Controller_Action
         {
             header('HTTP/1.1 200 OK');
         }
-        header("Content-Type: $mimeType"); 
+        header("Content-Type: $mimeType");
         header('Cache-Control: public, must-revalidate, max-age=0');
-        header('Pragma: no-cache');  
+        header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
         header('Content-Length:' . (($end - $begin) + 1));
         if (isset($_SERVER['HTTP_RANGE']))
@@ -225,7 +225,7 @@ class ApiController extends Zend_Controller_Action
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
         while (@ob_end_flush());
-        
+
         $cur = $begin;
         fseek($fm, $begin, 0);
 
@@ -235,7 +235,7 @@ class ApiController extends Zend_Controller_Action
             $cur += 1024 * 16;
         }
     }
-    
+
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
@@ -342,8 +342,6 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
 
-        PEAR::setErrorHandling(PEAR_ERROR_RETURN);
-
         $data = Application_Model_Schedule::GetScheduledPlaylists();
         echo json_encode($data, JSON_FORCE_OBJECT);
     }
@@ -368,12 +366,7 @@ class ApiController extends Zend_Controller_Action
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
         $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
-
-        if (!PEAR::isError($result)) {
-            echo json_encode(array("status"=>1, "message"=>""));
-        } else {
-            echo json_encode(array("status"=>0, "message"=>"DB Error:".$result->getMessage()));
-        }
+        echo json_encode(array("status"=>1, "message"=>""));
     }
 
     public function recordedShowsAction()
@@ -429,7 +422,7 @@ class ApiController extends Zend_Controller_Action
 
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
-        
+
         if (!is_null($result)){
             die('{"jsonrpc" : "2.0", "error" : {"code": '.$result[code].', "message" : "'.$result[message].'"}}');
         }
@@ -780,7 +773,7 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         $info = Application_Model_StreamSetting::getStreamSetting();
         $this->view->msg = $info;
     }
@@ -836,7 +829,7 @@ class ApiController extends Zend_Controller_Action
 
         Application_Model_StreamSetting::setLiquidsoapError($stream_id, $msg, $boot_time);
     }
-    
+
     public function updateSourceStatusAction(){
         $request = $this->getRequest();
 
@@ -945,13 +938,13 @@ class ApiController extends Zend_Controller_Action
         $dir = base64_decode($request->getParam('dir'));
         Application_Model_MusicDir::removeWatchedDir($dir, false);
     }
-    
+
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
     public function rabbitmqDoPushAction(){
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
@@ -962,10 +955,10 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
         Logging::log("Notifying RabbitMQ to send message to pypo");
-        
+
         Application_Model_RabbitMq::PushSchedule();
     }
-    
+
     public function getBootstrapInfoAction(){
         $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
@@ -977,14 +970,14 @@ class ApiController extends Zend_Controller_Action
         $this->view->stream_label = Application_Model_Preference::GetStreamLabelFormat();
         $this->view->transition_fade = Application_Model_Preference::GetDefaultTransitionFade();
     }
-    
+
     /* This is used but Liquidsoap to check authentication of live streams*/
     public function checkLiveStreamAuthAction(){
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
-        
+
         $username = $request->getParam('username');
         $password = $request->getParam('password');
         $djtype = $request->getParam('djtype');
@@ -996,7 +989,7 @@ class ApiController extends Zend_Controller_Action
             print 'You are not allowed to access this resource.';
             exit;
         }
-        
+
         if($djtype == 'master'){
             //check against master
             if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
@@ -1011,15 +1004,15 @@ class ApiController extends Zend_Controller_Action
             if(isset($showInfo[0]['id'])){
                 $current_show_id = $showInfo[0]['id'];
                 $CcShow = CcShowQuery::create()->findPK($current_show_id);
-                
+
                 // get custom pass info from the show
                 $custom_user = $CcShow->getDbLiveStreamUser();
                 $custom_pass = $CcShow->getDbLiveStreamPass();
-                
+
                 // get hosts ids
                 $show = new Application_Model_Show($current_show_id);
                 $hosts_ids = $show->getHostsIds();
-                
+
                 // check against hosts auth
                 if($CcShow->getDbLiveStreamUsingAirtimeAuth()){
                     foreach( $hosts_ids as $host){

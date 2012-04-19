@@ -2,31 +2,17 @@
 
 require_once __DIR__."/logging/Logging.php";
 Logging::setLogPath('/var/log/airtime/zendphp.log');
-
 require_once __DIR__."/configs/conf.php";
-
 require_once __DIR__."/configs/ACL.php";
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/configs/airtime-conf-production.php");
-
 require_once __DIR__."/configs/constants.php";
-require_once 'DB.php';
-
 require_once 'Preference.php';
 require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
-global $CC_CONFIG, $CC_DBC;
-$dsn = $CC_CONFIG['dsn'];
-
-$CC_DBC = DB::connect($dsn, FALSE);
-if (PEAR::isError($CC_DBC)) {
-    echo "ERROR: ".$CC_DBC->getMessage()." ".$CC_DBC->getUserInfo()."\n";
-    exit(1);
-}
-$CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
-
+global $CC_CONFIG;
 $CC_CONFIG['airtime_version'] = Application_Model_Preference::GetAirtimeVersion();
 
 require_once __DIR__."/configs/navigation.php";
@@ -116,8 +102,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initZFDebug()
     {
         if (APPLICATION_ENV == "development"){
-            global $CC_DBC;
-
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
 

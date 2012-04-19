@@ -25,8 +25,8 @@ echo "* Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
 //------------------------------------------------------------------------
 // Delete the database
 // Note: Do not put a call to AirtimeInstall::DbConnect()
-// before this function, even if you called $CC_DBC->disconnect(), there will
-// still be a connection to the database and you wont be able to delete it.
+// before this function, it will create a connection to the database
+// and you wont be able to delete it.
 //------------------------------------------------------------------------
 
 //close connection for any process id using airtime database since we are about to drop the database.
@@ -47,12 +47,14 @@ $command = "su postgres -c \"dropdb ".$CC_CONFIG["dsn"]["database"]."\"";
 //------------------------------------------------------------------------
 if ($dbDeleteFailed) {
     echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
-    AirtimeInstall::DbConnect(false);
+    $connected = AirtimeInstall::DbConnect(false);
 
-    if (!PEAR::isError($CC_DBC)) {
+    if ($connected) {
+        $con = Propel::getConnection();
         $sql = "select * from pg_tables where tableowner = 'airtime'";
-        $rows = $CC_DBC->GetAll($sql);
-        if (PEAR::isError($rows)) {
+        try {
+            $rows = $con->query($sql)->fetchAll();
+        } catch (Exception $e) {
             $rows = array();
         }
 
@@ -60,11 +62,10 @@ if ($dbDeleteFailed) {
             $tablename = $row["tablename"];
             echo "   * Removing database table $tablename...";
 
-            if (AirtimeInstall::DbTableExists($tablename)){
+            if (AirtimeInstall::DbTableExists($tablename)) {
                 $sql = "DROP TABLE $tablename CASCADE";
                 AirtimeInstall::InstallQuery($sql, false);
-
-                $CC_DBC->dropSequence($tablename."_id");
+                AirtimeInstall::DropSequence($tablename."_id");
             }
             echo "done.".PHP_EOL;
         }
