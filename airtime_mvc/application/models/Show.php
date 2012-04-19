@@ -1265,9 +1265,7 @@ class Application_Model_Show {
 
             Logging::log('$start time of non repeating record '.$start);
 
-            if ($newInstance){
-                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            }
+            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
         }
     }
 
