@@ -28,9 +28,9 @@ class AudiopreviewController extends Zend_Controller_Action
         
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/audiopreview/preview_jplayer.js?'.filemtime($baseDir.'/js/audiopreview/preview_jplayer.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.filemtime($baseDir.'/js/jplayer/jplayer.playlist.min.js'),'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css'));
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
@@ -60,9 +60,9 @@ class AudiopreviewController extends Zend_Controller_Action
         
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/audiopreview/preview_jplayer.js?'.filemtime($baseDir.'/js/audiopreview/preview_jplayer.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.filemtime($baseDir.'/js/jplayer/jplayer.playlist.min.js'),'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css'));
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
@@ -129,9 +129,9 @@ class AudiopreviewController extends Zend_Controller_Action
         
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/audiopreview/preview_jplayer.js?'.filemtime($baseDir.'/js/audiopreview/preview_jplayer.js'),'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.filemtime($baseDir.'/js/jplayer/jplayer.playlist.min.js'),'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.filemtime($baseDir.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css'));
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.audio-preview.blue.monday.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
