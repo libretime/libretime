@@ -306,6 +306,13 @@ var // currently active contextMenu trigger
             e.stopImmediatePropagation();
             $this.remove();
             root.$menu.trigger('contextmenu:hide');
+            /* (Airtime) added this to allow user to exit out of menu
+             * if ignoreThisClick remains false, every right click
+             * thereafter continues to show the menu
+             */  
+            if (e.button == 2) {
+                ignoreThisClick = true;
+            }
         },
         // key handled :hover
         keyStop: function(e, opt) {
