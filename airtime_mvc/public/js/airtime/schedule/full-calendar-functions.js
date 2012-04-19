@@ -212,7 +212,9 @@ function viewDisplay( view ) {
     }
 
     if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left > span').length == 5)) {
-        makeAddShowButton();
+        if($.trim($("#add-show-form").html()) != ""){
+            makeAddShowButton();
+        }
     }
     
     //save view name to db
