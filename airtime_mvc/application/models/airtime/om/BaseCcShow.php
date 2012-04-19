@@ -71,12 +71,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the live_stream_using_airtime_auth field.
+	 * Note: this column has a database default value of: false
 	 * @var        boolean
 	 */
 	protected $live_stream_using_airtime_auth;
 
 	/**
 	 * The value for the live_stream_using_custom_auth field.
+	 * Note: this column has a database default value of: false
 	 * @var        boolean
 	 */
 	protected $live_stream_using_custom_auth;
@@ -138,6 +140,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->name = '';
 		$this->url = '';
 		$this->genre = '';
+		$this->live_stream_using_airtime_auth = false;
+		$this->live_stream_using_custom_auth = false;
 	}
 
 	/**
@@ -412,7 +416,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$v = (boolean) $v;
 		}
 
-		if ($this->live_stream_using_airtime_auth !== $v) {
+		if ($this->live_stream_using_airtime_auth !== $v || $this->isNew()) {
 			$this->live_stream_using_airtime_auth = $v;
 			$this->modifiedColumns[] = CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH;
 		}
@@ -432,7 +436,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$v = (boolean) $v;
 		}
 
-		if ($this->live_stream_using_custom_auth !== $v) {
+		if ($this->live_stream_using_custom_auth !== $v || $this->isNew()) {
 			$this->live_stream_using_custom_auth = $v;
 			$this->modifiedColumns[] = CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH;
 		}
@@ -499,6 +503,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			}
 
 			if ($this->genre !== '') {
+				return false;
+			}
+
+			if ($this->live_stream_using_airtime_auth !== false) {
+				return false;
+			}
+
+			if ($this->live_stream_using_custom_auth !== false) {
 				return false;
 			}
 
