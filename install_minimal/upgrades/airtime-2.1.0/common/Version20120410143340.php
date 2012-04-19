@@ -19,7 +19,7 @@ class Version20120410143340 extends AbstractMigration
         
         $this->_addSql("ALTER TABLE cc_playlist ADD CONSTRAINT cc_playlist_createdby_fkey FOREIGN KEY (creator_id) REFERENCES cc_subjs(id) NOT DEFERRABLE INITIALLY IMMEDIATE");
 
-        $this->_addSql("ALTER TABLE cc_playlist ADD utime timestamp(6)");
+        $this->_addSql("ALTER TABLE cc_playlist ADD utime timestamp");
         //set the initial created to modified time since this is the closest we can get to inital creation time.
         $this->_addSql("UPDATE cc_playlist SET utime = mtime");
         

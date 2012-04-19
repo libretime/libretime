@@ -263,9 +263,10 @@ class ScheduleController extends Zend_Controller_Action
                 }
             } else {
                 if($instance->isRepeating()){
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
+                    /*$menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
                     $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-instance-form");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");*/
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
                 }else{
                     if($instance->isRebroadcast()){
                         $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
@@ -284,9 +285,10 @@ class ScheduleController extends Zend_Controller_Action
             if ($isAdminOrPM || $isDJ) {
 
                 if($instance->isRepeating()){
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
+                    /*$menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
                     $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-instance-form");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");*/
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
                 }else{
                     if($instance->isRebroadcast()){
                         $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
@@ -439,7 +441,9 @@ class ScheduleController extends Zend_Controller_Action
         unset($this->view->showContent);
     }
 
-    public function populateShowInstanceFormAction(){
+    // we removed edit show instance option in menu item
+    // this feature is disabled in 2.1 and should be back in 2.2
+    /*public function populateShowInstanceFormAction(){
         $formWhat = new Application_Form_AddShowWhat();
 		$formWho = new Application_Form_AddShowWho();
 		$formWhen = new Application_Form_AddShowWhen();
@@ -496,15 +500,15 @@ class ScheduleController extends Zend_Controller_Action
         $formRepeats->disable();
         $formStyle->disable();
         
-        /*
-        $formRecord->disable();
-        $formAbsoluteRebroadcast->disable();
-        $formRebroadcast->disable();
-        */
+        
+        //$formRecord->disable();
+        //$formAbsoluteRebroadcast->disable();
+        //$formRebroadcast->disable();
+        
         
         $this->view->action = "edit-show-instance";
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-    }
+    }*/
 
     public function populateShowFormAction()
     {
@@ -518,12 +522,12 @@ class ScheduleController extends Zend_Controller_Action
         // repeating shows. It's value is either "instance","rebroadcast", or "all"
         $type = $this->_getParam('type');
         
-        if($type == "rebroadcast") {
-            $this->view->action = "edit-show-rebroadcast";
+        /*if($type == "rebroadcast") {
+            //$this->view->action = "edit-show-rebroadcast";
         } else {
             $this->view->action = "edit-show";
-        }
-        
+        }*/
+        $this->view->action = "edit-show";
         try{
             $showInstance = new Application_Model_ShowInstance($showInstanceId);
         }catch(Exception $e){
@@ -677,10 +681,6 @@ class ScheduleController extends Zend_Controller_Action
             $formRepeats->disable();
             $formStyle->disable();
         }
-        
-        if($type == "rebroadcast"){
-            $formWhen->disable();
-        }
 
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         $this->view->entries = 5;
@@ -726,7 +726,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->edit = true;
     }
     
-    public function editShowInstanceAction(){
+    /*public function editShowInstanceAction(){
         $js = $this->_getParam('data');
         $data = array();
 
@@ -743,7 +743,7 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->addNewShow = false;
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
-    }
+    }*/
     
     public function editShowAction(){
         
@@ -775,6 +775,7 @@ class ScheduleController extends Zend_Controller_Action
             if (!array_key_exists('add_show_start_time', $data)){
                 $startTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartTime());
                 $data['add_show_start_time'] = $startTime->format("H:i");
+                $validateStartTime = false;
             }
             $validateStartDate = false;
         }
@@ -788,6 +789,9 @@ class ScheduleController extends Zend_Controller_Action
         } else {
             if (!$validateStartDate){
                 $this->view->when->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+            }
+            if(!$validateStartTime){
+                $this->view->when->getElement('add_show_start_time')->setOptions(array('disabled' => true));
             }
             $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
             $this->view->addNewShow = false;

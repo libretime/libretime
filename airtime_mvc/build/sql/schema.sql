@@ -178,8 +178,8 @@ CREATE TABLE "cc_show"
 	"description" VARCHAR(512),
 	"color" VARCHAR(6),
 	"background_color" VARCHAR(6),
-	"live_stream_using_airtime_auth" BOOLEAN,
-	"live_stream_using_custom_auth" BOOLEAN,
+	"live_stream_using_airtime_auth" BOOLEAN default 'f',
+	"live_stream_using_custom_auth" BOOLEAN default 'f',
 	"live_stream_user" VARCHAR(255),
 	"live_stream_pass" VARCHAR(255),
 	PRIMARY KEY ("id")

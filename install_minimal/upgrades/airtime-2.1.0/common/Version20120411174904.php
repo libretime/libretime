@@ -12,8 +12,8 @@ class Version20120411174904 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        $this->_addSql("ALTER TABLE cc_show_instances ADD created timestamp(6)");
-        $this->_addSql("ALTER TABLE cc_show_instances ADD last_scheduled timestamp(6)");
+        $this->_addSql("ALTER TABLE cc_show_instances ADD created timestamp");
+        $this->_addSql("ALTER TABLE cc_show_instances ALTER COLUMN created SET NOT NULL");
         
         //setting these to a default now for timeline refresh purposes.
         $now = gmdate("Y-m-d H:i:s");

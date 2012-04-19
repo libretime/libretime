@@ -19,10 +19,6 @@ class Version20120405114454 extends AbstractMigration
         $cc_subjs_token->addColumn('created', 'datetime',  array('notnull' => 1));
         
         $cc_subjs_token->setPrimaryKey(array('id'));
-        
-        $cc_subjs = $schema->getTable('cc_subjs');
-        $cc_subjs_token->addNamedForeignKeyConstraint('cc_subjs_token_userid_fkey', $cc_subjs, array('user_id'), array('id'));
-        $cc_subjs_token->addUniqueIndex(array('token'), 'uniq_token');
         //end create cc_subjs_token table
     }
 
