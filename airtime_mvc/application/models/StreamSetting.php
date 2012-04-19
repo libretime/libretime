@@ -44,7 +44,7 @@ class Application_Model_StreamSetting {
                 ." WHERE keyname = '$key'";
 
             $result = $con->query($sql)->fetchColumn(0);
-            return $result ? $result : NULL;
+            return ($result !== false) ? $result : NULL;
         }
     }
 
@@ -231,7 +231,7 @@ class Application_Model_StreamSetting {
             ." WHERE keyname = '$keyname'";
         $result = $con->query($sql)->fetchColumn(0);
 
-        return $result ? $result : NULL;
+        return ($result !== false) ? $result : NULL;
     }
 
     public static function getStreamEnabled($stream_id)

@@ -90,7 +90,7 @@ class Application_Model_Subjects {
         $sql = "SELECT id FROM ".$CC_CONFIG['subjTable']
             ." WHERE login='$login'";
         $query = $con->query($sql)->fetchColumn(0);
-        return $query ? $query : NULL;
+        return ($query !== false) ? $query : NULL;
     }
 
 
@@ -140,7 +140,7 @@ class Application_Model_Subjects {
         $con = Propel::getConnection();
         $sql = "SELECT login_attempts FROM ".$CC_CONFIG['subjTable']." WHERE login='$login'";
         $res = $con->query($sql)->fetchColumn(0);
-        return $res ? $res : 0;
+        return ($res !== false) ? $res : 0;
     }
 
 } // class Subjects

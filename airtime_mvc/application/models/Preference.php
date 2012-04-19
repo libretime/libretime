@@ -87,7 +87,7 @@ class Application_Model_Preference
 	        }
 
             $result = $con->query($sql)->fetchColumn(0);
-            return $result ? $result : "";
+            return ($result !== false) ? $result : "";
         }
     }
 

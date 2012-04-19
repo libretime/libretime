@@ -238,7 +238,7 @@ class Application_Model_User {
         }
 
         $query = $con->query($sql)->fetchColumn(0);
-        return $query ? $query : NULL;
+        return ($query !== false) ? $query : NULL;
     }
 
     public static function getHosts($search=NULL) {

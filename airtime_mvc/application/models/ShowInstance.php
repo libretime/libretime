@@ -665,7 +665,7 @@ class Application_Model_ShowInstance {
 			."LIMIT 1";
 
 		$query = $con->query($sql)->fetchColumn(0);
-		return $query ? $query : NULL;
+        return ($query !== false) ? $query : NULL;
 	}
 
     public function getShowEndGapTime(){

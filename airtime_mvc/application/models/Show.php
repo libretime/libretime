@@ -459,7 +459,7 @@ class Application_Model_Show {
             ." ORDER BY last_show DESC";
 
         $query = $con->query($sql)->fetchColumn(0);
-        return $query ? $query : "";
+        return ($query !== false) ? $query : "";
     }
 
     /**
