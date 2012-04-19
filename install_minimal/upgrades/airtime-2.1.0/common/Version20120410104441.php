@@ -12,6 +12,14 @@ class Version20120410104441 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+        $this->_addSql("DROP TRIGGER calculate_position ON cc_playlistcontents");
+        $this->_addSql("DROP FUNCTION calculate_position()");
+        
+        $this->_addSql("ALTER TABLE cc_subjs_token ALTER COLUMN created TYPE timestamp");
+        
+        $this->_addSql("ALTER TABLE cc_subjs_token ADD CONSTRAINT cc_subjs_token_idx UNIQUE (token);");
+        $this->_addSql("ALTER TABLE cc_subjs_token ADD CONSTRAINT cc_subjs_token_userid_fkey FOREIGN KEY (user_id) REFERENCES cc_subjs(id) ON DELETE CASCADE");
+        
         //add temp columns for changing bitrate and sample rate to integers.
         $this->_addSql("ALTER TABLE cc_files ADD temp_br integer");
         $this->_addSql("ALTER TABLE cc_files ADD temp_sr integer");
@@ -26,8 +34,8 @@ class Version20120410104441 extends AbstractMigration
         $this->_addSql("ALTER TABLE cc_files RENAME COLUMN temp_br TO bit_rate");
         
         //add utime, lptime
-        $this->_addSql("ALTER TABLE cc_files ADD utime timestamp(6)");
-        $this->_addSql("ALTER TABLE cc_files ADD lptime timestamp(6)");
+        $this->_addSql("ALTER TABLE cc_files ADD utime timestamp");
+        $this->_addSql("ALTER TABLE cc_files ADD lptime timestamp");
         
         //setting these to a default now for timeline refresh purposes.
         $now = gmdate("Y-m-d H:i:s");
