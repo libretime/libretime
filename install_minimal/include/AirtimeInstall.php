@@ -60,6 +60,8 @@ class AirtimeInstall
             return null;
         }
 
+        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version' LIMIT 1";
+        
         try {
             $version = $con->query($sql)->fetchColumn(0);
         } catch (PDOException $e){
@@ -70,17 +72,10 @@ class AirtimeInstall
             return null;
         }
 
-        $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version' LIMIT 1";
-        $version = $con->query($sql)->fetchColumn(0);
-
-        if (!$version) {
-            // no pref table something is wrong.
-            return null;
-        }
-
+        //if version is empty string, then version is older than version 1.8.0
         if ($version == '') {
             try {
-                // If this table exists, then it's 1.7.0
+                // If this table exists, then it's version 1.7.0
                 $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
                 $result = $con->query($sql)->fetchColumn(0);
                 $version = "1.7.0";
