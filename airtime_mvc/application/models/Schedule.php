@@ -245,7 +245,8 @@ class Application_Model_Schedule {
         showt.background_color AS show_background_color, showt.id AS show_id,
 
         si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
-        si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.id AS si_id, si.last_scheduled AS si_last_scheduled,
+        si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.instance_id AS parent_show,
+        si.id AS si_id, si.last_scheduled AS si_last_scheduled,
 
         sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
         sched.cue_in AS cue_in, sched.cue_out AS cue_out,

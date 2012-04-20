@@ -12,8 +12,8 @@ class UsersettingsController extends Zend_Controller_Action
                     ->addActionContext('set-library-datatable', 'json')
                     ->addActionContext('get-timeline-datatable', 'json')
                     ->addActionContext('set-timeline-datatable', 'json')
-                    ->addActionContext('register', 'json')
                     ->addActionContext('remindme', 'json')
+                    ->addActionContext('donotshowregistrationpopup', 'json')
                     ->initContext();
     }
     

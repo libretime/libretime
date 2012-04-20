@@ -228,7 +228,8 @@ var AIRTIME = (function(AIRTIME){
 					//background-color to imitate calendar color.
 					r,g,b,a,
 					$nRow = $(nRow),
-					$image;
+					$image,
+					$div;
 				
 				fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
 					
@@ -252,7 +253,25 @@ var AIRTIME = (function(AIRTIME){
 					node.innerHTML = '';
 					cl = 'sb-header';
 					
+					if (aData.record === true) {
+						$div = $("<div/>", {
+							"class": "small-icon recording"
+						});
+						$(node).append($div);
+					}
+					else if(aData.rebroadcast === true) {
+						$div = $("<div/>", {
+							"class": "small-icon rebroadcast"
+						});
+						$(node).append($div);
+					}
+					
 					sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
+					
+					if (aData.rebroadcast === true) {
+						sSeparatorHTML += '<span>'+aData.rebroadcast_title+'</span>';
+					}
+					
 					sSeparatorHTML += '<span class="push-right">';
 					
 					if (aData.startDate === aData.endDate) {
