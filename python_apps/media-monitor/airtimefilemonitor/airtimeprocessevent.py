@@ -142,8 +142,15 @@ class AirtimeProcessEvent(ProcessEvent):
                     
                     #delete files from organize if they can not be read properly.
                     if pathname is None:
-                        os.remove(oldPath)
-                        return
+                        try:
+                            self.logger.info("Deleting file because it cannot be read properly: %s", oldPath)
+                            os.remove(oldPath)
+                            return
+                        except Exception, e:
+                            import traceback
+                            top = traceback.format_exc()
+                            self.logger.error('Exception: %s', e)
+                            self.logger.error("traceback: %s", top)
 
                 self.mmc.set_needed_file_permissions(pathname, dir)
                 is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
@@ -245,7 +252,14 @@ class AirtimeProcessEvent(ProcessEvent):
                         
                         #delete files from organize if they can not be read properly.
                         if filepath is None:
-                            os.remove(event.pathname)
+                            try:
+                                self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
+                                os.remove(event.pathname)
+                            except Exception, e:
+                                import traceback
+                                top = traceback.format_exc()
+                                self.logger.error('Exception: %s', e)
+                                self.logger.error("traceback: %s", top)
 
                     else:
                         filepath = event.pathname
@@ -258,7 +272,14 @@ class AirtimeProcessEvent(ProcessEvent):
                         
                         #delete files from organize if they can not be read properly.
                         if filepath is None:
-                            os.remove(event.pathname)
+                            try:
+                                self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
+                                os.remove(event.pathname)
+                            except Exception, e:
+                                import traceback
+                                top = traceback.format_exc()
+                                self.logger.error('Exception: %s', e)
+                                self.logger.error("traceback: %s", top)
                     else:
                         #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
                         if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):

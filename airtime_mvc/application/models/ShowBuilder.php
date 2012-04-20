@@ -159,6 +159,22 @@ class Application_Model_ShowBuilder {
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format("U.u"));
         
+        //is a rebroadcast show
+        if (intval($p_item["si_rebroadcast"]) === 1) {
+            $row["rebroadcast"] = true;
+            
+            $parentInstance = CcShowInstancesQuery::create()->findPk($p_item["parent_show"]);
+            $name = $parentInstance->getCcShow()->getDbName();
+            $dt = $parentInstance->getDbStarts(null);
+            $dt->setTimezone(new DateTimeZone($this->timezone));
+            $time = $dt->format("Y-m-d H:i");
+            
+            $row["rebroadcast_title"] = "Rebroadcast of {$name} from {$time}";
+        }
+        else if (intval($p_item["si_record"]) === 1) {
+            $row["record"] = true;
+        }
+        
         if ($startsEpoch < $this->epoch_now && $endsEpoch > $this->epoch_now) {
             $row["currentShow"] = true;
             $this->currentShow = true;
@@ -238,7 +254,11 @@ class Application_Model_ShowBuilder {
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
         }
-              
+        
+        if (intval($p_item["si_rebroadcast"]) === 1) {
+            $row["record"] = true;
+        }
+               
         if ($this->currentShow = true) {
             $row["currentShow"] = true;
         }
