@@ -8,8 +8,15 @@ import shutil
 import os
 import sys
 
+from std_err_override import LogWriter
+
 # configure logging
 logging.config.fileConfig("logging.cfg")
+logger = logging.getLogger()
+LogWriter.override_std_err(logger)
+
+#need to wait for Python 2.7 for this..
+#logging.captureWarnings(True)
 
 # loading config file
 try:
@@ -19,7 +26,6 @@ try:
     POLL_INTERVAL = int(config['poll_interval'])
 
 except Exception, e:
-    logger = logging.getLogger()
     logger.error('Error loading config file: %s', e)
     sys.exit(1)
 

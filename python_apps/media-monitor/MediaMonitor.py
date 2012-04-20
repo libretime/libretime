@@ -6,6 +6,7 @@ import os
 import signal
 
 from api_clients import api_client as apc
+from std_err_override import LogWriter
 
 from multiprocessing import Process, Queue as mpQueue
 
@@ -23,11 +24,16 @@ from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorB
 # configure logging
 try:
     logging.config.fileConfig("logging.cfg")
+    
+    #need to wait for Python 2.7 for this..
+    #logging.captureWarnings(True)
+    
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
+    
 except Exception, e:
     print 'Error configuring logging: ', e
     sys.exit(1)
-
-logger = logging.getLogger()
 
 logger.info("\n\n*** Media Monitor bootup ***\n\n")
 

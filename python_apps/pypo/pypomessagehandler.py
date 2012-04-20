@@ -10,8 +10,15 @@ from kombu.messaging import Exchange, Queue
 from kombu.simple import SimpleQueue
 import json
 
+from std_err_override import LogWriter
+
 # configure logging
 logging.config.fileConfig("logging.cfg")
+logger = logging.getLogger('message_h')
+LogWriter.override_std_err(logger)
+
+#need to wait for Python 2.7 for this..
+#logging.captureWarnings(True)
 
 # loading config file
 try:
@@ -21,7 +28,6 @@ try:
     POLL_INTERVAL = int(config['poll_interval'])
 
 except Exception, e:
-    logger = logging.getLogger('message_h')
     logger.error('Error loading config file: %s', e)
     sys.exit()
 
