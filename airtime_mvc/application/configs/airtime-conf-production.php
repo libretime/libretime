@@ -8,6 +8,7 @@
  * that the user can customize these.
  */
 
+require_once (__DIR__."/conf.php");
 
 global $CC_CONFIG;
 
