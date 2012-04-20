@@ -295,11 +295,18 @@ class Application_Model_User {
 
     public static function GetCurrentUser() {
         $userinfo = Zend_Auth::getInstance()->getStorage()->read();
-        
+                
         if (is_null($userinfo)){
             return null;
         } else {
-            return new self($userinfo->id);
+            try {
+                return new self($userinfo->id);
+            } catch (Exception $e){
+                //we get here if $userinfo->id is defined, but doesn't exist
+                //in the database anymore.  
+                Zend_Auth::getInstance()->clearIdentity();
+                return null;
+            }
         }
     }
 }
