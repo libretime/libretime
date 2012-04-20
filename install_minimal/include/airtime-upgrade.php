@@ -20,6 +20,7 @@ require_once(__DIR__.'/airtime-constants.php');
 require_once(__DIR__.'/AirtimeIni.php');
 require_once(__DIR__.'/AirtimeInstall.php');
 require_once 'propel/runtime/lib/Propel.php';
+Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/db-conf.php");
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 
 
@@ -105,9 +106,6 @@ if (strcmp($version, "2.1.0") < 0){
 //set the new version in the database.
 $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
 $con->exec($sql);
-
-$values = parse_ini_file(CONF_FILE_AIRTIME, true);
-$phpDir = $values['general']['airtime_dir'];
 
 $newVersion = AIRTIME_VERSION;
 $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
