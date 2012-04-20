@@ -295,7 +295,11 @@ class Application_Model_User {
 
     public static function GetCurrentUser() {
         $userinfo = Zend_Auth::getInstance()->getStorage()->read();
-
-        return new self($userinfo->id);
+        
+        if (is_null($userinfo)){
+            return null;
+        } else {
+            return new self($userinfo->id);
+        }
     }
 }
