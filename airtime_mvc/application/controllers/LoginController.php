@@ -115,7 +115,7 @@ class LoginController extends Zend_Controller_Action
                 $auth = new Application_Model_Auth();
     
                 $auth->sendPasswordRestoreLink($user, $this->view);
-                $this->_helper->redirector('password-restore-after', 'auth');
+                $this->_helper->redirector('password-restore-after', 'login');
             }
             else {
                 $form->email->addError($this->view->translate("Given email not found."));
@@ -146,7 +146,7 @@ class LoginController extends Zend_Controller_Action
     
         //check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {
-            echo "token not valid";
+            Logging::debug("token not valid");
             $this->_helper->redirector('index', 'login');
         }
     

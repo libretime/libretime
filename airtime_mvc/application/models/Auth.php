@@ -16,6 +16,8 @@ class Application_Model_Auth {
 	   $info->setDbCreated(gmdate('Y-m-d H:i:s'));
 	   $info->save();
 	   
+	   Logging::debug("generated token {$token}");
+	   
 	   return $token;
 	}
 	
