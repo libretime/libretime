@@ -4,6 +4,7 @@ import logging.config
 import sys
 import os
 import signal
+import traceback
 
 from api_clients import api_client as apc
 from std_err_override import LogWriter
@@ -59,7 +60,8 @@ try:
     multi_queue = mpQueue()
     logger.info("Initializing event processor")
 except Exception, e:
-    logger.error('Exception: %s', e)    
+    logger.error('Exception: %s', e)
+    logger.error("traceback: %s", traceback.format_exc())
     
 try:
 
@@ -96,7 +98,5 @@ except KeyboardInterrupt:
     notifier.stop()
     logger.info("Keyboard Interrupt")
 except Exception, e:
-    import traceback
-    top = traceback.format_exc()
     logger.error('Exception: %s', e)
-    logger.error("traceback: %s", top)
+    logger.error("traceback: %s", traceback.format_exc())

@@ -4,6 +4,7 @@ import time
 import os
 import shutil
 import difflib
+import traceback
 
 import pyinotify
 from pyinotify import ProcessEvent
@@ -147,10 +148,8 @@ class AirtimeProcessEvent(ProcessEvent):
                             os.remove(oldPath)
                             return
                         except Exception, e:
-                            import traceback
-                            top = traceback.format_exc()
                             self.logger.error('Exception: %s', e)
-                            self.logger.error("traceback: %s", top)
+                            self.logger.error("traceback: %s", traceback.format_exc())
 
                 self.mmc.set_needed_file_permissions(pathname, dir)
                 is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
@@ -255,11 +254,10 @@ class AirtimeProcessEvent(ProcessEvent):
                             try:
                                 self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
                                 os.remove(event.pathname)
+                                return
                             except Exception, e:
-                                import traceback
-                                top = traceback.format_exc()
                                 self.logger.error('Exception: %s', e)
-                                self.logger.error("traceback: %s", top)
+                                self.logger.error("traceback: %s", traceback.format_exc())
 
                     else:
                         filepath = event.pathname
@@ -275,11 +273,10 @@ class AirtimeProcessEvent(ProcessEvent):
                             try:
                                 self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
                                 os.remove(event.pathname)
+                                return
                             except Exception, e:
-                                import traceback
-                                top = traceback.format_exc()
                                 self.logger.error('Exception: %s', e)
-                                self.logger.error("traceback: %s", top)
+                                self.logger.error("traceback: %s", traceback.format_exc())
                     else:
                         #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
                         if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
@@ -370,9 +367,15 @@ class AirtimeProcessEvent(ProcessEvent):
                 # handling those cases. We are manully calling handle_created_file
                 # function.
                 if os.path.exists(k):
-                    # check if file is open
-                    command = "lsof "+k
-                    f = os.popen(command)
+                    # check if file is open                    
+                    try:
+                        command = "lsof "+k
+                        f = os.popen(command)
+                    except Exception, e:
+                        self.logger.error('Exception: %s', e)
+                        self.logger.error("traceback: %s", traceback.format_exc())
+                        continue
+                    
                     if not f.readlines():
                         self.logger.info("Handling file: %s", k)
                         self.handle_created_file(False, k, os.path.basename(k))
@@ -387,9 +390,7 @@ class AirtimeProcessEvent(ProcessEvent):
         except socket.timeout:
             pass
         except Exception, e:
-            import traceback
-            top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
-            self.logger.error("traceback: %s", top)
+            self.logger.error("traceback: %s", traceback.format_exc())
             time.sleep(3)
 

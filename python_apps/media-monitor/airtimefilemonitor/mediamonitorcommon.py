@@ -4,6 +4,7 @@ import pwd
 import logging
 import stat
 import subprocess
+import traceback
 
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
@@ -49,22 +50,25 @@ class MediaMonitorCommon:
 
     #check if file is readable by "nobody"
     def has_correct_permissions(self, filepath, euid='nobody', egid='nogroup'):
-        uid = pwd.getpwnam(euid)[2]
-        gid = grp.getgrnam(egid)[2]
-        
-        #drop root permissions and become "nobody"
-        os.setegid(gid)
-        os.seteuid(uid)
 
         try:
+            uid = pwd.getpwnam(euid)[2]
+            gid = grp.getgrnam(egid)[2]
+            
+            #drop root permissions and become "nobody"
+            os.setegid(gid)
+            os.seteuid(uid)
+
             open(filepath)
             readable = True
         except IOError:
             self.logger.warn("File does not have correct permissions: '%s'", filepath)
             readable = False
+            self.logger.error("traceback: %s", traceback.format_exc())
         except Exception, e:
             self.logger.error("Unexpected exception thrown: %s", e)
             readable = False
+            self.logger.error("traceback: %s", traceback.format_exc())
         finally:
             #reset effective user to root
             os.seteuid(0)
@@ -96,10 +100,11 @@ class MediaMonitorCommon:
                     os.chmod(item, bitor)
         except Exception, e:
             self.logger.error("Failed to change file's owner/group/permissions. %s", e)
-            return False;
+            self.logger.error("traceback: %s", traceback.format_exc())
+            return False
         finally:
             os.umask(omask)
-            return True;
+            return True
 
 
     #checks if path is a directory, and if it doesnt exist, then creates it.
@@ -125,6 +130,7 @@ class MediaMonitorCommon:
             os.rename(source, dest)
         except Exception, e:
             self.logger.error("failed to move file. %s", e)
+            self.logger.error("traceback: %s", traceback.format_exc())
         finally:
             os.umask(omask)
 
@@ -137,8 +143,13 @@ class MediaMonitorCommon:
     def cleanup_empty_dirs(self, dir):
         if os.path.normpath(dir) != self.config.organize_directory:
             if len(os.listdir(dir)) == 0:
-                os.rmdir(dir)
-
+                try:
+                    os.rmdir(dir)
+                except Exception, e:
+                    #non-critical exception because we probably tried to delete a non-empty dir.
+                    #Don't need to log this, let's just "return"
+                    return
+                
                 pdir = os.path.dirname(dir)
                 self.cleanup_empty_dirs(pdir)
 
@@ -272,9 +283,13 @@ class MediaMonitorCommon:
 
     def touch_index_file(self):
         dirname = os.path.dirname(self.timestamp_file)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-        open(self.timestamp_file, "w")
+        try:
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+            open(self.timestamp_file, "w")
+        except Exception, e:
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", traceback.format_exc())
 
     def organize_new_file(self, pathname):
         self.logger.info("Organizing new file: %s", pathname)
