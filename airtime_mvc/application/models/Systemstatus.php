@@ -43,6 +43,16 @@ class Application_Model_Systemstatus
                         "memory_perc"=>"0%",
                         "memory_kb"=>"0",
                         "cpu_perc"=>"0%");
+                        
+        $notMonitored = array(
+                        "name"=>$p_serviceName,
+                        "process_id"=>"NOT MONITORED",
+                        "uptime_seconds"=>"-1",
+                        "status"=>false,
+                        "memory_perc"=>"0%",
+                        "memory_kb"=>"0",
+                        "cpu_perc"=>"0%"
+                      );
                       
         $notRunning = array(
                         "name"=>$p_serviceName,
@@ -66,8 +76,16 @@ class Application_Model_Systemstatus
                         $status = $monitor->item(0)->nodeValue;
                         if ($status == "2"){
                             $data = $starting;
+                        } else if ($status == 1){
+                            //is monitored, but is it running?
+                            $pid = $item->getElementsByTagName("pid");
+                            if ($pid->length == 0){
+                                $data = $notRunning;
+                            } else {
+                                //running!
+                            }
                         } else if ($status == 0){
-                            $data = $notRunning;
+                            $data = $notMonitored;
                         }
                     }
 

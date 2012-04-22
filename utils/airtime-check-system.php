@@ -222,6 +222,7 @@ class AirtimeCheck {
         global $showColor;
         
         $RED = "[0;31m";
+        $ORANGE = "[0;33m";
         $GREEN = "[1;32m";
 
         $color = $GREEN;
@@ -229,6 +230,9 @@ class AirtimeCheck {
         if ($value == "FAILED"){
             $color = $RED;
             self::$AIRTIME_STATUS_OK = false;
+        } else if ($value == "NOT MONITORED"){
+            $color = $ORANGE;
+            self::$AIRTIME_STATUS_OK = false;            
         }
         
         if ($showColor)
