@@ -81,8 +81,8 @@ end
 set("harbor.bind_addr", "0.0.0.0")
 
 def update_source_status(sourcename, status) =
-    system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
-    log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status}")
+    system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &")
+    log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &")
 end
 
 def live_dj_connect(header) =
