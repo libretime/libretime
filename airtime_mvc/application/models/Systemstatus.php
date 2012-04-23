@@ -39,7 +39,7 @@ class Application_Model_Systemstatus
                         "name"=>"",
                         "process_id"=>"STARTING...",
                         "uptime_seconds"=>"-1",
-                        "status"=>true,
+                        "status"=>0,
                         "memory_perc"=>"0%",
                         "memory_kb"=>"0",
                         "cpu_perc"=>"0%");
@@ -47,8 +47,8 @@ class Application_Model_Systemstatus
         $notMonitored = array(
                         "name"=>$p_serviceName,
                         "process_id"=>"NOT MONITORED",
-                        "uptime_seconds"=>"-1",
-                        "status"=>false,
+                        "uptime_seconds"=>"1",
+                        "status"=>1,
                         "memory_perc"=>"0%",
                         "memory_kb"=>"0",
                         "cpu_perc"=>"0%"
@@ -58,7 +58,7 @@ class Application_Model_Systemstatus
                         "name"=>$p_serviceName,
                         "process_id"=>"FAILED",
                         "uptime_seconds"=>"-1",
-                        "status"=>false,
+                        "status"=>0,
                         "memory_perc"=>"0%",
                         "memory_kb"=>"0",
                         "cpu_perc"=>"0%"
@@ -97,7 +97,7 @@ class Application_Model_Systemstatus
                     $process_id = $item->getElementsByTagName("pid");
                     if ($process_id->length > 0){
                         $data["process_id"] = $process_id->item(0)->nodeValue;
-                        $data["status"] = true;
+                        $data["status"] = 0;
                     }
 
                     $uptime = $item->getElementsByTagName("uptime");

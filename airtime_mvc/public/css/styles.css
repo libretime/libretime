@@ -2310,6 +2310,14 @@ tfoot tr th	{
 	margin:0;
 	display:block;
 }
+.warning-icon	{
+	width:100%;
+	margin:0;
+	background: url("images/warning-icon.png") no-repeat center center;
+	height:16px;
+	margin:0;
+	display:block;
+}
 .statustable ul	{
 	margin:4px 0;
 	padding:0;
