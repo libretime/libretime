@@ -98,7 +98,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $pl = new Application_Model_Playlist($playlistID);
         $result = Array();
         
-        foreach ( $pl->getContents() as $track ){
+        foreach ( $pl->getContents(true) as $track ){
             
             $elementMap = array( 'element_title' => isset($track['CcFiles']['track_title'])?$track['CcFiles']['track_title']:"",
                               'element_artist' => isset($track['CcFiles']['artist_name'])?$track['CcFiles']['artist_name']:"",
@@ -115,7 +115,7 @@ class AudiopreviewController extends Zend_Controller_Action
             }
             $result[] = $elementMap;
         }
-
+        
         $this->_helper->json($result);
     }
 

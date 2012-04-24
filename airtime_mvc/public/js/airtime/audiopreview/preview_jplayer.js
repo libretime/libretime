@@ -114,7 +114,9 @@ function buildplaylist(p_url, p_playIndex) {
             }
             myPlaylist[index] = media;
             
-            _idToPostionLookUp[data[index]['element_id']] = data[index]['element_position'];
+            // we should create a map according to the new position in the player itself
+            // total is the index on the player
+            _idToPostionLookUp[data[index]['element_id']] = total;
             total++;
         }
         
@@ -135,6 +137,9 @@ function buildplaylist(p_url, p_playIndex) {
  */
 function play(p_playlistIndex){
     playlistIndex = _idToPostionLookUp[p_playlistIndex];
+    if(playlistIndex == undefined){
+        playlistIndex = 0
+    }
     //_playlist_jplayer.select(playlistIndex);
     _playlist_jplayer.play(playlistIndex);
 }

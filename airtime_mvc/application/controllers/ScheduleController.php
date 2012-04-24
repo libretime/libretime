@@ -373,7 +373,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->switch_status = $switch_status;
         
         $this->view->entries = $range;
-        $this->view->show_name = $show[0]["name"];
+        $this->view->show_name = isset($show[0])?$show[0]["name"]:"";
     }
 
     public function removeGroupAction()
