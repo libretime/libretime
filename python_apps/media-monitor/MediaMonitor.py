@@ -5,6 +5,7 @@ import sys
 import os
 import signal
 import traceback
+import locale
 
 from api_clients import api_client as apc
 from std_err_override import LogWriter
@@ -38,7 +39,16 @@ except Exception, e:
 
 logger.info("\n\n*** Media Monitor bootup ***\n\n")
 
+
 try:
+    fs_encoding = locale.getdefaultlocale()[1].lower()
+    if fs_encoding not in ['utf-8', 'utf8']:
+        logger.error("Filesystem encoding needs to be UTF-8. Currently '%s'. Exiting..." % fs_encoding)
+        sys.exit(1)
+    else:
+        logger.debug("Filesystem encoding: '%s'" % fs_encoding)
+
+    
     config = AirtimeMediaConfig(logger)
     api_client = apc.api_client_factory(config.cfg)
     api_client.register_component("media-monitor")
