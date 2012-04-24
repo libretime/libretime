@@ -37,12 +37,13 @@ $ccAcl->allow('G', 'index')
       ->allow('H', 'usersettings')
       ->allow('H', 'plupload')
       ->allow('H', 'library')
-	  ->allow('H', 'playlist')
-	  ->allow('A', 'playouthistory')
-	  ->allow('A', 'user')
-	  ->allow('A', 'systemstatus')
-      ->allow('A', 'preference')
-      ->allow('A', 'audiopreview');
+      ->allow('H', 'playlist')
+      ->allow('H', 'audiopreview')
+      ->allow('A', 'playouthistory')
+      ->allow('A', 'user')
+      ->allow('A', 'systemstatus')
+      ->allow('A', 'preference');
+      
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
 
