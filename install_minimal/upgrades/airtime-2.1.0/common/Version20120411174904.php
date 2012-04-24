@@ -15,6 +15,8 @@ class Version20120411174904 extends AbstractMigration
         $this->_addSql("ALTER TABLE cc_show_instances ADD created timestamp");
         $this->_addSql("ALTER TABLE cc_show_instances ALTER COLUMN created SET NOT NULL");
         
+        $this->_addSql("ALTER TABLE cc_show_instances ADD last_scheduled timestamp");
+        
         //setting these to a default now for timeline refresh purposes.
         $now = gmdate("Y-m-d H:i:s");
         $this->_addSql("UPDATE cc_show_instances SET created = '$now'");
