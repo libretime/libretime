@@ -93,6 +93,17 @@ select {
 }
 /* Version Notification Ends*/
 
+.override_help_icon {
+        cursor: help;
+        position: relative;
+        
+        display:inline-block; zoom:1; display:inline;
+        width:14px; height:14px;
+        background:url(/css/images/icon_info.png) 0 0 no-repeat;
+        float:right; position:relative; top:2px; right:7px;
+        line-height:16px !important;
+}
+
 /* Info Tooltip Starts */
 .info-tooltip {
         cursor: help;
