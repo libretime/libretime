@@ -856,8 +856,8 @@ class Application_Model_Show {
             ." WHERE date(starts) = date(TIMESTAMP '$timestamp') "
             ." AND show_id = $showId";
 
-        $query = $con->query();
-        $row = $query ? $query->fetchColumn(0) : null;
+        $query = $con->query($sql);
+        $row = ($query !== false) ? $query->fetchColumn(0) : null;
         return CcShowInstancesQuery::create()
             ->findPk($row);
     }
