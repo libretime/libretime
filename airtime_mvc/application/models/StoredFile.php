@@ -841,8 +841,7 @@ Logging::log("getting media! - 2");
             //check to see if there is enough space in $stor to continue.
             $enough_space = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
             if ($enough_space){
-                $stor .= "/organize";
-                $audio_stor = $stor . DIRECTORY_SEPARATOR . $fileName;
+                $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
 
                 Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
                 //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
