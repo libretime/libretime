@@ -2,6 +2,7 @@ import json
 import time
 import os
 import logging
+import traceback
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
@@ -116,7 +117,11 @@ class AirtimeNotifier(Notifier):
 
             if m['delete']:
                 self.logger.info("Deleting file: %s ", filepath)
-                os.unlink(filepath)
+                try:
+                    os.unlink(filepath)
+                except Exception, e:
+                    self.logger.error('Exception: %s', e)
+                    self.logger.error("traceback: %s", traceback.format_exc())
 
 
     """

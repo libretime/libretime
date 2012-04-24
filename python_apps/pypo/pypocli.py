@@ -23,6 +23,7 @@ from configobj import ConfigObj
 
 # custom imports
 from api_clients import api_client
+from std_err_override import LogWriter
 
 PYPO_VERSION = '1.1'
 
@@ -45,12 +46,16 @@ parser.add_option("-c", "--check", help="Check the cached schedule and exit", de
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
+logger = logging.getLogger()
+LogWriter.override_std_err(logger)
+
+#need to wait for Python 2.7 for this..
+#logging.captureWarnings(True)
 
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
-    logger = logging.getLogger()
     logger.error('Error loading config file: %s', e)
     sys.exit()
 

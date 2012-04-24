@@ -4,8 +4,10 @@ import logging.config
 import sys
 import os
 import signal
+import traceback
 
 from api_clients import api_client as apc
+from std_err_override import LogWriter
 
 from multiprocessing import Process, Queue as mpQueue
 
@@ -23,11 +25,16 @@ from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorB
 # configure logging
 try:
     logging.config.fileConfig("logging.cfg")
+    
+    #need to wait for Python 2.7 for this..
+    #logging.captureWarnings(True)
+    
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
+    
 except Exception, e:
     print 'Error configuring logging: ', e
     sys.exit(1)
-
-logger = logging.getLogger()
 
 logger.info("\n\n*** Media Monitor bootup ***\n\n")
 
@@ -53,7 +60,8 @@ try:
     multi_queue = mpQueue()
     logger.info("Initializing event processor")
 except Exception, e:
-    logger.error('Exception: %s', e)    
+    logger.error('Exception: %s', e)
+    logger.error("traceback: %s", traceback.format_exc())
     
 try:
 
@@ -90,7 +98,5 @@ except KeyboardInterrupt:
     notifier.stop()
     logger.info("Keyboard Interrupt")
 except Exception, e:
-    import traceback
-    top = traceback.format_exc()
     logger.error('Exception: %s', e)
-    logger.error("traceback: %s", top)
+    logger.error("traceback: %s", traceback.format_exc())

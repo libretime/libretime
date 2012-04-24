@@ -8,7 +8,6 @@
  * that the user can customize these.
  */
 
-
 global $CC_CONFIG;
 
 $dbhost = $CC_CONFIG['dsn']['hostspec'];

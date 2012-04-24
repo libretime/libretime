@@ -1,5 +1,6 @@
 from mediaconfig import AirtimeMediaConfig
 import mediamonitorcommon
+import traceback
 
 class MediaMonitorWorkerProcess:
 
@@ -20,3 +21,4 @@ class MediaMonitorWorkerProcess:
                     notifier.update_airtime(event)
             except Exception, e:
                 notifier.logger.error(e)
+                notifier.logger.error("traceback: %s", traceback.format_exc())

@@ -18,7 +18,7 @@ class AirtimeMediaConfig:
             self.cfg = config
         except Exception, e:
             logger.info('Error loading config: ', e)
-            sys.exit()
+            sys.exit(1)
 
         self.storage_directory = None
 

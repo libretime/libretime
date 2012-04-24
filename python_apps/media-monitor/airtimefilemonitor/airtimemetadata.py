@@ -140,9 +140,7 @@ class AirtimeMetadata:
                 if key in self.mutagen2airtime and len(file_info[key]) > 0:
                     md[self.mutagen2airtime[key]] = file_info[key][0]
         if 'MDATA_KEY_TITLE' not in md:
-            #get rid of file extention from original name, name might have more than 1 '.' in it.
-            #filepath = to_unicode(filepath)
-            #filepath = filepath.encode('utf-8')
+            #get rid of file extension from original name, name might have more than 1 '.' in it.
             original_name = os.path.basename(filepath)
             original_name = original_name.split(".")[0:-1]
             original_name = ''.join(original_name)

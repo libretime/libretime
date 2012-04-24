@@ -16,11 +16,17 @@ from Queue import Empty
 from threading import Thread
 
 from api_clients import api_client
+from std_err_override import LogWriter
 from configobj import ConfigObj
 
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
+logger = logging.getLogger()
+LogWriter.override_std_err(logger)
+
+#need to wait for Python 2.7 for this..
+#logging.captureWarnings(True)
 
 # loading config file
 try:
@@ -30,7 +36,6 @@ try:
     PUSH_INTERVAL = 2
     MAX_LIQUIDSOAP_QUEUE_LENGTH = 2
 except Exception, e:
-    logger = logging.getLogger()
     logger.error('Error loading config file %s', e)
     sys.exit()
 

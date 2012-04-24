@@ -14,7 +14,7 @@ require_once(__DIR__.'/airtime-constants.php');
 
 AirtimeInstall::ExitIfNotRoot();
 
-require_once(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/conf.php");
+require_once(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/db-conf.php");
 require_once('propel/runtime/lib/Propel.php');
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 

@@ -18,6 +18,10 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
 require_once(__DIR__.'/airtime-constants.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
+
+require_once 'propel/runtime/lib/Propel.php';
+Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
+
 echo PHP_EOL;
 echo "* Uninstalling Airtime ".AIRTIME_VERSION.PHP_EOL;
 //AirtimeInstall::UninstallPhpCode();

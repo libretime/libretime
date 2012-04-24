@@ -42,7 +42,7 @@ def find_liquidsoap_binary():
 
     return None
 
-optlist, args = getopt.getopt(sys.argv[1:], 'hvo:H:P:u:p:')
+optlist, args = getopt.getopt(sys.argv[1:], 'hvo:H:P:u:p:m:')
 stream_types = set(["shoutcast", "icecast"])
 
 verbose = False
@@ -102,6 +102,8 @@ try:
         
     if not verbose:
         command += " 2>/dev/null | grep \"failed\""
+    else:
+        print command
     
     #print command
     rv = subprocess.call(command, shell=True)

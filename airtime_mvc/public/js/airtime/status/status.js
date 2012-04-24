@@ -48,7 +48,15 @@ function success(data, textStatus, jqXHR){
         var s = services[key];
         var children = $("#"+s.name).children();
         $(children[0]).text(s.name);
-        $($(children[1]).children()[0]).attr("class", s.status ? "checked-icon": "not-available-icon");
+        
+        var status_class = "not-available-icon";
+        if (s.status == 0){
+            status_class = "checked-icon";
+        } else if (s.status == 1) {
+            status_class = "warning-icon";
+        }
+        
+        $($(children[1]).children()[0]).attr("class", status_class);
         $(children[2]).text(sprintf('%(days)sd %(hours)sh %(minutes)sm %(seconds)ss', convertSecondsToDaysHoursMinutesSeconds(s.uptime_seconds)));
         $(children[3]).text(s.cpu_perc);
         $(children[4]).text(sprintf('%01.1fMB (%s)', parseInt(s.memory_kb)/1000, s.memory_perc));

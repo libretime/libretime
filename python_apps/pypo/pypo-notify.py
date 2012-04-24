@@ -36,6 +36,7 @@ from configobj import ConfigObj
 # custom imports
 #from util import *
 from api_clients import *
+from std_err_override import LogWriter
 
 # Set up command-line options
 parser = OptionParser()
@@ -59,13 +60,18 @@ parser.add_option("-y", "--source-status", help="source connection stauts", meta
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
+logger = logging.getLogger()
+LogWriter.override_std_err(logger)
+
+#need to wait for Python 2.7 for this..
+#logging.captureWarnings(True)
 
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
     
 except Exception, e:
-    print 'error: ', e
+    logger.error('Error loading config file: %s', e)
     sys.exit()
     
         

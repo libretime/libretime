@@ -61,16 +61,21 @@ class AirtimeInstall
         }
 
         $sql = "SELECT valstr FROM cc_pref WHERE keystr = 'system_version' LIMIT 1";
-        $version = $con->query($sql)->fetchColumn(0);
-
-        if (!$version) {
-            // no pref table something is wrong.
+        
+        try {
+            $version = $con->query($sql)->fetchColumn(0);
+        } catch (PDOException $e){
+            // no pref table therefore Airtime is not installed.
+            //We only get here if airtime database exists, but the table doesn't
+            //This state sometimes happens if a previous Airtime uninstall couldn't remove
+            //the database because it was busy, so it just removed the tables instead.
             return null;
         }
 
+        //if version is empty string, then version is older than version 1.8.0
         if ($version == '') {
             try {
-                // If this table exists, then it's 1.7.0
+                // If this table exists, then it's version 1.7.0
                 $sql = "SELECT * FROM cc_show_rebroadcast LIMIT 1";
                 $result = $con->query($sql)->fetchColumn(0);
                 $version = "1.7.0";

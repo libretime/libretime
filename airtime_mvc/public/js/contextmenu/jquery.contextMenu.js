@@ -310,7 +310,7 @@ var // currently active contextMenu trigger
              * if ignoreThisClick remains false, every right click
              * thereafter continues to show the menu
              */  
-            if (ignoreRightClick) {
+            if (handle.ignoreRightClick) {
                 if (e.button == 2) {
                     ignoreThisClick = true;
                 }

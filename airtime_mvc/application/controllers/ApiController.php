@@ -784,6 +784,7 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $getDiskInfo = $request->getParam('diskinfo') == "true";
+        
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {

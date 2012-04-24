@@ -76,6 +76,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
+        $user = Application_Model_User::GetCurrentUser();
+        if (!is_null($user)){
+            $userType = $user->getType();
+        } else {
+            $userType = "";
+        }
+        $view->headScript()->appendScript("var userType = '$userType';");
+
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
                 && ($_SERVER['REQUEST_URI'] != '/Dashboard/stream-player' || $_SERVER['REQUEST_URI'] != '/audiopreview/audio-preview-player')) {
             $client_id = Application_Model_Preference::GetClientId();
