@@ -134,11 +134,16 @@ class ShowRecorder(Thread):
             recorded_file['title'] = name
             recorded_file['artist'] = artist
             recorded_file['date'] = md[0]
-            recorded_file['tracknumber'] = self.show_instance
+            #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
+            recorded_file['tracknumber'] = unicode(self.show_instance)
             recorded_file.save()
 
         except Exception, e:
-            self.logger.error("Exception: %s", e)
+            import traceback
+            top = traceback.format_exc()
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", top)
+
 
     def run(self):
         code, filepath = self.record_show()
