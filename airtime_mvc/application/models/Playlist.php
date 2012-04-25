@@ -140,18 +140,26 @@ class Application_Model_Playlist {
 
     /**
      * Get the entire playlist as a two dimentional array, sorted in order of play.
+     * @param boolean $filterFiles if this is true, it will only return files that has
+     * 			file_exists flag set to true
      * @return array
      */
-    public function getContents() {
+    public function getContents($filterFiles=false) {
 
         Logging::log("Getting contents for playlist {$this->id}");
 
         $files = array();
-        $rows = CcPlaylistcontentsQuery::create()
-            ->joinWith('CcFiles')
-            ->orderByDbPosition()
-            ->filterByDbPlaylistId($this->id)
-            ->find($this->con);
+        $query = CcPlaylistcontentsQuery::create()
+                ->filterByDbPlaylistId($this->id);
+                
+        if($filterFiles){
+            $query->useCcFilesQuery()
+                     ->filterByDbFileExists(true)
+                  ->endUse();
+        }
+        $query->orderByDbPosition()
+              ->leftJoinWith('CcFiles');
+        $rows = $query->find($this->con);
 
         $i = 0;
         $offset = 0;

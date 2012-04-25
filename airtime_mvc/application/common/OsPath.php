@@ -42,4 +42,25 @@ class Application_Common_OsPath{
         else
             return '.';
     }
+    
+    /* Similar to the os.path.join python method
+     * http://stackoverflow.com/a/1782990/276949 */
+    function join() {
+        $args = func_get_args();
+        $paths = array();
+
+        foreach($args as $arg) {
+            $paths = array_merge($paths, (array)$arg);
+        }
+
+        foreach($paths as &$path) {
+            $path = trim($path, DIRECTORY_SEPARATOR);
+        }
+
+        if (substr($args[0], 0, 1) == DIRECTORY_SEPARATOR) {
+            $paths[0] = DIRECTORY_SEPARATOR . $paths[0];
+        }
+
+        return join(DIRECTORY_SEPARATOR, $paths);
+    }
 }

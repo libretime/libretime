@@ -373,7 +373,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->switch_status = $switch_status;
         
         $this->view->entries = $range;
-        $this->view->show_name = $show[0]["name"];
+        $this->view->show_name = isset($show[0])?$show[0]["name"]:"";
     }
 
     public function removeGroupAction()
@@ -752,12 +752,11 @@ class ScheduleController extends Zend_Controller_Action
             //Changing the start date was disabled, since the
             //array key does not exist. We need to repopulate this entry from the db.
             //The start date will be returned in UTC time, so lets convert it to local time.
-            $dt = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDate());
+            $dt = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
             $data['add_show_start_date'] = $dt->format("Y-m-d");
             
             if (!array_key_exists('add_show_start_time', $data)){
-                $startTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartTime());
-                $data['add_show_start_time'] = $startTime->format("H:i");
+                $data['add_show_start_time'] = $dt->format("H:i");
                 $validateStartTime = false;
             }
             $validateStartDate = false;

@@ -224,7 +224,7 @@ class Application_Model_ShowBuilder {
             $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
             $row["id"] = intval($p_item["sched_id"]);
-            $row["image"] = $p_item["file_exists"] == "t" ? true : false;
+            $row["image"] = $p_item["file_exists"];
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
             $row["ends"] = $schedEndDT->format("H:i:s");

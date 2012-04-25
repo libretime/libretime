@@ -557,14 +557,14 @@ class Application_Model_Show {
 
         $con->exec($sql);
     }
-
+    
     /**
      * Get the start date of the current show in UTC timezone.
      *
      * @return string
      *      The start date in the format YYYY-MM-DD
      */
-    public function getStartDate(){
+    public function getStartDateAndTime(){
         $con = Propel::getConnection();
 
         $showId = $this->getId();
@@ -583,8 +583,19 @@ class Application_Model_Show {
 
             $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
             $dt->setTimezone(new DateTimeZone("UTC"));
-            return $dt->format("Y-m-d");
+            return $dt->format("Y-m-d H:i");
         }
+    }
+
+    /**
+     * Get the start date of the current show in UTC timezone.
+     *
+     * @return string
+     *      The start date in the format YYYY-MM-DD
+     */
+    public function getStartDate(){
+    	list($date,) = explode(" ", $this->getStartDateAndTime());
+    	return $date;
     }
 
     /**
@@ -595,25 +606,8 @@ class Application_Model_Show {
      */
 
     public function getStartTime(){
-        $con = Propel::getConnection();
-
-        $showId = $this->getId();
-        $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
-            ." WHERE show_id = $showId"
-            ." ORDER BY first_show"
-            ." LIMIT 1";
-
-        $query = $con->query($sql);
-
-        if ($query->rowCount() == 0){
-            return "";
-        } else {
-            $rows = $query->fetchAll();
-            $row = $rows[0];
-            $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-            return $dt->format("H:i");
-        }
+    	list(,$time) = explode(" ", $this->getStartDateAndTime());
+    	return $time;
     }
 
     /**
@@ -856,8 +850,8 @@ class Application_Model_Show {
             ." WHERE date(starts) = date(TIMESTAMP '$timestamp') "
             ." AND show_id = $showId";
 
-        $query = $con->query();
-        $row = $query ? $query->fetchColumn(0) : null;
+        $query = $con->query($sql);
+        $row = ($query !== false) ? $query->fetchColumn(0) : null;
         return CcShowInstancesQuery::create()
             ->findPk($row);
     }

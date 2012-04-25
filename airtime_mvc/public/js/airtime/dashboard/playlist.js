@@ -85,8 +85,8 @@ function updateProgressBarValue(){
         if (songPercentDone < 0 || songPercentDone > 100){
             songPercentDone = 0;        
             currentSong = null;
-        } else { 
-            if (currentSong.media_item_played == "t" && currentShow.length > 0){
+        } else {
+            if (currentSong.media_item_played == true && currentShow.length > 0){
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
                 scheduled_play_div.addClass("ready")
                 scheduled_play_source = true;

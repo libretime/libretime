@@ -235,4 +235,26 @@ $(document).ready(function() {
     
     showErrorSections()
     setInterval('checkLiquidsoapStatus()', 1000)
+    
+    // qtip for help text
+    $(".override_help_icon").qtip({
+        content: {
+            text: "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151. For more detail, please read the <a target=\"_blank\" href=\"http://manuals.sourcefabric.org/\">Airtime manual</a>."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    })
 });
