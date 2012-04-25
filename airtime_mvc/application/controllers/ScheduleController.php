@@ -31,6 +31,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('set-time-interval', 'json')
                     ->addActionContext('edit-show-instance', 'json')
                     ->addActionContext('dj-edit-show', 'json')
+                    ->addActionContext('calculate-duration', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -891,12 +892,25 @@ class ScheduleController extends Zend_Controller_Action
     public function setTimeIntervalAction() {
     	Application_Model_Preference::SetCalendarTimeInterval($this->_getParam('timeInterval'));
     }
+    
+    public function calculateDurationAction() {
+        global $CC_CONFIG;
+
+        $startParam = $this->_getParam('startTime');
+        $endParam = $this->_getParam('endTime');
+        
+        $startDateTime = new DateTime($startParam);
+        $endDateTime = new DateTime($endParam);
+        
+        $UTCStartDateTime = $startDateTime->setTimezone(new DateTimeZone('UTC'));
+        $UTCEndDateTime = $endDateTime->setTimezone(new DateTimeZone('UTC'));
+        
+        $duration = $UTCEndDateTime->diff($UTCStartDateTime);
+        
+        $result = $duration->format('%r%Hh %Im');
+        
+        echo Zend_Json::encode($result);
+        exit();
+    }
 }
-
-
-
-
-
-
-
 
