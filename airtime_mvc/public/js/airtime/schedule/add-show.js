@@ -110,7 +110,22 @@ function setAddShowEvents() {
     form.find("#add_show_repeats").click(function(){
         $(this).blur();
         form.find("#schedule-show-when > fieldset:last").toggle();
+        
+        var checkBoxSelected = false;
+        var days = form.find("#add_show_day_check-element input").each( function() {
+                var currentCheckBox = $(this).attr("checked");
+                if (currentCheckBox && currentCheckBox == "checked"){
+                    checkBoxSelected = true;
+                }
+            });
+        
 
+        if (!checkBoxSelected){
+            var d = getDateFromString(form.find("#add_show_start_date").attr("value"));
+            if ( d != null)
+                form.find("#add_show_day_check-"+d.getDay()).attr('checked', true);
+        }
+        
         //must switch rebroadcast displays
         if(form.find("#add_show_rebroadcast").attr('checked')) {
 
