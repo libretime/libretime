@@ -11,6 +11,23 @@ function popup(mylink){
     return false;
 }
 
+/* Take a string representing a date in the format 2012-04-25 and return
+ * a javascript date object representing this date. */
+function getDateFromString(time){
+    var date = time.split("-");
+    
+    if (date.length != 3){
+        return null;
+    }
+    
+    var year = parseInt(date[0], 10);
+    var month = parseInt(date[1], 10) -1;
+    var day = parseInt(date[2], 10);
+    
+    return new Date(year, month, day);
+    
+}
+
 function convertSecondsToDaysHoursMinutesSeconds(seconds){
     if (seconds < 0)
         seconds = 0;
