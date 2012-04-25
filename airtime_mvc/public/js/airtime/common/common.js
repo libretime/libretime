@@ -85,10 +85,5 @@ function openPreviewWindow(url) {
 }
 
 function pad(number, length) {
-    var str = '' + number;
-    while (str.length < length) {
-        str = '0' + str;
-    }
-
-    return str;
+    return sprintf("%'0"+length+"d", number);
 }

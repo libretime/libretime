@@ -65,7 +65,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version']);
+        $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/sprintf/sprintf-0.7-beta1.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
 
         //scripts for now playing bar
