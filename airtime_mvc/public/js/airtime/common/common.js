@@ -83,3 +83,12 @@ function openPreviewWindow(url) {
     //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
     return false;
 }
+
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+
+    return str;
+}

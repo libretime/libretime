@@ -58,17 +58,6 @@ function removeAddShowButton(){
     span.remove();
 }
 
-function pad(number, length) {
-    
-    var str = '' + number;
-    while (str.length < length) {
-        str = '0' + str;
-    }
-   
-    return str;
-
-}
-
 function makeTimeStamp(date){
 	var sy, sm, sd, h, m, s, timestamp;
 	sy = date.getFullYear();
@@ -80,15 +69,6 @@ function makeTimeStamp(date){
 
 	timestamp = sy+"-"+ pad(sm, 2) +"-"+ pad(sd, 2) +" "+ pad(h, 2) +":"+ pad(m, 2) +":"+ pad(s, 2);
 	return timestamp;
-}
-
-function pad(number, length) {
-    var str = '' + number;
-    while (str.length < length) {
-        str = '0' + str;
-    }
-
-    return str;
 }
 
 function dayClick(date, allDay, jsEvent, view){
@@ -141,7 +121,7 @@ function dayClick(date, allDay, jsEvent, view){
             }else{
                 // if in day or week view, selected has all the time info as well
                 // so we don't ahve to calculate it explicitly
-                startTime_string = selected.getHours()+":"+selected.getMinutes()
+                startTime_string = pad(selected.getHours(),2)+":"+pad(selected.getMinutes(),2)
                 startTime = 0
             }
             
@@ -155,7 +135,7 @@ function dayClick(date, allDay, jsEvent, view){
             $("#add_show_end_date_no_repeat").val(endDateFormat);
             $("#add_show_end_date").val(endDateFormat);
             if(view.name !== "month") {
-                var endTimeString = endDateTime.getHours()+":"+endDateTime.getMinutes();
+                var endTimeString = pad(endDateTime.getHours(),2)+":"+pad(endDateTime.getMinutes(),2);
                 $("#add_show_start_time").val(startTime_string)
                 $("#add_show_end_time").val(endTimeString)
             }
