@@ -93,6 +93,22 @@
             <?php endif; ?>
         </dd>
         
+        <!-- Enable System Email option -->
+        <dt id="enableSystemEmail-label" class="block-display">
+            <label class="required" for="timezone"><?php echo $this->element->getElement('enableSystemEmail')->getLabel() ?>:
+            </label>
+        </dt>
+        <dd id="enableSystemEmail-element" class="block-display">
+        	<?php echo $this->element->getElement('enableSystemEmail') ?>
+            <?php if($this->element->getElement('enableSystemEmail')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('enableSystemEmail')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        
         <!-- System Email option -->
         <dt id="systemEmail-label" class="block-display">
             <label class="required" for="timezone"><?php echo $this->element->getElement('systemEmail')->getLabel() ?>:

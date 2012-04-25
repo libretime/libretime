@@ -789,6 +789,14 @@ class Application_Model_Preference
         return self::GetValue("live_dj_source_connection_url");
     }
     
+    public static function SetEnableSystemEmail($upload) {
+        self::SetValue("enable_system_email", $upload);
+    }
+    
+    public static function GetEnableSystemEmail() {
+        return self::GetValue("enable_system_email");
+    }
+    
     public static function SetSystemEmail($value) {
         self::SetValue("system_email", $value, false);
     }
