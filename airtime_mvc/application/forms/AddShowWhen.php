@@ -32,8 +32,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValidators(array(
                         'NotEmpty',
                         array('date', false, array('HH:mm')),
-                        array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))))
-                    ->setDecorators(array('ViewHelper'));
+                        array('regex', false, array('/^[0-2][0-3]:[0-5][0-9]$/', 'messages' => 'Time format should be HH:mm'))
+                        ))->setDecorators(array('ViewHelper'));
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
 
