@@ -30,6 +30,20 @@ class Application_Model_ShowInstance {
     public function getShow(){
         return new Application_Model_Show($this->getShowId());
     }
+    
+    public function deleteRebroadcasts(){
+        $con = Propel::getConnection();
+
+        $timestamp = gmdate("Y-m-d H:i:s");
+        $instance_id = $this->getShowInstanceId();
+
+        $sql = "DELETE FROM cc_show_instances"
+                ." WHERE starts > TIMESTAMP '$timestamp'"
+                ." AND instance_id = $instance_id"
+                ." AND rebroadcast = 1";
+
+        $con->exec($sql);    	
+    }
 
     /* This function is weird. It should return a boolean, but instead returns
      * an integer if it is a rebroadcast, or returns null if it isn't. You can convert
