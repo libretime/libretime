@@ -65,6 +65,16 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
         
+        //enable system emails.
+        $this->addElement('checkbox', 'enableSystemEmail', array(
+            'label' => 'Enable System Emails (Password Reset)',
+            'required' => false,
+            'value' => Application_Model_Preference::GetEnableSystemEmail(),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+        
         // Add end date element
         $systemEmail = new Zend_Form_Element_Text('systemEmail');
         $systemEmail->class = 'input_text';
@@ -74,7 +84,14 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                         'NotEmpty',
-                        'EmailAddress'
+                        'EmailAddress',
+                        new Zend_Validate_Callback(function ($value, $context) {
+                            if ($context['enableSystemEmail']) {
+                                return true;
+                            }
+                            
+                            return false;
+                        })
                     ))
             ->setDecorators(array('ViewHelper'));
         $this->addElement($systemEmail);
