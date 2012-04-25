@@ -84,16 +84,23 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                         'NotEmpty',
-                        'EmailAddress',
-                        new Zend_Validate_Callback(function ($value, $context) {
-                            if ($context['enableSystemEmail']) {
-                                return true;
-                            }
-                            
-                            return false;
-                        })
-                    ))
+                        'EmailAddress'
+            ))
             ->setDecorators(array('ViewHelper'));
+                        
+        $systemEmail->addValidator('Callback', true, array(
+            'callback' => function($value, $context) {
+                if ($context['enableSystemEmail']) {
+                    return true;
+                }
+                return false;
+            },
+            'messages' => array(
+                Zend_Validate_Callback::INVALID_VALUE => 'Email must be enabled'
+            ),
+        ));
+                        
+               
         $this->addElement($systemEmail);
     }
 
