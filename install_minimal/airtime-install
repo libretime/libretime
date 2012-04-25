@@ -79,6 +79,8 @@ AIRTIMEROOT=$SCRIPTPATH/../
 #and we should probably create a separate file that checks whether ALL dependencies are satisfied before 
 #allowing the install to continue. However in that case, we wouldn't check for Debian packages so that we 
 #can become less Debian platform dependent in the future...
+
+set +e
 dpkg -l | grep zendframework > /dev/null 2>&1
 ZENDFRAMEWORK=$?
 
