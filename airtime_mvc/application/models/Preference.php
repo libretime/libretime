@@ -794,7 +794,13 @@ class Application_Model_Preference
     }
     
     public static function GetEnableSystemEmail() {
-        return self::GetValue("enable_system_email");
+        $v =  self::GetValue("enable_system_email");
+        
+        if ($v === "") {
+            return 0;
+        }
+        
+        return $v;
     }
     
     public static function SetSystemEmail($value) {

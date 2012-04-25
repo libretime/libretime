@@ -39,6 +39,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
                 Application_Model_Preference::SetTimezone($values["preferences_general"]["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["preferences_general"]["weekStartDay"]);
+                Application_Model_Preference::SetEnableSystemEmail($values["preferences_general"]["enableSystemEmail"]);
                 Application_Model_Preference::SetSystemEmail($values["preferences_general"]["systemEmail"]);
 
                 Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["preferences_soundcloud"]["UseSoundCloud"]);

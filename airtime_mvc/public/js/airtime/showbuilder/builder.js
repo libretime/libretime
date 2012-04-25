@@ -420,6 +420,9 @@ var AIRTIME = (function(AIRTIME){
 			//remove any selected nodes before the draw.
 			"fnPreDrawCallback": function( oSettings ) {
 				
+				//make sure any dragging helpers are removed or else they'll be stranded on the screen.
+				$("#draggingContainer").remove();
+				
 				//disable jump to current button.
 				AIRTIME.button.disableButton("sb-button-delete");
 				//disable jump to current button.
