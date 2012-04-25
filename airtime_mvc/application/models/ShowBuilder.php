@@ -256,7 +256,7 @@ class Application_Model_ShowBuilder {
         }
         
         if (intval($p_item["si_rebroadcast"]) === 1) {
-            $row["record"] = true;
+            $row["rebroadcast"] = true;
         }
                
         if ($this->currentShow = true) {
