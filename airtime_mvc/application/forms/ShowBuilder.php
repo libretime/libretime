@@ -40,7 +40,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
                   ->setValidators(array(
                       'NotEmpty',
                       array('date', false, array('HH:mm')),
-                      array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))))
+                      array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Invalid character entered'))))
                   ->setDecorators(array('ViewHelper'));
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
@@ -68,7 +68,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
                 ->setValidators(array(
                     'NotEmpty',
                     array('date', false, array('HH:mm')),
-                    array('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'))))
+                    array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Invalid character entered'))))
                 ->setDecorators(array('ViewHelper'));
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);

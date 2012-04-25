@@ -28,7 +28,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $text->setAttrib('class', 'input_text');
             $text->addFilter('StringTrim');
             $text->addValidator('date', false, array('HH:mm'));
-            $text->addValidator('regex', false, array('/^[0-9:]+$/', 'messages' => 'Invalid character entered'));
+            $text->addValidator('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Invalid character entered'));
             $text->setRequired(false);
             $text->setDecorators(array('ViewHelper'));
             $this->addElement($text);
