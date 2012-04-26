@@ -24,9 +24,12 @@
  	<h3>Source Streams</h3>
     <ul>
       <li>
-        <div id="scheduled_play_div" class="source-label"> Scheduled Play</div>
+        <div id="master_dj_div" class="source-label">
+          <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
+          Master Source
+        </div>
         <div class="line-to-switch"></div>
-        <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
+        <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch?></span></a>
         <div class="line-to-on-air"></div>
       </li>
       <li>
@@ -39,12 +42,9 @@
         <div class="line-to-on-air"></div>
       </li>
       <li>
-        <div id="master_dj_div" class="source-label">
-          <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
-          Master Source
-        </div>
+        <div id="scheduled_play_div" class="source-label"> Scheduled Play</div>
         <div class="line-to-switch"></div>
-        <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch?></span></a>
+        <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
         <div class="line-to-on-air"></div>
       </li>
     </ul>
