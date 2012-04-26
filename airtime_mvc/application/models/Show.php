@@ -868,14 +868,6 @@ class Application_Model_Show {
             $this->updateDurationTime($p_data);
         }
 
-        if ($isRecorded){
-            //delete all rebroadcasts. They will simply be recreated later
-            //in the execution of this PHP script. This simplifies having to
-            //reason about whether we should keep individual rebroadcasts or
-            //delete them or move them around etc.
-            $this->deleteAllRebroadcasts();
-        }
-
         if ($p_data['add_show_repeats']){
             if (($repeatType == 1 || $repeatType == 2) &&
                 $p_data['add_show_start_date'] != $this->getStartDate()){
@@ -1172,8 +1164,8 @@ class Application_Model_Show {
         $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
         $res = $con->query($sql)->fetchAll();
 
-        foreach ($res as $showRow) {
-            Application_Model_Show::populateShow($showRow, $p_populateUntilDateTime);
+        foreach ($res as $showDaysRow) {
+            Application_Model_Show::populateShow($showDaysRow, $p_populateUntilDateTime);
         }
     }
 
@@ -1188,18 +1180,18 @@ class Application_Model_Show {
      * @param DateTime $p_populateUntilDateTime
      *        DateTime object in UTC time.
      */
-    private static function populateShow($p_showRow, $p_populateUntilDateTime) {
-        if($p_showRow["repeat_type"] == -1) {
-            Application_Model_Show::populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime);
+    private static function populateShow($p_showDaysRow, $p_populateUntilDateTime) {
+        if($p_showDaysRow["repeat_type"] == -1) {
+            Application_Model_Show::populateNonRepeatingShow($p_showDaysRow, $p_populateUntilDateTime);
         }
-        else if($p_showRow["repeat_type"] == 0) {
-            Application_Model_Show::populateRepeatingShow($p_showRow, $p_populateUntilDateTime, 'P7D');
+        else if($p_showDaysRow["repeat_type"] == 0) {
+            Application_Model_Show::populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, 'P7D');
         }
-        else if($p_showRow["repeat_type"] == 1) {
-            Application_Model_Show::populateRepeatingShow($p_showRow, $p_populateUntilDateTime, 'P14D');
+        else if($p_showDaysRow["repeat_type"] == 1) {
+            Application_Model_Show::populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, 'P14D');
         }
-        else if($p_showRow["repeat_type"] == 2) {
-            Application_Model_Show::populateRepeatingShow($p_showRow, $p_populateUntilDateTime, 'P1M');
+        else if($p_showDaysRow["repeat_type"] == 2) {
+            Application_Model_Show::populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, 'P1M');
         }
         Application_Model_RabbitMq::PushSchedule();
     }
@@ -1258,9 +1250,10 @@ class Application_Model_Show {
             $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
             $rebroadcasts = $con->query($sql)->fetchAll();
 
-            //Logging::log('$start time of non repeating record '.$start);
-
-            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            if ($showInstance->isRecorded()){
+	            $showInstance->deleteRebroadcasts();
+	            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
+            }
         }
     }
 
@@ -1276,19 +1269,19 @@ class Application_Model_Show {
      * @param string $p_interval
      *        Period of time between repeating shows (in php DateInterval notation 'P7D')
      */
-    private static function populateRepeatingShow($p_showRow, $p_populateUntilDateTime, $p_interval)
+    private static function populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, $p_interval)
     {
         $con = Propel::getConnection();
 
-        $show_id = $p_showRow["show_id"];
-        $next_pop_date = $p_showRow["next_pop_date"];
-        $first_show = $p_showRow["first_show"]; //non-UTC
-        $last_show = $p_showRow["last_show"]; //non-UTC
-        $start_time = $p_showRow["start_time"]; //non-UTC
-        $duration = $p_showRow["duration"];
-        $day = $p_showRow["day"];
-        $record = $p_showRow["record"];
-        $timezone = $p_showRow["timezone"];
+        $show_id = $p_showDaysRow["show_id"];
+        $next_pop_date = $p_showDaysRow["next_pop_date"];
+        $first_show = $p_showDaysRow["first_show"]; //non-UTC
+        $last_show = $p_showDaysRow["last_show"]; //non-UTC
+        $start_time = $p_showDaysRow["start_time"]; //non-UTC
+        $duration = $p_showDaysRow["duration"];
+        $day = $p_showDaysRow["day"];
+        $record = $p_showDaysRow["record"];
+        $timezone = $p_showDaysRow["timezone"];
 
         $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
 
@@ -1314,6 +1307,12 @@ class Application_Model_Show {
 
             if ($show->hasInstanceOnDate($utcStartDateTime)){
                 $ccShowInstance = $show->getInstanceOnDate($utcStartDateTime);
+                
+                if ($ccShowInstance->getDbModifiedInstance()){
+                	//show instance on this date has been deleted.
+                	continue;
+                }
+                
                 $newInstance = false;
             } else {
                 $ccShowInstance = new CcShowInstances();
@@ -1341,10 +1340,8 @@ class Application_Model_Show {
                 $showInstance->correctScheduleStartTimes();
             }
 
-            //don't create rebroadcasts for a deleted recorded show.
-            if ($ccShowInstance->getDbModifiedInstance() == false) {
-                self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            }
+            $showInstance->deleteRebroadcasts();
+            self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
 
             if ($p_interval == 'P1M'){
                 /* When adding months, there is a problem if we are on January 31st and add one month with PHP.

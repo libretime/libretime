@@ -110,7 +110,22 @@ function setAddShowEvents() {
     form.find("#add_show_repeats").click(function(){
         $(this).blur();
         form.find("#schedule-show-when > fieldset:last").toggle();
+        
+        var checkBoxSelected = false;
+        var days = form.find("#add_show_day_check-element input").each( function() {
+                var currentCheckBox = $(this).attr("checked");
+                if (currentCheckBox && currentCheckBox == "checked"){
+                    checkBoxSelected = true;
+                }
+            });
+        
 
+        if (!checkBoxSelected){
+            var d = getDateFromString(form.find("#add_show_start_date").attr("value"));
+            if ( d != null)
+                form.find("#add_show_day_check-"+d.getDay()).attr('checked', true);
+        }
+        
         //must switch rebroadcast displays
         if(form.find("#add_show_rebroadcast").attr('checked')) {
 
@@ -364,12 +379,16 @@ function setAddShowEvents() {
 
 	// when start date/time changes, set end date/time to start date/time+1 hr
 	$('#add_show_start_date, #add_show_start_time').change(function(){
-		var startDate = $('#add_show_start_date').val().split('-');
-		var startTime = $('#add_show_start_time').val().split(':');
+	    var startDateString = $('#add_show_start_date').val();
+	    var startTimeString = $('#add_show_start_time').val();
+		var startDate = startDateString.split('-');
+		var startTime = startTimeString.split(':');
         var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
 
-		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
-		var endTime = $('#add_show_end_time').val().split(':');
+        var endDateString = $('#add_show_end_date_no_repeat').val();
+        var endTimeString = $('#add_show_end_time').val()
+		var endDate = endDateString.split('-');
+		var endTime = endTimeString.split(':');
         var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
 
 		if(startDateTime.getTime() >= endDateTime.getTime()){
@@ -393,17 +412,23 @@ function setAddShowEvents() {
 		$('#add_show_end_time').val(endTimeFormat);
 
 		// calculate duration
-		calculateDuration(endDateTime, startDateTime);
+		var startDateTimeString = startDateString + " " + startTimeString;
+		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
+		calculateDuration(startDateTimeString, endDateTimeString);
 	});
 
 	// when end date/time changes, check if the changed date is in past of start date/time
 	$('#add_show_end_date_no_repeat, #add_show_end_time').change(function(){
-		var startDate = $('#add_show_start_date').val().split('-');
-        var startTime = $('#add_show_start_time').val().split(':');
+	    var startDateString = $('#add_show_start_date').val();
+        var startTimeString = $('#add_show_start_time').val();
+        var startDate = startDateString.split('-');
+        var startTime = startTimeString.split(':');
 		var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
 
-		var endDate = $('#add_show_end_date_no_repeat').val().split('-');
-		var endTime = $('#add_show_end_time').val().split(':');
+		var endDateString = $('#add_show_end_date_no_repeat').val();
+        var endTimeString = $('#add_show_end_time').val()
+        var endDate = endDateString.split('-');
+        var endTime = endTimeString.split(':');
         var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
 
 		if(startDateTime.getTime() > endDateTime.getTime()){
@@ -415,7 +440,9 @@ function setAddShowEvents() {
 		}
 
 		// calculate duration
-		calculateDuration(endDateTime, startDateTime);
+		var startDateTimeString = startDateString + " " + startTimeString;
+        var endDateTimeString = endDateString + " " + endTimeString;
+        calculateDuration(startDateTimeString, endDateTimeString);
 	});
 
     if($('#cb_custom_auth').attr('checked')){
@@ -434,27 +461,9 @@ function setAddShowEvents() {
 
 	function calculateDuration(endDateTime, startDateTime){
 		var duration;
-		var durationSeconds = (endDateTime.getTime() - startDateTime.getTime())/1000;
-		if(isNaN(durationSeconds)){
-		    duration = '1h';
-		}
-		else if(durationSeconds != 0){
-			var durationHour = parseInt(durationSeconds/3600, 10);
-			var durationMin = parseInt((durationSeconds%3600)/60, 10);
-			duration = (durationHour == 0 ? '' : durationHour+'h'+' ')+(durationMin == 0 ? '' : durationMin+'m');
-		}else{
-			duration = '0m';
-		}
-		$('#add_show_duration').val(duration);
-	}
-
-	function pad(number, length) {
-	    var str = '' + number;
-	    while (str.length < length) {
-	        str = '0' + str;
-	    }
-
-	    return str;
+		$.post("/Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
+		    $('#add_show_duration').val(JSON.parse(data));
+		});
 	}
 }
 
