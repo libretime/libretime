@@ -238,6 +238,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $show_filter = intval($request->getParam("showFilter", 0));
         $my_shows = intval($request->getParam("myShows", 0));
         $timestamp = intval($request->getParam("timestamp", -1));
+        $instances = $request->getParam("instances", array());
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
@@ -247,7 +248,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         //only send the schedule back if updates have been made.
         // -1 default will always call the schedule to be sent back if no timestamp is defined.
-        if ($showBuilder->hasBeenUpdatedSince($timestamp)) {
+        if ($showBuilder->hasBeenUpdatedSince($timestamp, $instances)) {
             $this->view->update = true;
         }
         else {
@@ -275,7 +276,9 @@ class ShowbuilderController extends Zend_Controller_Action
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
-        $this->view->schedule = $showBuilder->GetItems();
+        $data = $showBuilder->GetItems();
+        $this->view->schedule = $data["schedule"];
+        $this->view->instances = $data["showInstances"];
         $this->view->timestamp = $current_time;
         
         $end = microtime(true);

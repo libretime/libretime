@@ -19,6 +19,8 @@ class Application_Model_ShowBuilder {
     private $contentDT;
     private $epoch_now;
     private $currentShow;
+    
+    private $showInstances = array();
    
     private $defaultRowArray = array(
         "header" => false,
@@ -311,11 +313,13 @@ class Application_Model_ShowBuilder {
      * @return boolean whether the schedule in the show builder's range has been updated.
      *
      */
-    public function hasBeenUpdatedSince($timestamp) {
+    public function hasBeenUpdatedSince($timestamp, $instances) {
         $outdated = false;
         $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
+        $currentInstances = array();
 
         foreach ($shows as $show) {
+            $currentInstances[] = $show["instance_id"];
 
             if (isset($show["last_scheduled"])) {
                 $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
@@ -331,7 +335,8 @@ class Application_Model_ShowBuilder {
             }
         }
 
-        if (count($shows) == 0) {
+        //see if the displayed show instances have changed. (deleted, empty schedule etc)
+        if ($outdated === false && count($instances) !== count($currentInstances)) {
             $outdated = true;
         }
 
@@ -392,6 +397,10 @@ class Application_Model_ShowBuilder {
             if (isset($row)) {
                 $display_items[] = $row;
             }
+           
+            if ($current_id !== -1 && !in_array($current_id, $this->showInstances)) {
+                $this->showInstances[] = $current_id;
+            }
         }
 
         //make the last footer if there were any scheduled items.
@@ -399,6 +408,6 @@ class Application_Model_ShowBuilder {
             $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items)-1]);
         }
         
-        return $display_items;
+        return array("schedule" => $display_items, "showInstances" => $this->showInstances);
     }
 }
