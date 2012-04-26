@@ -218,6 +218,7 @@ AIRTIME = (function(AIRTIME) {
 			data["start"] = start;
 			data["end"] = end;
 			data["timestamp"] = AIRTIME.showbuilder.getTimestamp();
+			data["instances"] = AIRTIME.showbuilder.getShowInstances();
 			
 			if (fn.hasOwnProperty("ops")) {
 				data["myShows"] = fn.ops.myShows;

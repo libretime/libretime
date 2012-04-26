@@ -19,31 +19,35 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	mod.timeout = undefined;
+	mod.timestamp = -1;
+	mod.showInstances = [];
 	
 	mod.resetTimestamp = function() {
-		var timestamp = $("#sb_timestamp");
-		//reset timestamp value since input values could have changed.
-		timestamp.val(-1);
+		
+		mod.timestamp = -1;
 	};
 	
 	mod.setTimestamp = function(timestamp) {
-		$("#sb_timestamp").val(timestamp);
+		
+		mod.timestamp = timestamp;
 	};
 	
 	mod.getTimestamp = function() {
-		var timestamp = $("#sb_timestamp"),
-			val;
 		
-		//if the timestamp field is on the page return it, or give the default of -1
-		//to ensure a page refresh.
-		if (timestamp.length === 1) {
-			val = timestamp.val();
+		if (mod.timestamp !== undefined) {
+			return mod.timestamp;
 		}
 		else {
-			val = -1;
+			return -1;
 		}
-		
-		return val;
+	};
+	
+	mod.setShowInstances = function(showInstances) {
+		mod.showInstances = showInstances;
+	};
+	
+	mod.getShowInstances = function() {
+		return mod.showInstances;
 	};
 	
 	mod.getSelectedData = function() {
@@ -117,6 +121,7 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnServerData = function ( sSource, aoData, fnCallback ) {
 		
 		aoData.push( { name: "timestamp", value: AIRTIME.showbuilder.getTimestamp()} );
+		aoData.push( { name: "instances", value: AIRTIME.showbuilder.getShowInstances()} );
 		aoData.push( { name: "format", value: "json"} );
 		
 		if (mod.fnServerData.hasOwnProperty("start")) {
@@ -130,16 +135,17 @@ var AIRTIME = (function(AIRTIME){
 			aoData.push( { name: "showFilter", value: mod.fnServerData.ops.showFilter} );
 		}
 		
-		$.ajax( {
+		$.ajax({
 			"dataType": "json",
 			"type": "POST",
 			"url": sSource,
 			"data": aoData,
 			"success": function(json) {
 				AIRTIME.showbuilder.setTimestamp(json.timestamp);
+				AIRTIME.showbuilder.setShowInstances(json.instances);
 				fnCallback(json);
 			}
-		} );
+		});
 	};
 	
 	mod.builderDataTable = function() {
