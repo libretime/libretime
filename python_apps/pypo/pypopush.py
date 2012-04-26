@@ -73,7 +73,7 @@ class PypoPush(Thread):
                 if len(current_event_chain) > 0 and len(liquidsoap_queue_approx) == 0:
                     #Something is scheduled but Liquidsoap is not playing anything!
                     #Need to schedule it immediately..this might happen if Liquidsoap crashed.
-                    self.modify_cue_point_of_first_link(current_event_chain)
+                    self.modify_cue_point(current_event_chain[0])
                     next_media_item_chain = current_event_chain
                     time_until_next_play = 0
                 else:
@@ -176,8 +176,11 @@ class PypoPush(Thread):
         
         if problem_at_iteration is not None:
             self.logger.debug("Change in chain at link %s", problem_at_iteration)
-            #self.modify_cue_point_of_first_link(media_chain)
-            self.push_to_liquidsoap(media_chain[problem_at_iteration:])
+            
+            chain_to_push = media_chain[problem_at_iteration:]
+            if len(chain_to_push) > 0:
+                self.modify_cue_point(chain_to_push[0])
+                self.push_to_liquidsoap(chain_to_push)
         
     """
     Compare whats in the liquidsoap_queue to the new schedule we just
@@ -246,24 +249,19 @@ class PypoPush(Thread):
             
         return chains
     
-    def modify_cue_point_of_first_link(self, chain):
+    def modify_cue_point(self, link):
         tnow = datetime.utcnow()
-        link = chain[0]
         
         link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
         
         diff_td = tnow - link_start
-        diff_sec = self.convert_timedelta_to_seconds(diff_td)
+        diff_sec = self.date_interval_to_seconds(diff_td)
         
         if diff_sec > 0:
             self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_sec)
             original_cue_in_td = timedelta(seconds=float(link['cue_in']))
-            link['cue_in'] = self.convert_timedelta_to_seconds(original_cue_in_td) + diff_sec
-            
-        
-    def convert_timedelta_to_seconds(self, td):
-        return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
-        
+            link['cue_in'] = self.date_interval_to_seconds(original_cue_in_td) + diff_sec
+    
     
     def get_current_chain(self, chains):
         tnow = datetime.utcnow()
