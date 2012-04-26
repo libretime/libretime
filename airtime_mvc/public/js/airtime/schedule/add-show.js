@@ -460,9 +460,12 @@ function setAddShowEvents() {
     })
 
 	function calculateDuration(endDateTime, startDateTime){
-		var duration;
+		var loadingIcon = $('#icon-loader-small');
+		
+		loadingIcon.show();
 		$.post("/Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
 		    $('#add_show_duration').val(JSON.parse(data));
+		    loadingIcon.hide();
 		});
 	}
 }
