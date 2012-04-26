@@ -41,12 +41,15 @@ logger.info("\n\n*** Media Monitor bootup ***\n\n")
 
 
 try:
-    fs_encoding = locale.getdefaultlocale()[1].lower()
-    if fs_encoding not in ['utf-8', 'utf8']:
-        logger.error("Filesystem encoding needs to be UTF-8. Currently '%s'. Exiting..." % fs_encoding)
-        sys.exit(1)
+    fs_encoding = locale.getdefaultlocale()[1]
+    if fs_encoding is not None:
+        if fs_encoding not in ['utf-8', 'utf8']:
+            logger.error("Filesystem encoding needs to be UTF-8. Currently '%s'. Exiting..." % fs_encoding)
+            sys.exit(1)
+        else:
+            logger.debug("Filesystem encoding: '%s'" % fs_encoding)
     else:
-        logger.debug("Filesystem encoding: '%s'" % fs_encoding)
+        logger.debug("Unknown encoding")
 
     
     config = AirtimeMediaConfig(logger)
