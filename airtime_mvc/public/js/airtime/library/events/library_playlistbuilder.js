@@ -5,16 +5,15 @@ var AIRTIME = (function(AIRTIME){
 		AIRTIME.library = {};
 	}
 	
-	AIRTIME.library.events = {};
-	mod = AIRTIME.library.events;
+	mod = AIRTIME.library;
 
-    mod.enableAddButtonCheck = function() {
-    	var selected = $('#library_display tr[id ^= "au"] input[type=checkbox]').filter(":checked"),
+    mod.checkAddButton = function() {
+    	var selected = mod.getChosenItemsLength(),
     		sortable = $('#spl_sortable'),
     		check = false;
     	
     	//make sure audioclips are selected and a playlist is currently open.
-    	if (selected.length !== 0 && sortable.length !== 0) {
+    	if (selected !== 0 && sortable.length !== 0) {
     		check = true;
     	}
     	
@@ -35,6 +34,9 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.fnDrawCallback = function() {
+		
+		mod.redrawChosen();
+		mod.checkToolBarIcons();
 		
 		$('#library_display tr[id ^= "au"]').draggable({
 			helper: function(){
@@ -82,8 +84,9 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar
 			.append("<ul />")
 			.find('ul')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add selected files to playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected files"><span class="ui-icon ui-icon-trash"></span></li>');
+				.append('<li class="ui-state-default lib-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="Add selected library items to the current playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="Delete selected library items"><span class="ui-icon ui-icon-trash"></span></li>');
 		
 		//add to playlist button
 		$toolbar.find('.lib-button-add')
@@ -120,6 +123,8 @@ var AIRTIME = (function(AIRTIME){
 				
 				AIRTIME.library.fnDeleteSelectedItems();
 			});
+		
+		mod.createToolbarDropDown();
 	};
 	
 	return AIRTIME;

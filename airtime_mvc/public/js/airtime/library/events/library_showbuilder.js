@@ -5,16 +5,15 @@ var AIRTIME = (function(AIRTIME){
 		AIRTIME.library = {};
 	}
 	
-	AIRTIME.library.events = {};
-	mod = AIRTIME.library.events;
+	mod = AIRTIME.library;
 	
-	mod.enableAddButtonCheck = function() {
-    	var selected = $('#library_display tr input[type=checkbox]').filter(":checked"),
+	mod.checkAddButton = function() {
+		var selected = mod.getChosenItemsLength(),
     		cursor = $('tr.cursor-selected-row'),
     		check = false;
     	
     	//make sure library items are selected and a cursor is selected.
-    	if (selected.length !== 0 && cursor.length !== 0) {
+    	if (selected !== 0 && cursor.length !== 0) {
     		check = true;
     	}
     	
@@ -35,6 +34,9 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.fnDrawCallback = function fnLibDrawCallback() {
+		
+		mod.redrawChosen();
+		mod.checkToolBarIcons();
 		
 		$('#library_display tr:not(:first)').draggable({
 			helper: function(){
@@ -73,18 +75,18 @@ var AIRTIME = (function(AIRTIME){
 		    },
 			cursor: 'pointer',
 			connectToSortable: '#show_builder_table'
-		});	
+		});
 	};
 	
 	mod.setupLibraryToolbar = function() {
-		var $toolbar = $(".lib-content .fg-toolbar:first"),
-			$libTable = $("#library_display");
+		var $toolbar = $(".lib-content .fg-toolbar:first");
 		
 		$toolbar
 			.append("<ul />")
 			.find('ul')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add files after cursor points"><span class="ui-icon ui-icon-plusthick"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected files"><span class="ui-icon ui-icon-trash"></span></li>');
+				.append('<li class="ui-state-default lib-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="Add library items after selected cursors in the timeline"><span class="ui-icon ui-icon-plusthick"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="Delete selected library items"><span class="ui-icon ui-icon-trash"></span></li>');
 		
 		//add to timeline button
 		$toolbar.find('.lib-button-add')
@@ -131,7 +133,9 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				AIRTIME.library.fnDeleteSelectedItems();
-			});	
+			});
+		
+		mod.createToolbarDropDown();
 	};
 	
 	return AIRTIME;
