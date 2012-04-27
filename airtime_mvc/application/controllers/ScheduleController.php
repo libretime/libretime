@@ -900,15 +900,19 @@ class ScheduleController extends Zend_Controller_Action
         $startParam = $this->_getParam('startTime');
         $endParam = $this->_getParam('endTime');
         
-        $startDateTime = new DateTime($startParam);
-        $endDateTime = new DateTime($endParam);
+        try{
+            $startDateTime = new DateTime($startParam);
+            $endDateTime = new DateTime($endParam);
         
-        $UTCStartDateTime = $startDateTime->setTimezone(new DateTimeZone('UTC'));
-        $UTCEndDateTime = $endDateTime->setTimezone(new DateTimeZone('UTC'));
+            $UTCStartDateTime = $startDateTime->setTimezone(new DateTimeZone('UTC'));
+            $UTCEndDateTime = $endDateTime->setTimezone(new DateTimeZone('UTC'));
         
-        $duration = $UTCEndDateTime->diff($UTCStartDateTime);
+            $duration = $UTCEndDateTime->diff($UTCStartDateTime);
         
-        $result = $duration->format('%r%Hh %Im');
+            $result = $duration->format('%r%Hh %Im');
+        }catch (Exception $e){
+            $result = "Invalid Date";
+        }
         
         echo Zend_Json::encode($result);
         exit();

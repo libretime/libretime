@@ -20,6 +20,11 @@ var live_dj_on_air = false;
 var scheduled_play_on_air = false;
 var scheduled_play_source = false;
 
+//keep track of how many UI refreshes the ON-AIR light has been off for.
+//For example, the uiUpdateInterval is every 200ms, so if onAirOffIterations
+//is 25, then that means 5 seconds have gone by.
+var onAirOffIterations = 0;
+
 //var timezoneOffset = 0;
 
 //set to "development" if we are developing :). Useful to disable alerts
@@ -326,9 +331,16 @@ function parseSwitchStatus(obj){
 }
 
 function controlOnAirLight(){
-    if((scheduled_play_on_air && scheduled_play_source)|| live_dj_on_air || master_dj_on_air){
+    if ((scheduled_play_on_air && scheduled_play_source) || live_dj_on_air || master_dj_on_air) {
         $('#on-air-info').attr("class", "on-air-info on");
-    }else{
+        onAirOffIterations = 0;
+    } else if (onAirOffIterations < 15) {
+        //if less than 3 seconds have gone by (< 15 executions of this function)
+        //then keep the ON-AIR light on. Only after at least 3 seconds have gone by, 
+        //should we be allowed to turn it off. This is to stop the light from temporarily turning
+        //off between tracks: CC-3725
+        onAirOffIterations++;
+    } else {
         $('#on-air-info').attr("class", "on-air-info off");
     }
 }

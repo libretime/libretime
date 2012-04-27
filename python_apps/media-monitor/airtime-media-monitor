@@ -6,7 +6,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
 
 media_monitor_path="/usr/lib/airtime/media-monitor/"
-media_monitor_script="MediaMonitor.py"
+media_monitor_script="media_monitor.py"
 
 api_client_path="/usr/lib/airtime/"
 
