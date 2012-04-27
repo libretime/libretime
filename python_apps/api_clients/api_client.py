@@ -421,7 +421,7 @@ class AirTimeApiClient(ApiClientInterface):
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
 
-            response = urllib2.urlopen(req).read()
+            response = self.get_response_from_server(req)
             logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
             response = json.loads(response)
 
@@ -437,8 +437,6 @@ class AirTimeApiClient(ApiClientInterface):
                 response = self.get_response_from_server(url)
                 response = json.loads(response)
                 logger.info("associate recorded %s", response)
-
-
         except Exception, e:
             response = None
             import traceback
@@ -609,7 +607,7 @@ class AirTimeApiClient(ApiClientInterface):
             data = urllib.urlencode(map)
             
             req = urllib2.Request(url, data)
-            response = urllib2.urlopen(req).read()
+            response = self.get_response_from_server(req)
             
             logger.info("update file system mount: %s", json.loads(response))
         except Exception, e:
@@ -649,7 +647,8 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%api_key%%", self.config["api_key"])
             
             response = self.get_response_from_server(url)
-            logger.info("Bootstrap info retrieved %s", json.loads(response))
+            response = json.loads(response)
+            logger.info("Bootstrap info retrieved %s", response)
         except Exception, e:
             response = None
             import traceback
