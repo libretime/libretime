@@ -777,13 +777,13 @@ var AIRTIME = (function(AIRTIME){
 		
 		$ul = $("<ul/>");
 		$ul.append('<li class="ui-state-default sb-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
-			.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
-			.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="delete selected items"><span class="ui-icon ui-icon-trash"></span></li>');	
+			.append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="Delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
+			.append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="Delete selected scheduled items"><span class="ui-icon ui-icon-trash"></span></li>');	
 		$toolbar.append($ul);
 		
 		$ul = $("<ul/>");
-		$ul.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
-			.append('<li class="ui-state-default ui-state-disabled sb-button-cancel" title="cancel current show"><span class="ui-icon ui-icon-eject"></span></li>');
+		$ul.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="Jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
+			.append('<li class="ui-state-default ui-state-disabled sb-button-cancel" title="Cancel current show"><span class="ui-icon ui-icon-eject"></span></li>');
 		$toolbar.append($ul);
 		
 		$.contextMenu({

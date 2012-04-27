@@ -84,9 +84,9 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar
 			.append("<ul />")
 			.find('ul')
-				.append('<li class="ui-state-default lib-button-select" title="select"><span class="ui-icon ui-icon-document-b"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add files after cursor points"><span class="ui-icon ui-icon-plusthick"></span></li>')
-				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected files"><span class="ui-icon ui-icon-trash"></span></li>');
+				.append('<li class="ui-state-default lib-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="Add library items after selected cursors in the timeline"><span class="ui-icon ui-icon-plusthick"></span></li>')
+				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="Delete selected library items"><span class="ui-icon ui-icon-trash"></span></li>');
 		
 		//add to timeline button
 		$toolbar.find('.lib-button-add')
