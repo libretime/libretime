@@ -7,6 +7,8 @@ import signal
 import traceback
 import locale
 
+from configobj import ConfigObj
+
 from api_clients import api_client as apc
 from std_err_override import LogWriter
 
@@ -23,6 +25,33 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
 from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
+def get_locale():
+    current_locale = locale.getlocale()
+    
+    if current_locale[1] is None:
+        logger.debug("No locale currently set. Attempting to get default locale.")
+        default_locale = locale.getdefaultlocale()
+        
+        if default_locale[1] is None:
+            logger.debug("No default locale exists. Let's try loading from /etc/default/locale")
+            if os.path.exists("/etc/default/locale"):
+                config = ConfigObj('/etc/default/locale')
+                lang = config.get('LANG')
+                new_locale = lang
+            else:
+                logger.error("/etc/default/locale could not be found! Please run 'sudo update-locale' from command-line.")
+                sys.exit(1)
+        else:
+            new_locale = default_locale
+            
+        logger.debug("New locale set to: " + locale.setlocale(locale.LC_ALL, new_locale))
+            
+    
+    current_locale_encoding = locale.getlocale()[1].lower()
+    
+    if current_locale_encoding not in ['utf-8', 'utf8']:
+        logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
+            
 # configure logging
 try:
     logging.config.fileConfig("logging.cfg")
@@ -41,16 +70,7 @@ logger.info("\n\n*** Media Monitor bootup ***\n\n")
 
 
 try:
-    fs_encoding = locale.getdefaultlocale()[1]
-    if fs_encoding is not None:
-        if fs_encoding not in ['utf-8', 'utf8']:
-            logger.error("Filesystem encoding needs to be UTF-8. Currently '%s'. Exiting..." % fs_encoding)
-            sys.exit(1)
-        else:
-            logger.debug("Filesystem encoding: '%s'" % fs_encoding)
-    else:
-        logger.debug("Unknown encoding")
-
+    get_locale()
     
     config = AirtimeMediaConfig(logger)
     api_client = apc.api_client_factory(config.cfg)
@@ -72,12 +92,6 @@ try:
     
     multi_queue = mpQueue()
     logger.info("Initializing event processor")
-except Exception, e:
-    logger.error('Exception: %s', e)
-    logger.error("traceback: %s", traceback.format_exc())
-    
-try:
-
 
     wm = WatchManager()
     mmc = MediaMonitorCommon(config, wm=wm)
