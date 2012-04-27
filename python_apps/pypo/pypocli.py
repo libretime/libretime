@@ -9,6 +9,8 @@ import signal
 import logging
 import logging.config
 import logging.handlers
+import locale
+import os
 from Queue import Queue
 
 from threading import Lock
@@ -44,13 +46,47 @@ parser.add_option("-c", "--check", help="Check the cached schedule and exit", de
 # parse options
 (options, args) = parser.parse_args()
 
-# configure logging
-logging.config.fileConfig("logging.cfg")
-logger = logging.getLogger()
-LogWriter.override_std_err(logger)
 
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
+
+def configure_locale():
+    current_locale = locale.getlocale()
+    
+    if current_locale[1] is None:
+        logger.debug("No locale currently set. Attempting to get default locale.")
+        default_locale = locale.getdefaultlocale()
+        
+        if default_locale[1] is None:
+            logger.debug("No default locale exists. Let's try loading from /etc/default/locale")
+            if os.path.exists("/etc/default/locale"):
+                config = ConfigObj('/etc/default/locale')
+                lang = config.get('LANG')
+                new_locale = lang
+            else:
+                logger.error("/etc/default/locale could not be found! Please run 'sudo update-locale' from command-line.")
+                sys.exit(1)
+        else:
+            new_locale = default_locale
+            
+        logger.debug("New locale set to: " + locale.setlocale(locale.LC_ALL, new_locale))
+            
+    
+    current_locale_encoding = locale.getlocale()[1].lower()
+    
+    if current_locale_encoding not in ['utf-8', 'utf8']:
+        logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
+
+# configure logging
+try:
+    logging.config.fileConfig("logging.cfg")
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
+except Exception, e:
+    print "Couldn't configure logging"
+    sys.exit()
+    
+configure_locale()
 
 # loading config file
 try:

@@ -88,10 +88,10 @@ class AirtimeMediaMonitorBootstrap():
         for file in files['files']:
             db_known_files_set.add(file)
 
-        new_files = self.mmc.scan_dir_for_new_files(dir)
+        all_files = self.mmc.scan_dir_for_new_files(dir)
 
         all_files_set = set()
-        for file_path in new_files:
+        for file_path in all_files:
             if len(file_path.strip(" \n")) > 0:
                 all_files_set.add(file_path[len(dir):])
 
@@ -106,8 +106,8 @@ class AirtimeMediaMonitorBootstrap():
         else:
             command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
 
+        self.logger.debug(command)
         stdout = self.mmc.exec_command(command)
-        #self.logger.info(stdout)
 
         new_files = stdout.splitlines()
 
@@ -149,7 +149,6 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.debug(full_file_path)
             if os.path.exists(full_file_path):
                 self.pe.handle_created_file(False, full_file_path, os.path.basename(full_file_path))
-
 
         for file_path in modified_files_set:
             self.logger.debug("modified file")

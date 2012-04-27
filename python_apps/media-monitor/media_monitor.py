@@ -25,7 +25,7 @@ from airtimefilemonitor.mediaconfig import AirtimeMediaConfig
 from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
 from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
-def get_locale():
+def configure_locale():
     current_locale = locale.getlocale()
     
     if current_locale[1] is None:
@@ -70,7 +70,7 @@ logger.info("\n\n*** Media Monitor bootup ***\n\n")
 
 
 try:
-    get_locale()
+    configure_locale()
     
     config = AirtimeMediaConfig(logger)
     api_client = apc.api_client_factory(config.cfg)
