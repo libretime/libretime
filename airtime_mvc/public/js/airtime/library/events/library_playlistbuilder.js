@@ -13,7 +13,7 @@ var AIRTIME = (function(AIRTIME){
     		check = false;
     	
     	//make sure audioclips are selected and a playlist is currently open.
-    	if (selected.length !== 0 && sortable.length !== 0) {
+    	if (selected !== 0 && sortable.length !== 0) {
     		check = true;
     	}
     	
@@ -84,6 +84,7 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar
 			.append("<ul />")
 			.find('ul')
+				.append('<li class="ui-state-default lib-button-select" title="select"><span class="ui-icon ui-icon-document-b"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add selected files to playlist"><span class="ui-icon ui-icon-plusthick"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected files"><span class="ui-icon ui-icon-trash"></span></li>');
 		
@@ -122,6 +123,8 @@ var AIRTIME = (function(AIRTIME){
 				
 				AIRTIME.library.fnDeleteSelectedItems();
 			});
+		
+		mod.createToolbarDropDown();
 	};
 	
 	return AIRTIME;

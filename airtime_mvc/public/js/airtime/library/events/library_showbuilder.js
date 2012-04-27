@@ -13,7 +13,7 @@ var AIRTIME = (function(AIRTIME){
     		check = false;
     	
     	//make sure library items are selected and a cursor is selected.
-    	if (mod.chosenItems.length !== 0 && cursor.length !== 0) {
+    	if (selected !== 0 && cursor.length !== 0) {
     		check = true;
     	}
     	
@@ -79,12 +79,12 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.setupLibraryToolbar = function() {
-		var $toolbar = $(".lib-content .fg-toolbar:first"),
-			$libTable = $("#library_display");
+		var $toolbar = $(".lib-content .fg-toolbar:first");
 		
 		$toolbar
 			.append("<ul />")
 			.find('ul')
+				.append('<li class="ui-state-default lib-button-select" title="select"><span class="ui-icon ui-icon-document-b"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled lib-button-add" title="add files after cursor points"><span class="ui-icon ui-icon-plusthick"></span></li>')
 				.append('<li class="ui-state-default ui-state-disabled lib-button-delete" title="delete selected files"><span class="ui-icon ui-icon-trash"></span></li>');
 		
@@ -133,7 +133,9 @@ var AIRTIME = (function(AIRTIME){
 				}
 				
 				AIRTIME.library.fnDeleteSelectedItems();
-			});	
+			});
+		
+		mod.createToolbarDropDown();
 	};
 	
 	return AIRTIME;

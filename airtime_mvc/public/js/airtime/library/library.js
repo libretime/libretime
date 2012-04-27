@@ -18,6 +18,20 @@ var AIRTIME = (function(AIRTIME) {
     	return selected;
     };
     
+    mod.createToolbarDropDown = function() {
+    	
+    	$.contextMenu({
+            selector: '#library_content .ui-icon-document-b',
+            trigger: "left",
+            ignoreRightClick: true,
+            items: {
+                "sp": {name: "Select This Page", callback: mod.selectCurrentPage},
+                "dp": {name: "Deselect This Page", callback: mod.deselectCurrentPage},
+                "sn": {name: "Deselect All", callback: mod.selectNone}
+            }
+        }); 	
+    };
+    
     mod.checkDeleteButton = function() {
     	var selected = mod.getChosenItemsLength(),
     		check = false;
@@ -100,10 +114,10 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     /*
-     * select all selects all items which the user can currently see.
+     * selects all items which the user can currently see.
      * (behaviour taken from gmail)
      */
-    mod.selectAll = function () {
+    mod.selectCurrentPage = function() {
     	var $trs = $libTable.find("tbody input:checkbox").parents("tr");
     	
     	$trs.each(function(i, el){
@@ -114,10 +128,10 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     /*
-     * select none deselects all items that the user can currently see.
+     * deselects all items that the user can currently see.
      * (behaviour taken from gmail)
      */
-    mod.selectNone = function () {
+    mod.deselectCurrentPage = function() {
     	
     	var $trs = $libTable.find("tbody input:checkbox").filter(":checked").parents("tr");
 		
@@ -128,6 +142,18 @@ var AIRTIME = (function(AIRTIME) {
 		}); 	
     };
     
+    mod.selectNone = function() {
+    	var $inputs = $libTable.find("tbody input:checkbox"),
+    		$trs = $inputs.parents("tr");
+    	
+    	$inputs.attr("checked", false);
+    	$trs.removeClass(LIB_SELECTED_CLASS);
+    	
+    	chosenItems = {};
+    	
+    	mod.checkToolBarIcons();
+    };
+    
     mod.fnDeleteItems = function(aMedia) {
        
         $.post("/library/delete", 
@@ -136,7 +162,7 @@ var AIRTIME = (function(AIRTIME) {
                 if (json.message !== undefined) {
                     alert(json.message);
                 }
-               
+                chosenItems = {};
                 oTable.fnDraw();
             });
     };
@@ -170,7 +196,7 @@ var AIRTIME = (function(AIRTIME) {
             //put hidden columns at the top to insure they can never be visible on the table through column reordering.
             "aoColumns": [
               /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
-              /* Checkbox */      {"sTitle": "<input type='checkbox' name='pl_cb_all'>", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
+              /* Checkbox */      {"sTitle": "", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
               /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 0},
               /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title"},
               /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
@@ -384,17 +410,6 @@ var AIRTIME = (function(AIRTIME) {
             .change(function(ev){
                 oTable.fnDraw();
             });
-          
-        $libTable.find('[name="pl_cb_all"]').click(function() {
-            
-            if ($(this).is(":checked")) {
-            	
-            	AIRTIME.library.selectAll();
-            }
-            else {
-            	AIRTIME.library.selectNone();
-            }       
-        });
         
         $libTable.find("tbody").on("click", "input[type=checkbox]", function(ev) {
         	
