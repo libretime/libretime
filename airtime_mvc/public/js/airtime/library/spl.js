@@ -275,9 +275,9 @@ var AIRTIME = (function(AIRTIME){
 	}
 		
 	function redrawLib() {
-	    var dt = $("#library_display").dataTable();
+	    var dt = $lib.find("#library_display").dataTable();
 	    
-	    dt.fnStandingRedraw();
+	    dt.fnDraw();
 	}
 	
 	function setPlaylistContent(json) {

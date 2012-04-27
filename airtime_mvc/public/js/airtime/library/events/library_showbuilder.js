@@ -5,16 +5,15 @@ var AIRTIME = (function(AIRTIME){
 		AIRTIME.library = {};
 	}
 	
-	AIRTIME.library.events = {};
-	mod = AIRTIME.library.events;
+	mod = AIRTIME.library;
 	
-	mod.enableAddButtonCheck = function() {
-    	var selected = $('#library_display tr input[type=checkbox]').filter(":checked"),
+	mod.checkAddButton = function() {
+		var selected = mod.getChosenItemsLength(),
     		cursor = $('tr.cursor-selected-row'),
     		check = false;
     	
     	//make sure library items are selected and a cursor is selected.
-    	if (selected.length !== 0 && cursor.length !== 0) {
+    	if (mod.chosenItems.length !== 0 && cursor.length !== 0) {
     		check = true;
     	}
     	
@@ -35,6 +34,9 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.fnDrawCallback = function fnLibDrawCallback() {
+		
+		mod.redrawChosen();
+		mod.checkToolBarIcons();
 		
 		$('#library_display tr:not(:first)').draggable({
 			helper: function(){
@@ -73,7 +75,7 @@ var AIRTIME = (function(AIRTIME){
 		    },
 			cursor: 'pointer',
 			connectToSortable: '#show_builder_table'
-		});	
+		});
 	};
 	
 	mod.setupLibraryToolbar = function() {

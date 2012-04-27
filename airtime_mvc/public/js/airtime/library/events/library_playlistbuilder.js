@@ -5,11 +5,10 @@ var AIRTIME = (function(AIRTIME){
 		AIRTIME.library = {};
 	}
 	
-	AIRTIME.library.events = {};
-	mod = AIRTIME.library.events;
+	mod = AIRTIME.library;
 
-    mod.enableAddButtonCheck = function() {
-    	var selected = $('#library_display tr[id ^= "au"] input[type=checkbox]').filter(":checked"),
+    mod.checkAddButton = function() {
+    	var selected = mod.getChosenItemsLength(),
     		sortable = $('#spl_sortable'),
     		check = false;
     	
@@ -35,6 +34,9 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.fnDrawCallback = function() {
+		
+		mod.redrawChosen();
+		mod.checkToolBarIcons();
 		
 		$('#library_display tr[id ^= "au"]').draggable({
 			helper: function(){

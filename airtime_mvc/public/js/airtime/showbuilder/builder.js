@@ -79,7 +79,6 @@ var AIRTIME = (function(AIRTIME){
 			function(json){
 				checkError(json);
 				oSchedTable.fnDraw();
-				AIRTIME.library.selectNone();	
 			});
 	};
 	
@@ -541,7 +540,7 @@ var AIRTIME = (function(AIRTIME){
 					AIRTIME.button.enableButton("sb-button-cancel");
 				}
 				
-				AIRTIME.library.events.enableAddButtonCheck();
+				AIRTIME.library.checkAddButton();
 		    },
 			"fnHeaderCallback": function(nHead) {
 				$(nHead).find("input[type=checkbox]").attr("checked", false);
@@ -876,7 +875,7 @@ var AIRTIME = (function(AIRTIME){
 			}
 			
 			//check if add button can still be enabled.
-			AIRTIME.library.events.enableAddButtonCheck();
+			AIRTIME.library.checkAddButton();
 
 			return false;
 		});
