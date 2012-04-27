@@ -30,10 +30,9 @@ def api_client_factory(config, logger=None):
         temp_logger = logger
     else:
         temp_logger = logging.getLogger()
+        
     if config["api_client"] == "airtime":
         return AirTimeApiClient(temp_logger)
-    elif config["api_client"] == "obp":
-        return ObpApiClient()
     else:
         temp_logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
         sys.exit()
@@ -175,18 +174,19 @@ class AirTimeApiClient(ApiClientInterface):
         
         while not successful_response:
             try:
-                response = urllib.urlopen(url)
-                data = response.read()
+                response = urllib2.urlopen(url).read()
                 successful_response = True
             except IOError, e:
                 logger.error('Error Authenticating with remote server: %s', e)
             except Exception, e:
                 logger.error('Couldn\'t connect to remote server. Is it running?')
                 logger.error("%s" % e)
+            
             if not successful_response:
+                logger.error("Error connecting to server, waiting 5 seconds and trying again.")
                 time.sleep(5)
             
-        return data
+        return response
         
 
     def __get_airtime_version(self, verbose = True):
@@ -293,8 +293,9 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%schedule_id%%", str(schedule_id))
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
-            response = urllib.urlopen(url)
-            response = json.loads(response.read())
+                        
+            response = self.get_response_from_server(url)
+            response = json.loads(response)
             logger.info("API-Status %s", response['status'])
             logger.info("API-Message %s", response['message'])
 
@@ -376,8 +377,7 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%djtype%%", dj_type)
             url = url.replace("%%password%%", password)
     
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             import traceback
@@ -434,8 +434,7 @@ class AirTimeApiClient(ApiClientInterface):
                 url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
                 url = url.replace("%%api_key%%", self.config["api_key"])
 
-                req = urllib2.Request(url)
-                response = urllib2.urlopen(req).read()
+                response = self.get_response_from_server(url)
                 response = json.loads(response)
                 logger.info("associate recorded %s", response)
 
@@ -460,9 +459,8 @@ class AirTimeApiClient(ApiClientInterface):
 
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%dir_id%%", dir_id)
-
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             response = None
@@ -476,9 +474,8 @@ class AirTimeApiClient(ApiClientInterface):
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
 
             url = url.replace("%%api_key%%", self.config["api_key"])
-
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             response = None
@@ -493,9 +490,8 @@ class AirTimeApiClient(ApiClientInterface):
 
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%path%%", base64.b64encode(path))
-
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             response = None
@@ -510,9 +506,8 @@ class AirTimeApiClient(ApiClientInterface):
 
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%path%%", base64.b64encode(path))
-
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+           
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             response = None
@@ -528,8 +523,7 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%path%%", base64.b64encode(path))
 
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             response = None
@@ -542,9 +536,8 @@ class AirTimeApiClient(ApiClientInterface):
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_stream_setting"])
             
-            url = url.replace("%%api_key%%", self.config["api_key"])
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            url = url.replace("%%api_key%%", self.config["api_key"])         
+            response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
             response = None
@@ -565,8 +558,7 @@ class AirTimeApiClient(ApiClientInterface):
             
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%component%%", component)
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            get_response_from_server(url)
         except Exception, e:
             logger.error("Exception: %s", e)
     
@@ -582,8 +574,7 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%stream_id%%", stream_id)
             url = url.replace("%%boot_time%%", time)
             
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            response = self.get_response_from_server(url)
         except Exception, e:
             logger.error("Exception: %s", e)
             
@@ -596,8 +587,7 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%sourcename%%", sourcename)
             url = url.replace("%%status%%", status)
             
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
+            response = self.get_response_from_server(url)
         except Exception, e:
             logger.error("Exception: %s", e)
     
@@ -620,7 +610,8 @@ class AirTimeApiClient(ApiClientInterface):
             
             req = urllib2.Request(url, data)
             response = urllib2.urlopen(req).read()
-            logger.info("update file system mount: %s", response)
+            
+            logger.info("update file system mount: %s", json.loads(response))
         except Exception, e:
             import traceback
             top = traceback.format_exc()
@@ -639,9 +630,8 @@ class AirTimeApiClient(ApiClientInterface):
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%dir%%", base64.b64encode(dir))
             
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
-            logger.info("update file system mount: %s", response)
+            response = self.get_response_from_server(url)
+            logger.info("update file system mount: %s", json.loads(response))
         except Exception, e:
             import traceback
             top = traceback.format_exc()
@@ -658,10 +648,8 @@ class AirTimeApiClient(ApiClientInterface):
             
             url = url.replace("%%api_key%%", self.config["api_key"])
             
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req).read()
-            response = json.loads(response)
-            logger.info("Bootstrap info retrieved %s", response)
+            response = self.get_response_from_server(url)
+            logger.info("Bootstrap info retrieved %s", json.loads(response))
         except Exception, e:
             response = None
             import traceback
