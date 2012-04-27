@@ -27,6 +27,10 @@ class AirtimeMediaMonitorBootstrap():
         self.logger.info("Adding %s on watch list...", self.mount_file)
         self.wm.add_watch(self.mount_file, pyinotify.ALL_EVENTS, rec=False, auto_add=False)
         
+        tmp_dir = os.path.dirname(self.curr_mtab_file)
+        if not os.path.exists(tmp_dir):
+            os.makedirs(tmp_dir)
+        
         # create currMtab file if it's the first time
         if not os.path.exists(self.curr_mtab_file):
             shutil.copy('/etc/mtab', self.curr_mtab_file)
