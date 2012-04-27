@@ -556,7 +556,7 @@ class AirTimeApiClient(ApiClientInterface):
             
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%component%%", component)
-            get_response_from_server(url)
+            self.get_response_from_server(url)
         except Exception, e:
             logger.error("Exception: %s", e)
     
