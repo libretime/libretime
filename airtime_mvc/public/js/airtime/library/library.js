@@ -364,11 +364,10 @@ var AIRTIME = (function(AIRTIME) {
            //remove any selected nodes before the draw.
 			"fnPreDrawCallback": function( oSettings ) {
 				
+				//make sure any dragging helpers are removed or else they'll be stranded on the screen.
+				$("#draggingContainer").remove();
 		    },
             "fnDrawCallback": AIRTIME.library.fnDrawCallback,
-            "fnHeaderCallback": function(nHead) {
-            	$(nHead).find("input[type=checkbox]").attr("checked", false);	
-            },
             
             "aaSorting": [[3, 'asc']],
             "sPaginationType": "full_numbers",
