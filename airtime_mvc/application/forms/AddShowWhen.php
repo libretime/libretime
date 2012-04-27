@@ -69,7 +69,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $this->addElement('text', 'add_show_duration', array(
         	'label'		 => 'Duration:',
             'class'      => 'input_text',
-        	'value'		 => '01h00m',
+        	'value'		 => '01h 00m',
         	'readonly'	 => true,
             'decorators'  => array('ViewHelper')
         ));
@@ -99,8 +99,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 	        }
 	    }
 	    
-        if( $formData["add_show_duration"] == "0m" ) {
-            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 0m'));
+        if( $formData["add_show_duration"] == "00h 00m" ) {
+            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
             $valid = false;
         }elseif(strpos($formData["add_show_duration"], 'h') !== false && intval(substr($formData["add_show_duration"], 0, strpos($formData["add_show_duration"], 'h'))) > 24) {
             $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));

@@ -765,7 +765,7 @@ class Application_Model_Show {
             return $showDay->getDbDuration();
         }else{
             $info = explode(':',$showDay->getDbDuration());
-            return ($info[0] != 0 ? intval($info[0]).'h'.' ' : '').($info[1] != 0 ? intval($info[1]).'m' : '');
+            return str_pad(intval($info[0]),2,'0',STR_PAD_LEFT).'h '.str_pad(intval($info[1]),2,'0',STR_PAD_LEFT).'m';
         }
     }
 

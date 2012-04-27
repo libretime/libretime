@@ -618,7 +618,7 @@ class Application_Model_Schedule {
                                       'add_show_start_time' => '00:00',
                                       'add_show_end_date_no_repeate' => date("Y-m-d"),
                                       'add_show_end_time' => '01:00',
-                                      'add_show_duration' => '1h'));
+                                      'add_show_duration' => '01h 00m'));
 
         $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
 
