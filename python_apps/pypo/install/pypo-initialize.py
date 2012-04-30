@@ -100,10 +100,12 @@ try:
         print e
         sys.exit(1)
     
+    logging.basicConfig(format='%(asctime) %(message)s')
+    logger = logging.getLogger()
             
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
-    ac = api_client.api_client_factory(config)
+    ac = api_client.api_client_factory(config, logger)
     ss = ac.get_stream_setting()
         
     if ss is not None:
