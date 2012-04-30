@@ -49,7 +49,7 @@ else
 fi
 
 echo -e "\n*** Installing Python Libraries ***"
-/usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle -E /usr/lib/airtime/airtime_virtualenv || exit 1
+/usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle || exit 1
 
 echo -e "\n*** Patching Python Libraries ***"
 PATCHES=${SCRIPTPATH}/patches/*
