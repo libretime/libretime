@@ -686,7 +686,7 @@ Logging::log("getting media! - 2");
 
             if($type == "au"){//&& isset( $audioResults )) {
                 $row['audioFile'] = $row['gunid'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img src="/css/images/icon_audioclip.png">';
+                $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
             }
             else {
                 $row['image'] = '<img src="/css/images/icon_playlist.png">';
