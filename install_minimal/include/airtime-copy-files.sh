@@ -35,7 +35,9 @@ AIRTIMEROOT=$SCRIPTPATH/../../
 
 echo "* Creating /etc/airtime"
 mkdir -p /etc/airtime
-if [ ! -e /etc/airtime/airtime.conf ]; then
+#if [ ! -e /etc/airtime/airtime.conf ]; then
+if [ "$DO_UPGRADE" -eq "0" ]; then
+    #We aren't doing an upgrade so simply overwrite the config files.
     cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
 fi
 
@@ -62,9 +64,6 @@ if [ "$python_service" -eq "0" ]; then
     if [ "$pypo" = "t" ]; then
         python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
     fi
-    #if [ "$showrecorder" = "t" ]; then
-    #    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-copy-files.py
-    #fi
 fi
 
 mkdir -p /usr/lib/airtime
