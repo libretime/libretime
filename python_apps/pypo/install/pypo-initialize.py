@@ -8,7 +8,6 @@ from api_clients import api_client
 from configobj import ConfigObj
 
 import logging
-import logging.basicConfig
 
 if os.geteuid() != 0:
     print "Please run this as root."
