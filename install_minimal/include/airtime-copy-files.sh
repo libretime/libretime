@@ -35,9 +35,8 @@ AIRTIMEROOT=$SCRIPTPATH/../../
 
 echo "* Creating /etc/airtime"
 mkdir -p /etc/airtime
-#if [ ! -e /etc/airtime/airtime.conf ]; then
-if [ "$DO_UPGRADE" -eq "0" ]; then
-    #We aren't doing an upgrade so simply overwrite the config files.
+#if [ "$DO_UPGRADE" -eq "0" ]; then
+if [ ! -e /etc/airtime/airtime.conf ]; then
     cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
 fi
 
