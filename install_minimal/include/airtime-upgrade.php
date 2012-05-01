@@ -5,8 +5,6 @@
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-
-require_once('DB.php');
 require_once(__DIR__.'/airtime-constants.php');
 require_once(dirname(__FILE__).'/AirtimeIni.php');
 require_once(dirname(__FILE__).'/AirtimeInstall.php');
