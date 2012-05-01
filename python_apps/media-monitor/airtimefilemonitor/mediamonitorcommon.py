@@ -64,7 +64,6 @@ class MediaMonitorCommon:
         except IOError:
             self.logger.warn("File does not have correct permissions: '%s'", filepath)
             readable = False
-            self.logger.error("traceback: %s", traceback.format_exc())
         except Exception, e:
             self.logger.error("Unexpected exception thrown: %s", e)
             readable = False

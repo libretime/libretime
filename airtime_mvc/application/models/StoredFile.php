@@ -45,7 +45,9 @@ class Application_Model_StoredFile {
         "mime" => "DbMime",
         "md5" => "DbMd5",
         "ftype" => "DbFtype",
-        "language" => "DbLanguage"
+        "language" => "DbLanguage",
+        "filepath" => "DbFilepath",
+        "directory" => "DbDirectory"
     );
 
     public function __construct()
@@ -223,7 +225,19 @@ class Application_Model_StoredFile {
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
                 if (isset($this->_dbMD[$value])) {
-                    $md[$constant] = $this->getDbColMetadataValue($value);
+	                if ($value == 'filepath') {
+	                	$directoryPK = $this->getDbColMetadataValue('directory');
+	                	if ($directoryPK == 1) {
+                            $musicDir = Application_Model_MusicDir::getDirByPK($directoryPK);
+                            $md[$constant] = $musicDir->getDirectory() . $this->getDbColMetadataValue($value);
+	                	}
+                        else {
+                            $md[$constant] = $this->getDbColMetadataValue($value);
+	                	}
+	                }
+                    else {
+                        $md[$constant] = $this->getDbColMetadataValue($value);
+                    }
                 }
             }
         }
@@ -686,7 +700,7 @@ Logging::log("getting media! - 2");
 
             if($type == "au"){//&& isset( $audioResults )) {
                 $row['audioFile'] = $row['gunid'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img src="/css/images/icon_audioclip.png">';
+                $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
             }
             else {
                 $row['image'] = '<img src="/css/images/icon_playlist.png">';
