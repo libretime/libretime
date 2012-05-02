@@ -50,6 +50,11 @@ var AIRTIME = (function(AIRTIME){
 		return mod.showInstances;
 	};
 	
+	mod.refresh = function() {
+		mod.resetTimestamp();
+		oSchedTable.fnDraw();
+	};
+	
 	mod.checkTrimButton = function() {
 		$over = $sbTable.find(".sb-over");
 		
@@ -499,7 +504,6 @@ var AIRTIME = (function(AIRTIME){
 				var wrapperDiv,
 					markerDiv,
 					$td,
-					$tr,
 					aData,
 					elements,
 					i, length, temp,
@@ -570,11 +574,7 @@ var AIRTIME = (function(AIRTIME){
 					if (temp.length > 0) {
 						aData = temp.data("aData");
 						
-						setTimeout(function(){
-							mod.resetTimestamp();
-							oSchedTable.fnDraw();
-						}, aData.refresh * 1000); //need refresh in milliseconds
-						
+						setTimeout(mod.refresh, aData.refresh * 1000); //need refresh in milliseconds
 						break;
 					}
 				}

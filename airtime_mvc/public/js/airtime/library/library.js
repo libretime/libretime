@@ -591,7 +591,7 @@ var AIRTIME = (function(AIRTIME) {
     
 }(AIRTIME || {}));
 
-function checkImportStatus(){
+function checkImportStatus() {
     $.getJSON('/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
         var table = $('#library_display').dataTable();

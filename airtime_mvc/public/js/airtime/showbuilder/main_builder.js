@@ -206,8 +206,7 @@ AIRTIME = (function(AIRTIME) {
 			}
 		});
 		
-		//check if the timeline viewed needs updating.
-		setInterval(function(){
+		function checkScheduleUpdates(){
 			var data = {},
 				oTable = $('#show_builder_table').dataTable(),
 				fn = oTable.fnSettings().fnServerData,
@@ -235,10 +234,11 @@ AIRTIME = (function(AIRTIME) {
 						oTable.fnDraw();
 					}
 				}
-			} );
-			
-		}, 5 * 1000); //need refresh in milliseconds
-
+			} );		
+		}
+		
+		//check if the timeline view needs updating.
+		setInterval(checkScheduleUpdates, 5 * 1000); //need refresh in milliseconds
 	};
 	
 	mod.onResize = function() {
