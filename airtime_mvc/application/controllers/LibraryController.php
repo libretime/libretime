@@ -217,7 +217,14 @@ class LibraryController extends Zend_Controller_Action
                 $file = Application_Model_StoredFile::Recall($id);
                 $this->view->type = $type;
                 $md = $file->getMetadata();
-
+                
+                foreach ($md as $key => $value) {
+                    if ($key == 'MDATA_KEY_DIRECTORY') {
+                        $musicDir = Application_Model_MusicDir::getDirByPK($value);
+                        $md['MDATA_KEY_FILEPATH'] = $musicDir->getDirectory() . $md['MDATA_KEY_FILEPATH'];
+                    }
+                }
+                
                 $formatter = new SamplerateFormatter($md["MDATA_KEY_SAMPLERATE"]);
                 $md["MDATA_KEY_SAMPLERATE"] = $formatter->format();
 
