@@ -40,23 +40,21 @@ var AIRTIME = (function(AIRTIME){
 		
 		$('#library_display tr:not(:first)').draggable({
 			helper: function(){
-			    var selected = $('#library_display tr:not(:first) input:checked').parents('tr'),
+				
+				mod.selectItem($(this));
+				
+			    var selected = mod.getChosenItemsLength(),
 			    	container,
 			    	thead = $("#show_builder_table thead"),
 			    	colspan = thead.find("th").length,
 			    	width = thead.find("tr:first").width(),
 			    	message;
 			    
-			    //if nothing is checked select the dragged item.
-			    if (selected.length === 0) {
-			    	selected = $(this);
-			    }
-			    
-			    if (selected.length === 1) {
-			    	message = "Adding "+selected.length+" Item.";
+			    if (selected === 1) {
+			    	message = "Adding "+selected+" Item.";
 			    }
 			    else {
-			    	message = "Adding "+selected.length+" Items.";
+			    	message = "Adding "+selected+" Items.";
 			    }
 			    
 			    container = $('<div/>').attr('id', 'draggingContainer')
