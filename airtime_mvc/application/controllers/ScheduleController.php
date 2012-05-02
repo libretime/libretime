@@ -909,7 +909,17 @@ class ScheduleController extends Zend_Controller_Action
         
             $duration = $UTCEndDateTime->diff($UTCStartDateTime);
         
-            $result = $duration->format('%r%Hh %Im');
+            $day = intval($duration->format('%d'));
+            if($day > 0){
+                $hour = intval($duration->format('%h'));
+                $min = intval($duration->format('%i'));
+                $hour += $day * 24;
+                $hour = min($hour, 99);
+                $sign = $duration->format('%r');
+                $result = sprintf('%s%02dh %02dm', $sign, $hour, $min);
+            }else{
+                $result = $duration->format('%r%Hh %Im');
+            }
         }catch (Exception $e){
             $result = "Invalid Date";
         }

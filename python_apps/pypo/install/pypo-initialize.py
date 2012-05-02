@@ -7,6 +7,8 @@ sys.path.append('/usr/lib/airtime/')
 from api_clients import api_client
 from configobj import ConfigObj
 
+import logging
+
 if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
@@ -100,10 +102,11 @@ try:
         print e
         sys.exit(1)
     
+    logging.basicConfig(format='%(message)s')
             
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
-    ac = api_client.api_client_factory(config)
+    ac = api_client.api_client_factory(config, logging.getLogger())
     ss = ac.get_stream_setting()
         
     if ss is not None:

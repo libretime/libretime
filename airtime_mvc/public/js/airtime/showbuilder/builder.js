@@ -414,7 +414,7 @@ var AIRTIME = (function(AIRTIME){
 					$image = $(nRow).find('td.sb-image');
 					//check if the file exists.
 					if (aData.image === true) {
-						$image.html('<img src="/css/images/icon_audioclip.png"></img>')
+						$image.html('<img title="Track preview" src="/css/images/icon_audioclip.png"></img>')
 							.click(function() {
 			                    open_show_preview(aData.instance, aData.pos);
 			                    return false;

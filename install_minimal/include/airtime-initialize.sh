@@ -36,10 +36,6 @@ fi
 if [ "$pypo" = "t" ]; then
     python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
 fi
-#if [ "$showrecorder" = "t" ]; then
-#    python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-initialize.py
-#fi
-
 
 # Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is

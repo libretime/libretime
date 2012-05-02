@@ -1,6 +1,3 @@
-#!/usr/bin/env python2.6
-# -*- coding: utf-8 -*-
-
 ###############################################################################
 # This file holds the implementations for all the API clients.
 #

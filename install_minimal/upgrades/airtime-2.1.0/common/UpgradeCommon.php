@@ -1,7 +1,4 @@
 <?php
-
-require_once('DB.php');
-
 /* These are helper functions that are common to each upgrade such as
  * creating connections to a database, backing up config files etc.
  */
@@ -21,7 +18,7 @@ class UpgradeCommon{
     {       
         $sql = "SELECT valstr from cc_pref WHERE keystr = 'timezone'";
 
-        $result = self::selectQueryDb($sql);
+        $result = self::queryDb($sql);
         $timezone = $result['valstr'];
                 
         date_default_timezone_set($timezone);
@@ -29,29 +26,28 @@ class UpgradeCommon{
     
     public static function connectToDatabase($p_exitOnError = true)
     {
-        global $CC_DBC, $CC_CONFIG;
-        $CC_DBC = DB::connect($CC_CONFIG['dsn'], FALSE);
-        if (PEAR::isError($CC_DBC)) {
-            echo $CC_DBC->getMessage().PHP_EOL;
-            echo $CC_DBC->getUserInfo().PHP_EOL;
+        try {
+            $con = Propel::getConnection();
+        } catch (Exception $e) {
+            echo $e->getMessage().PHP_EOL;
             echo "Database connection problem.".PHP_EOL;
-            echo "Check if database '{$CC_CONFIG['dsn']['database']}' exists".
-                 " with corresponding permissions.".PHP_EOL;
+            echo "Check if database exists with corresponding permissions.".PHP_EOL;
             if ($p_exitOnError) {
                 exit(1);
             }
-        } else {
-            $CC_DBC->setFetchMode(DB_FETCHMODE_ASSOC);
+            return false;
         }
+        return true;
     }
 
     
     public static function DbTableExists($p_name)
     {
-        global $CC_DBC;
-        $sql = "SELECT * FROM ".$p_name;
-        $result = $CC_DBC->GetOne($sql);
-        if (PEAR::isError($result)) {
+        $con = Propel::getConnection();
+        try {
+            $sql = "SELECT * FROM ".$p_name." LIMIT 1";
+            $con->query($sql);
+        } catch (PDOException $e){
             return false;
         }
         return true;
@@ -238,27 +234,16 @@ class UpgradeCommon{
         fclose($fp);
     }
     
-    public static function selectQueryDb($p_sql){
-        global $CC_DBC;
+    public static function queryDb($p_sql){
+        $con = Propel::getConnection();
 
-        $result = $CC_DBC->getRow($p_sql, $fetchmode=DB_FETCHMODE_ASSOC);
-        if (PEAR::isError($result)) {
-            echo "Error executing $sql. Exiting.";
+        try {
+            $result = $con->exec($p_sql);
+        } catch (Exception $e) {
+            echo "Error executing $p_sql. Exiting.";
             exit(1);
         }
-        
-        return $result;
-    }
-    
-    public static function nonSelectQueryDb($p_sql){
-        global $CC_DBC;
 
-        $result = $CC_DBC->query($p_sql);
-        if (PEAR::isError($result)) {
-            echo "Error executing $sql. Exiting.";
-            exit(1);
-        }
-        
         return $result;
     }
 }

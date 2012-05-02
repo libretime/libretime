@@ -23,6 +23,9 @@ function get_conf_location(){
 $conf_path = get_conf_location();
 require_once $conf_path;
 
+set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
+
+require_once 'propel/runtime/lib/Propel.php';
 require_once 'common/UpgradeCommon.php';
 require_once 'ConfFileUpgrade.php';
 require_once 'DbUpgrade.php';
