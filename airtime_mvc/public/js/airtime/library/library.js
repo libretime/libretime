@@ -214,27 +214,27 @@ var AIRTIME = (function(AIRTIME) {
               /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
               /* Checkbox */      {"sTitle": "", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
               /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 0},
-              /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title"},
-              /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator"},
-              /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album"},
-              /* Genre */         {"sTitle": "Genre", "mDataProp": "genre", "sClass": "library_genre"},
+              /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title", "sWidth": "170px"},
+              /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator", "sWidth": "160px"},
+              /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album", "sWidth": "150px"},
+              /* Genre */         {"sTitle": "Genre", "mDataProp": "genre", "sClass": "library_genre", "sWidth": "100px"},
               /* Year */          {"sTitle": "Year", "mDataProp": "year", "sClass": "library_year", "sWidth": "60px"},
               /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
-              /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time"},
-              /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time"},
+              /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time", "sWidth": "125px"},
+              /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time", "sWidth": "125px"},
               /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
-              /* Mood */          {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood"},
-              /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm"},
-              /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer"},
-              /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url"},
+              /* Mood */          {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood", "sWidth": "70px"},
+              /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm", "sWidth": "50px"},
+              /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer", "sWidth": "150px"},
+              /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url", "sWidth": "150px"},
               /* Bit Rate */  {"sTitle": "Bit Rate", "mDataProp": "bit_rate", "bSearchable": false, "bVisible": false, "sClass": "library_bitrate", "sWidth": "80px"},
               /* Sample Rate */  {"sTitle": "Sample", "mDataProp": "sample_rate", "bSearchable": false, "bVisible": false, "sClass": "library_sr", "sWidth": "80px"},
-              /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bSearchable": false, "bVisible": false, "sClass": "library_isrc"},
-              /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bSearchable": false, "bVisible": false, "sClass": "library_encoded"},
-              /* Label */  {"sTitle": "Label", "mDataProp": "label", "bSearchable": false, "bVisible": false, "sClass": "library_label"},
-              /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bSearchable": false, "bVisible": false, "sClass": "library_copyright"},
-              /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bSearchable": false, "bVisible": false, "sClass": "library_mime"},
-              /* Language */  {"sTitle": "Language", "mDataProp": "language", "bSearchable": false, "bVisible": false, "sClass": "library_language"}
+              /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bSearchable": false, "bVisible": false, "sClass": "library_isrc", "sWidth": "150px"},
+              /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bSearchable": false, "bVisible": false, "sClass": "library_encoded", "sWidth": "150px"},
+              /* Label */  {"sTitle": "Label", "mDataProp": "label", "bSearchable": false, "bVisible": false, "sClass": "library_label", "sWidth": "125px"},
+              /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bSearchable": false, "bVisible": false, "sClass": "library_copyright", "sWidth": "125px"},
+              /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bSearchable": false, "bVisible": false, "sClass": "library_mime", "sWidth": "80px"},
+              /* Language */  {"sTitle": "Language", "mDataProp": "language", "bSearchable": false, "bVisible": false, "sClass": "library_language", "sWidth": "125px"}
               ],
                           
             "bProcessing": true,
@@ -242,6 +242,9 @@ var AIRTIME = (function(AIRTIME) {
             
             "aLengthMenu": [[5, 10, 15, 20, 25, 50, 100], [5, 10, 15, 20, 25, 50, 100]],
             
+            //"sScrollX": "100%",
+            //"sScrollXInner": "110%",
+                    
             "bStateSave": true,
             "fnStateSaveParams": function (oSettings, oData) {
                 //remove oData components we don't want to save.
