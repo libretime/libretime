@@ -27,20 +27,26 @@ class Application_Model_Preference
         if($isUserValue) {
         	$sql .= " AND subjid = '$id'";
         }
-
+		
         $result = $con->query($sql)->fetchColumn(0);
 
+        if($value == "") {
+            $value = "NULL";
+        }else {
+            $value = "'$value'";
+        }
+        
         if($result == 1) {
         	// result found
 	        if(is_null($id) || !$isUserValue) {
 	        	// system pref
 	            $sql = "UPDATE cc_pref"
-	            ." SET subjid = NULL, valstr = '$value'"
+	            ." SET subjid = NULL, valstr = $value"
 	            ." WHERE keystr = '$key'";
 	        } else {
 	        	// user pref
 	            $sql = "UPDATE cc_pref"
-	            . " SET valstr = '$value'"
+	            . " SET valstr = $value"
 	            . " WHERE keystr = '$key' AND subjid = $id";
 	        }
         } else {
@@ -48,14 +54,13 @@ class Application_Model_Preference
 	        if(is_null($id) || !$isUserValue) {
 	        	// system pref
 	            $sql = "INSERT INTO cc_pref (keystr, valstr)"
-	            ." VALUES ('$key', '$value')";
+	            ." VALUES ('$key', $value)";
 	        } else {
 	        	// user pref
 	            $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
-	            ." VALUES ($id, '$key', '$value')";
+	            ." VALUES ($id, '$key', $value)";
 	        }
         }
-
         return $con->exec($sql);
     }
 
