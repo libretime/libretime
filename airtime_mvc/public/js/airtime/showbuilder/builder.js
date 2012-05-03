@@ -5,6 +5,7 @@ var AIRTIME = (function(AIRTIME){
 		$sbContent,
 		$sbTable,
 		$toolbar,
+		$ul,
 		$lib;
 	
 	if (AIRTIME.showbuilder === undefined) {
@@ -56,7 +57,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkTrimButton = function() {
-		$over = $sbTable.find(".sb-over");
+		var $over = $sbTable.find(".sb-over");
 		
 		if ($over.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-trim");
@@ -67,7 +68,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkDeleteButton = function() {
-		$selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
+		var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
 		
 		if ($selected.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-delete");
@@ -78,7 +79,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkJumpToCurrentButton = function() {
-		$current = $sbTable.find(".sb-now-playing");
+		var $current = $sbTable.find(".sb-now-playing");
 		
 		if ($current.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-current");
@@ -89,7 +90,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkCancelButton = function() {
-		$current = $sbTable.find(".sb-current-show");
+		var $current = $sbTable.find(".sb-current-show");
 		
 		if ($current.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-cancel");
@@ -784,6 +785,7 @@ var AIRTIME = (function(AIRTIME){
 		$ul.append('<li class="ui-state-default ui-state-disabled sb-button-current" title="Jump to the currently playing track"><span class="ui-icon ui-icon-arrowstop-1-s"></span></li>')
 			.append('<li class="ui-state-default ui-state-disabled sb-button-cancel" title="Cancel current show"><span class="ui-icon ui-icon-eject"></span></li>');
 		$toolbar.append($ul);
+		$ul = undefined;
 		
 		$.contextMenu({
             selector: '#show_builder .ui-icon-document-b',
