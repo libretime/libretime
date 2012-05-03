@@ -9,11 +9,11 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.checkAddButton = function() {
 		var selected = mod.getChosenItemsLength(),
-    		cursor = $('tr.cursor-selected-row'),
+    		$cursor = $('tr.cursor-selected-row'),
     		check = false;
     	
     	//make sure library items are selected and a cursor is selected.
-    	if (selected !== 0 && cursor.length !== 0) {
+    	if (selected !== 0 && $cursor.length !== 0) {
     		check = true;
     	}
     	
@@ -100,7 +100,8 @@ var AIRTIME = (function(AIRTIME){
 					length,
 					temp,
 					aMediaIds = [],
-					aSchedIds = [];
+					aSchedIds = [],
+					aData = [];
 				
 				//process selected files/playlists.
 				for (i = 0, length = selected.length; i < length; i++) {
@@ -108,7 +109,6 @@ var AIRTIME = (function(AIRTIME){
 					aMediaIds.push({"id": data.id, "type": data.ftype});	
 				}
 				
-				aData = [];
 				$("#show_builder_table tr.cursor-selected-row").each(function(i, el){
 					aData.push($(el).prev().data("aData"));
 				});
