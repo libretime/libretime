@@ -45,25 +45,9 @@ $version = substr($version, 0, 5);
 
 $SCRIPTPATH = __DIR__;
 
-if (strcmp($version, "1.7.0") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.7.0/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "1.8.0") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.0/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "1.8.1") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.1/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "1.8.2") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.8.2/airtime-upgrade.php");
-    pause();
-}
 if (strcmp($version, "1.9.0") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.0/airtime-upgrade.php");
-    pause();
+    echo "Unsupported Airtime version. You must upgrade from at least Airtime 1.9.0.".PHP_EOL;
+    exit(1);
 }
 if (strcmp($version, "1.9.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.2/airtime-upgrade.php");
