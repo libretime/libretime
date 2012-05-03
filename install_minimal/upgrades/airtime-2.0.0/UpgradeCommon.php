@@ -236,7 +236,7 @@ class UpgradeCommon{
         $con = Propel::getConnection();
 
         try {
-            $result = $con->exec($p_sql);
+            $result = $con->query($p_sql);
         } catch (Exception $e) {
             echo "Error executing $p_sql. Exiting.";
             exit(1);

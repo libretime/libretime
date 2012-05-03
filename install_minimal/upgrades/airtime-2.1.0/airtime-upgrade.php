@@ -14,14 +14,32 @@
  * with new versions.
  */
 
+/*
 function get_conf_location(){
     $conf = parse_ini_file("/etc/airtime/airtime.conf", TRUE);
     $airtime_dir = $conf['general']['airtime_dir'];
     return $airtime_dir."/"."application/configs/conf.php";
 }
+* */
  
-$conf_path = get_conf_location();
-require_once $conf_path;
+// Define path to application directory
+defined('APPLICATION_PATH')
+|| define('APPLICATION_PATH', realpath(__DIR__.'/../../../airtime_mvc/application'));
+
+// Ensure library is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+        get_include_path(),
+        realpath(APPLICATION_PATH . '/../library')
+)));
+
+//Propel classes.
+set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
+
+include_once 'propel/runtime/lib/Propel.php';
+Propel::init(__DIR__."/propel/airtime-conf.php");
+
+//$conf_path = get_conf_location();
+//require_once $conf_path;
 
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 

@@ -21,7 +21,7 @@ class UpgradeCommon{
         $sql = "SELECT valstr from cc_pref WHERE keystr = 'timezone'";
 
         $result = self::queryDb($sql);
-        $timezone = $result['valstr'];
+        $timezone = $result->fetchColumn();
 
         date_default_timezone_set($timezone);
     }
@@ -245,7 +245,7 @@ class UpgradeCommon{
         $con = Propel::getConnection();
 
         try {
-            $result = $con->exec($p_sql);
+            $result = $con->query($p_sql);
         } catch (Exception $e) {
             echo "Error executing $p_sql. Exiting.";
             exit(1);

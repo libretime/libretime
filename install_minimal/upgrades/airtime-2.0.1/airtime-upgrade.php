@@ -18,7 +18,7 @@
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
-require_once 'conf.php';
+//require_once 'conf.php';
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/propel/airtime-conf.php");
 
@@ -76,8 +76,6 @@ class AirtimeConfigFileUpgrade{
                 chgrp($filename, $user) &&
                 chmod($filename, 0640));
     }
-
-
 }
 
 UpgradeCommon::connectToDatabase();

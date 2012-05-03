@@ -11,7 +11,7 @@
 set_include_path(__DIR__.'/../../../airtime_mvc/library' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/models' . PATH_SEPARATOR . get_include_path());
 set_include_path(__DIR__.'/../../../airtime_mvc/application/configs' . PATH_SEPARATOR . get_include_path());
-require_once 'conf.php';
+//require_once 'conf.php';
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(__DIR__."/propel/airtime-conf.php");
 
@@ -70,8 +70,8 @@ class AirtimeDatabaseUpgrade {
 
         $sql = "SELECT * FROM cc_playlist";
         $result = UpgradeCommon::queryDb($sql);
-
-        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+        
+        foreach ($result as $row){
             $dt = new DateTime($row['mtime'], new DateTimeZone(date_default_timezone_get()));
             $dt->setTimezone(new DateTimeZone("UTC"));
 
@@ -79,12 +79,8 @@ class AirtimeDatabaseUpgrade {
             $mtime = $dt->format("Y-m-d H:i:s");
 
             $sql = "UPDATE cc_playlist SET mtime = '$mtime' WHERE id = $id";
-            UpgradeCommon::queryDb($sql);
-            //echo ".";
-            //flush();
-            //usleep(100000);
+            UpgradeCommon::queryDb($sql);        
         }
-
 
         /*
         echo " * Converting playlists to UTC".PHP_EOL;
@@ -108,8 +104,8 @@ class AirtimeDatabaseUpgrade {
 
         $sql = "SELECT * FROM cc_schedule";
         $result = UpgradeCommon::queryDb($sql);
-
-        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+        
+        foreach ($result as $row){
             $dtStarts = new DateTime($row['starts'], new DateTimeZone(date_default_timezone_get()));
             $dtStarts->setTimezone(new DateTimeZone("UTC"));
 
@@ -122,10 +118,8 @@ class AirtimeDatabaseUpgrade {
 
             $sql = "UPDATE cc_schedule SET starts = '$starts', ends = '$ends' WHERE id = $id";
             UpgradeCommon::queryDb($sql);
-            //echo ".";
-            //flush();
-            //usleep(100000);
         }
+
         /*
 
         echo " * Converting schedule to UTC".PHP_EOL;
@@ -153,17 +147,13 @@ class AirtimeDatabaseUpgrade {
 
         $sql = "SELECT * FROM cc_show_days";
         $result = UpgradeCommon::queryDb($sql);
-
-        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
-
+        
+        foreach ($result as $row){
             $id = $row['id'];
             $timezone = date_default_timezone_get();
 
             $sql = "UPDATE cc_show_days SET timezone = '$timezone' WHERE id = $id";
-            UpgradeCommon::queryDb($sql);
-            //echo ".";
-            //flush();
-            //usleep(100000);
+            UpgradeCommon::queryDb($sql);            
         }
 
         /*
@@ -185,8 +175,8 @@ class AirtimeDatabaseUpgrade {
 
         $sql = "SELECT * FROM cc_show_instances";
         $result = UpgradeCommon::queryDb($sql);
-
-        while ($result->fetchInto($row, DB_FETCHMODE_ASSOC)){
+        
+        foreach ($result as $row){
             $dtStarts = new DateTime($row['starts'], new DateTimeZone(date_default_timezone_get()));
             $dtStarts->setTimezone(new DateTimeZone("UTC"));
 
@@ -199,9 +189,6 @@ class AirtimeDatabaseUpgrade {
 
             $sql = "UPDATE cc_show_instances SET starts = '$starts', ends = '$ends' WHERE id = $id";
             UpgradeCommon::queryDb($sql);
-            //echo ".";
-            //flush();
-            //usleep(100000);
         }
 
         /*
