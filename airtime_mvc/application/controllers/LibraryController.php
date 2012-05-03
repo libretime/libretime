@@ -221,7 +221,7 @@ class LibraryController extends Zend_Controller_Action
                 foreach ($md as $key => $value) {
                     if ($key == 'MDATA_KEY_DIRECTORY') {
                         $musicDir = Application_Model_MusicDir::getDirByPK($value);
-                        $md['MDATA_KEY_FILEPATH'] = $musicDir->getDirectory() . $md['MDATA_KEY_FILEPATH'];
+                        $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
                     }
                 }
                 
