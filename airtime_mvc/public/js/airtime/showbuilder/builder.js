@@ -143,35 +143,34 @@ var AIRTIME = (function(AIRTIME){
  		
  		mod.checkToolBarIcons();
     };
+    
+    mod.fnItemCallback = function(json) {
+    	checkError(json);
+		oSchedTable.fnDraw();
+    };
 	
 	mod.fnAdd = function(aMediaIds, aSchedIds) {
 		
 		$.post("/showbuilder/schedule-add", 
 			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
-			function(json){
-				checkError(json);
-				oSchedTable.fnDraw();
-			});
+			mod.fnItemCallback
+		);
 	};
 	
 	mod.fnMove = function(aSelect, aAfter) {
 		
 		$.post("/showbuilder/schedule-move", 
 			{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
-			function(json){
-				checkError(json);
-				oSchedTable.fnDraw();
-			});
+			mod.fnItemCallback
+		);
 	};
 	
 	mod.fnRemove = function(aItems) {
 		
 		$.post( "/showbuilder/schedule-remove",
 			{"items": aItems, "format": "json"},
-			function(json) {
-				checkError(json);
-				oSchedTable.fnDraw();
-			});
+			mod.fnItemCallback
+		);
 	};
 	
 	mod.fnRemoveSelectedItems = function() {
@@ -189,10 +188,10 @@ var AIRTIME = (function(AIRTIME){
 		mod.fnRemove(aItems);
 	};
 	
-	mod.fnServerData = function ( sSource, aoData, fnCallback ) {
+	mod.fnServerData = function fnBuilderServerData( sSource, aoData, fnCallback ) {
 		
-		aoData.push( { name: "timestamp", value: AIRTIME.showbuilder.getTimestamp()} );
-		aoData.push( { name: "instances", value: AIRTIME.showbuilder.getShowInstances()} );
+		aoData.push( { name: "timestamp", value: mod.getTimestamp()} );
+		aoData.push( { name: "instances", value: mod.getShowInstances()} );
 		aoData.push( { name: "format", value: "json"} );
 		
 		if (mod.fnServerData.hasOwnProperty("start")) {
@@ -212,8 +211,8 @@ var AIRTIME = (function(AIRTIME){
 			"url": sSource,
 			"data": aoData,
 			"success": function(json) {
-				AIRTIME.showbuilder.setTimestamp(json.timestamp);
-				AIRTIME.showbuilder.setShowInstances(json.instances);
+				mod.setTimestamp(json.timestamp);
+				mod.setShowInstances(json.instances);
 				fnCallback(json);
 			}
 		});
@@ -295,12 +294,12 @@ var AIRTIME = (function(AIRTIME){
 		        oData.iCreate = parseInt(oData.iCreate, 10);
 	        },
 	        
-			"fnServerData": AIRTIME.showbuilder.fnServerData,
+			"fnServerData": mod.fnServerData,
 			"fnRowCallback": function fnRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-				var i,
+				var i, length,
 					sSeparatorHTML,
 					fnPrepareSeparatorRow,
-					node,
+					$node,
 					cl="",
 					//background-color to imitate calendar color.
 					r,g,b,a,
@@ -310,37 +309,37 @@ var AIRTIME = (function(AIRTIME){
 				
 				fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
 					
-					node = nRow.children[iNodeIndex];
-					node.innerHTML = sRowContent;
-					node.setAttribute('colspan',100);
-					for (i = iNodeIndex + 1; i < nRow.children.length; i = i+1) {
-						node = nRow.children[i];
-						node.innerHTML = "";
-						node.setAttribute("style", "display : none");
+					$node = $(nRow.children[iNodeIndex]);
+					$node.html(sRowContent);
+					$node.attr('colspan',100);
+					for (i = iNodeIndex + 1, length = nRow.children.length; i < length; i = i+1) {
+						$node = $(nRow.children[i]);
+						$node.html("");
+						$node.attr("style", "display : none");
 					}
 					
-					$(nRow).addClass(sClass);
+					$nRow.addClass(sClass);
 				};
 				         
 				if (aData.header === true) {
 					//remove the column classes from all tds.
-					$(nRow).find('td').removeClass();
+					$nRow.find('td').removeClass();
 					
-					node = nRow.children[0];
-					node.innerHTML = '';
+					$node = $(nRow.children[0]);
+					$node.html("");
 					cl = 'sb-header';
 					
 					if (aData.record === true) {
 						$div = $("<div/>", {
 							"class": "small-icon recording"
 						});
-						$(node).append($div);
+						$node.append($div);
 					}
-					else if(aData.rebroadcast === true) {
+					else if (aData.rebroadcast === true) {
 						$div = $("<div/>", {
 							"class": "small-icon rebroadcast"
 						});
-						$(node).append($div);
+						$node.append($div);
 					}
 					
 					sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
@@ -366,18 +365,18 @@ var AIRTIME = (function(AIRTIME){
 				}
 				else if (aData.footer === true) {
 					//remove the column classes from all tds.
-					$(nRow).find('td').removeClass();
+					$nRow.find('td').removeClass();
 					
-					node = nRow.children[0];
+					$node = $(nRow.children[0]);
 					cl = 'sb-footer';
 					
 					//check the show's content status.
 					if (aData.runtime > 0) {
-						node.innerHTML = '<span class="ui-icon ui-icon-check"></span>';
+						$node.html('<span class="ui-icon ui-icon-check"></span>');
 						cl = cl + ' ui-state-highlight';
 					}
 					else {
-						node.innerHTML = '<span class="ui-icon ui-icon-notice"></span>';
+						$node.html('<span class="ui-icon ui-icon-notice"></span>');
 						cl = cl + ' ui-state-error';
 					}
 						
@@ -386,10 +385,10 @@ var AIRTIME = (function(AIRTIME){
 				}
 				else if (aData.empty === true) {
 					//remove the column classes from all tds.
-					$(nRow).find('td').removeClass();
+					$nRow.find('td').removeClass();
 					
-					node = nRow.children[0];
-					node.innerHTML = '';
+					$node = $(nRow.children[0]);
+					$node.html('');
 					
 					sSeparatorHTML = '<span>Show Empty</span>';
 					cl = cl + " sb-empty odd";
@@ -398,10 +397,10 @@ var AIRTIME = (function(AIRTIME){
 				}
 				else if (aData.record === true) {
 					//remove the column classes from all tds.
-					$(nRow).find('td').removeClass();
+					$nRow.find('td').removeClass();
 					
-					node = nRow.children[0];
-					node.innerHTML = '';
+					$node = $(nRow.children[0]);
+					$node.html('');
 					
 					sSeparatorHTML = '<span>Recording From Line In</span>';
 					cl = cl + " sb-record odd";
@@ -411,7 +410,7 @@ var AIRTIME = (function(AIRTIME){
 				else {
 					
 					 //add the play function if the file exists on disk.
-					$image = $(nRow).find('td.sb-image');
+					$image = $nRow.find('td.sb-image');
 					//check if the file exists.
 					if (aData.image === true) {
 						$image.html('<img title="Track preview" src="/css/images/icon_audioclip.png"></img>')
@@ -424,12 +423,12 @@ var AIRTIME = (function(AIRTIME){
 						$image.html('<span class="ui-icon ui-icon-alert"></span>');
 					}
 					
-					node = nRow.children[0];
+					$node = $(nRow.children[0]);
 					if (aData.allowed === true && aData.scheduled >= 1) {
-						node.innerHTML = '<input type="checkbox" name="'+aData.id+'"></input>';
+						$node.html('<input type="checkbox" name="'+aData.id+'"></input>');
 					}
 					else {
-						node.innerHTML = '';
+						$node.html('');
 					}
 				}
 				
@@ -455,39 +454,39 @@ var AIRTIME = (function(AIRTIME){
                 }
                 
                 //save some info for reordering purposes.
-				$(nRow).data({"aData": aData});
+				$nRow.data({"aData": aData});
 				
 				if (aData.scheduled === 1) {
-					$(nRow).addClass("sb-now-playing");
+					$nRow.addClass("sb-now-playing");
 				}
 				else if (aData.scheduled === 0) {
-					$(nRow).addClass("sb-past");
+					$nRow.addClass("sb-past");
 				}
 				else {
-					$(nRow).addClass("sb-future");
+					$nRow.addClass("sb-future");
 				}
 				
 				if (aData.allowed !== true) {
-					$(nRow).addClass("sb-not-allowed");
+					$nRow.addClass("sb-not-allowed");
 				}
 				else {
-					$(nRow).addClass("sb-allowed");
+					$nRow.addClass("sb-allowed");
 				}
 				
 				//status used to colour tracks.
 				if (aData.status === 2) {
-					$(nRow).addClass("sb-boundry");
+					$nRow.addClass("sb-boundry");
 				}
 				else if (aData.status === 0) {
-					$(nRow).addClass("sb-over");
+					$nRow.addClass("sb-over");
 				}
 				
 				if (aData.currentShow === true) {
-					$(nRow).addClass("sb-current-show");
+					$nRow.addClass("sb-current-show");
 				}
                  
                 //call the context menu so we can prevent the event from propagating.
-                $(nRow).find('td:gt(1)').click(function(e){
+                $nRow.find('td:gt(1)').click(function(e){
                     
                     $(this).contextMenu({x: e.pageX, y: e.pageY});
                     
@@ -513,7 +512,7 @@ var AIRTIME = (function(AIRTIME){
 					//use this array to cache DOM heights then we can detach the table to manipulate it to increase speed.
 					heights = [];
 				
-				clearTimeout(AIRTIME.showbuilder.timeout);
+				clearTimeout(mod.timeout);
 				
 				//only create the cursor arrows if the library is on the page.
 				if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
@@ -574,7 +573,7 @@ var AIRTIME = (function(AIRTIME){
 					if (temp.length > 0) {
 						aData = temp.data("aData");
 						
-						setTimeout(mod.refresh, aData.refresh * 1000); //need refresh in milliseconds
+						mod.timeout = setTimeout(mod.refresh, aData.refresh * 1000); //need refresh in milliseconds
 						break;
 					}
 				}
@@ -646,7 +645,7 @@ var AIRTIME = (function(AIRTIME){
 				}
 				aSchedIds.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 				
-				AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+				mod.fnAdd(aMediaIds, aSchedIds);
 			};
 			
 			fnMove = function() {
@@ -659,7 +658,7 @@ var AIRTIME = (function(AIRTIME){
 			
 				aAfter.push({"id": oPrevData.id, "instance": oPrevData.instance, "timestamp": oPrevData.timestamp});
 		
-				AIRTIME.showbuilder.fnMove(aSelect, aAfter);
+				mod.fnMove(aSelect, aAfter);
 			};
 			
 			fnReceive = function(event, ui) {
