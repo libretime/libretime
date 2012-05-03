@@ -6,6 +6,7 @@ define('AIRTIME_API_VERSION', '1.0');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH', 'filepath');
+define('MDATA_KEY_DIRECTORY', 'directory');
 define('MDATA_KEY_MD5', 'md5');
 define('MDATA_KEY_TITLE', 'track_title');
 define('MDATA_KEY_CREATOR', 'artist_name');

@@ -225,19 +225,7 @@ class Application_Model_StoredFile {
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
                 if (isset($this->_dbMD[$value])) {
-	                if ($value == 'filepath') {
-	                	$directoryPK = $this->getDbColMetadataValue('directory');
-	                	if ($directoryPK == 1) {
-                            $musicDir = Application_Model_MusicDir::getDirByPK($directoryPK);
-                            $md[$constant] = $musicDir->getDirectory() . $this->getDbColMetadataValue($value);
-	                	}
-                        else {
-                            $md[$constant] = $this->getDbColMetadataValue($value);
-	                	}
-	                }
-                    else {
-                        $md[$constant] = $this->getDbColMetadataValue($value);
-                    }
+                    $md[$constant] = $this->getDbColMetadataValue($value);
                 }
             }
         }
