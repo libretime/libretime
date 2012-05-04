@@ -238,7 +238,7 @@ class AirtimeProcessEvent(ProcessEvent):
             self.handle_mount_change()
 
         if not event.dir:
-            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(event.path, False):
+            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(event.pathname, False):
                 if event.cookie in self.temp_files:
                     self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
                     del self.temp_files[event.cookie]
