@@ -84,6 +84,7 @@ class MediaMonitorCommon:
                 # stat.S_IROTH - readable by all permission
                 # stat.S_IXOTH - excutable by all permission
                 # try to set permission 
+                self.logger.info("%s has incorrect permissions. Will modify to be readable.", item)
                 if self.is_parent_directory(item, self.config.storage_directory) or self.is_parent_directory(item, self.config.imported_directory) or self.is_parent_directory(item, self.config.organize_directory): 
                     if is_dir is True:
                         os.chmod(item, 02777)
@@ -98,8 +99,7 @@ class MediaMonitorCommon:
                         bitor = stats.st_mode | stat.S_IROTH
                     os.chmod(item, bitor)
         except Exception, e:
-            self.logger.error("Failed to change file's owner/group/permissions. %s", e)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            self.logger.warn("Failed to change owner/group/permissions for %s", item)
             return False
         finally:
             os.umask(omask)
