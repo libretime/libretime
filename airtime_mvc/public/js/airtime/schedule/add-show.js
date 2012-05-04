@@ -508,8 +508,7 @@ function alertShowErrorAndReload(){
     window.location.reload();
 }
 
-
-$(window).resize(function(){
+function windowResize() {
 	var windowWidth = $(this).width();
     // margin on showform are 16 px on each side
 	if(!$("#schedule-add-show").is(':hidden')){	 
@@ -524,4 +523,10 @@ $(window).resize(function(){
 	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
 	$("#schedule_calendar").fullCalendar('render');
 	
+}
+
+var scheduleResizeTimeout;
+$(window).resize(function(){
+	clearTimeout(scheduleResizeTimeout);
+	scheduleResizeTimeout = setTimeout(windowResize, 100);
 });
