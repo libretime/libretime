@@ -7,6 +7,7 @@ AIRTIME = (function(AIRTIME) {
 		$fs,
 		widgetHeight,
 		screenWidth,
+		resizeTimeout,
 		oBaseDatePickerSettings,
 		oBaseTimePickerSettings,
 		oRange,
@@ -47,7 +48,8 @@ AIRTIME = (function(AIRTIME) {
 		screenWidth = Math.floor(viewport.width - 90);
 		
 		var libTableHeight = widgetHeight - 130,
-			builderTableHeight = widgetHeight - 95;
+			builderTableHeight = widgetHeight - 95,
+			oTable;
 		
 		if ($fs.is(':visible')) {
 			builderTableHeight = builderTableHeight - 40;
@@ -73,6 +75,9 @@ AIRTIME = (function(AIRTIME) {
 				.find("#sb_edit")
 					.remove()
 					.end();
+	    	
+	    	oTable = $('#show_builder_table').dataTable();
+	    	oTable.fnDraw();
 	    }	
 	}
 
@@ -91,9 +96,9 @@ AIRTIME = (function(AIRTIME) {
 		AIRTIME.showbuilder.fnServerData.start = oRange.start;
 		AIRTIME.showbuilder.fnServerData.end = oRange.end;
 
-		setWidgetSize();
 		AIRTIME.library.libraryInit();
 		AIRTIME.showbuilder.builderDataTable();
+		setWidgetSize();
 		
 		$libWrapper = $lib.find("#library_display_wrapper");
 		$libWrapper.prepend($libClose);
@@ -242,7 +247,9 @@ AIRTIME = (function(AIRTIME) {
 	};
 	
 	mod.onResize = function() {
-		setWidgetSize();
+		
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(setWidgetSize, 100);
 	};
 	
 	return AIRTIME;
