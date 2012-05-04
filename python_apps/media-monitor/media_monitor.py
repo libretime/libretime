@@ -51,6 +51,7 @@ def configure_locale():
     
     if current_locale_encoding not in ['utf-8', 'utf8']:
         logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
+        sys.exit(1)
             
 # configure logging
 try:

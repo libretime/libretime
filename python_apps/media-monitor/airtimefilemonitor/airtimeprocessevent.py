@@ -134,7 +134,7 @@ class AirtimeProcessEvent(ProcessEvent):
             #file is being overwritten/replaced in GUI.
             elif "goutputstream" in pathname:
                 self.temp_files[pathname] = None
-            elif self.mmc.is_audio_file(pathname):
+            elif self.mmc.is_audio_file(pathname) and self.mmc.is_readable(pathname, False):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
@@ -151,14 +151,14 @@ class AirtimeProcessEvent(ProcessEvent):
                             self.logger.error('Exception: %s', e)
                             self.logger.error("traceback: %s", traceback.format_exc())
 
-                self.mmc.set_needed_file_permissions(pathname, dir)
+                self.mmc.is_readable(pathname, dir)
                 is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
                 self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
 
         else:
             #event is because of a created directory
             if self.mmc.is_parent_directory(pathname, self.config.storage_directory):
-                self.mmc.set_needed_file_permissions(pathname, dir)
+                self.mmc.is_readable(pathname, dir)
 
     def process_IN_MODIFY(self, event):
         # if IN_MODIFY is followed by IN_CREATE, it's not true modify event
@@ -237,9 +237,9 @@ class AirtimeProcessEvent(ProcessEvent):
         if event.pathname in filename:
             self.handle_mount_change()
         #if stuff dropped in stor via a UI move must change file permissions.
-        self.mmc.set_needed_file_permissions(event.pathname, event.dir)
+        self.mmc.is_readable(event.pathname, event.dir)
         if not event.dir:
-            if self.mmc.is_audio_file(event.name):
+            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(full_filepath, False):
                 if event.cookie in self.temp_files:
                     self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
                     del self.temp_files[event.cookie]

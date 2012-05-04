@@ -61,7 +61,13 @@ class Application_Model_Preference
 	            ." VALUES ($id, '$key', $value)";
 	        }
         }
-        return $con->exec($sql);
+        try {
+            $con->exec($sql);
+        } catch (Exception $e){
+            Logging::log("Could not connect to database.");
+            header('HTTP/1.0 503 Service Unavailable');
+            exit;
+        }
     }
 
     public static function GetValue($key, $isUserValue = false){
