@@ -62,7 +62,7 @@ class AirtimeNotifier(Notifier):
         message.ack()
 
         self.logger.info("Received md from RabbitMQ: " + body)
-        m =  json.loads(message.body)
+        m = json.loads(message.body)
 
         if m['event_type'] == "md_update":
             self.logger.info("AIRTIME NOTIFIER md update event")

@@ -173,7 +173,7 @@ class AirtimeProcessEvent(ProcessEvent):
         # update timestamp on create_dict for the entry with pathname as the key
         if pathname in self.create_dict:
             self.create_dict[pathname] = time.time()
-        if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory) and self.mmc.is_readable(pathname, False):
+        if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
             self.logger.info("Modified: %s", pathname)
             if self.mmc.is_audio_file(name):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})

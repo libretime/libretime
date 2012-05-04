@@ -88,17 +88,16 @@ class AirtimeMetadata:
         try:
             airtime_file = mutagen.File(m['MDATA_KEY_FILEPATH'], easy=True)
 
-            for key in m.keys() :
+            for key in m:
                 if key in self.airtime2mutagen:
                     value = m[key]
-                    if (value is not None):
-                        self.logger.debug("Saving %s to file", key)
-                        self.logger.debug(value)
-                        if isinstance(value, basestring) and (len(value) > 0):
-                            airtime_file[self.airtime2mutagen[key]] = api_client.encode_to(value, 'utf-8')
-                        elif isinstance(value, int):
-                            airtime_file[self.airtime2mutagen[key]] = str(value)
-
+                    
+                    if value is not None:
+                        value = unicode(value)
+                    
+                        if len(value) > 0:
+                            self.logger.debug("Saving key '%s' with value '%s' to file", key, value)
+                            airtime_file[self.airtime2mutagen[key]] = value
 
             airtime_file.save()
         except Exception, e:
