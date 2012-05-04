@@ -134,6 +134,9 @@ class CcShowInstances extends BaseCcShowInstances {
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_EQUAL)
             ->filterByDbStarts($this->ends, Criteria::GREATER_THAN)
             ->update(array('DbPlayoutStatus' => 0), $con);
+        
+        $this->setDbLastScheduled(gmdate("Y-m-d H:i:s"));
+        $this->save($con);
     }
     
     /**
