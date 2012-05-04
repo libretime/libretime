@@ -79,18 +79,24 @@ class MediaMonitorCommon:
     def set_needed_file_permissions(self, item, is_dir):
         try:
             omask = os.umask(0)
-            if not self.has_correct_permissions(item, 'www-data', 'www-data') or not self.has_correct_permissions(item, 'pypo', 'pypo'):
+            if not self.has_correct_permissions(item, 'www-data', 'www-data') \
+                or not self.has_correct_permissions(item, 'pypo', 'pypo'):
+                    
                 # stats.st_mode is the original permission
                 # stat.S_IROTH - readable by all permission
                 # stat.S_IXOTH - excutable by all permission
                 # try to set permission 
-                self.logger.info("%s has incorrect permissions. Will modify to be readable.", item)
-                if self.is_parent_directory(item, self.config.storage_directory) or self.is_parent_directory(item, self.config.imported_directory) or self.is_parent_directory(item, self.config.organize_directory): 
+                self.logger.warn("%s has incorrect permissions for reading. Skipping import.", item)
+                """
+                if self.is_parent_directory(item, self.config.storage_directory) \
+                    or self.is_parent_directory(item, self.config.imported_directory) \
+                    or self.is_parent_directory(item, self.config.organize_directory): 
+                    
                     if is_dir is True:
                         os.chmod(item, 02777)
                     else:
                         os.chmod(item, 0666)
-                else :
+                else:
                     # add world readable permission
                     stats = os.stat(item)
                     if is_dir is True:
@@ -98,6 +104,7 @@ class MediaMonitorCommon:
                     else:
                         bitor = stats.st_mode | stat.S_IROTH
                     os.chmod(item, bitor)
+                """
         except Exception, e:
             self.logger.warn("Failed to change owner/group/permissions for %s", item)
             return False
