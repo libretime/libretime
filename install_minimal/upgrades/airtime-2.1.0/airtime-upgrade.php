@@ -49,9 +49,13 @@ require_once 'ConfFileUpgrade.php';
 require_once 'DbUpgrade.php';
 require_once 'MiscUpgrade.php';
 
+
+$filename = "/etc/airtime/airtime.conf";
+$values = parse_ini_file($filename, true);
+
 UpgradeCommon::connectToDatabase();
 UpgradeCommon::SetDefaultTimezone();
 
 AirtimeConfigFileUpgrade::start();
-AirtimeDatabaseUpgrade::start();
+AirtimeDatabaseUpgrade::start($values);
 AirtimeMiscUpgrade::start();
