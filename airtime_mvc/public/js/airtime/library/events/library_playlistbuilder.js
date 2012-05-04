@@ -28,6 +28,13 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 		var $nRow = $(nRow);
 		
+		if (aData.ftype === "audioclip") {
+			$nRow.addClass("lib-audio");
+		}
+		else {
+			$nRow.addClass("lib-pl");
+		}
+		
 		$nRow.attr("id", aData["tr_id"])
 	    	.data("aData", aData)
 	    	.data("screen", "playlist");
@@ -38,7 +45,7 @@ var AIRTIME = (function(AIRTIME){
 		mod.redrawChosen();
 		mod.checkToolBarIcons();
 		
-		$('#library_display tr[id ^= "au"]').draggable({
+		$('#library_display tr.lib-audio').draggable({
 			helper: function(){
 				
 				mod.selectItem($(this));

@@ -241,10 +241,7 @@ var AIRTIME = (function(AIRTIME) {
             "bServerSide": true,
             
             "aLengthMenu": [[5, 10, 15, 20, 25, 50, 100], [5, 10, 15, 20, 25, 50, 100]],
-            
-            //"sScrollX": "100%",
-            //"sScrollXInner": "110%",
-                    
+                 
             "bStateSave": true,
             "fnStateSaveParams": function (oSettings, oData) {
                 //remove oData components we don't want to save.
