@@ -13,6 +13,7 @@ var AIRTIME = (function(AIRTIME){
 		$lib,
 		$pl,
 		widgetHeight,
+		resizeTimeout,
 		width;
 	
 	function isTimeValid(time) {
@@ -779,7 +780,9 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.onResize = function() {
-		setWidgetSize();
+		
+		clearTimeout(resizeTimeout);
+		resizeTimeout = setTimeout(setWidgetSize, 100);
 	};
 	
 	return AIRTIME;
