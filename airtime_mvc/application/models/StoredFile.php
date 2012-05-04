@@ -235,7 +235,9 @@ class Application_Model_StoredFile {
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
                 if (isset($dbmd_copy[$value])) {
-                    $md[$constant] = $this->getDbColMetadataValue($value);
+                    $propelColumn = $dbmd_copy[$value];
+                    $method = "get$propelColumn";
+                    $md[$constant] = $this->_file->$method();
                 }
             }
         }
