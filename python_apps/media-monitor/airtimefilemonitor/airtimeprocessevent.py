@@ -239,7 +239,7 @@ class AirtimeProcessEvent(ProcessEvent):
         #if stuff dropped in stor via a UI move must change file permissions.
         self.mmc.is_readable(event.pathname, event.dir)
         if not event.dir:
-            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(full_filepath, False):
+            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(event.name, False):
                 if event.cookie in self.temp_files:
                     self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
                     del self.temp_files[event.cookie]
