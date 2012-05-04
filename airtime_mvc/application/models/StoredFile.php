@@ -46,7 +46,7 @@ class Application_Model_StoredFile {
         "md5" => "DbMd5",
         "ftype" => "DbFtype",
         "language" => "DbLanguage",
-        "filepath" => "DbFilepath",
+        //"filepath" => "DbFilepath",
         "directory" => "DbDirectory"
     );
 
@@ -221,10 +221,20 @@ class Application_Model_StoredFile {
     {
         $c = get_defined_constants(true);
         $md = array();
+                
+        /* Create a copy of dbMD here and create a "filepath" key inside of 
+         * it. The reason we do this here, instead of creating this key inside
+         * dbMD is because "filepath" isn't really metadata, and we don't want 
+         * filepath updated everytime the metadata changes. Also it needs extra
+         * processing before we can write it to the database (needs to be split 
+         * into base and relative path)
+         *  */
+        $dbmd_copy = $this->_dbMD;
+        $dbmd_copy["filepath"] = "DbFilepath";
 
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
-                if (isset($this->_dbMD[$value])) {
+                if (isset($dbmd_copy[$value])) {
                     $md[$constant] = $this->getDbColMetadataValue($value);
                 }
             }
@@ -450,7 +460,7 @@ Logging::log("getting media! - 2");
 
         if(isset($md)) {
             $storedFile->setMetadata($md);
-       }
+        }
 
        return $storedFile;
     }
