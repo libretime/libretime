@@ -20,7 +20,7 @@ class AirtimeDatabaseUpgrade{
         $database = $p_dbValues['database']['dbname'];
         $dir = __DIR__;
         
-        passthru("export PGPASSWORD=$password && psql -h $host -U $username -f $dir/data/upgrade.sql $database");
+        passthru("export PGPASSWORD=$password && psql -h $host -U $username -f $dir/data/upgrade.sql $database > /dev/null");
        
         $sql = "INSERT INTO cc_pref(\"keystr\", \"valstr\") VALUES('scheduled_play_switch', 'on')";
         UpgradeCommon::queryDb($sql);
