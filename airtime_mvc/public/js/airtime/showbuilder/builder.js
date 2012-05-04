@@ -145,12 +145,41 @@ var AIRTIME = (function(AIRTIME){
  		mod.checkToolBarIcons();
     };
     
+    mod.disableUI = function() {
+    	
+    	$lib.block({ 
+            message: "",
+            theme: true,
+            applyPlatformOpacityRules: false
+        });
+    	
+    	$sbContent.block({ 
+            message: "",
+            theme: true,
+            applyPlatformOpacityRules: false
+        });
+    };
+    
+    mod.enableUI = function() {
+    	
+    	$lib.unblock();
+    	$sbContent.unblock();
+    	
+    	//Block UI changes the postion to relative to display the messages.
+    	$lib.css("position", "static");
+    	$sbContent.css("position", "static");
+    };
+    
     mod.fnItemCallback = function(json) {
     	checkError(json);
 		oSchedTable.fnDraw();
+		
+		mod.enableUI();
     };
 	
 	mod.fnAdd = function(aMediaIds, aSchedIds) {
+		
+		mod.disableUI();
 		
 		$.post("/showbuilder/schedule-add", 
 			{"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
@@ -160,6 +189,8 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.fnMove = function(aSelect, aAfter) {
 		
+		mod.disableUI();
+		
 		$.post("/showbuilder/schedule-move", 
 			{"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
 			mod.fnItemCallback
@@ -167,6 +198,8 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.fnRemove = function(aItems) {
+		
+		mod.disableUI();
 		
 		$.post( "/showbuilder/schedule-remove",
 			{"items": aItems, "format": "json"},

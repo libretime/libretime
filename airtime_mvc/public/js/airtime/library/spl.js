@@ -639,62 +639,57 @@ var AIRTIME = (function(AIRTIME){
 			});
 	};
 	
+	mod.disableUI = function() {
+    	
+    	$lib.block({ 
+            message: "",
+            theme: true,
+            applyPlatformOpacityRules: false
+        });
+    	
+    	$pl.block({ 
+            message: "",
+            theme: true,
+            applyPlatformOpacityRules: false
+        });
+    };
+    
+    mod.enableUI = function() {
+    	
+    	$lib.unblock();
+    	$pl.unblock();
+    	
+    	//Block UI changes the postion to relative to display the messages.
+    	$lib.css("position", "static");
+    	$pl.css("position", "static");
+    };
+    
+    function playlistResponse(json){	
+		
+		if (json.error !== undefined) {
+			playlistError(json);
+		}
+		else {
+			setPlaylistContent(json);
+		}
+		
+		mod.enableUI();
+	}
+	
 	function playlistRequest(sUrl, oData) {
-		var lastMod = getModified(),
-			plContent = $("#side_playlist"),
-			offset = plContent.offset(),
-			plHeight = plContent.height(),
-			plWidth = plContent.width(),
-			overlay,
-			loading;
+		var lastMod;
+		
+		mod.disableUI();
+		
+		lastMod = getModified();
 		
 		oData["modified"] = lastMod;
 		oData["format"] = "json";
 		
-
-		overlay = $("<div />", {
-    		"class": "pl-overlay ui-widget-content",
-    		"css": {
-    			"position": "absolute",
-    			"top": offset.top,
-    			"left": offset.left,
-    			"height": plHeight + 16,
-    			"width": plWidth + 16
-    		}
-    	}).click(function(){
-    		return false;
-    	});
-		
-		loading = $("<div />", {
-    		"class": "pl-loading",
-    		"css": {
-    			"position": "absolute",
-    			"top": offset.top + plHeight/2 - 32 - 8,
-    			"left": offset.left + plWidth/2 - 32 -8,
-    			"height": 64,
-    			"width": 64
-    		}
-    	});
-		
-		$("body")
-			.append(overlay)
-			.append(loading);
-
 		$.post(
 			sUrl, 
 			oData, 
-			function(json){	
-					
-				if (json.error !== undefined) {
-					playlistError(json);
-				}
-				else {
-					setPlaylistContent(json);
-				}
-				
-				loading.remove();
-				overlay.remove();
-			}
+			playlistResponse
 		);
 	}
 	
