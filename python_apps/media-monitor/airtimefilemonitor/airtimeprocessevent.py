@@ -134,7 +134,7 @@ class AirtimeProcessEvent(ProcessEvent):
             #file is being overwritten/replaced in GUI.
             elif "goutputstream" in pathname:
                 self.temp_files[pathname] = None
-            elif self.mmc.is_audio_file(pathname):
+            elif self.mmc.is_audio_file(pathname) and self.mmc.is_readable(pathname, False):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
@@ -173,7 +173,7 @@ class AirtimeProcessEvent(ProcessEvent):
         # update timestamp on create_dict for the entry with pathname as the key
         if pathname in self.create_dict:
             self.create_dict[pathname] = time.time()
-        if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
+        if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory) and self.mmc.is_readable(pathname, False):
             self.logger.info("Modified: %s", pathname)
             if self.mmc.is_audio_file(name):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
@@ -239,7 +239,7 @@ class AirtimeProcessEvent(ProcessEvent):
         #if stuff dropped in stor via a UI move must change file permissions.
         self.mmc.is_readable(event.pathname, event.dir)
         if not event.dir:
-            if self.mmc.is_audio_file(event.name):
+            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(full_filepath, False):
                 if event.cookie in self.temp_files:
                     self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
                     del self.temp_files[event.cookie]

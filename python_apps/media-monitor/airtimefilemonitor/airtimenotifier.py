@@ -150,7 +150,6 @@ class AirtimeNotifier(Notifier):
                 file_md = None
                 data = None
 
-
             if (os.path.exists(filepath) and (mode == self.config.MODE_CREATE)):
                 if file_md is None:
                     mutagen = self.md_manager.get_md_from_file(filepath)
