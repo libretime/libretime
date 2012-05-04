@@ -194,10 +194,6 @@ class AirtimeNotifier(Notifier):
 
         self.mmc.is_readable(directory, True)
         for (path, dirs, files) in os.walk(directory):
-            
-            for d in dirs:
-                self.mmc.is_readable(os.path.join(path, d), True)
-            
             for filename in files:
                 full_filepath = os.path.join(path, filename)
 
