@@ -49,7 +49,7 @@ class MediaMonitorCommon:
             return False
 
     #check if file is readable by "nobody"
-    def has_correct_permissions(self, filepath, euid='nobody', egid='nogroup'):
+    def is_user_readable(self, filepath, euid='nobody', egid='nogroup'):
 
         try:
             uid = pwd.getpwnam(euid)[2]
@@ -76,40 +76,17 @@ class MediaMonitorCommon:
         return readable
 
     # the function only changes the permission if its not readable by www-data
-    def set_needed_file_permissions(self, item, is_dir):
+    def is_readable(self, item, is_dir):
         try:
-            omask = os.umask(0)
-            if not self.has_correct_permissions(item, 'www-data', 'www-data') \
-                or not self.has_correct_permissions(item, 'pypo', 'pypo'):
+            if not self.is_user_readable(item, 'www-data', 'www-data') \
+                or not self.is_user_readable(item, 'pypo', 'pypo'):
                     
-                # stats.st_mode is the original permission
-                # stat.S_IROTH - readable by all permission
-                # stat.S_IXOTH - excutable by all permission
-                # try to set permission 
                 self.logger.warn("%s has incorrect permissions for reading. Skipping import.", item)
-                """
-                if self.is_parent_directory(item, self.config.storage_directory) \
-                    or self.is_parent_directory(item, self.config.imported_directory) \
-                    or self.is_parent_directory(item, self.config.organize_directory): 
-                    
-                    if is_dir is True:
-                        os.chmod(item, 02777)
-                    else:
-                        os.chmod(item, 0666)
-                else:
-                    # add world readable permission
-                    stats = os.stat(item)
-                    if is_dir is True:
-                        bitor = stats.st_mode | stat.S_IROTH | stat.S_IXOTH
-                    else:
-                        bitor = stats.st_mode | stat.S_IROTH
-                    os.chmod(item, bitor)
-                """
+                return False
         except Exception, e:
             self.logger.warn("Failed to change owner/group/permissions for %s", item)
             return False
         finally:
-            os.umask(omask)
             return True
 
 

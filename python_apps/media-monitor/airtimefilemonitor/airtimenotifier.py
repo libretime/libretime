@@ -103,9 +103,9 @@ class AirtimeNotifier(Notifier):
             self.mmc.ensure_is_dir(self.config.imported_directory)
             self.mmc.ensure_is_dir(self.config.organize_directory)
 
-            self.mmc.set_needed_file_permissions(self.config.storage_directory, True)
-            self.mmc.set_needed_file_permissions(self.config.imported_directory, True)
-            self.mmc.set_needed_file_permissions(self.config.organize_directory, True)
+            self.mmc.is_readable(self.config.storage_directory, True)
+            self.mmc.is_readable(self.config.imported_directory, True)
+            self.mmc.is_readable(self.config.organize_directory, True)
 
             self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
@@ -192,17 +192,17 @@ class AirtimeNotifier(Notifier):
 
         mm = self.proc_fun()
 
-        self.mmc.set_needed_file_permissions(directory, True)
+        self.mmc.is_readable(directory, True)
         for (path, dirs, files) in os.walk(directory):
             
             for d in dirs:
-                self.mmc.set_needed_file_permissions(os.path.join(path, d), True)
+                self.mmc.is_readable(os.path.join(path, d), True)
             
             for filename in files:
                 full_filepath = os.path.join(path, filename)
 
                 if self.mmc.is_audio_file(full_filepath):
-                    if self.mmc.set_needed_file_permissions(full_filepath, False):
+                    if self.mmc.is_readable(full_filepath, False):
                         self.logger.info("importing %s", full_filepath)
                         event = {'filepath': full_filepath, 'mode': self.config.MODE_CREATE, 'is_recorded_show': False}
                         mm.multi_queue.put(event)
