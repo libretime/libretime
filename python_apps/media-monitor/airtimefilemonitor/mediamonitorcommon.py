@@ -79,7 +79,7 @@ class MediaMonitorCommon:
     def is_readable(self, item, is_dir):
         try:
             return self.is_user_readable(item, 'www-data', 'www-data') \
-                and not self.is_user_readable(item, 'pypo', 'pypo')
+                and self.is_user_readable(item, 'pypo', 'pypo')
         except Exception, e:
             self.logger.warn("Failed to check owner/group/permissions for %s", item)
             return False
