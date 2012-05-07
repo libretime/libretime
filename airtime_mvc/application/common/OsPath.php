@@ -45,7 +45,7 @@ class Application_Common_OsPath{
     
     /* Similar to the os.path.join python method
      * http://stackoverflow.com/a/1782990/276949 */
-    function join() {
+    public static function join() {
         $args = func_get_args();
         $paths = array();
 

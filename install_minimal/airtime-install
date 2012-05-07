@@ -160,6 +160,19 @@ if [ "$DO_UPGRADE" -eq "1" ]; then
     php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-upgrade.php $@
 fi
 
+set +e
+if [ "$DO_UPGRADE" -eq "0" ]; then 
+    php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-install.php $@
+    result=$?
+
+    if [ "$result" -ne "0" ]; then
+        #There was an error, exit with error code.
+        echo "There was an error during install. Exit code $result"
+        exit 1
+    fi
+fi
+set -e
+
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 

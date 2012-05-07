@@ -129,7 +129,8 @@ class PypoPush(Thread):
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            self.logger.error(str(e))
+            self.logger.error("Error connecting to Liquidsoap: %s", e)
+            response = []
         finally:
             self.telnet_lock.release()
         

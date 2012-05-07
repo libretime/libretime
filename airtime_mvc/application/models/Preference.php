@@ -3,96 +3,109 @@
 class Application_Model_Preference
 {
 
-    public static function SetValue($key, $value, $isUserValue = false){
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
+    public static function SetValue($key, $value, $isUserValue = false){       
+        try {
+            $con = Propel::getConnection();
 
-        //called from a daemon process
-        if(!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
-            $id = NULL;
-        }
-        else {
-            $auth = Zend_Auth::getInstance();
-            $id = $auth->getIdentity()->id;
-        }
+            //called from a daemon process
+            if(!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
+                $id = NULL;
+            }
+            else {
+                $auth = Zend_Auth::getInstance();
+                $id = $auth->getIdentity()->id;
+            }
 
-        $key = pg_escape_string($key);
-        $value = pg_escape_string($value);
+            $key = pg_escape_string($key);
+            $value = pg_escape_string($value);
 
-        //Check if key already exists
-        $sql = "SELECT COUNT(*) FROM cc_pref"
-        ." WHERE keystr = '$key'";
-
-        //For user specific preference, check if id matches as well
-        if($isUserValue) {
-        	$sql .= " AND subjid = '$id'";
-        }
-		
-        $result = $con->query($sql)->fetchColumn(0);
-
-        if($value == "") {
-            $value = "NULL";
-        }else {
-            $value = "'$value'";
-        }
-        
-        if($result == 1) {
-        	// result found
-	        if(is_null($id) || !$isUserValue) {
-	        	// system pref
-	            $sql = "UPDATE cc_pref"
-	            ." SET subjid = NULL, valstr = $value"
-	            ." WHERE keystr = '$key'";
-	        } else {
-	        	// user pref
-	            $sql = "UPDATE cc_pref"
-	            . " SET valstr = $value"
-	            . " WHERE keystr = '$key' AND subjid = $id";
-	        }
-        } else {
-        	// result not found
-	        if(is_null($id) || !$isUserValue) {
-	        	// system pref
-	            $sql = "INSERT INTO cc_pref (keystr, valstr)"
-	            ." VALUES ('$key', $value)";
-	        } else {
-	        	// user pref
-	            $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
-	            ." VALUES ($id, '$key', $value)";
-	        }
-        }
-        return $con->exec($sql);
-    }
-
-    public static function GetValue($key, $isUserValue = false){
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
-        //Check if key already exists
-        $sql = "SELECT COUNT(*) FROM cc_pref"
-        ." WHERE keystr = '$key'";
-    	//For user specific preference, check if id matches as well
-        if ($isUserValue) {
-	        $auth = Zend_Auth::getInstance();
-	        if($auth->hasIdentity()) {
-		        $id = $auth->getIdentity()->id;
-	        	$sql .= " AND subjid = '$id'";
-		    }
-        }
-        $result = $con->query($sql)->fetchColumn(0);
-        if ($result == 0)
-            return "";
-        else {
-            $sql = "SELECT valstr FROM cc_pref"
+            //Check if key already exists
+            $sql = "SELECT COUNT(*) FROM cc_pref"
             ." WHERE keystr = '$key'";
 
-	        //For user specific preference, check if id matches as well
-	        if($isUserValue && $auth->hasIdentity()) {
-	        	$sql .= " AND subjid = '$id'";
-	        }
-
+            //For user specific preference, check if id matches as well
+            if($isUserValue) {
+                $sql .= " AND subjid = '$id'";
+            }
+            
             $result = $con->query($sql)->fetchColumn(0);
-            return ($result !== false) ? $result : "";
+
+            if($value == "") {
+                $value = "NULL";
+            }else {
+                $value = "'$value'";
+            }
+            
+            if($result == 1) {
+                // result found
+                if(is_null($id) || !$isUserValue) {
+                    // system pref
+                    $sql = "UPDATE cc_pref"
+                    ." SET subjid = NULL, valstr = $value"
+                    ." WHERE keystr = '$key'";
+                } else {
+                    // user pref
+                    $sql = "UPDATE cc_pref"
+                    . " SET valstr = $value"
+                    . " WHERE keystr = '$key' AND subjid = $id";
+                }
+            } else {
+                // result not found
+                if(is_null($id) || !$isUserValue) {
+                    // system pref
+                    $sql = "INSERT INTO cc_pref (keystr, valstr)"
+                    ." VALUES ('$key', $value)";
+                } else {
+                    // user pref
+                    $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
+                    ." VALUES ($id, '$key', $value)";
+                }
+            }
+
+            $con->exec($sql);
+        
+        } catch (Exception $e){
+            header('HTTP/1.0 503 Service Unavailable');
+            Logging::log("Could not connect to database.");
+            exit;
+        }
+
+    }
+
+    public static function GetValue($key, $isUserValue = false){       
+        try {
+            $con = Propel::getConnection();
+
+            //Check if key already exists
+            $sql = "SELECT COUNT(*) FROM cc_pref"
+            ." WHERE keystr = '$key'";
+            //For user specific preference, check if id matches as well
+            if ($isUserValue) {
+                $auth = Zend_Auth::getInstance();
+                if($auth->hasIdentity()) {
+                    $id = $auth->getIdentity()->id;
+                    $sql .= " AND subjid = '$id'";
+                }
+            }
+            $result = $con->query($sql)->fetchColumn(0);
+            if ($result == 0)
+                return "";
+            else {
+                $sql = "SELECT valstr FROM cc_pref"
+                ." WHERE keystr = '$key'";
+
+                //For user specific preference, check if id matches as well
+                if($isUserValue && $auth->hasIdentity()) {
+                    $sql .= " AND subjid = '$id'";
+                }
+
+                $result = $con->query($sql)->fetchColumn(0);
+                return ($result !== false) ? $result : "";
+            }
+        } catch (Exception $e) {
+            header('HTTP/1.0 503 Service Unavailable');
+            Logging::log("Could not connect to database.");
+            exit;            
         }
     }
 
@@ -561,10 +574,12 @@ class Application_Model_Preference
 
     public static function GetAirtimeVersion(){
         if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development" && function_exists('exec')){
-            return self::GetValue("system_version")."+".exec("git rev-parse --short HEAD");
-        } else {
-            return self::GetValue("system_version");
+            $version = exec("git rev-parse --short HEAD 2>/dev/null", $out, $return_code);
+            if ($return_code == 0){
+                return self::GetValue("system_version")."+".$version;
+            }
         }
+        return self::GetValue("system_version");
     }
 
     public static function GetLatestVersion(){

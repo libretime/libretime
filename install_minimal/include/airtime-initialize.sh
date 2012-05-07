@@ -14,22 +14,6 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 AIRTIMEROOT=$SCRIPTPATH/../../
 
-#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-#. ${virtualenv_bin}activate
-
-set +e
-if [ "$DO_UPGRADE" -eq "0" ]; then 
-    php --php-ini ${SCRIPTPATH}/../airtime-php.ini ${SCRIPTPATH}/airtime-install.php $@
-    result=$?
-
-    if [ "$result" -ne "0" ]; then
-        #There was an error, exit with error code.
-        echo "There was an error during install. Exit code $result"
-        exit 1
-    fi
-fi
-set -e
-
 if [ "$mediamonitor" = "t" ]; then
     python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
 fi

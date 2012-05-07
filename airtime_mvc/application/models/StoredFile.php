@@ -91,6 +91,27 @@ class Application_Model_StoredFile {
         }
         else {
             $dbMd = array();
+            
+            if (isset($p_md["MDATA_KEY_YEAR"])){
+                // We need to make sure to clean this value before inserting into database.
+                // If value is outside of range [-2^31, 2^31-1] then postgresl will throw error
+                // when trying to retrieve this value. We could make sure number is within these bounds,
+                // but simplest is to do substring to 4 digits (both values are garbage, but at least our
+                // new garbage value won't cause errors). If the value is 2012-01-01, then substring to
+                // 4 digits is an OK result.
+                // CC-3771
+                
+                $year = $p_md["MDATA_KEY_YEAR"];
+                
+                if (strlen($year) > 4){
+                    $year = substr($year, 0, 4);
+                }
+                if (!is_numeric($year)){
+                    $year = 0;
+                }
+                $p_md["MDATA_KEY_YEAR"] = $year;
+            }
+                        
             foreach ($p_md as $mdConst => $mdValue) {
                 $dbMd[constant($mdConst)] = $mdValue;
             }
@@ -235,7 +256,9 @@ class Application_Model_StoredFile {
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
                 if (isset($dbmd_copy[$value])) {
-                    $md[$constant] = $this->getDbColMetadataValue($value);
+                    $propelColumn = $dbmd_copy[$value];
+                    $method = "get$propelColumn";
+                    $md[$constant] = $this->_file->$method();
                 }
             }
         }

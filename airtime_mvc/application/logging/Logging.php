@@ -6,9 +6,18 @@ class Logging {
     private static $_path;
 
     public static function getLogger(){
-        if (!isset(self::$logger)) {
+        if (!isset(self::$_logger)) {
             $writer = new Zend_Log_Writer_Stream(self::$_path);
-            self::$_logger = new Zend_Log($writer);
+            
+            if (Zend_Version::compareVersion("1.11") > 0){
+                //Running Zend version 1.10 or lower. Need to instantiate our
+                //own Zend Log class with backported code from 1.11.
+                require_once __DIR__."/AirtimeLog.php";
+                self::$_logger = new Airtime_Zend_Log($writer);
+            } else {
+                self::$_logger = new Zend_Log($writer);
+            }
+            self::$_logger->registerErrorHandler();
         }
         return self::$_logger;
     }
