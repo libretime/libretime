@@ -411,9 +411,11 @@ class Application_Model_Preference
     			$systemInfoArray[$key] = $info[1];
     		}
     	}
-
+    	
     	$outputArray = array();
 
+    	$outputArray['SOUNDCLOUD_ENABLED'] = self::GetUploadToSoundcloudOption();
+    	$outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();
     	$outputArray['STATION_NAME'] = self::GetStationName();
     	$outputArray['PHONE'] = self::GetPhone();
     	$outputArray['EMAIL'] = self::GetEmail();
@@ -421,7 +423,6 @@ class Application_Model_Preference
     	$outputArray['STATION_COUNTRY'] = self::GetStationCountry();
     	$outputArray['STATION_CITY'] = self::GetStationCity();
     	$outputArray['STATION_DESCRIPTION'] = self::GetStationDescription();
-
 
     	// get web server info
     	if(isset($systemInfoArray["AIRTIME_VERSION_URL"])){
