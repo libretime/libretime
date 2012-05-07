@@ -226,6 +226,15 @@ class ScheduleController extends Zend_Controller_Action
 
         $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
+        
+        if ($instance->isRecorded() && $epochNow > $showEndLocalDT->getTimestamp()) {
+            
+            $file = $instance->getRecordedFile();
+            $fileId = $file->getId();
+            
+            $menu["view_recorded"] = array("name" => "View Recorded File Metadata", "icon" => "overview",
+                    "url" => "/library/edit-file-md/id/".$fileId);
+        }
 
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
             if ( ($isAdminOrPM || $isDJ) 

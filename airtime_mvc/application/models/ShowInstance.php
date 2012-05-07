@@ -120,14 +120,10 @@ class Application_Model_ShowInstance {
     {
         $file_id =  $this->_showInstance->getDbRecordedFile();
 
-        if(isset($file_id)) {
+        if (isset($file_id)) {
             $file =  Application_Model_StoredFile::Recall($file_id);
 
-            if (PEAR::isError($file)) {
-                return null;
-            }
-
-            if(file_exists($file->getFilePath())) {
+            if (isset($file) && file_exists($file->getFilePath())) {
                 return $file;
             }
         }
