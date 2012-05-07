@@ -415,7 +415,11 @@ class Application_Model_Preference
     	$outputArray = array();
 
     	$outputArray['SOUNDCLOUD_ENABLED'] = self::GetUploadToSoundcloudOption();
-    	$outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();
+        if ($outputArray['SOUNDCLOUD_ENABLED']) {
+    	    $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();
+        } else {
+            $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = NULL;
+        }
     	$outputArray['STATION_NAME'] = self::GetStationName();
     	$outputArray['PHONE'] = self::GetPhone();
     	$outputArray['EMAIL'] = self::GetEmail();
