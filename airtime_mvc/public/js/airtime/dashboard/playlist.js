@@ -85,7 +85,7 @@ function updateProgressBarValue(){
     var scheduled_play_div = $("#scheduled_play_div")
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch")
     
-    if (currentSong !== null){
+    if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
         if (songPercentDone < 0 || songPercentDone > 100){
             songPercentDone = 0;        
@@ -149,7 +149,7 @@ function updatePlaybar(){
         $('#previous').empty();
         $('#prev-length').empty();
     }
-    if (currentSong !== null){
+    if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
         if (currentSong.record == "1")
             $('#current').html("<span style='color:red; font-weight:bold'>Recording: </span>"+currentSong.name+",");
         else
@@ -185,7 +185,7 @@ function updatePlaybar(){
     $('#time-elapsed').empty();
     $('#time-remaining').empty();
     $('#song-length').empty();
-    if (currentSong !== null){
+    if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
         $('#start').text(currentSong.starts.split(' ')[1]);
         $('#end').text(currentSong.ends.split(' ')[1]);
 
