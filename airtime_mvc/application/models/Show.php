@@ -1583,7 +1583,7 @@ class Application_Model_Show {
         $interval = $p_start->diff($p_end);
         $days =  $interval->format('%a');
         $shows = Application_Model_Show::getShows($p_start, $p_end);
-        $today_timestamp = gmdate("Y-m-d H:i:s");
+        $nowEpoch = time();
 
         foreach ($shows as $show) {
             $options = array();
@@ -1593,8 +1593,17 @@ class Application_Model_Show {
             if (intval($days) <= 7) {
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
+            
+            $startsDT = new DateTime($show["starts"], new DateTimeZone("UTC"));
+            $endsDT = new DateTime($show["ends"], new DateTimeZone("UTC"));
+            
+            $startsEpoch = intval($startsDT->format("U"));
+            $endsEpoch = intval($endsDT->format("U"));
 
-            if ($p_editable && (strtotime($today_timestamp) < strtotime($show["ends"]))) {
+            if ($p_editable && $show["record"] && $nowEpoch < $endsEpoch) {
+                $options["editable"] = false;
+            }
+            else if ($p_editable && $nowEpoch < $endsEpoch) {
                 $options["editable"] = true;
             }
             $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);

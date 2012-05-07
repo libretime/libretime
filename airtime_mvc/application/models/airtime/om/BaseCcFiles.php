@@ -405,6 +405,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $soundcloud_link_to_file;
 
 	/**
+	 * The value for the soundcloud_upload_time field.
+	 * @var        string
+	 */
+	protected $soundcloud_upload_time;
+
+	/**
 	 * @var        CcSubjs
 	 */
 	protected $aCcSubjs;
@@ -1158,6 +1164,39 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function getDbSoundcloudLinkToFile()
 	{
 		return $this->soundcloud_link_to_file;
+	}
+
+	/**
+	 * Get the [optionally formatted] temporal [soundcloud_upload_time] column value.
+	 * 
+	 *
+	 * @param      string $format The date/time format string (either date()-style or strftime()-style).
+	 *							If format is NULL, then the raw DateTime object will be returned.
+	 * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
+	 * @throws     PropelException - if unable to parse/validate the date/time value.
+	 */
+	public function getDbSoundCloundUploadTime($format = 'Y-m-d H:i:s')
+	{
+		if ($this->soundcloud_upload_time === null) {
+			return null;
+		}
+
+
+
+		try {
+			$dt = new DateTime($this->soundcloud_upload_time);
+		} catch (Exception $x) {
+			throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->soundcloud_upload_time, true), $x);
+		}
+
+		if ($format === null) {
+			// Because propel.useDateTimeClass is TRUE, we return a DateTime object.
+			return $dt;
+		} elseif (strpos($format, '%') !== false) {
+			return strftime($format, $dt->format('U'));
+		} else {
+			return $dt->format($format);
+		}
 	}
 
 	/**
@@ -2496,6 +2535,55 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbSoundcloudLinkToFile()
 
 	/**
+	 * Sets the value of [soundcloud_upload_time] column to a normalized version of the date/time value specified.
+	 * 
+	 * @param      mixed $v string, integer (timestamp), or DateTime value.  Empty string will
+	 *						be treated as NULL for temporal objects.
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbSoundCloundUploadTime($v)
+	{
+		// we treat '' as NULL for temporal objects because DateTime('') == DateTime('now')
+		// -- which is unexpected, to say the least.
+		if ($v === null || $v === '') {
+			$dt = null;
+		} elseif ($v instanceof DateTime) {
+			$dt = $v;
+		} else {
+			// some string/numeric value passed; we normalize that so that we can
+			// validate it.
+			try {
+				if (is_numeric($v)) { // if it's a unix timestamp
+					$dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
+					// We have to explicitly specify and then change the time zone because of a
+					// DateTime bug: http://bugs.php.net/bug.php?id=43003
+					$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+				} else {
+					$dt = new DateTime($v);
+				}
+			} catch (Exception $x) {
+				throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+			}
+		}
+
+		if ( $this->soundcloud_upload_time !== null || $dt !== null ) {
+			// (nested ifs are a little easier to read in this case)
+
+			$currNorm = ($this->soundcloud_upload_time !== null && $tmpDt = new DateTime($this->soundcloud_upload_time)) ? $tmpDt->format('Y-m-d\\TH:i:sO') : null;
+			$newNorm = ($dt !== null) ? $dt->format('Y-m-d\\TH:i:sO') : null;
+
+			if ( ($currNorm !== $newNorm) // normalized values don't match 
+					)
+			{
+				$this->soundcloud_upload_time = ($dt ? $dt->format('Y-m-d\\TH:i:sO') : null);
+				$this->modifiedColumns[] = CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME;
+			}
+		} // if either are not null
+
+		return $this;
+	} // setDbSoundCloundUploadTime()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -2621,6 +2709,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->soundcloud_error_code = ($row[$startcol + 59] !== null) ? (int) $row[$startcol + 59] : null;
 			$this->soundcloud_error_msg = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
 			$this->soundcloud_link_to_file = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
+			$this->soundcloud_upload_time = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -2629,7 +2718,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 62; // 62 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 63; // 63 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcFiles object", $e);
@@ -3213,6 +3302,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 61:
 				return $this->getDbSoundcloudLinkToFile();
 				break;
+			case 62:
+				return $this->getDbSoundCloundUploadTime();
+				break;
 			default:
 				return null;
 				break;
@@ -3299,6 +3391,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[59] => $this->getDbSoundcloudErrorCode(),
 			$keys[60] => $this->getDbSoundcloudErrorMsg(),
 			$keys[61] => $this->getDbSoundcloudLinkToFile(),
+			$keys[62] => $this->getDbSoundCloundUploadTime(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -3524,6 +3617,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 61:
 				$this->setDbSoundcloudLinkToFile($value);
 				break;
+			case 62:
+				$this->setDbSoundCloundUploadTime($value);
+				break;
 		} // switch()
 	}
 
@@ -3610,6 +3706,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[59], $arr)) $this->setDbSoundcloudErrorCode($arr[$keys[59]]);
 		if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudErrorMsg($arr[$keys[60]]);
 		if (array_key_exists($keys[61], $arr)) $this->setDbSoundcloudLinkToFile($arr[$keys[61]]);
+		if (array_key_exists($keys[62], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[62]]);
 	}
 
 	/**
@@ -3683,6 +3780,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_CODE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_CODE, $this->soundcloud_error_code);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_MSG)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $this->soundcloud_error_msg);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE, $this->soundcloud_link_to_file);
+		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME)) $criteria->add(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $this->soundcloud_upload_time);
 
 		return $criteria;
 	}
@@ -3805,6 +3903,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbSoundcloudErrorCode($this->soundcloud_error_code);
 		$copyObj->setDbSoundcloudErrorMsg($this->soundcloud_error_msg);
 		$copyObj->setDbSoundcloudLinkToFile($this->soundcloud_link_to_file);
+		$copyObj->setDbSoundCloundUploadTime($this->soundcloud_upload_time);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -4466,6 +4565,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->soundcloud_error_code = null;
 		$this->soundcloud_error_msg = null;
 		$this->soundcloud_link_to_file = null;
+		$this->soundcloud_upload_time = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

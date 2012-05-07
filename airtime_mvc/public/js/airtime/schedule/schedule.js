@@ -354,6 +354,15 @@ $(document).ready(function() {
     				oItems.cancel_recorded.callback = callback;
     			}
     			
+    			//define a view recorded callback.
+                if (oItems.view_recorded !== undefined) {
+                    
+                    callback = function() {
+                        document.location.href = oItems.view_recorded.url;
+                    };
+                    oItems.view_recorded.callback = callback;
+                }
+    			
     			//define a cancel callback.
     			if (oItems.cancel !== undefined) {
     				

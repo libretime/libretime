@@ -1400,6 +1400,7 @@ ul.errors li {
 	background:#c6b4b4;
 	margin-bottom:2px;
 	border:1px solid #c83f3f;
+	list-style: none;
 }
 
 div.success{
