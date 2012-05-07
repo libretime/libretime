@@ -314,7 +314,7 @@ class MediaMonitorCommon:
 
             self.logger.debug("Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
-            if not self.mmc.make_readable(filepath):
+            if not self.make_readable(filepath):
                 self.logger.warn("Couldn't make filepath %s readable", pathname)
                 filepath = None
         else:

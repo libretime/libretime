@@ -134,7 +134,7 @@ class AirtimeProcessEvent(ProcessEvent):
             #file is being overwritten/replaced in GUI.
             elif "goutputstream" in pathname:
                 self.temp_files[pathname] = None
-            elif self.mmc.is_audio_file(pathname):
+            elif self.mmc.is_audio_file(name):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                         
                     #file was created in /srv/airtime/stor/organize. Need to process and move
@@ -150,10 +150,10 @@ class AirtimeProcessEvent(ProcessEvent):
                         except Exception, e:
                             self.logger.error('Exception: %s', e)
                             self.logger.error("traceback: %s", traceback.format_exc())
-                    else:
-                        #ensure file is world readable (Liquidsoap and Web UI preview)
-                        is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
-                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
+                        return
+
+                is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})                
 
 
     def process_IN_MODIFY(self, event):
