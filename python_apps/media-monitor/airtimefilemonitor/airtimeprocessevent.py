@@ -134,8 +134,9 @@ class AirtimeProcessEvent(ProcessEvent):
             #file is being overwritten/replaced in GUI.
             elif "goutputstream" in pathname:
                 self.temp_files[pathname] = None
-            elif self.mmc.is_audio_file(pathname) and self.mmc.is_readable(pathname, False):
+            elif self.mmc.is_audio_file(pathname):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
+                        
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
                     oldPath = pathname
@@ -144,21 +145,18 @@ class AirtimeProcessEvent(ProcessEvent):
                     #delete files from organize if they can not be read properly.
                     if pathname is None:
                         try:
-                            self.logger.info("Deleting file because it cannot be read properly: %s", oldPath)
+                            self.logger.warn("Deleting file because it cannot be read properly: %s", oldPath)
                             os.remove(oldPath)
-                            return
                         except Exception, e:
                             self.logger.error('Exception: %s', e)
                             self.logger.error("traceback: %s", traceback.format_exc())
-
-                self.mmc.is_readable(pathname, dir)
-                is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
-                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
-
-        else:
-            #event is because of a created directory
-            if self.mmc.is_parent_directory(pathname, self.config.storage_directory):
-                self.mmc.is_readable(pathname, dir)
+                    else:
+                        #ensure file is world readable (Liquidsoap and Web UI preview)
+                        if self.mmc.make_readable(pathname):
+                            is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
+                            self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
+                        else:
+                            self.logger.warn("Couldn't add %s because failed to change file permissions", pathname)
 
     def process_IN_MODIFY(self, event):
         # if IN_MODIFY is followed by IN_CREATE, it's not true modify event
@@ -175,7 +173,7 @@ class AirtimeProcessEvent(ProcessEvent):
             self.create_dict[pathname] = time.time()
         if not dir and not self.mmc.is_parent_directory(pathname, self.config.organize_directory):
             self.logger.info("Modified: %s", pathname)
-            if self.mmc.is_audio_file(name):
+            if self.mmc.is_audio_file(name) and self.mmc.make_readable(pathname):
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY})
     
     # if change is detected on /etc/mtab, we check what mount(file system) was added/removed
@@ -238,51 +236,52 @@ class AirtimeProcessEvent(ProcessEvent):
             self.handle_mount_change()
 
         if not event.dir:
-            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(event.pathname, False):
-                if event.cookie in self.temp_files:
-                    self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
-                    del self.temp_files[event.cookie]
-                elif event.cookie in self.cookies_IN_MOVED_FROM:
-                    #files original location was also in a watched directory
-                    del self.cookies_IN_MOVED_FROM[event.cookie]
-                    if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
-                        filepath = self.mmc.organize_new_file(event.pathname)
-                        
-                        #delete files from organize if they can not be read properly.
-                        if filepath is None:
-                            try:
-                                self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
-                                os.remove(event.pathname)
-                                return
-                            except Exception, e:
-                                self.logger.error('Exception: %s', e)
-                                self.logger.error("traceback: %s", traceback.format_exc())
+            if self.mmc.is_audio_file(event.name):
+                if self.mmc.make_readable(event.pathname):
+                    if event.cookie in self.temp_files:
+                        self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
+                        del self.temp_files[event.cookie]
+                    elif event.cookie in self.cookies_IN_MOVED_FROM:
+                        #files original location was also in a watched directory
+                        del self.cookies_IN_MOVED_FROM[event.cookie]
+                        if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
+                            filepath = self.mmc.organize_new_file(event.pathname)
+                            
+                            #delete files from organize if they can not be read properly.
+                            if filepath is None:
+                                try:
+                                    self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
+                                    os.remove(event.pathname)
+                                    return
+                                except Exception, e:
+                                    self.logger.error('Exception: %s', e)
+                                    self.logger.error("traceback: %s", traceback.format_exc())
 
-                    else:
-                        filepath = event.pathname
+                        else:
+                            filepath = event.pathname
 
-                    if (filepath is not None):
-                        self.file_events.append({'filepath': filepath, 'mode': self.config.MODE_MOVED})
-                else:
-                    if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
-                        filepath = self.mmc.organize_new_file(event.pathname)
-                        
-                        #delete files from organize if they can not be read properly.
-                        if filepath is None:
-                            try:
-                                self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
-                                os.remove(event.pathname)
-                                return
-                            except Exception, e:
-                                self.logger.error('Exception: %s', e)
-                                self.logger.error("traceback: %s", traceback.format_exc())
+                        if (filepath is not None):
+                            self.file_events.append({'filepath': filepath, 'mode': self.config.MODE_MOVED})
                     else:
-                        #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
-                        if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
-                            is_recorded = True
-                        else :
-                            is_recorded = False
-                        self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': is_recorded})
+                        if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
+                            filepath = self.mmc.organize_new_file(event.pathname)
+                            
+                            #delete files from organize if they can not be read properly.
+                            if filepath is None:
+                                try:
+                                    self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
+                                    os.remove(event.pathname)
+                                    return
+                                except Exception, e:
+                                    self.logger.error('Exception: %s', e)
+                                    self.logger.error("traceback: %s", traceback.format_exc())
+                        else:
+                            #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
+                            if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
+                                is_recorded = True
+                            else:
+                                is_recorded = False
+                            self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': is_recorded})
         else:
             #When we move a directory into a watched_dir, we only get a notification that the dir was created,
             #and no additional information about files that came along with that directory.
