@@ -936,7 +936,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		//begin context menu initialization.
         $.contextMenu({
-            selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header) td:not(.sb-checkbox, .sb-image)',
+            selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header, .sb-record) td:not(.sb-checkbox, .sb-image)',
             trigger: "left",
             ignoreRightClick: true,
             
@@ -1023,10 +1023,11 @@ var AIRTIME = (function(AIRTIME){
                       processMenuItems(json.items);
                   }
                 });
-    
-                return {
+
+            	return {
                     items: items
                 };
+    
             }
         });	
 	};

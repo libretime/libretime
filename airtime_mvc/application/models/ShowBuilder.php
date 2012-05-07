@@ -251,6 +251,14 @@ class Application_Model_ShowBuilder {
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
             $row["instance"] = intval($p_item["si_id"]);
+            
+            $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+            $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+            
+            $startsEpoch = floatval($showStartDT->format("U.u"));
+            $endsEpoch = floatval($showEndDT->format("U.u"));
+            
+            $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         }
         else {
             $row["empty"] = true;
