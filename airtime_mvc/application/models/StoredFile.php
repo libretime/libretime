@@ -92,7 +92,7 @@ class Application_Model_StoredFile {
         else {
             $dbMd = array();
             
-            if (isset($p_md["year"])){
+            if (isset($p_md["MDATA_KEY_YEAR"])){
                 // We need to make sure to clean this value before inserting into database.
                 // If value is outside of range [-2^31, 2^31-1] then postgresl will throw error
                 // when trying to retrieve this value. We could make sure number is within these bounds,
@@ -101,7 +101,7 @@ class Application_Model_StoredFile {
                 // 4 digits is an OK result.
                 // CC-3771
                 
-                $year = $p_md["year"];
+                $year = $p_md["MDATA_KEY_YEAR"];
                 
                 if (strlen($year) > 4){
                     $year = substr($year, 0, 4);
@@ -109,9 +109,9 @@ class Application_Model_StoredFile {
                 if (!is_numeric($year)){
                     $year = 0;
                 }
-                $p_md["year"] = $year;
+                $p_md["MDATA_KEY_YEAR"] = $year;
             }
-            
+                        
             foreach ($p_md as $mdConst => $mdValue) {
                 $dbMd[constant($mdConst)] = $mdValue;
             }
