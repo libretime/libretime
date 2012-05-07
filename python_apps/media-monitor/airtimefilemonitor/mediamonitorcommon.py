@@ -104,9 +104,8 @@ class MediaMonitorCommon:
         original_file = pathname
         is_dir = False
         try:
-            while not is_readable(original_file, is_dir):
+            while not self.is_readable(original_file, is_dir):
                 #Not readable. Make appropriate permission changes.
-                
                 self.make_file_readable(pathname, is_dir)
 
                 dirname = os.path.dirname(pathname)
@@ -315,6 +314,9 @@ class MediaMonitorCommon:
 
             self.logger.debug("Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
+            if not self.mmc.make_readable(filepath):
+                self.logger.warn("Couldn't make filepath %s readable", pathname)
+                filepath = None
         else:
             filepath = None
             self.logger.warn("File %s, has invalid metadata", pathname)
