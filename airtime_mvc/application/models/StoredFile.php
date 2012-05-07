@@ -936,6 +936,23 @@ Logging::log("getting media! - 2");
 
         return $results;
     }
+    
+    /* Gets number of tracks uploaded to
+     * Soundcloud in the last 24 hours
+     */
+    public static function getSoundCloudUploads()
+    {
+    	$con = Propel::getConnection();
+    	
+    	$sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
+                ." FROM CC_FILES"
+                ." WHERE (id != -2 and id != -3) and"
+                ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
+                
+        $rows = $con->query($sql)->fetchAll();
+        return count($rows);
+        
+    }
 
     public function setSoundCloudLinkToFile($link_to_file)
     {
@@ -979,6 +996,10 @@ Logging::log("getting media! - 2");
         $this->_file->setDbFileExists($flag)
             ->save();
     }
+    public function setSoundCloudUploadTime($time){
+        $this->_file->setDbSoundCloundUploadTime($time)
+            ->save();    
+    }
 
     public function getFileExistsFlag(){
         return $this->_file->getDbFileExists();
@@ -1004,6 +1025,7 @@ Logging::log("getting media! - 2");
                     $soundcloud_res = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
                     $this->setSoundCloudFileId($soundcloud_res['id']);
                     $this->setSoundCloudLinkToFile($soundcloud_res['permalink_url']);
+                    $this->setSoundCloudUploadTime(new DateTime("now"), new DateTimeZone("UTC"));
                     break;
                 }
                 catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
