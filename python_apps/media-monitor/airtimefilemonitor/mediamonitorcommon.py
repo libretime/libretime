@@ -83,6 +83,43 @@ class MediaMonitorCommon:
         except Exception, e:
             self.logger.warn("Failed to check owner/group/permissions for %s", item)
             return False
+            
+    def make_file_readable(self, pathname, is_dir):
+        if is_dir:
+            #set to 755
+            os.chmod(pathname, stat.S_IRUSR|stat.S_IWUSR|stat.S_IXUSR | stat.S_IRGRP|stat.S_IXGRP | stat.S_IROTH|stat.S_IXOTH)
+        else:
+            #set to 644
+            os.chmod(pathname, stat.S_IRUSR|stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+            
+    def make_readable(self, pathname):
+        """
+        Should only call this function if is_readable() returns False. This function
+        will attempt to make the file world readable by modifying the file's permission's
+        as well as the file's parent directory permissions. We should only call this function
+        on files in Airtime's stor directory, not watched directories!
+        
+        Returns True if we were able to make the file world readable. False otherwise.
+        """
+        original_file = pathname
+        is_dir = False
+        try:
+            while not self.is_readable(original_file, is_dir):
+                #Not readable. Make appropriate permission changes.
+                self.make_file_readable(pathname, is_dir)
+
+                dirname = os.path.dirname(pathname)
+                if dirname == pathname:
+                    #most likey reason for this is that we've hit '/'. Avoid infinite loop by terminating loop
+                    raise Exception()
+                else:
+                    pathname = dirname
+                    is_dir = True
+        except Exception, e:
+            #something went wrong while we were trying to make world readable.
+            return False
+            
+        return True
 
     #checks if path is a directory, and if it doesnt exist, then creates it.
     #Otherwise prints error to log file.
@@ -277,6 +314,9 @@ class MediaMonitorCommon:
 
             self.logger.debug("Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
+            if not self.make_readable(filepath):
+                self.logger.warn("Couldn't make filepath %s readable", pathname)
+                filepath = None
         else:
             filepath = None
             self.logger.warn("File %s, has invalid metadata", pathname)

@@ -134,8 +134,9 @@ class AirtimeProcessEvent(ProcessEvent):
             #file is being overwritten/replaced in GUI.
             elif "goutputstream" in pathname:
                 self.temp_files[pathname] = None
-            elif self.mmc.is_audio_file(pathname) and self.mmc.is_readable(pathname, False):
+            elif self.mmc.is_audio_file(name):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
+                        
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
                     oldPath = pathname
@@ -144,21 +145,16 @@ class AirtimeProcessEvent(ProcessEvent):
                     #delete files from organize if they can not be read properly.
                     if pathname is None:
                         try:
-                            self.logger.info("Deleting file because it cannot be read properly: %s", oldPath)
+                            self.logger.warn("Deleting file because it cannot be read properly: %s", oldPath)
                             os.remove(oldPath)
-                            return
                         except Exception, e:
                             self.logger.error('Exception: %s', e)
                             self.logger.error("traceback: %s", traceback.format_exc())
+                        return
 
-                self.mmc.is_readable(pathname, dir)
                 is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
-                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
+                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})                
 
-        else:
-            #event is because of a created directory
-            if self.mmc.is_parent_directory(pathname, self.config.storage_directory):
-                self.mmc.is_readable(pathname, dir)
 
     def process_IN_MODIFY(self, event):
         # if IN_MODIFY is followed by IN_CREATE, it's not true modify event
@@ -238,7 +234,7 @@ class AirtimeProcessEvent(ProcessEvent):
             self.handle_mount_change()
 
         if not event.dir:
-            if self.mmc.is_audio_file(event.name) and self.mmc.is_readable(event.pathname, False):
+            if self.mmc.is_audio_file(event.name):
                 if event.cookie in self.temp_files:
                     self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
                     del self.temp_files[event.cookie]
@@ -280,7 +276,7 @@ class AirtimeProcessEvent(ProcessEvent):
                         #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
                         if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
                             is_recorded = True
-                        else :
+                        else:
                             is_recorded = False
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': is_recorded})
         else:
