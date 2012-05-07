@@ -445,6 +445,11 @@ class Application_Model_Preference
     	$outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate("Y-m-d H:i:s"));
     	$outputArray['UNIQUE_ID'] = self::GetUniqueId();
     	$outputArray['SAAS'] = self::GetPlanLevel();
+    	if ($outputArray['SAAS'] != 'disabled') {
+    	    $outputArray['TRIAL_END_DATE'] = self::GetTrialEndingDate();
+    	} else {
+            $outputArray['TRIAL_END_DATE'] = NULL;
+        }
     	$outputArray['INSTALL_METHOD'] = self::GetInstallMethod();
     	$outputArray['NUM_OF_STREAMS'] = self::GetNumOfStreams();
     	$outputArray['STREAM_INFO'] = Application_Model_StreamSetting::getStreamInfoForDataCollection();
