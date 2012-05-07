@@ -250,6 +250,7 @@ class Application_Model_ShowBuilder {
         //show is empty or is a special kind of show (recording etc)
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
+            $row["instance"] = intval($p_item["si_id"]);
         }
         else {
             $row["empty"] = true;
@@ -261,7 +262,7 @@ class Application_Model_ShowBuilder {
             $row["rebroadcast"] = true;
         }
                
-        if ($this->currentShow = true) {
+        if ($this->currentShow === true) {
             $row["currentShow"] = true;
         }
            
@@ -297,7 +298,7 @@ class Application_Model_ShowBuilder {
         
         $row["refresh"] = floatval($showEndDT->format("U.u")) - $this->epoch_now;
         
-        if ($this->currentShow = true) {
+        if ($this->currentShow === true) {
             $row["currentShow"] = true;
         }
         
