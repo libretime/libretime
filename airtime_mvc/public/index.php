@@ -1,8 +1,8 @@
 <?php
 
 //error_reporting(E_ALL|E_STRICT);
-error_reporting(E_ALL);
-ini_set('display_errors', 'on');
+//error_reporting(E_ALL);
+//ini_set('display_errors', 'on');
 
 // Define path to application directory
 defined('APPLICATION_PATH')

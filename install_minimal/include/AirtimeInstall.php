@@ -261,7 +261,7 @@ class AirtimeInstall
         // Put Propel sql files in Database
         //$command = AirtimeInstall::CONF_DIR_WWW."/library/propel/generator/bin/propel-gen ".AirtimeInstall::CONF_DIR_WWW."/build/ insert-sql 2>/dev/null";
 
-        $dir = AirtimeInstall::CONF_DIR_WWW."/build/sql/";
+        $dir = self::GetAirtimeSrcDir()."/build/sql/";
         $files = array("schema.sql", "sequences.sql", "views.sql", "triggers.sql", "defaultdata.sql");
 
         foreach ($files as $f){
@@ -453,7 +453,7 @@ class AirtimeInstall
         }
 
         touch($file);
-        chmod($file, 0755);
+        chmod($file, 0644);
         chown($file, $CC_CONFIG['webServerUser']);
         chgrp($file, $CC_CONFIG['webServerUser']);
     }

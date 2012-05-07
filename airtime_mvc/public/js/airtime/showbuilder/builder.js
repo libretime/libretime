@@ -834,7 +834,8 @@ var AIRTIME = (function(AIRTIME){
 		$toolbar.find('.sb-button-cancel')
 			.click(function() {
 				var $tr,
-					data;
+					data,
+					msg = 'Cancel Current Show?';
 				
 				if (AIRTIME.button.isDisabled('sb-button-cancel') === true) {
 					return;
@@ -845,7 +846,11 @@ var AIRTIME = (function(AIRTIME){
 				if ($tr.hasClass('sb-current-show')) {
 					data = $tr.data("aData");
 					
-					if (confirm('Cancel Current Show?')) {
+					if (data.record === true) {
+						msg = 'Erase current show and stop recording?';
+					}
+					
+					if (confirm(msg)) {
 				        var url = "/Schedule/cancel-current-show";
 				        $.ajax({
 				        	url: url,
@@ -931,7 +936,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		//begin context menu initialization.
         $.contextMenu({
-            selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header) td:not(.sb-checkbox, .sb-image)',
+            selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header, .sb-record) td:not(.sb-checkbox, .sb-image)',
             trigger: "left",
             ignoreRightClick: true,
             
@@ -1018,10 +1023,11 @@ var AIRTIME = (function(AIRTIME){
                       processMenuItems(json.items);
                   }
                 });
-    
-                return {
+
+            	return {
                     items: items
                 };
+    
             }
         });	
 	};

@@ -25,6 +25,12 @@ class Application_Model_Scheduler {
         
         $this->epochNow = microtime(true);
         $this->nowDT = DateTime::createFromFormat("U.u", $this->epochNow, new DateTimeZone("UTC"));
+        
+        if ($this->nowDT === false){
+            // DateTime::createFromFormat does not support millisecond string formatting in PHP 5.3.2 (Ubuntu 10.04).
+            // In PHP 5.3.3 (Ubuntu 10.10), this has been fixed.
+            $this->nowDT = DateTime::createFromFormat("U", time(), new DateTimeZone("UTC"));
+        } 
          
         $this->user = Application_Model_User::GetCurrentUser();
     }
@@ -190,6 +196,12 @@ class Application_Model_Scheduler {
         $endEpoch = bcadd($startEpoch , (string) $durationSeconds, 6);
 
         $dt = DateTime::createFromFormat("U.u", $endEpoch, new DateTimeZone("UTC"));
+        
+        if ($dt === false) {
+            //PHP 5.3.2 problem
+            $dt = DateTime::createFromFormat("U", intval($endEpoch), new DateTimeZone("UTC"));
+        }
+        
         return $dt;
     }
     

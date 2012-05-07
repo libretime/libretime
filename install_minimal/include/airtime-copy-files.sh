@@ -35,10 +35,17 @@ AIRTIMEROOT=$SCRIPTPATH/../../
 
 echo "* Creating /etc/airtime"
 mkdir -p /etc/airtime
-#if [ "$DO_UPGRADE" -eq "0" ]; then
 if [ ! -e /etc/airtime/airtime.conf ]; then
+    #config file airtime.conf exists, but Airtime is not installed
     cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
 fi
+
+#if [ -e /etc/airtime/airtime.conf -a "$DO_UPGRADE" -eq "0" ]; then
+    #config file airtime.conf exists, but Airtime is not installed
+#    mv /etc/airtime/airtime.conf airtime.conf.bak
+#    cp $AIRTIMEROOT/airtime_mvc/build/airtime.conf /etc/airtime
+#fi
+
 
 echo "* Creating /etc/monit/conf.d/monit-airtime-generic.cfg"
 mkdir -p /etc/monit/conf.d/
@@ -77,6 +84,13 @@ ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
 ln -sf /usr/lib/airtime/utils/airtime-test-soundcard /usr/bin/airtime-test-soundcard
 ln -sf /usr/lib/airtime/utils/airtime-test-stream /usr/bin/airtime-test-stream
+
+echo "* Creating /var/log/airtime"
+mkdir -p /var/log/airtime
+chmod a+x /var/log/airtime
+touch /var/log/airtime/zendphp.log
+chown www-data:www-data /var/log/airtime/zendphp.log
+chmod 644 /var/log/airtime/zendphp.log
 
 if [ "$web" = "t" ]; then
     echo "* Creating /usr/share/airtime"

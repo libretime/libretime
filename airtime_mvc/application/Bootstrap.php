@@ -12,20 +12,25 @@ require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
+
+//DateTime in PHP 5.3.0+ need a default timezone set. Set to UTC initially
+//in case Application_Model_Preference::GetTimezone fails and creates needs to create
+//a log entry. This log entry requires a call to date(), which then complains that
+//timezone isn't set. Setting a default timezone allows us to create a a graceful log
+//that getting the real timezone failed, without PHP complaining that it cannot log because
+//there is no timezone :|.
+date_default_timezone_set('UTC');
+date_default_timezone_set(Application_Model_Preference::GetTimezone());
+
 global $CC_CONFIG;
 $CC_CONFIG['airtime_version'] = Application_Model_Preference::GetAirtimeVersion();
 
 require_once __DIR__."/configs/navigation.php";
 
-//DateTime in PHP 5.3.0+ need a default timezone set.
-date_default_timezone_set(Application_Model_Preference::GetTimezone());
-
 Zend_Validate::setDefaultNamespaces("Zend");
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
-
-//Logging::debug($_SERVER['REQUEST_URI']);
 
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */

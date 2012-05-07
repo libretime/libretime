@@ -3,9 +3,6 @@
  * @package Airtime
  * @copyright 2011 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
- *
- * Checks if a previous version of Airtime is currently installed and upgrades Airtime if so.
- * Performs a new install (new configs, database install) otherwise.
  */
 require_once(__DIR__.'/AirtimeIni.php');
 require_once(__DIR__.'/AirtimeInstall.php');
@@ -56,7 +53,7 @@ if ($overwrite) {
 }
 
 // Update the build.properties file to point to the correct directory.
-AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
+//AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
 
@@ -73,7 +70,5 @@ if ($db_install) {
         require_once('airtime-db-install.php');
     }
 }
-
-AirtimeInstall::CreateZendPhpLogFile();
 
 /* FINISHED AIRTIME PHP INSTALLER */
