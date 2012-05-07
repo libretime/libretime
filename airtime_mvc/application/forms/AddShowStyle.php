@@ -18,6 +18,12 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
             'viewScript' => 'form/add-show-style.phtml',
             'class'      => 'big'
         ))));
+        
+        $bg->setValidators(array(
+            'Hex',
+            array('stringLength', false, array(6, 6))
+        ));
+                
 
 	// Add show color input
         $this->addElement('text', 'add_show_color', array(
@@ -32,6 +38,11 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
             'viewScript' => 'form/add-show-style.phtml',
             'class'      => 'big'
         ))));
+        
+        $c->setValidators(array(
+                'Hex',
+                array('stringLength', false, array(6, 6))
+        ));
     }
 
     public function disable(){
