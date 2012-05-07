@@ -1,6 +1,6 @@
-from subprocess import Popen
 import os
 import sys
+import subprocess
 
 if os.geteuid() != 0:
     print "Please run this as root."
@@ -10,8 +10,7 @@ try:
     #stop pypo and liquidsoap processes
     print "Waiting for pypo processes to stop...",
     if (os.path.exists('/etc/init.d/airtime-playout')):
-        p = Popen("invoke-rc.d airtime-playout stop", shell=True)
-        sts = os.waitpid(p.pid, 0)[1]
+        subprocess.call("invoke-rc.d airtime-playout stop", shell=True)
         print "OK"
     else:
         print "Wasn't running"

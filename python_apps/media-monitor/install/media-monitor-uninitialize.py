@@ -1,4 +1,4 @@
-from subprocess import Popen
+import subprocess
 import os
 import sys
 
@@ -9,8 +9,7 @@ if os.geteuid() != 0:
 try:
     print "Waiting for media-monitor processes to stop...",
     if (os.path.exists('/etc/init.d/airtime-media-monitor')):
-        p = Popen("invoke-rc.d airtime-media-monitor stop", shell=True)
-        sts = os.waitpid(p.pid, 0)[1]
+        subprocess.call("invoke-rc.d airtime-media-monitor stop", shell=True)
         print "OK"
     else:
         print "Wasn't running"
