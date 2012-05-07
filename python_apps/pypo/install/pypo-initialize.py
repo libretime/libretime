@@ -1,6 +1,7 @@
 import platform
 import shutil
 from subprocess import Popen, PIPE
+import subprocess
 import sys
 import os
 sys.path.append('/usr/lib/airtime/')
@@ -115,17 +116,14 @@ try:
         print "Unable to connect to the Airtime server."
 
     #initialize init.d scripts
-    p = Popen("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
+    subprocess.call("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
 
     #clear out an previous pypo cache
     print "* Clearing previous pypo cache"  
-    p = Popen("rm -rf '/var/tmp/airtime/pypo/cache/scheduler/*' >/dev/null 2>&1", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
-
+    subprocess.call("rm -rf '/var/tmp/airtime/pypo/cache/scheduler/*' >/dev/null 2>&1", shell=True)
+    
     print "* Waiting for pypo processes to start..."    
-    p = Popen("invoke-rc.d airtime-playout start-no-monit  > /dev/null 2>&1", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
+    subprocess.call("invoke-rc.d airtime-playout start-no-monit  > /dev/null 2>&1", shell=True)
     
 except Exception, e:
     print e

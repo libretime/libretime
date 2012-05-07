@@ -1,4 +1,4 @@
-from subprocess import Popen
+import subprocess
 import os
 
 if os.geteuid() != 0:
@@ -11,16 +11,11 @@ try:
         os.makedirs("/var/tmp/airtime/media-monitor")
 
     #update-rc.d init script
-    p = Popen("update-rc.d airtime-media-monitor defaults >/dev/null 2>&1", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
+    subprocess.call("update-rc.d airtime-media-monitor defaults >/dev/null 2>&1", shell=True)
 
     #Start media-monitor daemon
     print "* Waiting for media-monitor processes to start..."
-    """
-    p = Popen("invoke-rc.d airtime-media-monitor stop", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
-    """
-    p = Popen("invoke-rc.d airtime-media-monitor start-no-monit", shell=True)
-    sts = os.waitpid(p.pid, 0)[1]
+
+    subprocess.call("invoke-rc.d airtime-media-monitor start-no-monit", shell=True)
 except Exception, e:
     print e
