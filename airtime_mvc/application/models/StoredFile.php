@@ -942,15 +942,21 @@ Logging::log("getting media! - 2");
      */
     public static function getSoundCloudUploads()
     {
-    	$con = Propel::getConnection();
+        try {
+    	    $con = Propel::getConnection();
     	
-    	$sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
-                ." FROM CC_FILES"
-                ." WHERE (id != -2 and id != -3) and"
-                ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
+    	    $sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
+                    ." FROM CC_FILES"
+                    ." WHERE (id != -2 and id != -3) and"
+                    ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
                 
-        $rows = $con->query($sql)->fetchAll();
-        return count($rows);
+            $rows = $con->query($sql)->fetchAll();
+            return count($rows);
+        } catch (Exception $e) {
+            header('HTTP/1.0 503 Service Unavailable');
+            Logging::log("Could not connect to database.");
+            exit;            
+        }
         
     }
 
