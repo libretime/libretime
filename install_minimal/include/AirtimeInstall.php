@@ -46,7 +46,6 @@ class AirtimeInstall
      */
     public static function GetVersionInstalled()
     {
-        global $CC_CONFIG;
         try {
             $con = Propel::getConnection();
         } catch (PropelException $e) {
@@ -158,8 +157,7 @@ class AirtimeInstall
 
         foreach ($dirs as $dir){
             if (!file_exists($dir)) {
-                @mkdir($dir, 02777, true);
-                if (file_exists($dir)) {
+                if (mkdir($dir, 02775, true)){
                     $rp = realpath($dir);
                     echo "* Directory $rp created".PHP_EOL;
                 } else {
@@ -179,8 +177,7 @@ class AirtimeInstall
 
             echo "* Giving Apache permission to access $rp".PHP_EOL;
             $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
-            $success = chown($rp, "www-data");
-            $success = chmod($rp, 02770);
+            $success = chmod($rp, 02775);
         }
     }
 
