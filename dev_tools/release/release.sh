@@ -37,16 +37,22 @@ echo "Checking out tag airtime-${suffix}"
 git checkout airtime-${suffix}
 git submodule init
 git submodule update
+
+cd python_apps/pypo/liquidsoap_bin/
+git checkout master
+git pull origin master
+
+cd $target
 rm -rf .git .gitignore .gitmodules .zfproject.xml dev_tools/ audio_samples/ python_apps/pypo/liquidsoap_bin/.git
 
-echo "Minimizing Airtime Javascript files..."
-cd $dir
-find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec bash -c 'echo {}; jsmin/jsmin < {} > {}.min' \;
-find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
-echo "Done"
-
+#echo "Minimizing Airtime Javascript files..."
+#cd $dir
+#find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec bash -c 'echo {}; jsmin/jsmin < {} > {}.min' \;
+#find $target/airtime_mvc/public/js/airtime/ -iname "*.js" -exec mv {}.min {} \;
+#echo "Done"
 
 #zip -r airtime-${suffix}.zip airtime-${version}
-tar -czf $target_file $target
+cd /tmp/
+tar -czf $target_file airtime-${version}
 
 echo "Output file available at $target_file"
