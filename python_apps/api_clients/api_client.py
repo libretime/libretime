@@ -406,9 +406,6 @@ class AirTimeApiClient(ApiClientInterface):
         logger = self.logger
         response = None
         try:
-
-            start = time.time()
-
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%mode%%", mode)
@@ -421,9 +418,6 @@ class AirTimeApiClient(ApiClientInterface):
             response = self.get_response_from_server(req)
             logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
             response = json.loads(response)
-
-            elapsed = (time.time() - start)
-            logger.info("time taken to get response %s", elapsed)
 
             if("error" not in response and is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])

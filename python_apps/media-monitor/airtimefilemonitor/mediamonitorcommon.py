@@ -335,7 +335,9 @@ def test_file_playability(pathname):
         
         #when there is an single apostrophe inside of a string quoted by apostrophes, we can only escape it by replace that apostrophe
         #with '\''. This breaks the string into two, and inserts an escaped single quote in between them.
-        command = "liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))'" % pathname.replace("'", "'\\''")
+        #We run the command as pypo because otherwise the target file is opened with write permissions, and this causes an ON_CLOSE_WRITE event
+        #to be fired :/
+        command = "sudo -u pypo liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))'" % pathname.replace("'", "'\\''")
         return_code = subprocess.call(command, shell=True)
     else:
         return_code = 0

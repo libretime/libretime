@@ -117,15 +117,15 @@ class AirtimeProcessEvent(ProcessEvent):
         self.logger.info("event: %s", event)
         self.logger.info("create_dict: %s", self.create_dict)
         
-        if event.pathname in self.create_dict:
-            # detele corresponding entry from create_dict
-            self.create_dict.pop(event.pathname)
+        try:
+            del self.create_dict[event.pathname]
             self.handle_created_file(event.dir, event.pathname, event.name)
+        except KeyError, e:
+            self.logger.error("%s does not exist in create_dict", event.pathname)
         
     def handle_created_file(self, dir, pathname, name):
         if not dir:
             self.logger.debug("PROCESS_IN_CLOSE_WRITE: %s, name: %s, pathname: %s ", dir, name, pathname)
-            #event is because of a created file
 
             if self.mmc.is_temp_file(name) :
                 #file created is a tmp file which will be modified and then moved back to the original filename.
@@ -150,10 +150,13 @@ class AirtimeProcessEvent(ProcessEvent):
                         except Exception, e:
                             self.logger.error('Exception: %s', e)
                             self.logger.error("traceback: %s", traceback.format_exc())
-                        return
-
-                is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
-                self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})                
+                        finally:
+                            return
+                else:
+                    # only append to self.file_events if the file isn't going to be altered by organize_new_file(). If file is going
+                    # to be altered by organize_new_file(), then process_IN_MOVED_TO event will handle appending it to self.file_events
+                    is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
+                    self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': pathname, 'is_recorded_show': is_recorded})
 
 
     def process_IN_MODIFY(self, event):
@@ -239,7 +242,7 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.file_events.append({'filepath': event.pathname, 'mode': self.config.MODE_MODIFY})
                     del self.temp_files[event.cookie]
                 elif event.cookie in self.cookies_IN_MOVED_FROM:
-                    #files original location was also in a watched directory
+                    #file's original location was also in a watched directory
                     del self.cookies_IN_MOVED_FROM[event.cookie]
                     if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                         filepath = self.mmc.organize_new_file(event.pathname)
@@ -263,17 +266,18 @@ class AirtimeProcessEvent(ProcessEvent):
                     if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                         filepath = self.mmc.organize_new_file(event.pathname)
                         
-                        #delete files from organize if they can not be read properly.
+                        #delete files from organize if they cannot be read properly.
                         if filepath is None:
                             try:
                                 self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
                                 os.remove(event.pathname)
-                                return
                             except Exception, e:
                                 self.logger.error('Exception: %s', e)
                                 self.logger.error("traceback: %s", traceback.format_exc())
+                            finally:
+                                return
                     else:
-                        #show dragged from unwatched folder into a watched folder. Do not "organize".:q!
+                        #show moved from unwatched folder into a watched folder. Do not "organize".
                         if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
                             is_recorded = True
                         else:
