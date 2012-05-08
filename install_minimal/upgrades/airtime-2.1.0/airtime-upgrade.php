@@ -58,4 +58,4 @@ UpgradeCommon::SetDefaultTimezone();
 
 AirtimeConfigFileUpgrade::start();
 AirtimeDatabaseUpgrade::start($values);
-AirtimeMiscUpgrade::start();
+AirtimeMiscUpgrade::start($values);
