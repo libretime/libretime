@@ -7,23 +7,22 @@
 require_once(__DIR__.'/AirtimeIni.php');
 require_once(__DIR__.'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
-require_once 'propel/runtime/lib/Propel.php';
-Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
-
-$version = AirtimeInstall::GetVersionInstalled();
 
 // -------------------------------------------------------------------------
 // The only way we get here is if we are doing a new install or a reinstall.
 // -------------------------------------------------------------------------
 
-$newInstall = false;
-if (is_null($version)) {
+$iniExists = file_exists("/etc/airtime/airtime.conf");
+if ($iniExists){
+    //reinstall, Will ask if we should rewrite config files.
+    require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+    require_once 'propel/runtime/lib/Propel.php';
+    Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
+    $version = AirtimeInstall::GetVersionInstalled();
+    $newInstall = is_null($version);
+} else {
+    //create config files without asking
     $newInstall = true;
-}
-
-$db_install = true;
-if (getenv("nodb")=="t") {
-	$db_install = false;
 }
 
 $overwrite = false;
@@ -50,24 +49,22 @@ if ($overwrite) {
     echo "* Initializing INI files".PHP_EOL;
     AirtimeIni::UpdateIniFiles();
 }
-
-// Update the build.properties file to point to the correct directory.
-//AirtimeIni::UpdateIniValue(AirtimeInstall::CONF_DIR_WWW.'/build/build.properties', 'project.home', AirtimeInstall::CONF_DIR_WWW);
-
-require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+if (!$iniExists){
+    require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+    require_once 'propel/runtime/lib/Propel.php';
+    Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
+}
 
 echo "* Airtime Version: ".AIRTIME_VERSION.PHP_EOL;
 
 AirtimeInstall::InstallStorageDirectory();
 
+$db_install = getenv("nodb")!="t";
 if ($db_install) {
     if($newInstall) {
         //call external script. "y" argument means force creation of database tables.
         passthru('php '.__DIR__.'/airtime-db-install.php y');
-        //AirtimeInstall::DbConnect(true);
     } else {
         require_once('airtime-db-install.php');
     }
 }
-
-/* FINISHED AIRTIME PHP INSTALLER */
