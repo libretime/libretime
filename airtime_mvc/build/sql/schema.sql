@@ -555,6 +555,26 @@ COMMENT ON TABLE "cc_service_register" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_live_log
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_live_log" CASCADE;
+
+
+CREATE TABLE "cc_live_log"
+(
+	"id" serial  NOT NULL,
+	"state" VARCHAR(32)  NOT NULL,
+	"start_time" TIMESTAMP  NOT NULL,
+	"end_time" TIMESTAMP,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_live_log" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

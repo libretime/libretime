@@ -414,6 +414,8 @@ class Application_Model_Preference
     	
     	$outputArray = array();
 
+    	$outputArray['LIVE_DURATION'] = Application_Model_LiveLog::GetLiveShowDuration();
+    	$outputArray['SCHEDULED_DURATION'] = Application_Model_LiveLog::GetScheduledDuration();
     	$outputArray['SOUNDCLOUD_ENABLED'] = self::GetUploadToSoundcloudOption();
         if ($outputArray['SOUNDCLOUD_ENABLED']) {
     	    $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();

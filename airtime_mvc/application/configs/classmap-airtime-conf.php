@@ -148,4 +148,11 @@ return array (
   'BaseCcServiceRegisterPeer' => 'airtime/om/BaseCcServiceRegisterPeer.php',
   'BaseCcServiceRegister' => 'airtime/om/BaseCcServiceRegister.php',
   'BaseCcServiceRegisterQuery' => 'airtime/om/BaseCcServiceRegisterQuery.php',
+  'CcLiveLogTableMap' => 'airtime/map/CcLiveLogTableMap.php',
+  'CcLiveLogPeer' => 'airtime/CcLiveLogPeer.php',
+  'CcLiveLog' => 'airtime/CcLiveLog.php',
+  'CcLiveLogQuery' => 'airtime/CcLiveLogQuery.php',
+  'BaseCcLiveLogPeer' => 'airtime/om/BaseCcLiveLogPeer.php',
+  'BaseCcLiveLog' => 'airtime/om/BaseCcLiveLog.php',
+  'BaseCcLiveLogQuery' => 'airtime/om/BaseCcLiveLogQuery.php',
 );
