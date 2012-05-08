@@ -334,7 +334,7 @@ def test_file_playability(pathname):
         
         #when there is an single apostrophe inside of a string quoted by apostrophes, we can only escape it by replace that apostrophe
         #with '\''. This breaks the string into two, and inserts an escaped single quote in between them.
-        command = "liquidsoap -c 'output.dummy(single(\"%s\"))'" % pathname.replace("'", "'\\''")
+        command = "liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))'" % pathname.replace("'", "'\\''")
         return_code = subprocess.call(command, shell=True)
     else:
         return_code = 0
