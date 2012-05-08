@@ -79,7 +79,6 @@ class AirtimeMediaMonitorBootstrap():
         twice. This is because some of the tests for new files return result sets that are not
         mutually exclusive from each other.
         """
-        new_and_modified_files = set()
         removed_files = set()
 
 
@@ -102,15 +101,20 @@ class AirtimeMediaMonitorBootstrap():
         if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
             time_diff_sec = time.time() - os.path.getmtime(self.mmc.timestamp_file)
-            command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable -mmin -%d" % (dir, time_diff_sec/60+1)
+            command = "find %s -iname '*.ogg' -o -iname '*.mp3' -type f -readable -mmin -%d" % (dir, time_diff_sec/60+1)
         else:
-            command = "find %s -type f -iname '*.ogg' -o -iname '*.mp3' -readable" % dir
+            command = "find %s -iname '*.ogg' -o -iname '*.mp3' -type f -readable" % dir
 
         self.logger.debug(command)
         stdout = self.mmc.exec_command(command)
+        
+        if stdout is None:
+            self.logger.error("Unrecoverable error when syncing db to filesystem.")
+            return
 
         new_files = stdout.splitlines()
 
+        new_and_modified_files = set()
         for file_path in new_files:
             if len(file_path.strip(" \n")) > 0:
                 new_and_modified_files.add(file_path[len(dir):])
@@ -127,9 +131,9 @@ class AirtimeMediaMonitorBootstrap():
         new_files_set = all_files_set - db_known_files_set
         modified_files_set = new_and_modified_files - new_files_set
 
-        self.logger.info("Deleted files: \n%s\n\n"%deleted_files_set)
-        self.logger.info("New files: \n%s\n\n"%new_files_set)
-        self.logger.info("Modified files: \n%s\n\n"%modified_files_set)
+        self.logger.info(u"Deleted files: \n%s\n\n", deleted_files_set)
+        self.logger.info(u"New files: \n%s\n\n", new_files_set)
+        self.logger.info(u"Modified files: \n%s\n\n", modified_files_set)
 
         #"touch" file timestamp
         try:

@@ -284,12 +284,13 @@ class MediaMonitorCommon:
             """
             stdout = stdout.decode("UTF-8")
         except Exception, e:
+            stdout = None
             self.logger.error("Could not decode %s using UTF-8" % stdout)
             
         return stdout
 
     def scan_dir_for_new_files(self, dir):
-        command = 'find "%s" -type f -iname "*.ogg" -o -iname "*.mp3" -readable' % dir.replace('"', '\\"')
+        command = 'find "%s" -iname "*.ogg" -o -iname "*.mp3" -type f -readable' % dir.replace('"', '\\"')
         self.logger.debug(command)
         stdout = self.exec_command(command)
         
