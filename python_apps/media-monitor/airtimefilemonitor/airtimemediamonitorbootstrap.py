@@ -15,12 +15,13 @@ class AirtimeMediaMonitorBootstrap():
     pe          -- reference to an instance of ProcessEvent
     api_clients -- reference of api_clients to communicate with airtime-server
     """
-    def __init__(self, logger, pe, api_client, mmc, wm):
+    def __init__(self, logger, pe, api_client, mmc, wm, config):
         self.logger = logger
         self.pe = pe
         self.api_client = api_client
         self.mmc = mmc
         self.wm = wm
+        self.config = config
         # add /etc on watch list so we can detect mount
         self.mount_file = "/etc"
         self.curr_mtab_file = "/var/tmp/airtime/media-monitor/currMtab"
@@ -91,7 +92,8 @@ class AirtimeMediaMonitorBootstrap():
 
         all_files_set = set()
         for file_path in all_files:
-            if len(file_path.strip(" \n")) > 0:
+            file_path = file_path.strip(" \n")
+            if len(file_path) > 0 and self.config.problem_directory not in file_path:
                 all_files_set.add(file_path[len(dir):])
 
         # if dir doesn't exists, update db
@@ -116,7 +118,8 @@ class AirtimeMediaMonitorBootstrap():
 
         new_and_modified_files = set()
         for file_path in new_files:
-            if len(file_path.strip(" \n")) > 0:
+            file_path = file_path.strip(" \n")
+            if len(file_path) > 0 and self.config.problem_directory not in file_path:
                 new_and_modified_files.add(file_path[len(dir):])
 
         """

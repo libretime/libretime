@@ -87,9 +87,15 @@ try:
     watched_dirs = apc.encode_to(response["watched_dirs"], 'utf-8')
     logger.info("Storage Directory is: %s", storage_directory)
     config.storage_directory = os.path.normpath(storage_directory)
-    config.imported_directory = os.path.normpath(storage_directory + '/imported')
-    config.organize_directory = os.path.normpath(storage_directory + '/organize')
-    config.recorded_directory = os.path.normpath(storage_directory + '/recorded')
+    config.imported_directory = os.path.normpath(os.path.join(storage_directory, 'imported'))
+    config.organize_directory = os.path.normpath(os.path.join(storage_directory, 'organize'))
+    config.recorded_directory = os.path.normpath(os.path.join(storage_directory, 'recorded'))
+    config.problem_directory = os.path.normpath(os.path.join(storage_directory, 'problem_files'))
+    
+    dirs = [config.imported_directory, config.organize_directory, config.recorded_directory, config.problem_directory]
+    for d in dirs:
+        if not os.path.exists(d):
+            os.makedirs(d, 02775)
     
     multi_queue = mpQueue()
     logger.info("Initializing event processor")
@@ -98,14 +104,14 @@ try:
     mmc = MediaMonitorCommon(config, wm=wm)
     pe = AirtimeProcessEvent(queue=multi_queue, airtime_config=config, wm=wm, mmc=mmc, api_client=api_client)
 
-    bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc, wm)
+    bootstrap = AirtimeMediaMonitorBootstrap(logger, pe, api_client, mmc, wm, config)
     bootstrap.scan()
     
     notifier = AirtimeNotifier(wm, pe, read_freq=0, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)
     notifier.coalesce_events()
         
     #create 5 worker threads
-    wp = MediaMonitorWorkerProcess()
+    wp = MediaMonitorWorkerProcess(config, mmc)
     for i in range(5):
         threadName = "Thread #%d" % i
         t = Thread(target=wp.process_file_events, name=threadName, args=(multi_queue, notifier))

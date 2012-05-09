@@ -235,6 +235,9 @@ class AirtimeProcessEvent(ProcessEvent):
         filename = self.mount_file_dir +"/mtab"
         if event.pathname in filename:
             self.handle_mount_change()
+        
+        if event.path in self.config.problem_directory:
+            return
 
         if not event.dir:
             if self.mmc.is_audio_file(event.name):
