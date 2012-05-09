@@ -88,8 +88,15 @@ try:
     binary_path = os.path.join(PATH_LIQUIDSOAP_BIN, "liquidsoap_%s_%s" % (codename, arch))
     
     try:
-        #open(binary_path)
-        shutil.copy(binary_path, "%s/liquidsoap"%PATH_LIQUIDSOAP_BIN)
+        open(binary_path)
+        
+        try:
+            os.remove("/usr/bin/airtime-liquidsoap")
+        except OSError, e:
+            #only get here if it doesn't exist
+            pass
+        
+        os.symlink(binary_path, "/usr/bin/airtime-liquidsoap")
     except IOError, e:
         """
         shutil.copy can throw this exception for two reasons. First reason is that it cannot open the source file.
