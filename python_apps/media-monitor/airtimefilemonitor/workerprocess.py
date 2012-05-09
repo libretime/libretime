@@ -22,7 +22,8 @@ class MediaMonitorWorkerProcess:
                         notifier.update_airtime(event)
                     else:
                         notifier.logger.warn("Liquidsoap integrity check for file at %s failed. Not adding to media library.", filepath)
-                        self.mmc.move_file(filepath, os.path.join(self.config.problem_directory, os.path.basename(filepath)))
+                        if self.config.storage_directory in filepath:
+                            self.mmc.move_file(filepath, os.path.join(self.config.problem_directory, os.path.basename(filepath)))
                 else:
                     notifier.update_airtime(event)
             except Exception, e:
