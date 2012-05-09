@@ -1,5 +1,4 @@
 from mediaconfig import AirtimeMediaConfig
-import mediamonitorcommon
 import traceback
 import os
 
@@ -18,7 +17,7 @@ class MediaMonitorWorkerProcess:
                 notifier.logger.info("received event %s", event)
                 if event['mode'] == AirtimeMediaConfig.MODE_CREATE:
                     filepath = event['filepath']
-                    if mediamonitorcommon.test_file_playability(filepath):
+                    if self.mmc.test_file_playability(filepath):
                         notifier.update_airtime(event)
                     else:
                         notifier.logger.warn("Liquidsoap integrity check for file at %s failed. Not adding to media library.", filepath)

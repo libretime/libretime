@@ -138,7 +138,6 @@ class MediaMonitorCommon:
     #moves file from source to dest but also recursively removes the
     #the source file's parent directories if they are now empty.
     def move_file(self, source, dest):
-
         try:
             omask = os.umask(0)
             os.rename(source, dest)
@@ -321,22 +320,15 @@ class MediaMonitorCommon:
 
         return filepath
         
-def test_file_playability(pathname):
-    """
-    Test if the file can be played by Liquidsoap. Return "True" if Liquidsoap
-    can play it, or if Liquidsoap is not found. 
-    """
-    liquidsoap_found = subprocess.call("which liquidsoap", shell=True)
-    if liquidsoap_found == 0:
-        #return_code = subprocess.call("liquidsoap -r \"%s\"" % pathname.replace('"', '\\"'), shell=True)
-        
+    def test_file_playability(self, pathname):
         #when there is an single apostrophe inside of a string quoted by apostrophes, we can only escape it by replace that apostrophe
         #with '\''. This breaks the string into two, and inserts an escaped single quote in between them.
         #We run the command as pypo because otherwise the target file is opened with write permissions, and this causes an inotify ON_CLOSE_WRITE event
         #to be fired :/
-        command = "sudo -u pypo liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))'" % pathname.replace("'", "'\\''")
+        command = "sudo -u pypo liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1" % pathname.replace("'", "'\\''")
         return_code = subprocess.call(command, shell=True)
-    else:
-        return_code = 0
-
-    return (return_code == 0)
+        if return_code != 0:
+            #print pathname for py-interpreter.log
+            print pathname
+        
+        return (return_code == 0)
