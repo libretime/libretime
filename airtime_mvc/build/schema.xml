@@ -371,6 +371,6 @@
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="state" phpName="DbState" type="VARCHAR" size="32" required="true" />
     <column name="start_time" phpName="DbStartTime" type="TIMESTAMP" required="true" />
-    <column name="end_time" phpName="DbEndTime" type="TIMESTAMP" />
+    <column name="end_time" phpName="DbEndTime" type="TIMESTAMP" required="false" defaultValue="null"/>
   </table>
 </database>
