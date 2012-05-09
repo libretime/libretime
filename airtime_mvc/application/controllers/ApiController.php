@@ -843,6 +843,8 @@ class ApiController extends Zend_Controller_Action
             $data = array("sourcename"=>$sourcename, "status"=>"off");
             Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
             Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");
+            Application_Model_LiveLog::SetEndTime($sourcename == 'scheduled_play'?'S':'L',
+                                                  new DateTime("now", new DateTimeZone('UTC')));
         }
         Application_Model_Preference::SetSourceStatus($sourcename, $status);
     }

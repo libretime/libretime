@@ -7,9 +7,9 @@ class Application_Model_LiveLog
         try {
             $con = Propel::getConnection();
             
-            $rows = self::GetNumLogs();
-            Logging::log($rows);
-            if ($data['count'] > 1) {
+            $count = self::GetNumLogs();
+            
+            if ($count > 1) {
             	$sql = "SELECT * FROM CC_LIVE_LOG"
             	     ." WHERE state = 'L'"
             	     ." and (start_time >= (now() - INTERVAL '1 day'))"
@@ -19,18 +19,22 @@ class Application_Model_LiveLog
                 $duration = self::GetDuration($rows);
                 return $duration;
             }
-            else if ($data['count'] == 1 && $data['state'] == 'S') {
-                $duration = new DateTime("00:00:00");
-                return $duration->format("H:i:s");
-            }
-            else if ($data['count'] == 1 && $data['state'] == 'L') {
-                $duration = new DateTime("23:59:59");
-                return $duration->format("H:i:s");
+            else if ($count == 1) {
+            	$sql = "SELECT state FROM CC_LIVE_LOG";
+            	$state = $con->query($sql)->fetchColumn(0);
+            	if ($state == 'S') {
+                    $duration = new DateTime("00:00:00");
+                    return $duration->format("H:i:s");
+            	}
+            	else if ($state == 'L') {
+            	    $duration = new DateTime("23:59:59");
+                    return $duration->format("H:i:s");
+            	}
             }
             
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::log("GetLiveShowDuration - Could not connect to database.");
             exit;            
         }	
     }
@@ -57,7 +61,7 @@ class Application_Model_LiveLog
             
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::log("GetScheduledDuration - Could not connect to database.");
             exit;            
         }
     }
@@ -87,10 +91,15 @@ class Application_Model_LiveLog
             $rows = $con->query($sql)->fetchAll();
             return $rows;
             */
+            $sql = "SELECT count(*) FROM CC_LIVE_LOG"
+                 ." WHERE (start_time >= (now() - INTERVAL '1 day'))";
+                 
+            $count = $con->query($sql)->fetchColumn(0);
+            return $count;
             
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::log("GetNumLogs - Could not connect to database.");
             exit; 
         }
     }
@@ -103,16 +112,14 @@ class Application_Model_LiveLog
             	self::SetEndTime('S', $dateTime);
             }
             
-            /* Check if airtime is currently broadcasting live.
-             * Only insert new state if scheduled switch is on
-             * or live broadcasting is off
+            /* Only insert new state if last log
+             * has ended
              */
             $sql_select = "SELECT max(id) from CC_LIVE_LOG"
-                        ." WHERE state='L' and end_time is NULL";
+                        ." WHERE (state='L' and end_time is NULL) or (state='S' and end_time is NULL)";
             $id = $con->query($sql_select)->fetchColumn(0);
             
             if ($id == null) {
-            	
                 $sql_insert = "INSERT INTO CC_LIVE_LOG (state, start_time)" 
                             ." VALUES ('$state', '{$dateTime->format("Y-m-d H:i:s")}')";
                 $con->exec($sql_insert);
@@ -135,13 +142,20 @@ class Application_Model_LiveLog
             }
             
             if (($dj_live=='off' && $master_live=='off') || $state == 'S') {
-            	$sql = "SELECT max(id) FROM CC_LIVE_LOG"
+            	/*$sql = "SELECT max(id) FROM CC_LIVE_LOG"
                      ." WHERE state = '$state'"
                      ." UNION"
                      ." SELECT max(id) FROM CC_LIVE_LOG";
+                 */
+            	$sql = "SELECT id, state from cc_live_log where id in (select max(id) from cc_live_log)";
                 $row = $con->query($sql)->fetch();
-                
-                if ($row != null && $row['max'] == $row[0]) {
+                Logging::log($state);
+                Logging::log($row);
+                /* Only set end time if state recevied ($state)
+                 * is the last row in cc_live_log
+                 */
+                //if ($row != null && $row['max'] == $row[0]) {
+                if ($row['state'] == $state) {
                     $update_sql = "UPDATE CC_LIVE_LOG"
                                 ." SET end_time = '{$dateTime->format("Y-m-d H:i:s")}'"
                                 ." WHERE id = '$row[0]'";
