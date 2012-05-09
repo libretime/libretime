@@ -221,12 +221,4 @@ class AirtimeMetadata:
         elif "vorbis" in md['MDATA_KEY_MIME']:
             md['MDATA_KEY_FTYPE'] = "audioclip"
 
-        #do this so object can be urlencoded properly.
-        for key in md.keys():
-
-            if (isinstance(md[key], basestring)):
-                #self.logger.info("Converting md[%s] = '%s' ", key, md[key])
-                md[key] = api_client.encode_to(md[key], 'utf-8')
-                #self.logger.info("Converting complete: md[%s] = '%s' ", key, md[key])
-
         return md

@@ -81,7 +81,7 @@ class MediaMonitorCommon:
             return self.is_user_readable(item, 'www-data', 'www-data') \
                 and self.is_user_readable(item, 'pypo', 'pypo')
         except Exception, e:
-            self.logger.warn("Failed to check owner/group/permissions for %s", item)
+            self.logger.warn(u"Failed to check owner/group/permissions for %s", item)
             return False
             
     def make_file_readable(self, pathname, is_dir):
@@ -131,7 +131,7 @@ class MediaMonitorCommon:
                 self.wm.add_watch(directory, pyinotify.ALL_EVENTS, rec=True, auto_add=True)
             elif not os.path.isdir(directory):
                 #path exists but it is a file not a directory!
-                self.logger.error("path %s exists, but it is not a directory!!!")
+                self.logger.error(u"path %s exists, but it is not a directory!!!", directory)
         finally:
             os.umask(omask)
 
@@ -159,13 +159,12 @@ class MediaMonitorCommon:
             if len(os.listdir(dir)) == 0:
                 try:
                     os.rmdir(dir)
+                    self.cleanup_empty_dirs(os.path.dirname(dir))
                 except Exception, e:
                     #non-critical exception because we probably tried to delete a non-empty dir.
                     #Don't need to log this, let's just "return"
-                    return
+                    pass
                 
-                pdir = os.path.dirname(dir)
-                self.cleanup_empty_dirs(pdir)
 
 
     #checks if path exists already in stor. If the path exists and the md5s are the
@@ -215,14 +214,12 @@ class MediaMonitorCommon:
         try:
             #will be in the format .ext
             file_ext = os.path.splitext(original_path)[1]
-            file_ext = api_client.encode_to(file_ext, 'utf-8')
-
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
             md = {}
             for m in path_md:
                 if m not in orig_md:
-                    md[m] = api_client.encode_to(u'unknown', 'utf-8')
+                    md[m] = u'unknown'
                 else:
                     #get rid of any "/" which will interfere with the filepath.
                     if isinstance(orig_md[m], basestring):
@@ -240,10 +237,10 @@ class MediaMonitorCommon:
             filepath = None
             #file is recorded by Airtime
             #/srv/airtime/stor/recorded/year/month/year-month-day-time-showname-bitrate.ext
-            if(md['MDATA_KEY_CREATOR'] == api_client.encode_to("Airtime Show Recorder", 'utf-8')):
+            if(md['MDATA_KEY_CREATOR'] == u"Airtime Show Recorder"):
                 #yyyy-mm-dd-hh-MM-ss
                 y = orig_md['MDATA_KEY_YEAR'].split("-")
-                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, api_client.encode_to("recorded", 'utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, api_client.encode_to("recorded", 'utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
                 #"Show-Title-2011-03-28-17:15:00"
                 title = md['MDATA_KEY_TITLE'].split("-")
@@ -257,10 +254,10 @@ class MediaMonitorCommon:
                 new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
                 self.md_manager.save_md_to_file(new_md)
 
-            elif(md['MDATA_KEY_TRACKNUMBER'] == api_client.encode_to(u'unknown', 'utf-8')):
-                filepath = '%s/%s/%s/%s/%s-%s%s' % (storage_directory, api_client.encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+            elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'):
+                filepath = u'%s/%s/%s/%s/%s-%s%s' % (storage_directory, api_client.encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = '%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, api_client.encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, api_client.encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
             filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
@@ -313,7 +310,7 @@ class MediaMonitorCommon:
         if file_md is not None:
             filepath = self.create_file_path(pathname, file_md)
 
-            self.logger.debug("Moving from %s to %s", pathname, filepath)
+            self.logger.debug(u"Moving from %s to %s", pathname, filepath)
             self.move_file(pathname, filepath)
             if not self.make_readable(filepath):
                 self.logger.warn("Couldn't make filepath %s readable", pathname)
@@ -335,7 +332,7 @@ def test_file_playability(pathname):
         
         #when there is an single apostrophe inside of a string quoted by apostrophes, we can only escape it by replace that apostrophe
         #with '\''. This breaks the string into two, and inserts an escaped single quote in between them.
-        #We run the command as pypo because otherwise the target file is opened with write permissions, and this causes an ON_CLOSE_WRITE event
+        #We run the command as pypo because otherwise the target file is opened with write permissions, and this causes an inotify ON_CLOSE_WRITE event
         #to be fired :/
         command = "sudo -u pypo liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))'" % pathname.replace("'", "'\\''")
         return_code = subprocess.call(command, shell=True)
