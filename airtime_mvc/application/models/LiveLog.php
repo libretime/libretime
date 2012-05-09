@@ -83,14 +83,6 @@ class Application_Model_LiveLog
     public static function GetNumLogs() {
         try {
             $con = Propel::getConnection();
-            /*
-            $sql = "SELECT count(*), state FROM CC_LIVE_LOG"
-                 ." WHERE (start_time >= (now() - INTERVAL '1 day'))"
-                 ." GROUP BY state";
-                 
-            $rows = $con->query($sql)->fetchAll();
-            return $rows;
-            */
             $sql = "SELECT count(*) FROM CC_LIVE_LOG"
                  ." WHERE (start_time >= (now() - INTERVAL '1 day'))";
                  
@@ -142,19 +134,13 @@ class Application_Model_LiveLog
             }
             
             if (($dj_live=='off' && $master_live=='off') || $state == 'S') {
-            	/*$sql = "SELECT max(id) FROM CC_LIVE_LOG"
-                     ." WHERE state = '$state'"
-                     ." UNION"
-                     ." SELECT max(id) FROM CC_LIVE_LOG";
-                 */
-            	$sql = "SELECT id, state from cc_live_log where id in (select max(id) from cc_live_log)";
+            	$sql = "SELECT id, state from cc_live_log"
+            	     ." where id in (select max(id) from cc_live_log)";
                 $row = $con->query($sql)->fetch();
-                Logging::log($state);
-                Logging::log($row);
+                
                 /* Only set end time if state recevied ($state)
                  * is the last row in cc_live_log
                  */
-                //if ($row != null && $row['max'] == $row[0]) {
                 if ($row['state'] == $state) {
                     $update_sql = "UPDATE CC_LIVE_LOG"
                                 ." SET end_time = '{$dateTime->format("Y-m-d H:i:s")}'"
@@ -162,7 +148,7 @@ class Application_Model_LiveLog
                     $con->exec($update_sql);
                 }
                 
-                //if live broadcasting is off, turn scheduled play on
+                //If live broadcasting is off, turn scheduled play on
                 $scheduled = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
                 if ($state == 'L' && $scheduled=='on') {
                     self::SetNewLogTime('S', $dateTime);
