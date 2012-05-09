@@ -65,14 +65,18 @@ class DashboardController extends Zend_Controller_Action
             Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
             if(strtolower($current_status) == "on"){
                 Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");
+                $this->view->status = "OFF";
+                
+                //Log table updates
                 Application_Model_LiveLog::SetEndTime($sourcename == 'scheduled_play'?'S':'L',
                                                       new DateTime("now", new DateTimeZone('UTC')));
-                $this->view->status = "OFF";
             }else{
                 Application_Model_Preference::SetSourceSwitchStatus($sourcename, "on");
+                $this->view->status = "ON";
+                
+                //Log table updates
                 Application_Model_LiveLog::SetNewLogTime($sourcename == 'scheduled_play'?'S':'L',
                                                          new DateTime("now", new DateTimeZone('UTC')));
-                $this->view->status = "ON";
             }
         }
         else{
