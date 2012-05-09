@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 # Auto install script for airtime on Ubuntu
 #
 
-exec > >(tee install_log.txt)
+exec >> (tee install_log.txt)
 exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then
@@ -55,25 +55,16 @@ else
     apt-get -y install libzend-framework-php
 fi
 
-
-
-if [ "$?" -ne "0" ]; then
-   echo ""
-   echo "There was a problem with apt-get. Please check the above error and try again."
-   echo ""
-   exit 1
-fi
-
 # Apache Config File
 echo "----------------------------------------------------"
 echo "2. Apache Config File"
 echo "----------------------------------------------------"
 if [ ! -f /etc/apache2/sites-available/airtime ]; then
-	cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
-	rm -rf /etc/apache2/sites-enabled/000-default
-	ln -s /etc/apache2/sites-available/airtime /etc/apache2/sites-enabled/airtime
-	a2enmod rewrite php5
-	service apache2 restart
+    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
+    a2dissite default
+    a2ensite airtime
+    a2enmod rewrite php5
+    service apache2 reload
 else
 	echo "Apache config for Airtime already exists..."
 fi
@@ -107,5 +98,3 @@ echo "5. Run Airtime Install"
 echo "----------------------------------------------------"
 cd $SCRIPTPATH/../../install_minimal
 ./airtime-install
-
-
