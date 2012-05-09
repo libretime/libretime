@@ -3,7 +3,7 @@
 # Auto install script for airtime on Ubuntu
 #
 
-exec >> (tee install_log.txt)
+exec > >(tee install_log.txt)
 exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then

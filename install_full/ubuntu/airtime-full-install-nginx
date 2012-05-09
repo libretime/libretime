@@ -6,7 +6,7 @@
 # Link to the post:
 # http://forum.sourcefabric.org/discussion/13563/first-step-to-run-airtime-via-nginx-based-on-airtime-2.0-beta-files
 
-exec >> (tee install_log.txt)
+exec > >(tee install_log.txt)
 exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then
