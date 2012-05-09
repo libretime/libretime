@@ -26,6 +26,7 @@ from airtimefilemonitor.workerprocess import MediaMonitorWorkerProcess
 from airtimefilemonitor.airtimemediamonitorbootstrap import AirtimeMediaMonitorBootstrap
 
 def configure_locale():
+    logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
     current_locale = locale.getlocale()
     
     if current_locale[1] is None:
@@ -48,6 +49,7 @@ def configure_locale():
             
     
     current_locale_encoding = locale.getlocale()[1].lower()
+    logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
     
     if current_locale_encoding not in ['utf-8', 'utf8']:
         logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
