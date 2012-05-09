@@ -82,8 +82,8 @@ function updateProgressBarValue(){
     $('#progress-show').attr("style", "width:"+showPercentDone+"%");
 
     var songPercentDone = 0;
-    var scheduled_play_div = $("#scheduled_play_div")
-    var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch")
+    var scheduled_play_div = $("#scheduled_play_div");
+    var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
     
     if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
@@ -93,20 +93,20 @@ function updateProgressBarValue(){
         } else {
             if (currentSong.media_item_played == true && currentShow.length > 0){
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
-                scheduled_play_div.addClass("ready")
+                scheduled_play_div.addClass("ready");
                 scheduled_play_source = true;
             }
             else{
                 scheduled_play_source = false;
                 scheduled_play_line_to_switch.attr("class", "line-to-switch off");
-                scheduled_play_div.removeClass("ready")
+                scheduled_play_div.removeClass("ready");
             }
             $('#progress-show').attr("class", "progress-show");
         }
     } else {
         scheduled_play_source = false;
         scheduled_play_line_to_switch.attr("class", "line-to-switch off");
-        scheduled_play_div.removeClass("ready")
+        scheduled_play_div.removeClass("ready");
         $('#progress-show').attr("class", "progress-show-error");
         
     }
@@ -262,25 +262,25 @@ function parseItems(obj){
 }
 
 function parseSourceStatus(obj){
-    var live_div = $("#live_dj_div")
-    var master_div = $("#master_dj_div")
-    var live_li = live_div.parent()
-    var master_li = master_div.parent()
+    var live_div = $("#live_dj_div");
+    var master_div = $("#master_dj_div");
+    var live_li = live_div.parent();
+    var master_li = master_div.parent();
     
     if(obj.live_dj_source == false){
-        live_li.find(".line-to-switch").attr("class", "line-to-switch off")
-        live_div.removeClass("ready")
+        live_li.find(".line-to-switch").attr("class", "line-to-switch off");
+        live_div.removeClass("ready");
     }else{
-        live_li.find(".line-to-switch").attr("class", "line-to-switch on")
-        live_div.addClass("ready")
+        live_li.find(".line-to-switch").attr("class", "line-to-switch on");
+        live_div.addClass("ready");
     }
     
     if(obj.master_dj_source == false){
-        master_li.find(".line-to-switch").attr("class", "line-to-switch off")
-        master_div.removeClass("ready")
+        master_li.find(".line-to-switch").attr("class", "line-to-switch off");
+        master_div.removeClass("ready");
     }else{
-        master_li.find(".line-to-switch").attr("class", "line-to-switch on")
-        master_div.addClass("ready")
+        master_li.find(".line-to-switch").attr("class", "line-to-switch on");
+        master_div.addClass("ready");
     }
 }
 
@@ -304,29 +304,29 @@ function parseSwitchStatus(obj){
         scheduled_play_on_air = false;
     }
     
-    var scheduled_play_switch = $("#scheduled_play.source-switch-button")
-    var live_dj_switch = $("#live_dj.source-switch-button")
-    var master_dj_switch = $("#master_dj.source-switch-button")
+    var scheduled_play_switch = $("#scheduled_play.source-switch-button");
+    var live_dj_switch = $("#live_dj.source-switch-button");
+    var master_dj_switch = $("#master_dj.source-switch-button");
     
-    scheduled_play_switch.find("span").html(obj.scheduled_play)
+    scheduled_play_switch.find("span").html(obj.scheduled_play);
     if(scheduled_play_on_air){
-        scheduled_play_switch.addClass("active")
+        scheduled_play_switch.addClass("active");
     }else{
-        scheduled_play_switch.removeClass("active")
+        scheduled_play_switch.removeClass("active");
     }
     
-    live_dj_switch.find("span").html(obj.live_dj_source)
+    live_dj_switch.find("span").html(obj.live_dj_source);
     if(live_dj_on_air){
-        live_dj_switch.addClass("active")
+        live_dj_switch.addClass("active");
     }else{
-        live_dj_switch.removeClass("active")
+        live_dj_switch.removeClass("active");
     }
     
     master_dj_switch.find("span").html(obj.master_dj_source)
     if(master_dj_on_air){
-        master_dj_switch.addClass("active")
+        master_dj_switch.addClass("active");
     }else{
-        master_dj_switch.removeClass("active")
+        master_dj_switch.removeClass("active");
     }
 }
 
@@ -346,26 +346,26 @@ function controlOnAirLight(){
 }
 
 function controlSwitchLight(){
-    var live_li= $("#live_dj_div").parent()
-    var master_li = $("#master_dj_div").parent()
-    var scheduled_play_li = $("#scheduled_play_div").parent()
+    var live_li= $("#live_dj_div").parent();
+    var master_li = $("#master_dj_div").parent();
+    var scheduled_play_li = $("#scheduled_play_div").parent();
     
     if((scheduled_play_on_air && scheduled_play_source) && !live_dj_on_air && !master_dj_on_air){
-        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air on")
-        live_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
-        master_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air on");
+        live_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
+        master_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
     }else if(live_dj_on_air && !master_dj_on_air){
-        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
-        live_li.find(".line-to-on-air").attr("class", "line-to-on-air on")
-        master_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
+        live_li.find(".line-to-on-air").attr("class", "line-to-on-air on");
+        master_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
     }else if(master_dj_on_air){
-        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
-        live_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
-        master_li.find(".line-to-on-air").attr("class", "line-to-on-air on")
+        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
+        live_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
+        master_li.find(".line-to-on-air").attr("class", "line-to-on-air on");
     }else{
-        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
-        live_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
-        master_li.find(".line-to-on-air").attr("class", "line-to-on-air off")
+        scheduled_play_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
+        live_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
+        master_li.find(".line-to-on-air").attr("class", "line-to-on-air off");
     }
 }
 
@@ -405,9 +405,9 @@ function setupQtip(){
 }
 
 function setSwitchListener(ele){
-    var sourcename = $(ele).attr('id')
-    var status_span = $(ele).find("span")
-    var status = status_span.html()
+    var sourcename = $(ele).attr('id');
+    var status_span = $(ele).find("span");
+    var status = status_span.html();
     
     $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
         if(data.error){
@@ -418,13 +418,13 @@ function setSwitchListener(ele){
         	}else{
         		$(ele).removeClass("active");
         	}
-            status_span.html(data.status)
+            status_span.html(data.status);
         }
     });
 }
 
 function kickSource(ele){
-    var sourcename = $(ele).attr('id')
+    var sourcename = $(ele).attr('id');
     
     $.get("/Dashboard/disconnect-source/format/json/sourcename/"+sourcename, function(data){
         if(data.error){
