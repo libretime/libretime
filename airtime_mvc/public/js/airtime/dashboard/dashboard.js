@@ -27,10 +27,6 @@ var onAirOffIterations = 0;
 
 //var timezoneOffset = 0;
 
-//set to "development" if we are developing :). Useful to disable alerts
-//when entering production mode. 
-var APPLICATION_ENV = "";
-
 /* boolean flag to let us know if we should prepare to execute a function
  * that flips the playlist to the next song. This flags purpose is to
  * make sure the function is only executed once*/
@@ -233,9 +229,7 @@ function calcAdditionalShowData(show){
     }
 }
 
-function parseItems(obj){
-    APPLICATION_ENV = obj.env;
-        
+function parseItems(obj){        
     $('#time-zone').text(obj.timezone);
 
     previousSong = obj.previous;
