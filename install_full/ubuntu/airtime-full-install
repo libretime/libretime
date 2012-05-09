@@ -75,7 +75,9 @@ echo "3. Enable Icecast"
 echo "----------------------------------------------------"
 cd /etc/default/
 sed -i 's/ENABLE=false/ENABLE=true/g' icecast2
+set +e
 service icecast2 start
+set -e
 echo ""
 
 # Enable Monit
