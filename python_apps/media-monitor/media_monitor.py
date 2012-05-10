@@ -47,7 +47,8 @@ def configure_locale():
             
         logger.debug("New locale set to: " + locale.setlocale(locale.LC_ALL, new_locale))
             
-    
+    reload(sys)
+    sys.setdefaultencoding("UTF-8")
     current_locale_encoding = locale.getlocale()[1].lower()
     logger.debug("sys default encoding %s", sys.getdefaultencoding())
     logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
