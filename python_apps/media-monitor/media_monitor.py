@@ -49,6 +49,7 @@ def configure_locale():
             
     
     current_locale_encoding = locale.getlocale()[1].lower()
+    logger.debug("sys default encoding %s", sys.getdefaultencoding())
     logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
     
     if current_locale_encoding not in ['utf-8', 'utf8']:
