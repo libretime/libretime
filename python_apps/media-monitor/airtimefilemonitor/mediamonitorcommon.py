@@ -302,22 +302,14 @@ class MediaMonitorCommon:
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", traceback.format_exc())
 
-    def organize_new_file(self, pathname):
+    def organize_new_file(self, pathname, file_md):
         self.logger.info("Organizing new file: %s", pathname)
-        file_md = self.md_manager.get_md_from_file(pathname)
 
-        if file_md is not None:
-            filepath = self.create_file_path(pathname, file_md)
+        filepath = self.create_file_path(pathname, file_md)
 
-            self.logger.debug(u"Moving from %s to %s", pathname, filepath)
-            self.move_file(pathname, filepath)
-            if not self.make_readable(filepath):
-                self.logger.warn("Couldn't make filepath %s readable", pathname)
-                filepath = None
-        else:
-            filepath = None
-            self.logger.warn("File %s, has invalid metadata", pathname)
-
+        self.logger.debug(u"Moving from %s to %s", pathname, filepath)
+        self.move_file(pathname, filepath)
+        self.make_readable(filepath)
         return filepath
         
     def test_file_playability(self, pathname):
@@ -332,3 +324,17 @@ class MediaMonitorCommon:
             print pathname
         
         return (return_code == 0)
+        
+    def move_to_problem_dir(self, source):
+        
+        dest = os.path.join(self.config.problem_directory, os.path.basename(source))
+        
+        try:
+            omask = os.umask(0)
+            os.rename(source, dest)
+        except Exception, e:
+            self.logger.error("failed to move file. %s", e)
+            self.logger.error("traceback: %s", traceback.format_exc())
+        finally:
+            os.umask(omask)
+        

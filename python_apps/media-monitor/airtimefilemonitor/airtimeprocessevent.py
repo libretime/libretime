@@ -81,8 +81,11 @@ class AirtimeProcessEvent(ProcessEvent):
                 
             
     def process_IN_DELETE_SELF(self, event):
-        if event.path in self.mount_file_dir:
+        
+        #we only care about files that have been moved away from imported/ or organize/ dir
+        if event.path in self.config.problem_directory or event.path in self.config.organize_directory:
             return
+            
         self.logger.info("event: %s", event)
         path = event.path + '/'
         if event.dir:
@@ -136,22 +139,18 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.temp_files[pathname] = None
             elif self.mmc.is_audio_file(name):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
-                        
+                         
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
-                    oldPath = pathname
-                    pathname = self.mmc.organize_new_file(pathname)
+                    file_md = self.md_manager.get_md_from_file(pathname)
+                    playable = self.mmc.test_file_playability(pathname)
                     
-                    #delete files from organize if they can not be read properly.
-                    if pathname is None:
-                        try:
-                            self.logger.warn("Deleting file because it cannot be read properly: %s", oldPath)
-                            os.remove(oldPath)
-                        except Exception, e:
-                            self.logger.error('Exception: %s', e)
-                            self.logger.error("traceback: %s", traceback.format_exc())
-                        finally:
-                            return
+                    if file_md and playable:
+                        self.mmc.organize_new_file(pathname, file_md)
+                    else:
+                        #move to problem_files
+                        self.mmc.move_to_problem_dir(pathname)
+
                 else:
                     # only append to self.file_events if the file isn't going to be altered by organize_new_file(). If file is going
                     # to be altered by organize_new_file(), then process_IN_MOVED_TO event will handle appending it to self.file_events
@@ -216,8 +215,11 @@ class AirtimeProcessEvent(ProcessEvent):
     #callback is only called if the destination of the file is also in a watched
     #directory.
     def process_IN_MOVED_FROM(self, event):
-        if event.path in self.mount_file:
+        
+        #we only care about files that have been moved away from imported/ or organize/ dir
+        if event.path in self.config.problem_directory:
             return
+            
         self.logger.info("process_IN_MOVED_FROM: %s", event)
         if not event.dir:
             if event.pathname in self.temp_files:
@@ -248,37 +250,50 @@ class AirtimeProcessEvent(ProcessEvent):
                     #file's original location was also in a watched directory
                     del self.cookies_IN_MOVED_FROM[event.cookie]
                     if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
-                        filepath = self.mmc.organize_new_file(event.pathname)
-                        
-                        #delete files from organize if they can not be read properly.
-                        if filepath is None:
-                            try:
-                                self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
-                                os.remove(event.pathname)
-                                return
-                            except Exception, e:
-                                self.logger.error('Exception: %s', e)
-                                self.logger.error("traceback: %s", traceback.format_exc())
 
+
+
+                        pathname = event.pathname
+                        #file was created in /srv/airtime/stor/organize. Need to process and move
+                        #to /srv/airtime/stor/imported
+                        file_md = self.md_manager.get_md_from_file(pathname)
+                        playable = self.mmc.test_file_playability(pathname)
+                        
+                        if file_md and playable:
+                            filepath = self.mmc.organize_new_file(pathname, file_md)
+                        else:
+                            #move to problem_files
+                            self.mmc.move_to_problem_dir(pathname)
+                            
+                            
+                            
                     else:
                         filepath = event.pathname
 
                     if (filepath is not None):
                         self.file_events.append({'filepath': filepath, 'mode': self.config.MODE_MOVED})
                 else:
-                    if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
-                        filepath = self.mmc.organize_new_file(event.pathname)
+                    #file's original location is from outside an inotify watched dir.
+                    pathname = event.pathname
+                    if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
                         
-                        #delete files from organize if they cannot be read properly.
-                        if filepath is None:
-                            try:
-                                self.logger.info("Deleting file because it cannot be read properly: %s", event.pathname)
-                                os.remove(event.pathname)
-                            except Exception, e:
-                                self.logger.error('Exception: %s', e)
-                                self.logger.error("traceback: %s", traceback.format_exc())
-                            finally:
-                                return
+                        
+                        
+                            
+                        #file was created in /srv/airtime/stor/organize. Need to process and move
+                        #to /srv/airtime/stor/imported
+                        file_md = self.md_manager.get_md_from_file(pathname)
+                        playable = self.mmc.test_file_playability(pathname)
+                        
+                        if file_md and playable:
+                            self.mmc.organize_new_file(pathname, file_md)
+                        else:
+                            #move to problem_files
+                            self.mmc.move_to_problem_dir(pathname)
+                            
+                            
+                            
+
                     else:
                         #show moved from unwatched folder into a watched folder. Do not "organize".
                         if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
@@ -299,10 +314,24 @@ class AirtimeProcessEvent(ProcessEvent):
                         
             files = self.mmc.scan_dir_for_new_files(event.pathname)
             if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
-                for file in files:
-                    filepath = self.mmc.organize_new_file(file)
-                    if (filepath is not None):
-                        self.file_events.append({'mode': mode, 'filepath': filepath, 'is_recorded_show': False})
+                for pathname in files:
+                    
+                    
+                        
+                    #file was created in /srv/airtime/stor/organize. Need to process and move
+                    #to /srv/airtime/stor/imported
+                    file_md = self.md_manager.get_md_from_file(pathname)
+                    playable = self.mmc.test_file_playability(pathname)
+                    
+                    if file_md and playable:
+                        self.mmc.organize_new_file(pathname, file_md)
+                        #self.file_events.append({'mode': mode, 'filepath': filepath, 'is_recorded_show': False})
+                    else:
+                        #move to problem_files
+                        self.mmc.move_to_problem_dir(pathname)
+                        
+                        
+                        
             else:
                 for file in files:
                     self.file_events.append({'mode': mode, 'filepath': file, 'is_recorded_show': False})
@@ -372,7 +401,8 @@ class AirtimeProcessEvent(ProcessEvent):
                     # check if file is open                    
                     try:
                         command = "lsof "+k
-                        f = os.popen(command)
+                        #f = os.popen(command)
+                        f = Popen(command, shell=True, stdout=PIPE).stdout
                     except Exception, e:
                         self.logger.error('Exception: %s', e)
                         self.logger.error("traceback: %s", traceback.format_exc())

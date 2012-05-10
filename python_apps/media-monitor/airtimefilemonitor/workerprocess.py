@@ -15,16 +15,7 @@ class MediaMonitorWorkerProcess:
             try:
                 event = queue.get()
                 notifier.logger.info("received event %s", event)
-                if event['mode'] == AirtimeMediaConfig.MODE_CREATE:
-                    filepath = event['filepath']
-                    if self.mmc.test_file_playability(filepath):
-                        notifier.update_airtime(event)
-                    else:
-                        notifier.logger.warn("Liquidsoap integrity check for file at %s failed. Not adding to media library.", filepath)
-                        if self.config.storage_directory in filepath:
-                            self.mmc.move_file(filepath, os.path.join(self.config.problem_directory, os.path.basename(filepath)))
-                else:
-                    notifier.update_airtime(event)
+                notifier.update_airtime(event)
             except Exception, e:
                 notifier.logger.error(e)
                 notifier.logger.error("traceback: %s", traceback.format_exc())
