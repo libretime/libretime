@@ -278,7 +278,8 @@ var AIRTIME = (function(AIRTIME){
 	function redrawLib() {
 	    var dt = $lib.find("#library_display").dataTable();
 	    
-	    dt.fnDraw();
+	    dt.fnStandingRedraw();
+	    AIRTIME.library.redrawChosen();
 	}
 	
 	function setPlaylistContent(json) {
@@ -523,10 +524,6 @@ var AIRTIME = (function(AIRTIME){
 				
 				//filter out anything that isn't an audiofile.
 				aSelected = AIRTIME.library.getSelectedData();
-				//if nothing is checked select the dragged item.
-			    if (aSelected.length === 0) {
-			    	aSelected.push(ui.item.data("aData"));
-			    }
 			    
 				for (i = 0, length = aSelected.length; i < length; i++) {
 					if (aSelected[i].ftype === "audioclip") {
@@ -536,6 +533,8 @@ var AIRTIME = (function(AIRTIME){
 	
 			    aReceiveItems = aItems;
 				html = ui.helper.html();
+				
+				AIRTIME.library.removeFromChosen(ui.item);
 			};
 			
 			fnUpdate = function(event, ui) {

@@ -699,14 +699,10 @@ var AIRTIME = (function(AIRTIME){
 				var aItems = [];
 			
 				aItems = AIRTIME.library.getSelectedData();
-				
-				//if nothing is checked select the dragged item.
-			    if (aItems.length === 0) {
-			    	aItems.push(ui.item.data("aData"));
-			    }
-			    
 				origTrs = aItems;
 				html = ui.helper.html();
+				
+				AIRTIME.library.removeFromChosen(ui.item);
 			};
 			
 			fnUpdate = function(event, ui) {
@@ -764,11 +760,11 @@ var AIRTIME = (function(AIRTIME){
 				    	height = trfirst.height(),
 				    	message;
 					
-				    //if nothing is checked select the dragged item.
-				    if (selected.length === 0) {
-				    	selected = [item.data("aData")];
-				    }
-				    
+					//if nothing is checked select the dragged item.
+					if (selected.length === 0) {
+						selected = [item.data("aData")];
+					}
+					
 				    if (selected.length === 1) {
 				    	message = "Moving "+selected.length+" Item.";
 				    }

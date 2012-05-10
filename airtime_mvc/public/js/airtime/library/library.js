@@ -98,6 +98,21 @@ var AIRTIME = (function(AIRTIME) {
     	}
     };
     
+    mod.addToChosen = function($el) {
+    	var id = $el.attr("id");
+    	
+    	chosenItems[id] = $el.data('aData');
+    };
+    
+    mod.removeFromChosen = function($el) {
+    	var id = $el.attr("id");
+    	
+    	//used to not keep dragged items selected.
+    	if (!$el.hasClass(LIB_SELECTED_CLASS)) {
+    		delete chosenItems[id];
+    	}	
+    };
+    
     mod.highlightItem = function($el) {
     	var $input = $el.find("input");
 	
@@ -105,26 +120,25 @@ var AIRTIME = (function(AIRTIME) {
 		$el.addClass(LIB_SELECTED_CLASS);
     };
     
+    mod.unHighlightItem = function($el) {
+    	var $input = $el.find("input");
+	
+		$input.attr("checked", false);
+		$el.removeClass(LIB_SELECTED_CLASS);
+    };
+    
     mod.selectItem = function($el) {
-    	var id;
     	
     	mod.highlightItem($el);
-    	
-    	id = $el.attr("id"); 
-		chosenItems[id] = $el.data('aData');
+    	mod.addToChosen($el);
 		
 		mod.checkToolBarIcons();
     };
     
     mod.deselectItem = function($el) {
-    	var id,
-    		$input = $el.find("input");
     	
-    	$input.attr("checked", false);
-    	$el.removeClass(LIB_SELECTED_CLASS);
-    	
-    	id = $el.attr("id"); 
-		delete chosenItems[id];
+    	mod.unHighlightItem($el);
+    	mod.removeFromChosen($el);
 		
 		mod.checkToolBarIcons();
     };

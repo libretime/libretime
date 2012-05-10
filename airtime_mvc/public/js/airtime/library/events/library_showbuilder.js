@@ -48,7 +48,7 @@ var AIRTIME = (function(AIRTIME){
 		$('#library_display tr.lib-audio, tr.lib-pl').draggable({
 			helper: function(){
 				
-				mod.selectItem($(this));
+				mod.addToChosen($(this));
 				
 			    var selected = mod.getChosenItemsLength(),
 			    	container,
