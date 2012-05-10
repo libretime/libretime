@@ -208,8 +208,6 @@ class MediaMonitorCommon:
 
         storage_directory = self.config.storage_directory
 
-        is_recorded_show = False
-
         try:
             #will be in the format .ext
             file_ext = os.path.splitext(original_path)[1]
@@ -238,8 +236,8 @@ class MediaMonitorCommon:
             #/srv/airtime/stor/recorded/year/month/year-month-day-time-showname-bitrate.ext
             if(md['MDATA_KEY_CREATOR'] == u"Airtime Show Recorder"):
                 #yyyy-mm-dd-hh-MM-ss
-                y = orig_md['MDATA_KEY_YEAR'].split("-")
-                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, api_client.encode_to("recorded", 'utf-8'), y[0], y[1], orig_md['MDATA_KEY_YEAR'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                y = orig_md['MDATA_KEY_DATE'].split("-")
+                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded", y[0], y[1], orig_md['MDATA_KEY_DATE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
                 #"Show-Title-2011-03-28-17:15:00"
                 title = md['MDATA_KEY_TITLE'].split("-")
@@ -250,13 +248,13 @@ class MediaMonitorCommon:
 
                 new_md = {}
                 new_md["MDATA_KEY_FILEPATH"] = original_path
-                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
+                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_DATE'], show_hour, show_min, show_sec)
                 self.md_manager.save_md_to_file(new_md)
 
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'):
-                filepath = u'%s/%s/%s/%s/%s-%s%s' % (storage_directory, api_client.encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = u'%s/%s/%s/%s/%s-%s%s' % (storage_directory, "imported", md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
             else:
-                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, api_client.encode_to("imported", 'utf-8'), md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "imported", md['MDATA_KEY_CREATOR'], md['MDATA_KEY_SOURCE'], md['MDATA_KEY_TRACKNUMBER'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
             filepath = self.create_unique_filename(filepath, original_path)
             self.logger.info('Unique filepath: %s', filepath)
@@ -264,6 +262,7 @@ class MediaMonitorCommon:
 
         except Exception, e:
             self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", traceback.format_exc())
 
         return filepath
 

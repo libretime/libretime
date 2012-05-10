@@ -3,6 +3,7 @@ import hashlib
 import mutagen
 import logging
 import math
+import datetime
 import re
 from api_clients import api_client
 
@@ -26,7 +27,8 @@ class AirtimeMetadata:
         "MDATA_KEY_COMPOSER": "composer",\
         "MDATA_KEY_ENCODER": "encodedby",\
         "MDATA_KEY_CONDUCTOR": "conductor",\
-        "MDATA_KEY_YEAR": "date",\
+        "MDATA_KEY_YEAR": "year",\
+        "MDATA_KEY_DATE": "date",\
         "MDATA_KEY_URL": "website",\
         "MDATA_KEY_ISRC": "isrc",\
         "MDATA_KEY_COPYRIGHT": "copyright",\
@@ -44,7 +46,8 @@ class AirtimeMetadata:
         "composer": "MDATA_KEY_COMPOSER",\
         "encodedby": "MDATA_KEY_ENCODER",\
         "conductor": "MDATA_KEY_CONDUCTOR",\
-        "date": "MDATA_KEY_YEAR",\
+        "year": "MDATA_KEY_YEAR",\
+        "date": "MDATA_KEY_DATE",\
         "website": "MDATA_KEY_URL",\
         "isrc": "MDATA_KEY_ISRC",\
         "copyright": "MDATA_KEY_COPYRIGHT",\
@@ -199,6 +202,9 @@ class AirtimeMetadata:
 
         if 'MDATA_KEY_YEAR' in md:
             md['MDATA_KEY_YEAR'] = self.truncate_to_length(md['MDATA_KEY_YEAR'], 4)
+            
+        if 'MDATA_KEY_DATE' in md:
+            md['MDATA_KEY_DATE'] = self.truncate_to_length(md['MDATA_KEY_DATE'], 16)
 
         if 'MDATA_KEY_URL' in md:
             md['MDATA_KEY_URL'] = self.truncate_to_length(md['MDATA_KEY_URL'], 512)

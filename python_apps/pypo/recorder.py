@@ -127,13 +127,14 @@ class ShowRecorder(Thread):
             self.logger.info("time: %s" % time)
 
             name = time+"-"+self.show_name
-            artist = api_client.encode_to("Airtime Show Recorder",'utf-8')
+            artist = "Airtime Show Recorder"
 
             #set some metadata for our file daemon
             recorded_file = mutagen.File(filepath, easy=True)
             recorded_file['title'] = name
             recorded_file['artist'] = artist
             recorded_file['date'] = md[0]
+            recorded_file['year'] = md[0].split("-")[0]
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
             recorded_file.save()

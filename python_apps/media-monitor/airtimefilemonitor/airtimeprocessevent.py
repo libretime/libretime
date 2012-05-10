@@ -296,10 +296,7 @@ class AirtimeProcessEvent(ProcessEvent):
 
                     else:
                         #show moved from unwatched folder into a watched folder. Do not "organize".
-                        if self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory):
-                            is_recorded = True
-                        else:
-                            is_recorded = False
+                        is_recorded = self.mmc.is_parent_directory(event.pathname, self.config.recorded_directory)
                         self.file_events.append({'mode': self.config.MODE_CREATE, 'filepath': event.pathname, 'is_recorded_show': is_recorded})
         else:
             #When we move a directory into a watched_dir, we only get a notification that the dir was created,
