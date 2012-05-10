@@ -10,7 +10,7 @@ class AirtimeMiscUpgrade{
     public static function adjustAirtimeStorPermissions($p_ini){
         /* Make the read permission of Monit cfg files more strict */
         $webUser = $p_ini["general"]["web_server_user"];
-        exec("chown -R root:$webUser");
+        exec("chown -R root:$webUser /srv/airtime");
         exec("chmod -R 2775 /srv/airtime");
     }
 }

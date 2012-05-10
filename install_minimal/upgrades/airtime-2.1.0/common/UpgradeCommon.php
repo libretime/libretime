@@ -162,15 +162,12 @@ class UpgradeCommon{
                         if(is_array($oldSettings[$section])) {
                             $sectionKeys = array_keys($newSettings[$section]);
                             foreach($sectionKeys as $sectionKey) {
-                                // skip airtim_dir as we want to use new value
-                                if($sectionKey != "airtime_dir"){
-                                    if(isset($oldSettings[$section][$sectionKey])) {
-                                        self::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
-                                    }
+
+                                if(isset($oldSettings[$section][$sectionKey])) {
+                                    self::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             self::UpdateIniValue($conf, $section, $oldSettings[$section]);
                         }
                     }
