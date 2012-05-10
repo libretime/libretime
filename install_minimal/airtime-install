@@ -86,10 +86,22 @@ ZENDFRAMEWORK=$?
 
 dpkg -l | grep libzend-framework-php > /dev/null 2>&1
 LIBZEND=$?
+
+dpkg -l | grep lsof > /dev/null 2>&1
+LSOF_EXIST=$?
+
+dpkg -l | grep sudo > /dev/null 2>&1
+SUDO_EXIST=$?
+
 set -e
 
 if [ "$ZENDFRAMEWORK" != "0" -a "$LIBZEND" != "0" ]; then
     echo "zendframework/libzend-framework-php package missing. Please run airtime-full-install"
+    exit 1
+fi
+
+if [ "$LSOF_EXIST" != "0" -o "$SUDO_EXIST" != "0" ]; then
+    echo "Packages missing. Please run airtime-full-install"
     exit 1
 fi
 
