@@ -35,6 +35,7 @@ CREATE TABLE cc_subjs_token (
 ALTER TABLE cc_files
 	ADD COLUMN utime timestamp(6) without time zone,
 	ADD COLUMN lptime timestamp(6) without time zone,
+	ADD COLUMN soundcloud_upload_time timestamp(6) without time zone,
 	ADD COLUMN file_exists boolean DEFAULT true,
 	ALTER COLUMN bit_rate TYPE integer USING airtime_to_int(bit_rate) /* TYPE change - table: cc_files original: character varying(32) new: integer */,
 	ALTER COLUMN sample_rate TYPE integer USING airtime_to_int(bit_rate) /* TYPE change - table: cc_files original: character varying(32) new: integer */,
