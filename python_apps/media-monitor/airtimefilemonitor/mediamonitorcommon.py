@@ -236,8 +236,8 @@ class MediaMonitorCommon:
             #/srv/airtime/stor/recorded/year/month/year-month-day-time-showname-bitrate.ext
             if(md['MDATA_KEY_CREATOR'] == u"Airtime Show Recorder"):
                 #yyyy-mm-dd-hh-MM-ss
-                y = orig_md['MDATA_KEY_DATE'].split("-")
-                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded", y[0], y[1], orig_md['MDATA_KEY_DATE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
+                y = orig_md['MDATA_KEY_RECORD_DATE'].split("-")
+                filepath = u'%s/%s/%s/%s/%s-%s-%s%s' % (storage_directory, "recorded", y[0], y[1], orig_md['MDATA_KEY_RECORD_DATE'], md['MDATA_KEY_TITLE'], md['MDATA_KEY_BITRATE'], file_ext)
 
                 #"Show-Title-2011-03-28-17:15:00"
                 title = md['MDATA_KEY_TITLE'].split("-")
@@ -248,7 +248,7 @@ class MediaMonitorCommon:
 
                 new_md = {}
                 new_md["MDATA_KEY_FILEPATH"] = original_path
-                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_DATE'], show_hour, show_min, show_sec)
+                new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_RECORD_DATE'], show_hour, show_min, show_sec)
                 self.md_manager.save_md_to_file(new_md)
 
             elif(md['MDATA_KEY_TRACKNUMBER'] == u'unknown'):

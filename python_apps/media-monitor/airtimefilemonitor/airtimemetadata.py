@@ -3,8 +3,8 @@ import hashlib
 import mutagen
 import logging
 import math
-import datetime
 import re
+import traceback
 from api_clients import api_client
 
 """
@@ -27,8 +27,8 @@ class AirtimeMetadata:
         "MDATA_KEY_COMPOSER": "composer",\
         "MDATA_KEY_ENCODER": "encodedby",\
         "MDATA_KEY_CONDUCTOR": "conductor",\
-        "MDATA_KEY_YEAR": "year",\
-        "MDATA_KEY_DATE": "date",\
+        "MDATA_KEY_RECORD_DATE": "record_date",\
+        "MDATA_KEY_YEAR": "date",\
         "MDATA_KEY_URL": "website",\
         "MDATA_KEY_ISRC": "isrc",\
         "MDATA_KEY_COPYRIGHT": "copyright",\
@@ -46,8 +46,8 @@ class AirtimeMetadata:
         "composer": "MDATA_KEY_COMPOSER",\
         "encodedby": "MDATA_KEY_ENCODER",\
         "conductor": "MDATA_KEY_CONDUCTOR",\
-        "year": "MDATA_KEY_YEAR",\
-        "date": "MDATA_KEY_DATE",\
+        "record_date": "MDATA_KEY_RECORD_DATE",\
+        "date": "MDATA_KEY_YEAR",\
         "website": "MDATA_KEY_URL",\
         "isrc": "MDATA_KEY_ISRC",\
         "copyright": "MDATA_KEY_COPYRIGHT",\
@@ -139,8 +139,14 @@ class AirtimeMetadata:
         #check if file has any metadata
         if file_info is not None:
             for key in file_info.keys() :
-                if key in self.mutagen2airtime and len(file_info[key]) > 0:
-                    md[self.mutagen2airtime[key]] = file_info[key][0]
+                if key in self.mutagen2airtime:
+                    val = file_info[key]
+                    try:
+                        if val is not None and len(val) > 0 and val[0] is not None and len(val[0]) > 0:
+                            md[self.mutagen2airtime[key]] = val[0]
+                    except Exception, e:
+                        self.logger.error('Exception: %s', e)
+                        self.logger.error("traceback: %s", traceback.format_exc())
         if 'MDATA_KEY_TITLE' not in md:
             #get rid of file extension from original name, name might have more than 1 '.' in it.
             original_name = os.path.basename(filepath)
@@ -203,8 +209,8 @@ class AirtimeMetadata:
         if 'MDATA_KEY_YEAR' in md:
             md['MDATA_KEY_YEAR'] = self.truncate_to_length(md['MDATA_KEY_YEAR'], 4)
             
-        if 'MDATA_KEY_DATE' in md:
-            md['MDATA_KEY_DATE'] = self.truncate_to_length(md['MDATA_KEY_DATE'], 16)
+        if 'MDATA_KEY_RECORD_DATE' in md:
+            md['MDATA_KEY_RECORD_DATE'] = self.truncate_to_length(md['MDATA_KEY_RECORD_DATE'], 16)
 
         if 'MDATA_KEY_URL' in md:
             md['MDATA_KEY_URL'] = self.truncate_to_length(md['MDATA_KEY_URL'], 512)
