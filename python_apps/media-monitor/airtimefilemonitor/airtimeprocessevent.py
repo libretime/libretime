@@ -5,6 +5,7 @@ import os
 import shutil
 import difflib
 import traceback
+from subprocess import Popen, PIPE
 
 import pyinotify
 from pyinotify import ProcessEvent
