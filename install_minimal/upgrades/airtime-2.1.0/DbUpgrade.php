@@ -25,6 +25,9 @@ class AirtimeDatabaseUpgrade{
        
         $sql = "INSERT INTO cc_pref(\"keystr\", \"valstr\") VALUES('scheduled_play_switch', 'on')";
         UpgradeCommon::queryDb($sql);
+        
+        $log_sql = "INSERT INTO cc_live_log(\"state\", \"start_time\") VALUES('S', now() at time zone 'UTC')";
+        UpgradeCommon::queryDb($log_sql);
     }
     
     /*
