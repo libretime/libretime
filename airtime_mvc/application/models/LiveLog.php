@@ -22,7 +22,6 @@ class Application_Model_LiveLog
                 array_push($rows, $last_row);
             }
 
-            //$duration = self::GetDuration($rows);
             $hours = 0;
             $minutes = 0;
             $seconds = 0;
@@ -56,6 +55,7 @@ class Application_Model_LiveLog
                             ." WHERE id = '{$row['id']}'";
                 $con->exec($sql_delete);
             }
+            
             $seconds = explode(".", $seconds);
             $duration = new DateInterval("PT". $hours . "H" . $minutes . "M" . $seconds[0] ."S");
             return $duration->format("%H:%i:%s");
@@ -183,17 +183,6 @@ class Application_Model_LiveLog
             Logging::log("GetScheduledDuration - Could not connect to database.");
             exit;
         }
-    }
-
-    public static function GetDuration($rows) {
-        $duration = new DateTime("00:00:00");
-        foreach($rows as $row) {
-            $end = new DateTime($row['end_time']);
-            $start = new DateTime($row['start_time']);
-            $duration->add($start->diff($end));
-        }
-        $duration = $duration->format("H:i:s");
-        return $duration;
     }
 
     public static function UpdateLastLogEndTime($log) {
