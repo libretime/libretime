@@ -31,8 +31,8 @@ $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
-        get_include_path(),
-        realpath($CC_CONFIG['phpDir'] . '/library')
+get_include_path(),
+realpath($CC_CONFIG['phpDir'] . '/library')
 )));
 
 require_once($CC_CONFIG['phpDir'].'/application/models/User.php');
@@ -43,15 +43,38 @@ require_once($CC_CONFIG['phpDir'].'/application/models/Show.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/ShowInstance.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StreamSetting.php');
+require_once($CC_CONFIG['phpDir'].'/application/models/LiveLog.php');
 
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init($CC_CONFIG['phpDir']."/application/configs/airtime-conf-production.php");
 
+//Zend framework
+if (file_exists('/usr/share/php/libzend-framework-php')){
+    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
+}
+
+require_once('Zend/Loader/Autoloader.php');
+$autoloader = Zend_Loader_Autoloader::getInstance();
+
+try {
+    $opts = new Zend_Console_Getopt(
+    array(
+            'test|t' => "Keep broadcast log data\n"
+            )
+            );
+            $opts->parse();
+}
+catch (Zend_Console_Getopt_Exception $e) {
+    print $e->getMessage() .PHP_EOL;
+    exit(1);
+}
+
 if(Application_Model_Preference::GetSupportFeedback() == '1'){
-    $infoArray = Application_Model_Preference::GetSystemInfo(true);
+
+    $infoArray = Application_Model_Preference::GetSystemInfo(true, isset($opts->t));
 
     $url = 'http://stat.sourcefabric.org/index.php?p=airtime';
-    //$url = 'http://stat-dev.sourcefabric.org/index.php?p=airtime';
+    //$url = 'http://localhost:9999/index.php?p=airtime';
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -64,13 +87,13 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
 
     curl_setopt($ch, CURLOPT_POSTFIELDS, $dataArray);
     $result = curl_exec($ch);
-
     curl_close($ch);
 }
 
 // Get latest version from stat server and store to db
 if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
     $url = 'http://stat.sourcefabric.org/airtime-stats/airtime_latest_version';
+    //$url = 'http://localhost:9999/index.php?p=airtime';
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -81,8 +104,12 @@ if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
         echo "curl error: " . curl_error($ch) . "\n";
     } else {
         $resultArray = explode("\n", $result);
-        Application_Model_Preference::SetLatestVersion($resultArray[0]);
-        Application_Model_Preference::SetLatestLink($resultArray[1]);
+        if (isset($resultArray[0])) {
+            Application_Model_Preference::SetLatestVersion($resultArray[0]);
+        }
+        if (isset($resultArray[1])) {
+            Application_Model_Preference::SetLatestLink($resultArray[1]);
+        }
     }
 
     curl_close($ch);

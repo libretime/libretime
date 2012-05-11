@@ -397,7 +397,8 @@ class Application_Model_Preference
     	return $out;
     }
 
-    public static function GetSystemInfo($returnArray=false){
+    public static function GetSystemInfo($returnArray=false, $p_testing)
+    {
     	exec('/usr/bin/airtime-check-system --no-color', $output);
 
     	$output = preg_replace('/\s+/', ' ', $output);
@@ -414,8 +415,8 @@ class Application_Model_Preference
     	
     	$outputArray = array();
 
-    	$outputArray['LIVE_DURATION'] = Application_Model_LiveLog::GetLiveShowDuration();
-    	$outputArray['SCHEDULED_DURATION'] = Application_Model_LiveLog::GetScheduledDuration();
+    	$outputArray['LIVE_DURATION'] = Application_Model_LiveLog::GetLiveShowDuration($p_testing);
+    	$outputArray['SCHEDULED_DURATION'] = Application_Model_LiveLog::GetScheduledDuration($p_testing);
     	$outputArray['SOUNDCLOUD_ENABLED'] = self::GetUploadToSoundcloudOption();
         if ($outputArray['SOUNDCLOUD_ENABLED']) {
     	    $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();

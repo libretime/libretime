@@ -3,14 +3,14 @@
 class Application_Model_LiveLog
 {
 
-    public static function GetLiveShowDuration() {
+    public static function GetLiveShowDuration($p_keepData=false) {
         try {
             $con = Propel::getConnection();
 
             $sql = "SELECT * FROM CC_LIVE_LOG"
-                 ." WHERE state = 'L'"
-                 ." and (start_time >= (now() - INTERVAL '1 day'))"
-                 ." ORDER BY id";
+            ." WHERE state = 'L'"
+            ." and (start_time >= (now() - INTERVAL '1 day'))"
+            ." ORDER BY id";
 
             $rows = $con->query($sql)->fetchAll();
 
@@ -32,7 +32,7 @@ class Application_Model_LiveLog
                 $duration = $start->diff($end);
                 $duration = $duration->format("%H:%i:%s");
                 $intervals = explode(":", $duration);
-                // Trim milliseconds (DateInteral does not support)
+                // Trim milliseconds (DateInterval does not support)
                 $sec = explode(".", $intervals[2]);
                 $intervals[2] = $sec[0];
 
@@ -50,16 +50,19 @@ class Application_Model_LiveLog
 
                 $hours += $intervals[0];
 
-                // Delete data we just used to start a new log history
-                $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                            ." WHERE id = '{$row['id']}'";
-                $con->exec($sql_delete);
+                if (!$p_keepData) {
+                    // Delete data we just used to start a new log history
+                    $sql_delete = "DELETE FROM CC_LIVE_LOG"
+                    ." WHERE id = '{$row['id']}'";
+                    $con->exec($sql_delete);
+                }
             }
-            
+            //Trim milliseconds
             $seconds = explode(".", $seconds);
-            $duration = new DateInterval("PT". $hours . "H" . $minutes . "M" . $seconds[0] ."S");
-            return $duration->format("%H:%i:%s");
-            return $duration;
+            $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
+            //$duration = new DateInterval("PT" . $minutes . "M" . $seconds[0] ."S");
+            //return $duration->format("%i.%s");
+            return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
             Logging::log("GetLiveShowDuration - Could not connect to database.");
@@ -67,14 +70,15 @@ class Application_Model_LiveLog
         }
     }
 
-    public static function GetScheduledDuration() {
+    public static function GetScheduledDuration($p_keepData = false) 
+    {
         try {
             $con = Propel::getConnection();
 
             $sql_get_logs = "SELECT * FROM CC_LIVE_LOG"
-                          ." WHERE state = 'S'"
-                          ." and (start_time >= (now() - INTERVAL '1 day'))"
-                          ." ORDER BY id";
+            ." WHERE state = 'S'"
+            ." and (start_time >= (now() - INTERVAL '1 day'))"
+            ." ORDER BY id";
 
             $rows = $con->query($sql_get_logs)->fetchAll();
 
@@ -95,10 +99,10 @@ class Application_Model_LiveLog
              */
             foreach ($rows as $row) {
                 $sql_get_tracks = "SELECT * FROM cc_schedule"
-                                ." WHERE starts >= '{$row['start_time']}'"
-                                ." AND starts < '{$row['end_time']}'"
-                                ." AND file_id IS NOT NULL"
-                                ." AND media_item_played IS TRUE";
+                ." WHERE starts >= '{$row['start_time']}'"
+                ." AND starts < '{$row['end_time']}'"
+                ." AND file_id IS NOT NULL"
+                ." AND media_item_played IS TRUE";
                 $tracks = $con->query($sql_get_tracks)->fetchAll();
                 foreach ($tracks as $track) {
                     if ($track['ends'] > $row['end_time']) {
@@ -167,17 +171,20 @@ class Application_Model_LiveLog
                     $hours += $intervals[0];
                 }
 
-                //Delete row because we do not need data anymore
-                $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                            ." WHERE id = '{$row['id']}'";
-                $con->exec($sql_delete);
-
+                if (!$p_keepData) {
+                    //Delete row because we do not need data anymore
+                    $sql_delete = "DELETE FROM CC_LIVE_LOG"
+                                ." WHERE id = '{$row['id']}'";
+                    $con->exec($sql_delete);
+                }
             }
 
 
             $seconds = explode(".", $seconds);
-            $duration = new DateInterval("PT". $hours . "H" . $minutes . "M" . $seconds[0] ."S");
-            return $duration->format("%H:%i:%s");
+            $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
+            //$duration = new DateInterval("PT". $minutes . "M" . $seconds[0] ."S");
+            //return $duration->format("%i.%s");
+            return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
             Logging::log("GetScheduledDuration - Could not connect to database.");
@@ -208,12 +215,12 @@ class Application_Model_LiveLog
              * has ended
              */
             $sql_select = "SELECT max(id) from CC_LIVE_LOG"
-                         ." WHERE (state='L' and end_time is NULL) or (state='S' and end_time is NULL)";
+            ." WHERE (state='L' and end_time is NULL) or (state='S' and end_time is NULL)";
             $id = $con->query($sql_select)->fetchColumn(0);
 
             if ($id == null) {
                 $sql_insert = "INSERT INTO CC_LIVE_LOG (state, start_time)"
-                            ." VALUES ('$state', '{$dateTime->format("Y-m-d H:i:s")}')";
+                ." VALUES ('$state', '{$dateTime->format("Y-m-d H:i:s")}')";
                 $con->exec($sql_insert);
             }
 
