@@ -350,7 +350,7 @@ var AIRTIME = (function(AIRTIME) {
                 });
                 
                 //add a tool tip to appear when the user clicks on the type icon.
-                $(nRow).find("td:not(:first, td>img)").qtip({
+                $(nRow).find("td:not(.library_checkbox, .library_type)").qtip({
                     content: {
                         text: "Loading...",
                         title: {
