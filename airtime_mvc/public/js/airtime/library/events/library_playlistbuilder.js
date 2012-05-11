@@ -47,9 +47,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		$('#library_display tr.lib-audio').draggable({
 			helper: function(){
-				
-				mod.addToChosen($(this));
-				
+					
 			    var selected = mod.getChosenAudioFilesLength(),
 			    	container,
 			    	message,
@@ -57,8 +55,8 @@ var AIRTIME = (function(AIRTIME){
 			    	width = li.width(),
 			    	height = li.height();
 			   
-			    if (selected === 1) {
-			    	message = "Adding "+selected+" Item.";
+			    if (selected === 0 || selected === 1) {
+			    	message = "Adding 1 Item.";
 			    }
 			    else {
 			    	message = "Adding "+selected+" Items.";

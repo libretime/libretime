@@ -522,6 +522,8 @@ var AIRTIME = (function(AIRTIME){
 					i,
 					length;
 				
+				AIRTIME.library.addToChosen(ui.item);
+				
 				//filter out anything that isn't an audiofile.
 				aSelected = AIRTIME.library.getSelectedData();
 			    

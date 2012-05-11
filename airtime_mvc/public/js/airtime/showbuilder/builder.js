@@ -697,6 +697,8 @@ var AIRTIME = (function(AIRTIME){
 			
 			fnReceive = function(event, ui) {
 				var aItems = [];
+				
+				AIRTIME.library.addToChosen(ui.item);
 			
 				aItems = AIRTIME.library.getSelectedData();
 				origTrs = aItems;
