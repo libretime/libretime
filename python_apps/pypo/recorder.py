@@ -213,7 +213,8 @@ class Recorder(Thread):
             next_show = getDateTimeObj(start_time)
 
             delta = next_show - tnow
-            out = delta.seconds
+            s = '%s.%s' % (delta.seconds, delta.microseconds)
+            out = float(s)
             
             if out < 5:
                 self.logger.debug("Shows %s", self.shows_to_record)
