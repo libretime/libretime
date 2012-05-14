@@ -15,6 +15,7 @@ cd ${media_monitor_path}
 exec 2>&1
 
 export PYTHONPATH=${api_client_path}
+export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2`
 
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
 exec python -u ${media_monitor_path}${media_monitor_script} > /var/log/airtime/media-monitor/py-interpreter.log 2>&1
