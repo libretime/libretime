@@ -400,7 +400,6 @@ class Application_Model_Preference
     public static function GetSystemInfo($returnArray=false, $p_testing=false)
     {
     	exec('/usr/bin/airtime-check-system --no-color', $output);
-
     	$output = preg_replace('/\s+/', ' ', $output);
 
     	$systemInfoArray = array();
@@ -409,7 +408,12 @@ class Application_Model_Preference
     		if(isset($info[1])){
     			$key = str_replace(' ', '_', trim($info[0]));
     			$key = strtoupper($key);
-    			$systemInfoArray[$key] = $info[1];
+    			if ($key == 'WEB_SERVER' || $key == 'CPU' || $key == 'OS'  || $key == 'TOTAL_RAM' ||
+    	                  $key == 'FREE_RAM' || $key == 'AIRTIME_VERSION' || $key == 'KERNAL_VERSION'  || 
+    	                  $key == 'MACHINE_ARCHITECTURE' || $key == 'TOTAL_MEMORY_MBYTES' || $key == 'TOTAL_SWAP_MBYTES' ||
+    	                  $key == 'PLAYOUT_ENGINE_CPU_PERC' ) {
+    			    $systemInfoArray[$key] = $info[1];
+    	        }
     		}
     	}
     	
