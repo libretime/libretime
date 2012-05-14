@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from mediaconfig import AirtimeMediaConfig
 import traceback
 import os

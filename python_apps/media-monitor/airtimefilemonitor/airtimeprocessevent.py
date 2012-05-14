@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import socket
 import logging
 import time
@@ -217,7 +219,7 @@ class AirtimeProcessEvent(ProcessEvent):
     #directory.
     def process_IN_MOVED_FROM(self, event):
         
-        #we only care about files that have been moved away from imported/ or organize/ dir
+        #we don't care about files that have been moved from problem_directory
         if event.path in self.config.problem_directory:
             return
             
