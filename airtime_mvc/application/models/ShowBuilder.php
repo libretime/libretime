@@ -178,8 +178,10 @@ class Application_Model_ShowBuilder {
             
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
                 $file = Application_Model_StoredFile::Recall($p_item["si_file_id"]);
-                $sid = $file->getSoundCloudId();
-                $row["soundcloud_id"] = $sid; 
+                if (isset($file)) {
+                    $sid = $file->getSoundCloudId();
+                    $row["soundcloud_id"] = $sid;
+                } 
             }
         }
         
