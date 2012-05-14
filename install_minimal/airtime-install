@@ -185,6 +185,14 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
 fi
 set -e
 
+echo "* Making sure /etc/default/locale is set properly"
+update-locale
+cat /etc/default/locale | grep -i "LANG=.*UTF-\?8"
+if [ "$?" != "0" ]; then
+    echo "non UTF-8 default locale found in /etc/default/locale.".PHP_EOL;
+    exit 1
+fi
+
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 
