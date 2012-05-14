@@ -81,7 +81,7 @@ function updateProgressBarValue(){
     var scheduled_play_div = $("#scheduled_play_div");
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
     
-    if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
+    if (currentSong !== null){
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
         if (songPercentDone < 0 || songPercentDone > 100){
             songPercentDone = 0;        
