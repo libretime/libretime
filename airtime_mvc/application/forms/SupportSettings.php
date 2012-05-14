@@ -139,7 +139,7 @@ class Application_Form_SupportSettings extends Zend_Form
             	'readonly'	=> true,
             	'cols'     => 61,
             	'rows'		=> 5,
-                'value' => Application_Model_Preference::GetSystemInfo(),
+                'value' => Application_Model_Preference::GetSystemInfo(false, true),
                 'decorators' => array(
                     'ViewHelper'
                 )

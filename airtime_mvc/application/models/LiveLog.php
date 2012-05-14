@@ -32,10 +32,18 @@ class Application_Model_LiveLog
                 $duration = $start->diff($end);
                 $duration = $duration->format("%H:%i:%s");
                 $intervals = explode(":", $duration);
+                for ($i = 0; $i < sizeof($intervals); $i++) {
+                    if (!isset($intervals[$i])) {
+                        $intervals[$i] = 0;
+                    }
+                }
+                
                 // Trim milliseconds (DateInterval does not support)
                 $sec = explode(".", $intervals[2]);
-                $intervals[2] = $sec[0];
-
+                if (isset($sec[0])) {
+                    $intervals[2] = $sec[0];
+                }
+                
                 $seconds += $intervals[2];
                 if ($seconds / 60 >= 1) {
                     $minutes += 1;
@@ -59,9 +67,12 @@ class Application_Model_LiveLog
             }
             //Trim milliseconds
             $seconds = explode(".", $seconds);
-            $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
-            //$duration = new DateInterval("PT" . $minutes . "M" . $seconds[0] ."S");
-            //return $duration->format("%i.%s");
+            if (isset($seconds[0])) {
+                $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
+            }
+            else {
+                $minutes = (double)(($hours*60)+$minutes);    
+            }
             return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
@@ -70,7 +81,7 @@ class Application_Model_LiveLog
         }
     }
 
-    public static function GetScheduledDuration($p_keepData = false) 
+    public static function GetScheduledDuration($p_keepData=false) 
     {
         try {
             $con = Propel::getConnection();
@@ -118,11 +129,21 @@ class Application_Model_LiveLog
                         $clip_length = $track['clip_length'];
                         //Convert clip_length into seconds
                         $clip_length_intervals = explode(":", $clip_length);
+                        for ($i = 0; $i < sizeof($clip_length_intervals); $i++) {
+                            if (!isset($clip_length_intervals[$i])) {
+                                $clip_length_intervals[$i] = 0;
+                            }
+                        }
                         $clip_length_seconds = $clip_length_intervals[0]*3600 + $clip_length_intervals[1]*60 + $clip_length_intervals[2];
                          
                         $extra_time = $extra_time->format("%H:%i:%s");
                         //Convert extra_time into seconds;
                         $extra_time_intervals = explode(":", $extra_time);
+                        for ($i = 0; $i < sizeof($extra_time_intervals); $i++) {
+                            if (!isset($extra_time_intervals[$i])) {
+                                $extra_time_intervals[$i] = 0;
+                            }
+                        }
                         $extra_time_seconds = $extra_time_intervals[0]*3600 + $extra_time_intervals[1]*60 + $extra_time_intervals[2];
 
                         $clip_length_seconds -= $extra_time_seconds;
@@ -152,9 +173,16 @@ class Application_Model_LiveLog
                     }
 
                     $intervals = explode(":", $clip_length);
+                    for ($i = 0; $i < sizeof($intervals); $i++) {
+                        if (!isset($intervals[$i])) {
+                            $intervals[$i] = 0;
+                        }
+                    }
                     // Trim milliseconds (DateInteral does not support)
                     $sec = explode(".", $intervals[2]);
-                    $intervals[2] = $sec[0];
+                    if (isset($sec[0])) {
+                        $intervals[2] = $sec[0];
+                    }
 
                     $seconds += $intervals[2];
                     if ($seconds / 60 >= 1) {
@@ -181,9 +209,12 @@ class Application_Model_LiveLog
 
 
             $seconds = explode(".", $seconds);
-            $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
-            //$duration = new DateInterval("PT". $minutes . "M" . $seconds[0] ."S");
-            //return $duration->format("%i.%s");
+            if (isset($seconds[0])) {
+                $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
+            }
+            else {
+                $minutes = (double)(($hours*60)+$minutes);
+            }
             return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
