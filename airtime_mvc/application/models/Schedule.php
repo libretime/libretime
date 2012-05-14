@@ -246,7 +246,7 @@ class Application_Model_Schedule {
 
         si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
         si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.instance_id AS parent_show,
-        si.id AS si_id, si.last_scheduled AS si_last_scheduled,
+        si.id AS si_id, si.last_scheduled AS si_last_scheduled, si.file_id AS si_file_id,
 
         sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
         sched.cue_in AS cue_in, sched.cue_out AS cue_out,
@@ -274,6 +274,8 @@ class Application_Model_Schedule {
         }
 
         $sql .= " ORDER BY si.starts, sched.starts;";
+        
+        Logging::debug($sql);
 
         $rows = $con->query($sql)->fetchAll();
         return $rows;

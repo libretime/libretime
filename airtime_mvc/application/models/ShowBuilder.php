@@ -175,6 +175,12 @@ class Application_Model_ShowBuilder {
         }
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
+            
+            if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
+                $file = Application_Model_StoredFile::Recall($p_item["si_file_id"]);
+                $sid = $file->getSoundCloudId();
+                $row["soundcloud_id"] = $sid; 
+            }
         }
         
         if ($startsEpoch < $this->epoch_now && $endsEpoch > $this->epoch_now) {

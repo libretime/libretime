@@ -339,7 +339,8 @@ var AIRTIME = (function(AIRTIME){
 					r,g,b,a,
 					$nRow = $(nRow),
 					$image,
-					$div;
+					$div,
+					headerIcon;
 				
 				fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
 					
@@ -364,8 +365,11 @@ var AIRTIME = (function(AIRTIME){
 					cl = 'sb-header';
 					
 					if (aData.record === true) {
+						
+						headerIcon =  (aData.soundcloud_id > 0) ? "soundcloud" : "recording";
+						
 						$div = $("<div/>", {
-							"class": "small-icon recording"
+							"class": "small-icon " + headerIcon
 						});
 						$node.append($div);
 					}
