@@ -56,32 +56,7 @@ class LibraryController extends Zend_Controller_Action
             }
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-            $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
-
-            if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-
-                //create a menu separator
-                $menu["sep1"] = "-----------";
-
-                //create a sub menu for Soundcloud actions.
-                $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
-
-                $scid = $file->getSoundCloudId();
-
-                if (!is_null($scid)){
-                    $text = "Re-upload to SoundCloud";
-                }
-                else {
-                    $text = "Upload to SoundCloud";
-                }
-
-                $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
-
-                if ($scid > 0){
-                    $url = $file->getSoundCloudLinkToFile();
-                    $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
-                }
-            }
+            $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);   
         }
         else if ($type === "playlist") {
 
@@ -94,6 +69,33 @@ class LibraryController extends Zend_Controller_Action
 
         //Open a jPlayer window and play the audio clip.
         $menu["play"] = array("name"=> "Play", "icon" => "play");
+        
+        
+        //SOUNDCLOUD MENU OPTIONS
+        if ($type === "audioclip" && Application_Model_Preference::GetUploadToSoundcloudOption()) {
+        
+            //create a menu separator
+            $menu["sep1"] = "-----------";
+        
+            //create a sub menu for Soundcloud actions.
+            $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
+        
+            $scid = $file->getSoundCloudId();
+        
+            if (!is_null($scid)){
+                $text = "Re-upload to SoundCloud";
+            }
+            else {
+                $text = "Upload to SoundCloud";
+            }
+        
+            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
+        
+            if ($scid > 0){
+                $url = $file->getSoundCloudLinkToFile();
+                $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
+            }
+        }
             
         $this->view->items = $menu;
     }
