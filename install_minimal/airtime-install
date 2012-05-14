@@ -186,10 +186,12 @@ fi
 set -e
 
 echo "* Making sure /etc/default/locale is set properly"
+set +e
 update-locale
 cat /etc/default/locale | grep -i "LANG=.*UTF-\?8"
+set -e
 if [ "$?" != "0" ]; then
-    echo "non UTF-8 default locale found in /etc/default/locale.".PHP_EOL;
+    echo "non UTF-8 default locale found in /etc/default/locale."
     exit 1
 fi
 
