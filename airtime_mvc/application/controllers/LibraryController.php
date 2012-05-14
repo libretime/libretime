@@ -39,6 +39,9 @@ class LibraryController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
+        
+        //Open a jPlayer window and play the audio clip.
+        $menu["play"] = array("name"=> "Play", "icon" => "play");
 
         if ($type === "audioclip") {
 
@@ -67,9 +70,6 @@ class LibraryController extends Zend_Controller_Action
             $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
         }
 
-        //Open a jPlayer window and play the audio clip.
-        $menu["play"] = array("name"=> "Play", "icon" => "play");
-        
         
         //SOUNDCLOUD MENU OPTIONS
         if ($type === "audioclip" && Application_Model_Preference::GetUploadToSoundcloudOption()) {
