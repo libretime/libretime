@@ -11,7 +11,6 @@ import logging.config
 import logging.handlers
 import locale
 import os
-import re
 from Queue import Queue
 
 from threading import Lock
@@ -71,12 +70,7 @@ def configure_locale():
         else:
             new_locale = default_locale
             
-        test = re.compile(r"UTF-?8", re.IGNORECASE)
-        if test.findall(new_locale):
-            logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
-        else:
-            logger.info("Invalid locale %s", new_locale)
-            sys.exit(1)
+        logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
         
         
             

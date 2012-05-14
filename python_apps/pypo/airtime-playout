@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
@@ -11,6 +11,14 @@ api_client_path="/usr/lib/airtime/"
 pypo_script="pypocli.py"
 cd ${pypo_path}
 exec 2>&1
+
+set +e
+cat /etc/default/locale | grep -i "LANG=.*UTF-\?8"
+set -e
+if [ "$?" != "0" ]; then
+    echo "non UTF-8 default locale found in /etc/default/locale." > /var/log/airtime/pypo/error.log
+    exit 1
+fi
 
 export HOME="/var/tmp/airtime/pypo/"
 export PYTHONPATH=${api_client_path}:$PYTHONPATH
