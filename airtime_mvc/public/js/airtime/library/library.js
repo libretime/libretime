@@ -467,7 +467,7 @@ var AIRTIME = (function(AIRTIME) {
        
         checkImportStatus();
         setInterval(checkImportStatus, 5000);
-        setInterval(checkSCUploadStatus, 5000);
+        setInterval(checkLibrarySCUploadStatus, 5000);
         
         addQtipToSCIcons();
        
@@ -653,28 +653,32 @@ function addProgressIcon(id) {
     }
 }
     
-function checkSCUploadStatus(){
+function checkLibrarySCUploadStatus(){
     
-    var url = '/Library/get-upload-to-soundcloud-status';
+    var url = '/Library/get-upload-to-soundcloud-status',
+    	span,
+    	id;
     
-    $("span[class*=progress]").each(function(){
-        var span, id;
+    function checkSCUploadStatusCallback(json) {
+    	
+        if (json.sc_id > 0) {
+            span.removeClass("progress").addClass("soundcloud");
+            
+        }
+        else if (json.sc_id == "-3") {
+            span.removeClass("progress").addClass("sc-error");
+        }
+    }
+    
+    function checkSCUploadStatusRequest() {
         
         span = $(this);
-        id = span.parent().parent().data("aData").id;
+        id = span.parents("tr").data("aData").id;
        
-        $.post(url, {format: "json", id: id, type:"file"}, function(json){
-            if (json.sc_id > 0) {
-                span.removeClass("progress")
-                    .addClass("soundcloud");
-                
-            }
-            else if (json.sc_id == "-3") {
-                span.removeClass("progress")
-                    .addClass("sc-error");
-            }
-        });
-    });
+        $.post(url, {format: "json", id: id, type:"file"}, checkSCUploadStatusCallback);
+    }
+    
+    $("#library_display span.progress").each(checkSCUploadStatusRequest);
 }
     
 function addQtipToSCIcons(){
