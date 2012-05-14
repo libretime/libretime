@@ -397,7 +397,7 @@ class Application_Model_Preference
     	return $out;
     }
 
-    public static function GetSystemInfo($returnArray=false, $p_testing)
+    public static function GetSystemInfo($returnArray=false, $p_testing=false)
     {
     	exec('/usr/bin/airtime-check-system --no-color', $output);
 
@@ -464,13 +464,19 @@ class Application_Model_Preference
     	    if($key == 'SAAS' && ($out != '' || $out != 'disabled')){
     	        continue;
     	    }
-    	    if($out != ''){
+    	    if($out != '' || is_numeric($out)){
     	        if($key == "STREAM_INFO"){
     	            $outputString .= $key." :\n";
     	            foreach($out as $s_info){
     	                foreach($s_info as $k => $v){
     	                    $outputString .= "\t".strtoupper($k)." : ".$v."\n";
     	                }
+    	            }
+    	        }else if ($key == "SOUNDCLOUD_ENABLED") {
+    	            if ($out) {
+    	                $outputString .= $key." : TRUE\n";
+    	            } else if (!$out) {
+    	                $outputString .= $key." : FALSE\n";
     	            }
     	        }else{
     		        $outputString .= $key.' : '.$out."\n";
