@@ -8,6 +8,7 @@ import os
 import signal
 import traceback
 import locale
+import re
 
 from configobj import ConfigObj
 
@@ -47,7 +48,14 @@ def configure_locale():
         else:
             new_locale = default_locale
             
-        logger.debug("New locale set to: " + locale.setlocale(locale.LC_ALL, new_locale))
+        test = re.compile(r"UTF-?8", re.IGNORECASE)
+        if re.findall(new_locale):
+            logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
+        else:
+            logger.info("Invalid locale %s", new_locale)
+            sys.exit(1)
+        
+        
             
     reload(sys)
     sys.setdefaultencoding("UTF-8")
