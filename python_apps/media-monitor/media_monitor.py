@@ -47,7 +47,7 @@ def configure_locale():
         else:
             new_locale = default_locale
             
-       logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
+        logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
         
         
             
