@@ -336,13 +336,22 @@ $(document).ready(function() {
     				oItems.content.callback = callback;
     			}
     			
-    			//define a soundcloud callback.
-    			if (oItems.soundcloud !== undefined) {
+    			//define a soundcloud upload callback.
+    			if (oItems.soundcloud_upload !== undefined) {
     				
     				callback = function() {
     					uploadToSoundCloud(data.id);
 					};
-    				oItems.soundcloud.callback = callback;
+    				oItems.soundcloud_upload.callback = callback;
+    			}
+    			
+    			//define a view on soundcloud callback.
+    			if (oItems.soundcloud_view !== undefined) {
+    				
+    				callback = function() {
+                        window.open(oItems.soundcloud_view.url);
+                    };
+    				oItems.soundcloud_view.callback = callback;
     			}
     			
     			//define a cancel recorded show callback.

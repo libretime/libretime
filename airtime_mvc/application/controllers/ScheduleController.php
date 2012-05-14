@@ -257,9 +257,18 @@ class ScheduleController extends Zend_Controller_Action
         if ($showEndLocalDT->getTimestamp() <= $epochNow
             && $instance->isRecorded()
             && Application_Model_Preference::GetUploadToSoundcloudOption()) {
+            
+            $file = $instance->getRecordedFile();
+            $fileId = $file->getId();
+            $scid = $instance->getSoundCloudFileId();
+            
+            if ($scid > 0){
+                $url = $file->getSoundCloudLinkToFile();
+                $menu["soundcloud_view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
+            }
 
-                $text = is_null($instance->getSoundCloudFileId()) ? 'Upload to SoundCloud' : 'Re-upload to SoundCloud';
-                $menu["soundcloud"] = array("name"=> $text, "icon" => "soundcloud");
+            $text = is_null($scid) ? 'Upload to SoundCloud' : 'Re-upload to SoundCloud';
+            $menu["soundcloud_upload"] = array("name"=> $text, "icon" => "soundcloud");    
         }
 
         if ($showStartLocalDT->getTimestamp() <= $epochNow &&

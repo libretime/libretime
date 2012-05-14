@@ -81,6 +81,11 @@ class LibraryController extends Zend_Controller_Action
             $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
         
             $scid = $file->getSoundCloudId();
+            
+            if ($scid > 0){
+                $url = $file->getSoundCloudLinkToFile();
+                $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
+            }
         
             if (!is_null($scid)){
                 $text = "Re-upload to SoundCloud";
@@ -90,11 +95,6 @@ class LibraryController extends Zend_Controller_Action
             }
         
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
-        
-            if ($scid > 0){
-                $url = $file->getSoundCloudLinkToFile();
-                $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
-            }
         }
             
         $this->view->items = $menu;
