@@ -497,40 +497,9 @@ class ApiController extends Zend_Controller_Action
 
         if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud())
         {
-        	for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
-
-        		$show = new Application_Model_Show($show_inst->getShowId());
-        		$description = $show->getDescription();
-        		$hosts = $show->getHosts();
-
-        		$tags = array_merge($hosts, array($show_name));
-
-        		try {
-        			$soundcloud = new Application_Model_Soundcloud();
-        			$soundcloud_id = $soundcloud->uploadTrack($file->getFilePath(), $tmpTitle, $description, $tags, $show_start_time, $show_genre);
-        			$file->setSoundCloudFileId($soundcloud_id);
-        			break;
-        		}
-        		catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
-        			$code = $e->getHttpCode();
-                    $msg = $e->getHttpBody();
-                    $temp = explode('"error":',$msg);
-                    $msg = trim($temp[1], '"}');
-                    $this->setSoundCloudErrorCode($code);
-                    $this->setSoundCloudErrorMsg($msg);
-                    // setting sc id to -3 which indicates error
-                    $this->setSoundCloudFileId(SOUNDCLOUD_ERROR);
-        			if(!in_array($code, array(0, 100))) {
-        				break;
-        			}
-        		}
-
-        		sleep($CC_CONFIG['soundcloud-connection-wait']);
-        	}
+            $id = $file->getId();
+            $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
         }
-
-        $this->view->id = $file_id;
-
     }
 
     public function mediaMonitorSetupAction() {
