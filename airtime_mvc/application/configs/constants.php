@@ -26,6 +26,7 @@ define('MDATA_KEY_ENCODER', 'encoded_by');
 define('MDATA_KEY_ISRC', 'isrc_number');
 define('MDATA_KEY_COPYRIGHT', 'copyright');
 define('MDATA_KEY_YEAR', 'year');
+define('MDATA_KEY_RECORD_DATE', 'year');
 define('MDATA_KEY_BPM', 'bpm');
 define('MDATA_KEY_TRACKNUMBER', 'track_number');
 define('MDATA_KEY_CONDUCTOR', 'conductor');
