@@ -17,12 +17,26 @@ ALTER TABLE cc_files
 ALTER TABLE cc_playlist
 	DROP CONSTRAINT cc_playlist_editedby_fkey;
 
+CREATE SEQUENCE cc_live_log_id_seq
+	START WITH 1
+	INCREMENT BY 1
+	NO MAXVALUE
+	NO MINVALUE
+	CACHE 1;
+
 CREATE SEQUENCE cc_subjs_token_id_seq
 	START WITH 1
 	INCREMENT BY 1
 	NO MAXVALUE
 	NO MINVALUE
 	CACHE 1;
+
+CREATE TABLE cc_live_log (
+	id integer DEFAULT nextval('cc_live_log_id_seq'::regclass) NOT NULL,
+	"state" character varying(32) NOT NULL,
+	start_time timestamp without time zone NOT NULL,
+	end_time timestamp without time zone
+);
 
 CREATE TABLE cc_subjs_token (
 	id integer DEFAULT nextval('cc_subjs_token_id_seq'::regclass) NOT NULL,
@@ -35,8 +49,8 @@ CREATE TABLE cc_subjs_token (
 ALTER TABLE cc_files
 	ADD COLUMN utime timestamp(6) without time zone,
 	ADD COLUMN lptime timestamp(6) without time zone,
-	ADD COLUMN soundcloud_upload_time timestamp(6) without time zone,
 	ADD COLUMN file_exists boolean DEFAULT true,
+	ADD COLUMN soundcloud_upload_time timestamp(6) without time zone,
 	ALTER COLUMN bit_rate TYPE integer USING airtime_to_int(bit_rate) /* TYPE change - table: cc_files original: character varying(32) new: integer */,
 	ALTER COLUMN sample_rate TYPE integer USING airtime_to_int(bit_rate) /* TYPE change - table: cc_files original: character varying(32) new: integer */,
 	ALTER COLUMN length TYPE interval /* TYPE change - table: cc_files original: time without time zone new: interval */,
@@ -80,7 +94,7 @@ ALTER TABLE cc_show
 	ADD COLUMN live_stream_using_custom_auth boolean DEFAULT false,
 	ADD COLUMN live_stream_user character varying(255),
 	ADD COLUMN live_stream_pass character varying(255);
-
+   
 ALTER TABLE cc_show_instances
 	ADD COLUMN created timestamp without time zone,
 	ADD COLUMN last_scheduled timestamp without time zone,
@@ -91,6 +105,9 @@ UPDATE cc_show_instances SET created = now();
 
 ALTER TABLE cc_show_instances
 	ALTER COLUMN created SET NOT NULL;
+
+ALTER TABLE cc_live_log
+	ADD CONSTRAINT cc_live_log_pkey PRIMARY KEY (id);
 
 ALTER TABLE cc_subjs_token
 	ADD CONSTRAINT cc_subjs_token_pkey PRIMARY KEY (id);
