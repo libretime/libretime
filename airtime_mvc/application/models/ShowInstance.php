@@ -543,9 +543,6 @@ class Application_Model_ShowInstance {
         }
 
         Application_Model_RabbitMq::PushSchedule();
-        if($recording){
-            Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
-        }
     }
 
     public function setRecordedFile($file_id)
@@ -577,7 +574,7 @@ class Application_Model_ShowInstance {
     {
         $time = $this->_showInstance->getDbTimeFilled();
 		
-        if ($time != "00:00:00") {
+        if ($time != "00:00:00" && $time != null && strcmp($time, '')!=0) {
             $time_arr = explode(".", $time);
             if (count($time_arr) > 1) {
                 $time_arr[1] = "." . $time_arr[1];

@@ -51,6 +51,7 @@ parser.add_option("-c", "--check", help="Check the cached schedule and exit", de
 #logging.captureWarnings(True)
 
 def configure_locale():
+    logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
     current_locale = locale.getlocale()
     
     if current_locale[1] is None:
@@ -69,13 +70,19 @@ def configure_locale():
         else:
             new_locale = default_locale
             
-        logger.debug("New locale set to: " + locale.setlocale(locale.LC_ALL, new_locale))
+        logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
+        
+        
             
-    
+    reload(sys)
+    sys.setdefaultencoding("UTF-8")
     current_locale_encoding = locale.getlocale()[1].lower()
+    logger.debug("sys default encoding %s", sys.getdefaultencoding())
+    logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
     
     if current_locale_encoding not in ['utf-8', 'utf8']:
         logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
+        sys.exit(1)
 
 # configure logging
 try:

@@ -134,7 +134,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         	'readonly'	=> true,
 			'rows'		=> 5,
             'cols'     => 61,
-            'value' => Application_Model_Preference::GetSystemInfo(),
+            'value' => Application_Model_Preference::GetSystemInfo(false, true),
             'decorators' => array(
                 'ViewHelper'
             )

@@ -12,8 +12,17 @@ pypo_script="pypocli.py"
 cd ${pypo_path}
 exec 2>&1
 
+set +e
+cat /etc/default/locale | grep -i "LANG=.*UTF-\?8"
+set -e
+if [ "$?" != "0" ]; then
+    echo "non UTF-8 default locale found in /etc/default/locale." > /var/log/airtime/pypo/error.log
+    exit 1
+fi
+
 export HOME="/var/tmp/airtime/pypo/"
 export PYTHONPATH=${api_client_path}:$PYTHONPATH
+export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 
 # Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
 exec python -u ${pypo_path}${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1

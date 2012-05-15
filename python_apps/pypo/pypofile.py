@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from threading import Thread
 from Queue import Empty
 from configobj import ConfigObj

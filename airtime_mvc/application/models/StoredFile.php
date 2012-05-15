@@ -92,7 +92,9 @@ class Application_Model_StoredFile {
         else {
             $dbMd = array();
             foreach ($p_md as $mdConst => $mdValue) {
-                $dbMd[constant($mdConst)] = $mdValue;
+                if (defined($mdConst)){
+                    $dbMd[constant($mdConst)] = $mdValue;
+                }
             }
             $this->setDbColMetadata($dbMd);
         }
@@ -703,7 +705,7 @@ Logging::log("getting media! - 2");
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
             }
             else {
-                $row['image'] = '<img src="/css/images/icon_playlist.png">';
+                $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
             }
         }
 

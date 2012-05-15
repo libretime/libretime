@@ -105,6 +105,17 @@ if [ "$LSOF_EXIST" != "0" -o "$SUDO_EXIST" != "0" ]; then
     exit 1
 fi
 
+echo "* Making sure /etc/default/locale is set properly"
+set +e
+update-locale
+cat /etc/default/locale | grep -i "LANG=.*UTF-\?8"
+set -e
+if [ "$?" != "0" ]; then
+    echo "non UTF-8 default locale found in /etc/default/locale."
+    exit 1
+fi
+
+
 # Check if airtime exists already
 set +e
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import time
 import logging
 import logging.config
@@ -45,7 +47,9 @@ def configure_locale():
         else:
             new_locale = default_locale
             
-        logger.debug("New locale set to: " + locale.setlocale(locale.LC_ALL, new_locale))
+        logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
+        
+        
             
     reload(sys)
     sys.setdefaultencoding("UTF-8")
