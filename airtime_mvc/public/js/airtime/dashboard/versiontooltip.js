@@ -6,11 +6,12 @@ function getContent() {
     var link = getLatestLink();
     
     var msg = "";
+    // See file airtime_mvc/application/views/helpers/VersionNotify.php for more info
     if(isUpToDate()) {
         msg = "You are running the latest version";
-    } else if(diff <= 1) {  // new version is possible when major diff = 0
+    } else if (diff < 20) {  
         msg = "New version available: " + link;
-    } else if(diff == 2) {
+    } else if (diff < 30) {
         msg = "This version will soon be obsolete.<br/>Please upgrade to " + link;
     } else {
         msg = "This version is no longer supported.<br/>Please upgrade to " + link;
