@@ -603,7 +603,6 @@ class ApiController extends Zend_Controller_Action
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 $filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
-                //$file->setMetadata($md);
             }
         }
         else if ($mode == "delete") {

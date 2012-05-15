@@ -1753,8 +1753,7 @@ class Application_Model_Show {
         ." AND modified_instance != TRUE"
         ." ORDER BY si.starts";
         
-        // Convert back to local timezone
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $numberOfRows = count($rows);
 
         $results['previousShow'] = array();
@@ -1771,6 +1770,7 @@ class Application_Model_Show {
                                 "id"=>$rows[$i-1]['id'],
                                 "instance_id"=>$rows[$i-1]['instance_id'],
                                 "name"=>$rows[$i-1]['name'],
+                                "url"=>$rows[$i-1]['url'],
                                 "start_timestamp"=>$rows[$i-1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i-1]['end_timestamp'],
                                 "starts"=>$rows[$i-1]['starts'],
@@ -1784,6 +1784,7 @@ class Application_Model_Show {
                                 "id"=>$rows[$i+1]['id'],
                                 "instance_id"=>$rows[$i+1]['instance_id'],
                                 "name"=>$rows[$i+1]['name'],
+                                "url"=>$rows[$i+1]['url'],
                                 "start_timestamp"=>$rows[$i+1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
                                 "starts"=>$rows[$i+1]['starts'],
@@ -1802,6 +1803,7 @@ class Application_Model_Show {
                                 "id"=>$rows[$i]['id'],
                                 "instance_id"=>$rows[$i]['instance_id'],
                                 "name"=>$rows[$i]['name'],
+                                "url"=>$rows[$i]['url'],
                                 "start_timestamp"=>$rows[$i]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i]['end_timestamp'],
                                 "starts"=>$rows[$i]['starts'],
