@@ -653,6 +653,10 @@ class Application_Model_Scheduler {
                     $this->removeItems($remove, false);
                 }
             }
+            else {
+                $rebroadcasts = $instance->getCcShowInstancessRelatedByDbId(null, $this->con);
+                $rebroadcasts->delete($this->con);
+            }
                 
             $instance->setDbEnds($this->nowDT);
             $instance->save($this->con);
