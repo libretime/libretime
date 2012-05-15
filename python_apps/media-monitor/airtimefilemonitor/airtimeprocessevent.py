@@ -127,7 +127,10 @@ class AirtimeProcessEvent(ProcessEvent):
             del self.create_dict[event.pathname]
             self.handle_created_file(event.dir, event.pathname, event.name)
         except KeyError, e:
-            self.logger.error("%s does not exist in create_dict", event.pathname)
+            pass
+            #self.logger.warn("%s does not exist in create_dict", event.pathname)
+            #Uncomment the above warning when we fix CC-3830 for 2.1.1
+            
         
     def handle_created_file(self, dir, pathname, name):
         if not dir:
