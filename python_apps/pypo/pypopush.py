@@ -77,6 +77,8 @@ class PypoPush(Thread):
                 if len(current_event_chain) > 0 and len(liquidsoap_queue_approx) == 0:
                     #Something is scheduled but Liquidsoap is not playing anything!
                     #Need to schedule it immediately..this might happen if Liquidsoap crashed.
+                    chains.remove(current_event_chain)
+                    
                     self.modify_cue_point(current_event_chain[0])
                     next_media_item_chain = current_event_chain
                     time_until_next_play = 0
@@ -84,8 +86,8 @@ class PypoPush(Thread):
                     media_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
                     self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, media_chain)
                     
-                    #chains = self.get_all_chains(media_schedule) 
                     next_media_item_chain = self.get_next_schedule_chain(chains)
+                    chains.remove(next_media_item_chain)
                     
                     self.logger.debug("Next schedule chain: %s", next_media_item_chain)                
                     if next_media_item_chain is not None:
@@ -100,8 +102,6 @@ class PypoPush(Thread):
                 #We only get here when a new chain of tracks are ready to be played.
                 self.push_to_liquidsoap(next_media_item_chain)
                                 
-                chains.remove(next_media_item_chain)
-                
                 next_media_item_chain = self.get_next_schedule_chain(chains)
                 if next_media_item_chain is not None:
                     tnow = datetime.utcnow()
