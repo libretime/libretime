@@ -543,9 +543,6 @@ class Application_Model_ShowInstance {
         }
 
         Application_Model_RabbitMq::PushSchedule();
-        if($recording){
-            Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
-        }
     }
 
     public function setRecordedFile($file_id)

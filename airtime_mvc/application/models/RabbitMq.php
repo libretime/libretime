@@ -82,7 +82,7 @@ class Application_Model_RabbitMq
 
         $temp['event_type'] = $event_type;
         $temp['server_timezone'] = Application_Model_Preference::GetTimezone();
-        if($event_type = "update_recorder_schedule"){
+        if($event_type == "update_recorder_schedule"){
             $temp['shows'] = Application_Model_Show::getShows($now, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
         }
         $data = json_encode($temp);
