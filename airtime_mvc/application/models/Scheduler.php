@@ -652,14 +652,11 @@ class Application_Model_Scheduler {
                     
                     $this->removeItems($remove, false);
                 }
+            }
                 
-                $instance->setDbEnds($this->nowDT);
-                $instance->save($this->con);
-            }
-            else {
-                $instance->delete($this->con);
-            }
-               
+            $instance->setDbEnds($this->nowDT);
+            $instance->save($this->con);
+   
             $this->con->commit();
             
             if ($instance->getDbRecord()) {

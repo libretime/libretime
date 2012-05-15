@@ -849,7 +849,7 @@ var AIRTIME = (function(AIRTIME){
 					data = $tr.data("aData");
 					
 					if (data.record === true) {
-						msg = 'Erase current show and stop recording?';
+						msg = 'Stop recording current show?';
 					}
 					
 					if (confirm(msg)) {
