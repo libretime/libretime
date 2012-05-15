@@ -92,7 +92,9 @@ class Application_Model_StoredFile {
         else {
             $dbMd = array();
             foreach ($p_md as $mdConst => $mdValue) {
-                $dbMd[constant($mdConst)] = $mdValue;
+                if (defined($mdConst)){
+                    $dbMd[constant($mdConst)] = $mdValue;
+                }
             }
             $this->setDbColMetadata($dbMd);
         }
