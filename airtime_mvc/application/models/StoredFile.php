@@ -703,7 +703,7 @@ Logging::log("getting media! - 2");
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
             }
             else {
-                $row['image'] = '<img src="/css/images/icon_playlist.png">';
+                $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
             }
         }
 
