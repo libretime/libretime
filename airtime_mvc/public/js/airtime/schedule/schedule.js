@@ -46,7 +46,7 @@ function confirmCancelShow(show_instance_id){
 }
 
 function confirmCancelRecordedShow(show_instance_id){
-    if (confirm('Erase current show and stop recording?')) {
+    if (confirm('Stop recording current show?')) {
         var url = "/Schedule/cancel-current-show";
         $.ajax({
 	        url: url,

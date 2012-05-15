@@ -465,26 +465,24 @@ class Application_Model_Preference
 
     	$outputString = "\n";
     	foreach($outputArray as $key => $out){
-    	    if($key == 'SAAS' && ($out != '' || $out != 'disabled')){
+    	    if($key == 'TRIAL_END_DATE' && ($out != '' || $out != 'NULL')){
     	        continue;
     	    }
-    	    if($out != '' || is_numeric($out)){
-    	        if($key == "STREAM_INFO"){
-    	            $outputString .= $key." :\n";
-    	            foreach($out as $s_info){
-    	                foreach($s_info as $k => $v){
-    	                    $outputString .= "\t".strtoupper($k)." : ".$v."\n";
-    	                }
+    	    if($key == "STREAM_INFO"){
+    	        $outputString .= $key." :\n";
+    	        foreach($out as $s_info){
+    	            foreach($s_info as $k => $v){
+    	                $outputString .= "\t".strtoupper($k)." : ".$v."\n";
     	            }
-    	        }else if ($key == "SOUNDCLOUD_ENABLED") {
-    	            if ($out) {
-    	                $outputString .= $key." : TRUE\n";
-    	            } else if (!$out) {
-    	                $outputString .= $key." : FALSE\n";
-    	            }
-    	        }else{
-    		        $outputString .= $key.' : '.$out."\n";
     	        }
+    	    }else if ($key == "SOUNDCLOUD_ENABLED") {
+    	        if ($out) {
+    	            $outputString .= $key." : TRUE\n";
+    	        } else if (!$out) {
+    	            $outputString .= $key." : FALSE\n";
+    	        }
+    	    }else{
+    	        $outputString .= $key.' : '.$out."\n";
     	    }
     	}
     	if($returnArray){
