@@ -282,7 +282,7 @@ function ScheduleData(data){
     
 
     this.schedulePosixTime = convertDateToPosixTime(data.schedulerTime);
-    this.schedulePosixTime += parseInt(data.timezoneOffset)*1000;
+    //this.schedulePosixTime += parseInt(data.timezoneOffset, 10)*1000;
     var date = new Date();
     this.localRemoteTimeOffset = date.getTime() - this.schedulePosixTime;
 }

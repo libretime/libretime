@@ -1753,8 +1753,7 @@ class Application_Model_Show {
         ." AND modified_instance != TRUE"
         ." ORDER BY si.starts";
         
-        // Convert back to local timezone
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $numberOfRows = count($rows);
 
         $results['previousShow'] = array();
