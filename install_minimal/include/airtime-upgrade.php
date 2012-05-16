@@ -5,10 +5,6 @@
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-require_once(__DIR__.'/airtime-constants.php');
-require_once(dirname(__FILE__).'/AirtimeIni.php');
-require_once(dirname(__FILE__).'/AirtimeInstall.php');
-
 if(posix_geteuid() != 0) {
     echo "Must be root user.\n";
     exit(1);
@@ -39,6 +35,29 @@ $con = Propel::getConnection();
 $version = AirtimeInstall::GetVersionInstalled();
 
 echo "******************************** Upgrade Begin *********************************".PHP_EOL;
+
+global $CC_CONFIG;
+$user = $CC_CONFIG['dsn']['username'];
+$password = $CC_CONFIG['dsn']['password'];
+$host = $CC_CONFIG['dsn']['hostspec'];
+$database = $CC_CONFIG['dsn']['database'];
+$airtime_version = AIRTIME_VERSION;
+
+$target_dir = trim(getenv("HOME"));
+if (strlen($target_dir) == 0){
+    $target_dir = "/tmp";
+}
+
+$target_file = "/airtime_$airtime_version.sql";
+$target_path = $target_dir.$target_file;
+echo "* Backing up current database to $target_path".PHP_EOL;
+exec("export PGPASSWORD=$password && pg_dump -h $host -U $user -f $target_path $database", $arr, $return_code);
+if ($return_code == 0){
+    echo " * Success".PHP_EOL;
+} else {
+    echo " * Failed".PHP_EOL;
+    exit(1);
+}
 
 //convert strings like 1.9.0-devel to 1.9.0
 $version = substr($version, 0, 5);
