@@ -202,7 +202,7 @@ class PypoPush(Thread):
         for queue_item in liquidsoap_queue_approx:
             if queue_item['start'] in media_schedule.keys():
                 media_item = media_schedule[queue_item['start']]
-                if queue_item['id'] == media_item['id']:
+                if queue_item['row_id'] == media_item['row_id']:
                     if queue_item['end'] == media_item['end']:
                         #Everything OK for this iteration.
                         pass
