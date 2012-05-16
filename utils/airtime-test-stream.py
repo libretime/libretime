@@ -33,12 +33,9 @@ def find_liquidsoap_binary():
     the location of this binary.
     """
     
-    rv = subprocess.call("which liquidsoap > /dev/null", shell=True)
+    rv = subprocess.call("which airtime-liquidsoap > /dev/null", shell=True)
     if rv == 0:
-        return "liquidsoap"
-    else:
-        if os.path.exists("/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"):
-            return "/usr/lib/airtime/pypo/bin/liquidsoap_bin/liquidsoap"
+        return "airtime-liquidsoap"
 
     return None
 
