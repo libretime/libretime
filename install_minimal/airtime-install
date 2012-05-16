@@ -39,7 +39,7 @@ showrecorder="f"
 web="f"
 liquidsoap_keep_alive="f"
 
-set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,show-recorder,web,liquidsoap-keep-alive "hopnrmyswl" "$@")
+set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,web,liquidsoap-keep-alive "hopnrmywl" "$@")
 while [ $# -gt 0 ]
 do
     case "$1" in
@@ -50,7 +50,6 @@ do
     (-r|--reinstall) reinstall="t";;
     (-m|--media-monitor) mediamonitor="t";;
     (-y|--pypo) pypo="t";;
-    (-s|--show-recorder) showrecorder="t";;
     (-w|--web) web="t";;
     (-l|--liquidsoap-keep-alive) liquidsoap_keep_alive="t";;
     
@@ -61,7 +60,7 @@ do
     shift
 done
 
-if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$showrecorder" = "f" -a "$web" = "f" ]; then
+if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$web" = "f" ]; then
     #none of these install parameters were specified, so by default we install all of them
     mediamonitor="t"
     pypo="t"
@@ -172,7 +171,7 @@ export preserve
 export liquidsoap_keep_alive
 
 set +e
-test "$mediamonitor" = "t" -o "$pypo" = "t" -o "$showrecorder" = "t"
+test "$mediamonitor" = "t" -o "$pypo" = "t"
 export python_service=$?
 set -e
 
@@ -208,7 +207,7 @@ set -e
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 
-if [ "$mediamonitor" = "t" -o "$pypo" = "t" -o "$showrecorder" = "t" ]; then
+if [ "$mediamonitor" = "t" -o "$pypo" = "t" ]; then
     #deactivate virtualenv
     deactivate
 fi
