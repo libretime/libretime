@@ -125,6 +125,15 @@ set -e
 DO_UPGRADE="0"
 if [ "$result" -eq "0" ]; then
     echo " * None found."
+    
+    #Make sure any straggler config files are removed. Reason for this is that they may be from
+    #an older version of Airtime, but since there no database installed, we have no idea how to 
+    #handle these (what version are they from?). 
+    rm -f "/etc/airtime/airtime.conf"
+    rm -f "/etc/airtime/api_client.cfg"
+    rm -f "/etc/airtime/liquidsoap.cfg"
+    rm -f "/etc/airtime/media-monitor.cfg"
+    rm -f "/etc/airtime/pypo.cfg"
 elif [ "$result" -eq "1" -a "$reinstall" = "f" ]; then
     echo " * Same version of Airtime already installed!"
     exit 1;
