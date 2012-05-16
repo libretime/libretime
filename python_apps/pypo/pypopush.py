@@ -173,7 +173,7 @@ class PypoPush(Thread):
             #Items that are in Liquidsoap's queue aren't scheduled anymore. We need to connect
             #and remove these items.
             self.logger.debug("Change in link %s of current chain", problem_at_iteration)
-            self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx)
+            self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx[problem_at_iteration:])
         
         if problem_at_iteration is None and len(media_chain) > len(liquidsoap_queue_approx):
             self.logger.debug("New schedule has longer current chain.")
@@ -339,48 +339,44 @@ class PypoPush(Thread):
         finally:
             self.telnet_lock.release()        
                 
-    def remove_from_liquidsoap_queue(self, problem_at_iteration, liquidsoap_queue_approx):        
-        iteration = 0
+    def remove_from_liquidsoap_queue(self, problem_at_iteration, liquidsoap_queue_approx):
         
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            
-            queue_copy = list(liquidsoap_queue_approx)
-            is_current_playing_removed = problem_at_iteration == 0
-            
+                        
             # If the current playing item is to be removed, let's remove it last
             # otherwise if we remove it first, the item after it that we also intend
             # to remove will quickly slide into the current playing position. This seems
             # to confuse Liquidsoap.
-            if is_current_playing_removed:
-                queue_copy = queue_copy[::-1]
+            queue_copy = liquidsoap_queue_approx[::-1]
             
             for queue_item in queue_copy:
-                if iteration >= problem_at_iteration:
-
-                    msg = "queue.remove %s\n" % queue_item['queue_id']
+                msg = "queue.remove %s\n" % queue_item['queue_id']
+                self.logger.debug(msg)
+                tn.write(msg)
+                response = tn.read_until("\r\n").strip("\r\n")
+                
+                if "No such request in my queue" in response:
+                    """
+                    Cannot remove because Liquidsoap started playing the item. Need
+                    to use source.skip instead
+                    """
+                    msg = "source.skip\n"
                     self.logger.debug(msg)
                     tn.write(msg)
-                    response = tn.read_until("\r\n").strip("\r\n")
-                    
-                    if "No such request in my queue" in response:
-                        """
-                        Cannot remove because Liquidsoap started playing the item. Need
-                        to use source.skip instead
-                        """
-                        msg = "source.skip\n"
-                        self.logger.debug(msg)
-                        tn.write(msg)
-                iteration += 1
                 
-            if is_current_playing_removed:
+            if problem_at_iteration == 0:
                 msg = "source.skip\n"
                 self.logger.debug(msg)
                 tn.write(msg)
+                
+            msg = "queue.queue\n"
+            self.logger.debug(msg)
+            tn.write(msg)
                         
             tn.write("exit\n")
-            tn.read_all()
+            self.logger.debug(tn.read_all())
         except Exception, e:
             self.logger.error(str(e))
         finally:
