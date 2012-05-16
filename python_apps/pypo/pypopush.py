@@ -346,7 +346,17 @@ class PypoPush(Thread):
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             
-            for queue_item in liquidsoap_queue_approx:
+            queue_copy = list(liquidsoap_queue_approx)
+            is_current_playing_removed = problem_at_iteration == 0
+            
+            # If the current playing item is to be removed, let's remove it last
+            # otherwise if we remove it first, the item after it that we also intend
+            # to remove will quickly slide into the current playing position. This seems
+            # to confuse Liquidsoap.
+            if is_current_playing_removed:
+                queue_copy = queue_copy[::-1]
+            
+            for queue_item in queue_copy:
                 if iteration >= problem_at_iteration:
 
                     msg = "queue.remove %s\n" % queue_item['queue_id']
@@ -363,6 +373,11 @@ class PypoPush(Thread):
                         self.logger.debug(msg)
                         tn.write(msg)
                 iteration += 1
+                
+            if is_current_playing_removed:
+                msg = "source.skip\n"
+                self.logger.debug(msg)
+                tn.write(msg)
                         
             tn.write("exit\n")
             tn.read_all()
