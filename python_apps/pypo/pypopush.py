@@ -87,10 +87,10 @@ class PypoPush(Thread):
                     self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, media_chain)
                     
                     next_media_item_chain = self.get_next_schedule_chain(chains)
-                    chains.remove(next_media_item_chain)
                     
                     self.logger.debug("Next schedule chain: %s", next_media_item_chain)                
                     if next_media_item_chain is not None:
+                        chains.remove(next_media_item_chain)
                         tnow = datetime.utcnow()
                         chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
                         time_until_next_play = self.date_interval_to_seconds(chain_start - tnow)
