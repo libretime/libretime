@@ -91,8 +91,8 @@ try:
         response = api_client.setup_media_monitor()
         time.sleep(5)
         
-    storage_directory = apc.encode_to(response["stor"], 'utf-8')
-    watched_dirs = apc.encode_to(response["watched_dirs"], 'utf-8')
+    storage_directory = response["stor"]
+    watched_dirs = response["watched_dirs"]
     logger.info("Storage Directory is: %s", storage_directory)
     config.storage_directory = os.path.normpath(storage_directory)
     config.imported_directory = os.path.normpath(os.path.join(storage_directory, 'imported'))

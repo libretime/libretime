@@ -77,7 +77,7 @@ class AirtimeNotifier(Notifier):
             self.watch_directory(m['directory'])
 
         elif m['event_type'] == "remove_watch":
-            watched_directory = api_client.encode_to(m['directory'], 'utf-8')
+            watched_directory = m['directory']
 
             mm = self.proc_fun()
             wd = mm.wm.get_wd(watched_directory)
@@ -86,8 +86,8 @@ class AirtimeNotifier(Notifier):
 
         elif m['event_type'] == "change_stor":
             storage_directory = self.config.storage_directory
-            new_storage_directory = api_client.encode_to(m['directory'], 'utf-8')
-            new_storage_directory_id = api_client.encode_to(str(m['dir_id']), 'utf-8')
+            new_storage_directory = m['directory']
+            new_storage_directory_id = str(m['dir_id'])
 
             mm = self.proc_fun()
 
@@ -111,7 +111,7 @@ class AirtimeNotifier(Notifier):
 
             self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
-            filepath = api_client.encode_to(m['filepath'], 'utf-8')
+            filepath = m['filepath']
 
             mm = self.proc_fun()
             self.logger.info("Adding file to ignore: %s ", filepath)
