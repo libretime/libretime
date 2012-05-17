@@ -24,7 +24,6 @@ showhelp () {
 --reinstall|-r                    Force a fresh install of this Airtime Version
 --media-monitor|-m                Install only media-monitor
 --pypo|-p                         Install only pypo and liquidsoap
---show-recorder|-s                Install only show-recorder
 --web|-w                          Install only files for web-server
 --liquidsoap-keep-alive|-l        Keep Liquidsoap alive when upgrading"
 }
