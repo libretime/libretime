@@ -345,31 +345,28 @@ class PypoPush(Thread):
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
                         
-            # If the current playing item is to be removed, let's remove it last
-            # otherwise if we remove it first, the item after it that we also intend
-            # to remove will quickly slide into the current playing position. This seems
-            # to confuse Liquidsoap.
-            queue_copy = liquidsoap_queue_approx[::-1]
-            
-            for queue_item in queue_copy:
-                msg = "queue.remove %s\n" % queue_item['queue_id']
-                self.logger.debug(msg)
-                tn.write(msg)
-                response = tn.read_until("\r\n").strip("\r\n")
-                
-                if "No such request in my queue" in response:
-                    """
-                    Cannot remove because Liquidsoap started playing the item. Need
-                    to use source.skip instead
-                    """
-                    msg = "source.skip\n"
-                    self.logger.debug(msg)
-                    tn.write(msg)
-                
             if problem_at_iteration == 0:
                 msg = "source.skip\n"
                 self.logger.debug(msg)
                 tn.write(msg)
+            else:
+                # Remove things in reverse order.
+                queue_copy = liquidsoap_queue_approx[::-1]
+                
+                for queue_item in queue_copy:
+                    msg = "queue.remove %s\n" % queue_item['queue_id']
+                    self.logger.debug(msg)
+                    tn.write(msg)
+                    response = tn.read_until("\r\n").strip("\r\n")
+                    
+                    if "No such request in my queue" in response:
+                        """
+                        Cannot remove because Liquidsoap started playing the item. Need
+                        to use source.skip instead
+                        """
+                        msg = "source.skip\n"
+                        self.logger.debug(msg)
+                        tn.write(msg)
                 
             msg = "queue.queue\n"
             self.logger.debug(msg)
