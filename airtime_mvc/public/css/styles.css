@@ -134,7 +134,7 @@ select {
 .info-tooltip:hover span {
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
         position: absolute; left: 25px; top: -18px; z-index: 99;
-        margin-left: 0; width: 250px;
+        margin-left: 0; width: 200px;
 }
 /* Info Tooltip Ends */
 
