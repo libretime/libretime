@@ -112,7 +112,7 @@ select {
         display:inline-block; zoom:1; display:inline;
         width:14px; height:14px;
         background:url(/css/images/icon_info.png) 0 0 no-repeat;
-        float:right; position:relative; top:2px; right:7px;
+        float:right; position:relative; top:4px; right:7px; left: 3px;
         line-height:16px !important;
 }
 .info-tooltip span {
@@ -440,6 +440,12 @@ label {
 	font-size:13px;
 	color:#5b5b5b;
 	padding:0 16px 0 0;
+}
+.static_text {
+  font-size:13px;
+  color:#3b3b3b;
+  padding:0 16px 0 0;
+  word-wrap: break-word;
 }
 #library_quick_search {
 	margin-bottom:16px;
@@ -2564,7 +2570,7 @@ dd .stream-status {
 }
 
 .stream-setting-global dt{
-	width: 180px;
+	width: 195px;
 }
 
 .stream-setting-global dd{
