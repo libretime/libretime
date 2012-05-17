@@ -324,8 +324,8 @@ function controlOnAirLight(){
     if ((scheduled_play_on_air && scheduled_play_source) || live_dj_on_air || master_dj_on_air) {
         $('#on-air-info').attr("class", "on-air-info on");
         onAirOffIterations = 0;
-    } else if (onAirOffIterations < 15) {
-        //if less than 3 seconds have gone by (< 15 executions of this function)
+    } else if (onAirOffIterations < 20) {
+        //if less than 4 seconds have gone by (< 20 executions of this function)
         //then keep the ON-AIR light on. Only after at least 3 seconds have gone by, 
         //should we be allowed to turn it off. This is to stop the light from temporarily turning
         //off between tracks: CC-3725
