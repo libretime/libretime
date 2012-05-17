@@ -47,8 +47,10 @@ function secondsTimer(){
 
 function newSongStart(){
     nextSongPrepare = true;
-    currentSong = nextSong;
-    nextSong = null;   
+    if (nextSong.type == 'track') {
+        currentSong = nextSong;
+        nextSong = null;
+    }   
 }
 
 function nextShowStart(){
@@ -74,12 +76,14 @@ function updateProgressBarValue(){
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
     
     if (currentSong !== null){	
+        var songElpasedTime = 0;
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
+        songElapsedTime = estimatedSchedulePosixTime - currentSong.songStartPosixTime;
         if (songPercentDone < 0 || songPercentDone > 100){
             songPercentDone = 0;        
             currentSong = null;
         } else {
-            if (currentSong.media_item_played == true && currentShow.length > 0) {
+            if ((currentSong.media_item_played == true && currentShow.length > 0) || songElapsedTime < 5000) {
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
                 scheduled_play_div.addClass("ready");
                 scheduled_play_source = true;
