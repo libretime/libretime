@@ -130,8 +130,8 @@ case "${1:-''}" in
   'restart-liquidsoap')
            # restart commands here
            echo -n "Restarting Liquidsoap: "
-           stop-liquidsoap
-           start-liquidsoap
+           liquidsoap_stop
+           liquidsoap_start
            echo "Done."
         ;;
   'pypo-stop')
