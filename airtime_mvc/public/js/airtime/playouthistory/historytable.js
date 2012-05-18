@@ -62,7 +62,7 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": true,
            
-            "sDom": 'lfr<"H"T><"dataTables_scrolling"t><"F"ip>', 
+            "sDom": 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
                 "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf"
