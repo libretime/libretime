@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+.dataTables_filter input {
+	width: 30%;
+}
+
+#history_content input.input_text.hasDatepicker {
+    width: 95px;
+}
+
+#history_content input.input_text.hasTimepicker {
+    width: 60px;
+}
+
+div.his-timerange {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+div.his-timerange div {
+    position: absolute;
+    bottom: 0px;
+    padding: 3px;
+    margin-left: 5px;
+}

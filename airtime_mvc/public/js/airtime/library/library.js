@@ -217,6 +217,25 @@ var AIRTIME = (function(AIRTIME) {
     libraryInit = function() {
     	
         $libContent = $("#library_content");
+        
+        /*
+         * Icon hover states in the toolbar.
+         */
+        $libContent.on("mouseenter", ".fg-toolbar ul li", function(ev) {
+        	$el = $(this);
+        	
+        	if (!$el.hasClass("ui-state-disabled")) {
+        		$el.addClass("ui-state-hover");
+        	}     	
+        });
+        $libContent.on("mouseleave", ".fg-toolbar ul li", function(ev) {
+        	$el = $(this);
+        	
+        	if (!$el.hasClass("ui-state-disabled")) {
+        		$el.removeClass("ui-state-hover");
+        	} 
+        });
+              
         $libTable = $libContent.find("table");
         
         var tableHeight = $libContent.height() - 130;

@@ -257,6 +257,24 @@ var AIRTIME = (function(AIRTIME){
 		$lib = $("#library_content"),
 		$sbTable = $sbContent.find('table');
 		
+		/*
+         * Icon hover states in the toolbar.
+         */
+		$sbContent.on("mouseenter", ".fg-toolbar ul li", function(ev) {
+        	$el = $(this);
+        	
+        	if (!$el.hasClass("ui-state-disabled")) {
+        		$el.addClass("ui-state-hover");
+        	}     	
+        });
+		$sbContent.on("mouseleave", ".fg-toolbar ul li", function(ev) {
+        	$el = $(this);
+        	
+        	if (!$el.hasClass("ui-state-disabled")) {
+        		$el.removeClass("ui-state-hover");
+        	} 
+        });
+		
 		oSchedTable = $sbTable.dataTable( {
 			"aoColumns": [
 		    /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "15px", "sClass": "sb-checkbox"},

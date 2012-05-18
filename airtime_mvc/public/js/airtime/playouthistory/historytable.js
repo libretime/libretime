@@ -93,6 +93,16 @@ $(document).ready(function(){
 		dateEndId = "#his_date_end",
 		timeEndId = "#his_time_end";
 	
+	/*
+     * Icon hover states for search.
+     */
+	history_content.on("mouseenter", ".his-timerange .ui-button", function(ev) {
+    	$(this).addClass("ui-state-hover"); 	
+    });
+	history_content.on("mouseleave", ".his-timerange .ui-button", function(ev) {
+    	$(this).removeClass("ui-state-hover");
+    });
+	
 	history_content
 		.height(widgetHeight)
 		.width(screenWidth);
