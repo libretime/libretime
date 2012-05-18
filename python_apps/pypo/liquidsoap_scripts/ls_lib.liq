@@ -209,7 +209,7 @@ def add_skip_command(s)
     # get playing (active) queue and flush it
     l = list.hd(server.execute("queue.secondary_queue"))
     l = string.split(separator=" ",l)
-    list.iter(fun (rid) -> ignore(server.execute("queue.ignore #{rid}")), l)
+    list.iter(fun (rid) -> ignore(server.execute("queue.remove #{rid}")), l)
 
     l = list.hd(server.execute("queue.primary_queue"))
     l = string.split(separator=" ", l)
