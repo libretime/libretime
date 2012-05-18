@@ -85,7 +85,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $systemEmail->class = 'input_text';
         $systemEmail->setRequired(false)
             ->setValue(Application_Model_Preference::GetSystemEmail())
-            ->setLabel('Airtime System Email')
+            ->setLabel('Reset Password \'From\' Email')
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                         'NotEmpty',
