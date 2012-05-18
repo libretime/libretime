@@ -1764,6 +1764,7 @@ class Application_Model_Show {
 
         for( $i = 0; $i < $numberOfRows; ++$i ){
             //Find the show that is within the current time.
+            $rows[$i]['type'] = 'show';
             if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previousShow'][0] = array(
@@ -1774,7 +1775,8 @@ class Application_Model_Show {
                                 "start_timestamp"=>$rows[$i-1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i-1]['end_timestamp'],
                                 "starts"=>$rows[$i-1]['starts'],
-                                "ends"=>$rows[$i-1]['ends']);
+                                "ends"=>$rows[$i-1]['ends'],
+                                "type"=>$rows[$i-1]['type']);
                 }
 
                 $results['currentShow'][0] =  $rows[$i];
@@ -1788,7 +1790,8 @@ class Application_Model_Show {
                                 "start_timestamp"=>$rows[$i+1]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
                                 "starts"=>$rows[$i+1]['starts'],
-                                "ends"=>$rows[$i+1]['ends']);
+                                "ends"=>$rows[$i+1]['ends'],
+                                "type"=>$rows[$i+1]['type']);
 
                 }
                 break;
@@ -1807,7 +1810,8 @@ class Application_Model_Show {
                                 "start_timestamp"=>$rows[$i]['start_timestamp'],
                                 "end_timestamp"=>$rows[$i]['end_timestamp'],
                                 "starts"=>$rows[$i]['starts'],
-                                "ends"=>$rows[$i]['ends']);
+                                "ends"=>$rows[$i]['ends'],
+                                "type"=>$rows[$i]['type']);
                 break;
             }
         }
@@ -1821,8 +1825,10 @@ class Application_Model_Show {
                     "start_timestamp"=>$rows[$previousShowIndex]['start_timestamp'],
                     "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
                     "starts"=>$rows[$previousShowIndex]['starts'],
-                    "ends"=>$rows[$previousShowIndex]['ends']);
+                    "ends"=>$rows[$previousShowIndex]['ends'],
+                    "type"=>$rows[$previousShowIndex]['type']);
         }
+        
         return $results;
     }
 

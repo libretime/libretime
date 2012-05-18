@@ -87,7 +87,9 @@ $(document).ready(function() {
         "bLengthChange": false,
         "oLanguage": {
             "sSearch": ""
-        }
+        },
+        
+        "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
     });
     
     //$('#user_details').hide();

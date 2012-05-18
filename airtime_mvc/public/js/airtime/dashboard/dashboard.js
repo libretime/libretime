@@ -47,8 +47,10 @@ function secondsTimer(){
 
 function newSongStart(){
     nextSongPrepare = true;
-    currentSong = nextSong;
-    nextSong = null;   
+    if (nextSong.type == 'track') {
+        currentSong = nextSong;
+        nextSong = null;
+    }   
 }
 
 function nextShowStart(){
@@ -74,12 +76,14 @@ function updateProgressBarValue(){
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
     
     if (currentSong !== null){	
+        var songElpasedTime = 0;
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
+        songElapsedTime = estimatedSchedulePosixTime - currentSong.songStartPosixTime;
         if (songPercentDone < 0 || songPercentDone > 100){
             songPercentDone = 0;        
             currentSong = null;
         } else {
-            if (currentSong.media_item_played == true && currentShow.length > 0) {
+            if ((currentSong.media_item_played == true && currentShow.length > 0) || songElapsedTime < 5000) {
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
                 scheduled_play_div.addClass("ready");
                 scheduled_play_source = true;
@@ -320,8 +324,8 @@ function controlOnAirLight(){
     if ((scheduled_play_on_air && scheduled_play_source) || live_dj_on_air || master_dj_on_air) {
         $('#on-air-info').attr("class", "on-air-info on");
         onAirOffIterations = 0;
-    } else if (onAirOffIterations < 15) {
-        //if less than 3 seconds have gone by (< 15 executions of this function)
+    } else if (onAirOffIterations < 20) {
+        //if less than 4 seconds have gone by (< 20 executions of this function)
         //then keep the ON-AIR light on. Only after at least 3 seconds have gone by, 
         //should we be allowed to turn it off. This is to stop the light from temporarily turning
         //off between tracks: CC-3725

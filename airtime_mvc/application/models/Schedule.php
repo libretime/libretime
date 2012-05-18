@@ -125,17 +125,20 @@ class Application_Model_Schedule {
                 if ( $i - 1 >= 0){
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
                             "starts"=>$rows[$i-1]["starts"],
-                            "ends"=>$rows[$i-1]["ends"]);
+                            "ends"=>$rows[$i-1]["ends"],
+                            "type"=>'track');
                 }
                 $results['current'] =  array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
                             "starts"=>$rows[$i]["starts"],
                             "ends"=> (($rows[$i]["ends"] > $rows[$i]["show_ends"]) ? $rows[$i]["show_ends"]: $rows[$i]["ends"]),
                             "media_item_played"=>$rows[$i]["media_item_played"],
-                            "record"=>0);
+                            "record"=>0,
+                            "type"=>'track');
                 if ( isset($rows[$i+1])){
                     $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
                             "starts"=>$rows[$i+1]["starts"],
-                            "ends"=>$rows[$i+1]["ends"]);
+                            "ends"=>$rows[$i+1]["ends"],
+                            "type"=>'track');
                 }
                 break;
             }
@@ -145,7 +148,8 @@ class Application_Model_Schedule {
             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
                 $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
                             "starts"=>$rows[$i]["starts"],
-                            "ends"=>$rows[$i]["ends"]);
+                            "ends"=>$rows[$i]["ends"],
+                            "type"=>'track');
                 break;
             }
         }

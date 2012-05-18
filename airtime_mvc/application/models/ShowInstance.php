@@ -574,7 +574,7 @@ class Application_Model_ShowInstance {
     {
         $time = $this->_showInstance->getDbTimeFilled();
 		
-        if ($time != "00:00:00" && $time != null && strcmp($time, '')!=0) {
+        if ($time != "00:00:00" && !empty($time)) {
             $time_arr = explode(".", $time);
             if (count($time_arr) > 1) {
                 $time_arr[1] = "." . $time_arr[1];

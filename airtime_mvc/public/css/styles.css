@@ -134,7 +134,7 @@ select {
 .info-tooltip:hover span {
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
         position: absolute; left: 25px; top: -18px; z-index: 99;
-        margin-left: 0; width: 250px;
+        margin-left: 0; width: 200px;
 }
 /* Info Tooltip Ends */
 
@@ -654,14 +654,19 @@ dl.inline-list dd {
     padding: 2px 2px 2px 0;
     vertical-align: top;
 }
-#library_display thead th, #library_display tbody td {
+table.dataTable tbody tr, 
+table.dataTable span.DataTables_sort_icon {
     cursor: pointer;
 }
-#library_display thead th.library_checkbox,
-#library_display thead th.library_id,
-#library_display thead th.library_title {
-    cursor: default;
+
+table.dataTable th.ui-state-default {
+    background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
+    background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
+    border: 1px solid #8F8F8F;
+    color: #363636;
 }
+
 .ColVis.TableTools .ui-button {
     height: 21px;
 }
@@ -2607,12 +2612,12 @@ dd .stream-status {
 	overflow: hidden;
 	margin: 3px 0 0 10px;
 	}
-	.close-round:hover {
-		background-position:0 -18px;
-		}
-	.close-round:active {
-		background-position:0 -36px;
-		}
+.close-round:hover {
+	background-position:0 -36px;
+}
+.close-round:active {
+	background-position:0 -36px;
+}
 
 
 /*---////////////////////    NEW BUTTONS    ////////////////////---*/		

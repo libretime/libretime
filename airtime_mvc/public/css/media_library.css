@@ -31,7 +31,7 @@
 }
 
 #library_display th {
-        text-align: left;
+    text-align: left;
 }
 
 #library_content #library_display {
@@ -51,14 +51,6 @@
 
 #library_content .ui-tabs-panel {
 	padding-top:16px;
-}
-
-.lib-content table th.ui-state-default {
-    background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
-    background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    border: 1px solid #8F8F8F;
-    color: #363636;
 }
 
 .paginationControl {

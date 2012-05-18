@@ -87,6 +87,16 @@ AIRTIME = (function(AIRTIME) {
 		$builder = $("#show_builder");
 		$fs = $builder.find('fieldset');
 		
+		/*
+	     * Icon hover states for search.
+	     */
+		$builder.on("mouseenter", ".sb-timerange .ui-button", function(ev) {
+	    	$(this).addClass("ui-state-hover"); 	
+	    });
+		$builder.on("mouseleave", ".sb-timerange .ui-button", function(ev) {
+	    	$(this).removeClass("ui-state-hover");
+	    });
+		
 		$builder.find(dateStartId).datepicker(oBaseDatePickerSettings);
 		$builder.find(timeStartId).timepicker(oBaseTimePickerSettings);
 		$builder.find(dateEndId).datepicker(oBaseDatePickerSettings);

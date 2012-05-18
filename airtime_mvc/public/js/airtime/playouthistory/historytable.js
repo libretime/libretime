@@ -62,7 +62,7 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": true,
            
-            "sDom": 'lfr<"H"T><"dataTables_scrolling"t><"F"ip>', 
+            "sDom": 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
                 "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf"
@@ -92,6 +92,16 @@ $(document).ready(function(){
 		timeStartId = "#his_time_start",
 		dateEndId = "#his_date_end",
 		timeEndId = "#his_time_end";
+	
+	/*
+     * Icon hover states for search.
+     */
+	history_content.on("mouseenter", ".his-timerange .ui-button", function(ev) {
+    	$(this).addClass("ui-state-hover"); 	
+    });
+	history_content.on("mouseleave", ".his-timerange .ui-button", function(ev) {
+    	$(this).removeClass("ui-state-hover");
+    });
 	
 	history_content
 		.height(widgetHeight)

@@ -2,11 +2,16 @@
 
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {
-
+    private $isSaas;	
+	
     public function init()
     {
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        $this->isSaas = $isSaas;
+        Logging::log($this->isSaas==true?"true":"false"); 
+        
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_general.phtml'))
+            array('ViewScript', array('viewScript' => 'form/preferences_general.phtml', "isSaas" => $isSaas))
         ));
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
@@ -80,7 +85,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $systemEmail->class = 'input_text';
         $systemEmail->setRequired(false)
             ->setValue(Application_Model_Preference::GetSystemEmail())
-            ->setLabel('Airtime System Email')
+            ->setLabel('Reset Password \'From\' Email')
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                         'NotEmpty',

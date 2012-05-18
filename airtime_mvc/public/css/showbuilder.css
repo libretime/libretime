@@ -95,6 +95,17 @@
     width:60px;
 }
 
+div.sb-timerange {
+    position: relative;
+}
+
+div.sb-timerange div {
+	position: absolute;
+	bottom: 0px;
+	padding: 3px;
+	margin-left: 5px;
+}
+
 .sb-starts,
 .sb-ends {
 	text-align: center;
@@ -174,6 +185,17 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
 	padding: 8px 8px 8px 16px;
 }
 
+table.dataTable tr.sb-past, 
+table.dataTable tr.sb-header,
+table.dataTable tr.sb-footer,
+table.dataTable tr.sb-not-allowed {
+    cursor: auto;
+}
+
+table.dataTable td.sb-image {
+	cursor: pointer;
+}
+
 table.datatable tr.sb-header.odd td, table.datatable tr.sb-header.even td,
 table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hover td{
     background: -moz-linear-gradient(top, #a4a4a4 0, #bcbcbc 100%);
@@ -189,14 +211,6 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 
 .sb-header div.ui-state-default {
 	float: left;
-}
-
-.sb-content table th.ui-state-default {
-    background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
-	background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    border: 1px solid #8F8F8F;
-    color: #363636;
 }
 
 .sb-content input.ui-button {
