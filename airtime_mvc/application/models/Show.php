@@ -1764,7 +1764,6 @@ class Application_Model_Show {
 
         for( $i = 0; $i < $numberOfRows; ++$i ){
             //Find the show that is within the current time.
-            $rows[$i]['type'] = 'show';
             if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previousShow'][0] = array(
@@ -1776,7 +1775,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i-1]['end_timestamp'],
                                 "starts"=>$rows[$i-1]['starts'],
                                 "ends"=>$rows[$i-1]['ends'],
-                                "type"=>$rows[$i-1]['type']);
+                                "type"=>"show");
                 }
 
                 $results['currentShow'][0] =  $rows[$i];
@@ -1791,7 +1790,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
                                 "starts"=>$rows[$i+1]['starts'],
                                 "ends"=>$rows[$i+1]['ends'],
-                                "type"=>$rows[$i+1]['type']);
+                                "type"=>"show");
 
                 }
                 break;
@@ -1811,7 +1810,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i]['end_timestamp'],
                                 "starts"=>$rows[$i]['starts'],
                                 "ends"=>$rows[$i]['ends'],
-                                "type"=>$rows[$i]['type']);
+                                "type"=>"show");
                 break;
             }
         }
@@ -1826,7 +1825,7 @@ class Application_Model_Show {
                     "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
                     "starts"=>$rows[$previousShowIndex]['starts'],
                     "ends"=>$rows[$previousShowIndex]['ends'],
-                    "type"=>$rows[$previousShowIndex]['type']);
+                    "type"=>"show");
         }
         
         return $results;
