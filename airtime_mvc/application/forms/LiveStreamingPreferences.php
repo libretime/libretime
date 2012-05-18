@@ -2,7 +2,7 @@
 
 class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 {
-
+	
     public function init()
     {
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
@@ -85,6 +85,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
         $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
         $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         
         $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
         $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
@@ -100,7 +101,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         }
         
         $this->setDecorators(array(
-        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url))
+        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isSaas' => $isSaas))
         ));
     }
     
