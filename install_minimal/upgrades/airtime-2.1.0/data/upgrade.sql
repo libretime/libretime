@@ -68,6 +68,8 @@ ALTER TABLE cc_playlist
 	ADD COLUMN utime timestamp(6) without time zone,
 	ADD COLUMN creator_id integer,
 	ADD COLUMN length interval DEFAULT '00:00:00'::interval;
+    
+UPDATE cc_playlist SET utime = mtime;
 
 ALTER TABLE cc_playlistcontents
 	ALTER COLUMN cliplength TYPE interval /* TYPE change - table: cc_playlistcontents original: time without time zone new: interval */,

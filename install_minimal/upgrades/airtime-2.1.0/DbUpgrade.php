@@ -22,6 +22,14 @@ class AirtimeDatabaseUpgrade{
         $dir = __DIR__;
         
         passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/data/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
+        
+        $sql = "SELECT id from cc_subjs WHERE type = 'A' LIMIT 1;";
+        $result = UpgradeCommon::queryDb($sql);
+        $admin_id = $result->fetchColumn(0);
+        
+        $sql = "UPDATE cc_playlist SET creator_id = $admin_id";
+        echo $sql.PHP_EOL;
+        UpgradeCommon::queryDb($sql);
        
         $sql = "INSERT INTO cc_pref(keystr, valstr) VALUES('scheduled_play_switch', 'on')";
         UpgradeCommon::queryDb($sql);
