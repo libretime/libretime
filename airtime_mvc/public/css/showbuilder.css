@@ -189,7 +189,7 @@ table.dataTable tr.sb-past,
 table.dataTable tr.sb-header,
 table.dataTable tr.sb-footer,
 table.dataTable tr.sb-not-allowed {
-    cursor: default;
+    cursor: auto;
 }
 
 table.dataTable td.sb-image {

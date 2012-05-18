@@ -23,3 +23,7 @@ div.his-timerange div {
     padding: 3px;
     margin-left: 5px;
 }
+
+table.dataTable tbody tr {
+	cursor: auto;
+}
