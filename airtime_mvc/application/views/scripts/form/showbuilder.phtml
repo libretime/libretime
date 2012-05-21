@@ -1,4 +1,7 @@
 <div class="sb-timerange">
+    <div id="sb_edit" class="ui-button ui-state-default" title="open the library to schedule files.">
+        <span class="ui-icon ui-icon-arrowthick-1-nw"></span>
+    </div>
     <?php echo $this->element->getElement('sb_date_start') ?>
     <?php echo $this->element->getElement('sb_time_start') ?>
     <?php echo $this->element->getElement('sb_date_end') ?>
@@ -13,15 +16,15 @@
         	<span class="ui-icon ui-icon-triangle-2-n-s"></span>
         Filter By Show:
         </legend>
-        
+
         <div class="sb-options-form">
             <label><?php echo $this->element->getElement('sb_show_filter')->getLabel() ?></label>
             <?php echo $this->element->getElement('sb_show_filter') ?>
-        
+
             <?php if ($this->element->getElement('sb_my_shows')):?>
             <label><?php echo $this->element->getElement('sb_my_shows')->getLabel(); ?></label>
             <?php echo $this->element->getElement('sb_my_shows'); ?>
             <?php endif;?>
         </div>
-    </fieldset>   
+    </fieldset>
 </div>

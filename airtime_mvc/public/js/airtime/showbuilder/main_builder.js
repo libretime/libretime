@@ -15,7 +15,7 @@ AIRTIME = (function(AIRTIME) {
 		timeStartId = "#sb_time_start",
 		dateEndId = "#sb_date_end",
 		timeEndId = "#sb_time_end",
-		$toggleLib = $('<div id="sb_edit" class="ui-state-default" title="open the library to schedule files."><span class="ui-icon ui-icon-arrowthick-1-nw"></span></div>'),
+		$toggleLib = $('<div id="sb_edit" class="ui-button ui-state-default" title="open the library to schedule files."><span class="ui-icon ui-icon-arrowthick-1-nw"></span></div>'),
 		$libClose = $('<a />', {
 			"class": "close-round",
 			"href": "#",
@@ -74,6 +74,9 @@ AIRTIME = (function(AIRTIME) {
 	    	$builder.width(Math.floor(screenWidth * 0.5))
 				.find("#sb_edit")
 					.remove()
+					.end()
+				.find("#sb_date_start")
+					.css("margin-left", 0)
 					.end();
 	    	
 	    	oTable = $('#show_builder_table').dataTable();
@@ -143,7 +146,7 @@ AIRTIME = (function(AIRTIME) {
 			oTable.fnDraw();
 		});
 
-		$builder.on("click","#sb_edit", function () {
+		$builder.on("click","#sb_edit", function (ev){
 			var schedTable = $("#show_builder_table").dataTable();
 			
 			//reset timestamp to redraw the cursors.
@@ -155,6 +158,9 @@ AIRTIME = (function(AIRTIME) {
 			$builder.width(Math.floor(screenWidth * 0.5))
 				.find("#sb_edit")
 					.remove()
+					.end()
+				.find("#sb_date_start")
+					.css("margin-left", 0)
 					.end();
 			
 			schedTable.fnDraw();
@@ -174,9 +180,13 @@ AIRTIME = (function(AIRTIME) {
 			$lib.hide();
 			$builder.width(screenWidth)
 				.find(".sb-timerange")
-					.append($toggleLib)
+					.prepend($toggleLib)
+					.find("#sb_date_start")
+						.css("margin-left", 30)
+						.end()
 					.end();
 			
+			$toggleLib.removeClass("ui-state-hover");
 			schedTable.fnDraw();
 			
 			$.ajax({
