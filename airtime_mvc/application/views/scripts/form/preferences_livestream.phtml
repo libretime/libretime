@@ -1,7 +1,7 @@
 <fieldset class="padded stream-setting-global" style="margin-top: 15px">
     <legend>Input Stream Settings</legend>
     <dl class="zend_form">
-    	<dt id="transition_fade-label">
+        <dt id="transition_fade-label">
             <label class="optional" for="transition_fade"><?php echo $this->element->getElement('transition_fade')->getLabel() ?> :
             </label>
         </dt>
@@ -43,80 +43,90 @@
                 </ul>
             <?php endif; ?> 
         </dd>
-        <dt id="master_harbor_input_port-label">
-            <label class="optional" for="master_harbor_input_port"><?php echo $this->element->getElement('master_harbor_input_port')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="master_harbor_input_port-element">
-            <?php echo $this->element->getElement('master_harbor_input_port') ?>
-            <?php if($this->element->getElement('master_harbor_input_port')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('master_harbor_input_port')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dt id="master_harbor_input_mount_point-label">
-            <label class="optional" for="master_harbor_input_mount_point"><?php echo $this->element->getElement('master_harbor_input_mount_point')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="master_harbor_input_mount_point-element">
-            <?php echo $this->element->getElement('master_harbor_input_mount_point') ?>
-            <?php if($this->element->getElement('master_harbor_input_mount_point')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('master_harbor_input_mount_point')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
+        <?php if( !$this->isSaas ){?>
+            <dt id="master_harbor_input_port-label">
+                <label class="optional" for="master_harbor_input_port"><?php echo $this->element->getElement('master_harbor_input_port')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="master_harbor_input_port-element">
+                <?php echo $this->element->getElement('master_harbor_input_port') ?>
+                <?php if($this->element->getElement('master_harbor_input_port')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('master_harbor_input_port')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?> 
+            </dd>
+            <dt id="master_harbor_input_mount_point-label">
+                <label class="optional" for="master_harbor_input_mount_point"><?php echo $this->element->getElement('master_harbor_input_mount_point')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="master_harbor_input_mount_point-element">
+                <?php echo $this->element->getElement('master_harbor_input_mount_point') ?>
+                <?php if($this->element->getElement('master_harbor_input_mount_point')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('master_harbor_input_mount_point')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?> 
+            </dd>
+        <?php } ?>
         <dt id="master_dj_connection_url-label">
             <label class="optional" for="master_dj_connection_url" style="white-space: nowrap">Master Source Connection URL:
             </label>
         </dt>
         <dd id="master_dj_connection_url-element">
-            <span id="stream_url" class="static_text"><?php echo $this->master_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
-            <span class="override_help_icon">
-            </span><br>
+            <span id="stream_url" class="static_text"><?php echo $this->master_dj_connection_url ?></span>
+            <?php if( !$this->isSaas ){?>
+                <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
+                <span class="override_help_icon">
+                </span><br>
+            <?php } ?>
             <div id="master_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
         </dd>
-        <dt id="dj_harbor_input_port-label">
-            <label class="optional" for="dj_harbor_input_port"><?php echo $this->element->getElement('dj_harbor_input_port')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="dj_harbor_input_port-element">
-            <?php echo $this->element->getElement('dj_harbor_input_port') ?>
-            <?php if($this->element->getElement('dj_harbor_input_port')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('dj_harbor_input_port')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dt id="dj_harbor_input_mount_point-label">
-            <label class="optional" for="dj_harbor_input_mount_point"><?php echo $this->element->getElement('dj_harbor_input_mount_point')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="dj_harbor_input_mount_point-element">
-            <?php echo $this->element->getElement('dj_harbor_input_mount_point') ?>
-            <?php if($this->element->getElement('dj_harbor_input_mount_point')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('dj_harbor_input_mount_point')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
+        <?php if( !$this->isSaas ){?>
+            <dt id="dj_harbor_input_port-label">
+                <label class="optional" for="dj_harbor_input_port"><?php echo $this->element->getElement('dj_harbor_input_port')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="dj_harbor_input_port-element">
+                <?php echo $this->element->getElement('dj_harbor_input_port') ?>
+                <?php if($this->element->getElement('dj_harbor_input_port')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('dj_harbor_input_port')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?> 
+            </dd>
+            <dt id="dj_harbor_input_mount_point-label">
+                <label class="optional" for="dj_harbor_input_mount_point"><?php echo $this->element->getElement('dj_harbor_input_mount_point')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="dj_harbor_input_mount_point-element">
+                <?php echo $this->element->getElement('dj_harbor_input_mount_point') ?>
+                <?php if($this->element->getElement('dj_harbor_input_mount_point')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->element->getElement('dj_harbor_input_mount_point')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?> 
+            </dd>
+        <?php } ?>
         <dt id="live_dj_connection_url-label">
             <label class="optional" for="live_dj_connection_url" style="white-space: nowrap">Show Source Connection URL:
             </label>
         </dt>
         <dd id="live_dj_connection_url-element">
-            <span id="stream_url" class="static_text"><?php echo $this->live_dj_connection_url ?></span>  <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
-            <span class="override_help_icon">
-            </span><br>
+            <span id="stream_url" class="static_text"><?php echo $this->live_dj_connection_url ?></span>
+            <?php if( !$this->isSaas ){?>   
+                <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
+                <span class="override_help_icon">
+                </span><br>
+            <?php } ?>
             <div id="live_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
         </dd>
     </dl>
