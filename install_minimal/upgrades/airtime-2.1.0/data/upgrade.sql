@@ -2,8 +2,6 @@ DROP TRIGGER calculate_position ON cc_playlistcontents;
 
 DROP FUNCTION calculate_position();
 
-DROP VIEW cc_playlisttimes;
-
 CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
     AS 
     'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
@@ -55,6 +53,8 @@ ALTER TABLE cc_files
 	ALTER COLUMN sample_rate TYPE integer USING airtime_to_int(bit_rate) /* TYPE change - table: cc_files original: character varying(32) new: integer */,
 	ALTER COLUMN length TYPE interval /* TYPE change - table: cc_files original: time without time zone new: interval */,
 	ALTER COLUMN length SET DEFAULT '00:00:00'::interval;
+    
+UPDATE cc_files SET utime = now();
 
 ALTER TABLE cc_music_dirs
 	ADD COLUMN "exists" boolean DEFAULT true,
@@ -70,6 +70,8 @@ ALTER TABLE cc_playlist
 	ADD COLUMN length interval DEFAULT '00:00:00'::interval;
     
 UPDATE cc_playlist SET utime = mtime;
+UPDATE cc_playlist AS pl SET length = (SELECT pt.length FROM cc_playlisttimes AS pt WHERE pt.id = pl.id);
+DROP VIEW cc_playlisttimes;
 
 ALTER TABLE cc_playlistcontents
 	ALTER COLUMN cliplength TYPE interval /* TYPE change - table: cc_playlistcontents original: time without time zone new: interval */,
@@ -104,6 +106,7 @@ ALTER TABLE cc_show_instances
 	ALTER COLUMN time_filled SET DEFAULT '00:00:00'::interval;
     
 UPDATE cc_show_instances SET created = now();
+UPDATE cc_show_instances SET last_scheduled = now();
 
 ALTER TABLE cc_show_instances
 	ALTER COLUMN created SET NOT NULL;
