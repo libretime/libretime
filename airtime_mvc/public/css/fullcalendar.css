@@ -107,6 +107,15 @@ html .fc,
 	
 /* Content
 ------------------------------------------------------------------------*/
+
+.fc table.fc-agenda-days thead,
+.fc table.fc-agenda-days thead tr{
+    height: 25px;
+}
+
+.fc table.fc-agenda-days thead th{
+    vertical-align: middle;
+}
 	
 .fc-content {
 	clear: both;
