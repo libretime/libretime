@@ -491,7 +491,7 @@ class ApiController extends Zend_Controller_Action
             $tmpTitle = $file->getName();
         }
 
-		$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
+		//$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', null);
 
