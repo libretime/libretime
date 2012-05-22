@@ -377,6 +377,7 @@ CREATE TABLE "cc_schedule"
 	"media_item_played" BOOLEAN default 'f',
 	"instance_id" INTEGER  NOT NULL,
 	"playout_status" INT2 default 1 NOT NULL,
+	"broadcasted" INT2 default 0 NOT NULL,
 	PRIMARY KEY ("id")
 );
 

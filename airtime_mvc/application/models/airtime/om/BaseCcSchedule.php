@@ -104,6 +104,13 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	protected $playout_status;
 
 	/**
+	 * The value for the broadcasted field.
+	 * Note: this column has a database default value of: 0
+	 * @var        int
+	 */
+	protected $broadcasted;
+
+	/**
 	 * @var        CcShowInstances
 	 */
 	protected $aCcShowInstances;
@@ -142,6 +149,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$this->cue_out = '00:00:00';
 		$this->media_item_played = false;
 		$this->playout_status = 1;
+		$this->broadcasted = 0;
 	}
 
 	/**
@@ -364,6 +372,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function getDbPlayoutStatus()
 	{
 		return $this->playout_status;
+	}
+
+	/**
+	 * Get the [broadcasted] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbBroadcasted()
+	{
+		return $this->broadcasted;
 	}
 
 	/**
@@ -733,6 +751,26 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	} // setDbPlayoutStatus()
 
 	/**
+	 * Set the value of [broadcasted] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcSchedule The current object (for fluent API support)
+	 */
+	public function setDbBroadcasted($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->broadcasted !== $v || $this->isNew()) {
+			$this->broadcasted = $v;
+			$this->modifiedColumns[] = CcSchedulePeer::BROADCASTED;
+		}
+
+		return $this;
+	} // setDbBroadcasted()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -770,6 +808,10 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				return false;
 			}
 
+			if ($this->broadcasted !== 0) {
+				return false;
+			}
+
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -804,6 +846,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$this->media_item_played = ($row[$startcol + 9] !== null) ? (boolean) $row[$startcol + 9] : null;
 			$this->instance_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
 			$this->playout_status = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+			$this->broadcasted = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -812,7 +855,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 12; // 12 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 13; // 13 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcSchedule object", $e);
@@ -1192,6 +1235,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			case 11:
 				return $this->getDbPlayoutStatus();
 				break;
+			case 12:
+				return $this->getDbBroadcasted();
+				break;
 			default:
 				return null;
 				break;
@@ -1228,6 +1274,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$keys[9] => $this->getDbMediaItemPlayed(),
 			$keys[10] => $this->getDbInstanceId(),
 			$keys[11] => $this->getDbPlayoutStatus(),
+			$keys[12] => $this->getDbBroadcasted(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShowInstances) {
@@ -1303,6 +1350,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			case 11:
 				$this->setDbPlayoutStatus($value);
 				break;
+			case 12:
+				$this->setDbBroadcasted($value);
+				break;
 		} // switch()
 	}
 
@@ -1339,6 +1389,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if (array_key_exists($keys[9], $arr)) $this->setDbMediaItemPlayed($arr[$keys[9]]);
 		if (array_key_exists($keys[10], $arr)) $this->setDbInstanceId($arr[$keys[10]]);
 		if (array_key_exists($keys[11], $arr)) $this->setDbPlayoutStatus($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setDbBroadcasted($arr[$keys[12]]);
 	}
 
 	/**
@@ -1362,6 +1413,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcSchedulePeer::MEDIA_ITEM_PLAYED)) $criteria->add(CcSchedulePeer::MEDIA_ITEM_PLAYED, $this->media_item_played);
 		if ($this->isColumnModified(CcSchedulePeer::INSTANCE_ID)) $criteria->add(CcSchedulePeer::INSTANCE_ID, $this->instance_id);
 		if ($this->isColumnModified(CcSchedulePeer::PLAYOUT_STATUS)) $criteria->add(CcSchedulePeer::PLAYOUT_STATUS, $this->playout_status);
+		if ($this->isColumnModified(CcSchedulePeer::BROADCASTED)) $criteria->add(CcSchedulePeer::BROADCASTED, $this->broadcasted);
 
 		return $criteria;
 	}
@@ -1434,6 +1486,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$copyObj->setDbMediaItemPlayed($this->media_item_played);
 		$copyObj->setDbInstanceId($this->instance_id);
 		$copyObj->setDbPlayoutStatus($this->playout_status);
+		$copyObj->setDbBroadcasted($this->broadcasted);
 
 		$copyObj->setNew(true);
 		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
@@ -1592,6 +1645,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$this->media_item_played = null;
 		$this->instance_id = null;
 		$this->playout_status = null;
+		$this->broadcasted = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

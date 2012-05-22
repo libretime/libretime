@@ -86,6 +86,7 @@ ALTER TABLE cc_schedule
 	DROP COLUMN group_id,
 	DROP COLUMN schedule_group_played,
 	ADD COLUMN playout_status smallint DEFAULT 1 NOT NULL,
+	ADD COLUMN broadcasted smallint DEFAULT 0 NOT NULL,
 	ALTER COLUMN clip_length TYPE interval /* TYPE change - table: cc_schedule original: time without time zone new: interval */,
 	ALTER COLUMN clip_length SET DEFAULT '00:00:00'::interval,
 	ALTER COLUMN cue_in TYPE interval /* TYPE change - table: cc_schedule original: time without time zone new: interval */,
