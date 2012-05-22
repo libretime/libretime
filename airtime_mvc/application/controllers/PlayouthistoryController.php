@@ -14,8 +14,6 @@ class PlayoutHistoryController extends Zend_Controller_Action
 	{
 		global $CC_CONFIG;
 		
-		$this->_helper->layout->setLayout('playouthistory');
-		
 		$request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
