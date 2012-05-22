@@ -237,8 +237,9 @@ class Application_Model_LiveLog
     public static function SetNewLogTime($state, $dateTime){
         try {
             $con = Propel::getConnection();
-
-            if ($state == 'L') {
+            
+            $scheduled = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
+            if ($state == 'L' && $scheduled == 'on') {
                 self::SetEndTime('S', $dateTime);
             }
 
