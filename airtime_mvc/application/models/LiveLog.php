@@ -254,6 +254,10 @@ class Application_Model_LiveLog
                 $sql_insert = "INSERT INTO CC_LIVE_LOG (state, start_time)"
                 ." VALUES ('$state', '{$dateTime->format("Y-m-d H:i:s")}')";
                 $con->exec($sql_insert);
+                if($state == "S"){
+                    // if scheduled play source is getting broadcasted
+                    Application_Model_Schedule::UpdateBrodcastedStatus($dateTime, 1);
+                }
             }
 
         } catch (Exception $e) {

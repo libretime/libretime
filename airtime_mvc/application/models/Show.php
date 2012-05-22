@@ -1519,8 +1519,6 @@ class Application_Model_Show {
             $sql = $sql." AND ({$exclude})";
         }
 
-        Logging::debug("getShows");
-        Logging::debug($sql);
         $result = $con->query($sql)->fetchAll();
         return $result;
     }
