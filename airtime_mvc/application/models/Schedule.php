@@ -45,10 +45,12 @@ class Application_Model_Schedule {
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
         $results = Application_Model_Schedule::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
 
+        Logging::log($shows['currentShow']);
+
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
-            "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow']['record'] == 1)?$shows['currentShow'][0]:null),
+            "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
             //"current"=>$results['current'] !=null?$results['current']:(count($shows['currentShow'])>0?$shows['currentShow'][0]:null),
             "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
             "currentShow"=>$shows['currentShow'],
