@@ -132,10 +132,18 @@ function buildplaylist(p_url, p_playIndex) {
         _playlist_jplayer.option("autoPlay", true);
         play(p_playIndex);
         
-        var height = Math.min(90 + (26 * total), 400);
-        window.innerWidth = 500;
-        window.innerHeight = height;
-        window.scrollbars = true;
+        var height = Math.min(143 + (26 * total), 400);
+        var width = 505;
+        
+        if (height === 400) {
+        	window.scrollbars = true;
+        }
+        else {
+        	//there's no scrollbars so we don't need the window to be as wide.
+        	width = 490;
+        }
+        
+        window.resizeTo(width, height);    
     });
 }
 
@@ -178,6 +186,5 @@ function playOne(p_audioFileID) {
     _playlist_jplayer._initPlaylist(playlist);
     _playlist_jplayer.play(0);
     
-    window.innerWidth = 490;
-    window.innerHeight = 120;
+    window.resizeTo(490, 167);
 }
