@@ -414,8 +414,8 @@ class Application_Model_Preference
     	                  $key == 'PLAYOUT_ENGINE_CPU_PERC' ) {
     	            if($key == 'AIRTIME_VERSION'){
     	                // remove hash tag on the version string
-    	                list($version, $dump) = explode('+', $info[1]);
-    			        $systemInfoArray[$key] = $version;
+    	                $version = explode('+', $info[1]);
+    			        $systemInfoArray[$key] = $version[0];
     	            }else{
     	                $systemInfoArray[$key] = $info[1];
     	            }
