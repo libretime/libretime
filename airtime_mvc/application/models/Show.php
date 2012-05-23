@@ -1771,7 +1771,7 @@ class Application_Model_Show {
 
         for( $i = 0; $i < $numberOfRows; ++$i ){
             //Find the show that is within the current time.
-            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
+            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) > $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previousShow'][0] = array(
                                 "id"=>$rows[$i-1]['id'],
