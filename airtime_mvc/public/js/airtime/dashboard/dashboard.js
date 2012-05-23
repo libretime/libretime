@@ -76,7 +76,7 @@ function updateProgressBarValue(){
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
     
     if (currentSong !== null){	
-        var songElpasedTime = 0;
+        var songElapsedTime = 0;
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
         songElapsedTime = estimatedSchedulePosixTime - currentSong.songStartPosixTime;
         if (songPercentDone < 0 || songPercentDone > 100){
