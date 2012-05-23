@@ -98,6 +98,13 @@ var AIRTIME = (function(AIRTIME) {
     	}
     };
     
+    mod.isChosenItem = function($el) {
+    	var id = $el.attr("id"),
+    		item = chosenItems[id];
+
+    	return item !== undefined ? true : false;
+    };
+    
     mod.addToChosen = function($el) {
     	var id = $el.attr("id");
     	

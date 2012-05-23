@@ -848,7 +848,7 @@ class Application_Model_Show {
         $showId = $this->getId();
         $sql = "SELECT id FROM cc_show_instances"
             ." WHERE date(starts) = date(TIMESTAMP '$timestamp') "
-            ." AND show_id = $showId";
+            ." AND show_id = $showId AND rebroadcast = 0";
 
         $query = $con->query($sql);
         $row = ($query !== false) ? $query->fetchColumn(0) : null;
@@ -1519,8 +1519,6 @@ class Application_Model_Show {
             $sql = $sql." AND ({$exclude})";
         }
 
-        Logging::debug("getShows");
-        Logging::debug($sql);
         $result = $con->query($sql)->fetchAll();
         return $result;
     }

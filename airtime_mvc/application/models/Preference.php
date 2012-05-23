@@ -412,7 +412,13 @@ class Application_Model_Preference
     	                  $key == 'FREE_RAM' || $key == 'AIRTIME_VERSION' || $key == 'KERNAL_VERSION'  || 
     	                  $key == 'MACHINE_ARCHITECTURE' || $key == 'TOTAL_MEMORY_MBYTES' || $key == 'TOTAL_SWAP_MBYTES' ||
     	                  $key == 'PLAYOUT_ENGINE_CPU_PERC' ) {
-    			    $systemInfoArray[$key] = $info[1];
+    	            if($key == 'AIRTIME_VERSION'){
+    	                // remove hash tag on the version string
+    	                list($version, $dump) = explode('+', $info[1]);
+    			        $systemInfoArray[$key] = $version;
+    	            }else{
+    	                $systemInfoArray[$key] = $info[1];
+    	            }
     	        }
     		}
     	}

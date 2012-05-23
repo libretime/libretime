@@ -291,8 +291,30 @@ class Application_Model_Schedule {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
-                ." SET media_item_played=TRUE"
-                ." WHERE id=$p_id";
+                ." SET media_item_played=TRUE";
+        // we need to update 'broadcasted' column as well
+        // check the current switch status
+        $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on'?true:false;
+        $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on'?true:false;
+        $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on'?true:false;
+        
+        if(!$live_dj && !$master_dj && $scheduled_play){
+            $sql .= ", broadcasted=1";
+        }
+        
+        $sql .= " WHERE id=$p_id";
+        
+        $retVal = $con->exec($sql);
+        return $retVal;
+    }
+    
+    public static function UpdateBrodcastedStatus($dateTime, $value){
+        global $CC_CONFIG;
+        $con = Propel::getConnection();
+        $now = $dateTime->format("Y-m-d H:i:s");
+        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
+                ." SET broadcasted=$value"
+                ." WHERE starts <= '$now' AND ends >= '$now'";
         $retVal = $con->exec($sql);
         return $retVal;
     }
