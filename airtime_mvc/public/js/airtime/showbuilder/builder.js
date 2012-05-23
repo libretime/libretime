@@ -2,6 +2,7 @@ var AIRTIME = (function(AIRTIME){
 	var mod,
 		oSchedTable,
 		SB_SELECTED_CLASS = "sb-selected",
+		CURSOR_SELECTED_CLASS = "cursor-selected-row",
 		$sbContent,
 		$sbTable,
 		$toolbar,
@@ -107,6 +108,18 @@ var AIRTIME = (function(AIRTIME){
 		mod.checkDeleteButton();
 		mod.checkJumpToCurrentButton();
 		mod.checkCancelButton();
+    };
+    
+    mod.selectCursor = function($el) {
+    	
+    	$el.addClass(CURSOR_SELECTED_CLASS);
+    	mod.checkToolBarIcons();
+    };
+    
+    mod.removeCursor = function($el) {
+    	
+    	$el.removeClass(CURSOR_SELECTED_CLASS);
+    	mod.checkToolBarIcons();
     };
 	
 	mod.getSelectedData = function() {
@@ -935,22 +948,20 @@ var AIRTIME = (function(AIRTIME){
 		//add events to cursors.
 		$sbTable.find("tbody").on("click", "div.marker", function(event) {
 			var $tr = $(this).parents("tr"),
-				cursorSelClass = "cursor-selected-row";
+				$trs;
 			
-			if ($tr.hasClass(cursorSelClass)) {
-				$tr.removeClass(cursorSelClass);
+			if ($tr.hasClass(CURSOR_SELECTED_CLASS)) {
+				mod.removeCursor($tr);
 			}
 			else {
-				$tr.addClass(cursorSelClass);
+				mod.selectCursor($tr);
 			}
 			
 			if (event.ctrlKey === false) {
-				$sbTable.find('.'+cursorSelClass).not($tr)
-					.removeClass(cursorSelClass);
+				$trs = $sbTable.find('.'+CURSOR_SELECTED_CLASS).not($tr);
+				mod.removeCursor($trs);
 			}
 			
-			mod.checkToolBarIcons();
-
 			return false;
 		});
 		
@@ -983,7 +994,9 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.selCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().addClass(cursorClass);
+                        	var $tr = $(this).parents('tr').next();
+                        	
+                        	mod.selectCursor($tr);
                         };
                         
                         oItems.selCurs.callback = callback;
@@ -993,7 +1006,9 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.delCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().removeClass(cursorClass);
+                        	var $tr = $(this).parents('tr').next();
+                        	
+                        	mod.removeCursor($tr);
                         };
                         
                         oItems.delCurs.callback = callback;
