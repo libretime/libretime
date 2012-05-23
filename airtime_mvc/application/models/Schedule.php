@@ -45,8 +45,6 @@ class Application_Model_Schedule {
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
         $results = Application_Model_Schedule::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
 
-        Logging::log($shows['currentShow']);
-
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=>$timeNow,
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
