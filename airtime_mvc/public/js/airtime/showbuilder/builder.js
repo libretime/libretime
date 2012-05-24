@@ -58,8 +58,19 @@ var AIRTIME = (function(AIRTIME){
 		oSchedTable.fnDraw();
 	};
 	
+	mod.checkSelectButton = function() {
+		var $selectable = $sbTable.find("tbody").find("input:checkbox");
+		
+		if ($selectable.length !== 0) {
+			AIRTIME.button.enableButton("sb-button-select");
+		}
+		else {
+			AIRTIME.button.disableButton("sb-button-select");
+		}
+	};
+	
 	mod.checkTrimButton = function() {
-		var $over = $sbTable.find(".sb-over");
+		var $over = $sbTable.find(".sb-over.sb-allowed");
 		
 		if ($over.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-trim");
@@ -92,7 +103,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkCancelButton = function() {
-		var $current = $sbTable.find(".sb-current-show");
+		var $current = $sbTable.find(".sb-current-show.sb-allowed");
 		
 		if ($current.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-cancel");
@@ -105,6 +116,7 @@ var AIRTIME = (function(AIRTIME){
 	mod.checkToolBarIcons = function() {
     	
 		AIRTIME.library.checkAddButton();
+		mod.checkSelectButton();
 		mod.checkTrimButton();
 		mod.checkDeleteButton();
 		mod.checkJumpToCurrentButton();
@@ -942,7 +954,7 @@ var AIRTIME = (function(AIRTIME){
 				
 				var temp,
 					aItems = [],
-					trs = $sbTable.find(".sb-over.sb-future");
+					trs = $sbTable.find(".sb-over.sb-future.sb-allowed");
 		
 				trs.each(function(){
 					temp = $(this).data("aData");
