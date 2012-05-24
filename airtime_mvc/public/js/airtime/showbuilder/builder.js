@@ -103,9 +103,12 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkCancelButton = function() {
-		var $current = $sbTable.find(".sb-current-show.sb-allowed");
+		var $current = $sbTable.find(".sb-current-show.sb-allowed"),
+			//this user type should be refactored into a separate users module later
+			//when there's more time and more JS will need to know user data.
+			userType = localStorage.getItem('user-type');
 		
-		if ($current.length !== 0) {
+		if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
 			AIRTIME.button.enableButton("sb-button-cancel");
 		}
 		else {
