@@ -96,10 +96,12 @@ div.sb-timerange div#sb_edit {
 }
 
 div.sb-timerange div#sb_submit {
-	position: absolute;
-	bottom: 0px;
 	padding: 3px;
 	margin-left: 5px;
+}
+
+div.sb-timerange input {
+    vertical-align: top;
 }
 
 div.sb-timerange input#sb_date_start {
