@@ -487,6 +487,10 @@ class Application_Model_Preference
     	        } else if (!$out) {
     	            $outputString .= $key." : FALSE\n";
     	        }
+    	    }else if ($key == "SAAS") {
+                if (strcmp($out, 'disabled')!=0) {
+                    $outputString .= $key.' : '.$out."\n";
+                }
     	    }else{
     	        $outputString .= $key.' : '.$out."\n";
     	    }
