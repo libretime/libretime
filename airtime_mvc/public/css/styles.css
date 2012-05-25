@@ -2419,7 +2419,7 @@ tfoot tr th	{
 	height:38px;
 	display:block;
 	position:absolute;
-	right:20px;
+	left:20px;
 	bottom:10px;
 	background-color:#222;
 	background-color:rgba(0, 0, 0, 0.7);
