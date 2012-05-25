@@ -22,6 +22,10 @@ class ShowbuilderController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
+        $user = Application_Model_User::GetCurrentUser();
+        
+        $userType = $user->getType();
+        $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
         
         $data = Application_Model_Preference::GetValue("library_datatable", true);
         if ($data != "") {
@@ -60,8 +64,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
         
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version']),'text/javascript');
-        
-        $user = Application_Model_User::GetCurrentUser(); 
+         
         $refer_sses = new Zend_Session_Namespace('referrer');
         
         if ($request->isPost()) {

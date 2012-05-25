@@ -58,8 +58,19 @@ var AIRTIME = (function(AIRTIME){
 		oSchedTable.fnDraw();
 	};
 	
+	mod.checkSelectButton = function() {
+		var $selectable = $sbTable.find("tbody").find("input:checkbox");
+		
+		if ($selectable.length !== 0) {
+			AIRTIME.button.enableButton("sb-button-select");
+		}
+		else {
+			AIRTIME.button.disableButton("sb-button-select");
+		}
+	};
+	
 	mod.checkTrimButton = function() {
-		var $over = $sbTable.find(".sb-over");
+		var $over = $sbTable.find(".sb-over.sb-allowed");
 		
 		if ($over.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-trim");
@@ -92,9 +103,12 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkCancelButton = function() {
-		var $current = $sbTable.find(".sb-current-show");
+		var $current = $sbTable.find(".sb-current-show.sb-allowed"),
+			//this user type should be refactored into a separate users module later
+			//when there's more time and more JS will need to know user data.
+			userType = localStorage.getItem('user-type');
 		
-		if ($current.length !== 0) {
+		if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
 			AIRTIME.button.enableButton("sb-button-cancel");
 		}
 		else {
@@ -105,6 +119,7 @@ var AIRTIME = (function(AIRTIME){
 	mod.checkToolBarIcons = function() {
     	
 		AIRTIME.library.checkAddButton();
+		mod.checkSelectButton();
 		mod.checkTrimButton();
 		mod.checkDeleteButton();
 		mod.checkJumpToCurrentButton();
@@ -942,7 +957,7 @@ var AIRTIME = (function(AIRTIME){
 				
 				var temp,
 					aItems = [],
-					trs = $sbTable.find(".sb-over.sb-future");
+					trs = $sbTable.find(".sb-over.sb-future.sb-allowed");
 		
 				trs.each(function(){
 					temp = $(this).data("aData");
