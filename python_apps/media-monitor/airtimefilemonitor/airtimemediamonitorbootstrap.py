@@ -77,6 +77,10 @@ class AirtimeMediaMonitorBootstrap():
     dir    -- pathname of the directory
     """
     def sync_database_to_filesystem(self, dir_id, dir):
+        
+        dir = os.path.normpath(dir)+"/"
+        
+        
         """
         set to hold new and/or modified files. We use a set to make it ok if files are added
         twice. This is because some of the tests for new files return result sets that are not
