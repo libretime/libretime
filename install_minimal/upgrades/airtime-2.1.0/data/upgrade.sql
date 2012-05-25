@@ -106,6 +106,7 @@ ALTER TABLE cc_show_instances
 	ALTER COLUMN time_filled TYPE interval /* TYPE change - table: cc_show_instances original: time without time zone new: interval */,
 	ALTER COLUMN time_filled SET DEFAULT '00:00:00'::interval;
     
+UPDATE cc_show_instances SET time_filled = '00:00:00' WHERE time_filled is NULL;
 UPDATE cc_show_instances SET created = now();
 UPDATE cc_show_instances SET last_scheduled = now();
 
