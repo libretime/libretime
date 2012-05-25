@@ -89,9 +89,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
-
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
-                && ($_SERVER['REQUEST_URI'] != '/Dashboard/stream-player' || $_SERVER['REQUEST_URI'] != '/audiopreview/audio-preview-player')) {
+                && !($_SERVER['REQUEST_URI'] == '/Dashboard/stream-player' || $_SERVER['REQUEST_URI'] == '/audiopreview/audio-preview-player')) {
             $client_id = Application_Model_Preference::GetClientId();
             $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
             $view->headScript()->appendFile($baseUrl . '/js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
