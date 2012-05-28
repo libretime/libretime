@@ -48,9 +48,7 @@ def generate_liquidsoap_config(ss):
         buffer = d[u'keyname'] + " = "
         if(d[u'type'] == 'string'):
             temp = d[u'value']
-            if(temp == ""):
-                temp = ""
-            buffer += "\"" + temp + "\""
+            buffer += '"%s"' % temp
         else:
             temp = d[u'value']
             if(temp == ""):
@@ -58,7 +56,7 @@ def generate_liquidsoap_config(ss):
             buffer += temp
         buffer += "\n"
         fh.write(api_client.encode_to(buffer))
-    fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
+    fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
     
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
