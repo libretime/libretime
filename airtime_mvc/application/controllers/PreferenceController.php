@@ -6,7 +6,7 @@ class PreferenceController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
-    	$ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('server-browse', 'json')
                     ->addActionContext('change-stor-directory', 'json')
                     ->addActionContext('reload-watch-directory', 'json')
@@ -143,6 +143,8 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+    
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
@@ -197,13 +199,12 @@ class PreferenceController extends Zend_Controller_Action
             $values = $post_data;
             
             if($form->isValid($post_data)){
-                if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+                if (!$isSaas) {
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
+                    $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
                 }
 
-
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
-                $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
                 $values['streamFormat'] = $form->getValue('streamFormat');
 
                 Application_Model_StreamSetting::setStreamSetting($values);
@@ -214,17 +215,19 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 
-                $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
-                $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
+                if (!$isSaas) {
+                    $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
+                    $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
                 
-                Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
-                Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
+                    Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
+                    Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
                 
-                // extra info that goes into cc_stream_setting
-                Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);
-                Application_Model_StreamSetting::SetMasterLiveSteamMountPoint($values["master_harbor_input_mount_point"]);
-                Application_Model_StreamSetting::SetDJLiveSteamPort($values["dj_harbor_input_port"]);
-                Application_Model_StreamSetting::SetDJLiveSteamMountPoint($values["dj_harbor_input_mount_point"]);
+                    // extra info that goes into cc_stream_setting
+                    Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);
+                    Application_Model_StreamSetting::SetMasterLiveSteamMountPoint($values["master_harbor_input_mount_point"]);
+                    Application_Model_StreamSetting::SetDJLiveSteamPort($values["dj_harbor_input_port"]);
+                    Application_Model_StreamSetting::SetDJLiveSteamMountPoint($values["dj_harbor_input_mount_point"]);
+                }
                 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
