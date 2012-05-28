@@ -11,6 +11,11 @@ ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
 exec 2>&1
 
+while [ ! -e /etc/airtime/liquidsoap.cfg ]; do
+    echo "/etc/airtime/liquidsoap.cfg does not exist."
+    sleep 1
+done
+
 cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
 
 export PYTHONPATH=${api_client_path}
