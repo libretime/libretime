@@ -109,17 +109,19 @@ try:
         print e
         sys.exit(1)
     
+    """
     logging.basicConfig(format='%(message)s')
             
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
     ac = api_client.api_client_factory(config, logging.getLogger())
     ss = ac.get_stream_setting()
-        
+    
     if ss is not None:
         generate_liquidsoap_config(ss)
     else:
         print "Unable to connect to the Airtime server."
+    """
 
     #initialize init.d scripts
     subprocess.call("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)

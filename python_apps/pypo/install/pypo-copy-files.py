@@ -1,4 +1,6 @@
 import os
+import grp
+import stat
 import shutil
 import sys
 import subprocess
@@ -42,7 +44,15 @@ try:
     
     if not os.path.exists(PATH_INI_FILE):
         shutil.copy('%s/../pypo.cfg'%current_script_dir, PATH_INI_FILE)
-    
+        
+    try:
+        os.remove("/etc/airtime/liquidsoap.cfg")
+    except Exception, e:
+        pass
+    gid = grp.getgrnam("pypo").gr_gid
+    os.chown("/etc/airtime", -1, gid)
+    os.chmod("/etc/airtime", stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |     stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |     stat.S_IROTH | stat.S_IXOTH)
+
     # load config file
     try:
         config = ConfigObj(PATH_INI_FILE)

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
@@ -10,15 +10,13 @@ ls_path="/usr/bin/airtime-liquidsoap --verbose"
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
 exec 2>&1
+export PYTHONPATH=${api_client_path}
 
-while [ ! -e /etc/airtime/liquidsoap.cfg ]; do
-    echo "/etc/airtime/liquidsoap.cfg does not exist."
-    sleep 1
-done
+rm -f /etc/airtime/liquidsoap.cfg
 
 cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
+python generate_liquidsoap_cfg.py
 
-export PYTHONPATH=${api_client_path}
 exec ${ls_path} ${ls_param}
 
 # EOF
