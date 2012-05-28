@@ -744,6 +744,7 @@ class ScheduleController extends Zend_Controller_Action
         
         $show = new Application_Model_Show($data['add_show_id']);
         $validateStartDate = true;
+        $validateStartTime = true;
         if (!array_key_exists('add_show_start_date', $data)){
             //Changing the start date was disabled, since the
             //array key does not exist. We need to repopulate this entry from the db.
