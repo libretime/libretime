@@ -203,6 +203,7 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
 fi
 set -e
 
+export airtime_service_start='t'
 $SCRIPTPATH/include/airtime-copy-files.sh
 $SCRIPTPATH/include/airtime-initialize.sh $@
 

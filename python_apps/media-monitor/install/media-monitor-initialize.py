@@ -14,8 +14,8 @@ try:
     subprocess.call("update-rc.d airtime-media-monitor defaults >/dev/null 2>&1", shell=True)
 
     #Start media-monitor daemon
-    print "* Waiting for media-monitor processes to start..."
-
-    subprocess.call("invoke-rc.d airtime-media-monitor start-no-monit", shell=True)
+    if "airtime_service_start" in os.environ and os.environ["airtime_service_start"] == "t":
+        print "* Waiting for media-monitor processes to start..."
+        subprocess.call("invoke-rc.d airtime-media-monitor start-no-monit", shell=True)
 except Exception, e:
     print e
