@@ -67,19 +67,19 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         
         // Add duration element
         $this->addElement('text', 'add_show_duration', array(
-        	'label'		 => 'Duration:',
+            'label'      => 'Duration:',
             'class'      => 'input_text',
-        	'value'		 => '01h 00m',
-        	'readonly'	 => true,
+            'value'      => '01h 00m',
+            'readonly'   => true,
             'decorators'  => array('ViewHelper')
         ));
 
-		// Add repeats element
-		$this->addElement('checkbox', 'add_show_repeats', array(
+        // Add repeats element
+        $this->addElement('checkbox', 'add_show_repeats', array(
             'label'      => 'Repeats?',
             'required'   => false,
-		    'decorators'  => array('ViewHelper')
-		));
+            'decorators'  => array('ViewHelper')
+        ));
 
     }
 
@@ -92,21 +92,25 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $nowDateTime = new DateTime();
         $showStartDateTime = new DateTime($start_time);
 
-		if ($validateStartDate){
-	        if($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
-	            $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
-	            $valid = false;
-	        }
-	    }
-	    
+        if ($validateStartDate){
+            if($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+                $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
+                $valid = false;
+            }
+        }
+        
+        $hours = intval(substr($formData["add_show_duration"], 0, strpos($formData["add_show_duration"], 'h')));
+        $minutes = intval(substr($formData["add_show_duration"], -3, -1));
         if( $formData["add_show_duration"] == "00h 00m" ) {
             $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
             $valid = false;
-        }elseif(strpos($formData["add_show_duration"], 'h') !== false && intval(substr($formData["add_show_duration"], 0, strpos($formData["add_show_duration"], 'h'))) > 24) {
-            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));
-            $valid = false;
+        }elseif(strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
+            if ($hours > 24 || ($hours == 24 && $minutes > 0)) {
+                $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));
+                $valid = false;
+            }
         }elseif( strstr($formData["add_show_duration"], '-') ){
-        	$this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
+            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
             $valid = false;
         }
 
