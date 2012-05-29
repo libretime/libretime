@@ -82,6 +82,9 @@ class PypoPush(Thread):
                     self.modify_cue_point(current_event_chain[0])
                     next_media_item_chain = current_event_chain
                     time_until_next_play = 0
+                    #sleep for 0.2 seconds to give pypo-file time to copy. This is a quick
+                    #fix that will be improved in 2.1.1
+                    time.sleep(0.2)
                 else:
                     media_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
                     self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, media_chain)
