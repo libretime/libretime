@@ -239,11 +239,11 @@ function parseItems(obj){
     if (nextSong !== null)
         calcAdditionalData(nextSong);
     
-    currentShow = obj.currentShow;
-    nextShow = obj.nextShow;
-    
     calcAdditionalShowData(obj.currentShow);
     calcAdditionalShowData(obj.nextShow);
+    
+    currentShow = obj.currentShow;
+    nextShow = obj.nextShow;
 
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
     //timezoneOffset = parseInt(obj.timezoneOffset)*1000;
