@@ -54,7 +54,7 @@ ALTER TABLE cc_files
 	ALTER COLUMN length TYPE interval /* TYPE change - table: cc_files original: time without time zone new: interval */,
 	ALTER COLUMN length SET DEFAULT '00:00:00'::interval;
     
-UPDATE cc_files SET utime = now();
+UPDATE cc_files SET utime = now()::timestamp(0);
 
 ALTER TABLE cc_music_dirs
 	ADD COLUMN "exists" boolean DEFAULT true,
