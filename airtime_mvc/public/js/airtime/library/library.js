@@ -153,10 +153,14 @@ var AIRTIME = (function(AIRTIME) {
     /*
      * selects all items which the user can currently see.
      * (behaviour taken from gmail)
+     * 
+     * by default the items are selected in reverse order
+     * so we need to reverse it back
      */
     mod.selectCurrentPage = function() {
-    	var $trs = $libTable.find("tbody input:checkbox").parents("tr");
-    	
+        $.fn.reverse = [].reverse;
+    	var $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
+
     	$trs.each(function(i, el){
     		$el = $(this);
     		
