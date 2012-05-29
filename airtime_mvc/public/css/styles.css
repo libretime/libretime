@@ -2401,6 +2401,7 @@ tfoot tr th	{
 	color:red;
 	border:1px solid #c83f3f;
 	background:#c6b4b4;
+	display:none;
 }
 #plupload_error table td {
 	color:#902d2d;
