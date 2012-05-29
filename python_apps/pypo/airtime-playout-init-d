@@ -44,6 +44,9 @@ stop_pypo () {
 }
 
 start () {
+        chown pypo:pypo /etc/airtime
+        chown pypo:pypo /etc/airtime/liquidsoap.cfg
+    
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
         monit monitor airtime-playout >/dev/null 2>&1
         
