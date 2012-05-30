@@ -55,6 +55,7 @@ ALTER TABLE cc_files
 	ALTER COLUMN length SET DEFAULT '00:00:00'::interval;
     
 UPDATE cc_files SET utime = now()::timestamp(0);
+UPDATE cc_files SET length = '00:00:00' WHERE length is NULL;
 
 ALTER TABLE cc_music_dirs
 	ADD COLUMN "exists" boolean DEFAULT true,
@@ -80,6 +81,10 @@ ALTER TABLE cc_playlistcontents
 	ALTER COLUMN cuein SET DEFAULT '00:00:00'::interval,
 	ALTER COLUMN cueout TYPE interval /* TYPE change - table: cc_playlistcontents original: time without time zone new: interval */,
 	ALTER COLUMN cueout SET DEFAULT '00:00:00'::interval;
+    
+UPDATE cc_playlistcontents SET cliplength = '00:00:00' WHERE cliplength is NULL;
+UPDATE cc_playlistcontents SET cuein = '00:00:00' WHERE cuein is NULL;
+UPDATE cc_playlistcontents SET cueout = '00:00:00' WHERE cueout is NULL;
 
 ALTER TABLE cc_schedule
 	DROP COLUMN playlist_id,
@@ -93,6 +98,10 @@ ALTER TABLE cc_schedule
 	ALTER COLUMN cue_in SET DEFAULT '00:00:00'::interval,
 	ALTER COLUMN cue_out TYPE interval /* TYPE change - table: cc_schedule original: time without time zone new: interval */,
 	ALTER COLUMN cue_out SET DEFAULT '00:00:00'::interval;
+    
+UPDATE cc_schedule SET clip_length = '00:00:00' WHERE clip_length is NULL;
+UPDATE cc_schedule SET cue_in = '00:00:00' WHERE cue_in is NULL;
+UPDATE cc_schedule SET cue_out = '00:00:00' WHERE cue_out is NULL;
 
 ALTER TABLE cc_show
 	ADD COLUMN live_stream_using_airtime_auth boolean DEFAULT false,
