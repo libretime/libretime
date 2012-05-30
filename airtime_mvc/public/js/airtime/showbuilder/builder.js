@@ -862,7 +862,7 @@ var AIRTIME = (function(AIRTIME){
 					elements.remove();
 					*/
 					
-					var elements = $sbTable.find('tr input:checked').parents('tr');
+					var elements = $sbTable.find('tr input:checked').parents('tr').not("."+NOW_PLAYING_CLASS);
 					
 					elements.hide();
 				}
