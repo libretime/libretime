@@ -48,14 +48,20 @@ var AIRTIME = (function(AIRTIME){
 		$('#library_display tr.lib-audio, tr.lib-pl').draggable({
 			helper: function(){
 				
-			    var selected = mod.getChosenItemsLength(),
+			    var $el = $(this),
+			    	selected = mod.getChosenItemsLength(),
 			    	container,
 			    	thead = $("#show_builder_table thead"),
 			    	colspan = thead.find("th").length,
 			    	width = thead.find("tr:first").width(),
 			    	message;
 			    
-			    if (selected === 0 || selected === 1) {
+			    //dragging an element that has an unselected checkbox.
+			    if (mod.isChosenItem($el) === false) {
+			    	selected++;
+			    }
+			    
+			    if (selected === 1) {
 			    	message = "Adding 1 Item.";
 			    }
 			    else {

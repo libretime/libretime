@@ -50,6 +50,7 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('MEDIA_ITEM_PLAYED', 'DbMediaItemPlayed', 'BOOLEAN', false, null, false);
 		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', true, null, null);
 		$this->addColumn('PLAYOUT_STATUS', 'DbPlayoutStatus', 'SMALLINT', true, null, 1);
+		$this->addColumn('BROADCASTED', 'DbBroadcasted', 'SMALLINT', true, null, 0);
 		// validators
 	} // initialize()
 

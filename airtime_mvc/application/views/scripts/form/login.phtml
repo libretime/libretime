@@ -25,7 +25,7 @@
           <a href="<?php echo $this->baseUrl('login/password-restore'); ?>" class="link reset">Reset password</a>
         </dd>
     <?php endif; ?>
-  
+    <?php echo $this->element->getElement('captcha') ?>
     <dt id="submit-label">&nbsp;</dt>
     <dd id="submit-element">
       <?php echo $this->element->getElement('submit') ?>

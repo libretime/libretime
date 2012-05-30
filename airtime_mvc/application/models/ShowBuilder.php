@@ -59,6 +59,22 @@ class Application_Model_ShowBuilder {
         $this->epoch_now = floatval(microtime(true));
         $this->currentShow = false;
     }
+    
+    private function getUsersShows() {
+        
+        $shows = array();
+        
+        $host_shows = CcShowHostsQuery::create()
+            ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+            ->filterByDbHost($this->user->getId())
+            ->find();
+        
+        foreach ($host_shows as $host_show) {
+            $shows[] = $host_show->getDbShow();
+        }
+        
+        return $shows;
+    }
 
     //check to see if this row should be editable by the user.
     private function isAllowed($p_item, &$row) {
@@ -333,27 +349,43 @@ class Application_Model_ShowBuilder {
     public function hasBeenUpdatedSince($timestamp, $instances) {
         $outdated = false;
         $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
+        
+        if ($this->opts["showFilter"] !== 0) {
+            $include[] = $this->opts["showFilter"];
+        }
+        else if ($this->opts["myShows"] === 1) {
+
+            $include = $this->getUsersShows();
+        }
+        
+ 
         $currentInstances = array();
 
         foreach ($shows as $show) {
-            $currentInstances[] = $show["instance_id"];
-
-            if (isset($show["last_scheduled"])) {
-                $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
-            }
-            else {
-                $dt = new DateTime($show["created"], new DateTimeZone("UTC"));
-            }
             
-            //check if any of the shows have a more recent timestamp.
-            if ($timestamp < intval($dt->format("U"))) {
-                $outdated = true;
-                break;
+            if (empty($include) || in_array($show["show_id"], $include)) {
+                $currentInstances[] = $show["instance_id"];
+    
+                if (isset($show["last_scheduled"])) {
+                    $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
+                }
+                else {
+                    $dt = new DateTime($show["created"], new DateTimeZone("UTC"));
+                }
+                
+                //check if any of the shows have a more recent timestamp.
+                $showTimeStamp = intval($dt->format("U"));
+                if ($timestamp < $showTimeStamp) {
+                    Logging::debug("timestamp is {$timestamp} show timestamp is {$showTimeStamp}");
+                    $outdated = true;
+                    break;
+                }
             }
         }
 
         //see if the displayed show instances have changed. (deleted, empty schedule etc)
         if ($outdated === false && count($instances) !== count($currentInstances)) {
+            Logging::debug("show instances have changed.");
             $outdated = true;
         }
 
@@ -368,14 +400,7 @@ class Application_Model_ShowBuilder {
         $shows = array();
         if ($this->opts["myShows"] === 1) {
 
-            $host_shows = CcShowHostsQuery::create()
-                ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-                ->filterByDbHost($this->user->getId())
-                ->find();
-
-            foreach ($host_shows as $host_show) {
-                $shows[] = $host_show->getDbShow();
-            }
+            $shows = $this->getUsersShows();
         }
         else if ($this->opts["showFilter"] !== 0) {
             $shows[] = $this->opts["showFilter"];

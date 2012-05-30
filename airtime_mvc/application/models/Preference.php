@@ -412,7 +412,13 @@ class Application_Model_Preference
     	                  $key == 'FREE_RAM' || $key == 'AIRTIME_VERSION' || $key == 'KERNAL_VERSION'  || 
     	                  $key == 'MACHINE_ARCHITECTURE' || $key == 'TOTAL_MEMORY_MBYTES' || $key == 'TOTAL_SWAP_MBYTES' ||
     	                  $key == 'PLAYOUT_ENGINE_CPU_PERC' ) {
-    			    $systemInfoArray[$key] = $info[1];
+    	            if($key == 'AIRTIME_VERSION'){
+    	                // remove hash tag on the version string
+    	                $version = explode('+', $info[1]);
+    			        $systemInfoArray[$key] = $version[0];
+    	            }else{
+    	                $systemInfoArray[$key] = $info[1];
+    	            }
     	        }
     		}
     	}
@@ -481,6 +487,10 @@ class Application_Model_Preference
     	        } else if (!$out) {
     	            $outputString .= $key." : FALSE\n";
     	        }
+    	    }else if ($key == "SAAS") {
+                if (strcmp($out, 'disabled')!=0) {
+                    $outputString .= $key.' : '.$out."\n";
+                }
     	    }else{
     	        $outputString .= $key.' : '.$out."\n";
     	    }

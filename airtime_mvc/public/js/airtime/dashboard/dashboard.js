@@ -76,7 +76,7 @@ function updateProgressBarValue(){
     var scheduled_play_line_to_switch = scheduled_play_div.parent().find(".line-to-switch");
     
     if (currentSong !== null){	
-        var songElpasedTime = 0;
+        var songElapsedTime = 0;
         songPercentDone = (estimatedSchedulePosixTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
         songElapsedTime = estimatedSchedulePosixTime - currentSong.songStartPosixTime;
         if (songPercentDone < 0 || songPercentDone > 100){
@@ -239,11 +239,11 @@ function parseItems(obj){
     if (nextSong !== null)
         calcAdditionalData(nextSong);
     
-    currentShow = obj.currentShow;
-    nextShow = obj.nextShow;
-    
     calcAdditionalShowData(obj.currentShow);
     calcAdditionalShowData(obj.nextShow);
+    
+    currentShow = obj.currentShow;
+    nextShow = obj.nextShow;
 
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
     //timezoneOffset = parseInt(obj.timezoneOffset)*1000;
@@ -276,7 +276,7 @@ function parseSourceStatus(obj){
 
 function parseSwitchStatus(obj){
     
-    if(obj.live_dj_source == "on" && obj.master_dj_source == "off"){
+    if(obj.live_dj_source == "on"){
         live_dj_on_air = true;
     }else{
         live_dj_on_air = false;
@@ -398,7 +398,6 @@ function setSwitchListener(ele){
     var sourcename = $(ele).attr('id');
     var status_span = $(ele).find("span");
     var status = status_span.html();
-    
     $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
         if(data.error){
             alert(data.error);

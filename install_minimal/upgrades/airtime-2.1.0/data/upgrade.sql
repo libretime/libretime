@@ -54,7 +54,7 @@ ALTER TABLE cc_files
 	ALTER COLUMN length TYPE interval /* TYPE change - table: cc_files original: time without time zone new: interval */,
 	ALTER COLUMN length SET DEFAULT '00:00:00'::interval;
     
-UPDATE cc_files SET utime = now();
+UPDATE cc_files SET utime = now()::timestamp(0);
 
 ALTER TABLE cc_music_dirs
 	ADD COLUMN "exists" boolean DEFAULT true,
@@ -86,6 +86,7 @@ ALTER TABLE cc_schedule
 	DROP COLUMN group_id,
 	DROP COLUMN schedule_group_played,
 	ADD COLUMN playout_status smallint DEFAULT 1 NOT NULL,
+	ADD COLUMN broadcasted smallint DEFAULT 0 NOT NULL,
 	ALTER COLUMN clip_length TYPE interval /* TYPE change - table: cc_schedule original: time without time zone new: interval */,
 	ALTER COLUMN clip_length SET DEFAULT '00:00:00'::interval,
 	ALTER COLUMN cue_in TYPE interval /* TYPE change - table: cc_schedule original: time without time zone new: interval */,
@@ -105,6 +106,7 @@ ALTER TABLE cc_show_instances
 	ALTER COLUMN time_filled TYPE interval /* TYPE change - table: cc_show_instances original: time without time zone new: interval */,
 	ALTER COLUMN time_filled SET DEFAULT '00:00:00'::interval;
     
+UPDATE cc_show_instances SET time_filled = '00:00:00' WHERE time_filled is NULL;
 UPDATE cc_show_instances SET created = now();
 UPDATE cc_show_instances SET last_scheduled = now();
 

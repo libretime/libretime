@@ -170,42 +170,78 @@ class PypoFetch(Thread):
             self.update_liquidsoap_station_name(info['station_name'])
             self.update_liquidsoap_transition_fade(info['transition_fade'])
             
-    def regenerateLiquidsoapConf(self, setting_p):
+    def write_liquidsoap_config(self, setting):
+        fh = open('/etc/airtime/liquidsoap.cfg', 'w')
+        self.logger.info("Rewriting liquidsoap.cfg...")
+        fh.write("################################################\n")
+        fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
+        fh.write("################################################\n")
+        for k, d in setting:
+            buffer_str = d[u'keyname'] + " = "
+            if d[u'type'] == 'string':
+                temp = d[u'value']
+                buffer_str += '"%s"' % temp
+            else:
+                temp = d[u'value']
+                if temp == "":
+                    temp = "0"
+                buffer_str += temp
+                
+            buffer_str += "\n"
+            fh.write(api_client.encode_to(buffer_str))
+        fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
+        fh.close()
+        # restarting pypo.
+        # we could just restart liquidsoap but it take more time somehow.
+        self.logger.info("Restarting pypo...")
+        sys.exit(0)
+            
+    def regenerateLiquidsoapConf(self, setting):
         existing = {}
         # create a temp file
-        fh = open('/etc/airtime/liquidsoap.cfg', 'r')
+        
+        setting = sorted(setting.items())
+        try:
+            fh = open('/etc/airtime/liquidsoap.cfg', 'r')
+        except IOError, e:
+            #file does not exist
+            self.write_liquidsoap_config(setting)
+        
         self.logger.info("Reading existing config...")
         # read existing conf file and build dict
-        while 1:
+        while True:
             line = fh.readline()
+
+            # empty line means EOF
             if not line:
                 break
-            
+                
             line = line.strip()
-            if line.find('#') == 0:
+                                        
+            if line[0] == "#":
                 continue
-            # if empty line
-            if not line:
+
+            try:
+                key, value = line.split('=', 1)
+            except ValueError:
                 continue
-            key, value = line.split(' = ')
             key = key.strip()
             value = value.strip()
             value = value.replace('"', '')
-            if value == "" or value == "0":
+            if value == '' or value == "0":
                 value = ''
-            existing[key] =  value
+            existing[key] = value
         fh.close()
         
         # dict flag for any change in cofig
         change = {}
-        # this flag is to detect diable -> disable change
+        # this flag is to detect disable -> disable change
         # in that case, we don't want to restart even if there are chnges.
         state_change_restart = {}
         #restart flag
         restart = False
         
         self.logger.info("Looking for changes...")
-        setting = sorted(setting_p.items())
         # look for changes
         for k, s in setting:
             if "output_sound_device" in s[u'keyname'] or "icecast_vorbis_metadata" in s[u'keyname']:
@@ -249,31 +285,7 @@ class PypoFetch(Thread):
                 restart = True
         # rewrite
         if restart:
-            fh = open('/etc/airtime/liquidsoap.cfg', 'w')
-            self.logger.info("Rewriting liquidsoap.cfg...")
-            fh.write("################################################\n")
-            fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
-            fh.write("################################################\n")
-            for k, d in setting:
-                buffer_str = d[u'keyname'] + " = "
-                if(d[u'type'] == 'string'):
-                    temp = d[u'value']
-                    if(temp == ""):
-                        temp = ""
-                    buffer_str += "\"" + temp + "\""
-                else:
-                    temp = d[u'value']
-                    if(temp == ""):
-                        temp = "0"
-                    buffer_str += temp
-                buffer_str += "\n"
-                fh.write(api_client.encode_to(buffer_str))
-            fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
-            fh.close()
-            # restarting pypo.
-            # we could just restart liquidsoap but it take more time somehow.
-            self.logger.info("Restarting pypo...")
-            sys.exit(0)
+            self.write_liquidsoap_config(setting)
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()

@@ -69,10 +69,9 @@ catch (Zend_Console_Getopt_Exception $e) {
     exit(1);
 }
 
+$infoArray = Application_Model_Preference::GetSystemInfo(true, isset($opts->t));
+
 if(Application_Model_Preference::GetSupportFeedback() == '1'){
-
-    $infoArray = Application_Model_Preference::GetSystemInfo(true, isset($opts->t));
-
     $url = 'http://stat.sourcefabric.org/index.php?p=airtime';
     //$url = 'http://localhost:9999/index.php?p=airtime';
 

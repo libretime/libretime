@@ -281,6 +281,7 @@
     <column name="media_item_played" phpName="DbMediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
     <column name="playout_status" phpName="DbPlayoutStatus" type="SMALLINT" required="true" defaultValue="1"/>
+    <column name="broadcasted" phpName="DbBroadcasted" type="SMALLINT" required="true" defaultValue="0"/>
     <!-- This foreign key is still useful even though it may seem we don't ever delete cc_show_instances anymore.
         We will do delete them in some cases (when editing a show and changing the repeating days of the week
         for example. \

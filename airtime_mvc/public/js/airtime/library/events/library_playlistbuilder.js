@@ -48,14 +48,20 @@ var AIRTIME = (function(AIRTIME){
 		$('#library_display tr.lib-audio').draggable({
 			helper: function(){
 					
-			    var selected = mod.getChosenAudioFilesLength(),
+			    var $el = $(this),
+			    	selected = mod.getChosenAudioFilesLength(),
 			    	container,
 			    	message,
 			    	li = $("#side_playlist ul li:first"),
 			    	width = li.width(),
 			    	height = li.height();
+			    
+			    //dragging an element that has an unselected checkbox.
+			    if (mod.isChosenItem($el) === false) {
+			    	selected++;
+			    }
 			   
-			    if (selected === 0 || selected === 1) {
+			    if (selected === 1) {
 			    	message = "Adding 1 Item.";
 			    }
 			    else {

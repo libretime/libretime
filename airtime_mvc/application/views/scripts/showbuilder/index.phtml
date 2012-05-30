@@ -9,7 +9,14 @@
 <?php endif; ?>
 
 <div id="show_builder" class="sb-content ui-widget ui-widget-content block-shadow omega-block padded">
+    <div class="sb-timerange">
+        <?php if(!$this->disableLib && !$this->showLib):?>
+        <div id="sb_edit" class="ui-button ui-state-default" title="open the library to schedule files.">
+            <span class="ui-icon ui-icon-arrowthick-1-nw"></span>
+        </div> 
+        <?php endif; ?>
     <?php echo $this->sb_form; ?>
+    </div>
     <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
 </div>
 

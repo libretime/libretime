@@ -272,47 +272,25 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         if ($showStartLocalDT->getTimestamp() <= $epochNow &&
-                $epochNow < $showEndLocalDT->getTimestamp() &&
-                ($isAdminOrPM || $isDJ)) {
+                $epochNow < $showEndLocalDT->getTimestamp() && $isAdminOrPM) {
 
             if ($instance->isRecorded()) {
-                if($isAdminOrPM){
-                    $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
-                }
-            } else {
-                if($instance->isRepeating()){
-                    /*$menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
-                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-instance-form");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");*/
+                $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+            } 
+            else {
+
+                if (!$instance->isRebroadcast()) {
                     $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
-                }else{
-                    if($instance->isRebroadcast()){
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
-                    }else{
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
-                    }
                 }
-                if($isAdminOrPM){
-                    $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
-                }
+
+                $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
             }
         }
 
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
-            if ($isAdminOrPM || $isDJ) {
-
-                if($instance->isRepeating()){
-                    /*$menu["edit"] = array("name"=> "Edit", "icon" => "edit", "items" => array());
-                    $menu["edit"]["items"]["instance"] = array("name"=> "Edit Show Instance", "icon" => "edit", "url" => "/Schedule/populate-show-instance-form");
-                    $menu["edit"]["items"]["all"] = array("name"=> "Edit Show", "icon" => "edit", "url" => "/Schedule/populate-show-form");*/
+                if (!$instance->isRebroadcast() && $isAdminOrPM) {
                     $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
-                }else{
-                    if($instance->isRebroadcast()){
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"rebroadcast", "url" => "/Schedule/populate-show-form");
-                    }else{
-                        $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
-                    }
                 }
 
                 if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
@@ -324,11 +302,10 @@ class ScheduleController extends Zend_Controller_Action
 
                     $menu["del"]["items"]["following"] = array("name"=> "Delete This Instance and All Following", "icon" => "delete", "url" => "/schedule/cancel-show");
                 }
-                else if($isAdminOrPM){
-                    //window["scheduleRefetchEvents"]'
-                   $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
+                else if ($isAdminOrPM){
+
+                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
                 }
-            }
         }
 
         $this->view->items = $menu;

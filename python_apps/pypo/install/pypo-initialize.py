@@ -48,9 +48,7 @@ def generate_liquidsoap_config(ss):
         buffer = d[u'keyname'] + " = "
         if(d[u'type'] == 'string'):
             temp = d[u'value']
-            if(temp == ""):
-                temp = ""
-            buffer += "\"" + temp + "\""
+            buffer += '"%s"' % temp
         else:
             temp = d[u'value']
             if(temp == ""):
@@ -58,7 +56,7 @@ def generate_liquidsoap_config(ss):
             buffer += temp
         buffer += "\n"
         fh.write(api_client.encode_to(buffer))
-    fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
+    fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
     
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
@@ -111,17 +109,19 @@ try:
         print e
         sys.exit(1)
     
+    """
     logging.basicConfig(format='%(message)s')
             
     #generate liquidsoap config file
     #access the DB and generate liquidsoap.cfg under /etc/airtime/
     ac = api_client.api_client_factory(config, logging.getLogger())
     ss = ac.get_stream_setting()
-        
+    
     if ss is not None:
         generate_liquidsoap_config(ss)
     else:
         print "Unable to connect to the Airtime server."
+    """
 
     #initialize init.d scripts
     subprocess.call("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
@@ -130,8 +130,9 @@ try:
     print "* Clearing previous pypo cache"  
     subprocess.call("rm -rf '/var/tmp/airtime/pypo/cache/scheduler/*' >/dev/null 2>&1", shell=True)
     
-    print "* Waiting for pypo processes to start..."    
-    subprocess.call("invoke-rc.d airtime-playout start-no-monit  > /dev/null 2>&1", shell=True)
+    if "airtime_service_start" in os.environ and os.environ["airtime_service_start"] == "t":
+        print "* Waiting for pypo processes to start..."    
+        subprocess.call("invoke-rc.d airtime-playout start-no-monit  > /dev/null 2>&1", shell=True)
     
 except Exception, e:
     print e

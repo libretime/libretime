@@ -2,6 +2,8 @@ var AIRTIME = (function(AIRTIME){
 	var mod,
 		oSchedTable,
 		SB_SELECTED_CLASS = "sb-selected",
+		CURSOR_SELECTED_CLASS = "cursor-selected-row",
+		NOW_PLAYING_CLASS = "sb-now-playing",
 		$sbContent,
 		$sbTable,
 		$toolbar,
@@ -56,8 +58,19 @@ var AIRTIME = (function(AIRTIME){
 		oSchedTable.fnDraw();
 	};
 	
+	mod.checkSelectButton = function() {
+		var $selectable = $sbTable.find("tbody").find("input:checkbox");
+		
+		if ($selectable.length !== 0) {
+			AIRTIME.button.enableButton("sb-button-select");
+		}
+		else {
+			AIRTIME.button.disableButton("sb-button-select");
+		}
+	};
+	
 	mod.checkTrimButton = function() {
-		var $over = $sbTable.find(".sb-over");
+		var $over = $sbTable.find(".sb-over.sb-allowed");
 		
 		if ($over.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-trim");
@@ -79,7 +92,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkJumpToCurrentButton = function() {
-		var $current = $sbTable.find(".sb-now-playing");
+		var $current = $sbTable.find("."+NOW_PLAYING_CLASS);
 		
 		if ($current.length !== 0) {
 			AIRTIME.button.enableButton("sb-button-current");
@@ -90,9 +103,12 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.checkCancelButton = function() {
-		var $current = $sbTable.find(".sb-current-show");
+		var $current = $sbTable.find(".sb-current-show.sb-allowed"),
+			//this user type should be refactored into a separate users module later
+			//when there's more time and more JS will need to know user data.
+			userType = localStorage.getItem('user-type');
 		
-		if ($current.length !== 0) {
+		if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
 			AIRTIME.button.enableButton("sb-button-cancel");
 		}
 		else {
@@ -103,17 +119,37 @@ var AIRTIME = (function(AIRTIME){
 	mod.checkToolBarIcons = function() {
     	
 		AIRTIME.library.checkAddButton();
+		mod.checkSelectButton();
 		mod.checkTrimButton();
 		mod.checkDeleteButton();
 		mod.checkJumpToCurrentButton();
 		mod.checkCancelButton();
     };
+    
+    mod.selectCursor = function($el) {
+    	
+    	$el.addClass(CURSOR_SELECTED_CLASS);
+    	mod.checkToolBarIcons();
+    };
+    
+    mod.removeCursor = function($el) {
+    	
+    	$el.removeClass(CURSOR_SELECTED_CLASS);
+    	mod.checkToolBarIcons();
+    };
 	
-	mod.getSelectedData = function() {
+    /*
+     * sNot is an optional string to filter selected elements by. (ex removing the currently playing item)
+     */
+	mod.getSelectedData = function(sNot) {
     	var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked").parents("tr"),
     		aData = [],
     		i, length,
     		$item;
+    	
+    	if (sNot !== undefined) {
+    		$selected = $selected.not("."+sNot);
+    	}
     	
     	for (i = 0, length = $selected.length; i < length; i++) {
     		$item = $($selected.get(i));
@@ -513,7 +549,7 @@ var AIRTIME = (function(AIRTIME){
 				$nRow.data({"aData": aData});
 				
 				if (aData.scheduled === 1) {
-					$nRow.addClass("sb-now-playing");
+					$nRow.addClass(NOW_PLAYING_CLASS);
 				}
 				else if (aData.scheduled === 0) {
 					$nRow.addClass("sb-past");
@@ -618,7 +654,7 @@ var AIRTIME = (function(AIRTIME){
 				
 				//order of importance of elements for setting the next timeout.
 				elements = [
-				    $sbTable.find("tr.sb-now-playing"),
+				    $sbTable.find("tr."+NOW_PLAYING_CLASS),
 				    $sbTable.find("tbody").find("tr.sb-future.sb-footer, tr.sb-future.sb-header").filter(":first")
 				];
 				
@@ -776,7 +812,7 @@ var AIRTIME = (function(AIRTIME){
 				forcePlaceholderSize: true,
 				distance: 10,
 				helper: function(event, item) {
-					var selected = mod.getSelectedData(),	    	
+					var selected = mod.getSelectedData(NOW_PLAYING_CLASS),	    	
 				    	thead = $("#show_builder_table thead"),
 				    	colspan = thead.find("th").length,
 				    	trfirst = thead.find("tr:first"),
@@ -816,7 +852,17 @@ var AIRTIME = (function(AIRTIME){
 				receive: fnReceive,
 				update: fnUpdate,
 				start: function(event, ui) {
-					var elements = $sbTable.find('tr:not(:first) input:checked').parents('tr');
+					/*
+					var elements = $sbTable.find('tr input:checked').parents('tr')
+						.not(ui.item)
+						.not("."+NOW_PLAYING_CLASS);
+					
+					//remove all other items from the screen, 
+					//don't remove ui.item or else we can not get position information when the user drops later.
+					elements.remove();
+					*/
+					
+					var elements = $sbTable.find('tr input:checked').parents('tr').not("."+NOW_PLAYING_CLASS);
 					
 					elements.hide();
 				}
@@ -895,7 +941,7 @@ var AIRTIME = (function(AIRTIME){
 				var $scroll = $sbContent.find(".dataTables_scrolling"),
 					scrolled = $scroll.scrollTop(),
 					scrollingTop = $scroll.offset().top,
-					current = $sbTable.find(".sb-now-playing"),
+					current = $sbTable.find("."+NOW_PLAYING_CLASS),
 					currentTop = current.offset().top;
 		
 				$scroll.scrollTop(currentTop - scrollingTop + scrolled);
@@ -911,7 +957,7 @@ var AIRTIME = (function(AIRTIME){
 				
 				var temp,
 					aItems = [],
-					trs = $sbTable.find(".sb-over.sb-future");
+					trs = $sbTable.find(".sb-over.sb-future.sb-allowed");
 		
 				trs.each(function(){
 					temp = $(this).data("aData");
@@ -935,22 +981,20 @@ var AIRTIME = (function(AIRTIME){
 		//add events to cursors.
 		$sbTable.find("tbody").on("click", "div.marker", function(event) {
 			var $tr = $(this).parents("tr"),
-				cursorSelClass = "cursor-selected-row";
+				$trs;
 			
-			if ($tr.hasClass(cursorSelClass)) {
-				$tr.removeClass(cursorSelClass);
+			if ($tr.hasClass(CURSOR_SELECTED_CLASS)) {
+				mod.removeCursor($tr);
 			}
 			else {
-				$tr.addClass(cursorSelClass);
+				mod.selectCursor($tr);
 			}
 			
 			if (event.ctrlKey === false) {
-				$sbTable.find('.'+cursorSelClass).not($tr)
-					.removeClass(cursorSelClass);
+				$trs = $sbTable.find('.'+CURSOR_SELECTED_CLASS).not($tr);
+				mod.removeCursor($trs);
 			}
 			
-			mod.checkToolBarIcons();
-
 			return false;
 		});
 		
@@ -983,7 +1027,9 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.selCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().addClass(cursorClass);
+                        	var $tr = $(this).parents('tr').next();
+                        	
+                        	mod.selectCursor($tr);
                         };
                         
                         oItems.selCurs.callback = callback;
@@ -993,7 +1039,9 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.delCurs !== undefined) {
                         
                         callback = function() {
-                            $(this).parents('tr').next().removeClass(cursorClass);
+                        	var $tr = $(this).parents('tr').next();
+                        	
+                        	mod.removeCursor($tr);
                         };
                         
                         oItems.delCurs.callback = callback;

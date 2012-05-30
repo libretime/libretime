@@ -848,7 +848,7 @@ class Application_Model_Show {
         $showId = $this->getId();
         $sql = "SELECT id FROM cc_show_instances"
             ." WHERE date(starts) = date(TIMESTAMP '$timestamp') "
-            ." AND show_id = $showId";
+            ." AND show_id = $showId AND rebroadcast = 0";
 
         $query = $con->query($sql);
         $row = ($query !== false) ? $query->fetchColumn(0) : null;
@@ -1484,32 +1484,34 @@ class Application_Model_Show {
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
-        $sql = "SELECT starts, ends, record, rebroadcast, instance_id, show_id, name,
-                color, background_color, file_id, cc_show_instances.id AS instance_id,
-                created, last_scheduled, time_filled
-            FROM cc_show_instances
-            LEFT JOIN cc_show ON cc_show.id = cc_show_instances.show_id
-            WHERE cc_show_instances.modified_instance = FALSE";
+        $sql = "SELECT si1.starts AS starts, si1.ends AS ends, si1.record AS record, si1.rebroadcast AS rebroadcast, si2.starts AS parent_starts,
+                si1.instance_id AS record_id, si1.show_id AS show_id, show.name AS name,
+                show.color AS color, show.background_color AS background_color, si1.file_id AS file_id, si1.id AS instance_id,
+                si1.created AS created, si1.last_scheduled AS last_scheduled, si1.time_filled AS time_filled
+            FROM cc_show_instances AS si1
+            LEFT JOIN cc_show_instances AS si2 ON si1.instance_id = si2.id
+            LEFT JOIN cc_show AS show ON show.id = si1.show_id
+            WHERE si1.modified_instance = FALSE";
 
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
         if ($onlyRecord) {
 
-            $sql = $sql." AND (starts >= '{$start_string}' AND starts < timestamp '{$end_string}')";
-            $sql = $sql." AND (record = 1)";
+            $sql = $sql." AND (si1.starts >= '{$start_string}' AND si1.starts < timestamp '{$end_string}')";
+            $sql = $sql." AND (si1.record = 1)";
         }
         else {
 
-            $sql = $sql." AND ((starts >= '{$start_string}' AND starts < '{$end_string}')
-                OR (ends > '{$start_string}' AND ends <= '{$end_string}')
-                OR (starts <= '{$start_string}' AND ends >= '{$end_string}'))";
+            $sql = $sql." AND ((si1.starts >= '{$start_string}' AND si1.starts < '{$end_string}')
+                OR (si1.ends > '{$start_string}' AND si1.ends <= '{$end_string}')
+                OR (si1.starts <= '{$start_string}' AND si1.ends >= '{$end_string}'))";
         }
 
 
         if (isset($excludeInstance)) {
             foreach($excludeInstance as $instance) {
-                $sql_exclude[] = "cc_show_instances.id != {$instance}";
+                $sql_exclude[] = "si1.id != {$instance}";
             }
 
             $exclude = join(" OR ", $sql_exclude);
@@ -1517,8 +1519,6 @@ class Application_Model_Show {
             $sql = $sql." AND ({$exclude})";
         }
 
-        //Logging::log("getShows");
-        //Logging::log($sql);
         $result = $con->query($sql)->fetchAll();
         return $result;
     }
@@ -1594,13 +1594,20 @@ class Application_Model_Show {
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
             
+            if (isset($show["parent_starts"])) {
+                $parentStartsDT = new DateTime($show["parent_starts"], new DateTimeZone("UTC"));
+                $parentStartsEpoch = intval($parentStartsDT->format("U"));
+            }
             $startsDT = new DateTime($show["starts"], new DateTimeZone("UTC"));
             $endsDT = new DateTime($show["ends"], new DateTimeZone("UTC"));
             
             $startsEpoch = intval($startsDT->format("U"));
             $endsEpoch = intval($endsDT->format("U"));
 
-            if ($p_editable && $show["record"] && $nowEpoch < $endsEpoch) {
+            if ($p_editable && $show["record"] && $nowEpoch > $startsEpoch) {
+                $options["editable"] = false;
+            }
+            else if ($p_editable && $show["rebroadcast"] && $nowEpoch > $parentStartsEpoch) {
                 $options["editable"] = false;
             }
             else if ($p_editable && $nowEpoch < $endsEpoch) {
@@ -1764,7 +1771,7 @@ class Application_Model_Show {
 
         for( $i = 0; $i < $numberOfRows; ++$i ){
             //Find the show that is within the current time.
-            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
+            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) > $timeNowAsMillis)){
                 if ( $i - 1 >= 0){
                     $results['previousShow'][0] = array(
                                 "id"=>$rows[$i-1]['id'],

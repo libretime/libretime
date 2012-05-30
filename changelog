@@ -1,3 +1,43 @@
+2.1.0 - June 5th, 2012
+  * The cool stuff:
+    * Real-time show editing in the Now Playing and Calendar screens
+      * Add/Remove/Rearrange tracks within a show, even if it currently playing
+      * Color-coded which tracks are inside the show, which are on the show boundary, and which are outside the show boundary
+      * Ability to cut all tracks that are outside the show boundary
+      * Edit the length of a show that is currently playing
+    * Live Stream Rebroadcasting
+      * Two live streams can be connected to Airtime: DJ stream and Master stream. The DJ stream can connect to Airtime and override the scheduled playout. The Master stream can connect to Airtime and override the DJ stream and the scheduled playout. Live Streams are activated in the interface and the interface displays which stream is being output.
+    * Library usability improvements
+      * Bulk actions added: "Add to Playlist", "Add to Show", and "Delete File"
+      * Ability to choose which columns to display and the order of the columns, sort by multiple columns
+      * Any metadata can be shown in the list
+      * Added a "Date Uploaded" column
+    * Preview tracks
+      * Ability to seek to a specific part of a track
+      * Ability to listen to all tracks in a playlist or show back-to-back.
+    * Media Monitor - added support for network and USB drives.
+      * Removing a watched directory and adding it again preserves playlists & shows with those files.
+      * An icon in the playlist shows whether a file is missing on disk, warning the user that the playlist will not go according to plan.
+      * Media monitor detects add and removal of watched temporary local storage (USB disks for example) and network drives.
+     * Broadcast Log - export play count of tracks within a given time range.&nbsp; Useful for royalty reporting purposes.
+  * Minor Improvements:
+    * Ability to turn off the broadcast.
+    * Editing metadata in the library will update the metadata on disk.
+    * Password reset - user can request a password reset if they forgot it.
+    * Overbooked shows now fade out properly
+    * Playlists & Shows can now be infinite length. Previously they were limited to 24 hours long.
+    * Default fade time set to 0.5 of a second
+    * Repeating shows default to "No End"
+    * Ability to "View on Soundcloud" for recorded shows in the calendar
+    * "Listen" preview player no longer falls behind the broadcast (you can only mute the stream now, not stop it)
+    * Tracks that cannot be played will be rejected on upload and put in to the directory "/srv/airtime/store/problem_files" (but currently it will not tell you that it rejected them - sorry\!)
+    * Library is automatically refreshed when media import is finished
+    * Show "Disk Full" message when trying to upload a file that wont fit on the disk
+    * Reduced CPU utilization for OGG streams
+    * New command line utilities:
+      * airtime-test-soundcard - verify that the soundcard is working
+      * airtime-test-icecast - verify that you can connect to an Icecast server
+
 2.0.3 - April 3rd, 2012
   * Bug Fixes:
     * monit user should have read-only permissions by default

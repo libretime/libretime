@@ -108,11 +108,10 @@ select {
 .info-tooltip {
         cursor: help;
         position: relative;
-        
-        display:inline-block; zoom:1; display:inline;
+        display:inline-block; zoom:1;
         width:14px; height:14px;
         background:url(/css/images/icon_info.png) 0 0 no-repeat;
-        float:right; position:relative; top:4px; right:7px; left: 3px;
+        top:2px; right:7px; left: 3px;
         line-height:16px !important;
 }
 .info-tooltip span {
@@ -2420,7 +2419,7 @@ tfoot tr th	{
 	height:38px;
 	display:block;
 	position:absolute;
-	right:20px;
+	left:20px;
 	bottom:10px;
 	background-color:#222;
 	background-color:rgba(0, 0, 0, 0.7);
