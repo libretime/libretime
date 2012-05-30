@@ -143,3 +143,23 @@ ALTER TABLE cc_subjs_token
 CREATE INDEX cc_files_file_exists_idx ON cc_files USING btree (file_exists);
 
 DROP FUNCTION airtime_to_int(chartoconvert character varying);
+
+
+UPDATE cc_playlist SET creator_id = (SELECT id FROM cc_subjs WHERE type = 'A' LIMIT 1);
+
+DELETE FROM cc_pref WHERE keystr = 'scheduled_play_switch';
+INSERT INTO cc_pref(keystr, valstr) VALUES('scheduled_play_switch', 'on');
+
+INSERT INTO cc_live_log(state, start_time) VALUES('S', now() at time zone 'UTC');
+
+DELETE FROM cc_pref WHERE keystr = 'system_version';
+INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.1.0');
+ 
+--UPDATE
+UPDATE cc_schedule SET playout_status = 1 WHERE id in (SELECT DISTINCT s.id FROM cc_schedule as s LEFT JOIN cc_show_instances as si ON si.id = s.instance_id WHERE s.ends <= si.ends AND s.playout_status >= 0); 
+
+UPDATE cc_schedule SET playout_status = 2 WHERE id in (SELECT DISTINCT s.id FROM cc_schedule as s LEFT JOIN cc_show_instances as si ON si.id = s.instance_id WHERE s.starts < si.ends AND s.ends > si.ends AND s.playout_status >= 0);
+
+UPDATE cc_schedule SET playout_status = 0 WHERE id in (SELECT DISTINCT s.id FROM cc_schedule as s LEFT JOIN cc_show_instances as si ON si.id = s.instance_id WHERE s.starts > si.ends AND s.playout_status >= 0);
+
+

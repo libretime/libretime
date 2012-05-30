@@ -104,12 +104,4 @@ if (strcmp($version, "2.1.0") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.0/airtime-upgrade.php");
 } 
 
-//set the new version in the database.
-$sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
-$con->exec($sql);
-
-$newVersion = AIRTIME_VERSION;
-$sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$newVersion')";
-$con->exec($sql);
-
 echo "******************************* Upgrade Complete *******************************".PHP_EOL;
