@@ -276,7 +276,7 @@ function parseSourceStatus(obj){
 
 function parseSwitchStatus(obj){
     
-    if(obj.live_dj_source == "on" && obj.master_dj_source == "off"){
+    if(obj.live_dj_source == "on"){
         live_dj_on_air = true;
     }else{
         live_dj_on_air = false;
@@ -398,7 +398,6 @@ function setSwitchListener(ele){
     var sourcename = $(ele).attr('id');
     var status_span = $(ele).find("span");
     var status = status_span.html();
-    
     $.get("/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
         if(data.error){
             alert(data.error);
