@@ -128,7 +128,7 @@ try:
 
     #clear out an previous pypo cache
     print "* Clearing previous pypo cache"  
-    subprocess.call("rm -rf '/var/tmp/airtime/pypo/cache/scheduler/*' >/dev/null 2>&1", shell=True)
+    subprocess.call("rm -rf /var/tmp/airtime/pypo/cache/scheduler/* >/dev/null 2>&1", shell=True)
     
     if "airtime_service_start" in os.environ and os.environ["airtime_service_start"] == "t":
         print "* Waiting for pypo processes to start..."    
