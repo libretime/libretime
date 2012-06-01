@@ -560,7 +560,6 @@ class ApiController extends Zend_Controller_Action
             $filepath = str_replace("//", "/", $filepath);
 
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
             }
@@ -573,6 +572,7 @@ class ApiController extends Zend_Controller_Action
                 }else{
                     // file marked as not exists
                     $file->setFileExistsFlag(true);
+                    $file->setMetadata($md);
                 }
             }
         }
