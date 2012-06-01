@@ -97,10 +97,12 @@ class AirtimeMetadata:
                     
                     if value is not None:
                         value = unicode(value)
+                    else:
+                        value = unicode('');
                     
-                        if len(value) > 0:
-                            self.logger.debug("Saving key '%s' with value '%s' to file", key, value)
-                            airtime_file[self.airtime2mutagen[key]] = value
+                        #if len(value) > 0:
+                    self.logger.debug("Saving key '%s' with value '%s' to file", key, value)
+                    airtime_file[self.airtime2mutagen[key]] = value
 
             airtime_file.save()
         except Exception, e:
