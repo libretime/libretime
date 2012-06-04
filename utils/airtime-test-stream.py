@@ -22,7 +22,7 @@ def printUsage():
     print "     -o stream server type (default: icecast)"
     print "     -H hostname (default: localhost) "
     print "     -P port (default: 8000) "
-    print "     -u port (default: source) "
+    print "     -u user (default: source) "
     print "     -p password (default: hackme) "
     print "     -m mount (default: test) "
         
