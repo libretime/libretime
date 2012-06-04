@@ -172,7 +172,11 @@ class Application_Model_StreamSetting {
                         $v = $d['enable'] == 1 ? 'true' : 'false';
                     }
                     $v = trim($v);
+                    
+                    #escape double single quotes CC-3926
+                    $v = str_replace("'", "''", $v);
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
+
                     $con->exec($sql);
                 }
             } else {
