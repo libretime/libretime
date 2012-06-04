@@ -135,8 +135,8 @@ class ShowRecorder(Thread):
             recorded_file = mutagen.File(filepath, easy=True)
             recorded_file['title'] = name
             recorded_file['artist'] = artist
-            recorded_file['record_date'] = md[0]
-            recorded_file['date'] = md[0].split("-")[0]
+            recorded_file['date'] = md[0]
+            #recorded_file['date'] = md[0].split("-")[0]
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
             recorded_file.save()
