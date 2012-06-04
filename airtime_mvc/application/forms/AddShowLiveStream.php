@@ -6,7 +6,6 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
 
     public function init()
     {
-        $description1 = "This follows the same security pattern for the shows: only users assigned to the show can connect.";
         $cb_airtime_auth = new Zend_Form_Element_Checkbox("cb_airtime_auth");
         $cb_airtime_auth->setLabel("Use Airtime Authentication:")
                           ->setDescription($description1)
@@ -14,7 +13,6 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                           ->setDecorators(array('ViewHelper'));
         $this->addElement($cb_airtime_auth);
         
-        $description2 = "Specify custom authentication which will work only for this show.";
         $cb_custom_auth = new Zend_Form_Element_Checkbox("cb_custom_auth");
         $cb_custom_auth  ->setLabel("Use Custom Authentication:")
                             ->setDescription($description2)

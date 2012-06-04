@@ -179,7 +179,48 @@ function setAddShowEvents() {
     form.find("#add_show_day_check-element").addClass("block-display clearfix");
     form.find("#add_show_day_check-element label").addClass("wrapp-label");
     form.find("#add_show_day_check-element br").remove();
-
+    
+    form.find(".airtime_auth_help_icon").qtip({
+        content: {
+            text: "This follows the same security pattern for the shows: only users assigned to the show can connect."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+    form.find(".custom_auth_help_icon").qtip({
+        content: {
+            text: "Specify custom authentication which will work only for this show."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+    
     function endDateVisibility(){
         if(form.find("#add_show_no_end").is(':checked')){
             form.find("#add_show_end_date").hide();

@@ -93,7 +93,7 @@ select {
 }
 /* Version Notification Ends*/
 
-.override_help_icon {
+.override_help_icon, .icecast_metadata_help_icon  {
         cursor: help;
         position: relative;
         
@@ -104,8 +104,7 @@ select {
         line-height:16px !important;
 }
 
-/* Info Tooltip Starts */
-.info-tooltip {
+.airtime_auth_help_icon, .custom_auth_help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
@@ -114,28 +113,6 @@ select {
         top:2px; right:7px; left: 3px;
         line-height:16px !important;
 }
-.info-tooltip span {
-        margin-left: -9999em;
-        position: absolute;
-        padding: 1em 1em 1em 1em;
-        text-indent:0; font-family:Arial, Helvetica, sans-serif !important; font-size:13px !important;
-        border:#505050 solid 3px;
-        background:#e6e6e6;
-        cursor:text;
-}
-.info-tooltip:hover span:before {
-        content:"";
-        position:absolute; top:22px; left:-11px;
-        width:8px; height:15px;
-        margin:-7px 0 0 0;
-        background:url(/css/images/tooltip_arrow.png) 0 0 no-repeat;
-}
-.info-tooltip:hover span {
-        box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1); -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-        position: absolute; left: 25px; top: -18px; z-index: 99;
-        margin-left: 0; width: 200px;
-}
-/* Info Tooltip Ends */
 
 /* Clearfix */
 .clearfix:after, #side_playlist li:after { content: "."; display: block;	height: 0; clear: both;  visibility: hidden;}
