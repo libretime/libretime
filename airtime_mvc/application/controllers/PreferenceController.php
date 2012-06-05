@@ -214,6 +214,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
+                Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 
                 if (!$isSaas) {
                     $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];

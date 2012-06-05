@@ -805,9 +805,10 @@ class ApiController extends Zend_Controller_Action
         $msg = $request->getParam('msg');
         $sourcename = $request->getParam('sourcename');
         $status = $request->getParam('status');
-
+        
         // on source disconnection sent msg to pypo to turn off the switch
-        if($status == "false"){
+        // Added AutoTransition option
+        if($status == "false" && Application_Model_Preference::GetAutoTransition()){
             $data = array("sourcename"=>$sourcename, "status"=>"off");
             Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
             Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");

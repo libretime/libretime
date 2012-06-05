@@ -15,7 +15,14 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $defaultFade = '00.000000';
         }
         
-        //Default transition fade
+        // automatic switch off
+        $auto_transition = new Zend_Form_Element_Checkbox("auto_transition");
+        $auto_transition->setLabel("Auto Source Transition")
+                        ->setValue(Application_Model_Preference::GetAutoTransition())
+                        ->setDecorators(array('ViewHelper'));
+        $this->addElement($auto_transition);
+        
+        // Default transition fade
         $transition_fade = new Zend_Form_Element_Text("transition_fade");
         $transition_fade->setLabel("Switch Transition Fade (s)")
                         ->setFilters(array('StringTrim'))
