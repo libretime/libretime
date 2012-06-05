@@ -281,6 +281,28 @@ class Application_Model_StreamSetting {
         }
         return $out;
     }
+    
+    public static function GetConnectionUrls($p_source_type) {
+        if (strcmp($p_source_type, "master")==0) {
+            $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
+            $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
+            $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
+            $connection_url = ($master_dj_connection_url == "")?("http://".$_SERVER['SERVER_NAME'].":".$m_port."/".$m_mount):$master_dj_connection_url;
+            if($m_port=="" || $m_mount==""){
+                $connection_url = "N/A";
+            }
+        }
+        else if (strcmp($p_source_type, "show")==0) {
+            $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
+            $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
+            $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
+            $connection_url = ($live_dj_connection_url == "")?"http://".$_SERVER['SERVER_NAME'].":".$l_port."/".$l_mount:$live_dj_connection_url;
+            if($l_port=="" || $l_mount==""){
+                $connection_url = "N/A";
+            }
+        }
+        return $connection_url;	
+    }
 
     public static function SetMasterLiveSteamPort($value){
         self::SetValue("master_live_stream_port", $value, "integer");
