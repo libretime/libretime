@@ -1782,6 +1782,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i-1]['end_timestamp'],
                                 "starts"=>$rows[$i-1]['starts'],
                                 "ends"=>$rows[$i-1]['ends'],
+                                "record"=>$rows[$i-1]['record'],
                                 "type"=>"show");
                 }
 
@@ -1797,6 +1798,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i+1]['end_timestamp'],
                                 "starts"=>$rows[$i+1]['starts'],
                                 "ends"=>$rows[$i+1]['ends'],
+                                "record"=>$rows[$i+1]['record'],
                                 "type"=>"show");
 
                 }
@@ -1817,6 +1819,7 @@ class Application_Model_Show {
                                 "end_timestamp"=>$rows[$i]['end_timestamp'],
                                 "starts"=>$rows[$i]['starts'],
                                 "ends"=>$rows[$i]['ends'],
+                                "record"=>$rows[$i]['record'],
                                 "type"=>"show");
                 break;
             }
@@ -1832,6 +1835,7 @@ class Application_Model_Show {
                     "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
                     "starts"=>$rows[$previousShowIndex]['starts'],
                     "ends"=>$rows[$previousShowIndex]['ends'],
+                    "record"=>$rows[$previousShowIndex]['record'],
                     "type"=>"show");
         }
         

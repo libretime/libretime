@@ -83,7 +83,7 @@ function updateProgressBarValue(){
             songPercentDone = 0;        
             currentSong = null;
         } else {
-            if ((currentSong.media_item_played == true && currentShow.length > 0) || songElapsedTime < 5000) {
+            if ((currentSong.media_item_played == true && currentShow.length > 0) || (songElapsedTime < 5000 && currentShow[0].record != 1)) {
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
                 scheduled_play_div.addClass("ready");
                 scheduled_play_source = true;

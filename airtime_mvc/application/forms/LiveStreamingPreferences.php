@@ -5,6 +5,10 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     
     public function init()
     {
+        global $CC_CONFIG;
+        $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
+        $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
+        
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
         if($defaultFade == ""){
@@ -32,7 +36,12 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($master_username);
         
         //Master password
-        $master_password = new Zend_Form_Element_Password('master_password');
+        if($isDemo){
+                $master_password = new Zend_Form_Element_Text('master_password');
+        }else{
+                $master_password = new Zend_Form_Element_Password('master_password');
+                $master_password->setAttrib('renderPassword','true');
+        }
         $master_password->setAttrib('autocomplete', 'off')
                         ->setAttrib('renderPassword','true')
                         ->setAllowEmpty(true)
@@ -81,15 +90,29 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($live_dj_mount);
         }
+        // demo only code
+        if(!$isStreamConfigable){
+            $elements = $this->getElements();
+            foreach ($elements as $element)
+            {
+                if ($element->getType() != 'Zend_Form_Element_Hidden')
+                {
+                    $element->setAttrib("disabled", "disabled");
+                }
+            }
+        }
     }
     
     public function updateVariables(){
+        global $CC_CONFIG;
+
         $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
         $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
         $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
         $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        
+        $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
+
         $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
         $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
         
@@ -102,9 +125,9 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         if($l_port=="" || $l_mount==""){
             $live_dj_connection_url = "N/A";
         }
-        
+
         $this->setDecorators(array(
-        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isSaas' => $isSaas))
+        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isSaas' => $isSaas, 'isDemo' => $isDemo))
         ));
     }
     

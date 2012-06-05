@@ -5,7 +5,8 @@ var AIRTIME = (function(AIRTIME) {
 	    $libContent,
 	    $libTable,
 	    LIB_SELECTED_CLASS = "lib-selected",
-	    chosenItems = {};
+	    chosenItems = {},
+	    visibleChosenItems = {};
     
     if (AIRTIME.library === undefined) {
         AIRTIME.library = {};
@@ -13,16 +14,45 @@ var AIRTIME = (function(AIRTIME) {
     mod = AIRTIME.library;
     
     mod.getChosenItemsLength = function(){
-    	var selected = Object.keys(chosenItems).length;
-    	
+        var cItem,
+            selected,
+            $trs;
+		    
+        // Get visible items and check if any chosenItems are visible
+        $trs = $libTable.find("tbody input:checkbox").parents("tr");
+        $trs.each(function(i){
+            for (cItem in chosenItems) {
+                if (cItem === $(this).attr("id")) {
+                    visibleChosenItems[cItem] = $(this).data('aData');
+                }
+            } 
+        });
+	    
+    	selected = Object.keys(visibleChosenItems).length;
+    	visibleChosenItems = {};
     	return selected;
     };
     
     mod.getChosenAudioFilesLength = function(){
-    	var files = Object.keys(chosenItems),
-    		i, length,
-    		count = 0,
-    		reAudio=/^au/ ;
+    	//var files = Object.keys(chosenItems),
+    	var files,
+            $trs,
+            cItem,
+            i, length,
+            count = 0,
+            reAudio=/^au/ ;
+    		
+        // Get visible items and check if any chosenItems are visible
+        $trs = $libTable.find("tbody input:checkbox").parents("tr");
+        $trs.each(function(i){
+            for (cItem in chosenItems) {
+                if (cItem === $(this).attr("id")) {
+                    visibleChosenItems[cItem] = $(this).data('aData');
+                }
+            } 
+        });
+        
+        files = Object.keys(visibleChosenItems);
     	
     	for (i = 0, length = files.length; i < length; i++) {
     		
@@ -72,14 +102,27 @@ var AIRTIME = (function(AIRTIME) {
     
     mod.getSelectedData = function() {
     	var id,
-    		data = [];
+            data = [],
+            cItem,
+            $trs;
+            
+    	$.fn.reverse = [].reverse;
     	
-    	for (id in chosenItems) {
-    		
-    		if (chosenItems.hasOwnProperty(id)) {
-    			data.push(chosenItems[id]);
-    		}
-    	}
+    	// Get visible items and check if any chosenItems are visible
+        $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
+    	$trs.each(function(i){
+            for (cItem in chosenItems) {
+                if (cItem === $(this).attr("id")) {
+                    visibleChosenItems[cItem] = $(this).data('aData');
+                }
+            } 
+        });
+    	
+    	for (id in visibleChosenItems) {
+            if (visibleChosenItems.hasOwnProperty(id)) {
+                data.push(visibleChosenItems[id]);
+            }
+        }
     	
     	return data;
     };
@@ -153,10 +196,14 @@ var AIRTIME = (function(AIRTIME) {
     /*
      * selects all items which the user can currently see.
      * (behaviour taken from gmail)
+     * 
+     * by default the items are selected in reverse order
+     * so we need to reverse it back
      */
     mod.selectCurrentPage = function() {
-    	var $trs = $libTable.find("tbody input:checkbox").parents("tr");
-    	
+        $.fn.reverse = [].reverse;
+    	var $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
+
     	$trs.each(function(i, el){
     		$el = $(this);
     		
@@ -656,7 +703,7 @@ function checkImportStatus() {
         }
         else{
             if ($(div).is(':visible')) {
-                table.fnDraw();
+                table.fnStandingRedraw();
             }
             div.hide();
         }

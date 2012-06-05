@@ -24,6 +24,7 @@ $(document).ready(function() {
 				.append('<td>' + j.error.message + '</td>');
 				
 			$("#plupload_error").find("table").append(row);
+			$("#plupload_error table").css("display", "inline-table");
 		}else{
 		    var tempFileName = j.tempfilepath;
 		    $.get('/Plupload/copyfile/format/json/name/'+encodeURIComponent(file.name)+'/tempname/'+encodeURIComponent(tempFileName), function(json){
@@ -34,6 +35,7 @@ $(document).ready(function() {
 		                .append('<td>' + jr.error.message + '</td>');
 		                
 		            $("#plupload_error").find("table").append(row);
+		            $("#plupload_error table").css("display", "inline-table");
 		        }
 		    });
 		}

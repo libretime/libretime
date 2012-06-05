@@ -79,7 +79,7 @@
         </dt>
         <dd id="master_dj_connection_url-element">
             <span id="stream_url" class="static_text"><?php echo $this->master_dj_connection_url ?></span>
-            <?php if( !$this->isSaas ){?>
+            <?php if( !$this->isSaas && !$this->isDemo){?>
                 <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
                 <span class="override_help_icon">
                 </span><br>
@@ -122,7 +122,7 @@
         </dt>
         <dd id="live_dj_connection_url-element">
             <span id="stream_url" class="static_text"><?php echo $this->live_dj_connection_url ?></span>
-            <?php if( !$this->isSaas ){?>   
+            <?php if( !$this->isSaas && !$this->isDemo ){?>   
                 <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
                 <span class="override_help_icon">
                 </span><br>

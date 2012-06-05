@@ -855,7 +855,6 @@ Logging::log("getting media! - 2");
         Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
         $duplicate = Application_Model_StoredFile::RecallByMd5($md5, true);
-        
 
         $result = null;
         if ($duplicate) {
@@ -886,14 +885,22 @@ Logging::log("getting media! - 2");
                     Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
                 }
                 
-                //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
-                $r = @rename($audio_file, $audio_stor);
+                // Check if file is playable
+                $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1", $audio_file);
+                exec($command, $output, $rv);
+                if ($rv != 0) {
+                    $result = array("code" => 110, "message" => "This file appears to be corrupted and could not be uploaded.");
+                }
+                else {
+                    //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+                    $r = @rename($audio_file, $audio_stor);
 
-                if ($r === false) {
-                   #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
-                   #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-                    unlink($audio_file);//remove the file from the organize after failed rename
-                    $result = array("code" => 108, "message" => "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space.");
+                    if ($r === false) {
+                        #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
+                        #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+                        unlink($audio_file);//remove the file from the organize after failed rename
+                        $result = array("code" => 108, "message" => "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space.");
+                    }
                 }
             }
         }
