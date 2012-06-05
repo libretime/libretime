@@ -703,7 +703,7 @@ function checkImportStatus() {
         }
         else{
             if ($(div).is(':visible')) {
-                table.fnDraw();
+                table.fnStandingRedraw();
             }
             div.hide();
         }
