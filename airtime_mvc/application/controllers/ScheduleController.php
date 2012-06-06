@@ -760,7 +760,8 @@ class ScheduleController extends Zend_Controller_Action
         }
         $data['add_show_record'] = $show->isRecorded();
         
-        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate);
+        $origianlShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
+        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate, $origianlShowStartDateTime);
         
         if ($success){
             $this->view->addNewShow = true;
