@@ -94,13 +94,15 @@
             </label>
         </dt>
         <dd id="master_dj_connection_url-element">
-            <span id="stream_url" class="static_text"><?php echo $this->element->getElement('master_dj_connection_url') ?></span>
+            <span id="stream_url"><?php echo $this->element->getElement('master_dj_connection_url')->setValue($this->master_dj_connection_url) ?></span>
             <?php if( !$this->isSaas && !$this->isDemo){?>
-                <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
+                <a href=# id="connection_url_override" style="font-size: 12px;">Override</a>&nbsp;&nbsp;
                 <span class="override_help_icon">
                 </span><br>
             <?php } ?>
-            <div id="master_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
+            <div id="master_dj_connection_url_actions" style="display:none">
+                <a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a>
+            </div>
         </dd>
         <?php if( !$this->isSaas ){?>
             <dt id="dj_harbor_input_port-label">
@@ -137,13 +139,15 @@
             </label>
         </dt>
         <dd id="live_dj_connection_url-element">
-            <span id="stream_url" class="static_text"><?php echo $this->element->getElement('live_dj_connection_url') ?></span>
+            <span id="stream_url"><?php echo $this->element->getElement('live_dj_connection_url')->setValue($this->live_dj_connection_url) ?></span>
             <?php if( !$this->isSaas && !$this->isDemo ){?>   
-                <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
+                <a href=# id="connection_url_override" style="font-size: 12px;">Override</a>&nbsp;&nbsp;
                 <span class="override_help_icon">
                 </span><br>
             <?php } ?>
-            <div id="live_dj_connection_url_tb" style="display:none"><input type="text"><a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a></div>
+            <div id="live_dj_connection_url_actions" style="display:none">
+                <a href=# id="ok" style="font-size: 12px;">OK</a>  <a href=# id="reset" style="font-size: 12px;">RESET</a>
+            </div>
         </dd>
     </dl>
 </fieldset>

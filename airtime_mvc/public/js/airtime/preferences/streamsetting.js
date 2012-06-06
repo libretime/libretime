@@ -108,52 +108,57 @@ function checkLiquidsoapStatus(){
 
 function setLiveSourceConnectionOverrideListener(){
     $("[id=connection_url_override]").click(function(event){
-        var div_ele = $(this).parent().find("div[id$='_dj_connection_url_tb']")
-        div_ele.find(":input").val("")
-        div_ele.show()
+        var url_input = $(this).parent().find("#stream_url").children()
+        url_input.removeAttr("readonly")
+		
+        $(this).parent().find("div[id$='_dj_connection_url_actions']").show()
         event.preventDefault()
     })
     
     // set action for "OK" and "X"
-    var live_dj_input = $("#live_dj_connection_url_tb")
-    var live_dj_label = live_dj_input.parent().find("#stream_url")
-    var master_dj_input = $("#master_dj_connection_url_tb")
-    var master_dj_label = master_dj_input.parent().find("#stream_url")
+    var live_dj_actions = $("#live_dj_connection_url_actions")
+    var live_dj_input = live_dj_actions.parent().find("#stream_url").children()
+    var master_dj_actions = $("#master_dj_connection_url_actions")
+    var master_dj_input = master_dj_actions.parent().find("#stream_url").children()
     
-    live_dj_input.find("#ok").click(function(event){
+    live_dj_actions.find("#ok").click(function(event){
     	event.preventDefault()
-        var url = $(this).parent().find(":input").val()
-        live_dj_label.html(url)
-        live_dj_input.hide()
+        var url = live_dj_input.val()
+        live_dj_input.val(url)
+        live_dj_input.attr("readonly", "readonly")
+        live_dj_actions.hide()
         $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url)});
     	event.preventDefault()
     })
     
-    live_dj_input.find("#reset").click(function(event){
+    live_dj_actions.find("#reset").click(function(event){
     	event.preventDefault()
         var port = $("#dj_harbor_input_port").val()
         var mount = $("#dj_harbor_input_mount_point").val()
         var url = "http://"+location.hostname+":"+port+"/"+mount
-        live_dj_label.html(url)
-        live_dj_input.hide()
+        live_dj_input.val(url)
+        live_dj_input.attr("readonly", "readonly")
+        live_dj_actions.hide()
         $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url)});
     	event.preventDefault()
     })
     
-    master_dj_input.find("#ok").click(function(event){
-        var url = $(this).parent().find(":input").val()
-        master_dj_label.html(url)
-        master_dj_input.hide()
+    master_dj_actions.find("#ok").click(function(event){
+        var url = master_dj_input.val()
+        master_dj_input.val(url)
+        master_dj_input.attr("readonly", "readonly")
+        master_dj_actions.hide()
         $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url)})
         event.preventDefault()
     })
     
-    master_dj_input.find("#reset").click(function(event){
+    master_dj_actions.find("#reset").click(function(event){
         var port = $("#master_harbor_input_port").val()
         var mount = $("#master_harbor_input_mount_point").val()
         var url = "http://"+location.hostname+":"+port+"/"+mount
-        master_dj_label.html(url)
-        master_dj_input.hide()
+        master_dj_input.val(url)
+        master_dj_input.attr("readonly", "readonly")
+        master_dj_actions.hide()
         $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url)})
         event.preventDefault()
     })
