@@ -889,7 +889,7 @@ Logging::log("getting media! - 2");
                 $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1", $audio_file);
                 exec($command, $output, $rv);
                 if ($rv != 0) {
-                    $result = array("code" => 110, "message" => "This file appears to be corrupted and could not be uploaded.");
+                    $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
                 }
                 else {
                     //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
