@@ -99,8 +99,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             }
         }
         
-        $hours = intval(substr($formData["add_show_duration"], 0, strpos($formData["add_show_duration"], 'h')));
-        $minutes = intval(substr($formData["add_show_duration"], -3, -1));
+        $pattern =  '/([0-9][0-9])h ([0-9][0-9])m/';
+        preg_match($pattern, $formData['add_show_duration'], $matches);
+        $hours = $matches[1];
+        $minutes = $matches[2];
         if( $formData["add_show_duration"] == "00h 00m" ) {
             $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
             $valid = false;
