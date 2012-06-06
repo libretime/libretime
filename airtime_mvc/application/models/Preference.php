@@ -831,7 +831,7 @@ class Application_Model_Preference
     public static function GetMasterDJSourceConnectionURL(){
         return self::GetValue("master_dj_source_connection_url");
     }
-
+    
     public static function SetLiveDJSourceConnectionURL($value){
         self::SetValue("live_dj_source_connection_url", $value, false);
     }
@@ -839,6 +839,24 @@ class Application_Model_Preference
     public static function GetLiveDJSourceConnectionURL(){
         return self::GetValue("live_dj_source_connection_url");
     }
+    
+    /* Source Connection URL override status starts */
+    public static function GetLiveDjConnectionUrlOverride(){
+        return self::GetValue("live_dj_connection_url_override");
+    }
+    
+    public static function SetLiveDjConnectionUrlOverride($value){
+        self::SetValue("live_dj_connection_url_override", $value, false);
+    }
+    
+    public static function GetMasterDjConnectionUrlOverride(){
+        return self::GetValue("master_dj_connection_url_override");
+    }
+    
+    public static function SetMasterDjConnectionUrlOverride($value){
+        self::SetValue("master_dj_connection_url_override", $value, false);
+    }
+    /* Source Connection URL override status ends */
     
     public static function SetAutoTransition($value){
         self::SetValue("auto_transition", $value, false);
