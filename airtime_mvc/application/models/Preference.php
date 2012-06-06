@@ -840,6 +840,14 @@ class Application_Model_Preference
         return self::GetValue("live_dj_source_connection_url");
     }
     
+    public static function SetAutoTransition($value){
+        self::SetValue("auto_transition", $value, false);
+    }
+    
+    public static function GetAutoTransition(){
+        return self::GetValue("auto_transition");
+    }
+    
     public static function SetEnableSystemEmail($upload) {
         self::SetValue("enable_system_email", $upload);
     }

@@ -1,6 +1,22 @@
 <fieldset class="padded stream-setting-global" style="margin-top: 15px">
     <legend>Input Stream Settings</legend>
     <dl class="zend_form">
+        <dt id="auto_transition-label">
+            <label class="optional" for="auto_transition"><?php echo $this->element->getElement('auto_transition')->getLabel() ?> :
+                <span class="icecast_metadata_help_icon" id="auto_transition_help">
+                </span>
+            </label>
+        </dt>
+        <dd id="auto_transition-element">
+            <?php echo $this->element->getElement('auto_transition') ?>
+            <?php if($this->element->getElement('auto_transition')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('auto_transition')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
         <dt id="transition_fade-label">
             <label class="optional" for="transition_fade"><?php echo $this->element->getElement('transition_fade')->getLabel() ?> :
             </label>
@@ -78,7 +94,7 @@
             </label>
         </dt>
         <dd id="master_dj_connection_url-element">
-            <span id="stream_url" class="static_text"><?php echo $this->master_dj_connection_url ?></span>
+            <span id="stream_url" class="static_text"><?php echo $this->element->getElement('master_dj_connection_url') ?></span>
             <?php if( !$this->isSaas && !$this->isDemo){?>
                 <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
                 <span class="override_help_icon">
@@ -121,7 +137,7 @@
             </label>
         </dt>
         <dd id="live_dj_connection_url-element">
-            <span id="stream_url" class="static_text"><?php echo $this->live_dj_connection_url ?></span>
+            <span id="stream_url" class="static_text"><?php echo $this->element->getElement('live_dj_connection_url') ?></span>
             <?php if( !$this->isSaas && !$this->isDemo ){?>   
                 <a href=# id="connection_url_override" style="font-size: 12px;">override</a>&nbsp;&nbsp;
                 <span class="override_help_icon">

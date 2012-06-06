@@ -15,7 +15,14 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $defaultFade = '00.000000';
         }
         
-        //Default transition fade
+        // automatic switch off
+        $auto_transition = new Zend_Form_Element_Checkbox("auto_transition");
+        $auto_transition->setLabel("Auto Source Transition")
+                        ->setValue(Application_Model_Preference::GetAutoTransition())
+                        ->setDecorators(array('ViewHelper'));
+        $this->addElement($auto_transition);
+        
+        // Default transition fade
         $transition_fade = new Zend_Form_Element_Text("transition_fade");
         $transition_fade->setLabel("Switch Transition Fade (s)")
                         ->setFilters(array('StringTrim'))
@@ -50,6 +57,22 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                         ->setFilters(array('StringTrim'))
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($master_password);
+        
+        //Master source connection url
+        $master_dj_connection_url = new Zend_Form_Element_Text('master_dj_connection_url');
+        $master_dj_connection_url->setAttrib('readonly', true)
+                                 ->setLabel('Master Source Connection URL')
+                                 ->setValue(Application_Model_StreamSetting::GetConnectionUrls('master'))
+                                 ->setDecorators(array('ViewHelper'));
+        $this->addElement($master_dj_connection_url);
+        
+        //Show source connection url
+        $live_dj_connection_url = new Zend_Form_Element_Text('live_dj_connection_url');
+        $live_dj_connection_url->setAttrib('readonly', true)
+                                 ->setLabel('Show Source Connection URL')
+                                 ->setValue(Application_Model_StreamSetting::GetConnectionUrls('show'))
+                                 ->setDecorators(array('ViewHelper'));
+        $this->addElement($live_dj_connection_url);
         
         //liquidsoap harbor.input port
         if (!$isSaas) {
@@ -105,29 +128,12 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     
     public function updateVariables(){
         global $CC_CONFIG;
-
-        $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
-        $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
-        $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
-        $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
+        
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
-
-        $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
-        $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
-        
-        $master_dj_connection_url = ($master_dj_connection_url == "")?("http://".$_SERVER['SERVER_NAME'].":".$m_port."/".$m_mount):$master_dj_connection_url;
-        $live_dj_connection_url = ($live_dj_connection_url == "")?"http://".$_SERVER['SERVER_NAME'].":".$l_port."/".$l_mount:$live_dj_connection_url;
-        
-        if($m_port=="" || $m_mount==""){
-            $master_dj_connection_url = "N/A";
-        }
-        if($l_port=="" || $l_mount==""){
-            $live_dj_connection_url = "N/A";
-        }
-
+		
         $this->setDecorators(array(
-        array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isSaas' => $isSaas, 'isDemo' => $isDemo))
+            array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'isSaas' => $isSaas, 'isDemo' => $isDemo))
         ));
     }
     
