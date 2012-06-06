@@ -71,12 +71,12 @@ class PreferenceController extends Zend_Controller_Action
         $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $form = new Application_Form_SupportSettings();
-
         if ($request->isPost()) {
             $values = $request->getPost();
             if ($form->isValid($values)) {
                 if (!$isSass && $values["Publicise"] != 1){
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                    Application_Model_Preference::SetPublicise($values["Publicise"]);
                     if(isset($values["Privacy"])){
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
