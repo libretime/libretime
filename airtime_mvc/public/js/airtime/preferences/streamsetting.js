@@ -127,7 +127,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url)});
+        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: true});
     	event.preventDefault()
     })
     
@@ -139,7 +139,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url)});
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: false});
     	event.preventDefault()
     })
     
@@ -148,7 +148,7 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url)})
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: true})
         event.preventDefault()
     })
     
@@ -159,7 +159,7 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url)})
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: false})
         event.preventDefault()
     })
 }
