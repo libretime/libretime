@@ -1,12 +1,12 @@
 var AIRTIME = (function(AIRTIME) {
     var mod,
         libraryInit,
-	    oTable,
-	    $libContent,
-	    $libTable,
-	    LIB_SELECTED_CLASS = "lib-selected",
-	    chosenItems = {},
-	    visibleChosenItems = {};
+        oTable,
+        $libContent,
+        $libTable,
+        LIB_SELECTED_CLASS = "lib-selected",
+        chosenItems = {},
+        visibleChosenItems = {};
     
     if (AIRTIME.library === undefined) {
         AIRTIME.library = {};
@@ -17,7 +17,7 @@ var AIRTIME = (function(AIRTIME) {
         var cItem,
             selected,
             $trs;
-		    
+            
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
         $trs.each(function(i){
@@ -27,21 +27,21 @@ var AIRTIME = (function(AIRTIME) {
                 }
             } 
         });
-	    
-    	selected = Object.keys(visibleChosenItems).length;
-    	visibleChosenItems = {};
-    	return selected;
+        
+        selected = Object.keys(visibleChosenItems).length;
+        visibleChosenItems = {};
+        return selected;
     };
     
     mod.getChosenAudioFilesLength = function(){
-    	//var files = Object.keys(chosenItems),
-    	var files,
+        //var files = Object.keys(chosenItems),
+        var files,
             $trs,
             cItem,
             i, length,
             count = 0,
             reAudio=/^au/ ;
-    		
+            
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
         $trs.each(function(i){
@@ -53,20 +53,20 @@ var AIRTIME = (function(AIRTIME) {
         });
         
         files = Object.keys(visibleChosenItems);
-    	
-    	for (i = 0, length = files.length; i < length; i++) {
-    		
-    		if (files[i].search(reAudio) !== -1) {
-    			count++;
-    		}
-    	}
-    	
-    	return count;
+        
+        for (i = 0, length = files.length; i < length; i++) {
+            
+            if (files[i].search(reAudio) !== -1) {
+                count++;
+            }
+        }
+        
+        return count;
     };
     
     mod.createToolbarDropDown = function() {
-    	
-    	$.contextMenu({
+        
+        $.contextMenu({
             selector: '#library_content .ui-icon-document-b',
             trigger: "left",
             ignoreRightClick: true,
@@ -75,122 +75,122 @@ var AIRTIME = (function(AIRTIME) {
                 "dp": {name: "Deselect This Page", callback: mod.deselectCurrentPage},
                 "sn": {name: "Deselect All", callback: mod.selectNone}
             }
-        }); 	
+        });     
     };
     
     mod.checkDeleteButton = function() {
-    	var selected = mod.getChosenItemsLength(),
-    		check = false;
-    	
-    	if (selected !== 0) {
-    		check = true;
-    	}
-    	
-    	if (check === true) {
-	    	AIRTIME.button.enableButton("lib-button-delete");
-	    }
-	    else {
-	    	AIRTIME.button.disableButton("lib-button-delete");
-	    }
+        var selected = mod.getChosenItemsLength(),
+            check = false;
+        
+        if (selected !== 0) {
+            check = true;
+        }
+        
+        if (check === true) {
+            AIRTIME.button.enableButton("lib-button-delete");
+        }
+        else {
+            AIRTIME.button.disableButton("lib-button-delete");
+        }
     };
     
     mod.checkToolBarIcons = function() {
-    	
-    	AIRTIME.library.checkAddButton();
-    	AIRTIME.library.checkDeleteButton();    	
+        
+        AIRTIME.library.checkAddButton();
+        AIRTIME.library.checkDeleteButton();        
     };
     
     mod.getSelectedData = function() {
-    	var id,
+        var id,
             data = [],
             cItem,
             $trs;
             
-    	$.fn.reverse = [].reverse;
-    	
-    	// Get visible items and check if any chosenItems are visible
+        $.fn.reverse = [].reverse;
+        
+        // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
-    	$trs.each(function(i){
+        $trs.each(function(i){
             for (cItem in chosenItems) {
                 if (cItem === $(this).attr("id")) {
                     visibleChosenItems[cItem] = $(this).data('aData');
                 }
             } 
         });
-    	
-    	for (id in visibleChosenItems) {
+        
+        for (id in visibleChosenItems) {
             if (visibleChosenItems.hasOwnProperty(id)) {
                 data.push(visibleChosenItems[id]);
             }
         }
-    	
-    	return data;
+        
+        return data;
     };
     
     mod.redrawChosen = function() {
-    	var ids = Object.keys(chosenItems),
-    		i, length,
-    		$el;
-    	
-    	for (i = 0, length = ids.length; i < length; i++) {
-    		$el = $libTable.find("#"+ids[i]);
-    		
-    		if ($el.length !== 0) {
-    			mod.highlightItem($el);
-    		}
-    	}
+        var ids = Object.keys(chosenItems),
+            i, length,
+            $el;
+        
+        for (i = 0, length = ids.length; i < length; i++) {
+            $el = $libTable.find("#"+ids[i]);
+            
+            if ($el.length !== 0) {
+                mod.highlightItem($el);
+            }
+        }
     };
     
     mod.isChosenItem = function($el) {
-    	var id = $el.attr("id"),
-    		item = chosenItems[id];
+        var id = $el.attr("id"),
+            item = chosenItems[id];
 
-    	return item !== undefined ? true : false;
+        return item !== undefined ? true : false;
     };
     
     mod.addToChosen = function($el) {
-    	var id = $el.attr("id");
-    	
-    	chosenItems[id] = $el.data('aData');
+        var id = $el.attr("id");
+        
+        chosenItems[id] = $el.data('aData');
     };
     
     mod.removeFromChosen = function($el) {
-    	var id = $el.attr("id");
-    	
-    	//used to not keep dragged items selected.
-    	if (!$el.hasClass(LIB_SELECTED_CLASS)) {
-    		delete chosenItems[id];
-    	}	
+        var id = $el.attr("id");
+        
+        //used to not keep dragged items selected.
+        if (!$el.hasClass(LIB_SELECTED_CLASS)) {
+            delete chosenItems[id];
+        }   
     };
     
     mod.highlightItem = function($el) {
-    	var $input = $el.find("input");
-	
-		$input.attr("checked", true);
-		$el.addClass(LIB_SELECTED_CLASS);
+        var $input = $el.find("input");
+    
+        $input.attr("checked", true);
+        $el.addClass(LIB_SELECTED_CLASS);
     };
     
     mod.unHighlightItem = function($el) {
-    	var $input = $el.find("input");
-	
-		$input.attr("checked", false);
-		$el.removeClass(LIB_SELECTED_CLASS);
+        var $input = $el.find("input");
+    
+        $input.attr("checked", false);
+        $el.removeClass(LIB_SELECTED_CLASS);
     };
     
     mod.selectItem = function($el) {
-    	
-    	mod.highlightItem($el);
-    	mod.addToChosen($el);
-		
-		mod.checkToolBarIcons();
+        
+        mod.highlightItem($el);
+        mod.addToChosen($el);
+        
+        mod.checkToolBarIcons();
     };
     
     mod.deselectItem = function($el) {
-    	
-    	mod.unHighlightItem($el);
-    	mod.removeFromChosen($el);
-		
-		mod.checkToolBarIcons();
+        
+        mod.unHighlightItem($el);
+        mod.removeFromChosen($el);
+        
+        mod.checkToolBarIcons();
     };
     
     /*
@@ -202,13 +202,13 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod.selectCurrentPage = function() {
         $.fn.reverse = [].reverse;
-    	var $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
+        var $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
 
-    	$trs.each(function(i, el){
-    		$el = $(this);
-    		
-    		mod.selectItem($el);
-    	});
+        $trs.each(function(i, el){
+            $el = $(this);
+            
+            mod.selectItem($el);
+        });
     };
     
     /*
@@ -216,26 +216,26 @@ var AIRTIME = (function(AIRTIME) {
      * (behaviour taken from gmail)
      */
     mod.deselectCurrentPage = function() {
-    	
-    	var $trs = $libTable.find("tbody input:checkbox").filter(":checked").parents("tr");
-		
-		$trs.each(function(i, el){
-			$el = $(this);
-			
-			mod.deselectItem($el);
-		}); 	
+        
+        var $trs = $libTable.find("tbody input:checkbox").filter(":checked").parents("tr");
+        
+        $trs.each(function(i, el){
+            $el = $(this);
+            
+            mod.deselectItem($el);
+        });     
     };
     
     mod.selectNone = function() {
-    	var $inputs = $libTable.find("tbody input:checkbox"),
-    		$trs = $inputs.parents("tr");
-    	
-    	$inputs.attr("checked", false);
-    	$trs.removeClass(LIB_SELECTED_CLASS);
-    	
-    	chosenItems = {};
-    	
-    	mod.checkToolBarIcons();
+        var $inputs = $libTable.find("tbody input:checkbox"),
+            $trs = $inputs.parents("tr");
+        
+        $inputs.attr("checked", false);
+        $trs.removeClass(LIB_SELECTED_CLASS);
+        
+        chosenItems = {};
+        
+        mod.checkToolBarIcons();
     };
     
     mod.fnDeleteItems = function(aMedia) {
@@ -262,32 +262,32 @@ var AIRTIME = (function(AIRTIME) {
             temp = aData[item];
             if (temp !== null && temp.hasOwnProperty('id') ) {
                 aMedia.push({"id": temp.id, "type": temp.ftype});
-            } 	
+            }   
         }
     
         AIRTIME.library.fnDeleteItems(aMedia);
     };
     
     libraryInit = function() {
-    	
+        
         $libContent = $("#library_content");
         
         /*
          * Icon hover states in the toolbar.
          */
         $libContent.on("mouseenter", ".fg-toolbar ul li", function(ev) {
-        	$el = $(this);
-        	
-        	if (!$el.hasClass("ui-state-disabled")) {
-        		$el.addClass("ui-state-hover");
-        	}     	
+            $el = $(this);
+            
+            if (!$el.hasClass("ui-state-disabled")) {
+                $el.addClass("ui-state-hover");
+            }       
         });
         $libContent.on("mouseleave", ".fg-toolbar ul li", function(ev) {
-        	$el = $(this);
-        	
-        	if (!$el.hasClass("ui-state-disabled")) {
-        		$el.removeClass("ui-state-hover");
-        	} 
+            $el = $(this);
+            
+            if (!$el.hasClass("ui-state-disabled")) {
+                $el.removeClass("ui-state-hover");
+            } 
         });
               
         $libTable = $libContent.find("table");
@@ -337,9 +337,9 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateSave": function (oSettings, oData) {
                
-            	localStorage.setItem('datatables-library', JSON.stringify(oData));
-            	
-            	$.ajax({
+                localStorage.setItem('datatables-library', JSON.stringify(oData));
+                
+                $.ajax({
                     url: "/usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
@@ -347,11 +347,11 @@ var AIRTIME = (function(AIRTIME) {
                   });
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
-            	var settings = localStorage.getItem('datatables-library');
-            	
-            	if (settings !== "") {
-            		return JSON.parse(settings);
-            	}
+                var settings = localStorage.getItem('datatables-library');
+                
+                if (settings !== "") {
+                    return JSON.parse(settings);
+                }
             },
             "fnStateLoadParams": function (oSettings, oData) {
                 var i,
@@ -361,16 +361,16 @@ var AIRTIME = (function(AIRTIME) {
                 //putting serialized data back into the correct js type to make
                 //sure everything works properly.
                 for (i = 0, length = a.length; i < length; i++) {
-                	if (typeof(a[i]) === "string") {
-                		a[i] = (a[i] === "true") ? true : false;
-                	} 
+                    if (typeof(a[i]) === "string") {
+                        a[i] = (a[i] === "true") ? true : false;
+                    } 
                 }
                 
                 a = oData.ColReorder;
                 for (i = 0, length = a.length; i < length; i++) {
-                	if (typeof(a[i]) === "string") {
-                		a[i] = parseInt(a[i], 10);
-                	}
+                    if (typeof(a[i]) === "string") {
+                        a[i] = parseInt(a[i], 10);
+                    }
                 }
                
                 oData.iEnd = parseInt(oData.iEnd, 10);
@@ -465,11 +465,11 @@ var AIRTIME = (function(AIRTIME) {
                 });
             },
            //remove any selected nodes before the draw.
-			"fnPreDrawCallback": function( oSettings ) {
-				
-				//make sure any dragging helpers are removed or else they'll be stranded on the screen.
-				$("#draggingContainer").remove();
-		    },
+            "fnPreDrawCallback": function( oSettings ) {
+                
+                //make sure any dragging helpers are removed or else they'll be stranded on the screen.
+                $("#draggingContainer").remove();
+            },
             "fnDrawCallback": AIRTIME.library.fnDrawCallback,
             
             "aaSorting": [[3, 'asc']],
@@ -514,28 +514,28 @@ var AIRTIME = (function(AIRTIME) {
             });
         
         $libTable.find("tbody").on("click", "input[type=checkbox]", function(ev) {
-        	
-        	var $cb = $(this),
-        		$prev,
-        		$tr = $cb.parents("tr"),
-        		$trs;
-        	
-        	if ($cb.is(":checked")) {
-        		
-        		if (ev.shiftKey) {
-        			$prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
-        			$trs = $prev.nextUntil($tr);
-        			
-        			$trs.each(function(i, el){
-        				mod.selectItem($(el));
-        			});
-        		}
+            
+            var $cb = $(this),
+                $prev,
+                $tr = $cb.parents("tr"),
+                $trs;
+            
+            if ($cb.is(":checked")) {
+                
+                if (ev.shiftKey) {
+                    $prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
+                    $trs = $prev.nextUntil($tr);
+                    
+                    $trs.each(function(i, el){
+                        mod.selectItem($(el));
+                    });
+                }
 
-        		mod.selectItem($tr);
-        	}
-        	else {
-        		mod.deselectItem($tr);	
-        	}
+                mod.selectItem($tr);
+            }
+            else {
+                mod.deselectItem($tr);  
+            }
         });
        
         checkImportStatus();
@@ -716,7 +716,7 @@ function addProgressIcon(id) {
     
     span = tr.find("td.library_title").find("span");
     
-    if (span.length > 0){	
+    if (span.length > 0){   
         span.removeClass()
             .addClass("small-icon progress");
     }
@@ -729,11 +729,11 @@ function addProgressIcon(id) {
 function checkLibrarySCUploadStatus(){
     
     var url = '/Library/get-upload-to-soundcloud-status',
-    	span,
-    	id;
+        span,
+        id;
     
     function checkSCUploadStatusCallback(json) {
-    	
+        
         if (json.sc_id > 0) {
             span.removeClass("progress").addClass("soundcloud");
             
