@@ -386,6 +386,10 @@ fieldset.plain {
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
 }
 
+input[readonly]{
+    background-color:#b1b1b1
+}
+
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_text_area:focus {
 	border: 1px solid #0088f1;
 }
