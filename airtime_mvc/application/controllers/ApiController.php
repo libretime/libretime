@@ -493,7 +493,7 @@ class ApiController extends Zend_Controller_Action
 
 		//$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
-        $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', null);
+        $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
         if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud())
         {

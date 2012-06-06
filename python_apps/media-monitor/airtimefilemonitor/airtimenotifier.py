@@ -159,7 +159,7 @@ class AirtimeNotifier(Notifier):
                         return
                     md.update(mutagen)
 
-                if event['is_recorded_show']:
+                if 'is_recorded_show' in event and event['is_recorded_show']:
                     self.api_client.update_media_metadata(md, mode, True)
                 else:
                     self.api_client.update_media_metadata(md, mode)
@@ -169,12 +169,16 @@ class AirtimeNotifier(Notifier):
                 if mutagen is None:
                     return
                 md.update(mutagen)
-                self.api_client.update_media_metadata(md, mode)
-
+                if 'is_recorded_show' in event and event['is_recorded_show']:
+                    self.api_client.update_media_metadata(md, mode, True)
+                else:
+                    self.api_client.update_media_metadata(md, mode)
             elif (mode == self.config.MODE_MOVED):
                 md['MDATA_KEY_MD5'] = self.md_manager.get_md5(filepath)
-                self.api_client.update_media_metadata(md, mode)
-
+                if 'is_recorded_show' in event and event['is_recorded_show']:
+                    self.api_client.update_media_metadata(md, mode, True)
+                else:
+                    self.api_client.update_media_metadata(md, mode)
             elif (mode == self.config.MODE_DELETE):
                 self.api_client.update_media_metadata(md, mode)
             
