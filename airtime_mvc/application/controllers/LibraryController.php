@@ -42,32 +42,38 @@ class LibraryController extends Zend_Controller_Action
         
         //Open a jPlayer window and play the audio clip.
         $menu["play"] = array("name"=> "Play", "icon" => "play");
+        
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         if ($type === "audioclip") {
 
             $file = Application_Model_StoredFile::Recall($id);
 
             if (isset($this->pl_sess->id) && $screen == "playlist") {
-                $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                // if the user is not admin or pm, check the creator and see if this person owns the playlist
+                $playlist = new Application_Model_Playlist($this->pl_sess->id);
+                if($isAdminOrPM || $playlist->getCreatorId() == $user->getId()){
+                    $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                }
             }
-            
-            
-            $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
-    
-            if ($user->isAdmin()) {
+            if ($isAdminOrPM) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
+                $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
             }
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-            $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);   
+            $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
         }
         else if ($type === "playlist") {
-
+            $playlist = new Application_Model_Playlist($id);
             if ($this->pl_sess->id !== $id && $screen == "playlist") {
-                $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
+                if($isAdminOrPM || $playlist->getCreatorId() == $user->getId()){
+                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
+                }
             }
-
-            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
+            if($isAdminOrPM || $playlist->getCreatorId() == $user->getId()){
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
+            }
         }
 
         
@@ -106,6 +112,7 @@ class LibraryController extends Zend_Controller_Action
         $mediaItems = $this->_getParam('media', null);
 
         $user = Application_Model_User::GetCurrentUser();
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $files = array();
         $playlists = array();
@@ -122,12 +129,27 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
+        $hasPermission = true;
         if (count($playlists)) {
-            Application_Model_Playlist::DeletePlaylists($playlists);
+            // make sure use has permission to delete all playslists in the list
+            if(!$isAdminOrPM){
+                foreach($playlists as $pid){
+                    $pl = new Application_Model_Playlist($pid);
+                    if($pl->getCreatorId() != $user->getId()){
+                        $hasPermission = false;
+                    }
+                }
+            }
         }
 
-        if (!$user->isAdmin()) {
+        if (!$isAdminOrPM && count($files)) {
+            $hasPermission = false;
+        }
+        if(!$hasPermission){
+            $this->view->message = "You don't have a permission to delete all playlists/files that are selected.";
             return;
+        }else{
+            Application_Model_Playlist::DeletePlaylists($playlists);
         }
 
         foreach ($files as $id) {
@@ -182,6 +204,12 @@ class LibraryController extends Zend_Controller_Action
 
     public function editFileMdAction()
     {
+        $user = Application_Model_User::GetCurrentUser();
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        if(!$isAdminOrPM){
+            return;
+        }
+        
         $request = $this->getRequest();
         $form = new Application_Form_EditAudioMD();
 
