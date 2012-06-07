@@ -83,7 +83,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    public function checkReliantFields($formData, $validateStartDate) {
+    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=false) {
         $valid = true;
         
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
@@ -91,11 +91,18 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         //DateTime stores $start_time in the current timezone
         $nowDateTime = new DateTime();
         $showStartDateTime = new DateTime($start_time);
-
         if ($validateStartDate){
             if($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
                 $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
                 $valid = false;
+            }
+            // if edit action, check if original show start time is in the past. CC-3864
+            if($originalStartDate){
+                if($originalStartDate->getTimestamp() < $nowDateTime->getTimestamp()) {
+                    $this->getElement('add_show_start_time')->setErrors(array('Cannot modify start date/time of the show that is already started'));
+                    $this->disableStartDateAndTime();
+                    $valid = false;
+                }
             }
         }
         

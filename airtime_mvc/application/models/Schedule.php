@@ -750,7 +750,7 @@ class Application_Model_Schedule {
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin 
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate){
+    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null){
     
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -777,7 +777,7 @@ class Application_Model_Schedule {
 		$when = $formWhen->isValid($data);
 		$live = $formLive->isValid($data);
         if($when) {
-            $when = $formWhen->checkReliantFields($data, $validateStartDate);
+            $when = $formWhen->checkReliantFields($data, $validateStartDate, $originalStartDate);
         }
 
         //The way the following code works is that is parses the hour and

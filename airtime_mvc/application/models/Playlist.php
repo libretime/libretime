@@ -121,6 +121,10 @@ class Application_Model_Playlist {
 
         return $this->pl->getCcSubjs()->getDbLogin();
     }
+    
+    public function getCreatorId() {
+        return $this->pl->getCcSubjs()->getDbId();
+    }
 
     public function setCreator($p_id) {
 
