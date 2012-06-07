@@ -2187,11 +2187,18 @@ function BasicView(element, calendar, viewName) {
 		}else{
 			clearEvents();
 		}
-		updateCells(firstTime);
+		getOffset();
 	}
 	
-	
-	
+    function getOffset() {
+        var timezoneOffset;
+        $.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:function(data) {
+            timezoneOffset = data.calendarInit.timezoneOffset*1000;
+            var firstTime = !body;
+            updateCells(firstTime, timezoneOffset);
+        }, error:function(jqXHR, textStatus, errorThrown){}});
+    }
+
 	function updateOptions() {
 		rtl = opt('isRTL');
 		if (rtl) {
@@ -2272,15 +2279,17 @@ function BasicView(element, calendar, viewName) {
 				.appendTo(element);
 	}
 	
-	
-	
-	function updateCells(firstTime) {
+	function updateCells(firstTime, timezoneOffset) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
-		var today = clearTime(new Date());
 		var cell;
 		var date;
 		var row;
+		
+		var today = new Date();
+		var utc = today.getTime() + (today.getTimezoneOffset()*60000);
+		var userTime = new Date(utc + timezoneOffset);
+		today = clearTime(userTime);	
 	
 		if (dowDirty) {
 			headCells.each(function(i, _cell) {
