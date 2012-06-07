@@ -99,6 +99,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             // if edit action, check if original show start time is in the past. CC-3864
             if($originalStartDate){
                 if($originalStartDate->getTimestamp() < $nowDateTime->getTimestamp()) {
+                    $this->getElement('add_show_start_time')->setValue($originalStartDate->format("H:i"));
+                    $this->getElement('add_show_start_date')->setValue($originalStartDate->format("Y-m-d"));
                     $this->getElement('add_show_start_time')->setErrors(array('Cannot modify start date/time of the show that is already started'));
                     $this->disableStartDateAndTime();
                     $valid = false;
