@@ -247,7 +247,7 @@ var AIRTIME = (function(AIRTIME) {
                     alert(json.message);
                 }
                 chosenItems = {};
-                oTable.fnDraw();
+                oTable.fnStandingRedraw();
             });
     };
     
