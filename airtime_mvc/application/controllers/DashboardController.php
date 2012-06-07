@@ -83,7 +83,11 @@ class DashboardController extends Zend_Controller_Action
             if($source_connected){
                 $this->view->error = "You don't have permission to switch source.";
             }else{
-                $this->view->error = "There is no source connected to this input.";
+                if($sourcename == 'scheduled_play'){
+                    $this->view->error = "You don't have permission to disconnect source.";
+                }else{
+                    $this->view->error = "There is no source connected to this input.";
+                }
             }
         }
     }
