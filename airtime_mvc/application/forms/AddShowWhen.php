@@ -83,14 +83,16 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=false) {
+    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null) {
         $valid = true;
         
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
+        $end_time = $formData['add_show_end_date_no_repeat']." ".$formData['add_show_end_time'];
         
         //DateTime stores $start_time in the current timezone
         $nowDateTime = new DateTime();
         $showStartDateTime = new DateTime($start_time);
+        $showEndDateTime = new DateTime($end_time);
         if ($validateStartDate){
             if($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
                 $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
@@ -106,6 +108,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $valid = false;
                 }
             }
+        }
+        
+        // if end time is in the past, return error
+        if($showEndDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+            $this->getElement('add_show_end_time')->setErrors(array('End date/time cannot be in the past'));
+            $valid = false;
         }
         
         $pattern =  '/([0-9][0-9])h ([0-9][0-9])m/';
