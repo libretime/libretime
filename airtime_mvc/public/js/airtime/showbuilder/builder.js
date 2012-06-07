@@ -301,6 +301,9 @@ var AIRTIME = (function(AIRTIME){
             
             if (!$el.hasClass("ui-state-disabled")) {
                 $el.addClass("ui-state-hover");
+            }
+            else {
+                $("#show_builder .ui-icon-document-b").contextMenu(false);
             }       
         });
         $sbContent.on("mouseleave", ".fg-toolbar ul li", function(ev) {
