@@ -39,6 +39,11 @@ function openAudioPreview(p_event) {
 }
 
 function open_audio_preview(audioFileID, audioFileTitle, audioFileArtist) {
+    // we need to remove soundcloud icon from audioFileTitle
+    var index = audioFileTitle.indexOf("<span class=");
+    if(index != -1){
+        audioFileTitle = audioFileTitle.substring(0,index);
+    }
     openPreviewWindow('audiopreview/audio-preview/audioFileID/'+audioFileID+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle);
     _preview_window.focus();
 }
