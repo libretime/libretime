@@ -96,7 +96,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		iRange = iEnd - iStart;
 		
-		if (iRange === 0 || iEnd < iStart) {
+		if (iEnd < iStart) {
 			iEnd = iStart + DEFAULT_RANGE;
 			iRange = DEFAULT_RANGE;
 		}
