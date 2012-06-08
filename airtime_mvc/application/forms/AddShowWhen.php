@@ -117,19 +117,24 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }
         
         $pattern =  '/([0-9][0-9])h ([0-9][0-9])m/';
-        preg_match($pattern, $formData['add_show_duration'], $matches);
-        $hours = $matches[1];
-        $minutes = $matches[2];
-        if( $formData["add_show_duration"] == "00h 00m" ) {
-            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
-            $valid = false;
-        }elseif(strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
-            if ($hours > 24 || ($hours == 24 && $minutes > 0)) {
-                $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));
+        
+        if (preg_match($pattern, $formData['add_show_duration'], $matches) && count($matches) == 3) {
+            $hours = $matches[1];
+            $minutes = $matches[2];
+            if( $formData["add_show_duration"] == "00h 00m" ) {
+                $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
+                $valid = false;
+            }elseif(strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
+                if ($hours > 24 || ($hours == 24 && $minutes > 0)) {
+                    $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));
+                    $valid = false;
+                }
+            }elseif( strstr($formData["add_show_duration"], '-') ){
+                $this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
                 $valid = false;
             }
-        }elseif( strstr($formData["add_show_duration"], '-') ){
-            $this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
+        }
+        else {
             $valid = false;
         }
 
