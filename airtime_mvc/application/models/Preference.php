@@ -66,7 +66,7 @@ class Application_Model_Preference
         
         } catch (Exception $e){
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::log("Could not connect to database: ".$e->getMessage());
             exit;
         }
 
@@ -104,7 +104,7 @@ class Application_Model_Preference
             }
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::log("Could not connect to database: ".$e->getMessage());
             exit;            
         }
     }
