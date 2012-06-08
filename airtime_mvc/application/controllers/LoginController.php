@@ -14,7 +14,7 @@ class LoginController extends Zend_Controller_Action
         
         if (Zend_Auth::getInstance()->hasIdentity())
         {
-        	$this->_redirect('Showbuilder');
+            $this->_redirect('Showbuilder');
         }
         
         //uses separate layout without a navigation.
@@ -100,29 +100,34 @@ class LoginController extends Zend_Controller_Action
     
     public function passwordRestoreAction()
     {
-        //uses separate layout without a navigation.
-        $this->_helper->layout->setLayout('login');
-         
-        $form = new Application_Form_PasswordRestore();
-    
-        $request = $this->getRequest();
-        if ($request->isPost() && $form->isValid($request->getPost())) {
-            $user = CcSubjsQuery::create()
-                ->filterByDbEmail($form->email->getValue())
-                ->findOne();
-    
-            if (!empty($user)) {
-                $auth = new Application_Model_Auth();
-    
-                $auth->sendPasswordRestoreLink($user, $this->view);
-                $this->_helper->redirector('password-restore-after', 'login');
-            }
-            else {
-                $form->email->addError($this->view->translate("Given email not found."));
-            }
+        if (!Application_Model_Preference::GetEnableSystemEmail()) {
+            $this->_redirect('login');
         }
+        else {
+            //uses separate layout without a navigation.
+            $this->_helper->layout->setLayout('login');
+             
+            $form = new Application_Form_PasswordRestore();
         
-        $this->view->form = $form;
+            $request = $this->getRequest();
+            if ($request->isPost() && $form->isValid($request->getPost())) {
+                $user = CcSubjsQuery::create()
+                    ->filterByDbEmail($form->email->getValue())
+                    ->findOne();
+        
+                if (!empty($user)) {
+                    $auth = new Application_Model_Auth();
+        
+                    $auth->sendPasswordRestoreLink($user, $this->view);
+                    $this->_helper->redirector('password-restore-after', 'login');
+                }
+                else {
+                    $form->email->addError($this->view->translate("Given email not found."));
+                }
+            }
+        
+            $this->view->form = $form;
+        }
     }
     
     public function passwordRestoreAfterAction()

@@ -56,6 +56,9 @@ function setWatchedDirEvents() {
                     setWatchedDirEvents();
                 });
         }
+        else {
+            $('#storageFolder').val("");	
+        }
     });
 
     $('#watchedFolder-ok').click(function(){
