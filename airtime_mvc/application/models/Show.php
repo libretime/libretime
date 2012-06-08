@@ -1061,7 +1061,7 @@ class Application_Model_Show {
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's future show_rebroadcast information first.
-        if (($data['add_show_id'] != -1) && $data['add_show_rebroadcast']){
+        if (($data['add_show_id'] != -1) && isset($data['add_show_rebroadcast']) && $data['add_show_rebroadcast']){
             CcShowRebroadcastQuery::create()
                 ->filterByDbShowId($data['add_show_id'])
                 ->delete();
