@@ -179,8 +179,6 @@ class Application_Model_StreamSetting {
 
                     $con->exec($sql);
                 }
-            } else {
-                Logging::log("Warning unexpected value: ".$key);
             }
         }
     }
