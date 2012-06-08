@@ -53,7 +53,7 @@ class DashboardController extends Zend_Controller_Action
         $show_id = isset($show[0]['id'])?$show[0]['id']:0;
         
         $source_connected = Application_Model_Preference::GetSourceStatus($sourcename);
-        if($user->canSchedule($show_id) && ($source_connected || $sourcename == 'scheduled_play')){
+        if($user->canSchedule($show_id) && ($source_connected || $sourcename == 'scheduled_play' || $current_status == "on")){
         
             $change_status_to = "on";
             
