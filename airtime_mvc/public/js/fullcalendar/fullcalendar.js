@@ -2187,14 +2187,13 @@ function BasicView(element, calendar, viewName) {
 		}else{
 			clearEvents();
 		}
-		getOffset();
+		getOffset(firstTime);
 	}
 	
-    function getOffset() {
+    function getOffset(firstTime) {
         var timezoneOffset;
         $.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:function(data) {
             timezoneOffset = data.calendarInit.timezoneOffset*1000;
-            var firstTime = !body;
             updateCells(firstTime, timezoneOffset);
         }, error:function(jqXHR, textStatus, errorThrown){}});
     }
