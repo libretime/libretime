@@ -162,7 +162,7 @@ class CcShowInstances extends BaseCcShowInstances {
     public function updateDbTimeFilled(PropelPDO $con)
     {
         $timefilled = $this->computeDbTimeFilled($con);
-        if($timefilled == null){
+        if(is_null($timefilled)){
             $timefilled = "00:00:00";
         }
         $this->setDbTimeFilled($timefilled);
