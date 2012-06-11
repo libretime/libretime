@@ -302,7 +302,7 @@ class ApiController extends Zend_Controller_Action
             $dayStart = $date->getWeekStartDate();
             $utcDayStart = Application_Common_DateHelper::ConvertToUtcDateTimeString($dayStart);
 
-            $dow = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
+            $dow = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
 
             $result = array();
             for ($i=0; $i<7; $i++){
