@@ -104,7 +104,7 @@ select {
         line-height:16px !important;
 }
 
-.airtime_auth_help_icon, .custom_auth_help_icon {
+.airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
