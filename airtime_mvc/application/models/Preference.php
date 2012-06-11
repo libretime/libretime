@@ -175,7 +175,18 @@ class Application_Model_Preference
         if ($fade === "") {
             // the default value of the fade is 00.500000
             return "00.500000";
-        } 
+        }
+        
+        // we need this function to work with 2.0 version on default_fade value in cc_pref
+        // it has 00:00:00.000000 format where in 2.1 we have 00.000000 format
+        if(preg_match("/([0-9]{2}):([0-9]{2}):([0-9]{2}).([0-9]{6})/", $fade, $matches) == 1 && count($matches) == 5){
+            $out = 0;
+            $out += intval($matches[1] * 3600);
+            $out += intval($matches[2] * 60);
+            $out += intval($matches[3]);
+            $out .= ".$matches[4]";
+            $fade = $out;
+        }
         
         $fade = number_format($fade, 6);
         //fades need 2 leading zeros for DateTime conversion
