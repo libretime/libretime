@@ -12,7 +12,7 @@ class Application_Model_Schedule {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE file_id = {$p_fileId} AND starts > NOW()";
+        ." WHERE file_id = {$p_fileId} AND ends > NOW() AT TIME ZONE 'UTC'";
         $count = $con->query($sql)->fetchColumn(0);
         if (is_numeric($count) && ($count != '0')) {
             return TRUE;

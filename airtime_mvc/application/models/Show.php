@@ -1061,7 +1061,7 @@ class Application_Model_Show {
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's future show_rebroadcast information first.
-        if (($data['add_show_id'] != -1) && $data['add_show_rebroadcast']){
+        if (($data['add_show_id'] != -1) && isset($data['add_show_rebroadcast']) && $data['add_show_rebroadcast']){
             CcShowRebroadcastQuery::create()
                 ->filterByDbShowId($data['add_show_id'])
                 ->delete();
@@ -1309,8 +1309,9 @@ class Application_Model_Show {
                 $ccShowInstance = $show->getInstanceOnDate($utcStartDateTime);
                 
                 if ($ccShowInstance->getDbModifiedInstance()){
-                	//show instance on this date has been deleted.
-                	continue;
+                    //show instance on this date has been deleted.
+                    $utcStartDateTime = self::advanceRepeatingDate($p_interval, $start, $timezone);
+                    continue;
                 }
                 
                 $newInstance = false;
@@ -1342,43 +1343,47 @@ class Application_Model_Show {
 
             $showInstance->deleteRebroadcasts();
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-
-            if ($p_interval == 'P1M'){
-                /* When adding months, there is a problem if we are on January 31st and add one month with PHP.
-                 * What ends up happening is that since February 31st doesn't exist, the date returned is
-                 * March 3rd. For now let's ignore the day and assume we are always working with the
-                 * first of each month, and use PHP to add 1 month to this (this will take care of rolling
-                 * over the years 2011->2012, etc.). Then let's append the actual day, and use the php
-                 * checkdate() function, to see if it is valid. If not, then we'll just skip this month. */
-
-                $startDt = new DateTime($start, new DateTimeZone($timezone));
-
-                /* pass in only the year and month (not the day) */
-                $dt = new DateTime($startDt->format("Y-m"), new DateTimeZone($timezone));
-
-                /* Keep adding 1 month, until we find the next month that contains the day
-                 * we are looking for (31st day for example) */
-                do {
-                    $dt->add(new DateInterval($p_interval));
-                } while(!checkdate($dt->format("m"), $startDt->format("d"), $dt->format("Y")));
-                $dt->setDate($dt->format("Y"), $dt->format("m"), $startDt->format("d"));
-
-                $start = $dt->format("Y-m-d H:i:s");
-
-                $dt->setTimezone(new DateTimeZone('UTC'));
-                $utcStartDateTime = $dt;
-            } else {
-                $dt = new DateTime($start, new DateTimeZone($timezone));
-                $dt->add(new DateInterval($p_interval));
-                $start = $dt->format("Y-m-d H:i:s");
-
-                $dt->setTimezone(new DateTimeZone('UTC'));
-                $utcStartDateTime = $dt;
-            }
+            $utcStartDateTime = self::advanceRepeatingDate($p_interval, $start, $timezone);
 
         }
 
         Application_Model_Show::setNextPop($start, $show_id, $day);
+    }
+    
+    private static function advanceRepeatingDate($p_interval, $start, $timezone){
+        if ($p_interval == 'P1M'){
+            /* When adding months, there is a problem if we are on January 31st and add one month with PHP.
+             * What ends up happening is that since February 31st doesn't exist, the date returned is
+             * March 3rd. For now let's ignore the day and assume we are always working with the
+             * first of each month, and use PHP to add 1 month to this (this will take care of rolling
+             * over the years 2011->2012, etc.). Then let's append the actual day, and use the php
+             * checkdate() function, to see if it is valid. If not, then we'll just skip this month. */
+
+                /* pass in only the year and month (not the day) */
+                $dt = new DateTime($startDt->format("Y-m"), new DateTimeZone($timezone));
+
+            $dt = new DateTime($startDt->format("Y-m"), new DateTimeZone($timezone));
+
+            /* Keep adding 1 month, until we find the next month that contains the day
+             * we are looking for (31st day for example) */
+            do {
+                $dt->add(new DateInterval($p_interval));
+            } while(!checkdate($dt->format("m"), $startDt->format("d"), $dt->format("Y")));
+            $dt->setDate($dt->format("Y"), $dt->format("m"), $startDt->format("d"));
+
+            $start = $dt->format("Y-m-d H:i:s");
+
+            $dt->setTimezone(new DateTimeZone('UTC'));
+            $utcStartDateTime = $dt;
+        } else {
+            $dt = new DateTime($start, new DateTimeZone($timezone));
+            $dt->add(new DateInterval($p_interval));
+            $start = $dt->format("Y-m-d H:i:s");
+
+            $dt->setTimezone(new DateTimeZone('UTC'));
+            $utcStartDateTime = $dt;
+        }
+        return $utcStartDateTime;
     }
 
     /*
@@ -1477,7 +1482,6 @@ class Application_Model_Show {
 
         //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-
         //if application is requesting shows past our previous populated until date, generate shows up until this point.
         if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $end_timestamp->getTimestamp()) {
             Application_Model_Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
@@ -1492,7 +1496,6 @@ class Application_Model_Show {
             LEFT JOIN cc_show_instances AS si2 ON si1.instance_id = si2.id
             LEFT JOIN cc_show AS show ON show.id = si1.show_id
             WHERE si1.modified_instance = FALSE";
-
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
@@ -1563,7 +1566,6 @@ class Application_Model_Show {
 
         //Logging::log($sql);
         $res = $con->query($sql)->fetchAll();
-
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
         }
@@ -1584,7 +1586,7 @@ class Application_Model_Show {
         $days =  $interval->format('%a');
         $shows = Application_Model_Show::getShows($p_start, $p_end);
         $nowEpoch = time();
-
+        
         foreach ($shows as $show) {
             $options = array();
 

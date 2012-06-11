@@ -68,7 +68,9 @@
                 </legend>
                 <dl class="zend_form">
                 <dt id="outputUser-label">
-                    <label for="outputUser"><?php echo $this->element->getElement('user')->getLabel()?> :</label>
+                    <label for="outputUser"><?php echo $this->element->getElement('user')->getLabel()?> :
+                    <span class='stream_username_help_icon'></span>
+                    </label>
                 </dt>
                 <dd id="outputUser-element">
                     <?php echo $this->element->getElement('user')?>

@@ -42,6 +42,8 @@ class PypoFetch(Thread):
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
+        self.last_update_schedule_timestamp = time.time()
+        self.listener_timeout = 3600
         
         self.telnet_lock = telnet_lock
         
@@ -78,6 +80,7 @@ class PypoFetch(Thread):
             self.logger.info("Handling command: " + command)
         
             if command == 'update_schedule':
+                self.last_update_schedule_timestamp = time.time()
                 self.schedule_data  = m['schedule']
                 self.process_schedule(self.schedule_data)
             elif command == 'update_stream_setting':
@@ -98,6 +101,15 @@ class PypoFetch(Thread):
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
                 self.disconnect_source(self.logger, self.telnet_lock, m['sourcename'])
+                
+            # update timeout value
+            if command == 'update_schedule':
+                self.listener_timeout = 3600
+            else:
+                self.listener_timeout = self.last_update_schedule_timestamp - time.time() + 3600
+                if self.listener_timeout < 0:
+                    self.listener_timeout = 0
+            self.logger.info("New timeout: %s" % self.listener_timeout)
         except Exception, e:
             import traceback
             top = traceback.format_exc()
@@ -476,7 +488,9 @@ class PypoFetch(Thread):
                 
                 Currently we are checking every 3600 seconds (1 hour)
                 """
-                message = self.fetch_queue.get(block=True, timeout=3600)
+                
+                
+                message = self.fetch_queue.get(block=True, timeout=self.listener_timeout)
                 self.handle_message(message)
             except Exception, e:
                 import traceback
