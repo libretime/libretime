@@ -887,6 +887,46 @@ class Application_Model_Preference
     public static function GetSystemEmail() {
         return self::GetValue("system_email");
     }
+    
+    public static function SetMailServerConfigured($value) {
+	    self::SetValue("mail_server_configured", $value, false);
+	}
+	
+	public static function GetMailServerConfigured() {
+	    return self::GetValue("mail_server_configured");
+	}
+	
+	public static function SetMailServer($value) {
+	    self::SetValue("mail_server", $value, false);
+	}
+	
+	public static function GetMailServer() {
+	    return self::GetValue("mail_server");
+	}
+	
+	public static function SetMailServerEmailAddress($value) {
+	    self::SetValue("mail_server_email_address", $value, false);
+	}
+	
+	public static function GetMailServerEmailAddress() {
+	    return self::GetValue("mail_server_email_address");
+	}
+	
+	public static function SetMailServerPassword($value) {
+	    self::SetValue("mail_server_password", $value, false);
+	}
+	
+	public static function GetMailServerPassword() {
+	    return self::GetValue("mail_server_password");
+	}
+	
+	public static function SetMailServerPort($value) {
+	    self::SetValue("mail_server_port", $value, false);
+	}
+	
+	public static function GetMailServerPort() {
+	    return self::GetValue("mail_server_port");
+	}
     /* User specific preferences end */
 
     public static function ShouldShowPopUp(){

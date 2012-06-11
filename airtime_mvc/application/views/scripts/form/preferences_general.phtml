@@ -92,39 +92,6 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        
-        <!-- Enable System Email option -->
-        <?php if( !$this->isSaas ){?>
-            <dt id="enableSystemEmail-label" class="block-display">
-                <label class="required" for="timezone"><?php echo $this->element->getElement('enableSystemEmail')->getLabel() ?>:
-                </label>
-            </dt>
-            <dd id="enableSystemEmail-element" class="block-display">
-                <?php echo $this->element->getElement('enableSystemEmail') ?>
-                <?php if($this->element->getElement('enableSystemEmail')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('enableSystemEmail')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-            </dd>
-            
-            <!-- System Email option -->
-            <dt id="systemEmail-label" class="block-display">
-                <label class="required" for="timezone"><?php echo $this->element->getElement('systemEmail')->getLabel() ?>:
-                </label>
-            </dt>
-            <dd id="systemEmail-element" class="block-display">
-                <?php echo $this->element->getElement('systemEmail') ?>
-                <?php if($this->element->getElement('systemEmail')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('systemEmail')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-            </dd>
-        <?php } ?>
+       
     </dl>
 </fieldset>

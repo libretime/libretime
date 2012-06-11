@@ -21,7 +21,9 @@ class PreferenceController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-
+        
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -39,8 +41,16 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
                 Application_Model_Preference::SetTimezone($values["preferences_general"]["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["preferences_general"]["weekStartDay"]);
-                Application_Model_Preference::SetEnableSystemEmail($values["preferences_general"]["enableSystemEmail"]);
-                Application_Model_Preference::SetSystemEmail($values["preferences_general"]["systemEmail"]);
+                
+                if (!$isSaas) {
+                    Application_Model_Preference::SetEnableSystemEmail($values["preferences_email_server"]["enableSystemEmail"]);
+                    Application_Model_Preference::SetSystemEmail($values["preferences_email_server"]["systemEmail"]);
+                    Application_Model_Preference::SetMailServerConfigured($values["preferences_email_server"]["configureMailServer"]);
+                    Application_Model_Preference::SetMailServer($values["preferences_email_server"]["mailServer"]);
+                    Application_Model_Preference::SetMailServerEmailAddress($values["preferences_email_server"]["email"]);
+                    Application_Model_Preference::SetMailServerPassword($values["preferences_email_server"]["ms_password"]);
+                    Application_Model_Preference::SetMailServerPort($values["preferences_email_server"]["port"]);
+                }
 
                 Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["preferences_soundcloud"]["UseSoundCloud"]);
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["preferences_soundcloud"]["UploadToSoundcloudOption"]);
