@@ -127,7 +127,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: true});
+        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
     	event.preventDefault()
     })
     
@@ -136,10 +136,13 @@ function setLiveSourceConnectionOverrideListener(){
         var port = $("#dj_harbor_input_port").val()
         var mount = $("#dj_harbor_input_mount_point").val()
         var url = "http://"+location.hostname+":"+port+"/"+mount
+        if (port == '' || mount == '') {
+            url = 'N/A'
+        }
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: false});
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
     	event.preventDefault()
     })
     
@@ -148,7 +151,7 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: true})
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1})
         event.preventDefault()
     })
     
@@ -156,10 +159,13 @@ function setLiveSourceConnectionOverrideListener(){
         var port = $("#master_harbor_input_port").val()
         var mount = $("#master_harbor_input_mount_point").val()
         var url = "http://"+location.hostname+":"+port+"/"+mount
+        if (port == '' || mount == '') {
+            url = 'N/A'
+        }
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: false})
+        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0})
         event.preventDefault()
     })
 }

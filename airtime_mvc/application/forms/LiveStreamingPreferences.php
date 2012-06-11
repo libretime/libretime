@@ -62,7 +62,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $master_dj_connection_url = new Zend_Form_Element_Text('master_dj_connection_url');
         $master_dj_connection_url->setAttrib('readonly', true)
                                  ->setLabel('Master Source Connection URL')
-                                 ->setValue(Application_Model_StreamSetting::GetConnectionUrls('master'))
+                                 ->setValue(Application_Model_Preference::GetMasterDJSourceConnectionURL())
                                  ->setDecorators(array('ViewHelper'));
         $this->addElement($master_dj_connection_url);
         
@@ -70,7 +70,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $live_dj_connection_url = new Zend_Form_Element_Text('live_dj_connection_url');
         $live_dj_connection_url->setAttrib('readonly', true)
                                  ->setLabel('Show Source Connection URL')
-                                 ->setValue(Application_Model_StreamSetting::GetConnectionUrls('show'))
+                                 ->setValue(Application_Model_Preference::GetLiveDJSourceConnectionURL())
                                  ->setDecorators(array('ViewHelper'));
         $this->addElement($live_dj_connection_url);
         
@@ -131,8 +131,8 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
-        $master_dj_connection_url = Application_Model_StreamSetting::GetConnectionUrls('master');
-        $live_dj_connection_url = Application_Model_StreamSetting::GetConnectionUrls('show');
+        $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
+        $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
 		
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isSaas' => $isSaas, 'isDemo' => $isDemo))
