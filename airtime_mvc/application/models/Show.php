@@ -1310,7 +1310,7 @@ class Application_Model_Show {
                 
                 if ($ccShowInstance->getDbModifiedInstance()){
                     //show instance on this date has been deleted.
-                    $utcStartDateTime = self::advanceRepeatingDate($p_interval, $start, $timezone);
+                    list($start, $utcStartDateTime) = self::advanceRepeatingDate($p_interval, $start, $timezone);
                     continue;
                 }
                 
@@ -1343,7 +1343,7 @@ class Application_Model_Show {
 
             $showInstance->deleteRebroadcasts();
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            $utcStartDateTime = self::advanceRepeatingDate($p_interval, $start, $timezone);
+            list($start, $utcStartDateTime) = self::advanceRepeatingDate($p_interval, $start, $timezone);
 
         }
 
@@ -1383,7 +1383,7 @@ class Application_Model_Show {
             $dt->setTimezone(new DateTimeZone('UTC'));
             $utcStartDateTime = $dt;
         }
-        return $utcStartDateTime;
+        return array($start, $utcStartDateTime);
     }
 
     /*
