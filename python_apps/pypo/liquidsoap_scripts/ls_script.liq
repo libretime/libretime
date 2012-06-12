@@ -45,7 +45,7 @@ server.register(namespace="vars", "default_dj_fade", fun (s) -> begin default_dj
 
 
 default = amplify(id="silence_src", 0.00001, noise())
-default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
+default = rewrite_metadata([("artist","Airtime"), ("title", s1_name)],default)
 ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false
