@@ -17,6 +17,22 @@
                 </ul>
             <?php endif; ?> 
         </dd>
+        <dt id="auto_switch-label">
+            <label class="optional" for="auto_transition"><?php echo $this->element->getElement('auto_switch')->getLabel() ?> :
+                <span class="icecast_metadata_help_icon" id="auto_switch_help">
+                </span>
+            </label>
+        </dt>
+        <dd id="auto_switch-element">
+            <?php echo $this->element->getElement('auto_switch') ?>
+            <?php if($this->element->getElement('auto_switch')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('auto_switch')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
         <dt id="transition_fade-label">
             <label class="optional" for="transition_fade"><?php echo $this->element->getElement('transition_fade')->getLabel() ?> :
             </label>

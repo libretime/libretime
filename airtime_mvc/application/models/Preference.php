@@ -877,6 +877,14 @@ class Application_Model_Preference
         return self::GetValue("auto_transition");
     }
     
+    public static function SetAutoSwitch($value){
+        self::SetValue("auto_switch", $value, false);
+    }
+    
+    public static function GetAutoSwitch(){
+        return self::GetValue("auto_switch");
+    }
+    
     public static function SetEnableSystemEmail($upload) {
         self::SetValue("enable_system_email", $upload);
     }
