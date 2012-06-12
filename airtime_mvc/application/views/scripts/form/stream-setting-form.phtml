@@ -98,6 +98,19 @@
                 <dt class="block-display info-block">
                     The following info will be displayed to listeners in their media player:
                 </dt>
+                <dt id="stationName-label">
+                    <label for="stationName"><?php echo $this->element->getElement('name')->getLabel()?> :</label>
+                </dt>
+                <dd id="stationName-element" class="clearfix">
+                    <?php echo $this->element->getElement('name')?>
+                    <?php if($this->element->getElement('name')->hasErrors()) : ?>
+                        <ul class='errors'>
+                            <?php foreach($this->element->getElement('name')->getMessages() as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </dd>
                 <dt id="stationDescription-label">
                     <label for="stationDescription"><?php echo $this->element->getElement('description')->getLabel()?> :</label>
                 </dt>

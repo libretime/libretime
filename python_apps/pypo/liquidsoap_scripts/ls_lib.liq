@@ -62,7 +62,7 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected) =
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected, name) =
     def on_error(msg)
         connected := "false"
         system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &")
@@ -89,7 +89,8 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     genre = genre,
                     user = !user_ref,
                     on_error = on_error,
-                    on_connect = on_connect)
+                    on_connect = on_connect,
+                    name = name)
         if type == "mp3" then
             if bitrate == 24 then 
                 ignore(output(%mp3(bitrate = 24),s))

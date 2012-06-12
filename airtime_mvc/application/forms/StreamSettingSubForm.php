@@ -136,8 +136,17 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm{
         $url->setAttrib('alt', 'url');
         $this->addElement($url);
 
+        $name = new Zend_Form_Element_Text('name');
+        $name->setLabel("Name")
+             ->setValue(isset($setting[$prefix.'_name'])?$setting[$prefix.'_name']:"")
+             ->setDecorators(array('ViewHelper'));
+        if($disable_all){
+            $name->setAttrib("disabled", "disabled");
+        }
+        $this->addElement($name);
+
         $description = new Zend_Form_Element_Text('description');
-        $description->setLabel("Name/Description")
+        $description->setLabel("Description")
                 ->setValue(isset($setting[$prefix.'_description'])?$setting[$prefix.'_description']:"")
                 ->setDecorators(array('ViewHelper'));
         if($disable_all){
