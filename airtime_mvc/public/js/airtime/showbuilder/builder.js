@@ -301,6 +301,7 @@ var AIRTIME = (function(AIRTIME){
             
             if (!$el.hasClass("ui-state-disabled")) {
                 $el.addClass("ui-state-hover");
+                $("#show_builder .ui-icon-document-b").contextMenu(true);
             }
             else {
                 $("#show_builder .ui-icon-document-b").contextMenu(false);

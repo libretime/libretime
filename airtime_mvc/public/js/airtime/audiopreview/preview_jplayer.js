@@ -166,21 +166,19 @@ function play(p_playlistIndex){
  */
 function playOne(p_audioFileID) {
     var playlist = new Array();
-    var fileExtensioin = p_audioFileID.split('.').pop();
-    console.log(p_audioFileID);
-    if (fileExtensioin === 'mp3') {
+    var fileExtension = p_audioFileID.split('.').pop();
+    if (fileExtension.toLowerCase() === 'mp3') {
         media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
             mp3:"/api/get-media/file/"+p_audioFileID
         };
-    }else if (fileExtensioin === 'ogg' ) {
+    }else if (fileExtension.toLowerCase() === 'ogg' ) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
             oga:"/api/get-media/file/"+p_audioFileID
         };
     }
     _playlist_jplayer.option("autoPlay", true);
-    console.log(media);
     playlist[0] = media;
     //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
     _playlist_jplayer._initPlaylist(playlist);
