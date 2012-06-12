@@ -53,7 +53,7 @@ class Application_Common_DateHelper
      */
     function getWeekStartDate()
     {
-        $startDate = date('w') == 0 ? date('Y-m-d') : date('Y-m-d', strtotime('monday'));
+        $startDate = date('w') == 0 ? date('Y-m-d') : date('Y-m-d', strtotime('monday this week'));
         $startDateTime = new DateTime($startDate);
         return $startDateTime->format('Y-m-d H:i:s');
     }

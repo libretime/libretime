@@ -33,7 +33,8 @@ class Application_Form_EditAudioMD extends Zend_Form
             'label'      => 'Track:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
-            'validators' => array('Int')
+            'validators' => array('Int'),
+            'required' => true
         ));
 
 		// Add genre field
