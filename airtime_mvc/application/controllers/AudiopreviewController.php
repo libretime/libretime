@@ -106,9 +106,9 @@ class AudiopreviewController extends Zend_Controller_Action
                               'element_position' => isset($track['position'])?$track['position']:"",
                             );
             $fileExtension = pathinfo($track['CcFiles']['filepath'], PATHINFO_EXTENSION);
-            if ($fileExtension === 'mp3'){
+            if (strtolower($fileExtension) === 'mp3'){
                 $elementMap['element_mp3'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
-            } else if( $fileExtension === 'ogg') {
+            } else if(strtolower($fileExtension) === 'ogg') {
                 $elementMap['element_oga'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
             } else {
                 //the media was neither mp3 or ogg
@@ -181,9 +181,9 @@ class AudiopreviewController extends Zend_Controller_Action
             );
            
             $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
-            if ($fileExtension === 'mp3'){
+            if (strtolower($fileExtension) === 'mp3'){
                 $elementMap['element_mp3'] = $track['gunid'].'.'.$fileExtension;
-            } else if( $fileExtension === 'ogg') {
+            } else if(strtolower($fileExtension) === 'ogg') {
                 $elementMap['element_oga'] = $track['gunid'].'.'.$fileExtension;
             } else {
                 //the media was neither mp3 or ogg

@@ -212,7 +212,7 @@ class MediaMonitorCommon:
 
         try:
             #will be in the format .ext
-            file_ext = os.path.splitext(original_path)[1]
+            file_ext = os.path.splitext(original_path)[1].lower()
             path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE', 'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
 
             md = {}
