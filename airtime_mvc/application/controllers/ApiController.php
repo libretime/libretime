@@ -148,7 +148,7 @@ class ApiController extends Zend_Controller_Action
                         //user clicks play button for track and downloads it.
                         header('Content-Disposition: inline; filename="'.$file_base_name.'"');
                     }
-                    if ($ext === 'mp3'){
+                    if (strtolower($ext) === 'mp3'){
                         $this->smartReadFile($filepath, 'audio/mpeg');
                     } else {
                         $this->smartReadFile($filepath, 'audio/'.$ext);
