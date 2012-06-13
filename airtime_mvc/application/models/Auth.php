@@ -31,7 +31,9 @@ class Application_Model_Auth {
        
         $message = "Click this link: {$e_link_protocol}://{$e_link_base}{$e_link_path}";
        
-	    Application_Model_Email::send('Airtime Password Reset', $message, $user->getDbEmail());
+	    $success = Application_Model_Email::send('Airtime Password Reset', $message, $user->getDbEmail());
+	    
+	    return $success;
 	}
 	
 	public function invalidateTokens($user, $action)

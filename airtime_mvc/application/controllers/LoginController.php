@@ -118,8 +118,12 @@ class LoginController extends Zend_Controller_Action
                 if (!empty($user)) {
                     $auth = new Application_Model_Auth();
         
-                    $auth->sendPasswordRestoreLink($user, $this->view);
-                    $this->_helper->redirector('password-restore-after', 'login');
+                    $success = $auth->sendPasswordRestoreLink($user, $this->view);
+                    if ($success) {
+                        $this->_helper->redirector('password-restore-after', 'login');
+                    } else {
+                        $form->email->addError($this->view->translate("Email could not be sent. Check your mail server settings and ensure it has been configured properly."));
+                    }
                 }
                 else {
                     $form->email->addError($this->view->translate("Given email not found."));
