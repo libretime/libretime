@@ -292,7 +292,7 @@ $(document).ready(function() {
     
     $("#auto_transition_help").qtip({
         content: {
-            text: "Check this box to allow automatic transitions between sources. If enabled, Airtime will fallback to the next available source upon current (Master or Show) source failure. The fallback hierarchy is Master Source > Show Source > Scheduled Play."
+            text: "Check this box to automatically switch off Master/Show source upon source disconnection."
         },
         hide: {
             delay: 500,

@@ -17,7 +17,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         
         // automatic switch off
         $auto_transition = new Zend_Form_Element_Checkbox("auto_transition");
-        $auto_transition->setLabel("Auto Source Transition")
+        $auto_transition->setLabel("Auto Switch Off")
                         ->setValue(Application_Model_Preference::GetAutoTransition())
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($auto_transition);
