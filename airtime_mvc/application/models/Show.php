@@ -1303,7 +1303,7 @@ class Application_Model_Show {
         while ($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
                 && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){
 
-            list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
+            list($utcStartDateTime, $utcEndDateTime) = self::createUTCStartEndDateTime($start, $duration, $timezone);
 
             if ($show->hasInstanceOnDate($utcStartDateTime)){
                 $ccShowInstance = $show->getInstanceOnDate($utcStartDateTime);
