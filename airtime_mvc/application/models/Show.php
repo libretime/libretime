@@ -1310,7 +1310,7 @@ class Application_Model_Show {
                 
                 if ($ccShowInstance->getDbModifiedInstance()){
                     //show instance on this date has been deleted.
-                    $utcStartDateTime = self::advanceRepeatingDate($p_interval, $start, $timezone);
+                    list($start, $utcStartDateTime) = self::advanceRepeatingDate($p_interval, $start, $timezone);
                     continue;
                 }
                 
@@ -1343,7 +1343,7 @@ class Application_Model_Show {
 
             $showInstance->deleteRebroadcasts();
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            $utcStartDateTime = self::advanceRepeatingDate($p_interval, $start, $timezone);
+            list($start, $utcStartDateTime) = self::advanceRepeatingDate($p_interval, $start, $timezone);
 
         }
 
@@ -1359,31 +1359,29 @@ class Application_Model_Show {
              * over the years 2011->2012, etc.). Then let's append the actual day, and use the php
              * checkdate() function, to see if it is valid. If not, then we'll just skip this month. */
 
-                /* pass in only the year and month (not the day) */
-                $dt = new DateTime($startDt->format("Y-m"), new DateTimeZone($timezone));
-
+            /* pass in only the year and month (not the day) */
             $dt = new DateTime($startDt->format("Y-m"), new DateTimeZone($timezone));
+
 
             /* Keep adding 1 month, until we find the next month that contains the day
              * we are looking for (31st day for example) */
             do {
                 $dt->add(new DateInterval($p_interval));
             } while(!checkdate($dt->format("m"), $startDt->format("d"), $dt->format("Y")));
+            
             $dt->setDate($dt->format("Y"), $dt->format("m"), $startDt->format("d"));
-
-            $start = $dt->format("Y-m-d H:i:s");
-
-            $dt->setTimezone(new DateTimeZone('UTC'));
-            $utcStartDateTime = $dt;
+            
         } else {
             $dt = new DateTime($start, new DateTimeZone($timezone));
             $dt->add(new DateInterval($p_interval));
-            $start = $dt->format("Y-m-d H:i:s");
-
-            $dt->setTimezone(new DateTimeZone('UTC'));
-            $utcStartDateTime = $dt;
         }
-        return $utcStartDateTime;
+        
+        $start = $dt->format("Y-m-d H:i:s");
+
+        $dt->setTimezone(new DateTimeZone('UTC'));
+        $utcStartDateTime = $dt;
+        
+        return array($start, $utcStartDateTime);
     }
 
     /*
