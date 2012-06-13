@@ -51,6 +51,12 @@ class Application_Form_AddUser extends Zend_Form
         $email->addFilter('StringTrim');
         $email->addValidator('EmailAddress');
         $this->addElement($email);
+        
+        $cellPhone = new Zend_Form_Element_Text('cell_phone');
+        $cellPhone->setLabel('Mobile Phone:');
+        $cellPhone->setAttrib('class', 'input_text');
+        $cellPhone->addFilter('StringTrim');
+        $this->addElement($cellPhone);
 
         $skype = new Zend_Form_Element_Text('skype');
         $skype->setLabel('Skype:');
@@ -91,7 +97,7 @@ class Application_Form_AddUser extends Zend_Form
             $count = CcSubjsQuery::create()->filterByDbLogin($data['login'])->count();
             
             if ($count != 0){
-                $this->getElement('login')->setErrors(array("login name is not unique."));
+                $this->getElement('login')->setErrors(array("Login name is not unique."));
                 return false;
             }
         }

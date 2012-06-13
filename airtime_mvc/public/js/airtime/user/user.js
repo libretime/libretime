@@ -10,6 +10,7 @@ function populateForm(entries){
     $('#last_name').val(entries.last_name);
     $('#type').val(entries.type);
     $('#email').val(entries.email);
+    $('#cell_phone').val(entries.cell_phone);
     $('#skype').val(entries.skype_contact);
     $('#jabber').val(entries.jabber_contact);
     

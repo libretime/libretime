@@ -96,6 +96,12 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	protected $email;
 
 	/**
+	 * The value for the cell_phone field.
+	 * @var        string
+	 */
+	protected $cell_phone;
+
+	/**
 	 * The value for the login_attempts field.
 	 * Note: this column has a database default value of: 0
 	 * @var        int
@@ -336,6 +342,16 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	public function getDbEmail()
 	{
 		return $this->email;
+	}
+
+	/**
+	 * Get the [cell_phone] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbCellPhone()
+	{
+		return $this->cell_phone;
 	}
 
 	/**
@@ -627,6 +643,26 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	} // setDbEmail()
 
 	/**
+	 * Set the value of [cell_phone] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcSubjs The current object (for fluent API support)
+	 */
+	public function setDbCellPhone($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->cell_phone !== $v) {
+			$this->cell_phone = $v;
+			$this->modifiedColumns[] = CcSubjsPeer::CELL_PHONE;
+		}
+
+		return $this;
+	} // setDbCellPhone()
+
+	/**
 	 * Set the value of [login_attempts] column.
 	 * 
 	 * @param      int $v new value
@@ -713,7 +749,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			$this->skype_contact = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
 			$this->jabber_contact = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->email = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-			$this->login_attempts = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+			$this->cell_phone = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+			$this->login_attempts = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -722,7 +759,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 12; // 12 = CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 13; // 13 = CcSubjsPeer::NUM_COLUMNS - CcSubjsPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcSubjs object", $e);
@@ -1199,6 +1236,9 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				return $this->getDbEmail();
 				break;
 			case 11:
+				return $this->getDbCellPhone();
+				break;
+			case 12:
 				return $this->getDbLoginAttempts();
 				break;
 			default:
@@ -1235,7 +1275,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			$keys[8] => $this->getDbSkypeContact(),
 			$keys[9] => $this->getDbJabberContact(),
 			$keys[10] => $this->getDbEmail(),
-			$keys[11] => $this->getDbLoginAttempts(),
+			$keys[11] => $this->getDbCellPhone(),
+			$keys[12] => $this->getDbLoginAttempts(),
 		);
 		return $result;
 	}
@@ -1301,6 +1342,9 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->setDbEmail($value);
 				break;
 			case 11:
+				$this->setDbCellPhone($value);
+				break;
+			case 12:
 				$this->setDbLoginAttempts($value);
 				break;
 		} // switch()
@@ -1338,7 +1382,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		if (array_key_exists($keys[8], $arr)) $this->setDbSkypeContact($arr[$keys[8]]);
 		if (array_key_exists($keys[9], $arr)) $this->setDbJabberContact($arr[$keys[9]]);
 		if (array_key_exists($keys[10], $arr)) $this->setDbEmail($arr[$keys[10]]);
-		if (array_key_exists($keys[11], $arr)) $this->setDbLoginAttempts($arr[$keys[11]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbCellPhone($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setDbLoginAttempts($arr[$keys[12]]);
 	}
 
 	/**
@@ -1361,6 +1406,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcSubjsPeer::SKYPE_CONTACT)) $criteria->add(CcSubjsPeer::SKYPE_CONTACT, $this->skype_contact);
 		if ($this->isColumnModified(CcSubjsPeer::JABBER_CONTACT)) $criteria->add(CcSubjsPeer::JABBER_CONTACT, $this->jabber_contact);
 		if ($this->isColumnModified(CcSubjsPeer::EMAIL)) $criteria->add(CcSubjsPeer::EMAIL, $this->email);
+		if ($this->isColumnModified(CcSubjsPeer::CELL_PHONE)) $criteria->add(CcSubjsPeer::CELL_PHONE, $this->cell_phone);
 		if ($this->isColumnModified(CcSubjsPeer::LOGIN_ATTEMPTS)) $criteria->add(CcSubjsPeer::LOGIN_ATTEMPTS, $this->login_attempts);
 
 		return $criteria;
@@ -1433,6 +1479,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$copyObj->setDbSkypeContact($this->skype_contact);
 		$copyObj->setDbJabberContact($this->jabber_contact);
 		$copyObj->setDbEmail($this->email);
+		$copyObj->setDbCellPhone($this->cell_phone);
 		$copyObj->setDbLoginAttempts($this->login_attempts);
 
 		if ($deepCopy) {
@@ -2471,6 +2518,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$this->skype_contact = null;
 		$this->jabber_contact = null;
 		$this->email = null;
+		$this->cell_phone = null;
 		$this->login_attempts = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;

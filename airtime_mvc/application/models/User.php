@@ -119,6 +119,11 @@ class Application_Model_User {
         $user = $this->_userInstance;
         $user->setDbEmail($email);
     }
+    
+    public function setCellPhone($cellPhone){
+        $user = $this->_userInstance;
+        $user->setDbCellPhone($cellPhone);
+    }
 
     public function setSkype($skype){
         $user = $this->_userInstance;
@@ -158,6 +163,11 @@ class Application_Model_User {
     public function getEmail(){
         $user = $this->_userInstance;
         return $user->getDbEmail();
+    }
+    
+    public function getCellPhone(){
+        $user = $this->_userInstance;
+        return $user->getDbCellPhone();
     }
 
     public function getSkype(){
@@ -277,7 +287,7 @@ class Application_Model_User {
     public static function getUserData($id){
         $con = Propel::getConnection();
 
-        $sql = "SELECT login, first_name, last_name, type, id, email, skype_contact, jabber_contact"
+        $sql = "SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact, jabber_contact"
         ." FROM cc_subjs"
         ." WHERE id = $id";
 

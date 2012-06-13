@@ -50,6 +50,7 @@ class UserController extends Zend_Controller_Action
                         $user->setPassword($formdata['password']);
                     $user->setType($formdata['type']);
                     $user->setEmail($formdata['email']);
+                    $user->setCellPhone($formdata['cell_phone']);
                     $user->setSkype($formdata['skype']);
                     $user->setJabber($formdata['jabber']);
                     $user->save();

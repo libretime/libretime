@@ -330,6 +330,7 @@
     <column name="skype_contact" phpName="DbSkypeContact" type="VARCHAR" required="false"/>
     <column name="jabber_contact" phpName="DbJabberContact" type="VARCHAR" required="false"/>
     <column name="email" phpName="DbEmail" type="VARCHAR" required="false"/>
+    <column name="cell_phone" phpName="DbCellPhone" type="VARCHAR" required="false"/>
     <column name="login_attempts" phpName="DbLoginAttempts" type="INTEGER" required="false" defaultValue="0"/>
     <unique name="cc_subjs_id_idx">
       <unique-column name="id"/>

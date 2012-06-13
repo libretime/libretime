@@ -451,6 +451,7 @@ CREATE TABLE "cc_subjs"
 	"skype_contact" VARCHAR(255),
 	"jabber_contact" VARCHAR(255),
 	"email" VARCHAR(255),
+	"cell_phone" VARCHAR(255),
 	"login_attempts" INTEGER default 0,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "cc_subjs_id_idx" UNIQUE ("id"),

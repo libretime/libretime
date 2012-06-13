@@ -17,6 +17,7 @@
  * @method     CcSubjsQuery orderByDbSkypeContact($order = Criteria::ASC) Order by the skype_contact column
  * @method     CcSubjsQuery orderByDbJabberContact($order = Criteria::ASC) Order by the jabber_contact column
  * @method     CcSubjsQuery orderByDbEmail($order = Criteria::ASC) Order by the email column
+ * @method     CcSubjsQuery orderByDbCellPhone($order = Criteria::ASC) Order by the cell_phone column
  * @method     CcSubjsQuery orderByDbLoginAttempts($order = Criteria::ASC) Order by the login_attempts column
  *
  * @method     CcSubjsQuery groupByDbId() Group by the id column
@@ -30,6 +31,7 @@
  * @method     CcSubjsQuery groupByDbSkypeContact() Group by the skype_contact column
  * @method     CcSubjsQuery groupByDbJabberContact() Group by the jabber_contact column
  * @method     CcSubjsQuery groupByDbEmail() Group by the email column
+ * @method     CcSubjsQuery groupByDbCellPhone() Group by the cell_phone column
  * @method     CcSubjsQuery groupByDbLoginAttempts() Group by the login_attempts column
  *
  * @method     CcSubjsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -82,6 +84,7 @@
  * @method     CcSubjs findOneByDbSkypeContact(string $skype_contact) Return the first CcSubjs filtered by the skype_contact column
  * @method     CcSubjs findOneByDbJabberContact(string $jabber_contact) Return the first CcSubjs filtered by the jabber_contact column
  * @method     CcSubjs findOneByDbEmail(string $email) Return the first CcSubjs filtered by the email column
+ * @method     CcSubjs findOneByDbCellPhone(string $cell_phone) Return the first CcSubjs filtered by the cell_phone column
  * @method     CcSubjs findOneByDbLoginAttempts(int $login_attempts) Return the first CcSubjs filtered by the login_attempts column
  *
  * @method     array findByDbId(int $id) Return CcSubjs objects filtered by the id column
@@ -95,6 +98,7 @@
  * @method     array findByDbSkypeContact(string $skype_contact) Return CcSubjs objects filtered by the skype_contact column
  * @method     array findByDbJabberContact(string $jabber_contact) Return CcSubjs objects filtered by the jabber_contact column
  * @method     array findByDbEmail(string $email) Return CcSubjs objects filtered by the email column
+ * @method     array findByDbCellPhone(string $cell_phone) Return CcSubjs objects filtered by the cell_phone column
  * @method     array findByDbLoginAttempts(int $login_attempts) Return CcSubjs objects filtered by the login_attempts column
  *
  * @package    propel.generator.airtime.om
@@ -458,6 +462,28 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSubjsPeer::EMAIL, $dbEmail, $comparison);
+	}
+
+	/**
+	 * Filter the query on the cell_phone column
+	 * 
+	 * @param     string $dbCellPhone The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByDbCellPhone($dbCellPhone = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbCellPhone)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCellPhone)) {
+				$dbCellPhone = str_replace('*', '%', $dbCellPhone);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcSubjsPeer::CELL_PHONE, $dbCellPhone, $comparison);
 	}
 
 	/**
