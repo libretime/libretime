@@ -1,3 +1,24 @@
+2.1.1 - June 12th, 2012
+  * Changes
+    * Add Media page will now display error message and reject uploaded file if it is corrupt
+    * jQuery schedule widget now show upcoming Sunday instead of previous Sunday
+    * fixed uploading files with upper case file extensions
+    * fixed master/source override URL being reverted to original setting after clicking 'Save' in stream settings.
+    * Add several helpful tips in the Stream Settings page and some UI cleanup
+    * DJ user type cannot delete Playlists that aren't their own or delete tracks
+    * Playlist Builder should remember your position instead of reseting to the first page everytime an operation was performed
+    * If Master or Live input source is disconnected, Airtime will no longer automatically switch off that source. This should allow the source to
+      reconnect and continue playback.
+  
+  * Bug fixes
+    * Fixed playout engine sometimes not receiving new schedule which could result in dead air
+    * Fixed script timeout which caused Apache to become unresponsive
+    * Fixed various Apache warnings
+    * Fixed not being able to delete some tracks that had been played
+    * Fixed calendar highlighting the wrong day due to server timezone being different from client browser timezone
+    * Promote my station opt-out button now works
+    * Fixed recording working sporadically on some system configurations
+
 2.1.0 - June 5th, 2012
   * The cool stuff:
     * Real-time show editing in the Now Playing and Calendar screens
