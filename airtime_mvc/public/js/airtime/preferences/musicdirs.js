@@ -77,6 +77,10 @@ function setWatchedDirEvents() {
                 setWatchedDirEvents();
             });
     });
+    
+    $('#watchedFolder-rescan').click(function(){
+        $.get("/Preference/rescan-watch-directory", {format: "json"});
+    });
 
     $('.selected-item').find('.ui-icon-close').click(function(){
         if(confirm("Are you sure you want to remove the watched folder?")){

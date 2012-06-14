@@ -1990,6 +1990,17 @@ label span {
 	line-height:12px;
 	padding:0 10px 1px 10px;
 }
+
+#watched-folder-section a {
+    font-size: 12px;
+}
+
+#watched-folder-section a:hover {
+    text-decoration:none;
+    color:#FF5D1A;
+    cursor:pointer;
+}
+
 #watched-folder-section dd.block-display input[type="button"]:hover {
 	border: 1px solid #242424;
 	background-color: #292929;

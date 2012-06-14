@@ -350,6 +350,15 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->subform = $watched_dirs_form->render();
     }
+    
+    public function rescanWatchDirectoryAction()
+    {
+        $dirs = Application_Model_MusicDir::getWatchedDirs();
+        foreach ($dirs as $dir) {
+            $res = Application_Model_MusicDir::addWatchedDir($dir->getDirectory());	
+        }
+        die();
+    }
 
     public function removeWatchDirectoryAction()
     {
