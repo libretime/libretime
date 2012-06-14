@@ -13,6 +13,8 @@ class Application_Model_Email {
     public static function send($subject, $message, $tos, $from = null)
     {
         $mailServerConfigured = Application_Model_Preference::GetMailServerConfigured() == true ? true : false;
+        $success = true;
+        
         if ($mailServerConfigured) {
             $username = Application_Model_Preference::GetMailServerEmailAddress();
             $password = Application_Model_Preference::GetMailServerPassword();
@@ -35,7 +37,7 @@ class Application_Model_Email {
 		    
             $transport = new Zend_Mail_Transport_Smtp($mailServer, $config); 	
         }
-        
+
         $mail = new Zend_Mail('utf-8');
         $mail->setSubject($subject);
         $mail->setBodyText($message);
@@ -46,10 +48,21 @@ class Application_Model_Email {
 
         if ($mailServerConfigured) {
             $mail->setFrom(isset($from) ? $from : Application_Model_Preference::GetMailServerEmailAddress());
-            $mail->send($transport);
+            try {
+                $mail->send($transport);
+            } catch (Exception $e) {
+                $success = false;
+            }
         } else {
             $mail->setFrom(isset($from) ? $from : Application_Model_Preference::GetSystemEmail());
-            $mail->send();
-        }    
+            try {
+                $mail->send();
+            } catch (Exception $e) {
+                $success = false;
+            }
+        }  
+		
+        return $success;
+
     }
 }
