@@ -215,6 +215,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
+                Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
                 
                 if (!$isSaas) {
                     if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {

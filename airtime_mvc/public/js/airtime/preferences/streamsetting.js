@@ -311,6 +311,27 @@ $(document).ready(function() {
         },
     })
     
+    $("#auto_switch_help").qtip({
+        content: {
+            text: "Check this box to automatically switch on Master/Show source upon source disconnection."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    })
+    
     $(".stream_username_help_icon").qtip({
         content: {
             text: "If your live streaming client does not ask for a username, this field should be 'source'."
