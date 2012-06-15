@@ -353,10 +353,12 @@ class PreferenceController extends Zend_Controller_Action
     
     public function rescanWatchDirectoryAction()
     {
-        $dirs = Application_Model_MusicDir::getWatchedDirs();
-        foreach ($dirs as $dir) {
-            $res = Application_Model_MusicDir::addWatchedDir($dir->getDirectory());	
-        }
+        $dir = Application_Model_MusicDir::getDirByPath($this->getRequest()->getParam("dir"));
+        $id = $dir->getId();
+        $data = array();
+        $data['directory'] = $dir->getDirectory();
+        $data['id'] = $id;
+        Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
         die();
     }
 

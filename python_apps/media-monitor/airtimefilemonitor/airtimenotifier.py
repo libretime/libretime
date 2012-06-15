@@ -84,6 +84,9 @@ class AirtimeNotifier(Notifier):
             self.logger.info("Removing watch on: %s wd %s", watched_directory, wd)
             mm.wm.rm_watch(wd, rec=True)
 
+        elif m['event_type'] == "rescan_watch":
+            self.bootstrap.sync_database_to_filesystem(str(m['id']), m['directory'])
+
         elif m['event_type'] == "change_stor":
             storage_directory = self.config.storage_directory
             new_storage_directory = m['directory']

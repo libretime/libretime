@@ -2027,12 +2027,23 @@ label span {
 	-moz-border-radius: 4px;
 	font-size:13px;
 }
+
 #watched-folder-section dd.block-display.selected-item .ui-icon {
 	position:absolute;
 	top:4px;
 	right:5px;
 	cursor:pointer;
 }
+
+#watched-folder-section dd.block-display.selected-item .ui-icon.ui-icon-refresh {
+	position:absolute;
+	top:4px;
+	right:20px;
+	cursor:pointer;
+	background-image:url(redmond/images/ui-icons_ffffff_256x240.png);
+	background-position: -128px -63px;
+}
+
 #watched-folder-section dd.block-display.selected-item .ui-icon:hover {
 	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png)
 }

@@ -20,7 +20,7 @@
 
         <dt id="watchedFolder-label" class="block-display">
             <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
-            <a href="#" id="watchedFolder-rescan">Rescan</a>
+            
         </dt>
         <dd id="watchedFolder-element" class="block-display">
             <?php echo $this->element->getElement('watchedFolder') ?>
@@ -39,7 +39,10 @@
         <?php if (count($watched_dirs) > 0): ?>
             <?php foreach($watched_dirs as $watched_dir): ?>
                 <dd class="block-display selected-item">
-                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span><?php echo $watched_dir->getDirectory();?></span></span><span class="ui-icon ui-icon-close"></span>
+                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath"><?php echo $watched_dir->getDirectory();?></span></span>
+                    <span title="Rescan watched directory (This is useful if it is network mount and may be out of sync with Airtime)" class="ui-icon ui-icon-refresh"></span>
+                    <span title="Remove watched directory" class="ui-icon ui-icon-close"></span>
+                    
                 </dd>
             <?php endforeach; ?>
         <?php else: ?>

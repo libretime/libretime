@@ -78,14 +78,15 @@ function setWatchedDirEvents() {
             });
     });
     
-    $('#watchedFolder-rescan').click(function(){
-        $.get("/Preference/rescan-watch-directory", {format: "json"});
+    $('.selected-item').find('.ui-icon-refresh').click(function(){
+        var folder = $(this).prev().text();
+        $.get("/Preference/rescan-watch-directory", {format: "json", dir: folder});
     });
 
     $('.selected-item').find('.ui-icon-close').click(function(){
         if(confirm("Are you sure you want to remove the watched folder?")){
             var row = $(this).parent();
-            var folder = $(this).prev().text();
+            var folder = row.find('#folderPath').text();
 
             url = "/Preference/remove-watch-directory";
 
@@ -124,4 +125,5 @@ $(document).ready(function() {
         show: 'mouseover',
         hide: 'mouseout'
     });
+    
 });
