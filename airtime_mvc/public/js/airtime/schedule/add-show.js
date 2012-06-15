@@ -12,7 +12,7 @@ function startDpSelect(dateText, inst) {
 	date = new Date(time[0], time[1] - 1, time[2]);
 
     if (inst.input)
-        inst.input.trigger('change');
+        inst.input.trigger('input');
 }
 
 function endDpSelect(dateText, inst) {
@@ -22,19 +22,19 @@ function endDpSelect(dateText, inst) {
 	date = new Date(time[0], time[1] - 1, time[2]);
 
 	if (inst.input)
-        inst.input.trigger('change');
+        inst.input.trigger('input');
 }
 
 function createDateInput(el, onSelect) {
 	var date;
 
 	el.datepicker({
-			minDate: adjustDateToServerDate(new Date(), timezoneOffset),
-			onSelect: onSelect,
-			dateFormat: 'yy-mm-dd',
-			closeText: 'Close',
-			showButtonPanel: true,
-                        firstDay: weekStart
+        minDate: adjustDateToServerDate(new Date(), timezoneOffset),
+        onSelect: onSelect,
+        dateFormat: 'yy-mm-dd',
+        closeText: 'Close',
+        showButtonPanel: true,
+        firstDay: weekStart
 		});
 }
 
@@ -81,6 +81,14 @@ function beginEditShow(data){
     removeAddShowButton();
     setAddShowEvents();
     openAddShowForm();
+}
+
+function onStartTimeSelect(){
+    $("#add_show_start_time").trigger('input');
+}
+
+function onEndTimeSelect(){
+    $("#add_show_end_time").trigger('input');
 }
 
 function setAddShowEvents() {
@@ -255,12 +263,14 @@ function setAddShowEvents() {
 	createDateInput(form.find("#add_show_end_date_no_repeat"), endDpSelect);
 	createDateInput(form.find("#add_show_end_date"), endDpSelect);
 
-    form.find("#add_show_start_time").timepicker({
+    $("#add_show_start_time").timepicker({
         amPmText: ['', ''],
-        defaultTime: '00:00'
+        defaultTime: '00:00',
+        onSelect: onStartTimeSelect
     });
-    form.find("#add_show_end_time").timepicker({
-        amPmText: ['', '']
+    $("#add_show_end_time").timepicker({
+        amPmText: ['', ''],
+        onSelect: onEndTimeSelect
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
@@ -438,72 +448,81 @@ function setAddShowEvents() {
             });
 		});
 
+	var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]/);
+    var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]/);
+    
 	// when start date/time changes, set end date/time to start date/time+1 hr
-	$('#add_show_start_date, #add_show_start_time').change(function(){
+	$('#add_show_start_date, #add_show_start_time').bind('input', 'change', function(){
 	    var startDateString = $('#add_show_start_date').val();
 	    var startTimeString = $('#add_show_start_time').val();
-		var startDate = startDateString.split('-');
-		var startTime = startTimeString.split(':');
-        var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
-
-        var endDateString = $('#add_show_end_date_no_repeat').val();
-        var endTimeString = $('#add_show_end_time').val()
-		var endDate = endDateString.split('-');
-		var endTime = endTimeString.split(':');
-        var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
-
-		if(startDateTime.getTime() >= endDateTime.getTime()){
-		    var duration = $('#add_show_duration').val();
-	        // parse duration
-		    var time = 0;
-		    var info = duration.split(' ');
-		    var h = parseInt(info[0], 10);
-		    time += h * 60 * 60* 1000;
-		    if(info.length >1 && $.trim(info[1]) !== ''){
-		        var m = parseInt(info[1], 10);
-		        time += m * 60 * 1000;
-		    }
-			endDateTime = new Date(startDateTime.getTime() + time);
-		}
-
-		var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
-		var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
-
-		$('#add_show_end_date_no_repeat').val(endDateFormat);
-		$('#add_show_end_time').val(endTimeFormat);
-
-		// calculate duration
-		var startDateTimeString = startDateString + " " + startTimeString;
-		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
-		calculateDuration(startDateTimeString, endDateTimeString);
+	    
+	    if(regDate.test(startDateString) && regTime.test(startTimeString)){
+    		var startDate = startDateString.split('-');
+    		var startTime = startTimeString.split(':');
+            var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
+    
+            var endDateString = $('#add_show_end_date_no_repeat').val();
+            var endTimeString = $('#add_show_end_time').val()
+    		var endDate = endDateString.split('-');
+    		var endTime = endTimeString.split(':');
+            var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
+    
+    		if(startDateTime.getTime() >= endDateTime.getTime()){
+    		    var duration = $('#add_show_duration').val();
+    	        // parse duration
+    		    var time = 0;
+    		    var info = duration.split(' ');
+    		    var h = parseInt(info[0], 10);
+    		    time += h * 60 * 60* 1000;
+    		    if(info.length >1 && $.trim(info[1]) !== ''){
+    		        var m = parseInt(info[1], 10);
+    		        time += m * 60 * 1000;
+    		    }
+    			endDateTime = new Date(startDateTime.getTime() + time);
+    		}
+    
+    		var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
+    		var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
+    
+    		$('#add_show_end_date_no_repeat').val(endDateFormat);
+    		$('#add_show_end_time').val(endTimeFormat);
+    
+    		// calculate duration
+    		var startDateTimeString = startDateString + " " + startTimeString;
+    		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
+    		calculateDuration(startDateTimeString, endDateTimeString);
+	    }
 	});
 
 	// when end date/time changes, check if the changed date is in past of start date/time
-	$('#add_show_end_date_no_repeat, #add_show_end_time').change(function(){
-	    var startDateString = $('#add_show_start_date').val();
-        var startTimeString = $('#add_show_start_time').val();
-        var startDate = startDateString.split('-');
-        var startTime = startTimeString.split(':');
-		var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
-
-		var endDateString = $('#add_show_end_date_no_repeat').val();
+	$('#add_show_end_date_no_repeat, #add_show_end_time').bind('input', 'change', function(){
+	    var endDateString = $('#add_show_end_date_no_repeat').val();
         var endTimeString = $('#add_show_end_time').val()
-        var endDate = endDateString.split('-');
-        var endTime = endTimeString.split(':');
-        var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
+	    
+        if(regDate.test(endDateString) && regTime.test(endTimeString)){
+            var startDateString = $('#add_show_start_date').val();
+            var startTimeString = $('#add_show_start_time').val();
+            var startDate = startDateString.split('-');
+            var startTime = startTimeString.split(':');
+            var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
 
-		if(startDateTime.getTime() > endDateTime.getTime()){
-			$('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
-			$('#add_show_end_time').css('background-color', '#F49C9C');
-		}else{
-			$('#add_show_end_date_no_repeat').css('background-color', '');
-			$('#add_show_end_time').css('background-color', '');
-		}
-
-		// calculate duration
-		var startDateTimeString = startDateString + " " + startTimeString;
-        var endDateTimeString = endDateString + " " + endTimeString;
-        calculateDuration(startDateTimeString, endDateTimeString);
+            var endDate = endDateString.split('-');
+            var endTime = endTimeString.split(':');
+            var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
+    
+    		if(startDateTime.getTime() > endDateTime.getTime()){
+    			$('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
+    			$('#add_show_end_time').css('background-color', '#F49C9C');
+    		}else{
+    			$('#add_show_end_date_no_repeat').css('background-color', '');
+    			$('#add_show_end_time').css('background-color', '');
+    		}
+    
+    		// calculate duration
+    		var startDateTimeString = startDateString + " " + startTimeString;
+            var endDateTimeString = endDateString + " " + endTimeString;
+            calculateDuration(startDateTimeString, endDateTimeString);
+        }
 	});
 
     if($('#cb_custom_auth').attr('checked')){

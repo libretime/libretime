@@ -49,6 +49,7 @@ class Application_Form_AddUser extends Zend_Form
         $email->setLabel('Email:');
         $email->setAttrib('class', 'input_text');
         $email->addFilter('StringTrim');
+        $email->setRequired(true);
         $email->addValidator('EmailAddress');
         $this->addElement($email);
         

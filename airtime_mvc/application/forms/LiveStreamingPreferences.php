@@ -15,12 +15,19 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $defaultFade = '00.000000';
         }
         
-        // automatic switch off
+        // automatic trasition on source disconnection
         $auto_transition = new Zend_Form_Element_Checkbox("auto_transition");
         $auto_transition->setLabel("Auto Switch Off")
                         ->setValue(Application_Model_Preference::GetAutoTransition())
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($auto_transition);
+        
+        // automatic switch on upon source connection
+        $auto_switch = new Zend_Form_Element_Checkbox("auto_switch");
+        $auto_switch->setLabel("Auto Switch On")
+                        ->setValue(Application_Model_Preference::GetAutoSwitch())
+                        ->setDecorators(array('ViewHelper'));
+        $this->addElement($auto_switch);
         
         // Default transition fade
         $transition_fade = new Zend_Form_Element_Text("transition_fade");
