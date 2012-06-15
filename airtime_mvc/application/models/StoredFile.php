@@ -391,7 +391,7 @@ class Application_Model_StoredFile {
 
         return $directory.$filepath;
     }
-
+    
     /**
      * Set real filename of raw media data
      *
@@ -887,8 +887,9 @@ Logging::log("getting media! - 2");
                 
                 // Check if file is playable
                 $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' 2>&1", $audio_file);
+                
                 exec($command, $output, $rv);
-                if ($rv != 0 || count($output) != 0) {
+                if ($rv != 0 || $output[0] == 'TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.') {
                     $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
                 }
                 else {
@@ -1011,6 +1012,10 @@ Logging::log("getting media! - 2");
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
     }
+    
+    public function getDirectory(){
+	    return $this->_file->getDbDirectory();	
+	}
 
     public function setFileExistsFlag($flag){
         $this->_file->setDbFileExists($flag)
