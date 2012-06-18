@@ -1,3 +1,7 @@
+2.1.2 - June 18th, 2012
+  * Bug Fixes
+    * Fixed problem where playout engine may not retrieve program schedule after extended periods of user inactivity.
+
 2.1.1 - June 12th, 2012
   * Changes
     * Add Media page will now display error message and reject uploaded file if it is corrupt
