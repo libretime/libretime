@@ -117,7 +117,7 @@ class Application_Model_User {
 
     public function setEmail($email){
         $user = $this->_userInstance;
-        $user->setDbEmail($email);
+        $user->setDbEmail(strtolower($email));
     }
 
     public function setSkype($skype){

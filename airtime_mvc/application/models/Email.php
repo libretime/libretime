@@ -12,6 +12,7 @@ class Application_Model_Email {
      */
     public static function send($subject, $message, $tos, $from = null)
     {
+        $success = true;
         $mail = new Zend_Mail('utf-8');
         $mail->setSubject($subject);
         $mail->setBodyText($message);
@@ -21,6 +22,12 @@ class Application_Model_Email {
             $mail->addTo($to);
         }
 
-        $mail->send();
+        try {
+            $mail->send();
+        } catch (Exception $e) {
+            $success = false;
+        }
+		
+        return $success;
     }
 }

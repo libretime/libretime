@@ -215,6 +215,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
+                Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
                 
                 if (!$isSaas) {
                     if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
@@ -265,7 +266,7 @@ class PreferenceController extends Zend_Controller_Action
         }
         
         $live_stream_subform->updateVariables();
-        $this->view->confirm_pypo_restart_text = "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings).";
+        $this->view->confirm_pypo_restart_text = "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.";
         
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
