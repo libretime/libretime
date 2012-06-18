@@ -80,7 +80,6 @@ class PypoFetch(Thread):
             self.logger.info("Handling command: " + command)
         
             if command == 'update_schedule':
-                self.last_update_schedule_timestamp = time.time()
                 self.schedule_data  = m['schedule']
                 self.process_schedule(self.schedule_data)
             elif command == 'update_stream_setting':
@@ -404,7 +403,8 @@ class PypoFetch(Thread):
        to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cached files
     """
-    def process_schedule(self, schedule_data):      
+    def process_schedule(self, schedule_data):
+        self.last_update_schedule_timestamp = time.time()
         self.logger.debug(schedule_data)
         media = schedule_data["media"]
         media_filtered = {}
