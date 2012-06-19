@@ -404,7 +404,7 @@ class PypoFetch(Thread):
      - runs the cleanup routine, to get rid of unused cached files
     """
     def process_schedule(self, schedule_data):      
-	self.last_update_schedule_timestamp = time.time()
+        self.last_update_schedule_timestamp = time.time()
         self.logger.debug(schedule_data)
         media = schedule_data["media"]
         media_filtered = {}

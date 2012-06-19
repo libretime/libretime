@@ -7,11 +7,11 @@ class AirtimeDatabaseUpgrade{
 
     public static function start($p_dbValues){
         echo "* Updating Database".PHP_EOL;
-        self::runUpgradeScript($p_dbValues);
+        self::task0($p_dbValues);
         echo " * Complete".PHP_EOL;
     }
 
-    private static function runUpgradeScript($p_dbValues){
+    private static function task0($p_dbValues){
         
         $username = $p_dbValues['database']['dbuser'];
         $password = $p_dbValues['database']['dbpass'];
