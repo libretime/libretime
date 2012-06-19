@@ -19,7 +19,7 @@
       * Removing a watched directory and adding it again preserves playlists & shows with those files.
       * An icon in the playlist shows whether a file is missing on disk, warning the user that the playlist will not go according to plan.
       * Media monitor detects add and removal of watched temporary local storage (USB disks for example) and network drives.
-     * Broadcast Log - export play count of tracks within a given time range.&nbsp; Useful for royalty reporting purposes.
+     * Broadcast Log - export play count of tracks within a given time range. Useful for royalty reporting purposes.
   * Minor Improvements:
     * Ability to turn off the broadcast.
     * Editing metadata in the library will update the metadata on disk.
@@ -30,7 +30,7 @@
     * Repeating shows default to "No End"
     * Ability to "View on Soundcloud" for recorded shows in the calendar
     * "Listen" preview player no longer falls behind the broadcast (you can only mute the stream now, not stop it)
-    * Tracks that cannot be played will be rejected on upload and put in to the directory "/srv/airtime/store/problem_files" (but currently it will not tell you that it rejected them - sorry\!)
+    * Tracks that cannot be played will be rejected on upload and put in to the directory "/srv/airtime/stor/problem_files" (but currently it will not tell you that it rejected them - sorry\!)
     * Library is automatically refreshed when media import is finished
     * Show "Disk Full" message when trying to upload a file that wont fit on the disk
     * Reduced CPU utilization for OGG streams
