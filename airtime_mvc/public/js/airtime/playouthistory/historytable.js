@@ -1,3 +1,22 @@
+function getFileName(){
+    var filename = $("#his_date_start").val()+"_"+$("#his_time_start").val()+"m--"+$("#his_date_end").val()+"_"+$("#his_time_end").val()+"m"
+    filename = filename.replace(/:/g,"h")
+    return filename;
+}
+
+function setFlashFileName( nButton, oConfig, oFlash ) {
+    var filename = getFileName()
+    oFlash.setFileName( filename );
+    this.fnSetText( oFlash,
+        "title:"+ this.fnGetTitle(oConfig) +"\n"+
+        "message:"+ oConfig.sPdfMessage +"\n"+
+        "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
+        "orientation:"+ oConfig.sPdfOrientation +"\n"+
+        "size:"+ oConfig.sPdfSize +"\n"+
+        "--/TableToolsOpts--\n" +
+        this.fnGetTableData(oConfig));
+}
+
 var AIRTIME = (function(AIRTIME) {
     var mod;
     
@@ -65,7 +84,23 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
-                "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf"
+                "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
+                "aButtons": [
+                             "copy",
+                             {
+                                 "sExtends": "csv",
+                                 "fnClick": setFlashFileName
+                             },
+                             {
+                                 "sExtends": "xls",
+                                 "fnClick": setFlashFileName
+                             },
+                             {
+                                 "sExtends": "pdf",
+                                 "fnClick": setFlashFileName
+                             },
+                             "print"
+                         ]
             }
         });
         oTable.fnSetFilteringDelay(350);
