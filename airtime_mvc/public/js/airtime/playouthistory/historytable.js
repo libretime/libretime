@@ -102,10 +102,6 @@ var AIRTIME = (function(AIRTIME) {
                                  "fnClick": setFlashFileName
                              },
                              {
-                                 "sExtends": "xls",
-                                 "fnClick": setFlashFileName
-                             },
-                             {
                                  "sExtends": "pdf",
                                  "fnClick": setFlashFileName
                              },
