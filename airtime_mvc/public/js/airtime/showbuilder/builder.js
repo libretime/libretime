@@ -890,8 +890,8 @@ var AIRTIME = (function(AIRTIME){
         
         $ul = $("<ul/>");
         $ul.append('<li class="ui-state-default sb-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
-            .append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="Delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
-            .append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="Delete selected scheduled items"><span class="ui-icon ui-icon-trash"></span></li>');    
+            .append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="Remove all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
+            .append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="Remove selected scheduled items"><span class="ui-icon ui-icon-trash"></span></li>');    
         $toolbar.append($ul);
         
         $ul = $("<ul/>");
