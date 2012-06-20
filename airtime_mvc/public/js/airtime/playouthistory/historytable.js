@@ -1,20 +1,30 @@
-function getFileName(){
+function getFileName(ext){
     var filename = $("#his_date_start").val()+"_"+$("#his_time_start").val()+"m--"+$("#his_date_end").val()+"_"+$("#his_time_end").val()+"m"
     filename = filename.replace(/:/g,"h")
+    if(ext == "pdf"){
+        filename = filename+".pdf"
+    }else{
+        filename = filename+".csv"
+    }
     return filename;
 }
 
 function setFlashFileName( nButton, oConfig, oFlash ) {
-    var filename = getFileName()
+    var filename = getFileName(oConfig.sExtends)
     oFlash.setFileName( filename );
-    this.fnSetText( oFlash,
-        "title:"+ this.fnGetTitle(oConfig) +"\n"+
-        "message:"+ oConfig.sPdfMessage +"\n"+
-        "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
-        "orientation:"+ oConfig.sPdfOrientation +"\n"+
-        "size:"+ oConfig.sPdfSize +"\n"+
-        "--/TableToolsOpts--\n" +
-        this.fnGetTableData(oConfig));
+    if(oConfig.sExtends == "pdf"){
+        this.fnSetText( oFlash,
+            "title:"+ this.fnGetTitle(oConfig) +"\n"+
+            "message:"+ oConfig.sPdfMessage +"\n"+
+            "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
+            "orientation:"+ oConfig.sPdfOrientation +"\n"+
+            "size:"+ oConfig.sPdfSize +"\n"+
+            "--/TableToolsOpts--\n" +
+            this.fnGetTableData(oConfig));
+    }else{
+        this.fnSetText( oFlash,
+                this.fnGetTableData(oConfig));
+    }
 }
 
 var AIRTIME = (function(AIRTIME) {
