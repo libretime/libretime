@@ -29,5 +29,13 @@ class Application_Form_PasswordRestore extends Zend_Form
                 'ViewHelper'
             )
         ));
+        
+        $cancel = new Zend_Form_Element_Button("cancel");
+        $cancel->class = 'ui-button ui-widget ui-state-default ui-button-text-only center';
+        $cancel->setLabel("Cancel")
+               ->setIgnore(True)
+               ->setAttrib('onclick', 'redirectToLogin();')
+               ->setDecorators(array('ViewHelper'));
+        $this->addElement($cancel);
     }
 }
