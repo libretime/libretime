@@ -66,7 +66,7 @@ var AIRTIME = (function(AIRTIME) {
             
             "aoColumns": [
                {"sTitle": "Title", "mDataProp": "title", "sClass": "his_title"}, /* Title */
-               {"sTitle": "Artist", "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
+               {"sTitle": "Creator", "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
                {"sTitle": "Played", "mDataProp": "played", "sClass": "his_artist"}, /* times played */
                {"sTitle": "Length", "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
                {"sTitle": "Composer", "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
