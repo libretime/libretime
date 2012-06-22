@@ -23,7 +23,9 @@ date_default_timezone_set('UTC');
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 global $CC_CONFIG;
-$CC_CONFIG['airtime_version'] = Application_Model_Preference::GetAirtimeVersion();
+$airtime_version = Application_Model_Preference::GetAirtimeVersion();
+$uniqueid = Application_Model_Preference::GetUniqueId();
+$CC_CONFIG['airtime_version'] = md5($airtime_version + $uniqueid);
 
 require_once __DIR__."/configs/navigation.php";
 
