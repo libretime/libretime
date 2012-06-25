@@ -20,58 +20,77 @@ class Application_Model_LiveLog
             if ($rows != null) {
                 $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                 array_push($rows, $last_row);
+                $skip = false;
+            } else {
+                $sql = "SELECT * FROM CC_LIVE_LOG"
+                    ." WHERE state = 'L'"
+                    ." ORDER BY id";
+                $rows = $con->query($sql)->fetchAll();
+                
+                if ($rows != null) {
+                    $last_row = self::UpdateLastLogEndTime(array_pop($rows));
+                    array_push($rows, $last_row);
+                    foreach ($rows as $row) {
+                        $sql_delete = "DELETE FROM CC_LIVE_LOG"
+                                    ." WHERE id = '{$row['id']}'";
+                        $con->exec($sql_delete);
+                    }
+                }
+                $skip = true;   
             }
 
             $hours = 0;
             $minutes = 0;
             $seconds = 0;
 
-            foreach ($rows as $row) {
-                $end = new DateTime($row['end_time']);
-                $start = new DateTime($row['start_time']);
-                $duration = $start->diff($end);
-                $duration = $duration->format("%H:%i:%s");
-                $intervals = explode(":", $duration);
-                for ($i = 0; $i < sizeof($intervals); $i++) {
-                    if (!isset($intervals[$i])) {
-                        $intervals[$i] = 0;
+            if (!$skip) {
+                foreach ($rows as $row) {
+                    $end = new DateTime($row['end_time']);
+                    $start = new DateTime($row['start_time']);
+                    $duration = $start->diff($end);
+                    $duration = $duration->format("%H:%i:%s");
+                    $intervals = explode(":", $duration);
+                    for ($i = 0; $i < sizeof($intervals); $i++) {
+                        if (!isset($intervals[$i])) {
+                            $intervals[$i] = 0;
+                        }
+                    }
+                    
+                    // Trim milliseconds (DateInterval does not support)
+                    $sec = explode(".", $intervals[2]);
+                    if (isset($sec[0])) {
+                        $intervals[2] = $sec[0];
+                    }
+                    
+                    $seconds += $intervals[2];
+                    if ($seconds / 60 >= 1) {
+                        $minutes += 1;
+                        $seconds -= 60;
+                    }
+
+                    $minutes += $intervals[1];
+                    if ($minutes / 60 >= 1) {
+                        $hours += 1;
+                        $minutes -= 60;
+                    }
+
+                    $hours += $intervals[0];
+
+                    if (!$p_keepData) {
+                        // Delete data we just used to start a new log history
+                        $sql_delete = "DELETE FROM CC_LIVE_LOG"
+                        ." WHERE id = '{$row['id']}'";
+                        $con->exec($sql_delete);
                     }
                 }
-                
-                // Trim milliseconds (DateInterval does not support)
-                $sec = explode(".", $intervals[2]);
-                if (isset($sec[0])) {
-                    $intervals[2] = $sec[0];
+                //Trim milliseconds
+                $seconds = explode(".", $seconds);
+                if (isset($seconds[0])) {
+                    $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
                 }
-                
-                $seconds += $intervals[2];
-                if ($seconds / 60 >= 1) {
-                    $minutes += 1;
-                    $seconds -= 60;
+                else {
+                    $minutes = (double)(($hours*60)+$minutes);    
                 }
-
-                $minutes += $intervals[1];
-                if ($minutes / 60 >= 1) {
-                    $hours += 1;
-                    $minutes -= 60;
-                }
-
-                $hours += $intervals[0];
-
-                if (!$p_keepData) {
-                    // Delete data we just used to start a new log history
-                    $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                    ." WHERE id = '{$row['id']}'";
-                    $con->exec($sql_delete);
-                }
-            }
-            //Trim milliseconds
-            $seconds = explode(".", $seconds);
-            if (isset($seconds[0])) {
-                $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
-            }
-            else {
-                $minutes = (double)(($hours*60)+$minutes);    
             }
             return $minutes;
         } catch (Exception $e) {
@@ -99,121 +118,141 @@ class Application_Model_LiveLog
             if ($rows != null) {
                 $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                 array_push($rows, $last_row);
+                $skip = false;
+            }
+            else {
+                $sql = "SELECT * FROM CC_LIVE_LOG"
+                    ." WHERE state = 'S'"
+                    ." ORDER BY id";
+                    $rows = $con->query($sql)->fetchAll();
+                    
+                if ($rows != null) {
+                    $last_row = self::UpdateLastLogEndTime(array_pop($rows));
+                    array_push($rows, $last_row);
+                    foreach ($rows as $row) {
+                        $sql_delete = "DELETE FROM CC_LIVE_LOG"
+                                    ." WHERE id = '{$row['id']}'";
+                        $con->exec($sql_delete);
+                    }
+                }
+                $skip = true;  
             }
 
             $hours = 0;
             $minutes = 0;
             $seconds = 0;
 
-            /* Get all shows and tracks from cc_schedule that played
-             * during a scheduled state
-             */
-            foreach ($rows as $row) {
-                $sql_get_tracks = "SELECT * FROM cc_schedule"
-                ." WHERE starts >= '{$row['start_time']}'"
-                ." AND starts < '{$row['end_time']}'"
-                ." AND file_id IS NOT NULL"
-                ." AND media_item_played IS TRUE";
-                $tracks = $con->query($sql_get_tracks)->fetchAll();
-                foreach ($tracks as $track) {
-                    if ($track['ends'] > $row['end_time']) {
-                        $scheduled_ends = new DateTime($row['end_time']);
-                        $track_ends = new DateTime($track['ends']);
-                        $extra_time = $scheduled_ends->diff($track_ends);
+            if (!$skip) {
+                /* Get all shows and tracks from cc_schedule that played
+                 * during a scheduled state
+                 */
+                foreach ($rows as $row) {
+                    $sql_get_tracks = "SELECT * FROM cc_schedule"
+                    ." WHERE starts >= '{$row['start_time']}'"
+                    ." AND starts < '{$row['end_time']}'"
+                    ." AND file_id IS NOT NULL"
+                    ." AND media_item_played IS TRUE";
+                    $tracks = $con->query($sql_get_tracks)->fetchAll();
+                    foreach ($tracks as $track) {
+                        if ($track['ends'] > $row['end_time']) {
+                            $scheduled_ends = new DateTime($row['end_time']);
+                            $track_ends = new DateTime($track['ends']);
+                            $extra_time = $scheduled_ends->diff($track_ends);
 
-                        /* Get difference between clip_length
-                         * and the extra time. We need to subtract
-                         * this difference from the track's
-                         * clip length.
-                         */
-                        $clip_length = $track['clip_length'];
-                        //Convert clip_length into seconds
-                        $clip_length_intervals = explode(":", $clip_length);
-                        for ($i = 0; $i < sizeof($clip_length_intervals); $i++) {
-                            if (!isset($clip_length_intervals[$i])) {
-                                $clip_length_intervals[$i] = 0;
+                            /* Get difference between clip_length
+                             * and the extra time. We need to subtract
+                             * this difference from the track's
+                             * clip length.
+                             */
+                            $clip_length = $track['clip_length'];
+                            //Convert clip_length into seconds
+                            $clip_length_intervals = explode(":", $clip_length);
+                            for ($i = 0; $i < sizeof($clip_length_intervals); $i++) {
+                                if (!isset($clip_length_intervals[$i])) {
+                                    $clip_length_intervals[$i] = 0;
+                                }
                             }
-                        }
-                        $clip_length_seconds = $clip_length_intervals[0]*3600 + $clip_length_intervals[1]*60 + $clip_length_intervals[2];
-                         
-                        $extra_time = $extra_time->format("%H:%i:%s");
-                        //Convert extra_time into seconds;
-                        $extra_time_intervals = explode(":", $extra_time);
-                        for ($i = 0; $i < sizeof($extra_time_intervals); $i++) {
-                            if (!isset($extra_time_intervals[$i])) {
-                                $extra_time_intervals[$i] = 0;
+                            $clip_length_seconds = $clip_length_intervals[0]*3600 + $clip_length_intervals[1]*60 + $clip_length_intervals[2];
+                             
+                            $extra_time = $extra_time->format("%H:%i:%s");
+                            //Convert extra_time into seconds;
+                            $extra_time_intervals = explode(":", $extra_time);
+                            for ($i = 0; $i < sizeof($extra_time_intervals); $i++) {
+                                if (!isset($extra_time_intervals[$i])) {
+                                    $extra_time_intervals[$i] = 0;
+                                }
                             }
-                        }
-                        $extra_time_seconds = $extra_time_intervals[0]*3600 + $extra_time_intervals[1]*60 + $extra_time_intervals[2];
+                            $extra_time_seconds = $extra_time_intervals[0]*3600 + $extra_time_intervals[1]*60 + $extra_time_intervals[2];
 
-                        $clip_length_seconds -= $extra_time_seconds;
-                         
-                        //Convert new clip_length into "H-i-s" format
-                        $clip_length_arr = array();
-                        if ($clip_length_seconds / 3600 >= 1) {
-                            array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 3600), 2, "0", STR_PAD_LEFT));
-                            $clip_length_seconds -= floor($clip_length_seconds / 3600);
+                            $clip_length_seconds -= $extra_time_seconds;
+                             
+                            //Convert new clip_length into "H-i-s" format
+                            $clip_length_arr = array();
+                            if ($clip_length_seconds / 3600 >= 1) {
+                                array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 3600), 2, "0", STR_PAD_LEFT));
+                                $clip_length_seconds -= floor($clip_length_seconds / 3600);
+                            }
+                            else {
+                                array_push($clip_length_arr, "00");
+                            }
+                            if ($clip_length_seconds / 60 >= 1) {
+                                array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 60), 2, "0", STR_PAD_LEFT));
+                                $clip_length_seconds -= floor($clip_length_seconds / 60);
+                            }
+                            else {
+                                array_push($clip_length_arr, "00");
+                            }
+
+                            array_push($clip_length_arr, str_pad($clip_length_seconds, 2, "0", STR_PAD_LEFT));
+                            $clip_length = implode(":", $clip_length_arr);
                         }
                         else {
-                            array_push($clip_length_arr, "00");
-                        }
-                        if ($clip_length_seconds / 60 >= 1) {
-                            array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 60), 2, "0", STR_PAD_LEFT));
-                            $clip_length_seconds -= floor($clip_length_seconds / 60);
-                        }
-                        else {
-                            array_push($clip_length_arr, "00");
+                            $clip_length = $track['clip_length'];
                         }
 
-                        array_push($clip_length_arr, str_pad($clip_length_seconds, 2, "0", STR_PAD_LEFT));
-                        $clip_length = implode(":", $clip_length_arr);
-                    }
-                    else {
-                        $clip_length = $track['clip_length'];
-                    }
-
-                    $intervals = explode(":", $clip_length);
-                    for ($i = 0; $i < sizeof($intervals); $i++) {
-                        if (!isset($intervals[$i])) {
-                            $intervals[$i] = 0;
+                        $intervals = explode(":", $clip_length);
+                        for ($i = 0; $i < sizeof($intervals); $i++) {
+                            if (!isset($intervals[$i])) {
+                                $intervals[$i] = 0;
+                            }
                         }
-                    }
-                    // Trim milliseconds (DateInteral does not support)
-                    $sec = explode(".", $intervals[2]);
-                    if (isset($sec[0])) {
-                        $intervals[2] = $sec[0];
+                        // Trim milliseconds (DateInteral does not support)
+                        $sec = explode(".", $intervals[2]);
+                        if (isset($sec[0])) {
+                            $intervals[2] = $sec[0];
+                        }
+
+                        $seconds += $intervals[2];
+                        if ($seconds / 60 >= 1) {
+                            $minutes += 1;
+                            $seconds -= 60;
+                        }
+
+                        $minutes += $intervals[1];
+                        if ($minutes / 60 >= 1) {
+                            $hours += 1;
+                            $minutes -= 60;
+                        }
+
+                        $hours += $intervals[0];
                     }
 
-                    $seconds += $intervals[2];
-                    if ($seconds / 60 >= 1) {
-                        $minutes += 1;
-                        $seconds -= 60;
+                    if (!$p_keepData) {
+                        //Delete row because we do not need data anymore
+                        $sql_delete = "DELETE FROM CC_LIVE_LOG"
+                                    ." WHERE id = '{$row['id']}'";
+                        $con->exec($sql_delete);
                     }
-
-                    $minutes += $intervals[1];
-                    if ($minutes / 60 >= 1) {
-                        $hours += 1;
-                        $minutes -= 60;
-                    }
-
-                    $hours += $intervals[0];
                 }
 
-                if (!$p_keepData) {
-                    //Delete row because we do not need data anymore
-                    $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                                ." WHERE id = '{$row['id']}'";
-                    $con->exec($sql_delete);
+
+                $seconds = explode(".", $seconds);
+                if (isset($seconds[0])) {
+                    $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
                 }
-            }
-
-
-            $seconds = explode(".", $seconds);
-            if (isset($seconds[0])) {
-                $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
-            }
-            else {
-                $minutes = (double)(($hours*60)+$minutes);
+                else {
+                    $minutes = (double)(($hours*60)+$minutes);
+                }
             }
             return $minutes;
         } catch (Exception $e) {
