@@ -243,11 +243,14 @@ var AIRTIME = (function(AIRTIME){
     mod.fnRemove = function(aItems) {
         
         mod.disableUI();
-        
-        $.post( "/showbuilder/schedule-remove",
-            {"items": aItems, "format": "json"},
-            mod.fnItemCallback
-        );
+        if (confirm("Delete selected item(s)?")) {
+	        $.post( "/showbuilder/schedule-remove",
+	            {"items": aItems, "format": "json"},
+	            mod.fnItemCallback
+	        );
+        }else{
+        	mod.enableUI();
+        }
     };
     
     mod.fnRemoveSelectedItems = function() {
@@ -1088,7 +1091,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.del !== undefined) {
                         
                         callback = function() {
-                            if (confirm("Delete selected Items?")) {
+                            if (confirm("Delete selected item?")) {
                                 AIRTIME.showbuilder.fnRemove([{
                                     id: data.id,
                                     timestamp: data.timestamp,

@@ -252,20 +252,22 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.fnDeleteSelectedItems = function() {
-        var aData = AIRTIME.library.getSelectedData(),
-            item,
-            temp,
-            aMedia = [];
-        
-        //process selected files/playlists.
-        for (item in aData) {
-            temp = aData[item];
-            if (temp !== null && temp.hasOwnProperty('id') ) {
-                aMedia.push({"id": temp.id, "type": temp.ftype});
-            }   
-        }
-    
-        AIRTIME.library.fnDeleteItems(aMedia);
+    	if (confirm('Are you sure you want to delete the selected item(s)?')) {
+	        var aData = AIRTIME.library.getSelectedData(),
+	            item,
+	            temp,
+	            aMedia = [];
+	        
+	        //process selected files/playlists.
+	        for (item in aData) {
+	            temp = aData[item];
+	            if (temp !== null && temp.hasOwnProperty('id') ) {
+	                aMedia.push({"id": temp.id, "type": temp.ftype});
+	            }   
+	        }
+	    
+	        AIRTIME.library.fnDeleteItems(aMedia);
+    	}
     };
     
     libraryInit = function() {
