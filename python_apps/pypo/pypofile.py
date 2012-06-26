@@ -77,7 +77,7 @@ class PypoFile(Thread):
                 shutil.copy(src, dst)
 
                 #make file world readable
-                os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IXOTH)
+                os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
             except Exception, e:
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
