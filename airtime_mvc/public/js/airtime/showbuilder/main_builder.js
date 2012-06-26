@@ -30,7 +30,7 @@ AIRTIME = (function(AIRTIME) {
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
-		onSelect: function(sDate, oDatePicker) {		
+		onClick: function(sDate, oDatePicker) {		
 			$(this).datepicker( "setDate", sDate );
 		}
 	};
