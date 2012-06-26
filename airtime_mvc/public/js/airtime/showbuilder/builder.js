@@ -670,6 +670,7 @@ var AIRTIME = (function(AIRTIME){
                         $tr = $table.find("tr[id="+cursorIds[i]+"]");
                         mod.selectCursor($tr);
                     }
+                    cursorIds = [];
                     
                     //if there is only 1 cursor on the page highlight it by default.
                     if ($cursorRows.length === 1) {
