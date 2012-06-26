@@ -1088,7 +1088,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.del !== undefined) {
                         
                         callback = function() {
-                            if (confirm("Delete selected Items?")) {
+                            if (confirm("Delete selected item?")) {
                                 AIRTIME.showbuilder.fnRemove([{
                                     id: data.id,
                                     timestamp: data.timestamp,
