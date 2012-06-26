@@ -890,8 +890,7 @@ Logging::log("getting media! - 2");
                 exec($command, $output, $rv);
                 if ($rv != 0 || (!empty($output) && $output[0] == 'TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.')) {
                     $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
-                }
-                else {
+                } else {
                     //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
                     $r = @rename($audio_file, $audio_stor);
 

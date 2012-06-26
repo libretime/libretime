@@ -82,17 +82,9 @@ class Application_Model_MusicDir {
         $show_instances = $con->query($sql)->fetchAll();
         
         // get all the files on this dir
-        $sql = "SELECT f.id FROM cc_music_dirs as md "
-            ." LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id";
-        $files = $con->query($sql)->fetchAll();
-        
-        // set file_exist flag to false
-        foreach ($files as $file_row) {
-            $temp_file = Application_Model_StoredFile::Recall($file_row['id']);
-            if($temp_file != null){
-                $temp_file->setFileExistsFlag(false);
-            }
-        }
+        $sql = "UPDATE cc_files SET file_exists = 'f' WHERE id IN (SELECT f.id FROM cc_music_dirs as md "
+            ." LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id)";
+        $affected = $con->exec($sql);
         
         // set RemovedFlag to true
         if ($userAddedWatchedDir) {
@@ -399,14 +391,16 @@ class Application_Model_MusicDir {
      *  otherwise, it will set "Exists" flag to true
     **/ 
     public static function removeWatchedDir($p_dir, $userAddedWatchedDir=true){
+        
+        //make sure that $p_dir has a trailing "/" 
         $real_path = Application_Common_OsPath::normpath($p_dir)."/";
         if($real_path != "/"){
             $p_dir = $real_path;
         }
         $dir = Application_Model_MusicDir::getDirByPath($p_dir);
-        if($dir == NULL){
-            return array("code"=>1,"error"=>"'$p_dir' doesn't exist in the watched list.");
-        }else{
+        if (is_null($dir)) {
+            return array("code"=>1, "error"=>"'$p_dir' doesn't exist in the watched list.");
+        } else {
             $dir->remove($userAddedWatchedDir);
             $data = array();
             $data["directory"] = $p_dir;
