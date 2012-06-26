@@ -678,8 +678,14 @@ var AIRTIME = (function(AIRTIME){
                     
                     if (temp.length > 0) {
                         aData = temp.data("aData");
-                        
-                        mod.timeout = setTimeout(mod.refresh, aData.refresh * 1000); //need refresh in milliseconds
+                        // max time interval
+						// setTimeout allow only up to 2^21 millisecs timeout value
+						maxRefreshInterval = Math.pow(2, 31) - 1;
+						refreshInterval = aData.refresh * 1000;
+						if(refreshInterval > maxRefreshInterval){
+							refreshInterval = maxRefreshInterval;
+						}
+						mod.timeout = setTimeout(mod.refresh, refreshInterval); //need refresh in milliseconds
                         break;
                     }
                 }
