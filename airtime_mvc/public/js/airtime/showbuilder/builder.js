@@ -8,7 +8,9 @@ var AIRTIME = (function(AIRTIME){
         $sbTable,
         $toolbar,
         $ul,
-        $lib;
+        $lib,
+        cursors = [],
+        cursorIds = [];
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -127,7 +129,7 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.selectCursor = function($el) {
-        
+
         $el.addClass(CURSOR_SELECTED_CLASS);
         mod.checkToolBarIcons();
     };
@@ -208,11 +210,16 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnItemCallback = function(json) {
         checkError(json);
+        
+        cursors = $(".cursor-selected-row");
+        for (i = 0; i < cursors.length; i++) {
+            cursorIds.push(($(cursors.get(i)).attr("id")));
+        }
         oSchedTable.fnDraw();
         
         mod.enableUI();
     };
-    
+        
     mod.fnAdd = function(aMediaIds, aSchedIds) {
         
         mod.disableUI();
@@ -401,7 +408,6 @@ var AIRTIME = (function(AIRTIME){
                     headerIcon;
                 
                 fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
-                    
                     $node = $(nRow.children[iNodeIndex]);
                     $node.html(sRowContent);
                     $node.attr('colspan',100);
@@ -413,7 +419,9 @@ var AIRTIME = (function(AIRTIME){
                     
                     $nRow.addClass(sClass);
                 };
-                         
+ 
+                $nRow.attr("id", aData.id); 
+                        
                 if (aData.header === true) {
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
@@ -615,6 +623,7 @@ var AIRTIME = (function(AIRTIME){
                     $cursorRows,
                     $table = $(this),
                     $parent = $table.parent(),
+                    $tr,
                     //use this array to cache DOM heights then we can detach the table to manipulate it to increase speed.
                     heights = [];
                 
@@ -653,6 +662,13 @@ var AIRTIME = (function(AIRTIME){
                         });
                         
                         $td.append(markerDiv).wrapInner(wrapperDiv);
+                        
+                    }
+                    
+                    //re-highlight selected cursors before draw took place
+                    for (i = 0; i < cursorIds.length; i++) {
+                        $tr = $table.find("tr[id="+cursorIds[i]+"]");
+                        mod.selectCursor($tr);
                     }
                     
                     //if there is only 1 cursor on the page highlight it by default.
