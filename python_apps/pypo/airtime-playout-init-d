@@ -10,6 +10,7 @@
 ### END INIT INFO
 
 USERID=pypo
+ROOTUSERID=root
 GROUPID=pypo
 NAME=Airtime\ Playout
 
@@ -47,7 +48,7 @@ start () {
         chown pypo:pypo /etc/airtime
         chown pypo:pypo /etc/airtime/liquidsoap.cfg
     
-        start-stop-daemon --start --background --quiet --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
+        start-stop-daemon --start --background --quiet --chuid $ROOTUSERID:$ROOTUSERID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
         monit monitor airtime-playout >/dev/null 2>&1
         
         liquidsoap_start
@@ -80,7 +81,7 @@ monit_restart() {
 }
 
 start_no_monit() {
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0        
+        start-stop-daemon --start --background --quiet --chuid $ROOTUSERID:$ROOTUSERID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0        
         liquidsoap_start
 }
 
