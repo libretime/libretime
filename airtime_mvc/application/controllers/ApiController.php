@@ -131,6 +131,9 @@ class ApiController extends Zend_Controller_Action
                     $full_path = $media->getPropelOrm()->getDbFilepath();
                     
                     $file_base_name = strrchr($full_path, '/');
+                    /* If $full_path does not contain a '/', strrchr will return false,
+                     * in which case we can use $full_path as the base name.
+                     */ 
                     if (!$file_base_name) {
                         $file_base_name = $full_path;
                     } 
