@@ -70,6 +70,9 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
+
+                media_item['started_copying'] = True
+
                 """
                 copy will overwrite dst if it already exists
                 """

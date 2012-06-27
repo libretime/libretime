@@ -80,8 +80,7 @@ class PypoPush(Thread):
                     self.modify_cue_point(current_event_chain[0])
                     next_media_item_chain = current_event_chain
                     time_until_next_play = 0
-                    #sleep for 0.2 seconds to give pypo-file time to copy. This is a quick
-                    #fix that will be improved in 2.1.1
+                    #sleep for 0.2 seconds to give pypo-file time to copy.
                     time.sleep(0.2)
                 else:
                     media_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
@@ -313,7 +312,20 @@ class PypoPush(Thread):
         try:
             for media_item in event_chain:
                 if media_item['type'] == "file":
-                    self.telnet_to_liquidsoap(media_item)
+
+                    """
+                    Wait maximum 5 seconds (50 iterations) for file to become ready, otherwise
+                    give up on it.
+                    """
+                    iter_num = 0
+                    while not media_item['started_copying'] and iter_num < 50:
+                        time.sleep(0.1)
+                        iter_num += 1
+
+                    if media_item['started_copying']:
+                        self.telnet_to_liquidsoap(media_item)
+                    else:
+                        self.logger.warn("File %s did not become ready in less than 5 seconds. Skipping...", media_item['dst'])
                 elif media_item['type'] == "event":
                     if media_item['event_type'] == "kick_out":
                         PypoFetch.disconnect_source(self.logger, self.telnet_lock, "live_dj")
