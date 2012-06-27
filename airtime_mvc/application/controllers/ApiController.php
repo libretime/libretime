@@ -125,18 +125,17 @@ class ApiController extends Zend_Controller_Action
             $media = Application_Model_StoredFile::RecallByGunid($file_id);
             if ( $media != null )
             {
-                $dir = Application_Model_MusicDir::getDirByPK($media->getDirectory());
 				
                 $filepath = $media->getFilePath();
                 if(is_file($filepath)){
                     $full_path = $media->getPropelOrm()->getDbFilepath();
                     
-                    if (strcmp($dir->getType(), 'watched') != 0) {
-                        $file_base_name = strrchr($full_path, '/');
-                        $file_base_name = substr($file_base_name, 1);
-                    } else {
+                    $file_base_name = strrchr($full_path, '/');
+                    if (!$file_base_name) {
                         $file_base_name = $full_path;
-                    }
+                    } 
+                    $file_base_name = substr($file_base_name, 1);
+                    
                     // possibly use fileinfo module here in the future.
                     // http://www.php.net/manual/en/book.fileinfo.php
                     $ext = pathinfo($fileID, PATHINFO_EXTENSION);
