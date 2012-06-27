@@ -5,7 +5,6 @@ from Queue import Empty
 from configobj import ConfigObj
 
 import logging
-import logging.config
 import shutil
 import os
 import sys

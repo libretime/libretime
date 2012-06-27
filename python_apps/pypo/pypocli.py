@@ -3,12 +3,10 @@ Python part of radio playout (pypo)
 """
 
 import time
-from optparse import *
+from optparse import OptionParser
 import sys
 import signal
 import logging
-import logging.config
-import logging.handlers
 import locale
 import os
 from Queue import Queue
@@ -53,11 +51,11 @@ parser.add_option("-c", "--check", help="Check the cached schedule and exit", de
 def configure_locale():
     logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
     current_locale = locale.getlocale()
-    
+
     if current_locale[1] is None:
         logger.debug("No locale currently set. Attempting to get default locale.")
         default_locale = locale.getdefaultlocale()
-        
+
         if default_locale[1] is None:
             logger.debug("No default locale exists. Let's try loading from /etc/default/locale")
             if os.path.exists("/etc/default/locale"):
@@ -69,17 +67,17 @@ def configure_locale():
                 sys.exit(1)
         else:
             new_locale = default_locale
-            
+
         logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
-        
-        
-            
+
+
+
     reload(sys)
     sys.setdefaultencoding("UTF-8")
     current_locale_encoding = locale.getlocale()[1].lower()
     logger.debug("sys default encoding %s", sys.getdefaultencoding())
     logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
-    
+
     if current_locale_encoding not in ['utf-8', 'utf8']:
         logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
         sys.exit(1)
@@ -92,7 +90,7 @@ try:
 except Exception, e:
     print "Couldn't configure logging"
     sys.exit()
-    
+
 configure_locale()
 
 # loading config file
@@ -105,11 +103,11 @@ except Exception, e:
 class Global:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
-        
+
     def selfcheck(self):
         self.api_client = api_client.api_client_factory(config)
         return self.api_client.is_server_compatible()
-        
+
     def test_api(self):
         self.api_client.test()
 
@@ -160,7 +158,7 @@ if __name__ == '__main__':
     g = Global()
 
     while not g.selfcheck(): time.sleep(5)
-    
+
     logger = logging.getLogger()
 
     if options.test:
@@ -173,9 +171,9 @@ if __name__ == '__main__':
     pypoFetch_q = Queue()
     recorder_q = Queue()
     pypoPush_q = Queue()
-    
+
     telnet_lock = Lock()
-    
+
     """
     This queue is shared between pypo-fetch and pypo-file, where pypo-file
     is the receiver. Pypo-fetch will send every schedule it gets to pypo-file
@@ -183,19 +181,19 @@ if __name__ == '__main__':
     priority, and will retrieve it.
     """
     media_q = Queue()
-    
+
     pmh = PypoMessageHandler(pypoFetch_q, recorder_q)
     pmh.daemon = True
     pmh.start()
-    
+
     pfile = PypoFile(media_q)
     pfile.daemon = True
     pfile.start()
-    
+
     pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock)
     pf.daemon = True
     pf.start()
-    
+
     pp = PypoPush(pypoPush_q, telnet_lock)
     pp.daemon = True
     pp.start()
@@ -210,7 +208,7 @@ if __name__ == '__main__':
     #recorder.join()
     #pp.join()
     pf.join()
-    
+
     logger.info("pypo fetch exit")
     sys.exit()
 """
