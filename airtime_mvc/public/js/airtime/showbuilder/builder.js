@@ -699,7 +699,7 @@ var AIRTIME = (function(AIRTIME){
                     if (temp.length > 0) {
                         aData = temp.data("aData");
                         // max time interval
-						// setTimeout allow only up to 2^21 millisecs timeout value
+						// setTimeout allows only up to (2^31)-1 millisecs timeout value
 						maxRefreshInterval = Math.pow(2, 31) - 1;
 						refreshInterval = aData.refresh * 1000;
 						if(refreshInterval > maxRefreshInterval){
