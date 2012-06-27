@@ -111,34 +111,6 @@ class Global:
     def test_api(self):
         self.api_client.test()
 
-"""
-    def check_schedule(self):
-        logger = logging.getLogger()
-
-        try:
-            schedule_file = open(self.schedule_file, "r")
-            schedule = pickle.load(schedule_file)
-            schedule_file.close()
-
-        except Exception, e:
-            logger.error("%s", e)
-            schedule = None
-
-        for pkey in sorted(schedule.iterkeys()):
-            playlist = schedule[pkey]
-            print '*****************************************'
-            print '\033[0;32m%s %s\033[m' % ('scheduled at:', str(pkey))
-            print 'cached at :   ' + self.cache_dir + str(pkey)
-            print 'played:       ' + str(playlist['played'])
-            print 'schedule id:  ' + str(playlist['schedule_id'])
-            print 'duration:     ' + str(playlist['duration'])
-            print 'source id:    ' + str(playlist['x_ident'])
-            print '-----------------------------------------'
-
-            for media in playlist['medias']:
-                print media
-"""
-
 def keyboardInterruptHandler(signum, frame):
     logger = logging.getLogger()
     logger.info('\nKeyboard Interrupt\n')
@@ -202,7 +174,7 @@ if __name__ == '__main__':
     recorder.daemon = True
     recorder.start()
 
-    # all join() are commented out becase we want to exit entire pypo
+    # all join() are commented out because we want to exit entire pypo
     # if pypofetch is exiting 
     #pmh.join()
     #recorder.join()
@@ -211,14 +183,3 @@ if __name__ == '__main__':
 
     logger.info("pypo fetch exit")
     sys.exit()
-"""
-    if options.check:
-        try: g.check_schedule()
-        except Exception, e:
-            print e
-
-    if options.cleanup:
-        try: pf.cleanup('scheduler')
-        except Exception, e:
-            print e
-"""
