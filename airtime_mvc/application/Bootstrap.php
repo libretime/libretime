@@ -25,8 +25,7 @@ date_default_timezone_set(Application_Model_Preference::GetTimezone());
 global $CC_CONFIG;
 $airtime_version = Application_Model_Preference::GetAirtimeVersion();
 $uniqueid = Application_Model_Preference::GetUniqueId();
-$CC_CONFIG['airtime_version'] = md5($airtime_version + $uniqueid);
-
+$CC_CONFIG['airtime_version'] = md5($airtime_version.$uniqueid);
 require_once __DIR__."/configs/navigation.php";
 
 Zend_Validate::setDefaultNamespaces("Zend");
