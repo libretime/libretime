@@ -211,6 +211,8 @@ var AIRTIME = (function(AIRTIME){
     mod.fnItemCallback = function(json) {
         checkError(json);
         
+        
+        cursorIds = [];
         cursors = $(".cursor-selected-row");
         for (i = 0; i < cursors.length; i++) {
             cursorIds.push(($(cursors.get(i)).attr("id")));
@@ -673,7 +675,6 @@ var AIRTIME = (function(AIRTIME){
                         $tr = $table.find("tr[id="+cursorIds[i]+"]");
                         mod.selectCursor($tr);
                     }
-                    cursorIds = [];
                     
                     //if there is only 1 cursor on the page highlight it by default.
                     if ($cursorRows.length === 1) {
