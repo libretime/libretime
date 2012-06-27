@@ -27,7 +27,9 @@ try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
     LS_HOST = config['ls_host']
     LS_PORT = config['ls_port']
-    POLL_INTERVAL = int(config['poll_interval'])
+    #POLL_INTERVAL = int(config['poll_interval'])
+    POLL_INTERVAL = 1800
+
 
 except Exception, e:
     logger.error('Error loading config file: %s', e)
@@ -41,7 +43,7 @@ class PypoFetch(Thread):
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
-        self.listener_timeout = 3600
+        self.listener_timeout = POLL_INTERVAL
 
         self.telnet_lock = telnet_lock
 
@@ -101,9 +103,9 @@ class PypoFetch(Thread):
 
             # update timeout value
             if command == 'update_schedule':
-                self.listener_timeout = 3600
+                self.listener_timeout = POLL_INTERVAL
             else:
-                self.listener_timeout = self.last_update_schedule_timestamp - time.time() + 3600
+                self.listener_timeout = self.last_update_schedule_timestamp - time.time() + POLL_INTERVAL
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
             self.logger.info("New timeout: %s" % self.listener_timeout)
@@ -484,7 +486,7 @@ class PypoFetch(Thread):
                 sent, and we will have very stale (or non-existent!) data about the 
                 schedule.
                 
-                Currently we are checking every 3600 seconds (1 hour)
+                Currently we are checking every POLL_INTERVAL seconds
                 """
 
 
