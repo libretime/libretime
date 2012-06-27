@@ -210,8 +210,7 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnItemCallback = function(json) {
         checkError(json);
-        
-        
+
         cursorIds = [];
         cursors = $(".cursor-selected-row");
         for (i = 0; i < cursors.length; i++) {
@@ -424,8 +423,6 @@ var AIRTIME = (function(AIRTIME){
                     
                     $nRow.addClass(sClass);
                 };
- 
-                $nRow.attr("id", aData.id); 
                         
                 if (aData.header === true) {
                     //remove the column classes from all tds.
@@ -585,11 +582,12 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true) {
+                if (aData.allowed !== true || aData.header === true) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {
                     $nRow.addClass("sb-allowed");
+                    $nRow.attr("id", aData.id);
                 }
                 
                 //status used to colour tracks.
@@ -603,7 +601,7 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.currentShow === true) {
                     $nRow.addClass("sb-current-show");
                 }
-                 
+              
                 //call the context menu so we can prevent the event from propagating.
                 $nRow.find('td:gt(1)').click(function(e){
                     
