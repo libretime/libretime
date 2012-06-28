@@ -71,11 +71,14 @@ class PypoPush(Thread):
                 #We get to the following lines only if a schedule was received.
                 liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
 
-                current_event_chain = self.get_current_chain(chains)
+                current_event_chain, original_chain = self.get_current_chain(chains)
                 if len(current_event_chain) > 0 and len(liquidsoap_queue_approx) == 0:
                     #Something is scheduled but Liquidsoap is not playing anything!
                     #Need to schedule it immediately..this might happen if Liquidsoap crashed.
-                    chains.remove(current_event_chain)
+                    try:
+                        chains.remove(original_chain)
+                    except ValueError, e:
+                        self.logger.error(str(e))
 
                     self.modify_cue_point(current_event_chain[0])
                     next_media_item_chain = current_event_chain
@@ -90,7 +93,11 @@ class PypoPush(Thread):
 
                     self.logger.debug("Next schedule chain: %s", next_media_item_chain)
                     if next_media_item_chain is not None:
-                        chains.remove(next_media_item_chain)
+                        try:
+                            chains.remove(next_media_item_chain)
+                        except ValueError, e:
+                            self.logger.error(str(e))
+
                         tnow = datetime.utcnow()
                         chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
                         time_until_next_play = self.date_interval_to_seconds(chain_start - tnow)
@@ -111,6 +118,8 @@ class PypoPush(Thread):
                 else:
                     self.logger.debug("Blocking indefinitely since no show scheduled next")
                     time_until_next_play = None
+            except Exception, e:
+                self.logger.error(str(e))
 
             if loops % heartbeat_period == 0:
                 self.logger.info("heartbeat")
@@ -263,10 +272,25 @@ class PypoPush(Thread):
             original_cue_in_td = timedelta(seconds=float(link['cue_in']))
             link['cue_in'] = self.date_interval_to_seconds(original_cue_in_td) + diff_sec
 
-
+    """
+    Returns two chains, original chain and current_chain. current_chain is a subset of
+    original_chain but can also be equal to original chain.
+    
+    We return original chain because the user of this function may want to clean
+    up the input 'chains' list
+    
+    chain, original = get_current_chain(chains)
+    
+    and 
+    chains.remove(chain) can throw a ValueError exception
+    
+    but 
+    chains.remove(original) won't
+    """
     def get_current_chain(self, chains):
         tnow = datetime.utcnow()
         current_chain = []
+        original_chain = None
 
         for chain in chains:
             iteration = 0
@@ -277,10 +301,11 @@ class PypoPush(Thread):
                 self.logger.debug("tnow %s, chain_start %s", tnow, link_start)
                 if link_start <= tnow and tnow < link_end:
                     current_chain = chain[iteration:]
+                    original_chain = chain
                     break
                 iteration += 1
 
-        return current_chain
+        return current_chain, original_chain
 
     """
     The purpose of this function is to take a look at the last received schedule from
