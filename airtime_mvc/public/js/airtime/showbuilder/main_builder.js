@@ -222,7 +222,9 @@ AIRTIME = (function(AIRTIME) {
 			
 			if ($(this).is(':checked')) {
 				$(ev.delegateTarget).find('#sb_show_filter').val(0);
-			}	
+			}
+			
+			showSearchSubmit();	
 		});
 		
 		//set select event for choosing a show.
