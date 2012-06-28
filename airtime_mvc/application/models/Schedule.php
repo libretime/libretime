@@ -548,10 +548,11 @@ class Application_Model_Schedule {
             $data["media"][$kick_start]['end'] = $kick_start;
             $data["media"][$kick_start]['event_type'] = "kick_out";
             $data["media"][$kick_start]['type'] = "event";
-
+            
             if($kick_time !== $switch_off_time){
-                $data["media"][$switch_start]['start'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
-                $data["media"][$switch_start]['end'] = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
+                $switch_start = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
+                $data["media"][$switch_start]['start'] = $switch_start;
+                $data["media"][$switch_start]['end'] = $switch_start;
                 $data["media"][$switch_start]['event_type'] = "switch_off";
                 $data["media"][$switch_start]['type'] = "event";
             }
