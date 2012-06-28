@@ -210,7 +210,8 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnItemCallback = function(json) {
         checkError(json);
-        
+
+        cursorIds = [];
         cursors = $(".cursor-selected-row");
         for (i = 0; i < cursors.length; i++) {
             cursorIds.push(($(cursors.get(i)).attr("id")));
@@ -422,8 +423,6 @@ var AIRTIME = (function(AIRTIME){
                     
                     $nRow.addClass(sClass);
                 };
- 
-                $nRow.attr("id", aData.id); 
                         
                 if (aData.header === true) {
                     //remove the column classes from all tds.
@@ -583,11 +582,12 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true) {
+                if (aData.allowed !== true || aData.header === true) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {
                     $nRow.addClass("sb-allowed");
+                    $nRow.attr("id", aData.id);
                 }
                 
                 //status used to colour tracks.
@@ -601,7 +601,7 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.currentShow === true) {
                     $nRow.addClass("sb-current-show");
                 }
-                 
+              
                 //call the context menu so we can prevent the event from propagating.
                 $nRow.find('td:gt(1)').click(function(e){
                     
@@ -673,7 +673,6 @@ var AIRTIME = (function(AIRTIME){
                         $tr = $table.find("tr[id="+cursorIds[i]+"]");
                         mod.selectCursor($tr);
                     }
-                    cursorIds = [];
                     
                     //if there is only 1 cursor on the page highlight it by default.
                     if ($cursorRows.length === 1) {
@@ -699,7 +698,7 @@ var AIRTIME = (function(AIRTIME){
                     if (temp.length > 0) {
                         aData = temp.data("aData");
                         // max time interval
-						// setTimeout allow only up to 2^21 millisecs timeout value
+						// setTimeout allows only up to (2^31)-1 millisecs timeout value
 						maxRefreshInterval = Math.pow(2, 31) - 1;
 						refreshInterval = aData.refresh * 1000;
 						if(refreshInterval > maxRefreshInterval){

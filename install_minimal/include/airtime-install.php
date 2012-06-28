@@ -61,6 +61,16 @@ AirtimeInstall::InstallStorageDirectory();
 
 $db_install = getenv("nodb")!="t";
 if ($db_install) {
+    
+    echo "* Checking database for correct encoding".PHP_EOL;
+    exec('su -c \'psql -t -c "SHOW SERVER_ENCODING"\' postgres | grep -i "UTF.*8"', $out, $return_code);
+    if ($return_code != 0){
+        echo " * Unfortunately your postgresql database has not been created using a UTF-8 encoding.".PHP_EOL;
+        echo " * As of Airtime 2.1, installs will fail unless the encoding has been set to UTF-8. Please verify this is the case".PHP_EOL;
+        echo " * and try the install again".PHP_EOL;
+        exit(1);
+    }
+    
     if($newInstall) {
         //call external script. "y" argument means force creation of database tables.
         passthru('php '.__DIR__.'/airtime-db-install.php y');

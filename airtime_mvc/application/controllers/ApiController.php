@@ -129,6 +129,12 @@ class ApiController extends Zend_Controller_Action
                 if(is_file($filepath)){
                     $full_path = $media->getPropelOrm()->getDbFilepath();
                     $file_base_name = strrchr($full_path, '/');
+                    /* If $full_path does not contain a '/', strrchr will return false,
+                     * in which case we can use $full_path as the base name.
+                     */ 
+                    if (!$file_base_name) {
+                        $file_base_name = $full_path;
+                    } 
                     $file_base_name = substr($file_base_name, 1);
                     // possibly use fileinfo module here in the future.
                     // http://www.php.net/manual/en/book.fileinfo.php

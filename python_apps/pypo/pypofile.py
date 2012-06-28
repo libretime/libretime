@@ -5,7 +5,6 @@ from Queue import Empty
 from configobj import ConfigObj
 
 import logging
-import logging.config
 import shutil
 import os
 import sys
@@ -71,13 +70,16 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
+
+                media_item['started_copying'] = True
+
                 """
                 copy will overwrite dst if it already exists
                 """
                 shutil.copy(src, dst)
 
                 #make file world readable
-                os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IXOTH)
+                os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
             except Exception, e:
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
