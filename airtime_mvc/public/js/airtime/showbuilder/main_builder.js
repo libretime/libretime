@@ -83,6 +83,34 @@ AIRTIME = (function(AIRTIME) {
 	    	oTable.fnDraw();
 	    }	
 	}
+	
+    function showSearchSubmit() {
+        var fn,
+            oRange,
+            op,
+            oTable = $('#show_builder_table').dataTable();
+			
+        //reset timestamp value since input values could have changed.
+        AIRTIME.showbuilder.resetTimestamp();
+			
+        oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+			
+        fn = oTable.fnSettings().fnServerData;
+        fn.start = oRange.start;
+        fn.end = oRange.end;
+		    
+        op = $("div.sb-advanced-options");
+        if (op.is(":visible")) {
+		    	
+            if (fn.ops === undefined) {
+                fn.ops = {};
+            }
+            fn.ops.showFilter = op.find("#sb_show_filter").val();
+            fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+        }
+			
+        oTable.fnDraw();
+    }
 
 	mod.onReady = function() {
 		//define module vars.
@@ -118,33 +146,7 @@ AIRTIME = (function(AIRTIME) {
 		
 		$builder.find('.dataTables_scrolling').css("max-height", widgetHeight - 95);
 		
-		$builder.on("click", "#sb_submit", function(ev){
-			var fn,
-				oRange,
-				op,
-				oTable = $('#show_builder_table').dataTable();
-			
-			//reset timestamp value since input values could have changed.
-			AIRTIME.showbuilder.resetTimestamp();
-			
-			oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
-			
-		    fn = oTable.fnSettings().fnServerData;
-		    fn.start = oRange.start;
-		    fn.end = oRange.end;
-		    
-		    op = $("div.sb-advanced-options");
-		    if (op.is(":visible")) {
-		    	
-		    	if (fn.ops === undefined) {
-		    		fn.ops = {};
-		    	}
-		    	fn.ops.showFilter = op.find("#sb_show_filter").val();
-		    	fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
-		    }
-			
-			oTable.fnDraw();
-		});
+		$builder.on("click", "#sb_submit", showSearchSubmit);
 
 		$builder.on("click","#sb_edit", function (ev){
 			var schedTable = $("#show_builder_table").dataTable();
@@ -229,6 +231,9 @@ AIRTIME = (function(AIRTIME) {
 			if ($(this).val() !== 0) {
 				$(ev.delegateTarget).find('#sb_my_shows').attr("checked", false);
 			}
+			
+			showSearchSubmit();
+			
 		});
 		
 		function checkScheduleUpdates(){
