@@ -1,6 +1,6 @@
 /**
 *
-*	Full Calendar callback methods.
+*   Full Calendar callback methods.
 *
 */
 
@@ -9,12 +9,12 @@ function scheduleRefetchEvents(json) {
         alert("The show instance doesn't exist anymore!");
     }
     if(json.show_id) {
-    	var dialog_id = parseInt($("#add_show_id").val(), 10);
-    	
-    	//if you've deleted the show you are currently editing, close the add show dialog.
-    	if (dialog_id === json.show_id) {
-    		$("#add-show-close").click();
-    	}
+        var dialog_id = parseInt($("#add_show_id").val(), 10);
+        
+        //if you've deleted the show you are currently editing, close the add show dialog.
+        if (dialog_id === json.show_id) {
+            $("#add-show-close").click();
+        }
     }
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
@@ -31,9 +31,9 @@ function openAddShowForm() {
             $("#schedule_calendar").fullCalendar('render');
         }
         $("#schedule-show-what").show(0, function(){
-        	$add_show_name = $("#add_show_name");
-        	$add_show_name.focus();
-        	$add_show_name.select();
+            $add_show_name = $("#add_show_name");
+            $add_show_name.focus();
+            $add_show_name.select();
         });
     }
 }
@@ -59,16 +59,16 @@ function removeAddShowButton(){
 }
 
 function makeTimeStamp(date){
-	var sy, sm, sd, h, m, s, timestamp;
-	sy = date.getFullYear();
-	sm = date.getMonth() + 1;
-	sd = date.getDate();
-	h = date.getHours();
-	m = date.getMinutes();
-	s = date.getSeconds();
+    var sy, sm, sd, h, m, s, timestamp;
+    sy = date.getFullYear();
+    sm = date.getMonth() + 1;
+    sd = date.getDate();
+    h = date.getHours();
+    m = date.getMinutes();
+    s = date.getSeconds();
 
-	timestamp = sy+"-"+ pad(sm, 2) +"-"+ pad(sd, 2) +" "+ pad(h, 2) +":"+ pad(m, 2) +":"+ pad(s, 2);
-	return timestamp;
+    timestamp = sy+"-"+ pad(sm, 2) +"-"+ pad(sd, 2) +" "+ pad(h, 2) +":"+ pad(m, 2) +":"+ pad(s, 2);
+    return timestamp;
 }
 
 function dayClick(date, allDay, jsEvent, view){
@@ -176,7 +176,7 @@ function viewDisplay( view ) {
                 
                 //save slotMin value to db
                 var url = '/Schedule/set-time-interval/format/json';
-		$.post(url, {timeInterval: slotMin});
+                $.post(url, {timeInterval: slotMin});
             });
 
         var topLeft = $(view.element).find("table.fc-agenda-days > thead th:first");
@@ -205,53 +205,53 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-	
-	$(element).data("event", event);
+    
+    $(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
-	if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0) {
-		var div = $('<div/>');
-		div
-			.height('5px')
-			.width('95%')
-			.css('margin-top', '1px')
+    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 0) {
+        var div = $('<div/>');
+        div
+            .height('5px')
+            .width('95%')
+            .css('margin-top', '1px')
             .css('margin-left', 'auto')
             .css('margin-right', 'auto')
-			.progressbar({
-				value: event.percent
-			});
+            .progressbar({
+                value: event.percent
+            });
 
-		$(element).find(".fc-event-content").append(div);
-	}
+        $(element).find(".fc-event-content").append(div);
+    }
 
     //add the record/rebroadcast icons if needed.
     //record icon (only if not on soundcloud, will always be true for future events)
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
 
-		$(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span>');
-	}
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span>');
+    }
     if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
 
-		$(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span>');
-	}
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span>');
+    }
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
 
-		$(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
-	}
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
+    }
     if(view.name === 'month' && event.rebroadcast === 1) {
 
-		$(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
-	}
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
+    }
     //soundcloud icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id > 0 && event.record === 1) {
 
-		$(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
-	}
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
+    }
     if(view.name === 'month' && event.soundcloud_id > 0 && event.record === 1) {
 
-		$(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
-	}
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
+    }
     
     //progress icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id === -2 && event.record === 1) {
@@ -282,56 +282,56 @@ function eventAfterRender( event, element, view ) {
 }
 
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
-	var url;
+    var url;
 
-	url = '/Schedule/move-show/format/json';
+    url = '/Schedule/move-show/format/json';
 
-	$.post(url,
-		{day: dayDelta, min: minuteDelta, showInstanceId: event.id},
-		function(json){
-		    if(json.show_error == true){
+    $.post(url,
+        {day: dayDelta, min: minuteDelta, showInstanceId: event.id},
+        function(json){
+            if(json.show_error == true){
                 alertShowErrorAndReload();
             }
-			if(json.error) {
+            if(json.error) {
                 alert(json.error);
-				revertFunc();
-			}
-		});
+                revertFunc();
+            }
+        });
 }
 
 function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) {
-	var url;
+    var url;
 
-	url = '/Schedule/resize-show/format/json';
+    url = '/Schedule/resize-show/format/json';
 
-	$.post(url,
-		{day: dayDelta, min: minuteDelta, showId: event.showId},
-		function(json){
-		    if(json.show_error == true){
+    $.post(url,
+        {day: dayDelta, min: minuteDelta, showId: event.showId},
+        function(json){
+            if(json.show_error == true){
                 alertShowErrorAndReload();
             }
-			if(json.error) {
+            if(json.error) {
                 alert(json.error);
-				revertFunc();
-			}
+                revertFunc();
+            }
 
             scheduleRefetchEvents(json);
-		});
+        });
 }
 
 function getFullCalendarEvents(start, end, callback) {
-	var url, start_date, end_date;
+    var url, start_date, end_date;
 
-	start_date = makeTimeStamp(start);
-	end_date = makeTimeStamp(end);
+    start_date = makeTimeStamp(start);
+    end_date = makeTimeStamp(end);
 
-	url = '/Schedule/event-feed';
+    url = '/Schedule/event-feed';
 
-	var d = new Date();
+    var d = new Date();
 
-	$.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
-		callback(json.events);
-	});
+    $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
+        callback(json.events);
+    });
 }
 
 function checkSCUploadStatus(){
