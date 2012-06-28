@@ -1,20 +1,20 @@
 var AIRTIME = (function(AIRTIME){
-	var mod;
-	
-	if (AIRTIME.schedule === undefined) {
-		AIRTIME.schedule = {};
-	}
-	mod = AIRTIME.schedule;
-	
-	return AIRTIME;
-	
+    var mod;
+    
+    if (AIRTIME.schedule === undefined) {
+        AIRTIME.schedule = {};
+    }
+    mod = AIRTIME.schedule;
+    
+    return AIRTIME;
+    
 }(AIRTIME || {}));
 
 var serverTimezoneOffset = 0;
 
 function closeDialog(event, ui) {
-	$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-	$(this).remove();
+    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
+    $(this).remove();
 }
 
 function checkShowLength(json) {
@@ -36,11 +36,11 @@ function confirmCancelShow(show_instance_id){
     if (confirm('Cancel Current Show?')) {
         var url = "/Schedule/cancel-current-show";
         $.ajax({
-        	url: url,
-        	data: {format: "json", id: show_instance_id},
-        	success: function(data){
-        		scheduleRefetchEvents(data);
-        	}
+            url: url,
+            data: {format: "json", id: show_instance_id},
+            success: function(data){
+                scheduleRefetchEvents(data);
+            }
         });
     }
 }
@@ -49,11 +49,11 @@ function confirmCancelRecordedShow(show_instance_id){
     if (confirm('Stop recording current show?')) {
         var url = "/Schedule/cancel-current-show";
         $.ajax({
-	        url: url,
-	        data: {format: "json", id: show_instance_id},
-	        success: function(data){
-	        	scheduleRefetchEvents(data);
-	        }
+            url: url,
+            data: {format: "json", id: show_instance_id},
+            success: function(data){
+                scheduleRefetchEvents(data);
+            }
         });
     }
 }
@@ -72,21 +72,21 @@ function uploadToSoundCloud(show_instance_id){
     if(span.length == 0){
         span = $(window.triggerElement).find(".soundcloud");
         span.removeClass("soundcloud")
-        	.addClass("progress");
+            .addClass("progress");
     }else{
         span.removeClass("recording")
-        	.addClass("progress");
+            .addClass("progress");
     }
 }
 
 function checkCalendarSCUploadStatus(){
     
     var url = '/Library/get-upload-to-soundcloud-status',
-    	span,
-    	id;
+        span,
+        id;
     
     function checkSCUploadStatusCallback(json) {
-    	
+        
         if (json.sc_id > 0) {
             span.removeClass("progress").addClass("soundcloud");
             
@@ -108,111 +108,111 @@ function checkCalendarSCUploadStatus(){
 }
 
 function findViewportDimensions() {
-	var viewportwidth,
-		viewportheight;
-	
-	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use
-	// window.innerWidth and window.innerHeight
-	if (typeof window.innerWidth != 'undefined') {
-		viewportwidth = window.innerWidth, viewportheight = window.innerHeight;
-	}
-	// IE6 in standards compliant mode (i.e. with a valid doctype as the first
-	// line in the document)
-	else if (typeof document.documentElement != 'undefined'
-			&& typeof document.documentElement.clientWidth != 'undefined'
-			&& document.documentElement.clientWidth != 0) {
-		viewportwidth = document.documentElement.clientWidth;
-		viewportheight = document.documentElement.clientHeight;
-	}
-	// older versions of IE
-	else {
-		viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
-		viewportheight = document.getElementsByTagName('body')[0].clientHeight;
-	}
-	
-	return {
-		width: viewportwidth,
-		height: viewportheight
-	};
+    var viewportwidth,
+        viewportheight;
+    
+    // the more standards compliant browsers (mozilla/netscape/opera/IE7) use
+    // window.innerWidth and window.innerHeight
+    if (typeof window.innerWidth != 'undefined') {
+        viewportwidth = window.innerWidth, viewportheight = window.innerHeight;
+    }
+    // IE6 in standards compliant mode (i.e. with a valid doctype as the first
+    // line in the document)
+    else if (typeof document.documentElement != 'undefined'
+            && typeof document.documentElement.clientWidth != 'undefined'
+            && document.documentElement.clientWidth != 0) {
+        viewportwidth = document.documentElement.clientWidth;
+        viewportheight = document.documentElement.clientHeight;
+    }
+    // older versions of IE
+    else {
+        viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
+        viewportheight = document.getElementsByTagName('body')[0].clientHeight;
+    }
+    
+    return {
+        width: viewportwidth,
+        height: viewportheight
+    };
 }
 
 function buildScheduleDialog (json) {
-	var dialog = $(json.dialog),
-		viewport = findViewportDimensions(),
-		height = Math.floor(viewport.height * 0.96),
-		width = Math.floor(viewport.width * 0.96),
-		fnServer = AIRTIME.showbuilder.fnServerData,
-		//subtract padding in pixels
-		widgetWidth = width - 60,
-		libWidth = Math.floor(widgetWidth * 0.5),
-		builderWidth = Math.floor(widgetWidth * 0.5);
-	
-	dialog.find("#library_content")
-		.height(height - 115)
-		.width(libWidth);
-	
-	dialog.find("#show_builder")
-		.height(height - 115)
-		.width(builderWidth);
-	
-	dialog.dialog({
-		autoOpen: false,
-		title: json.title,
-		width: width,
-		height: height,
-		resizable: false,
-		draggable: true,
-		modal: true,
-		close: closeDialog,
-		buttons: {"Ok": function() {
+    var dialog = $(json.dialog),
+        viewport = findViewportDimensions(),
+        height = Math.floor(viewport.height * 0.96),
+        width = Math.floor(viewport.width * 0.96),
+        fnServer = AIRTIME.showbuilder.fnServerData,
+        //subtract padding in pixels
+        widgetWidth = width - 60,
+        libWidth = Math.floor(widgetWidth * 0.5),
+        builderWidth = Math.floor(widgetWidth * 0.5);
+    
+    dialog.find("#library_content")
+        .height(height - 115)
+        .width(libWidth);
+    
+    dialog.find("#show_builder")
+        .height(height - 115)
+        .width(builderWidth);
+    
+    dialog.dialog({
+        autoOpen: false,
+        title: json.title,
+        width: width,
+        height: height,
+        resizable: false,
+        draggable: true,
+        modal: true,
+        close: closeDialog,
+        buttons: {"Ok": function() {
             $(this).dialog("close");
-		}} 
-	});
-		
-	//set the start end times so the builder datatables knows its time range.
-	fnServer.start = json.start;
-	fnServer.end = json.end;
-	
-	AIRTIME.library.libraryInit();
-	AIRTIME.showbuilder.builderDataTable();
-	
-	//set max heights of datatables.
-	dialog.find(".lib-content .dataTables_scrolling")
-		.css("max-height", height - 90 - 155);
-	
-	dialog.find(".sb-content .dataTables_scrolling")
-		.css("max-height", height - 90 - 60);
-	
-	dialog.dialog('open');
+        }} 
+    });
+        
+    //set the start end times so the builder datatables knows its time range.
+    fnServer.start = json.start;
+    fnServer.end = json.end;
+    
+    AIRTIME.library.libraryInit();
+    AIRTIME.showbuilder.builderDataTable();
+    
+    //set max heights of datatables.
+    dialog.find(".lib-content .dataTables_scrolling")
+        .css("max-height", height - 90 - 155);
+    
+    dialog.find(".sb-content .dataTables_scrolling")
+        .css("max-height", height - 90 - 60);
+    
+    dialog.dialog('open');
 }
 
 function buildContentDialog (json){
-	var dialog = $(json.dialog),
-		viewport = findViewportDimensions(),
-		height = viewport.height * 2/3,
-		width = viewport.width * 4/5;
-	
+    var dialog = $(json.dialog),
+        viewport = findViewportDimensions(),
+        height = viewport.height * 2/3,
+        width = viewport.width * 4/5;
+    
     if (json.show_error == true){
         alertShowErrorAndReload();
     }
-	      
-	dialog.find("#show_progressbar").progressbar({
-		value: json.percentFilled
-	});
+          
+    dialog.find("#show_progressbar").progressbar({
+        value: json.percentFilled
+    });
      
-	dialog.dialog({
-		autoOpen: false,
-		title: "Contents of Show \"" + json.showTitle + "\"",
-		width: width,
-		height: height,
-		modal: true,
-		close: closeDialog,
-		buttons: {"Ok": function() {
-			dialog.remove();
-		}}
-	});
+    dialog.dialog({
+        autoOpen: false,
+        title: "Contents of Show \"" + json.showTitle + "\"",
+        width: width,
+        height: height,
+        modal: true,
+        close: closeDialog,
+        buttons: {"Ok": function() {
+            dialog.remove();
+        }}
+    });
 
-	dialog.dialog('open');
+    dialog.dialog('open');
 }
 
 /**
@@ -277,55 +277,55 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
-	$.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
+    $.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
-	
-	setInterval(checkCalendarSCUploadStatus, 5000);
-	
-	$.contextMenu({
+    
+    setInterval(checkCalendarSCUploadStatus, 5000);
+    
+    $.contextMenu({
         selector: 'div.fc-event',
         trigger: "left",
         ignoreRightClick: true,
         
         build: function($el, e) {
-    		var data, 
-	    		items, 
-	    		callback;
-    		
-    		data = $el.data("event");
-    		
-    		function processMenuItems(oItems) {
-    			
-    			//define a schedule callback.
-    			if (oItems.schedule !== undefined) {
-    				
-    				callback = function() {
-    					
-    					$.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
-    						buildScheduleDialog(json);
-    					});
-    				};
-    				
-    				oItems.schedule.callback = callback;
-    			}
-    			
-    			//define a clear callback.
-    			if (oItems.clear !== undefined) {
-    				
-    				callback = function() {
-    					if (confirm("Remove all content?")) {
-    						$.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
-        						scheduleRefetchEvents(json);
-        					});
-    					}
-					};
-    				oItems.clear.callback = callback;
-    			}
-    			
-    			//define an edit callback.
-    			if (oItems.edit !== undefined) {
-    			    if(oItems.edit.items !== undefined){
-    			        var edit = oItems.edit.items;
+            var data, 
+                items, 
+                callback;
+            
+            data = $el.data("event");
+            
+            function processMenuItems(oItems) {
+                
+                //define a schedule callback.
+                if (oItems.schedule !== undefined) {
+                    
+                    callback = function() {
+                        
+                        $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
+                            buildScheduleDialog(json);
+                        });
+                    };
+                    
+                    oItems.schedule.callback = callback;
+                }
+                
+                //define a clear callback.
+                if (oItems.clear !== undefined) {
+                    
+                    callback = function() {
+                        if (confirm("Remove all content?")) {
+                            $.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
+                                scheduleRefetchEvents(json);
+                            });
+                        }
+                    };
+                    oItems.clear.callback = callback;
+                }
+                
+                //define an edit callback.
+                if (oItems.edit !== undefined) {
+                    if(oItems.edit.items !== undefined){
+                        var edit = oItems.edit.items;
                         
                         //edit a single instance
                         callback = function() {
@@ -342,55 +342,55 @@ $(document).ready(function() {
                             });
                         };
                         edit.all.callback = callback;
-    			    }else{
-    			        callback = function() {
+                    }else{
+                        callback = function() {
                             $.get(oItems.edit.url, {format: "json", id: data.id, type: oItems.edit._type}, function(json){
                                 beginEditShow(json);
                             });
                         };
                         oItems.edit.callback = callback;
-    			    }
-    			}
-    			
-    			//define a content callback.
-    			if (oItems.content !== undefined) {
-    				
-					callback = function() {
-    					$.get(oItems.content.url, {format: "json", id: data.id}, function(json){
-    						buildContentDialog(json);
-    					});
-					};
-    				oItems.content.callback = callback;
-    			}
-    			
-    			//define a soundcloud upload callback.
-    			if (oItems.soundcloud_upload !== undefined) {
-    				
-    				callback = function() {
-    					uploadToSoundCloud(data.id);
-					};
-    				oItems.soundcloud_upload.callback = callback;
-    			}
-    			
-    			//define a view on soundcloud callback.
-    			if (oItems.soundcloud_view !== undefined) {
-    				
-    				callback = function() {
+                    }
+                }
+                
+                //define a content callback.
+                if (oItems.content !== undefined) {
+                    
+                    callback = function() {
+                        $.get(oItems.content.url, {format: "json", id: data.id}, function(json){
+                            buildContentDialog(json);
+                        });
+                    };
+                    oItems.content.callback = callback;
+                }
+                
+                //define a soundcloud upload callback.
+                if (oItems.soundcloud_upload !== undefined) {
+                    
+                    callback = function() {
+                        uploadToSoundCloud(data.id);
+                    };
+                    oItems.soundcloud_upload.callback = callback;
+                }
+                
+                //define a view on soundcloud callback.
+                if (oItems.soundcloud_view !== undefined) {
+                    
+                    callback = function() {
                         window.open(oItems.soundcloud_view.url);
                     };
-    				oItems.soundcloud_view.callback = callback;
-    			}
-    			
-    			//define a cancel recorded show callback.
-    			if (oItems.cancel_recorded !== undefined) {
-    				
-    				callback = function() {
-    					confirmCancelRecordedShow(data.id);
-					};
-    				oItems.cancel_recorded.callback = callback;
-    			}
-    			
-    			//define a view recorded callback.
+                    oItems.soundcloud_view.callback = callback;
+                }
+                
+                //define a cancel recorded show callback.
+                if (oItems.cancel_recorded !== undefined) {
+                    
+                    callback = function() {
+                        confirmCancelRecordedShow(data.id);
+                    };
+                    oItems.cancel_recorded.callback = callback;
+                }
+                
+                //define a view recorded callback.
                 if (oItems.view_recorded !== undefined) {
                     
                     callback = function() {
@@ -398,71 +398,71 @@ $(document).ready(function() {
                     };
                     oItems.view_recorded.callback = callback;
                 }
-    			
-    			//define a cancel callback.
-    			if (oItems.cancel !== undefined) {
-    				
-    				callback = function() {
-    					confirmCancelShow(data.id);
-					};
-    				oItems.cancel.callback = callback;
-    			}
-    			
-    			//define a delete callback.
-    			if (oItems.del !== undefined) {
-    				
-    				//repeating show multiple delete options
-    				if (oItems.del.items !== undefined) {
-    					var del = oItems.del.items;
-    					
-    					//delete a single instance
-    					callback = function() {
-        					$.post(del.single.url, {format: "json", id: data.id}, function(json){
-        						scheduleRefetchEvents(json);
-        					});
-    					};
-        				del.single.callback = callback;
-        				
-        				//delete this instance and all following instances.
-        				callback = function() {
-        					$.post(del.following.url, {format: "json", id: data.id}, function(json){
-        						scheduleRefetchEvents(json);
-        					});
-    					};
-        				del.following.callback = callback;	
-    					
-    				}
-    				//single show
-    				else {
-    					callback = function() {
-        					$.post(oItems.del.url, {format: "json", id: data.id}, function(json){
-        						scheduleRefetchEvents(json);
-        					});
-    					};
-        				oItems.del.callback = callback;	
-    				}
-    			}
-    		
-    			items = oItems;
-    		}
-    		
-    		$.ajax({
-			  url: "/schedule/make-context-menu",
-			  type: "GET",
-			  data: {id : data.id, format: "json"},
-			  dataType: "json",
-			  async: false,
-			  success: function(json){
-				  processMenuItems(json.items);
-			  }
-			});
+                
+                //define a cancel callback.
+                if (oItems.cancel !== undefined) {
+                    
+                    callback = function() {
+                        confirmCancelShow(data.id);
+                    };
+                    oItems.cancel.callback = callback;
+                }
+                
+                //define a delete callback.
+                if (oItems.del !== undefined) {
+                    
+                    //repeating show multiple delete options
+                    if (oItems.del.items !== undefined) {
+                        var del = oItems.del.items;
+                        
+                        //delete a single instance
+                        callback = function() {
+                            $.post(del.single.url, {format: "json", id: data.id}, function(json){
+                                scheduleRefetchEvents(json);
+                            });
+                        };
+                        del.single.callback = callback;
+                        
+                        //delete this instance and all following instances.
+                        callback = function() {
+                            $.post(del.following.url, {format: "json", id: data.id}, function(json){
+                                scheduleRefetchEvents(json);
+                            });
+                        };
+                        del.following.callback = callback;  
+                        
+                    }
+                    //single show
+                    else {
+                        callback = function() {
+                            $.post(oItems.del.url, {format: "json", id: data.id}, function(json){
+                                scheduleRefetchEvents(json);
+                            });
+                        };
+                        oItems.del.callback = callback; 
+                    }
+                }
+            
+                items = oItems;
+            }
+            
+            $.ajax({
+              url: "/schedule/make-context-menu",
+              type: "GET",
+              data: {id : data.id, format: "json"},
+              dataType: "json",
+              async: false,
+              success: function(json){
+                  processMenuItems(json.items);
+              }
+            });
 
             return {
                 items: items,
                 determinePosition : function($menu, x, y) {
-                	$menu.css('display', 'block')
-                		.position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
-                		.css('display', 'none');
+                    $menu.css('display', 'block')
+                        .position({ my: "left top", at: "right top", of: this, offset: "-20 10", collision: "fit"})
+                        .css('display', 'none');
                 }
             };
         }
