@@ -91,6 +91,34 @@ function onEndTimeSelect(){
     $("#add_show_end_time").trigger('input');
 }
 
+function padZeroes(number, length)
+{
+    var str = '' + number;
+    while (str.length < length) {str = '0' + str;}
+    return str;
+}
+
+function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+} 
+
+function intToRGB(i){
+    return (padZeroes(((i>>16)&0xFF).toString(16), 2) + 
+           padZeroes(((i>>8)&0xFF).toString(16), 2)+ 
+           padZeroes((i&0xFF).toString(16), 2)
+           );
+}
+
+function stringToColor(s)
+{
+    return intToRGB(hashCode(s));
+}
+
+
 function setAddShowEvents() {
 
     var form = $("#add-show-form");
@@ -548,6 +576,12 @@ function setAddShowEvents() {
 		    loadingIcon.hide();
 		});
 	}
+    
+    var bgColorEle = $("#add_show_background_color");
+    $('#add_show_name').bind('input', 'change', function(){
+        var colorCode = stringToColor($(this).val());
+        bgColorEle.val(colorCode);
+    });
 }
 
 function showErrorSections() {
