@@ -10,7 +10,7 @@ function scheduleRefetchEvents(json) {
     }
     if(json.show_id) {
         var dialog_id = parseInt($("#add_show_id").val(), 10);
-        
+
         //if you've deleted the show you are currently editing, close the add show dialog.
         if (dialog_id === json.show_id) {
             $("#add-show-close").click();
@@ -76,9 +76,9 @@ function dayClick(date, allDay, jsEvent, view){
     // Hence, if the user if DJ then it won't open anything.
     if(userType == "A" || userType == "P"){
         var now, today, selected, chosenDate, chosenTime;
-        
+
         now = adjustDateToServerDate(new Date(), serverTimezoneOffset);
-            
+
         if(view.name === "month") {
             today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             selected = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -87,17 +87,17 @@ function dayClick(date, allDay, jsEvent, view){
             today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes());
             selected = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
         }
-        
+
         if(selected >= today) {
             var addShow = $('.add-button');
-    
+
             //remove the +show button if it exists.
             if(addShow.length == 1){
                  var span = $(addShow).parent();
                 $(span).prev().remove();
                 $(span).remove();
             }
-            
+
             // get current duration value on the form
             var duration_string = $.trim($("#add_show_duration").val());
             var duration_info = duration_string.split(" ");
@@ -111,7 +111,7 @@ function dayClick(date, allDay, jsEvent, view){
             }
             // duration in milisec
             var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
-        
+
             var startTime_string, startTime
             // get start time value on the form
             if(view.name === "month") {
@@ -124,13 +124,13 @@ function dayClick(date, allDay, jsEvent, view){
                 startTime_string = pad(selected.getHours(),2)+":"+pad(selected.getMinutes(),2)
                 startTime = 0
             }
-            
+
             // calculate endDateTime
             var endDateTime = new Date(selected.getTime() + startTime + duration);
-            
+
             chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
             var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
-    
+
             $("#add_show_start_date").val(chosenDate);
             $("#add_show_end_date_no_repeat").val(endDateFormat);
             $("#add_show_end_date").val(endDateFormat);
@@ -140,7 +140,7 @@ function dayClick(date, allDay, jsEvent, view){
                 $("#add_show_end_time").val(endTimeString)
             }
             $("#schedule-show-when").show();
-    
+
             openAddShowForm();
         }
     }
@@ -173,7 +173,7 @@ function viewDisplay( view ) {
                     .fullCalendar('destroy')
                     .fullCalendar(opt)
                     .fullCalendar( 'gotoDate', date );
-                
+
                 //save slotMin value to db
                 var url = '/Schedule/set-time-interval/format/json';
                 $.post(url, {timeInterval: slotMin});
@@ -192,20 +192,20 @@ function viewDisplay( view ) {
     }
 
     if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left > span').length == 5)) {
-        
+
         //userType is defined in bootstrap.php, and is derived from the currently logged in user.
         if(userType == "A" || userType == "P"){
             makeAddShowButton();
         }
     }
-    
+
     //save view name to db
     var url = '/Schedule/set-time-scale/format/json';
     $.post(url, {timeScale: view.name});
 }
 
 function eventRender(event, element, view) {
-    
+
     $(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
@@ -224,16 +224,27 @@ function eventRender(event, element, view) {
         $(element).find(".fc-event-content").append(div);
     }
 
-    //add the record/rebroadcast icons if needed.
-    //record icon (only if not on soundcloud, will always be true for future events)
+    //add the record/rebroadcast/soundcloud icons if needed
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
-
         $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span>');
+    } else if ((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id > 0) {
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon soundcloud"></span>');
+    } else if ((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -2) {
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon progress"></span>');
+    } else if ((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -3) {
+        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
     }
-    if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
 
+    if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span>');
+    } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id > 0) {
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon soundcloud"></span>');
+    } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -2) {
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon progress"></span>');
+    } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -3) {
+        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
     }
+
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
 
@@ -243,39 +254,10 @@ function eventRender(event, element, view) {
 
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
-    //soundcloud icon
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id > 0 && event.record === 1) {
-
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
-    }
-    if(view.name === 'month' && event.soundcloud_id > 0 && event.record === 1) {
-
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon soundcloud"></span>');
-    }
-    
-    //progress icon
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id === -2 && event.record === 1) {
-
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon progress"></span>');
-    }
-    if(view.name === 'month' && event.soundcloud_id === -2 && event.record === 1) {
-
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon progress"></span>');
-    }
-    
-    //error icon
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.soundcloud_id === -3 && event.record === 1) {
-
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon sc-error"></span>');
-    }
-    if(view.name === 'month' && event.soundcloud_id === -3 && event.record === 1) {
-
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon sc-error"></span>');
-    }
 }
 
 function eventAfterRender( event, element, view ) {
-   
+
     $(element).find(".small-icon").live('mouseover',function(){
         addQtipToSCIcons($(this));
     });
@@ -340,9 +322,9 @@ function checkSCUploadStatus(){
         var id = $(this).attr("id");
         $.post(url, {format: "json", id: id, type:"show"}, function(json){
             if(json.sc_id > 0){
-                $("span[id="+id+"]").removeClass("progress").addClass("soundcloud");
+                $("span[id="+id+"]:not(.recording)").removeClass("progress").addClass("soundcloud");
             }else if(json.sc_id == "-3"){
-                $("span[id="+id+"]").removeClass("progress").addClass("sc-error");
+                $("span[id="+id+"]:not(.recording)").removeClass("progress").addClass("sc-error");
             }
         });
     });
