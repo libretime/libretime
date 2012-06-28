@@ -46,7 +46,7 @@ parser.add_option("-y", "--source-status", help="source connection stauts", meta
 (options, args) = parser.parse_args()
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+logging.config.fileConfig("notify_logging.cfg")
 logger = logging.getLogger('notify')
 LogWriter.override_std_err(logger)
 
