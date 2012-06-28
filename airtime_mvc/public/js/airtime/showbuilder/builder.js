@@ -11,6 +11,7 @@ var AIRTIME = (function(AIRTIME){
         $lib,
         cursors = [],
         cursorIds = [];
+        showInstanceIds = [];
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -212,9 +213,15 @@ var AIRTIME = (function(AIRTIME){
         checkError(json);
 
         cursorIds = [];
+        /* We need to keep record of which show the cursor belongs to
+         * in the case where more than one show is displayed in the show builder
+         * because header and footer rows have the same id
+         */ 
+        showInstanceIds = [];
         cursors = $(".cursor-selected-row");
         for (i = 0; i < cursors.length; i++) {
             cursorIds.push(($(cursors.get(i)).attr("id")));
+            showInstanceIds.push(($(cursors.get(i)).attr("si_id")));
         }
         oSchedTable.fnDraw();
         
@@ -588,6 +595,7 @@ var AIRTIME = (function(AIRTIME){
                 else {
                     $nRow.addClass("sb-allowed");
                     $nRow.attr("id", aData.id);
+                    $nRow.attr("si_id", aData.instance);
                 }
                 
                 //status used to colour tracks.
@@ -670,7 +678,7 @@ var AIRTIME = (function(AIRTIME){
                     
                     //re-highlight selected cursors before draw took place
                     for (i = 0; i < cursorIds.length; i++) {
-                        $tr = $table.find("tr[id="+cursorIds[i]+"]");
+                        $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
                         mod.selectCursor($tr);
                     }
                     
