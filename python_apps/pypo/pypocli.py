@@ -5,6 +5,8 @@ Python part of radio playout (pypo)
 from optparse import OptionParser
 from datetime import datetime
 
+import telnetlib
+
 import time
 import sys
 import signal
@@ -50,6 +52,15 @@ parser.add_option("-c", "--check", help="Check the cached schedule and exit", de
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
+# configure logging
+try:
+    logging.config.fileConfig("logging.cfg")
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
+except Exception, e:
+    print "Couldn't configure logging"
+    sys.exit()
+
 def configure_locale():
     logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
     current_locale = locale.getlocale()
@@ -61,8 +72,8 @@ def configure_locale():
         if default_locale[1] is None:
             logger.debug("No default locale exists. Let's try loading from /etc/default/locale")
             if os.path.exists("/etc/default/locale"):
-                config = ConfigObj('/etc/default/locale')
-                lang = config.get('LANG')
+                locale_config = ConfigObj('/etc/default/locale')
+                lang = locale_config.get('LANG')
                 new_locale = lang
             else:
                 logger.error("/etc/default/locale could not be found! Please run 'sudo update-locale' from command-line.")
@@ -84,14 +95,6 @@ def configure_locale():
         logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
         sys.exit(1)
 
-# configure logging
-try:
-    logging.config.fileConfig("logging.cfg")
-    logger = logging.getLogger()
-    LogWriter.override_std_err(logger)
-except Exception, e:
-    print "Couldn't configure logging"
-    sys.exit()
 
 configure_locale()
 
@@ -118,9 +121,26 @@ def keyboardInterruptHandler(signum, frame):
     logger.info('\nKeyboard Interrupt\n')
     sys.exit(0)
 
+def liquidsoap_running_test(telnet_lock, host, port, logger):
+    logger.debug("Checking to see if Liquidsoap is running")
+    success = True
+    try:
+        telnet_lock.acquire()
+        tn = telnetlib.Telnet(host, port)
+        msg = "version\n"
+        tn.write(msg)
+        tn.write("exit\n")
+        logger.info("Liquidsoap version %s", tn.read_all())
+    except Exception, e:
+        logger.error(str(e))
+        success = False
+    finally:
+        telnet_lock.release()
+
+    return success
+
 
 if __name__ == '__main__':
-    logger = logging.getLogger()
     logger.info('###########################################')
     logger.info('#             *** pypo  ***               #')
     logger.info('#   Liquidsoap Scheduled Playout System   #')
@@ -137,9 +157,16 @@ if __name__ == '__main__':
     # initialize
     g = Global()
 
-    while not g.selfcheck(): time.sleep(5)
+    while not g.selfcheck():
+        time.sleep(5)
 
-    logger = logging.getLogger()
+    telnet_lock = Lock()
+
+    ls_host = config['ls_host']
+    ls_port = config['ls_port']
+    while not liquidsoap_running_test(telnet_lock, ls_host, ls_port, logger):
+        logger.warning("Liquidsoap not started yet. Sleeping one second and trying again")
+        time.sleep(1)
 
     if options.test:
         g.test_api()
@@ -152,7 +179,7 @@ if __name__ == '__main__':
     recorder_q = Queue()
     pypoPush_q = Queue()
 
-    telnet_lock = Lock()
+
 
     """
     This queue is shared between pypo-fetch and pypo-file, where pypo-file
