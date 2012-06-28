@@ -9,6 +9,8 @@ import telnetlib
 import copy
 from threading import Thread
 
+from Queue import Empty
+
 from api_clients import api_client
 from std_err_override import LogWriter
 
@@ -493,6 +495,8 @@ class PypoFetch(Thread):
 
                 message = self.fetch_queue.get(block=True, timeout=self.listener_timeout)
                 self.handle_message(message)
+            except Empty, e:
+                self.logger.info("Queue timeout. Fetching schedule manually")
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()
