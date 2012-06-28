@@ -9,6 +9,8 @@ import telnetlib
 import copy
 from threading import Thread
 
+from Queue import Empty
+
 from api_clients import api_client
 from std_err_override import LogWriter
 
@@ -171,8 +173,8 @@ class PypoFetch(Thread):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
         info = self.api_client.get_bootstrap_info()
         if info == None:
-            self.logger.error('Unable to get bootstrap info.. Existing pypo...')
-            sys.exit(0)
+            self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
+            sys.exit(1)
         else:
             self.logger.debug('info:%s', info)
             for k, v in info['switch_status'].iteritems():
@@ -427,6 +429,7 @@ class PypoFetch(Thread):
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, media_item['id'] + fileExt)
                     media_item['dst'] = dst
+                    media_item['started_copying'] = False
                     media_filtered[key] = media_item
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
@@ -492,6 +495,8 @@ class PypoFetch(Thread):
 
                 message = self.fetch_queue.get(block=True, timeout=self.listener_timeout)
                 self.handle_message(message)
+            except Empty, e:
+                self.logger.info("Queue timeout. Fetching schedule manually")
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()

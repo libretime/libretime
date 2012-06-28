@@ -2,8 +2,10 @@
 Python part of radio playout (pypo)
 """
 
-import time
 from optparse import OptionParser
+from datetime import datetime
+
+import time
 import sys
 import signal
 import logging
@@ -123,6 +125,12 @@ if __name__ == '__main__':
     logger.info('#             *** pypo  ***               #')
     logger.info('#   Liquidsoap Scheduled Playout System   #')
     logger.info('###########################################')
+
+    #Although all of our calculations are in UTC, it is useful to know what timezone
+    #the local machine is, so that we have a reference for what time the actual
+    #log entries were made
+    logger.info("Timezone: %s" % time.tzname)
+    logger.info("UTC time: %s" % datetime.utcnow())
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 

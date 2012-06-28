@@ -41,7 +41,7 @@ class LibraryController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
         
         //Open a jPlayer window and play the audio clip.
-        $menu["play"] = array("name"=> "Play", "icon" => "play");
+        $menu["play"] = array("name"=> "Preview", "icon" => "play");
         
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
