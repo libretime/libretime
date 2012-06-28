@@ -202,13 +202,19 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod.selectCurrentPage = function() {
         $.fn.reverse = [].reverse;
-        var $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
+        var $inputs = $libTable.find("tbody input:checkbox"),
+            $trs = $inputs.parents("tr").reverse();
+            
+        $inputs.attr("checked", true);
+        $trs.addClass(LIB_SELECTED_CLASS);
 
         $trs.each(function(i, el){
             $el = $(this);
-            
-            mod.selectItem($el);
+            mod.addToChosen($el);
         });
+
+        mod.checkToolBarIcons();
+          
     };
     
     /*
@@ -216,14 +222,20 @@ var AIRTIME = (function(AIRTIME) {
      * (behaviour taken from gmail)
      */
     mod.deselectCurrentPage = function() {
+        var $inputs = $libTable.find("tbody input:checkbox"),
+            $trs = $inputs.parents("tr"),
+            id;
         
-        var $trs = $libTable.find("tbody input:checkbox").filter(":checked").parents("tr");
+        $inputs.attr("checked", false);
+        $trs.removeClass(LIB_SELECTED_CLASS);
         
         $trs.each(function(i, el){
             $el = $(this);
-            
-            mod.deselectItem($el);
-        });     
+            id = $el.attr("id");
+            delete chosenItems[id];
+        });
+        
+        mod.checkToolBarIcons();     
     };
     
     mod.selectNone = function() {
