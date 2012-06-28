@@ -137,7 +137,6 @@ function findViewportDimensions() {
 }
 
 function buildScheduleDialog (json) {
-	
 	var dialog = $(json.dialog),
 		viewport = findViewportDimensions(),
 		height = Math.floor(viewport.height * 0.96),
@@ -166,9 +165,8 @@ function buildScheduleDialog (json) {
 		modal: true,
 		close: closeDialog,
 		buttons: {"Ok": function() {
-			dialog.remove();
-			$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-		}}
+            $(this).dialog("close");
+		}} 
 	});
 		
 	//set the start end times so the builder datatables knows its time range.
