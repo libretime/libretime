@@ -327,7 +327,10 @@ class Application_Model_StoredFile {
             throw new DeleteScheduledFileException();
         }
 
-        if (file_exists($filepath)) {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $type = $music_dir->getType();
+        
+        if (file_exists($filepath) && $type == "stor") {
             $data = array("filepath" => $filepath, "delete" => 1);
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
