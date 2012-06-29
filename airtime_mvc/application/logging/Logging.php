@@ -35,14 +35,20 @@ class Logging {
     }
     
     public static function log($p_msg){
+        $bt = debug_backtrace();
+        $caller = array_shift($bt);
+        
         $logger = self::getLogger();
-        $logger->info(self::toString($p_msg));
+        $logger->info(self::toString($p_msg)." - file:".$caller['file'].":".$caller['line']);
     }
     
     public static function debug($p_msg){
+        $bt = debug_backtrace();
+        $caller = array_shift($bt);
+        
         if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development"){
             $logger = self::getLogger();
-            $logger->debug(self::toString($p_msg));            
+            $logger->debug(self::toString($p_msg)." - file:".$caller['file'].":".$caller['line']);            
         }
     }
 }
