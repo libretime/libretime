@@ -589,7 +589,7 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true || aData.header === true) {
+                if (aData.allowed !== true) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {
@@ -902,7 +902,7 @@ var AIRTIME = (function(AIRTIME){
                     
                     return draggingContainer; 
                 },
-                items: 'tr:not(:first, :last, .sb-header, .sb-not-allowed, .sb-past, .sb-now-playing)',
+                items: 'tr:not(:first, :last, .sb-header, .sb-not-allowed, .sb-past, .sb-now-playing, .sb-empty)',
                 cancel: '.sb-footer',
                 receive: fnReceive,
                 update: fnUpdate,
