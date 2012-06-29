@@ -35,6 +35,7 @@ $ccAcl->allow('G', 'index')
       ->allow('G', 'schedule')
       ->allow('G', 'dashboard')
       ->allow('G', 'audiopreview')
+      ->allow('H', 'preference', 'is-import-in-progress')
       ->allow('H', 'usersettings')
       ->allow('H', 'plupload')
       ->allow('H', 'library')
@@ -42,7 +43,7 @@ $ccAcl->allow('G', 'index')
       ->allow('A', 'playouthistory')
       ->allow('A', 'user')
       ->allow('A', 'systemstatus')
-      ->allow('A', 'preference');
+      ->allow('A', 'preference', 'admin');
       
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
