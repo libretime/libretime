@@ -15,19 +15,9 @@ Main case:
 
 """
 
-# python defaults (debian default)
-import time
-import os
-import traceback
-from optparse import *
+from optparse import OptionParser
 import sys
-import time
-import datetime
-import logging
 import logging.config
-import urllib
-import urllib2
-import string
 import json
 
 # additional modules (should be checked)
@@ -37,9 +27,6 @@ from configobj import ConfigObj
 #from util import *
 from api_clients import *
 from std_err_override import LogWriter
-
-# Set up command-line options
-parser = OptionParser()
 
 # help screeen / info
 usage = "%prog [options]" + " - notification gateway"
@@ -59,8 +46,8 @@ parser.add_option("-y", "--source-status", help="source connection stauts", meta
 (options, args) = parser.parse_args()
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
-logger = logging.getLogger()
+logging.config.fileConfig("notify_logging.cfg")
+logger = logging.getLogger('notify')
 LogWriter.override_std_err(logger)
 
 #need to wait for Python 2.7 for this..
@@ -69,54 +56,54 @@ LogWriter.override_std_err(logger)
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
-    
+
 except Exception, e:
     logger.error('Error loading config file: %s', e)
     sys.exit()
-    
-        
+
+
 class Notify:
     def __init__(self):
         self.api_client = api_client.api_client_factory(config)
-    
+
     def notify_media_start_playing(self, data, media_id):
         logger = logging.getLogger("notify")
-        
+
         logger.debug('#################################################')
         logger.debug('# Calling server to update about what\'s playing #')
         logger.debug('#################################################')
-        logger.debug('data = '+ str(data))
-        response = self.api_client.notify_media_item_start_playing(data, media_id) 
-        logger.debug("Response: "+json.dumps(response))
-    
+        logger.debug('data = ' + str(data))
+        response = self.api_client.notify_media_item_start_playing(data, media_id)
+        logger.debug("Response: " + json.dumps(response))
+
     # @pram time: time that LS started
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = logging.getLogger("notify")
-        
+
         logger.debug('#################################################')
         logger.debug('# Calling server to update liquidsoap status    #')
         logger.debug('#################################################')
-        logger.debug('msg = '+ str(msg))
-        response = self.api_client.notify_liquidsoap_status(msg, stream_id, time) 
-        logger.debug("Response: "+json.dumps(response))
-    
+        logger.debug('msg = ' + str(msg))
+        response = self.api_client.notify_liquidsoap_status(msg, stream_id, time)
+        logger.debug("Response: " + json.dumps(response))
+
     def notify_source_status(self, source_name, status):
         logger = logging.getLogger("notify")
-        
+
         logger.debug('#################################################')
         logger.debug('# Calling server to update source status        #')
         logger.debug('#################################################')
-        logger.debug('msg = '+ str(source_name) + ' : ' + str(status))
-        response = self.api_client.notify_source_status(source_name, status) 
-        logger.debug("Response: "+json.dumps(response))
-        
+        logger.debug('msg = ' + str(source_name) + ' : ' + str(status))
+        response = self.api_client.notify_source_status(source_name, status)
+        logger.debug("Response: " + json.dumps(response))
+
 if __name__ == '__main__':
     print
     print '#########################################'
     print '#           *** pypo  ***               #'
     print '#     pypo notification gateway         #'
     print '#########################################'
-    
+
     # initialize
     logger = logging.getLogger("notify")
     if options.error and options.stream_id:
@@ -141,11 +128,11 @@ if __name__ == '__main__':
         if not options.data:
             print "NOTICE: 'data' command-line argument not given."
             sys.exit()
-        
+
         if not options.media_id:
             print "NOTICE: 'media_id' command-line argument not given."
             sys.exit()
-        
+
         try:
             n = Notify()
             n.notify_media_start_playing(options.data, options.media_id)

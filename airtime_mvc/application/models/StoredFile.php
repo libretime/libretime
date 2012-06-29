@@ -327,7 +327,10 @@ class Application_Model_StoredFile {
             throw new DeleteScheduledFileException();
         }
 
-        if (file_exists($filepath)) {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $type = $music_dir->getType();
+        
+        if (file_exists($filepath) && $type == "stor") {
             $data = array("filepath" => $filepath, "delete" => 1);
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
@@ -889,10 +892,9 @@ Logging::log("getting media! - 2");
                 $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' 2>&1", $audio_file);
                 
                 exec($command, $output, $rv);
-                if ($rv != 0 || $output[0] == 'TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.') {
+                if ($rv != 0 || (!empty($output) && $output[0] == 'TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.')) {
                     $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
-                }
-                else {
+                } else {
                     //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
                     $r = @rename($audio_file, $audio_stor);
 

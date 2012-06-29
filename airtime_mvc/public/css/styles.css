@@ -808,6 +808,12 @@ dt.block-display, dd.block-display {
 	font-size:14px;
 	padding: 6px 10px 6px;
 }
+
+.login-content dd button.ui-button, .login-content dd button.btn {
+   width:100%;
+    font-size:14px;
+    padding: 6px 10px 6px;
+}
 .login-content .hidden, .hidden {
 	display:none;
 }

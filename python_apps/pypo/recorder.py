@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import logging.config
 import json
 import time
 import datetime
@@ -55,7 +54,7 @@ class ShowRecorder(Thread):
         self.p = None
 
     def record_show(self):
-        length = str(self.filelength)+".0"
+        length = str(self.filelength) + ".0"
         filename = self.start_time
         filename = filename.replace(" ", "-")
 
@@ -128,7 +127,7 @@ class ShowRecorder(Thread):
             time = md[1].replace(":", "-")
             self.logger.info("time: %s" % time)
 
-            name = time+"-"+self.show_name
+            name = time + "-" + self.show_name
             artist = "Airtime Show Recorder"
 
             #set some metadata for our file daemon
@@ -181,7 +180,7 @@ class Recorder(Thread):
     def handle_message(self):
         if not self.queue.empty():
             message = self.queue.get()
-            msg =  json.loads(message)
+            msg = json.loads(message)
             command = msg["event_type"]
             self.logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == 'cancel_recording':
@@ -190,10 +189,10 @@ class Recorder(Thread):
             else:
                 self.process_recorder_schedule(msg)
                 self.loops = 0
-        
+
         if self.shows_to_record:
             self.start_record()
-    
+
     def process_recorder_schedule(self, m):
         self.logger.info("Parsing recording show schedules...")
         temp_shows_to_record = {}
@@ -217,7 +216,7 @@ class Recorder(Thread):
             delta = next_show - tnow
             s = '%s.%s' % (delta.seconds, delta.microseconds)
             out = float(s)
-            
+
             if out < 5:
                 self.logger.debug("Shows %s", self.shows_to_record)
                 self.logger.debug("Next show %s", next_show)
@@ -231,26 +230,26 @@ class Recorder(Thread):
                 if delta < 5:
                     self.logger.debug("sleeping %s seconds until show", delta)
                     time.sleep(delta)
-    
+
                     sorted_show_keys = sorted(self.shows_to_record.keys())
                     start_time = sorted_show_keys[0]
                     show_length = self.shows_to_record[start_time][0]
                     show_instance = self.shows_to_record[start_time][1]
                     show_name = self.shows_to_record[start_time][2]
                     server_timezone = self.shows_to_record[start_time][3]
-                    
+
                     T = pytz.timezone(server_timezone)
                     start_time_on_UTC = getDateTimeObj(start_time)
                     start_time_on_server = start_time_on_UTC.replace(tzinfo=pytz.utc).astimezone(T)
                     start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
-                        {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day,\
+                        {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day, \
                          'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
                     self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted)
                     self.sr.start()
                     #remove show from shows to record.
                     del self.shows_to_record[start_time]
                     #self.time_till_next_show = self.get_time_till_next_show()
-            except Exception,e :
+            except Exception, e :
                 import traceback
                 top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)
@@ -273,12 +272,12 @@ class Recorder(Thread):
                 self.logger.info("Bootstrap recorder schedule received: %s", temp)
             except Exception, e:
                 self.logger.error(e)
-                
+
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
-                        
+
             self.loops = 0
-            heartbeat_period = math.floor(30/PUSH_INTERVAL)
-            
+            heartbeat_period = math.floor(30 / PUSH_INTERVAL)
+
             while True:
                 if self.loops % heartbeat_period == 0:
                     self.logger.info("heartbeat")
@@ -299,7 +298,7 @@ class Recorder(Thread):
                     self.logger.error('Pypo Recorder Exception: %s', e)
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
-        except Exception,e :
+        except Exception, e :
             import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)

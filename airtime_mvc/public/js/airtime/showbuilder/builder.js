@@ -8,7 +8,10 @@ var AIRTIME = (function(AIRTIME){
         $sbTable,
         $toolbar,
         $ul,
-        $lib;
+        $lib,
+        cursors = [],
+        cursorIds = [];
+        showInstanceIds = [];
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -127,7 +130,7 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.selectCursor = function($el) {
-        
+
         $el.addClass(CURSOR_SELECTED_CLASS);
         mod.checkToolBarIcons();
     };
@@ -208,11 +211,23 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnItemCallback = function(json) {
         checkError(json);
+
+        cursorIds = [];
+        /* We need to keep record of which show the cursor belongs to
+         * in the case where more than one show is displayed in the show builder
+         * because header and footer rows have the same id
+         */ 
+        showInstanceIds = [];
+        cursors = $(".cursor-selected-row");
+        for (i = 0; i < cursors.length; i++) {
+            cursorIds.push(($(cursors.get(i)).attr("id")));
+            showInstanceIds.push(($(cursors.get(i)).attr("si_id")));
+        }
         oSchedTable.fnDraw();
         
         mod.enableUI();
     };
-    
+        
     mod.fnAdd = function(aMediaIds, aSchedIds) {
         
         mod.disableUI();
@@ -236,11 +251,14 @@ var AIRTIME = (function(AIRTIME){
     mod.fnRemove = function(aItems) {
         
         mod.disableUI();
-        
-        $.post( "/showbuilder/schedule-remove",
-            {"items": aItems, "format": "json"},
-            mod.fnItemCallback
-        );
+        if (confirm("Delete selected item(s)?")) {
+	        $.post( "/showbuilder/schedule-remove",
+	            {"items": aItems, "format": "json"},
+	            mod.fnItemCallback
+	        );
+        }else{
+        	mod.enableUI();
+        }
     };
     
     mod.fnRemoveSelectedItems = function() {
@@ -401,7 +419,6 @@ var AIRTIME = (function(AIRTIME){
                     headerIcon;
                 
                 fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
-                    
                     $node = $(nRow.children[iNodeIndex]);
                     $node.html(sRowContent);
                     $node.attr('colspan',100);
@@ -413,7 +430,7 @@ var AIRTIME = (function(AIRTIME){
                     
                     $nRow.addClass(sClass);
                 };
-                         
+                        
                 if (aData.header === true) {
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
@@ -572,11 +589,13 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true) {
+                if (aData.allowed !== true || aData.header === true) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {
                     $nRow.addClass("sb-allowed");
+                    $nRow.attr("id", aData.id);
+                    $nRow.attr("si_id", aData.instance);
                 }
                 
                 //status used to colour tracks.
@@ -590,7 +609,7 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.currentShow === true) {
                     $nRow.addClass("sb-current-show");
                 }
-                 
+              
                 //call the context menu so we can prevent the event from propagating.
                 $nRow.find('td:gt(1)').click(function(e){
                     
@@ -615,6 +634,7 @@ var AIRTIME = (function(AIRTIME){
                     $cursorRows,
                     $table = $(this),
                     $parent = $table.parent(),
+                    $tr,
                     //use this array to cache DOM heights then we can detach the table to manipulate it to increase speed.
                     heights = [];
                 
@@ -653,6 +673,13 @@ var AIRTIME = (function(AIRTIME){
                         });
                         
                         $td.append(markerDiv).wrapInner(wrapperDiv);
+                        
+                    }
+                    
+                    //re-highlight selected cursors before draw took place
+                    for (i = 0; i < cursorIds.length; i++) {
+                        $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
+                        mod.selectCursor($tr);
                     }
                     
                     //if there is only 1 cursor on the page highlight it by default.
@@ -678,8 +705,14 @@ var AIRTIME = (function(AIRTIME){
                     
                     if (temp.length > 0) {
                         aData = temp.data("aData");
-                        
-                        mod.timeout = setTimeout(mod.refresh, aData.refresh * 1000); //need refresh in milliseconds
+                        // max time interval
+						// setTimeout allows only up to (2^31)-1 millisecs timeout value
+						maxRefreshInterval = Math.pow(2, 31) - 1;
+						refreshInterval = aData.refresh * 1000;
+						if(refreshInterval > maxRefreshInterval){
+							refreshInterval = maxRefreshInterval;
+						}
+						mod.timeout = setTimeout(mod.refresh, refreshInterval); //need refresh in milliseconds
                         break;
                     }
                 }
@@ -890,8 +923,8 @@ var AIRTIME = (function(AIRTIME){
         
         $ul = $("<ul/>");
         $ul.append('<li class="ui-state-default sb-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
-            .append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="Delete all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
-            .append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="Delete selected scheduled items"><span class="ui-icon ui-icon-trash"></span></li>');    
+            .append('<li class="ui-state-default ui-state-disabled sb-button-trim" title="Remove all overbooked tracks"><span class="ui-icon ui-icon-scissors"></span></li>')
+            .append('<li class="ui-state-default ui-state-disabled sb-button-delete" title="Remove selected scheduled items"><span class="ui-icon ui-icon-trash"></span></li>');    
         $toolbar.append($ul);
         
         $ul = $("<ul/>");
@@ -1065,7 +1098,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.del !== undefined) {
                         
                         callback = function() {
-                            if (confirm("Delete selected Items?")) {
+                            if (confirm("Delete selected item?")) {
                                 AIRTIME.showbuilder.fnRemove([{
                                     id: data.id,
                                     timestamp: data.timestamp,

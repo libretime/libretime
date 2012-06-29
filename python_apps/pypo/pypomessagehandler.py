@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import logging.config
 import sys
 from configobj import ConfigObj
 from threading import Thread
@@ -39,7 +38,7 @@ class PypoMessageHandler(Thread):
         self.logger = logging.getLogger('message_h')
         self.pypo_queue = pq
         self.recorder_queue = rq
-        
+
     def init_rabbit_mq(self):
         self.logger.info("Initializing RabbitMQ stuff")
         try:
@@ -51,21 +50,21 @@ class PypoMessageHandler(Thread):
         except Exception, e:
             self.logger.error(e)
             return False
-            
+
         return True
-    
+
     """
     Handle a message from RabbitMQ, put it into our yucky global var.
     Hopefully there is a better way to do this.
     """
     def handle_message(self, message):
-        try:        
+        try:
             self.logger.info("Received event from RabbitMQ: %s" % message)
-            
-            m =  json.loads(message)
+
+            m = json.loads(message)
             command = m['event_type']
             self.logger.info("Handling command: " + command)
-        
+
             if command == 'update_schedule':
                 self.logger.info("Updating schdule...")
                 self.pypo_queue.put(message)
@@ -121,15 +120,13 @@ class PypoMessageHandler(Thread):
                 while loop and eat all the CPU
                 """
                 time.sleep(5)
-                
+
                 """
                 There is a problem with the RabbitMq messenger service. Let's
                 log the error and get the schedule via HTTP polling
                 """
-                import traceback
-                top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", top)
+                self.logger.error("traceback: %s", traceback.format_exc())
 
             loops += 1
 

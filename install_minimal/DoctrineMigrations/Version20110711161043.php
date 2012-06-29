@@ -15,8 +15,11 @@ class Version20110711161043 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $ini = parse_ini_file(__DIR__."/../include/airtime-install.ini");
+        $stor_dir = $ini["storage_dir"];
+        
         /* 1) update cc_files table to include to "directory" column */
-        $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('stor', '/srv/airtime/stor/');");
+        $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('stor', $stor_dir);");
 
         $this->_addSql("INSERT INTO cc_music_dirs (type, directory) VALUES ('link', '');");
 

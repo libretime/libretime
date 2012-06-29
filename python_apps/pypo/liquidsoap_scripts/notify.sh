@@ -10,4 +10,4 @@ SCRIPT=`readlink -f $0`
 # Absolute path this script is in
 SCRIPTPATH=`dirname $SCRIPT`
 
-cd ${SCRIPTPATH}/../ && python pypo-notify.py "$@"
+cd ${SCRIPTPATH}/../ && python pyponotify.py "$@"

@@ -618,7 +618,7 @@ class Application_Model_Preference
         if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development" && function_exists('exec')){
             $version = exec("git rev-parse --short HEAD 2>/dev/null", $out, $return_code);
             if ($return_code == 0){
-                return self::GetValue("system_version")."+".$version;
+                return self::GetValue("system_version")."+".$version.":".time();
             }
         }
         return self::GetValue("system_version");
