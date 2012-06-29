@@ -679,7 +679,15 @@ var AIRTIME = (function(AIRTIME){
                     //re-highlight selected cursors before draw took place
                     for (i = 0; i < cursorIds.length; i++) {
                         $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
-                        mod.selectCursor($tr);
+                        
+                        /* If the currently playing track's cursor is selected, 
+                         * and that track is deleted, the cursor position becomes
+                         * unavailble. We have to check the position is available
+                         * before re-highlighting it.
+                         */ 
+                        if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
+                            mod.selectCursor($tr);
+                        }
                     }
                     
                     //if there is only 1 cursor on the page highlight it by default.
