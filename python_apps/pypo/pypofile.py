@@ -66,7 +66,7 @@ class PypoFile(Thread):
             if src_size != dst_size:
                 do_copy = True
             else:
-                self.logger.debug("file %s already exists in local cache as %s, skipping cpoying..." % (src, dst))
+                self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
                 media_item['already_exist'] = True
         else:
             do_copy = True
