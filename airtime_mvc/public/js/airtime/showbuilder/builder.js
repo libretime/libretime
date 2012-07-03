@@ -693,7 +693,7 @@ var AIRTIME = (function(AIRTIME){
                     //re-highlight selected cursors before draw took place
                     for (i = 0; i < cursorIds.length; i++) {
                         if (headerFooter[i] == "f") {
-                            $tr = $table.find("tbody tr.sb-footer");
+                            $tr = $table.find("tbody tr.sb-footer[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
                         } else {
                             $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
                         }
