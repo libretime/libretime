@@ -31,7 +31,7 @@ class MediaMonitorCommon:
 
     def is_temp_file(self, filename):
         info = filename.split(".")
-        
+
         # if file doesn't have any extension, info[-2] throws exception
         # Hence, checking length of info before we do anything
         if(len(info) >= 2):
@@ -56,7 +56,7 @@ class MediaMonitorCommon:
         try:
             uid = pwd.getpwnam(euid)[2]
             gid = grp.getgrnam(egid)[2]
-            
+
             #drop root permissions and become "nobody"
             os.setegid(gid)
             os.seteuid(uid)
@@ -85,15 +85,15 @@ class MediaMonitorCommon:
         except Exception, e:
             self.logger.warn(u"Failed to check owner/group/permissions for %s", item)
             return False
-            
+
     def make_file_readable(self, pathname, is_dir):
         if is_dir:
             #set to 755
-            os.chmod(pathname, stat.S_IRUSR|stat.S_IWUSR|stat.S_IXUSR | stat.S_IRGRP|stat.S_IXGRP | stat.S_IROTH|stat.S_IXOTH)
+            os.chmod(pathname, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
         else:
             #set to 644
-            os.chmod(pathname, stat.S_IRUSR|stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
-            
+            os.chmod(pathname, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+
     def make_readable(self, pathname):
         """
         Should only call this function if is_readable() returns False. This function
@@ -120,7 +120,7 @@ class MediaMonitorCommon:
         except Exception, e:
             #something went wrong while we were trying to make world readable.
             return False
-            
+
         return True
 
     #checks if path is a directory, and if it doesnt exist, then creates it.
@@ -165,7 +165,7 @@ class MediaMonitorCommon:
                     #non-critical exception because we probably tried to delete a non-empty dir.
                     #Don't need to log this, let's just "return"
                     pass
-                
+
 
 
     #checks if path exists already in stor. If the path exists and the md5s are the
@@ -195,7 +195,7 @@ class MediaMonitorCommon:
                     self.logger.error("Trying %s", new_filepath)
 
                     if(os.path.exists(new_filepath)):
-                        i = i+1;
+                        i = i + 1;
                     else:
                         filepath = new_filepath
                         break
@@ -231,7 +231,7 @@ class MediaMonitorCommon:
                 md['MDATA_KEY_TRACKNUMBER'] = "%02d" % (int(md['MDATA_KEY_TRACKNUMBER']))
 
             #format bitrate as 128kbps
-            md['MDATA_KEY_BITRATE'] = str(md['MDATA_KEY_BITRATE']/1000)+"kbps"
+            md['MDATA_KEY_BITRATE'] = str(md['MDATA_KEY_BITRATE'] / 1000) + "kbps"
 
             filepath = None
             #file is recorded by Airtime
@@ -274,7 +274,7 @@ class MediaMonitorCommon:
         if p.returncode != 0:
             self.logger.warn("command \n%s\n return with a non-zero return value", command)
             self.logger.error(stderr)
-            
+
         try:
             """
             File name charset encoding is UTF-8.  
@@ -283,14 +283,14 @@ class MediaMonitorCommon:
         except Exception, e:
             stdout = None
             self.logger.error("Could not decode %s using UTF-8" % stdout)
-            
+
         return stdout
 
     def scan_dir_for_new_files(self, dir):
         command = 'find "%s" -iname "*.ogg" -o -iname "*.mp3" -type f -readable' % dir.replace('"', '\\"')
         self.logger.debug(command)
         stdout = self.exec_command(command)
-        
+
         return stdout.splitlines()
 
     def touch_index_file(self):
@@ -312,7 +312,7 @@ class MediaMonitorCommon:
         self.move_file(pathname, filepath)
         self.make_readable(filepath)
         return filepath
-        
+
     def test_file_playability(self, pathname):
         #when there is an single apostrophe inside of a string quoted by apostrophes, we can only escape it by replace that apostrophe
         #with '\''. This breaks the string into two, and inserts an escaped single quote in between them.
@@ -323,13 +323,13 @@ class MediaMonitorCommon:
         if return_code != 0:
             #print pathname for py-interpreter.log
             print pathname
-        
+
         return (return_code == 0)
-        
+
     def move_to_problem_dir(self, source):
-        
+
         dest = os.path.join(self.config.problem_directory, os.path.basename(source))
-        
+
         try:
             omask = os.umask(0)
             os.rename(source, dest)
@@ -338,4 +338,4 @@ class MediaMonitorCommon:
             self.logger.error("traceback: %s", traceback.format_exc())
         finally:
             os.umask(omask)
-        
+

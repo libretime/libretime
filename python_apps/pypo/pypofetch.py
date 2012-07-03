@@ -429,7 +429,7 @@ class PypoFetch(Thread):
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, media_item['id'] + fileExt)
                     media_item['dst'] = dst
-                    media_item['started_copying'] = False
+                    media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
             self.media_prepare_queue.put(copy.copy(media_filtered))

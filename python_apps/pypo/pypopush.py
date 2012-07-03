@@ -340,11 +340,11 @@ class PypoPush(Thread):
                     give up on it.
                     """
                     iter_num = 0
-                    while not media_item['started_copying'] and iter_num < 50:
+                    while not media_item['file_ready'] and iter_num < 50:
                         time.sleep(0.1)
                         iter_num += 1
 
-                    if media_item['started_copying'] or media_item['already_exist']:
+                    if media_item['file_ready']:
                         self.telnet_to_liquidsoap(media_item)
                     else:
                         self.logger.warn("File %s did not become ready in less than 5 seconds. Skipping...", media_item['dst'])
