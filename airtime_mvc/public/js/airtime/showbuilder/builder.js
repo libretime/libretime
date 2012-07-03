@@ -10,8 +10,9 @@ var AIRTIME = (function(AIRTIME){
         $ul,
         $lib,
         cursors = [],
-        cursorIds = [];
-        showInstanceIds = [];
+        cursorIds = [],
+        showInstanceIds = [],
+        headerFooter = [];
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -213,15 +214,28 @@ var AIRTIME = (function(AIRTIME){
         checkError(json);
 
         cursorIds = [];
+        
         /* We need to keep record of which show the cursor belongs to
          * in the case where more than one show is displayed in the show builder
          * because header and footer rows have the same id
          */ 
         showInstanceIds = [];
+        
+        /* Keeps track if the row is a footer. We need to do this because
+         * header and footer rows have the save cursorIds and showInstanceId
+         * so both will be selected in the draw callback
+         */ 
+        headerFooter = [];
+        
         cursors = $(".cursor-selected-row");
         for (i = 0; i < cursors.length; i++) {
             cursorIds.push(($(cursors.get(i)).attr("id")));
             showInstanceIds.push(($(cursors.get(i)).attr("si_id")));
+            if ($(cursors.get(i)).hasClass("sb-footer")) {
+                headerFooter.push("f");	
+            } else {
+                headerFooter.push("n");	
+            }
         }
         oSchedTable.fnDraw();
         
@@ -678,8 +692,12 @@ var AIRTIME = (function(AIRTIME){
                     
                     //re-highlight selected cursors before draw took place
                     for (i = 0; i < cursorIds.length; i++) {
-                        $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
-                        
+                        if (headerFooter[i] == "f") {
+                            $tr = $table.find("tbody tr.sb-footer");
+                        } else {
+                            $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
+                        }
+						
                         /* If the currently playing track's cursor is selected, 
                          * and that track is deleted, the cursor position becomes
                          * unavailble. We have to check the position is available
@@ -688,11 +706,11 @@ var AIRTIME = (function(AIRTIME){
                         if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
                             mod.selectCursor($tr);
                             
-                        /* If the selected cursor is the header or footer row
-                         * we need to explicitly select it because those rows do not have
+                        /* If the selected cursor is the footer row we need to
+                         * explicitly select it because that row does not have
                          * innerWrapper class
                          */     
-                        } else if ($tr.hasClass("sb-header") || $tr.hasClass("sb-footer")) {
+                        } else if ($tr.hasClass("sb-footer")) {
                             mod.selectCursor($tr);	
                         }
                     }
