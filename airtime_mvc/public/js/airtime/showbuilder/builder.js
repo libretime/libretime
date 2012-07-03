@@ -213,6 +213,13 @@ var AIRTIME = (function(AIRTIME){
     mod.fnItemCallback = function(json) {
         checkError(json);
 
+        mod.getSelectedCursors(); 
+        oSchedTable.fnDraw();
+        
+        mod.enableUI();
+    };
+    
+    mod.getSelectedCursors = function() {
         cursorIds = [];
         
         /* We need to keep record of which show the cursor belongs to
@@ -237,9 +244,6 @@ var AIRTIME = (function(AIRTIME){
                 headerFooter.push("n");	
             }
         }
-        oSchedTable.fnDraw();
-        
-        mod.enableUI();
     };
         
     mod.fnAdd = function(aMediaIds, aSchedIds) {
@@ -315,6 +319,7 @@ var AIRTIME = (function(AIRTIME){
             "success": function(json) {
                 mod.setTimestamp(json.timestamp);
                 mod.setShowInstances(json.instances);
+                mod.getSelectedCursors();
                 fnCallback(json);
             }
         });
