@@ -60,22 +60,28 @@ class PypoFile(Thread):
         except Exception, e:
             dst_exists = False
 
-        media_item['already_exist'] = False
         do_copy = False
         if dst_exists:
             if src_size != dst_size:
                 do_copy = True
             else:
                 self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
-                media_item['already_exist'] = True
         else:
             do_copy = True
+
+        media_item['file_ready'] = not do_copy
 
         if do_copy:
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
 
-                media_item['started_copying'] = True
+                """
+                List file as "ready" before it starts copying because by the time
+                Liquidsoap is ready to play this file, it should have at least started
+                copying (and can continue copying while Liquidsoap reads from the beginning
+                of the file)
+                """
+                media_item['file_ready'] = True
 
                 """
                 copy will overwrite dst if it already exists
