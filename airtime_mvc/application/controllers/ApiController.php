@@ -136,9 +136,10 @@ class ApiController extends Zend_Controller_Action
                      */ 
                     if (!$file_base_name) {
                         $file_base_name = $full_path;
-                    } 
-                    $file_base_name = substr($file_base_name, 1);
-                    
+                    } else {
+                        $file_base_name = substr($file_base_name, 1);
+                    }
+
                     // possibly use fileinfo module here in the future.
                     // http://www.php.net/manual/en/book.fileinfo.php
                     $ext = pathinfo($fileID, PATHINFO_EXTENSION);

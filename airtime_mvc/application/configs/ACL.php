@@ -43,7 +43,7 @@ $ccAcl->allow('G', 'index')
       ->allow('A', 'playouthistory')
       ->allow('A', 'user')
       ->allow('A', 'systemstatus')
-      ->allow('A', 'preference', 'admin');
+      ->allow('A', 'preference');
       
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);

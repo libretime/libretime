@@ -221,7 +221,6 @@ class Application_Model_ShowBuilder {
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);
         $row["image"] = '';
-        $row["id"] = -1;
         
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
 
@@ -311,7 +310,6 @@ class Application_Model_ShowBuilder {
         $row = $this->defaultRowArray;
         $row["footer"] = true;
         $row["instance"] = intval($p_item["si_id"]);
-        $row["id"] = -1;
         $this->getRowTimestamp($p_item, $row);
 
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));

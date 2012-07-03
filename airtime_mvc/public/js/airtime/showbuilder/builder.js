@@ -589,7 +589,7 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true || aData.header === true) {
+                if (aData.allowed !== true) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {
@@ -679,7 +679,15 @@ var AIRTIME = (function(AIRTIME){
                     //re-highlight selected cursors before draw took place
                     for (i = 0; i < cursorIds.length; i++) {
                         $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
-                        mod.selectCursor($tr);
+                        
+                        /* If the currently playing track's cursor is selected, 
+                         * and that track is deleted, the cursor position becomes
+                         * unavailble. We have to check the position is available
+                         * before re-highlighting it.
+                         */ 
+                        if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
+                            mod.selectCursor($tr);
+                        }
                     }
                     
                     //if there is only 1 cursor on the page highlight it by default.
@@ -894,7 +902,7 @@ var AIRTIME = (function(AIRTIME){
                     
                     return draggingContainer; 
                 },
-                items: 'tr:not(:first, :last, .sb-header, .sb-not-allowed, .sb-past, .sb-now-playing)',
+                items: 'tr:not(:first, :last, .sb-header, .sb-not-allowed, .sb-past, .sb-now-playing, .sb-empty)',
                 cancel: '.sb-footer',
                 receive: fnReceive,
                 update: fnUpdate,

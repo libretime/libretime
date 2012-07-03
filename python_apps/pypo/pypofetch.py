@@ -497,15 +497,14 @@ class PypoFetch(Thread):
                 self.handle_message(message)
             except Empty, e:
                 self.logger.info("Queue timeout. Fetching schedule manually")
+                success, self.schedule_data = self.api_client.get_schedule()
+                if success:
+                    self.process_schedule(self.schedule_data)
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)
                 self.logger.error("traceback: %s", top)
-
-                success, self.schedule_data = self.api_client.get_schedule()
-                if success:
-                    self.process_schedule(self.schedule_data)
 
             loops += 1
 
