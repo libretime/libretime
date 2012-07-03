@@ -684,9 +684,16 @@ var AIRTIME = (function(AIRTIME){
                          * and that track is deleted, the cursor position becomes
                          * unavailble. We have to check the position is available
                          * before re-highlighting it.
-                         */ 
+                         */
                         if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
                             mod.selectCursor($tr);
+                            
+                        /* If the selected cursor is the header or footer row
+                         * we need to explicitly select it because those rows do not have
+                         * innerWrapper class
+                         */     
+                        } else if ($tr.hasClass("sb-header") || $tr.hasClass("sb-footer")) {
+                            mod.selectCursor($tr);	
                         }
                     }
                     
