@@ -20,7 +20,7 @@ from configobj import ConfigObj
 import string
 import hashlib
 
-AIRTIME_VERSION = "2.1.2"
+AIRTIME_VERSION = "2.1.3"
 
 def api_client_factory(config, logger=None):
     if logger != None:

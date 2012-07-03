@@ -111,6 +111,10 @@ if (strcmp($version, "2.1.1") < 0){
 if (strcmp($version, "2.1.2") < 0){
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.2/airtime-upgrade.php");
     pause();
-} 
+}
+if (strcmp($version, "2.1.3") < 0){
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.3/airtime-upgrade.php");
+    pause();
+}  
 
 echo "******************************* Upgrade Complete *******************************".PHP_EOL;
