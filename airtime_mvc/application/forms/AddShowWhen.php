@@ -138,6 +138,20 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $valid = false;
         }
 
+        /* Check if show is overlapping
+         * We will only do this check if the show is valid
+         * upto this point
+         */
+        if ($valid) {
+            $show_start = new DateTime($start_time);
+            $show_end = new DateTime($end_time);
+            $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end); 
+            if ($overlapping) {
+                $this->getElement('add_show_duration')->setErrors(array('Cannot have overlapping shows'));
+                $valid = false;	
+            }
+        }
+	      
         return $valid;
     }
     

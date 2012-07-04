@@ -912,4 +912,47 @@ class Application_Model_Schedule {
             return false;
         }
     }
+    
+    public static function checkOverlappingShows($show_start, $show_end) {
+        global $CC_CONFIG;
+        
+        $overlapping = false;
+        //Set timezone to UTC to be consisent with DB
+        $show_start->setTimezone(new DateTimeZone('UTC'));
+        
+        $con = Propel::getConnection();
+        $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
+                where starts <= '{$show_start->format('Y-m-d H:i:s')}' order by ends";
+        $rows = $con->query($sql);
+        
+        //Set back to local timezone to do comparison
+        $show_start->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+        
+        foreach($rows as $row) {
+            $start = new DateTime($row["starts"]);
+            $end = new DateTime($row["ends"]);
+
+            /* When data is grabbed from the DB, the time is in UTC
+             * but the timezone is set locally. Comparing timestamps
+             * on two DateTime objects with different timezones but
+             * same time yeild different results.
+             * 
+             * Since we cannot change the timezone back to UTC without
+             * changing the time, we convert each show's instance
+             * end time to local time via offset and then do the comparison.
+             */ 
+            $offset = $show_start->getOffset();
+            if ($offset < 0) {
+                $end->sub(new DateInterval("PT".abs($offset)."S"));
+            } else {
+                $end->add(new DateInterval("PT".$offset."S"));
+            }
+
+            if ($show_start->getTimestamp() < $end->getTimestamp()) {
+                $overlapping = true;
+                break;
+            }
+        }
+        return $overlapping;
+    }
 }
