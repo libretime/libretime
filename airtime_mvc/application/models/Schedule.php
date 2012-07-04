@@ -701,7 +701,7 @@ class Application_Model_Schedule {
         }
         $when = $formWhen->isValid($data);
         
-        if($when && $formWhen->checkReliantFields($data, true)) {        
+        if($when && $formWhen->checkReliantFields($data, true, null, true)) {        
             $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
             $start_dt->setTimezone(new DateTimeZone('UTC'));
             
@@ -751,7 +751,7 @@ class Application_Model_Schedule {
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin 
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null){
+    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null){
     
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -778,7 +778,7 @@ class Application_Model_Schedule {
 		$when = $formWhen->isValid($data);
 		$live = $formLive->isValid($data);
         if($when) {
-            $when = $formWhen->checkReliantFields($data, $validateStartDate, $originalStartDate);
+            $when = $formWhen->checkReliantFields($data, $validateStartDate, $originalStartDate, $update, $instanceId);
         }
 
         //The way the following code works is that is parses the hour and
@@ -913,40 +913,26 @@ class Application_Model_Schedule {
         }
     }
     
-    public static function checkOverlappingShows($show_start, $show_end) {
+    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=false) {
         global $CC_CONFIG;
         
         $overlapping = false;
-        //Set timezone to UTC to be consisent with DB
-        $show_start->setTimezone(new DateTimeZone('UTC'));
         
         $con = Propel::getConnection();
-        $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                where starts <= '{$show_start->format('Y-m-d H:i:s')}' order by ends";
+        
+        if ($update) {
+            $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
+                    where starts <= '{$show_start->format('Y-m-d H:i:s')}'
+                    and id != ".$instanceId. " order by ends";
+        } else {
+            $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
+                    where starts <= '{$show_start->format('Y-m-d H:i:s')}' order by ends";
+        }
         $rows = $con->query($sql);
-        
-        //Set back to local timezone to do comparison
-        $show_start->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
-        
+                
         foreach($rows as $row) {
-            $start = new DateTime($row["starts"]);
-            $end = new DateTime($row["ends"]);
-
-            /* When data is grabbed from the DB, the time is in UTC
-             * but the timezone is set locally. Comparing timestamps
-             * on two DateTime objects with different timezones but
-             * same time yeild different results.
-             * 
-             * Since we cannot change the timezone back to UTC without
-             * changing the time, we convert each show's instance
-             * end time to local time via offset and then do the comparison.
-             */ 
-            $offset = $show_start->getOffset();
-            if ($offset < 0) {
-                $end->sub(new DateInterval("PT".abs($offset)."S"));
-            } else {
-                $end->add(new DateInterval("PT".$offset."S"));
-            }
+            $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
+            $end = new DateTime($row["ends"], new DateTimeZone('UTC'));
 
             if ($show_start->getTimestamp() < $end->getTimestamp()) {
                 $overlapping = true;

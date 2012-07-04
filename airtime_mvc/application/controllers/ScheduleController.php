@@ -743,6 +743,7 @@ class ScheduleController extends Zend_Controller_Action
         }
         
         $show = new Application_Model_Show($data['add_show_id']);
+        
         $validateStartDate = true;
         $validateStartTime = true;
         if (!array_key_exists('add_show_start_date', $data)){
@@ -761,7 +762,7 @@ class ScheduleController extends Zend_Controller_Action
         $data['add_show_record'] = $show->isRecorded();
         
         $origianlShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
-        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate, $origianlShowStartDateTime);
+        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate, $origianlShowStartDateTime, true, $data['add_show_instance_id']);
         
         if ($success){
             $this->view->addNewShow = true;

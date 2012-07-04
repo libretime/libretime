@@ -83,7 +83,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null) {
+    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null) {
         $valid = true;
         
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
@@ -144,8 +144,11 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
          */
         if ($valid) {
             $show_start = new DateTime($start_time);
+            $show_start->setTimezone(new DateTimeZone('UTC'));
             $show_end = new DateTime($end_time);
-            $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end); 
+            $show_end->setTimezone(new DateTimeZone('UTC'));
+            
+            $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId); 
             if ($overlapping) {
                 $this->getElement('add_show_duration')->setErrors(array('Cannot have overlapping shows'));
                 $valid = false;	
