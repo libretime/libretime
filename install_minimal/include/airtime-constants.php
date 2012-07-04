@@ -1,3 +1,3 @@
 <?php
 
-define('AIRTIME_VERSION', '2.1.2');
+define('AIRTIME_VERSION', '2.1.3');
