@@ -117,7 +117,7 @@ try:
     
     notifier = AirtimeNotifier(wm, pe, read_freq=0, timeout=0, airtime_config=config, api_client=api_client, bootstrap=bootstrap, mmc=mmc)
     notifier.coalesce_events()
-        
+
     #create 5 worker threads
     wp = MediaMonitorWorkerProcess(config, mmc)
     for i in range(5):

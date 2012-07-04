@@ -35,20 +35,13 @@ class MediaMonitorCommon:
         # if file doesn't have any extension, info[-2] throws exception
         # Hence, checking length of info before we do anything
         if(len(info) >= 2):
-            if(info[-2].lower() in self.supported_file_formats):
-                return True
-            else:
-                return False
+            return info[-2].lower() in self.supported_file_formats
         else:
             return False
 
     def is_audio_file(self, filename):
         info = filename.split(".")
-
-        if(info[-1].lower() in self.supported_file_formats):
-            return True
-        else:
-            return False
+        return info[-1].lower() in self.supported_file_formats
 
     #check if file is readable by "nobody"
     def is_user_readable(self, filepath, euid='nobody', egid='nogroup'):

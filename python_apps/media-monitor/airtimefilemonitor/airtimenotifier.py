@@ -191,6 +191,7 @@ class AirtimeNotifier(Notifier):
         except Exception, e:
             self.logger.error("failed updating filepath: %s ", event['filepath'])
             self.logger.error('Exception: %s', e)
+            self.logger.error('Traceback: %s', traceback.format_exc())
 
     #define which directories the pyinotify WatchManager should watch.
     def watch_directory(self, directory):
