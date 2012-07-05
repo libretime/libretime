@@ -25,6 +25,10 @@ class MediaMonitorCommon:
         self.wm = wm
 
 
+    def clean_dirty_file_paths(self, dirty_files):
+        """ clean dirty file paths by removing blanks and removing trailing/leading whitespace"""
+        return filter(lambda e: len(e) > 0, [ f.strip(" \n") for f in dirty_files ])
+
     def find_command(self, directory, extra_arguments=""):
         """ Builds a find command that respects supported_file_formats list 
         Note: Use single quotes to quote arguments """

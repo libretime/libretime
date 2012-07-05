@@ -77,10 +77,8 @@ class AirtimeMediaMonitorBootstrap():
     dir    -- pathname of the directory
     """
     def sync_database_to_filesystem(self, dir_id, dir):
-        
+        # TODO: is this line even necessary?
         dir = os.path.normpath(dir)+"/"
-        
-        
         """
         set to hold new and/or modified files. We use a set to make it ok if files are added
         twice. This is because some of the tests for new files return result sets that are not
@@ -94,17 +92,16 @@ class AirtimeMediaMonitorBootstrap():
         for file in files['files']:
             db_known_files_set.add(file)
 
-        all_files = self.mmc.scan_dir_for_new_files(dir)
+        all_files = self.mmc.clean_dirty_file_paths( self.mmc.scan_dir_for_new_files(dir) )
 
         all_files_set = set()
         for file_path in all_files:
-            file_path = file_path.strip(" \n")
-            if len(file_path) > 0 and self.config.problem_directory not in file_path:
+            if self.config.problem_directory not in file_path:
                 all_files_set.add(file_path[len(dir):])
 
         # if dir doesn't exists, update db
         if not os.path.exists(dir):
-            self.pe.handle_watched_dir_missing(dir)
+            self.pe.handle_stdout_files(dir)
 
         if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
@@ -120,12 +117,11 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.error("Unrecoverable error when syncing db to filesystem.")
             return
 
-        new_files = stdout.splitlines()
+        new_files = self.mmc.clean_dirty_file_paths(stdout.splitlines())
 
         new_and_modified_files = set()
         for file_path in new_files:
-            file_path = file_path.strip(" \n")
-            if len(file_path) > 0 and self.config.problem_directory not in file_path:
+            if self.config.problem_directory not in file_path:
                 new_and_modified_files.add(file_path[len(dir):])
 
         """
