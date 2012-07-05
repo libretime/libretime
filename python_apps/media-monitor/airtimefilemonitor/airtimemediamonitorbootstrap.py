@@ -163,5 +163,5 @@ class AirtimeMediaMonitorBootstrap():
                 self.logger.debug(debug_message)
                 full_file_path = os.path.join(dir, file_path)
                 self.logger.debug(full_file_path)
-                is os.path.exists(full_file_path):
+                if os.path.exists(full_file_path):
                     getattr(self.pe,handle_attribute)(False,full_file_path, os.path.basename(full_file_path))
