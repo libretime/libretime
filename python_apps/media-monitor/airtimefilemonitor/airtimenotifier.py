@@ -142,7 +142,7 @@ class AirtimeNotifier(Notifier):
             mode = event['mode']
 
             md = {}
-            md['MDATA_KEY_FILEPATH'] = filepath
+            md['MDATA_KEY_FILEPATH'] = os.path.normpath(filepath)
 
             if 'data' in event:
                 file_md = event['data']
