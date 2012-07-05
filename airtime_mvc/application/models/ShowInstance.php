@@ -256,6 +256,12 @@ class Application_Model_ShowInstance {
         if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
             return "Can't move show into past";
         }
+        
+        //check if show is overlapping
+        $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime, $newEndsDateTime, true, $this->getShowInstanceId());
+        if ($overlapping) {
+            return "Cannot schedule overlapping shows";	
+        }
 
         if ($this->isRecorded()) {
 

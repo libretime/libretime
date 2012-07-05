@@ -913,7 +913,7 @@ class Application_Model_Schedule {
         }
     }
     
-    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=false) {
+    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null) {		
         global $CC_CONFIG;
         
         $overlapping = false;
