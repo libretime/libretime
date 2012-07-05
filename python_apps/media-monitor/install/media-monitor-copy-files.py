@@ -54,13 +54,9 @@ try:
     
     #create log dir
     create_dir(config['log_dir'])
-    os.system("chown -R pypo:pypo "+config["log_dir"])
 
     #copy python files
     copy_dir("%s/.."%current_script_dir, config["bin_dir"])
-
-    #set executable permissions on python files
-    os.system("chown -R pypo:pypo "+config["bin_dir"])
 
     #copy init.d script
     shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")

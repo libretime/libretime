@@ -83,8 +83,7 @@ class MediaMonitorCommon:
     # the function only changes the permission if its not readable by www-data
     def is_readable(self, item, is_dir):
         try:
-            return self.is_user_readable(item, 'www-data', 'www-data') \
-                and self.is_user_readable(item, 'pypo', 'pypo')
+            return self.is_user_readable(item, 'www-data', 'www-data')
         except Exception, e:
             self.logger.warn(u"Failed to check owner/group/permissions for %s", item)
             return False
