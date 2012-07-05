@@ -109,9 +109,9 @@ class AirtimeMediaMonitorBootstrap():
         if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
             time_diff_sec = time.time() - os.path.getmtime(self.mmc.timestamp_file)
-            command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable -mmin -%d" % (dir, time_diff_sec/60+1)
+            command = self.mmc.find_command(directory=dir, extra_arguments=("-type f -readable -mmin -%d" % (time_diff_sec/60+1)))
         else:
-            command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable" % dir
+            command = self.mmc.find_command(directory=dir, extra_arguments="-type f -readable -mmin -%d")
 
         self.logger.debug(command)
         stdout = self.mmc.exec_command(command)

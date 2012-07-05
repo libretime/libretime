@@ -24,6 +24,14 @@ class MediaMonitorCommon:
         self.md_manager = AirtimeMetadata()
         self.wm = wm
 
+
+    def find_command(self, directory, extra_arguments=""):
+        """ Builds a find command that respects supported_file_formats list 
+        Note: Use single quotes to quote arguments """
+        ext_globs = [ "-iname '*.%s'" % ext for ext in self.supported_file_formats ]
+        find_glob = ' -o '.join(ext_globs)
+        return "find '%s' %s %s" % (directory, find_glob, extra_arguments)
+
     def is_parent_directory(self, filepath, directory):
         filepath = os.path.normpath(filepath)
         directory = os.path.normpath(directory)
@@ -280,7 +288,7 @@ class MediaMonitorCommon:
         return stdout
 
     def scan_dir_for_new_files(self, dir):
-        command = 'find "%s" -iname "*.ogg" -o -iname "*.mp3" -type f -readable' % dir.replace('"', '\\"')
+        command = self.find_command(directory=dir, extra_arguments="-type f -readable")
         self.logger.debug(command)
         stdout = self.exec_command(command)
 
