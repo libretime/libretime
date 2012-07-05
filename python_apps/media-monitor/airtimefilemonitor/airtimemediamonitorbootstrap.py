@@ -156,16 +156,12 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.debug(full_file_path)
             self.pe.handle_removed_file(False, full_file_path)
 
-        for file_path in new_files_set:
-            self.logger.debug("new file")
-            full_file_path = os.path.join(dir, file_path)
-            self.logger.debug(full_file_path)
-            if os.path.exists(full_file_path):
-                self.pe.handle_created_file(False, full_file_path, os.path.basename(full_file_path))
 
-        for file_path in modified_files_set:
-            self.logger.debug("modified file")
-            full_file_path = "%s%s" % (dir, file_path)
-            self.logger.debug(full_file_path)
-            if os.path.exists(full_file_path):
-                self.pe.handle_modified_file(False, full_file_path, os.path.basename(full_file_path))
+        for file_set, debug_message, handle_attribute in [(new_files_set, "new file", "handle_created_file"),
+                                                          (modified_files_set, "modified file", "handle_modified_file")]:
+            for file_path in file_set:
+                self.logger.debug(debug_message)
+                full_file_path = os.path.join(dir, file_path)
+                self.logger.debug(full_file_path)
+                is os.path.exists(full_file_path):
+                    getattr(self.pe,handle_attribute)(False,full_file_path, os.path.basename(full_file_path))
