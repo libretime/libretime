@@ -16,13 +16,25 @@ import pyinotify
 class MediaMonitorCommon:
 
     timestamp_file = "/var/tmp/airtime/media-monitor/last_index"
+    supported_file_formats = ['mp3', 'ogg']
 
     def __init__(self, airtime_config, wm=None):
-        self.supported_file_formats = ['mp3', 'ogg']
         self.logger = logging.getLogger()
         self.config = airtime_config
         self.md_manager = AirtimeMetadata()
         self.wm = wm
+
+
+    def clean_dirty_file_paths(self, dirty_files):
+        """ clean dirty file paths by removing blanks and removing trailing/leading whitespace"""
+        return filter(lambda e: len(e) > 0, [ f.strip(" \n") for f in dirty_files ])
+
+    def find_command(self, directory, extra_arguments=""):
+        """ Builds a find command that respects supported_file_formats list 
+        Note: Use single quotes to quote arguments """
+        ext_globs = [ "-iname '*.%s'" % ext for ext in self.supported_file_formats ]
+        find_glob = ' -o '.join(ext_globs)
+        return "find '%s' %s %s" % (directory, find_glob, extra_arguments)
 
     def is_parent_directory(self, filepath, directory):
         filepath = os.path.normpath(filepath)
@@ -31,7 +43,6 @@ class MediaMonitorCommon:
 
     def is_temp_file(self, filename):
         info = filename.split(".")
-
         # if file doesn't have any extension, info[-2] throws exception
         # Hence, checking length of info before we do anything
         if(len(info) >= 2):
@@ -41,20 +52,19 @@ class MediaMonitorCommon:
 
     def is_audio_file(self, filename):
         info = filename.split(".")
+        if len(info) < 2: return false # handle cases like filename="mp3"
         return info[-1].lower() in self.supported_file_formats
 
     #check if file is readable by "nobody"
     def is_user_readable(self, filepath, euid='nobody', egid='nogroup'):
-
+        f = None
         try:
             uid = pwd.getpwnam(euid)[2]
             gid = grp.getgrnam(egid)[2]
-
             #drop root permissions and become "nobody"
             os.setegid(gid)
             os.seteuid(uid)
-
-            open(filepath)
+            f = open(filepath)
             readable = True
         except IOError:
             self.logger.warn("File does not have correct permissions: '%s'", filepath)
@@ -65,16 +75,15 @@ class MediaMonitorCommon:
             self.logger.error("traceback: %s", traceback.format_exc())
         finally:
             #reset effective user to root
+            if f: f.close()
             os.seteuid(0)
             os.setegid(0)
-
         return readable
 
     # the function only changes the permission if its not readable by www-data
     def is_readable(self, item, is_dir):
         try:
-            return self.is_user_readable(item, 'www-data', 'www-data') \
-                and self.is_user_readable(item, 'pypo', 'pypo')
+            return self.is_user_readable(item, 'www-data', 'www-data')
         except Exception, e:
             self.logger.warn(u"Failed to check owner/group/permissions for %s", item)
             return False
@@ -242,7 +251,7 @@ class MediaMonitorCommon:
                 show_name = '-'.join(title[3:])
 
                 new_md = {}
-                new_md["MDATA_KEY_FILEPATH"] = original_path
+                new_md['MDATA_KEY_FILEPATH'] = os.path.normpath(original_path)
                 new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % (show_name, orig_md['MDATA_KEY_YEAR'], show_hour, show_min, show_sec)
                 self.md_manager.save_md_to_file(new_md)
 
@@ -280,7 +289,7 @@ class MediaMonitorCommon:
         return stdout
 
     def scan_dir_for_new_files(self, dir):
-        command = 'find "%s" -iname "*.ogg" -o -iname "*.mp3" -type f -readable' % dir.replace('"', '\\"')
+        command = self.find_command(directory=dir, extra_arguments="-type f -readable")
         self.logger.debug(command)
         stdout = self.exec_command(command)
 
@@ -316,13 +325,10 @@ class MediaMonitorCommon:
         if return_code != 0:
             #print pathname for py-interpreter.log
             print pathname
-
         return (return_code == 0)
 
     def move_to_problem_dir(self, source):
-
         dest = os.path.join(self.config.problem_directory, os.path.basename(source))
-
         try:
             omask = os.umask(0)
             os.rename(source, dest)

@@ -77,10 +77,8 @@ class AirtimeMediaMonitorBootstrap():
     dir    -- pathname of the directory
     """
     def sync_database_to_filesystem(self, dir_id, dir):
-        
+        # TODO: is this line even necessary?
         dir = os.path.normpath(dir)+"/"
-        
-        
         """
         set to hold new and/or modified files. We use a set to make it ok if files are added
         twice. This is because some of the tests for new files return result sets that are not
@@ -94,24 +92,23 @@ class AirtimeMediaMonitorBootstrap():
         for file in files['files']:
             db_known_files_set.add(file)
 
-        all_files = self.mmc.scan_dir_for_new_files(dir)
+        all_files = self.mmc.clean_dirty_file_paths( self.mmc.scan_dir_for_new_files(dir) )
 
         all_files_set = set()
         for file_path in all_files:
-            file_path = file_path.strip(" \n")
-            if len(file_path) > 0 and self.config.problem_directory not in file_path:
+            if self.config.problem_directory not in file_path:
                 all_files_set.add(file_path[len(dir):])
 
         # if dir doesn't exists, update db
         if not os.path.exists(dir):
-            self.pe.handle_watched_dir_missing(dir)
+            self.pe.handle_stdout_files(dir)
 
         if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
             time_diff_sec = time.time() - os.path.getmtime(self.mmc.timestamp_file)
-            command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable -mmin -%d" % (dir, time_diff_sec/60+1)
+            command = self.mmc.find_command(directory=dir, extra_arguments=("-type f -readable -mmin -%d" % (time_diff_sec/60+1)))
         else:
-            command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable" % dir
+            command = self.mmc.find_command(directory=dir, extra_arguments="-type f -readable")
 
         self.logger.debug(command)
         stdout = self.mmc.exec_command(command)
@@ -120,12 +117,11 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.error("Unrecoverable error when syncing db to filesystem.")
             return
 
-        new_files = stdout.splitlines()
+        new_files = self.mmc.clean_dirty_file_paths(stdout.splitlines())
 
         new_and_modified_files = set()
         for file_path in new_files:
-            file_path = file_path.strip(" \n")
-            if len(file_path) > 0 and self.config.problem_directory not in file_path:
+            if self.config.problem_directory not in file_path:
                 new_and_modified_files.add(file_path[len(dir):])
 
         """
@@ -156,16 +152,12 @@ class AirtimeMediaMonitorBootstrap():
             self.logger.debug(full_file_path)
             self.pe.handle_removed_file(False, full_file_path)
 
-        for file_path in new_files_set:
-            self.logger.debug("new file")
-            full_file_path = os.path.join(dir, file_path)
-            self.logger.debug(full_file_path)
-            if os.path.exists(full_file_path):
-                self.pe.handle_created_file(False, full_file_path, os.path.basename(full_file_path))
 
-        for file_path in modified_files_set:
-            self.logger.debug("modified file")
-            full_file_path = "%s%s" % (dir, file_path)
-            self.logger.debug(full_file_path)
-            if os.path.exists(full_file_path):
-                self.pe.handle_modified_file(False, full_file_path, os.path.basename(full_file_path))
+        for file_set, debug_message, handle_attribute in [(new_files_set, "new file", "handle_created_file"),
+                                                          (modified_files_set, "modified file", "handle_modified_file")]:
+            for file_path in file_set:
+                self.logger.debug(debug_message)
+                full_file_path = os.path.join(dir, file_path)
+                self.logger.debug(full_file_path)
+                if os.path.exists(full_file_path):
+                    getattr(self.pe,handle_attribute)(False,full_file_path, os.path.basename(full_file_path))
