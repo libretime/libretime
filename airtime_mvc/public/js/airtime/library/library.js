@@ -428,11 +428,32 @@ var AIRTIME = (function(AIRTIME) {
                     return false;
                 });
                 
+                alreadyclicked=false;
                 //call the context menu so we can prevent the event from propagating.
                 $(nRow).find('td:not(.library_checkbox, .library_type)').click(function(e){
-                    
-                    $(this).contextMenu({x: e.pageX, y: e.pageY});
-                    
+                    var el=$(this);
+                    if (alreadyclicked)
+                    {
+                        alreadyclicked=false; // reset
+                        clearTimeout(alreadyclickedTimeout); // prevent this from happening
+                        // do what needs to happen on double click.
+                        
+                        $tr = $(el).parent();
+                        data = $tr.data("aData");
+                        AIRTIME.library.dblClickAdd(data.id, data.ftype);
+                        //AIRTIME.playlist.fnAddItems([data.id], undefined, 'after');
+                    }
+                    else
+                    {
+                        alreadyclicked=true;
+                        alreadyclickedTimeout=setTimeout(function(){
+                            alreadyclicked=false; // reset when it happens
+                            // do what needs to happen on single click. 
+                            // use el instead of $(this) because $(this) is 
+                            // no longer the element
+                            el.contextMenu({x: e.pageX, y: e.pageY});
+                        },300); // <-- dblclick tolerance here
+                    }
                     return false;
                 });
                 
