@@ -108,7 +108,7 @@ class AirtimeMediaMonitorBootstrap():
             time_diff_sec = time.time() - os.path.getmtime(self.mmc.timestamp_file)
             command = self.mmc.find_command(directory=dir, extra_arguments=("-type f -readable -mmin -%d" % (time_diff_sec/60+1)))
         else:
-            command = self.mmc.find_command(directory=dir, extra_arguments="-type f -readable -mmin -%d")
+            command = self.mmc.find_command(directory=dir, extra_arguments="-type f -readable")
 
         self.logger.debug(command)
         stdout = self.mmc.exec_command(command)
