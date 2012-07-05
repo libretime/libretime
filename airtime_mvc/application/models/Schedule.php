@@ -922,11 +922,11 @@ class Application_Model_Schedule {
         
         if ($update) {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where starts <= '{$show_start->format('Y-m-d H:i:s')}'
+                    where ends <= '{$show_end->format('Y-m-d H:i:s')}'
                     and id != ".$instanceId. " order by ends";
         } else {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where starts <= '{$show_start->format('Y-m-d H:i:s')}' order by ends";
+                    where ends <= '{$show_end->format('Y-m-d H:i:s')}' order by ends";
         }
         $rows = $con->query($sql);
                 
@@ -934,7 +934,8 @@ class Application_Model_Schedule {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
             $end = new DateTime($row["ends"], new DateTimeZone('UTC'));
 
-            if ($show_start->getTimestamp() < $end->getTimestamp()) {
+            if ($show_start->getTimestamp() < $end->getTimestamp() && 
+                $show_end->getTimestamp() > $start->getTimestamp()) {
                 $overlapping = true;
                 break;
             }
