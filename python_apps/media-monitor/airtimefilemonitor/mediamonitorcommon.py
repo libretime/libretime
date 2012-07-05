@@ -43,7 +43,6 @@ class MediaMonitorCommon:
 
     def is_temp_file(self, filename):
         info = filename.split(".")
-
         # if file doesn't have any extension, info[-2] throws exception
         # Hence, checking length of info before we do anything
         if(len(info) >= 2):
@@ -53,20 +52,19 @@ class MediaMonitorCommon:
 
     def is_audio_file(self, filename):
         info = filename.split(".")
+        if len(info) < 2: return false # handle cases like filename="mp3"
         return info[-1].lower() in self.supported_file_formats
 
     #check if file is readable by "nobody"
     def is_user_readable(self, filepath, euid='nobody', egid='nogroup'):
-
+        f = None
         try:
             uid = pwd.getpwnam(euid)[2]
             gid = grp.getgrnam(egid)[2]
-
             #drop root permissions and become "nobody"
             os.setegid(gid)
             os.seteuid(uid)
-
-            open(filepath)
+            f = open(filepath)
             readable = True
         except IOError:
             self.logger.warn("File does not have correct permissions: '%s'", filepath)
@@ -77,9 +75,9 @@ class MediaMonitorCommon:
             self.logger.error("traceback: %s", traceback.format_exc())
         finally:
             #reset effective user to root
+            if f: f.close()
             os.seteuid(0)
             os.setegid(0)
-
         return readable
 
     # the function only changes the permission if its not readable by www-data
