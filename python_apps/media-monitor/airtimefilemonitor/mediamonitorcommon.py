@@ -326,13 +326,10 @@ class MediaMonitorCommon:
         if return_code != 0:
             #print pathname for py-interpreter.log
             print pathname
-
         return (return_code == 0)
 
     def move_to_problem_dir(self, source):
-
         dest = os.path.join(self.config.problem_directory, os.path.basename(source))
-
         try:
             omask = os.umask(0)
             os.rename(source, dest)
