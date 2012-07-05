@@ -150,7 +150,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             
             $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId); 
             if ($overlapping) {
-                $this->getElement('add_show_duration')->setErrors(array('Cannot have overlapping shows'));
+                $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
                 $valid = false;	
             }
         }
