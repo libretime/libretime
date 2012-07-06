@@ -46,7 +46,7 @@ class Application_Model_StoredFile {
         "md5" => "DbMd5",
         "ftype" => "DbFtype",
         "language" => "DbLanguage",
-        //"filepath" => "DbFilepath",
+        "replay_gain" => "DbReplayGain",
         "directory" => "DbDirectory"
     );
 
@@ -98,7 +98,7 @@ class Application_Model_StoredFile {
                 // when trying to retrieve this value. We could make sure number is within these bounds,
                 // but simplest is to do substring to 4 digits (both values are garbage, but at least our
                 // new garbage value won't cause errors). If the value is 2012-01-01, then substring to
-                // 4 digits is an OK result.
+                // first 4 digits is an OK result.
                 // CC-3771
                   
                 $year = $p_md["MDATA_KEY_YEAR"];
@@ -147,6 +147,7 @@ class Application_Model_StoredFile {
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method = "set$propelColumn";
+                    Logging::log($method);
                     $this->_file->$method($mdValue);
                 }
             }
@@ -838,19 +839,12 @@ Logging::log("getting media! - 2");
      * Check, using disk_free_space, the space available in the $destination_folder folder to see if it has
      * enough space to move the $audio_file into and report back to the user if not.
      **/
-    public static function checkForEnoughDiskSpaceToCopy($destination_folder, $audio_file){
+    public static function isEnoughDiskSpaceToCopy($destination_folder, $audio_file){
         //check to see if we have enough space in the /organize directory to copy the file
         $freeSpace = disk_free_space($destination_folder);
         $fileSize = filesize($audio_file);
 
-        if ( $freeSpace < $fileSize){
-            $freeSpace = ceil($freeSpace/1024/1024);
-            $fileSize = ceil($fileSize/1024/1024);
-            return array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
-            return false;
-        } else {
-            return true;
-        }
+        return $freeSpace >= $fileSize;
     }
 
     public static function copyFileToStor($p_targetDir, $fileName, $tempname){
@@ -877,40 +871,53 @@ Logging::log("getting media! - 2");
                     return $result;
                 }
             }
+            
+            if (chmod($audio_file, 0644) === false){
+                Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
+            }
+            
             //check to see if there is enough space in $stor to continue.
-            $enough_space = Application_Model_StoredFile::checkForEnoughDiskSpaceToCopy($stor, $audio_file);
-            if ($enough_space){
+            if (self::isEnoughDiskSpaceToCopy($stor, $audio_file)){
                 $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
 
-                Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-                
-                if (chmod($audio_file, 0644) === false){
-                    Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
-                }
-                
-                // Check if file is playable
-                $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' 2>&1", $audio_file);
-                
-                exec($command, $output, $rv);
-                if ($rv != 0 || (!empty($output) && $output[0] == 'TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.')) {
-                    $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
-                } else {
+                if (self::liquidsoapFilePlayabilityTest($audio_file)){
+                    
+                    Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
+                    
                     //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
-                    $r = @rename($audio_file, $audio_stor);
-
-                    if ($r === false) {
+                    if (@rename($audio_file, $audio_stor) === false) {
                         #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
                         #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-                        unlink($audio_file);//remove the file from the organize after failed rename
-                        $result = array("code" => 108, "message" => "The file was not uploaded, this error will occur if the computer hard drive does not have enough disk space.");
-                    }
+                        unlink($audio_file);//remove the file after failed rename
+                        $result = array("code" => 108, "message" => "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space.");
+                    }                
+                } else {
+                    $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
                 }
+
+            } else {
+                $result = array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
             }
         }
         return $result;
     }
-
-
+       
+    /*
+     * Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
+     */
+    public static function liquidsoapFilePlayabilityTest($audio_file){
+        
+        $LIQUIDSOAP_ERRORS = array('TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.');
+        
+        // Ask Liquidsoap if file is playable
+        $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' 2>&1", $audio_file);
+        
+        exec($command, $output, $rv);
+        
+        $isError = count($output) > 0 && in_array($output[0], $LIQUIDSOAP_ERRORS);
+        return ($rv == 0 && !$isError);        
+    }
+    
     public static function getFileCount()
     {
         global $CC_CONFIG;

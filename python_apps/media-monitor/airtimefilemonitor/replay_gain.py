@@ -48,7 +48,7 @@ def calculate_replay_gain(file_path):
             print "mp3gain not found"
             #Log warning
     elif re.search(r'ogg$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "application/ogg":
-        if run_process("which vorbisgain > /dev/null  && which ogginfo > dev/null") == 0:
+        if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
             run_process('vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % file_path)
             out = get_process_output('ogginfo "%s"' % file_path)
             search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)

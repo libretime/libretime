@@ -69,6 +69,7 @@
  * @method     CcFilesQuery orderByDbSoundcloudErrorMsg($order = Criteria::ASC) Order by the soundcloud_error_msg column
  * @method     CcFilesQuery orderByDbSoundcloudLinkToFile($order = Criteria::ASC) Order by the soundcloud_link_to_file column
  * @method     CcFilesQuery orderByDbSoundCloundUploadTime($order = Criteria::ASC) Order by the soundcloud_upload_time column
+ * @method     CcFilesQuery orderByDbReplayGain($order = Criteria::ASC) Order by the replay_gain column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbGunid() Group by the gunid column
@@ -133,6 +134,7 @@
  * @method     CcFilesQuery groupByDbSoundcloudErrorMsg() Group by the soundcloud_error_msg column
  * @method     CcFilesQuery groupByDbSoundcloudLinkToFile() Group by the soundcloud_link_to_file column
  * @method     CcFilesQuery groupByDbSoundCloundUploadTime() Group by the soundcloud_upload_time column
+ * @method     CcFilesQuery groupByDbReplayGain() Group by the replay_gain column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -224,6 +226,7 @@
  * @method     CcFiles findOneByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return the first CcFiles filtered by the soundcloud_error_msg column
  * @method     CcFiles findOneByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return the first CcFiles filtered by the soundcloud_link_to_file column
  * @method     CcFiles findOneByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return the first CcFiles filtered by the soundcloud_upload_time column
+ * @method     CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbGunid(string $gunid) Return CcFiles objects filtered by the gunid column
@@ -288,6 +291,7 @@
  * @method     array findByDbSoundcloudErrorMsg(string $soundcloud_error_msg) Return CcFiles objects filtered by the soundcloud_error_msg column
  * @method     array findByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return CcFiles objects filtered by the soundcloud_link_to_file column
  * @method     array findByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return CcFiles objects filtered by the soundcloud_upload_time column
+ * @method     array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
  *
  * @package    propel.generator.airtime.om
  */
@@ -1888,6 +1892,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $dbSoundCloundUploadTime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the replay_gain column
+	 * 
+	 * @param     string $dbReplayGain The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbReplayGain($dbReplayGain = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbReplayGain)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbReplayGain)) {
+				$dbReplayGain = str_replace('*', '%', $dbReplayGain);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::REPLAY_GAIN, $dbReplayGain, $comparison);
 	}
 
 	/**

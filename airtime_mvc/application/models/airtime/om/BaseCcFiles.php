@@ -411,6 +411,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $soundcloud_upload_time;
 
 	/**
+	 * The value for the replay_gain field.
+	 * @var        string
+	 */
+	protected $replay_gain;
+
+	/**
 	 * @var        CcSubjs
 	 */
 	protected $aCcSubjs;
@@ -1197,6 +1203,16 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		} else {
 			return $dt->format($format);
 		}
+	}
+
+	/**
+	 * Get the [replay_gain] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbReplayGain()
+	{
+		return $this->replay_gain;
 	}
 
 	/**
@@ -2584,6 +2600,26 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbSoundCloundUploadTime()
 
 	/**
+	 * Set the value of [replay_gain] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbReplayGain($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->replay_gain !== $v) {
+			$this->replay_gain = $v;
+			$this->modifiedColumns[] = CcFilesPeer::REPLAY_GAIN;
+		}
+
+		return $this;
+	} // setDbReplayGain()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -2710,6 +2746,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->soundcloud_error_msg = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
 			$this->soundcloud_link_to_file = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
 			$this->soundcloud_upload_time = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
+			$this->replay_gain = ($row[$startcol + 63] !== null) ? (string) $row[$startcol + 63] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -2718,7 +2755,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 63; // 63 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 64; // 64 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcFiles object", $e);
@@ -3305,6 +3342,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 62:
 				return $this->getDbSoundCloundUploadTime();
 				break;
+			case 63:
+				return $this->getDbReplayGain();
+				break;
 			default:
 				return null;
 				break;
@@ -3392,6 +3432,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[60] => $this->getDbSoundcloudErrorMsg(),
 			$keys[61] => $this->getDbSoundcloudLinkToFile(),
 			$keys[62] => $this->getDbSoundCloundUploadTime(),
+			$keys[63] => $this->getDbReplayGain(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -3620,6 +3661,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 62:
 				$this->setDbSoundCloundUploadTime($value);
 				break;
+			case 63:
+				$this->setDbReplayGain($value);
+				break;
 		} // switch()
 	}
 
@@ -3707,6 +3751,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudErrorMsg($arr[$keys[60]]);
 		if (array_key_exists($keys[61], $arr)) $this->setDbSoundcloudLinkToFile($arr[$keys[61]]);
 		if (array_key_exists($keys[62], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[62]]);
+		if (array_key_exists($keys[63], $arr)) $this->setDbReplayGain($arr[$keys[63]]);
 	}
 
 	/**
@@ -3781,6 +3826,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_ERROR_MSG)) $criteria->add(CcFilesPeer::SOUNDCLOUD_ERROR_MSG, $this->soundcloud_error_msg);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE, $this->soundcloud_link_to_file);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME)) $criteria->add(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $this->soundcloud_upload_time);
+		if ($this->isColumnModified(CcFilesPeer::REPLAY_GAIN)) $criteria->add(CcFilesPeer::REPLAY_GAIN, $this->replay_gain);
 
 		return $criteria;
 	}
@@ -3904,6 +3950,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbSoundcloudErrorMsg($this->soundcloud_error_msg);
 		$copyObj->setDbSoundcloudLinkToFile($this->soundcloud_link_to_file);
 		$copyObj->setDbSoundCloundUploadTime($this->soundcloud_upload_time);
+		$copyObj->setDbReplayGain($this->replay_gain);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -4566,6 +4613,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->soundcloud_error_msg = null;
 		$this->soundcloud_link_to_file = null;
 		$this->soundcloud_upload_time = null;
+		$this->replay_gain = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
