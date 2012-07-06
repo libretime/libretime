@@ -147,7 +147,8 @@ function dayClick(date, allDay, jsEvent, view){
 }
 
 function viewDisplay( view ) {
-
+    view_name = view.name;
+	
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
         var calendarEl = this;
@@ -205,7 +206,8 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-
+    getCurrentShow();
+    
     $(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
@@ -222,6 +224,13 @@ function eventRender(event, element, view) {
             });
 
         $(element).find(".fc-event-content").append(div);
+    }
+    
+    //need to add id for every event to find the current show
+    if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+        $(element).find(".fc-event-time").attr("id", event.id);
+    } else if (view.name === 'month') {
+        $(element).find(".fc-event-title").attr("id", event.id);
     }
 
     //add the record/rebroadcast/soundcloud icons if needed
@@ -247,11 +256,10 @@ function eventRender(event, element, view) {
 
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
-
         $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
+    
     if(view.name === 'month' && event.rebroadcast === 1) {
-
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
 }
@@ -310,7 +318,7 @@ function getFullCalendarEvents(start, end, callback) {
     url = '/Schedule/event-feed';
 
     var d = new Date();
-
+    
     $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
         callback(json.events);
     });
@@ -328,6 +336,55 @@ function checkSCUploadStatus(){
             }
         });
     });
+}
+
+function getCurrentShow(){
+    var url = '/Schedule/get-current-show/format/json',
+        id,
+        $el;
+    $.post(url, {format: "json"}, function(json) {
+        if (json.current_show === true) {
+            $el = $("div[class*=fc-event-time][id="+json.si_id+"]");
+            if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
+
+                /* Need to remove now-playing class because if user
+                 * is switching from week view to day view (and vice versa)
+                 * the icon may already be there from previous view
+                 */ 
+                $el.siblings().remove("span[class=small-icon now-playing]");
+                if (!$el.siblings().hasClass("small-icon now-playing")) {
+                    if ($el.siblings().hasClass("small-icon recording")) {
+
+                        /* Without removing recording icon, the now playing
+                         * icon will overwrite it.
+                         */  
+                        $el.siblings().remove("span[class=small-icon recording]");
+                        $el.before('<span id="'+json.si_id+'" class="small-icon now-playing"></span><span id="'+json.si_id+'" class="small-icon recording"></span>');
+                    } else if ($el.siblings().hasClass("small-icon rebroadcast")) {
+
+                        /* Without removing rebroadcast icon, the now playing
+                         * icon will overwrite it.
+                         */ 
+                        $el.siblings().remove("span[class=small-icon rebroadcast]");
+                        $el.before('<span id="'+json.si_id+'" class="small-icon now-playing"></span><span id="'+json.si_id+'" class="small-icon rebroadcast"></span>');
+                    } else {
+                        $el.before('<span id="'+json.si_id+'" class="small-icon now-playing"></span>');
+                    }
+                }
+            } else if (view_name === 'month') {
+                if (!$("span[class*=fc-event-title][id="+json.si_id+"]").siblings().hasClass("small-icon now-playing")) {
+                    $("span[class*=fc-event-title][id="+json.si_id+"]").after('<span id="'+json.si_id+'" class="small-icon now-playing"></span>');
+                }
+            }
+        }
+        //remove icon from shows that have ended
+        $(".now-playing").each(function(){
+            id = $(this).attr("id");
+                if (id != json.si_id) {
+                    $(this).remove("span[small-icon now-playing]");	
+                }    	
+            });
+    }); 	
 }
 
 function addQtipToSCIcons(ele){
@@ -415,4 +472,7 @@ function alertShowErrorAndReload(){
 
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
+    setInterval( "getCurrentShow()", 5000 );
 });
+
+var view_name;

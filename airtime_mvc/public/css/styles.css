@@ -1734,6 +1734,10 @@ div.errors{
 	background:url(images/icon_soundcloud_error2.png) no-repeat 0 0;
 	width:21px;
 }
+.small-icon.now-playing {
+    background:url(images/icon_nowplaying_n.png) no-repeat 0 0;
+    height:8px;
+}
 .small-icon.progress {
 	background:url(images/upload-icon.gif) no-repeat;
     background-color:black;
