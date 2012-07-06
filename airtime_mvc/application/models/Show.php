@@ -1351,6 +1351,7 @@ class Application_Model_Show {
     }
     
     private static function advanceRepeatingDate($p_interval, $start, $timezone){
+        $startDt = new DateTime($start, new DateTimeZone($timezone));
         if ($p_interval == 'P1M'){
             /* When adding months, there is a problem if we are on January 31st and add one month with PHP.
              * What ends up happening is that since February 31st doesn't exist, the date returned is
