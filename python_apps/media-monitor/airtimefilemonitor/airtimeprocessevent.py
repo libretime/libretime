@@ -9,7 +9,6 @@ import difflib
 import traceback
 from subprocess import Popen, PIPE
 
-import pyinotify
 from pyinotify import ProcessEvent
 
 from airtimemetadata import AirtimeMetadata
@@ -59,8 +58,8 @@ class AirtimeProcessEvent(ProcessEvent):
             if "-unknown-path" in path:
                 unknown_path = path
                 pos = path.find("-unknown-path")
-                path = path[0:pos]+"/"
-                
+                path = path[0:pos] + "/"
+
                 list = self.api_client.list_all_watched_dirs()
                 # case where the dir that is being watched is moved to somewhere 
                 if path in list[u'dirs'].values():
@@ -81,14 +80,14 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.logger.info("Removing watch on: %s wd %s", unknown_path, wd)
                     self.wm.rm_watch(wd, rec=True)
                     self.file_events.append({'mode': self.config.MODE_DELETE_DIR, 'filepath': path})
-                
-            
+
+
     def process_IN_DELETE_SELF(self, event):
-        
+
         #we only care about files that have been moved away from imported/ or organize/ dir
         if event.path in self.config.problem_directory or event.path in self.config.organize_directory:
             return
-            
+
         self.logger.info("event: %s", event)
         path = event.path + '/'
         if event.dir:
@@ -103,7 +102,7 @@ class AirtimeProcessEvent(ProcessEvent):
                     self.logger.info("%s removed from watch folder list successfully.", path)
                 else:
                     self.logger.info("Removing the watch folder failed: %s", res['msg']['error'])
-    
+
     def process_IN_CREATE(self, event):
         if event.path in self.mount_file_dir:
             return
@@ -111,7 +110,7 @@ class AirtimeProcessEvent(ProcessEvent):
         if not event.dir:
             # record the timestamp of the time on IN_CREATE event
             self.create_dict[event.pathname] = time.time()
-        
+
     #event.dir: True if the event was raised against a directory.
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
@@ -122,7 +121,7 @@ class AirtimeProcessEvent(ProcessEvent):
             return
         self.logger.info("event: %s", event)
         self.logger.info("create_dict: %s", self.create_dict)
-        
+
         try:
             del self.create_dict[event.pathname]
             self.handle_created_file(event.dir, event.pathname, event.name)
@@ -130,8 +129,8 @@ class AirtimeProcessEvent(ProcessEvent):
             pass
             #self.logger.warn("%s does not exist in create_dict", event.pathname)
             #Uncomment the above warning when we fix CC-3830 for 2.1.1
-            
-        
+
+
     def handle_created_file(self, dir, pathname, name):
         if not dir:
             self.logger.debug("PROCESS_IN_CLOSE_WRITE: %s, name: %s, pathname: %s ", dir, name, pathname)
@@ -145,12 +144,12 @@ class AirtimeProcessEvent(ProcessEvent):
                 self.temp_files[pathname] = None
             elif self.mmc.is_audio_file(name):
                 if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
-                         
+
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
                     file_md = self.md_manager.get_md_from_file(pathname)
                     playable = self.mmc.test_file_playability(pathname)
-                    
+
                     if file_md and playable:
                         self.mmc.organize_new_file(pathname, file_md)
                     else:
@@ -182,7 +181,7 @@ class AirtimeProcessEvent(ProcessEvent):
             if self.mmc.is_audio_file(name):
                 is_recorded = self.mmc.is_parent_directory(pathname, self.config.recorded_directory)
                 self.file_events.append({'filepath': pathname, 'mode': self.config.MODE_MODIFY, 'is_recorded_show': is_recorded})
-    
+
     # if change is detected on /etc/mtab, we check what mount(file system) was added/removed
     # and act accordingly
     def handle_mount_change(self):
@@ -192,41 +191,41 @@ class AirtimeProcessEvent(ProcessEvent):
         shutil.move(self.curr_mtab_file, self.prev_mtab_file)
         # create the file
         shutil.copy(self.mount_file, self.curr_mtab_file)
-        
+
         d = difflib.Differ()
         curr_fh = open(self.curr_mtab_file, 'r')
         prev_fh = open(self.prev_mtab_file, 'r')
-        
+
         diff = list(d.compare(prev_fh.readlines(), curr_fh.readlines()))
         added_mount_points = []
         removed_mount_points = []
-        
+
         for dir in diff:
             info = dir.split(' ')
             if info[0] == '+':
                 added_mount_points.append(info[2])
             elif info[0] == '-':
                 removed_mount_points.append(info[2])
-        
+
         self.logger.info("added: %s", added_mount_points)
         self.logger.info("removed: %s", removed_mount_points)
-        
+
         # send current mount information to Airtime
         self.api_client.update_file_system_mount(added_mount_points, removed_mount_points);
-    
+
     def handle_watched_dir_missing(self, dir):
         self.api_client.handle_watched_dir_missing(dir);
-        
+
     #if a file is moved somewhere, this callback is run. With details about
     #where the file is being moved from. The corresponding process_IN_MOVED_TO
     #callback is only called if the destination of the file is also in a watched
     #directory.
     def process_IN_MOVED_FROM(self, event):
-        
+
         #we don't care about files that have been moved from problem_directory
         if event.path in self.config.problem_directory:
             return
-            
+
         self.logger.info("process_IN_MOVED_FROM: %s", event)
         if not event.dir:
             if event.pathname in self.temp_files:
@@ -241,10 +240,10 @@ class AirtimeProcessEvent(ProcessEvent):
     def process_IN_MOVED_TO(self, event):
         self.logger.info("process_IN_MOVED_TO: %s", event)
         # if /etc/mtab is modified
-        filename = self.mount_file_dir +"/mtab"
+        filename = self.mount_file_dir + "/mtab"
         if event.pathname in filename:
             self.handle_mount_change()
-        
+
         if event.path in self.config.problem_directory:
             return
 
@@ -265,15 +264,15 @@ class AirtimeProcessEvent(ProcessEvent):
                         #to /srv/airtime/stor/imported
                         file_md = self.md_manager.get_md_from_file(pathname)
                         playable = self.mmc.test_file_playability(pathname)
-                        
+
                         if file_md and playable:
                             filepath = self.mmc.organize_new_file(pathname, file_md)
                         else:
                             #move to problem_files
                             self.mmc.move_to_problem_dir(pathname)
-                            
-                            
-                            
+
+
+
                     else:
                         filepath = event.pathname
 
@@ -283,23 +282,23 @@ class AirtimeProcessEvent(ProcessEvent):
                     #file's original location is from outside an inotify watched dir.
                     pathname = event.pathname
                     if self.mmc.is_parent_directory(pathname, self.config.organize_directory):
-                        
-                        
-                        
-                            
+
+
+
+
                         #file was created in /srv/airtime/stor/organize. Need to process and move
                         #to /srv/airtime/stor/imported
                         file_md = self.md_manager.get_md_from_file(pathname)
                         playable = self.mmc.test_file_playability(pathname)
-                        
+
                         if file_md and playable:
                             self.mmc.organize_new_file(pathname, file_md)
                         else:
                             #move to problem_files
                             self.mmc.move_to_problem_dir(pathname)
-                            
-                            
-                            
+
+
+
 
                     else:
                         #show moved from unwatched folder into a watched folder. Do not "organize".
@@ -309,33 +308,33 @@ class AirtimeProcessEvent(ProcessEvent):
             #When we move a directory into a watched_dir, we only get a notification that the dir was created,
             #and no additional information about files that came along with that directory.
             #need to scan the entire directory for files.
-                        
+
             if event.cookie in self.cookies_IN_MOVED_FROM:
                 del self.cookies_IN_MOVED_FROM[event.cookie]
                 mode = self.config.MODE_MOVED
             else:
                 mode = self.config.MODE_CREATE
-                        
+
             files = self.mmc.scan_dir_for_new_files(event.pathname)
             if self.mmc.is_parent_directory(event.pathname, self.config.organize_directory):
                 for pathname in files:
-                    
-                    
-                        
+
+
+
                     #file was created in /srv/airtime/stor/organize. Need to process and move
                     #to /srv/airtime/stor/imported
                     file_md = self.md_manager.get_md_from_file(pathname)
                     playable = self.mmc.test_file_playability(pathname)
-                    
+
                     if file_md and playable:
                         self.mmc.organize_new_file(pathname, file_md)
                         #self.file_events.append({'mode': mode, 'filepath': filepath, 'is_recorded_show': False})
                     else:
                         #move to problem_files
                         self.mmc.move_to_problem_dir(pathname)
-                        
-                        
-                        
+
+
+
             else:
                 for file in files:
                     self.file_events.append({'mode': mode, 'filepath': file, 'is_recorded_show': False})
@@ -368,12 +367,12 @@ class AirtimeProcessEvent(ProcessEvent):
             for event in self.file_events:
                 self.multi_queue.put(event)
             self.mmc.touch_index_file()
-            
+
             self.file_events = []
 
         #yield to worker thread
         time.sleep(0)
-        
+
         #use items() because we are going to be modifying this
         #dictionary while iterating over it.
         for k, pair in self.cookies_IN_MOVED_FROM.items():
@@ -390,7 +389,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 #it from the Airtime directory.
                 del self.cookies_IN_MOVED_FROM[k]
                 self.handle_removed_file(False, event.pathname)
-        
+
         # we don't want create_dict grow infinitely
         # this part is like a garbage collector
         for k, t in self.create_dict.items():
@@ -404,14 +403,14 @@ class AirtimeProcessEvent(ProcessEvent):
                 if os.path.exists(k):
                     # check if file is open                    
                     try:
-                        command = "lsof "+k
+                        command = "lsof " + k
                         #f = os.popen(command)
                         f = Popen(command, shell=True, stdout=PIPE).stdout
                     except Exception, e:
                         self.logger.error('Exception: %s', e)
                         self.logger.error("traceback: %s", traceback.format_exc())
                         continue
-                    
+
                     if not f.readlines():
                         self.logger.info("Handling file: %s", k)
                         self.handle_created_file(False, k, os.path.basename(k))

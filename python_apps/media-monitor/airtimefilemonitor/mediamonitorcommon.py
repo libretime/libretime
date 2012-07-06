@@ -10,7 +10,6 @@ import traceback
 
 from subprocess import Popen, PIPE
 from airtimemetadata import AirtimeMetadata
-from api_clients import api_client
 import pyinotify
 
 class MediaMonitorCommon:
@@ -75,7 +74,7 @@ class MediaMonitorCommon:
         try:
             return self.is_user_readable(item, 'www-data', 'www-data') \
                 and self.is_user_readable(item, 'pypo', 'pypo')
-        except Exception, e:
+        except Exception:
             self.logger.warn(u"Failed to check owner/group/permissions for %s", item)
             return False
 
@@ -110,7 +109,7 @@ class MediaMonitorCommon:
                 else:
                     pathname = dirname
                     is_dir = True
-        except Exception, e:
+        except Exception:
             #something went wrong while we were trying to make world readable.
             return False
 
@@ -194,7 +193,7 @@ class MediaMonitorCommon:
                         break
 
         except Exception, e:
-             self.logger.error("Exception %s", e)
+            self.logger.error("Exception %s", e)
 
         return filepath
 
@@ -273,7 +272,7 @@ class MediaMonitorCommon:
             File name charset encoding is UTF-8.  
             """
             stdout = stdout.decode("UTF-8")
-        except Exception, e:
+        except Exception:
             stdout = None
             self.logger.error("Could not decode %s using UTF-8" % stdout)
 

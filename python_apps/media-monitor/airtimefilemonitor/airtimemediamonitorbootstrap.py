@@ -5,11 +5,8 @@ import time
 import pyinotify
 import shutil
 
-from subprocess import Popen, PIPE
-from api_clients import api_client
-
 class AirtimeMediaMonitorBootstrap():
-    
+
     """AirtimeMediaMonitorBootstrap constructor
 
     Keyword Arguments:
@@ -29,11 +26,11 @@ class AirtimeMediaMonitorBootstrap():
         self.curr_mtab_file = "/var/tmp/airtime/media-monitor/currMtab"
         self.logger.info("Adding %s on watch list...", self.mount_file)
         self.wm.add_watch(self.mount_file, pyinotify.ALL_EVENTS, rec=False, auto_add=False)
-        
+
         tmp_dir = os.path.dirname(self.curr_mtab_file)
         if not os.path.exists(tmp_dir):
             os.makedirs(tmp_dir)
-        
+
         # create currMtab file if it's the first time
         if not os.path.exists(self.curr_mtab_file):
             shutil.copy('/etc/mtab', self.curr_mtab_file)
@@ -77,10 +74,10 @@ class AirtimeMediaMonitorBootstrap():
     dir    -- pathname of the directory
     """
     def sync_database_to_filesystem(self, dir_id, dir):
-        
-        dir = os.path.normpath(dir)+"/"
-        
-        
+
+        dir = os.path.normpath(dir) + "/"
+
+
         """
         set to hold new and/or modified files. We use a set to make it ok if files are added
         twice. This is because some of the tests for new files return result sets that are not
@@ -109,13 +106,13 @@ class AirtimeMediaMonitorBootstrap():
         if os.path.exists(self.mmc.timestamp_file):
             """find files that have been modified since the last time media-monitor process started."""
             time_diff_sec = time.time() - os.path.getmtime(self.mmc.timestamp_file)
-            command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable -mmin -%d" % (dir, time_diff_sec/60+1)
+            command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable -mmin -%d" % (dir, time_diff_sec / 60 + 1)
         else:
             command = "find '%s' -iname '*.ogg' -o -iname '*.mp3' -type f -readable" % dir
 
         self.logger.debug(command)
         stdout = self.mmc.exec_command(command)
-        
+
         if stdout is None:
             self.logger.error("Unrecoverable error when syncing db to filesystem.")
             return

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from mediaconfig import AirtimeMediaConfig
 import traceback
 import os
 
 class MediaMonitorWorkerProcess:
-    
+
     def __init__(self, config, mmc):
         self.config = config
         self.mmc = mmc

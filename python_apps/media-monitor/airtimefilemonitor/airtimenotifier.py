@@ -8,13 +8,11 @@ import traceback
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
+from kombu.messaging import Exchange, Queue, Consumer
 
 import pyinotify
 from pyinotify import Notifier
 
-#from api_clients import api_client
-from api_clients import api_client
 from airtimemetadata import AirtimeMetadata
 
 class AirtimeNotifier(Notifier):
@@ -153,7 +151,6 @@ class AirtimeNotifier(Notifier):
                 md.update(file_md)
             else:
                 file_md = None
-                data = None
 
             if (os.path.exists(filepath) and (mode == self.config.MODE_CREATE)):
                 if file_md is None:
@@ -184,7 +181,7 @@ class AirtimeNotifier(Notifier):
                     self.api_client.update_media_metadata(md, mode)
             elif (mode == self.config.MODE_DELETE):
                 self.api_client.update_media_metadata(md, mode)
-            
+
             elif (mode == self.config.MODE_DELETE_DIR):
                 self.api_client.update_media_metadata(md, mode)
 
