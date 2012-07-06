@@ -4,3 +4,6 @@ mp3gain
 vorbisgain
 flac
 vorbis-tools
+
+
+calculate Replay Gain dB on upgrade.
