@@ -98,7 +98,7 @@
     <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
     <column name="soundcloud_link_to_file" phpName="DbSoundcloudLinkToFile" type="VARCHAR" size="4096" required="false"/>
     <column name="soundcloud_upload_time" phpName="DbSoundCloundUploadTime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="replay_gain" phpName="DbReplayGain" type="VARCHAR" size="16" required="false"/>
+    <column name="replay_gain" phpName="DbReplayGain" type="VARCHAR" size="16" required="false" defaultValue="0"/>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
       <reference local="editedby" foreign="id"/>
     </foreign-key>

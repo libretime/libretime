@@ -28,8 +28,8 @@ def get_mime_type(file_path):
 
 def calculate_replay_gain(file_path):
     """
-    This function accepts files of type mp3/ogg/flac and returns a calculated ReplayGain value.
-    If the value cannot be calculated for some reason, then we default to 1.
+    This function accepts files of type mp3/ogg/flac and returns a calculated ReplayGain value in dB.
+    If the value cannot be calculated for some reason, then we default to 0 (Unity Gain).
     
     TODO:
     Currently some of the subprocesses called will actually insert metadata into the file itself,
@@ -66,7 +66,7 @@ def calculate_replay_gain(file_path):
         pass
         #Log unknown file type.
 
-    replay_gain = 1
+    replay_gain = 0
     if search:
         matches = search.groups()
         if len(matches) == 1:
