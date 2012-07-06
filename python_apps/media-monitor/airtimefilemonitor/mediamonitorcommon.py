@@ -83,7 +83,7 @@ class MediaMonitorCommon:
     def is_readable(self, item, is_dir):
         try:
             return self.is_user_readable(item, 'www-data', 'www-data')
-        except Exception, e:
+        except Exception:
             self.logger.warn(u"Failed to check owner/group/permissions for %s", item)
             return False
 
@@ -162,7 +162,7 @@ class MediaMonitorCommon:
                 try:
                     os.rmdir(dir)
                     self.cleanup_empty_dirs(os.path.dirname(dir))
-                except Exception, e:
+                except Exception:
                     #non-critical exception because we probably tried to delete a non-empty dir.
                     #Don't need to log this, let's just "return"
                     pass

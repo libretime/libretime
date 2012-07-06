@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import replay_gain
+import replaygain
 
 import os
 import hashlib
@@ -126,7 +126,7 @@ class AirtimeMetadata:
 
         md = {}
 
-        replay_gain_val = replay_gain.calculate_replay_gain(filepath)
+        replay_gain_val = replaygain.calculate_replay_gain(filepath)
         self.logger.info('ReplayGain calculated as %s for %s' % (replay_gain_val, filepath))
         md['MDATA_KEY_REPLAYGAIN'] = replay_gain_val
 
