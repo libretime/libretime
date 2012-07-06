@@ -99,16 +99,12 @@ class AirtimeNotifier(Notifier):
             self.bootstrap.sync_database_to_filesystem(new_storage_directory_id, new_storage_directory)
 
             self.config.storage_directory = os.path.normpath(new_storage_directory)
-            self.config.imported_directory = os.path.normpath(new_storage_directory + '/imported')
-            self.config.organize_directory = os.path.normpath(new_storage_directory + '/organize')
+            self.config.imported_directory = os.path.normpath(os.path.join(new_storage_directory, '/imported'))
+            self.config.organize_directory = os.path.normpath(os.path.join(new_storage_directory, '/organize'))
 
-            self.mmc.ensure_is_dir(self.config.storage_directory)
-            self.mmc.ensure_is_dir(self.config.imported_directory)
-            self.mmc.ensure_is_dir(self.config.organize_directory)
-
-            self.mmc.is_readable(self.config.storage_directory, True)
-            self.mmc.is_readable(self.config.imported_directory, True)
-            self.mmc.is_readable(self.config.organize_directory, True)
+            for directory in [self.config.storage_directory, self.config.imported_directory, self.config.organize_directory]:
+                self.mmc.ensure_is_dir(directory)
+                self.mmc.is_readable(directory, True)
 
             self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
@@ -144,7 +140,7 @@ class AirtimeNotifier(Notifier):
             mode = event['mode']
 
             md = {}
-            md['MDATA_KEY_FILEPATH'] = filepath
+            md['MDATA_KEY_FILEPATH'] = os.path.normpath(filepath)
 
             if 'data' in event:
                 file_md = event['data']

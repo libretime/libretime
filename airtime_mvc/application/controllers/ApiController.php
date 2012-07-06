@@ -573,8 +573,9 @@ class ApiController extends Zend_Controller_Action
         Application_Model_Preference::SetImportTimestamp();
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
-            $filepath = str_replace("//", "/", $filepath);
+            //$filepath = str_replace("\\", "", $filepath);
+            //$filepath = str_replace("//", "/", $filepath);
+            $filepath = Application_Common_OsPath::normpath($filepath);
 
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
             if (is_null($file)) {
@@ -595,7 +596,7 @@ class ApiController extends Zend_Controller_Action
         }
         else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
+            //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             //File is not in database anymore.
@@ -618,13 +619,13 @@ class ApiController extends Zend_Controller_Action
             }
             else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
-                $filepath = str_replace("\\", "", $filepath);
+                //$filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
             }
         }
         else if ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
+            //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
             
             if (is_null($file)) {
@@ -637,7 +638,7 @@ class ApiController extends Zend_Controller_Action
         }
         else if ($mode == "delete_dir") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
+            //$filepath = str_replace("\\", "", $filepath);
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
 
             foreach($files as $file){

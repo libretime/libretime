@@ -87,6 +87,35 @@ var AIRTIME = (function(AIRTIME){
 		});
 	};
 	
+	mod.dblClickAdd = function(id, type) {
+        
+        var i,
+            length,
+            temp,
+            aMediaIds = [],
+            aSchedIds = [],
+            aData = [];
+        
+        //process selected files/playlists.
+        aMediaIds.push({"id": id, "type": type});
+        
+        $("#show_builder_table tr.cursor-selected-row").each(function(i, el){
+            aData.push($(el).prev().data("aData"));
+        });
+    
+        //process selected schedule rows to add media after.
+        for (i=0, length = aData.length; i < length; i++) {
+            temp = aData[i];
+            aSchedIds.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});    
+        }
+        
+        if(aSchedIds.length == 0){
+            alert("Please select a cursor position on timeline.");
+            return false;
+        }
+        AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+	};
+	
 	mod.setupLibraryToolbar = function() {
 		var $toolbar = $(".lib-content .fg-toolbar:first");
 		
