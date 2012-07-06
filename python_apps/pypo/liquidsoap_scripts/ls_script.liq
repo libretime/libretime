@@ -10,6 +10,7 @@ time = ref string_of(gettimeofday())
 
 queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
 queue = cue_cut(queue)
+queue = amplify(1., override="replay_gain", queue)
 
 pypo_data = ref '0'
 web_stream_enabled = ref false

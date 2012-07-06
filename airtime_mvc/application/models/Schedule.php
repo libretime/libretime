@@ -447,19 +447,22 @@ class Application_Model_Schedule {
         $con = Propel::getConnection();
 
         $baseQuery = "SELECT st.file_id AS file_id,"
-            ." st.id as id,"
-            ." st.instance_id as instance_id,"
+            ." st.id AS id,"
+            ." st.instance_id AS instance_id,"
             ." st.starts AS start,"
             ." st.ends AS end,"
             ." st.cue_in AS cue_in,"
             ." st.cue_out AS cue_out,"
             ." st.fade_in AS fade_in,"
             ." st.fade_out AS fade_out,"
-            ." si.starts as show_start,"
-            ." si.ends as show_end"
-            ." FROM $CC_CONFIG[scheduleTable] as st"
-            ." LEFT JOIN $CC_CONFIG[showInstances] as si"
-            ." ON st.instance_id = si.id";
+            ." si.starts AS show_start,"
+            ." si.ends AS show_end,"
+            ." f.replay_gain AS replay_gain"
+            ." FROM $CC_CONFIG[scheduleTable] AS st"
+            ." LEFT JOIN $CC_CONFIG[showInstances] AS si"
+            ." ON st.instance_id = si.id"
+            ." LEFT JOIN $CC_CONFIG[filesTable] AS f"
+            ." ON st.file_id = f.id";
 
 
         $predicates = " WHERE st.ends > '$p_startTime'"
@@ -597,7 +600,8 @@ class Application_Model_Schedule {
                 'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                 'start' => $start,
                 'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
-                'show_name' => $showName
+                'show_name' => $showName,
+                'replay_gain' => $item["replay_gain"]
             );
         }
 
