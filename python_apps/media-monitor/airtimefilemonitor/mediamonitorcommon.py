@@ -29,7 +29,7 @@ class MediaMonitorCommon:
         return filter(lambda e: len(e) > 0, [ f.strip(" \n") for f in dirty_files ])
 
     def find_command(self, directory, extra_arguments=""):
-        """ Builds a find command that respects supported_file_formats list 
+        """ Builds a find command that respects supported_file_formats list
         Note: Use single quotes to quote arguments """
         ext_globs = [ "-iname '*.%s'" % ext for ext in self.supported_file_formats ]
         find_glob = ' -o '.join(ext_globs)
@@ -51,7 +51,7 @@ class MediaMonitorCommon:
 
     def is_audio_file(self, filename):
         info = filename.split(".")
-        if len(info) < 2: return false # handle cases like filename="mp3"
+        if len(info) < 2: return False # handle cases like filename="mp3"
         return info[-1].lower() in self.supported_file_formats
 
     #check if file is readable by "nobody"
@@ -101,7 +101,7 @@ class MediaMonitorCommon:
         will attempt to make the file world readable by modifying the file's permission's
         as well as the file's parent directory permissions. We should only call this function
         on files in Airtime's stor directory, not watched directories!
-        
+
         Returns True if we were able to make the file world readable. False otherwise.
         """
         original_file = pathname
@@ -278,7 +278,7 @@ class MediaMonitorCommon:
 
         try:
             """
-            File name charset encoding is UTF-8.  
+            File name charset encoding is UTF-8.
             """
             stdout = stdout.decode("UTF-8")
         except Exception:
