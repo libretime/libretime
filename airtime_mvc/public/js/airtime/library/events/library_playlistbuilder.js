@@ -88,6 +88,18 @@ var AIRTIME = (function(AIRTIME){
 		});
 	};
 	
+	mod.dblClickAdd = function(id, type) {
+        var i,
+            aMediaIds = [];
+        
+        //process selected files/playlists.
+        if (type === "audioclip") {
+            aMediaIds.push(id);
+        }
+    
+        AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+	};
+	
 	mod.setupLibraryToolbar = function() {
 		var $toolbar = $(".lib-content .fg-toolbar:first");
 		
