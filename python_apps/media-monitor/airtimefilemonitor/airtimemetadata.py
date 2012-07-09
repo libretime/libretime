@@ -221,9 +221,20 @@ class AirtimeMetadata:
             md['MDATA_KEY_COPYRIGHT'] = self.truncate_to_length(md['MDATA_KEY_COPYRIGHT'], 512)
         #end of db truncation checks.
 
-        md['MDATA_KEY_BITRATE'] = getattr(file_info.info, "bitrate", None)
-        md['MDATA_KEY_SAMPLERATE'] = getattr(file_info.info, "sample_rate", None)
-        self.logger.info( "Bitrate: %s , Samplerate: %s", md['MDATA_KEY_BITRATE'], md['MDATA_KEY_SAMPLERATE'] )
+        try:
+            md['MDATA_KEY_BITRATE'] = getattr(file_info.info, "bitrate", "0")
+        except Exception as e:
+            self.logger.warn("Could not get Bitrate")
+            md['MDATA_KEY_BITRATE'] = "0"
+            
+        try:
+            md['MDATA_KEY_SAMPLERATE'] = getattr(file_info.info, "sample_rate", "0")
+        except Exception as e:
+            self.logger.warn("Could not get Samplerate")
+            md['MDATA_KEY_SAMPLERATE'] = "0"
+            
+        self.logger.info("Bitrate: %s , Samplerate: %s", md['MDATA_KEY_BITRATE'], md['MDATA_KEY_SAMPLERATE'])
+            
         try: md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
         except Exception as e: self.logger.warn("File: '%s' raises: %s", filepath, str(e))
 
