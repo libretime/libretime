@@ -73,7 +73,7 @@ monit_restart() {
         start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
         rm -f $PIDFILE1
         
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
+        start-stop-daemon --start --background --quiet --chuid $ROOTUSERID:$ROOTUSERID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
         
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
         --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1

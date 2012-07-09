@@ -221,11 +221,17 @@ class AirtimeMetadata:
             md['MDATA_KEY_COPYRIGHT'] = self.truncate_to_length(md['MDATA_KEY_COPYRIGHT'], 512)
         #end of db truncation checks.
 
-
-        md['MDATA_KEY_BITRATE'] = file_info.info.bitrate
-        md['MDATA_KEY_SAMPLERATE'] = file_info.info.sample_rate
-        md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
-        md['MDATA_KEY_MIME'] = file_info.mime[0]
+        try:
+            md['MDATA_KEY_BITRATE'] = getattr(file_info.info, "bitrate", 0)
+            md['MDATA_KEY_SAMPLERATE'] = getattr(file_info.info, "sample_rate", 0)
+            
+            #TODO: WHATS A GOOD DEFAULT VALUE???
+            md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
+            
+            #TODO: WHATS A GOOD DEFAULT VALUE???
+            md['MDATA_KEY_MIME'] = file_info.mime[0]
+        except Exception as e:
+            self.logger.warn(e)
 
         if "mp3" in md['MDATA_KEY_MIME']:
             md['MDATA_KEY_FTYPE'] = "audioclip"
