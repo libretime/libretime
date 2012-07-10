@@ -461,11 +461,13 @@ class Application_Model_Playlist {
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
+            
+        
 
-            #Propel returns values in form 00.000000 format which is for only seconds.
-            $fadeIn = $row->getDbFadein();
-            $fadeOut = $row->getDbFadeout();
-            return array($fadeIn, $fadeOut);
+        #Propel returns values in form 00.000000 format which is for only seconds.
+        $fadeIn = $row->getDbFadein();
+        $fadeOut = $row->getDbFadeout();
+        return array($fadeIn, $fadeOut);
 	}
 
     /**

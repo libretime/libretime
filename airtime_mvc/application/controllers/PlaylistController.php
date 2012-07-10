@@ -83,7 +83,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    private function playlistOutdated($pl, $e)
+    private function playlistOutdated($e)
     {
         $this->view->error = $e->getMessage();
     }
@@ -228,7 +228,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->createUpdateResponse($pl);
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -251,7 +251,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->createUpdateResponse($pl);
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -273,7 +273,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->createUpdateResponse($pl);
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -302,7 +302,7 @@ class PlaylistController extends Zend_Controller_Action
             }
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -331,7 +331,7 @@ class PlaylistController extends Zend_Controller_Action
             }
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -352,7 +352,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->fadeOut = $fades[1];
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -378,7 +378,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->modified = $pl->getLastModified("U");
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -399,7 +399,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->modified = $pl->getLastModified("U");
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -420,7 +420,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->modified = $pl->getLastModified("U");
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
