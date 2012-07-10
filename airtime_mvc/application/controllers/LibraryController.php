@@ -129,27 +129,11 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
-        $hasPermission = true;
-        if (count($playlists)) {
-            // make sure use has permission to delete all playslists in the list
-            if(!$isAdminOrPM){
-                foreach($playlists as $pid){
-                    $pl = new Application_Model_Playlist($pid);
-                    if($pl->getCreatorId() != $user->getId()){
-                        $hasPermission = false;
-                    }
-                }
-            }
-        }
-
-        if (!$isAdminOrPM && count($files)) {
-            $hasPermission = false;
-        }
-        if(!$hasPermission){
+        try{
+            Application_Model_Playlist::DeletePlaylists($playlists, $user->getId());
+        }catch (PlaylistNoPermissionException $e){
             $this->view->message = "You don't have a permission to delete all playlists/files that are selected.";
             return;
-        }else{
-            Application_Model_Playlist::DeletePlaylists($playlists);
         }
 
         foreach ($files as $id) {

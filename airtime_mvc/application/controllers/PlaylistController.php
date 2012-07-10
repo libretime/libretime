@@ -96,6 +96,10 @@ class PlaylistController extends Zend_Controller_Action
         $this->changePlaylist(null);
         $this->createFullResponse(null);
     }
+    
+    private function playlistNoPermission(){
+        $this->view->error = "You don't have permission to deleted playlist(s)";
+    }
 
     private function playlistUnknownError($e)
     {
@@ -197,6 +201,9 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $pl = null;
+        
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
 
         try {
 
@@ -210,8 +217,11 @@ class PlaylistController extends Zend_Controller_Action
                 $pl = new Application_Model_Playlist($this->pl_sess->id);
             }
 
-            Application_Model_Playlist::DeletePlaylists($ids);
+            Application_Model_Playlist::DeletePlaylists($ids, $userInfo->id);
             $this->createFullResponse($pl);
+        }
+        catch (PlaylistNoPermissionException $e){
+            $this->playlistNoPermission();
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
