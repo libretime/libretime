@@ -138,7 +138,13 @@ class PlaylistController extends Zend_Controller_Action
         try {
             if (isset($this->pl_sess->id)) {
                 $pl = new Application_Model_Playlist($this->pl_sess->id);
-                $this->view->pl = $pl;
+                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+                $user = new Application_Model_User($userInfo->id);
+                $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+                
+                if($isAdminOrPM || $pl->getCreatorId() == $userInfo->id){
+                    $this->view->pl = $pl;
+                }
 
                 $formatter = new LengthFormatter($pl->getLength());
                 $this->view->length = $formatter->format();
