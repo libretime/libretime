@@ -5,7 +5,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
     public function init()
     {
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/showbuilder.phtml'))

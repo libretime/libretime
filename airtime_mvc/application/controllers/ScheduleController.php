@@ -90,7 +90,7 @@ class ScheduleController extends Zend_Controller_Action
 
         Application_Model_Schedule::createNewFormSections($this->view);
 
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))){
             $this->view->preloadShowForm = true;
@@ -689,7 +689,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getFormAction() {
         
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         
         if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))){
             Application_Model_Schedule::createNewFormSections($this->view);
@@ -822,7 +822,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function cancelShowAction()
     {
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
 
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 		    $showInstanceId = $this->_getParam('id');
@@ -842,7 +842,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function cancelCurrentShowAction()
     {
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
 
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $id = $this->_getParam('id');

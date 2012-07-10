@@ -26,7 +26,7 @@ class Application_Model_LiveLog
                     ." WHERE state = 'L'"
                     ." ORDER BY id";
                 $rows = $con->query($sql)->fetchAll();
-                
+
                 if ($rows != null) {
                     $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                     array_push($rows, $last_row);
@@ -36,7 +36,7 @@ class Application_Model_LiveLog
                         $con->exec($sql_delete);
                     }
                 }
-                $skip = true;   
+                $skip = true;
             }
 
             $hours = 0;
@@ -55,13 +55,13 @@ class Application_Model_LiveLog
                             $intervals[$i] = 0;
                         }
                     }
-                    
+
                     // Trim milliseconds (DateInterval does not support)
                     $sec = explode(".", $intervals[2]);
                     if (isset($sec[0])) {
                         $intervals[2] = $sec[0];
                     }
-                    
+
                     $seconds += $intervals[2];
                     if ($seconds / 60 >= 1) {
                         $minutes += 1;
@@ -89,7 +89,7 @@ class Application_Model_LiveLog
                     $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
                 }
                 else {
-                    $minutes = (double)(($hours*60)+$minutes);    
+                    $minutes = (double)(($hours*60)+$minutes);
                 }
             }
             return $minutes;
@@ -100,7 +100,7 @@ class Application_Model_LiveLog
         }
     }
 
-    public static function GetScheduledDuration($p_keepData=false) 
+    public static function GetScheduledDuration($p_keepData=false)
     {
         try {
             $con = Propel::getConnection();
@@ -125,7 +125,7 @@ class Application_Model_LiveLog
                     ." WHERE state = 'S'"
                     ." ORDER BY id";
                     $rows = $con->query($sql)->fetchAll();
-                    
+
                 if ($rows != null) {
                     $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                     array_push($rows, $last_row);
@@ -135,7 +135,7 @@ class Application_Model_LiveLog
                         $con->exec($sql_delete);
                     }
                 }
-                $skip = true;  
+                $skip = true;
             }
 
             $hours = 0;
@@ -173,7 +173,7 @@ class Application_Model_LiveLog
                                 }
                             }
                             $clip_length_seconds = $clip_length_intervals[0]*3600 + $clip_length_intervals[1]*60 + $clip_length_intervals[2];
-                             
+
                             $extra_time = $extra_time->format("%H:%i:%s");
                             //Convert extra_time into seconds;
                             $extra_time_intervals = explode(":", $extra_time);
@@ -185,7 +185,7 @@ class Application_Model_LiveLog
                             $extra_time_seconds = $extra_time_intervals[0]*3600 + $extra_time_intervals[1]*60 + $extra_time_intervals[2];
 
                             $clip_length_seconds -= $extra_time_seconds;
-                             
+
                             //Convert new clip_length into "H-i-s" format
                             $clip_length_arr = array();
                             if ($clip_length_seconds / 3600 >= 1) {
@@ -276,7 +276,7 @@ class Application_Model_LiveLog
     public static function SetNewLogTime($state, $dateTime){
         try {
             $con = Propel::getConnection();
-            
+
             $scheduled = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
             if ($state == 'L' && $scheduled == 'on') {
                 self::SetEndTime('S', $dateTime);

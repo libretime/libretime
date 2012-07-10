@@ -91,7 +91,7 @@ class Application_Model_StoredFile {
         }
         else {
             $dbMd = array();
-            
+
             if (isset($p_md["MDATA_KEY_YEAR"])){
                 // We need to make sure to clean this value before inserting into database.
                 // If value is outside of range [-2^31, 2^31-1] then postgresl will throw error
@@ -100,9 +100,9 @@ class Application_Model_StoredFile {
                 // new garbage value won't cause errors). If the value is 2012-01-01, then substring to
                 // first 4 digits is an OK result.
                 // CC-3771
-                  
+
                 $year = $p_md["MDATA_KEY_YEAR"];
-                  
+
                 if (strlen($year) > 4){
                     $year = substr($year, 0, 4);
                 }
@@ -111,7 +111,7 @@ class Application_Model_StoredFile {
                 }
                 $p_md["MDATA_KEY_YEAR"] = $year;
             }
-            
+
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)){
                     $dbMd[constant($mdConst)] = $mdValue;
@@ -161,9 +161,9 @@ class Application_Model_StoredFile {
      * Set metadata element value
      *
      * @param string $category
-     * 		Metadata element by metadata constant
+     *         Metadata element by metadata constant
      * @param string $value
-     * 		value to store, if NULL then delete record
+     *         value to store, if NULL then delete record
      */
     public function setMetadataValue($p_category, $p_value)
     {
@@ -176,9 +176,9 @@ class Application_Model_StoredFile {
      * Set metadata element value
      *
      * @param string $category
-     * 		Metadata element by db column
+     *         Metadata element by db column
      * @param string $value
-     * 		value to store, if NULL then delete record
+     *         value to store, if NULL then delete record
      */
     public function setDbColMetadataValue($p_category, $p_value)
     {
@@ -245,12 +245,12 @@ class Application_Model_StoredFile {
     {
         $c = get_defined_constants(true);
         $md = array();
-                
-        /* Create a copy of dbMD here and create a "filepath" key inside of 
+
+        /* Create a copy of dbMD here and create a "filepath" key inside of
          * it. The reason we do this here, instead of creating this key inside
-         * dbMD is because "filepath" isn't really metadata, and we don't want 
+         * dbMD is because "filepath" isn't really metadata, and we don't want
          * filepath updated everytime the metadata changes. Also it needs extra
-         * processing before we can write it to the database (needs to be split 
+         * processing before we can write it to the database (needs to be split
          * into base and relative path)
          *  */
         $dbmd_copy = $this->_dbMD;
@@ -273,9 +273,9 @@ class Application_Model_StoredFile {
      * Set state of virtual file
      *
      * @param string $p_state
-     * 		'empty'|'incomplete'|'ready'|'edited'
+     *         'empty'|'incomplete'|'ready'|'edited'
      * @param int $p_editedby
-     * 		 user id | 'NULL' for clear editedBy field
+     *          user id | 'NULL' for clear editedBy field
      * @return TRUE
      */
     public function setState($p_state, $p_editedby=NULL)
@@ -330,7 +330,7 @@ class Application_Model_StoredFile {
 
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         $type = $music_dir->getType();
-        
+
         if (file_exists($filepath) && $type == "stor") {
             $data = array("filepath" => $filepath, "delete" => 1);
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
@@ -343,7 +343,7 @@ class Application_Model_StoredFile {
         $this->_file->setDbFileExists(false);
         $this->_file->save();
     }
-    
+
     /**
      * This function is for when media monitor detects deletion of file
      * and trying to update airtime side
@@ -367,7 +367,7 @@ class Application_Model_StoredFile {
      * Return suitable extension.
      *
      * @return string
-     * 		file extension without a dot
+     *         file extension without a dot
      */
     public function getFileExtension()
     {
@@ -395,7 +395,7 @@ class Application_Model_StoredFile {
 
         return $directory.$filepath;
     }
-    
+
     /**
      * Set real filename of raw media data
      *
@@ -500,9 +500,9 @@ Logging::log("getting media! - 2");
      * be NULL.
      *
      * @param int $p_id
-     * 		local id
+     *         local id
      * @param string $p_gunid
-     * 		global unique id of file
+     *         global unique id of file
      * @param string $p_md5sum
      *    MD5 sum of the file
      * @param boolean $exist
@@ -570,7 +570,7 @@ Logging::log("getting media! - 2");
      * by gunid.
      *
      * @param string $p_gunid
-     * 		global unique id of file
+     *         global unique id of file
      * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByGunid($p_gunid)
@@ -624,7 +624,7 @@ Logging::log("getting media! - 2");
 
     public static function searchLibraryFiles($datatables) {
 
-    	$con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
@@ -871,26 +871,26 @@ Logging::log("getting media! - 2");
                     return $result;
                 }
             }
-            
+
             if (chmod($audio_file, 0644) === false){
                 Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
             }
-            
+
             //check to see if there is enough space in $stor to continue.
             if (self::isEnoughDiskSpaceToCopy($stor, $audio_file)){
                 $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
 
                 if (self::liquidsoapFilePlayabilityTest($audio_file)){
-                    
+
                     Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-                    
+
                     //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
                     if (@rename($audio_file, $audio_stor) === false) {
                         #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
                         #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
                         unlink($audio_file);//remove the file after failed rename
                         $result = array("code" => 108, "message" => "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space.");
-                    }                
+                    }
                 } else {
                     $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
                 }
@@ -901,23 +901,23 @@ Logging::log("getting media! - 2");
         }
         return $result;
     }
-       
+
     /*
      * Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
      */
     public static function liquidsoapFilePlayabilityTest($audio_file){
-        
+
         $LIQUIDSOAP_ERRORS = array('TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.');
-        
+
         // Ask Liquidsoap if file is playable
         $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' 2>&1", $audio_file);
-        
+
         exec($command, $output, $rv);
-        
+
         $isError = count($output) > 0 && in_array($output[0], $LIQUIDSOAP_ERRORS);
-        return ($rv == 0 && !$isError);        
+        return ($rv == 0 && !$isError);
     }
-    
+
     public static function getFileCount()
     {
         global $CC_CONFIG;
@@ -960,28 +960,28 @@ Logging::log("getting media! - 2");
 
         return $results;
     }
-    
+
     /* Gets number of tracks uploaded to
      * Soundcloud in the last 24 hours
      */
     public static function getSoundCloudUploads()
     {
         try {
-    	    $con = Propel::getConnection();
-    	
-    	    $sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
+            $con = Propel::getConnection();
+
+            $sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
                     ." FROM CC_FILES"
                     ." WHERE (id != -2 and id != -3) and"
                     ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
-                
+
             $rows = $con->query($sql)->fetchAll();
             return count($rows);
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
             Logging::log("Could not connect to database.");
-            exit;            
+            exit;
         }
-        
+
     }
 
     public function setSoundCloudLinkToFile($link_to_file)
@@ -1021,10 +1021,10 @@ Logging::log("getting media! - 2");
     public function getSoundCloudErrorMsg(){
         return $this->_file->getDbSoundCloudErrorMsg();
     }
-    
+
     public function getDirectory(){
-	    return $this->_file->getDbDirectory();	
-	}
+        return $this->_file->getDbDirectory();
+    }
 
     public function setFileExistsFlag($flag){
         $this->_file->setDbFileExists($flag)
@@ -1032,7 +1032,7 @@ Logging::log("getting media! - 2");
     }
     public function setSoundCloudUploadTime($time){
         $this->_file->setDbSoundCloundUploadTime($time)
-            ->save();    
+            ->save();
     }
 
     public function getFileExistsFlag(){

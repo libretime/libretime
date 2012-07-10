@@ -1,7 +1,7 @@
 <?php
 
 class Application_Model_Email {
-	
+
     /**
      * Send email
      *
@@ -14,7 +14,7 @@ class Application_Model_Email {
     {
         $mailServerConfigured = Application_Model_Preference::GetMailServerConfigured() == true ? true : false;
         $success = true;
-        
+
         if ($mailServerConfigured) {
             $username = Application_Model_Preference::GetMailServerEmailAddress();
             $password = Application_Model_Preference::GetMailServerPassword();
@@ -23,25 +23,25 @@ class Application_Model_Email {
             if (!empty($mailServerPort)) {
                 $port = Application_Model_Preference::GetMailServerPort();
             }
-            
+
             $config = array(
                 'auth' => 'login',
                 'ssl' => 'ssl',
                 'username' => $username,
                 'password' => $password
             );
-            
+
             if (isset($port)) {
                 $config['port'] = $port;
             }
-		    
-            $transport = new Zend_Mail_Transport_Smtp($mailServer, $config); 	
+
+            $transport = new Zend_Mail_Transport_Smtp($mailServer, $config);
         }
 
         $mail = new Zend_Mail('utf-8');
         $mail->setSubject($subject);
         $mail->setBodyText($message);
-		
+
         foreach ((array) $tos as $to) {
             $mail->addTo($to);
         }
@@ -60,8 +60,8 @@ class Application_Model_Email {
             } catch (Exception $e) {
                 $success = false;
             }
-        }  
-		
+        }
+
         return $success;
 
     }

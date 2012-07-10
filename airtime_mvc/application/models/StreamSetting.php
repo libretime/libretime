@@ -130,23 +130,23 @@ class Application_Model_StreamSetting {
         }
 
         if (!isset($exists["master_live_stream_port"])) {
-            $rows[] = array("keyname" =>"master_live_stream_port", 
-                            "value"=>self::getMasterLiveStreamPort(), 
+            $rows[] = array("keyname" =>"master_live_stream_port",
+                            "value"=>self::getMasterLiveStreamPort(),
                             "type"=>"integer");
         }
         if (!isset($exists["master_live_stream_mp"])) {
-            $rows[] = array("keyname" =>"master_live_stream_mp", 
-                            "value"=>self::getMasterLiveStreamMountPoint(), 
+            $rows[] = array("keyname" =>"master_live_stream_mp",
+                            "value"=>self::getMasterLiveStreamMountPoint(),
                             "type"=>"string");
         }
         if (!isset($exists["dj_live_stream_port"])) {
-            $rows[] = array("keyname" =>"dj_live_stream_port", 
-                            "value"=>self::getDjLiveStreamPort(), 
+            $rows[] = array("keyname" =>"dj_live_stream_port",
+                            "value"=>self::getDjLiveStreamPort(),
                             "type"=>"integer");
         }
         if (!isset($exists["dj_live_stream_mp"])) {
-            $rows[] = array("keyname" =>"dj_live_stream_mp", 
-                            "value"=>self::getDjLiveStreamMountPoint(), 
+            $rows[] = array("keyname" =>"dj_live_stream_mp",
+                            "value"=>self::getDjLiveStreamMountPoint(),
                             "type"=>"string");
         }
         return $rows;
@@ -180,7 +180,7 @@ class Application_Model_StreamSetting {
                         $v = $d['enable'] == 1 ? 'true' : 'false';
                     }
                     $v = trim($v);
-                    
+
                     #escape double single quotes CC-3926
                     $v = str_replace("'", "''", $v);
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";

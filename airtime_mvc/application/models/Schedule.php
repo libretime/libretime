@@ -81,7 +81,7 @@ class Application_Model_Schedule {
 
         /* Alternate SQL...merge conflict and I'm not sure which on is right.... -MK
         $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played, si.ends as show_ends
-                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id 
+                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id
                 WHERE ';
                 */
 
@@ -231,15 +231,15 @@ class Application_Model_Schedule {
         return $row;
     }
 
-	/*
-	 *
-	 * @param DateTime $p_startDateTime
-	 *
-	 * @param DateTime $p_endDateTime
-	 *
-	 * @return array $scheduledItems
-	 *
-	 */
+    /*
+     *
+     * @param DateTime $p_startDateTime
+     *
+     * @param DateTime $p_endDateTime
+     *
+     * @return array $scheduledItems
+     *
+     */
     public static function GetScheduleDetailItems($p_start, $p_end, $p_shows)
     {
         global $CC_CONFIG;
@@ -279,7 +279,7 @@ class Application_Model_Schedule {
         }
 
         $sql .= " ORDER BY si.starts, sched.starts;";
-        
+
         Logging::debug($sql);
 
         $rows = $con->query($sql)->fetchAll();
@@ -297,17 +297,17 @@ class Application_Model_Schedule {
         $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on'?true:false;
         $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on'?true:false;
         $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on'?true:false;
-        
+
         if(!$live_dj && !$master_dj && $scheduled_play){
             $sql .= ", broadcasted=1";
         }
-        
+
         $sql .= " WHERE id=$p_id";
-        
+
         $retVal = $con->exec($sql);
         return $retVal;
     }
-    
+
     public static function UpdateBrodcastedStatus($dateTime, $value){
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -551,7 +551,7 @@ class Application_Model_Schedule {
             $data["media"][$kick_start]['end'] = $kick_start;
             $data["media"][$kick_start]['event_type'] = "kick_out";
             $data["media"][$kick_start]['type'] = "event";
-            
+
             if($kick_time !== $switch_off_time){
                 $switch_start = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
                 $data["media"][$switch_start]['start'] = $switch_start;
@@ -562,16 +562,16 @@ class Application_Model_Schedule {
         }
 
         foreach ($items as $item){
-			
+
             $showInstance = CcShowInstancesQuery::create()->findPK($item["instance_id"]);
             $showId = $showInstance->getDbShowId();
             $show = CcShowQuery::create()->findPK($showId);
             $showName = $show->getDbName();
-			
+
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
             $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
-            
+
             if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
                 continue;
             }
@@ -584,10 +584,10 @@ class Application_Model_Schedule {
                 $item["cue_out"] = $di->format("%H:%i:%s").".000";
                 $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
             }
-            
+
             $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
             $uri = $storedFile->getFilePath();
-            
+
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(
                 'id' => $storedFile->getGunid(),
@@ -614,7 +614,7 @@ class Application_Model_Schedule {
         $con = Propel::getConnection();
         $con->exec("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
-    
+
     public static function deleteWithFileId($fileId){
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -626,18 +626,18 @@ class Application_Model_Schedule {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
-		$formLive = new Application_Form_AddShowLiveStream();
+        $formWho = new Application_Form_AddShowWho();
+        $formWhen = new Application_Form_AddShowWhen();
+        $formRepeats = new Application_Form_AddShowRepeats();
+        $formStyle = new Application_Form_AddShowStyle();
+        $formLive = new Application_Form_AddShowLiveStream();
 
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
-		$formLive->removeDecorator('DtDdWrapper');
+        $formWhat->removeDecorator('DtDdWrapper');
+        $formWho->removeDecorator('DtDdWrapper');
+        $formWhen->removeDecorator('DtDdWrapper');
+        $formRepeats->removeDecorator('DtDdWrapper');
+        $formStyle->removeDecorator('DtDdWrapper');
+        $formLive->removeDecorator('DtDdWrapper');
 
         $p_view->what = $formWhat;
         $p_view->when = $formWhen;
@@ -646,7 +646,7 @@ class Application_Model_Schedule {
         $p_view->style = $formStyle;
         $p_view->live = $formLive;
 
-        $formWhat->populate(array('add_show_id' => '-1', 
+        $formWhat->populate(array('add_show_id' => '-1',
                                       'add_show_instance_id' => '-1'));
         $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
                                       'add_show_start_time' => '00:00',
@@ -671,29 +671,29 @@ class Application_Model_Schedule {
         }
         $p_view->addNewShow = true;
     }
-    
-    /* This function is responsible for handling the case where an individual 
+
+    /* This function is responsible for handling the case where an individual
      * show instance in a repeating show was edited (via the context menu in the Calendar).
      * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
      * this method to manipulate the view (this should be done inside the controller function). With
      * 2.1 deadline looming, this is OK for now. -Martin */
     public static function updateShowInstance($data, $controller){
         $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
-        
-        $formWhat = new Application_Form_AddShowWhat();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formWho = new Application_Form_AddShowWho();
-		$formStyle = new Application_Form_AddShowStyle();
-		$formLive = new Application_Form_AddShowLiveStream();
 
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
-		$formLive->removeDecorator('DtDdWrapper');
-        
+        $formWhat = new Application_Form_AddShowWhat();
+        $formWhen = new Application_Form_AddShowWhen();
+        $formRepeats = new Application_Form_AddShowRepeats();
+        $formWho = new Application_Form_AddShowWho();
+        $formStyle = new Application_Form_AddShowStyle();
+        $formLive = new Application_Form_AddShowLiveStream();
+
+        $formWhat->removeDecorator('DtDdWrapper');
+        $formWhen->removeDecorator('DtDdWrapper');
+        $formRepeats->removeDecorator('DtDdWrapper');
+        $formWho->removeDecorator('DtDdWrapper');
+        $formStyle->removeDecorator('DtDdWrapper');
+        $formLive->removeDecorator('DtDdWrapper');
+
         if(!$isSaas){
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
@@ -704,21 +704,21 @@ class Application_Model_Schedule {
             $formRebroadcast->removeDecorator('DtDdWrapper');
         }
         $when = $formWhen->isValid($data);
-        
-        if($when && $formWhen->checkReliantFields($data, true, null, true)) {        
+
+        if($when && $formWhen->checkReliantFields($data, true, null, true)) {
             $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
             $start_dt->setTimezone(new DateTimeZone('UTC'));
-            
+
             $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'], new DateTimeZone(date_default_timezone_get()));
             $end_dt->setTimezone(new DateTimeZone('UTC'));
-                    
+
             $ccShowInstance = CcShowInstancesQuery::create()->findPK($data["add_show_instance_id"]);
             $ccShowInstance->setDbStarts($start_dt);
             $ccShowInstance->setDbEnds($end_dt);
-            $ccShowInstance->save();    
-        
+            $ccShowInstance->save();
+
             Application_Model_Schedule::createNewFormSections($controller->view);
-            
+
             return true;
         } else {
             $formWhat->disable();
@@ -727,36 +727,36 @@ class Application_Model_Schedule {
             $formWho->disable();
             $formStyle->disable();
             //$formLive->disable();
-        
+
             $controller->view->what = $formWhat;
             $controller->view->when = $formWhen;
             $controller->view->repeats = $formRepeats;
             $controller->view->who = $formWho;
             $controller->view->style = $formStyle;
-            $controller->view->live = $formLive; 
+            $controller->view->live = $formLive;
             if(!$isSaas){
                 $controller->view->rr = $formRecord;
                 $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
                 $controller->view->rebroadcast = $formRebroadcast;
-                
+
                 //$formRecord->disable();
                 //$formAbsoluteRebroadcast->disable();
                 //$formRebroadcast->disable();
             }
             return false;
-        }    
+        }
     }
-    
-    /* This function is responsible for handling the case where the entire show (not a single show instance) 
+
+    /* This function is responsible for handling the case where the entire show (not a single show instance)
      * was edited (via the context menu in the Calendar).
      * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
      * this method to manipulate the view (this should be done inside the controller function). With
      * 2.1 deadline looming, this is OK for now.
      * Another clean-up is to move all the form manipulation to the proper form class.....
-     * -Martin 
+     * -Martin
      */
     public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null){
-    
+
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
@@ -765,22 +765,22 @@ class Application_Model_Schedule {
         $record = false;
 
         $formWhat = new Application_Form_AddShowWhat();
-		$formWho = new Application_Form_AddShowWho();
-		$formWhen = new Application_Form_AddShowWhen();
-		$formRepeats = new Application_Form_AddShowRepeats();
-		$formStyle = new Application_Form_AddShowStyle();
-		$formLive = new Application_Form_AddShowLiveStream();
+        $formWho = new Application_Form_AddShowWho();
+        $formWhen = new Application_Form_AddShowWhen();
+        $formRepeats = new Application_Form_AddShowRepeats();
+        $formStyle = new Application_Form_AddShowStyle();
+        $formLive = new Application_Form_AddShowLiveStream();
 
-		$formWhat->removeDecorator('DtDdWrapper');
-		$formWho->removeDecorator('DtDdWrapper');
-		$formWhen->removeDecorator('DtDdWrapper');
-		$formRepeats->removeDecorator('DtDdWrapper');
-		$formStyle->removeDecorator('DtDdWrapper');
-		$formLive->removeDecorator('DtDdWrapper');
+        $formWhat->removeDecorator('DtDdWrapper');
+        $formWho->removeDecorator('DtDdWrapper');
+        $formWhen->removeDecorator('DtDdWrapper');
+        $formRepeats->removeDecorator('DtDdWrapper');
+        $formStyle->removeDecorator('DtDdWrapper');
+        $formLive->removeDecorator('DtDdWrapper');
 
-		$what = $formWhat->isValid($data);
-		$when = $formWhen->isValid($data);
-		$live = $formLive->isValid($data);
+        $what = $formWhat->isValid($data);
+        $when = $formWhen->isValid($data);
+        $live = $formLive->isValid($data);
         if($when) {
             $when = $formWhen->checkReliantFields($data, $validateStartDate, $originalStartDate, $update, $instanceId);
         }
@@ -798,11 +798,11 @@ class Application_Model_Schedule {
         $mValue = 0;
 
         if($hPos !== false){
-        	$hValue = trim(substr($data["add_show_duration"], 0, $hPos));
+            $hValue = trim(substr($data["add_show_duration"], 0, $hPos));
         }
         if($mPos !== false){
             $hPos = $hPos === FALSE ? 0 : $hPos+1;
-        	$mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
+            $mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
         }
 
         $data["add_show_duration"] = $hValue.":".$mValue;
@@ -821,7 +821,7 @@ class Application_Model_Schedule {
         }
 
         if($data["add_show_repeats"]) {
-		    $repeats = $formRepeats->isValid($data);
+            $repeats = $formRepeats->isValid($data);
             if($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
@@ -857,8 +857,8 @@ class Application_Model_Schedule {
             }
         }
 
-		$who = $formWho->isValid($data);
-		$style = $formStyle->isValid($data);
+        $who = $formWho->isValid($data);
+        $style = $formStyle->isValid($data);
         if ($what && $when && $repeats && $who && $style && $live) {
             if(!$isSaas){
                 if($record && $rebroadAb && $rebroad){
@@ -882,7 +882,7 @@ class Application_Model_Schedule {
                     $controller->view->rebroadcast = $formRebroadcast;
                     $controller->view->live = $formLive;
                     //$controller->view->addNewShow = !$editShow;
-                    
+
                     //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
                     return false;
 
@@ -898,14 +898,14 @@ class Application_Model_Schedule {
                 //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
                 return true;
             }
-		} else {
+        } else {
             $controller->view->what = $formWhat;
             $controller->view->when = $formWhen;
             $controller->view->repeats = $formRepeats;
             $controller->view->who = $formWho;
             $controller->view->style = $formStyle;
             $controller->view->live = $formLive;
-            
+
             if(!$isSaas){
                 $controller->view->rr = $formRecord;
                 $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
@@ -916,14 +916,14 @@ class Application_Model_Schedule {
             return false;
         }
     }
-    
-    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null) {		
+
+    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null) {
         global $CC_CONFIG;
-        
+
         $overlapping = false;
-        
+
         $con = Propel::getConnection();
-        
+
         if ($update) {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
                     where ends <= '{$show_end->format('Y-m-d H:i:s')}'
@@ -933,12 +933,12 @@ class Application_Model_Schedule {
                     where ends <= '{$show_end->format('Y-m-d H:i:s')}' order by ends";
         }
         $rows = $con->query($sql);
-                
+
         foreach($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
             $end = new DateTime($row["ends"], new DateTimeZone('UTC'));
 
-            if ($show_start->getTimestamp() < $end->getTimestamp() && 
+            if ($show_start->getTimestamp() < $end->getTimestamp() &&
                 $show_end->getTimestamp() > $start->getTimestamp()) {
                 $overlapping = true;
                 break;

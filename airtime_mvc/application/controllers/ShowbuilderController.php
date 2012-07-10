@@ -22,7 +22,7 @@ class ShowbuilderController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
@@ -184,7 +184,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
         $menu = array();
     
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
     
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();

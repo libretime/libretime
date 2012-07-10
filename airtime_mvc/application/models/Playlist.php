@@ -20,17 +20,17 @@ class Application_Model_Playlist {
      */
     private $id;
 
-	/**
+    /**
      * propel object for this playlist.
      */
-	private $pl;
+    private $pl;
 
-	/**
+    /**
      * info needed to insert a new playlist element.
      */
-	private $plItem = array(
+    private $plItem = array(
         "id" => "",
-	    "pos" => "",
+        "pos" => "",
         "cliplength" => "",
         "cuein" => "00:00:00",
         "cueout" => "00:00:00",
@@ -38,13 +38,13 @@ class Application_Model_Playlist {
         "fadeout" => "0.0",
     );
 
-	//using propel's phpNames.
-	private $categories = array(
-	    "dc:title" => "Name",
-    	"dc:creator" => "Creator",
-    	"dc:description" => "Description",
-    	"dcterms:extent" => "Length"
-	);
+    //using propel's phpNames.
+    private $categories = array(
+        "dc:title" => "Name",
+        "dc:creator" => "Creator",
+        "dc:description" => "Description",
+        "dcterms:extent" => "Length"
+    );
 
 
     public function __construct($id=null, $con=null)
@@ -90,12 +90,12 @@ class Application_Model_Playlist {
      */
     public function setName($p_newname)
     {
-    	$this->pl->setDbName($p_newname);
-    	$this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
-    	$this->pl->save($this->con);
+        $this->pl->setDbName($p_newname);
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->pl->save($this->con);
     }
 
- 	/**
+     /**
      * Get mnemonic playlist name
      *
      * @return string
@@ -107,9 +107,9 @@ class Application_Model_Playlist {
 
     public function setDescription($p_description)
     {
-    	$this->pl->setDbDescription($p_description);
-    	$this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
-    	$this->pl->save($this->con);
+        $this->pl->setDbDescription($p_description);
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->pl->save($this->con);
     }
 
     public function getDescription()
@@ -121,7 +121,7 @@ class Application_Model_Playlist {
 
         return $this->pl->getCcSubjs()->getDbLogin();
     }
-    
+
     public function getCreatorId() {
         return $this->pl->getCcSubjs()->getDbId();
     }
@@ -145,7 +145,7 @@ class Application_Model_Playlist {
     /**
      * Get the entire playlist as a two dimentional array, sorted in order of play.
      * @param boolean $filterFiles if this is true, it will only return files that has
-     * 			file_exists flag set to true
+     *             file_exists flag set to true
      * @return array
      */
     public function getContents($filterFiles=false) {
@@ -155,7 +155,7 @@ class Application_Model_Playlist {
         $files = array();
         $query = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id);
-                
+
         if($filterFiles){
             $query->useCcFilesQuery()
                      ->filterByDbFileExists(true)
@@ -416,7 +416,7 @@ class Application_Model_Playlist {
      * Remove audioClip from playlist
      *
      * @param array $p_items
-     * 		array of unique item ids to remove from the playlist..
+     *         array of unique item ids to remove from the playlist..
      */
     public function delAudioClips($p_items)
     {
@@ -452,11 +452,11 @@ class Application_Model_Playlist {
     }
 
 
-	public function getFadeInfo($pos) {
+    public function getFadeInfo($pos) {
 
-	    Logging::log("Getting fade info for pos {$pos}");
+        Logging::log("Getting fade info for pos {$pos}");
 
-		$row = CcPlaylistcontentsQuery::create()
+        $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
@@ -466,24 +466,24 @@ class Application_Model_Playlist {
             $fadeIn = $row->getDbFadein();
             $fadeOut = $row->getDbFadeout();
             return array($fadeIn, $fadeOut);
-	}
+    }
 
     /**
      * Change fadeIn and fadeOut values for playlist Element
      *
      * @param int $pos
-     * 		position of audioclip in playlist
+     *         position of audioclip in playlist
      * @param string $fadeIn
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @param string $fadeOut
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @return boolean
      */
     public function changeFadeInfo($id, $fadeIn, $fadeOut)
     {
         //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
-	   //setting it to nonNull for checks down below
+       //setting it to nonNull for checks down below
         $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
 
@@ -502,8 +502,8 @@ class Application_Model_Playlist {
 
             if (!is_null($fadeIn)) {
 
-    			$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     //"Fade In can't be larger than overall playlength.";
                     $fadeIn = $clipLength;
@@ -512,8 +512,8 @@ class Application_Model_Playlist {
             }
             if (!is_null($fadeOut)){
 
-    			$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     //Fade Out can't be larger than overall playlength.";
                     $fadeOut = $clipLength;
@@ -562,11 +562,11 @@ class Application_Model_Playlist {
      * Change cueIn/cueOut values for playlist element
      *
      * @param int $pos
-     * 		position of audioclip in playlist
+     *         position of audioclip in playlist
      * @param string $cueIn
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @param string $cueOut
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @return boolean or pear error object
      */
     public function changeClipLength($id, $cueIn, $cueOut)
@@ -604,23 +604,23 @@ class Application_Model_Playlist {
                     $cueOut = $origLength;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
                     return $errArray;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)){
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
                     return $errArray;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
-    			$r = $this->con->query($sql);
-    			$cliplength = $r->fetchColumn(0);
+                $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
+                $r = $this->con->query($sql);
+                $cliplength = $r->fetchColumn(0);
 
                 $row->setDbCuein($cueIn);
                 $row->setDbCueout($cueOut);
@@ -629,16 +629,16 @@ class Application_Model_Playlist {
             }
             else if (!is_null($cueIn)) {
 
-    			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
                     return $errArray;
                 }
 
                 $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
-    			$r = $this->con->query($sql);
-    			$cliplength = $r->fetchColumn(0);
+                $r = $this->con->query($sql);
+                $cliplength = $r->fetchColumn(0);
 
                 $row->setDbCuein($cueIn);
                 $row->setDBCliplength($cliplength);
@@ -649,23 +649,23 @@ class Application_Model_Playlist {
                     $cueOut = $origLength;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue out to be smaller than cue in.";
                     return $errArray;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-    			$r = $this->con->query($sql);
+                $sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
+                $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)){
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
                     return $errArray;
                 }
 
                 $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$oldCueIn}'";
-    			$r = $this->con->query($sql);
-    			$cliplength = $r->fetchColumn(0);
+                $r = $this->con->query($sql);
+                $cliplength = $r->fetchColumn(0);
 
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
@@ -673,15 +673,15 @@ class Application_Model_Playlist {
 
             $cliplength = $row->getDbCliplength();
 
-    		$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
-    		$r = $this->con->query($sql);
+            $sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
+            $r = $this->con->query($sql);
             if ($r->fetchColumn(0)){
                 $fadeIn = $cliplength;
                 $row->setDbFadein($fadeIn);
             }
 
-    		$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
-    		$r = $this->con->query($sql);
+            $sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
+            $r = $this->con->query($sql);
             if ($r->fetchColumn(0)){
                 $fadeOut = $cliplength;
                 $row->setDbFadein($fadeOut);

@@ -111,7 +111,7 @@ class LibraryController extends Zend_Controller_Action
         //array containing id and type of media to delete.
         $mediaItems = $this->_getParam('media', null);
 
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $files = array();
@@ -204,7 +204,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function editFileMdAction()
     {
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
         if(!$isAdminOrPM){
             return;

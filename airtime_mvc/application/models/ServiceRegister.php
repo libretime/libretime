@@ -17,7 +17,7 @@ class Application_Model_ServiceRegister {
         if ($p_ipAddress == "::1"){
             $p_ipAddress = "127.0.0.1";
         }
-        
+
         $component->setDbIp($p_ipAddress);
         $component->save();
     }

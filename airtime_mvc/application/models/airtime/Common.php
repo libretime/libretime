@@ -1,10 +1,10 @@
 <?php
 
-class Common {	
-	
-	public static function setTimeInSub($row, $col, $time)
+class Common {    
+    
+    public static function setTimeInSub($row, $col, $time)
     {
-  	    $class = get_class($row).'Peer';
+          $class = get_class($row).'Peer';
 
         $con = Propel::getConnection($class::DATABASE_NAME);
 

@@ -5,7 +5,7 @@ class Application_Model_Soundcloud {
 
     private $_soundcloud;
 
-	public function __construct()
+    public function __construct()
     {
         global $CC_CONFIG;
 
@@ -35,7 +35,7 @@ class Application_Model_Soundcloud {
             }
 
             $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1'?true:false;
-            
+
             $track_data = array(
                 'track[sharing]' => 'private',
                 'track[title]' => $filename,
@@ -77,7 +77,7 @@ class Application_Model_Soundcloud {
             if ($license != "") {
                 $track_data['track[license]'] = $license;
             }
-            
+
             $response = json_decode(
                 $this->_soundcloud->post('tracks', $track_data),
                 true
