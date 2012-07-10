@@ -117,10 +117,9 @@ class AirtimeMediaMonitorBootstrap():
         stdout = self.mmc.exec_command(command)
         
         if stdout is None:
-            self.logger.error("Unrecoverable error when syncing db to filesystem.")
-            return
-
-        new_files = stdout.splitlines()
+            new_files = []
+        else:
+            new_files = stdout.splitlines()
 
         new_and_modified_files = set()
         for file_path in new_files:
