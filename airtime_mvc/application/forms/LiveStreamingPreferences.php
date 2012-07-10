@@ -83,7 +83,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         
         //liquidsoap harbor.input port
         if (!$isSaas) {
-            $m_port = Application_Model_StreamSetting::GetMasterLiveSteamPort();
+            $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
             $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
             $master_dj_port->setLabel("Master Source Port")
                     ->setValue($m_port)
@@ -92,7 +92,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($master_dj_port);
             
-            $m_mount = Application_Model_StreamSetting::GetMasterLiveSteamMountPoint();
+            $m_mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
             $master_dj_mount = new Zend_Form_Element_Text('master_harbor_input_mount_point');
             $master_dj_mount->setLabel("Master Source Mount Point")
                     ->setValue($m_mount)
@@ -102,7 +102,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $this->addElement($master_dj_mount);
             
             //liquidsoap harbor.input port
-            $l_port = Application_Model_StreamSetting::GetDJLiveSteamPort();
+            $l_port = Application_Model_StreamSetting::getDjLiveStreamPort();
             $live_dj_port = new Zend_Form_Element_Text('dj_harbor_input_port');
             $live_dj_port->setLabel("Show Source Port")
                     ->setValue($l_port)
@@ -111,7 +111,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($live_dj_port);
             
-            $l_mount = Application_Model_StreamSetting::GetDJLiveSteamMountPoint();
+            $l_mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
             $live_dj_mount = new Zend_Form_Element_Text('dj_harbor_input_mount_point');
             $live_dj_mount->setLabel("Show Source Mount Point")
                     ->setValue($l_mount)
@@ -159,7 +159,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             }
             if($master_harbor_input_port != ""){
                 if(is_numeric($master_harbor_input_port)){
-                    if($master_harbor_input_port != Application_Model_StreamSetting::GetMasterLiveSteamPort()){
+                    if($master_harbor_input_port != Application_Model_StreamSetting::getMasterLiveStreamPort()){
                         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
                         $res = socket_bind($sock, 0, $master_harbor_input_port);
                         if(!$res){
@@ -175,7 +175,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             }
             if($dj_harbor_input_port != ""){
                 if(is_numeric($dj_harbor_input_port)){
-                    if($dj_harbor_input_port != Application_Model_StreamSetting::GetDJLiveSteamPort()){
+                    if($dj_harbor_input_port != Application_Model_StreamSetting::getDjLiveStreamPort()){
                         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
                         $res = socket_bind($sock, 0, $dj_harbor_input_port);
                         if(!$res){

@@ -27,7 +27,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
         
-        $data = Application_Model_Preference::GetValue("library_datatable", true);
+        $data = Application_Model_Preference::getValue("library_datatable", true);
         if ($data != "") {
             $libraryTable = json_encode(unserialize($data));
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
@@ -36,7 +36,7 @@ class ShowbuilderController extends Zend_Controller_Action
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
         }
         
-        $data = Application_Model_Preference::GetValue("timeline_datatable", true);
+        $data = Application_Model_Preference::getValue("timeline_datatable", true);
         if ($data != "") {
             $timelineTable = json_encode(unserialize($data));
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
@@ -130,7 +130,7 @@ class ShowbuilderController extends Zend_Controller_Action
     	$showLib = false;
     	if (!$user->isGuest()) {
     	    $disableLib = false;
-            $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
+            $data = Application_Model_Preference::getValue("nowplaying_screen", true);
             if ($data != "") {
                 $settings = unserialize($data);
                 

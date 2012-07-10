@@ -24,7 +24,7 @@ class Application_Form_SupportSettings extends Zend_Form
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validator'  => array('NotEmpty'),
-            'value' => Application_Model_Preference::GetValue("station_name"),
+            'value' => Application_Model_Preference::getValue("station_name"),
             'decorators' => array(
                 'ViewHelper'
             )
