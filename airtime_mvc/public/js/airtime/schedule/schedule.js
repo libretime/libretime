@@ -132,7 +132,7 @@ function findViewportDimensions() {
     
     return {
         width: viewportwidth,
-        height: viewportheight
+        height: viewportheight-45
     };
 }
 
