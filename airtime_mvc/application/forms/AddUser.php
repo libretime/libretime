@@ -10,11 +10,11 @@ class Application_Form_AddUser extends Zend_Form
                                     '../application/validate',
                                     'validate');
                                     * */
-                        
+
         $hidden = new Zend_Form_Element_Hidden('user_id');
         $hidden->setDecorators(array('ViewHelper'));
         $this->addElement($hidden);
-              
+
         $login = new Zend_Form_Element_Text('login');
         $login->setLabel('Username:');
         $login->setAttrib('class', 'input_text');
@@ -22,7 +22,7 @@ class Application_Form_AddUser extends Zend_Form
         $login->addFilter('StringTrim');
         //$login->addValidator('UserNameValidate');
         $this->addElement($login);
-        
+
         $password = new Zend_Form_Element_Password('password');
         $password->setLabel('Password:');
         $password->setAttrib('class', 'input_text');
@@ -30,21 +30,21 @@ class Application_Form_AddUser extends Zend_Form
         $password->addFilter('StringTrim');
         $password->addValidator('NotEmpty');
         $this->addElement($password);
-    
+
         $firstName = new Zend_Form_Element_Text('first_name');
         $firstName->setLabel('Firstname:');
         $firstName->setAttrib('class', 'input_text');
         $firstName->addFilter('StringTrim');
         $firstName->addValidator('NotEmpty');
         $this->addElement($firstName);
-        
+
         $lastName = new Zend_Form_Element_Text('last_name');
         $lastName->setLabel('Lastname:');
         $lastName->setAttrib('class', 'input_text');
         $lastName->addFilter('StringTrim');
         $lastName->addValidator('NotEmpty');
         $this->addElement($lastName);
-        
+
         $email = new Zend_Form_Element_Text('email');
         $email->setLabel('Email:');
         $email->setAttrib('class', 'input_text');
@@ -52,7 +52,7 @@ class Application_Form_AddUser extends Zend_Form
         $email->setRequired(true);
         $email->addValidator('EmailAddress');
         $this->addElement($email);
-        
+
         $cellPhone = new Zend_Form_Element_Text('cell_phone');
         $cellPhone->setLabel('Mobile Phone:');
         $cellPhone->setAttrib('class', 'input_text');
@@ -79,30 +79,30 @@ class Application_Form_AddUser extends Zend_Form
         $select->setMultiOptions(array(
                 "G" => "Guest",
                 "H" => "DJ",
-        		"P" => "Program Manager",
+                "P" => "Program Manager",
                 "A" => "Admin"
             ));
         $select->setRequired(true);
         $this->addElement($select);
-        
+
         $submit = new Zend_Form_Element_Submit('submit');
         $submit->setAttrib('class', 'ui-button ui-state-default right-floated');
         $submit->setIgnore(true);
         $submit->setLabel('Save');
         $this->addElement($submit);
     }
-    
+
     public function validateLogin($data){
-        
+
         if (strlen($data['user_id']) == 0){
             $count = CcSubjsQuery::create()->filterByDbLogin($data['login'])->count();
-            
+
             if ($count != 0){
                 $this->getElement('login')->setErrors(array("Login name is not unique."));
                 return false;
             }
         }
-        
+
         return true;
     }
 }

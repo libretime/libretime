@@ -8,7 +8,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/add-show-when.phtml'))
         ));
-        
+
         // Add start date element
         $startDate = new Zend_Form_Element_Text('add_show_start_date');
         $startDate->class = 'input_text';
@@ -22,7 +22,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setDecorators(array('ViewHelper'));
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
-        
+
         // Add start time element
         $startTime = new Zend_Form_Element_Text('add_show_start_time');
         $startTime->class = 'input_text';
@@ -50,7 +50,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setDecorators(array('ViewHelper'));
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
-        
+
         // Add end time element
         $endTime = new Zend_Form_Element_Text('add_show_end_time');
         $endTime->class = 'input_text';
@@ -64,7 +64,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setDecorators(array('ViewHelper'));
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
-        
+
         // Add duration element
         $this->addElement('text', 'add_show_duration', array(
             'label'      => 'Duration:',
@@ -85,13 +85,13 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null) {
         $valid = true;
-        
+
         $hours;
         $minutes;
-        
+
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
         $end_time = $formData['add_show_end_date_no_repeat']." ".$formData['add_show_end_time'];
-        
+
         //DateTime stores $start_time in the current timezone
         $nowDateTime = new DateTime();
         $showStartDateTime = new DateTime($start_time);
@@ -112,15 +112,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 }
             }
         }
-        
+
         // if end time is in the past, return error
         if($showEndDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
             $this->getElement('add_show_end_time')->setErrors(array('End date/time cannot be in the past'));
             $valid = false;
         }
-        
+
         $pattern =  '/([0-9][0-9])h ([0-9][0-9])m/';
-        
+
         if (preg_match($pattern, $formData['add_show_duration'], $matches) && count($matches) == 3) {
             $hours = $matches[1];
             $minutes = $matches[2];
@@ -152,7 +152,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $show_end->setTimezone(new DateTimeZone('UTC'));
 
             if ($formData["add_show_repeats"]) {
-                
+
                 //get repeating show end date
                 if ($formData["add_show_no_end"]) {
                     $date = Application_Model_Preference::GetShowsPopulatedUntil();
@@ -163,12 +163,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     } else {
                         $populateUntilDateTime = clone $date;
                     }
-                
+
                 } elseif (!$formData["add_show_no_end"]) {
                     $popUntil = $formData["add_show_end_date"]." ".$formData["add_show_end_time"];
                     $populateUntilDateTime = new DateTime($popUntil, new DateTimeZone('UTC'));
                 }
-                
+
                 //get repeat interval
                 if ($formData["add_show_repeat_type"] == 0) {
                     $interval = 'P7D';
@@ -177,12 +177,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 } elseif ($formData["add_show_repeat_type"] == 2) {
                     $interval = 'P1M';
                 }
-                
+
                 /* Check first show
                  * Continue if the first show does not overlap
                  */
                 $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
-                
+
                 /* Check if repeats overlap with previously scheduled shows
                  * Do this for each show day
                  */
@@ -222,7 +222,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                  * Continue if the first show does not overlap
                  */
                 $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
-                
+
                 if (!$overlapping) {
                     for ($i = 1; $i <= 10; $i++) {
                         $hours = ltrim($hours, '0');
@@ -233,7 +233,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                             $minutes = "0";
                             $durationToAdd = "PT".$hours."H";
                         }
-                        
+
                         $abs_rebroadcast_start = $formData["add_show_rebroadcast_date_absolute_".$i]." ".
                                                  $formData["add_show_rebroadcast_time_absolute_".$i];
                         $rebroadcastShowStart = new DateTime($abs_rebroadcast_start);
@@ -259,10 +259,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 }
             }
         }
-	      
+
         return $valid;
     }
-    
+
     public function disable(){
         $elements = $this->getElements();
         foreach ($elements as $element)
@@ -273,7 +273,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             }
         }
     }
-    
+
     public function disableRepeatCheckbox(){
         $element = $this->getElement('add_show_repeats');
         if ($element->getType() != 'Zend_Form_Element_Hidden')
@@ -281,7 +281,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $element->setAttrib('disabled','disabled');
         }
     }
-    
+
     public function disableStartDateAndTime(){
         $elements = array($this->getElement('add_show_start_date'), $this->getElement('add_show_start_time'));
         foreach ($elements as $element)

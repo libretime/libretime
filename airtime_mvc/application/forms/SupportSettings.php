@@ -5,18 +5,18 @@ require_once 'customfilters/ImageSize.php';
 class Application_Form_SupportSettings extends Zend_Form
 {
     private $isSass;
-    
+
     public function init()
     {
         $country_list = Application_Model_Preference::GetCountryList();
         $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $this->isSass = $isSass;
-        
+
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/support-setting.phtml', "isSaas" => $isSass)),
             array('File', array('viewScript' => 'form/support-setting.phtml', 'placement' => false)))
         );
-        
+
         //Station name
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
@@ -63,20 +63,20 @@ class Application_Form_SupportSettings extends Zend_Form
             'decorators' => array(
                 'ViewHelper'
             )
-		));
+        ));
 
-		// county list dropdown
-		$this->addElement('select', 'Country', array(
-			'label'		=> 'Country:',
-			'required'	=> false,
-			'value'		=> Application_Model_Preference::GetStationCountry(),
-			'multiOptions'	=> $country_list,
-			'decorators' => array(
+        // county list dropdown
+        $this->addElement('select', 'Country', array(
+            'label'        => 'Country:',
+            'required'    => false,
+            'value'        => Application_Model_Preference::GetStationCountry(),
+            'multiOptions'    => $country_list,
+            'decorators' => array(
                 'ViewHelper'
             )
-		));
-		
-		// Station city
+        ));
+
+        // Station city
         $this->addElement('text', 'City', array(
             'label'      => 'City:',
             'required'   => false,
@@ -85,31 +85,31 @@ class Application_Form_SupportSettings extends Zend_Form
             'decorators' => array(
                 'ViewHelper'
             )
-		));
-		
-		// Station Description
-		$description = new Zend_Form_Element_Textarea('Description');
-		$description->class = 'input_text_area';
-		$description->setLabel('Station Description:')
-					->setRequired(false)
-					->setValue(Application_Model_Preference::GetStationDescription())
-					->setDecorators(array('ViewHelper'))
-					->setAttrib('ROWS','2')
-					->setAttrib('COLS','58');
-		$this->addElement($description);
-		
-		// Station Logo
-		$upload = new Zend_Form_Element_File('Logo');
-		$upload->setLabel('Station Logo:')
-				->setRequired(false)
-				->setDecorators(array('File'))
-				->addValidator('Count', false, 1)
-				->addValidator('Extension', false, 'jpg,jpeg,png,gif')
-				->addFilter('ImageSize');
-		$upload->setAttrib('accept', 'image/*');
-		$this->addElement($upload);
-		
-		if(!$isSass){
+        ));
+
+        // Station Description
+        $description = new Zend_Form_Element_Textarea('Description');
+        $description->class = 'input_text_area';
+        $description->setLabel('Station Description:')
+                    ->setRequired(false)
+                    ->setValue(Application_Model_Preference::GetStationDescription())
+                    ->setDecorators(array('ViewHelper'))
+                    ->setAttrib('ROWS','2')
+                    ->setAttrib('COLS','58');
+        $this->addElement($description);
+
+        // Station Logo
+        $upload = new Zend_Form_Element_File('Logo');
+        $upload->setLabel('Station Logo:')
+                ->setRequired(false)
+                ->setDecorators(array('File'))
+                ->addValidator('Count', false, 1)
+                ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
+                ->addFilter('ImageSize');
+        $upload->setAttrib('accept', 'image/*');
+        $this->addElement($upload);
+
+        if(!$isSass){
             //enable support feedback
             $this->addElement('checkbox', 'SupportFeedback', array(
                 'label'      => 'Send support feedback',
@@ -118,9 +118,9 @@ class Application_Form_SupportSettings extends Zend_Form
                 'decorators' => array(
                     'ViewHelper'
                 )
-    		));
-    
-    		// checkbox for publicise
+            ));
+
+            // checkbox for publicise
             $checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
             $checkboxPublicise->setLabel('Promote my station on Sourcefabric.org')
                               ->setRequired(false)
@@ -130,28 +130,28 @@ class Application_Form_SupportSettings extends Zend_Form
                 $checkboxPublicise->setAttrib("disabled", "disabled");
             }
             $this->addElement($checkboxPublicise);
-    		
-    		// text area for sending detail
+
+            // text area for sending detail
             $this->addElement('textarea', 'SendInfo', array(
-            	'class'		=> 'sending_textarea',
-            	'required'   => false,
+                'class'        => 'sending_textarea',
+                'required'   => false,
                 'filters'    => array('StringTrim'),
-            	'readonly'	=> true,
-            	'cols'     => 61,
-            	'rows'		=> 5,
+                'readonly'    => true,
+                'cols'     => 61,
+                'rows'        => 5,
                 'value' => Application_Model_Preference::GetSystemInfo(false, true),
                 'decorators' => array(
                     'ViewHelper'
                 )
             ));
-            
+
             // checkbox for privacy policy
             $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
             $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"http://www.sourcefabric.org/en/about/policy/\" onclick=\"window.open(this.href); return false;\">privacy policy</a>.")
                 ->setDecorators(array('ViewHelper'));
             $this->addElement($checkboxPrivacy);
         }
-        
+
         // submit button
         $submit = new Zend_Form_Element_Submit("submit");
         $submit->class = 'ui-button ui-state-default right-floated';
@@ -160,7 +160,7 @@ class Application_Form_SupportSettings extends Zend_Form
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($submit);
     }
-    
+
     // overriding isValid function
     public function isValid ($data)
     {

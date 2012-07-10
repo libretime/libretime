@@ -29,7 +29,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             $this->addElement($text);
         }
     }
-    
+
     public function disable(){
         $elements = $this->getElements();
         foreach ($elements as $element)

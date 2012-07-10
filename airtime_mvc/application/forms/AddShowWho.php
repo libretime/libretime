@@ -10,21 +10,21 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
             'label'      => 'Search Users:',
             'class'      => 'input_text ui-autocomplete-input',
             'required'   => false
-		)); 
+        ));
 
-		$options = array();
-		$hosts = Application_Model_User::getHosts();
+        $options = array();
+        $hosts = Application_Model_User::getHosts();
 
-		foreach ($hosts as $host) {
-			$options[$host['index']] = $host['label'];
-		}
+        foreach ($hosts as $host) {
+            $options[$host['index']] = $host['label'];
+        }
 
-		//Add hosts selection
-		$hosts = new Zend_Form_Element_MultiCheckbox('add_show_hosts');
-		$hosts->setLabel('DJs:')
-			->setMultiOptions($options);
+        //Add hosts selection
+        $hosts = new Zend_Form_Element_MultiCheckbox('add_show_hosts');
+        $hosts->setLabel('DJs:')
+            ->setMultiOptions($options);
 
-		$this->addElement($hosts);
+        $this->addElement($hosts);
     }
 
     public function disable(){

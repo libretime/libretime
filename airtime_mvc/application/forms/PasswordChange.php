@@ -9,7 +9,7 @@ class Application_Form_PasswordChange extends Zend_Form
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/password-change.phtml'))
         ));
-        
+
         $this->addElement('password', 'password', array(
             'label' => 'Password',
             'required' => true,

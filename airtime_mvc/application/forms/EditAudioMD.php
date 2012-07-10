@@ -7,21 +7,21 @@ class Application_Form_EditAudioMD extends Zend_Form
          // Set the method for the display form to POST
         $this->setMethod('post');
 
-		// Add title field
+        // Add title field
         $this->addElement('text', 'track_title', array(
             'label'      => 'Title:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
         ));
 
-		// Add artist field
+        // Add artist field
         $this->addElement('text', 'artist_name', array(
             'label'      => 'Creator:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
         ));
 
-		// Add album field
+        // Add album field
         $this->addElement('text', 'album_title', array(
             'label'      => 'Album:',
             'class'      => 'input_text',
@@ -37,39 +37,39 @@ class Application_Form_EditAudioMD extends Zend_Form
             'required' => true
         ));
 
-		// Add genre field
+        // Add genre field
         $this->addElement('text', 'genre', array(
             'label'      => 'Genre:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
-		// Add year field
+        // Add year field
         $this->addElement('text', 'year', array(
             'label'      => 'Year:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
             'validators' => array(
-				array('date', false, array('YYYY-MM-DD')),
+                array('date', false, array('YYYY-MM-DD')),
                 array('date', false, array('YYYY-MM')),
-        		array('date', false, array('YYYY'))
-    		)
+                array('date', false, array('YYYY'))
+            )
         ));
 
-		// Add label field
+        // Add label field
         $this->addElement('text', 'label', array(
             'label'      => 'Label:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
-		// Add composer field
+        // Add composer field
         $this->addElement('text', 'composer', array(
             'label'      => 'Composer:',
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
-        
+
         // Add conductor field
         $this->addElement('text', 'conductor', array(
             'label'      => 'Conductor:',
@@ -77,7 +77,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'filters'    => array('StringTrim')
         ));
 
-		// Add mood field
+        // Add mood field
         $this->addElement('text', 'mood', array(
             'label'      => 'Mood:',
             'class'      => 'input_text',
@@ -122,7 +122,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'filters'    => array('StringTrim')
         ));
 
-		// Add the submit button
+        // Add the submit button
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default',
@@ -132,7 +132,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             )
         ));
 
-		// Add the submit button
+        // Add the submit button
         $this->addElement('button', 'cancel', array(
             'ignore'   => true,
             'class'    => 'ui-button ui-state-default ui-button-text-only md-cancel',

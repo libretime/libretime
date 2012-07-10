@@ -4,22 +4,22 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 {
     public function init()
     {
-    	// retrieves the length limit for each char field
-    	// and store to assoc array
-    	$maxLens = Application_Model_Show::getMaxLengths();
-    	
+        // retrieves the length limit for each char field
+        // and store to assoc array
+        $maxLens = Application_Model_Show::getMaxLengths();
+
         // Hidden element to indicate whether the show is new or
         // whether we are updating an existing show.
         $this->addElement('hidden', 'add_show_id', array(
             'decorators' => array('ViewHelper')
         ));
-        
+
         // Hidden element to indicate the instance id of the show
         // being edited.
         $this->addElement('hidden', 'add_show_instance_id', array(
             'decorators' => array('ViewHelper')
         ));
-        
+
         // Add name element
         $this->addElement('text', 'add_show_name', array(
             'label'      => 'Name:',
@@ -27,8 +27,8 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array('NotEmpty'),
-        	'value'		=> 'Untitled Show',
-        	'validators' => array(array('StringLength', false, array(0, $maxLens['name'])))
+            'value'        => 'Untitled Show',
+            'validators' => array(array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
          // Add URL element
@@ -46,16 +46,16 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
-        	'validators' => array(array('StringLength', false, array(0, $maxLens['genre'])))
+            'validators' => array(array('StringLength', false, array(0, $maxLens['genre'])))
         ));
 
-		 // Add the description element
+         // Add the description element
         $this->addElement('textarea', 'add_show_description', array(
             'label'      => 'Description:',
             'required'   => false,
             'class'      => 'input_text_area',
-        	'validators' => array(array('StringLength', false, array(0, $maxLens['description'])))
-		));
+            'validators' => array(array('StringLength', false, array(0, $maxLens['description'])))
+        ));
 
         $descText = $this->getElement('add_show_description');
 
@@ -65,7 +65,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
         ))));
 
     }
-    
+
     public function disable(){
         $elements = $this->getElements();
         foreach ($elements as $element)
