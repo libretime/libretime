@@ -149,6 +149,14 @@ def ubuntu_oneiric_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_11.10_64')
         
+def ubuntu_precise_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.04_64')
+        
+def ubuntu_precise_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.04_32')
+        
 def debian_squeeze_32(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Debian_Squeeze_32', debian=True)
@@ -172,7 +180,7 @@ def compile_liquidsoap(filename="liquidsoap"):
         'libmad-ocaml-dev libtaglib-ocaml-dev libalsa-ocaml-dev libtaglib-ocaml-dev libvorbis-ocaml-dev ' + \
         'libspeex-dev libspeexdsp-dev speex libladspa-ocaml-dev festival festival-dev ' + \
         'libsamplerate-dev libxmlplaylist-ocaml-dev libxmlrpc-light-ocaml-dev libflac-dev ' + \
-        'libxml-dom-perl libxml-dom-xpath-perl icecast2 patch autoconf libmp3lame-dev ' + \
+        'libxml-dom-perl libxml-dom-xpath-perl patch autoconf libmp3lame-dev ' + \
         'libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev camlidl')
         
     root = '/home/martin/src'
@@ -183,11 +191,11 @@ def compile_liquidsoap(filename="liquidsoap"):
     do_run('mv %s %s/liquidsoap.tar.gz' % (tmpPath, root))
     do_run('cd %s && tar xzf liquidsoap.tar.gz' % root)
     
-    do_run('cd %s/savonet && cp PACKAGES.minimal PACKAGES' % root)
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
-    do_run('cd %s/savonet && ./bootstrap' % root)
-    do_run('cd %s/savonet && ./configure' % root)
-    do_run('cd %s/savonet && make' % root)
-    get('%s/savonet/liquidsoap/src/liquidsoap' % root, filename)
+    do_run('cd %s/liquidsoap-1.0.1-full && cp PACKAGES.minimal PACKAGES' % root)
+    sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
+    sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
+    sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
+    do_run('cd %s/liquidsoap-1.0.1-full && ./bootstrap' % root)
+    do_run('cd %s/liquidsoap-1.0.1-full && ./configure' % root)
+    do_run('cd %s/liquidsoap-1.0.1-full && make' % root)
+    get('%s/liquidsoap-1.0.1-full/liquidsoap-1.0.1/src/liquidsoap' % root, filename)

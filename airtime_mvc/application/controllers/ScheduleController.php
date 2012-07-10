@@ -32,6 +32,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('edit-show-instance', 'json')
                     ->addActionContext('dj-edit-show', 'json')
                     ->addActionContext('calculate-duration', 'json')
+                    ->addActionContext('get-current-show', 'json')
                     ->initContext();
 
 		$this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -115,6 +116,16 @@ class ScheduleController extends Zend_Controller_Action
         }
 
 		$this->view->events = Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
+    }
+    
+    public function getCurrentShowAction() {
+        $currentShow = Application_Model_Show::GetCurrentShow();
+        if (!empty($currentShow)) {
+            $this->view->si_id = $currentShow[0]["instance_id"];
+            $this->view->current_show = true;
+        } else {
+            $this->view->current_show = false;
+        }
     }
 
     public function moveShowAction()
