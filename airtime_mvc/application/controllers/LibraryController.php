@@ -129,10 +129,10 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
-        try{
-            Application_Model_Playlist::DeletePlaylists($playlists, $user->getId());
-        }catch (PlaylistNoPermissionException $e){
-            $this->view->message = "You don't have a permission to delete all playlists/files that are selected.";
+        try {
+            Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
+        } catch (PlaylistNoPermissionException $e) {
+            $this->view->message = "You don't have permission to delete selected playlists/files.";
             return;
         }
 

@@ -804,12 +804,12 @@ class Application_Model_Playlist {
      * Delete playlists that match the ids..
      * @param array $p_ids
      */
-    public static function DeletePlaylists($p_ids, $p_userId)
+    public static function deletePlaylists($p_ids, $p_userId)
     {
         $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
-        if(count($leftOver) == 0){
+        if (count($leftOver) == 0) {
             CcPlaylistQuery::create()->findPKs($p_ids)->delete();
-        }else{
+        } else {
             throw new PlaylistNoPermissionException;
         }
     }
@@ -819,8 +819,8 @@ class Application_Model_Playlist {
         $ownedByUser = CcPlaylistQuery::create()->filterByDbCreatorId($p_userId)->find()->getData();
         $selectedPls = $p_ids;
         $ownedPls = array();
-        foreach($ownedByUser as $pl){
-            if( in_array($pl->getDbId(), $selectedPls) ){
+        foreach ($ownedByUser as $pl) {
+            if (in_array($pl->getDbId(), $selectedPls)) {
                 $ownedPls[] = $pl->getDbId();
             }
         }
