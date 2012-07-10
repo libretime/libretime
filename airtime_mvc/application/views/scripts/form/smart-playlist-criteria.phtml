@@ -17,14 +17,19 @@
         </dd>
         
         <dd id='sp_criteria-element'>
-        <?php foreach($this->ids as $id) {?>
-            <?php echo $this->element->getElement('sp_criteria_'.$id) ?>
-            <?php echo $this->element->getElement('sp_criteria_options_'.$id) ?>
-            <?php echo $this->element->getElement('sp_criteria_value_'.$id) ?>
-            <a href='#' class='criteria-remove' id=<?php echo $id ?>>Remove</a>
-            <br />
+        <?php for($i = 1; $i <= $this->criteriasLength; $i++) {?>
+            <div <?php if(($i > 1) && ($this->element->getElement('sp_criteria_'.$i)->getValue() == "0" &&
+                           $this->element->getElement('sp_criteria_modifier_'.$i)->getValue() == "0")) {
+                           echo 'style=display:none';
+                       } ?>>
+        
+                <?php echo $this->element->getElement('sp_criteria_'.$i) ?>
+                <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
+                <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
+                <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove</a>
+            </div>
         <?php } ?>
-        <a href='#' class='criteria-add'>Add</a>
+        <a href='#' id='criteria_add'>Add</a>
         </dd>
         
         <dd id='sp_limit-element'>

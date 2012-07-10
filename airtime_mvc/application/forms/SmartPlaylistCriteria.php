@@ -3,13 +3,6 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
 {
     public function init()
     {
-        //temporary solution
-        //get criteria ids
-        $ids = array(1,2,3);
-        
-        $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml', 'ids' => $ids))
-        ));
         
         $criteriaOptions = array(
             0 => "Select criteria",
@@ -43,20 +36,22 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         );
         
         $stringCriteriaOptions = array(
-            "contains",
-            "does not contain",
-            "is",
-            "is not",
-            "starts with",
-            "ends with"
+            0 => "Select modifier",
+            "contains" => "contains",
+            "does not contain" => "does not contain",
+            "is" => "is",
+            "is not" => "is not",
+            "starts with" => "starts with",
+            "ends with" => "ends with"
         );
         
         $numericCriteriaOptions = array(
-            "is",
-            "is not",
-            "is greater than",
-            "is less than",
-            "is in the range"
+            0 => "Select modifier",
+            "is" => "is",
+            "is not" => "is not",
+            "is greater than" => "is greater than",
+            "is less than" => "is less than",
+            "is in the range" => "is in the range"
         );
         
         $limitOptions = array(
@@ -64,6 +59,11 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "minutes",
             "items"
         );
+
+        $this->setDecorators(array(
+        array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml',
+              'criteriasLength' => count($criteriaOptions)))
+        ));
         
         $spType = new Zend_Form_Element_Radio('sp_type');
         $spType->setLabel('Set smart playlist type:');
@@ -75,27 +75,23 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $spType->setValue('Static');
         $this->addElement($spType);
         
-        foreach($ids as $id) {
-            $criteria = new Zend_Form_Element_Select('sp_criteria_'.$id);
-            $criteria->setAttrib('id', $id);
+        $numElements = count($criteriaOptions);
+        for($i = 1; $i <= $numElements; $i++) {
+            $criteria = new Zend_Form_Element_Select('sp_criteria_'.$i);
             $criteria->setAttrib('class', 'input_select');
+            $criteria->setValue(0);
             $criteria->setDecorators(array('viewHelper'));
             $criteria->setMultiOptions($criteriaOptions);
             $this->addElement($criteria);
-        }
+            
+            $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_'.$i);
+            $criteriaModifers->setValue(0);
+            $criteriaModifers->setAttrib('class', 'input_select');
+            $criteriaModifers->setDecorators(array('viewHelper'));
+            $criteriaModifers->setMultiOptions($stringCriteriaOptions);
+            $this->addElement($criteriaModifers);
         
-        foreach($ids as $id) {
-            $criteriaOptions = new Zend_Form_Element_Select('sp_criteria_options_'.$id);
-            $criteriaOptions->setAttrib('id', $id);
-            $criteriaOptions->setAttrib('class', 'input_select');
-            $criteriaOptions->setDecorators(array('viewHelper'));
-            $criteriaOptions->setMultiOptions($stringCriteriaOptions);
-            $this->addElement($criteriaOptions);
-        }
-        
-        foreach($ids as $id) {
-            $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_'.$id);
-            $criteriaValue->setAttrib('id', $id);
+            $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_'.$i);
             $criteriaValue->setAttrib('class', 'input_text');
             $criteriaValue->setDecorators(array('viewHelper'));
             $this->addElement($criteriaValue);
