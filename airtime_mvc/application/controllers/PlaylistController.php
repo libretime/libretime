@@ -72,6 +72,10 @@ class PlaylistController extends Zend_Controller_Action
         if (isset($pl)) {
             $formatter = new LengthFormatter($pl->getLength());
             $this->view->length = $formatter->format();
+            
+            $form = new Application_Form_SmartPlaylistCriteria();
+            $form->removeDecorator('DtDdWrapper');
+            $this->view->form = $form;
 
             $this->view->pl = $pl;
             $this->view->id = $pl->getId();
@@ -133,12 +137,15 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/smart_playlistbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
             if (isset($this->pl_sess->id)) {
                 $pl = new Application_Model_Playlist($this->pl_sess->id);
                 $this->view->pl = $pl;
+                $form = new Application_Form_SmartPlaylistCriteria();
+                $this->view->form = $form;
 
                 $formatter = new LengthFormatter($pl->getLength());
                 $this->view->length = $formatter->format();
@@ -169,6 +176,8 @@ class PlaylistController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id', null);
         Logging::log("editing playlist {$id}");
+        //$form = new Application_Form_SmartPlaylistCriteria();
+            
 
         if (!is_null($id)) {
             $this->changePlaylist($id);
