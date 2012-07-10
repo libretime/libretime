@@ -11,23 +11,23 @@ class LoginController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-        
+
         if (Zend_Auth::getInstance()->hasIdentity())
         {
             $this->_redirect('Showbuilder');
         }
-        
+
         //uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
-        
+
         $error = false;
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $form = new Application_Form_Login();
-        
+
         $message = "Please enter your user name and password";
 
         if($request->isPost())
@@ -50,24 +50,24 @@ class LoginController extends Zend_Controller_Action
                     //pass to the adapter the submitted username and password
                     $authAdapter->setIdentity($username)
                                 ->setCredential($password);
-    
+
                     $auth = Zend_Auth::getInstance();
                     $result = $auth->authenticate($authAdapter);
                     if($result->isValid())
                     {
                         //all info about this user from the login table omit only the password
                         $userInfo = $authAdapter->getResultRowObject(null, 'password');
-    
+
                         //the default storage is a session with namespace Zend_Auth
                         $authStorage = $auth->getStorage();
                         $authStorage->write($userInfo);
-                        
+
                         Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
                         Application_Model_Subjects::resetLoginAttempts($username);
-                        
+
                         $tempSess = new Zend_Session_Namespace("referrer");
                         $tempSess->referrer = 'login';
-                        
+
                         $this->_redirect('Showbuilder');
                     }
                     else
@@ -81,7 +81,7 @@ class LoginController extends Zend_Controller_Action
                 }
             }
         }
-        
+
         $this->view->message = $message;
         $this->view->error = $error;
         $this->view->form = $form;
@@ -97,15 +97,15 @@ class LoginController extends Zend_Controller_Action
         Zend_Auth::getInstance()->clearIdentity();
         $this->_redirect('showbuilder/index');
     }
-    
+
     public function passwordRestoreAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         if (!Application_Model_Preference::GetEnableSystemEmail()) {
             $this->_redirect('login');
         }

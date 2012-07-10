@@ -20,24 +20,24 @@ class UserController extends Zend_Controller_Action
     public function addUserAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js?'.$CC_CONFIG['airtime_version'],'text/javascript'); 
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/users.css?'.$CC_CONFIG['airtime_version']);
 
         $form = new Application_Form_AddUser();
 
         $this->view->successMessage = "";
- 
+
         if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {  
-    
-				$formdata = $form->getValues();
+            if ($form->isValid($request->getPost())) {
+
+                $formdata = $form->getValues();
                 if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 && $formdata['login'] == 'admin' && $formdata['user_id'] != 0){
                     $this->view->successMessage = "<div class='errors'>Specific action is not allowed in demo version!</div>";
                 }
@@ -54,7 +54,7 @@ class UserController extends Zend_Controller_Action
                     $user->setSkype($formdata['skype']);
                     $user->setJabber($formdata['jabber']);
                     $user->save();
-                    
+
                     $form->reset();
 
                     if (strlen($formdata['user_id']) == 0){
@@ -65,7 +65,7 @@ class UserController extends Zend_Controller_Action
                 }
             }
         }
- 
+
         $this->view->form = $form;
     }
 
@@ -80,7 +80,7 @@ class UserController extends Zend_Controller_Action
     {
         $post = $this->getRequest()->getPost();
         $users = Application_Model_User::getUsersDataTablesInfo($post);
-                 
+
         die(json_encode($users));
     }
 
@@ -102,7 +102,7 @@ class UserController extends Zend_Controller_Action
             $user = new Application_Model_User($delId);
             $this->view->entries = $user->delete();
         }
-            
+
     }
 
 

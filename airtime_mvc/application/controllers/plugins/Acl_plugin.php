@@ -26,8 +26,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      **/
     public function __construct(Zend_Acl $aclData, $roleName = 'G')
     {
-        $this->_errorPage = array('module' => 'default', 
-                                  'controller' => 'error', 
+        $this->_errorPage = array('module' => 'default',
+                                  'controller' => 'error',
                                   'action' => 'denied');
 
         $this->_roleName = $roleName;
@@ -62,17 +62,17 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * Returns the ACL role used
      *
      * @return string
-     * @author 
+     * @author
      **/
     public function getRoleName()
     {
         return $this->_roleName;
     }
 
-	public function setRoleName($type)
-	{
-		$this->_roleName = $type;
-	}
+    public function setRoleName($type)
+    {
+        $this->_roleName = $type;
+    }
 
     /**
      * Sets the error page
@@ -84,7 +84,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      **/
     public function setErrorPage($action, $controller = 'error', $module = null)
     {
-        $this->_errorPage = array('module' => $module, 
+        $this->_errorPage = array('module' => $module,
                                   'controller' => $controller,
                                   'action' => $action);
     }
@@ -108,58 +108,58 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      **/
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-		$controller = strtolower($request->getControllerName());
-		
-		if (in_array($controller, array("api", "auth"))){
-            			
-			$this->setRoleName("G");	
-		} 
+        $controller = strtolower($request->getControllerName());
+        
+        if (in_array($controller, array("api", "auth"))){
+                        
+            $this->setRoleName("G");    
+        }
         else if (!Zend_Auth::getInstance()->hasIdentity()){
-			
-			 if ($controller !== 'login') {
+            
+             if ($controller !== 'login') {
 
-				if ($request->isXmlHttpRequest()) {
+                if ($request->isXmlHttpRequest()) {
 
-					$url = 'http://'.$request->getHttpHost().'/login';
-					$json = Zend_Json::encode(array('auth' => false, 'url' => $url));
-					
-					// Prepare response
-					$this->getResponse()
-					     ->setHttpResponseCode(401)
-					     ->setBody($json)
-					     ->sendResponse();
+                    $url = 'http://'.$request->getHttpHost().'/login';
+                    $json = Zend_Json::encode(array('auth' => false, 'url' => $url));
+                    
+                    // Prepare response
+                    $this->getResponse()
+                         ->setHttpResponseCode(401)
+                         ->setBody($json)
+                         ->sendResponse();
 
-					//redirectAndExit() cleans up, sends the headers and stops the script
-					Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
-				} 
-				else {        
-					$r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-					$r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
-			   }
-    		}
-		}
-		else {
+                    //redirectAndExit() cleans up, sends the headers and stops the script
+                    Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
+                }
+                else {
+                    $r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+                    $r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
+               }
+            }
+        }
+        else {
 
-			$userInfo = Zend_Auth::getInstance()->getStorage()->read();
-			$this->setRoleName($userInfo->type);
+            $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+            $this->setRoleName($userInfo->type);
 
             Zend_View_Helper_Navigation_HelperAbstract::setDefaultAcl($this->_acl);
-			Zend_View_Helper_Navigation_HelperAbstract::setDefaultRole($this->_roleName);
-           
-		    $resourceName = '';
+            Zend_View_Helper_Navigation_HelperAbstract::setDefaultRole($this->_roleName);
 
-		    if ($request->getModuleName() != 'default') {
-		        $resourceName .= strtolower($request->getModuleName()) . ':';
-		    }
+            $resourceName = '';
 
-		    $resourceName .= $controller;
+            if ($request->getModuleName() != 'default') {
+                $resourceName .= strtolower($request->getModuleName()) . ':';
+            }
 
-		    /** Check if the controller/action can be accessed by the current user */
-		    if (!$this->getAcl()->isAllowed($this->_roleName, $resourceName, $request->getActionName())) {
-		        /** Redirect to access denied page */
-		        $this->denyAccess();
-		    }
-		}
+            $resourceName .= $controller;
+
+            /** Check if the controller/action can be accessed by the current user */
+            if (!$this->getAcl()->isAllowed($this->_roleName, $resourceName, $request->getActionName())) {
+                /** Redirect to access denied page */
+                $this->denyAccess();
+            }
+        }
     }
 
     /**
