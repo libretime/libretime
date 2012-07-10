@@ -1733,7 +1733,8 @@ class Application_Model_Show {
             $timeNow = $date->getUtcTimestamp(); 
         }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name,"
+        ." s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts <= TIMESTAMP '$timeNow'"
@@ -1746,14 +1747,16 @@ class Application_Model_Show {
     }
 
     /**
-     * Gets the current show, previous and next with an 2day window from the given timeNow, so timeNow-2days and timeNow+2days.
+     * Gets the current show, previous and next with an 2day window from
+     * the given timeNow, so timeNow-2days and timeNow+2days.
      */
     public static function getPrevCurrentNext($p_timeNow)
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name,"
+        ." s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '2 days'"
@@ -1770,10 +1773,11 @@ class Application_Model_Show {
 
         $timeNowAsMillis = strtotime($p_timeNow);
 
-        for( $i = 0; $i < $numberOfRows; ++$i ){
+        for ($i = 0; $i < $numberOfRows; ++$i) {
             //Find the show that is within the current time.
-            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) > $timeNowAsMillis)){
-                if ( $i - 1 >= 0){
+            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) 
+                && (strtotime($rows[$i]['ends']) > $timeNowAsMillis)) {
+                if ($i-1 >= 0) {
                     $results['previousShow'][0] = array(
                                 "id"=>$rows[$i-1]['id'],
                                 "instance_id"=>$rows[$i-1]['instance_id'],
@@ -1789,7 +1793,7 @@ class Application_Model_Show {
 
                 $results['currentShow'][0] =  $rows[$i];
 
-                if ( isset($rows[$i+1])){
+                if (isset($rows[$i+1])) {
                     $results['nextShow'][0] =  array(
                                 "id"=>$rows[$i+1]['id'],
                                 "instance_id"=>$rows[$i+1]['instance_id'],
@@ -1801,7 +1805,6 @@ class Application_Model_Show {
                                 "ends"=>$rows[$i+1]['ends'],
                                 "record"=>$rows[$i+1]['record'],
                                 "type"=>"show");
-
                 }
                 break;
             }
@@ -1855,7 +1858,7 @@ class Application_Model_Show {
      * @param String $timeEnd - interval end time (in UTC)
      * @return array - the next $limit number of shows within the time interval
      */
-    public static function GetNextShows($timeStart, $limit = "0", $timeEnd = "")
+    public static function getNextShows($timeStart, $limit = "0", $timeEnd = "")
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -1878,7 +1881,7 @@ class Application_Model_Show {
         ." ORDER BY si.starts";
 
         // defaults to retrieve all shows within the interval if $limit not set
-        if($limit != "0") {
+        if ($limit != "0") {
             $sql = $sql . " LIMIT $limit";
         }
 
@@ -1893,20 +1896,22 @@ class Application_Model_Show {
      * @param type $rows                arrays of arrays containing database query result
      * @param type $columnsToConvert    array of column names to convert
      */
-    public static function ConvertToLocalTimeZone(&$rows, $columnsToConvert) {
+    public static function convertToLocalTimeZone(&$rows, $columnsToConvert)
+    {
         $timezone = date_default_timezone_get();
 
         if (!is_array($rows)) {
             return;
         }
-        foreach($rows as &$row) {
-            foreach($columnsToConvert as $column) {
+        foreach ($rows as &$row) {
+            foreach ($columnsToConvert as $column) {
                 $row[$column] = Application_Common_DateHelper::ConvertToLocalDateTimeString($row[$column]);
             }
         }
     }
 
-    public static function GetMaxLengths() {
+    public static function getMaxLengths()
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
 

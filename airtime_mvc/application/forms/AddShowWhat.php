@@ -6,7 +6,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
     {
     	// retrieves the length limit for each char field
     	// and store to assoc array
-    	$maxLens = Application_Model_Show::GetMaxLengths();
+    	$maxLens = Application_Model_Show::getMaxLengths();
     	
         // Hidden element to indicate whether the show is new or
         // whether we are updating an existing show.

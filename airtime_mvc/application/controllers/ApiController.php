@@ -270,18 +270,18 @@ class ApiController extends Zend_Controller_Action
 
             $date = new Application_Common_DateHelper;
             $utcTimeNow = $date->getUtcTimestamp();
-            $utcTimeEnd = "";   // if empty, GetNextShows will use interval instead of end of day
+            $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
 
             $request = $this->getRequest();
             $type = $request->getParam('type');
             if($type == "endofday") {
-                // make GetNextShows use end of day
+                // make getNextShows use end of day
                 $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
                 $result = array("env"=>APPLICATION_ENV,
                                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 5, $utcTimeEnd));
+                                "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, 5, $utcTimeEnd));
                 
-                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             }else{
             
                 $limit = $request->getParam('limit');
@@ -292,8 +292,8 @@ class ApiController extends Zend_Controller_Action
                 $result = Application_Model_Schedule::GetPlayOrderRange();
     
                 //Convert from UTC to localtime for user.
-                Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             }
             
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
@@ -324,10 +324,10 @@ class ApiController extends Zend_Controller_Action
             $result = array();
             for ($i=0; $i<7; $i++){
                 $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
-                $shows = Application_Model_Show::GetNextShows($utcDayStart, "0", $utcDayEnd);
+                $shows = Application_Model_Show::getNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 
-                Application_Model_Show::ConvertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
                 $result[$dow[$i]] = $shows;
             }
@@ -413,7 +413,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->server_timezone = Application_Model_Preference::GetTimezone();
 
         $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+        Application_Model_Show::convertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
         if (count($rows) > 0){
             $this->view->is_recording = ($rows[0]['record'] == 1);

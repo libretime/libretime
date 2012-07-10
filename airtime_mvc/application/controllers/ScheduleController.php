@@ -357,8 +357,8 @@ class ScheduleController extends Zend_Controller_Action
             $range["next"]["ends"] = Application_Common_DateHelper::ConvertToLocalDateTimeString($range["next"]["ends"]);
         }
 
-        Application_Model_Show::ConvertToLocalTimeZone($range["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-        Application_Model_Show::ConvertToLocalTimeZone($range["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+        Application_Model_Show::convertToLocalTimeZone($range["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+        Application_Model_Show::convertToLocalTimeZone($range["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
         
         $source_status = array();
         $switch_status = array();
