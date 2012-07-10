@@ -1,0 +1,41 @@
+<form id="smart-playlist-form" method="post" action="">
+<fieldset class='toggle closed' id='smart_playlist_options'>
+<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Playlist Options</legend>
+    <dl class='zend_form'>
+        <dd id='sp_type-element' class='radio-inline-list'>
+        <label for='sp_type'>            
+            <?php echo $this->element->getElement('sp_type')->getLabel() ?>
+            <?php $i=0;
+                  $value = $this->element->getElement('sp_type')->getValue();
+                  foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
+                      <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> >
+                          <?php echo $radio ?>
+                      </input>
+            <?php $i = $i + 1; ?>
+            <?php endforeach; ?>
+        </label>
+        </dd>
+        
+        <dd id='sp_criteria-element'>
+        <?php foreach($this->ids as $id) {?>
+            <?php echo $this->element->getElement('sp_criteria_'.$id) ?>
+            <?php echo $this->element->getElement('sp_criteria_options_'.$id) ?>
+            <?php echo $this->element->getElement('sp_criteria_value_'.$id) ?>
+            <a href='#' class='criteria-remove' id=<?php echo $id ?>>Remove</a>
+            <br />
+        <?php } ?>
+        <a href='#' class='criteria-add'>Add</a>
+        </dd>
+        
+        <dd id='sp_limit-element'>
+            <label>
+                <?php echo $this->element->getElement('sp_limit_check') ?>
+                <?php echo $this->element->getElement('sp_limit_check')->getLabel() ?>
+                <?php echo $this->element->getElement('sp_limit_options') ?>
+                <?php echo $this->element->getElement('sp_limit_value')?>
+            </label>
+        </dd>
+        
+</dl>
+</fieldset>
+</form>
