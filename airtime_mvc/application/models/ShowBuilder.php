@@ -14,14 +14,14 @@ class Application_Model_ShowBuilder {
 
     private $user;
     private $opts;
-    
+
     private $pos;
     private $contentDT;
     private $epoch_now;
     private $currentShow;
-    
+
     private $showInstances = array();
-   
+
     private $defaultRowArray = array(
         "header" => false,
         "footer" => false,
@@ -54,16 +54,16 @@ class Application_Model_ShowBuilder {
         $this->startDT = $p_startDT;
         $this->endDT = $p_endDT;
         $this->timezone = date_default_timezone_get();
-        $this->user = Application_Model_User::GetCurrentUser();
+        $this->user = Application_Model_User::getCurrentUser();
         $this->opts = $p_opts;
         $this->epoch_now = floatval(microtime(true));
         $this->currentShow = false;
     }
-    
+
     private function getUsersShows() {
-        
+
         $shows = array();
-        
+
         $host_shows = CcShowHostsQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
             ->filterByDbHost($this->user->getId())
@@ -72,7 +72,7 @@ class Application_Model_ShowBuilder {
         foreach ($host_shows as $host_show) {
             $shows[] = $host_show->getDbShow();
         }
-        
+
         return $shows;
     }
 
@@ -84,15 +84,15 @@ class Application_Model_ShowBuilder {
             return;
         }
 
-        if ($this->user->canSchedule($p_item["show_id"]) == true) {  
+        if ($this->user->canSchedule($p_item["show_id"]) == true) {
             $row["allowed"] = true;
-        }    
+        }
     }
-    
+
     private function getItemColor($p_item, &$row) {
         $defaultColor = "ffffff";
         $defaultBackground = "3366cc";
-        
+
         $color = $p_item["show_color"];
         if ($color === '') {
             $color = $defaultColor;
@@ -101,7 +101,7 @@ class Application_Model_ShowBuilder {
         if ($backgroundColor === '') {
             $backgroundColor = $defaultBackground;
         }
-        
+
         $row["color"] = $color;
         $row["backgroundColor"] = $backgroundColor;
     }
@@ -123,7 +123,7 @@ class Application_Model_ShowBuilder {
         }
         $row["timestamp"] = $ts;
     }
-    
+
     /*
      * marks a row's status.
      * 0 = past
@@ -131,7 +131,7 @@ class Application_Model_ShowBuilder {
      * 2 = future
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row) {
-       
+
         if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart && $this->epoch_now > $p_epochItemEnd) {
             $row["scheduled"] = 0;
         }
@@ -144,7 +144,7 @@ class Application_Model_ShowBuilder {
         else if ($row["header"] === true && $this->epoch_now < $p_epochItemEnd) {
             $row["scheduled"] = 2;
         }
-        
+
         //item is in the past.
         else if ($this->epoch_now > $p_epochItemEnd) {
             $row["scheduled"] = 0;
@@ -156,7 +156,7 @@ class Application_Model_ShowBuilder {
             //how many seconds the view should wait to redraw itself.
             $row["refresh"] = $p_epochItemEnd - $this->epoch_now;
         }
-        
+
         //item is in the future.
         else if ($this->epoch_now < $p_epochItemStart) {
             $row["scheduled"] = 2;
@@ -176,31 +176,31 @@ class Application_Model_ShowBuilder {
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format("U.u"));
-        
+
         //is a rebroadcast show
         if (intval($p_item["si_rebroadcast"]) === 1) {
             $row["rebroadcast"] = true;
-            
+
             $parentInstance = CcShowInstancesQuery::create()->findPk($p_item["parent_show"]);
             $name = $parentInstance->getCcShow()->getDbName();
             $dt = $parentInstance->getDbStarts(null);
             $dt->setTimezone(new DateTimeZone($this->timezone));
             $time = $dt->format("Y-m-d H:i");
-            
+
             $row["rebroadcast_title"] = "Rebroadcast of {$name} from {$time}";
         }
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
-            
+
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
                 $file = Application_Model_StoredFile::Recall($p_item["si_file_id"]);
                 if (isset($file)) {
                     $sid = $file->getSoundCloudId();
                     $row["soundcloud_id"] = $sid;
-                } 
+                }
             }
         }
-        
+
         if ($startsEpoch < $this->epoch_now && $endsEpoch > $this->epoch_now) {
             $row["currentShow"] = true;
             $this->currentShow = true;
@@ -221,7 +221,7 @@ class Application_Model_ShowBuilder {
         $row["title"] = $p_item["show_name"];
         $row["instance"] = intval($p_item["si_id"]);
         $row["image"] = '';
-        
+
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
 
         $this->contentDT = $showStartDT;
@@ -254,7 +254,7 @@ class Application_Model_ShowBuilder {
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"] = $schedStartDT->format("H:i:s");
             $row["ends"] = $schedEndDT->format("H:i:s");
-        
+
             $formatter = new LengthFormatter($p_item['file_length']);
             $row['runtime'] = $formatter->format();
 
@@ -266,7 +266,7 @@ class Application_Model_ShowBuilder {
             $row["cueout"] = $p_item["cue_out"];
             $row["fadein"] = round(substr($p_item["fade_in"], 6), 6);
             $row["fadeout"] = round(substr($p_item["fade_out"], 6), 6);
-            
+
             $row["pos"] = $this->pos++;
 
             $this->contentDT = $schedEndDT;
@@ -275,10 +275,10 @@ class Application_Model_ShowBuilder {
         else if (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
             $row["instance"] = intval($p_item["si_id"]);
-            
+
             $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
             $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
-            
+
             $startsEpoch = floatval($showStartDT->format("U.u"));
             $endsEpoch = floatval($showEndDT->format("U.u"));
             
@@ -289,7 +289,7 @@ class Application_Model_ShowBuilder {
             $row["id"] = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
         }
-        
+
         if (intval($p_item["si_rebroadcast"]) === 1) {
             $row["rebroadcast"] = true;
         }
@@ -320,23 +320,23 @@ class Application_Model_ShowBuilder {
 
         $timeFilled = new TimeFilledFormatter($runtime);
         $row["fRuntime"] = $timeFilled->format();
-        
+
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
         $startsEpoch = floatval($showStartDT->format("U.u"));
         $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format("U.u"));
-        
+
         $row["refresh"] = floatval($showEndDT->format("U.u")) - $this->epoch_now;
-        
+
         if ($this->currentShow === true) {
             $row["currentShow"] = true;
         }
         
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         $this->isAllowed($p_item, $row);
-        
+
         return $row;
     }
 
@@ -349,7 +349,7 @@ class Application_Model_ShowBuilder {
     public function hasBeenUpdatedSince($timestamp, $instances) {
         $outdated = false;
         $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
-        
+
         if ($this->opts["showFilter"] !== 0) {
             $include[] = $this->opts["showFilter"];
         }
@@ -357,22 +357,22 @@ class Application_Model_ShowBuilder {
 
             $include = $this->getUsersShows();
         }
-        
- 
+
+
         $currentInstances = array();
 
         foreach ($shows as $show) {
-            
+
             if (empty($include) || in_array($show["show_id"], $include)) {
                 $currentInstances[] = $show["instance_id"];
-    
+
                 if (isset($show["last_scheduled"])) {
                     $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
                 }
                 else {
                     $dt = new DateTime($show["created"], new DateTimeZone("UTC"));
                 }
-                
+
                 //check if any of the shows have a more recent timestamp.
                 $showTimeStamp = intval($dt->format("U"));
                 if ($timestamp < $showTimeStamp) {
@@ -411,7 +411,7 @@ class Application_Model_ShowBuilder {
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 
             $item = $scheduled_items[$i];
-            
+
             //don't send back data for filler rows.
             if (isset($item["playout_status"]) && $item["playout_status"] < 0) {
                 continue;
@@ -425,11 +425,11 @@ class Application_Model_ShowBuilder {
                     //pass in the previous row as it's the last row for the previous show.
                     $display_items[] = $this->makeFooterRow($scheduled_items[$i-1]);
                 }
-                
+
                 $display_items[] = $this->makeHeaderRow($item);
 
                 $current_id = $item["si_id"];
-                
+
                 $this->pos = 1;
             }
 
@@ -449,7 +449,7 @@ class Application_Model_ShowBuilder {
         if (count($scheduled_items) > 0) {
             $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items)-1]);
         }
-        
+
         return array("schedule" => $display_items, "showInstances" => $this->showInstances);
     }
 }

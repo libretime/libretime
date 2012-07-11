@@ -9,8 +9,8 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
     public function init()
     {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $this->isSaas = $isSaas; 
-        
+        $this->isSaas = $isSaas;
+
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_email_server.phtml', "isSaas" => $isSaas))
         ));
@@ -24,7 +24,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
                 'ViewHelper'
             )
         ));
-        
+
         $this->addElement('text', 'systemEmail', array(
             'class' => 'input_text',
             'label' => 'Reset Password \'From\' Email',
@@ -32,7 +32,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
             'readonly' => true,
             'decorators' => array('viewHelper')
         ));
-        
+
         $this->addElement('checkbox', 'configureMailServer', array(
             'label' => 'Configure Mail Server',
             'required' => false,
@@ -41,7 +41,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
                 'viewHelper'
             )
         ));
-        
+
         $this->addElement('text', 'mailServer', array(
             'class' => 'input_text',
             'label' => 'Mail Server',
@@ -53,7 +53,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
                 new ConditionalNotEmpty(array('configureMailServer'=>'1'))
             )
         ));
-        
+
         $this->addElement('text', 'email', array(
             'class' => 'input_text',
             'label' => 'Email Address',
@@ -65,7 +65,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
                 new ConditionalNotEmpty(array('configureMailServer'=>'1'))
             )
         ));
-        
+
         $this->addElement('password', 'ms_password', array(
             'class' => 'input_text',
             'label' => 'Password',
@@ -78,7 +78,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
             ),
             'renderPassword' => true
         ));
-                        
+
         $port = new Zend_Form_Element_Text('port');
         $port->class = 'input_text';
         $port->setRequired(false)
@@ -86,7 +86,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
             ->setLabel('Port')
             ->setAttrib('readonly', true)
             ->setDecorators(array('viewHelper'));
-            
+
         $this->addElement($port);
 
     }

@@ -2,13 +2,13 @@
 
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {
-    private $isSaas;	
-	
+    private $isSaas;
+
     public function init()
     {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $this->isSaas = $isSaas; 
-        
+        $this->isSaas = $isSaas;
+
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_general.phtml', "isSaas" => $isSaas))
         ));
@@ -24,7 +24,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'label'      => 'Station Name',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetValue("station_name"),
+            'value' => Application_Model_Preference::getValue("station_name"),
             'decorators' => array(
                 'ViewHelper'
             )
@@ -98,16 +98,16 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
 
     private function getWeekStartDays() {
-    	$days = array(
-    		'Sunday',
-    		'Monday',
-		    'Tuesday',
-		    'Wednesday',
-		    'Thursday',
-		    'Friday',
-		    'Saturday'
-    	);
-    	return $days;
+        $days = array(
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday'
+        );
+        return $days;
     }
 }
 

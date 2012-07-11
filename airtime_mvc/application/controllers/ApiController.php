@@ -74,7 +74,7 @@ class ApiController extends Zend_Controller_Action
      * This is only being used by schedule.js at the moment.
      */
     public function calendarInitAction(){
-    	$this->view->layout()->disableLayout();
+        $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
         if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
@@ -83,12 +83,12 @@ class ApiController extends Zend_Controller_Action
             return;
         }
 
-    	$this->view->calendarInit = array(
-        	"timestamp" => time(),
-        	"timezoneOffset" => date("Z"),
-        	"timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
-    		"timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
-    		"weekStartDay" => Application_Model_Preference::GetWeekStartDay()
+        $this->view->calendarInit = array(
+            "timestamp" => time(),
+            "timezoneOffset" => date("Z"),
+            "timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
+            "timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
+            "weekStartDay" => Application_Model_Preference::GetWeekStartDay()
         );
     }
 
@@ -116,24 +116,24 @@ class ApiController extends Zend_Controller_Action
             Logging::log("401 Unauthorized");
             return;
         }
-        
+
         $fileID = $this->_getParam("file");
         $file_id = substr($fileID, 0, strpos($fileID, "."));
-        
+
         if (ctype_alnum($file_id) && strlen($file_id) == 32)
         {
             $media = Application_Model_StoredFile::RecallByGunid($file_id);
             if ( $media != null )
             {
-				
+                
                 $filepath = $media->getFilePath();
                 if(is_file($filepath)){
                     $full_path = $media->getPropelOrm()->getDbFilepath();
-                    
+
                     $file_base_name = strrchr($full_path, '/');
                     /* If $full_path does not contain a '/', strrchr will return false,
                      * in which case we can use $full_path as the base name.
-                     */ 
+                     */
                     if (!$file_base_name) {
                         $file_base_name = $full_path;
                     } else {
@@ -270,32 +270,32 @@ class ApiController extends Zend_Controller_Action
 
             $date = new Application_Common_DateHelper;
             $utcTimeNow = $date->getUtcTimestamp();
-            $utcTimeEnd = "";   // if empty, GetNextShows will use interval instead of end of day
+            $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
 
             $request = $this->getRequest();
             $type = $request->getParam('type');
             if($type == "endofday") {
-                // make GetNextShows use end of day
+                // make getNextShows use end of day
                 $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
                 $result = array("env"=>APPLICATION_ENV,
                                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                                "nextShow"=>Application_Model_Show::GetNextShows($utcTimeNow, 5, $utcTimeEnd));
-                
-                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                                "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, 5, $utcTimeEnd));
+
+                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             }else{
-            
+
                 $limit = $request->getParam('limit');
                 if($limit == "" || !is_numeric($limit)) {
                     $limit = "5";
                 }
-    
+
                 $result = Application_Model_Schedule::GetPlayOrderRange();
-    
+
                 //Convert from UTC to localtime for user.
-                Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             }
-            
+
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
 
             //echo json_encode($result);
@@ -324,14 +324,14 @@ class ApiController extends Zend_Controller_Action
             $result = array();
             for ($i=0; $i<7; $i++){
                 $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
-                $shows = Application_Model_Show::GetNextShows($utcDayStart, "0", $utcDayEnd);
+                $shows = Application_Model_Show::getNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 
-                Application_Model_Show::ConvertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
                 $result[$dow[$i]] = $shows;
             }
-	    $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
+        $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
         } else {
@@ -413,7 +413,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->server_timezone = Application_Model_Preference::GetTimezone();
 
         $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
-        Application_Model_Show::ConvertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+        Application_Model_Show::convertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
         if (count($rows) > 0){
             $this->view->is_recording = ($rows[0]['record'] == 1);
@@ -466,8 +466,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->showinstanceid = $show_instance_id;
 
 
-       	$showCanceled = false;
-       	$file = Application_Model_StoredFile::Recall($file_id);
+           $showCanceled = false;
+           $file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
         $show_name = null;
@@ -508,7 +508,7 @@ class ApiController extends Zend_Controller_Action
             $tmpTitle = $file->getName();
         }
 
-		//$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
+        //$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
@@ -627,7 +627,7 @@ class ApiController extends Zend_Controller_Action
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-            
+
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
                 return;
@@ -770,7 +770,7 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $api_key = $request->getParam('api_key');
         $getDiskInfo = $request->getParam('diskinfo') == "true";
-        
+
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {
@@ -823,7 +823,7 @@ class ApiController extends Zend_Controller_Action
         $msg = $request->getParam('msg');
         $sourcename = $request->getParam('sourcename');
         $status = $request->getParam('status');
-        
+
         // on source disconnection sent msg to pypo to turn off the switch
         // Added AutoTransition option
         if($status == "false" && Application_Model_Preference::GetAutoTransition()){
@@ -977,7 +977,7 @@ class ApiController extends Zend_Controller_Action
         $username = $request->getParam('username');
         $password = $request->getParam('password');
         $djtype = $request->getParam('djtype');
-        
+
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read()))
         {

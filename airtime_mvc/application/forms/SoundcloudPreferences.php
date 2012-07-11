@@ -30,7 +30,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
                 'ViewHelper'
             )
         ));
-        
+
         //enable downloadable for soundcloud
         $this->addElement('checkbox', 'SoundCloudDownloadbleOption', array(
             'label'      => 'Automatically Mark Files "Downloadable" on SoundCloud',
@@ -51,7 +51,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             'decorators' => array(
                 'ViewHelper'
             ),
-            
+
             // By default, 'allowEmpty' is true. This means that our custom
             // validators are going to be skipped if this field is empty,
             // which is something we don't want
@@ -71,7 +71,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             'decorators' => array(
                 'ViewHelper'
             ),
-            
+
             // By default, 'allowEmpty' is true. This means that our custom
             // validators are going to be skipped if this field is empty,
             // which is something we don't want
@@ -79,7 +79,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             'validators' => array(
                 new ConditionalNotEmpty(array('UploadToSoundcloudOption'=>'1'))
             ),
-            'renderPassword' => true 
+            'renderPassword' => true
         ));
 
          // Add the description element
@@ -91,7 +91,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             'decorators' => array(
                 'ViewHelper'
             )
-		));
+        ));
 
         //SoundCloud default genre
         $this->addElement('text', 'SoundCloudGenre', array(

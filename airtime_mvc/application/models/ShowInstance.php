@@ -30,7 +30,7 @@ class Application_Model_ShowInstance {
     public function getShow(){
         return new Application_Model_Show($this->getShowId());
     }
-    
+
     public function deleteRebroadcasts(){
         $con = Propel::getConnection();
 
@@ -42,7 +42,7 @@ class Application_Model_ShowInstance {
                 ." AND instance_id = $instance_id"
                 ." AND rebroadcast = 1";
 
-        $con->exec($sql);    	
+        $con->exec($sql);
     }
 
     /* This function is weird. It should return a boolean, but instead returns
@@ -256,11 +256,11 @@ class Application_Model_ShowInstance {
         if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
             return "Can't move show into past";
         }
-        
+
         //check if show is overlapping
         $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime, $newEndsDateTime, true, $this->getShowInstanceId());
         if ($overlapping) {
-            return "Cannot schedule overlapping shows";	
+            return "Cannot schedule overlapping shows";
         }
 
         if ($this->isRecorded()) {
@@ -579,7 +579,7 @@ class Application_Model_ShowInstance {
     public function getTimeScheduled()
     {
         $time = $this->_showInstance->getDbTimeFilled();
-		
+
         if ($time != "00:00:00" && !empty($time)) {
             $time_arr = explode(".", $time);
             if (count($time_arr) > 1) {
@@ -593,7 +593,7 @@ class Application_Model_ShowInstance {
         } else {
             $time = "00:00:00.00";
         }
-		
+
         return $time;
     }
 
@@ -637,7 +637,7 @@ class Application_Model_ShowInstance {
         } else {
             $returnStr = $hours . ":" . $interval->format("%I:%S") . ".00";
         }
-        
+
         return $returnStr;
     }
 
@@ -670,30 +670,30 @@ class Application_Model_ShowInstance {
 
     public function getLastAudioItemEnd()
     {
-		$con = Propel::getConnection();
+        $con = Propel::getConnection();
 
-		$sql = "SELECT ends FROM cc_schedule "
-			."WHERE instance_id = {$this->_instanceId} "
-			."ORDER BY ends DESC "
-			."LIMIT 1";
+        $sql = "SELECT ends FROM cc_schedule "
+            ."WHERE instance_id = {$this->_instanceId} "
+            ."ORDER BY ends DESC "
+            ."LIMIT 1";
 
-		$query = $con->query($sql)->fetchColumn(0);
+        $query = $con->query($sql)->fetchColumn(0);
         return ($query !== false) ? $query : NULL;
-	}
+    }
 
     public function getShowEndGapTime(){
-		$showEnd = $this->getShowInstanceEnd();
-		$lastItemEnd = $this->getLastAudioItemEnd();
+        $showEnd = $this->getShowInstanceEnd();
+        $lastItemEnd = $this->getLastAudioItemEnd();
 
-		if (is_null($lastItemEnd)){
-			$lastItemEnd = $this->getShowInstanceStart();
-		}
+        if (is_null($lastItemEnd)){
+            $lastItemEnd = $this->getShowInstanceStart();
+        }
 
 
-		$diff = strtotime($showEnd) - strtotime($lastItemEnd);
+        $diff = strtotime($showEnd) - strtotime($lastItemEnd);
 
-		return ($diff < 0) ? 0 : $diff;
-	}
+        return ($diff < 0) ? 0 : $diff;
+    }
 
     public static function GetLastShowInstance($p_timeNow){
         global $CC_CONFIG;
@@ -777,14 +777,14 @@ class Application_Model_ShowInstance {
         $con = Propel::getConnection();
 
         $sql = "SELECT ends
-				FROM cc_show_instances as si
+                FROM cc_show_instances as si
                 JOIN cc_show as sh ON si.show_id = sh.id
-        		WHERE si.ends > '$p_startTime' and si.ends < '$p_endTime' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
-        		ORDER BY si.ends";
+                WHERE si.ends > '$p_startTime' and si.ends < '$p_endTime' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
+                ORDER BY si.ends";
 
         return $con->query($sql)->fetchAll();
     }
-    
+
     function isRepeating(){
         if ($this->getShow()->isRepeating()){
             return true;

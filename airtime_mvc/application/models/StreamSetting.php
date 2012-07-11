@@ -1,7 +1,7 @@
 <?php
 class Application_Model_StreamSetting {
 
-    public static function SetValue($key, $value, $type)
+    public static function setValue($key, $value, $type)
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -27,7 +27,7 @@ class Application_Model_StreamSetting {
         return $con->exec($sql);
     }
 
-    public static function GetValue($key)
+    public static function getValue($key)
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -37,14 +37,14 @@ class Application_Model_StreamSetting {
         ." WHERE keyname = '$key'";
         $result = $con->query($sql)->fetchColumn(0);
 
-        if ($result == 0)
+        if ($result == 0) {
             return "";
-        else {
+        } else {
             $sql = "SELECT value FROM cc_stream_setting"
                 ." WHERE keyname = '$key'";
 
             $result = $con->query($sql)->fetchColumn(0);
-            return ($result !== false) ? $result : NULL;
+            return ($result !== false) ? $result : null;
         }
     }
 
@@ -130,16 +130,24 @@ class Application_Model_StreamSetting {
         }
 
         if (!isset($exists["master_live_stream_port"])) {
-            $rows[] = (array("keyname" =>"master_live_stream_port", "value"=>self::GetMasterLiveSteamPort(), "type"=>"integer"));
+            $rows[] = array("keyname" =>"master_live_stream_port",
+                            "value"=>self::getMasterLiveStreamPort(),
+                            "type"=>"integer");
         }
         if (!isset($exists["master_live_stream_mp"])) {
-            $rows[] = (array("keyname" =>"master_live_stream_mp", "value"=>self::GetMasterLiveSteamMountPoint(), "type"=>"string"));
+            $rows[] = array("keyname" =>"master_live_stream_mp",
+                            "value"=>self::getMasterLiveStreamMountPoint(),
+                            "type"=>"string");
         }
         if (!isset($exists["dj_live_stream_port"])) {
-            $rows[] = (array("keyname" =>"dj_live_stream_port", "value"=>self::GetDJLiveSteamPort(), "type"=>"integer"));
+            $rows[] = array("keyname" =>"dj_live_stream_port",
+                            "value"=>self::getDjLiveStreamPort(),
+                            "type"=>"integer");
         }
         if (!isset($exists["dj_live_stream_mp"])) {
-            $rows[] = (array("keyname" =>"dj_live_stream_mp", "value"=>self::GetDJLiveSteamMountPoint(), "type"=>"string"));
+            $rows[] = array("keyname" =>"dj_live_stream_mp",
+                            "value"=>self::getDjLiveStreamMountPoint(),
+                            "type"=>"string");
         }
         return $rows;
     }
@@ -155,7 +163,7 @@ class Application_Model_StreamSetting {
     {
         $con = Propel::getConnection();
 
-        foreach ($data as $key=>$d) {
+        foreach ($data as $key => $d) {
             if ($key == "output_sound_device" || $key == "icecast_vorbis_metadata") {
                 $v = $d == 1?"true":"false";
                 $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$key'";
@@ -166,13 +174,13 @@ class Application_Model_StreamSetting {
             } else if (is_array($d)) {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
-                foreach ($d as $k=>$v) {
+                foreach ($d as $k => $v) {
                     $keyname = $prefix . "_" . $k;
                     if ($k == 'enable') {
                         $v = $d['enable'] == 1 ? 'true' : 'false';
                     }
                     $v = trim($v);
-                    
+
                     #escape double single quotes CC-3926
                     $v = str_replace("'", "''", $v);
                     $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
@@ -233,7 +241,7 @@ class Application_Model_StreamSetting {
             ." WHERE keyname = '$keyname'";
         $result = $con->query($sql)->fetchColumn(0);
 
-        return ($result !== false) ? $result : NULL;
+        return ($result !== false) ? $result : null;
     }
 
     public static function getStreamEnabled($stream_id)
@@ -264,7 +272,8 @@ class Application_Model_StreamSetting {
         $enabled_stream = self::getEnabledStreamIds();
 
         foreach ($enabled_stream as $stream) {
-            $keys = "'".$stream."_output', "."'".$stream."_type', "."'".$stream."_bitrate', "."'".$stream."_host'";
+            $keys = "'".$stream."_output', "."'".$stream."_type', "."'"
+                .$stream."_bitrate', "."'".$stream."_host'";
 
             $sql = "SELECT keyname, value FROM cc_stream_setting"
                 ." WHERE keyname IN ($keys)";
@@ -280,35 +289,43 @@ class Application_Model_StreamSetting {
         return $out;
     }
 
-    public static function SetMasterLiveSteamPort($value){
-        self::SetValue("master_live_stream_port", $value, "integer");
+    public static function setMasterLiveStreamPort($value)
+    {
+        self::setValue("master_live_stream_port", $value, "integer");
     }
 
-    public static function GetMasterLiveSteamPort(){
-        return self::GetValue("master_live_stream_port");
+    public static function getMasterLiveStreamPort()
+    {
+        return self::getValue("master_live_stream_port");
     }
 
-    public static function SetMasterLiveSteamMountPoint($value){
-        self::SetValue("master_live_stream_mp", $value, "string");
+    public static function setMasterLiveStreamMountPoint($value)
+    {
+        self::setValue("master_live_stream_mp", $value, "string");
     }
 
-    public static function GetMasterLiveSteamMountPoint(){
-        return self::GetValue("master_live_stream_mp");
+    public static function getMasterLiveStreamMountPoint()
+    {
+        return self::getValue("master_live_stream_mp");
     }
 
-    public static function SetDJLiveSteamPort($value){
-        self::SetValue("dj_live_stream_port", $value, "integer");
+    public static function setDjLiveStreamPort($value)
+    {
+        self::setValue("dj_live_stream_port", $value, "integer");
     }
 
-    public static function GetDJLiveSteamPort(){
-        return self::GetValue("dj_live_stream_port");
+    public static function getDjLiveStreamPort()
+    {
+        return self::getValue("dj_live_stream_port");
     }
 
-    public static function SetDJLiveSteamMountPoint($value){
-        self::SetValue("dj_live_stream_mp", $value, "string");
+    public static function setDjLiveStreamMountPoint($value)
+    {
+        self::setValue("dj_live_stream_mp", $value, "string");
     }
 
-    public static function GetDJLiveSteamMountPoint(){
-        return self::GetValue("dj_live_stream_mp");
+    public static function getDjLiveStreamMountPoint()
+    {
+        return self::getValue("dj_live_stream_mp");
     }
 }

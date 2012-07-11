@@ -16,7 +16,7 @@ class Zend_Filter_ImageSize implements Zend_Filter_Interface {
         $origWidth = imagesx($image);
         $origHeight = imagesy($image);
         $ratio = max($origWidth, $origHeight) / 600;
-        
+
         if ($ratio > 1) {
             // img too big! create a scaled down image
             $newWidth = round($origWidth / $ratio);
@@ -34,7 +34,7 @@ class Zend_Filter_ImageSize implements Zend_Filter_Interface {
                 $writeFunc($resized, $value);
             }
         }
-        
+
         return $value;
     }
 }

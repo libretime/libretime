@@ -121,7 +121,7 @@ class Application_Model_Dashboard
                 }
             } else {
                 //return the one that starts sooner.
-                
+
                 if ($row[0]["starts"] <= $showInstance->getShowInstanceStart()){
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                             "starts"=>$row[0]["starts"],

@@ -37,7 +37,7 @@ class Application_Form_StreamSetting extends Zend_Form
             }
             $this->addElement($output_type);
         }
-      
+
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
         $icecast_vorbis_metadata->setLabel('Icecast Vorbis Metadata')
                                 ->setRequired(false)

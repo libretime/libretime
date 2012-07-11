@@ -21,9 +21,9 @@ class PreferenceController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-        
+
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
@@ -41,7 +41,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAllow3rdPartyApi($values["preferences_general"]["thirdPartyApi"]);
                 Application_Model_Preference::SetTimezone($values["preferences_general"]["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["preferences_general"]["weekStartDay"]);
-                
+
                 if (!$isSaas) {
                     Application_Model_Preference::SetEnableSystemEmail($values["preferences_email_server"]["enableSystemEmail"]);
                     Application_Model_Preference::SetSystemEmail($values["preferences_email_server"]["systemEmail"]);
@@ -153,7 +153,7 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-    
+
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         // get current settings
@@ -189,7 +189,7 @@ class PreferenceController extends Zend_Controller_Action
 
         $form->setSetting($setting);
         $form->startFrom();
-        
+
         $live_stream_subform = new Application_Form_LiveStreamingPreferences();
         $form->addSubForm($live_stream_subform, "live_stream_subform");
 
@@ -207,7 +207,7 @@ class PreferenceController extends Zend_Controller_Action
 
             $error = false;
             $values = $post_data;
-            
+
             if($form->isValid($post_data)){
                 if (!$isSaas) {
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
@@ -218,7 +218,7 @@ class PreferenceController extends Zend_Controller_Action
                 $values['streamFormat'] = $form->getValue('streamFormat');
 
                 Application_Model_StreamSetting::setStreamSetting($values);
-                
+
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
                 Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
@@ -226,7 +226,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
-                
+
                 if (!$isSaas) {
                     if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
                         $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
@@ -238,9 +238,9 @@ class PreferenceController extends Zend_Controller_Action
                         }
                     } else {
                         Application_Model_Preference::SetMasterDJSourceConnectionURL($values["master_dj_connection_url"]);
-                    } 
-                    
-                    if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {  
+                    }
+
+                    if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
                         $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
                         if (empty($values["dj_harbor_input_port"]) || empty($values["dj_harbor_input_mount_point"])) {
                             Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
@@ -252,32 +252,32 @@ class PreferenceController extends Zend_Controller_Action
                     else {
                         Application_Model_Preference::SetLiveDJSourceConnectionURL($values["live_dj_connection_url"]);
                     }
-                    
+
                     // extra info that goes into cc_stream_setting
-                    Application_Model_StreamSetting::SetMasterLiveSteamPort($values["master_harbor_input_port"]);
-                    Application_Model_StreamSetting::SetMasterLiveSteamMountPoint($values["master_harbor_input_mount_point"]);
-                    Application_Model_StreamSetting::SetDJLiveSteamPort($values["dj_harbor_input_port"]);
-                    Application_Model_StreamSetting::SetDJLiveSteamMountPoint($values["dj_harbor_input_mount_point"]);
+                    Application_Model_StreamSetting::setMasterLiveStreamPort($values["master_harbor_input_port"]);
+                    Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
+                    Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
+                    Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
                 }
-                
+
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
-                
+
                 $data = array();
                 $info = Application_Model_StreamSetting::getStreamSetting();
                 $data['setting'] = $info;
                 for($i=1;$i<=$num_of_stream;$i++){
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
-                
+
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
             }
         }
-        
+
         $live_stream_subform->updateVariables();
         $this->view->confirm_pypo_restart_text = "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.";
-        
+
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
         $this->view->form = $form;
@@ -351,7 +351,7 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->subform = $watched_dirs_form->render();
     }
-    
+
     public function rescanWatchDirectoryAction()
     {
         $dir = Application_Model_MusicDir::getDirByPath($this->getRequest()->getParam("dir"));
@@ -395,13 +395,13 @@ class PreferenceController extends Zend_Controller_Action
         }
         die(json_encode($out));
     }
-    
+
     public function setSourceConnectionUrlAction(){
         $request = $this->getRequest();
         $type = $request->getParam("type", null);
         $url = urldecode($request->getParam("url", null));
         $override = $request->getParam("override", false);
-        
+
         if($type == 'masterdj'){
             Application_Model_Preference::SetMasterDJSourceConnectionURL($url);
             Application_Model_Preference::SetMasterDjConnectionUrlOverride($override);
@@ -409,7 +409,7 @@ class PreferenceController extends Zend_Controller_Action
             Application_Model_Preference::SetLiveDJSourceConnectionURL($url);
             Application_Model_Preference::SetLiveDjConnectionUrlOverride($override);
         }
-        
+
         die();
     }
 }

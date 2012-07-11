@@ -13,7 +13,7 @@
  */
 class CcFiles extends BaseCcFiles {
 
-	public function getDbLength($format = "H:i:s.u")
+    public function getDbLength($format = "H:i:s.u")
     {
         return parent::getDbLength($format);
     }

@@ -39,10 +39,10 @@ class LibraryController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        
+
         //Open a jPlayer window and play the audio clip.
         $menu["play"] = array("name"=> "Preview", "icon" => "play");
-        
+
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         if ($type === "audioclip") {
@@ -76,7 +76,7 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
-        
+
         //SOUNDCLOUD MENU OPTIONS
         if ($type === "audioclip" && Application_Model_Preference::GetUploadToSoundcloudOption()) {
         
@@ -87,7 +87,7 @@ class LibraryController extends Zend_Controller_Action
             $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
         
             $scid = $file->getSoundCloudId();
-            
+
             if ($scid > 0){
                 $url = $file->getSoundCloudLinkToFile();
                 $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
@@ -102,7 +102,7 @@ class LibraryController extends Zend_Controller_Action
         
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
         }
-            
+
         $this->view->items = $menu;
     }
 
@@ -111,7 +111,7 @@ class LibraryController extends Zend_Controller_Action
         //array containing id and type of media to delete.
         $mediaItems = $this->_getParam('media', null);
 
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $files = array();
@@ -204,12 +204,12 @@ class LibraryController extends Zend_Controller_Action
 
     public function editFileMdAction()
     {
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
         if(!$isAdminOrPM){
             return;
         }
-        
+
         $request = $this->getRequest();
         $form = new Application_Form_EditAudioMD();
 
@@ -247,14 +247,14 @@ class LibraryController extends Zend_Controller_Action
                 $file = Application_Model_StoredFile::Recall($id);
                 $this->view->type = $type;
                 $md = $file->getMetadata();
-                
+
                 foreach ($md as $key => $value) {
                     if ($key == 'MDATA_KEY_DIRECTORY') {
                         $musicDir = Application_Model_MusicDir::getDirByPK($value);
                         $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
                     }
                 }
-                
+
                 $formatter = new SamplerateFormatter($md["MDATA_KEY_SAMPLERATE"]);
                 $md["MDATA_KEY_SAMPLERATE"] = $formatter->format();
 

@@ -34,7 +34,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $this->addElement($text);
         }
     }
-    
+
     public function disable(){
         $elements = $this->getElements();
         foreach ($elements as $element)

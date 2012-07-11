@@ -61,7 +61,7 @@ class Application_Model_RabbitMq
         $channel->close();
         $conn->close();
     }
-    
+
     public static function SendMessageToShowRecorder($event_type)
     {
         global $CC_CONFIG;
@@ -73,10 +73,10 @@ class Application_Model_RabbitMq
                                          $CC_CONFIG["rabbitmq"]["vhost"]);
         $channel = $conn->channel();
         $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
-    
+
         $EXCHANGE = 'airtime-pypo';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
-    
+
         $now = new DateTime("@".time()); //in UTC timezone
         $end_timestamp = new DateTime("@".(time() + 3600*2)); //in UTC timezone
 
@@ -87,7 +87,7 @@ class Application_Model_RabbitMq
         }
         $data = json_encode($temp);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
-    
+
         $channel->basic_publish($msg, $EXCHANGE);
         $channel->close();
         $conn->close();

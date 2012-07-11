@@ -135,7 +135,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_playlistbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
@@ -162,14 +162,14 @@ class PlaylistController extends Zend_Controller_Action
     public function newAction()
     {
         $pl_sess = $this->pl_sess;
-		$userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
         $pl = new Application_Model_Playlist();
         $pl->setName("Untitled Playlist");
-		$pl->setPLMetaData('dc:creator', $userInfo->id);
+        $pl->setPLMetaData('dc:creator', $userInfo->id);
 
-		$this->changePlaylist($pl->getId());
-		$this->createFullResponse($pl);
+        $this->changePlaylist($pl->getId());
+        $this->createFullResponse($pl);
     }
 
     public function editAction()
@@ -179,21 +179,20 @@ class PlaylistController extends Zend_Controller_Action
         //$form = new Application_Form_SmartPlaylistCriteria();
             
 
-		if (!is_null($id)) {
-			$this->changePlaylist($id);
-		}
+        if (!is_null($id)) {
+            $this->changePlaylist($id);
+        }
 
-		try {
+        try {
             $pl = new Application_Model_Playlist($id);
             $this->createFullResponse($pl);
-            //$this->view->form = $form;
-		}
-		catch (PlaylistNotFoundException $e) {
-		    $this->playlistNotFound();
-		}
-		catch (Exception $e) {
-		    $this->playlistUnknownError($e);
-		}
+        }
+        catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound();
+        }
+        catch (Exception $e) {
+            $this->playlistUnknownError($e);
+        }
     }
 
     public function deleteAction()
@@ -224,13 +223,13 @@ class PlaylistController extends Zend_Controller_Action
             $this->playlistUnknownError($e);
         }
     }
-    
+
     public function addItemsAction()
     {
         $ids = $this->_getParam('ids', array());
         $ids = (!is_array($ids)) ? array($ids) : $ids;
-    	$afterItem = $this->_getParam('afterItem', null);
-    	$addType = $this->_getParam('type', 'after');
+        $afterItem = $this->_getParam('afterItem', null);
+        $addType = $this->_getParam('type', 'after');
 
         try {
             $pl = $this->getPlaylist();
@@ -295,9 +294,9 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setCueAction()
     {
-		$id = $this->_getParam('id');
-		$cueIn = $this->_getParam('cueIn', null);
-		$cueOut = $this->_getParam('cueOut', null);
+        $id = $this->_getParam('id');
+        $cueIn = $this->_getParam('cueIn', null);
+        $cueOut = $this->_getParam('cueOut', null);
 
         try {
             $pl = $this->getPlaylist();
@@ -324,9 +323,9 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setFadeAction()
     {
-		$id = $this->_getParam('id');
-		$fadeIn = $this->_getParam('fadeIn', null);
-		$fadeOut = $this->_getParam('fadeOut', null);
+        $id = $this->_getParam('id');
+        $fadeIn = $this->_getParam('fadeIn', null);
+        $fadeOut = $this->_getParam('fadeOut', null);
 
         try {
             $pl = $this->getPlaylist();
@@ -379,8 +378,8 @@ class PlaylistController extends Zend_Controller_Action
      **/
     public function setPlaylistFadesAction()
     {
-		$fadeIn = $this->_getParam('fadeIn', null);
-		$fadeOut = $this->_getParam('fadeOut', null);
+        $fadeIn = $this->_getParam('fadeIn', null);
+        $fadeOut = $this->_getParam('fadeOut', null);
 
         try {
             $pl = $this->getPlaylist();
