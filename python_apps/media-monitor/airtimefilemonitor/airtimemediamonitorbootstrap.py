@@ -69,12 +69,11 @@ class AirtimeMediaMonitorBootstrap():
         json = self.api_client.list_all_watched_dirs()
         
         try:
-            dirs = getattr(json, "dirs")
-        except AttributeError:
-            self.logger.error("Could not find index 'dirs' in dictionary: %s", str(dirs))
+            return json["dirs"]
+        except KeyError as e:
+            self.logger.error("Could not find index 'dirs' in dictionary: %s", str(json))
+            self.logger.error(e)
             return {}
-            
-        return dirs
 
     """
     This function takes in a path name provided by the database (and its corresponding row id)

@@ -456,8 +456,8 @@ class AirTimeApiClient(ApiClientInterface):
             logger.error("Exception: %s", e)
             
         try:
-            return getattr(response, "files")
-        except AttributeError:
+            return response["files"]
+        except KeyError:
             self.logger.error("Could not find index 'files' in dictionary: %s", str(response))
             return []
 
