@@ -452,7 +452,7 @@ class AirTimeApiClient(ApiClientInterface):
             response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
-            response = None
+            response = {} 
             logger.error("Exception: %s", e)
 
         return response
