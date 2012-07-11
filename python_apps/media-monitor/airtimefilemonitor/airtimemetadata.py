@@ -255,5 +255,8 @@ class AirtimeMetadata:
             md['MDATA_KEY_FTYPE'] = "audioclip"
         elif "vorbis" in md['MDATA_KEY_MIME']:
             md['MDATA_KEY_FTYPE'] = "audioclip"
+        else:
+            self.logger.error("File %s of mime type %s does not appear to be a valid vorbis or mp3 file." % (filepath, md['MDATA_KEY_MIME']))
+            return None
 
         return md
