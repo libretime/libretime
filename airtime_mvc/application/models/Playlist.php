@@ -806,6 +806,53 @@ class Application_Model_Playlist {
     {
         CcPlaylistQuery::create()->findPKs($p_ids)->delete();
     }
+    
+    
+    // smart playlist functions start
+    /**
+     * Saves smart playlist criteria
+     * @param array $p_criteria
+     */
+    public static function saveSmartPlaylistCriteria($p_criteria)
+    {
+        $data = self::organizeSmartPlyalistCriteria($p_criteria);
+    }
+    
+    /**
+     * Get smart playlist criteria
+     * @param array $p_playlistId
+     */
+    public static function getSmartPlaylistCriteria($p_playlistId)
+    {
+        
+    }
+    
+    /**
+     * generate list of tracks. This function saves creiteria and generate
+     * tracks.
+     * @param array $p_criteria
+     */
+    public static function generateSmartPlaylist($p_criteria)
+    {
+        self::saveSmartPlaylistCriteria($p_criteria);
+    }
+    
+    public static function organizeSmartPlyalistCriteria($p_criteria)
+    {
+        $fieldNames = array('sp_criteria', 'sp_criteria_modifier', 'sp_criteria_value');
+        $output = array();
+        foreach ($p_criteria as $ele) {
+            $index = strrpos($ele['name'], '_');
+            $fieldName = substr($ele['name'], 0, $index);
+            if (in_array($fieldName, $fieldNames)) {
+                $rowNum = intval(substr($ele['name'], $index+1));
+                $output['criteria'][$rowNum][$fieldName] = $ele['value'];
+            }else{
+                $output['etc'][$ele['name']] = $ele['value'];
+            }
+        }
+    }
+    // smart playlist functions end
 
 } // class Playlist
 
