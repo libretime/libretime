@@ -69,8 +69,8 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $spType->setLabel('Set smart playlist type:');
         $spType->setDecorators(array('viewHelper'));
         $spType->setMultiOptions(array(
-            'Static',
-            'Dynamic'
+            'static' => 'Static',
+            'dynamic' => 'Dynamic'
         ));
         $spType->setValue('Static');
         $this->addElement($spType);
@@ -113,5 +113,11 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $limitValue->setAttrib('class', 'input_text');
         $limitValue->setDecorators(array('viewHelper'));
         $this->addElement($limitValue);
+        
+        $save = new Zend_Form_Element_Button('save_button');
+        $save->setAttrib('class', 'ui-button ui-state-default right-floated');
+        $save->setIgnore(true);
+        $save->setLabel('Save');
+        $this->addElement($save);
     }
 }
