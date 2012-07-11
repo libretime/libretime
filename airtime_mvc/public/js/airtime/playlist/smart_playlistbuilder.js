@@ -38,8 +38,8 @@ function setSmartPlaylistEvents() {
 		
         list.find('div:visible:last').children().attr('disabled', 'disabled');
         list.find("div:visible:last")
-            .find('[name^="sp_criteria"]').val('').end()
-            .find('[name^="sp_criteria_modifier"]').val('').end()
+            .find('[name^="sp_criteria"]').val(0).end()
+            .find('[name^="sp_criteria_modifier"]').val(0).end()
             .find('[name^="sp_criteria_value"]').val('')
             .end().hide();
 
