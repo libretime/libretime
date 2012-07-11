@@ -47,8 +47,8 @@ function setSmartPlaylistEvents() {
     form.find('button[id="save_button"]').click(function(event){
         var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
             data = $('form').serializeArray(),
-            static_action = 'Playlist/smart-playlist-criteria-save',
-            dynamic_action ='Playlist/smart-playlist-criteria-generate',
+            static_action = 'Playlist/smart-playlist-criteria-generate',
+            dynamic_action ='Playlist/smart-playlist-criteria-save',
             action,
             callback;
 		
@@ -66,9 +66,9 @@ function setSmartPlaylistEvents() {
         var playlist_type = $('input:radio[name=sp_type]:checked').val(),
             button_text;
         if (playlist_type == "0") {
-            button_text = 'Save';
-        } else {
             button_text = 'Generate';
+        } else {
+            button_text = 'Save';
         }
         $('button[id="save_button"]').text(button_text);    	
     });
