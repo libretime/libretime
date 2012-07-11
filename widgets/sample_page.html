@@ -17,7 +17,8 @@ $(document).ready(function() {
     $("#onAirToday").airtimeShowSchedule({
         sourceDomain: "http://localhost",
         text: {onAirToday:"On air today"},
-        updatePeriod: 5 //seconds
+        updatePeriod: 5, //seconds
+        showLimit: 10
     });
     $("#scheduleTabs").airtimeWeekSchedule({
         sourceDomain:"http://localhost",
