@@ -274,7 +274,6 @@ class ApiController extends Zend_Controller_Action
             if ($type == "endofday") {
                 
                 $limit = $request->getParam('limit');
-                Logging::log($limit);
                 if($limit == "" || !is_numeric($limit)) {
                     $limit = "5";
                 }
