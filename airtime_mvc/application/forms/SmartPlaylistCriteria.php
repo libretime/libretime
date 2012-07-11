@@ -6,33 +6,36 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         
         $criteriaOptions = array(
             0 => "Select criteria",
-            "track_title" => "Title",
+            "album_title" => "Album",
             "artist_name" => "Artist",
             "bit_rate" => "Bit Rate",
-            "sample_rate" => "Sample Rate",
-            "length" => "Length",
-            "album_title" => "Album",
-            "genre" => "Genre",
-            "year" => "Year",
-            "track_num" => "Track Number",
             "bmp" => "Bpm",
-            "rating" => "Rating",
-            "disc_number" => "Disc Number",
-            "mood" => "Mood",
-            "label" => "Label",
-            "composer" => "Composer",
-            "lyricist" => "Lyricist",
-            "name" => "Name",
-            "isrc_number" => "ISRC Number",
-            "language" => "Language",
-            "utime" => "Date Added",
-            "mtime" => "Date Modified",
             "comments" => "Comments",
-            "orchestra" => "Orchestra",
             "composer" => "Composer",
             "conductor" => "Conductor",
+            "utime" => "Date Added",
+            "mtime" => "Date Modified",
+            "disc_number" => "Disc Number",
+            "genre" => "Genre",
+            "isrc_number" => "ISRC Number",
+            "label" => "Label",
+            "language" => "Language",
+            "length" => "Length",
+            "lyricist" => "Lyricist",
+            "mood" => "Mood",
+            "name" => "Name",
+            "orchestra" => "Orchestra",
             "radio_station_name" => "Radio Station Name",
-            "soundcloud_id" => "Soundcloud Upload"    
+            "rating" => "Rating",
+            "sample_rate" => "Sample Rate",
+            "soundcloud_id" => "Soundcloud Upload",
+            "track_title" => "Title",
+            "track_num" => "Track Number",
+            "year" => "Year"               
+        );
+        
+        $criteriaTypes = array(
+        
         );
         
         $stringCriteriaOptions = array(
@@ -55,9 +58,9 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         );
         
         $limitOptions = array(
-            "hours",
-            "minutes",
-            "items"
+            "hours" => "hours",
+            "minutes" => "minutes",
+            "items" => "items"
         );
 
         $this->setDecorators(array(
@@ -76,32 +79,35 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $this->addElement($spType);
         
         $numElements = count($criteriaOptions);
-        for($i = 1; $i <= $numElements; $i++) {
+        for ($i = 0; $i < $numElements; $i++) {
             $criteria = new Zend_Form_Element_Select('sp_criteria_'.$i);
             $criteria->setAttrib('class', 'input_select');
-            $criteria->setValue(0);
+            $criteria->setValue('Select criteria');
             $criteria->setDecorators(array('viewHelper'));
             $criteria->setMultiOptions($criteriaOptions);
+            if ($i != 0){
+                $criteria->setAttrib('disabled', 'disabled');
+            }
             $this->addElement($criteria);
             
             $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_'.$i);
-            $criteriaModifers->setValue(0);
+            $criteriaModifers->setValue('Select modifier');
             $criteriaModifers->setAttrib('class', 'input_select');
             $criteriaModifers->setDecorators(array('viewHelper'));
             $criteriaModifers->setMultiOptions($stringCriteriaOptions);
+            if ($i != 0){
+                $criteriaModifers->setAttrib('disabled', 'disabled');
+            }
             $this->addElement($criteriaModifers);
         
             $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_'.$i);
             $criteriaValue->setAttrib('class', 'input_text');
             $criteriaValue->setDecorators(array('viewHelper'));
+            if ($i != 0){
+                $criteriaValue->setAttrib('disabled', 'disabled');
+            }
             $this->addElement($criteriaValue);
         }
-        
-        $limitCheck = new Zend_Form_Element_Checkbox('sp_limit_check');
-        $limitCheck->setLabel('Limit to');
-        $limitCheck->setDecorators(array('viewHelper'));
-        $limitCheck->setValue(true);
-        $this->addElement($limitCheck);
         
         $limit = new Zend_Form_Element_Select('sp_limit_options');
         $limit->setAttrib('class', 'input_select');
@@ -111,6 +117,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
         $limitValue->setAttrib('class', 'input_text');
+        $limitValue->setLabel('Limit to');
         $limitValue->setDecorators(array('viewHelper'));
         $this->addElement($limitValue);
         

@@ -9,6 +9,7 @@ function setSmartPlaylistEvents() {
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
 
         div.show();
+        div.children().removeAttr('disabled');
         div = div.next();
         if(div.length === 0) {
             $(this).hide();
@@ -35,9 +36,10 @@ function setSmartPlaylistEvents() {
             next = curr.next();
         }
 		
+        list.find('div:visible:last').children().attr('disabled', 'disabled');
         list.find("div:visible:last")
-            .find('[name^="sp_criteria"]').val('').end()
-            .find('[name^="sp_criteria_modifier"]').val('').end()
+            .find('[name^="sp_criteria"]').val(0).end()
+            .find('[name^="sp_criteria_modifier"]').val(0).end()
             .find('[name^="sp_criteria_value"]').val('')
             .end().hide();
 
@@ -47,7 +49,7 @@ function setSmartPlaylistEvents() {
     form.find('button[id="save_button"]').click(function(event){
         var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
             data = $('form').serializeArray(),
-            static_action = 'Playlist/smart-playlist-criteria-generate',
+            static_action = 'Playlist/smart-playlist-generate',
             dynamic_action ='Playlist/smart-playlist-criteria-save',
             action,
             callback;
