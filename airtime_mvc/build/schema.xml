@@ -224,6 +224,7 @@
     <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>
+    <column name="type" phpName="DbType" type="VARCHAR" size="7" defaultValue="static"/>
     <behavior name="aggregate_column">
       <parameter name="name" value="length" />
       <parameter name="foreign_table" value="cc_playlistcontents" />
@@ -249,6 +250,16 @@
     <foreign-key foreignTable="cc_playlist" name="cc_playlistcontents_playlist_id_fkey" onDelete="CASCADE">
       <reference local="playlist_id" foreign="id"/>
     </foreign-key>
+  </table>
+  <table name="cc_playlistcriteria" phpName="CcPlaylistcriteria">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="criteria" phpName="DbCriteria" type="VARCHAR" size="16" required="true"/>
+    <column name="modifier" phpName="DbModifier" type="VARCHAR" size="16" required="true"/>
+    <column name="value" phpName="DbValue" type="VARCHAR" size="16" required="true"/>
+    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="cc_playlist" name="cc_playlistcontents_playlist_id_fkey" onDelete="CASCADE">
+      <reference local="playlist_id" foreign="id"/>
+    </foreign-key>    
   </table>
   <table name="cc_pref" phpName="CcPref">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
