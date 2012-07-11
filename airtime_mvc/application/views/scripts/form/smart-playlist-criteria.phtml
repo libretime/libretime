@@ -17,16 +17,17 @@
         </dd>
         
         <dd id='sp_criteria-element'>
-        <?php for($i = 1; $i <= $this->criteriasLength; $i++) {?>
-            <div <?php if(($i > 1) && ($this->element->getElement('sp_criteria_'.$i)->getValue() == "0" &&
-                           $this->element->getElement('sp_criteria_modifier_'.$i)->getValue() == "0")) {
+        <?php for ($i = 1; $i <= $this->criteriasLength; $i++) {?>
+            <div <?php if (($i > 1) && ($this->element->getElement('sp_criteria_'.$i)->getAttrib('disabled') == 'disabled')) {
                            echo 'style=display:none';
                        } ?>>
         
                 <?php echo $this->element->getElement('sp_criteria_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
-                <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove</a>
+                <?php if ($i != 1) { ?>
+                    <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove</a>
+                <?php } ?>
             </div>
         <?php } ?>
         <a href='#' id='criteria_add'>Add</a>
