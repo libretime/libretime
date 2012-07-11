@@ -437,10 +437,10 @@ class AirTimeApiClient(ApiClientInterface):
 
         return response
 
-    #returns a list of all db files for a given directory in JSON format:
-    #{"files":["path/to/file1", "path/to/file2"]}
-    #Note that these are relative paths to the given directory. The full
-    #path is not returned.
+    # returns a list of all db files for a given directory in JSON format:
+    # ["path/to/file1", "path/to/file2"]
+    # Note that these are relative paths to the given directory. The full
+    # path is not returned.
     def list_all_db_files(self, dir_id):
         logger = self.logger
         try:
@@ -454,8 +454,12 @@ class AirTimeApiClient(ApiClientInterface):
         except Exception, e:
             response = {} 
             logger.error("Exception: %s", e)
-
-        return response
+            
+        try:
+            return getattr(response, "files")
+        except AttributeError:
+            self.logger.error("Could not find index 'files' in dictionary: %s", str(response))
+            return []
 
     def list_all_watched_dirs(self):
         logger = self.logger

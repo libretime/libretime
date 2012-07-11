@@ -43,8 +43,7 @@ class AirtimeMediaMonitorBootstrap():
     went offline.
     """
     def scan(self):
-        directories = self.get_list_of_watched_dirs();
-
+        directories = self.get_list_of_watched_dirs()
         self.logger.info("watched directories found: %s", directories)
 
         for id, dir in directories.iteritems():
@@ -60,12 +59,22 @@ class AirtimeMediaMonitorBootstrap():
         return self.api_client.list_all_db_files(dir_id)
 
     """
-    returns the path and the database row id for this path for all watched directories. Also
+    returns the path and its corresponding database row idfor all watched directories. Also
     returns the Stor directory, which can be identified by its row id (always has value of "1")
+    
+    Return type is a dictionary similar to:
+    {"1":"/srv/airtime/stor/"}
     """
     def get_list_of_watched_dirs(self):
         json = self.api_client.list_all_watched_dirs()
-        return json["dirs"]
+        
+        try:
+            dirs = getattr(json, "dirs")
+        except AttributeError:
+            self.logger.error("Could not find index 'dirs' in dictionary: %s", str(dirs))
+            return {}
+            
+        return dirs
 
     """
     This function takes in a path name provided by the database (and its corresponding row id)
@@ -91,8 +100,9 @@ class AirtimeMediaMonitorBootstrap():
 
         db_known_files_set = set()
         files = self.list_db_files(dir_id)
-        for file in files['files']:
-            db_known_files_set.add(file)
+        
+        for f in files:
+            db_known_files_set.add(f)
 
         all_files = self.mmc.scan_dir_for_new_files(dir)
 
