@@ -9,7 +9,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "album_title" => "Album",
             "artist_name" => "Artist",
             "bit_rate" => "Bit Rate",
-            "bmp" => "Bpm",
+            "bpm" => "Bpm",
             "comments" => "Comments",
             "composer" => "Composer",
             "conductor" => "Conductor",
