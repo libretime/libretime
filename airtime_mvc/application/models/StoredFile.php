@@ -960,6 +960,24 @@ Logging::log("getting media! - 2");
 
         return $results;
     }
+    
+    //TODO: MERGE THIS FUNCTION AND "listAllFiles" -MK
+    public static function listAllFiles2($dir_id=null, $limit=null)
+    {
+        $con = Propel::getConnection();
+
+        $sql = "SELECT id, filepath as fp"
+                ." FROM CC_FILES"
+                ." WHERE directory = $dir_id"
+                ." AND file_exists = 'TRUE'";
+                
+        if (!is_null($limit) && is_int($limit)){
+            $sql .= " LIMIT $limit";
+        }
+                
+        $rows = $con->query($sql, PDO::FETCH_ASSOC);
+        return $rows;
+    }
 
     /* Gets number of tracks uploaded to
      * Soundcloud in the last 24 hours

@@ -31,7 +31,22 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('check-live-stream-auth', 'json')
                 ->addActionContext('update-source-status', 'json')
                 ->addActionContext('get-bootstrap-info', 'json')
+                ->addActionContext('get-files-without-replay-gain', 'json')
                 ->initContext();
+    }
+    
+    public function checkAuth()
+    {
+        global $CC_CONFIG;
+        
+        $api_key = $this->_getParam('api_key');
+        
+        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
+            is_null(Zend_Auth::getInstance()->getStorage()->read())) {
+            header('HTTP/1.0 401 Unauthorized');
+            print 'You are not allowed to access this resource.';
+            exit;
+        }        
     }
 
     public function indexAction()
@@ -51,20 +66,12 @@ class ApiController extends Zend_Controller_Action
      */
     public function versionAction()
     {
-        global $CC_CONFIG;
-
+        $this->checkAuth();
+        
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
         $jsonStr = json_encode(array("version"=>Application_Model_Preference::GetAirtimeVersion()));
         echo $jsonStr;
     }
@@ -100,22 +107,11 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-
-        $api_key = $this->_getParam('api_key');
-
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            Logging::log("401 Unauthorized");
-            return;
-        }
 
         $fileID = $this->_getParam("file");
         $file_id = substr($fileID, 0, strpos($fileID, "."));
@@ -186,6 +182,8 @@ class ApiController extends Zend_Controller_Action
     */
     function smartReadFile($location, $mimeType = 'audio/mp3')
     {
+        $this->checkAuth();
+        
         $size= filesize($location);
         $time= date('r', filemtime($location));
 
@@ -343,21 +341,11 @@ class ApiController extends Zend_Controller_Action
 
     public function scheduleAction()
     {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-
-        $api_key = $this->_getParam('api_key');
-
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource. ';
-            exit;
-        }
 
         $data = Application_Model_Schedule::GetScheduledPlaylists();
         echo json_encode($data, JSON_FORCE_OBJECT);
@@ -365,20 +353,11 @@ class ApiController extends Zend_Controller_Action
 
     public function notifyMediaItemStartPlayAction()
     {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-
-        $api_key = $this->_getParam('api_key');
-        if(!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
@@ -388,16 +367,7 @@ class ApiController extends Zend_Controller_Action
 
     public function recordedShowsAction()
     {
-        global $CC_CONFIG;
-
-        $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
+        $this->checkAuth();
 
         $today_timestamp = date("Y-m-d H:i:s");
         $now = new DateTime($today_timestamp);
@@ -422,16 +392,7 @@ class ApiController extends Zend_Controller_Action
 
     public function uploadFileAction()
     {
-        global $CC_CONFIG;
-
-        $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
+        $this->checkAuth();
 
         $upload_dir = ini_get("upload_tmp_dir");
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
@@ -447,16 +408,7 @@ class ApiController extends Zend_Controller_Action
 
     public function uploadRecordedAction()
     {
-        global $CC_CONFIG;
-
-        $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
+        $this->checkAuth();
 
         //this file id is the recording for this show instance.
         $show_instance_id = $this->_getParam('showinstanceid');
@@ -520,20 +472,11 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function mediaMonitorSetupAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-
-        $api_key = $this->_getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
 
@@ -546,17 +489,9 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function reloadMetadataAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $mode = $request->getParam('mode');
         $params = $request->getParams();
@@ -650,34 +585,18 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function listAllFilesAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
         $dir_id = $request->getParam('dir_id');
 
         $this->view->files = Application_Model_StoredFile::listAllFiles($dir_id);
     }
 
     public function listAllWatchedDirsAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $result = array();
 
@@ -694,90 +613,46 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function addWatchedDirAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
-
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $this->view->msg = Application_Model_MusicDir::addWatchedDir($path);
     }
 
     public function removeWatchedDirAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
-
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $this->view->msg = Application_Model_MusicDir::removeWatchedDir($path);
     }
 
     public function setStorageDirAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
         $path = base64_decode($request->getParam('path'));
-
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $this->view->msg = Application_Model_MusicDir::setStorDir($path);
     }
 
     public function getStreamSettingAction() {
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $info = Application_Model_StreamSetting::getStreamSetting();
         $this->view->msg = $info;
     }
 
     public function statusAction() {
-        global $CC_CONFIG;
-
+        $this->checkAuth();
+        
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
         $getDiskInfo = $request->getParam('diskinfo') == "true";
-
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $status = array(
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
@@ -844,92 +719,76 @@ class ApiController extends Zend_Controller_Action
 
     // handles addition/deletion of mount point which watched dirs reside
     public function updateFileSystemMountAction(){
-        global $CC_CONFIG;
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $params = $request->getParams();
         $added_list = empty($params['added_dir'])?array():explode(',',$params['added_dir']);
         $removed_list = empty($params['removed_dir'])?array():explode(',',$params['removed_dir']);
 
         // get all watched dirs
-        $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null,null);
+        $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null, null);
 
-            foreach( $added_list as $ad){
-                $ad .= '/';
-                foreach( $watched_dirs as $dir ){
-                    $dirPath = $dir->getDirectory();
+        foreach ($added_list as $ad) {
+            $ad .= '/';
+            foreach ($watched_dirs as $dir) {
+                $dirPath = $dir->getDirectory();
 
-                    // if mount path itself was watched
-                    if($dirPath == $ad){
-                        Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                    }
+                // if mount path itself was watched
+                if ($dirPath == $ad) {
+                    Application_Model_MusicDir::addWatchedDir($dirPath, false);
+                } else if(substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
-                    else if(substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false){
-                        Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                    }
+                    Application_Model_MusicDir::addWatchedDir($dirPath, false);
+                } else if (substr($ad, 0, strlen($dirPath)) === $dirPath) {
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we add this mount point as
                     // watched dir
-                    else if(substr($ad, 0, strlen($dirPath)) === $dirPath){
-                        // bypass nested loop check
-                        Application_Model_MusicDir::addWatchedDir($ad, false, true);
-                    }
+                    // bypass nested loop check
+                    Application_Model_MusicDir::addWatchedDir($ad, false, true);
                 }
             }
-            foreach( $removed_list as $rd){
-                $rd .= '/';
-                foreach( $watched_dirs as $dir ){
-                    $dirPath = $dir->getDirectory();
-                    // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
-                    if(substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true){
-                        Application_Model_MusicDir::removeWatchedDir($dirPath, false);
-                    }
+        }
+        
+        foreach( $removed_list as $rd) {
+            $rd .= '/';
+            foreach ($watched_dirs as $dir) {
+                $dirPath = $dir->getDirectory();
+                // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
+                if (substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true) {
+                    Application_Model_MusicDir::removeWatchedDir($dirPath, false);
+                } else if (substr($rd, 0, strlen($dirPath)) === $dirPath) {
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we walk through all files within
                     // this watched dir in DB and mark them deleted.
                     // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to
                     // compare agaisnt all files in cc_files table
-                    else if(substr($rd, 0, strlen($dirPath)) === $dirPath ){
-                        $watchDir = Application_Model_MusicDir::getDirByPath($rd);
-                        // get all the files that is under $dirPath
-                        $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
-                        foreach($files as $f){
-                            // if the file is from this mount
-                            if(substr( $f->getFilePath(),0,strlen($rd) ) === $rd){
-                                $f->delete();
-                            }
+                    
+                    $watchDir = Application_Model_MusicDir::getDirByPath($rd);
+                    // get all the files that is under $dirPath
+                    $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
+                    foreach ($files as $f) {
+                        // if the file is from this mount
+                        if (substr( $f->getFilePath(),0,strlen($rd) ) === $rd) {
+                            $f->delete();
                         }
-                        if($watchDir){
-                            Application_Model_MusicDir::removeWatchedDir($rd, false);
-                        }
+                    }
+                    
+                    if($watchDir) {
+                        Application_Model_MusicDir::removeWatchedDir($rd, false);
                     }
                 }
             }
-
+        }
     }
 
     // handles case where watched dir is missing
-    public function handleWatchedDirMissingAction(){
-        global $CC_CONFIG;
+    public function handleWatchedDirMissingAction()
+    {
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
 
         $dir = base64_decode($request->getParam('dir'));
         Application_Model_MusicDir::removeWatchedDir($dir, false);
@@ -938,24 +797,18 @@ class ApiController extends Zend_Controller_Action
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
-    public function rabbitmqDoPushAction(){
-        global $CC_CONFIG;
+    public function rabbitmqDoPushAction()
+    {
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
         Logging::log("Notifying RabbitMQ to send message to pypo");
 
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    public function getBootstrapInfoAction(){
+    public function getBootstrapInfoAction()
+    {
         $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
         $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
         $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
@@ -968,36 +821,29 @@ class ApiController extends Zend_Controller_Action
     }
 
     /* This is used but Liquidsoap to check authentication of live streams*/
-    public function checkLiveStreamAuthAction(){
-        global $CC_CONFIG;
+    public function checkLiveStreamAuthAction()
+    {
+        $this->checkAuth();
 
         $request = $this->getRequest();
-        $api_key = $request->getParam('api_key');
 
         $username = $request->getParam('username');
         $password = $request->getParam('password');
         $djtype = $request->getParam('djtype');
 
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read()))
-        {
-            header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
-            exit;
-        }
-
-        if($djtype == 'master'){
+        if ($djtype == 'master') {
             //check against master
-            if($username == Application_Model_Preference::GetLiveSteamMasterUsername() && $password == Application_Model_Preference::GetLiveSteamMasterPassword()){
+            if ($username == Application_Model_Preference::GetLiveSteamMasterUsername() 
+                    && $password == Application_Model_Preference::GetLiveSteamMasterPassword()) {
                 $this->view->msg = true;
-            }else{
+            } else {
                 $this->view->msg = false;
             }
-        }elseif($djtype == "dj"){
+        } elseif ($djtype == "dj") {
             //check against show dj auth
             $showInfo = Application_Model_Show::GetCurrentShow();
             // there is current playing show
-            if(isset($showInfo[0]['id'])){
+            if (isset($showInfo[0]['id'])) {
                 $current_show_id = $showInfo[0]['id'];
                 $CcShow = CcShowQuery::create()->findPK($current_show_id);
 
@@ -1010,31 +856,46 @@ class ApiController extends Zend_Controller_Action
                 $hosts_ids = $show->getHostsIds();
 
                 // check against hosts auth
-                if($CcShow->getDbLiveStreamUsingAirtimeAuth()){
-                    foreach( $hosts_ids as $host){
+                if ($CcShow->getDbLiveStreamUsingAirtimeAuth()) {
+                    foreach ($hosts_ids as $host) {
                         $h = new Application_Model_User($host['subjs_id']);
-                        if($username == $h->getLogin() && md5($password) == $h->getPassword()){
+                        if($username == $h->getLogin() && md5($password) == $h->getPassword()) {
                             $this->view->msg = true;
                             return;
                         }
                     }
                 }
                 // check against custom auth
-                if($CcShow->getDbLiveStreamUsingCustomAuth()){
-                    if($username == $custom_user && $password == $custom_pass){
+                if ($CcShow->getDbLiveStreamUsingCustomAuth()) {
+                    if ($username == $custom_user && $password == $custom_pass) {
                         $this->view->msg = true;
-                    }else{
+                    } else {
                         $this->view->msg = false;
                     }
-                }
-                else{
+                } else {
                     $this->view->msg = false;
                 }
-            }else{
+            } else {
                 // no show is currently playing
                 $this->view->msg = false;
             }
         }
+    }
+    
+    /* This action is for use by our dev scripts, that make
+     * a change to the database and we want rabbitmq to send
+     * out a message to pypo that a potential change has been made. */
+    public function getFilesWithoutReplayGainAction()
+    {
+        $this->checkAuth();
+        
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $dir_id = $this->_getParam('dir_id');
+        
+        //connect to db and get get sql
+        $this->view->rows = Application_Model_StoredFile::listAllFiles2($dir_id, 0);
+        
     }
 }
 
