@@ -46,7 +46,7 @@ class ShowRecorder(Thread):
     def __init__ (self, show_instance, show_name, filelength, start_time):
         Thread.__init__(self)
         self.logger = logging.getLogger('recorder')
-        self.api_client = api_client.api_client_factory(config, self.logger)
+        self.api_client = api_client(self.logger)
         self.filelength = filelength
         self.start_time = start_time
         self.show_instance = show_instance
@@ -168,7 +168,7 @@ class Recorder(Thread):
     def __init__(self, q):
         Thread.__init__(self)
         self.logger = logging.getLogger('recorder')
-        self.api_client = api_client.api_client_factory(config, self.logger)
+        self.api_client = api_client(self.logger)
         self.api_client.register_component("show-recorder")
         self.sr = None
         self.shows_to_record = {}

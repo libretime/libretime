@@ -107,10 +107,10 @@ except Exception, e:
 
 class Global:
     def __init__(self):
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirTimeApiClient()
 
     def selfcheck(self):
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirTimeApiClient()
         return self.api_client.is_server_compatible()
 
     def test_api(self):
@@ -172,7 +172,7 @@ if __name__ == '__main__':
         g.test_api()
         sys.exit()
 
-    api_client = api_client.api_client_factory(config)
+    api_client = api_client.AirTimeApiClient()
     api_client.register_component("pypo")
 
     pypoFetch_q = Queue()

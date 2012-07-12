@@ -80,7 +80,7 @@ try:
     configure_locale()
 
     config = AirtimeMediaConfig(logger)
-    api_client = apc.api_client_factory(config.cfg)
+    api_client = apc.AirTimeApiClient()
     api_client.register_component("media-monitor")
 
     logger.info("Setting up monitor")

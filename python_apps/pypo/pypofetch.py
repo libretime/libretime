@@ -40,7 +40,7 @@ except Exception, e:
 class PypoFetch(Thread):
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock):
         Thread.__init__(self)
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirTimeApiClient()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q

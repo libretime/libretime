@@ -13,27 +13,14 @@ import urllib
 import urllib2
 import logging
 import json
-import os
 from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 import string
-import hashlib
+import traceback
 
 AIRTIME_VERSION = "2.1.3"
 
-def api_client_factory(config, logger=None):
-    if logger != None:
-        temp_logger = logger
-    else:
-        temp_logger = logging.getLogger()
-        
-    if config["api_client"] == "airtime":
-        return AirTimeApiClient(temp_logger)
-    else:
-        temp_logger.info('API Client "'+config["api_client"]+'" not supported.  Please check your config file.\n')
-        sys.exit()
-        
 def to_unicode(obj, encoding='utf-8'):
     if isinstance(obj, basestring):
         if not isinstance(obj, unicode):
@@ -44,120 +31,23 @@ def encode_to(obj, encoding='utf-8'):
     if isinstance(obj, unicode):
         obj = obj.encode(encoding)
     return obj
-    
+
 def convert_dict_value_to_utf8(md):
     #list comprehension to convert all values of md to utf-8
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
-
-class ApiClientInterface:
-
-    # Implementation: optional
-    #
-    # Called from: beginning of all scripts
-    #
-    # Should exit the program if this version of pypo is not compatible with
-    # 3rd party software.
-    def is_server_compatible(self, verbose = True):
-        pass
-
-    # Implementation: Required
-    #
-    # Called from: fetch loop
-    #
-    # This is the main method you need to implement when creating a new API client.
-    # start and end are for testing purposes.
-    # start and end are strings in the format YYYY-DD-MM-hh-mm-ss
-    def get_schedule(self, start=None, end=None):
-        return 0, []
-
-    # Implementation: Required
-    #
-    # Called from: fetch loop
-    #
-    # This downloads the media from the server.
-    def get_media(self, src, dst):
-        pass
-
-    # Implementation: optional
-    # You dont actually have to implement this function for the liquidsoap playout to work.
-    #
-    # Called from: pypo_notify.py
-    #
-    # This is a callback from liquidsoap, we use this to notify about the
-    # currently playing *song*.  We get passed a JSON string which we handed to
-    # liquidsoap in get_liquidsoap_data().
-    def notify_media_item_start_playing(self, data, media_id):
-        pass
-
-    # Implementation: optional
-    # You dont actually have to implement this function for the liquidsoap playout to work.
-    def generate_range_dp(self):
-        pass
-
-    # Implementation: optional
-    #
-    # Called from: push loop
-    #
-    # Return a dict of extra info you want to pass to liquidsoap
-    # You will be able to use this data in update_start_playing
-    def get_liquidsoap_data(self, pkey, schedule):
-        pass
-
-    def get_shows_to_record(self):
-        pass
-
-    def upload_recorded_show(self):
-        pass
-
-    def check_media_status(self, md5):
-        pass
-
-    def update_media_metadata(self, md):
-        pass
-
-    def list_all_db_files(self, dir_id):
-        pass
-
-    def list_all_watched_dirs(self):
-        pass
-
-    def add_watched_dir(self):
-        pass
-
-    def remove_watched_dir(self):
-        pass
-
-    def set_storage_dir(self):
-        pass
-
-    def register_component(self):
-        pass
-
-    def notify_liquidsoap_error(self, error_msg, stream_id):
-        pass
-    
-    def notify_liquidsoap_connection(self, stream_id):
-        pass
-        
-    # Put here whatever tests you want to run to make sure your API is working
-    def test(self):
-        pass
-
-
-    #def get_media_type(self, playlist):
-    #   nil
 
 ################################################################################
 # Airtime API Client
 ################################################################################
 
-class AirTimeApiClient(ApiClientInterface):
+class AirTimeApiClient():
 
     def __init__(self, logger=None):
-        if logger != None:
-            self.logger = logger
+        if logger is None:
+            self.logger = logging
         else:
-            self.logger = logging.getLogger()
+            self.logger = logger
+
         # loading config file
         try:
             self.config = ConfigObj('/etc/airtime/api_client.cfg')
