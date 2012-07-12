@@ -26,11 +26,13 @@
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
                 <?php if ($i != 0) { ?>
-                    <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove</a>
+                    <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove&nbsp;</a>
+                <?php } else { ?>
+                    <a href='#' id='criteria_add'>Add</a>
                 <?php } ?>
             </div>
         <?php } ?>
-        <a href='#' id='criteria_add'>Add</a>
+        
         </dd>
         
         <dd id='sp_limit-element'>

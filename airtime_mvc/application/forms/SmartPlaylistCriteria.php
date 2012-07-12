@@ -34,29 +34,6 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "year" => "Year"               
         );
         
-        $criteriaTypes = array(
-        
-        );
-        
-        $stringCriteriaOptions = array(
-            0 => "Select modifier",
-            "contains" => "contains",
-            "does not contain" => "does not contain",
-            "is" => "is",
-            "is not" => "is not",
-            "starts with" => "starts with",
-            "ends with" => "ends with"
-        );
-        
-        $numericCriteriaOptions = array(
-            0 => "Select modifier",
-            "is" => "is",
-            "is not" => "is not",
-            "is greater than" => "is greater than",
-            "is less than" => "is less than",
-            "is in the range" => "is in the range"
-        );
-        
         $limitOptions = array(
             "hours" => "hours",
             "minutes" => "minutes",
@@ -94,7 +71,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             $criteriaModifers->setValue('Select modifier');
             $criteriaModifers->setAttrib('class', 'input_select');
             $criteriaModifers->setDecorators(array('viewHelper'));
-            $criteriaModifers->setMultiOptions($stringCriteriaOptions);
+            $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
             if ($i != 0){
                 $criteriaModifers->setAttrib('disabled', 'disabled');
             }
