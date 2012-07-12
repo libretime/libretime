@@ -28,9 +28,10 @@ function setSmartPlaylistEvents() {
         var add_button = form.find('a[id="criteria_add"]');
         
         //remove error message from current row, if any
-        var error_element = curr.find('span[class="sp-errors"] span[id="sp-errors"]');
+        var error_element = curr.find('span[class="sp-errors"]');
         if (error_element.is(':visible')) {
             error_element.remove();
+            curr.find('span[id="sp-errors"]').remove();
         }
 
        /* assign next row to current row for all rows below and including
