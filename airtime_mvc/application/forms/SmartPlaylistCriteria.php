@@ -13,13 +13,12 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "comments" => "Comments",
             "composer" => "Composer",
             "conductor" => "Conductor",
-            "utime" => "Date Added",
-            "mtime" => "Date Modified",
             "disc_number" => "Disc Number",
             "genre" => "Genre",
-            "isrc_number" => "ISRC Number",
+            "isrc_number" => "ISRC",
             "label" => "Label",
             "language" => "Language",
+            "mtime" => "Last Modified",
             "length" => "Length",
             "lyricist" => "Lyricist",
             "mood" => "Mood",
@@ -31,6 +30,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "soundcloud_id" => "Soundcloud Upload",
             "track_title" => "Title",
             "track_num" => "Track Number",
+            "utime" => "Uploaded",
             "year" => "Year"               
         );
         

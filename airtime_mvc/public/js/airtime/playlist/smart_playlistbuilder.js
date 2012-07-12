@@ -5,7 +5,7 @@ $(document).ready(function() {
 function setSmartPlaylistEvents() {
     var form = $('#smart-playlist-form');
 	
-    form.find('a[id="criteria_add"]').click(function(){
+    form.find('a[id="criteria_add"]').live("click", function(){
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next(),
             add_button = $(this);
         
@@ -18,7 +18,7 @@ function setSmartPlaylistEvents() {
         }
     });
 	
-    form.find('a[id^="criteria_remove"]').click(function(){
+    form.find('a[id^="criteria_remove"]').live("click", function(){
         var curr = $(this).parent();
         var curr_pos = curr.index();
         var list = curr.parent();
@@ -26,6 +26,12 @@ function setSmartPlaylistEvents() {
         var count = list_length - curr_pos;
         var next = curr.next();
         var add_button = form.find('a[id="criteria_add"]');
+        
+        //remove error message from current row, if any
+        var error_element = curr.find('span[class="sp-errors"] span[id="sp-errors"]');
+        if (error_element.is(':visible')) {
+            error_element.remove();
+        }
 
        /* assign next row to current row for all rows below and including
         * the row getting removed
@@ -33,8 +39,11 @@ function setSmartPlaylistEvents() {
        for (var i=0; i<=count; i++) {
             var criteria = next.find('[name^="sp_criteria"]').val();
             curr.find('[name^="sp_criteria"]').val(criteria);
+            
             var modifier = next.find('[name^="sp_criteria_modifier"]').val();
+            populateModifierSelect(curr.find('[name^="sp_criteria"]'));
             curr.find('[name^="sp_criteria_modifier"]').val(modifier);
+            
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
             
@@ -96,13 +105,14 @@ function setSmartPlaylistEvents() {
         }
     });
 	
-    form.find('button[id="save_button"]').click(function(event){
+    form.find('button[id="save_button"]').live("click", function(event){
         var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
             data = $('form').serializeArray(),
             static_action = 'Playlist/smart-playlist-generate',
             dynamic_action ='Playlist/smart-playlist-criteria-save',
             action,
-            callback;
+            callback,
+            playlist_id = $('input[id="pl_id"]').val();
 		
         if (playlist_type == "0") {
             action = static_action;
@@ -111,10 +121,10 @@ function setSmartPlaylistEvents() {
             action = dynamic_action;
             callback = dynamicCallback;
         }
-        $.post(action, {format: "json", data: data}, callback);
+        $.post(action, {format: "json", data: data, pl_id: playlist_id}, callback);
     });
 	
-    form.find('dd[id="sp_type-element"]').change(function(){
+    form.find('dd[id="sp_type-element"]').live("change", function(){
         var playlist_type = $('input:radio[name=sp_type]:checked').val(),
             button_text;
         if (playlist_type == "0") {
@@ -125,48 +135,83 @@ function setSmartPlaylistEvents() {
         $('button[id="save_button"]').text(button_text);    	
     });
     
-    form.find('select[id^="sp_criteria"]').change(function(){
-        var criteria = $(this).val(),
-            criteria_type = criteriaTypes[criteria],
-            div = $(this);
-        $(this).next().children().remove();
-        
-        if (criteria_type == 's') {
-            $.each(stringCriteriaOptions, function(key, value){
-                div.next().append($('<option></option>')
-                          .attr('value', key)
-                          .text(value));
-            });
-        } else {
-            $.each(numericCriteriaOptions, function(key, value){
-                div.next().append($('<option></option>')
-                          .attr('value', key)
-                          .text(value));
-            })
+    form.find('select[id^="sp_criteria"]').live("change", function(){
+        var index_name = $(this).attr('id'),
+            index_num = index_name.charAt(index_name.length-1);
+        if ($('#sp_criteria_extra_'+index_num).length > 0) {
+            $('#sp_criteria_extra_'+index_num).remove();
+            $('#sp_criteria_extra_label_'+index_num).remove();
         }
+        populateModifierSelect(this);
     });
     
-    form.find('select[id^="sp_criteria_modifier"]').change(function(){
+    form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
+        var criteria_value = $(this).next(),
+            index_name = criteria_value.attr('id'),
+            index_num = index_name.charAt(index_name.length-1);
+        
         if ($(this).val() == 'is in the range') {
-            var criteria_value = $(this).next(),
-                index_name = criteria_value.attr('id'),
-                index_num = index_name.charAt(index_name.length-1);
-            
             criteria_value.after($('<input type="text" class="input_text">')
                           .attr('id', 'sp_criteria_extra_'+index_num)
-                          .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label"> to </span>');
+                          .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label_'+index_num+'"> to </span>');
         
-        }	
+        } else {
+            if ($('#sp_criteria_extra_'+index_num).length > 0) {
+            	$('#sp_criteria_extra_'+index_num).remove();
+            	$('#sp_criteria_extra_label_'+index_num).remove();
+            }
+        }
     });
 	
 }
 
-function staticCallback() {
-	
+function populateModifierSelect(e) {
+    var criteria = $(e).val(),
+        criteria_type = criteriaTypes[criteria],
+        div = $(e);
+    
+    $(e).next().children().remove();
+
+    if (criteria_type == 's') {
+        $.each(stringCriteriaOptions, function(key, value){
+            div.next().append($('<option></option>')
+                      .attr('value', key)
+                      .text(value));
+        });
+    } else {
+        $.each(numericCriteriaOptions, function(key, value){
+            div.next().append($('<option></option>')
+                      .attr('value', key)
+                      .text(value));
+        });
+    }
 }
 
-function dynamicCallback() {
-	
+function staticCallback(data) {
+	var form = $('#smart-playlist-form');
+	form.find('span[class="sp-errors"]').remove();
+	form.find(' span[id="sp-errors"]').remove();
+	var json = $.parseJSON(data);
+	if (json.result == "1") {
+	    var error_element;
+	    $.each(json.errors, function(index, error){
+            $.each(error.msg, function(index, message){
+                $('#'+error.element).parent().append("<span class='sp-errors'>"+message+"</span><span id='sp-errors'><br /></span>");
+            });
+        });
+    }
+}
+
+function dynamicCallback(json) {
+	var json = $.parseJSON(data);
+	if (json.result == "1") {
+        var error_element;
+        $.each(json.errors, function(index, error){
+            $.each(error.msg, function(index, message){
+                $('#'+error.element).parent().append("<span class='errors'>"+message+"<br /></span>");
+            });
+        });
+    }
 }
 
 var criteriaTypes = {

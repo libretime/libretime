@@ -1418,6 +1418,16 @@ div.errors{
     border:1px solid #c83f3f;
 }
 
+span.sp-errors{
+    color:#902d2d;
+    font-size:11px;
+    padding:2px 4px;
+    background:#c6b4b4;
+    margin-bottom:2px;
+    border:1px solid #c83f3f;
+    width: 400px;	
+}
+
 .collapsible-header, .collapsible-header-disabled {
 	border: 1px solid #8f8f8f;
 	background-color: #cccccc;
