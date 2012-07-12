@@ -24,6 +24,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('get-playlist', 'json')
                     ->addActionContext('smart-playlist-criteria-save', 'json')
                     ->addActionContext('smart-playlist-generate', 'json')
+                    ->addActionContext('smart-playlist-get', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -445,15 +446,24 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        Application_Model_Playlist::saveSmartPlaylistCriteria($param['data']);
-        
+        $result = Application_Model_Playlist::saveSmartPlaylistCriteria($params['data'], $params['pl_id']);
+        die(json_encode($result));
     }
     
     public function smartPlaylistGenerateAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $result = Application_Model_Playlist::generateSmartPlaylist($params['data']);
+        Logging::log($params);
+        $result = Application_Model_Playlist::generateSmartPlaylist($params['data'], $params['pl_id']);
+        die(json_encode($result));
+    }
+    
+    public function smartPlaylistGetAction()
+    {
+        $request = $this->getRequest();
+        $playlistId = $request->getParam('playlistId');
+        $result = Application_Model_Playlist::getSmartPlaylistCriteria($playlistId);
         die(json_encode($result));
     }
 }

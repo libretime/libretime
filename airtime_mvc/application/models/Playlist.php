@@ -854,15 +854,17 @@ class Application_Model_Playlist {
      * Saves smart playlist criteria
      * @param array $p_criteria
      */
-    public static function saveSmartPlaylistCriteria($p_criteria)
+    public static function saveSmartPlaylistCriteria($p_criteria, $p_playlistId)
     {
         $data = self::organizeSmartPlyalistCriteria($p_criteria);
         // things we need to check
         // 1. limit value shouldn't be empty and has upperbound of 24 hrs
         // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
+        // 3. validate formate according to DB column type
         $multiplier = 1;
         $result = 0;
         $errors = array();
+        $error = array();
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
         }
@@ -875,9 +877,13 @@ class Application_Model_Playlist {
                     $error[] =  "Litmit cannot be more than 24 hrs";
                 }
             }
-            $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
+            if (count($error) > 0){
+                $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
+            }
+            Logging::log($errors);
         }
         
+        Logging::log($errors);
         // format validation
         foreach ($data['criteria'] as $key=>$d){
             $error = array();
@@ -902,11 +908,43 @@ class Application_Model_Playlist {
             if ($d['sp_criteria_value'] == "") {
                 $error[] =  "Value cannot be empty";
             }
-            
-            $errors[] = array("element"=>"sp_criteria_".$key, "msg"=>$error);
+            if(count($error) > 0){
+                $errors[] = array("element"=>"sp_criteria_".$key, "msg"=>$error);
+            }
         }
         $result = count($errors) > 0 ? 1 :0;
+        if ($result == 0) {
+            self::storeCriteriaIntoDb($data, $p_playlistId);
+        }
         return array("result"=>$result, "errors"=>$errors);
+    }
+    
+    public static function storeCriteriaIntoDb($p_criteriaData, $p_playlistId){
+        // delete criteria under $p_playlistId
+        Logging::log($p_criteriaData);
+        $deleteCrit = new Criteria();
+        $deleteCrit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
+        CcPlaylistcriteriaPeer::doDelete($deleteCrit);
+        
+        foreach( $p_criteriaData['criteria'] as $d){
+            $crit = new Criteria();
+            $crit->add(CcPlaylistcriteriaPeer::CRITERIA, $d['sp_criteria']);
+            $crit->add(CcPlaylistcriteriaPeer::MODIFIER, $d['sp_criteria_modifier']);
+            $crit->add(CcPlaylistcriteriaPeer::VALUE, $d['sp_criteria_value']);
+            if (isset($d['sp_criteria_extra'])) {
+                $crit->add(CcPlaylistcriteriaPeer::EXTRA, $d['sp_criteria_extra']);
+            }
+            $crit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
+            CcPlaylistcriteriaPeer::doInsert($crit);
+        }
+        
+        // insert limit info
+        $crit = new Criteria();
+        $crit->add(CcPlaylistcriteriaPeer::CRITERIA, "limit");
+        $crit->add(CcPlaylistcriteriaPeer::MODIFIER, $p_criteriaData['etc']['sp_limit_options']);
+        $crit->add(CcPlaylistcriteriaPeer::VALUE, $p_criteriaData['etc']['sp_limit_value']);
+        $crit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
+        CcPlaylistcriteriaPeer::doInsert($crit);
     }
     
     /**
@@ -923,15 +961,16 @@ class Application_Model_Playlist {
      * tracks.
      * @param array $p_criteria
      */
-    public static function generateSmartPlaylist($p_criteria)
+    public static function generateSmartPlaylist($p_criteria, $p_playlistId)
     {
-        $result = self::saveSmartPlaylistCriteria($p_criteria);
+        $result = self::saveSmartPlaylistCriteria($p_criteria, $p_playlistId);
+        Logging::log($result);
         if ($result['result'] != 0) {
             return $result;
         }else{
-            Logging::log($p_criteria);
             $data = self::organizeSmartPlyalistCriteria($p_criteria);
             $list = self::getListofFilesMeetCriteria($data['criteria']);
+            return array("result"=>0);
         }
     }
     
