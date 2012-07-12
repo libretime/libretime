@@ -45,6 +45,47 @@ class Application_Model_Playlist {
         "dc:description" => "Description",
         "dcterms:extent" => "Length"
     );
+    
+    private static $modifier2CriteriaMap = array(
+            "contains" => Criteria::LIKE,
+            "does not contain" => Criteria::NOT_LIKE,
+            "is" => Criteria::EQUAL,
+            "is not" => Criteria::NOT_EQUAL,
+            "starts with" => Criteria::LIKE,
+            "ends with" => Criteria::LIKE,
+            "is greater than" => Criteria::GREATER_THAN,
+            "is less than" => Criteria::LESS_THAN,
+            "is in the range" => Criteria::CUSTOM);
+    
+    private static $criteria2PeerMap = array(
+            0 => "Select criteria",
+            "album_title" => CcFilesPeer::ALBUM_TITLE,
+            "artist_name" => CcFilesPeer::ARTIST_NAME,
+            "bit_rate" => CcFilesPeer::BIT_RATE,
+            "bpm" => CcFilesPeer::BPM,
+            "comments" => CcFilesPeer::COMMENTS,
+            "composer" => CcFilesPeer::COMPOSER,
+            "conductor" => CcFilesPeer::CONDUCTOR,
+            "utime" => CcFilesPeer::UTIME,
+            "mtime" => CcFilesPeer::MTIME,
+            "disc_number" => CcFilesPeer::DISC_NUMBER,
+            "genre" => CcFilesPeer::GENRE,
+            "isrc_number" => CcFilesPeer::ISRC_NUMBER,
+            "label" => CcFilesPeer::LABEL,
+            "language" => CcFilesPeer::LANGUAGE,
+            "length" => CcFilesPeer::LENGTH,
+            "lyricist" => CcFilesPeer::LYRICIST,
+            "mood" => CcFilesPeer::MOOD,
+            "name" => CcFilesPeer::NAME,
+            "orchestra" => CcFilesPeer::ORCHESTRA,
+            "radio_station_name" => CcFilesPeer::RADIO_STATION_NAME,
+            "rating" => CcFilesPeer::RATING,
+            "sample_rate" => CcFilesPeer::SAMPLE_RATE,
+            "soundcloud_id" => CcFilesPeer::SOUNDCLOUD_ID,
+            "track_title" => CcFilesPeer::TRACK_TITLE,
+            "track_num" => CcFilesPeer::TRACK_NUMBER,
+            "year" => CcFilesPeer::YEAR
+    );
 
 
     public function __construct($id=null, $con=null)
@@ -806,6 +847,139 @@ class Application_Model_Playlist {
     {
         CcPlaylistQuery::create()->findPKs($p_ids)->delete();
     }
+    
+    
+    // smart playlist functions start
+    /**
+     * Saves smart playlist criteria
+     * @param array $p_criteria
+     */
+    public static function saveSmartPlaylistCriteria($p_criteria)
+    {
+        $data = self::organizeSmartPlyalistCriteria($p_criteria);
+        // things we need to check
+        // 1. limit value shouldn't be empty and has upperbound of 24 hrs
+        // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
+        $multiplier = 1;
+        $result = 0;
+        $errors = array();
+        if ($data['etc']['sp_limit_options'] == 'hours') {
+            $multiplier = 60;
+        }
+        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
+            if ( $data['etc']['sp_limit_value'] == "" || intval($data['etc']['sp_limit_value']) == 0) {
+                $error[] =  "Litmit cannot be empty or 0";
+            } else {
+                $mins = $data['etc']['sp_limit_value'] * $multiplier;
+                if ($mins > 14400) {
+                    $error[] =  "Litmit cannot be more than 24 hrs";
+                }
+            }
+            $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
+        }
+        
+        // format validation
+        foreach ($data['criteria'] as $key=>$d){
+            $error = array();
+            // check for not selected select box
+            if ($d['sp_criteria'] == "0" || $d['sp_criteria_modifier'] == "0"){
+                $error[] =  "You must select Criteria and Modifier";
+            } else {
+                // we need to take care 'length' specially since the column type is varchar
+                if ($d['sp_criteria'] == 'length') {
+                    if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                        $error[] =  "'Length' should be in '00:00:00' format";
+                    }
+                }else{
+                    if (CcFilesPeer::getTableMap()->getColumn(self::$criteria2PeerMap[$d['sp_criteria']])->getType() == PropelColumnTypes::TIMESTAMP) {
+                        if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
+                            $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
+                        }
+                    }
+                }
+            }
+            
+            if ($d['sp_criteria_value'] == "") {
+                $error[] =  "Value cannot be empty";
+            }
+            
+            $errors[] = array("element"=>"sp_criteria_".$key, "msg"=>$error);
+        }
+        $result = count($errors) > 0 ? 1 :0;
+        return array("result"=>$result, "errors"=>$errors);
+    }
+    
+    /**
+     * Get smart playlist criteria
+     * @param array $p_playlistId
+     */
+    public static function getSmartPlaylistCriteria($p_playlistId)
+    {
+        
+    }
+    
+    /**
+     * generate list of tracks. This function saves creiteria and generate
+     * tracks.
+     * @param array $p_criteria
+     */
+    public static function generateSmartPlaylist($p_criteria)
+    {
+        $result = self::saveSmartPlaylistCriteria($p_criteria);
+        if ($result['result'] != 0) {
+            return $result;
+        }else{
+            Logging::log($p_criteria);
+            $data = self::organizeSmartPlyalistCriteria($p_criteria);
+            $list = self::getListofFilesMeetCriteria($data['criteria']);
+        }
+    }
+    
+    // this function return list of propel object
+    private static function getListofFilesMeetCriteria($p_data)
+    {
+        $c = new Criteria();
+        
+        foreach ($p_data as $criteria) {
+            $spCriteria = self::$criteria2PeerMap[$criteria['sp_criteria']];
+            $spCriteriaModifier = $criteria['sp_criteria_modifier'];
+            $spCriteriaValue = $criteria['sp_criteria_value'];
+            if ($spCriteriaModifier == "starts with") {
+                $spCriteriaValue = "$spCriteriaValue%";
+            } else if ($spCriteriaModifier == "ends with") {
+                $spCriteriaValue = "%$spCriteriaValue";
+            } else if ($spCriteriaModifier == "is in the range") {
+                $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[sp_criteria_extra]'";
+            }
+            $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+            $c->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+        }
+        try{
+            $out = CcFilesPeer::doSelect($c);
+        }catch(Exception $e){
+            //Logging::log($e);
+        }
+                
+    }
+    
+    private static function organizeSmartPlyalistCriteria($p_criteria)
+    {
+        $fieldNames = array('sp_criteria', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
+        $output = array();
+        foreach ($p_criteria as $ele) {
+            $index = strrpos($ele['name'], '_');
+            $fieldName = substr($ele['name'], 0, $index);
+            if (in_array($fieldName, $fieldNames)) {
+                $rowNum = intval(substr($ele['name'], $index+1));
+                $output['criteria'][$rowNum][$fieldName] = trim($ele['value']);
+            }else{
+                $output['etc'][$ele['name']] = $ele['value'];
+            }
+        }
+        
+        return $output;
+    }
+    // smart playlist functions end
 
 } // class Playlist
 
