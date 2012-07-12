@@ -8,6 +8,7 @@ unicode_unknown = u'unknown'
 class IncludeOnly(object):
     """
     A little decorator to help listeners only be called on extensions they support
+    NOTE: this decorator only works on methods and not functions. maybe fix this?
     """
     def __init__(self, *deco_args):
         self.exts = set([])
@@ -24,7 +25,6 @@ class IncludeOnly(object):
 def is_file_supported(path):
     return extension(path) in supported_extensions
 
-
 # In the future we would like a better way to find out
 # whether a show has been recorded
 def is_airtime_recorded(md):
@@ -32,10 +32,13 @@ def is_airtime_recorded(md):
 
 def clean_empty_dirs(path):
     """ walks path and deletes every empty directory it finds """
-    for root, dirs, _ in os.walk(path):
-        full_paths = ( os.path.join(root, d) for d in dirs )
-        for d in full_paths:
-            if not os.listdir(d): os.rmdir(d)
+    if path.endswith('/'): clean_empty_dirs(path[0:-1])
+    else:
+        for root, dirs, _ in os.walk(path, topdown=False):
+            full_paths = ( os.path.join(root, d) for d in dirs )
+            for d in full_paths:
+                if os.path.exists(d):
+                    if not os.listdir(d): os.removedirs(d)
 
 
 def extension(path):
