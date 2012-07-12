@@ -210,7 +210,6 @@ class MediaMonitorCommon:
     def create_file_path(self, original_path, orig_md):
 
         storage_directory = self.config.storage_directory
-
         try:
             #will be in the format .ext
             file_ext = os.path.splitext(original_path)[1].lower()
