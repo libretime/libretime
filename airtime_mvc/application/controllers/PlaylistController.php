@@ -446,13 +446,15 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         Application_Model_Playlist::saveSmartPlaylistCriteria($param['data']);
+        
     }
     
     public function smartPlaylistGenerateAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        Application_Model_Playlist::generateSmartPlaylist($params['data']);
+        $result = Application_Model_Playlist::generateSmartPlaylist($params['data']);
+        die(json_encode($result));
     }
 }
 
