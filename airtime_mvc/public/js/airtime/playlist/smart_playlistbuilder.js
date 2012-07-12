@@ -3,34 +3,77 @@ $(document).ready(function() {
 });
 
 function setSmartPlaylistEvents() {
-	var form = $('#smart-playlist-form');
+    var form = $('#smart-playlist-form');
 	
-	form.find('a[id="criteria_add"]').click(function(){
-        var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
-
+    form.find('a[id="criteria_add"]').click(function(){
+        var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next(),
+            add_button = $(this);
+        
         div.show();
+        div.find('a[id^="criteria_remove"]').after(add_button);
         div.children().removeAttr('disabled');
         div = div.next();
-        if(div.length === 0) {
+        if (div.length === 0) {
             $(this).hide();
         }
-	});
+    });
 	
-	form.find('a[id^="criteria_remove"]').click(function(){
+    form.find('a[id^="criteria_remove"]').click(function(){
         var curr = $(this).parent();
         var curr_pos = curr.index();
         var list = curr.parent();
         var list_length = list.find("div:visible").length;
         var count = list_length - curr_pos;
         var next = curr.next();
-		
-       for(var i=0; i<=count; i++) {
+        var add_button = form.find('a[id="criteria_add"]');
+
+       /* assign next row to current row for all rows below and including
+        * the row getting removed
+        */
+       for (var i=0; i<=count; i++) {
             var criteria = next.find('[name^="sp_criteria"]').val();
             curr.find('[name^="sp_criteria"]').val(criteria);
             var modifier = next.find('[name^="sp_criteria_modifier"]').val();
             curr.find('[name^="sp_criteria_modifier"]').val(modifier);
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
+            
+            /* if current and next row have the extra criteria value
+             * (for 'is in the range' modifier), then assign the next
+             * extra value to current and remove that element from
+             * next row
+             */
+            if (curr.find('[name^="sp_criteria_extra"]').length > 0
+                && next.find('[name^="sp_criteria_extra"]').length > 0) {
+            	
+                var criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
+                curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
+            	next.find('[name^="sp_criteria_extra"]').remove();
+                next.find('span[id="sp_criteria_extra_label"]').remove();
+            
+            /* if only the current row has the extra criteria value,
+             * then just remove the current row's extra criteria element
+             */
+            } else if (curr.find('[name^="sp_criteria_extra"]').length > 0
+                       && next.find('[name^="sp_criteria_extra"]').length == 0) {
+                curr.find('[name^="sp_criteria_extra"]').remove();
+                curr.find('span[id="sp_criteria_extra_label"]').remove();
+                
+            /* if only the next row has the extra criteria value,
+             * then add the extra criteria element to current row
+             * and assign next row's value to it
+             */
+            } else if (next.find('[name^="sp_criteria_extra"]').length > 0) {
+                var index_name = curr.find('[name^="sp_criteria_value"]').attr('id'),
+                    index_num = index_name.charAt(index_name.length-1),
+                    criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
+                
+                curr.find('[name^="sp_criteria_value"]')
+                    .after($('<input type="text" class="input_text">')
+                    .attr('id', 'sp_criteria_extra_'+index_num)
+                    .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label"> to </span>');
+                curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
+            }
 
             curr = next;
             next = curr.next();
@@ -44,6 +87,13 @@ function setSmartPlaylistEvents() {
             .end().hide();
 
         list.next().show();
+        
+        // always put 'add' button on the last row
+        if (list.find('div:visible').length > 1) {
+            list.find('div:visible:last').find('a[id^="criteria_remove"]').after(add_button);
+        } else {
+            list.find('div:visible:last').find('[name^="sp_criteria_value"]').after(add_button);
+        }
     });
 	
     form.find('button[id="save_button"]').click(function(event){
@@ -104,7 +154,7 @@ function setSmartPlaylistEvents() {
             
             criteria_value.after($('<input type="text" class="input_text">')
                           .attr('id', 'sp_criteria_extra_'+index_num)
-                          .attr('name', 'sp_criteria_extra_'+index_num)).after(' to ');
+                          .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label"> to </span>');
         
         }	
     });
