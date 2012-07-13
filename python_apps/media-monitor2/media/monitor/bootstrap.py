@@ -1,8 +1,8 @@
 import os
 from pydispatch import dispatcher
 from media.monitor.events import OrganizeFile, NewFile, DeleteFile
-import media.monitor.pure as mmp
 from media.monitor.log import Loggable
+import media.monitor.pure as mmp
 
 class Bootstrapper(Loggable):
     """
@@ -34,8 +34,7 @@ class Bootstrapper(Loggable):
         file system
         """
         songs = set()
-        modded = 0
-        deleted = 0
+        modded = deleted = 0
         for pc in self.watch_channels:
             for f in mmp.walk_supported(pc.path, clean_empties=False):
                 songs.add(f)
@@ -44,7 +43,7 @@ class Bootstrapper(Loggable):
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
                     dispatcher.send(signal=pc.signal, sender=self, event=NewFile(f))
         # Want all files in the database that are not in the filesystem
-        for to_delete in (self.db - songs):
+        for to_delete in self.db.exclude(songs):
             for pc in self.watch_channels:
                 if os.path.commonprefix([pc.path, to_delete]) == pc.path:
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
@@ -56,4 +55,5 @@ class Bootstrapper(Loggable):
                                   file '%s'" % to_delete)
         self.logger.info("Flushed watch directories. (modified, deleted) = (%d, %d)"
                          % (modded, deleted) )
+
 

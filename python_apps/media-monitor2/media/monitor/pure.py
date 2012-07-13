@@ -8,7 +8,7 @@ unicode_unknown = u'unknown'
 class IncludeOnly(object):
     """
     A little decorator to help listeners only be called on extensions they support
-    NOTE: this decorator only works on methods and not functions. maybe fix this?
+    NOTE: this decorator only works on methods and not functions. Maybe fix this?
     """
     def __init__(self, *deco_args):
         self.exts = set([])
@@ -39,7 +39,6 @@ def clean_empty_dirs(path):
             for d in full_paths:
                 if os.path.exists(d):
                     if not os.listdir(d): os.removedirs(d)
-
 
 def extension(path):
     """
