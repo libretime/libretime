@@ -78,6 +78,7 @@ class PlaylistController extends Zend_Controller_Action
             
             $form = new Application_Form_SmartPlaylistCriteria();
             $form->removeDecorator('DtDdWrapper');
+            $form->startForm($pl->getId());
             //$form->loadCriteria($pl->getId());
             $this->view->form = $form;
 
@@ -149,6 +150,7 @@ class PlaylistController extends Zend_Controller_Action
                 $pl = new Application_Model_Playlist($this->pl_sess->id);
                 $this->view->pl = $pl;
                 $form = new Application_Form_SmartPlaylistCriteria();
+                $form->startForm($this->pl_sess->id);
                 $this->view->form = $form;
 
                 $formatter = new LengthFormatter($pl->getLength());

@@ -238,7 +238,7 @@ var criteriaTypes = {
     "album_title" : "s",
     "artist_name" : "s",
     "bit_rate" : "n",
-    "bmp" : "n",
+    "bpm" : "n",
     "comments" : "s",
     "composer" : "s",
     "conductor" : "s",
