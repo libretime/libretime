@@ -895,7 +895,7 @@ class Application_Model_Playlist {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
                 }else{
-                    if (CcFilesPeer::getTableMap()->getColumn(self::$criteria2PeerMap[$d['sp_criteria']])->getType() == PropelColumnTypes::TIMESTAMP) {
+                    if (CcFilesPeer::getTableMap()->getColumn(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
                         if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                             $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
                         }
@@ -925,7 +925,7 @@ class Application_Model_Playlist {
         
         foreach( $p_criteriaData['criteria'] as $d){
             $crit = new Criteria();
-            $crit->add(CcPlaylistcriteriaPeer::CRITERIA, $d['sp_criteria']);
+            $crit->add(CcPlaylistcriteriaPeer::CRITERIA, $d['sp_criteria_field']);
             $crit->add(CcPlaylistcriteriaPeer::MODIFIER, $d['sp_criteria_modifier']);
             $crit->add(CcPlaylistcriteriaPeer::VALUE, $d['sp_criteria_value']);
             if (isset($d['sp_criteria_extra'])) {
@@ -964,14 +964,14 @@ class Application_Model_Playlist {
         if ($result['result'] != 0) {
             return $result;
         }else{
-            $data = self::organizeSmartPlyalistCriteria($p_criteria);
-            $list = self::getListofFilesMeetCriteria($data['criteria']);
+            //$data = self::organizeSmartPlyalistCriteria($p_criteria);
+            $list = self::getListofFilesMeetCriteria($p_playlist_id);
             return array("result"=>0);
         }
     }
     
     // this function return list of propel object
-    private static function getListofFilesMeetCriteria($p_data)
+    private static function getListofFilesMeetCriteria($p_playlist_id)
     {
         $c = new Criteria();
         
@@ -999,7 +999,7 @@ class Application_Model_Playlist {
     
     private static function organizeSmartPlyalistCriteria($p_criteria)
     {
-        $fieldNames = array('sp_criteria', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
+        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
         $output = array();
         foreach ($p_criteria as $ele) {
             $index = strrpos($ele['name'], '_');
