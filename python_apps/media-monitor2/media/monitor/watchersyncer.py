@@ -7,7 +7,6 @@ from media.monitor.handler import ReportHandler
 from media.monitor.events import NewFile, DeleteFile
 from media.monitor.log import Loggable
 from media.monitor.exceptions import BadSongFile
-import media.monitor.pure as mmp
 from media.monitor.pure import LazyProperty
 
 import api_clients.api_client as ac
@@ -25,7 +24,7 @@ class RequestSync(threading.Thread,Loggable):
     def run(self):
         # TODO : implement proper request sending
         self.logger.info("launching request with %d items." % len(self.requests))
-        # self.apiclient.update_media_metadata(self
+        #self.apiclient.update_media_metadata(
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
@@ -103,7 +102,6 @@ class WatchSyncer(ReportHandler,Loggable):
         self.logger.info("Force flushing events...")
         self.push_request()
         self.request_do()
-
 
     def events_in_queue(self):
         """returns true if there are events in the queue that haven't been processed yet"""
