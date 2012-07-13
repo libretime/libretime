@@ -3,6 +3,7 @@ import os
 import mutagen
 import abc
 from media.monitor.exceptions import BadSongFile
+from media.monitor.pure import LazyProperty
 
 class PathChannel(object):
     """a dumb struct; python has no record types"""
@@ -18,32 +19,21 @@ class HasMetaData(object):
     __metaclass__ = abc.ABCMeta
     # doing weird bullshit here because python constructors only
     # call the constructor of the leftmost superclass.
-    @property
+    @LazyProperty
     def metadata(self):
         # Normally this would go in init but we don't like
         # relying on consumers of this behaviour to have to call
         # the constructor
-        if not hasattr(self,"_loaded"): self._loaded = False
-        if self._loaded: return self._metadata
-        else:
-            f = None
-            try: f  = mutagen.File(self.path, easy=True)
-            except Exception: raise BadSongFile(self.path)
-            # value returned by mutagen only acts like a dictionary.
-            # in fact it comes with a nice surprise for you if you try
-            # to add elements to it
-            self._metadata = {}
-            for k,v in f:
-                if isinstance(v, list):
-                    if len(v) == 1:
-                        self._metadata[k] = v[0]
-                    else:
-                        raise Exception("Weird mutagen %s:%s" % (k,str(v)))
-                else:
-                    self._metadata[k] = v
-            self._loaded = True
-            return self.metadata
-
+        try: f  = mutagen.File(self.path, easy=True)
+        except Exception: raise BadSongFile(self.path)
+        metadata = {}
+        for k,v in f:
+            # Special handling of attributes here
+            if isinstance(v, list):
+                if len(v) == 1: metadata[k] = v[0]
+                else: raise Exception("Weird mutagen %s:%s" % (k,str(v)))
+            else: metadata[k] = v
+        return metadata
 
 class BaseEvent(object):
     __metaclass__ = abc.ABCMeta
