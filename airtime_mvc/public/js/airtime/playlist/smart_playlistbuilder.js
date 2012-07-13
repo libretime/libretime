@@ -28,10 +28,9 @@ function setSmartPlaylistEvents() {
         var add_button = form.find('a[id="criteria_add"]');
         
         //remove error message from current row, if any
-        var error_element = curr.find('span[class="sp-errors"]');
+        var error_element = curr.find('span[class="errors sp-errors"]');
         if (error_element.is(':visible')) {
             error_element.remove();
-            curr.find('span[id="sp-errors"]').remove();
         }
 
        /* assign next row to current row for all rows below and including
@@ -93,19 +92,25 @@ function setSmartPlaylistEvents() {
         }
 		
         list.find('div:visible:last').children().attr('disabled', 'disabled');
-        list.find("div:visible:last")
+        list.find('div:visible:last')
             .find('[name^="sp_criteria"]').val(0).end()
             .find('[name^="sp_criteria_modifier"]').val(0).end()
-            .find('[name^="sp_criteria_value"]').val('')
-            .end().hide();
+            .find('[name^="sp_criteria_value"]').val('');
+        
+        if (list.find('div:visible:last').children().hasClass('criteria_add')) {
+            list.find('div:visible:last').find('.criteria_add').remove();
+        }
+        list.find('div:visible:last').hide();
 
         list.next().show();
         
         // always put 'add' button on the last row
         if (list.find('div:visible').length > 1) {
-            list.find('div:visible:last').find('a[id^="criteria_remove"]').after(add_button);
+            list.find('div:visible:last').find('a[id^="criteria_remove"]')
+                                         .after("<a href='#' id='criteria_add' class='criteria_add'>Add</a>");
         } else {
-            list.find('div:visible:last').find('[name^="sp_criteria_value"]').after(add_button);
+            list.find('div:visible:last').find('[name^="sp_criteria_value"]')
+                                         .after("<a href='#' id='criteria_add' class='criteria_add'>Add</a>");
         }
     });
 	
@@ -210,24 +215,25 @@ function populateModifierSelect(e) {
 
 function staticCallback(data) {
 	var form = $('#smart-playlist-form');
-	form.find('span[class="sp-errors"]').remove();
-	form.find(' span[id="sp-errors"]').remove();
+	form.find('span[class="errors sp-errors"]').remove();
 	var json = $.parseJSON(data);
 	if (json.result == "1") {
 	    $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
-                $('#'+error.element).parent().append("<span class='sp-errors'>"+message+"</span><span id='sp-errors'><br /></span>");
+                $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
             });
         });
     }
 }
 
 function dynamicCallback(json) {
+	var form = $('#smart-playlist-form');
+	form.find('span[class="errors sp-errors"]').remove();
 	var json = $.parseJSON(data);
 	if (json.result == "1") {
         $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
-                $('#'+error.element).parent().append("<span class='errors'>"+message+"<br /></span>");
+                $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
             });
         });
     }
