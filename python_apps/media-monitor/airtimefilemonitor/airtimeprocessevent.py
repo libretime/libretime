@@ -61,7 +61,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 path = path[0:pos] + "/"
 
                 list = self.api_client.list_all_watched_dirs()
-                # case where the dir that is being watched is moved to somewhere 
+                # case where the dir that is being watched is moved to somewhere
                 if path in list[u'dirs'].values():
                     self.logger.info("Requesting the airtime server to remove '%s'", path)
                     res = self.api_client.remove_watched_dir(path)
@@ -115,7 +115,7 @@ class AirtimeProcessEvent(ProcessEvent):
     #event.name: filename
     #event.pathname: pathname (str): Concatenation of 'path' and 'name'.
     # we used to use IN_CREATE event, but the IN_CREATE event gets fired before the
-    # copy was done. Hence, IN_CLOSE_WRITE is the correct one to handle.    
+    # copy was done. Hence, IN_CLOSE_WRITE is the correct one to handle.
     def process_IN_CLOSE_WRITE(self, event):
         if event.path in self.mount_file_dir:
             return
@@ -401,7 +401,7 @@ class AirtimeProcessEvent(ProcessEvent):
                 # handling those cases. We are manully calling handle_created_file
                 # function.
                 if os.path.exists(k):
-                    # check if file is open                    
+                    # check if file is open
                     try:
                         command = "lsof " + k
                         #f = os.popen(command)
