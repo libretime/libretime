@@ -20,6 +20,7 @@ channels = {
 org = Organizer(channel=channels['org'],target_path=channels['watch'].path)
 watch = WatchSyncer(channel=channels['watch'])
 problem_files = ProblemFileHandler(channel=channels['badfile'])
+
 # do the bootstrapping before any listening is going one
 #conn = Connection('localhost', 'more', 'shit', 'here')
 #db = DBDumper(conn).dump_block()

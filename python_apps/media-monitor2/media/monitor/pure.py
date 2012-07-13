@@ -20,6 +20,7 @@ class LazyProperty(object):
         setattr(obj,self.func_name,value)
         return value
 
+
 class IncludeOnly(object):
     """
     A little decorator to help listeners only be called on extensions they support
