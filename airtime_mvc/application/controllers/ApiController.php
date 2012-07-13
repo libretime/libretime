@@ -32,6 +32,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-source-status', 'json')
                 ->addActionContext('get-bootstrap-info', 'json')
                 ->addActionContext('get-files-without-replay-gain', 'json')
+                ->addActionContext('reload-metadata-group', 'json')
                 ->initContext();
     }
     
@@ -576,14 +577,16 @@ class ApiController extends Zend_Controller_Action
         //The key does not have any meaning as of yet but it could potentially correspond
         //to some unique id.
         $responses = array();
-        Logging::log("inside reloadMetadataGroupAction");
-        return;
-        foreach ($request->getRequest()->getParams() as $action => $raw_json) {
+        foreach ($request->getParams() as $k => $raw_json) {
             $info_json = json_decode($raw_json, $assoc=true);
-            array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
+            $mode = $info_json['mode'];
+            unset($info_json['mode']);
+            // TODO : uncomment the following line to actually do something
+            // array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
+            // Like wise, remove the following line when done
             Logging::log( $info_json );
         }
-        // TODO : do something with $responses here instead of doing nothing
+        die(json_encode( array('successes' => 19, 'fails' => 123) ));
     }
 
     public function reloadMetadataAction() {

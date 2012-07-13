@@ -340,7 +340,6 @@ class AirTimeApiClient():
 
             md = convert_dict_value_to_utf8(md)
 
-
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
 
@@ -364,23 +363,34 @@ class AirTimeApiClient():
 
         return response
 
-    def send_media_monitor_requests(self, md_list, mode, is_record=False):
+    def send_media_monitor_requests(self, action_list, is_record=False):
         logger = self.logger
         response = None
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
-            url = url.replace("%%api_key%%", self.config["api_key"])
-            url = url.replace("%%mode%%", mode)
-
-            md_list = convert_dict_value_to_utf8(md_list)
-
+            url = self.construct_url('reload_metadata_group')
+            # We are assuming that action_list is a list of dictionaries such
+            # that every dictionary represents the metadata of a file along
+            # with a special mode key that is the action to be executed by the
+            # controller.
+            valid_actions = []
+            # We could get a list of valid_actions in a much shorter way using
+            # filter but here we prefer a little more verbosity to help
+            # debugging
+            for action in action_list:
+                if not 'mode' in action:
+                    self.logger.debug("Warning: Sending a request element without a 'mode'")
+                    self.logger.debug("Here is the the request: '%s'" % str(action) )
+                else: valid_actions.append(action)
+            md_list = { i : json.dumps(convert_dict_value_to_utf8(md)) for i,md in enumerate(valid_actions) }
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
-
             response = self.get_response_from_server(req)
-            logger.info("update media %s, filepath: %s, mode: %s", response, md_list['MDATA_KEY_FILEPATH'], mode)
+            # We no longer have a single mode for every http request.
+            #logger.info("update media %s, filepath: %s, mode: %s", response, md_list['MDATA_KEY_FILEPATH'], mode)
             response = json.loads(response)
-
+            # TODO : this request returns a more detailed response of what
+            # happened through a json array. Hence we should handle errors
+            # differently
             if("error" not in response and is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
                 url = url.replace("%%fileid%%", str(response[u'id']))
