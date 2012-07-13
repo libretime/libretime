@@ -58,7 +58,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $numElements = count($criteriaOptions);
         for ($i = 0; $i < $numElements; $i++) {
             $criteria = new Zend_Form_Element_Select('sp_criteria_field_'.$i);
-            $criteria->setAttrib('class', 'input_select');
+            $criteria->setAttrib('class', 'sp_input_select');
             $criteria->setValue('Select criteria');
             $criteria->setDecorators(array('viewHelper'));
             $criteria->setMultiOptions($criteriaOptions);
@@ -69,7 +69,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             
             $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_'.$i);
             $criteriaModifers->setValue('Select modifier');
-            $criteriaModifers->setAttrib('class', 'input_select');
+            $criteriaModifers->setAttrib('class', 'sp_input_select');
             $criteriaModifers->setDecorators(array('viewHelper'));
             $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
             if ($i != 0){
@@ -78,7 +78,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             $this->addElement($criteriaModifers);
         
             $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_'.$i);
-            $criteriaValue->setAttrib('class', 'input_text');
+            $criteriaValue->setAttrib('class', 'input_text sp_input_text');
             $criteriaValue->setDecorators(array('viewHelper'));
             if ($i != 0){
                 $criteriaValue->setAttrib('disabled', 'disabled');
