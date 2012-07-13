@@ -80,10 +80,10 @@ class AirTimeApiClient():
         This function will query the server and download its response directly
         into a temporary file. This is useful in the situation where the response
         from the server can be huge and we don't want to store it into memory (potentially
-        causing Python to use hundreds of MB's of memory). By writing into a file we can 
+        causing Python to use hundreds of MB's of memory). By writing into a file we can
         then open this file later, and read data a little bit at a time and be very mem
         efficient.
-        
+
         The return value of this function is the path of the temporary file. Unless specified using
         block = False, this function will block until a successful HTTP 200 response is received.
         """
@@ -362,6 +362,39 @@ class AirTimeApiClient():
 
         return response
 
+    def send_media_monitor_requests(self, md_list, mode, is_record=False):
+        logger = self.logger
+        response = None
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = url.replace("%%mode%%", mode)
+
+            md_list = convert_dict_value_to_utf8(md_list)
+
+            data = urllib.urlencode(md_list)
+            req = urllib2.Request(url, data)
+
+            response = self.get_response_from_server(req)
+            logger.info("update media %s, filepath: %s, mode: %s", response, md_list['MDATA_KEY_FILEPATH'], mode)
+            response = json.loads(response)
+
+            if("error" not in response and is_record):
+                url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
+                url = url.replace("%%fileid%%", str(response[u'id']))
+                url = url.replace("%%showinstanceid%%", str(md_list['MDATA_KEY_TRACKNUMBER']))
+                url = url.replace("%%api_key%%", self.config["api_key"])
+
+                response = self.get_response_from_server(url)
+                response = json.loads(response)
+                logger.info("associate recorded %s", response)
+        except Exception, e:
+            response = None
+            logger.error('Exception: %s', e)
+            logger.error("traceback: %s", traceback.format_exc())
+
+        return response
+
     #returns a list of all db files for a given directory in JSON format:
     #{"files":["path/to/file1", "path/to/file2"]}
     #Note that these are relative paths to the given directory. The full
@@ -569,7 +602,7 @@ class AirTimeApiClient():
 
     def get_files_without_replay_gain_value(self, dir_id):
         """
-        Download a list of files that need to have their ReplayGain value calculated. This list 
+        Download a list of files that need to have their ReplayGain value calculated. This list
         of files is downloaded into a file and the path to this file is the return value.
         """
 

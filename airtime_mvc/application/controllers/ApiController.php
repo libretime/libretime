@@ -463,6 +463,100 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
+    public function dispatchMetaDataAction($md, $mode) 
+    { 
+        // NOTE : if you are using this method. Make sure you've checked authorization
+        // in its caller because this method does not do checkAuth
+        // update import timestamp
+        Application_Model_Preference::SetImportTimestamp();
+        if ($mode == "create") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $filepath = Application_Common_OsPath::normpath($filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+            if (is_null($file)) {
+                $file = Application_Model_StoredFile::Insert($md);
+            } else {
+                // path already exist
+                if ($file->getFileExistsFlag()) {
+                    // file marked as exists
+                    $this->view->error = "File already exists in Airtime.";
+                    return;
+                } else {
+                    // file marked as not exists
+                    $file->setFileExistsFlag(true);
+                    $file->setMetadata($md);
+                }
+            }
+        }
+        else if ($mode == "modify") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+
+            //File is not in database anymore.
+            if (is_null($file)) {
+                $this->view->error = "File does not exist in Airtime.";
+                return;
+            }
+            //Updating a metadata change.
+            else {
+                $file->setMetadata($md);
+            }
+        }
+        else if ($mode == "moved") {
+            $md5 = $md['MDATA_KEY_MD5'];
+            $file = Application_Model_StoredFile::RecallByMd5($md5);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                //$filepath = str_replace("\\", "", $filepath);
+                $file->setFilePath($filepath);
+            }
+        }
+        else if ($mode == "delete") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            //$filepath = str_replace("\\", "", $filepath);
+            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+
+            if (is_null($file)) {
+                $this->view->error = "File doesn't exist in Airtime.";
+                return;
+            }
+            else {
+                $file->deleteByMediaMonitor();
+            }
+        }
+        else if ($mode == "delete_dir") {
+            $filepath = $md['MDATA_KEY_FILEPATH'];
+            //$filepath = str_replace("\\", "", $filepath);
+            $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
+
+            foreach($files as $file){
+                $file->deleteByMediaMonitor();
+            }
+            return;
+        }
+        return $file->getId();
+    } 
+
+    public function reloadMetadataGroupAction()
+    {
+        $request = $this->getRequest();
+        //extract all file metadata params from the request.
+        //The value is a json encoded hash that has all the information related to this action
+        //The key does not have any meaning as of yet but it could potentially correspond
+        //to some unique id.
+        $responses = array();
+        foreach ($request->getRequest()->getParams() as $action => $info_json) {
+            $json = json_decode($info_json, $assoc=true);
+            array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
+        }
+        // TODO : do something with $responses here instead of doing nothing
+    }
+
     public function reloadMetadataAction()
     {
         $request = $this->getRequest();
