@@ -7,6 +7,7 @@ from media.monitor.handler import ReportHandler
 from media.monitor.events import NewFile, DeleteFile
 from media.monitor.log import Loggable
 from media.monitor.exceptions import BadSongFile
+from media.monitor.airtime import Request
 
 class RequestSync(threading.Thread,Loggable):
     def __init__(self, watcher, requests):
@@ -15,7 +16,10 @@ class RequestSync(threading.Thread,Loggable):
         self.requests = requests
 
     def run(self):
+        # TODO : implement proper request sending
         self.logger.info("launching request with %d items." % len(self.requests))
+        try: Request.serialize(self.requests).send()
+        except: self.logger.info("Failed to send request...")
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
