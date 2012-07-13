@@ -6,7 +6,6 @@
 # You will probably want to create a script on your server side to automatically
 # schedule a playlist one minute from the current time.
 ###############################################################################
-
 import sys
 import time
 import urllib
@@ -312,32 +311,35 @@ class AirTimeApiClient():
 
         return response
 
+    def construct_url(self,config_action_key):
+        """Constructs the base url for every request"""
+        # TODO : Make other methods in this class use this this method.
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config[config_action_key])
+        url = url.replace("%%api_key%%", self.config["api_key"])
+        return url
+
     def setup_media_monitor(self):
         logger = self.logger
-
         response = None
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["media_setup_url"])
-            url = url.replace("%%api_key%%", self.config["api_key"])
-
+            url = self.construct_url("media_setup_url")
             response = self.get_response_from_server(url)
             response = json.loads(response)
             logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
-
         return response
 
     def update_media_metadata(self, md, mode, is_record=False):
         logger = self.logger
         response = None
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_media_url"])
-            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = self.construct_url("update_media_url")
             url = url.replace("%%mode%%", mode)
 
             md = convert_dict_value_to_utf8(md)
+
 
             data = urllib.urlencode(md)
             req = urllib2.Request(url, data)
