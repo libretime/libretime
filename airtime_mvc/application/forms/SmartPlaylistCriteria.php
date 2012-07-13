@@ -57,7 +57,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         
         $numElements = count($criteriaOptions);
         for ($i = 0; $i < $numElements; $i++) {
-            $criteria = new Zend_Form_Element_Select('sp_criteria_'.$i);
+            $criteria = new Zend_Form_Element_Select('sp_criteria_field_'.$i);
             $criteria->setAttrib('class', 'input_select');
             $criteria->setValue('Select criteria');
             $criteria->setDecorators(array('viewHelper'));
@@ -84,6 +84,12 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
                 $criteriaValue->setAttrib('disabled', 'disabled');
             }
             $this->addElement($criteriaValue);
+            
+            $criteriaExtra = new Zend_Form_Element_Text('sp_criteria_extra_'.$i);
+            $criteriaExtra->setAttrib('class', 'input_text');
+            $criteriaExtra->setDecorators(array('viewHelper'));
+            $criteriaExtra->setAttrib('disabled', 'disabled');
+            $this->addElement($criteriaExtra);
         }
         
         $limit = new Zend_Form_Element_Select('sp_limit_options');
@@ -103,5 +109,32 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $save->setIgnore(true);
         $save->setLabel('Generate');
         $this->addElement($save);
+    }
+    
+    public function loadCriteria($p_playlistId)
+    {
+        $c = new Criteria();
+        $c->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
+        $out = CcPlaylistcriteriaPeer::doSelect($c);
+        
+        $i = 0;
+        foreach ($out as $crit) {
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+            
+            if($criteria == "limit"){
+                $this->getElement("sp_limit_options")->setValue($modifier);
+                $this->getElement("sp_limit_value")->setValue($value);
+            }else{
+                $this->getElement("sp_criteria_$i")->setValue($criteria);
+                $this->getElement("sp_criteria_modifier_$i")->setValue($criteria);
+                $this->getElement("sp_criteria_value_$i")->setValue($criteria);
+                
+                $i++;
+            }
+        }
+        Logging::log($out);
     }
 }

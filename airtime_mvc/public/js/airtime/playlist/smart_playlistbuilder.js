@@ -37,51 +37,54 @@ function setSmartPlaylistEvents() {
        /* assign next row to current row for all rows below and including
         * the row getting removed
         */
-       for (var i=0; i<=count; i++) {
-            var criteria = next.find('[name^="sp_criteria"]').val();
-            curr.find('[name^="sp_criteria"]').val(criteria);
+       for (var i=0; i<count; i++) {
+            var criteria = next.find('[name^="sp_criteria_field"]').val();
+            curr.find('[name^="sp_criteria_field"]').val(criteria);
             
             var modifier = next.find('[name^="sp_criteria_modifier"]').val();
-            populateModifierSelect(curr.find('[name^="sp_criteria"]'));
+            populateModifierSelect(curr.find('[name^="sp_criteria_field"]'));
             curr.find('[name^="sp_criteria_modifier"]').val(modifier);
             
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
             
+            var id = curr.find('[name^="sp_criteria"]').attr('id');
+            var index = id.charAt(id.length-1); 
             /* if current and next row have the extra criteria value
              * (for 'is in the range' modifier), then assign the next
              * extra value to current and remove that element from
              * next row
              */
-            if (curr.find('[name^="sp_criteria_extra"]').length > 0
-                && next.find('[name^="sp_criteria_extra"]').length > 0) {
+            if (curr.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled"
+                && next.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled") {
             	
                 var criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
-            	next.find('[name^="sp_criteria_extra"]').remove();
-                next.find('span[id="sp_criteria_extra_label"]').remove();
+                disableAndHideExtraField(next.find(':first-child'), index+1);
+            	/*next.find('[name^="sp_criteria_extra"]').remove();
+                next.find('span[id="sp_criteria_extra_label"]').remove();*/
+                
             
             /* if only the current row has the extra criteria value,
              * then just remove the current row's extra criteria element
              */
-            } else if (curr.find('[name^="sp_criteria_extra"]').length > 0
-                       && next.find('[name^="sp_criteria_extra"]').length == 0) {
-                curr.find('[name^="sp_criteria_extra"]').remove();
-                curr.find('span[id="sp_criteria_extra_label"]').remove();
+            } else if (curr.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled"
+                       && next.find('[name^="sp_criteria_extra"]').attr("disabled") == "disabled") {
+                disableAndHideExtraField(curr.find(':first-child'), index);
+                /*curr.find('[name^="sp_criteria_extra"]').remove();
+                curr.find('span[id="sp_criteria_extra_label"]').remove();*/
                 
             /* if only the next row has the extra criteria value,
              * then add the extra criteria element to current row
              * and assign next row's value to it
              */
-            } else if (next.find('[name^="sp_criteria_extra"]').length > 0) {
-                var index_name = curr.find('[name^="sp_criteria_value"]').attr('id'),
-                    index_num = index_name.charAt(index_name.length-1),
-                    criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
-                
-                curr.find('[name^="sp_criteria_value"]')
+            } else if (next.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled") {
+                criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
+                enableAndShowExtraField(curr.find(':first-child'), index);
+                /*curr.find('[name^="sp_criteria_value"]')
                     .after($('<input type="text" class="input_text">')
                     .attr('id', 'sp_criteria_extra_'+index_num)
-                    .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label"> to </span>');
+                    .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label"> to </span>');*/
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
             }
 
@@ -136,13 +139,16 @@ function setSmartPlaylistEvents() {
         $('button[id="save_button"]').text(button_text);    	
     });
     
-    form.find('select[id^="sp_criteria"]').live("change", function(){
+    form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
         var index_name = $(this).attr('id'),
             index_num = index_name.charAt(index_name.length-1);
-        if ($('#sp_criteria_extra_'+index_num).length > 0) {
+        
+        // disalbe extra field and hide the span
+        disableAndHideExtraField($(this), index_num);
+        /*if ($('#sp_criteria_extra_'+index_num).length > 0) {
             $('#sp_criteria_extra_'+index_num).remove();
             $('#sp_criteria_extra_label_'+index_num).remove();
-        }
+        }*/
         populateModifierSelect(this);
     });
     
@@ -152,18 +158,32 @@ function setSmartPlaylistEvents() {
             index_num = index_name.charAt(index_name.length-1);
         
         if ($(this).val() == 'is in the range') {
-            criteria_value.after($('<input type="text" class="input_text">')
+            enableAndShowExtraField(criteria_value, index_num);
+            /*after($('<input type="text" class="input_text">')
                           .attr('id', 'sp_criteria_extra_'+index_num)
-                          .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label_'+index_num+'"> to </span>');
+                          .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label_'+index_num+'"> to </span>');*/
         
         } else {
-            if ($('#sp_criteria_extra_'+index_num).length > 0) {
+            disableAndHideExtraField(criteria_value, index_num);
+            /*if ($('#sp_criteria_extra_'+index_num).length > 0) {
             	$('#sp_criteria_extra_'+index_num).remove();
             	$('#sp_criteria_extra_label_'+index_num).remove();
-            }
+            }*/
         }
     });
 	
+}
+
+function enableAndShowExtraField(valEle, index) {
+    var spanExtra = valEle.nextAll("#extra_criteria");
+    spanExtra.children('#sp_criteria_extra_'+index).removeAttr("disabled");
+    spanExtra.show();
+}
+
+function disableAndHideExtraField(valEle, index) {
+    var spanExtra = valEle.nextAll("#extra_criteria");
+    spanExtra.children('#sp_criteria_extra_'+index).val("").attr("disabled", "disabled");
+    spanExtra.hide();
 }
 
 function populateModifierSelect(e) {
@@ -194,7 +214,6 @@ function staticCallback(data) {
 	form.find(' span[id="sp-errors"]').remove();
 	var json = $.parseJSON(data);
 	if (json.result == "1") {
-	    var error_element;
 	    $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='sp-errors'>"+message+"</span><span id='sp-errors'><br /></span>");
@@ -206,7 +225,6 @@ function staticCallback(data) {
 function dynamicCallback(json) {
 	var json = $.parseJSON(data);
 	if (json.result == "1") {
-        var error_element;
         $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='errors'>"+message+"<br /></span>");

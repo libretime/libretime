@@ -880,10 +880,8 @@ class Application_Model_Playlist {
             if (count($error) > 0){
                 $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
             }
-            Logging::log($errors);
         }
         
-        Logging::log($errors);
         // format validation
         foreach ($data['criteria'] as $key=>$d){
             $error = array();
@@ -921,7 +919,6 @@ class Application_Model_Playlist {
     
     public static function storeCriteriaIntoDb($p_criteriaData, $p_playlistId){
         // delete criteria under $p_playlistId
-        Logging::log($p_criteriaData);
         $deleteCrit = new Criteria();
         $deleteCrit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
         CcPlaylistcriteriaPeer::doDelete($deleteCrit);
@@ -964,7 +961,6 @@ class Application_Model_Playlist {
     public static function generateSmartPlaylist($p_criteria, $p_playlistId)
     {
         $result = self::saveSmartPlaylistCriteria($p_criteria, $p_playlistId);
-        Logging::log($result);
         if ($result['result'] != 0) {
             return $result;
         }else{

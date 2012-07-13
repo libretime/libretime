@@ -18,13 +18,13 @@
         
         <dd id='sp_criteria-element'>
         <?php for ($i = 0; $i < $this->criteriasLength; $i++) {?>
-            <div <?php if (($i > 0) && ($this->element->getElement('sp_criteria_'.$i)->getAttrib('disabled') == 'disabled')) {
+            <div <?php if (($i > 0) && ($this->element->getElement('sp_criteria_field_'.$i)->getAttrib('disabled') == 'disabled')) {
                            echo 'style=display:none';
                        } ?>>
         
-                <?php echo $this->element->getElement('sp_criteria_'.$i) ?>
+                <?php echo $this->element->getElement('sp_criteria_field_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
-                <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
+                <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?><span id="extra_criteria" style="display:none;"> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
                 <?php if ($i != 0) { ?>
                     <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove&nbsp;</a>
                 <?php } else { ?>
