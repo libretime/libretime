@@ -7,7 +7,10 @@ from media.monitor.handler import ReportHandler
 from media.monitor.events import NewFile, DeleteFile
 from media.monitor.log import Loggable
 from media.monitor.exceptions import BadSongFile
-from media.monitor.airtime import Request
+import media.monitor.pure as mmp
+from media.monitor.pure import LazyProperty
+
+import api_clients.api_client as ac
 
 class RequestSync(threading.Thread,Loggable):
     def __init__(self, watcher, requests):
@@ -15,11 +18,14 @@ class RequestSync(threading.Thread,Loggable):
         self.watcher = watcher
         self.requests = requests
 
+    @LazyProperty
+    def apiclient(self):
+        return ac.AirTimeApiClient()
+
     def run(self):
         # TODO : implement proper request sending
         self.logger.info("launching request with %d items." % len(self.requests))
-        try: Request.serialize(self.requests).send()
-        except: self.logger.info("Failed to send request...")
+        # self.apiclient.update_media_metadata(self
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
@@ -55,6 +61,7 @@ class WatchSyncer(ReportHandler,Loggable):
         # trying to send the http requests in order
         self.__requests = []
         self.request_running = False
+        # we don't actually use this "private" instance variable anywhere
         self.__current_thread = None
         tc = TimeoutWatcher(self, timeout)
         tc.daemon = True

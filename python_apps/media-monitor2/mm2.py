@@ -6,8 +6,7 @@ from media.monitor.organizer import Organizer
 from media.monitor.events import PathChannel
 from media.monitor.watchersyncer import WatchSyncer
 from media.monitor.handler import ProblemFileHandler
-from media.monitor.bootstrap import Bootstrapper
-from media.monitor.airtime import DBDumper, Connection
+#from media.monitor.bootstrap import Bootstrapper
 
 channels = {
     # note that org channel still has a 'watch' path because that is the path
@@ -22,11 +21,11 @@ org = Organizer(channel=channels['org'],target_path=channels['watch'].path)
 watch = WatchSyncer(channel=channels['watch'])
 problem_files = ProblemFileHandler(channel=channels['badfile'])
 # do the bootstrapping before any listening is going one
-conn = Connection('localhost', 'more', 'shit', 'here')
-db = DBDumper(conn).dump_block()
-bs = Bootstrapper(db, [channels['org']], [channels['watch']])
-bs.flush_organize()
-bs.flush_watch()
+#conn = Connection('localhost', 'more', 'shit', 'here')
+#db = DBDumper(conn).dump_block()
+#bs = Bootstrapper(db, [channels['org']], [channels['watch']])
+#bs.flush_organize()
+#bs.flush_watch()
 
 wm = pyinotify.WatchManager()
 

@@ -10,6 +10,12 @@ class Handles(object):
     @abc.abstractmethod
     def handle(self, sender, event, *args, **kwargs): pass
 
+
+# TODO : remove the code duplication between ReportHandler and
+# ProblemFileHandler. Namely the part where both initialize pydispatch
+# TODO : Investigate whether weak reffing in dispatcher.connect could possibly
+# cause a memory leak
+
 class ReportHandler(Handles):
     __metaclass__ = abc.ABCMeta
     def __init__(self, signal):

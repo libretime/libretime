@@ -5,6 +5,21 @@ import shutil
 supported_extensions =  ["mp3", "ogg"]
 unicode_unknown = u'unknown'
 
+class LazyProperty(object):
+    """
+    meant to be used for lazy evaluation of an object attribute.
+    property should represent non-mutable data, as it replaces itself.
+    """
+    def __init__(self,fget):
+        self.fget = fget
+        self.func_name = fget.__name__
+
+    def __get__(self,obj,cls):
+        if obj is None: return None
+        value = self.fget(obj)
+        setattr(obj,self.func_name,value)
+        return value
+
 class IncludeOnly(object):
     """
     A little decorator to help listeners only be called on extensions they support
