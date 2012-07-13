@@ -568,6 +568,7 @@ class ApiController extends Zend_Controller_Action
     } 
 
     public function reloadMetadataGroupAction() {
+        # reload-metadata-group
         $this->checkAuth();
         $request = $this->getRequest();
         //extract all file metadata params from the request.
@@ -575,8 +576,8 @@ class ApiController extends Zend_Controller_Action
         //The key does not have any meaning as of yet but it could potentially correspond
         //to some unique id.
         $responses = array();
-        foreach ($request->getRequest()->getParams() as $action => $info_json) {
-            $json = json_decode($info_json, $assoc=true);
+        foreach ($request->getRequest()->getParams() as $action => $raw_json) {
+            $info_json = json_decode($raw_json, $assoc=true);
             array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
         }
         // TODO : do something with $responses here instead of doing nothing
