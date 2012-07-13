@@ -41,7 +41,7 @@ class BaseEvent(object):
         # TODO : clean up this idiotic hack
         # we should use keyword constructors instead of this behaviour checking
         # bs to initialize BaseEvent
-        if getattr(raw_event,"pathname"):
+        if hasattr(raw_event,"pathname"):
             self.__raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
