@@ -975,13 +975,11 @@ Logging::log("getting media! - 2");
                 ." FROM CC_FILES"
                 ." WHERE directory = $dir_id"
                 ." AND file_exists = 'TRUE'";
-
         if (!is_null($limit) && is_int($limit)) {
             $sql .= " LIMIT $limit";
         }
-
-        $rows = $con->query($sql, PDO::FETCH_ASSOC);
-
+                
+        $rows = $con->query($sql, PDO::FETCH_ASSOC)->fetchAll();
         return $rows;
     }
 

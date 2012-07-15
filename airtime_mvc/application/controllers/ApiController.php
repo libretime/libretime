@@ -954,7 +954,6 @@ class ApiController extends Zend_Controller_Action
         $dir_id = $this->_getParam('dir_id');
 
         //connect to db and get get sql
-        $this->view->rows = Application_Model_StoredFile::listAllFiles2($dir_id, 0);
-
+        $this->view->rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
     }
 }

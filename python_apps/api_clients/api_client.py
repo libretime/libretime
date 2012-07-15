@@ -381,7 +381,11 @@ class AirTimeApiClient():
                     self.logger.debug("Warning: Sending a request element without a 'mode'")
                     self.logger.debug("Here is the the request: '%s'" % str(action) )
                 else: valid_actions.append(action)
-            md_list = { i : json.dumps(convert_dict_value_to_utf8(md)) for i,md in enumerate(valid_actions) }
+
+            md_list = dict((i, json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
+            #Doesn't work in Python 2.6
+            #md_list = {i : json.dumps(convert_dict_value_to_utf8(md)) for i,md in enumerate(valid_actions) }
+
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
@@ -625,12 +629,15 @@ class AirTimeApiClient():
             url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(get-files-without-replay-gain)s/" % (self.config)
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%dir_id%%", dir_id)
+            response = self.get_response_from_server(url)
 
-            file_path = self.get_response_into_file(url)
+            logger.info("update file system mount: %s", response)
+            response = json.loads(response)
+            #file_path = self.get_response_into_file(url)
         except Exception, e:
-            file_path = None
+            response = None
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
 
-        return file_path
+        return response
 
