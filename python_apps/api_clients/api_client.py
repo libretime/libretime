@@ -346,6 +346,9 @@ class AirTimeApiClient():
             response = self.get_response_from_server(req)
             logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
             response = json.loads(response)
+            try: response = json.loads(response)
+            except ValueError:
+                logger.info("Could not parse json from response: '%s'" % response)
 
             if("error" not in response and is_record):
                 url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
