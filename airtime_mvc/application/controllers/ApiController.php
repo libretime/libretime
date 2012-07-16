@@ -385,17 +385,17 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function uploadRecordAction() {
+    public function uploadRecordedAction() {
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
         $this->view->fileid = $file_id;
         $this->view->showinstanceid = $show_instance_id;
-        $this->uploadRecordActionParam($show_instance_id, $file_id);
+        $this->uploadRecordedActionParam($show_instance_id, $file_id);
     }
 
-    // The paramterized version of the uploadRecordAction controller. We want this controller's action
+    // The paramterized version of the uploadRecordedAction controller. We want this controller's action
     // to be invokable from other controllers instead being of only through http
-    public function uploadRecordActionParam($show_instance_id, $file_id)
+    public function uploadRecordedActionParam($show_instance_id, $file_id)
     {
         $showCanceled = false;
         $file = Application_Model_StoredFile::Recall($file_id);
@@ -539,7 +539,7 @@ class ApiController extends Zend_Controller_Action
             // was usually called from the python api
             if( $info_json['is_record'] ) {
                 // TODO : must check for error in $response before proceeding...
-                $this->uploadRecordActionParam($info_json['showinstanceid'],$info_json['fileid']);
+                $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid']);
             }
             // TODO : Remove this line when done debugging
             Logging::log( $info_json );
