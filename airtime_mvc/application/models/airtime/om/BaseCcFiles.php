@@ -412,7 +412,6 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the replay_gain field.
-	 * Note: this column has a database default value of: '0'
 	 * @var        string
 	 */
 	protected $replay_gain;
@@ -472,7 +471,6 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->currentlyaccessing = 0;
 		$this->length = '00:00:00';
 		$this->file_exists = true;
-		$this->replay_gain = '0';
 	}
 
 	/**
@@ -2613,7 +2611,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$v = (string) $v;
 		}
 
-		if ($this->replay_gain !== $v || $this->isNew()) {
+		if ($this->replay_gain !== $v) {
 			$this->replay_gain = $v;
 			$this->modifiedColumns[] = CcFilesPeer::REPLAY_GAIN;
 		}
@@ -2660,10 +2658,6 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			}
 
 			if ($this->file_exists !== true) {
-				return false;
-			}
-
-			if ($this->replay_gain !== '0') {
 				return false;
 			}
 
