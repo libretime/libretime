@@ -387,15 +387,18 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function uploadRecordedAction()
-    {
-        //this file id is the recording for this show instance.
+    public function uploadRecordAction() {
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
-
         $this->view->fileid = $file_id;
         $this->view->showinstanceid = $show_instance_id;
+        $this->uploadRecordActionParam($show_instance_id, $file_id);
+    }
 
+    // The paramterized version of the uploadRecordAction controller. We want this controller's action
+    // to be invokable from other controllers instead being of only through http
+    public function uploadRecordActionParam($show_instance_id, $file_id)
+    {
         $showCanceled = false;
         $file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
@@ -531,9 +534,18 @@ class ApiController extends Zend_Controller_Action
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
             // TODO : uncomment the following line to actually do something
-            // array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
+            $response = $this->dispatchMetaDataAction($info_json, $info_json['mode']);
+            array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
             // Like wise, remove the following line when done
+            // On recorded show requests we do some extra work here. Not sure what it actually is and it
+            // was usually called from the python api
+            if( $info_json['is_record'] ) {
+                // TODO : must check for error in $response before proceeding...
+                $this->uploadRecordActionParam($info_json['showinstanceid'],$info_json['fileid']);
+            }
+            // TODO : Remove this line when done debugging this shit
             Logging::log( $info_json );
+
         }
         die(json_encode( array('successes' => 19, 'fails' => 123) ));
     }

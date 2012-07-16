@@ -363,7 +363,14 @@ class AirTimeApiClient():
 
         return response
 
-    def send_media_monitor_requests(self, action_list, is_record=False):
+    def send_media_monitor_requests(self, action_list):
+        """
+        Send a gang of media monitor events at a time. actions_list is a list of dictionaries
+        where every dictionary is representing an action. Every action dict must contain a 'mode'
+        key that says what kind of action it is and an optional 'is_record' key that says whether
+        the show was recorded or not. The value of this key does not matter, only if it's present
+        or not.
+        """
         logger = self.logger
         try:
             url = self.construct_url('reload_metadata_group')
@@ -379,28 +386,33 @@ class AirTimeApiClient():
                 if not 'mode' in action:
                     self.logger.debug("Warning: Sending a request element without a 'mode'")
                     self.logger.debug("Here is the the request: '%s'" % str(action) )
-                else: valid_actions.append(action)
+                else:
+                    # We alias the value of is_record to true or false no
+                    # matter what it is based on if it's absent in the action
+                    if 'is_record' in action:
+                        self.logger.debug("Sending a 'recorded' action")
+                        action['is_record'] = True
+                    else: action['is_record'] = False
+                    valid_actions.append(action)
 
             md_list = dict((i, json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
-
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
-            # We no longer have a single mode for every http request.
-            #logger.info("update media %s, filepath: %s, mode: %s", response, md_list['MDATA_KEY_FILEPATH'], mode)
             response = json.loads(response)
             # TODO : this request returns a more detailed response of what
             # happened through a json array. Hence we should handle errors
             # differently
-            if("error" not in response and is_record):
-                url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"])
-                url = url.replace("%%fileid%%", str(response[u'id']))
-                url = url.replace("%%showinstanceid%%", str(md_list['MDATA_KEY_TRACKNUMBER']))
-                url = url.replace("%%api_key%%", self.config["api_key"])
+            # we would like to move all of this to the controller since we are
+            # not doing anything here
+            #if("error" not in response and is_record):
+                #url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"]) url = url.replace("%%fileid%%", str(response[u'id']))
+                #url = url.replace("%%showinstanceid%%", str(md_list['MDATA_KEY_TRACKNUMBER']))
+                #url = url.replace("%%api_key%%", self.config["api_key"])
 
-                response = self.get_response_from_server(url)
-                response = json.loads(response)
-                logger.info("associate recorded %s", response)
+                #response = self.get_response_from_server(url)
+                #response = json.loads(response)
+                #logger.info("associate recorded %s", response)
             return response
         except Exception, e:
             logger.error('Exception: %s', e)
