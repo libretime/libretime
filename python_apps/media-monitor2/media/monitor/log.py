@@ -10,5 +10,6 @@ class Loggable(object):
     # TODO : replace this boilerplate with LazyProperty
     @LazyProperty
     def logger(self):
+        # TODO : Clean this up
         if not hasattr(self,"_logger"): self._logger = logging.getLogger('mediamonitor2')
         return self._logger

@@ -34,7 +34,8 @@ class PluploadController extends Zend_Controller_Action
         die('{"jsonrpc" : "2.0", "tempfilepath" : "'.$tempFileName.'" }');
     }
 
-    public function copyfileAction(){
+    public function copyfileAction()
+    {
         $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
         $filename = $this->_getParam('name');
         $tempname = $this->_getParam('tempname');
@@ -45,6 +46,3 @@ class PluploadController extends Zend_Controller_Action
         die('{"jsonrpc" : "2.0"}');
     }
 }
-
-
-

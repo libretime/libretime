@@ -17,25 +17,25 @@ class UsersettingsController extends Zend_Controller_Action
                     ->initContext();
     }
 
-    public function setNowPlayingScreenSettingsAction() {
-
+    public function setNowPlayingScreenSettingsAction()
+    {
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
-        
+
         $data = serialize($settings);
         Application_Model_Preference::setValue("nowplaying_screen", $data, true);
     }
 
-    public function getNowPlayingScreenSettingsAction() {
-
+    public function getNowPlayingScreenSettingsAction()
+    {
         $data = Application_Model_Preference::getValue("nowplaying_screen", true);
         if ($data != "") {
             $this->view->settings = unserialize($data);
         }
     }
 
-    public function setLibraryDatatableAction() {
-
+    public function setLibraryDatatableAction()
+    {
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
@@ -43,16 +43,16 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::setValue("library_datatable", $data, true);
     }
 
-    public function getLibraryDatatableAction() {
-
+    public function getLibraryDatatableAction()
+    {
         $data = Application_Model_Preference::getValue("library_datatable", true);
         if ($data != "") {
             $this->view->settings = unserialize($data);
         }
     }
 
-    public function setTimelineDatatableAction() {
-
+    public function setTimelineDatatableAction()
+    {
         $start = microtime(true);
 
         $request = $this->getRequest();
@@ -67,8 +67,8 @@ class UsersettingsController extends Zend_Controller_Action
         Logging::debug(floatval($end) - floatval($start));
     }
 
-    public function getTimelineDatatableAction() {
-
+    public function getTimelineDatatableAction()
+    {
         $start = microtime(true);
 
         $data = Application_Model_Preference::getValue("timeline_datatable", true);
@@ -77,7 +77,7 @@ class UsersettingsController extends Zend_Controller_Action
         }
 
         $end = microtime(true);
-        
+
         Logging::debug("getting timeline datatables info took:");
         Logging::debug(floatval($end) - floatval($start));
     }
@@ -88,7 +88,7 @@ class UsersettingsController extends Zend_Controller_Action
         Zend_Session::namespaceUnset('referrer');
         Application_Model_Preference::SetRemindMeDate();
     }
-    
+
     public function donotshowregistrationpopupAction()
     {
         // unset session

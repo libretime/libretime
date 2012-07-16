@@ -1,6 +1,6 @@
 <?php
-class Application_Model_StreamSetting {
-
+class Application_Model_StreamSetting
+{
     public static function setValue($key, $value, $type)
     {
         global $CC_CONFIG;
@@ -44,6 +44,7 @@ class Application_Model_StreamSetting {
                 ." WHERE keyname = '$key'";
 
             $result = $con->query($sql)->fetchColumn(0);
+
             return ($result !== false) ? $result : null;
         }
     }
@@ -120,11 +121,11 @@ class Application_Model_StreamSetting {
         foreach ($rows as $r) {
             if ($r['keyname'] == 'master_live_stream_port') {
                 $exists['master_live_stream_port'] = true;
-            } elseif($r['keyname'] == 'master_live_stream_mp') {
+            } elseif ($r['keyname'] == 'master_live_stream_mp') {
                 $exists['master_live_stream_mp'] = true;
-            } elseif($r['keyname'] == 'dj_live_stream_port') {
+            } elseif ($r['keyname'] == 'dj_live_stream_port') {
                 $exists['dj_live_stream_port'] = true;
-            } elseif($r['keyname'] == 'dj_live_stream_mp') {
+            } elseif ($r['keyname'] == 'dj_live_stream_mp') {
                 $exists['dj_live_stream_mp'] = true;
             }
         }
@@ -149,6 +150,7 @@ class Application_Model_StreamSetting {
                             "value"=>self::getDjLiveStreamMountPoint(),
                             "type"=>"string");
         }
+
         return $rows;
     }
 
@@ -168,10 +170,10 @@ class Application_Model_StreamSetting {
                 $v = $d == 1?"true":"false";
                 $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$key'";
                 $con->exec($sql);
-            } else if ($key == "output_sound_device_type") {
+            } elseif ($key == "output_sound_device_type") {
                 $sql = "UPDATE cc_stream_setting SET value='$d' WHERE keyname='$key'";
                 $con->exec($sql);
-            } else if (is_array($d)) {
+            } elseif (is_array($d)) {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
                 foreach ($d as $k => $v) {
@@ -257,6 +259,7 @@ class Application_Model_StreamSetting {
         } else {
             $result = true;
         }
+
         return $result;
     }
 
@@ -286,6 +289,7 @@ class Application_Model_StreamSetting {
                 $out[$stream] = $info;
             }
         }
+
         return $out;
     }
 

@@ -36,7 +36,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
-        if($logo){
+        if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
@@ -70,7 +70,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
-        if($logo){
+        if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
@@ -84,21 +84,22 @@ class AudiopreviewController extends Zend_Controller_Action
     /**
      *Function will load and return the contents of the requested playlist.
      */
-    public function getPlaylistAction(){
+    public function getPlaylistAction()
+    {
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
         $playlistID = $this->_getParam('playlistID');
 
-        if (!isset($playlistID)){
+        if (!isset($playlistID)) {
             return;
         }
 
         $pl = new Application_Model_Playlist($playlistID);
         $result = Array();
 
-        foreach ( $pl->getContents(true) as $track ){
+        foreach ( $pl->getContents(true) as $track ) {
 
             $elementMap = array( 'element_title' => isset($track['CcFiles']['track_title'])?$track['CcFiles']['track_title']:"",
                               'element_artist' => isset($track['CcFiles']['artist_name'])?$track['CcFiles']['artist_name']:"",
@@ -106,9 +107,9 @@ class AudiopreviewController extends Zend_Controller_Action
                               'element_position' => isset($track['position'])?$track['position']:"",
                             );
             $fileExtension = pathinfo($track['CcFiles']['filepath'], PATHINFO_EXTENSION);
-            if (strtolower($fileExtension) === 'mp3'){
+            if (strtolower($fileExtension) === 'mp3') {
                 $elementMap['element_mp3'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
-            } else if(strtolower($fileExtension) === 'ogg') {
+            } elseif (strtolower($fileExtension) === 'ogg') {
                 $elementMap['element_oga'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
             } else {
                 //the media was neither mp3 or ogg
@@ -141,7 +142,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
-        if ($logo){
+        if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
@@ -164,14 +165,14 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $showID = $this->_getParam('showID');
 
-        if (!isset($showID)){
+        if (!isset($showID)) {
             return;
         }
 
         $showInstance = new Application_Model_ShowInstance($showID);
         $result = array();
         $position = 0;
-        foreach ($showInstance->getShowListContent() as $track){
+        foreach ($showInstance->getShowListContent() as $track) {
 
             $elementMap = array(
                 'element_title' => isset($track['track_title']) ? $track['track_title'] : "",
@@ -181,9 +182,9 @@ class AudiopreviewController extends Zend_Controller_Action
             );
 
             $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
-            if (strtolower($fileExtension) === 'mp3'){
+            if (strtolower($fileExtension) === 'mp3') {
                 $elementMap['element_mp3'] = $track['gunid'].'.'.$fileExtension;
-            } else if(strtolower($fileExtension) === 'ogg') {
+            } elseif (strtolower($fileExtension) === 'ogg') {
                 $elementMap['element_oga'] = $track['gunid'].'.'.$fileExtension;
             } else {
                 //the media was neither mp3 or ogg

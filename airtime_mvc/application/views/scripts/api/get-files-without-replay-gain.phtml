@@ -1,8 +1,0 @@
-<?php
-
-//disable buffering so that data is sent as we retrieve it from the database
-while (@ob_end_flush());
-
-foreach($this->rows as $row) {
-    echo json_encode($row)."\n";
-}

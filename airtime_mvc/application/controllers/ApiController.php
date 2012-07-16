@@ -5,6 +5,7 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
+        $this->checkAuth();
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
@@ -35,19 +36,19 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('reload-metadata-group', 'json')
                 ->initContext();
     }
-    
+
     public function checkAuth()
     {
         global $CC_CONFIG;
-        
+
         $api_key = $this->_getParam('api_key');
-        
+
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
             exit;
-        }        
+        }
     }
 
     public function indexAction()
@@ -67,8 +68,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function versionAction()
     {
-        $this->checkAuth();
-        
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -81,13 +80,15 @@ class ApiController extends Zend_Controller_Action
      * Sets up and send init values used in the Calendar.
      * This is only being used by schedule.js at the moment.
      */
-    public function calendarInitAction(){
+    public function calendarInitAction()
+    {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        if(is_null(Zend_Auth::getInstance()->getStorage()->read())) {
+        if (is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource.';
+
             return;
         }
 
@@ -108,8 +109,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -117,14 +116,12 @@ class ApiController extends Zend_Controller_Action
         $fileID = $this->_getParam("file");
         $file_id = substr($fileID, 0, strpos($fileID, "."));
 
-        if (ctype_alnum($file_id) && strlen($file_id) == 32)
-        {
+        if (ctype_alnum($file_id) && strlen($file_id) == 32) {
             $media = Application_Model_StoredFile::RecallByGunid($file_id);
-            if ( $media != null )
-            {
-                
+            if ($media != null) {
+
                 $filepath = $media->getFilePath();
-                if(is_file($filepath)){
+                if (is_file($filepath)) {
                     $full_path = $media->getPropelOrm()->getDbFilepath();
 
                     $file_base_name = strrchr($full_path, '/');
@@ -141,7 +138,7 @@ class ApiController extends Zend_Controller_Action
                     // http://www.php.net/manual/en/book.fileinfo.php
                     $ext = pathinfo($fileID, PATHINFO_EXTENSION);
                     //Download user left clicks a track and selects Download.
-                    if ("true" == $this->_getParam('download')){
+                    if ("true" == $this->_getParam('download')) {
                         //path_info breaks up a file path into seperate pieces of informaiton.
                         //We just want the basename which is the file name with the path
                         //information stripped away. We are using Content-Disposition to specify
@@ -151,21 +148,22 @@ class ApiController extends Zend_Controller_Action
                         // I'm removing pathinfo() since it strips away UTF-8 characters.
                         // Using manualy parsing
                         header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
-                    }else{
+                    } else {
                         //user clicks play button for track and downloads it.
                         header('Content-Disposition: inline; filename="'.$file_base_name.'"');
                     }
-                    if (strtolower($ext) === 'mp3'){
+                    if (strtolower($ext) === 'mp3') {
                         $this->smartReadFile($filepath, 'audio/mpeg');
                     } else {
                         $this->smartReadFile($filepath, 'audio/'.$ext);
                     }
                     exit;
-                }else{
+                } else {
                     header ("HTTP/1.1 404 Not Found");
                 }
             }
         }
+
         return;
     }
 
@@ -181,41 +179,33 @@ class ApiController extends Zend_Controller_Action
     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
     * @link http://php.net/manual/en/function.readfile.php#86244
     */
-    function smartReadFile($location, $mimeType = 'audio/mp3')
+    public function smartReadFile($location, $mimeType = 'audio/mp3')
     {
-        $this->checkAuth();
-        
         $size= filesize($location);
         $time= date('r', filemtime($location));
 
         $fm = @fopen($location, 'rb');
-        if (!$fm)
-        {
+        if (!$fm) {
             header ("HTTP/1.1 505 Internal server error");
+
             return;
         }
 
         $begin= 0;
         $end= $size - 1;
 
-        if (isset($_SERVER['HTTP_RANGE']))
-        {
-            if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches))
-            {
+        if (isset($_SERVER['HTTP_RANGE'])) {
+            if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
                 $begin = intval($matches[1]);
-                if (!empty($matches[2]))
-                {
+                if (!empty($matches[2])) {
                     $end = intval($matches[2]);
                 }
             }
         }
 
-        if (isset($_SERVER['HTTP_RANGE']))
-        {
+        if (isset($_SERVER['HTTP_RANGE'])) {
             header('HTTP/1.1 206 Partial Content');
-        }
-        else
-        {
+        } else {
             header('HTTP/1.1 200 OK');
         }
         header("Content-Type: $mimeType");
@@ -223,8 +213,7 @@ class ApiController extends Zend_Controller_Action
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
         header('Content-Length:' . (($end - $begin) + 1));
-        if (isset($_SERVER['HTTP_RANGE']))
-        {
+        if (isset($_SERVER['HTTP_RANGE'])) {
             header("Content-Range: bytes $begin-$end/$size");
         }
         header("Content-Transfer-Encoding: binary");
@@ -238,8 +227,7 @@ class ApiController extends Zend_Controller_Action
         $cur = $begin;
         fseek($fm, $begin, 0);
 
-        while(!feof($fm) && $cur <= $end && (connection_status() == 0))
-        {
+        while (!feof($fm) && $cur <= $end && (connection_status() == 0)) {
             echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));
             $cur += 1024 * 16;
         }
@@ -262,7 +250,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function liveInfoAction()
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()){
+        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
@@ -273,7 +261,7 @@ class ApiController extends Zend_Controller_Action
 
             $request = $this->getRequest();
             $type = $request->getParam('type');
-            if($type == "endofday") {
+            if ($type == "endofday") {
                 // make getNextShows use end of day
                 $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
                 $result = array("env"=>APPLICATION_ENV,
@@ -281,10 +269,10 @@ class ApiController extends Zend_Controller_Action
                                 "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, 5, $utcTimeEnd));
 
                 Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-            }else{
+            } else {
 
                 $limit = $request->getParam('limit');
-                if($limit == "" || !is_numeric($limit)) {
+                if ($limit == "" || !is_numeric($limit)) {
                     $limit = "5";
                 }
 
@@ -309,7 +297,7 @@ class ApiController extends Zend_Controller_Action
 
     public function weekInfoAction()
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()){
+        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
@@ -321,7 +309,7 @@ class ApiController extends Zend_Controller_Action
             $dow = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
 
             $result = array();
-            for ($i=0; $i<7; $i++){
+            for ($i=0; $i<7; $i++) {
                 $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
@@ -342,8 +330,6 @@ class ApiController extends Zend_Controller_Action
 
     public function scheduleAction()
     {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -354,8 +340,6 @@ class ApiController extends Zend_Controller_Action
 
     public function notifyMediaItemStartPlayAction()
     {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -368,8 +352,6 @@ class ApiController extends Zend_Controller_Action
 
     public function recordedShowsAction()
     {
-        $this->checkAuth();
-
         $today_timestamp = date("Y-m-d H:i:s");
         $now = new DateTime($today_timestamp);
         $end_timestamp = $now->add(new DateInterval("PT2H"));
@@ -386,15 +368,13 @@ class ApiController extends Zend_Controller_Action
         $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
         Application_Model_Show::convertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
-        if (count($rows) > 0){
+        if (count($rows) > 0) {
             $this->view->is_recording = ($rows[0]['record'] == 1);
         }
     }
 
     public function uploadFileAction()
     {
-        $this->checkAuth();
-
         $upload_dir = ini_get("upload_tmp_dir");
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
         $tempFileName = basename($tempFilePath);
@@ -402,15 +382,13 @@ class ApiController extends Zend_Controller_Action
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
 
-        if (!is_null($result)){
+        if (!is_null($result)) {
             die('{"jsonrpc" : "2.0", "error" : {"code": '.$result[code].', "message" : "'.$result[message].'"}}');
         }
     }
 
     public function uploadRecordedAction()
     {
-        $this->checkAuth();
-
         //this file id is the recording for this show instance.
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
@@ -432,7 +410,7 @@ class ApiController extends Zend_Controller_Action
             $show_genre = $show_inst->getGenre();
             $show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
-         } catch (Exception $e){
+         } catch (Exception $e) {
             //we've reached here probably because the show was
             //cancelled, and therefore the show instance does not
             //exist anymore (ShowInstance constructor threw this error).
@@ -456,8 +434,7 @@ class ApiController extends Zend_Controller_Action
             $new_name[] = $filename_parts[count($filename_parts)-1];
 
             $tmpTitle = implode("-", $new_name);
-        }
-        else {
+        } else {
             $tmpTitle = $file->getName();
         }
 
@@ -465,16 +442,14 @@ class ApiController extends Zend_Controller_Action
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
-        if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud())
-        {
+        if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud()) {
             $id = $file->getId();
             $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
         }
     }
 
-    public function mediaMonitorSetupAction() {
-        $this->checkAuth();
-
+    public function mediaMonitorSetupAction()
+    {
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -483,7 +458,7 @@ class ApiController extends Zend_Controller_Action
 
         $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
         $watchedDirsPath = array();
-        foreach($watchedDirs as $wd){
+        foreach ($watchedDirs as $wd) {
             $watchedDirsPath[] = $wd->getDirectory();
         }
         $this->view->watched_dirs = $watchedDirsPath;
@@ -491,9 +466,6 @@ class ApiController extends Zend_Controller_Action
 
     public function dispatchMetaDataAction($md, $mode) 
     { 
-        // NOTE : if you are using this method. Make sure you've checked authorization
-        // in its caller because this method does not do checkAuth
-        // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
@@ -568,9 +540,8 @@ class ApiController extends Zend_Controller_Action
         return $file->getId();
     } 
 
-    public function reloadMetadataGroupAction() {
-        # reload-metadata-group
-        $this->checkAuth();
+    public function reloadMetadataGroupAction()
+    {
         $request = $this->getRequest();
         //extract all file metadata params from the request.
         //The value is a json encoded hash that has all the information related to this action
@@ -589,9 +560,8 @@ class ApiController extends Zend_Controller_Action
         die(json_encode( array('successes' => 19, 'fails' => 123) ));
     }
 
-    public function reloadMetadataAction() {
-        $this->checkAuth();
-
+    public function reloadMetadataAction()
+    {
         $request = $this->getRequest();
 
         $mode = $request->getParam('mode');
@@ -616,21 +586,20 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
-            }
-            else {
+            } else {
                 // path already exist
-                if($file->getFileExistsFlag()){
+                if ($file->getFileExistsFlag()) {
                     // file marked as exists
                     $this->view->error = "File already exists in Airtime.";
+
                     return;
-                }else{
+                } else {
                     // file marked as not exists
                     $file->setFileExistsFlag(true);
                     $file->setMetadata($md);
                 }
             }
-        }
-        else if ($mode == "modify") {
+        } else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -638,65 +607,61 @@ class ApiController extends Zend_Controller_Action
             //File is not in database anymore.
             if (is_null($file)) {
                 $this->view->error = "File does not exist in Airtime.";
+
                 return;
-            }
-            //Updating a metadata change.
-            else {
+            } else {
+                //Updating a metadata change.
                 $file->setMetadata($md);
             }
-        }
-        else if ($mode == "moved") {
+        } else if ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
+
                 return;
-            }
-            else {
+            } else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
             }
-        }
-        else if ($mode == "delete") {
+        } else if ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
                 $this->view->error = "File doesn't exist in Airtime.";
+
                 return;
-            }
-            else {
+            } else {
                 $file->deleteByMediaMonitor();
             }
-        }
-        else if ($mode == "delete_dir") {
+        } else if ($mode == "delete_dir") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
 
-            foreach($files as $file){
+            foreach ($files as $file) {
                 $file->deleteByMediaMonitor();
             }
+
             return;
         }
         $this->view->id = $file->getId();
     }
 
-    public function listAllFilesAction() {
-        $this->checkAuth();
-
+    public function listAllFilesAction()
+    {
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
 
         $this->view->files = Application_Model_StoredFile::listAllFiles($dir_id);
     }
 
-    public function listAllWatchedDirsAction() {
-        $this->checkAuth();
-
+    public function listAllWatchedDirsAction()
+    {
         $request = $this->getRequest();
 
         $result = array();
@@ -706,52 +671,47 @@ class ApiController extends Zend_Controller_Action
 
         $result[$storDir->getId()] = $storDir->getDirectory();
 
-        foreach ($arrWatchedDirs as $watchedDir){
+        foreach ($arrWatchedDirs as $watchedDir) {
             $result[$watchedDir->getId()] = $watchedDir->getDirectory();
         }
 
         $this->view->dirs = $result;
     }
 
-    public function addWatchedDirAction() {
-        $this->checkAuth();
-
+    public function addWatchedDirAction()
+    {
         $request = $this->getRequest();
         $path = base64_decode($request->getParam('path'));
 
         $this->view->msg = Application_Model_MusicDir::addWatchedDir($path);
     }
 
-    public function removeWatchedDirAction() {
-        $this->checkAuth();
-
+    public function removeWatchedDirAction()
+    {
         $request = $this->getRequest();
         $path = base64_decode($request->getParam('path'));
 
         $this->view->msg = Application_Model_MusicDir::removeWatchedDir($path);
     }
 
-    public function setStorageDirAction() {
-        $this->checkAuth();
-
+    public function setStorageDirAction()
+    {
         $request = $this->getRequest();
         $path = base64_decode($request->getParam('path'));
 
         $this->view->msg = Application_Model_MusicDir::setStorDir($path);
     }
 
-    public function getStreamSettingAction() {
-        $this->checkAuth();
-
+    public function getStreamSettingAction()
+    {
         $request = $this->getRequest();
 
         $info = Application_Model_StreamSetting::getStreamSetting();
         $this->view->msg = $info;
     }
 
-    public function statusAction() {
-        $this->checkAuth();
-        
+    public function statusAction()
+    {
         $request = $this->getRequest();
         $getDiskInfo = $request->getParam('diskinfo') == "true";
 
@@ -766,14 +726,15 @@ class ApiController extends Zend_Controller_Action
             )
         );
 
-        if ($getDiskInfo){
+        if ($getDiskInfo) {
             $status["partitions"] = Application_Model_Systemstatus::GetDiskInfo();
         }
 
         $this->view->status = $status;
     }
 
-    public function registerComponentAction(){
+    public function registerComponentAction()
+    {
         $request = $this->getRequest();
 
         $component = $request->getParam('component');
@@ -783,7 +744,8 @@ class ApiController extends Zend_Controller_Action
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
     }
 
-    public function updateLiquidsoapStatusAction(){
+    public function updateLiquidsoapStatusAction()
+    {
         $request = $this->getRequest();
 
         $msg = $request->getParam('msg');
@@ -793,7 +755,8 @@ class ApiController extends Zend_Controller_Action
         Application_Model_StreamSetting::setLiquidsoapError($stream_id, $msg, $boot_time);
     }
 
-    public function updateSourceStatusAction(){
+    public function updateSourceStatusAction()
+    {
         $request = $this->getRequest();
 
         $msg = $request->getParam('msg');
@@ -802,13 +765,13 @@ class ApiController extends Zend_Controller_Action
 
         // on source disconnection sent msg to pypo to turn off the switch
         // Added AutoTransition option
-        if($status == "false" && Application_Model_Preference::GetAutoTransition()){
+        if ($status == "false" && Application_Model_Preference::GetAutoTransition()) {
             $data = array("sourcename"=>$sourcename, "status"=>"off");
             Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
             Application_Model_Preference::SetSourceSwitchStatus($sourcename, "off");
             Application_Model_LiveLog::SetEndTime($sourcename == 'scheduled_play'?'S':'L',
                                                   new DateTime("now", new DateTimeZone('UTC')));
-        }elseif($status == "true" && Application_Model_Preference::GetAutoSwitch()){
+        } elseif ($status == "true" && Application_Model_Preference::GetAutoSwitch()) {
             $data = array("sourcename"=>$sourcename, "status"=>"on");
             Application_Model_RabbitMq::SendMessageToPypo("switch_source", $data);
             Application_Model_Preference::SetSourceSwitchStatus($sourcename, "on");
@@ -819,14 +782,13 @@ class ApiController extends Zend_Controller_Action
     }
 
     // handles addition/deletion of mount point which watched dirs reside
-    public function updateFileSystemMountAction(){
-        $this->checkAuth();
-
+    public function updateFileSystemMountAction()
+    {
         $request = $this->getRequest();
 
         $params = $request->getParams();
-        $added_list = empty($params['added_dir'])?array():explode(',',$params['added_dir']);
-        $removed_list = empty($params['removed_dir'])?array():explode(',',$params['removed_dir']);
+        $added_list = empty($params['added_dir'])?array():explode(',', $params['added_dir']);
+        $removed_list = empty($params['removed_dir'])?array():explode(',', $params['removed_dir']);
 
         // get all watched dirs
         $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null, null);
@@ -839,10 +801,10 @@ class ApiController extends Zend_Controller_Action
                 // if mount path itself was watched
                 if ($dirPath == $ad) {
                     Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                } else if(substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
+                } else if (substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                     Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                } else if (substr($ad, 0, strlen($dirPath)) === $dirPath) {
+                } elseif (substr($ad, 0, strlen($dirPath)) === $dirPath) {
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we add this mount point as
                     // watched dir
@@ -851,32 +813,31 @@ class ApiController extends Zend_Controller_Action
                 }
             }
         }
-        
-        foreach( $removed_list as $rd) {
+
+        foreach ($removed_list as $rd) {
             $rd .= '/';
             foreach ($watched_dirs as $dir) {
                 $dirPath = $dir->getDirectory();
                 // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                 if (substr($dirPath, 0, strlen($rd)) === $rd && $dir->getExistsFlag() == true) {
                     Application_Model_MusicDir::removeWatchedDir($dirPath, false);
-                } else if (substr($rd, 0, strlen($dirPath)) === $dirPath) {
+                } elseif (substr($rd, 0, strlen($dirPath)) === $dirPath) {
                     // is new mount point within the watched dir?
                     // pyinotify doesn't notify anyhing in this case, so we walk through all files within
                     // this watched dir in DB and mark them deleted.
                     // In case of h) of use cases, due to pyinotify behaviour of noticing mounted dir, we need to
                     // compare agaisnt all files in cc_files table
-                    
+
                     $watchDir = Application_Model_MusicDir::getDirByPath($rd);
                     // get all the files that is under $dirPath
                     $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
                     foreach ($files as $f) {
                         // if the file is from this mount
-                        if (substr( $f->getFilePath(),0,strlen($rd) ) === $rd) {
+                        if (substr($f->getFilePath(), 0, strlen($rd)) === $rd) {
                             $f->delete();
                         }
                     }
-                    
-                    if($watchDir) {
+                    if ($watchDir) {
                         Application_Model_MusicDir::removeWatchedDir($rd, false);
                     }
                 }
@@ -887,8 +848,6 @@ class ApiController extends Zend_Controller_Action
     // handles case where watched dir is missing
     public function handleWatchedDirMissingAction()
     {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $dir = base64_decode($request->getParam('dir'));
@@ -900,8 +859,6 @@ class ApiController extends Zend_Controller_Action
      * out a message to pypo that a potential change has been made. */
     public function rabbitmqDoPushAction()
     {
-        $this->checkAuth();
-
         $request = $this->getRequest();
         Logging::log("Notifying RabbitMQ to send message to pypo");
 
@@ -924,8 +881,6 @@ class ApiController extends Zend_Controller_Action
     /* This is used but Liquidsoap to check authentication of live streams*/
     public function checkLiveStreamAuthAction()
     {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $username = $request->getParam('username');
@@ -934,7 +889,7 @@ class ApiController extends Zend_Controller_Action
 
         if ($djtype == 'master') {
             //check against master
-            if ($username == Application_Model_Preference::GetLiveSteamMasterUsername() 
+            if ($username == Application_Model_Preference::GetLiveSteamMasterUsername()
                     && $password == Application_Model_Preference::GetLiveSteamMasterPassword()) {
                 $this->view->msg = true;
             } else {
@@ -960,8 +915,9 @@ class ApiController extends Zend_Controller_Action
                 if ($CcShow->getDbLiveStreamUsingAirtimeAuth()) {
                     foreach ($hosts_ids as $host) {
                         $h = new Application_Model_User($host['subjs_id']);
-                        if($username == $h->getLogin() && md5($password) == $h->getPassword()) {
+                        if ($username == $h->getLogin() && md5($password) == $h->getPassword()) {
                             $this->view->msg = true;
+
                             return;
                         }
                     }
@@ -982,21 +938,42 @@ class ApiController extends Zend_Controller_Action
             }
         }
     }
-    
+
     /* This action is for use by our dev scripts, that make
      * a change to the database and we want rabbitmq to send
      * out a message to pypo that a potential change has been made. */
     public function getFilesWithoutReplayGainAction()
     {
-        $this->checkAuth();
-        
         // disable the view and the layout
         $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $dir_id = $this->_getParam('dir_id');
-        
+
         //connect to db and get get sql
-        $this->view->rows = Application_Model_StoredFile::listAllFiles2($dir_id, 0);
+        $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
         
+        echo json_encode($rows);
+    }
+
+    public function updateReplayGainValueAction()
+    {
+        $this->checkAuth();
+
+        // disable layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam('data'));
+        
+        foreach ($data as $pair) {
+            list($id, $gain) = $pair;
+            
+            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            Logging::log("Setting $gain for file id $id");
+            $file->setDbReplayGain($gain);
+            $file->save();
+        }
     }
 }
-

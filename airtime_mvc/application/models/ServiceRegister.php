@@ -1,11 +1,11 @@
 <?php
-class Application_Model_ServiceRegister {
-
-    public static function Register($p_componentName, $p_ipAddress){
-
+class Application_Model_ServiceRegister
+{
+    public static function Register($p_componentName, $p_ipAddress)
+    {
         $component = CcServiceRegisterQuery::create()->findOneByDbName($p_componentName);
 
-        if ($component == NULL){
+        if ($component == NULL) {
             $component = new CcServiceRegister();
             $component->setDbName($p_componentName);
         }
@@ -14,7 +14,7 @@ class Application_Model_ServiceRegister {
         // to allow access via an ipv6 address.
         // http://[::1]:2812 does not respond.
         // Bug: http://savannah.nongnu.org/bugs/?27608
-        if ($p_ipAddress == "::1"){
+        if ($p_ipAddress == "::1") {
             $p_ipAddress = "127.0.0.1";
         }
 

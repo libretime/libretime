@@ -381,7 +381,9 @@ class AirTimeApiClient():
                     self.logger.debug("Warning: Sending a request element without a 'mode'")
                     self.logger.debug("Here is the the request: '%s'" % str(action) )
                 else: valid_actions.append(action)
-            md_list = { i : json.dumps(convert_dict_value_to_utf8(md)) for i,md in enumerate(valid_actions) }
+
+            md_list = dict((i, json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
+
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
@@ -621,15 +623,35 @@ class AirTimeApiClient():
 
         logger = self.logger
         try:
-            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(get-files-without-replay-gain)s/" % (self.config)
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(get_files_without_replay_gain)s/" % (self.config)
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%dir_id%%", dir_id)
+            response = self.get_response_from_server(url)
 
-            file_path = self.get_response_into_file(url)
+            logger.info("update file system mount: %s", response)
+            response = json.loads(response)
+            #file_path = self.get_response_into_file(url)
         except Exception, e:
-            file_path = None
+            response = None
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
 
-        return file_path
+        return response
 
+    def update_replay_gain_values(self, pairs):
+        """
+        'pairs' is a list of pairs in (x, y), where x is the file's database row id
+        and y is the file's replay_gain value in dB
+        """
+
+        #http://localhost/api/update-replay-gain-value/
+        try:
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(update_replay_gain_value)s/" % (self.config)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            data = urllib.urlencode({'data': json.dumps(pairs)})
+            request = urllib2.Request(url, data)
+
+            self.get_response_from_server(request)
+        except Exception, e:
+            self.logger.error("Exception: %s", e)
+            raise

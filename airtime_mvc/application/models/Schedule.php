@@ -1,7 +1,7 @@
 <?php
 
-class Application_Model_Schedule {
-
+class Application_Model_Schedule
+{
     /**
      * Return TRUE if file is going to be played in the future.
      *
@@ -24,13 +24,13 @@ class Application_Model_Schedule {
     /**
      * Returns data related to the scheduled items.
      *
-     * @param int $p_prev
-     * @param int $p_next
+     * @param  int  $p_prev
+     * @param  int  $p_next
      * @return date
      */
     public static function GetPlayOrderRange($p_prev = 1, $p_next = 1)
     {
-        if (!is_int($p_prev) || !is_int($p_next)){
+        if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
             return array();
         }
@@ -70,8 +70,8 @@ class Application_Model_Schedule {
     public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
     {
         if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null)
-            return;
 
+            return;
 
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -85,12 +85,12 @@ class Application_Model_Schedule {
                 WHERE ';
                 */
 
-         if (isset($p_previousShowID)){
+         if (isset($p_previousShowID)) {
             if (isset($p_nextShowID) || isset($p_currentShowID))
                 $sql .= '(';
             $sql .= 'st.instance_id = '.$p_previousShowID;
         }
-        if ($p_currentShowID != null){
+        if ($p_currentShowID != null) {
             if ($p_previousShowID != null)
                 $sql .= ' OR ';
             else if($p_nextShowID != null)
@@ -117,13 +117,13 @@ class Application_Model_Schedule {
         $results['next'] = null;
 
         $timeNowAsMillis = strtotime($p_timeNow);
-        for( $i = 0; $i < $numberOfRows; ++$i ){
+        for ($i = 0; $i < $numberOfRows; ++$i) {
             // if the show is overbooked, then update the track end time to the end of the show time.
-            if($rows[$i]['ends'] > $rows[$i]["show_ends"]){
+            if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-           if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)){
-                if ( $i - 1 >= 0){
+           if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)) {
+                if ($i - 1 >= 0) {
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
                             "starts"=>$rows[$i-1]["starts"],
                             "ends"=>$rows[$i-1]["ends"],
@@ -135,7 +135,7 @@ class Application_Model_Schedule {
                             "media_item_played"=>$rows[$i]["media_item_played"],
                             "record"=>0,
                             "type"=>'track');
-                if ( isset($rows[$i+1])){
+                if ( isset($rows[$i+1])) {
                     $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
                             "starts"=>$rows[$i+1]["starts"],
                             "ends"=>$rows[$i+1]["ends"],
@@ -161,10 +161,12 @@ class Application_Model_Schedule {
                             "starts"=>$rows[$previousIndex]["starts"],
                             "ends"=>$rows[$previousIndex]["ends"]);;
         }
+
         return $results;
     }
 
-    public static function GetLastScheduleItem($p_timeNow){
+    public static function GetLastScheduleItem($p_timeNow)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT"
@@ -182,11 +184,13 @@ class Application_Model_Schedule {
         ." LIMIT 1";
 
         $row = $con->query($sql)->fetchAll();
+
         return $row;
     }
 
 
-    public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId){
+    public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         /* Note that usually there will be one result returned. In some
@@ -207,10 +211,12 @@ class Application_Model_Schedule {
         ." LIMIT 1";
 
         $row = $con->query($sql)->fetchAll();
+
         return $row;
     }
 
-    public static function GetNextScheduleItem($p_timeNow){
+    public static function GetNextScheduleItem($p_timeNow)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT"
@@ -228,6 +234,7 @@ class Application_Model_Schedule {
         ." LIMIT 1";
 
         $row = $con->query($sql)->fetchAll();
+
         return $row;
     }
 
@@ -273,7 +280,6 @@ class Application_Model_Schedule {
         OR (si.ends > '{$p_start}' AND si.ends <= '{$p_end}')
         OR (si.starts <= '{$p_start}' AND si.ends >= '{$p_end}'))";
 
-
         if (count($p_shows) > 0) {
             $sql .= " AND show_id IN (".implode(",", $p_shows).")";
         }
@@ -283,6 +289,7 @@ class Application_Model_Schedule {
         Logging::debug($sql);
 
         $rows = $con->query($sql)->fetchAll();
+
         return $rows;
     }
 
@@ -298,17 +305,19 @@ class Application_Model_Schedule {
         $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on'?true:false;
         $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on'?true:false;
 
-        if(!$live_dj && !$master_dj && $scheduled_play){
+        if (!$live_dj && !$master_dj && $scheduled_play) {
             $sql .= ", broadcasted=1";
         }
 
         $sql .= " WHERE id=$p_id";
 
         $retVal = $con->exec($sql);
+
         return $retVal;
     }
 
-    public static function UpdateBrodcastedStatus($dateTime, $value){
+    public static function UpdateBrodcastedStatus($dateTime, $value)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $now = $dateTime->format("Y-m-d H:i:s");
@@ -316,6 +325,7 @@ class Application_Model_Schedule {
                 ." SET broadcasted=$value"
                 ." WHERE starts <= '$now' AND ends >= '$now'";
         $retVal = $con->exec($sql);
+
         return $retVal;
     }
 
@@ -324,15 +334,15 @@ class Application_Model_Schedule {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
+
         return $con->query($sql)->fetchColumn(0);
     }
-
 
     /**
      * Convert a time string in the format "YYYY-MM-DD HH:mm:SS"
      * to "YYYY-MM-DD-HH-mm-SS".
      *
-     * @param string $p_time
+     * @param  string $p_time
      * @return string
      */
     private static function AirtimeTimeToPypoTime($p_time)
@@ -340,6 +350,7 @@ class Application_Model_Schedule {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(" ", "-", $p_time);
         $p_time = str_replace(":", "-", $p_time);
+
         return $p_time;
     }
 
@@ -347,19 +358,20 @@ class Application_Model_Schedule {
      * Convert a time string in the format "YYYY-MM-DD-HH-mm-SS" to
      * "YYYY-MM-DD HH:mm:SS".
      *
-     * @param string $p_time
+     * @param  string $p_time
      * @return string
      */
     private static function PypoTimeToAirtimeTime($p_time)
     {
         $t = explode("-", $p_time);
+
         return $t[0]."-".$t[1]."-".$t[2]." ".$t[3].":".$t[4].":00";
     }
 
     /**
      * Return true if the input string is in the format YYYY-MM-DD-HH-mm
      *
-     * @param string $p_time
+     * @param  string  $p_time
      * @return boolean
      */
     public static function ValidPypoTimeFormat($p_time)
@@ -373,6 +385,7 @@ class Application_Model_Schedule {
                 return false;
             }
         }
+
         return true;
     }
 
@@ -380,7 +393,7 @@ class Application_Model_Schedule {
      * Converts a time value as a string (with format HH:MM:SS.mmmmmm) to
      * millisecs.
      *
-     * @param string $p_time
+     * @param  string $p_time
      * @return int
      */
     public static function WallTimeToMillisecs($p_time)
@@ -397,16 +410,16 @@ class Application_Model_Schedule {
             $seconds = intval($t[2]);
         }
         $ret = $millisecs + ($seconds * 1000) + ($t[1] * 60 * 1000) + ($t[0] * 60 * 60 * 1000);
+
         return $ret;
     }
-
 
     /**
      * Compute the difference between two times in the format "HH:MM:SS.mmmmmm".
      * Note: currently only supports calculating millisec differences.
      *
-     * @param string $p_time1
-     * @param string $p_time2
+     * @param  string $p_time1
+     * @param  string $p_time2
      * @return double
      */
     private static function TimeDiff($p_time1, $p_time2)
@@ -423,6 +436,7 @@ class Application_Model_Schedule {
             $millisec2 = intval($millisec2);
             $diff = abs($millisec1 - $millisec2)/1000;
         }
+
         return $diff;
     }
 
@@ -442,7 +456,8 @@ class Application_Model_Schedule {
      *    Returns null if nothing found, else an array of associative
      *    arrays representing each row.
      */
-    public static function GetItems($p_startTime, $p_endTime) {
+    public static function GetItems($p_startTime, $p_endTime)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
 
@@ -464,7 +479,6 @@ class Application_Model_Schedule {
             ." LEFT JOIN $CC_CONFIG[filesTable] AS f"
             ." ON st.file_id = f.id";
 
-
         $predicates = " WHERE st.ends > '$p_startTime'"
         ." AND st.starts < '$p_endTime'"
         ." AND st.playout_status > 0"
@@ -475,7 +489,7 @@ class Application_Model_Schedule {
 
         $rows = $con->query($sql)->fetchAll();
 
-        if (count($rows) < 3){
+        if (count($rows) < 3) {
             Logging::debug("Get Schedule: Less than 3 results returned. Doing another query since we need a minimum of 3 results.");
 
             $dt = new DateTime("@".time());
@@ -496,8 +510,8 @@ class Application_Model_Schedule {
         return $rows;
     }
 
-    public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null){
-
+    public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null)
+    {
         global $CC_CONFIG;
 
         /* if $p_fromDateTime and $p_toDateTime function parameters are null, then set range
@@ -513,7 +527,7 @@ class Application_Model_Schedule {
 
             $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
 
-            if (is_numeric($cache_ahead_hours)){
+            if (is_numeric($cache_ahead_hours)) {
                 //make sure we are not dealing with a float
                 $cache_ahead_hours = intval($cache_ahead_hours);
             } else {
@@ -536,7 +550,7 @@ class Application_Model_Schedule {
         $data["media"] = array();
 
         $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
-        foreach($kick_times as $kick_time_info){
+        foreach ($kick_times as $kick_time_info) {
             $kick_time = $kick_time_info['ends'];
             $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
             // we round down transition time since PHP cannot handle millisecond. We need to
@@ -552,7 +566,7 @@ class Application_Model_Schedule {
             $data["media"][$kick_start]['event_type'] = "kick_out";
             $data["media"][$kick_start]['type'] = "event";
 
-            if($kick_time !== $switch_off_time){
+            if ($kick_time !== $switch_off_time) {
                 $switch_start = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
                 $data["media"][$switch_start]['start'] = $switch_start;
                 $data["media"][$switch_start]['end'] = $switch_start;
@@ -561,7 +575,7 @@ class Application_Model_Schedule {
             }
         }
 
-        foreach ($items as $item){
+        foreach ($items as $item) {
 
             $showInstance = CcShowInstancesQuery::create()->findPK($item["instance_id"]);
             $showId = $showInstance->getDbShowId();
@@ -572,13 +586,13 @@ class Application_Model_Schedule {
             $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
 
-            if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
+            if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
                 continue;
             }
 
             /* Note: cue_out and end are always the same. */
             /* TODO: Not all tracks will have "show_end" */
-            if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()){
+            if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
                 $di = $trackStartDateTime->diff($showEndDateTime);
 
                 $item["cue_out"] = $di->format("%H:%i:%s").".000";
@@ -601,7 +615,7 @@ class Application_Model_Schedule {
                 'start' => $start,
                 'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
                 'show_name' => $showName,
-                'replay_gain' => $item["replay_gain"]
+                'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"]
             );
         }
 
@@ -615,14 +629,16 @@ class Application_Model_Schedule {
         $con->exec("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
     }
 
-    public static function deleteWithFileId($fileId){
+    public static function deleteWithFileId($fileId)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=$fileId";
         $res = $con->query($sql);
     }
 
-    public static function createNewFormSections($p_view){
+    public static function createNewFormSections($p_view)
+    {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $formWhat = new Application_Form_AddShowWhat();
@@ -656,7 +672,7 @@ class Application_Model_Schedule {
 
         $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
 
-        if(!$isSaas){
+        if (!$isSaas) {
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
             $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
@@ -677,7 +693,8 @@ class Application_Model_Schedule {
      * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
      * this method to manipulate the view (this should be done inside the controller function). With
      * 2.1 deadline looming, this is OK for now. -Martin */
-    public static function updateShowInstance($data, $controller){
+    public static function updateShowInstance($data, $controller)
+    {
         $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
 
         $formWhat = new Application_Form_AddShowWhat();
@@ -694,7 +711,7 @@ class Application_Model_Schedule {
         $formStyle->removeDecorator('DtDdWrapper');
         $formLive->removeDecorator('DtDdWrapper');
 
-        if(!$isSaas){
+        if (!$isSaas) {
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
             $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
@@ -705,7 +722,7 @@ class Application_Model_Schedule {
         }
         $when = $formWhen->isValid($data);
 
-        if($when && $formWhen->checkReliantFields($data, true, null, true)) {
+        if ($when && $formWhen->checkReliantFields($data, true, null, true)) {
             $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
             $start_dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -734,7 +751,7 @@ class Application_Model_Schedule {
             $controller->view->who = $formWho;
             $controller->view->style = $formStyle;
             $controller->view->live = $formLive;
-            if(!$isSaas){
+            if (!$isSaas) {
                 $controller->view->rr = $formRecord;
                 $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
                 $controller->view->rebroadcast = $formRebroadcast;
@@ -743,6 +760,7 @@ class Application_Model_Schedule {
                 //$formAbsoluteRebroadcast->disable();
                 //$formRebroadcast->disable();
             }
+
             return false;
         }
     }
@@ -755,8 +773,8 @@ class Application_Model_Schedule {
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null){
-
+    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null)
+    {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
@@ -781,7 +799,7 @@ class Application_Model_Schedule {
         $what = $formWhat->isValid($data);
         $when = $formWhen->isValid($data);
         $live = $formLive->isValid($data);
-        if($when) {
+        if ($when) {
             $when = $formWhen->checkReliantFields($data, $validateStartDate, $originalStartDate, $update, $instanceId);
         }
 
@@ -797,17 +815,17 @@ class Application_Model_Schedule {
         $hValue = 0;
         $mValue = 0;
 
-        if($hPos !== false){
+        if ($hPos !== false) {
             $hValue = trim(substr($data["add_show_duration"], 0, $hPos));
         }
-        if($mPos !== false){
+        if ($mPos !== false) {
             $hPos = $hPos === FALSE ? 0 : $hPos+1;
             $mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
         }
 
         $data["add_show_duration"] = $hValue.":".$mValue;
 
-        if(!$isSaas){
+        if (!$isSaas) {
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
             $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
@@ -820,19 +838,19 @@ class Application_Model_Schedule {
             $record = $formRecord->isValid($data);
         }
 
-        if($data["add_show_repeats"]) {
+        if ($data["add_show_repeats"]) {
             $repeats = $formRepeats->isValid($data);
-            if($repeats) {
+            if ($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
-            if(!$isSaas){
+            if (!$isSaas) {
                 $formAbsoluteRebroadcast->reset();
                 //make it valid, results don't matter anyways.
                 $rebroadAb = 1;
 
                 if ($data["add_show_rebroadcast"]) {
                     $rebroad = $formRebroadcast->isValid($data);
-                    if($rebroad) {
+                    if ($rebroad) {
                         $rebroad = $formRebroadcast->checkReliantFields($data);
                     }
                 } else {
@@ -841,14 +859,14 @@ class Application_Model_Schedule {
             }
         } else {
             $repeats = 1;
-            if(!$isSaas){
+            if (!$isSaas) {
                 $formRebroadcast->reset();
                  //make it valid, results don't matter anyways.
                 $rebroad = 1;
 
                 if ($data["add_show_rebroadcast"]) {
                     $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
-                    if($rebroadAb) {
+                    if ($rebroadAb) {
                         $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
                     }
                 } else {
@@ -860,8 +878,8 @@ class Application_Model_Schedule {
         $who = $formWho->isValid($data);
         $style = $formStyle->isValid($data);
         if ($what && $when && $repeats && $who && $style && $live) {
-            if(!$isSaas){
-                if($record && $rebroadAb && $rebroad){
+            if (!$isSaas) {
+                if ($record && $rebroadAb && $rebroad) {
                     if ($isAdminOrPM) {
                         Application_Model_Show::create($data);
                     }
@@ -906,7 +924,7 @@ class Application_Model_Schedule {
             $controller->view->style = $formStyle;
             $controller->view->live = $formLive;
 
-            if(!$isSaas){
+            if (!$isSaas) {
                 $controller->view->rr = $formRecord;
                 $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
                 $controller->view->rebroadcast = $formRebroadcast;
@@ -917,7 +935,8 @@ class Application_Model_Schedule {
         }
     }
 
-    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null) {
+    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null)
+    {
         global $CC_CONFIG;
 
         $overlapping = false;
@@ -934,7 +953,7 @@ class Application_Model_Schedule {
         }
         $rows = $con->query($sql);
 
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
             $end = new DateTime($row["ends"], new DateTimeZone('UTC'));
 
@@ -944,6 +963,7 @@ class Application_Model_Schedule {
                 break;
             }
         }
+
         return $overlapping;
     }
 }

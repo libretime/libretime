@@ -5,8 +5,8 @@ define('UTYPE_ADMIN', 'A');
 define('UTYPE_GUEST', 'G');
 define('UTYPE_PROGRAM_MANAGER', 'P');
 
-class Application_Model_User {
-
+class Application_Model_User
+{
     private $_userInstance;
 
     public function __construct($userId)
@@ -66,7 +66,7 @@ class Application_Model_User {
         if (is_array($type)) {
             $result = false;
             foreach ($type as $t) {
-                switch($t){
+                switch ($t) {
                     case UTYPE_ADMIN:
                         $result = $this->_userInstance->getDbType() === 'A';
                         break;
@@ -85,11 +85,12 @@ class Application_Model_User {
                 }
             }
         } else {
-            switch($type) {
+            switch ($type) {
                 case UTYPE_ADMIN:
                     return $this->_userInstance->getDbType() === 'A';
                 case UTYPE_HOST:
                     $userId = $this->_userInstance->getDbId();
+
                     return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
                 case UTYPE_PROGRAM_MANAGER:
                     return $this->_userInstance->getDbType() === 'P';
@@ -154,54 +155,63 @@ class Application_Model_User {
     public function getLogin()
     {
         $user = $this->_userInstance;
+
         return $user->getDbLogin();
     }
 
     public function getPassword()
     {
         $user = $this->_userInstance;
+
         return $user->getDbPass();
     }
 
     public function getFirstName()
     {
         $user = $this->_userInstance;
+
         return $user->getDbFirstName();
     }
 
     public function getLastName()
     {
         $user = $this->_userInstance;
+
         return $user->getDbLastName();
     }
 
     public function getType()
     {
         $user = $this->_userInstance;
+
         return $user->getDbType();
     }
 
     public function getEmail()
     {
         $user = $this->_userInstance;
+
         return $user->getDbEmail();
     }
 
     public function getCellPhone()
     {
         $user = $this->_userInstance;
+
         return $user->getDbCellPhone();
     }
 
     public function getSkype()
     {
         $user = $this->_userInstance;
+
         return $user->getDbSkypeContact();
     }
 
     public function getJabber()
     {
         $user = $this->_userInstance;
+
         return $user->getDbJabberContact();
 
     }
@@ -221,6 +231,7 @@ class Application_Model_User {
     private function createUser()
     {
         $user = new CcSubjs();
+
         return $user;
     }
 
@@ -275,6 +286,7 @@ class Application_Model_User {
         }
 
         $query = $con->query($sql)->fetchColumn(0);
+
         return ($query !== false) ? $query : null;
     }
 
@@ -337,6 +349,7 @@ class Application_Model_User {
                 //we get here if $userinfo->id is defined, but doesn't exist
                 //in the database anymore.
                 Zend_Auth::getInstance()->clearIdentity();
+
                 return null;
             }
         }

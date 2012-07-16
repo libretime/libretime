@@ -12,8 +12,7 @@ class LoginController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        if (Zend_Auth::getInstance()->hasIdentity())
-        {
+        if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_redirect('Showbuilder');
         }
 
@@ -30,21 +29,19 @@ class LoginController extends Zend_Controller_Action
 
         $message = "Please enter your user name and password";
 
-        if($request->isPost())
-        {
+        if ($request->isPost()) {
             // if the post contains recaptcha field, which means form had recaptcha field.
             // Hence add the element for validation.
-            if(array_key_exists('recaptcha_response_field', $request->getPost())){
+            if (array_key_exists('recaptcha_response_field', $request->getPost())) {
                 $form->addRecaptcha();
             }
-            if($form->isValid($request->getPost()))
-            {
+            if ($form->isValid($request->getPost())) {
                 //get the username and password from the form
                 $username = $form->getValue('username');
                 $password = $form->getValue('password');
-                if(Application_Model_Subjects::getLoginAttempts($username) >= 3 && $form->getElement('captcha') == NULL){
+                if (Application_Model_Subjects::getLoginAttempts($username) >= 3 && $form->getElement('captcha') == NULL) {
                     $form->addRecaptcha();
-                }else{
+                } else {
                     $authAdapter = Application_Model_Auth::getAuthAdapter();
 
                     //pass to the adapter the submitted username and password
@@ -53,8 +50,7 @@ class LoginController extends Zend_Controller_Action
 
                     $auth = Zend_Auth::getInstance();
                     $result = $auth->authenticate($authAdapter);
-                    if($result->isValid())
-                    {
+                    if ($result->isValid()) {
                         //all info about this user from the login table omit only the password
                         $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
@@ -69,9 +65,7 @@ class LoginController extends Zend_Controller_Action
                         $tempSess->referrer = 'login';
 
                         $this->_redirect('Showbuilder');
-                    }
-                    else
-                    {
+                    } else {
                         $message = "Wrong username or password provided. Please try again.";
                         Application_Model_Subjects::increaseLoginAttempts($username);
                         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
@@ -87,7 +81,7 @@ class LoginController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->airtimeVersion = Application_Model_Preference::GetAirtimeVersion();
         $this->view->airtimeCopyright = AIRTIME_COPYRIGHT_DATE;
-        if(isset($CC_CONFIG['demo'])){
+        if (isset($CC_CONFIG['demo'])) {
             $this->view->demo = $CC_CONFIG['demo'];
         }
     }
@@ -108,92 +102,87 @@ class LoginController extends Zend_Controller_Action
 
         if (!Application_Model_Preference::GetEnableSystemEmail()) {
             $this->_redirect('login');
-        }
-        else {
+        } else {
             //uses separate layout without a navigation.
             $this->_helper->layout->setLayout('login');
-             
+
             $form = new Application_Form_PasswordRestore();
-        
+
             $request = $this->getRequest();
             if ($request->isPost() && $form->isValid($request->getPost())) {
                 $user = CcSubjsQuery::create()
                     ->filterByDbEmail($form->email->getValue())
                     ->findOne();
-        
+
                 if (!empty($user)) {
                     $auth = new Application_Model_Auth();
-        
+
                     $success = $auth->sendPasswordRestoreLink($user, $this->view);
                     if ($success) {
                         $this->_helper->redirector('password-restore-after', 'login');
                     } else {
                         $form->email->addError($this->view->translate("Email could not be sent. Check your mail server settings and ensure it has been configured properly."));
                     }
-                }
-                else {
+                } else {
                     $form->email->addError($this->view->translate("Given email not found."));
                 }
             }
-        
+
             $this->view->form = $form;
         }
     }
-    
+
     public function passwordRestoreAfterAction()
     {
         //uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
     }
-    
+
     public function passwordChangeAction()
     {
         //uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
-    
+
         $request = $this->getRequest();
         $token = $request->getParam("token", false);
         $user_id = $request->getParam("user_id", 0);
-    
+
         $form = new Application_Form_PasswordChange();
         $auth = new Application_Model_Auth();
         $user = CcSubjsQuery::create()->findPK($user_id);
-    
+
         //check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {
             Logging::debug("token not valid");
             $this->_helper->redirector('index', 'login');
         }
-    
+
         if ($request->isPost() && $form->isValid($request->getPost())) {
-             
+
             $user->setDbPass(md5($form->password->getValue()));
             $user->save();
-             
+
             $auth->invalidateTokens($user, 'password.restore');
-    
+
             $zend_auth = Zend_Auth::getInstance();
             $zend_auth->clearIdentity();
-    
+
             $authAdapter = Application_Model_Auth::getAuthAdapter();
             $authAdapter->setIdentity($user->getDbLogin())
             ->setCredential($form->password->getValue());
-    
+
             $result = $zend_auth->authenticate($authAdapter);
-    
+
             //all info about this user from the login table omit only the password
             $userInfo = $authAdapter->getResultRowObject(null, 'password');
-    
+
             //the default storage is a session with namespace Zend_Auth
             $authStorage = $zend_auth->getStorage();
             $authStorage->write($userInfo);
-    
+
             $this->_helper->redirector('index', 'showbuilder');
         }
-    
+
         $this->view->form = $form;
     }
 }
-
-
-

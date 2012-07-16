@@ -40,7 +40,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     /**
      * Sets the ACL object
      *
-     * @param mixed $aclData
+     * @param  mixed $aclData
      * @return void
      **/
     public function setAcl(Zend_Acl $aclData)
@@ -77,9 +77,9 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     /**
      * Sets the error page
      *
-     * @param string $action
-     * @param string $controller
-     * @param string $module
+     * @param  string $action
+     * @param  string $controller
+     * @param  string $module
      * @return void
      **/
     public function setErrorPage($action, $controller = 'error', $module = null)
@@ -109,20 +109,19 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
         $controller = strtolower($request->getControllerName());
-        
-        if (in_array($controller, array("api", "auth"))){
-                        
-            $this->setRoleName("G");    
-        }
-        else if (!Zend_Auth::getInstance()->hasIdentity()){
-            
+
+        if (in_array($controller, array("api", "auth"))) {
+
+            $this->setRoleName("G");
+        } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
+
              if ($controller !== 'login') {
 
                 if ($request->isXmlHttpRequest()) {
 
                     $url = 'http://'.$request->getHttpHost().'/login';
                     $json = Zend_Json::encode(array('auth' => false, 'url' => $url));
-                    
+
                     // Prepare response
                     $this->getResponse()
                          ->setHttpResponseCode(401)
@@ -131,14 +130,12 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
                     //redirectAndExit() cleans up, sends the headers and stops the script
                     Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
-                }
-                else {
+                } else {
                     $r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
                     $r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
                }
             }
-        }
-        else {
+        } else {
 
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $this->setRoleName($userInfo->type);

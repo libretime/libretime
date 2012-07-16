@@ -1,7 +1,7 @@
 <?php
 
-class Application_Model_Datatables {
-
+class Application_Model_Datatables
+{
     /*
      * query used to return data for a paginated/searchable datatable.
      */
@@ -44,7 +44,7 @@ class Application_Model_Datatables {
 
         // Order By clause
         $orderby = array();
-        for ($i = 0; $i < $data["iSortingCols"]; $i++){
+        for ($i = 0; $i < $data["iSortingCols"]; $i++) {
             $num = $data["iSortCol_".$i];
             $orderby[] = $data["mDataProp_{$num}"]." ".$data["sSortDir_".$i];
         }
@@ -64,8 +64,7 @@ class Application_Model_Datatables {
             if ($displayLength !== -1) {
                 $sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
             }
-        }
-        else {
+        } else {
             $sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby;
 
             //limit the results returned.
@@ -81,16 +80,14 @@ class Application_Model_Datatables {
             if (isset($sqlTotalDisplayRows)) {
                 $r = $con->query($sqlTotalDisplayRows);
                 $totalDisplayRows = $r->fetchColumn(0);
-            }
-            else {
+            } else {
                 $totalDisplayRows = $totalRows;
             }
 
             $r = $con->query($sql);
             $r->setFetchMode(PDO::FETCH_ASSOC);
             $results = $r->fetchAll();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Logging::debug($e->getMessage());
         }
 

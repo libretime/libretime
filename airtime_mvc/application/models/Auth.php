@@ -1,7 +1,7 @@
 <?php
 
-class Application_Model_Auth {
-
+class Application_Model_Auth
+{
     const TOKEN_LIFETIME = 'P2D'; // DateInterval syntax
 
     private function generateToken($action, $user_id)
@@ -86,8 +86,8 @@ class Application_Model_Auth {
     /**
      * Get random string
      *
-     * @param int $length
-     * @param string $allowed_chars
+     * @param  int    $length
+     * @param  string $allowed_chars
      * @return string
      */
     final public function generateRandomString($length = 12, $allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
