@@ -221,9 +221,11 @@ function staticCallback(data) {
             });
         });
     } else {
-        AIRTIME.playlist.fnAddItems(json.ids, null, 'after');
+        AIRTIME.playlist.fnOpenPlaylist(json);
+        var form = $('#smart-playlist-form');
         form.find('.success').text('Smart playlist generated');
         form.find('.success').show();
+        form.find('#smart_playlist_options').removeClass("closed");
     }
 }
 

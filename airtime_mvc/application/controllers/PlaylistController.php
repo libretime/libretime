@@ -70,7 +70,7 @@ class PlaylistController extends Zend_Controller_Action
         unset($this->view->pl);
     }
 
-    private function createFullResponse($pl = null)
+    private function createFullResponse($pl = null, $isJson = false)
     {
         if (isset($pl)) {
             $formatter = new LengthFormatter($pl->getLength());
@@ -84,11 +84,19 @@ class PlaylistController extends Zend_Controller_Action
 
             $this->view->pl = $pl;
             $this->view->id = $pl->getId();
-            $this->view->html = $this->view->render('playlist/playlist.phtml');
+            if ($isJson){
+                return $this->view->render('playlist/playlist.phtml');
+            }else{
+                $this->view->html = $this->view->render('playlist/playlist.phtml');
+            }
             unset($this->view->pl);
         }
         else {
-            $this->view->html = $this->view->render('playlist/playlist.phtml');
+            if ($isJson){
+                return $this->view->render('playlist/playlist.phtml');
+            }else{
+                $this->view->html = $this->view->render('playlist/playlist.phtml');
+            }
         }
     }
 
@@ -451,15 +459,41 @@ class PlaylistController extends Zend_Controller_Action
         $params = $request->getPost();
         $result = Application_Model_Playlist::saveSmartPlaylistCriteria($params['data'], $params['pl_id']);
         die(json_encode($result));
+        /*if ($result['result'] != 0) {
+            die(json_encode($result));
+        } else{
+            try {
+                $pl = new Application_Model_Playlist($params['pl_id']);
+                $this->createFullResponse($pl);
+            }
+            catch (PlaylistNotFoundException $e) {
+                $this->playlistNotFound();
+            }
+            catch (Exception $e) {
+                $this->playlistUnknownError($e);
+            }
+        }*/
     }
     
     public function smartPlaylistGenerateAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        Logging::log($params);
         $result = Application_Model_Playlist::generateSmartPlaylist($params['data'], $params['pl_id']);
-        die(json_encode($result));
+        if ($result['result'] == 0) {
+            try {
+                $pl = new Application_Model_Playlist($params['pl_id']);
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+            }
+            catch (PlaylistNotFoundException $e) {
+                $this->playlistNotFound();
+            }
+            catch (Exception $e) {
+                $this->playlistUnknownError($e);
+            }
+        }else{
+            die(json_encode($result));
+        }
     }
     
     public function smartPlaylistGetAction()

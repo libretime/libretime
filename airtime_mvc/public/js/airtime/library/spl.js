@@ -658,6 +658,10 @@ var AIRTIME = (function(AIRTIME){
         });
     };
     
+    mod.fnOpenPlaylist = function(json) {
+        openPlaylist(json);
+    };
+    
     mod.enableUI = function() {
     	
     	$lib.unblock();

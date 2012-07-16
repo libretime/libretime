@@ -848,6 +848,15 @@ class Application_Model_Playlist {
         CcPlaylistQuery::create()->findPKs($p_ids)->delete();
     }
     
+    /**
+     * Delete all files from playlist
+     * @param int $p_playlistId
+     */
+    public static function deleteAllFilesFromPlaylist($p_playlistId)
+    {
+        CcPlaylistcontentsQuery::create()->findByDbPlaylistId($p_playlistId)->delete();
+    }
+    
     
     // smart playlist functions start
     /**
@@ -963,34 +972,80 @@ class Application_Model_Playlist {
         $result = self::saveSmartPlaylistCriteria($p_criteria, $p_playlistId);
         if ($result['result'] != 0) {
             return $result;
-        }else{
-            //$data = self::organizeSmartPlyalistCriteria($p_criteria);
-            $list = self::getListofFilesMeetCriteria($p_playlist_id);
-            return array("result"=>0);
+        } else {
+            $info = self::getListofFilesMeetCriteria($p_playlistId);
+            $files = $info['files'];
+            $limit = $info['limit'];
+            // construct ids of track candidates
+            self::deleteAllFilesFromPlaylist($p_playlistId);
+            $playlist = new self($p_playlistId);
+            $insertList = array();
+            $totalTime = 0;
+            while ($totalTime < $limit['time'] && !empty($files)) {
+                $key = array_rand($files);
+                $insertList[$key] = $files[$key];
+                $totalTime += $files[$key];
+                unset($files[$key]);
+                if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
+                     break;
+                } 
+            }
+            $playlist->addAudioClips(array_keys($insertList));
+            return array("result"=>0, "ids"=>array_keys($insertList));
         }
     }
     
     // this function return list of propel object
-    private static function getListofFilesMeetCriteria($p_playlist_id)
+    private static function getListofFilesMeetCriteria($p_playlistId)
     {
         $c = new Criteria();
+        $c->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
+        $out = CcPlaylistcriteriaPeer::doSelect($c);
         
-        foreach ($p_data as $criteria) {
-            $spCriteria = self::$criteria2PeerMap[$criteria['sp_criteria_field']];
-            $spCriteriaModifier = $criteria['sp_criteria_modifier'];
-            $spCriteriaValue = $criteria['sp_criteria_value'];
+        $storedCrit = array();
+        foreach ($out as $crit) {
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+        
+            if($criteria == "limit"){
+                $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
+            }else{
+                $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
+            }
+        }
+        $ccFileCriteria = new Criteria();
+        foreach ($storedCrit["crit"] as $criteria) {
+            $spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
+            $spCriteriaModifier = $criteria['modifier'];
+            $spCriteriaValue = $criteria['value'];
             if ($spCriteriaModifier == "starts with") {
                 $spCriteriaValue = "$spCriteriaValue%";
             } else if ($spCriteriaModifier == "ends with") {
                 $spCriteriaValue = "%$spCriteriaValue";
             } else if ($spCriteriaModifier == "is in the range") {
-                $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[sp_criteria_extra]'";
+                $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
             }
             $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
-            $c->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+            $ccFileCriteria->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+        }
+        // construct limit restriction
+        $limits = array();
+        if ($storedCrit['limit']['modifier'] == "items") {
+            $limits['time'] = 1440 * 60;
+            $limits['items'] = $storedCrit['limit']['value'];
+        } else {
+            $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
+            $limits['items'] = null;
         }
         try{
-            $out = CcFilesPeer::doSelect($c);
+            $out = CcFilesPeer::doSelect($ccFileCriteria);
+            $files = array();
+            foreach ($out as $file) {
+                $files[$file->getDbId()] = Application_Common_DateHelper::calculateLengthInSeconds($file->getDbLength());
+            }
+            return array("files"=>$files, "limit"=>$limits);
         }catch(Exception $e){
             //Logging::log($e);
         }
