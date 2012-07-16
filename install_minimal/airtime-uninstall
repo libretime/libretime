@@ -6,6 +6,28 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+
+options=$(getopt -o p -l purge -- "$@")
+if [ $? -ne 0 ]; then
+    echo "only -p or --purge parameter allowed"
+    exit 1
+fi
+eval set -- "$options"
+
+purge='f'
+
+while true
+do
+    case "$1" in
+    -p|--purge)      purge='t'; shift;;
+    --)             shift 1; break ;;
+        *)              break ;;
+    esac
+done
+
+#Make 'purge' env variable available to sub bash script
+export purge
+
 echo -e "\n******************************* Uninstall Begin ********************************"
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
