@@ -976,6 +976,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
             Logging::log("Setting $gain for file id $id");
             $file->setDbReplayGain($gain);
+            $file->save();
         }
     }
 }

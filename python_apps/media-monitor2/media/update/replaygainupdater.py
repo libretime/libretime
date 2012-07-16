@@ -42,21 +42,17 @@ class ReplayGainUpdater(Thread):
                     # return a list of pairs where the first value is the file's database row id
                     # and the second value is the filepath
                     files = self.api_client.get_files_without_replay_gain_value(dir_id)
-                    self.logger.debug(files)
 
                     for f in files:
                         full_path = os.path.join(dir_path, f['fp'])
                         processed_data.append((f['id'], replaygain.calculate_replay_gain(full_path)))
 
-                    #finished = (len(files) == 0)
-                    finished = True
+                    self.api_client.update_replay_gain_values(processed_data)
+                    finished = (len(files) == 0)
 
-                #send data here
-                self.api_client.update_replay_gain_values(processed_data)
-                print processed_data
             except Exception, e:
-                print e
-                print traceback.format_exc()
+                self.logger.error(e)
+                self.logger.debug(traceback.format_exc())
     def run(self):
         try: self.main()
         except Exception, e:
@@ -66,7 +62,7 @@ class ReplayGainUpdater(Thread):
 if __name__ == "__main__":
     try:
         rgu = ReplayGainUpdater(logging)
-        print rgu.main()
+        rgu.main()
     except Exception, e:
         print e
         print traceback.format_exc()
