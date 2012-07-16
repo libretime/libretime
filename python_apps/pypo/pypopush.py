@@ -42,7 +42,7 @@ except Exception, e:
 class PypoPush(Thread):
     def __init__(self, q, telnet_lock):
         Thread.__init__(self)
-        self.api_client = api_client.AirTimeApiClient()
+        self.api_client = api_client.AirtimeApiClient()
         self.queue = q
 
         self.telnet_lock = telnet_lock

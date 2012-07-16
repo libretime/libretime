@@ -64,7 +64,7 @@ except Exception, e:
 
 class Notify:
     def __init__(self):
-        self.api_client = api_client.AirTimeApiClient()
+        self.api_client = api_client.AirtimeApiClient()
 
     def notify_media_start_playing(self, data, media_id):
         logger = logging.getLogger("notify")

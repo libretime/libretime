@@ -40,7 +40,7 @@ def convert_dict_value_to_utf8(md):
 # Airtime API Client
 ################################################################################
 
-class AirTimeApiClient():
+class AirtimeApiClient():
 
     def __init__(self, logger=None):
         if logger is None:

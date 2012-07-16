@@ -23,7 +23,7 @@ class ReplayGainUpdater(Thread):
     def __init__(self, logger):
         Thread.__init__(self)
         self.logger = logger
-        self.api_client = api_client.AirTimeApiClient()
+        self.api_client = api_client.AirtimeApiClient()
 
     def main(self):
 
