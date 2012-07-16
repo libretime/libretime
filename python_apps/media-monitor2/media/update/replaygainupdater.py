@@ -5,8 +5,11 @@ import os
 import logging
 import json
 
+import sys
+sys.path.append('/home/martin/workspace/airtime/python_apps/media-monitor2/')
+
 from api_clients import api_client
-import replaygain
+from media.update import replaygain
 
 
 class ReplayGainUpdater(Thread):
@@ -52,6 +55,7 @@ class ReplayGainUpdater(Thread):
                     finished = True
 
                 #send data here
+                self.api_client.update_replay_gain_values(processed_data)
                 print processed_data
             except Exception, e:
                 print e

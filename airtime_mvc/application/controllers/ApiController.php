@@ -956,4 +956,22 @@ class ApiController extends Zend_Controller_Action
         //connect to db and get get sql
         $this->view->rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
     }
+
+    public function updateReplayGainValueAction()
+    {
+        $this->checkAuth();
+
+        // disable layout
+        $this->view->layout()->disableLayout();
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam('data'));
+        
+        foreach ($data as $pair) {
+            list($id, $gain) = $pair;
+            
+            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            Logging::log("Setting $gain for file id $id");
+            $file->setDbReplayGain($gain);
+        }
+    }
 }

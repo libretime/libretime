@@ -626,7 +626,7 @@ class AirTimeApiClient():
 
         logger = self.logger
         try:
-            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(get-files-without-replay-gain)s/" % (self.config)
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(get_files_without_replay_gain)s/" % (self.config)
             url = url.replace("%%api_key%%", self.config["api_key"])
             url = url.replace("%%dir_id%%", dir_id)
             response = self.get_response_from_server(url)
@@ -640,4 +640,21 @@ class AirTimeApiClient():
             logger.error("traceback: %s", traceback.format_exc())
 
         return response
+
+    def update_replay_gain_values(self, pairs):
+        """
+        'pairs' is a list of pairs in (x, y), where x is the file's database row id
+        and y is the file's replay_gain value in dB
+        """
+
+        #http://localhost/api/update-replay-gain-value/
+        try:
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(update_replay_gain_value)s/" % (self.config)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            data = urllib.urlencode({'data': json.dumps(pairs)})
+            request = urllib2.Request(url, data)
+
+            self.get_response_from_server(request)
+        except Exception, e:
+            response = None
 
