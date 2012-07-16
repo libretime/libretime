@@ -25,6 +25,8 @@ def printUsage():
     print "     -u user (default: source) "
     print "     -p password (default: hackme) "
     print "     -m mount (default: test) "
+    print "     -h show help menu"
+
         
 def find_liquidsoap_binary():
     """

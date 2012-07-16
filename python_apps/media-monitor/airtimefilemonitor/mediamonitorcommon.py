@@ -292,7 +292,10 @@ class MediaMonitorCommon:
         self.logger.debug(command)
         stdout = self.exec_command(command)
 
-        return stdout.splitlines()
+        if stdout is None:
+            return []
+        else:
+            return stdout.splitlines()
 
     def touch_index_file(self):
         dirname = os.path.dirname(self.timestamp_file)

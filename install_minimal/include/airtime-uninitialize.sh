@@ -19,7 +19,6 @@ set +e
 monit unmonitor airtime-media-monitor >/dev/null 2>&1
 monit unmonitor airtime-liquidsoap >/dev/null 2>&1
 monit unmonitor airtime-playout >/dev/null 2>&1
-#monit unmonitor airtime-show-recorder >/dev/null 2>&1
 monit unmonitor rabbitmq-server
 set -e
 
@@ -31,5 +30,7 @@ python $AIRTIMEROOT/python_apps/pypo/install/pypo-uninitialize.py
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-uninitialize.py
 #python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-uninitialize.py
 
+if [ "$purge" = "t" ]; then
 #call Airtime uninstall script
 php --php-ini ${SCRIPTPATH}/../airtime-php.ini ${SCRIPTPATH}/airtime-uninstall.php
+fi

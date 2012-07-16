@@ -36,6 +36,11 @@ class AirtimeNotifier(Notifier):
             time.sleep(5)
 
     def init_rabbit_mq(self):
+        """
+        This function will attempt to connect to RabbitMQ Server and if successful
+        return 'True'. Returns 'False' otherwise.
+        """
+ 
         self.logger.info("Initializing RabbitMQ stuff")
         try:
             schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)

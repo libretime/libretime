@@ -261,30 +261,28 @@ class ApiController extends Zend_Controller_Action
             $request = $this->getRequest();
             $type = $request->getParam('type');
             if ($type == "endofday") {
-                // make getNextShows use end of day
+                $limit = $request->getParam('limit');
+                if($limit == "" || !is_numeric($limit)) {
+                    $limit = "5";
+                }
+                
+                // make GetNextShows use end of day
                 $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
                 $result = array("env"=>APPLICATION_ENV,
                                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                                "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, 5, $utcTimeEnd));
-
+                                "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd));
+                
                 Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             } else {
-
-                $limit = $request->getParam('limit');
-                if ($limit == "" || !is_numeric($limit)) {
-                    $limit = "5";
-                }
-
                 $result = Application_Model_Schedule::GetPlayOrderRange();
 
-                //Convert from UTC to localtime for user.
+                //Convert from UTC to localtime for Web Browser.
                 Application_Model_Show::convertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
                 Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
             }
 
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
 
-            //echo json_encode($result);
             header("Content-type: text/javascript");
             echo $_GET['callback'].'('.json_encode($result).')';
         } else {
