@@ -543,7 +543,7 @@ class ApiController extends Zend_Controller_Action
                 // TODO : must check for error in $response before proceeding...
                 $this->uploadRecordActionParam($info_json['showinstanceid'],$info_json['fileid']);
             }
-            // TODO : Remove this line when done debugging this shit
+            // TODO : Remove this line when done debugging
             Logging::log( $info_json );
 
         }
