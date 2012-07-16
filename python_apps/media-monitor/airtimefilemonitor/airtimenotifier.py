@@ -123,17 +123,16 @@ class AirtimeNotifier(Notifier):
                     self.logger.error("traceback: %s", traceback.format_exc())
 
 
+    def update_airtime(self, event):
     """
     Update airtime with information about files discovered in our
-    watched directories. 
+    watched directories.
     event: a dict() object with the following attributes:
      -filepath
      -mode
      -data
-     -is_recorded_show 
+     -is_recorded_show
     """
-    def update_airtime(self, event):
-
         try:
             self.logger.info("updating filepath: %s ", event['filepath'])
             filepath = event['filepath']

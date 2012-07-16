@@ -396,15 +396,13 @@ class ApiController extends Zend_Controller_Action
         $this->view->fileid = $file_id;
         $this->view->showinstanceid = $show_instance_id;
 
-
-           $showCanceled = false;
-           $file = Application_Model_StoredFile::Recall($file_id);
+        $showCanceled = false;
+        $file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
         $show_name = null;
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance_id);
-
             $show_inst->setRecordedFile($file_id);
             $show_name = $show_inst->getName();
             $show_genre = $show_inst->getGenre();
