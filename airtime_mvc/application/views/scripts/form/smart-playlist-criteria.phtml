@@ -2,6 +2,7 @@
 <fieldset class='toggle closed' id='smart_playlist_options' style='overflow-x:auto; width:781px'>
 <legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Playlist Options</legend>
     <dl class='zend_form'>
+        <div id='sp-success' class='success' style='display:none'></div>
         <dd id='sp_type-element' class='radio-inline-list'>
         <label for='sp_type'>            
             <?php echo $this->element->getElement('sp_type')->getLabel() ?>
@@ -26,13 +27,15 @@
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?><span id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
                 <?php if ($i != 0) { ?>
-                    <a href='#' id='criteria_remove_<?php echo $i ?>'>Remove&nbsp;</a>
+                    <a class='ui-button sp-add sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
+                        <span class='ui-icon ui-icon-closethick'></span>
+                    </a>
                 <?php } ?>
                 <br />
             </div>
             
         <?php } ?>
-        
+        <br />
         </dd>
         
         <dd id='sp_limit-element'>
@@ -40,7 +43,6 @@
                 <?php echo $this->element->getElement('sp_limit_value')->getLabel() ?>
                 <?php echo $this->element->getElement('sp_limit_value')?>
                 <?php echo $this->element->getElement('sp_limit_options') ?>
-                <br />
             </label>
         </dd>
         

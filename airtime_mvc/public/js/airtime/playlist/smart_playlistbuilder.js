@@ -214,29 +214,39 @@ function staticCallback(data) {
 	form.find('span[class="errors sp-errors"]').remove();
 	var json = $.parseJSON(data);
 	if (json.result == "1") {
+		form.find('.success').hide();
 	    $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
             });
         });
+    } else {
+        AIRTIME.playlist.fnAddItems(json.ids, null, 'after');
+        form.find('.success').text('Smart playlist generated');
+        form.find('.success').show();
     }
 }
 
 function dynamicCallback(json) {
 	var form = $('#smart-playlist-form');
 	form.find('span[class="errors sp-errors"]').remove();
-	var json = $.parseJSON(data);
+	var json = $.parseJSON(json);
 	if (json.result == "1") {
+		form.find('.success').hide();
         $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
             });
         });
+    } else {
+    	form.find('.success').text('Criteria saved');
+        form.find('.success').show();
     }
 }
 
 function appendAddButton(rows) {
-    var add_button = "<a href='#' id='criteria_add' class='criteria_add'>Add</a>";
+    var add_button = "<a class='ui-button sp-ui-button-icon-only' id='criteria_add' class='criteria_add'>" +
+    		"<span class='ui-icon ui-icon-plusthick'</span></a>";
 	
     if (rows.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
         rows.find('select[name^="sp_criteria_field"]:enabled:last')

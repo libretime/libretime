@@ -185,7 +185,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         }
         
         $limit = new Zend_Form_Element_Select('sp_limit_options');
-        $limit->setAttrib('class', 'input_select');
+        $limit->setAttrib('class', 'sp_input_select');
         $limit->setDecorators(array('viewHelper'));
         $limit->setMultiOptions($limitOptions);
         if (isset($storedCrit["limit"])) {
@@ -194,7 +194,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $this->addElement($limit);
         
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
-        $limitValue->setAttrib('class', 'input_text');
+        $limitValue->setAttrib('class', 'sp_input_text_limit');
         $limitValue->setLabel('Limit to');
         $limitValue->setDecorators(array('viewHelper'));
         $this->addElement($limitValue);

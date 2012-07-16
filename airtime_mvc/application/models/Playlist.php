@@ -907,7 +907,7 @@ class Application_Model_Playlist {
                 $error[] =  "Value cannot be empty";
             }
             if(count($error) > 0){
-                $errors[] = array("element"=>"sp_criteria_".$key, "msg"=>$error);
+                $errors[] = array("element"=>"sp_criteria_field_".$key, "msg"=>$error);
             }
         }
         $result = count($errors) > 0 ? 1 :0;

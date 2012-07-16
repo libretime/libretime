@@ -420,12 +420,27 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     width: 130px;
 }
 
+.sp_input_text_limit{
+    width: 75px !important;
+}
+
 input.input_text.sp_input_text{
     width: 200px !important;
 }
 
 input.input_text.sp_extra_input_text{
     width: 85px !important;
+}
+
+.sp-ui-button-icon-only .ui-icon{
+	position: absolute;
+	top: 50%;
+	margin-top: -10px;
+	left: 50%;
+}
+
+.sp-add .sp-ui-button-icon-only .ui-icon{
+    left: 90% !important;
 }
 
 label {
@@ -1431,7 +1446,7 @@ div.errors, span.errors{
 }
 
 span.errors.sp-errors{
-    width: 400px;
+    width: 466px;
     display: block;	
 }
 
