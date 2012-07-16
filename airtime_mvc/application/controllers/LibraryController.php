@@ -52,7 +52,7 @@ class LibraryController extends Zend_Controller_Action
             if (isset($this->pl_sess->id) && $screen == "playlist") {
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist
                 $playlist = new Application_Model_Playlist($this->pl_sess->id);
-                if($isAdminOrPM || $playlist->getCreatorId() == $user->getId()){
+                if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
                     $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                 }
             }
@@ -63,43 +63,40 @@ class LibraryController extends Zend_Controller_Action
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
-        }
-        else if ($type === "playlist") {
+        } elseif ($type === "playlist") {
             $playlist = new Application_Model_Playlist($id);
             if ($this->pl_sess->id !== $id && $screen == "playlist") {
-                if($isAdminOrPM || $playlist->getCreatorId() == $user->getId()){
+                if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
                 }
             }
-            if($isAdminOrPM || $playlist->getCreatorId() == $user->getId()){
+            if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
         }
 
-
         //SOUNDCLOUD MENU OPTIONS
         if ($type === "audioclip" && Application_Model_Preference::GetUploadToSoundcloudOption()) {
-        
+
             //create a menu separator
             $menu["sep1"] = "-----------";
-        
+
             //create a sub menu for Soundcloud actions.
             $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
-        
+
             $scid = $file->getSoundCloudId();
 
-            if ($scid > 0){
+            if ($scid > 0) {
                 $url = $file->getSoundCloudLinkToFile();
                 $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
             }
-        
-            if (!is_null($scid)){
+
+            if (!is_null($scid)) {
                 $text = "Re-upload to SoundCloud";
-            }
-            else {
+            } else {
                 $text = "Upload to SoundCloud";
             }
-        
+
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
         }
 
@@ -123,8 +120,7 @@ class LibraryController extends Zend_Controller_Action
 
             if ($media["type"] === "audioclip") {
                 $files[] = intval($media["id"]);
-            }
-            else if ($media["type"] === "playlist") {
+            } elseif ($media["type"] === "playlist") {
                 $playlists[] = intval($media["id"]);
             }
         }
@@ -132,10 +128,10 @@ class LibraryController extends Zend_Controller_Action
         $hasPermission = true;
         if (count($playlists)) {
             // make sure use has permission to delete all playslists in the list
-            if(!$isAdminOrPM){
-                foreach($playlists as $pid){
+            if (!$isAdminOrPM) {
+                foreach ($playlists as $pid) {
                     $pl = new Application_Model_Playlist($pid);
-                    if($pl->getCreatorId() != $user->getId()){
+                    if ($pl->getCreatorId() != $user->getId()) {
                         $hasPermission = false;
                     }
                 }
@@ -145,10 +141,11 @@ class LibraryController extends Zend_Controller_Action
         if (!$isAdminOrPM && count($files)) {
             $hasPermission = false;
         }
-        if(!$hasPermission){
+        if (!$hasPermission) {
             $this->view->message = "You don't have a permission to delete all playlists/files that are selected.";
+
             return;
-        }else{
+        } else {
             Application_Model_Playlist::DeletePlaylists($playlists);
         }
 
@@ -180,22 +177,20 @@ class LibraryController extends Zend_Controller_Action
         //TODO move this to the datatables row callback.
         foreach ($r["aaData"] as &$data) {
 
-            if ($data['ftype'] == 'audioclip'){
+            if ($data['ftype'] == 'audioclip') {
                 $file = Application_Model_StoredFile::Recall($data['id']);
                 $scid = $file->getSoundCloudId();
 
-                if ($scid == "-2"){
+                if ($scid == "-2") {
                     $data['track_title'] .= '<span class="small-icon progress"/>';
-                }
-                else if ($scid == "-3"){
+                } elseif ($scid == "-3") {
                     $data['track_title'] .= '<span class="small-icon sc-error"/>';
-                }
-                else if (!is_null($scid)){
+                } elseif (!is_null($scid)) {
                     $data['track_title'] .= '<span class="small-icon soundcloud"/>';
                 }
             }
         }
-        
+
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
         $this->view->iTotalRecords = $r["iTotalRecords"];
@@ -206,7 +201,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        if(!$isAdminOrPM){
+        if (!$isAdminOrPM) {
             return;
         }
 
@@ -266,8 +261,7 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
 
-            }
-            else if ($type == "playlist") {
+            } elseif ($type == "playlist") {
 
                 $file = new Application_Model_Playlist($id);
                 $this->view->type = $type;
@@ -279,20 +273,21 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->md = $md;
                 $this->view->contents = $file->getContents();
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Logging::log($e->getMessage());
         }
     }
 
-    public function uploadFileSoundcloudAction(){
+    public function uploadFileSoundcloudAction()
+    {
         $id = $this->_getParam('id');
         $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
         // we should die with ui info
         die();
     }
 
-    public function getUploadToSoundcloudStatusAction(){
+    public function getUploadToSoundcloudStatusAction()
+    {
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
 
@@ -302,8 +297,7 @@ class LibraryController extends Zend_Controller_Action
             $file = $show_instance->getRecordedFile();
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
-        }
-        else if ($type == "file") {
+        } elseif ($type == "file") {
             $file = Application_Model_StoredFile::Recall($id);
             $this->view->sc_id = $file->getSoundCloudId();
             $this->view->error_code = $file->getSoundCloudErrorCode();

@@ -2,8 +2,8 @@
 
 require_once 'formatters/LengthFormatter.php';
 
-class Application_Model_ShowInstance {
-
+class Application_Model_ShowInstance
+{
     private $_instanceId;
     private $_showInstance;
 
@@ -12,7 +12,7 @@ class Application_Model_ShowInstance {
         $this->_instanceId = $instanceId;
         $this->_showInstance = CcShowInstancesQuery::create()->findPK($instanceId);
 
-        if (is_null($this->_showInstance)){
+        if (is_null($this->_showInstance)) {
             throw new Exception();
         }
     }
@@ -27,11 +27,13 @@ class Application_Model_ShowInstance {
         return $this->_instanceId;
     }
 
-    public function getShow(){
+    public function getShow()
+    {
         return new Application_Model_Show($this->getShowId());
     }
 
-    public function deleteRebroadcasts(){
+    public function deleteRebroadcasts()
+    {
         $con = Propel::getConnection();
 
         $timestamp = gmdate("Y-m-d H:i:s");
@@ -62,12 +64,14 @@ class Application_Model_ShowInstance {
     public function getName()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
+
         return $show->getDbName();
     }
 
     public function getGenre()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
+
         return $show->getDbGenre();
     }
 
@@ -93,6 +97,7 @@ class Application_Model_ShowInstance {
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(" ", $showStart);
+
         return $showStartExplode[0];
     }
 
@@ -113,6 +118,7 @@ class Application_Model_ShowInstance {
     public function getSoundCloudFileId()
     {
         $file = Application_Model_StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+
         return $file->getSoundCloudId();
     }
 
@@ -174,7 +180,7 @@ class Application_Model_ShowInstance {
 
             $diff = $showStartsEpoch - $scheduleStartsEpoch;
 
-            if ($diff != 0){
+            if ($diff != 0) {
                 $sql = "UPDATE cc_schedule"
                 ." SET starts = starts + INTERVAL '$diff' second,"
                 ." ends = ends + INTERVAL '$diff' second"
@@ -199,8 +205,8 @@ class Application_Model_ShowInstance {
      * @return $newDateTime
      *      php DateTime, $dateTime with the added time deltas.
      */
-    private static function addDeltas($dateTime, $deltaDay, $deltaMin) {
-
+    private static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    {
         $newDateTime = clone $dateTime;
 
         $days = abs($deltaDay);
@@ -211,15 +217,13 @@ class Application_Model_ShowInstance {
 
         if ($deltaDay > 0) {
             $newDateTime->add($dayInterval);
-        }
-        else if ($deltaDay < 0){
+        } elseif ($deltaDay < 0) {
             $newDateTime->sub($dayInterval);
         }
 
         if ($deltaMin > 0) {
             $newDateTime->add($minInterval);
-        }
-        else if ($deltaMin < 0) {
+        } elseif ($deltaMin < 0) {
             $newDateTime->sub($minInterval);
         }
 
@@ -228,7 +232,7 @@ class Application_Model_ShowInstance {
 
     public function moveShow($deltaDay, $deltaMin)
     {
-        if ($this->getShow()->isRepeating()){
+        if ($this->getShow()->isRepeating()) {
             return "Can't drag and drop repeating shows";
         }
 
@@ -286,6 +290,7 @@ class Application_Model_ShowInstance {
             //recorded show doesn't exist.
             catch (Exception $e) {
                 $this->_showInstance->delete();
+
                 return "Show was deleted because recorded show does not exist!";
             }
 
@@ -302,7 +307,7 @@ class Application_Model_ShowInstance {
         $this->correctScheduleStartTimes();
 
         $show = new Application_Model_Show($this->getShowId());
-        if(!$show->isRepeating() && is_null($this->isRebroadcast())){
+        if (!$show->isRepeating() && is_null($this->isRebroadcast())) {
             $show->setShowFirstShow($newStartsDateTime);
             $show->setShowLastShow($newEndsDateTime);
         }
@@ -331,7 +336,7 @@ class Application_Model_ShowInstance {
         $starts = $this->getShowInstanceStart();
         $ends = $this->getShowInstanceEnd();
 
-        if(strtotime($today_timestamp) > strtotime($starts)) {
+        if (strtotime($today_timestamp) > strtotime($starts)) {
             return "can't resize a past show";
         }
 
@@ -346,14 +351,14 @@ class Application_Model_ShowInstance {
 
             $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
 
-            if(count($overlap) > 0) {
+            if (count($overlap) > 0) {
                 return "Should not overlap shows";
             }
         }
         //with overbooking no longer need to check already scheduled content still fits.
 
         //must update length of all rebroadcast instances.
-        if($this->isRecorded()) {
+        if ($this->isRecorded()) {
             $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
                     WHERE rebroadcast = 1 AND instance_id = {$this->_instanceId}";
             $con->exec($sql);
@@ -453,7 +458,7 @@ class Application_Model_ShowInstance {
             ->filterByDbRebroadcast(0)
             ->find();
 
-        if (is_null($showInstances)){
+        if (is_null($showInstances)) {
             return true;
         }
         //only 1 show instance left of the show, make it non repeating.
@@ -532,17 +537,15 @@ class Application_Model_ShowInstance {
                     ->delete();
 
 
-                if ($this->checkToDeleteShow($showId)){
+                if ($this->checkToDeleteShow($showId)) {
                     CcShowQuery::create()
                         ->filterByDbId($showId)
                         ->delete();
                 }
-            }
-            else {
+            } else {
                 if ($this->isRebroadcast()) {
                     $this->_showInstance->delete();
-                }
-                else {
+                } else {
                     $show->delete();
                 }
             }
@@ -567,8 +570,7 @@ class Application_Model_ShowInstance {
             try {
                 $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
                 $rebroad->addFileToShow($file_id, false);
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 Logging::log("{$e->getFile()}");
                 Logging::log("{$e->getLine()}");
                 Logging::log("{$e->getMessage()}");
@@ -586,8 +588,7 @@ class Application_Model_ShowInstance {
                 $time_arr[1] = "." . $time_arr[1];
                 $milliseconds = number_format(round($time_arr[1], 2), 2);
                 $time = $time_arr[0] . substr($milliseconds, 1);
-            }
-            else {
+            } else {
                 $time = $time_arr[0] . ".00";
             }
         } else {
@@ -601,6 +602,7 @@ class Application_Model_ShowInstance {
     public function getTimeScheduledSecs()
     {
         $time_filled = $this->getTimeScheduled();
+
         return Application_Model_Playlist::playlistTimeToSeconds($time_filled);
     }
 
@@ -608,6 +610,7 @@ class Application_Model_ShowInstance {
     {
         $ends = $this->getShowInstanceEnd(null);
         $starts = $this->getShowInstanceStart(null);
+
         return intval($ends->format('U')) - intval($starts->format('U'));
     }
 
@@ -678,14 +681,16 @@ class Application_Model_ShowInstance {
             ."LIMIT 1";
 
         $query = $con->query($sql)->fetchColumn(0);
+
         return ($query !== false) ? $query : NULL;
     }
 
-    public function getShowEndGapTime(){
+    public function getShowEndGapTime()
+    {
         $showEnd = $this->getShowInstanceEnd();
         $lastItemEnd = $this->getLastAudioItemEnd();
 
-        if (is_null($lastItemEnd)){
+        if (is_null($lastItemEnd)) {
             $lastItemEnd = $this->getShowInstanceStart();
         }
 
@@ -695,7 +700,8 @@ class Application_Model_ShowInstance {
         return ($diff < 0) ? 0 : $diff;
     }
 
-    public static function GetLastShowInstance($p_timeNow){
+    public static function GetLastShowInstance($p_timeNow)
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
 
@@ -767,6 +773,7 @@ class Application_Model_ShowInstance {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT count(*) as cnt FROM $CC_CONFIG[showInstances] WHERE ends < '$day'";
+
         return $con->query($sql)->fetchColumn(0);
     }
 
@@ -785,10 +792,11 @@ class Application_Model_ShowInstance {
         return $con->query($sql)->fetchAll();
     }
 
-    function isRepeating(){
-        if ($this->getShow()->isRepeating()){
+    public function isRepeating()
+    {
+        if ($this->getShow()->isRepeating()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

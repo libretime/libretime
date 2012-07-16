@@ -38,10 +38,9 @@ class UserController extends Zend_Controller_Action
             if ($form->isValid($request->getPost())) {
 
                 $formdata = $form->getValues();
-                if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 && $formdata['login'] == 'admin' && $formdata['user_id'] != 0){
+                if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 && $formdata['login'] == 'admin' && $formdata['user_id'] != 0) {
                     $this->view->successMessage = "<div class='errors'>Specific action is not allowed in demo version!</div>";
-                }
-                else if ($form->validateLogin($formdata)){
+                } elseif ($form->validateLogin($formdata)) {
                     $user = new Application_Model_User($formdata['user_id']);
                     $user->setFirstName($formdata['first_name']);
                     $user->setLastName($formdata['last_name']);
@@ -57,7 +56,7 @@ class UserController extends Zend_Controller_Action
 
                     $form->reset();
 
-                    if (strlen($formdata['user_id']) == 0){
+                    if (strlen($formdata['user_id']) == 0) {
                         $this->view->successMessage = "<div class='success'>User added successfully!</div>";
                     } else {
                         $this->view->successMessage = "<div class='success'>User updated successfully!</div>";
@@ -98,23 +97,11 @@ class UserController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $userId = $userInfo->id;
 
-        if ($delId != $userId){
+        if ($delId != $userId) {
             $user = new Application_Model_User($delId);
             $this->view->entries = $user->delete();
         }
 
     }
 
-
 }
-
-
-
-
-
-
-
-
-
-
-

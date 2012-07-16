@@ -40,6 +40,7 @@ class PlaylistController extends Zend_Controller_Action
                 throw new PlaylistOutDatedException("You are viewing an older version of {$pl->getName()}");
             }
         }
+
         return $pl;
     }
 
@@ -47,8 +48,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         if (is_null($pl_id)) {
             unset($this->pl_sess->id);
-        }
-        else {
+        } else {
             $this->pl_sess->id = intval($pl_id);
         }
     }
@@ -77,8 +77,7 @@ class PlaylistController extends Zend_Controller_Action
             $this->view->id = $pl->getId();
             $this->view->html = $this->view->render('playlist/playlist.phtml');
             unset($this->view->pl);
-        }
-        else {
+        } else {
             $this->view->html = $this->view->render('playlist/playlist.phtml');
         }
     }
@@ -121,12 +120,12 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'),'text/javascript');
-        
+
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
@@ -143,11 +142,9 @@ class PlaylistController extends Zend_Controller_Action
                 $formatter = new LengthFormatter($pl->getLength());
                 $this->view->length = $formatter->format();
             }
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -177,11 +174,9 @@ class PlaylistController extends Zend_Controller_Action
         try {
             $pl = new Application_Model_Playlist($id);
             $this->createFullResponse($pl);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -198,19 +193,16 @@ class PlaylistController extends Zend_Controller_Action
             if (in_array($this->pl_sess->id, $ids)) {
                 Logging::log("Deleting currently active playlist");
                 $this->changePlaylist(null);
-            }
-            else {
+            } else {
                 Logging::log("Not deleting currently active playlist");
                 $pl = new Application_Model_Playlist($this->pl_sess->id);
             }
 
             Application_Model_Playlist::DeletePlaylists($ids);
             $this->createFullResponse($pl);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -226,14 +218,11 @@ class PlaylistController extends Zend_Controller_Action
             $pl = $this->getPlaylist();
             $pl->addAudioClips($ids, $afterItem, $addType);
             $this->createUpdateResponse($pl);
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -249,14 +238,11 @@ class PlaylistController extends Zend_Controller_Action
             $pl = $this->getPlaylist();
             $pl->moveAudioClips($ids, $afterItem);
             $this->createUpdateResponse($pl);
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -271,14 +257,11 @@ class PlaylistController extends Zend_Controller_Action
             $pl = $this->getPlaylist();
             $pl->delAudioClips($ids);
             $this->createUpdateResponse($pl);
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -296,18 +279,14 @@ class PlaylistController extends Zend_Controller_Action
             if (!isset($response["error"])) {
                 $this->view->response = $response;
                 $this->createUpdateResponse($pl);
-            }
-            else {
+            } else {
                 $this->view->cue_error = $response["error"];
             }
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -325,18 +304,14 @@ class PlaylistController extends Zend_Controller_Action
             if (!isset($response["error"])) {
                 $this->createUpdateResponse($pl);
                 $this->view->response = $response;
-            }
-            else {
+            } else {
                 $this->view->fade_error = $response["error"];
             }
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -350,14 +325,11 @@ class PlaylistController extends Zend_Controller_Action
 
             $fades = $pl->getFadeInfo($pl->getSize()-1);
             $this->view->fadeOut = $fades[1];
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -376,14 +348,11 @@ class PlaylistController extends Zend_Controller_Action
             $pl = $this->getPlaylist();
             $pl->setPlaylistfades($fadeIn, $fadeOut);
             $this->view->modified = $pl->getLastModified("U");
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -397,14 +366,11 @@ class PlaylistController extends Zend_Controller_Action
             $pl->setName($name);
             $this->view->playlistName = $name;
             $this->view->modified = $pl->getLastModified("U");
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -418,16 +384,12 @@ class PlaylistController extends Zend_Controller_Action
             $pl->setDescription($description);
             $this->view->description = $pl->getDescription();
             $this->view->modified = $pl->getLastModified("U");
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
 }
-

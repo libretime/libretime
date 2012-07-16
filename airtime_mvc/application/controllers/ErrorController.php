@@ -43,6 +43,7 @@ class ErrorController extends Zend_Controller_Action
             return false;
         }
         $log = $bootstrap->getResource('Log');
+
         return $log;
     }
 
@@ -51,8 +52,4 @@ class ErrorController extends Zend_Controller_Action
         // action body
     }
 
-
 }
-
-
-

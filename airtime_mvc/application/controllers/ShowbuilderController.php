@@ -16,10 +16,10 @@ class ShowbuilderController extends Zend_Controller_Action
                     ->initContext();
     }
 
-    public function indexAction() {
-
+    public function indexAction()
+    {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         $user = Application_Model_User::getCurrentUser();
@@ -31,8 +31,7 @@ class ShowbuilderController extends Zend_Controller_Action
         if ($data != "") {
             $libraryTable = json_encode(unserialize($data));
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
-        }
-        else {
+        } else {
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
         }
 
@@ -40,8 +39,7 @@ class ShowbuilderController extends Zend_Controller_Action
         if ($data != "") {
             $timelineTable = json_encode(unserialize($data));
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
-        }
-        else {
+        } else {
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
         }
 
@@ -57,7 +55,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
@@ -66,43 +64,41 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version']),'text/javascript');
 
         $refer_sses = new Zend_Session_Namespace('referrer');
-        
+
         if ($request->isPost()) {
             $form = new Application_Form_RegisterAirtime();
-        
+
             $values = $request->getPost();
             if ($values["Publicise"] != 1 && $form->isValid($values)) {
                 Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                
+
                 if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
                 // unset session
                 Zend_Session::namespaceUnset('referrer');
-            }
-            else if ($values["Publicise"] == '1' && $form->isValid($values)) {
+            } elseif ($values["Publicise"] == '1' && $form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
                 Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
                 Application_Model_Preference::SetPublicise($values["Publicise"]);
-        
+
                 $form->Logo->receive();
                 $imagePath = $form->Logo->getFileName();
-        
+
                 Application_Model_Preference::SetStationCountry($values["Country"]);
                 Application_Model_Preference::SetStationCity($values["City"]);
                 Application_Model_Preference::SetStationDescription($values["Description"]);
                 Application_Model_Preference::SetStationLogo($imagePath);
                 Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                
-                if (isset($values["Privacy"])){
+
+                if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
                 // unset session
                 Zend_Session::namespaceUnset('referrer');
-            }
-            else {
+            } else {
                 $logo = Application_Model_Preference::GetStationLogo();
                 if ($logo) {
                     $this->view->logoImg = $logo;
@@ -115,9 +111,9 @@ class ShowbuilderController extends Zend_Controller_Action
         //popup if previous page was login
         if ($refer_sses->referrer == 'login' && Application_Model_Preference::ShouldShowPopUp()
                 && !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
-    
+
             $form = new Application_Form_RegisterAirtime();
-    
+
             $logo = Application_Model_Preference::GetStationLogo();
             if ($logo) {
                 $this->view->logoImg = $logo;
@@ -138,8 +134,7 @@ class ShowbuilderController extends Zend_Controller_Action
                     $showLib = true;
                 }
             }
-        }
-        else {
+        } else {
             $disableLib = true;
         }
         $this->view->disableLib = $disableLib;
@@ -179,32 +174,32 @@ class ShowbuilderController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id');
         $now = floatval(microtime(true));
-    
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
         $menu = array();
-    
+
         $user = Application_Model_User::getCurrentUser();
-    
+
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();
-    
+
         $menu["preview"] = array("name"=> "Preview", "icon" => "play");
         //select the cursor
         $menu["selCurs"] = array("name"=> "Select Cursor","icon" => "select-cursor");
         $menu["delCurs"] = array("name"=> "Remove Cursor","icon" => "select-cursor");
-    
+
         if ($now < floatval($item->getDbEnds("U.u")) && $user->canSchedule($instance->getDbShowId())) {
-    
+
             //remove/truncate the item from the schedule
             $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/showbuilder/schedule-remove");
         }
-    
+
         $this->view->items = $menu;
     }
 
-    public function builderDialogAction() {
-
+    public function builderDialogAction()
+    {
         $request = $this->getRequest();
         $id = $request->getParam("id");
 
@@ -212,6 +207,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         if (is_null($instance)) {
             $this->view->error = "show does not exist";
+
             return;
         }
 
@@ -231,8 +227,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
 
-    public function checkBuilderFeedAction() {
-
+    public function checkBuilderFeedAction()
+    {
         $request = $this->getRequest();
         $current_time = time();
 
@@ -254,14 +250,13 @@ class ShowbuilderController extends Zend_Controller_Action
         // -1 default will always call the schedule to be sent back if no timestamp is defined.
         if ($showBuilder->hasBeenUpdatedSince($timestamp, $instances)) {
             $this->view->update = true;
-        }
-        else {
+        } else {
             $this->view->update = false;
         }
     }
 
-    public function builderFeedAction() {
-
+    public function builderFeedAction()
+    {
         $start = microtime(true);
 
         $request = $this->getRequest();
@@ -286,13 +281,13 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->timestamp = $current_time;
 
         $end = microtime(true);
-        
+
         Logging::debug("getting builder feed info took:");
         Logging::debug(floatval($end) - floatval($start));
     }
 
-    public function scheduleAddAction() {
-
+    public function scheduleAddAction()
+    {
         $request = $this->getRequest();
         $mediaItems = $request->getParam("mediaIds", array());
         $scheduledItems = $request->getParam("schedIds", array());
@@ -300,14 +295,12 @@ class ShowbuilderController extends Zend_Controller_Action
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->scheduleAfter($scheduledItems, $mediaItems);
-        }
-        catch (OutDatedScheduleException $e) {
+        } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
             Logging::log("{$e->getFile()}");
             Logging::log("{$e->getLine()}");
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
             Logging::log("{$e->getFile()}");
@@ -323,14 +316,12 @@ class ShowbuilderController extends Zend_Controller_Action
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->removeItems($items);
-        }
-        catch (OutDatedScheduleException $e) {
+        } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
             Logging::log("{$e->getFile()}");
             Logging::log("{$e->getLine()}");
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
             Logging::log("{$e->getFile()}");
@@ -338,8 +329,8 @@ class ShowbuilderController extends Zend_Controller_Action
         }
     }
 
-    public function scheduleMoveAction() {
-
+    public function scheduleMoveAction()
+    {
         $request = $this->getRequest();
         $selectedItems = $request->getParam("selectedItem");
         $afterItem = $request->getParam("afterItem");
@@ -347,14 +338,12 @@ class ShowbuilderController extends Zend_Controller_Action
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->moveItem($selectedItems, $afterItem);
-        }
-        catch (OutDatedScheduleException $e) {
+        } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
             Logging::log("{$e->getFile()}");
             Logging::log("{$e->getLine()}");
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::log($e->getMessage());
             Logging::log("{$e->getFile()}");
@@ -362,8 +351,8 @@ class ShowbuilderController extends Zend_Controller_Action
         }
     }
 
-    public function scheduleReorderAction() {
-
+    public function scheduleReorderAction()
+    {
         $request = $this->getRequest();
 
         $showInstance = $request->getParam("instanceId");

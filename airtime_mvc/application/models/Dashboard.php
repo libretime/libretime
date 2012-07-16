@@ -3,7 +3,8 @@
 class Application_Model_Dashboard
 {
 
-    public static function GetPreviousItem($p_timeNow){
+    public static function GetPreviousItem($p_timeNow)
+    {
         //get previous show and previous item in the schedule table.
         //Compare the two and if the last show was recorded and started
         //after the last item in the schedule table, then return the show's
@@ -12,8 +13,8 @@ class Application_Model_Dashboard
         $showInstance = Application_Model_ShowInstance::GetLastShowInstance($p_timeNow);
         $row = Application_Model_Schedule::GetLastScheduleItem($p_timeNow);
 
-        if (is_null($showInstance)){
-            if (count($row) == 0){
+        if (is_null($showInstance)) {
+            if (count($row) == 0) {
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
@@ -22,8 +23,8 @@ class Application_Model_Dashboard
 
             }
         } else {
-            if (count($row) == 0){
-                if ($showInstance->isRecorded()){
+            if (count($row) == 0) {
+                if ($showInstance->isRecorded()) {
                     //last item is a show instance
                     return array("name"=>$showInstance->getName(),
                                 "starts"=>$showInstance->getShowInstanceStart(),
@@ -33,7 +34,7 @@ class Application_Model_Dashboard
                 }
             } else {
                 //return the one that started later.
-                if ($row[0]["starts"] >= $showInstance->getShowInstanceStart()){
+                if ($row[0]["starts"] >= $showInstance->getShowInstanceStart()) {
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
@@ -46,7 +47,8 @@ class Application_Model_Dashboard
         }
     }
 
-    public static function GetCurrentItem($p_timeNow){
+    public static function GetCurrentItem($p_timeNow)
+    {
         //get previous show and previous item in the schedule table.
         //Compare the two and if the last show was recorded and started
         //after the last item in the schedule table, then return the show's
@@ -54,26 +56,27 @@ class Application_Model_Dashboard
 
         $row = array();
         $showInstance = Application_Model_ShowInstance::GetCurrentShowInstance($p_timeNow);
-        if (!is_null($showInstance)){
+        if (!is_null($showInstance)) {
             $instanceId = $showInstance->getShowInstanceId();
             $row = Application_Model_Schedule::GetCurrentScheduleItem($p_timeNow, $instanceId);
         }
-        if (is_null($showInstance)){
-            if (count($row) == 0){
+        if (is_null($showInstance)) {
+            if (count($row) == 0) {
                 return null;
             } else {
                 /* Should never reach here, but lets return the track information
                  * just in case we allow tracks to be scheduled without a show
                  * in the future.
                  */
+
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);
             }
         } else {
-            if (count($row) == 0){
+            if (count($row) == 0) {
                 //last item is a show instance
-                if ($showInstance->isRecorded()){
+                if ($showInstance->isRecorded()) {
                     return array("name"=>$showInstance->getName(),
                                 "starts"=>$showInstance->getShowInstanceStart(),
                                 "ends"=>$showInstance->getShowInstanceEnd(),
@@ -92,7 +95,8 @@ class Application_Model_Dashboard
         }
     }
 
-    public static function GetNextItem($p_timeNow){
+    public static function GetNextItem($p_timeNow)
+    {
         //get previous show and previous item in the schedule table.
         //Compare the two and if the last show was recorded and started
         //after the last item in the schedule table, then return the show's
@@ -101,8 +105,8 @@ class Application_Model_Dashboard
         $showInstance = Application_Model_ShowInstance::GetNextShowInstance($p_timeNow);
         $row = Application_Model_Schedule::GetNextScheduleItem($p_timeNow);
 
-        if (is_null($showInstance)){
-            if (count($row) == 0){
+        if (is_null($showInstance)) {
+            if (count($row) == 0) {
                 return null;
             } else {
                 return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
@@ -110,8 +114,8 @@ class Application_Model_Dashboard
                             "ends"=>$row[0]["ends"]);
             }
         } else {
-            if (count($row) == 0){
-                if ($showInstance->isRecorded()){
+            if (count($row) == 0) {
+                if ($showInstance->isRecorded()) {
                     //last item is a show instance
                     return array("name"=>$showInstance->getName(),
                                 "starts"=>$showInstance->getShowInstanceStart(),
@@ -122,7 +126,7 @@ class Application_Model_Dashboard
             } else {
                 //return the one that starts sooner.
 
-                if ($row[0]["starts"] <= $showInstance->getShowInstanceStart()){
+                if ($row[0]["starts"] <= $showInstance->getShowInstanceStart()) {
                     return array("name"=>$row[0]["artist_name"]." - ".$row[0]["track_title"],
                             "starts"=>$row[0]["starts"],
                             "ends"=>$row[0]["ends"]);

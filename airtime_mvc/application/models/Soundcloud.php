@@ -1,8 +1,8 @@
 <?php
 require_once 'soundcloud-api/Services/Soundcloud.php';
 
-class Application_Model_Soundcloud {
-
+class Application_Model_Soundcloud
+{
     private $_soundcloud;
 
     public function __construct()
@@ -24,13 +24,11 @@ class Application_Model_Soundcloud {
 
     public function uploadTrack($filepath, $filename, $description, $tags=array(), $release=null, $genre=null)
     {
-        if($this->getToken())
-        {
-            if(count($tags)) {
+        if ($this->getToken()) {
+            if (count($tags)) {
                 $tags = join(" ", $tags);
                 $tags = $tags." ".Application_Model_Preference::GetSoundCloudTags();
-            }
-            else {
+            } else {
                 $tags = Application_Model_Preference::GetSoundCloudTags();
             }
 
@@ -46,7 +44,7 @@ class Application_Model_Soundcloud {
 
             );
 
-            if(isset($release)) {
+            if (isset($release)) {
                 $release = str_replace(" ", "-", $release);
                 $release = str_replace(":", "-", $release);
 
@@ -60,8 +58,7 @@ class Application_Model_Soundcloud {
 
             if (isset($genre) && $genre != "") {
                 $track_data['track[genre]'] = $genre;
-            }
-            else {
+            } else {
                 $default_genre = Application_Model_Preference::GetSoundCloudGenre();
                 if ($default_genre != "") {
                     $track_data['track[genre]'] = $default_genre;

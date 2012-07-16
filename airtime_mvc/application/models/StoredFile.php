@@ -13,8 +13,8 @@ require_once 'formatters/BitrateFormatter.php';
  * @license http://www.gnu.org/licenses/gpl.txt
  * @see MetaData
  */
-class Application_Model_StoredFile {
-
+class Application_Model_StoredFile
+{
     /**
      * @holds propel database object
      */
@@ -60,7 +60,8 @@ class Application_Model_StoredFile {
         return $this->_file->getDbId();
     }
 
-    public function getGunId() {
+    public function getGunId()
+    {
         return $this->_file->getDbGunid();
     }
 
@@ -69,7 +70,8 @@ class Application_Model_StoredFile {
         return $this->_file->getDbFtype();
     }
 
-    public function getPropelOrm(){
+    public function getPropelOrm()
+    {
         return $this->_file;
     }
 
@@ -88,11 +90,10 @@ class Application_Model_StoredFile {
     {
         if (is_null($p_md)) {
             $this->setDbColMetadata();
-        }
-        else {
+        } else {
             $dbMd = array();
 
-            if (isset($p_md["MDATA_KEY_YEAR"])){
+            if (isset($p_md["MDATA_KEY_YEAR"])) {
                 // We need to make sure to clean this value before inserting into database.
                 // If value is outside of range [-2^31, 2^31-1] then postgresl will throw error
                 // when trying to retrieve this value. We could make sure number is within these bounds,
@@ -103,17 +104,17 @@ class Application_Model_StoredFile {
 
                 $year = $p_md["MDATA_KEY_YEAR"];
 
-                if (strlen($year) > 4){
+                if (strlen($year) > 4) {
                     $year = substr($year, 0, 4);
                 }
-                if (!is_numeric($year)){
+                if (!is_numeric($year)) {
                     $year = 0;
                 }
                 $p_md["MDATA_KEY_YEAR"] = $year;
             }
 
             foreach ($p_md as $mdConst => $mdValue) {
-                if (defined($mdConst)){
+                if (defined($mdConst)) {
                     $dbMd[constant($mdConst)] = $mdValue;
                 }
             }
@@ -137,11 +138,10 @@ class Application_Model_StoredFile {
                 $method = "set$propelColumn";
                 $this->_file->$method(null);
             }
-        }
-        else {
+        } else {
             foreach ($p_md as $dbColumn => $mdValue) {
                 //don't blank out name, defaults to original filename on first insertion to database.
-                if($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
+                if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
                 if (isset($this->_dbMD[$dbColumn])) {
@@ -183,7 +183,7 @@ class Application_Model_StoredFile {
     public function setDbColMetadataValue($p_category, $p_value)
     {
         //don't blank out name, defaults to original filename on first insertion to database.
-        if($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
+        if ($p_category == "track_title" && (is_null($p_value) || $p_value == "")) {
             return;
         }
         if (isset($this->_dbMD[$p_category])) {
@@ -197,7 +197,7 @@ class Application_Model_StoredFile {
     /**
      * Get one metadata value.
      *
-     * @param string $p_category (MDATA_KEY_URL)
+     * @param  string $p_category (MDATA_KEY_URL)
      * @return string
      */
     public function getMetadataValue($p_category)
@@ -210,13 +210,14 @@ class Application_Model_StoredFile {
      /**
      * Get one metadata value.
      *
-     * @param string $p_category (url)
+     * @param  string $p_category (url)
      * @return string
      */
     public function getDbColMetadataValue($p_category)
     {
         $propelColumn = $this->_dbMD[$p_category];
         $method = "get$propelColumn";
+
         return $this->_file->$method();
     }
 
@@ -290,6 +291,7 @@ class Application_Model_StoredFile {
         $res = $con->exec($sql);
         $this->state = $p_state;
         $this->editedby = $p_editedby;
+
         return TRUE;
     }
 
@@ -297,7 +299,8 @@ class Application_Model_StoredFile {
      * Returns an array of playlist objects that this file is a part of.
      * @return array
      */
-    public function getPlaylists() {
+    public function getPlaylists()
+    {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT playlist_id "
@@ -310,6 +313,7 @@ class Application_Model_StoredFile {
                 $playlists[] = Application_Model_Playlist::Recall($id);
             }
         }
+
         return $playlists;
     }
 
@@ -336,7 +340,7 @@ class Application_Model_StoredFile {
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
 
-        if ($deleteFromPlaylist){
+        if ($deleteFromPlaylist) {
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         }
         // set file_exists falg to false
@@ -355,7 +359,7 @@ class Application_Model_StoredFile {
     {
         $filepath = $this->getFilePath();
 
-        if ($deleteFromPlaylist){
+        if ($deleteFromPlaylist) {
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         }
         // set file_exists falg to false
@@ -375,8 +379,7 @@ class Application_Model_StoredFile {
 
         if ($mime == "audio/vorbis" || $mime == "application/ogg") {
             return "ogg";
-        }
-        else if ($mime == "audio/mp3" || $mime == "audio/mpeg") {
+        } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg") {
             return "mp3";
         }
     }
@@ -432,16 +435,17 @@ class Application_Model_StoredFile {
      * is specified in the airtime.conf config file. If either of these is
      * not specified, then use values provided by the $_SERVER global variable.
      */
-    public function getFileUrlUsingConfigAddress(){
+    public function getFileUrlUsingConfigAddress()
+    {
         global $CC_CONFIG;
 
-        if (isset($CC_CONFIG['baseUrl'])){
+        if (isset($CC_CONFIG['baseUrl'])) {
             $serverName = $CC_CONFIG['baseUrl'];
         } else {
             $serverName = $_SERVER['SERVER_NAME'];
         }
 
-        if (isset($CC_CONFIG['basePort'])){
+        if (isset($CC_CONFIG['basePort'])) {
             $serverPort = $CC_CONFIG['basePort'];
         } else {
             $serverPort = $_SERVER['SERVER_PORT'];
@@ -450,8 +454,10 @@ class Application_Model_StoredFile {
         return $this->constructGetFileUrl($serverName, $serverPort);
     }
 
-    private function constructGetFileUrl($p_serverName, $p_serverPort){
+    private function constructGetFileUrl($p_serverName, $p_serverPort)
+    {
 Logging::log("getting media! - 2");
+
         return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
@@ -462,6 +468,7 @@ Logging::log("getting media! - 2");
     public function getRelativeFileUrl($baseUrl)
     {
         Logging::log("getting media!");
+
         return $baseUrl."/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
     }
 
@@ -475,19 +482,18 @@ Logging::log("getting media! - 2");
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
 
-        if(isset($md['MDATA_KEY_FILEPATH'])) {
+        if (isset($md['MDATA_KEY_FILEPATH'])) {
             // removed "//" in the path. Always use '/' for path separator
             $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
             $res = $storedFile->setFilePath($filepath);
             if ($res === -1) {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
 
-        if(isset($md)) {
+        if (isset($md)) {
             $storedFile->setMetadata($md);
         }
 
@@ -514,25 +520,22 @@ Logging::log("getting media! - 2");
     {
         if (isset($p_id)) {
             $file = CcFilesQuery::create()->findPK(intval($p_id));
-        }
-        else if (isset($p_gunid)) {
+        } elseif (isset($p_gunid)) {
             $file = CcFilesQuery::create()
                             ->filterByDbGunid($p_gunid)
                             ->findOne();
-        }
-        else if (isset($p_md5sum)) {
-            if($exist){
+        } elseif (isset($p_md5sum)) {
+            if ($exist) {
                 $file = CcFilesQuery::create()
                             ->filterByDbMd5($p_md5sum)
                             ->filterByDbFileExists(true)
                             ->findOne();
-            }else{
+            } else {
                 $file = CcFilesQuery::create()
                             ->filterByDbMd5($p_md5sum)
                             ->findOne();
             }
-        }
-        else if (isset($p_filepath)) {
+        } elseif (isset($p_filepath)) {
             $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
 
             if (is_null($path_info)) {
@@ -544,8 +547,7 @@ Logging::log("getting media! - 2");
                             ->filterByDbDirectory($music_dir->getId())
                             ->filterByDbFilepath($path_info[1])
                             ->findOne();
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -554,14 +556,15 @@ Logging::log("getting media! - 2");
             $storedFile->_file = $file;
 
             return $storedFile;
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    public function getName(){
+    public function getName()
+    {
         $info = pathinfo($this->getFilePath());
+
         return $info['filename'];
     }
 
@@ -582,7 +585,7 @@ Logging::log("getting media! - 2");
     /**
      * Fetch the Application_Model_StoredFile by looking up the MD5 value.
      *
-     * @param string $p_md5sum
+     * @param  string                            $p_md5sum
      * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByMd5($p_md5sum, $exist=false)
@@ -593,7 +596,7 @@ Logging::log("getting media! - 2");
     /**
      * Fetch the Application_Model_StoredFile by looking up its filepath.
      *
-     * @param string $p_filepath path of file stored in Airtime.
+     * @param  string                            $p_filepath path of file stored in Airtime.
      * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByFilepath($p_filepath)
@@ -601,7 +604,8 @@ Logging::log("getting media! - 2");
         return Application_Model_StoredFile::Recall(null, null, null, $p_filepath);
     }
 
-    public static function RecallByPartialFilepath($partial_path){
+    public static function RecallByPartialFilepath($partial_path)
+    {
         $path_info = Application_Model_MusicDir::splitFilePath($partial_path);
 
         if (is_null($path_info)) {
@@ -614,16 +618,17 @@ Logging::log("getting media! - 2");
                         ->filterByDbFilepath("$path_info[1]%")
                         ->find();
         $res = array();
-        foreach ($files as $file){
+        foreach ($files as $file) {
             $storedFile = new Application_Model_StoredFile();
             $storedFile->_file = $file;
             $res[] = $storedFile;
         }
+
         return $res;
     }
 
-    public static function searchLibraryFiles($datatables) {
-
+    public static function searchLibraryFiles($datatables)
+    {
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
@@ -639,35 +644,30 @@ Logging::log("getting media! - 2");
             if ($key === "id") {
                 $plSelect[] = "PL.id AS ".$key;
                 $fileSelect[] = $key;
-            }
-            else if ($key === "track_title") {
+            } elseif ($key === "track_title") {
                 $plSelect[] = "name AS ".$key;
                 $fileSelect[] = $key;
-            }
-            else if ($key === "ftype") {
+            } elseif ($key === "ftype") {
                 $plSelect[] = "'playlist'::varchar AS ".$key;
                 $fileSelect[] = $key;
-            }
-            else if ($key === "artist_name") {
+            } elseif ($key === "artist_name") {
                 $plSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
             }
             //same columns in each table.
-            else if(in_array($key, array("length", "utime", "mtime"))) {
+            else if (in_array($key, array("length", "utime", "mtime"))) {
                 $plSelect[] = $key;
                 $fileSelect[] = $key;
-            }
-            else if ($key === "year") {
+            } elseif ($key === "year") {
 
                 $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $fileSelect[] = "year AS ".$key;
             }
             //need to cast certain data as ints for the union to search on.
-            else if (in_array($key, array("track_number", "bit_rate", "sample_rate"))){
+            else if (in_array($key, array("track_number", "bit_rate", "sample_rate"))) {
                 $plSelect[] = "NULL::int AS ".$key;
                 $fileSelect[] = $key;
-            }
-            else {
+            } else {
                 $plSelect[] = "NULL::text AS ".$key;
                 $fileSelect[] = $key;
             }
@@ -725,11 +725,10 @@ Logging::log("getting media! - 2");
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
 
-            if($type == "au"){//&& isset( $audioResults )) {
+            if ($type == "au") {//&& isset( $audioResults )) {
                 $row['audioFile'] = $row['gunid'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
-            }
-            else {
+            } else {
                 $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
             }
         }
@@ -839,7 +838,8 @@ Logging::log("getting media! - 2");
      * Check, using disk_free_space, the space available in the $destination_folder folder to see if it has
      * enough space to move the $audio_file into and report back to the user if not.
      **/
-    public static function isEnoughDiskSpaceToCopy($destination_folder, $audio_file){
+    public static function isEnoughDiskSpaceToCopy($destination_folder, $audio_file)
+    {
         //check to see if we have enough space in the /organize directory to copy the file
         $freeSpace = disk_free_space($destination_folder);
         $fileSize = filesize($audio_file);
@@ -847,7 +847,8 @@ Logging::log("getting media! - 2");
         return $freeSpace >= $fileSize;
     }
 
-    public static function copyFileToStor($p_targetDir, $fileName, $tempname){
+    public static function copyFileToStor($p_targetDir, $fileName, $tempname)
+    {
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
         Logging::log('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
@@ -861,26 +862,27 @@ Logging::log("getting media! - 2");
             }
         }
 
-        if (!isset($result)){//The file has no duplicate, so proceed to copy.
+        if (!isset($result)) {//The file has no duplicate, so proceed to copy.
             $storDir = Application_Model_MusicDir::getStorDir();
             $stor = $storDir->getDirectory();
             // check if "organize" dir exists and if not create one
-            if(!file_exists($stor."/organize")){
-                if(!mkdir($stor."/organize", 0777)){
+            if (!file_exists($stor."/organize")) {
+                if (!mkdir($stor."/organize", 0777)) {
                     $result = array("code" => 109, "message" => "Failed to create 'organize' directory.");
+
                     return $result;
                 }
             }
 
-            if (chmod($audio_file, 0644) === false){
+            if (chmod($audio_file, 0644) === false) {
                 Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
             }
 
             //check to see if there is enough space in $stor to continue.
-            if (self::isEnoughDiskSpaceToCopy($stor, $audio_file)){
+            if (self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
                 $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
 
-                if (self::liquidsoapFilePlayabilityTest($audio_file)){
+                if (self::liquidsoapFilePlayabilityTest($audio_file)) {
 
                     Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
 
@@ -899,14 +901,15 @@ Logging::log("getting media! - 2");
                 $result = array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
             }
         }
+
         return $result;
     }
 
     /*
      * Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
      */
-    public static function liquidsoapFilePlayabilityTest($audio_file){
-
+    public static function liquidsoapFilePlayabilityTest($audio_file)
+    {
         $LIQUIDSOAP_ERRORS = array('TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.');
 
         // Ask Liquidsoap if file is playable
@@ -915,6 +918,7 @@ Logging::log("getting media! - 2");
         exec($command, $output, $rv);
 
         $isError = count($output) > 0 && in_array($output[0], $LIQUIDSOAP_ERRORS);
+
         return ($rv == 0 && !$isError);
     }
 
@@ -924,6 +928,7 @@ Logging::log("getting media! - 2");
         $con = Propel::getConnection();
 
         $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE file_exists";
+
         return $con->query($sql)->fetchColumn(0);
     }
 
@@ -960,7 +965,7 @@ Logging::log("getting media! - 2");
 
         return $results;
     }
-    
+
     //TODO: MERGE THIS FUNCTION AND "listAllFiles" -MK
     public static function listAllFiles2($dir_id=null, $limit=null)
     {
@@ -970,12 +975,13 @@ Logging::log("getting media! - 2");
                 ." FROM CC_FILES"
                 ." WHERE directory = $dir_id"
                 ." AND file_exists = 'TRUE'";
-                
-        if (!is_null($limit) && is_int($limit)){
+
+        if (!is_null($limit) && is_int($limit)) {
             $sql .= " LIMIT $limit";
         }
-                
+
         $rows = $con->query($sql, PDO::FETCH_ASSOC);
+
         return $rows;
     }
 
@@ -993,6 +999,7 @@ Logging::log("getting media! - 2");
                     ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
 
             $rows = $con->query($sql)->fetchAll();
+
             return count($rows);
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
@@ -1008,7 +1015,8 @@ Logging::log("getting media! - 2");
         ->save();
     }
 
-    public function getSoundCloudLinkToFile(){
+    public function getSoundCloudLinkToFile()
+    {
         return $this->_file->getDbSoundCloudLinkToFile();
     }
 
@@ -1018,42 +1026,51 @@ Logging::log("getting media! - 2");
             ->save();
     }
 
-    public function getSoundCloudId(){
+    public function getSoundCloudId()
+    {
         return $this->_file->getDbSoundCloudId();
     }
 
-    public function setSoundCloudErrorCode($code){
+    public function setSoundCloudErrorCode($code)
+    {
         $this->_file->setDbSoundCloudErrorCode($code)
             ->save();
     }
 
-    public function getSoundCloudErrorCode(){
+    public function getSoundCloudErrorCode()
+    {
         return $this->_file->getDbSoundCloudErrorCode();
     }
 
-    public function setSoundCloudErrorMsg($msg){
+    public function setSoundCloudErrorMsg($msg)
+    {
         $this->_file->setDbSoundCloudErrorMsg($msg)
             ->save();
     }
 
-    public function getSoundCloudErrorMsg(){
+    public function getSoundCloudErrorMsg()
+    {
         return $this->_file->getDbSoundCloudErrorMsg();
     }
 
-    public function getDirectory(){
+    public function getDirectory()
+    {
         return $this->_file->getDbDirectory();
     }
 
-    public function setFileExistsFlag($flag){
+    public function setFileExistsFlag($flag)
+    {
         $this->_file->setDbFileExists($flag)
             ->save();
     }
-    public function setSoundCloudUploadTime($time){
+    public function setSoundCloudUploadTime($time)
+    {
         $this->_file->setDbSoundCloundUploadTime($time)
             ->save();
     }
 
-    public function getFileExistsFlag(){
+    public function getFileExistsFlag()
+    {
         return $this->_file->getDbFileExists();
     }
 
@@ -1062,12 +1079,11 @@ Logging::log("getting media! - 2");
         global $CC_CONFIG;
 
         $file = $this->_file;
-        if(is_null($file)) {
+        if (is_null($file)) {
             return "File does not exist";
         }
-        if(Application_Model_Preference::GetUploadToSoundcloudOption())
-        {
-            for($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
+        if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
+            for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
                 $description = $file->getDbTrackTitle();
                 $tag = array();
                 $genre = $file->getDbGenre();
@@ -1079,8 +1095,7 @@ Logging::log("getting media! - 2");
                     $this->setSoundCloudLinkToFile($soundcloud_res['permalink_url']);
                     $this->setSoundCloudUploadTime(new DateTime("now"), new DateTimeZone("UTC"));
                     break;
-                }
-                catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
+                } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                     $code = $e->getHttpCode();
                     $msg = $e->getHttpBody();
                     $temp = explode('"error":',$msg);
@@ -1089,7 +1104,7 @@ Logging::log("getting media! - 2");
                     $this->setSoundCloudErrorMsg($msg);
                     // setting sc id to -3 which indicates error
                     $this->setSoundCloudFileId(SOUNDCLOUD_ERROR);
-                    if(!in_array($code, array(0, 100))) {
+                    if (!in_array($code, array(0, 100))) {
                         break;
                     }
                 }

@@ -1,7 +1,7 @@
 <?php
 
-class Application_Model_Scheduler {
-
+class Application_Model_Scheduler
+{
     private $con;
     private $fileInfo = array(
             "id" => "",
@@ -19,14 +19,14 @@ class Application_Model_Scheduler {
 
     private $checkUserPermissions = true;
 
-    public function __construct() {
-
+    public function __construct()
+    {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $this->epochNow = microtime(true);
         $this->nowDT = DateTime::createFromFormat("U.u", $this->epochNow, new DateTimeZone("UTC"));
 
-        if ($this->nowDT === false){
+        if ($this->nowDT === false) {
             // DateTime::createFromFormat does not support millisecond string formatting in PHP 5.3.2 (Ubuntu 10.04).
             // In PHP 5.3.3 (Ubuntu 10.10), this has been fixed.
             $this->nowDT = DateTime::createFromFormat("U", time(), new DateTimeZone("UTC"));
@@ -35,18 +35,18 @@ class Application_Model_Scheduler {
         $this->user = Application_Model_User::getCurrentUser();
     }
 
-    public function setCheckUserPermissions($value) {
+    public function setCheckUserPermissions($value)
+    {
         $this->checkUserPermissions = $value;
     }
-
 
     /*
      * make sure any incoming requests for scheduling are ligit.
     *
     * @param array $items, an array containing pks of cc_schedule items.
     */
-    private function validateRequest($items) {
-
+    private function validateRequest($items)
+    {
         $nowEpoch = floatval($this->nowDT->format("U.u"));
 
         for ($i = 0; $i < count($items); $i++) {
@@ -101,8 +101,8 @@ class Application_Model_Scheduler {
             }
 
             $showEndEpoch = floatval($instance->getDbEnds("U.u"));
-            
-            if ($showEndEpoch < $nowEpoch) {   
+
+            if ($showEndEpoch < $nowEpoch) {
                 throw new OutDatedScheduleException("The show {$show->getDbName()} is over and cannot be scheduled.");
             }
 
@@ -121,8 +121,8 @@ class Application_Model_Scheduler {
      *
      * @return $files
      */
-    private function retrieveMediaFiles($id, $type) {
-
+    private function retrieveMediaFiles($id, $type)
+    {
         $files = array();
 
         if ($type === "audioclip") {
@@ -130,8 +130,7 @@ class Application_Model_Scheduler {
 
             if (is_null($file) || !$file->getDbFileExists()) {
                 throw new Exception("A selected File does not exist!");
-            }
-            else {
+            } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
                 $data["cliplength"] = $file->getDbLength();
@@ -146,8 +145,7 @@ class Application_Model_Scheduler {
 
                 $files[] = $data;
             }
-        }
-        else if ($type === "playlist") {
+        } elseif ($type === "playlist") {
 
             $contents = CcPlaylistcontentsQuery::create()
                 ->orderByDbPosition()
@@ -186,8 +184,8 @@ class Application_Model_Scheduler {
      *
      * @return DateTime endDT in UTC
      */
-    private function findEndTime($p_startDT, $p_duration) {
-
+    private function findEndTime($p_startDT, $p_duration)
+    {
         $startEpoch = $p_startDT->format("U.u");
         $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
 
@@ -205,11 +203,11 @@ class Application_Model_Scheduler {
         return $dt;
     }
 
-    private function findNextStartTime($DT, $instance) {
-
+    private function findNextStartTime($DT, $instance)
+    {
         $sEpoch = $DT->format("U.u");
         $nEpoch = $this->epochNow;
-        
+
         //check for if the show has started.
         if (bccomp( $nEpoch , $sEpoch , 6) === 1) {
             //need some kind of placeholder for cc_schedule.
@@ -218,7 +216,7 @@ class Application_Model_Scheduler {
 
             $length = bcsub($nEpoch , $sEpoch , 6);
             $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
-        
+
             //fillers are for only storing a chunk of time space that has already passed.
             $filler = new CcSchedule();
             $filler->setDbStarts($DT)
@@ -227,8 +225,7 @@ class Application_Model_Scheduler {
                 ->setDbPlayoutStatus(-1)
                 ->setDbInstanceId($instance->getDbId())
                 ->save($this->con);
-        }
-        else {
+        } else {
             $nextDT = $DT;
         }
 
@@ -240,31 +237,30 @@ class Application_Model_Scheduler {
     * @param array $exclude
     *   ids of sched items to remove from the calulation.
     */
-    private function removeGaps($showInstance, $exclude=null) {
-    
+    private function removeGaps($showInstance, $exclude=null)
+    {
         Logging::log("removing gaps from show instance #".$showInstance);
-    
+
         $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
         if (is_null($instance)) {
             throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
         }
-    
+
         $itemStartDT = $instance->getDbStarts(null);
-    
+
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($showInstance)
             ->filterByDbId($exclude, Criteria::NOT_IN)
             ->orderByDbStarts()
             ->find($this->con);
-    
-    
+
         foreach ($schedule as $item) {
-    
+
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
-    
+
             $item->setDbStarts($itemStartDT)
                 ->setDbEnds($itemEndDT);
-    
+
             $itemStartDT = $itemEndDT;
         }
 
@@ -276,8 +272,8 @@ class Application_Model_Scheduler {
      * @param array $fileIds
      * @param array $playlistIds
      */
-    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true) {
-
+    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true)
+    {
         try {
 
             $affectedShowInstances = array();
@@ -331,7 +327,7 @@ class Application_Model_Scheduler {
                     Logging::debug(floatval($pend) - floatval($pstart));
                 }
 
-                foreach($schedFiles as $file) {
+                foreach ($schedFiles as $file) {
 
                     $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
@@ -339,8 +335,7 @@ class Application_Model_Scheduler {
                     //need to keep same id for resources if we want REST.
                     if (isset($file['sched_id'])) {
                         $sched = CcScheduleQuery::create()->findPK($file['sched_id'], $this->con);
-                    }
-                    else {
+                    } else {
                         $sched = new CcSchedule();
                     }
                    Logging::log(print_r($file,true));
@@ -408,8 +403,7 @@ class Application_Model_Scheduler {
             $endProfile = microtime(true);
             Logging::debug("updating last scheduled timestamp.");
             Logging::debug(floatval($endProfile) - floatval($startProfile));
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             Logging::debug($e->getMessage());
             throw $e;
         }
@@ -419,8 +413,8 @@ class Application_Model_Scheduler {
      * @param array $scheduleItems
      * @param array $mediaItems
      */
-    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true) {
-
+    public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true)
+    {
         $this->con->beginTransaction();
 
         $schedFiles = array();
@@ -437,8 +431,7 @@ class Application_Model_Scheduler {
             $this->con->commit();
 
             Application_Model_RabbitMq::PushSchedule();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
@@ -448,8 +441,8 @@ class Application_Model_Scheduler {
      * @param array $selectedItem
      * @param array $afterItem
      */
-    public function moveItem($selectedItems, $afterItems, $adjustSched = true) {
-
+    public function moveItem($selectedItems, $afterItems, $adjustSched = true)
+    {
         $startProfile = microtime(true);
 
         $this->con->beginTransaction();
@@ -463,7 +456,7 @@ class Application_Model_Scheduler {
             $endProfile = microtime(true);
             Logging::debug("validating move request took:");
             Logging::debug(floatval($endProfile) - floatval($startProfile));
- 
+
             $afterInstance = CcShowInstancesQuery::create()->findPK($afterItems[0]["instance"], $this->con);
 
             //map show instances to cc_schedule primary keys.
@@ -492,8 +485,7 @@ class Application_Model_Scheduler {
                 $schedId = $selected->getDbId();
                 if (isset($modifiedMap[$showInstanceId])) {
                     array_push($modifiedMap[$showInstanceId], $schedId);
-                }
-                else {
+                } else {
                     $modifiedMap[$showInstanceId] = array($schedId);
                 }
             }
@@ -520,7 +512,7 @@ class Application_Model_Scheduler {
             $afterInstanceId = $afterInstance->getDbId();
             $modified = array_keys($modifiedMap);
             //need to adjust shows we have moved items from.
-            foreach($modified as $instanceId) {
+            foreach ($modified as $instanceId) {
 
                 $instance = CcShowInstancesQuery::create()->findPK($instanceId, $this->con);
                 $instance->updateScheduleStatus($this->con);
@@ -530,15 +522,14 @@ class Application_Model_Scheduler {
             $this->con->commit();
 
             Application_Model_RabbitMq::PushSchedule();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
     }
 
-    public function removeItems($scheduledItems, $adjustSched = true) {
-
+    public function removeItems($scheduledItems, $adjustSched = true)
+    {
         $showInstances = array();
         $this->con->beginTransaction();
 
@@ -575,8 +566,7 @@ class Application_Model_Scheduler {
                         ->setDbClipLength($cliplength)
                         ->setDbEnds($this->nowDT)
                         ->save($this->con);
-                }
-                else {
+                } else {
                     $removedItem->delete($this->con);
                 }
             }
@@ -613,8 +603,7 @@ class Application_Model_Scheduler {
             $this->con->commit();
 
             Application_Model_RabbitMq::PushSchedule();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
@@ -625,8 +614,8 @@ class Application_Model_Scheduler {
      *
      * @param $p_id id of the show instance to cancel.
      */
-    public function cancelShow($p_id) {
-
+    public function cancelShow($p_id)
+    {
         $this->con->beginTransaction();
 
         try {
@@ -643,17 +632,16 @@ class Application_Model_Scheduler {
                 if (count($items) > 0) {
                     $remove = array();
                     $ts = $this->nowDT->format('U');
-                    
-                    for($i = 0; $i < count($items); $i++) {
+
+                    for ($i = 0; $i < count($items); $i++) {
                         $remove[$i]["instance"] = $p_id;
                         $remove[$i]["timestamp"] = $ts;
                         $remove[$i]["id"] = $items[$i]->getDbId();
                     }
-                    
+
                     $this->removeItems($remove, false);
                 }
-            }
-            else {
+            } else {
                 $rebroadcasts = $instance->getCcShowInstancessRelatedByDbId(null, $this->con);
                 $rebroadcasts->delete($this->con);
             }
@@ -666,8 +654,7 @@ class Application_Model_Scheduler {
             if ($instance->getDbRecord()) {
                 Application_Model_RabbitMq::SendMessageToShowRecorder("cancel_recording");
             }
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }

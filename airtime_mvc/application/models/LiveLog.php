@@ -3,7 +3,8 @@
 class Application_Model_LiveLog
 {
 
-    public static function GetLiveShowDuration($p_keepData=false) {
+    public static function GetLiveShowDuration($p_keepData=false)
+    {
         try {
             $con = Propel::getConnection();
 
@@ -86,12 +87,12 @@ class Application_Model_LiveLog
                 //Trim milliseconds
                 $seconds = explode(".", $seconds);
                 if (isset($seconds[0])) {
-                    $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
-                }
-                else {
-                    $minutes = (double)(($hours*60)+$minutes);
+                    $minutes = (double) (($hours*60)+$minutes . "." . $seconds[0]);
+                } else {
+                    $minutes = (double) (($hours*60)+$minutes);
                 }
             }
+
             return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
@@ -119,8 +120,7 @@ class Application_Model_LiveLog
                 $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                 array_push($rows, $last_row);
                 $skip = false;
-            }
-            else {
+            } else {
                 $sql = "SELECT * FROM CC_LIVE_LOG"
                     ." WHERE state = 'S'"
                     ." ORDER BY id";
@@ -191,22 +191,19 @@ class Application_Model_LiveLog
                             if ($clip_length_seconds / 3600 >= 1) {
                                 array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 3600), 2, "0", STR_PAD_LEFT));
                                 $clip_length_seconds -= floor($clip_length_seconds / 3600);
-                            }
-                            else {
+                            } else {
                                 array_push($clip_length_arr, "00");
                             }
                             if ($clip_length_seconds / 60 >= 1) {
                                 array_push($clip_length_arr, str_pad(floor($clip_length_seconds / 60), 2, "0", STR_PAD_LEFT));
                                 $clip_length_seconds -= floor($clip_length_seconds / 60);
-                            }
-                            else {
+                            } else {
                                 array_push($clip_length_arr, "00");
                             }
 
                             array_push($clip_length_arr, str_pad($clip_length_seconds, 2, "0", STR_PAD_LEFT));
                             $clip_length = implode(":", $clip_length_arr);
-                        }
-                        else {
+                        } else {
                             $clip_length = $track['clip_length'];
                         }
 
@@ -248,12 +245,12 @@ class Application_Model_LiveLog
 
                 $seconds = explode(".", $seconds);
                 if (isset($seconds[0])) {
-                    $minutes = (double)(($hours*60)+$minutes . "." . $seconds[0]);
-                }
-                else {
-                    $minutes = (double)(($hours*60)+$minutes);
+                    $minutes = (double) (($hours*60)+$minutes . "." . $seconds[0]);
+                } else {
+                    $minutes = (double) (($hours*60)+$minutes);
                 }
             }
+
             return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
@@ -262,7 +259,8 @@ class Application_Model_LiveLog
         }
     }
 
-    public static function UpdateLastLogEndTime($log) {
+    public static function UpdateLastLogEndTime($log)
+    {
         if ($log['end_time'] == null) {
             $current_time = new DateTime("now", new DateTimeZone('UTC'));
             $log['end_time'] = $current_time;
@@ -270,10 +268,12 @@ class Application_Model_LiveLog
             self::SetEndTime($log['state'], $current_time, true);
             self::SetNewLogTime($log['state'], $current_time);
         }
+
         return $log;
     }
 
-    public static function SetNewLogTime($state, $dateTime){
+    public static function SetNewLogTime($state, $dateTime)
+    {
         try {
             $con = Propel::getConnection();
 
@@ -293,7 +293,7 @@ class Application_Model_LiveLog
                 $sql_insert = "INSERT INTO CC_LIVE_LOG (state, start_time)"
                 ." VALUES ('$state', '{$dateTime->format("Y-m-d H:i:s")}')";
                 $con->exec($sql_insert);
-                if($state == "S"){
+                if ($state == "S") {
                     // if scheduled play source is getting broadcasted
                     Application_Model_Schedule::UpdateBrodcastedStatus($dateTime, 1);
                 }
@@ -306,7 +306,8 @@ class Application_Model_LiveLog
         }
     }
 
-    public static function SetEndTime($state, $dateTime, $override=false){
+    public static function SetEndTime($state, $dateTime, $override=false)
+    {
         try {
             $con = Propel::getConnection();
 

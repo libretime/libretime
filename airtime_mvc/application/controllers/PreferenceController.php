@@ -84,18 +84,18 @@ class PreferenceController extends Zend_Controller_Action
         if ($request->isPost()) {
             $values = $request->getPost();
             if ($form->isValid($values)) {
-                if (!$isSass && $values["Publicise"] != 1){
+                if (!$isSass && $values["Publicise"] != 1) {
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                     Application_Model_Preference::SetPublicise($values["Publicise"]);
-                    if(isset($values["Privacy"])){
+                    if (isset($values["Privacy"])) {
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
-                }else{
+                } else {
                     Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                     Application_Model_Preference::SetPhone($values["Phone"]);
                     Application_Model_Preference::SetEmail($values["Email"]);
                     Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                    if(!$isSass){
+                    if (!$isSass) {
                         Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                         Application_Model_Preference::SetPublicise($values["Publicise"]);
                     }
@@ -107,7 +107,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationCity($values["City"]);
                     Application_Model_Preference::SetStationDescription($values["Description"]);
                     Application_Model_Preference::SetStationLogo($imagePath);
-                    if(!$isSass && isset($values["Privacy"])){
+                    if (!$isSass && isset($values["Privacy"])) {
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
                 }
@@ -115,11 +115,11 @@ class PreferenceController extends Zend_Controller_Action
             }
         }
         $logo = Application_Model_Preference::GetStationLogo();
-        if($logo){
+        if ($logo) {
             $this->view->logoImg = $logo;
         }
         $privacyChecked = false;
-        if(Application_Model_Preference::GetPrivacyPolicyCheck() == 1){
+        if (Application_Model_Preference::GetPrivacyPolicyCheck() == 1) {
             $privacyChecked = true;
         }
         $this->view->privacyChecked = $privacyChecked;
@@ -132,7 +132,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+        if (Application_Model_Preference::GetPlanLevel() == 'disabled') {
             $request = $this->getRequest();
             $baseUrl = $request->getBaseUrl();
 
@@ -159,17 +159,17 @@ class PreferenceController extends Zend_Controller_Action
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
         $setting = array();
-        foreach ($temp as $t){
+        foreach ($temp as $t) {
             $setting[$t['keyname']] = $t['value'];
         }
 
         // get predefined type and bitrate from pref table
         $temp_types = Application_Model_Preference::GetStreamType();
         $stream_types = array();
-        foreach ($temp_types as $type){
-            if(trim($type) == "ogg"){
+        foreach ($temp_types as $type) {
+            if (trim($type) == "ogg") {
                 $temp = "OGG/VORBIS";
-            }else{
+            } else {
                 $temp = strtoupper(trim($type));
             }
             $stream_types[trim($type)] = $temp;
@@ -178,8 +178,8 @@ class PreferenceController extends Zend_Controller_Action
         $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
         $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
         $stream_bitrates = array();
-        foreach ($temp_bitrate as $type){
-            if(intval($type) <= $max_bitrate){
+        foreach ($temp_bitrate as $type) {
+            if (intval($type) <= $max_bitrate) {
                 $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
             }
         }
@@ -193,7 +193,7 @@ class PreferenceController extends Zend_Controller_Action
         $live_stream_subform = new Application_Form_LiveStreamingPreferences();
         $form->addSubForm($live_stream_subform, "live_stream_subform");
 
-        for($i=1; $i<=$num_of_stream; $i++){
+        for ($i=1; $i<=$num_of_stream; $i++) {
             $subform = new Application_Form_StreamSettingSubForm();
             $subform->setPrefix($i);
             $subform->setSetting($setting);
@@ -208,7 +208,7 @@ class PreferenceController extends Zend_Controller_Action
             $error = false;
             $values = $post_data;
 
-            if($form->isValid($post_data)){
+            if ($form->isValid($post_data)) {
                 if (!$isSaas) {
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
                     $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
@@ -232,8 +232,7 @@ class PreferenceController extends Zend_Controller_Action
                         $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
                         if (empty($values["master_harbor_input_port"]) || empty($values["master_harbor_input_mount_point"])) {
                             Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
-                        }
-                        else {
+                        } else {
                             Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
                         }
                     } else {
@@ -244,12 +243,10 @@ class PreferenceController extends Zend_Controller_Action
                         $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
                         if (empty($values["dj_harbor_input_port"]) || empty($values["dj_harbor_input_mount_point"])) {
                             Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
-                        }
-                        else {
+                        } else {
                             Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
                         }
-                    }
-                    else {
+                    } else {
                         Application_Model_Preference::SetLiveDJSourceConnectionURL($values["live_dj_connection_url"]);
                     }
 
@@ -266,7 +263,7 @@ class PreferenceController extends Zend_Controller_Action
                 $data = array();
                 $info = Application_Model_StreamSetting::getStreamSetting();
                 $data['setting'] = $info;
-                for($i=1;$i<=$num_of_stream;$i++){
+                for ($i=1;$i<=$num_of_stream;$i++) {
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
 
@@ -290,19 +287,16 @@ class PreferenceController extends Zend_Controller_Action
 
         $result = array();
 
-        if(is_null($path))
-        {
+        if (is_null($path)) {
             $element = array();
             $element["name"] = "path should be specified";
             $element["isFolder"] = false;
             $element["isError"] = true;
             $result[$path] = $element;
-        }
-        else
-        {
+        } else {
             $path = $path.'/';
             $handle = opendir($path);
-            if ($handle !== false){
+            if ($handle !== false) {
                 while (false !== ($file = readdir($handle))) {
                     if ($file != "." && $file != "..") {
                         //only show directories that aren't private.
@@ -329,7 +323,7 @@ class PreferenceController extends Zend_Controller_Action
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
 
         $res = Application_Model_MusicDir::setStorDir($chosen);
-        if($res['code'] != 0){
+        if ($res['code'] != 0) {
             $watched_dirs_form->populate(array('storageFolder' => $chosen));
             $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
         }
@@ -344,7 +338,7 @@ class PreferenceController extends Zend_Controller_Action
         $watched_dirs_form = new Application_Form_WatchedDirPreferences();
 
         $res = Application_Model_MusicDir::addWatchedDir($chosen);
-        if($res['code'] != 0){
+        if ($res['code'] != 0) {
             $watched_dirs_form->populate(array('watchedFolder' => $chosen));
             $watched_dirs_form->getElement($element)->setErrors(array($res['error']));
         }
@@ -373,22 +367,24 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->subform = $watched_dirs_form->render();
     }
 
-    public function isImportInProgressAction(){
+    public function isImportInProgressAction()
+    {
         $now = time();
         $res = false;
-        if(Application_Model_Preference::GetImportTimestamp()+10 > $now){
+        if (Application_Model_Preference::GetImportTimestamp()+10 > $now) {
             $res = true;
         }
         die(json_encode($res));
     }
 
-    public function getLiquidsoapStatusAction(){
+    public function getLiquidsoapStatusAction()
+    {
         $out = array();
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
-        for($i=1; $i<=$num_of_stream; $i++){
+        for ($i=1; $i<=$num_of_stream; $i++) {
             $status = Application_Model_StreamSetting::getLiquidsoapError($i);
             $status = $status == NULL?"Problem with Liquidsoap...":$status;
-            if(!Application_Model_StreamSetting::getStreamEnabled($i)){
+            if (!Application_Model_StreamSetting::getStreamEnabled($i)) {
                 $status = "N/A";
             }
             $out[] = array("id"=>$i, "status"=>$status);
@@ -396,16 +392,17 @@ class PreferenceController extends Zend_Controller_Action
         die(json_encode($out));
     }
 
-    public function setSourceConnectionUrlAction(){
+    public function setSourceConnectionUrlAction()
+    {
         $request = $this->getRequest();
         $type = $request->getParam("type", null);
         $url = urldecode($request->getParam("url", null));
         $override = $request->getParam("override", false);
 
-        if($type == 'masterdj'){
+        if ($type == 'masterdj') {
             Application_Model_Preference::SetMasterDJSourceConnectionURL($url);
             Application_Model_Preference::SetMasterDjConnectionUrlOverride($override);
-        }elseif($type == 'livedj'){
+        } elseif ($type == 'livedj') {
             Application_Model_Preference::SetLiveDJSourceConnectionURL($url);
             Application_Model_Preference::SetLiveDjConnectionUrlOverride($override);
         }
@@ -413,6 +410,3 @@ class PreferenceController extends Zend_Controller_Action
         die();
     }
 }
-
-
-

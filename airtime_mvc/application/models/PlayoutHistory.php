@@ -2,16 +2,16 @@
 
 require_once 'formatters/LengthFormatter.php';
 
-class Application_Model_PlayoutHistory {
-
+class Application_Model_PlayoutHistory
+{
     private $con;
     private $timezone;
-    
+
     //in UTC timezone
     private $startDT;
     //in UTC timezone
     private $endDT;
-    
+
     private $epoch_now;
     private $opts;
 
@@ -24,8 +24,8 @@ class Application_Model_PlayoutHistory {
         "copyright" => "file.copyright",
     );
 
-    public function __construct($p_startDT, $p_endDT, $p_opts) {
-
+    public function __construct($p_startDT, $p_endDT, $p_opts)
+    {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $this->startDT = $p_startDT;
         $this->endDT = $p_endDT;
@@ -37,16 +37,16 @@ class Application_Model_PlayoutHistory {
     /*
      * map front end mDataProp labels to proper column names for searching etc.
      */
-    private function translateColumns() {
+    private function translateColumns()
+    {
+        for ($i = 0; $i < $this->opts["iColumns"]; $i++) {
 
-        for ($i = 0; $i < $this->opts["iColumns"]; $i++){
-            
             $this->opts["mDataProp_{$i}"] = $this->mDataPropMap[$this->opts["mDataProp_{$i}"]];
         }
     }
 
-    public function getItems() {
-
+    public function getItems()
+    {
         $this->translateColumns();
 
         $select = array(
@@ -61,7 +61,7 @@ class Application_Model_PlayoutHistory {
 
         $start = $this->startDT->format("Y-m-d H:i:s");
         $end = $this->endDT->format("Y-m-d H:i:s");
-        
+
         $historyTable = "(
             select count(schedule.file_id) as played, schedule.file_id as file_id
             from cc_schedule as schedule
