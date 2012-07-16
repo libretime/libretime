@@ -5,9 +5,6 @@ import os
 import logging
 import json
 
-import sys
-sys.path.append('/home/martin/workspace/airtime/python_apps/media-monitor2/')
-
 from api_clients import api_client
 from media.update import replaygain
 
@@ -16,7 +13,7 @@ class ReplayGainUpdater(Thread):
     """
     The purpose of the class is to query the server for a list of files which do not have a ReplayGain
     value calculated. This class will iterate over the list calculate the values, update the server and
-    repeat the process until the the server reports there are no files left.
+    repeat the process until the server reports there are no files left.
 
     This class will see heavy activity right after a 2.1->2.2 upgrade since 2.2 introduces ReplayGain
     normalization. A fresh install of Airtime 2.2 will see this class not used at all since a file

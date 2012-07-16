@@ -949,10 +949,14 @@ class ApiController extends Zend_Controller_Action
     {
         // disable the view and the layout
         $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $dir_id = $this->_getParam('dir_id');
 
         //connect to db and get get sql
-        $this->view->rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
+        $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
+        
+        echo json_encode($rows);
     }
 
     public function updateReplayGainValueAction()
@@ -961,6 +965,8 @@ class ApiController extends Zend_Controller_Action
 
         // disable layout
         $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
         

@@ -615,7 +615,7 @@ class Application_Model_Schedule
                 'start' => $start,
                 'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
                 'show_name' => $showName,
-                'replay_gain' => $item["replay_gain"]
+                'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"]
             );
         }
 

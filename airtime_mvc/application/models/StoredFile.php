@@ -974,7 +974,8 @@ Logging::log("getting media! - 2");
         $sql = "SELECT id, filepath as fp"
                 ." FROM CC_FILES"
                 ." WHERE directory = $dir_id"
-                ." AND file_exists = 'TRUE'";
+                ." AND file_exists = 'TRUE'"
+                ." AND replay_gain is NULL";
         if (!is_null($limit) && is_int($limit)) {
             $sql .= " LIMIT $limit";
         }
