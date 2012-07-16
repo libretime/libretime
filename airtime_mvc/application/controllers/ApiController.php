@@ -958,8 +958,6 @@ class ApiController extends Zend_Controller_Action
 
     public function updateReplayGainValueAction()
     {
-        $this->checkAuth();
-
         // disable layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -971,7 +969,7 @@ class ApiController extends Zend_Controller_Action
             list($id, $gain) = $pair;
             
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
-            Logging::log("Setting $gain for file id $id");
+            Logging::debug("Setting $gain for file id $id");
             $file->setDbReplayGain($gain);
             $file->save();
         }
