@@ -365,7 +365,6 @@ class AirTimeApiClient():
 
     def send_media_monitor_requests(self, action_list, is_record=False):
         logger = self.logger
-        response = None
         try:
             url = self.construct_url('reload_metadata_group')
             # We are assuming that action_list is a list of dictionaries such
@@ -402,11 +401,11 @@ class AirTimeApiClient():
                 response = self.get_response_from_server(url)
                 response = json.loads(response)
                 logger.info("associate recorded %s", response)
+            return response
         except Exception, e:
-            response = None
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
-        return response
+            raise
 
     #returns a list of all db files for a given directory in JSON format:
     #{"files":["path/to/file1", "path/to/file2"]}

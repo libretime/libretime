@@ -543,15 +543,15 @@ class ApiController extends Zend_Controller_Action
     public function reloadMetadataGroupAction()
     {
         $request = $this->getRequest();
-        //extract all file metadata params from the request.
-        //The value is a json encoded hash that has all the information related to this action
-        //The key does not have any meaning as of yet but it could potentially correspond
-        //to some unique id.
+        // extract all file metadata params from the request.
+        // The value is a json encoded hash that has all the information related to this action
+        // The key does not have any meaning as of yet but it could potentially correspond
+        // to some unique id.
         $responses = array();
         foreach ($request->getParams() as $k => $raw_json) {
             $info_json = json_decode($raw_json, $assoc=true);
             $mode = $info_json['mode'];
-            unset($info_json['mode']);
+            unset( $info_json['mode'] );
             // TODO : uncomment the following line to actually do something
             // array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
             // Like wise, remove the following line when done
