@@ -151,6 +151,7 @@ if [ "$result" -eq "0" ]; then
 elif [ "$result" -eq "1" -a "$reinstall" = "f" ]; then
     echo " * Same version of Airtime already installed! Reusing database."
     nodb='t'
+    overwrite='f'
 elif [ "$result" -eq "2" ]; then
     echo " * Previous version of Airtime already installed..will perform upgrade."
     DO_UPGRADE="1"

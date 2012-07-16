@@ -19,7 +19,7 @@ def generate_liquidsoap_config(ss):
             val = d[u'value']
             val = val if len(val) > 0 else "0"
         str_buffer = "%s = %s\n" % (key, val)
-        fh.write(str_buffer)
+        fh.write(str_buffer.encode('utf-8'))
     fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
 
