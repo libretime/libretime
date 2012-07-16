@@ -1,10 +1,12 @@
 $(document).ready(function() {
     setSmartPlaylistEvents();
+    var form = $('#smart-playlist-form');
+    appendAddButton(form);
 });
 
 function setSmartPlaylistEvents() {
     var form = $('#smart-playlist-form');
-	
+    
     form.find('a[id="criteria_add"]').live("click", function(){
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next(),
             add_button = $(this);
@@ -26,6 +28,7 @@ function setSmartPlaylistEvents() {
         var count = list_length - curr_pos;
         var next = curr.next();
         var add_button = form.find('a[id="criteria_add"]');
+        var item_to_hide;
         
         //remove error message from current row, if any
         var error_element = curr.find('span[class="errors sp-errors"]');
@@ -60,9 +63,6 @@ function setSmartPlaylistEvents() {
                 var criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
                 disableAndHideExtraField(next.find(':first-child'), index+1);
-            	/*next.find('[name^="sp_criteria_extra"]').remove();
-                next.find('span[id="sp_criteria_extra_label"]').remove();*/
-                
             
             /* if only the current row has the extra criteria value,
              * then just remove the current row's extra criteria element
@@ -70,8 +70,6 @@ function setSmartPlaylistEvents() {
             } else if (curr.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled"
                        && next.find('[name^="sp_criteria_extra"]').attr("disabled") == "disabled") {
                 disableAndHideExtraField(curr.find(':first-child'), index);
-                /*curr.find('[name^="sp_criteria_extra"]').remove();
-                curr.find('span[id="sp_criteria_extra_label"]').remove();*/
                 
             /* if only the next row has the extra criteria value,
              * then add the extra criteria element to current row
@@ -80,10 +78,6 @@ function setSmartPlaylistEvents() {
             } else if (next.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled") {
                 criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 enableAndShowExtraField(curr.find(':first-child'), index);
-                /*curr.find('[name^="sp_criteria_value"]')
-                    .after($('<input type="text" class="input_text">')
-                    .attr('id', 'sp_criteria_extra_'+index_num)
-                    .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label"> to </span>');*/
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
             }
 
@@ -91,27 +85,27 @@ function setSmartPlaylistEvents() {
             next = curr.next();
         }
 		
-        list.find('div:visible:last').children().attr('disabled', 'disabled');
-        list.find('div:visible:last')
-            .find('[name^="sp_criteria"]').val(0).end()
-            .find('[name^="sp_criteria_modifier"]').val(0).end()
-            .find('[name^="sp_criteria_value"]').val('');
+        /* Disable the last visible row since it holds the values the user removed
+         * Reset the values to empty and resize the criteria value textbox
+         * in case the row had the extra criteria textbox
+         */
+        item_to_hide = list.find('div:visible:last');
+        item_to_hide.children().attr('disabled', 'disabled');
+        item_to_hide.find('[name^="sp_criteria_field"]').val(0).end()
+                    .find('[name^="sp_criteria_modifier"]').val(0).end()
+                    .find('[name^="sp_criteria_value"]').val('');
         
-        if (list.find('div:visible:last').children().hasClass('criteria_add')) {
-            list.find('div:visible:last').find('.criteria_add').remove();
+        if (item_to_hide.children().hasClass('criteria_add')) {
+        	item_to_hide.find('.criteria_add').remove();
         }
-        list.find('div:visible:last').hide();
+        
+        sizeTextBoxes(item_to_hide.find('[name^="sp_criteria_value"]'), 'sp_extra_input_text', 'sp_input_text');
+        item_to_hide.hide();
 
         list.next().show();
         
         // always put 'add' button on the last row
-        if (list.find('div:visible').length > 1) {
-            list.find('div:visible:last').find('a[id^="criteria_remove"]')
-                                         .after("<a href='#' id='criteria_add' class='criteria_add'>Add</a>");
-        } else {
-            list.find('div:visible:last').find('[name^="sp_criteria_value"]')
-                                         .after("<a href='#' id='criteria_add' class='criteria_add'>Add</a>");
-        }
+        appendAddButton(list);
     });
 	
     form.find('button[id="save_button"]').live("click", function(event){
@@ -148,12 +142,8 @@ function setSmartPlaylistEvents() {
         var index_name = $(this).attr('id'),
             index_num = index_name.charAt(index_name.length-1);
         
-        // disalbe extra field and hide the span
+        // disable extra field and hide the span
         disableAndHideExtraField($(this), index_num);
-        /*if ($('#sp_criteria_extra_'+index_num).length > 0) {
-            $('#sp_criteria_extra_'+index_num).remove();
-            $('#sp_criteria_extra_label_'+index_num).remove();
-        }*/
         populateModifierSelect(this);
     });
     
@@ -164,16 +154,8 @@ function setSmartPlaylistEvents() {
         
         if ($(this).val() == 'is in the range') {
             enableAndShowExtraField(criteria_value, index_num);
-            /*after($('<input type="text" class="input_text">')
-                          .attr('id', 'sp_criteria_extra_'+index_num)
-                          .attr('name', 'sp_criteria_extra_'+index_num)).after('<span id="sp_criteria_extra_label_'+index_num+'"> to </span>');*/
-        
         } else {
             disableAndHideExtraField(criteria_value, index_num);
-            /*if ($('#sp_criteria_extra_'+index_num).length > 0) {
-            	$('#sp_criteria_extra_'+index_num).remove();
-            	$('#sp_criteria_extra_label_'+index_num).remove();
-            }*/
         }
     });
 	
@@ -183,12 +165,26 @@ function enableAndShowExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
     spanExtra.children('#sp_criteria_extra_'+index).removeAttr("disabled");
     spanExtra.show();
+
+    //make value input smaller since we have extra element now
+    var criteria_val = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_val, 'sp_input_text', 'sp_extra_input_text');
 }
 
 function disableAndHideExtraField(valEle, index) {
     var spanExtra = valEle.nextAll("#extra_criteria");
     spanExtra.children('#sp_criteria_extra_'+index).val("").attr("disabled", "disabled");
     spanExtra.hide();
+    
+    //make value input larger because we don't have extra field now
+    var criteria_value = $('#sp_criteria_value_'+index);
+    sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
+}
+
+function sizeTextBoxes(ele, classToRemove, classToAdd) {
+    if (ele.hasClass(classToRemove)) {
+        ele.removeClass(classToRemove).addClass(classToAdd);
+    }
 }
 
 function populateModifierSelect(e) {
@@ -236,6 +232,20 @@ function dynamicCallback(json) {
                 $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
             });
         });
+    }
+}
+
+function appendAddButton(rows) {
+    var add_button = "<a href='#' id='criteria_add' class='criteria_add'>Add</a>";
+	
+    if (rows.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
+        rows.find('select[name^="sp_criteria_field"]:enabled:last')
+            .siblings('a[id^="criteria_remove"]')
+            .after(add_button);
+    } else {
+        rows.find('select[name^="sp_criteria_field"]:enabled')
+            .siblings('[name^="sp_criteria_value"]')
+            .after(add_button);
     }
 }
 

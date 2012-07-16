@@ -870,11 +870,11 @@ class Application_Model_Playlist {
         }
         if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
             if ( $data['etc']['sp_limit_value'] == "" || intval($data['etc']['sp_limit_value']) == 0) {
-                $error[] =  "Litmit cannot be empty or 0";
+                $error[] =  "Limit cannot be empty or 0";
             } else {
                 $mins = $data['etc']['sp_limit_value'] * $multiplier;
                 if ($mins > 14400) {
-                    $error[] =  "Litmit cannot be more than 24 hrs";
+                    $error[] =  "Limit cannot be more than 24 hrs";
                 }
             }
             if (count($error) > 0){
@@ -886,11 +886,11 @@ class Application_Model_Playlist {
         foreach ($data['criteria'] as $key=>$d){
             $error = array();
             // check for not selected select box
-            if ($d['sp_criteria'] == "0" || $d['sp_criteria_modifier'] == "0"){
+            if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
                 $error[] =  "You must select Criteria and Modifier";
             } else {
                 // we need to take care 'length' specially since the column type is varchar
-                if ($d['sp_criteria'] == 'length') {
+                if ($d['sp_criteria_field'] == 'length') {
                     if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
@@ -976,7 +976,7 @@ class Application_Model_Playlist {
         $c = new Criteria();
         
         foreach ($p_data as $criteria) {
-            $spCriteria = self::$criteria2PeerMap[$criteria['sp_criteria']];
+            $spCriteria = self::$criteria2PeerMap[$criteria['sp_criteria_field']];
             $spCriteriaModifier = $criteria['sp_criteria_modifier'];
             $spCriteriaValue = $criteria['sp_criteria_value'];
             if ($spCriteriaModifier == "starts with") {

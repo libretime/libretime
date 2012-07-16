@@ -129,7 +129,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
             $criteria = new Zend_Form_Element_Select('sp_criteria_field_'.$i);
-            $criteria->setAttrib('class', 'input_select')
+            $criteria->setAttrib('class', 'input_select sp_input_select')
                      ->setValue('Select criteria')
                      ->setDecorators(array('viewHelper'))
                      ->setMultiOptions($criteriaOptions);
@@ -144,7 +144,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             
             $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_'.$i);
             $criteriaModifers->setValue('Select modifier')
-                             ->setAttrib('class', 'input_select')
+                             ->setAttrib('class', 'input_select sp_input_select')
                              ->setDecorators(array('viewHelper'));
             if ($i != 0 && !isset($storedCrit["crit"][$i])){
                 $criteriaModifers->setAttrib('disabled', 'disabled');
@@ -162,7 +162,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             $this->addElement($criteriaModifers);
         
             $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_'.$i);
-            $criteriaValue->setAttrib('class', 'input_text')
+            $criteriaValue->setAttrib('class', 'input_text sp_input_text')
                           ->setDecorators(array('viewHelper'));
             if ($i != 0 && !isset($storedCrit["crit"][$i])){
                 $criteriaValue->setAttrib('disabled', 'disabled');
@@ -173,10 +173,11 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             $this->addElement($criteriaValue);
             
             $criteriaExtra = new Zend_Form_Element_Text('sp_criteria_extra_'.$i);
-            $criteriaExtra->setAttrib('class', 'input_text')
+            $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
                           ->setDecorators(array('viewHelper'));
             if (isset($storedCrit["crit"][$i]["extra"])) {
                 $criteriaExtra->setValue($storedCrit["crit"][$i]["extra"]);
+                $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
             }else{
                 $criteriaExtra->setAttrib('disabled', 'disabled');
             }
@@ -189,8 +190,6 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $limit->setMultiOptions($limitOptions);
         if (isset($storedCrit["limit"])) {
             $limit->setValue($storedCrit["limit"]["modifier"]);
-        }else{
-            $limit->setAttrib('disabled', 'disabled');
         }
         $this->addElement($limit);
         
@@ -201,8 +200,6 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $this->addElement($limitValue);
         if (isset($storedCrit["limit"])) {
             $limitValue->setValue($storedCrit["limit"]["value"]);
-        }else{
-            $limitValue->setAttrib('disabled', 'disabled');
         }
         
         $save = new Zend_Form_Element_Button('save_button');
@@ -212,29 +209,5 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $this->addElement($save);
     }
     
-    public function loadCriteria($p_playlistId)
-    {
-        $c = new Criteria();
-        $c->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
-        $out = CcPlaylistcriteriaPeer::doSelect($c);
-        
-        $i = 0;
-        foreach ($out as $crit) {
-            $criteria = $crit->getDbCriteria();
-            $modifier = $crit->getDbModifier();
-            $value = $crit->getDbValue();
-            $extra = $crit->getDbExtra();
-            
-            if($criteria == "limit"){
-                Zend_Form::getElement("sp_limit_options")->setValue($modifier);
-                Zend_Form::getElement("sp_limit_value")->setValue($value);
-            }else{
-                Zend_Form::getElement("sp_criteria_$i")->setValue($criteria);
-                Zend_Form::getElement("sp_criteria_modifier_$i")->setValue($criteria);
-                Zend_Form::getElement("sp_criteria_value_$i")->setValue($criteria);
-                Zend_Form::getElement("sp_criteria_extra_$i")->setValue($criteria);
-                $i++;
-            }
-        }
-    }
+    
 }

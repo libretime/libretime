@@ -416,6 +416,18 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     padding: 2px 2px 2px 0;
     vertical-align: top;
 }
+.sp_input_select{
+    width: 130px;
+}
+
+input.input_text.sp_input_text{
+    width: 200px !important;
+}
+
+input.input_text.sp_extra_input_text{
+    width: 85px !important;
+}
+
 label {
 	font-size:13px;
 	color:#5b5b5b;
@@ -1409,7 +1421,7 @@ div.success{
 	border:1px solid #488214;
 }
 
-div.errors{
+div.errors, span.errors{
 	color:#902d2d;
 	font-size:11px;
     padding:2px 4px;
@@ -1418,14 +1430,9 @@ div.errors{
     border:1px solid #c83f3f;
 }
 
-span.sp-errors{
-    color:#902d2d;
-    font-size:11px;
-    padding:2px 4px;
-    background:#c6b4b4;
-    margin-bottom:2px;
-    border:1px solid #c83f3f;
-    width: 400px;	
+span.errors.sp-errors{
+    width: 400px;
+    display: block;	
 }
 
 .collapsible-header, .collapsible-header-disabled {

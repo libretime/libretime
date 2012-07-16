@@ -318,8 +318,10 @@ var AIRTIME = (function(AIRTIME){
 		$("#side_playlist")
 			.empty()
 			.append(json.html);
-		
+				
 		setUpPlaylist();
+        var form = $('#smart-playlist-form');
+        appendAddButton(form);
 	}
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
