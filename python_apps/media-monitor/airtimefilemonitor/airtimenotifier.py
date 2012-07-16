@@ -51,13 +51,13 @@ class AirtimeNotifier(Notifier):
 
         return True
 
-    """
-    Messages received from RabbitMQ are handled here. These messages
-    instruct media-monitor of events such as a new directory being watched,
-    file metadata has been changed, or any other changes to the config of
-    media-monitor via the web UI.
-    """
     def handle_message(self, body, message):
+        """
+        Messages received from RabbitMQ are handled here. These messages
+        instruct media-monitor of events such as a new directory being watched,
+        file metadata has been changed, or any other changes to the config of
+        media-monitor via the web UI.
+        """
         # ACK the message to take it off the queue
         message.ack()
 
@@ -124,15 +124,15 @@ class AirtimeNotifier(Notifier):
 
 
     def update_airtime(self, event):
-    """
-    Update airtime with information about files discovered in our
-    watched directories.
-    event: a dict() object with the following attributes:
-     -filepath
-     -mode
-     -data
-     -is_recorded_show
-    """
+        """
+        Update airtime with information about files discovered in our
+        watched directories.
+        event: a dict() object with the following attributes:
+        -filepath
+        -mode
+        -data
+        -is_recorded_show
+        """
         try:
             self.logger.info("updating filepath: %s ", event['filepath'])
             filepath = event['filepath']
