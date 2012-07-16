@@ -149,13 +149,13 @@ if [ "$result" -eq "0" ]; then
     rm -f "/etc/airtime/media-monitor.cfg"
     rm -f "/etc/airtime/pypo.cfg"
 elif [ "$result" -eq "1" -a "$reinstall" = "f" ]; then
-    echo " * Same version of Airtime already installed!"
-    exit 1;
+    echo " * Same version of Airtime already installed! Reusing database."
+    nodb='t'
 elif [ "$result" -eq "2" ]; then
-    echo " * Previous version of Airtime already installed..will perform upgrade"
+    echo " * Previous version of Airtime already installed..will perform upgrade."
     DO_UPGRADE="1"
 elif [ "$result" -eq "3" ]; then
-    echo " * You require at least Airtime 1.8.0 installed for upgrade"
+    echo " * You require at least Airtime 1.8.0 installed for upgrade."
     exit 1
 fi
 
