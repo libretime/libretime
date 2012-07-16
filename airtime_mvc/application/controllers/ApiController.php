@@ -602,7 +602,7 @@ class ApiController extends Zend_Controller_Action
                     $file->setMetadata($md);
                 }
             }
-        } elseif ($mode == "modify") {
+        } else if ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -612,12 +612,11 @@ class ApiController extends Zend_Controller_Action
                 $this->view->error = "File does not exist in Airtime.";
 
                 return;
-            }
-            //Updating a metadata change.
-            else {
+            } else {
+                //Updating a metadata change.
                 $file->setMetadata($md);
             }
-        } elseif ($mode == "moved") {
+        } else if ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
@@ -630,7 +629,7 @@ class ApiController extends Zend_Controller_Action
                 //$filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
             }
-        } elseif ($mode == "delete") {
+        } else if ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -642,7 +641,7 @@ class ApiController extends Zend_Controller_Action
             } else {
                 $file->deleteByMediaMonitor();
             }
-        } elseif ($mode == "delete_dir") {
+        } else if ($mode == "delete_dir") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
@@ -791,8 +790,8 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         $params = $request->getParams();
-        $added_list = empty($params['added_dir'])?array():explode(',',$params['added_dir']);
-        $removed_list = empty($params['removed_dir'])?array():explode(',',$params['removed_dir']);
+        $added_list = empty($params['added_dir'])?array():explode(',', $params['added_dir']);
+        $removed_list = empty($params['removed_dir'])?array():explode(',', $params['removed_dir']);
 
         // get all watched dirs
         $watched_dirs = Application_Model_MusicDir::getWatchedDirs(null, null);
@@ -805,7 +804,7 @@ class ApiController extends Zend_Controller_Action
                 // if mount path itself was watched
                 if ($dirPath == $ad) {
                     Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                } elseif (substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
+                } else if (substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                     Application_Model_MusicDir::addWatchedDir($dirPath, false);
                 } elseif (substr($ad, 0, strlen($dirPath)) === $dirPath) {
@@ -837,11 +836,10 @@ class ApiController extends Zend_Controller_Action
                     $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
                     foreach ($files as $f) {
                         // if the file is from this mount
-                        if (substr( $f->getFilePath(),0,strlen($rd) ) === $rd) {
+                        if (substr($f->getFilePath(), 0, strlen($rd)) === $rd) {
                             $f->delete();
                         }
                     }
-
                     if ($watchDir) {
                         Application_Model_MusicDir::removeWatchedDir($rd, false);
                     }
