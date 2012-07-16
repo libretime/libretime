@@ -5,6 +5,7 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
+        $this->checkAuth();
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version', 'json')
@@ -66,8 +67,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function versionAction()
     {
-        $this->checkAuth();
-        
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -107,8 +106,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -182,8 +179,6 @@ class ApiController extends Zend_Controller_Action
     */
     function smartReadFile($location, $mimeType = 'audio/mp3')
     {
-        $this->checkAuth();
-        
         $size= filesize($location);
         $time= date('r', filemtime($location));
 
@@ -341,8 +336,6 @@ class ApiController extends Zend_Controller_Action
 
     public function scheduleAction()
     {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -353,8 +346,6 @@ class ApiController extends Zend_Controller_Action
 
     public function notifyMediaItemStartPlayAction()
     {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -367,8 +358,6 @@ class ApiController extends Zend_Controller_Action
 
     public function recordedShowsAction()
     {
-        $this->checkAuth();
-
         $today_timestamp = date("Y-m-d H:i:s");
         $now = new DateTime($today_timestamp);
         $end_timestamp = $now->add(new DateInterval("PT2H"));
@@ -392,8 +381,6 @@ class ApiController extends Zend_Controller_Action
 
     public function uploadFileAction()
     {
-        $this->checkAuth();
-
         $upload_dir = ini_get("upload_tmp_dir");
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
         $tempFileName = basename($tempFilePath);
@@ -408,8 +395,6 @@ class ApiController extends Zend_Controller_Action
 
     public function uploadRecordedAction()
     {
-        $this->checkAuth();
-
         //this file id is the recording for this show instance.
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
@@ -472,8 +457,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function mediaMonitorSetupAction() {
-        $this->checkAuth();
-
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -489,8 +472,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function reloadMetadataAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $mode = $request->getParam('mode');
@@ -585,8 +566,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function listAllFilesAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
 
@@ -594,8 +573,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function listAllWatchedDirsAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $result = array();
@@ -613,8 +590,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function addWatchedDirAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
         $path = base64_decode($request->getParam('path'));
 
@@ -622,8 +597,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function removeWatchedDirAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
         $path = base64_decode($request->getParam('path'));
 
@@ -631,8 +604,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function setStorageDirAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
         $path = base64_decode($request->getParam('path'));
 
@@ -640,8 +611,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function getStreamSettingAction() {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $info = Application_Model_StreamSetting::getStreamSetting();
@@ -649,8 +618,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function statusAction() {
-        $this->checkAuth();
-        
         $request = $this->getRequest();
         $getDiskInfo = $request->getParam('diskinfo') == "true";
 
@@ -719,8 +686,6 @@ class ApiController extends Zend_Controller_Action
 
     // handles addition/deletion of mount point which watched dirs reside
     public function updateFileSystemMountAction(){
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $params = $request->getParams();
@@ -786,8 +751,6 @@ class ApiController extends Zend_Controller_Action
     // handles case where watched dir is missing
     public function handleWatchedDirMissingAction()
     {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $dir = base64_decode($request->getParam('dir'));
@@ -799,8 +762,6 @@ class ApiController extends Zend_Controller_Action
      * out a message to pypo that a potential change has been made. */
     public function rabbitmqDoPushAction()
     {
-        $this->checkAuth();
-
         $request = $this->getRequest();
         Logging::log("Notifying RabbitMQ to send message to pypo");
 
@@ -823,8 +784,6 @@ class ApiController extends Zend_Controller_Action
     /* This is used but Liquidsoap to check authentication of live streams*/
     public function checkLiveStreamAuthAction()
     {
-        $this->checkAuth();
-
         $request = $this->getRequest();
 
         $username = $request->getParam('username');
@@ -887,8 +846,6 @@ class ApiController extends Zend_Controller_Action
      * out a message to pypo that a potential change has been made. */
     public function getFilesWithoutReplayGainAction()
     {
-        $this->checkAuth();
-        
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $dir_id = $this->_getParam('dir_id');
