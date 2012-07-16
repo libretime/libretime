@@ -111,31 +111,29 @@ function setSmartPlaylistEvents() {
     form.find('button[id="save_button"]').live("click", function(event){
         var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
             data = $('form').serializeArray(),
-            static_action = 'Playlist/smart-playlist-generate',
-            dynamic_action ='Playlist/smart-playlist-criteria-save',
-            action,
-            callback,
+            save_action = 'Playlist/smart-playlist-criteria-save',
+            playlist_id = $('input[id="pl_id"]').val();
+        
+        $.post(save_action, {format: "json", data: data, pl_id: playlist_id}, saveCallback);
+    });
+    
+    form.find('button[id="generate_button"]').live("click", function(event){
+        var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
+            data = $('form').serializeArray(),
+            generate_action = 'Playlist/smart-playlist-generate',
             playlist_id = $('input[id="pl_id"]').val();
 		
-        if (playlist_type == "0") {
-            action = static_action;
-            callback = staticCallback;
-        } else {
-            action = dynamic_action;
-            callback = dynamicCallback;
-        }
-        $.post(action, {format: "json", data: data, pl_id: playlist_id}, callback);
+        $.post(generate_action, {format: "json", data: data, pl_id: playlist_id}, generateCallback);
     });
 	
     form.find('dd[id="sp_type-element"]').live("change", function(){
-        var playlist_type = $('input:radio[name=sp_type]:checked').val(),
-            button_text;
+        var playlist_type = $('input:radio[name=sp_type]:checked').val();
         if (playlist_type == "0") {
-            button_text = 'Generate';
+            $('button[id="generate_button"]').show();
+        	
         } else {
-            button_text = 'Save';
-        }
-        $('button[id="save_button"]').text(button_text);    	
+            $('button[id="generate_button"]').hide();
+        }   	
     });
     
     form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
@@ -176,7 +174,7 @@ function disableAndHideExtraField(valEle, index) {
     spanExtra.children('#sp_criteria_extra_'+index).val("").attr("disabled", "disabled");
     spanExtra.hide();
     
-    //make value input larger because we don't have extra field now
+    //make value input larger since we don't have extra field now
     var criteria_value = $('#sp_criteria_value_'+index);
     sizeTextBoxes(criteria_value, 'sp_extra_input_text', 'sp_input_text');
 }
@@ -209,7 +207,7 @@ function populateModifierSelect(e) {
     }
 }
 
-function staticCallback(data) {
+function generateCallback(data) {
 	var form = $('#smart-playlist-form');
 	form.find('span[class="errors sp-errors"]').remove();
 	var json = $.parseJSON(data);
@@ -229,7 +227,7 @@ function staticCallback(data) {
     }
 }
 
-function dynamicCallback(json) {
+function saveCallback(json) {
 	var form = $('#smart-playlist-form');
 	form.find('span[class="errors sp-errors"]').remove();
 	var json = $.parseJSON(json);
@@ -247,8 +245,8 @@ function dynamicCallback(json) {
 }
 
 function appendAddButton(rows) {
-    var add_button = "<a class='ui-button sp-ui-button-icon-only' id='criteria_add' class='criteria_add'>" +
-    		"<span class='ui-icon ui-icon-plusthick'</span></a>";
+    var add_button = "<a class='ui-button sp-add sp-ui-button-icon-only' id='criteria_add' class='criteria_add'>" +
+                     "<span class='ui-icon ui-icon-plusthick'></span></a>";
 	
     if (rows.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
         rows.find('select[name^="sp_criteria_field"]:enabled:last')
@@ -256,7 +254,7 @@ function appendAddButton(rows) {
             .after(add_button);
     } else {
         rows.find('select[name^="sp_criteria_field"]:enabled')
-            .siblings('[name^="sp_criteria_value"]')
+            .siblings('input:last')
             .after(add_button);
     }
 }
