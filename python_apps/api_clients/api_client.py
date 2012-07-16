@@ -404,7 +404,6 @@ class AirTimeApiClient():
             response = None
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
-
         return response
 
     #returns a list of all db files for a given directory in JSON format:
