@@ -419,26 +419,6 @@ class ApiController extends Zend_Controller_Action
             $showCanceled = true;
         }
 
-        if (isset($show_name)) {
-
-            $show_name = str_replace(" ", "-", $show_name);
-
-            //2011-12-09-19-28-00-ofirrr-256kbps
-            $filename = $file->getName();
-
-            //replace the showname in the filepath incase it has been edited since the show started recording
-            //(some old bug)
-            $filename_parts = explode("-", $filename);
-            $new_name = array_slice($filename_parts, 0, 6);
-            $new_name[] = $show_name;
-            $new_name[] = $filename_parts[count($filename_parts)-1];
-
-            $tmpTitle = implode("-", $new_name);
-        } else {
-            $tmpTitle = $file->getName();
-        }
-
-        //$file->setMetadataValue('MDATA_KEY_TITLE', $tmpTitle);
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
