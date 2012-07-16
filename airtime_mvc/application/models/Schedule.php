@@ -32,6 +32,7 @@ class Application_Model_Schedule
     {
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
+            Logging::log("Invalid range parameters: $p_prev or $p_next");
             return array();
         }
 
@@ -49,7 +50,6 @@ class Application_Model_Schedule
             "schedulerTime"=>$timeNow,
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
             "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
-            //"current"=>$results['current'] !=null?$results['current']:(count($shows['currentShow'])>0?$shows['currentShow'][0]:null),
             "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],

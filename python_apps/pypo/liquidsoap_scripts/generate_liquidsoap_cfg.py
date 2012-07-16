@@ -1,6 +1,6 @@
 import logging
 import sys
-from api_clients import api_client
+from api_clients.api_client import AirtimeApiClient
 
 def generate_liquidsoap_config(ss):
     data = ss['msg']
@@ -9,22 +9,22 @@ def generate_liquidsoap_config(ss):
     fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
     fh.write("################################################\n")
     for d in data:
+
+        key = d['keyname']
+
         str_buffer = d[u'keyname'] + " = "
         if(d[u'type'] == 'string'):
-            temp = d[u'value']
-            str_buffer += '"%s"' % temp
+            val = '"%s"' % d['value']
         else:
-            temp = d[u'value']
-            if(temp == ""):
-                temp = "0"
-            str_buffer += temp
-        str_buffer += "\n"
-        fh.write(api_client.encode_to(str_buffer))
+            val = d[u'value']
+            val = val if len(val) > 0 else "0"
+        str_buffer = "%s = %s\n" % (key, val)
+        fh.write(str_buffer.encode('utf-8'))
     fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
 
 logging.basicConfig(format='%(message)s')
-ac = api_client(logging.getLogger())
+ac = AirtimeApiClient(logging.getLogger())
 ss = ac.get_stream_setting()
 
 if ss is not None:

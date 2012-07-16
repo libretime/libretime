@@ -1876,9 +1876,9 @@ class Application_Model_Show
 
     /**
      * Given a start time $timeStart and end time $timeEnd, returns the next $limit
-     * number of shows within the time interval;
-     * If $timeEnd not given, shows within next 48 hours from $timeStart are returned;
-     * If $limit not given, all shows within the intervals are returns;
+     * number of shows within the time interval
+     * If $timeEnd not given, shows within next 48 hours from $timeStart are returned
+     * If $limit not given, all shows within the intervals are returned
      * Times are all in UTC time.
      *
      * @param  String $timeStart - interval start time (in UTC)

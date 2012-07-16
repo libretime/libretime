@@ -1,7 +1,7 @@
 from api_clients import *
 import sys
 
-api_clients = api_client.AirTimeApiClient()
+api_clients = api_client.AirtimeApiClient()
 
 dj_type = sys.argv[1]
 username = sys.argv[2]

@@ -39,7 +39,7 @@ def convert_dict_value_to_utf8(md):
 # Airtime API Client
 ################################################################################
 
-class AirTimeApiClient():
+class AirtimeApiClient():
 
     def __init__(self, logger=None):
         if logger is None:
@@ -437,10 +437,14 @@ class AirTimeApiClient():
             response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
-            response = None
+            response = {}
             logger.error("Exception: %s", e)
 
-        return response
+        try:
+            return response["files"]
+        except KeyError:
+            self.logger.error("Could not find index 'files' in dictionary: %s", str(response))
+            return []
 
     def list_all_watched_dirs(self):
         logger = self.logger

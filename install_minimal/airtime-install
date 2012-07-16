@@ -107,12 +107,28 @@ echo "* Making sure /etc/default/locale is set properly"
 set +e
 update-locale
 cat /etc/default/locale | grep -i "LANG=.*UTF-\?8"
-set -e
 if [ "$?" != "0" ]; then
-    echo "non UTF-8 default locale found in /etc/default/locale."
+    echo -e " * Fail\n"
+    echo "A non UTF-8 default locale found in /etc/default/locale. Airtime requires
+a UTF-8 locale to run. To fix this please do the following:
+
+Ubuntu:
+Put line 'en_US.UTF-8 UTF-8' (or similar) without quotes to '/var/lib/locales/supported.d/local', 
+replacing any existing lines.
+A list of supported locales is available in '/usr/share/i18n/SUPPORTED'
+Then run 'sudo dpkg-reconfigure locales'
+
+Debian:
+Run 'sudo dpkg-reconfigure locales' and use the interface to select 'en_US.UTF-8 UTF-8' (or similar).
+On the second page select this new locale as the default.
+
+After these changes have been made simply run install again.
+
+Now exiting install...
+"
     exit 1
 fi
-
+set -e
 
 # Check if airtime exists already
 set +e
@@ -133,13 +149,14 @@ if [ "$result" -eq "0" ]; then
     rm -f "/etc/airtime/media-monitor.cfg"
     rm -f "/etc/airtime/pypo.cfg"
 elif [ "$result" -eq "1" -a "$reinstall" = "f" ]; then
-    echo " * Same version of Airtime already installed!"
-    exit 1;
+    echo " * Same version of Airtime already installed! Reusing database."
+    nodb='t'
+    overwrite='f'
 elif [ "$result" -eq "2" ]; then
-    echo " * Previous version of Airtime already installed..will perform upgrade"
+    echo " * Previous version of Airtime already installed..will perform upgrade."
     DO_UPGRADE="1"
 elif [ "$result" -eq "3" ]; then
-    echo " * You require at least Airtime 1.8.0 installed for upgrade"
+    echo " * You require at least Airtime 1.8.0 installed for upgrade."
     exit 1
 fi
 

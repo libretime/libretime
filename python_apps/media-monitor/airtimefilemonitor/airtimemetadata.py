@@ -12,8 +12,17 @@ import traceback
 
 """
 list of supported easy tags in mutagen version 1.20
-['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
+['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 
+'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 
+'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 
+'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 
+'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 
+'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 
+'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 
+'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 
+'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
+
 class AirtimeMetadata:
 
     def __init__(self):
@@ -57,10 +66,17 @@ class AirtimeMetadata:
         self.logger = logging.getLogger()
 
     def get_md5(self, filepath):
-        f = open(filepath, 'rb')
-        m = hashlib.md5()
-        m.update(f.read())
-        md5 = m.hexdigest()
+        """
+        Returns an md5 of the file located at filepath. Returns an empty string
+        if there was an error reading the file.
+        """
+        try:
+            f = open(filepath, 'rb')
+            m = hashlib.md5()
+            m.update(f.read())
+            md5 = m.hexdigest()
+        except Exception, e:
+            return ""
 
         return md5
 
@@ -121,6 +137,10 @@ class AirtimeMetadata:
                 return item
 
     def get_md_from_file(self, filepath):
+        """
+        Returns None if error retrieving metadata. Otherwise returns a dictionary
+        representing the file's metadata 
+        """
 
         self.logger.info("getting info from filepath %s", filepath)
 
@@ -136,7 +156,6 @@ class AirtimeMetadata:
             md['MDATA_KEY_MD5'] = md5
 
             file_info = mutagen.File(filepath, easy=True)
-
         except Exception, e:
             self.logger.error("failed getting metadata from %s", filepath)
             self.logger.error("Exception %s", e)
@@ -146,18 +165,16 @@ class AirtimeMetadata:
         #check if file has any metadata
         if file_info is None:
             return None
-        #check if file has any metadata
-        if file_info is not None:
-            for key in file_info.keys() :
-                if key in self.mutagen2airtime:
-                    val = file_info[key]
-                    try:
-                        if val is not None and len(val) > 0 and val[0] is not None and len(val[0]) > 0:
-                            md[self.mutagen2airtime[key]] = val[0]
-                    except Exception, e:
-                        self.logger.error('Exception: %s', e)
-                        self.logger.error("traceback: %s", traceback.format_exc())
 
+        for key in file_info.keys() :
+            if key in self.mutagen2airtime:
+                val = file_info[key]
+                try:
+                    if val is not None and len(val) > 0 and val[0] is not None and len(val[0]) > 0:
+                        md[self.mutagen2airtime[key]] = val[0]
+                except Exception, e:
+                    self.logger.error('Exception: %s', e)
+                    self.logger.error("traceback: %s", traceback.format_exc())
         if 'MDATA_KEY_TITLE' not in md:
             #get rid of file extension from original name, name might have more than 1 '.' in it.
             original_name = os.path.basename(filepath)
@@ -228,18 +245,24 @@ class AirtimeMetadata:
             md['MDATA_KEY_COPYRIGHT'] = self.truncate_to_length(md['MDATA_KEY_COPYRIGHT'], 512)
         #end of db truncation checks.
 
-        md['MDATA_KEY_BITRATE'] = getattr(file_info.info, "bitrate", None)
-        md['MDATA_KEY_SAMPLERATE'] = getattr(file_info.info, "sample_rate", None)
-        self.logger.info("Bitrate: %s , Samplerate: %s", md['MDATA_KEY_BITRATE'], md['MDATA_KEY_SAMPLERATE'])
-        try: md['MDATA_KEY_DURATION'] = self.format_length(file_info.info.length)
-        except Exception as e: self.logger.warn("File: '%s' raises: %s", filepath, str(e))
-
-        try: md['MDATA_KEY_MIME'] = file_info.mime[0]
-        except Exception as e: self.logger.warn("File: '%s' has no mime type", filepath, str(e))
+        try:
+            md['MDATA_KEY_BITRATE'] = getattr(file_info.info, "bitrate", 0)
+            md['MDATA_KEY_SAMPLERATE'] = getattr(file_info.info, "sample_rate", 0)
+            
+            md['MDATA_KEY_DURATION'] = self.format_length(getattr(file_info.info, "length", 0.0))
+            
+            md['MDATA_KEY_MIME'] = ""
+            if len(file_info.mime) > 0:
+                md['MDATA_KEY_MIME'] = file_info.mime[0]
+        except Exception as e:
+            self.logger.warn(e)
 
         if "mp3" in md['MDATA_KEY_MIME']:
             md['MDATA_KEY_FTYPE'] = "audioclip"
         elif "vorbis" in md['MDATA_KEY_MIME']:
             md['MDATA_KEY_FTYPE'] = "audioclip"
+        else:
+            self.logger.error("File %s of mime type %s does not appear to be a valid vorbis or mp3 file." % (filepath, md['MDATA_KEY_MIME']))
+            return None
 
         return md
