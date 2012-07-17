@@ -41,7 +41,7 @@ def convert_dict_value_to_utf8(md):
 
 class AirtimeApiClient():
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
         if logger is None:
             self.logger = logging
         else:
@@ -49,7 +49,7 @@ class AirtimeApiClient():
 
         # loading config file
         try:
-            self.config = ConfigObj('/etc/airtime/api_client.cfg')
+            self.config = ConfigObj(config_path)
         except Exception, e:
             self.logger.error('Error loading config file: %s', e)
             sys.exit(1)
@@ -366,7 +366,7 @@ class AirtimeApiClient():
 
         return response
 
-    def send_media_monitor_requests(self, action_list):
+    def send_media_monitor_requests(self, action_list, dry=False):
         """
         Send a gang of media monitor events at a time. actions_list is a list of dictionaries
         where every dictionary is representing an action. Every action dict must contain a 'mode'
@@ -402,6 +402,9 @@ class AirtimeApiClient():
             # parenthesis make the code almost unreadable
             md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) \
                     for i,md in enumerate(valid_actions))
+            # For testing we add the following "dry" parameter to tell the
+            # controller not to actually do any changes
+            if dry: md_list['dry'] = 1
             self.logger.info("Pumping out %d requests..." % len(valid_actions))
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
