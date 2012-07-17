@@ -456,8 +456,8 @@ class ApiController extends Zend_Controller_Action
                 // path already exist
                 if ($file->getFileExistsFlag()) {
                     // file marked as exists
-                    $this->view->error = "File already exists in Airtime.";
-                    return;
+                    # TODO : jsonify all the error messages mang
+                    return "File already exists in Airtime.";
                 } else {
                     // file marked as not exists
                     $file->setFileExistsFlag(true);
@@ -471,8 +471,7 @@ class ApiController extends Zend_Controller_Action
 
             //File is not in database anymore.
             if (is_null($file)) {
-                $this->view->error = "File does not exist in Airtime.";
-                return;
+                return "File does not exist in Airtime.";
             }
             //Updating a metadata change.
             else {
@@ -484,8 +483,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
-                $this->view->error = "File doesn't exist in Airtime.";
-                return;
+                return "File doesn't exist in Airtime.";
             }
             else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
@@ -499,8 +497,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $this->view->error = "File doesn't exist in Airtime.";
-                return;
+                return "File doesn't exist in Airtime.";
             }
             else {
                 $file->deleteByMediaMonitor();

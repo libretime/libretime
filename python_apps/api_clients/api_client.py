@@ -403,19 +403,6 @@ class AirtimeApiClient():
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
             response = json.loads(response)
-            # TODO : this request returns a more detailed response of what
-            # happened through a json array. Hence we should handle errors
-            # differently
-            # we would like to move all of this to the controller since we are
-            # not doing anything here
-            #if("error" not in response and is_record):
-                #url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"]) url = url.replace("%%fileid%%", str(response[u'id']))
-                #url = url.replace("%%showinstanceid%%", str(md_list['MDATA_KEY_TRACKNUMBER']))
-                #url = url.replace("%%api_key%%", self.config["api_key"])
-
-                #response = self.get_response_from_server(url)
-                #response = json.loads(response)
-                #logger.info("associate recorded %s", response)
             return response
         except Exception, e:
             logger.error('Exception: %s', e)
