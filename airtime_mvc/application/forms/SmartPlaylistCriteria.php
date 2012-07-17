@@ -226,6 +226,13 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $generate->setLabel('Generate');
         $generate->setDecorators(array('viewHelper'));
         $this->addElement($generate);
+        
+        $shuffle = new Zend_Form_Element_Button('shuffle_button');
+        $shuffle->setAttrib('class', 'ui-button ui-state-default right-floated');
+        $shuffle->setIgnore(true);
+        $shuffle->setLabel('Shuffle');
+        $shuffle->setDecorators(array('viewHelper'));
+        $this->addElement($shuffle);
     }
     
     

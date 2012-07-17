@@ -25,7 +25,8 @@
         
                 <?php echo $this->element->getElement('sp_criteria_field_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
-                <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?><span id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
+                <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
+                    <span id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
                 <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
                     <span class='ui-icon ui-icon-closethick'></span>
                 </a>
@@ -46,6 +47,7 @@
        <dd id='action_buttons'> 
            <?php echo $this->element->getElement('save_button') ?>
            <?php echo $this->element->getElement('generate_button') ?>
+           <?php echo $this->element->getElement('shuffle_button') ?>
        </dd>
         
 </dl>

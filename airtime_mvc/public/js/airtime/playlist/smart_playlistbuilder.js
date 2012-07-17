@@ -1,6 +1,5 @@
 $(document).ready(function() {
     setSmartPlaylistEvents();
-    setupUI();
 });
 
 function setSmartPlaylistEvents() {
@@ -111,7 +110,9 @@ function setSmartPlaylistEvents() {
             save_action = 'Playlist/smart-playlist-criteria-save',
             playlist_id = $('input[id="pl_id"]').val();
         
-        $.post(save_action, {format: "json", data: data, pl_id: playlist_id}, saveCallback);
+        $.post(save_action, {format: "json", data: data, pl_id: playlist_id}, function(data){
+            callback(data, "save");
+        });
     });
     
     form.find('button[id="generate_button"]').live("click", function(event){
@@ -120,7 +121,20 @@ function setSmartPlaylistEvents() {
             generate_action = 'Playlist/smart-playlist-generate',
             playlist_id = $('input[id="pl_id"]').val();
 		
-        $.post(generate_action, {format: "json", data: data, pl_id: playlist_id}, generateCallback);
+        $.post(generate_action, {format: "json", data: data, pl_id: playlist_id}, function(data){
+            callback(data, "generate");
+        });
+    });
+    
+    form.find('button[id="shuffle_button"]').live("click", function(event){
+        var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
+            data = $('form').serializeArray(),
+            shuffle_action = 'Playlist/smart-playlist-shuffle',
+            playlist_id = $('input[id="pl_id"]').val();
+		
+        $.post(shuffle_action, {format: "json", data: data, pl_id: playlist_id}, function(data){
+            callback(data, "shuffle");
+        });
     });
 	
     form.find('dd[id="sp_type-element"]').live("change", function(){
@@ -148,6 +162,7 @@ function setSmartPlaylistEvents() {
         }
     });
     
+    setupUI();
     appendAddButton();
     removeButtonCheck();
 }
@@ -156,10 +171,12 @@ function setupUI() {
     var playlist_type = $('input:radio[name=sp_type]:checked').val();
     if (playlist_type == "0") {
         $('button[id="generate_button"]').show();
+        $('button[id="shuffle_button"]').show();
         $('#spl_sortable').unblock();
         $('#library_content').unblock();
     } else {
         $('button[id="generate_button"]').hide();
+        $('button[id="shuffle_button"]').hide();
         $('#spl_sortable').block({
             message: "",
             theme: true,
@@ -217,10 +234,42 @@ function populateModifierSelect(e) {
     }
 }
 
-function generateCallback(data) {
-    var form = $('#smart-playlist-form');
+function callback(data, type) {
+    var form = $('#smart-playlist-form'),
+    json = $.parseJSON(data);
+
     form.find('span[class="errors sp-errors"]').remove();
-    var json = $.parseJSON(data);
+	
+    if (json.result == "1") {
+        form.find('.success').hide();
+        $.each(json.errors, function(index, error){
+            $.each(error.msg, function(index, message){
+                $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
+            });
+        });
+    } else {
+        if (type == 'shuffle' || type == 'generate') {
+            AIRTIME.playlist.fnOpenPlaylist(json);
+            form = $('#smart-playlist-form');
+            if (type == 'shuffle') {
+                form.find('.success').text('Playlist shuffled');
+            } else {
+            	form.find('.success').text('Smart playlist generated');
+            }
+    	    form.find('.success').show();
+    	    form.find('#smart_playlist_options').removeClass("closed");
+        } else {
+            form.find('.success').text('Criteria saved');
+            form.find('.success').show();
+        }
+    }
+}
+
+/*function generateCallback(data) {
+    var form = $('#smart-playlist-form'),
+        json = $.parseJSON(data);
+    
+    form.find('span[class="errors sp-errors"]').remove();
     
     if (json.result == "1") {
         form.find('.success').hide();
@@ -231,6 +280,7 @@ function generateCallback(data) {
         });
     } else {
         AIRTIME.playlist.fnOpenPlaylist(json);
+        form = $('#smart-playlist-form')
         form.find('.success').text('Smart playlist generated');
         form.find('.success').show();
         form.find('#smart_playlist_options').removeClass("closed");
@@ -238,9 +288,11 @@ function generateCallback(data) {
 }
 
 function saveCallback(json) {
-	var form = $('#smart-playlist-form');
+	var form = $('#smart-playlist-form'),
+	    json = $.parseJSON(json);
+
 	form.find('span[class="errors sp-errors"]').remove();
-	var json = $.parseJSON(json);
+	
 	if (json.result == "1") {
 		form.find('.success').hide();
         $.each(json.errors, function(index, error){
@@ -252,7 +304,7 @@ function saveCallback(json) {
     	form.find('.success').text('Criteria saved');
         form.find('.success').show();
     }
-}
+}*/
 
 function appendAddButton() {
     var rows = $('#smart-playlist-form');
