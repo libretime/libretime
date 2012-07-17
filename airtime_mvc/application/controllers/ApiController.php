@@ -566,7 +566,6 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            // TODO : remove the $dry_run parameter after finished testing
             $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=$dry);
             // We attack the 'key' back to every request in case the would like to associate
             // his requests with particular responses
