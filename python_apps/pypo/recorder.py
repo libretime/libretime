@@ -134,6 +134,9 @@ class ShowRecorder(Thread):
         try:
             date = self.start_time
             md = date.split(" ")
+            # TODO : rename 'time' variable to something better so that there
+            # is no naming conflicts with the time module that is being
+            # imported
             time = md[1].replace(":", "-")
             self.logger.info("time: %s" % time)
 
