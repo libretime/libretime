@@ -285,7 +285,9 @@ class ApiController extends Zend_Controller_Action
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
 
             header("Content-type: text/javascript");
-            echo $_GET['callback'].'('.json_encode($result).')';
+            
+            // If a callback is not given, then just provide the raw JSON. 
+            echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource. ';
@@ -318,7 +320,9 @@ class ApiController extends Zend_Controller_Action
             }
         $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
-            echo $_GET['callback'].'('.json_encode($result).')';
+            
+            // If a callback is not given, then just provide the raw JSON. 
+            echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
             print 'You are not allowed to access this resource. ';
@@ -726,7 +730,7 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         $component = $request->getParam('component');
-        $remoteAddr = $_SERVER['REMOTE_ADDR'];
+        $remoteAddr = Application_Model_ServiceRegister::GetRemoteIpAddr();
         Logging::log("Registered Component: ".$component."@".$remoteAddr);
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
