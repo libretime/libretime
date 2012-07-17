@@ -447,7 +447,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetaDataAction($md, $mode, $dryrun=false) 
+    public function dispatchMetadataAction($md, $mode, $dry_run=false) 
     { 
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
@@ -540,13 +540,18 @@ class ApiController extends Zend_Controller_Action
         // The value is a json encoded hash that has all the information related to this action
         // The key does not have any meaning as of yet but it could potentially correspond
         // to some unique id.
+        Logging::log("Entering controller, mang");
         $responses = array();
         foreach ($request->getParams() as $k => $raw_json) {
             $info_json = json_decode($raw_json, $assoc=true);
+            if( !array_key_exists('mode', $info_json) ) {
+                Logging::log("Received bad request, no 'mode' parameter");
+                Logging::log( $info_json );
+                continue;
+            }
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            // TODO : uncomment the following line to actually do something
-            $response = $this->dispatchMetaDataAction($info_json, $info_json['mode']);
+            $response = $this->dispatchMetadataAction($info_json, $info_json['mode'], $dry_run=true);
             array_push($responses, $response);
             // Like wise, remove the following line when done
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
