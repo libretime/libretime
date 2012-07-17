@@ -6,11 +6,21 @@ set("log.stdout", true)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
 
+#Dynamic source list
+dyn_sources = ref []
+
 time = ref string_of(gettimeofday())
 
 queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
 queue = cue_cut(queue)
 queue = amplify(1., override="replay_gain", queue)
+
+#fallback between queue and input.harbor (for restreaming other web-streams)
+#live stream setup
+set("harbor.bind_addr", "0.0.0.0")
+
+#TODO: Need to create a randomized password for every instance
+web_stream = input.harbor("test-harbor",port=8999,password="hackme")
 
 pypo_data = ref '0'
 web_stream_enabled = ref false
@@ -35,6 +45,8 @@ queue = map_metadata(append_title, queue)
 queue = crossfade(queue)
 ignore(output.dummy(queue, fallible=true))
 
+queue = fallback([web_stream, queue])
+
 server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)
 server.register(namespace="vars", "web_stream_enabled", fun (s) -> begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
 server.register(namespace="vars", "stream_metadata_type", fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
@@ -43,7 +55,16 @@ server.register(namespace="vars", "station_name", fun (s) -> begin station_name 
 server.register(namespace="vars", "bootup_time", fun (s) -> begin time := s s end)
 server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
 server.register(namespace="vars", "default_dj_fade", fun (s) -> begin default_dj_fade := float_of_string(s) s end)
-
+server.register(namespace="dynamic_source",
+                description="Start a new dynamic source.",
+                usage="start <uri>",
+                "start",
+                create_dynamic_source)
+server.register(namespace="dynamic_source",
+                description="Stop a dynamic source.",
+                usage="stop <uri>",
+                "stop",
+                destroy_dynamic_source)
 
 default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
@@ -77,9 +98,6 @@ end
 def make_scheduled_play_unavailable()
         scheduled_play_enabled := false
 end
-
-#live stream setup
-set("harbor.bind_addr", "0.0.0.0")
 
 def update_source_status(sourcename, status) =
     system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &")
@@ -120,13 +138,8 @@ def check_dj_client(user,password) =
         #get the output of the php script
         ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
         #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
-        ret = list.hd(ret)
-        #return true to let the client transmit data, or false to tell harbor to decline
-        if (ret == "True") then
-            true
-        else
-            false
-        end
+        hd = list.hd(ret)
+        hd == "True"
 end
 
 def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
