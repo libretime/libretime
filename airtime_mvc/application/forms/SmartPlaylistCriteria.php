@@ -96,14 +96,25 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
               'criteriasLength' => count($criteriaOptions)))
         ));
         
+        // load type
+        $c = new Criteria();
+        $c->add(CcPlaylistPeer::ID, $p_playlistId);
+        $out = CcPlaylistPeer::doSelect($c);
+        
+        if ($out[0]->getDbType() == "static") {
+            $playlistType = 0;
+        } else {
+            $playlistType = 1;
+        }
+        
         $spType = new Zend_Form_Element_Radio('sp_type');
-        $spType->setLabel('Set smart playlist type:');
-        $spType->setDecorators(array('viewHelper'));
-        $spType->setMultiOptions(array(
-            'static' => 'Static',
-            'dynamic' => 'Dynamic'
-        ));
-        $spType->setValue('Static');
+        $spType->setLabel('Set smart playlist type:')
+               ->setDecorators(array('viewHelper'))
+               ->setMultiOptions(array(
+                    'static' => 'Static',
+                    'dynamic' => 'Dynamic'
+                ))
+               ->setValue($playlistType);
         $this->addElement($spType);
         
         // load criteria from db

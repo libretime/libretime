@@ -874,6 +874,14 @@ class Application_Model_Playlist {
         $result = 0;
         $errors = array();
         $error = array();
+        
+        // saving dynamic/static flag
+        $playlistType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
+        $playlistCrit = new Criteria();
+        $playlistCrit->add(CcPlaylistPeer::ID, $p_playlistId);
+        $playlistCrit->add(CcPlaylistPeer::TYPE, $playlistType);
+        CcPlaylistPeer::doUpdate($playlistCrit);
+        
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
         }
@@ -967,13 +975,13 @@ class Application_Model_Playlist {
      * tracks.
      * @param array $p_criteria
      */
-    public static function generateSmartPlaylist($p_criteria, $p_playlistId)
+    public static function generateSmartPlaylist($p_criteria, $p_playlistId, $returnList=false)
     {
         $result = self::saveSmartPlaylistCriteria($p_criteria, $p_playlistId);
         if ($result['result'] != 0) {
             return $result;
         } else {
-            $info = self::getListofFilesMeetCriteria($p_playlistId);
+            /*$info = self::getListofFilesMeetCriteria($p_playlistId);
             $files = $info['files'];
             $limit = $info['limit'];
             // construct ids of track candidates
@@ -989,10 +997,33 @@ class Application_Model_Playlist {
                 if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
                      break;
                 } 
-            }
+            }*/
+            $insertList = self::getListOfFilesUnderLimit($p_playlistId);
+            $playlist = new self($p_playlistId);
             $playlist->addAudioClips(array_keys($insertList));
             return array("result"=>0, "ids"=>array_keys($insertList));
         }
+    }
+    
+    public static function getListOfFilesUnderLimit($p_playlistId)
+    {
+        $info = self::getListofFilesMeetCriteria($p_playlistId);
+        $files = $info['files'];
+        $limit = $info['limit'];
+        // construct ids of track candidates
+        self::deleteAllFilesFromPlaylist($p_playlistId);
+        $insertList = array();
+        $totalTime = 0;
+        while ($totalTime < $limit['time'] && !empty($files)) {
+            $key = array_rand($files);
+            $insertList[$key] = $files[$key];
+            $totalTime += $files[$key];
+            unset($files[$key]);
+            if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
+                break;
+            }
+        }
+        return $insertList;
     }
     
     // this function return list of propel object

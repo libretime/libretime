@@ -1,7 +1,7 @@
 $(document).ready(function() {
     setSmartPlaylistEvents();
-    var form = $('#smart-playlist-form');
-    appendAddButton(form);
+    /*var form = $('#smart-playlist-form');
+    appendAddButton(form);*/
 });
 
 function setSmartPlaylistEvents() {
@@ -158,7 +158,8 @@ function setSmartPlaylistEvents() {
             disableAndHideExtraField(criteria_value, index_num);
         }
     });
-	
+    
+    appendAddButton(form);
 }
 
 function enableAndShowExtraField(valEle, index) {
@@ -222,7 +223,6 @@ function staticCallback(data) {
         });
     } else {
         AIRTIME.playlist.fnOpenPlaylist(json);
-        var form = $('#smart-playlist-form');
         form.find('.success').text('Smart playlist generated');
         form.find('.success').show();
         form.find('#smart_playlist_options').removeClass("closed");
