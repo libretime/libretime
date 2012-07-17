@@ -394,11 +394,15 @@ class AirtimeApiClient():
                     # matter what it is based on if it's absent in the action
                     if 'is_record' in action:
                         self.logger.debug("Sending a 'recorded' action")
-                        action['is_record'] = True
-                    else: action['is_record'] = False
+                        action['is_record'] = 1
+                    else: action['is_record'] = 0
                     valid_actions.append(action)
             # Note that we must prefix every key with: mdX where x is a number
-            md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
+            # Is there a way to format the next line a little better? The
+            # parenthesis make the code almost unreadable
+            md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) \
+                    for i,md in enumerate(valid_actions))
+            self.logger.info("Pumping out %d requests..." % len(valid_actions))
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
