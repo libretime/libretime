@@ -42,7 +42,7 @@ def getDateTimeObj(time):
     # - perhaps validate the input before doing dangerous casts?
     # - rename this function to follow the standard convention
     # - rename time to something else so that the module name does not get
-    # shadowed
+    #   shadowed
     # - add docstring to document all behaviour of this function
     timeinfo = time.split(" ")
     date = [ int(x) for x in timeinfo[0].split("-") ]
