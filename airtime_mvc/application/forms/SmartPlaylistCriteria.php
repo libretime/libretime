@@ -216,8 +216,16 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $save = new Zend_Form_Element_Button('save_button');
         $save->setAttrib('class', 'ui-button ui-state-default right-floated');
         $save->setIgnore(true);
-        $save->setLabel('Generate');
+        $save->setLabel('Save');
+        $save->setDecorators(array('viewHelper'));
         $this->addElement($save);
+        
+        $generate = new Zend_Form_Element_Button('generate_button');
+        $generate->setAttrib('class', 'ui-button ui-state-default right-floated');
+        $generate->setIgnore(true);
+        $generate->setLabel('Generate');
+        $generate->setDecorators(array('viewHelper'));
+        $this->addElement($generate);
     }
     
     

@@ -439,8 +439,12 @@ input.input_text.sp_extra_input_text{
 	left: 50%;
 }
 
-.sp-add .sp-ui-button-icon-only .ui-icon{
-    left: 90% !important;
+.sp-add.sp-ui-button-icon-only .ui-icon{
+    margin-left: 20px !important;
+}
+
+.sp-ui-button-icon-only .ui-icon-closethick:hover, .sp-ui-button-icon-only .ui-icon-plusthick:hover {
+    background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png)
 }
 
 label {
