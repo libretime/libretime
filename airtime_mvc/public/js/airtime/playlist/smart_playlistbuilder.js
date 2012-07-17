@@ -1,23 +1,22 @@
 $(document).ready(function() {
     setSmartPlaylistEvents();
-    /*var form = $('#smart-playlist-form');
-    appendAddButton(form);*/
+    setupUI();
 });
 
 function setSmartPlaylistEvents() {
     var form = $('#smart-playlist-form');
     
-    form.find('a[id="criteria_add"]').live("click", function(){
-        var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next(),
-            add_button = $(this);
+    form.find('.criteria_add').live("click", function(){
+        var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
         
         div.show();
-        div.find('a[id^="criteria_remove"]').after(add_button);
         div.children().removeAttr('disabled');
         div = div.next();
         if (div.length === 0) {
             $(this).hide();
         }
+        appendAddButton();
+        removeButtonCheck();
     });
 	
     form.find('a[id^="criteria_remove"]').live("click", function(){
@@ -95,17 +94,15 @@ function setSmartPlaylistEvents() {
                     .find('[name^="sp_criteria_modifier"]').val(0).end()
                     .find('[name^="sp_criteria_value"]').val('');
         
-        if (item_to_hide.children().hasClass('criteria_add')) {
-        	item_to_hide.find('.criteria_add').remove();
-        }
-        
         sizeTextBoxes(item_to_hide.find('[name^="sp_criteria_value"]'), 'sp_extra_input_text', 'sp_input_text');
         item_to_hide.hide();
 
         list.next().show();
         
-        // always put 'add' button on the last row
-        appendAddButton(list);
+        // always put '+' button on the last enabled row
+        appendAddButton();
+        // remove the 'x' button if only one row is enabled
+        removeButtonCheck();
     });
 	
     form.find('button[id="save_button"]').live("click", function(event){
@@ -127,13 +124,7 @@ function setSmartPlaylistEvents() {
     });
 	
     form.find('dd[id="sp_type-element"]').live("change", function(){
-        var playlist_type = $('input:radio[name=sp_type]:checked').val();
-        if (playlist_type == "0") {
-            $('button[id="generate_button"]').show();
-        	
-        } else {
-            $('button[id="generate_button"]').hide();
-        }   	
+        setupUI();  	
     });
     
     form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
@@ -157,7 +148,24 @@ function setSmartPlaylistEvents() {
         }
     });
     
-    appendAddButton(form);
+    appendAddButton();
+    removeButtonCheck();
+}
+
+function setupUI() {
+    var playlist_type = $('input:radio[name=sp_type]:checked').val();
+    if (playlist_type == "0") {
+        $('button[id="generate_button"]').show();
+        $('#spl_sortable').unblock();
+        $('#library_content').unblock();
+    } else {
+        $('button[id="generate_button"]').hide();
+        $('#spl_sortable').block({
+            message: "",
+            theme: true,
+            applyPlatformOpacityRules: false
+        });
+    }
 }
 
 function enableAndShowExtraField(valEle, index) {
@@ -181,6 +189,7 @@ function disableAndHideExtraField(valEle, index) {
 }
 
 function sizeTextBoxes(ele, classToRemove, classToAdd) {
+    var form = $('#smart-playlist-form');
     if (ele.hasClass(classToRemove)) {
         ele.removeClass(classToRemove).addClass(classToAdd);
     }
@@ -209,12 +218,13 @@ function populateModifierSelect(e) {
 }
 
 function generateCallback(data) {
-	var form = $('#smart-playlist-form');
-	form.find('span[class="errors sp-errors"]').remove();
-	var json = $.parseJSON(data);
-	if (json.result == "1") {
-		form.find('.success').hide();
-	    $.each(json.errors, function(index, error){
+    var form = $('#smart-playlist-form');
+    form.find('span[class="errors sp-errors"]').remove();
+    var json = $.parseJSON(data);
+    
+    if (json.result == "1") {
+        form.find('.success').hide();
+        $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
             });
@@ -244,18 +254,33 @@ function saveCallback(json) {
     }
 }
 
-function appendAddButton(rows) {
-    var add_button = "<a class='ui-button sp-add sp-ui-button-icon-only' id='criteria_add' class='criteria_add'>" +
+function appendAddButton() {
+    var rows = $('#smart-playlist-form');
+    var add_button = "<a class='ui-button sp-add sp-ui-button-icon-only criteria_add'>" +
                      "<span class='ui-icon ui-icon-plusthick'></span></a>";
-	
+
+    rows.find('.criteria_add').remove();
+    
     if (rows.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
         rows.find('select[name^="sp_criteria_field"]:enabled:last')
             .siblings('a[id^="criteria_remove"]')
             .after(add_button);
     } else {
         rows.find('select[name^="sp_criteria_field"]:enabled')
-            .siblings('input:last')
+            .siblings('span[id="extra_criteria"]')
             .after(add_button);
+    }
+}
+
+function removeButtonCheck() {
+    var rows = $('#smart-playlist-form');
+	
+    if (rows.find('select[name^="sp_criteria_field"]:enabled').length == 1) {
+        rows.find('a[id="criteria_remove_0"]').attr('disabled', 'disabled');
+        rows.find('a[id="criteria_remove_0"]').hide();
+    } else {
+        rows.find('a[id="criteria_remove_0"]').removeAttr('disabled');
+        rows.find('a[id="criteria_remove_0"]').show(); 
     }
 }
 

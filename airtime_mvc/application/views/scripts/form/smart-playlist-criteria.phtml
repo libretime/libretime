@@ -26,11 +26,9 @@
                 <?php echo $this->element->getElement('sp_criteria_field_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?><span id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
-                <?php if ($i != 0) { ?>
-                    <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
-                        <span class='ui-icon ui-icon-closethick'></span>
-                    </a>
-                <?php } ?>
+                <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
+                    <span class='ui-icon ui-icon-closethick'></span>
+                </a>
                 <br />
             </div>
             

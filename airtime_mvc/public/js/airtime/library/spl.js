@@ -320,8 +320,12 @@ var AIRTIME = (function(AIRTIME){
 			.append(json.html);
 				
 		setUpPlaylist();
-        var form = $('#smart-playlist-form');
-        appendAddButton(form);
+		
+        // functions in smart_playlistbuilder.js
+        setupUI();
+        appendAddButton();
+        removeButtonCheck();
+        
 	}
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
