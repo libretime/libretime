@@ -543,8 +543,8 @@ class ApiController extends Zend_Controller_Action
         // to some unique id.
         $responses = array();
         $params = $request->getParams();
-        die( json_encode($params) );
         foreach ($request->getParams() as $k => $raw_json) {
+            // Valid requests must start with mdXXX where XXX represents at least 1 digit
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
             if( !array_key_exists('mode', $info_json) ) {
@@ -553,12 +553,11 @@ class ApiController extends Zend_Controller_Action
                 array_push( $responses, array('error' => "Bad request. no 'mode' parameter passed.") );
                 continue;
             }
-            Logging::log("we got here mang");
-            die( json_encode('damn straight') );
+            // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
             // TODO : remove the $dry_run parameter after finished testing
-            $response = $this->dispatchMetadataAction($info_json, $info_json['mode'], $dry_run=true);
+            $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=true);
             array_push($responses, $response);
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
             // was usually called from the python api. Now we just call it straight from the controller to 
@@ -566,8 +565,6 @@ class ApiController extends Zend_Controller_Action
             if( $info_json['is_record'] and !array_key_exists('error', $response) ) {
                 $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid']);
             }
-            // TODO : Remove this line when done debugging
-            Logging::log( $info_json );
         }
         die( json_encode($responses) );
     }
