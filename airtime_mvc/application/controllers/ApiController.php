@@ -535,7 +535,7 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         // extract all file metadata params from the request.
         // The value is a json encoded hash that has all the information related to this action
-        // The key does not have any meaning as of yet but it could potentially correspond
+        // The key(mdXXX) does not have any meaning as of yet but it could potentially correspond
         // to some unique id.
         $responses = array();
         $params = $request->getParams();
@@ -544,9 +544,11 @@ class ApiController extends Zend_Controller_Action
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
             if( !array_key_exists('mode', $info_json) ) {
-                Logging::log("Received bad request, no 'mode' parameter. Bad request is:");
+                Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::log( $info_json );
-                array_push( $responses, array('error' => "Bad request. no 'mode' parameter passed.") );
+                array_push( $responses, array(
+                    'error' => "Bad request. no 'mode' parameter passed.",
+                    'key' => $k));
                 continue;
             }
             // Removing 'mode' key from $info_json might not be necessary...
@@ -554,6 +556,9 @@ class ApiController extends Zend_Controller_Action
             unset( $info_json['mode'] );
             // TODO : remove the $dry_run parameter after finished testing
             $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=true);
+            // We attack the 'key' back to every request in case the would like to associate
+            // his requests with particular responses
+            $response['key'] = $k;
             array_push($responses, $response);
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
             // was usually called from the python api. Now we just call it straight from the controller to 
