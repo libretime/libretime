@@ -539,16 +539,27 @@ class ApiController extends Zend_Controller_Action
         // to some unique id.
         $responses = array();
         $params = $request->getParams();
+        $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
         foreach ($request->getParams() as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at least 1 digit
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
-            if( !array_key_exists('mode', $info_json) ) {
+            if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
                 Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::log( $info_json );
                 array_push( $responses, array(
                     'error' => "Bad request. no 'mode' parameter passed.",
                     'key' => $k));
+                continue;
+            } elseif ( !in_array($info_json['mode'], $valid_modes) )  {
+                // A request still has a chance of being invalid even if it exists but it's validated
+                // by $valid_modes array
+                $mode = $info_json['mode'];
+                Logging::log("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'");
+                array_push( $responses, array(
+                    'error' => "Bad request. 'mode' parameter is invalid",
+                    'key' => $k,
+                    'mode' => $mode ) );
                 continue;
             }
             // Removing 'mode' key from $info_json might not be necessary...
