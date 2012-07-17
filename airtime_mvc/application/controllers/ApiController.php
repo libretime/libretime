@@ -447,8 +447,17 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetaDataAction($md, $mode) 
+    public function dispatchMetaDataAction($md, $mode, $dryrun=false) 
     { 
+        // Replace this compound result in a hash with proper error handling later on
+        $return_hash = array();
+        if ( $dry_run ) { // for debugging we return garbage not to screw around with the db
+            return array(
+                'md' => $md,
+                'mode' => $mode,
+                'fileid' => 123456
+            );
+        }
         Application_Model_Preference::SetImportTimestamp();
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
@@ -460,8 +469,8 @@ class ApiController extends Zend_Controller_Action
                 // path already exist
                 if ($file->getFileExistsFlag()) {
                     // file marked as exists
-                    # TODO : jsonify all the error messages mang
-                    return "File already exists in Airtime.";
+                    $return_hash['error'] =  "File already exists in Airtime.";
+                    return $return_hash;
                 } else {
                     // file marked as not exists
                     $file->setFileExistsFlag(true);
@@ -475,7 +484,8 @@ class ApiController extends Zend_Controller_Action
 
             //File is not in database anymore.
             if (is_null($file)) {
-                return "File does not exist in Airtime.";
+                $return_hash['error'] = "File does not exist in Airtime.";
+                return $return_hash;
             }
             //Updating a metadata change.
             else {
@@ -501,7 +511,8 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                return "File doesn't exist in Airtime.";
+                $return_hash['error'] =  "File doesn't exist in Airtime.";
+                return $return_hash;
             }
             else {
                 $file->deleteByMediaMonitor();
@@ -515,9 +526,11 @@ class ApiController extends Zend_Controller_Action
             foreach($files as $file){
                 $file->deleteByMediaMonitor();
             }
-            return;
+            $return_hash['success'] = 1;
+            return $return_hash;
         }
-        return $file->getId();
+        $return_hash['fileid'] = $file->getId();
+        return $return_hash;
     } 
 
     public function reloadMetadataGroupAction()
@@ -534,7 +547,7 @@ class ApiController extends Zend_Controller_Action
             unset( $info_json['mode'] );
             // TODO : uncomment the following line to actually do something
             $response = $this->dispatchMetaDataAction($info_json, $info_json['mode']);
-            array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
+            array_push($responses, $response);
             // Like wise, remove the following line when done
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
             // was usually called from the python api
