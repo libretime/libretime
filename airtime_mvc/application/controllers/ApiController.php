@@ -542,30 +542,34 @@ class ApiController extends Zend_Controller_Action
         // The key does not have any meaning as of yet but it could potentially correspond
         // to some unique id.
         $responses = array();
+        $params = $request->getParams();
+        die( json_encode($params) );
         foreach ($request->getParams() as $k => $raw_json) {
+            if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
             if( !array_key_exists('mode', $info_json) ) {
                 Logging::log("Received bad request, no 'mode' parameter. Bad request is:");
                 Logging::log( $info_json );
+                array_push( $responses, array('error' => "Bad request. no 'mode' parameter passed.") );
                 continue;
             }
+            Logging::log("we got here mang");
+            die( json_encode('damn straight') );
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
             // TODO : remove the $dry_run parameter after finished testing
             $response = $this->dispatchMetadataAction($info_json, $info_json['mode'], $dry_run=true);
             array_push($responses, $response);
-            // Like wise, remove the following line when done
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
-            // was usually called from the python api
-            if( $info_json['is_record'] ) {
-                // TODO : must check for error in $response before proceeding...
+            // was usually called from the python api. Now we just call it straight from the controller to 
+            // save the http roundtrip
+            if( $info_json['is_record'] and !array_key_exists('error', $response) ) {
                 $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid']);
             }
             // TODO : Remove this line when done debugging
             Logging::log( $info_json );
-
         }
-        die(json_encode( array('successes' => 19, 'fails' => 123) ));
+        die( json_encode($responses) );
     }
 
     public function reloadMetadataAction()

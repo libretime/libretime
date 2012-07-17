@@ -397,8 +397,8 @@ class AirtimeApiClient():
                         action['is_record'] = True
                     else: action['is_record'] = False
                     valid_actions.append(action)
-
-            md_list = dict((i, json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
+            # Note that we must prefix every key with: mdX where x is a number
+            md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
