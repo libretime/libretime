@@ -145,32 +145,50 @@ class Application_Model_Scheduler
 
                 $files[] = $data;
             }
-        } elseif ($type === "playlist") {
-
-            $contents = CcPlaylistcontentsQuery::create()
-                ->orderByDbPosition()
-                ->filterByDbPlaylistId($id)
-                ->find($this->con);
+        }
+        else if ($type === "playlist") {
+            
+            // find if the playslit is static or dynamic
+            $c = new Criteria();
+            $c->add(CcPlaylistPeer::ID, $id);
+            $pl = CcPlaylistPeer::doSelect($c);
+            $playlistType = $pl[0]->getDbType();
+            
+            if ($playlistType == "static") {
+                $contents = CcPlaylistcontentsQuery::create()
+                    ->orderByDbPosition()
+                    ->filterByDbPlaylistId($id)
+                    ->find($this->con);
+            } else {
+                $pl = new Application_Model_Playlist($id);
+                $contents = $pl->getListOfFilesUnderLimit();
+            }
 
             if (is_null($contents)) {
                 throw new Exception("A selected Playlist does not exist!");
             }
 
-            foreach ($contents as $plItem) {
-
-                $file = $plItem->getCcFiles($this->con);
-                if (isset($file) && $file->getDbFileExists()) {
-
-                    $data = $this->fileInfo;
-                    $data["id"] = $plItem->getDbFileId();
-                    $data["cliplength"] = $plItem->getDbCliplength();
-                    $data["cuein"] = $plItem->getDbCuein();
-                    $data["cueout"] = $plItem->getDbCueout();
-                    $data["fadein"] = $plItem->getDbFadein();
-                    $data["fadeout"] = $plItem->getDbFadeout();
-
-                    $files[] = $data;
+            foreach ($contents as $fileId => $plItem) {
+                $data = $this->fileInfo;
+                if ($playlistType == "static"){
+                    $file = $plItem->getCcFiles($this->con);
+                    if (isset($file) && $file->getDbFileExists()) {
+                        $data["id"] = $plItem->getDbFileId();
+                        $data["cliplength"] = $plItem->getDbCliplength();
+                        $data["cuein"] = $plItem->getDbCuein();
+                        $data["cueout"] = $plItem->getDbCueout();
+                        $data["fadein"] = $plItem->getDbFadein();
+                        $data["fadeout"] = $plItem->getDbFadeout();
+                    }   
+                } else {
+                    // on dynamic playslsit, $fileId is id of files
+                    $file = Application_Model_StoredFile::Recall($fileId)->getPropelOrm();
+                    if (isset($file) && $file->getDbFileExists()) {
+                        $data["id"] = $fileId;
+                        $data["cliplength"] = $file->getDbLength();
+                    }
                 }
+                $files[] = $data;
             }
         }
 

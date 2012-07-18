@@ -45,6 +45,7 @@ class CcPlaylistTableMap extends TableMap {
 		$this->addForeignKey('CREATOR_ID', 'DbCreatorId', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', false, 512, null);
 		$this->addColumn('LENGTH', 'DbLength', 'VARCHAR', false, null, '00:00:00');
+		$this->addColumn('TYPE', 'DbType', 'VARCHAR', false, 7, 'static');
 		// validators
 	} // initialize()
 
@@ -55,6 +56,7 @@ class CcPlaylistTableMap extends TableMap {
 	{
     $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('creator_id' => 'id', ), null, null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'playlist_id', ), 'CASCADE', null);
+    $this->addRelation('CcPlaylistcriteria', 'CcPlaylistcriteria', RelationMap::ONE_TO_MANY, array('id' => 'playlist_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 	/**

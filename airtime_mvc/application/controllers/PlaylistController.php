@@ -22,6 +22,9 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('set-playlist-description', 'json')
                     ->addActionContext('playlist-preview', 'json')
                     ->addActionContext('get-playlist', 'json')
+                    ->addActionContext('smart-playlist-criteria-save', 'json')
+                    ->addActionContext('smart-playlist-generate', 'json')
+                    ->addActionContext('smart-playlist-shuffle', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -67,18 +70,32 @@ class PlaylistController extends Zend_Controller_Action
         unset($this->view->pl);
     }
 
-    private function createFullResponse($pl = null)
+    private function createFullResponse($pl = null, $isJson = false)
     {
         if (isset($pl)) {
             $formatter = new LengthFormatter($pl->getLength());
             $this->view->length = $formatter->format();
+            
+            $form = new Application_Form_SmartPlaylistCriteria();
+            $form->removeDecorator('DtDdWrapper');
+            $form->startForm($pl->getId());
+            $this->view->form = $form;
 
             $this->view->pl = $pl;
             $this->view->id = $pl->getId();
-            $this->view->html = $this->view->render('playlist/playlist.phtml');
+            if ($isJson){
+                return $this->view->render('playlist/playlist.phtml');
+            }else{
+                $this->view->html = $this->view->render('playlist/playlist.phtml');
+            }
             unset($this->view->pl);
-        } else {
-            $this->view->html = $this->view->render('playlist/playlist.phtml');
+        }
+        else {
+            if ($isJson){
+                return $this->view->render('playlist/playlist.phtml');
+            }else{
+                $this->view->html = $this->view->render('playlist/playlist.phtml');
+            }
         }
     }
 
@@ -87,6 +104,12 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->error = $e->getMessage();
     }
 
+    private function playlistDynamic($pl)
+    {
+        $this->view->error = "You cannot add tracks to dynamic playlist.";
+        $this->createFullResponse($pl);
+    }
+    
     private function playlistNotFound()
     {
         $this->view->error = "Playlist not found";
@@ -136,6 +159,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_playlistbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
@@ -147,6 +171,9 @@ class PlaylistController extends Zend_Controller_Action
                 
                 if($isAdminOrPM || $pl->getCreatorId() == $userInfo->id){
                     $this->view->pl = $pl;
+                    $form = new Application_Form_SmartPlaylistCriteria();
+                    $form->startForm($this->pl_sess->id);
+                    $this->view->form = $form;
                 }
 
                 $formatter = new LengthFormatter($pl->getLength());
@@ -176,6 +203,8 @@ class PlaylistController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id', null);
         Logging::log("editing playlist {$id}");
+        //$form = new Application_Form_SmartPlaylistCriteria();
+            
 
         if (!is_null($id)) {
             $this->changePlaylist($id);
@@ -230,16 +259,26 @@ class PlaylistController extends Zend_Controller_Action
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
         $addType = $this->_getParam('type', 'after');
-
+        
         try {
             $pl = $this->getPlaylist();
-            $pl->addAudioClips($ids, $afterItem, $addType);
-            $this->createUpdateResponse($pl);
-        } catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($e);
-        } catch (PlaylistNotFoundException $e) {
+            if ($pl->isStatic()) {
+                $pl->addAudioClips($ids, $afterItem, $addType);
+                $this->createUpdateResponse($pl);
+            } else {
+                throw new PlaylistDyanmicException;
+            }
+        }
+        catch (PlaylistOutDatedException $e) {
+            $this->playlistOutdated($pl, $e);
+        }
+        catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
-        } catch (Exception $e) {
+        }
+        catch (PlaylistDyanmicException $e) {
+            $this->playlistDynamic($pl);
+        }
+        catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }
@@ -407,6 +446,57 @@ class PlaylistController extends Zend_Controller_Action
             $this->playlistNotFound();
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
+        }
+    }
+    
+    public function smartPlaylistCriteriaSaveAction()
+    {
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        $pl = new Application_Model_Playlist($params['pl_id']);
+        $result = $pl->saveSmartPlaylistCriteria($params['data']);
+        die(json_encode($result));
+    }
+    
+    public function smartPlaylistGenerateAction()
+    {
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        $pl = new Application_Model_Playlist($params['pl_id']);
+        $result = $pl->generateSmartPlaylist($params['data']);
+        if ($result['result'] == 0) {
+            try {
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+            }
+            catch (PlaylistNotFoundException $e) {
+                $this->playlistNotFound();
+            }
+            catch (Exception $e) {
+                $this->playlistUnknownError($e);
+            }
+        }else{
+            die(json_encode($result));
+        }
+    }
+    
+    public function smartPlaylistShuffleAction()
+    {
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        $pl = new Application_Model_Playlist($params['pl_id']);
+        $result = $pl->shuffleSmartPlaylist();
+        if ($result['result'] == 0) {
+            try {
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+            }
+            catch (PlaylistNotFoundException $e) {
+                $this->playlistNotFound();
+            }
+            catch (Exception $e) {
+                $this->playlistUnknownError($e);
+            }
+        }else{
+            die(json_encode($result));
         }
     }
 }
