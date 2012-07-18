@@ -1,35 +1,11 @@
 $(document).ready(function() {
     setSmartPlaylistEvents();
-    
-    $(".playlist_type_help_icon").qtip({
-        content: {
-            text: "A static playlist will save the criteria and generate the playlist content immediately." +
-                  "This allows you to edit and view it in the Playlist Builder before adding it to a show.<br /><br />" +
-                  "A dynamic playlist will only save the criteria. The playlist content will get generated upon " +
-                  "adding it to a show. You will not be able to view and edit it in the Playlist Builder."
-        },
-        hide: {
-            delay: 500,
-            fixed: true
-        },
-        style: {
-            border: {
-                width: 0,
-                radius: 4
-            },
-            classes: "ui-tooltip-dark ui-tooltip-rounded"
-        },
-        position: {
-            my: "left bottom",
-            at: "right center"
-        },
-    })
 });
 
 function setSmartPlaylistEvents() {
     var form = $('#smart-playlist-form');
     
-    form.find('.criteria_add').live("click", function(){
+    form.find('.criteria_add').live('click', function(){
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
         
         div.show();
@@ -42,7 +18,7 @@ function setSmartPlaylistEvents() {
         removeButtonCheck();
     });
 	
-    form.find('a[id^="criteria_remove"]').live("click", function(){
+    form.find('a[id^="criteria_remove"]').live('click', function(){
         var curr = $(this).parent();
         var curr_pos = curr.index();
         var list = curr.parent();
@@ -207,6 +183,30 @@ function setupUI() {
             applyPlatformOpacityRules: false
         });
     }
+    
+    $(".playlist_type_help_icon").qtip({
+        content: {
+            text: "A static playlist will save the criteria and generate the playlist content immediately." +
+                  "This allows you to edit and view it in the Playlist Builder before adding it to a show.<br /><br />" +
+                  "A dynamic playlist will only save the criteria. The playlist content will get generated upon " +
+                  "adding it to a show. You will not be able to view and edit it in the Playlist Builder."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    });
 }
 
 function enableAndShowExtraField(valEle, index) {

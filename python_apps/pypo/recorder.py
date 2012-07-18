@@ -20,7 +20,14 @@ from threading import Thread
 
 import mutagen
 
-from api_clients import api_client
+from api_clients import api_client as apc
+
+def api_client(logger):
+    """
+    api_client returns the correct instance of AirtimeApiClient. Although there is only one
+    instance to choose from at the moment.
+    """
+    return apc.AirtimeApiClient(logger)
 
 # loading config file
 try:
@@ -30,14 +37,17 @@ except Exception, e:
     sys.exit()
 
 def getDateTimeObj(time):
+    # TODO : clean up for this function later.
+    # - use tuples to parse result from split (instead of indices)
+    # - perhaps validate the input before doing dangerous casts?
+    # - rename this function to follow the standard convention
+    # - rename time to something else so that the module name does not get
+    # shadowed
+    # - add docstring to document all behaviour of this function
     timeinfo = time.split(" ")
-    date = timeinfo[0].split("-")
-    time = timeinfo[1].split(":")
-
-    date = map(int, date)
-    time = map(int, time)
-
-    return datetime.datetime(date[0], date[1], date[2], time[0], time[1], time[2], 0, None)
+    date = [ int(x) for x in timeinfo[0].split("-") ]
+    my_time = [ int(x) for x in timeinfo[1].split(":") ]
+    return datetime.datetime(date[0], date[1], date[2], my_time[0], my_time[1], my_time[2], 0, None)
 
 PUSH_INTERVAL = 2
 
