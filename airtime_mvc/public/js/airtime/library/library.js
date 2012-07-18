@@ -60,7 +60,7 @@ var AIRTIME = (function(AIRTIME) {
                 count++;
             }
         }
-        
+        visibleChosenItems = {};
         return count;
     };
     
@@ -123,7 +123,7 @@ var AIRTIME = (function(AIRTIME) {
                 data.push(visibleChosenItems[id]);
             }
         }
-        
+        visibleChosenItems = {};
         return data;
     };
     
@@ -441,7 +441,6 @@ var AIRTIME = (function(AIRTIME) {
                         $tr = $(el).parent();
                         data = $tr.data("aData");
                         AIRTIME.library.dblClickAdd(data.id, data.ftype);
-                        //AIRTIME.playlist.fnAddItems([data.id], undefined, 'after');
                     }
                     else
                     {

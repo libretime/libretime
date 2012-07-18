@@ -69,6 +69,13 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	protected $length;
 
 	/**
+	 * The value for the type field.
+	 * Note: this column has a database default value of: 'static'
+	 * @var        string
+	 */
+	protected $type;
+
+	/**
 	 * @var        CcSubjs
 	 */
 	protected $aCcSubjs;
@@ -77,6 +84,11 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @var        array CcPlaylistcontents[] Collection to store aggregation of CcPlaylistcontents objects.
 	 */
 	protected $collCcPlaylistcontentss;
+
+	/**
+	 * @var        array CcPlaylistcriteria[] Collection to store aggregation of CcPlaylistcriteria objects.
+	 */
+	protected $collCcPlaylistcriterias;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -102,6 +114,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	{
 		$this->name = '';
 		$this->length = '00:00:00';
+		$this->type = 'static';
 	}
 
 	/**
@@ -228,6 +241,16 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	public function getDbLength()
 	{
 		return $this->length;
+	}
+
+	/**
+	 * Get the [type] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbType()
+	{
+		return $this->type;
 	}
 
 	/**
@@ -433,6 +456,26 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	} // setDbLength()
 
 	/**
+	 * Set the value of [type] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcPlaylist The current object (for fluent API support)
+	 */
+	public function setDbType($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->type !== $v || $this->isNew()) {
+			$this->type = $v;
+			$this->modifiedColumns[] = CcPlaylistPeer::TYPE;
+		}
+
+		return $this;
+	} // setDbType()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -447,6 +490,10 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			}
 
 			if ($this->length !== '00:00:00') {
+				return false;
+			}
+
+			if ($this->type !== 'static') {
 				return false;
 			}
 
@@ -479,6 +526,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$this->creator_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
 			$this->description = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
 			$this->length = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->type = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -487,7 +535,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 7; // 7 = CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 8; // 8 = CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlaylist object", $e);
@@ -554,6 +602,8 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 
 			$this->aCcSubjs = null;
 			$this->collCcPlaylistcontentss = null;
+
+			$this->collCcPlaylistcriterias = null;
 
 		} // if (deep)
 	}
@@ -708,6 +758,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcPlaylistcriterias !== null) {
+				foreach ($this->collCcPlaylistcriterias as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -799,6 +857,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 					}
 				}
 
+				if ($this->collCcPlaylistcriterias !== null) {
+					foreach ($this->collCcPlaylistcriterias as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
 
 			$this->alreadyInValidation = false;
 		}
@@ -853,6 +919,9 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			case 6:
 				return $this->getDbLength();
 				break;
+			case 7:
+				return $this->getDbType();
+				break;
 			default:
 				return null;
 				break;
@@ -884,6 +953,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$keys[4] => $this->getDbCreatorId(),
 			$keys[5] => $this->getDbDescription(),
 			$keys[6] => $this->getDbLength(),
+			$keys[7] => $this->getDbType(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -941,6 +1011,9 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			case 6:
 				$this->setDbLength($value);
 				break;
+			case 7:
+				$this->setDbType($value);
+				break;
 		} // switch()
 	}
 
@@ -972,6 +1045,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if (array_key_exists($keys[4], $arr)) $this->setDbCreatorId($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setDbDescription($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setDbLength($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbType($arr[$keys[7]]);
 	}
 
 	/**
@@ -990,6 +1064,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcPlaylistPeer::CREATOR_ID)) $criteria->add(CcPlaylistPeer::CREATOR_ID, $this->creator_id);
 		if ($this->isColumnModified(CcPlaylistPeer::DESCRIPTION)) $criteria->add(CcPlaylistPeer::DESCRIPTION, $this->description);
 		if ($this->isColumnModified(CcPlaylistPeer::LENGTH)) $criteria->add(CcPlaylistPeer::LENGTH, $this->length);
+		if ($this->isColumnModified(CcPlaylistPeer::TYPE)) $criteria->add(CcPlaylistPeer::TYPE, $this->type);
 
 		return $criteria;
 	}
@@ -1057,6 +1132,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		$copyObj->setDbCreatorId($this->creator_id);
 		$copyObj->setDbDescription($this->description);
 		$copyObj->setDbLength($this->length);
+		$copyObj->setDbType($this->type);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1066,6 +1142,12 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			foreach ($this->getCcPlaylistcontentss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcPlaylistcontents($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcPlaylistcriterias() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcPlaylistcriteria($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1298,6 +1380,115 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcPlaylistcriterias collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcPlaylistcriterias()
+	 */
+	public function clearCcPlaylistcriterias()
+	{
+		$this->collCcPlaylistcriterias = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcPlaylistcriterias collection.
+	 *
+	 * By default this just sets the collCcPlaylistcriterias collection to an empty array (like clearcollCcPlaylistcriterias());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcPlaylistcriterias()
+	{
+		$this->collCcPlaylistcriterias = new PropelObjectCollection();
+		$this->collCcPlaylistcriterias->setModel('CcPlaylistcriteria');
+	}
+
+	/**
+	 * Gets an array of CcPlaylistcriteria objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcPlaylist is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcPlaylistcriteria[] List of CcPlaylistcriteria objects
+	 * @throws     PropelException
+	 */
+	public function getCcPlaylistcriterias($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcPlaylistcriterias || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcPlaylistcriterias) {
+				// return empty collection
+				$this->initCcPlaylistcriterias();
+			} else {
+				$collCcPlaylistcriterias = CcPlaylistcriteriaQuery::create(null, $criteria)
+					->filterByCcPlaylist($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcPlaylistcriterias;
+				}
+				$this->collCcPlaylistcriterias = $collCcPlaylistcriterias;
+			}
+		}
+		return $this->collCcPlaylistcriterias;
+	}
+
+	/**
+	 * Returns the number of related CcPlaylistcriteria objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcPlaylistcriteria objects.
+	 * @throws     PropelException
+	 */
+	public function countCcPlaylistcriterias(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcPlaylistcriterias || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcPlaylistcriterias) {
+				return 0;
+			} else {
+				$query = CcPlaylistcriteriaQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcPlaylist($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcPlaylistcriterias);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcPlaylistcriteria object to this object
+	 * through the CcPlaylistcriteria foreign key attribute.
+	 *
+	 * @param      CcPlaylistcriteria $l CcPlaylistcriteria
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcPlaylistcriteria(CcPlaylistcriteria $l)
+	{
+		if ($this->collCcPlaylistcriterias === null) {
+			$this->initCcPlaylistcriterias();
+		}
+		if (!$this->collCcPlaylistcriterias->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcPlaylistcriterias[]= $l;
+			$l->setCcPlaylist($this);
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1309,6 +1500,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		$this->creator_id = null;
 		$this->description = null;
 		$this->length = null;
+		$this->type = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -1335,9 +1527,15 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcPlaylistcriterias) {
+				foreach ((array) $this->collCcPlaylistcriterias as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
 		$this->collCcPlaylistcontentss = null;
+		$this->collCcPlaylistcriterias = null;
 		$this->aCcSubjs = null;
 	}
 

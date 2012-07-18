@@ -93,7 +93,7 @@ select {
 }
 /* Version Notification Ends*/
 
-.override_help_icon, .icecast_metadata_help_icon  {
+.override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
         
@@ -104,7 +104,7 @@ select {
         line-height:16px !important;
 }
 
-.airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon {
+.airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon, .playlist_type_help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
@@ -416,6 +416,50 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     padding: 2px 2px 2px 0;
     vertical-align: top;
 }
+
+/***** SMART PLAYLIST SPECIFIC STYLES BEGIN *****/
+.sp_input_select{
+    width: 130px;
+}
+
+.sp_input_text_limit{
+    width: 75px !important;
+}
+
+input.input_text.sp_input_text{
+    width: 200px !important;
+}
+
+input.input_text.sp_extra_input_text{
+    width: 87px !important;
+}
+
+.sp_text_font{
+    font-size:13px;
+    font-family:Helvetica, Arial, sans-serif;
+    color: #5B5B5B;
+}
+
+.sp-ui-button-icon-only {
+	position: relative;
+	top: 5px;
+	margin-top: -10px;
+	margin-left: 5px;
+}
+
+.sp-ui-button-icon-only .ui-icon-closethick:hover, .sp-ui-button-icon-only .ui-icon-plusthick:hover {
+    background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png)
+}
+
+.sp-button{
+    float: right !important;
+    width: 60px;
+    height: 24px !important;
+    margin-right: 0px !important;
+    margin-left: 10px !important;
+}
+/***** SMART PLAYLIST SPECIFIC STYLES END *****/
+
 label {
 	font-size:13px;
 	color:#5b5b5b;
@@ -1409,13 +1453,18 @@ div.success{
 	border:1px solid #488214;
 }
 
-div.errors{
+div.errors, span.errors{
 	color:#902d2d;
 	font-size:11px;
     padding:2px 4px;
     background:#c6b4b4;
     margin-bottom:2px;
     border:1px solid #c83f3f;
+}
+
+span.errors.sp-errors{
+    width: 466px;
+    display: block;	
 }
 
 .collapsible-header, .collapsible-header-disabled {

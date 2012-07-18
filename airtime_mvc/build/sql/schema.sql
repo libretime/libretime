@@ -301,6 +301,7 @@ CREATE TABLE "cc_playlist"
 	"creator_id" INTEGER,
 	"description" VARCHAR(512),
 	"length" interval default '00:00:00',
+	"type" VARCHAR(7) default 'static',
 	PRIMARY KEY ("id")
 );
 
@@ -330,6 +331,28 @@ CREATE TABLE "cc_playlistcontents"
 );
 
 COMMENT ON TABLE "cc_playlistcontents" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_playlistcriteria
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_playlistcriteria" CASCADE;
+
+
+CREATE TABLE "cc_playlistcriteria"
+(
+	"id" serial  NOT NULL,
+	"criteria" VARCHAR(16)  NOT NULL,
+	"modifier" VARCHAR(16)  NOT NULL,
+	"value" VARCHAR(32)  NOT NULL,
+	"extra" VARCHAR(32),
+	"playlist_id" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_playlistcriteria" IS '';
 
 
 SET search_path TO public;
@@ -605,6 +628,8 @@ ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KE
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_playlistcriteria" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
