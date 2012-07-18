@@ -2,6 +2,7 @@
 from kombu.messaging import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
 import json
+import copy
 
 from media.monitor.log import Loggable
 
@@ -63,15 +64,25 @@ class AirtimeMessageReceiver(Loggable):
     def message(self, msg):
         """
         This method is called by an AirtimeNotifier instance that consumes the Rabbit MQ events
-        that trigger this.
+        that trigger this. The method return true when the event was executed and false when it
+        wasn't
         """
+        msg = copy.deepcopy(msg)
         if msg['event_type'] in self.dispatch_table:
-            # Perhaps we should get rid of the event_type key?
-            self.logger.info("Handling RabbitMQ message: '%s'" % msg['event_type'])
-            self.dispatch_table['event_type'](msg)
+            evt = msg['event_type']
+            del msg['event_type']
+            self.logger.info("Handling RabbitMQ message: '%s'" % evt)
+            self.execute_message(evt,msg)
+            return True
         else:
             self.logger.info("Received invalid message with 'event_type': '%s'" % msg['event_type'])
             self.logger.info("Message details: %s" % str(msg))
+            return False
+    def execute_message(self,evt,message):
+        self.dispatch_table[evt](message)
+
+    def supported_messages(self):
+        return self.dispatch_table.keys()
 
     # Handler methods - Should either fire the events directly with
     # pydispatcher or do the necessary changes on the filesystem that will fire
