@@ -61,6 +61,10 @@ class AirtimeMessageReceiver(Loggable):
         }
         self.cfg = cfg
     def message(self, msg):
+        """
+        This method is called by an AirtimeNotifier instance that consumes the Rabbit MQ events
+        that trigger this.
+        """
         if msg['event_type'] in self.dispatch_table:
             # Perhaps we should get rid of the event_type key?
             self.logger.info("Handling RabbitMQ message: '%s'" % msg['event_type'])
@@ -69,7 +73,9 @@ class AirtimeMessageReceiver(Loggable):
             self.logger.info("Received invalid message with 'event_type': '%s'" % msg['event_type'])
             self.logger.info("Message details: %s" % str(msg))
 
-    # Handler methods
+    # Handler methods - Should either fire the events directly with
+    # pydispatcher or do the necessary changes on the filesystem that will fire
+    # the events
     def md_update(self, msg):
         pass
     def new_watch(self, msg):
