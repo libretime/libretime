@@ -25,7 +25,6 @@ export PYTHONPATH=${api_client_path}:$PYTHONPATH
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 export TERM=xterm
 
-# Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
-exec python -u ${pypo_path}${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1
+exec python ${pypo_path}${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1
 
 # EOF
