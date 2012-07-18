@@ -1,11 +1,12 @@
 <form id="smart-playlist-form" method="post" action="">
-<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='smart_playlist_options' style='overflow-x:auto; width:781px'>
+<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='smart_playlist_options'>
 <legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Playlist Options</legend>
     <dl class='zend_form'>
         <div id='sp-success' class='success' style='display:none'></div>
         <dd id='sp_type-element' class='radio-inline-list'>
-        <label for='sp_type'>            
+        <label for='sp_type'>
             <?php echo $this->element->getElement('sp_type')->getLabel() ?>
+            <span class='playlist_type_help_icon'></span>
             <?php $i=0;
                   $value = $this->element->getElement('sp_type')->getValue();
                   foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
@@ -14,6 +15,9 @@
                       </input>
             <?php $i = $i + 1; ?>
             <?php endforeach; ?>
+            <?php echo $this->element->getElement('save_button') ?>
+            <?php echo $this->element->getElement('generate_button') ?>
+            <?php echo $this->element->getElement('shuffle_button') ?>
         </label>
         </dd>
         
@@ -26,7 +30,7 @@
                 <?php echo $this->element->getElement('sp_criteria_field_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
                 <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
-                    <span id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
+                    <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
                 <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
                     <span class='ui-icon ui-icon-closethick'></span>
                 </a>
@@ -38,17 +42,10 @@
         </dd>
         
         <dd id='sp_limit-element'>
-            <label>
-                <?php echo $this->element->getElement('sp_limit_value')->getLabel() ?>
-                <?php echo $this->element->getElement('sp_limit_value')?>
-                <?php echo $this->element->getElement('sp_limit_options') ?>
-            </label>
+            <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></span>
+            <?php echo $this->element->getElement('sp_limit_value')?>
+            <?php echo $this->element->getElement('sp_limit_options') ?>
         </dd>
-       <dd id='action_buttons'> 
-           <?php echo $this->element->getElement('save_button') ?>
-           <?php echo $this->element->getElement('generate_button') ?>
-           <?php echo $this->element->getElement('shuffle_button') ?>
-       </dd>
         
 </dl>
 </fieldset>

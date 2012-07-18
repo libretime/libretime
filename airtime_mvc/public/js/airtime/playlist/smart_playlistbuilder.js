@@ -1,5 +1,29 @@
 $(document).ready(function() {
     setSmartPlaylistEvents();
+    
+    $(".playlist_type_help_icon").qtip({
+        content: {
+            text: "A static playlist will save the criteria and generate the playlist content immediately." +
+                  "This allows you to edit and view it in the Playlist Builder before adding it to a show.<br /><br />" +
+                  "A dynamic playlist will only save the criteria. The playlist content will get generated upon " +
+                  "adding it to a show. You will not be able to view and edit it in the Playlist Builder."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    })
 });
 
 function setSmartPlaylistEvents() {
@@ -171,7 +195,7 @@ function setupUI() {
     var playlist_type = $('input:radio[name=sp_type]:checked').val();
     if (playlist_type == "0") {
         $('button[id="generate_button"]').show();
-        $('button[id="shuffle_button"]').show();
+        $('button[id="shuffle_button"]').show();        
         $('#spl_sortable').unblock();
         $('#spl_sortable').css("position", "static");
     } else {
@@ -262,53 +286,19 @@ function callback(data, type) {
             form.find('.success').text('Criteria saved');
             form.find('.success').show();
         }
+        setTimeout('removeSuccessMsg()', 5000);
     }
 }
 
-/*function generateCallback(data) {
-    var form = $('#smart-playlist-form'),
-        json = $.parseJSON(data);
-    
-    form.find('span[class="errors sp-errors"]').remove();
-    
-    if (json.result == "1") {
-        form.find('.success').hide();
-        $.each(json.errors, function(index, error){
-            $.each(error.msg, function(index, message){
-                $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
-            });
-        });
-    } else {
-        AIRTIME.playlist.fnOpenPlaylist(json);
-        form = $('#smart-playlist-form')
-        form.find('.success').text('Smart playlist generated');
-        form.find('.success').show();
-        form.find('#smart_playlist_options').removeClass("closed");
-    }
+function removeSuccessMsg() {
+    var form = $('#smart-playlist-form');
+    form.find('.success').text('');
+    form.find('.success').hide();
 }
-
-function saveCallback(json) {
-	var form = $('#smart-playlist-form'),
-	    json = $.parseJSON(json);
-
-	form.find('span[class="errors sp-errors"]').remove();
-	
-	if (json.result == "1") {
-		form.find('.success').hide();
-        $.each(json.errors, function(index, error){
-            $.each(error.msg, function(index, message){
-                $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
-            });
-        });
-    } else {
-    	form.find('.success').text('Criteria saved');
-        form.find('.success').show();
-    }
-}*/
 
 function appendAddButton() {
     var rows = $('#smart-playlist-form');
-    var add_button = "<a class='ui-button sp-add sp-ui-button-icon-only criteria_add'>" +
+    var add_button = "<a class='ui-button sp-ui-button-icon-only criteria_add'>" +
                      "<span class='ui-icon ui-icon-plusthick'></span></a>";
 
     rows.find('.criteria_add').remove();
