@@ -9,12 +9,12 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $criteriaOptions = array(
             0 => "Select criteria",
             "album_title" => "Album",
-            "artist_name" => "Artist",
             "bit_rate" => "Bit Rate",
             "bpm" => "Bpm",
             "comments" => "Comments",
             "composer" => "Composer",
             "conductor" => "Conductor",
+            "artist_name" => "Creator",
             "disc_number" => "Disc Number",
             "genre" => "Genre",
             "isrc_number" => "ISRC",
