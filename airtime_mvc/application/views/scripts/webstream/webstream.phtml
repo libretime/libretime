@@ -1,0 +1,43 @@
+<button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
+<?php if (isset($this->ws)) : ?>
+    <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
+<?php endif; ?>
+
+<?php if (isset($this->ws)) : ?>
+    <input id="ws_id" type="hidden" value="<?php echo $this->ws->getId(); ?>"></input>
+    <input id="pl_lastMod" type="hidden" value="<?php echo $this->ws->getLastModified('U'); ?>"></input>
+    <div class="playlist_title">
+        <h3 id="ws_name">
+            <a id="playlist_name_display" contenteditable="true"><?php echo $this->ws->getName(); ?></a>
+        </h3>
+        <h4 id="ws_length"><?php echo $this->ws->getDefaultLength(); ?></h4>
+    </div>
+
+    <fieldset class="toggle closed" id="fieldset-metadate_change">
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
+        <dl class="zend_form">
+            <dt id="description-label"><label for="description">Description</label></dt>
+            <dd id="description-element">
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->ws->getDescription(); ?></textarea>
+            </dd>
+         <dt id="submit-label" style="display: none;">&nbsp;</dt>
+         <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
+         <dd id="streamurl-element">
+             <input type="text" value="http://"/>
+         </dd>
+         <dt id="length-label"><label for="length">Default Length:</label></dt>
+         <dd id="length-element">
+             <input type="text" value="00h 20m"/>
+         </dd>        
+         <dd id="submit-element" class="buttons">
+            <input class="ui-button ui-state-default" type="submit" value="Cancel" id="description_cancel" name="cancel">
+            <input class="ui-button ui-state-default" type="submit" value="Save" id="description_save" name="submit">
+        </dd>
+       </dl>
+    </fieldset>
+
+
+
+<?php else : ?>
+    <div>No webstream</div>
+<?php endif; ?>

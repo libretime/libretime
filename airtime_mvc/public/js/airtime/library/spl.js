@@ -616,7 +616,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	mod.fnNew = function() {
-		var url = '/Playlist/new';
+		var url = '/Webstream/new';
 
 		stopAudioPreview();
 		
