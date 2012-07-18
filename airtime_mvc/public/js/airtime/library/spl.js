@@ -674,6 +674,7 @@ var AIRTIME = (function(AIRTIME){
     	//Block UI changes the postion to relative to display the messages.
     	$lib.css("position", "static");
     	$pl.css("position", "static");
+    	setupUI();
     };
     
     function playlistResponse(json){	

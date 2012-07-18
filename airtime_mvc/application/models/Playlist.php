@@ -59,32 +59,32 @@ class Application_Model_Playlist {
     
     private static $criteria2PeerMap = array(
             0 => "Select criteria",
-            "album_title" => CcFilesPeer::ALBUM_TITLE,
-            "artist_name" => CcFilesPeer::ARTIST_NAME,
-            "bit_rate" => CcFilesPeer::BIT_RATE,
-            "bpm" => CcFilesPeer::BPM,
-            "comments" => CcFilesPeer::COMMENTS,
-            "composer" => CcFilesPeer::COMPOSER,
-            "conductor" => CcFilesPeer::CONDUCTOR,
-            "utime" => CcFilesPeer::UTIME,
-            "mtime" => CcFilesPeer::MTIME,
-            "disc_number" => CcFilesPeer::DISC_NUMBER,
-            "genre" => CcFilesPeer::GENRE,
-            "isrc_number" => CcFilesPeer::ISRC_NUMBER,
-            "label" => CcFilesPeer::LABEL,
-            "language" => CcFilesPeer::LANGUAGE,
-            "length" => CcFilesPeer::LENGTH,
-            "lyricist" => CcFilesPeer::LYRICIST,
-            "mood" => CcFilesPeer::MOOD,
-            "name" => CcFilesPeer::NAME,
-            "orchestra" => CcFilesPeer::ORCHESTRA,
-            "radio_station_name" => CcFilesPeer::RADIO_STATION_NAME,
-            "rating" => CcFilesPeer::RATING,
-            "sample_rate" => CcFilesPeer::SAMPLE_RATE,
-            "soundcloud_id" => CcFilesPeer::SOUNDCLOUD_ID,
-            "track_title" => CcFilesPeer::TRACK_TITLE,
-            "track_num" => CcFilesPeer::TRACK_NUMBER,
-            "year" => CcFilesPeer::YEAR
+            "album_title" => "DbAlbumTitle",
+            "artist_name" => "DbArtistName",
+            "bit_rate" => "DbBitRate",
+            "bpm" => "DbBpm",
+            "comments" => "DbComments",
+            "composer" => "DbComposer",
+            "conductor" => "DbConductor",
+            "utime" => "DbUtime",
+            "mtime" => "DbMtime",
+            "disc_number" => "DbDiscNumber",
+            "genre" => "DbGenre",
+            "isrc_number" => "DbIsrcNumber",
+            "label" => "DbLabel",
+            "language" => "DbLanguage",
+            "length" => "DbLength",
+            "lyricist" => "DbLyricist",
+            "mood" => "DbMood",
+            "name" => "DbName",
+            "orchestra" => "DbOrchestra",
+            "radio_station_name" => "DbRadioStation",
+            "rating" => "DbRating",
+            "sample_rate" => "DbSampleRate",
+            "soundcloud_id" => "DbSoundcloudId",
+            "track_title" => "DbTrackTitle",
+            "track_num" => "DbTrackNum",
+            "year" => "DbYear"
     );
 
 
@@ -290,6 +290,14 @@ class Application_Model_Playlist {
         }
         else {
             throw new Exception("trying to add a file that does not exist.");
+        }
+    }
+    
+    public function isStatic(){
+        if ($this->pl->getDbType() == "static") {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -852,20 +860,43 @@ class Application_Model_Playlist {
      * Delete all files from playlist
      * @param int $p_playlistId
      */
-    public static function deleteAllFilesFromPlaylist($p_playlistId)
+    public function deleteAllFilesFromPlaylist()
     {
-        CcPlaylistcontentsQuery::create()->findByDbPlaylistId($p_playlistId)->delete();
+        CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
     }
     
     
     // smart playlist functions start
+    public function shuffleSmartPlaylist(){
+        // if it here that means it's static pl
+        $this->saveType("static");
+        $contents = CcPlaylistcontentsQuery::create()
+        ->filterByDbPlaylistId($this->id)
+        ->orderByDbPosition()
+        ->find();
+        $shuffledPos = range(0, count($contents)-1);
+        shuffle($shuffledPos);
+        $temp = new CcPlaylist();
+        foreach ($contents as $item) {
+            $item->setDbPosition(array_shift($shuffledPos));
+            $item->save();
+        }
+        return array("result"=>0);
+    }
+    
+    public function saveType($p_playlistType)
+    {
+        // saving dynamic/static flag
+        CcPlaylistQuery::create()->findPk($this->id)->setDbType($p_playlistType)->save();
+    }
+    
     /**
      * Saves smart playlist criteria
      * @param array $p_criteria
      */
-    public static function saveSmartPlaylistCriteria($p_criteria, $p_playlistId)
+    public function saveSmartPlaylistCriteria($p_criteria)
     {
-        $data = self::organizeSmartPlyalistCriteria($p_criteria);
+        $data = $this->organizeSmartPlyalistCriteria($p_criteria);
         // things we need to check
         // 1. limit value shouldn't be empty and has upperbound of 24 hrs
         // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
@@ -877,10 +908,7 @@ class Application_Model_Playlist {
         
         // saving dynamic/static flag
         $playlistType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
-        $playlistCrit = new Criteria();
-        $playlistCrit->add(CcPlaylistPeer::ID, $p_playlistId);
-        $playlistCrit->add(CcPlaylistPeer::TYPE, $playlistType);
-        CcPlaylistPeer::doUpdate($playlistCrit);
+        $this->saveType($playlistType);
         
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
@@ -912,7 +940,7 @@ class Application_Model_Playlist {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
                 }else{
-                    if (CcFilesPeer::getTableMap()->getColumn(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
+                    if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
                         if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                             $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
                         }
@@ -929,45 +957,35 @@ class Application_Model_Playlist {
         }
         $result = count($errors) > 0 ? 1 :0;
         if ($result == 0) {
-            self::storeCriteriaIntoDb($data, $p_playlistId);
+            $this->storeCriteriaIntoDb($data);
         }
         return array("result"=>$result, "errors"=>$errors);
     }
     
-    public static function storeCriteriaIntoDb($p_criteriaData, $p_playlistId){
+    public function storeCriteriaIntoDb($p_criteriaData){
         // delete criteria under $p_playlistId
-        $deleteCrit = new Criteria();
-        $deleteCrit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
-        CcPlaylistcriteriaPeer::doDelete($deleteCrit);
+        CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($this->id)->delete();
         
         foreach( $p_criteriaData['criteria'] as $d){
-            $crit = new Criteria();
-            $crit->add(CcPlaylistcriteriaPeer::CRITERIA, $d['sp_criteria_field']);
-            $crit->add(CcPlaylistcriteriaPeer::MODIFIER, $d['sp_criteria_modifier']);
-            $crit->add(CcPlaylistcriteriaPeer::VALUE, $d['sp_criteria_value']);
+            $qry = new CcPlaylistcriteria();
+            $qry->setDbCriteria($d['sp_criteria_field'])
+                ->setDbModifier($d['sp_criteria_modifier'])
+                ->setDbValue($d['sp_criteria_value'])
+                ->setDbPlaylistId($this->id);
+            
             if (isset($d['sp_criteria_extra'])) {
-                $crit->add(CcPlaylistcriteriaPeer::EXTRA, $d['sp_criteria_extra']);
+                $qry->setDbExtra($d['sp_criteria_extra']);
             }
-            $crit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
-            CcPlaylistcriteriaPeer::doInsert($crit);
+            $qry->save();
         }
         
         // insert limit info
-        $crit = new Criteria();
-        $crit->add(CcPlaylistcriteriaPeer::CRITERIA, "limit");
-        $crit->add(CcPlaylistcriteriaPeer::MODIFIER, $p_criteriaData['etc']['sp_limit_options']);
-        $crit->add(CcPlaylistcriteriaPeer::VALUE, $p_criteriaData['etc']['sp_limit_value']);
-        $crit->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
-        CcPlaylistcriteriaPeer::doInsert($crit);
-    }
-    
-    /**
-     * Get smart playlist criteria
-     * @param array $p_playlistId
-     */
-    public static function getSmartPlaylistCriteria($p_playlistId)
-    {
-        
+        $qry = new CcPlaylistcriteria();
+        $qry->setDbCriteria("limit")
+            ->setDbModifier($p_criteriaData['etc']['sp_limit_options'])
+            ->setDbValue($p_criteriaData['etc']['sp_limit_value'])
+            ->setDbPlaylistId($this->id)
+            ->save();
     }
     
     /**
@@ -975,43 +993,25 @@ class Application_Model_Playlist {
      * tracks.
      * @param array $p_criteria
      */
-    public static function generateSmartPlaylist($p_criteria, $p_playlistId, $returnList=false)
+    public function generateSmartPlaylist($p_criteria, $returnList=false)
     {
-        $result = self::saveSmartPlaylistCriteria($p_criteria, $p_playlistId);
+        $result = $this->saveSmartPlaylistCriteria($p_criteria);
         if ($result['result'] != 0) {
             return $result;
         } else {
-            /*$info = self::getListofFilesMeetCriteria($p_playlistId);
-            $files = $info['files'];
-            $limit = $info['limit'];
-            // construct ids of track candidates
-            self::deleteAllFilesFromPlaylist($p_playlistId);
-            $playlist = new self($p_playlistId);
-            $insertList = array();
-            $totalTime = 0;
-            while ($totalTime < $limit['time'] && !empty($files)) {
-                $key = array_rand($files);
-                $insertList[$key] = $files[$key];
-                $totalTime += $files[$key];
-                unset($files[$key]);
-                if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
-                     break;
-                } 
-            }*/
-            $insertList = self::getListOfFilesUnderLimit($p_playlistId);
-            $playlist = new self($p_playlistId);
-            $playlist->addAudioClips(array_keys($insertList));
-            return array("result"=>0, "ids"=>array_keys($insertList));
+            $insertList = $this->getListOfFilesUnderLimit();
+            $this->deleteAllFilesFromPlaylist();
+            $this->addAudioClips(array_keys($insertList));
+            return array("result"=>0);
         }
     }
     
-    public static function getListOfFilesUnderLimit($p_playlistId)
+    public function getListOfFilesUnderLimit()
     {
-        $info = self::getListofFilesMeetCriteria($p_playlistId);
+        $info = $this->getListofFilesMeetCriteria();
         $files = $info['files'];
         $limit = $info['limit'];
         // construct ids of track candidates
-        self::deleteAllFilesFromPlaylist($p_playlistId);
         $insertList = array();
         $totalTime = 0;
         while ($totalTime < $limit['time'] && !empty($files)) {
@@ -1027,12 +1027,9 @@ class Application_Model_Playlist {
     }
     
     // this function return list of propel object
-    private static function getListofFilesMeetCriteria($p_playlistId)
+    private function getListofFilesMeetCriteria()
     {
-        $c = new Criteria();
-        $c->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
-        $out = CcPlaylistcriteriaPeer::doSelect($c);
-        
+        $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($this->id);
         $storedCrit = array();
         foreach ($out as $crit) {
             $criteria = $crit->getDbCriteria();
@@ -1046,9 +1043,12 @@ class Application_Model_Playlist {
                 $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
             }
         }
-        $ccFileCriteria = new Criteria();
+        $qry = CcFilesQuery::create();
         foreach ($storedCrit["crit"] as $criteria) {
-            $spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
+            // propel doc says we should use phpname for column name but
+            // it looks like we have to use actual column name
+            //$spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
+            $spCriteria = $criteria['criteria'];
             $spCriteriaModifier = $criteria['modifier'];
             $spCriteriaValue = $criteria['value'];
             if ($spCriteriaModifier == "starts with") {
@@ -1059,7 +1059,11 @@ class Application_Model_Playlist {
                 $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
             }
             $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
-            $ccFileCriteria->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+            try{
+                $qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+            }catch (Exception $e){
+                Logging::log($e);
+            }
         }
         // construct limit restriction
         $limits = array();
@@ -1070,15 +1074,18 @@ class Application_Model_Playlist {
             $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
             $limits['items'] = null;
         }
+        Logging::log("2222");
         try{
-            $out = CcFilesPeer::doSelect($ccFileCriteria);
+            $out = $qry->find();
+            Logging::log("3333");
             $files = array();
             foreach ($out as $file) {
                 $files[$file->getDbId()] = Application_Common_DateHelper::calculateLengthInSeconds($file->getDbLength());
             }
+            Logging::log($files);
             return array("files"=>$files, "limit"=>$limits);
         }catch(Exception $e){
-            //Logging::log($e);
+            Logging::log($e);
         }
                 
     }
@@ -1106,3 +1113,4 @@ class Application_Model_Playlist {
 
 class PlaylistNotFoundException extends Exception {}
 class PlaylistOutDatedException extends Exception {}
+class PlaylistDyanmicException extends Exception {}

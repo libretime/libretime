@@ -24,7 +24,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('get-playlist', 'json')
                     ->addActionContext('smart-playlist-criteria-save', 'json')
                     ->addActionContext('smart-playlist-generate', 'json')
-                    ->addActionContext('smart-playlist-get', 'json')
+                    ->addActionContext('smart-playlist-shuffle', 'json')
                     ->initContext();
 
         $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -79,7 +79,6 @@ class PlaylistController extends Zend_Controller_Action
             $form = new Application_Form_SmartPlaylistCriteria();
             $form->removeDecorator('DtDdWrapper');
             $form->startForm($pl->getId());
-            //$form->loadCriteria($pl->getId());
             $this->view->form = $form;
 
             $this->view->pl = $pl;
@@ -105,6 +104,12 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->error = $e->getMessage();
     }
 
+    private function playlistDynamic($pl)
+    {
+        $this->view->error = "You cannot add tracks to dynamic playlist.";
+        $this->createFullResponse($pl);
+    }
+    
     private function playlistNotFound()
     {
         $this->view->error = "Playlist not found";
@@ -244,17 +249,24 @@ class PlaylistController extends Zend_Controller_Action
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
         $addType = $this->_getParam('type', 'after');
-
+        
         try {
             $pl = $this->getPlaylist();
-            $pl->addAudioClips($ids, $afterItem, $addType);
-            $this->createUpdateResponse($pl);
+            if ($pl->isStatic()) {
+                $pl->addAudioClips($ids, $afterItem, $addType);
+                $this->createUpdateResponse($pl);
+            } else {
+                throw new PlaylistDyanmicException;
+            }
         }
         catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($pl, $e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
+        }
+        catch (PlaylistDyanmicException $e) {
+            $this->playlistDynamic($pl);
         }
         catch (Exception $e) {
             $this->playlistUnknownError($e);
@@ -457,32 +469,19 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $result = Application_Model_Playlist::saveSmartPlaylistCriteria($params['data'], $params['pl_id']);
+        $pl = new Application_Model_Playlist($params['pl_id']);
+        $result = $pl->saveSmartPlaylistCriteria($params['data']);
         die(json_encode($result));
-        /*if ($result['result'] != 0) {
-            die(json_encode($result));
-        } else{
-            try {
-                $pl = new Application_Model_Playlist($params['pl_id']);
-                $this->createFullResponse($pl);
-            }
-            catch (PlaylistNotFoundException $e) {
-                $this->playlistNotFound();
-            }
-            catch (Exception $e) {
-                $this->playlistUnknownError($e);
-            }
-        }*/
     }
     
     public function smartPlaylistGenerateAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $result = Application_Model_Playlist::generateSmartPlaylist($params['data'], $params['pl_id']);
+        $pl = new Application_Model_Playlist($params['pl_id']);
+        $result = $pl->generateSmartPlaylist($params['data']);
         if ($result['result'] == 0) {
             try {
-                $pl = new Application_Model_Playlist($params['pl_id']);
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
             }
             catch (PlaylistNotFoundException $e) {
@@ -496,12 +495,25 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
     
-    public function smartPlaylistGetAction()
+    public function smartPlaylistShuffleAction()
     {
         $request = $this->getRequest();
-        $playlistId = $request->getParam('playlistId');
-        $result = Application_Model_Playlist::getSmartPlaylistCriteria($playlistId);
-        die(json_encode($result));
+        $params = $request->getPost();
+        $pl = new Application_Model_Playlist($params['pl_id']);
+        $result = $pl->shuffleSmartPlaylist();
+        if ($result['result'] == 0) {
+            try {
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+            }
+            catch (PlaylistNotFoundException $e) {
+                $this->playlistNotFound();
+            }
+            catch (Exception $e) {
+                $this->playlistUnknownError($e);
+            }
+        }else{
+            die(json_encode($result));
+        }
     }
 }
 

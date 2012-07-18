@@ -90,18 +90,10 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "minutes" => "minutes",
             "items" => "items"
         );
-
-        $this->setDecorators(array(
-        array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml',
-              'criteriasLength' => count($criteriaOptions)))
-        ));
         
         // load type
-        $c = new Criteria();
-        $c->add(CcPlaylistPeer::ID, $p_playlistId);
-        $out = CcPlaylistPeer::doSelect($c);
-        
-        if ($out[0]->getDbType() == "static") {
+        $out = CcPlaylistQuery::create()->findPk($p_playlistId);
+        if ($out->getDbType() == "static") {
             $playlistType = 0;
         } else {
             $playlistType = 1;
@@ -118,9 +110,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $this->addElement($spType);
         
         // load criteria from db
-        $c = new Criteria();
-        $c->add(CcPlaylistcriteriaPeer::PLAYLIST_ID, $p_playlistId);
-        $out = CcPlaylistcriteriaPeer::doSelect($c);
+        $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($p_playlistId);
         
         $storedCrit = array();
         foreach ($out as $crit) {
@@ -134,6 +124,11 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             }else{
                 $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
             }
+        }
+        
+        $openSmartPlaylistOption = false;
+        if (!empty($storedCrit)) {
+            $openSmartPlaylistOption = true;
         }
         
         $numElements = count($criteriaOptions);
@@ -233,7 +228,10 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $shuffle->setLabel('Shuffle');
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
+        
+        $this->setDecorators(array(
+                array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
+                        'criteriasLength' => count($criteriaOptions)))
+        ));
     }
-    
-    
 }

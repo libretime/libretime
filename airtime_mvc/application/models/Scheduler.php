@@ -153,7 +153,7 @@ class Application_Model_Scheduler {
             $c = new Criteria();
             $c->add(CcPlaylistPeer::ID, $id);
             $pl = CcPlaylistPeer::doSelect($c);
-            $playlistType = $pl->getDbType();
+            $playlistType = $pl[0]->getDbType();
             
             if ($playlistType == "static") {
                 $contents = CcPlaylistcontentsQuery::create()
@@ -161,14 +161,15 @@ class Application_Model_Scheduler {
                     ->filterByDbPlaylistId($id)
                     ->find($this->con);
             } else {
-                $contents = Application_Model_Playlist::getListOfFilesUnderLimit($id);
+                $pl = new Application_Model_Playlist($id);
+                $contents = $pl->getListOfFilesUnderLimit();
             }
 
             if (is_null($contents)) {
                 throw new Exception("A selected Playlist does not exist!");
             }
 
-            foreach ($contents as $plItem) {
+            foreach ($contents as $fileId => $plItem) {
                 $data = $this->fileInfo;
                 if ($playlistType == "static"){
                     $file = $plItem->getCcFiles($this->con);
@@ -181,10 +182,11 @@ class Application_Model_Scheduler {
                         $data["fadeout"] = $plItem->getDbFadeout();
                     }   
                 } else {
-                    // on dynamic playslsit, $plItem is id of files
-                    $file = Application_Model_StoredFile::Recall($plItem);
+                    // on dynamic playslsit, $fileId is id of files
+                    $file = Application_Model_StoredFile::Recall($fileId)->getPropelOrm();
                     if (isset($file) && $file->getDbFileExists()) {
-                        $data["id"] = $plItem;
+                        $data["id"] = $fileId;
+                        $data["cliplength"] = $file->getDbLength();
                     }
                 }
                 $files[] = $data;

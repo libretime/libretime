@@ -173,7 +173,7 @@ function setupUI() {
         $('button[id="generate_button"]').show();
         $('button[id="shuffle_button"]').show();
         $('#spl_sortable').unblock();
-        $('#library_content').unblock();
+        $('#spl_sortable').css("position", "static");
     } else {
         $('button[id="generate_button"]').hide();
         $('button[id="shuffle_button"]').hide();
