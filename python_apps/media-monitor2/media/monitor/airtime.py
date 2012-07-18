@@ -17,6 +17,7 @@ class AirtimeNotifier(Loggable):
     them from json
     """
     def __init__(self, cfg, message_receiver):
+        self.cfg = cfg
         try:
             self.handler = message_receiver
             self.logger.info("Initializing RabbitMQ message consumer...")
@@ -50,6 +51,34 @@ class AirtimeNotifier(Loggable):
 
 class AirtimeMessageReceiver(Loggable):
     def __init__(self, cfg):
-        pass
+        self.dispatch_table = {
+                'md_update' : self.md_update,
+                'new_watch' : self.new_watch,
+                'remove_watch' : self.remove_watch,
+                'rescan_watch' : self.rescan_watch,
+                'change_stor' : self.change_storage,
+                'file_delete' : self.file_delete,
+        }
+        self.cfg = cfg
     def message(self, msg):
+        if msg['event_type'] in self.dispatch_table:
+            # Perhaps we should get rid of the event_type key?
+            self.logger.info("Handling RabbitMQ message: '%s'" % msg['event_type'])
+            self.dispatch_table['event_type'](msg)
+        else:
+            self.logger.info("Received invalid message with 'event_type': '%s'" % msg['event_type'])
+            self.logger.info("Message details: %s" % str(msg))
+
+    # Handler methods
+    def md_update(self, msg):
+        pass
+    def new_watch(self, msg):
+        pass
+    def remove_watch(self, msg):
+        pass
+    def rescan_watch(self, msg):
+        pass
+    def change_storage(self, msg):
+        pass
+    def file_delete(self, msg):
         pass
