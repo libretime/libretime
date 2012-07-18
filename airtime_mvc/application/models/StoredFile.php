@@ -650,58 +650,69 @@ Logging::log("getting media! - 2");
         $plSelect = array();
         $blSelect = array();
         $fileSelect = array();
+        $streamSelect = array();
         foreach ($displayColumns as $key) {
 
             if ($key === "id") {
                 $plSelect[] = "PL.id AS ".$key;
                 $blSelect[] = "BL.id AS ".$key;
                 $fileSelect[] = $key;
+                $streamSelect[] = $key;
             } elseif ($key === "track_title") {
                 $plSelect[] = "name AS ".$key;
                 $blSelect[] = "name AS ".$key;
                 $fileSelect[] = $key;
+                $streamSelect[] = "name AS ".$key;
             } elseif ($key === "ftype") {
                 $plSelect[] = "'playlist'::varchar AS ".$key;
                 $blSelect[] = "'block'::varchar AS ".$key;
                 $fileSelect[] = $key;
+                $streamSelect[] = "'stream'::varchar AS ".$key;
             } elseif ($key === "artist_name") {
                 $plSelect[] = "login AS ".$key;
                 $blSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
+                $plSelect[] = "login AS ".$key;
+                $streamSelect[] = "login AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
                 $plSelect[] = $key;
                 $blSelect[] = $key;
                 $fileSelect[] = $key;
+                $streamSelect[] = $key;
             } elseif ($key === "year") {
-
                 $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $blSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $fileSelect[] = "year AS ".$key;
+                $streamSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
             }
             //need to cast certain data as ints for the union to search on.
             else if (in_array($key, array("track_number", "bit_rate", "sample_rate"))) {
                 $plSelect[] = "NULL::int AS ".$key;
                 $blSelect[] = "NULL::int AS ".$key;
                 $fileSelect[] = $key;
+                $streamSelect[] = "NULL::int AS ".$key;
             } else {
                 $plSelect[] = "NULL::text AS ".$key;
                 $blSelect[] = "NULL::text AS ".$key;
                 $fileSelect[] = $key;
+                $streamSelect[] = "NULL::text AS ".$key;
             }
         }
 
         $plSelect = "SELECT ". join(",", $plSelect);
         $blSelect = "SELECT ". join(",", $blSelect);
         $fileSelect = "SELECT ". join(",", $fileSelect);
+        $streamSelect = "SELECT ". join(",", $streamSelect);
 
         $type = intval($datatables["type"]);
 
         $plTable = "({$plSelect} FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))";
         $blTable = "({$blSelect} FROM cc_block AS BL LEFT JOIN cc_subjs AS sub ON (sub.id = BL.creator_id))";
         $fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
-        $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} ) AS RESULTS";
+        $streamTable = "({$streamSelect} FROM cc_webstream AS WEBSTREAM)";
+        $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 
         //choose which table we need to select data from.
         switch ($type) {

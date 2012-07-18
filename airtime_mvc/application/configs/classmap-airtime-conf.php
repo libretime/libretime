@@ -176,4 +176,11 @@ return array (
   'BaseCcLiveLogPeer' => 'airtime/om/BaseCcLiveLogPeer.php',
   'BaseCcLiveLog' => 'airtime/om/BaseCcLiveLog.php',
   'BaseCcLiveLogQuery' => 'airtime/om/BaseCcLiveLogQuery.php',
+  'CcWebstreamTableMap' => 'airtime/map/CcWebstreamTableMap.php',
+  'CcWebstreamPeer' => 'airtime/CcWebstreamPeer.php',
+  'CcWebstream' => 'airtime/CcWebstream.php',
+  'CcWebstreamQuery' => 'airtime/CcWebstreamQuery.php',
+  'BaseCcWebstreamPeer' => 'airtime/om/BaseCcWebstreamPeer.php',
+  'BaseCcWebstream' => 'airtime/om/BaseCcWebstream.php',
+  'BaseCcWebstreamQuery' => 'airtime/om/BaseCcWebstreamQuery.php',
 );

@@ -427,4 +427,15 @@
     <column name="start_time" phpName="DbStartTime" type="TIMESTAMP" required="true" />
     <column name="end_time" phpName="DbEndTime" type="TIMESTAMP" required="false"/>
   </table>
+  <table name="cc_webstream" phpName="CcWebstream">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" />
+    <!-- TODO, remove hardlimit on this column length? -->
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="255" required="true" />
+    <column name="url" phpName="DbUrl" type="VARCHAR" size="255" required="true" />
+    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" required="true" defaultValue="00:00:00"/>
+    <column name="login" phpName="DbLogin" type="VARCHAR" size="255" required="true" />
+    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="true" />
+    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="true" />
+  </table>
 </database>

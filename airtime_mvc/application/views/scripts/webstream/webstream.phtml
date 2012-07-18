@@ -1,6 +1,6 @@
-<button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
+<button id="ws_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->ws)) : ?>
-    <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
+    <button id="ws_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
 <?php endif; ?>
 
 <?php if (isset($this->ws)) : ?>
@@ -25,13 +25,13 @@
          <dd id="streamurl-element">
              <input type="text" value="http://"/>
          </dd>
-         <dt id="length-label"><label for="length">Default Length:</label></dt>
-         <dd id="length-element">
+         <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
+         <dd id="streamlength-element">
              <input type="text" value="00h 20m"/>
          </dd>        
          <dd id="submit-element" class="buttons">
-            <input class="ui-button ui-state-default" type="submit" value="Cancel" id="description_cancel" name="cancel">
-            <input class="ui-button ui-state-default" type="submit" value="Save" id="description_save" name="submit">
+            <input class="ui-button ui-state-default" type="submit" value="Cancel" id="webstream_cancel" name="cancel">
+            <input class="ui-button ui-state-default" type="submit" value="Save" id="webstream_save" name="submit">
         </dd>
        </dl>
     </fieldset>

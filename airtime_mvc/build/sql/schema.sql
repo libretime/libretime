@@ -651,6 +651,30 @@ COMMENT ON TABLE "cc_live_log" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_webstream
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_webstream" CASCADE;
+
+
+CREATE TABLE "cc_webstream"
+(
+	"id" serial  NOT NULL,
+	"name" VARCHAR(255)  NOT NULL,
+	"description" VARCHAR(255)  NOT NULL,
+	"url" VARCHAR(255)  NOT NULL,
+	"length" interval default '00:00:00' NOT NULL,
+	"login" VARCHAR(255)  NOT NULL,
+	"mtime" TIMESTAMP(6)  NOT NULL,
+	"utime" TIMESTAMP(6)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_webstream" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

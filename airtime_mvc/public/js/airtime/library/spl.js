@@ -488,7 +488,39 @@ var AIRTIME = (function(AIRTIME){
 	        	$fs.addClass("closed");
 	        }
 	    });
-		
+		$pl.on("click", "#webstream_save", function(){
+            //get all fields and POST to server
+            //description
+            //stream url
+            //default_length  
+            //playlist name
+            var description = $pl.find("#description").val();
+            var streamurl = $pl.find("#streamurl-element input").val();
+            var length = $pl.find("#streamlength-element input").val();
+            var name = $pl.find("#playlist_name_display").text(); 
+        
+            var url = 'Webstream/save';
+            $.post(url, 
+        		{format: "json", description: description, url:streamurl, length: length, name: name}, 
+        		function(json){
+                    console.log(json);
+
+                    /*
+		            if (json.error !== undefined){
+		            	playlistError(json);
+		            } else {
+		            	setModified(json.modified);
+		                textarea.val(json.description);
+		                $pl.find("#fieldset-metadate_change").addClass("closed");
+			            redrawLib();
+		            } */     
+		        });    
+        
+        
+        }
+              
+              
+              )
 		$pl.on("click", "#description_save", function(){
 	        var textarea = $pl.find("#fieldset-metadate_change textarea"),
 	        	description = textarea.val(),
