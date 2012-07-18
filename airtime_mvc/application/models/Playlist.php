@@ -47,12 +47,12 @@ class Application_Model_Playlist
     );
     
     private static $modifier2CriteriaMap = array(
-            "contains" => Criteria::LIKE,
-            "does not contain" => Criteria::NOT_LIKE,
+            "contains" => Criteria::ILIKE,
+            "does not contain" => Criteria::NOT_ILIKE,
             "is" => Criteria::EQUAL,
             "is not" => Criteria::NOT_EQUAL,
-            "starts with" => Criteria::LIKE,
-            "ends with" => Criteria::LIKE,
+            "starts with" => Criteria::ILIKE,
+            "ends with" => Criteria::ILIKE,
             "is greater than" => Criteria::GREATER_THAN,
             "is less than" => Criteria::LESS_THAN,
             "is in the range" => Criteria::CUSTOM);
@@ -1066,19 +1066,22 @@ class Application_Model_Playlist
         foreach ($storedCrit["crit"] as $criteria) {
             // propel doc says we should use phpname for column name but
             // it looks like we have to use actual column name
-            //$spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
-            $spCriteria = $criteria['criteria'];
+            $spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
+            //$spCriteria = $criteria['criteria'];
             $spCriteriaModifier = $criteria['modifier'];
             $spCriteriaValue = $criteria['value'];
             if ($spCriteriaModifier == "starts with") {
                 $spCriteriaValue = "$spCriteriaValue%";
             } else if ($spCriteriaModifier == "ends with") {
                 $spCriteriaValue = "%$spCriteriaValue";
+            } else if ($spCriteriaModifier == "contains") {
+                $spCriteriaValue = "%$spCriteriaValue%";
             } else if ($spCriteriaModifier == "is in the range") {
                 $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
             }
             $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
             try{
+                //$qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                 $qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
             }catch (Exception $e){
                 Logging::log($e);
@@ -1093,15 +1096,14 @@ class Application_Model_Playlist
             $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
             $limits['items'] = null;
         }
-        Logging::log("2222");
         try{
             $out = $qry->find();
-            Logging::log("3333");
+            Logging::log($qry->toString());
             $files = array();
             foreach ($out as $file) {
                 $files[$file->getDbId()] = Application_Common_DateHelper::calculateLengthInSeconds($file->getDbLength());
             }
-            Logging::log($files);
+            //Logging::log($files);
             return array("files"=>$files, "limit"=>$limits);
         }catch(Exception $e){
             Logging::log($e);
