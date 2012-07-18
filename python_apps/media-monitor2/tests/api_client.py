@@ -15,17 +15,16 @@ class TestApiClient(unittest.TestCase):
         self.apc.register_component("api-client-tester")
         # All of the following requests should error out in some way
         self.bad_requests = [
-                { 'mode' : 'dang it', 'is_record' : 0},
+                { 'mode' : 'dang it', 'is_record' : 0 },
                 { 'mode' : 'damn frank', 'is_record' : 1 },
-                { 'no_mode' : 'at_all' },
-        ]
+                { 'no_mode' : 'at_all' }, ]
 
     def test_bad_requests(self):
         responses = self.apc.send_media_monitor_requests(self.bad_requests, dry=True)
         for response in responses:
             self.assertTrue( 'key' in response )
             self.assertTrue( 'error' in response )
-            print("Response: '%s'" % response)
+            print( "Response: '%s'" % response )
 
     # We don't actually test any well formed requests because it is more
     # involved
