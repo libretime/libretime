@@ -162,7 +162,7 @@ class Application_Model_StoredFile
                 }
             }
         }
-Logging::log(new DateTime("now", new DateTimeZone("UTC")));
+
         $this->_file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->_file->save();
     }
