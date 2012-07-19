@@ -435,9 +435,13 @@ input.input_text.sp_extra_input_text{
 }
 
 .sp_text_font{
-    font-size:13px;
-    font-family:Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-family: Helvetica, Arial, sans-serif;
     color: #5B5B5B;
+}
+
+.sp_text_font_bold{
+    font-weight: bold;
 }
 
 .sp-ui-button-icon-only {
@@ -457,6 +461,21 @@ input.input_text.sp_extra_input_text{
     height: 24px !important;
     margin-right: 0px !important;
     margin-left: 10px !important;
+}
+
+.sp-checked-icon{
+    width: 16px !important;
+    display: inline-block !important;
+}
+
+.sp-warning-icon{
+    margin: 0;
+    background-image: url(redmond/images/ui-icons_ff5d1a_256x240.png);
+    background-repeat: no-repeat;
+    background-position: 0px -140px;
+    height:16px;
+    width: 16px;
+    display: inline-block;
 }
 /***** SMART PLAYLIST SPECIFIC STYLES END *****/
 

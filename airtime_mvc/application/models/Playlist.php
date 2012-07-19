@@ -985,7 +985,11 @@ class Application_Model_Playlist
         if ($result == 0) {
             $this->storeCriteriaIntoDb($data);
         }
-        return array("result"=>$result, "errors"=>$errors);
+        
+        //get number of files that meet the criteria
+        $files = $this->getListofFilesMeetCriteria();
+        
+        return array("result"=>$result, "errors"=>$errors, "poolCount"=>$files["count"]);
     }
     
     public function storeCriteriaIntoDb($p_criteriaData){

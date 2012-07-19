@@ -4,21 +4,22 @@
     <dl class='zend_form'>
         <div id='sp-success' class='success' style='display:none'></div>
         <dd id='sp_type-element' class='radio-inline-list'>
-        <label for='sp_type'>
+            <label>
             <?php echo $this->element->getElement('sp_type')->getLabel() ?>
             <span class='playlist_type_help_icon'></span>
+            </label>
             <?php $i=0;
                   $value = $this->element->getElement('sp_type')->getValue();
                   foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
-                      <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> >
-                          <?php echo $radio ?>
-                      </input>
+                  
+                  <label for='sp_type-<?php echo $i?>'>
+                      <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> ><?php echo $radio ?>
+                  </label>
             <?php $i = $i + 1; ?>
             <?php endforeach; ?>
             <?php echo $this->element->getElement('save_button') ?>
             <?php echo $this->element->getElement('generate_button') ?>
             <?php echo $this->element->getElement('shuffle_button') ?>
-        </label>
         </dd>
         
         <dd id='sp_criteria-element'>
@@ -45,8 +46,35 @@
             <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></span>
             <?php echo $this->element->getElement('sp_limit_value')?>
             <?php echo $this->element->getElement('sp_limit_options') ?>
+        <br /><br />
         </dd>
+        <div class='sp_text_font sp_text_font_bold'>
+            <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
+            <?php
+            if ($this->poolCount > 1) {
+                echo $this->poolCount;
+            ?>
+                files meet the criteria
+                </span>
+                <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
+            <?php 
+            } else if ($this->poolCount == 1) {
+                echo $this->poolCount;
+            ?>
+                file meets the criteria
+                </span>
+                <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
+            <?php 
+            } else {
+            ?> 
+                0 files meet the criteria
+                </span>
+                <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
+            <?php 
+            }
+            ?>
+        </div>
         
-</dl>
+    </dl>
 </fieldset>
 </form>

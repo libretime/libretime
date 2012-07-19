@@ -232,9 +232,13 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
         
+        //getting playlist content candidate count that meets criteria
+        $pl = new Application_Model_Playlist($p_playlistId);
+        $files = $pl->getListofFilesMeetCriteria();
+        
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
-                        'criteriasLength' => count($criteriaOptions)))
+                        'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count']))
         ));
     }
 }

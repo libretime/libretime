@@ -105,8 +105,7 @@ function setSmartPlaylistEvents() {
     });
 	
     form.find('button[id="save_button"]').live("click", function(event){
-        var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
-            data = $('form').serializeArray(),
+        var data = $('form').serializeArray(),
             save_action = 'Playlist/smart-playlist-criteria-save',
             playlist_id = $('input[id="pl_id"]').val();
         
@@ -116,8 +115,7 @@ function setSmartPlaylistEvents() {
     });
     
     form.find('button[id="generate_button"]').live("click", function(event){
-        var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
-            data = $('form').serializeArray(),
+        var data = $('form').serializeArray(),
             generate_action = 'Playlist/smart-playlist-generate',
             playlist_id = $('input[id="pl_id"]').val();
 		
@@ -127,8 +125,7 @@ function setSmartPlaylistEvents() {
     });
     
     form.find('button[id="shuffle_button"]').live("click", function(event){
-        var playlist_type = form.find('input:radio[name=sp_type]:checked').val(),
-            data = $('form').serializeArray(),
+        var data = $('form').serializeArray(),
             shuffle_action = 'Playlist/smart-playlist-shuffle',
             playlist_id = $('input[id="pl_id"]').val();
 		
@@ -172,16 +169,20 @@ function setupUI() {
     if (playlist_type == "0") {
         $('button[id="generate_button"]').show();
         $('button[id="shuffle_button"]').show();        
-        $('#spl_sortable').unblock();
-        $('#spl_sortable').css("position", "static");
+        //$('#spl_sortable').unblock();
+        //$('#spl_sortable').css("position", "static");
+        $('#spl_sortable').show();
     } else {
         $('button[id="generate_button"]').hide();
         $('button[id="shuffle_button"]').hide();
+        /*
         $('#spl_sortable').block({
             message: "",
             theme: true,
             applyPlatformOpacityRules: false
         });
+        */
+        $('#spl_sortable').hide();
     }
     
     $(".playlist_type_help_icon").qtip({
@@ -285,6 +286,26 @@ function callback(data, type) {
         } else {
             form.find('.success').text('Criteria saved');
             form.find('.success').show();
+            
+            /* Update number of files that meet criteria and
+             * change icon to success/warning as appropriate
+             */
+            if (json.poolCount > 1) {
+                $('#sp_pool_count').text(json.poolCount+' files meet the criteria');
+                if ($('#sp_pool_count_icon').hasClass('sp-warning-icon')) {
+                    $('#sp_pool_count_icon').removeClass('sp-warning-icon').addClass('checked-icon sp-checked-icon');  
+                }
+            } else if (json.poolCount == 1) {
+                $('#sp_pool_count').text('1 file meets the criteria');
+                if ($('#sp_pool_count_icon').hasClass('sp-warning-icon')) {
+                    $('#sp_pool_count_icon').removeClass('sp-warning-icon').addClass('checked-icon sp-checked-icon');  
+                }
+            } else {
+                $('#sp_pool_count').text('0 files meet the criteria');
+                if ($('#sp_pool_count_icon').hasClass('checked-icon sp-checked-icon')) {
+                    $('#sp_pool_count_icon').removeClass('checked-icon sp-checked-icon').addClass('sp-warning-icon');  
+                }
+            }
         }
         setTimeout('removeSuccessMsg()', 5000);
     }
