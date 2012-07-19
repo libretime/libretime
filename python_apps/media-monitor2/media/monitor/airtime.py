@@ -72,13 +72,13 @@ class AirtimeMessageReceiver(Loggable):
             evt = msg['event_type']
             del msg['event_type']
             self.logger.info("Handling RabbitMQ message: '%s'" % evt)
-            self.execute_message(evt,msg)
+            self._execute_message(evt,msg)
             return True
         else:
             self.logger.info("Received invalid message with 'event_type': '%s'" % msg['event_type'])
             self.logger.info("Message details: %s" % str(msg))
             return False
-    def execute_message(self,evt,message):
+    def _execute_message(self,evt,message):
         self.dispatch_table[evt](message)
 
     def supported_messages(self):

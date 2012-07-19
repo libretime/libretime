@@ -22,7 +22,9 @@ class TestReceiver(unittest.TestCase):
         for event_type in self.amr.supported_messages():
             msg = { 'event_type' : event_type, 'extra_param' : 123 }
             filtered = filter_ev(msg)
-            with patch.object(self.amr, 'execute_message') as mock_method:
+            # There should be a better way to test the following without
+            # patching private methods
+            with patch.object(self.amr, '_execute_message') as mock_method:
                 mock_method.side_effect = None
                 ret = self.amr.message(msg)
                 self.assertTrue(ret)
@@ -31,7 +33,7 @@ class TestReceiver(unittest.TestCase):
     def test_no_mod_message(self):
         ev = { 'event_type' : 'new_watch', 'directory' : 'something here' }
         filtered = filter_ev(ev)
-        with patch.object(self.amr, 'execute_message') as mock_method:
+        with patch.object(self.amr, '_execute_message') as mock_method:
             mock_method.return_value = "tested"
             ret = self.amr.message(ev)
             self.assertTrue( ret ) # message passing worked
