@@ -24,7 +24,11 @@ class RequestSync(threading.Thread,Loggable):
     def run(self):
         # TODO : implement proper request sending
         self.logger.info("launching request with %d items." % len(self.requests))
-        #self.apiclient.update_media_metadata(
+        # Note that we must attach the appropriate mode to every response. Also
+        # Not forget to attach the 'is_record' to any requests that are related
+        # to recorded shows
+        # A simplistic request would like:
+        # self.apiclient.send_media_monitor_requests(requests)
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):

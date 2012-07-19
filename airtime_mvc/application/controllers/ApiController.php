@@ -389,17 +389,17 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function uploadRecordAction() {
+    public function uploadRecordedAction() {
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
         $this->view->fileid = $file_id;
         $this->view->showinstanceid = $show_instance_id;
-        $this->uploadRecordActionParam($show_instance_id, $file_id);
+        $this->uploadRecordedActionParam($show_instance_id, $file_id);
     }
 
-    // The paramterized version of the uploadRecordAction controller. We want this controller's action
+    // The paramterized version of the uploadRecordedAction controller. We want this controller's action
     // to be invokable from other controllers instead being of only through http
-    public function uploadRecordActionParam($show_instance_id, $file_id)
+    public function uploadRecordedActionParam($show_instance_id, $file_id)
     {
         $showCanceled = false;
         $file = Application_Model_StoredFile::Recall($file_id);
@@ -447,8 +447,17 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetaDataAction($md, $mode) 
+    public function dispatchMetadataAction($md, $mode, $dry_run=false) 
     { 
+        // Replace this compound result in a hash with proper error handling later on
+        $return_hash = array();
+        if ( $dry_run ) { // for debugging we return garbage not to screw around with the db
+            return array(
+                'md' => $md,
+                'mode' => $mode,
+                'fileid' => 123456
+            );
+        }
         Application_Model_Preference::SetImportTimestamp();
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
@@ -460,8 +469,8 @@ class ApiController extends Zend_Controller_Action
                 // path already exist
                 if ($file->getFileExistsFlag()) {
                     // file marked as exists
-                    $this->view->error = "File already exists in Airtime.";
-                    return;
+                    $return_hash['error'] =  "File already exists in Airtime.";
+                    return $return_hash;
                 } else {
                     // file marked as not exists
                     $file->setFileExistsFlag(true);
@@ -475,8 +484,8 @@ class ApiController extends Zend_Controller_Action
 
             //File is not in database anymore.
             if (is_null($file)) {
-                $this->view->error = "File does not exist in Airtime.";
-                return;
+                $return_hash['error'] = "File does not exist in Airtime.";
+                return $return_hash;
             }
             //Updating a metadata change.
             else {
@@ -488,8 +497,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
-                $this->view->error = "File doesn't exist in Airtime.";
-                return;
+                return "File doesn't exist in Airtime.";
             }
             else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
@@ -503,8 +511,8 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $this->view->error = "File doesn't exist in Airtime.";
-                return;
+                $return_hash['error'] =  "File doesn't exist in Airtime.";
+                return $return_hash;
             }
             else {
                 $file->deleteByMediaMonitor();
@@ -518,9 +526,11 @@ class ApiController extends Zend_Controller_Action
             foreach($files as $file){
                 $file->deleteByMediaMonitor();
             }
-            return;
+            $return_hash['success'] = 1;
+            return $return_hash;
         }
-        return $file->getId();
+        $return_hash['fileid'] = $file->getId();
+        return $return_hash;
     } 
 
     public function reloadMetadataGroupAction()
@@ -528,28 +538,51 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         // extract all file metadata params from the request.
         // The value is a json encoded hash that has all the information related to this action
-        // The key does not have any meaning as of yet but it could potentially correspond
+        // The key(mdXXX) does not have any meaning as of yet but it could potentially correspond
         // to some unique id.
         $responses = array();
+        $dry = $request->getParam('dry') || false;
+        $params = $request->getParams();
+        $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
         foreach ($request->getParams() as $k => $raw_json) {
+            // Valid requests must start with mdXXX where XXX represents at least 1 digit
+            if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
+            if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
+                Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
+                Logging::log( $info_json );
+                array_push( $responses, array(
+                    'error' => "Bad request. no 'mode' parameter passed.",
+                    'key' => $k));
+                continue;
+            } elseif ( !in_array($info_json['mode'], $valid_modes) )  {
+                // A request still has a chance of being invalid even if it exists but it's validated
+                // by $valid_modes array
+                $mode = $info_json['mode'];
+                Logging::log("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
+                Logging::log( $info_json );
+                array_push( $responses, array(
+                    'error' => "Bad request. 'mode' parameter is invalid",
+                    'key' => $k,
+                    'mode' => $mode ) );
+                continue;
+            }
+            // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            // TODO : uncomment the following line to actually do something
-            $response = $this->dispatchMetaDataAction($info_json, $info_json['mode']);
-            array_push($responses, $this->dispatchMetaDataAction($info_json, $info_json['mode']));
-            // Like wise, remove the following line when done
+            $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=$dry);
+            // We attack the 'key' back to every request in case the would like to associate
+            // his requests with particular responses
+            $response['key'] = $k;
+            array_push($responses, $response);
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
-            // was usually called from the python api
-            if( $info_json['is_record'] ) {
-                // TODO : must check for error in $response before proceeding...
-                $this->uploadRecordActionParam($info_json['showinstanceid'],$info_json['fileid']);
+            // was usually called from the python api client. Now we just call it straight from the controller to 
+            // save the http roundtrip
+            if( $info_json['is_record'] and !array_key_exists('error', $response) ) {
+                $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid'],$dry_run=$dry);
             }
-            // TODO : Remove this line when done debugging
-            Logging::log( $info_json );
-
         }
-        die(json_encode( array('successes' => 19, 'fails' => 123) ));
+        die( json_encode($responses) );
     }
 
     public function reloadMetadataAction()

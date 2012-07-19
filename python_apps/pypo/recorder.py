@@ -42,7 +42,7 @@ def getDateTimeObj(time):
     # - perhaps validate the input before doing dangerous casts?
     # - rename this function to follow the standard convention
     # - rename time to something else so that the module name does not get
-    # shadowed
+    #   shadowed
     # - add docstring to document all behaviour of this function
     timeinfo = time.split(" ")
     date = [ int(x) for x in timeinfo[0].split("-") ]
@@ -134,6 +134,9 @@ class ShowRecorder(Thread):
         try:
             date = self.start_time
             md = date.split(" ")
+            # TODO : rename 'time' variable to something better so that there
+            # is no naming conflicts with the time module that is being
+            # imported
             time = md[1].replace(":", "-")
             self.logger.info("time: %s" % time)
 

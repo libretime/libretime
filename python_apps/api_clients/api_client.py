@@ -41,7 +41,7 @@ def convert_dict_value_to_utf8(md):
 
 class AirtimeApiClient():
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
         if logger is None:
             self.logger = logging
         else:
@@ -49,7 +49,7 @@ class AirtimeApiClient():
 
         # loading config file
         try:
-            self.config = ConfigObj('/etc/airtime/api_client.cfg')
+            self.config = ConfigObj(config_path)
         except Exception, e:
             self.logger.error('Error loading config file: %s', e)
             sys.exit(1)
@@ -366,7 +366,7 @@ class AirtimeApiClient():
 
         return response
 
-    def send_media_monitor_requests(self, action_list):
+    def send_media_monitor_requests(self, action_list, dry=False):
         """
         Send a gang of media monitor events at a time. actions_list is a list of dictionaries
         where every dictionary is representing an action. Every action dict must contain a 'mode'
@@ -394,28 +394,22 @@ class AirtimeApiClient():
                     # matter what it is based on if it's absent in the action
                     if 'is_record' in action:
                         self.logger.debug("Sending a 'recorded' action")
-                        action['is_record'] = True
-                    else: action['is_record'] = False
+                        action['is_record'] = 1
+                    else: action['is_record'] = 0
                     valid_actions.append(action)
-
-            md_list = dict((i, json.dumps(convert_dict_value_to_utf8(md))) for i,md in enumerate(valid_actions))
+            # Note that we must prefix every key with: mdX where x is a number
+            # Is there a way to format the next line a little better? The
+            # parenthesis make the code almost unreadable
+            md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) \
+                    for i,md in enumerate(valid_actions))
+            # For testing we add the following "dry" parameter to tell the
+            # controller not to actually do any changes
+            if dry: md_list['dry'] = 1
+            self.logger.info("Pumping out %d requests..." % len(valid_actions))
             data = urllib.urlencode(md_list)
             req = urllib2.Request(url, data)
             response = self.get_response_from_server(req)
             response = json.loads(response)
-            # TODO : this request returns a more detailed response of what
-            # happened through a json array. Hence we should handle errors
-            # differently
-            # we would like to move all of this to the controller since we are
-            # not doing anything here
-            #if("error" not in response and is_record):
-                #url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["upload_recorded"]) url = url.replace("%%fileid%%", str(response[u'id']))
-                #url = url.replace("%%showinstanceid%%", str(md_list['MDATA_KEY_TRACKNUMBER']))
-                #url = url.replace("%%api_key%%", self.config["api_key"])
-
-                #response = self.get_response_from_server(url)
-                #response = json.loads(response)
-                #logger.info("associate recorded %s", response)
             return response
         except Exception, e:
             logger.error('Exception: %s', e)
