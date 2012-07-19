@@ -966,4 +966,10 @@ class Application_Model_Schedule
 
         return $overlapping;
     }
+    
+    public static function GetFileId($p_scheduleId)
+    {
+        $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
+        return $scheduledItem->getDbFileId();
+    }
 }

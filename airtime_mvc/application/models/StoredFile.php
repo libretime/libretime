@@ -79,6 +79,19 @@ class Application_Model_StoredFile
     {
         $this->_file->setDbFtype($p_format);
     }
+    
+    /* This function is only called after liquidsoap
+     * has notified that a track has started playing.
+     */
+    public function setLastPlayedTime($p_now)
+    {
+        $this->_file->setDbLPtime($p_now);
+        /* Normally we would only call save after all columns have been set
+         * like in setDbColMetadata(). But since we are only setting one 
+         * column in this case it is OK.
+         */
+        $this->_file->save();
+    }
 
     /**
      * Set multiple metadata values using defined metadata constants.
@@ -120,9 +133,6 @@ class Application_Model_StoredFile
             }
             $this->setDbColMetadata($dbMd);
         }
-
-        $this->_file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
-        $this->_file->save();
     }
 
     /**
@@ -152,8 +162,8 @@ class Application_Model_StoredFile
                 }
             }
         }
-
-        $this->_file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+Logging::log(new DateTime("now", new DateTimeZone("UTC")));
+        $this->_file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->_file->save();
     }
 
@@ -476,8 +486,8 @@ Logging::log("getting media! - 2");
     {
         $file = new CcFiles();
         $file->setDbGunid(md5(uniqid("", true)));
-        $file->setDbUtime(new DateTime("now"), new DateTimeZone("UTC"));
-        $file->setDbMtime(new DateTime("now"), new DateTimeZone("UTC"));
+        $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
+        $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
 
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;

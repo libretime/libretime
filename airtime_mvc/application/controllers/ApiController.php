@@ -349,6 +349,18 @@ class ApiController extends Zend_Controller_Action
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
         $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
+        
+        //set a 'last played' timestamp for media item
+        //needed for smart playlists
+        try{
+            $file_id = Application_Model_Schedule::GetFileId($media_id);
+            $file = Application_Model_StoredFile::Recall($file_id);
+            $now = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setLastPlayedTime($now);
+        }catch(Exception $e){
+            Logging::log($e);
+        }
+        
         echo json_encode(array("status"=>1, "message"=>""));
     }
 
