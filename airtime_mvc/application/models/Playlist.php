@@ -933,17 +933,24 @@ class Application_Model_Playlist
             $multiplier = 60;
         }
         if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
-            if ( $data['etc']['sp_limit_value'] == "" || intval($data['etc']['sp_limit_value']) == 0) {
-                $error[] =  "Limit cannot be empty or 0";
+            if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
+                $error[] =  "Limit cannot be empty or smaller than 0";
             } else {
                 $mins = $data['etc']['sp_limit_value'] * $multiplier;
                 if ($mins > 14400) {
                     $error[] =  "Limit cannot be more than 24 hrs";
                 }
             }
-            if (count($error) > 0){
-                $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
+        } else {
+            if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
+                $error[] =  "Limit cannot be empty or smaller than 0";
+            } else if (floatval($data['etc']['sp_limit_value']) < 1) {
+                $error[] =  "The value should be an integer";
             }
+        }
+        
+        if (count($error) > 0){
+            $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
         }
         
         // format validation
@@ -1030,23 +1037,31 @@ class Application_Model_Playlist
         $info = $this->getListofFilesMeetCriteria();
         $files = $info['files'];
         $limit = $info['limit'];
-        // construct ids of track candidates
+        
         $insertList = array();
         $totalTime = 0;
-        while ($totalTime < $limit['time'] && !empty($files)) {
-            $key = array_rand($files);
-            $insertList[$key] = $files[$key];
-            $totalTime += $files[$key];
-            unset($files[$key]);
+        
+        // this moves the pointer to the first element in the collection
+        $files->getFirst();
+        $iterator = $files->getIterator();
+        while ($iterator->valid() && $totalTime < $limit['time']) {
+            Logging::log($iterator->current()->getDbId());
+            Logging::log($iterator->current()->getDbLength());
+            $id = $iterator->current()->getDbId();
+            $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
+            $insertList[$id] = $length;
+            $totalTime += $length;
             if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
                 break;
             }
+            
+            $iterator->next();
         }
         return $insertList;
     }
     
     // this function return list of propel object
-    private function getListofFilesMeetCriteria()
+    public function getListofFilesMeetCriteria()
     {
         $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($this->id);
         $storedCrit = array();
@@ -1062,7 +1077,8 @@ class Application_Model_Playlist
                 $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
             }
         }
-        $qry = CcFilesQuery::create();
+        
+        $qry = CcFilesQuery::create()->setFormatter(ModelCriteria::FORMAT_ON_DEMAND);
         foreach ($storedCrit["crit"] as $criteria) {
             // propel doc says we should use phpname for column name but
             // it looks like we have to use actual column name
@@ -1081,8 +1097,8 @@ class Application_Model_Playlist
             }
             $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
             try{
-                //$qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                 $qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                $qry->addAscendingOrderByColumn('random()');
             }catch (Exception $e){
                 Logging::log($e);
             }
@@ -1098,13 +1114,7 @@ class Application_Model_Playlist
         }
         try{
             $out = $qry->find();
-            Logging::log($qry->toString());
-            $files = array();
-            foreach ($out as $file) {
-                $files[$file->getDbId()] = Application_Common_DateHelper::calculateLengthInSeconds($file->getDbLength());
-            }
-            //Logging::log($files);
-            return array("files"=>$files, "limit"=>$limits);
+            return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         }catch(Exception $e){
             Logging::log($e);
         }
