@@ -125,7 +125,7 @@ def normalized_metadata(md, original_path):
     new_md = copy.deepcopy(md)
     # replace all slashes with dashes
     for k,v in new_md.iteritems():
-        new_md[k] = str(v).replace('/','-')
+        new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
         # It's very likely that the following isn't strictly necessary. But the old
@@ -205,6 +205,15 @@ def file_md5(path,max_length=100):
             m.update(f.read(max_length))
             return m.hexdigest()
     else: raise ValueError("'%s' must exist to find its md5")
+
+def encode_to(obj, encoding='utf-8'):
+    if isinstance(obj, unicode):
+        obj = obj.encode(encoding)
+    return obj
+
+def convert_dict_value_to_utf8(md):
+    #list comprehension to convert all values of md to utf-8
+    return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 if __name__ == '__main__':
     import doctest

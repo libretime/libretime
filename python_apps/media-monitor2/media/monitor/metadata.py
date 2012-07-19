@@ -92,13 +92,14 @@ def truncate_to_length(item, length):
 
 class Metadata(Loggable):
     def __init__(self, fpath):
-        try: full_mutagen  = mutagen.File(self.path, easy=True)
-        except Exception: raise BadSongFile(self.path)
+        try: full_mutagen  = mutagen.File(fpath, easy=True)
+        except Exception: raise BadSongFile(fpath)
+        self.path = fpath
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
         metadata = {}
         # Load only the metadata avilable in mutagen into metdata
-        for k,v in full_mutagen:
+        for k,v in full_mutagen.iteritems():
             # Special handling of attributes here
             if isinstance(v, list):
                 if len(v) == 1: metadata[k] = v[0]
@@ -118,15 +119,17 @@ class Metadata(Loggable):
                 self.__metadata[ airtime_key ] = muta_v
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
-        for special_key,f in airtime_special:
+        for special_key,f in airtime_special.iteritems():
             new_val = f(full_mutagen)
             if new_val is not None:
                 self.__metadata[special_key] = f(full_mutagen)
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
-        self.__metadata['MDATA_KEY_MD5'] = mmp.fild_md5(fpath)
+        self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath)
 
     def extract(self):
         return copy.deepcopy(self.__metadata)
 
+    def utf8(self):
+        return mmp.convert_dict_value_to_utf8(self.extract())
