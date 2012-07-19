@@ -14,8 +14,7 @@ class Organizer(ReportHandler,Loggable):
         """Intercept events where a new file has been added to the organize
         directory and place it in the correct path (starting with self.target_path)"""
         try:
-            normal_md = mmp.normalized_metadata(event.metadata, event.path)
-            new_path = mmp.organized_path(event.path, self.target_path, normal_md)
+            new_path = mmp.organized_path(event.path, self.target_path, event.metadata.extract())
             mmp.magic_move(event.path, new_path)
             self.logger.info('Organized: "%s" into "%s"' % (event.path, new_path))
         except BadSongFile as e:

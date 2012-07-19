@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
+import os
 import media.monitor.pure as mmp
 
 class TestMMP(unittest.TestCase):
@@ -50,5 +51,13 @@ class TestMMP(unittest.TestCase):
         self.assertEqual( og, real_path1 )
         # for recorded it should be something like this
         # ./recorded/2012/07/2012-07-09-17-55-00-Untitled Show-256kbps.ogg
+
+    def test_file_md5(self):
+        p = os.path.realpath(__file__)
+        m1 = mmp.file_md5(p)
+        m2 = mmp.file_md5(p,10)
+        self.assertTrue( m1 != m2 )
+        self.assertRaises( ValueError, lambda : mmp.file_md5('/bull/shit/path') )
+        self.assertTrue( m1 == mmp.file_md5(p) )
 
 if __name__ == '__main__': unittest.main()

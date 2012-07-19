@@ -193,7 +193,10 @@ def organized_path(old_path, root_path, normal_md):
     return filepath
 
 def file_md5(path,max_length=100):
-    """Get md5 of file path (if it exists)"""
+    """
+    Get md5 of file path (if it exists). Use only max_length characters to save time and
+    memory
+    """
     if os.path.exists(path):
         with open(path, 'rb') as f:
             m = hashlib.md5()
