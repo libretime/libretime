@@ -2,6 +2,7 @@
 import copy
 import os
 import shutil
+import hashlib
 supported_extensions =  ["mp3", "ogg"]
 unicode_unknown = u'unknown'
 
@@ -190,6 +191,17 @@ def organized_path(old_path, root_path, normal_md):
                             normal_md['MDATA_KEY_SOURCE'])
         filepath = os.path.join(path, fname)
     return filepath
+
+def file_md5(path,max_length=100):
+    """Get md5 of file path (if it exists)"""
+    if os.path.exists(path):
+        with open(path, 'rb') as f:
+            m = hashlib.md5()
+            # If a file is shorter than "max_length" python will just return
+            # whatever it was able to read which is acceptable behaviour
+            m.update(f.read(max_length))
+            return m.hexdigest()
+    else: raise ValueError("'%s' must exist to find its md5")
 
 if __name__ == '__main__':
     import doctest
