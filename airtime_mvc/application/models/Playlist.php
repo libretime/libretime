@@ -965,11 +965,29 @@ class Application_Model_Playlist
                     if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
-                }else{
-                    if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
-                        if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                            $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
+                } else if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
+                    if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
+                        $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
+                    } else {
+                        // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                        if(!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])){
+                            $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
                         }
+                    }
+                    
+                    if (isset($d['sp_criteria_extra'])) {
+                        if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+                            $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
+                        } else {
+                            // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                            if(!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])){
+                                $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
+                            }
+                        }
+                    }
+                } else if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::INTEGER) {
+                    if (!is_numeric($d['sp_criteria_value'])) {
+                        $error[] = "The value has to be numeric";
                     }
                 }
             }
@@ -1049,8 +1067,6 @@ class Application_Model_Playlist
         $files->getFirst();
         $iterator = $files->getIterator();
         while ($iterator->valid() && $totalTime < $limit['time']) {
-            Logging::log($iterator->current()->getDbId());
-            Logging::log($iterator->current()->getDbLength());
             $id = $iterator->current()->getDbId();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
             $insertList[$id] = $length;
@@ -1082,26 +1098,25 @@ class Application_Model_Playlist
             }
         }
         
-        $qry = CcFilesQuery::create()->setFormatter(ModelCriteria::FORMAT_ON_DEMAND);
+        $qry = CcFilesQuery::create();
         foreach ($storedCrit["crit"] as $criteria) {
-            // propel doc says we should use phpname for column name but
-            // it looks like we have to use actual column name
-            $spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
-            //$spCriteria = $criteria['criteria'];
+            $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
+            $spCriteria = $criteria['criteria'];
+            
             $spCriteriaModifier = $criteria['modifier'];
             $spCriteriaValue = $criteria['value'];
             if ($spCriteriaModifier == "starts with") {
                 $spCriteriaValue = "$spCriteriaValue%";
             } else if ($spCriteriaModifier == "ends with") {
                 $spCriteriaValue = "%$spCriteriaValue";
-            } else if ($spCriteriaModifier == "contains") {
+            } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
                 $spCriteriaValue = "%$spCriteriaValue%";
             } else if ($spCriteriaModifier == "is in the range") {
                 $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
             }
             $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
             try{
-                $qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                $qry->filterBy($spCriteriaPhpName, $spCriteriaValue, $spCriteriaModifier);
                 $qry->addAscendingOrderByColumn('random()');
             }catch (Exception $e){
                 Logging::log($e);
@@ -1117,7 +1132,7 @@ class Application_Model_Playlist
             $limits['items'] = null;
         }
         try{
-            $out = $qry->find();
+            $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         }catch(Exception $e){
             Logging::log($e);

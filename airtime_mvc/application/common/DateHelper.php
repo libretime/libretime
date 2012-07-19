@@ -305,5 +305,34 @@ class Application_Common_DateHelper
         
         return new DateInterval("PT{$hour}H{$min}M{$sec}S");
     }
+    
+    /**
+     * returns true or false depending on input is wether in
+     * valid range of SQL date/time
+     * @param string $p_datetime
+     *     should be in format of '0000-00-00 00:00:00'
+     */
+    public static function checkDateTimeRangeForSQL($p_datetime){
+        $info = explode(' ', $p_datetime);
+        $dateInfo = explode('-', $info[0]);
+        $timeInfo = explode(':', $info[1]);
+        
+        $year = $dateInfo[0];
+        $month = $dateInfo[1];
+        $day = $dateInfo[2];
+        // if year is < 1753 or > 9999 it's out of range
+        if ($year < 1753 || !checkdate($month, $day, $year)) {
+            return false;
+        } else {
+            // check time
+            $hour = intval($timeInfo[0]);
+            $min = intval($timeInfo[1]);
+            $sec = intval($timeInfo[2]);
+            if ($hour > 23 || $min > 59 || $sec > 59) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
