@@ -723,6 +723,15 @@ Logging::log("getting media! - 2");
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
             }
+            
+            //convert mtime and utime to localtime
+            $row['mtime'] = new DateTime($row['mtime'], new DateTimeZone('UTC'));
+            $row['mtime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+            $row['mtime'] = $row['mtime']->format('Y-m-d H:i:s');
+            
+            $row['utime'] = new DateTime($row['utime'], new DateTimeZone('UTC'));
+            $row['utime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+            $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
 
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
