@@ -1099,37 +1099,41 @@ class Application_Model_Playlist
         }
         
         $qry = CcFilesQuery::create();
-        foreach ($storedCrit["crit"] as $criteria) {
-            $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
-            $spCriteria = $criteria['criteria'];
-            
-            $spCriteriaModifier = $criteria['modifier'];
-            $spCriteriaValue = $criteria['value'];
-            if ($spCriteriaModifier == "starts with") {
-                $spCriteriaValue = "$spCriteriaValue%";
-            } else if ($spCriteriaModifier == "ends with") {
-                $spCriteriaValue = "%$spCriteriaValue";
-            } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
-                $spCriteriaValue = "%$spCriteriaValue%";
-            } else if ($spCriteriaModifier == "is in the range") {
-                $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
-            }
-            $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
-            try{
-                $qry->filterBy($spCriteriaPhpName, $spCriteriaValue, $spCriteriaModifier);
-                $qry->addAscendingOrderByColumn('random()');
-            }catch (Exception $e){
-                Logging::log($e);
+        if (isset($storedCrit["crit"])) {
+            foreach ($storedCrit["crit"] as $criteria) {
+                $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
+                $spCriteria = $criteria['criteria'];
+                
+                $spCriteriaModifier = $criteria['modifier'];
+                $spCriteriaValue = $criteria['value'];
+                if ($spCriteriaModifier == "starts with") {
+                    $spCriteriaValue = "$spCriteriaValue%";
+                } else if ($spCriteriaModifier == "ends with") {
+                    $spCriteriaValue = "%$spCriteriaValue";
+                } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
+                    $spCriteriaValue = "%$spCriteriaValue%";
+                } else if ($spCriteriaModifier == "is in the range") {
+                    $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
+                }
+                $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+                try{
+                    $qry->filterBy($spCriteriaPhpName, $spCriteriaValue, $spCriteriaModifier);
+                    $qry->addAscendingOrderByColumn('random()');
+                }catch (Exception $e){
+                    Logging::log($e);
+                }
             }
         }
         // construct limit restriction
         $limits = array();
-        if ($storedCrit['limit']['modifier'] == "items") {
-            $limits['time'] = 1440 * 60;
-            $limits['items'] = $storedCrit['limit']['value'];
-        } else {
-            $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
-            $limits['items'] = null;
+        if (isset($storedCrit['limit'])) {
+            if ($storedCrit['limit']['modifier'] == "items") {
+                $limits['time'] = 1440 * 60;
+                $limits['items'] = $storedCrit['limit']['value'];
+            } else {
+                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
+                $limits['items'] = null;
+            }
         }
         try{
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
