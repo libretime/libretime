@@ -13,6 +13,7 @@
  * @method     CcPlaylistQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcPlaylistQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcPlaylistQuery orderByDbLength($order = Criteria::ASC) Order by the length column
+ * @method     CcPlaylistQuery orderByDbType($order = Criteria::ASC) Order by the type column
  *
  * @method     CcPlaylistQuery groupByDbId() Group by the id column
  * @method     CcPlaylistQuery groupByDbName() Group by the name column
@@ -21,6 +22,7 @@
  * @method     CcPlaylistQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcPlaylistQuery groupByDbDescription() Group by the description column
  * @method     CcPlaylistQuery groupByDbLength() Group by the length column
+ * @method     CcPlaylistQuery groupByDbType() Group by the type column
  *
  * @method     CcPlaylistQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlaylistQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -34,6 +36,10 @@
  * @method     CcPlaylistQuery rightJoinCcPlaylistcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcPlaylistQuery innerJoinCcPlaylistcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
  *
+ * @method     CcPlaylistQuery leftJoinCcPlaylistcriteria($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlaylistcriteria relation
+ * @method     CcPlaylistQuery rightJoinCcPlaylistcriteria($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcriteria relation
+ * @method     CcPlaylistQuery innerJoinCcPlaylistcriteria($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcriteria relation
+ *
  * @method     CcPlaylist findOne(PropelPDO $con = null) Return the first CcPlaylist matching the query
  * @method     CcPlaylist findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylist matching the query, or a new CcPlaylist object populated from the query conditions when no match is found
  *
@@ -44,6 +50,7 @@
  * @method     CcPlaylist findOneByDbCreatorId(int $creator_id) Return the first CcPlaylist filtered by the creator_id column
  * @method     CcPlaylist findOneByDbDescription(string $description) Return the first CcPlaylist filtered by the description column
  * @method     CcPlaylist findOneByDbLength(string $length) Return the first CcPlaylist filtered by the length column
+ * @method     CcPlaylist findOneByDbType(string $type) Return the first CcPlaylist filtered by the type column
  *
  * @method     array findByDbId(int $id) Return CcPlaylist objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcPlaylist objects filtered by the name column
@@ -52,6 +59,7 @@
  * @method     array findByDbCreatorId(int $creator_id) Return CcPlaylist objects filtered by the creator_id column
  * @method     array findByDbDescription(string $description) Return CcPlaylist objects filtered by the description column
  * @method     array findByDbLength(string $length) Return CcPlaylist objects filtered by the length column
+ * @method     array findByDbType(string $type) Return CcPlaylist objects filtered by the type column
  *
  * @package    propel.generator.airtime.om
  */
@@ -338,6 +346,28 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query on the type column
+	 * 
+	 * @param     string $dbType The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistQuery The current query, for fluid interface
+	 */
+	public function filterByDbType($dbType = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbType)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbType)) {
+				$dbType = str_replace('*', '%', $dbType);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcPlaylistPeer::TYPE, $dbType, $comparison);
+	}
+
+	/**
 	 * Filter the query by a related CcSubjs object
 	 *
 	 * @param     CcSubjs $ccSubjs  the related object to use as filter
@@ -463,6 +493,70 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 		return $this
 			->joinCcPlaylistcontents($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlaylistcontents', 'CcPlaylistcontentsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcPlaylistcriteria object
+	 *
+	 * @param     CcPlaylistcriteria $ccPlaylistcriteria  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistQuery The current query, for fluid interface
+	 */
+	public function filterByCcPlaylistcriteria($ccPlaylistcriteria, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcPlaylistPeer::ID, $ccPlaylistcriteria->getDbPlaylistId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcPlaylistcriteria relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcPlaylistQuery The current query, for fluid interface
+	 */
+	public function joinCcPlaylistcriteria($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcPlaylistcriteria');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcPlaylistcriteria');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcPlaylistcriteria relation CcPlaylistcriteria object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcPlaylistcriteriaQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcPlaylistcriteriaQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcPlaylistcriteria($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcPlaylistcriteria', 'CcPlaylistcriteriaQuery');
 	}
 
 	/**

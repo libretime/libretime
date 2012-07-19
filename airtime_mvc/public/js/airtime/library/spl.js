@@ -318,8 +318,14 @@ var AIRTIME = (function(AIRTIME){
 		$("#side_playlist")
 			.empty()
 			.append(json.html);
-		
+				
 		setUpPlaylist();
+		
+        // functions in smart_playlistbuilder.js
+        setupUI();
+        appendAddButton();
+        removeButtonCheck();
+        
 	}
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
@@ -656,6 +662,10 @@ var AIRTIME = (function(AIRTIME){
         });
     };
     
+    mod.fnOpenPlaylist = function(json) {
+        openPlaylist(json);
+    };
+    
     mod.enableUI = function() {
     	
     	$lib.unblock();
@@ -664,6 +674,7 @@ var AIRTIME = (function(AIRTIME){
     	//Block UI changes the postion to relative to display the messages.
     	$lib.css("position", "static");
     	$pl.css("position", "static");
+    	setupUI();
     };
     
     function playlistResponse(json){	

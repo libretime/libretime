@@ -45,6 +45,47 @@ class Application_Model_Playlist
         "dc:description" => "Description",
         "dcterms:extent" => "Length"
     );
+    
+    private static $modifier2CriteriaMap = array(
+            "contains" => Criteria::ILIKE,
+            "does not contain" => Criteria::NOT_ILIKE,
+            "is" => Criteria::EQUAL,
+            "is not" => Criteria::NOT_EQUAL,
+            "starts with" => Criteria::ILIKE,
+            "ends with" => Criteria::ILIKE,
+            "is greater than" => Criteria::GREATER_THAN,
+            "is less than" => Criteria::LESS_THAN,
+            "is in the range" => Criteria::CUSTOM);
+    
+    private static $criteria2PeerMap = array(
+            0 => "Select criteria",
+            "album_title" => "DbAlbumTitle",
+            "artist_name" => "DbArtistName",
+            "bit_rate" => "DbBitRate",
+            "bpm" => "DbBpm",
+            "comments" => "DbComments",
+            "composer" => "DbComposer",
+            "conductor" => "DbConductor",
+            "utime" => "DbUtime",
+            "mtime" => "DbMtime",
+            "disc_number" => "DbDiscNumber",
+            "genre" => "DbGenre",
+            "isrc_number" => "DbIsrcNumber",
+            "label" => "DbLabel",
+            "language" => "DbLanguage",
+            "length" => "DbLength",
+            "lyricist" => "DbLyricist",
+            "mood" => "DbMood",
+            "name" => "DbName",
+            "orchestra" => "DbOrchestra",
+            "radio_station_name" => "DbRadioStation",
+            "rating" => "DbRating",
+            "sample_rate" => "DbSampleRate",
+            "soundcloud_id" => "DbSoundcloudId",
+            "track_title" => "DbTrackTitle",
+            "track_num" => "DbTrackNum",
+            "year" => "DbYear"
+    );
 
 
     public function __construct($id=null, $con=null)
@@ -249,6 +290,14 @@ class Application_Model_Playlist
             return $entry;
         } else {
             throw new Exception("trying to add a file that does not exist.");
+        }
+    }
+    
+    public function isStatic(){
+        if ($this->pl->getDbType() == "static") {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -825,9 +874,265 @@ class Application_Model_Playlist
         $leftOvers = array_diff($selectedPls, $ownedPls);
         return $leftOvers;
     }
+    
+    /**
+     * Delete all files from playlist
+     * @param int $p_playlistId
+     */
+    public function deleteAllFilesFromPlaylist()
+    {
+        CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
+    }
+    
+    
+    // smart playlist functions start
+    public function shuffleSmartPlaylist(){
+        // if it here that means it's static pl
+        $this->saveType("static");
+        $contents = CcPlaylistcontentsQuery::create()
+        ->filterByDbPlaylistId($this->id)
+        ->orderByDbPosition()
+        ->find();
+        $shuffledPos = range(0, count($contents)-1);
+        shuffle($shuffledPos);
+        $temp = new CcPlaylist();
+        foreach ($contents as $item) {
+            $item->setDbPosition(array_shift($shuffledPos));
+            $item->save();
+        }
+        return array("result"=>0);
+    }
+    
+    public function saveType($p_playlistType)
+    {
+        // saving dynamic/static flag
+        CcPlaylistQuery::create()->findPk($this->id)->setDbType($p_playlistType)->save();
+    }
+    
+    /**
+     * Saves smart playlist criteria
+     * @param array $p_criteria
+     */
+    public function saveSmartPlaylistCriteria($p_criteria)
+    {
+        $data = $this->organizeSmartPlyalistCriteria($p_criteria);
+        // things we need to check
+        // 1. limit value shouldn't be empty and has upperbound of 24 hrs
+        // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
+        // 3. validate formate according to DB column type
+        $multiplier = 1;
+        $result = 0;
+        $errors = array();
+        $error = array();
+        
+        // saving dynamic/static flag
+        $playlistType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
+        $this->saveType($playlistType);
+        
+        if ($data['etc']['sp_limit_options'] == 'hours') {
+            $multiplier = 60;
+        }
+        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
+            if ( $data['etc']['sp_limit_value'] == "" || intval($data['etc']['sp_limit_value']) == 0) {
+                $error[] =  "Limit cannot be empty or 0";
+            } else {
+                $mins = $data['etc']['sp_limit_value'] * $multiplier;
+                if ($mins > 14400) {
+                    $error[] =  "Limit cannot be more than 24 hrs";
+                }
+            }
+            if (count($error) > 0){
+                $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
+            }
+        }
+        
+        // format validation
+        foreach ($data['criteria'] as $key=>$d){
+            $error = array();
+            // check for not selected select box
+            if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
+                $error[] =  "You must select Criteria and Modifier";
+            } else {
+                // we need to take care 'length' specially since the column type is varchar
+                if ($d['sp_criteria_field'] == 'length') {
+                    if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                        $error[] =  "'Length' should be in '00:00:00' format";
+                    }
+                }else{
+                    if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
+                        if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
+                            $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
+                        }
+                    }
+                }
+            }
+            
+            if ($d['sp_criteria_value'] == "") {
+                $error[] =  "Value cannot be empty";
+            }
+            if(count($error) > 0){
+                $errors[] = array("element"=>"sp_criteria_field_".$key, "msg"=>$error);
+            }
+        }
+        $result = count($errors) > 0 ? 1 :0;
+        if ($result == 0) {
+            $this->storeCriteriaIntoDb($data);
+        }
+        return array("result"=>$result, "errors"=>$errors);
+    }
+    
+    public function storeCriteriaIntoDb($p_criteriaData){
+        // delete criteria under $p_playlistId
+        CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($this->id)->delete();
+        
+        foreach( $p_criteriaData['criteria'] as $d){
+            $qry = new CcPlaylistcriteria();
+            $qry->setDbCriteria($d['sp_criteria_field'])
+                ->setDbModifier($d['sp_criteria_modifier'])
+                ->setDbValue($d['sp_criteria_value'])
+                ->setDbPlaylistId($this->id);
+            
+            if (isset($d['sp_criteria_extra'])) {
+                $qry->setDbExtra($d['sp_criteria_extra']);
+            }
+            $qry->save();
+        }
+        
+        // insert limit info
+        $qry = new CcPlaylistcriteria();
+        $qry->setDbCriteria("limit")
+            ->setDbModifier($p_criteriaData['etc']['sp_limit_options'])
+            ->setDbValue($p_criteriaData['etc']['sp_limit_value'])
+            ->setDbPlaylistId($this->id)
+            ->save();
+    }
+    
+    /**
+     * generate list of tracks. This function saves creiteria and generate
+     * tracks.
+     * @param array $p_criteria
+     */
+    public function generateSmartPlaylist($p_criteria, $returnList=false)
+    {
+        $result = $this->saveSmartPlaylistCriteria($p_criteria);
+        if ($result['result'] != 0) {
+            return $result;
+        } else {
+            $insertList = $this->getListOfFilesUnderLimit();
+            $this->deleteAllFilesFromPlaylist();
+            $this->addAudioClips(array_keys($insertList));
+            return array("result"=>0);
+        }
+    }
+    
+    public function getListOfFilesUnderLimit()
+    {
+        $info = $this->getListofFilesMeetCriteria();
+        $files = $info['files'];
+        $limit = $info['limit'];
+        // construct ids of track candidates
+        $insertList = array();
+        $totalTime = 0;
+        while ($totalTime < $limit['time'] && !empty($files)) {
+            $key = array_rand($files);
+            $insertList[$key] = $files[$key];
+            $totalTime += $files[$key];
+            unset($files[$key]);
+            if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
+                break;
+            }
+        }
+        return $insertList;
+    }
+    
+    // this function return list of propel object
+    private function getListofFilesMeetCriteria()
+    {
+        $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($this->id);
+        $storedCrit = array();
+        foreach ($out as $crit) {
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+        
+            if($criteria == "limit"){
+                $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
+            }else{
+                $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
+            }
+        }
+        $qry = CcFilesQuery::create();
+        foreach ($storedCrit["crit"] as $criteria) {
+            // propel doc says we should use phpname for column name but
+            // it looks like we have to use actual column name
+            $spCriteria = self::$criteria2PeerMap[$criteria['criteria']];
+            //$spCriteria = $criteria['criteria'];
+            $spCriteriaModifier = $criteria['modifier'];
+            $spCriteriaValue = $criteria['value'];
+            if ($spCriteriaModifier == "starts with") {
+                $spCriteriaValue = "$spCriteriaValue%";
+            } else if ($spCriteriaModifier == "ends with") {
+                $spCriteriaValue = "%$spCriteriaValue";
+            } else if ($spCriteriaModifier == "contains") {
+                $spCriteriaValue = "%$spCriteriaValue%";
+            } else if ($spCriteriaModifier == "is in the range") {
+                $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
+            }
+            $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+            try{
+                //$qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                $qry->filterBy($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+            }catch (Exception $e){
+                Logging::log($e);
+            }
+        }
+        // construct limit restriction
+        $limits = array();
+        if ($storedCrit['limit']['modifier'] == "items") {
+            $limits['time'] = 1440 * 60;
+            $limits['items'] = $storedCrit['limit']['value'];
+        } else {
+            $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
+            $limits['items'] = null;
+        }
+        try{
+            $out = $qry->find();
+            Logging::log($qry->toString());
+            $files = array();
+            foreach ($out as $file) {
+                $files[$file->getDbId()] = Application_Common_DateHelper::calculateLengthInSeconds($file->getDbLength());
+            }
+            //Logging::log($files);
+            return array("files"=>$files, "limit"=>$limits);
+        }catch(Exception $e){
+            Logging::log($e);
+        }
+                
+    }
+    
+    private static function organizeSmartPlyalistCriteria($p_criteria)
+    {
+        $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
+        $output = array();
+        foreach ($p_criteria as $ele) {
+            $index = strrpos($ele['name'], '_');
+            $fieldName = substr($ele['name'], 0, $index);
+            if (in_array($fieldName, $fieldNames)) {
+                $rowNum = intval(substr($ele['name'], $index+1));
+                $output['criteria'][$rowNum][$fieldName] = trim($ele['value']);
+            }else{
+                $output['etc'][$ele['name']] = $ele['value'];
+            }
+        }
+        
+        return $output;
+    }
+    // smart playlist functions end
 
 } // class Playlist
 
 class PlaylistNotFoundException extends Exception {}
 class PlaylistNoPermissionException extends Exception {}
 class PlaylistOutDatedException extends Exception {}
+class PlaylistDyanmicException extends Exception {}
