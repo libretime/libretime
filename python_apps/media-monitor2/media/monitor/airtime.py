@@ -45,7 +45,7 @@ class AirtimeNotifier(Loggable):
         media-monitor via the web UI.
         """
         message.ack()
-        self.logger.info("Received md from RabbitMQ: " + body)
+        self.logger.info("Received md from RabbitMQ: %s" % str(body))
         m = json.loads(message.body)
         self.handler.message(m)
 

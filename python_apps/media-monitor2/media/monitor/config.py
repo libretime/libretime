@@ -33,10 +33,4 @@ class MMConfig(Loggable):
     def haxxor_set(self, key, value): self.cfg[key] = value
     def haxxor_get(self, key): return self.cfg[key]
 
-    def __del__(self):
-        """
-        persist any changes made whenever this object is garbage collected
-        """
-        self.save()
-
 
