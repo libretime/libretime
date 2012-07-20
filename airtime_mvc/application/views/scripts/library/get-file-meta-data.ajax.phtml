@@ -29,9 +29,9 @@
 <div><span>Contents: </span>
     <?php foreach($this->contents as $row) : ?>
     <div>
-        <span><?php echo $row["CcFiles"]["track_title"] ?></span>
-        <span><?php echo $row["CcFiles"]["artist_name"] ?></span>
-        <span><?php echo $row["CcFiles"]["album_title"] ?></span>
+        <span><?php echo $row["track_title"] ?></span>
+        <span><?php echo $row["creator"] ?></span>
+        <span><?php echo $row["album_title"] ?></span>
         <span><?php echo $row["cliplength"] ?></span>
     </div>
     <?php endforeach; ?>

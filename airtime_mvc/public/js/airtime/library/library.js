@@ -40,7 +40,7 @@ var AIRTIME = (function(AIRTIME) {
             cItem,
             i, length,
             count = 0,
-            reAudio=/^au/ ;
+            reAudio=/^(au|st|pl)/ ;
             
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");

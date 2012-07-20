@@ -101,16 +101,16 @@ class AudiopreviewController extends Zend_Controller_Action
 
         foreach ( $pl->getContents(true) as $track ) {
 
-            $elementMap = array( 'element_title' => isset($track['CcFiles']['track_title'])?$track['CcFiles']['track_title']:"",
-                              'element_artist' => isset($track['CcFiles']['artist_name'])?$track['CcFiles']['artist_name']:"",
+            $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
+                              'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
                               'element_id' => isset($track['id'])?$track['id']:"",
                               'element_position' => isset($track['position'])?$track['position']:"",
                             );
-            $fileExtension = pathinfo($track['CcFiles']['filepath'], PATHINFO_EXTENSION);
+            $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
             if (strtolower($fileExtension) === 'mp3') {
-                $elementMap['element_mp3'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
+                $elementMap['element_mp3'] = $track['gunid'].'.'.$fileExtension;
             } elseif (strtolower($fileExtension) === 'ogg') {
-                $elementMap['element_oga'] = $track['CcFiles']['gunid'].'.'.$fileExtension;
+                $elementMap['element_oga'] = $track['gunid'].'.'.$fileExtension;
             } else {
                 //the media was neither mp3 or ogg
             }

@@ -239,6 +239,11 @@
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
+    <!-- What type of item is stored in the playlist. 
+            0: audiotrack
+            1: webstream  
+    -->
+    <column name="type" phpName="DbType" type="INTEGER" required="true" default="0"/>
     <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
     <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>

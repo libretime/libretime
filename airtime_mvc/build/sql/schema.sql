@@ -322,6 +322,7 @@ CREATE TABLE "cc_playlistcontents"
 	"playlist_id" INTEGER,
 	"file_id" INTEGER,
 	"block_id" INTEGER,
+	"type" INTEGER default 0 NOT NULL,
 	"position" INTEGER,
 	"cliplength" interval default '00:00:00',
 	"cuein" interval default '00:00:00',

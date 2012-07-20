@@ -30,8 +30,9 @@ var AIRTIME = (function(AIRTIME){
 		
 		if (aData.ftype === "audioclip") {
 			$nRow.addClass("lib-audio");
-		}
-		else {
+		} else if (aData.ftype === "stream"){
+            $nRow.addClass("lib-stream");
+        } else {
 			$nRow.addClass("lib-pl");
 		}
 		
@@ -45,7 +46,7 @@ var AIRTIME = (function(AIRTIME){
 		mod.redrawChosen();
 		mod.checkToolBarIcons();
 		
-		$('#library_display tr.lib-audio').draggable({
+		$('#library_display tr.lib-audio, tr.lib-stream, tr.lib-pl').draggable({
 			helper: function(){
 					
 			    var $el = $(this),

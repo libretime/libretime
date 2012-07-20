@@ -49,6 +49,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	protected $block_id;
 
 	/**
+	 * The value for the type field.
+	 * Note: this column has a database default value of: 0
+	 * @var        int
+	 */
+	protected $type;
+
+	/**
 	 * The value for the position field.
 	 * @var        int
 	 */
@@ -129,6 +136,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	 */
 	public function applyDefaultValues()
 	{
+		$this->type = 0;
 		$this->cliplength = '00:00:00';
 		$this->cuein = '00:00:00';
 		$this->cueout = '00:00:00';
@@ -184,6 +192,16 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	public function getDbBlockId()
 	{
 		return $this->block_id;
+	}
+
+	/**
+	 * Get the [type] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbType()
+	{
+		return $this->type;
 	}
 
 	/**
@@ -385,6 +403,26 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	} // setDbBlockId()
 
 	/**
+	 * Set the value of [type] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcPlaylistcontents The current object (for fluent API support)
+	 */
+	public function setDbType($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->type !== $v || $this->isNew()) {
+			$this->type = $v;
+			$this->modifiedColumns[] = CcPlaylistcontentsPeer::TYPE;
+		}
+
+		return $this;
+	} // setDbType()
+
+	/**
 	 * Set the value of [position] column.
 	 * 
 	 * @param      int $v new value
@@ -574,6 +612,10 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
+			if ($this->type !== 0) {
+				return false;
+			}
+
 			if ($this->cliplength !== '00:00:00') {
 				return false;
 			}
@@ -620,12 +662,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$this->playlist_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->file_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
 			$this->block_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-			$this->position = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-			$this->cliplength = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->cuein = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->cueout = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-			$this->fadein = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->fadeout = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+			$this->type = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+			$this->position = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+			$this->cliplength = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->cuein = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->cueout = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->fadein = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+			$this->fadeout = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -634,7 +677,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 10; // 10 = CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 11; // 11 = CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlaylistcontents object", $e);
@@ -1010,21 +1053,24 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 				return $this->getDbBlockId();
 				break;
 			case 4:
-				return $this->getDbPosition();
+				return $this->getDbType();
 				break;
 			case 5:
-				return $this->getDbCliplength();
+				return $this->getDbPosition();
 				break;
 			case 6:
-				return $this->getDbCuein();
+				return $this->getDbCliplength();
 				break;
 			case 7:
-				return $this->getDbCueout();
+				return $this->getDbCuein();
 				break;
 			case 8:
-				return $this->getDbFadein();
+				return $this->getDbCueout();
 				break;
 			case 9:
+				return $this->getDbFadein();
+				break;
+			case 10:
 				return $this->getDbFadeout();
 				break;
 			default:
@@ -1055,12 +1101,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 			$keys[1] => $this->getDbPlaylistId(),
 			$keys[2] => $this->getDbFileId(),
 			$keys[3] => $this->getDbBlockId(),
-			$keys[4] => $this->getDbPosition(),
-			$keys[5] => $this->getDbCliplength(),
-			$keys[6] => $this->getDbCuein(),
-			$keys[7] => $this->getDbCueout(),
-			$keys[8] => $this->getDbFadein(),
-			$keys[9] => $this->getDbFadeout(),
+			$keys[4] => $this->getDbType(),
+			$keys[5] => $this->getDbPosition(),
+			$keys[6] => $this->getDbCliplength(),
+			$keys[7] => $this->getDbCuein(),
+			$keys[8] => $this->getDbCueout(),
+			$keys[9] => $this->getDbFadein(),
+			$keys[10] => $this->getDbFadeout(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcFiles) {
@@ -1116,21 +1163,24 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 				$this->setDbBlockId($value);
 				break;
 			case 4:
-				$this->setDbPosition($value);
+				$this->setDbType($value);
 				break;
 			case 5:
-				$this->setDbCliplength($value);
+				$this->setDbPosition($value);
 				break;
 			case 6:
-				$this->setDbCuein($value);
+				$this->setDbCliplength($value);
 				break;
 			case 7:
-				$this->setDbCueout($value);
+				$this->setDbCuein($value);
 				break;
 			case 8:
-				$this->setDbFadein($value);
+				$this->setDbCueout($value);
 				break;
 			case 9:
+				$this->setDbFadein($value);
+				break;
+			case 10:
 				$this->setDbFadeout($value);
 				break;
 		} // switch()
@@ -1161,12 +1211,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDbPlaylistId($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbFileId($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbBlockId($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbPosition($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbCliplength($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbCuein($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbCueout($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setDbFadein($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbFadeout($arr[$keys[9]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbType($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbPosition($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbCliplength($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbCuein($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbCueout($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbFadein($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbFadeout($arr[$keys[10]]);
 	}
 
 	/**
@@ -1182,6 +1233,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcPlaylistcontentsPeer::PLAYLIST_ID)) $criteria->add(CcPlaylistcontentsPeer::PLAYLIST_ID, $this->playlist_id);
 		if ($this->isColumnModified(CcPlaylistcontentsPeer::FILE_ID)) $criteria->add(CcPlaylistcontentsPeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcPlaylistcontentsPeer::BLOCK_ID)) $criteria->add(CcPlaylistcontentsPeer::BLOCK_ID, $this->block_id);
+		if ($this->isColumnModified(CcPlaylistcontentsPeer::TYPE)) $criteria->add(CcPlaylistcontentsPeer::TYPE, $this->type);
 		if ($this->isColumnModified(CcPlaylistcontentsPeer::POSITION)) $criteria->add(CcPlaylistcontentsPeer::POSITION, $this->position);
 		if ($this->isColumnModified(CcPlaylistcontentsPeer::CLIPLENGTH)) $criteria->add(CcPlaylistcontentsPeer::CLIPLENGTH, $this->cliplength);
 		if ($this->isColumnModified(CcPlaylistcontentsPeer::CUEIN)) $criteria->add(CcPlaylistcontentsPeer::CUEIN, $this->cuein);
@@ -1252,6 +1304,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		$copyObj->setDbPlaylistId($this->playlist_id);
 		$copyObj->setDbFileId($this->file_id);
 		$copyObj->setDbBlockId($this->block_id);
+		$copyObj->setDbType($this->type);
 		$copyObj->setDbPosition($this->position);
 		$copyObj->setDbCliplength($this->cliplength);
 		$copyObj->setDbCuein($this->cuein);
@@ -1461,6 +1514,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject  implements Persistent
 		$this->playlist_id = null;
 		$this->file_id = null;
 		$this->block_id = null;
+		$this->type = null;
 		$this->position = null;
 		$this->cliplength = null;
 		$this->cuein = null;

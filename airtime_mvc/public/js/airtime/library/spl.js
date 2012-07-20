@@ -575,9 +575,8 @@ var AIRTIME = (function(AIRTIME){
 				aSelected = AIRTIME.library.getSelectedData();
 			    
 				for (i = 0, length = aSelected.length; i < length; i++) {
-					if (aSelected[i].ftype === "audioclip") {
-						aItems.push(aSelected[i].id);
-					}
+					var type = aSelected[i].ftype;
+					aItems.push(new Array(aSelected[i].id, type));
 				}
 	
 			    aReceiveItems = aItems;
@@ -648,7 +647,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	mod.fnNew = function() {
-		var url = '/Webstream/new';
+		var url = '/Playlist/new';
 
 		stopAudioPreview();
 		
@@ -765,7 +764,7 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.fnAddItems = function(aItems, iAfter, sAddType) {
 		var sUrl = "/playlist/add-items";
-			oData = {"ids": aItems, "afterItem": iAfter, "type": sAddType};
+			oData = {"aItems": aItems, "afterItem": iAfter, "type": sAddType};
 		
 		playlistRequest(sUrl, oData);
 	};

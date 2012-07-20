@@ -3,11 +3,11 @@ $items = $this->obj->getContents();
 if (count($items)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
-    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["CcFiles"]["gunid"]."_".$item["id"]; ?>">
+    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["gunid"]."_".$item["id"]; ?>">
         <div class="list-item-container"> 
         
-            <?php if ($item["CcFiles"]['file_exists']):?>
-            <div class="big_play" audioFile="<?php echo $item["CcFiles"]["gunid"].".".pathinfo($item["CcFiles"]['filepath'], PATHINFO_EXTENSION); ?>">
+            <?php if ($item['exists']):?>
+            <div class="big_play" audioFile="<?php echo $item["gunid"].".".pathinfo($item['path'], PATHINFO_EXTENSION); ?>">
                 <span class="ui-icon ui-icon-play"></span>
             </div>
             <?php else: ?>
@@ -19,10 +19,10 @@ if (count($items)) : ?>
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $item["cliplength"] ?></span>
                 <span class="spl_cue ui-state-default"></span>
-                <span class="spl_title"><?php echo $item["CcFiles"]['track_title'] ?></span>
+                <span class="spl_title"><?php echo $item['track_title'] ?></span>
             </div>
             <div class="text-row">
-                <span class="spl_artist"><?php echo $item["CcFiles"]['artist_name'] ?></span>     
+                <span class="spl_artist"><?php echo $item['creator'] ?></span>     
                 <span class="spl_offset"><?php echo $item["offset"]?></span>
             </div>
             <?php //create the crossfade icon.
@@ -38,7 +38,7 @@ if (count($items)) : ?>
                 'id' => $item["id"],
                 'cueIn' => $item['cuein'],
                 'cueOut' => $item['cueout'],
-                'origLength' => $item["CcFiles"]['length'])); ?>
+                'origLength' => $item['length'])); ?>
         </div>
 
 
