@@ -9,11 +9,11 @@ class Bootstrapper(Loggable):
     Bootstrapper reads all the info in the filesystem flushes organize
     events and watch events
     """
-    def __init__(self,db,last_ran,org_channels,watch_channels):
+    def __init__(self,db,last_run,org_channels,watch_channels):
         self.db = db
         self.org_channels = org_channels
         self.watch_channels = watch_channels
-        self.last_ran = last_ran
+        self.last_run = last_run
 
     def flush_organize(self):
         """
@@ -44,12 +44,12 @@ class Bootstrapper(Loggable):
                 # wasn't aware when this changes occured in the filesystem
                 # hence it will send the correct events to sync the database
                 # with the filesystem
-                if os.path.getmtime(f) > self.last_ran:
+                if os.path.getmtime(f) > self.last_run:
                     modded += 1
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
                     dispatcher.send(signal=pc.signal, sender=self, event=NewFile(f))
         # Want all files in the database that are not in the filesystem
-        for to_delete in self.db.exclude(songs):
+        for to_delete in self.db.difference(songs):
             for pc in self.watch_channels:
                 if os.path.commonprefix([pc.path, to_delete]) == pc.path:
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
@@ -57,9 +57,8 @@ class Bootstrapper(Loggable):
                     deleted += 1
                     break
             else:
-                self.logger.info("Error, could not find watch directory of would be deleted \
-                                  file '%s'" % to_delete)
-        self.logger.info("Flushed watch directories. (modified, deleted) = (%d, %d)"
+                self.logger.info("Error, could not find watch directory of would be deleted file '%s'" % to_delete)
+        self.logger.info( "Flushed watch directories. (modified, deleted) = (%d, %d)"
                          % (modded, deleted) )
 
 

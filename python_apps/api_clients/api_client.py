@@ -605,16 +605,13 @@ class AirtimeApiClient():
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
 
-    """
-        Retrive infomations needed on bootstrap time
-    """
     def get_bootstrap_info(self):
+        """
+        Retrive infomations needed on bootstrap time
+        """
         logger = self.logger
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_bootstrap_info"])
-
-            url = url.replace("%%api_key%%", self.config["api_key"])
-
+            url = self.construct_url("get_bootstrap_info")
             response = self.get_response_from_server(url)
             response = json.loads(response)
             logger.info("Bootstrap info retrieved %s", response)

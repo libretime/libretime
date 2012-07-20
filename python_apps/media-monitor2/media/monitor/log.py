@@ -13,3 +13,6 @@ class Loggable(object):
         # TODO : Clean this up
         if not hasattr(self,"_logger"): self._logger = logging.getLogger('mediamonitor2')
         return self._logger
+
+def get_logger():
+    return logging.getLogger('mediamonitor2')

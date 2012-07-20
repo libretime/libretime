@@ -2,7 +2,7 @@
 import os
 import abc
 from media.monitor.pure import LazyProperty
-from media.monitor.monitor import Metadata
+from media.monitor.metadata import Metadata
 
 class PathChannel(object):
     """a dumb struct; python has no record types"""
