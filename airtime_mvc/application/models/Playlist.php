@@ -68,6 +68,7 @@ class Application_Model_Playlist
             "conductor" => "DbConductor",
             "utime" => "DbUtime",
             "mtime" => "DbMtime",
+            "lptime" => "DbLPtime",
             "disc_number" => "DbDiscNumber",
             "genre" => "DbGenre",
             "isrc_number" => "DbIsrcNumber",
@@ -81,7 +82,6 @@ class Application_Model_Playlist
             "radio_station_name" => "DbRadioStation",
             "rating" => "DbRating",
             "sample_rate" => "DbSampleRate",
-            "soundcloud_id" => "DbSoundcloudId",
             "track_title" => "DbTrackTitle",
             "track_num" => "DbTrackNum",
             "year" => "DbYear"
