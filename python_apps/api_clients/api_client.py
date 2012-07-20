@@ -338,6 +338,8 @@ class AirtimeApiClient():
             url = self.construct_url("update_media_url")
             url = url.replace("%%mode%%", mode)
 
+            self.logger.info("Requesting url %s" % url)
+
             md = convert_dict_value_to_utf8(md)
 
             data = urllib.urlencode(md)
@@ -345,6 +347,8 @@ class AirtimeApiClient():
 
             response = self.get_response_from_server(req)
             logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
+            self.logger.info("Received response:")
+            self.logger.info(response)
             try: response = json.loads(response)
             except ValueError:
                 logger.info("Could not parse json from response: '%s'" % response)

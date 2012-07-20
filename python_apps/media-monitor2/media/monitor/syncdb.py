@@ -2,7 +2,6 @@
 from media.monitor.log import Loggable
 
 class SyncDB(Loggable):
-
     def __init__(self, apc):
         self.apc = apc
         dirs = self.apc.list_all_watched_dirs()
