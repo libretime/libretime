@@ -39,10 +39,9 @@ class Bootstrapper(Loggable):
         modded = deleted = 0
         signal_by_path = dict( (pc.signal, pc.path) for pc in self.watch_channels )
         for pc in self.watch_channels:
-            # TODO : fixed the inconsistencies regarding normpath
             songs[ pc.path ] = set()
             for f in mmp.walk_supported(pc.path, clean_empties=False):
-                songs[ pc.path ].add(os.path.normpath(f))
+                songs[ pc.path ].add(f)
                 # We decide whether to update a file's metadata by checking
                 # its system modification date. If it's above the value
                 # self.last_run which is passed to us that means media monitor
