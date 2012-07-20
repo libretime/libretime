@@ -66,15 +66,6 @@ class Bootstrapper(Loggable):
                 else:
                     self.logger.error("Could not find the signal corresponding to path: '%s'" % watch_dir)
 
-        for to_delete in self.db.difference(songs):
-            for pc in self.watch_channels:
-                if os.path.commonprefix([pc.path, to_delete]) == pc.path:
-                    dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
-                    os.remove(to_delete)
-                    deleted += 1
-                    break
-            else:
-                self.logger.info("Error, could not find watch directory of would be deleted file '%s'" % to_delete)
         self.logger.info( "Flushed watch directories. (modified, deleted) = (%d, %d)"
                          % (modded, deleted) )
 
