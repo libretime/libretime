@@ -426,11 +426,8 @@ class AirtimeApiClient():
     def list_all_db_files(self, dir_id):
         logger = self.logger
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_db_files"])
-
-            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = self.construct_url("list_all_db_files")
             url = url.replace("%%dir_id%%", dir_id)
-
             response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:

@@ -44,6 +44,11 @@ class IncludeOnly(object):
             if ext in self.exts: func(moi, event, *args, **kwargs)
         return _wrap
 
+
+def partition(f, alist):
+    # TODO : document this function and add doctests
+    return (filter(f, alist), filter(lambda x: not f(x), alist))
+
 def is_file_supported(path):
     # TODO : test and document this function
     return extension(path) in supported_extensions
