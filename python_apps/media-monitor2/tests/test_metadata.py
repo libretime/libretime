@@ -2,7 +2,7 @@
 import os
 import unittest
 import sys
-from media.monitor.metadata import Metadata
+import media.monitor.metadata as mmm
 
 class TestMetadata(unittest.TestCase):
     def setUp(self):
@@ -20,7 +20,7 @@ class TestMetadata(unittest.TestCase):
         i = 0
         for full_path in full_paths:
             if os.path.isfile(full_path):
-                md_full = Metadata(full_path)
+                md_full = mmm.Metadata(full_path)
                 md = md_full.extract()
                 if i < 3:
                     i += 1
@@ -32,5 +32,19 @@ class TestMetadata(unittest.TestCase):
                     if hasattr(utf8[k], 'decode'):
                         self.assertEqual( utf8[k].decode('utf-8'), md[k] )
             else: print("Skipping '%s' because it's a directory" % full_path)
+
+    def test_airtime_mutagen_dict(self):
+        for muta,airtime in mmm.mutagen2airtime.iteritems():
+            self.assertEqual( mmm.airtime2mutagen[airtime], muta )
+
+    def test_format_length(self):
+        x1 = 123456
+        print("Formatting '%s' to '%s'" % (x1, mmm.format_length(x1)))
+
+    def test_truncate_to_length(self):
+        s1 = "testing with non string literal"
+        s2 = u"testing with unicode literal"
+        self.assertEqual( len(mmm.truncate_to_length(s1, 5)), 5)
+        self.assertEqual( len(mmm.truncate_to_length(s2, 8)), 8)
 
 if __name__ == '__main__': unittest.main()
