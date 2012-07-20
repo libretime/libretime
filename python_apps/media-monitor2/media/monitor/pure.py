@@ -46,7 +46,12 @@ class IncludeOnly(object):
 
 
 def partition(f, alist):
-    # TODO : document this function and add doctests
+    """
+    Partition is very similar to filter except that it also returns the elements for which f
+    return false but in a tuple.
+    >>> partition(lambda x : x > 3, [1,2,3,4,5,6])
+    [4,5,6],[1,2,3]
+    """
     return (filter(f, alist), filter(lambda x: not f(x), alist))
 
 def is_file_supported(path):
