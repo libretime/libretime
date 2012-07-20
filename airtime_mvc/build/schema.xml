@@ -255,8 +255,8 @@
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="criteria" phpName="DbCriteria" type="VARCHAR" size="16" required="true"/>
     <column name="modifier" phpName="DbModifier" type="VARCHAR" size="16" required="true"/>
-    <column name="value" phpName="DbValue" type="VARCHAR" size="32" required="true"/>
-    <column name="extra" phpName="DbExtra" type="VARCHAR" size="32" required="false"/>
+    <column name="value" phpName="DbValue" type="VARCHAR" size="512" required="true"/>
+    <column name="extra" phpName="DbExtra" type="VARCHAR" size="512" required="false"/>
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="true"/>
     <foreign-key foreignTable="cc_playlist" name="cc_playlistcontents_playlist_id_fkey" onDelete="CASCADE">
       <reference local="playlist_id" foreign="id"/>

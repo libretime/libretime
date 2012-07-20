@@ -271,6 +271,11 @@ class Application_Model_Playlist
         $row->setDbFadein($info["fadein"]);
         $row->setDbFadeout($info["fadeout"]);
         $row->save($this->con);
+        // above save result update on cc_playlist table on length column.
+        // but $this->pl doesn't get updated automatically
+        // so we need to manually grab it again from DB so it has updated values
+        // It is something to do FORMAT_ON_DEMAND( Lazy Loading )
+        $this->pl = CcPlaylistQuery::create()->findPK($this->id);
     }
 
     /*
@@ -929,6 +934,7 @@ class Application_Model_Playlist
         $playlistType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
         $this->saveType($playlistType);
         
+        // validation start
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
         }
@@ -952,42 +958,46 @@ class Application_Model_Playlist
         if (count($error) > 0){
             $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
         }
-        
-        // format validation
+
         foreach ($data['criteria'] as $key=>$d){
             $error = array();
+            $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
             // check for not selected select box
             if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
                 $error[] =  "You must select Criteria and Modifier";
             } else {
-                // we need to take care 'length' specially since the column type is varchar
+                // validation on type of column
                 if ($d['sp_criteria_field'] == 'length') {
                     if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
-                } else if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::TIMESTAMP) {
+                } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                     if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                         $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                    } else {
+                    } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])) {
                         // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                        if(!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])){
-                            $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
-                        }
+                        $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
                     }
                     
                     if (isset($d['sp_criteria_extra'])) {
                         if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
                             $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                        } else {
+                        } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])) {
                             // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                            if(!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])){
-                                $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
-                            }
+                            $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
                         }
                     }
-                } else if (CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']])->getType() == PropelColumnTypes::INTEGER) {
+                } else if ($column->getType() == PropelColumnTypes::INTEGER) {
                     if (!is_numeric($d['sp_criteria_value'])) {
                         $error[] = "The value has to be numeric";
+                    }
+                    // length check
+                    if (intval($d['sp_criteria_value']) >= pow(2,31)) {
+                        $error[] = "The value should be less then 2147483648";
+                    }
+                } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
+                    if (strlen($d['sp_criteria_value']) > $column->getSize()) {
+                        $error[] = "The value should be less ".$column->getSize()." characters";
                     }
                 }
             }
@@ -1105,6 +1115,12 @@ class Application_Model_Playlist
             
             $spCriteriaModifier = $criteria['modifier'];
             $spCriteriaValue = $criteria['value'];
+            
+            // change date/time to UTC is the column time is timestamp
+            if (CcFilesPeer::getTableMap()->getColumnByPhpName($spCriteriaPhpName)->getType() == PropelColumnTypes::TIMESTAMP) {
+                $spCriteriaValue = Application_Common_DateHelper::ConvertToUtcDateTimeString($spCriteriaValue);
+            }
+            
             if ($spCriteriaModifier == "starts with") {
                 $spCriteriaValue = "$spCriteriaValue%";
             } else if ($spCriteriaModifier == "ends with") {
