@@ -33,11 +33,16 @@ class Bootstrapper(Loggable):
         the last run in mediamonitor and sends requests to make the database consistent with
         file system
         """
-        songs = set()
+        # Songs is a dictionary where every key is the watched the directory
+        # and the value is a set with all the files in that directory.
+        songs = {}
         modded = deleted = 0
+        signal_by_path = dict( (pc.signal, pc.path) for pc in self.watch_channels )
         for pc in self.watch_channels:
+            # TODO : fixed the inconsistencies regarding normpath
+            songs[ pc.path ] = set()
             for f in mmp.walk_supported(pc.path, clean_empties=False):
-                songs.add(f)
+                songs[ pc.path ].add(os.path.normpath(f))
                 # We decide whether to update a file's metadata by checking
                 # its system modification date. If it's above the value
                 # self.last_run which is passed to us that means media monitor
@@ -49,6 +54,19 @@ class Bootstrapper(Loggable):
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
                     dispatcher.send(signal=pc.signal, sender=self, event=NewFile(f))
         # Want all files in the database that are not in the filesystem
+        for watch_dir in self.db.list_directories():
+            db_songs = self.db.directory_get_files(watch_dir)
+            # Get all the files that are in the database but in the file
+            # system. These are the files marked for deletions
+            for to_delete in db_songs.difference(songs[watch_dir]):
+                # need the correct watch channel signal to call delete
+                if watch_dir in signal_by_path:
+                    dispatcher.send(signal=signal_by_path[watch_dir], sender=self, event=DeleteFile(f))
+                    os.remove(to_delete)
+                    deleted += 1
+                else:
+                    self.logger.error("Could not find the signal corresponding to path: '%s'" % watch_dir)
+
         for to_delete in self.db.difference(songs):
             for pc in self.watch_channels:
                 if os.path.commonprefix([pc.path, to_delete]) == pc.path:
