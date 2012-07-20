@@ -28,10 +28,10 @@ class SyncDB(Loggable):
     def directory_get_files(self, directory):
         """
         returns all the files(recursively) in a directory. a directory is an "actual" directory
-        path instead of it's id.
+        path instead of its id.
         """
-        return [ os.path.normpath(os.path.join(directory,f)) \
-                for f in self.apc.list_all_db_files(self.directories[directory]) ]
+        return set( [ os.path.normpath(os.path.join(directory,f)) \
+                for f in self.apc.list_all_db_files(self.directories[directory]) ] )
 
     def id_get_files(self, dir_id):
         """
