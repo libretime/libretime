@@ -92,6 +92,9 @@ def truncate_to_length(item, length):
 
 class Metadata(Loggable):
     def __init__(self, fpath):
+        # Forcing the unicode through
+        try: fpath = fpath.decode("utf-8")
+        except: pass
         try: full_mutagen  = mutagen.File(fpath, easy=True)
         except Exception: raise BadSongFile(fpath)
         self.path = fpath

@@ -83,7 +83,7 @@ def no_extension_basename(path):
     >>> no_extension_basename('blah.ml')
     'blah'
     """
-    base = os.path.basename(path)
+    base = unicode(os.path.basename(path))
     if extension(base) == "": return base
     else: return base.split(".")[-2]
 
@@ -154,7 +154,7 @@ def normalized_metadata(md, original_path):
         hour,minute,second,name = md['MDATA_KEY_TITLE'].split("-",4)
         # We assume that MDATA_KEY_YEAR is always given for airtime recorded
         # shows
-        new_md['MDATA_KEY_TITLE'] = '%s-%s-%s:%s:%s' % \
+        new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
             (name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
         # IMPORTANT: in the original code. MDATA_KEY_FILEPATH would also
         # be set to the original path of the file for airtime recorded shows
