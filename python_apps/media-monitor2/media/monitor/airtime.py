@@ -84,7 +84,7 @@ class AirtimeMessageReceiver(Loggable):
     def supported_messages(self):
         return self.dispatch_table.keys()
 
-    # Handler methods - Should either fire the events directly with
+    # TODO : Handler methods - Should either fire the events directly with
     # pydispatcher or do the necessary changes on the filesystem that will fire
     # the events
     def md_update(self, msg):

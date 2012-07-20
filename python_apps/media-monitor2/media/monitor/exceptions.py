@@ -12,3 +12,6 @@ class NoConfigFile(Exception):
 class ConfigAccessViolation(Exception):
     def __init__(self,key): self.key = key
     def __str__(self): return "You must not access key '%s' directly" % self.key
+
+class FailedToSetLocale(Exception):
+    def __str__(self): return "Failed to set locale"

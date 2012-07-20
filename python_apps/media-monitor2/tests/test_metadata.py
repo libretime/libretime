@@ -38,6 +38,7 @@ class TestMetadata(unittest.TestCase):
             self.assertEqual( mmm.airtime2mutagen[airtime], muta )
 
     def test_format_length(self):
+        # TODO : add some real tests for this function
         x1 = 123456
         print("Formatting '%s' to '%s'" % (x1, mmm.format_length(x1)))
 

@@ -3,13 +3,13 @@ from pydispatch import dispatcher
 import abc
 
 from media.monitor.log import Loggable
+import media.monitor.pure as mmp
 
 # Defines the handle interface
 class Handles(object):
     __metaclass__ = abc.ABCMeta
     @abc.abstractmethod
     def handle(self, sender, event, *args, **kwargs): pass
-
 
 # TODO : remove the code duplication between ReportHandler and
 # ProblemFileHandler. Namely the part where both initialize pydispatch
@@ -36,6 +36,8 @@ class ProblemFileHandler(Handles, Loggable):
         dispatcher.connect(dummy, signal=self.signal, sender=dispatcher.Any, weak=False)
 
     def handle(self, sender, event, exception=None):
-        self.logger.info("Received problem file: '%s'. Supposed to move it somewhere", event.path)
-        # TODO : not actually moving it anywhere yet
-
+        self.logger.info("Received problem file: '%s'. Supposed to move it to problem dir", event.path)
+        try: mmp.move_to_dir(dir_path=self.problem_dir, file_path=event.path)
+        except Exception as e:
+            self.logger.info("Could not move file: '%s' to problem dir: '%s'" % (event.path, self.problem_dir))
+            self.logger.info("Exception: %s" % str(e))

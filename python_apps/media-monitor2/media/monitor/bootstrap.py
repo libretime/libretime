@@ -38,6 +38,12 @@ class Bootstrapper(Loggable):
         for pc in self.watch_channels:
             for f in mmp.walk_supported(pc.path, clean_empties=False):
                 songs.add(f)
+                # We decide whether to update a file's metadata by checking
+                # its system modification date. If it's above the value
+                # self.last_run which is passed to us that means media monitor
+                # wasn't aware when this changes occured in the filesystem
+                # hence it will send the correct events to sync the database
+                # with the filesystem
                 if os.path.getmtime(f) > self.last_ran:
                     modded += 1
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))

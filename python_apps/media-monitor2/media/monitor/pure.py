@@ -2,7 +2,13 @@
 import copy
 import os
 import shutil
+import sys
 import hashlib
+from configobj import ConfigObj
+import locale
+
+from media.monitor.exceptions import FailedToSetLocale
+
 supported_extensions =  ["mp3", "ogg"]
 unicode_unknown = u'unknown'
 
@@ -20,7 +26,6 @@ class LazyProperty(object):
         value = self.fget(obj)
         setattr(obj,self.func_name,value)
         return value
-
 
 class IncludeOnly(object):
     """
@@ -40,6 +45,7 @@ class IncludeOnly(object):
         return _wrap
 
 def is_file_supported(path):
+    # TODO : test and document this function
     return extension(path) in supported_extensions
 
 # In the future we would like a better way to find out
@@ -49,6 +55,7 @@ def is_airtime_recorded(md):
 
 def clean_empty_dirs(path):
     """ walks path and deletes every empty directory it finds """
+    # TODO : test this function
     if path.endswith('/'): clean_empty_dirs(path[0:-1])
     else:
         for root, dirs, _ in os.walk(path, topdown=False):
@@ -99,10 +106,15 @@ def walk_supported(directory, clean_empties=False):
     if clean_empties: clean_empty_dirs(directory)
 
 def magic_move(old, new):
-    # TODO : document this
+    # TODO : document and test this function
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
     shutil.move(old,new)
+
+def move_to_dir(dir_path,file_path):
+    # TODO : document and test this function
+    bs = os.path.basename(file_path)
+    magic_move(file_path, os.path.join(dir_path, bs))
 
 def apply_rules_dict(d, rules):
     # TODO : document this
@@ -212,8 +224,28 @@ def encode_to(obj, encoding='utf-8'):
     return obj
 
 def convert_dict_value_to_utf8(md):
-    #list comprehension to convert all values of md to utf-8
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
+
+def configure_locale():
+    current_locale = locale.getlocale()
+    if current_locale[1] is None:
+        default_locale = locale.getdefaultlocale()
+        if default_locale[1] is None:
+            if os.path.exists("/etc/default/locale"):
+                config = ConfigObj('/etc/default/locale')
+                lang = config.get('LANG')
+                new_locale = lang
+            else:
+                raise FailedToSetLocale()
+        else:
+            new_locale = default_locale
+        locale.setlocale(locale.LC_ALL, new_locale)
+    reload(sys)
+    sys.setdefaultencoding("UTF-8")
+    current_locale_encoding = locale.getlocale()[1].lower()
+    if current_locale_encoding not in ['utf-8', 'utf8']:
+        raise FailedToSetLocale()
+
 
 if __name__ == '__main__':
     import doctest

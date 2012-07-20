@@ -580,7 +580,7 @@ class ApiController extends Zend_Controller_Action
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
             $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=$dry);
-            // We attack the 'key' back to every request in case the would like to associate
+            // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
             array_push($responses, $response);
