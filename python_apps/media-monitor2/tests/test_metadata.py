@@ -31,7 +31,6 @@ class TestMetadata(unittest.TestCase):
                 for k,v in md.iteritems():
                     if hasattr(utf8[k], 'decode'):
                         self.assertEqual( utf8[k].decode('utf-8'), md[k] )
-            else:
-                print("Skipping '%s' because it's a directory" % full_path)
+            else: print("Skipping '%s' because it's a directory" % full_path)
 
 if __name__ == '__main__': unittest.main()
