@@ -9,7 +9,7 @@ import locale
 
 from media.monitor.exceptions import FailedToSetLocale
 
-supported_extensions =  ["mp3", "ogg"]
+supported_extensions =  [u"mp3", u"ogg"]
 unicode_unknown = u'unknown'
 
 class LazyProperty(object):
