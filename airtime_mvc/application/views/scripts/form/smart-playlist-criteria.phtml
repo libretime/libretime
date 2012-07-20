@@ -3,8 +3,8 @@
 <legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Playlist Options</legend>
     <dl class='zend_form'>
         <div id='sp-success' class='success' style='display:none'></div>
-        <dd id='sp_type-element' class='radio-inline-list'>
-            <label>
+        <dd id='sp_type-element'>
+            <label class='sp-label'>
             <?php echo $this->element->getElement('sp_type')->getLabel() ?>
             <span class='playlist_type_help_icon'></span>
             </label>
@@ -12,7 +12,7 @@
                   $value = $this->element->getElement('sp_type')->getValue();
                   foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
                   
-                  <label for='sp_type-<?php echo $i?>'>
+                  <label class='sp-label' for='sp_type-<?php echo $i?>'>
                       <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> ><?php echo $radio ?>
                   </label>
             <?php $i = $i + 1; ?>
