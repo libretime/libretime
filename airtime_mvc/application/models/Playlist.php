@@ -172,12 +172,12 @@ class Application_Model_Playlist
         $rows = $query->find($this->con);
          */
         $sql = <<<"EOT"
-((SELECT pc.file_id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
     f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
     LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
 UNION ALL
-(SELECT pc.file_id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-ws.name as title, ws.login as creator, NULL::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
+(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+(ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
 LEFT JOIN cc_webstream AS ws on pc.file_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1));
 EOT;
         Logging::debug($sql);
@@ -201,17 +201,18 @@ filepath
 album_title
 #length
 */
+
         $offset = 0;
         foreach ($rows as &$row) {
             Logging::log($row);
 
-            $clipSec = Application_Model_Playlist::playlistTimeToSeconds($row['cliplength']);
+            $clipSec = Application_Model_Playlist::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
             $offset_cliplength = Application_Model_Playlist::secondsToPlaylistTime($offset);
     
             //format the length for UI.
-            $formatter = new LengthFormatter($row['cliplength']);
-            $row['cliplength'] = $formatter->format();
+            $formatter = new LengthFormatter($row['length']);
+            $row['length'] = $formatter->format();
     
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
