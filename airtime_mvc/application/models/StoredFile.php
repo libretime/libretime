@@ -281,31 +281,6 @@ class Application_Model_StoredFile
     }
 
     /**
-     * Set state of virtual file
-     *
-     * @param string $p_state
-     *         'empty'|'incomplete'|'ready'|'edited'
-     * @param int $p_editedby
-     *          user id | 'NULL' for clear editedBy field
-     * @return TRUE
-     */
-    public function setState($p_state, $p_editedby=NULL)
-    {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-        $escapedState = pg_escape_string($p_state);
-        $eb = (!is_null($p_editedby) ? ", editedBy=$p_editedby" : '');
-        $sql = "UPDATE ".$CC_CONFIG['filesTable']
-            ." SET state='$escapedState'$eb, mtime=now()"
-            ." WHERE gunid='{$this->gunid}'";
-        $res = $con->exec($sql);
-        $this->state = $p_state;
-        $this->editedby = $p_editedby;
-
-        return TRUE;
-    }
-
-    /**
      * Returns an array of playlist objects that this file is a part of.
      * @return array
      */
