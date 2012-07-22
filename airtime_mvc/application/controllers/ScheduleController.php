@@ -114,7 +114,8 @@ class ScheduleController extends Zend_Controller_Action
             $editable = false;
         }
 
-		$this->view->events = Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
+        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
+		$this->view->events = $events;
     }
 
     public function moveShowAction()
