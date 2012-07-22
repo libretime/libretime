@@ -109,11 +109,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	protected $login_attempts;
 
 	/**
-	 * @var        array CcAccess[] Collection to store aggregation of CcAccess objects.
-	 */
-	protected $collCcAccesss;
-
-	/**
 	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
 	 */
 	protected $collCcFiless;
@@ -826,8 +821,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collCcAccesss = null;
-
 			$this->collCcFiless = null;
 
 			$this->collCcPermss = null;
@@ -977,14 +970,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collCcAccesss !== null) {
-				foreach ($this->collCcAccesss as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
 			if ($this->collCcFiless !== null) {
 				foreach ($this->collCcFiless as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -1119,14 +1104,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
-
-				if ($this->collCcAccesss !== null) {
-					foreach ($this->collCcAccesss as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
 
 				if ($this->collCcFiless !== null) {
 					foreach ($this->collCcFiless as $referrerFK) {
@@ -1510,12 +1487,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
-			foreach ($this->getCcAccesss() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcAccess($relObj->copy($deepCopy));
-				}
-			}
-
 			foreach ($this->getCcFiless() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcFiles($relObj->copy($deepCopy));
@@ -1607,115 +1578,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			self::$peer = new CcSubjsPeer();
 		}
 		return self::$peer;
-	}
-
-	/**
-	 * Clears out the collCcAccesss collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addCcAccesss()
-	 */
-	public function clearCcAccesss()
-	{
-		$this->collCcAccesss = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collCcAccesss collection.
-	 *
-	 * By default this just sets the collCcAccesss collection to an empty array (like clearcollCcAccesss());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initCcAccesss()
-	{
-		$this->collCcAccesss = new PropelObjectCollection();
-		$this->collCcAccesss->setModel('CcAccess');
-	}
-
-	/**
-	 * Gets an array of CcAccess objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcSubjs is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcAccess[] List of CcAccess objects
-	 * @throws     PropelException
-	 */
-	public function getCcAccesss($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collCcAccesss || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcAccesss) {
-				// return empty collection
-				$this->initCcAccesss();
-			} else {
-				$collCcAccesss = CcAccessQuery::create(null, $criteria)
-					->filterByCcSubjs($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collCcAccesss;
-				}
-				$this->collCcAccesss = $collCcAccesss;
-			}
-		}
-		return $this->collCcAccesss;
-	}
-
-	/**
-	 * Returns the number of related CcAccess objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related CcAccess objects.
-	 * @throws     PropelException
-	 */
-	public function countCcAccesss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collCcAccesss || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcAccesss) {
-				return 0;
-			} else {
-				$query = CcAccessQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByCcSubjs($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collCcAccesss);
-		}
-	}
-
-	/**
-	 * Method called to associate a CcAccess object to this object
-	 * through the CcAccess foreign key attribute.
-	 *
-	 * @param      CcAccess $l CcAccess
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addCcAccess(CcAccess $l)
-	{
-		if ($this->collCcAccesss === null) {
-			$this->initCcAccesss();
-		}
-		if (!$this->collCcAccesss->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcAccesss[]= $l;
-			$l->setCcSubjs($this);
-		}
 	}
 
 	/**
@@ -2679,11 +2541,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collCcAccesss) {
-				foreach ((array) $this->collCcAccesss as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 			if ($this->collCcFiless) {
 				foreach ((array) $this->collCcFiless as $o) {
 					$o->clearAllReferences($deep);
@@ -2726,7 +2583,6 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
-		$this->collCcAccesss = null;
 		$this->collCcFiless = null;
 		$this->collCcPermss = null;
 		$this->collCcShowHostss = null;

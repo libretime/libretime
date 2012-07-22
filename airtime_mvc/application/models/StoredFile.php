@@ -60,11 +60,6 @@ class Application_Model_StoredFile
         return $this->_file->getDbId();
     }
 
-    public function getGunId()
-    {
-        return $this->_file->getDbGunid();
-    }
-
     public function getFormat()
     {
         return $this->_file->getDbFtype();
@@ -441,9 +436,7 @@ class Application_Model_StoredFile
 
     private function constructGetFileUrl($p_serverName, $p_serverPort)
     {
-Logging::log("getting media! - 2");
-
-        return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+        return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 
     /**
@@ -454,13 +447,12 @@ Logging::log("getting media! - 2");
     {
         Logging::log("getting media!");
 
-        return $baseUrl."/api/get-media/file/".$this->getGunId().".".$this->getFileExtension();
+        return $baseUrl."/api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 
     public static function Insert($md=null)
     {
         $file = new CcFiles();
-        $file->setDbGunid(md5(uniqid("", true)));
         $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
         $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
 
@@ -492,7 +484,7 @@ Logging::log("getting media! - 2");
      *
      * @param int $p_id
      *         local id
-     * @param string $p_gunid
+     * @param string $p_gunid - TODO: Remove this!
      *         global unique id of file
      * @param string $p_md5sum
      *    MD5 sum of the file
@@ -505,10 +497,6 @@ Logging::log("getting media! - 2");
     {
         if (isset($p_id)) {
             $file = CcFilesQuery::create()->findPK(intval($p_id));
-        } elseif (isset($p_gunid)) {
-            $file = CcFilesQuery::create()
-                            ->filterByDbGunid($p_gunid)
-                            ->findOne();
         } elseif (isset($p_md5sum)) {
             if ($exist) {
                 $file = CcFilesQuery::create()
@@ -552,20 +540,6 @@ Logging::log("getting media! - 2");
 
         return $info['filename'];
     }
-
-    /**
-     * Create instance of StoreFile object and recall existing file
-     * by gunid.
-     *
-     * @param string $p_gunid
-     *         global unique id of file
-     * @return Application_Model_StoredFile|NULL
-     */
-    public static function RecallByGunid($p_gunid)
-    {
-        return Application_Model_StoredFile::Recall(null, $p_gunid);
-    }
-
 
     /**
      * Fetch the Application_Model_StoredFile by looking up the MD5 value.
@@ -619,7 +593,7 @@ Logging::log("getting media! - 2");
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
             "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "gunid", "filepath"
+            "language", "filepath"
         );
 
         $plSelect = array();
@@ -743,8 +717,10 @@ Logging::log("getting media! - 2");
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
 
-            if ($type == "au") {//&& isset( $audioResults )) {
-                $row['audioFile'] = $row['gunid'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
+            if ($type == "au") {
+                //TODO:
+                Logging::log("row id: ".$row['id']);
+                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
             } else {
                 $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';

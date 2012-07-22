@@ -604,7 +604,7 @@ class Application_Model_Schedule
 
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $data["media"][$start] = array(
-                'id' => $storedFile->getGunid(),
+                'id' => $storedFile->getId(),
                 'type' => "file",
                 'row_id' => $item["id"],
                 'uri' => $uri,

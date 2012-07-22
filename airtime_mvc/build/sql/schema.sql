@@ -1,36 +1,5 @@
 
 -----------------------------------------------------------------------------
--- cc_access
------------------------------------------------------------------------------
-
-DROP TABLE "cc_access" CASCADE;
-
-
-CREATE TABLE "cc_access"
-(
-	"id" serial  NOT NULL,
-	"gunid" CHAR(32),
-	"token" INT8,
-	"chsum" CHAR(32) default '' NOT NULL,
-	"ext" VARCHAR(128) default '' NOT NULL,
-	"type" VARCHAR(20) default '' NOT NULL,
-	"parent" INT8,
-	"owner" INTEGER,
-	"ts" TIMESTAMP,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_access" IS '';
-
-
-SET search_path TO public;
-CREATE INDEX "cc_access_gunid_idx" ON "cc_access" ("gunid");
-
-CREATE INDEX "cc_access_parent_idx" ON "cc_access" ("parent");
-
-CREATE INDEX "cc_access_token_idx" ON "cc_access" ("token");
-
------------------------------------------------------------------------------
 -- cc_music_dirs
 -----------------------------------------------------------------------------
 
@@ -62,7 +31,6 @@ DROP TABLE "cc_files" CASCADE;
 CREATE TABLE "cc_files"
 (
 	"id" serial  NOT NULL,
-	"gunid" CHAR(32)  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
 	"mime" VARCHAR(255) default '' NOT NULL,
 	"ftype" VARCHAR(128) default '' NOT NULL,
@@ -125,8 +93,7 @@ CREATE TABLE "cc_files"
 	"soundcloud_link_to_file" VARCHAR(4096),
 	"soundcloud_upload_time" TIMESTAMP(6),
 	"replay_gain" VARCHAR(16),
-	PRIMARY KEY ("id"),
-	CONSTRAINT "cc_files_gunid_idx" UNIQUE ("gunid")
+	PRIMARY KEY ("id")
 );
 
 COMMENT ON TABLE "cc_files" IS '';
@@ -676,8 +643,6 @@ COMMENT ON TABLE "cc_webstream" IS '';
 
 
 SET search_path TO public;
-ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
-
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id");

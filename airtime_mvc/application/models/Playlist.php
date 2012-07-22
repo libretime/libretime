@@ -173,34 +173,16 @@ class Application_Model_Playlist
          */
         $sql = <<<"EOT"
 ((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-    f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
+    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
     LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
 UNION ALL
 (SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-(ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
+ws.id as item_id, (ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
 LEFT JOIN cc_webstream AS ws on pc.file_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1));
 EOT;
         Logging::debug($sql);
         $con = Propel::getConnection();
         $rows = $con->query($sql)->fetchAll();
-
-        Logging::debug($rows);
-/*
-#id
-#cliplength
-#cuein
-#cueout
-#fadeout
-#fadein
-
-gunid
-#file_exists
-filepath
-#track_title
-#artist_name
-album_title
-#length
-*/
 
         $offset = 0;
         foreach ($rows as &$row) {

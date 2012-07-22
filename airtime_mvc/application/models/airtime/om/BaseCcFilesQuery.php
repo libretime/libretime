@@ -7,7 +7,6 @@
  * 
  *
  * @method     CcFilesQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method     CcFilesQuery orderByDbGunid($order = Criteria::ASC) Order by the gunid column
  * @method     CcFilesQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method     CcFilesQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
  * @method     CcFilesQuery orderByDbFtype($order = Criteria::ASC) Order by the ftype column
@@ -72,7 +71,6 @@
  * @method     CcFilesQuery orderByDbReplayGain($order = Criteria::ASC) Order by the replay_gain column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
- * @method     CcFilesQuery groupByDbGunid() Group by the gunid column
  * @method     CcFilesQuery groupByDbName() Group by the name column
  * @method     CcFilesQuery groupByDbMime() Group by the mime column
  * @method     CcFilesQuery groupByDbFtype() Group by the ftype column
@@ -168,7 +166,6 @@
  * @method     CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
  *
  * @method     CcFiles findOneByDbId(int $id) Return the first CcFiles filtered by the id column
- * @method     CcFiles findOneByDbGunid(string $gunid) Return the first CcFiles filtered by the gunid column
  * @method     CcFiles findOneByDbName(string $name) Return the first CcFiles filtered by the name column
  * @method     CcFiles findOneByDbMime(string $mime) Return the first CcFiles filtered by the mime column
  * @method     CcFiles findOneByDbFtype(string $ftype) Return the first CcFiles filtered by the ftype column
@@ -233,7 +230,6 @@
  * @method     CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
- * @method     array findByDbGunid(string $gunid) Return CcFiles objects filtered by the gunid column
  * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
  * @method     array findByDbMime(string $mime) Return CcFiles objects filtered by the mime column
  * @method     array findByDbFtype(string $ftype) Return CcFiles objects filtered by the ftype column
@@ -420,28 +416,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			$comparison = Criteria::IN;
 		}
 		return $this->addUsingAlias(CcFilesPeer::ID, $dbId, $comparison);
-	}
-
-	/**
-	 * Filter the query on the gunid column
-	 * 
-	 * @param     string $dbGunid The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcFilesQuery The current query, for fluid interface
-	 */
-	public function filterByDbGunid($dbGunid = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbGunid)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbGunid)) {
-				$dbGunid = str_replace('*', '%', $dbGunid);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcFilesPeer::GUNID, $dbGunid, $comparison);
 	}
 
 	/**

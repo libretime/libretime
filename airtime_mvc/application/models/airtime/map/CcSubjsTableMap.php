@@ -59,7 +59,6 @@ class CcSubjsTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcAccess', 'CcAccess', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), null, null);
     $this->addRelation('CcFiles', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'editedby', ), null, null);
     $this->addRelation('CcPerms', 'CcPerms', RelationMap::ONE_TO_MANY, array('id' => 'subj', ), 'CASCADE', null);
     $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'subjs_id', ), 'CASCADE', null);

@@ -3,11 +3,11 @@ $items = $this->obj->getContents();
 if (count($items)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) : ?>
-    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["gunid"]."_".$item["id"]; ?>">
+    <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["id"]; ?>">
         <div class="list-item-container"> 
         
             <?php if ($item['exists']):?>
-            <div class="big_play" audioFile="<?php echo $item["gunid"].".".pathinfo($item['path'], PATHINFO_EXTENSION); ?>">
+            <div class="big_play" audioFile="<?php echo $item["id"]; ?>">
                 <span class="ui-icon ui-icon-play"></span>
             </div>
             <?php else: ?>
