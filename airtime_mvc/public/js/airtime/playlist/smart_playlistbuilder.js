@@ -279,7 +279,7 @@ function callback(data, type) {
             if (type == 'shuffle') {
                 form.find('.success').text('Playlist shuffled');
             } else {
-            	form.find('.success').text('Smart playlist generated');
+            	form.find('.success').text('Smart playlist generated and saved');
             }
     	    form.find('.success').show();
     	    form.find('#smart_playlist_options').removeClass("closed");
@@ -287,8 +287,9 @@ function callback(data, type) {
             form.find('.success').text('Criteria saved');
             form.find('.success').show();
             
-            /* Update number of files that meet criteria and
-             * change icon to success/warning as appropriate
+            /* Update number of files that meet criteria and change icon to success/warning
+             * as appropriate. This is also done in the form but we do not pass the form
+             * back on a 'Save' callback.
              */
             if (json.poolCount > 1) {
                 $('#sp_pool_count').text(json.poolCount+' files meet the criteria');
@@ -358,6 +359,7 @@ var criteriaTypes = {
     "conductor" : "s",
     "utime" : "n",
     "mtime" : "n",
+    "lptime" : "n",
     "disc_number" : "n",
     "genre" : "s",
     "isrc_number" : "s",
@@ -371,7 +373,6 @@ var criteriaTypes = {
     "radio_station_name" : "s",
     "rating" : "n",
     "sample_rate" : "n",
-    "soundcloud_id" : "n",
     "track_title" : "s",
     "track_num" : "n",
     "year" : "n"               

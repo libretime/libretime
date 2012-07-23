@@ -477,6 +477,10 @@ input.input_text.sp_extra_input_text{
     width: 16px;
     display: inline-block;
 }
+
+.sp-label{
+    padding: 0px !important;
+}
 /***** SMART PLAYLIST SPECIFIC STYLES END *****/
 
 label {

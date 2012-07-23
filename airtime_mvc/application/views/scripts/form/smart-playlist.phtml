@@ -1,0 +1,32 @@
+<form id="smart-playlist-form" method="post" action="">
+<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='smart_playlist_options'>
+<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Playlist Options</legend>
+    <dl class='zend_form'>
+        <div id='sp-success' class='success' style='display:none'></div>
+        <dd id='sp_type-element'>
+            <label class='sp-label'>
+            <?php echo $this->element->getElement('sp_type')->getLabel() ?>
+            <span class='playlist_type_help_icon'></span>
+            </label>
+            <?php $i=0;
+                  $value = $this->element->getElement('sp_type')->getValue();
+                  foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
+                  
+                  <label class='sp-label' for='sp_type-<?php echo $i?>'>
+                      <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> ><?php echo $radio ?>
+                  </label>
+            <?php $i = $i + 1; ?>
+            <?php endforeach; ?>
+            <?php echo $this->element->getElement('save_button') ?>
+            <?php echo $this->element->getElement('generate_button') ?>
+            <?php echo $this->element->getElement('shuffle_button') ?>
+        </dd>
+    </dl>
+    <?php
+        for($i=0;$i<$this->numOfSubForm;$i++){
+            echo $this->parent_form->getSubform('sp_set_'.$i);
+        }
+    ?>
+
+</fieldset>
+</form>

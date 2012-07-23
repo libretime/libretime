@@ -1,38 +1,18 @@
-<form id="smart-playlist-form" method="post" action="">
-<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='smart_playlist_options'>
-<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Playlist Options</legend>
+<h2 class="collapsible-header close"><span class="arrow-icon"></span>Set <?php echo $this->setNumber?></h2>
+<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='sp_set_<?php echo $this->setNumber?>'>
     <dl class='zend_form'>
-        <div id='sp-success' class='success' style='display:none'></div>
-        <dd id='sp_type-element' class='radio-inline-list'>
-            <label>
-            <?php echo $this->element->getElement('sp_type')->getLabel() ?>
-            <span class='playlist_type_help_icon'></span>
-            </label>
-            <?php $i=0;
-                  $value = $this->element->getElement('sp_type')->getValue();
-                  foreach ($this->element->getElement('sp_type')->getMultiOptions() as $radio) : ?>
-                  
-                  <label for='sp_type-<?php echo $i?>'>
-                      <input type="radio" value="<?php echo $i ?>" id="sp_type-<?php echo $i ?>" name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> ><?php echo $radio ?>
-                  </label>
-            <?php $i = $i + 1; ?>
-            <?php endforeach; ?>
-            <?php echo $this->element->getElement('save_button') ?>
-            <?php echo $this->element->getElement('generate_button') ?>
-            <?php echo $this->element->getElement('shuffle_button') ?>
-        </dd>
         
         <dd id='sp_criteria-element'>
         <?php for ($i = 0; $i < $this->criteriasLength; $i++) {?>
-            <div <?php if (($i > 0) && ($this->element->getElement('sp_criteria_field_'.$i)->getAttrib('disabled') == 'disabled')) {
+            <div <?php if (($i > 0) && ($this->element->getElement("sp_criteria_field_".$this->setNumber."_".$i)->getAttrib('disabled') == 'disabled')) {
                            echo 'style=display:none';
                        } ?>>
         
-                <?php echo $this->element->getElement('sp_criteria_field_'.$i) ?>
-                <?php echo $this->element->getElement('sp_criteria_modifier_'.$i) ?>
-                <?php echo $this->element->getElement('sp_criteria_value_'.$i) ?>
-                    <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement('sp_criteria_extra_'.$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
-                <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
+                <?php echo $this->element->getElement("sp_criteria_field_".$this->setNumber."_".$i) ?>
+                <?php echo $this->element->getElement("sp_criteria_modifier_".$this->setNumber."_".$i) ?>
+                <?php echo $this->element->getElement("sp_criteria_value_".$this->setNumber."_".$i) ?>
+                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$this->setNumber."_".$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$this->setNumber.'_'.$i) ?></span> 
+                <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $this->setNumber ?>_<?php echo $i ?>'>
                     <span class='ui-icon ui-icon-closethick'></span>
                 </a>
                 <br />
@@ -43,9 +23,9 @@
         </dd>
         
         <dd id='sp_limit-element'>
-            <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></span>
-            <?php echo $this->element->getElement('sp_limit_value')?>
-            <?php echo $this->element->getElement('sp_limit_options') ?>
+            <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value_'.$this->setNumber)->getLabel() ?></span>
+            <?php echo $this->element->getElement('sp_limit_value_'.$this->setNumber)?>
+            <?php echo $this->element->getElement('sp_limit_options_'.$this->setNumber) ?>
         <br /><br />
         </dd>
         <div class='sp_text_font sp_text_font_bold'>
@@ -77,4 +57,3 @@
         
     </dl>
 </fieldset>
-</form>
