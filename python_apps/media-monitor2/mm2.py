@@ -60,14 +60,21 @@ except Exception as e:
     log.info("Failed to set the locale for unknown reason. Logging exception.")
     log.info(str(e))
 
-channels = {
-    # note that org channel still has a 'watch' path because that is the path
-    # it supposed to be moving the organized files to. it doesn't matter where
-    # are all the "to organize" files are coming from
-    'org' : PathChannel('org', '/home/rudi/throwaway/fucking_around/organize'),
-    'watch' : [],
-    'badfile' : PathChannel('badfile', '/home/rudi/throwaway/fucking_around/problem_dir'),
-}
+#channels = {
+     #note that org channel still has a 'watch' path because that is the path
+     #it supposed to be moving the organized files to. it doesn't matter where
+     #are all the "to organize" files are coming from
+    #'org' : PathChannel('org', '/home/rudi/throwaway/fucking_around/organize'),
+    #'watch' : [],
+    #'badfile' : PathChannel('badfile', '/home/rudi/throwaway/fucking_around/problem_dir'),
+#}
+
+channels = {}
+org = config['org']
+channels['org'] = PathChannel(org['signal'], org['path'])
+channels['watch'] = []
+problem = config['problem']
+channels['badfile'] = PathChannel(problem['signal'], problem['path'])
 
 apiclient = apc.AirtimeApiClient(log)
 # We initialize sdb before anything because we must know what our watched
@@ -85,6 +92,7 @@ for watch_dir in sdb.list_directories():
     if os.path.exists(watch_dir):
         channels['watch'].append(PathChannel('watch', watch_dir))
 
+# The stor directory is the first directory in the watched directories list
 org = Organizer(channel=channels['org'],target_path=channels['watch'][0].path)
 watches = [ WatchSyncer(channel=pc) for pc in channels['watch'] ]
 problem_files = ProblemFileHandler(channel=channels['badfile'])
