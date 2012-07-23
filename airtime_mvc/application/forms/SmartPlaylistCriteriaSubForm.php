@@ -220,32 +220,6 @@ class Application_Form_SmartPlaylistCriteriaSubForm extends Zend_Form_SubForm
             $limitValue->setValue($storedCrit["limit"]["value"]);
         }
         
-        /*
-        $save = new Zend_Form_Element_Button('save_button');
-        $save->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $save->setAttrib('title', 'Save criteria only');
-        $save->setIgnore(true);
-        $save->setLabel('Save');
-        $save->setDecorators(array('viewHelper'));
-        $this->addElement($save);
-        
-        $generate = new Zend_Form_Element_Button('generate_button');
-        $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $generate->setAttrib('title', 'Save criteria and generate playlist content');
-        $generate->setIgnore(true);
-        $generate->setLabel('Generate');
-        $generate->setDecorators(array('viewHelper'));
-        $this->addElement($generate);
-        
-        $shuffle = new Zend_Form_Element_Button('shuffle_button');
-        $shuffle->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $shuffle->setAttrib('title', 'Shuffle playlist content');
-        $shuffle->setIgnore(true);
-        $shuffle->setLabel('Shuffle');
-        $shuffle->setDecorators(array('viewHelper'));
-        $this->addElement($shuffle);
-        */
-        
         //getting playlist content candidate count that meets criteria
         $pl = new Application_Model_Playlist($p_playlistId);
         $files = $pl->getListofFilesMeetCriteria();
