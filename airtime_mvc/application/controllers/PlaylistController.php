@@ -76,9 +76,13 @@ class PlaylistController extends Zend_Controller_Action
             $formatter = new LengthFormatter($pl->getLength());
             $this->view->length = $formatter->format();
             
-            $form = new Application_Form_SmartPlaylistCriteria();
+            $form = new Application_Form_SmartPlaylist();
             $form->removeDecorator('DtDdWrapper');
             $form->startForm($pl->getId());
+            $subform = new Application_Form_SmartPlaylistCriteriaSubForm();
+            $form->removeDecorator('DtDdWrapper');
+            $form->addSubForm($subform, 'sp_set_1');
+            
             $this->view->form = $form;
 
             $this->view->pl = $pl;
@@ -171,7 +175,7 @@ class PlaylistController extends Zend_Controller_Action
                 
                 if($isAdminOrPM || $pl->getCreatorId() == $userInfo->id){
                     $this->view->pl = $pl;
-                    $form = new Application_Form_SmartPlaylistCriteria();
+                    $form = new Application_Form_SmartPlaylist();
                     $form->startForm($this->pl_sess->id);
                     $this->view->form = $form;
                 }
@@ -203,7 +207,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id', null);
         Logging::log("editing playlist {$id}");
-        //$form = new Application_Form_SmartPlaylistCriteria();
+        //$form = new Application_Form_SmartPlaylist();
             
 
         if (!is_null($id)) {

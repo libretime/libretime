@@ -1,9 +1,17 @@
 <?php
-class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
+class Application_Form_SmartPlaylistCriteriaSubForm extends Zend_Form_SubForm
 {
+    private $setNumber;
+    
     public function init(){
         
     }
+    
+    public function setCriteriaSetNumber($p_num)
+    {
+        $this->setNumber = $p_num;
+    }
+    
     public function startForm($p_playlistId)
     {
         $criteriaOptions = array(
@@ -91,6 +99,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             "items" => "items"
         );
         
+        /*
         // load type
         $out = CcPlaylistQuery::create()->findPk($p_playlistId);
         if ($out->getDbType() == "static") {
@@ -98,6 +107,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         } else {
             $playlistType = 1;
         }
+        
         
         $spType = new Zend_Form_Element_Radio('sp_type');
         $spType->setLabel('Set smart playlist type:')
@@ -108,6 +118,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
                 ))
                ->setValue($playlistType);
         $this->addElement($spType);
+        */
         
         // load criteria from db
         $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($p_playlistId);
@@ -134,7 +145,8 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $numElements = count($criteriaOptions);
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
-            $criteria = new Zend_Form_Element_Select('sp_criteria_field_'.$i);
+            
+            $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$this->setNumber."_".$i);
             $criteria->setAttrib('class', 'input_select sp_input_select')
                      ->setValue('Select criteria')
                      ->setDecorators(array('viewHelper'))
@@ -148,7 +160,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             }
             $this->addElement($criteria);
             
-            $criteriaModifers = new Zend_Form_Element_Select('sp_criteria_modifier_'.$i);
+            $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$this->setNumber."_".$i);
             $criteriaModifers->setValue('Select modifier')
                              ->setAttrib('class', 'input_select sp_input_select')
                              ->setDecorators(array('viewHelper'));
@@ -167,7 +179,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             }
             $this->addElement($criteriaModifers);
         
-            $criteriaValue = new Zend_Form_Element_Text('sp_criteria_value_'.$i);
+            $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$this->setNumber."_".$i);
             $criteriaValue->setAttrib('class', 'input_text sp_input_text')
                           ->setDecorators(array('viewHelper'));
             if ($i != 0 && !isset($storedCrit["crit"][$i])){
@@ -178,7 +190,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             }
             $this->addElement($criteriaValue);
             
-            $criteriaExtra = new Zend_Form_Element_Text('sp_criteria_extra_'.$i);
+            $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$this->setNumber."_".$i);
             $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
                           ->setDecorators(array('viewHelper'));
             if (isset($storedCrit["crit"][$i]["extra"])) {
@@ -190,24 +202,25 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
             $this->addElement($criteriaExtra);
         }
         
-        $limit = new Zend_Form_Element_Select('sp_limit_options');
-        $limit->setAttrib('class', 'sp_input_select');
-        $limit->setDecorators(array('viewHelper'));
-        $limit->setMultiOptions($limitOptions);
+        $limit = new Zend_Form_Element_Select('sp_limit_options_'.$this->setNumber);
+        $limit->setAttrib('class', 'sp_input_select')
+              ->setDecorators(array('viewHelper'))
+              ->setMultiOptions($limitOptions);
         if (isset($storedCrit["limit"])) {
             $limit->setValue($storedCrit["limit"]["modifier"]);
         }
         $this->addElement($limit);
         
-        $limitValue = new Zend_Form_Element_Text('sp_limit_value');
-        $limitValue->setAttrib('class', 'sp_input_text_limit');
-        $limitValue->setLabel('Limit to');
-        $limitValue->setDecorators(array('viewHelper'));
+        $limitValue = new Zend_Form_Element_Text('sp_limit_value_'.$this->setNumber);
+        $limitValue->setAttrib('class', 'sp_input_text_limit')
+                   ->setLabel('Limit to')
+                   ->setDecorators(array('viewHelper'));
         $this->addElement($limitValue);
         if (isset($storedCrit["limit"])) {
             $limitValue->setValue($storedCrit["limit"]["value"]);
         }
         
+        /*
         $save = new Zend_Form_Element_Button('save_button');
         $save->setAttrib('class', 'ui-button ui-state-default sp-button');
         $save->setAttrib('title', 'Save criteria only');
@@ -231,14 +244,18 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $shuffle->setLabel('Shuffle');
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
+        */
         
         //getting playlist content candidate count that meets criteria
         $pl = new Application_Model_Playlist($p_playlistId);
         $files = $pl->getListofFilesMeetCriteria();
         
+        Logging::log($this->getElements());
+        Logging::log(count($this->getElements()));
+        
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
-                        'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count']))
+                        'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count'], 'setNumber' => $this->setNumber))
         ));
     }
 }
