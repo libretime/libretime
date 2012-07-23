@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# testing ground for the script
 import pyinotify
 import time
 import sys
@@ -11,11 +10,29 @@ from media.monitor.watchersyncer import WatchSyncer
 from media.monitor.handler import ProblemFileHandler
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.log import get_logger
+from media.monitor.config import MMConfig
 from media.monitor.syncdb import SyncDB
-from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale
+from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
+from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 import media.monitor.pure as mmp
 from api_clients import api_client as apc
+
 log = get_logger()
+global_config = u'/path/to/global/config'
+# MMConfig is a proxy around ConfigObj instances. it does not allow itself
+# users of MMConfig instances to modify any config options directly through the
+# dictionary. Users of this object muse use the correct methods designated for
+# modification
+config = None
+try: config = MMConfig(global_config)
+except NoConfigFile as e:
+    log.info("Cannot run mediamonitor2 without configuration file.")
+    log.info("Current config path: '%s'" % global_config)
+    sys.exit(1)
+except Exception as e:
+    log.info("Unknown error reading configuration file: '%s'" % global_config)
+    log.info(str(e))
+
 log.info("Attempting to set the locale...")
 try:
     mmp.configure_locale(mmp.get_system_locale())
@@ -67,13 +84,6 @@ bs = Bootstrapper(db=sdb, last_run=int(time.time()), org_channels=[channels['org
 bs.flush_organize()
 bs.flush_watch()
 
-# do the bootstrapping before any listening is going one
-#conn = Connection('localhost', 'more', 'shit', 'here')
-#db = DBDumper(conn).dump_block()
-#bs = Bootstrapper(db, [channels['org']], [channels['watch']])
-#bs.flush_organize()
-#bs.flush_watch()
-
 wm = pyinotify.WatchManager()
 
 # Listeners don't care about which directory they're related to. All they care
@@ -86,6 +96,14 @@ notifier = pyinotify.Notifier(wm)
 wdd1 = wm.add_watch(channels['org'].path, pyinotify.ALL_EVENTS, rec=True, auto_add=True, proc_fun=o1)
 for pc in channels['watch']:
     wdd2 = wm.add_watch(pc.path, pyinotify.ALL_EVENTS, rec=True, auto_add=True, proc_fun=o2)
+
+# After finishing the bootstrapping + the listeners we should initialize the
+# kombu message consumer to respond to messages from airtime. we prefer to
+# leave this component of the program for last because without the *Listener
+# objects we cannot properly respond to all events from airtime anyway.
+
+airtime_receiver = AirtimeMessageReceiver(config)
+airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
 notifier.loop()
 

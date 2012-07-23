@@ -229,11 +229,13 @@ def file_md5(path,max_length=100):
     else: raise ValueError("'%s' must exist to find its md5")
 
 def encode_to(obj, encoding='utf-8'):
+    # TODO : add documentation + unit tests for this function
     if isinstance(obj, unicode):
         obj = obj.encode(encoding)
     return obj
 
 def convert_dict_value_to_utf8(md):
+    # TODO : add documentation + unit tests for this function
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 def get_system_locale(locale_path='/etc/default/locale'):
@@ -265,6 +267,15 @@ def configure_locale(config):
     current_locale_encoding = locale.getlocale()[1].lower()
     if current_locale_encoding not in ['utf-8', 'utf8']:
         raise FailedToSetLocale()
+
+def fondle(path,times=None):
+    # TODO : write unit tests for this
+    """
+    touch a file to change the last modified date. Beware of calling this function on the
+    same file from multiple threads.
+    """
+    with file(path, 'a'):
+        os.utime(path, times)
 
 if __name__ == '__main__':
     import doctest

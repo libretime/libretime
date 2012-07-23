@@ -20,3 +20,11 @@ class FailedToObtainLocale(Exception):
         self.path = path
         self.cause = cause
     def __str__(self): return "Failed to obtain locale from '%s'" % self.path
+
+class CouldNotCreateIndexFile(Exception):
+    """exception whenever index file cannot be created"""
+    def __init__(self, path, cause):
+        self.path = path
+        self.cause = cause
+    def __str__(self): return "Failed to create touch file '%s'" % self.path
+
