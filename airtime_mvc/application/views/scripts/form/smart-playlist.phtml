@@ -23,10 +23,9 @@
         </dd>
     </dl>
     <?php
-        for($i=0;$i<$this->numOfSubForm;$i++){
+        for($i=0; $i<$this->numOfSubForm; $i++){
             echo $this->parent_form->getSubform('sp_set_'.$i);
         }
     ?>
-
 </fieldset>
 </form>

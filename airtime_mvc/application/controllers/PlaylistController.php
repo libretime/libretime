@@ -79,9 +79,9 @@ class PlaylistController extends Zend_Controller_Action
             $form = new Application_Form_SmartPlaylist();
             $form->removeDecorator('DtDdWrapper');
             $form->startForm($pl->getId());
-            $subform = new Application_Form_SmartPlaylistCriteriaSubForm();
+            /*$subform = new Application_Form_SmartPlaylistCriteriaSubForm();
             $form->removeDecorator('DtDdWrapper');
-            $form->addSubForm($subform, 'sp_set_1');
+            $form->addSubForm($subform, 'sp_set_1');*/
             
             $this->view->form = $form;
 

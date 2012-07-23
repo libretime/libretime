@@ -2,6 +2,7 @@
 class Application_Form_SmartPlaylistCriteriaSubForm extends Zend_Form_SubForm
 {
     private $setNumber;
+    private $openSubset;
     
     public function init(){
         
@@ -131,14 +132,19 @@ class Application_Form_SmartPlaylistCriteriaSubForm extends Zend_Form_SubForm
             $extra = $crit->getDbExtra();
         
             if($criteria == "limit"){
-                $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
+                $storedCrit[]["limit"] = array("value"=>$value, "modifier"=>$modifier);
             }else{
-                $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
+                $storedCrit[]["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
             }
         }
         
         $openSmartPlaylistOption = false;
         if (!empty($storedCrit)) {
+            $openSmartPlaylistOption = true;
+            $this->openSubset = $openSmartPlaylistOption;
+        }
+        
+        if(!empty($subsetOpen)){
             $openSmartPlaylistOption = true;
         }
         
@@ -231,5 +237,10 @@ class Application_Form_SmartPlaylistCriteriaSubForm extends Zend_Form_SubForm
                 array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
                         'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count'], 'setNumber' => $this->setNumber))
         ));
+    }
+    
+    public function getIsOpen()
+    {
+        return $this->openSubset;
     }
 }

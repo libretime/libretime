@@ -3,9 +3,21 @@ $(document).ready(function() {
 });
 
 function setSmartPlaylistEvents() {
-    var form = $('#smart-playlist-form');
+    var form = $('#smart-playlist-form'),
+        sets = form.find('h2[id^=sp_set]');
+    
+    sets.each(function(index, set){
+        $(set).live('click', function(){
+           if ($(this).next().hasClass('closed')) { 
+               $(this).next().removeClass('closed sp-closed');
+           } else {
+               $(this).next().addClass('closed sp-closed');
+           }
+        });
+    });
     
     form.find('.criteria_add').live('click', function(){
+        
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
         
         div.show();
@@ -319,33 +331,41 @@ function removeSuccessMsg() {
 }
 
 function appendAddButton() {
-    var rows = $('#smart-playlist-form');
     var add_button = "<a class='ui-button sp-ui-button-icon-only criteria_add'>" +
                      "<span class='ui-icon ui-icon-plusthick'></span></a>";
 
-    rows.find('.criteria_add').remove();
+    var sets = $('fieldset[id^=sp_set]');
     
-    if (rows.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
-        rows.find('select[name^="sp_criteria_field"]:enabled:last')
-            .siblings('a[id^="criteria_remove"]')
-            .after(add_button);
-    } else {
-        rows.find('select[name^="sp_criteria_field"]:enabled')
-            .siblings('span[id="extra_criteria"]')
-            .after(add_button);
-    }
+    sets.each(function(index, ele){
+        var set = $(ele);
+        set.find('.criteria_add').remove();
+        
+        if (set.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
+            set.find('select[name^="sp_criteria_field"]:enabled:last')
+                .siblings('a[id^="criteria_remove"]')
+                .after(add_button);
+        } else {
+            set.find('select[name^="sp_criteria_field"]:enabled')
+                .siblings('span[id="extra_criteria"]')
+                .after(add_button);
+        }
+    });
 }
 
 function removeButtonCheck() {
-    var rows = $('#smart-playlist-form');
-	
-    if (rows.find('select[name^="sp_criteria_field"]:enabled').length == 1) {
-        rows.find('a[id="criteria_remove_0"]').attr('disabled', 'disabled');
-        rows.find('a[id="criteria_remove_0"]').hide();
-    } else {
-        rows.find('a[id="criteria_remove_0"]').removeAttr('disabled');
-        rows.find('a[id="criteria_remove_0"]').show(); 
-    }
+    var sets = $('fieldset[id^=sp_set]');
+    sets.each(function(index, ele){
+        var set = $(ele);
+        var temp = set.find('select[name^="sp_criteria_field"]:enabled');
+        var ex = temp.siblings('a[id^="criteria_remove"]');
+        if (temp.length == 1) {
+            ex.attr('disabled', 'disabled');
+            ex.hide();
+        } else {
+            ex.removeAttr('disabled');
+            ex.show();
+        }
+    });
 }
 
 var criteriaTypes = {

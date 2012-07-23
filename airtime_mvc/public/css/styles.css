@@ -481,6 +481,10 @@ input.input_text.sp_extra_input_text{
 .sp-label{
     padding: 0px !important;
 }
+
+.sp-closed{
+	border-width: 0 0 0 !important;
+}
 /***** SMART PLAYLIST SPECIFIC STYLES END *****/
 
 label {
@@ -2144,7 +2148,7 @@ fieldset.closed, fieldset.display_field.closed {
     margin-left: 1px;
 }
 
-fieldset.closed dl, fieldset.closed textarea, fieldset.closed div {
+fieldset.closed dl, fieldset.closed textarea, fieldset.closed div, fieldset.closed h2 {
 	display:none;
 }
 

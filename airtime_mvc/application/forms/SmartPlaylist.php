@@ -28,7 +28,7 @@ class Application_Form_SmartPlaylist extends Zend_Form
         // load criteria from db
         $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($p_playlistId);
         */
-        $storedCrit = array();
+        /*$storedCrit = array();
         foreach ($out as $crit) {
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
@@ -40,11 +40,7 @@ class Application_Form_SmartPlaylist extends Zend_Form
             }else{
                 $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
             }
-        }
-        $openSmartPlaylistOption = false;
-        if (!empty($storedCrit)) {
-            $openSmartPlaylistOption = true;
-        }
+        }*/
         
         $save = new Zend_Form_Element_Button('save_button');
         $save->setAttrib('class', 'ui-button ui-state-default sp-button');
@@ -70,12 +66,16 @@ class Application_Form_SmartPlaylist extends Zend_Form
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
         
+        $openSmartPlaylistOption = false;
         $numOfSubForm = 3;
-        for ($i=0;$i<$numOfSubForm;$i++) {
+        for ($i=0; $i<$numOfSubForm; $i++) {
             $subform = new Application_Form_SmartPlaylistCriteriaSubForm();
             $subform->setCriteriaSetNumber($i);
             $subform->startForm($p_playlistId);
             $this->addSubForm($subform, 'sp_set_'.$i);
+            if ($subform->getIsOpen()) {
+                $openSmartPlaylistOption = true;
+            }
         }
         
         //getting playlist content candidate count that meets criteria

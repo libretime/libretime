@@ -1,5 +1,7 @@
-<h2 class="collapsible-header close"><span class="arrow-icon"></span>Set <?php echo $this->setNumber?></h2>
-<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='sp_set_<?php echo $this->setNumber?>'>
+<h2 class="collapsible-header close" id='sp_set_<?php echo $this->setNumber?>' <?php echo $this->openOption || $this->setNumber == 0 ? "" : "style='display:none'"?>>
+    <span class="arrow-icon"></span>Set <?php echo $this->setNumber?>
+</h2>
+<fieldset class='toggle <?php echo $this->openOption ? "" : "closed sp-closed"?>' id='sp_set_<?php echo $this->setNumber?>'>
     <dl class='zend_form'>
         
         <dd id='sp_criteria-element'>
