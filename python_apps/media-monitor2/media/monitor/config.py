@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-from configobj import ConfigObj
 import copy
+from configobj import ConfigObj
 
 from media.monitor.exceptions import NoConfigFile, ConfigAccessViolation
 
@@ -30,5 +30,3 @@ class MMConfig(object):
     # Remove this after debugging...
     def haxxor_set(self, key, value): self.cfg[key] = value
     def haxxor_get(self, key): return self.cfg[key]
-
-
