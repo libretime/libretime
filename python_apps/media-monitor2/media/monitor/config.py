@@ -25,15 +25,6 @@ class MMConfig(object):
         """
         raise ConfigAccessViolation(key)
 
-    def last_ran():
-        return 123456
-
-    def update_last_run():
-        pass
-
-    def set_last_run_now():
-        pass
-
     def save(self): self.cfg.write()
 
     # Remove this after debugging...
