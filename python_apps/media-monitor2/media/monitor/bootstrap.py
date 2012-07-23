@@ -65,7 +65,6 @@ class Bootstrapper(Loggable):
                     deleted += 1
                 else:
                     self.logger.error("Could not find the signal corresponding to path: '%s'" % watch_dir)
-
         self.logger.info( "Flushed watch directories. (modified, deleted) = (%d, %d)"
                          % (modded, deleted) )
 

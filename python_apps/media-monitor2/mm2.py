@@ -28,7 +28,7 @@ log = get_logger()
 apiclient = apc.AirtimeApiClient(log)
 # We initialize sdb before anything because we must know what our watched
 # directories are.
-sdb = SyncDB(apc)
+sdb = SyncDB(apiclient)
 for watch_dir in sdb.list_directories():
     if not os.path.exists(watch_dir):
         # Create the watch_directory here
@@ -40,12 +40,10 @@ for watch_dir in sdb.list_directories():
     if os.path.exists(watch_dir):
         channels['watch'].append(PathChannel('watch', watch_dir))
 
-org = Organizer(channel=channels['org'],target_path=channels['watch'].path)
+org = Organizer(channel=channels['org'],target_path=channels['watch'][0].path)
 watches = [ WatchSyncer(channel=pc) for pc in channels['watch'] ]
 problem_files = ProblemFileHandler(channel=channels['badfile'])
 
-raw_bootstrap = apiclient.get_bootstrap_info()
-print(raw_bootstrap)
 # A slight incosistency here, channels['watch'] is already a list while the
 # other items are single elements. For consistency we should make all the
 # values in channels lists later on
@@ -68,7 +66,8 @@ wm = pyinotify.WatchManager()
 # Listeners don't care about which directory they're related to. All they care
 # about is which signal they should respond to
 o1 = OrganizeListener(signal=channels['org'].signal)
-o2 = StoreWatchListener(signal=channels['watch'].signal)
+# We are assuming that the signals are the same for each watched directory here
+o2 = StoreWatchListener(signal=channels['watch'][0].signal)
 
 notifier = pyinotify.Notifier(wm)
 wdd1 = wm.add_watch(channels['org'].path, pyinotify.ALL_EVENTS, rec=True, auto_add=True, proc_fun=o1)
