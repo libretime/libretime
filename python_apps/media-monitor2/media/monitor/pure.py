@@ -277,6 +277,16 @@ def fondle(path,times=None):
     with file(path, 'a'):
         os.utime(path, times)
 
+def last_modified(path):
+    """
+    return the time of the last time mm2 was ran. path refers to the index file whose
+    date modified attribute contains this information. In the case when the file does not
+    exist we set this time 0 so that any files on the filesystem were modified after it
+    """
+    if os.path.exists(path):
+        os.path.gmtime(path)
+    else: 0
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()

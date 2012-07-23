@@ -9,11 +9,11 @@ class Bootstrapper(Loggable):
     Bootstrapper reads all the info in the filesystem flushes organize
     events and watch events
     """
-    def __init__(self,db,last_run,org_channels,watch_channels):
+    def __init__(self,db,last_ran,org_channels,watch_channels):
         self.db = db
         self.org_channels = org_channels
         self.watch_channels = watch_channels
-        self.last_run = last_run
+        self.last_ran = last_ran
 
     def flush_organize(self):
         """
@@ -44,11 +44,11 @@ class Bootstrapper(Loggable):
                 songs[ pc.path ].add(f)
                 # We decide whether to update a file's metadata by checking
                 # its system modification date. If it's above the value
-                # self.last_run which is passed to us that means media monitor
+                # self.last_ran which is passed to us that means media monitor
                 # wasn't aware when this changes occured in the filesystem
                 # hence it will send the correct events to sync the database
                 # with the filesystem
-                if os.path.getmtime(f) > self.last_run:
+                if os.path.getmtime(f) > self.last_ran:
                     modded += 1
                     dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
                     dispatcher.send(signal=pc.signal, sender=self, event=NewFile(f))

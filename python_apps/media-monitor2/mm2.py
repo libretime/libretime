@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pyinotify
-import time
 import sys
 import os
 from media.monitor.listeners import OrganizeListener, StoreWatchListener
@@ -11,6 +10,7 @@ from media.monitor.handler import ProblemFileHandler
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.log import get_logger
 from media.monitor.config import MMConfig
+from media.monitor.toucher import ToucherThread
 from media.monitor.syncdb import SyncDB
 from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
@@ -59,6 +59,7 @@ apiclient = apc.AirtimeApiClient(log)
 # We initialize sdb before anything because we must know what our watched
 # directories are.
 sdb = SyncDB(apiclient)
+
 for watch_dir in sdb.list_directories():
     if not os.path.exists(watch_dir):
         # Create the watch_directory here
@@ -79,7 +80,7 @@ problem_files = ProblemFileHandler(channel=channels['badfile'])
 # values in channels lists later on
 # TODO : get the actual last running time instead of using the current time
 # like now
-bs = Bootstrapper(db=sdb, last_run=int(time.time()), org_channels=[channels['org']], watch_channels=channels['watch'])
+bs = Bootstrapper(db=sdb, last_ran=mmp.last_modified(config['index_path']), org_channels=[channels['org']], watch_channels=channels['watch'])
 
 bs.flush_organize()
 bs.flush_watch()
@@ -104,6 +105,10 @@ for pc in channels['watch']:
 
 airtime_receiver = AirtimeMessageReceiver(config)
 airtime_notifier = AirtimeNotifier(config, airtime_receiver)
+
+# Launch the toucher that updates the last time when the script was ran every
+# n seconds.
+tt = ToucherThread(path=config['index_path'], interval=config['touch_interval'])
 
 notifier.loop()
 

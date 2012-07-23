@@ -3,13 +3,11 @@ import os
 from configobj import ConfigObj
 import copy
 
-from media.monitor.log import Loggable
 from media.monitor.exceptions import NoConfigFile, ConfigAccessViolation
 
-class MMConfig(Loggable):
+class MMConfig(object):
     def __init__(self, path):
         if not os.path.exists(path):
-            self.logger.error("Configuration file does not exist. Path: '%s'" % path)
             raise NoConfigFile(path)
         self.cfg = ConfigObj(path)
 
