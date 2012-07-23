@@ -1519,10 +1519,11 @@ class Application_Model_Show
         $sql = "SELECT si1.starts AS starts, si1.ends AS ends, si1.record AS record, si1.rebroadcast AS rebroadcast, si2.starts AS parent_starts,
                 si1.instance_id AS record_id, si1.show_id AS show_id, show.name AS name,
                 show.color AS color, show.background_color AS background_color, si1.file_id AS file_id, si1.id AS instance_id,
-                si1.created AS created, si1.last_scheduled AS last_scheduled, si1.time_filled AS time_filled
+                si1.created AS created, si1.last_scheduled AS last_scheduled, si1.time_filled AS time_filled, f.soundcloud_id
             FROM cc_show_instances AS si1
             LEFT JOIN cc_show_instances AS si2 ON si1.instance_id = si2.id
             LEFT JOIN cc_show AS show ON show.id = si1.show_id
+            LEFT JOIN cc_files AS f ON f.id = si1.file_id
             WHERE si1.modified_instance = FALSE";
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
@@ -1538,7 +1539,6 @@ class Application_Model_Show
                 OR (si1.starts <= '{$start_string}' AND si1.ends >= '{$end_string}'))";
         }
 
-
         if (isset($excludeInstance)) {
             foreach ($excludeInstance as $instance) {
                 $sql_exclude[] = "si1.id != {$instance}";
@@ -1549,8 +1549,7 @@ class Application_Model_Show
             $sql = $sql." AND ({$exclude})";
         }
 
-        $result = $con->query($sql)->fetchAll();
-
+        $result = $con->query($sql);
         return $result;
     }
 
@@ -1606,7 +1605,7 @@ class Application_Model_Show
      *          -in UTC time
      * @param boolean $editable
      */
-    public static function getFullCalendarEvents($p_start, $p_end, $p_editable=false)
+    public static function &getFullCalendarEvents($p_start, $p_end, $p_editable=false)
     {
         $events = array();
         $interval = $p_start->diff($p_end);
@@ -1614,11 +1613,12 @@ class Application_Model_Show
         $shows = Application_Model_Show::getShows($p_start, $p_end);
         $nowEpoch = time();
 
+        $timezone = date_default_timezone_get();
+
         foreach ($shows as $show) {
             $options = array();
 
             //only bother calculating percent for week or day view.
-
             if (intval($days) <= 7) {
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
@@ -1627,11 +1627,17 @@ class Application_Model_Show
                 $parentStartsDT = new DateTime($show["parent_starts"], new DateTimeZone("UTC"));
                 $parentStartsEpoch = intval($parentStartsDT->format("U"));
             }
-            $startsDT = new DateTime($show["starts"], new DateTimeZone("UTC"));
-            $endsDT = new DateTime($show["ends"], new DateTimeZone("UTC"));
-
-            $startsEpoch = intval($startsDT->format("U"));
-            $endsEpoch = intval($endsDT->format("U"));
+            $startsDT = DateTime::createFromFormat("Y-m-d G:i:s", $show["starts"], new DateTimeZone("UTC"));
+            $endsDT = DateTime::createFromFormat("Y-m-d G:i:s", $show["ends"], new DateTimeZone("UTC"));
+            
+            $startsEpochStr = $startsDT->format("U");
+            $endsEpochStr = $endsDT->format("U");
+            
+            $startsEpoch = intval($startsEpochStr);
+            $endsEpoch = intval($endsEpochStr);
+            
+            $startsDT->setTimezone(new DateTimeZone($timezone));
+            $endsDT->setTimezone(new DateTimeZone($timezone));
 
             if ($p_editable && $show["record"] && $nowEpoch > $startsEpoch) {
                 $options["editable"] = false;
@@ -1640,7 +1646,7 @@ class Application_Model_Show
             } elseif ($p_editable && $nowEpoch < $endsEpoch) {
                 $options["editable"] = true;
             }
-            $events[] = Application_Model_Show::makeFullCalendarEvent($show, $options);
+            $events[] = &self::makeFullCalendarEvent($show, $options, $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
         }
 
         return $events;
@@ -1659,47 +1665,35 @@ class Application_Model_Show
         return $percent;
     }
 
-    private static function makeFullCalendarEvent($show, $options=array())
+    private static function &makeFullCalendarEvent(&$show, $options=array(), $startDateTime, $endDateTime, $startsEpoch, $endsEpoch)
     {
         $event = array();
-
-        $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
-        $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
-        $endDateTime = new DateTime($show["ends"], new DateTimeZone("UTC"));
-        $endDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
         $event["id"] = intval($show["instance_id"]);
         $event["title"] = $show["name"];
         $event["start"] = $startDateTime->format("Y-m-d H:i:s");
-        $event["startUnix"] = $startDateTime->format("U");
+        $event["startUnix"] = $startsEpoch;
         $event["end"] = $endDateTime->format("Y-m-d H:i:s");
-        $event["endUnix"] = $endDateTime->format("U");
+        $event["endUnix"] = $endsEpoch;
         $event["allDay"] = false;
         $event["showId"] = intval($show["show_id"]);
         $event["record"] = intval($show["record"]);
         $event["rebroadcast"] = intval($show["rebroadcast"]);
-
-        // get soundcloud_id
-        if (!is_null($show["file_id"])) {
-            $file = Application_Model_StoredFile::Recall($show["file_id"]);
-            $soundcloud_id = $file->getSoundCloudId();
-        }
-
-        $event["soundcloud_id"] = isset($soundcloud_id) ? $soundcloud_id : -1;
+        $event["soundcloud_id"] = is_null($show["soundcloud_id"]) ? -1 : $show["soundcloud_id"];
 
         //event colouring
         if ($show["color"] != "") {
             $event["textColor"] = "#".$show["color"];
         }
+        
         if ($show["background_color"] != "") {
             $event["color"] = "#".$show["background_color"];
         }
-
+        
         foreach ($options as $key => $value) {
             $event[$key] = $value;
         }
-
+        
         return $event;
     }
 
