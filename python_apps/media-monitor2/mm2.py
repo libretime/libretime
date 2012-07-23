@@ -19,6 +19,18 @@ import media.monitor.pure as mmp
 
 from api_clients import api_client as apc
 
+# Execution consists of the following steps (for now)
+# 1. initialize logging
+# 2. create MMConfig from the config file
+# 3. configure the locale
+# 4. initialize all event handlers (WatchManager, OrganizeListener, etc.)
+# 5. get bootstrap db from airtime
+# 6. sync the db according to the filesystem (and vice versa in some cases)
+# 7. initialize listeners for watched and organize directories
+# 8. initialize kombu listener for receiving messages from airtime
+# 9. start the toucher thread that updates the last modified time of the index
+#    file as the program is running
+
 log = get_logger()
 global_config = u'/path/to/global/config'
 # MMConfig is a proxy around ConfigObj instances. it does not allow itself
@@ -80,7 +92,6 @@ problem_files = ProblemFileHandler(channel=channels['badfile'])
 # A slight incosistency here, channels['watch'] is already a list while the
 # other items are single elements. For consistency we should make all the
 # values in channels lists later on
-# TODO : get the actual last running time instead of using the current time
 # like now
 bs = Bootstrapper(db=sdb, last_ran=mmp.last_modified(config['index_path']), org_channels=[channels['org']], watch_channels=channels['watch'])
 
