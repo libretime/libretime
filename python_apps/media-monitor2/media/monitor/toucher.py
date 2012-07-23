@@ -62,6 +62,7 @@ class ToucherThread(Loggable):
     def __init__(self, path, interval=5):
         if not os.path.exists(path):
             try:
+                # TODO : rewrite using with?
                 f = open(path,'w')
                 f.write('')
                 f.close()
