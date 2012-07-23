@@ -13,9 +13,7 @@ class Toucher(Loggable):
             self.logger.info("Failed to touch file: '%s'. Logging exception." % self.path)
             self.logger.info(str(e))
 
-"""
-http://code.activestate.com/lists/python-ideas/8982/
-"""
+#http://code.activestate.com/lists/python-ideas/8982/
 from datetime import datetime
 
 import threading
@@ -61,7 +59,6 @@ class RepeatTimer(threading.Thread):
 
 
 class ToucherThread(Loggable):
-    """docstring for ToucherThread"""
     def __init__(self, path, interval=5):
         if not os.path.exists(path):
             try:
@@ -72,5 +69,6 @@ class ToucherThread(Loggable):
                 raise CouldNotCreateIndexFile(path,e)
         cb = Toucher(path)
         t = RepeatTimer(interval, cb)
+        t.daemon = True # thread terminates once process is done
         t.start()
 

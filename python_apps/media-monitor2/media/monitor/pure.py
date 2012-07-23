@@ -284,7 +284,7 @@ def last_modified(path):
     exist we set this time 0 so that any files on the filesystem were modified after it
     """
     if os.path.exists(path):
-        os.path.gmtime(path)
+        return os.path.getmtime(path)
     else: 0
 
 if __name__ == '__main__':

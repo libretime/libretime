@@ -2,6 +2,7 @@
 import pyinotify
 import sys
 import os
+
 from media.monitor.listeners import OrganizeListener, StoreWatchListener
 from media.monitor.organizer import Organizer
 from media.monitor.events import PathChannel
@@ -15,6 +16,7 @@ from media.monitor.syncdb import SyncDB
 from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 import media.monitor.pure as mmp
+
 from api_clients import api_client as apc
 
 log = get_logger()
