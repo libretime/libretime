@@ -236,17 +236,27 @@ def encode_to(obj, encoding='utf-8'):
 def convert_dict_value_to_utf8(md):
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
-def configure_locale():
+def get_system_locale(locale_path='/etc/default/locale'):
+    """
+    Returns the configuration object for the system's default locale. Normally
+    requires root access.
+    """
+    if os.path.exists(locale_path):
+        try:
+            config = ConfigObj(locale_path)
+            return config
+        except Exception as e:
+            raise FailedToSetLocale(locale_path,cause=e)
+    else: raise ValueError("locale path '%s' does not exist. permissions issue?" % locale_path)
+
+def configure_locale(config):
+    """ sets the locale according to the system's locale."""
     current_locale = locale.getlocale()
     if current_locale[1] is None:
         default_locale = locale.getdefaultlocale()
         if default_locale[1] is None:
-            if os.path.exists("/etc/default/locale"):
-                config = ConfigObj('/etc/default/locale')
-                lang = config.get('LANG')
-                new_locale = lang
-            else:
-                raise FailedToSetLocale()
+            lang = config.get('LANG')
+            new_locale = lang
         else:
             new_locale = default_locale
         locale.setlocale(locale.LC_ALL, new_locale)
@@ -255,7 +265,6 @@ def configure_locale():
     current_locale_encoding = locale.getlocale()[1].lower()
     if current_locale_encoding not in ['utf-8', 'utf8']:
         raise FailedToSetLocale()
-
 
 if __name__ == '__main__':
     import doctest

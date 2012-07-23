@@ -7,7 +7,6 @@ logging.basicConfig(filename='/home/rudi/throwaway/mm2.log', level=logging.DEBUG
 
 class Loggable(object):
     __metaclass__ = abc.ABCMeta
-    # TODO : replace this boilerplate with LazyProperty
     @LazyProperty
     def logger(self):
         # TODO : Clean this up

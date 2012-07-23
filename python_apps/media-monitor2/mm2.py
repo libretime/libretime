@@ -2,6 +2,7 @@
 # testing ground for the script
 import pyinotify
 import time
+import sys
 import os
 from media.monitor.listeners import OrganizeListener, StoreWatchListener
 from media.monitor.organizer import Organizer
@@ -11,9 +12,22 @@ from media.monitor.handler import ProblemFileHandler
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.log import get_logger
 from media.monitor.syncdb import SyncDB
+from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale
+import media.monitor.pure as mmp
 from api_clients import api_client as apc
-
-# TODO : we should configure locale before doing anything here
+log = get_logger()
+log.info("Attempting to set the locale...")
+try:
+    mmp.configure_locale(mmp.get_system_locale())
+except FailedToSetLocale as e:
+    log.info("Failed to set the locale...")
+    sys.exit(1)
+except FailedToObtainLocale as e:
+    log.info("Failed to obtain the locale form the default path: '/etc/default/locale'")
+    sys.exit(1)
+except Exception as e:
+    log.info("Failed to set the locale for unknown reason. Logging exception.")
+    log.info(str(e))
 
 channels = {
     # note that org channel still has a 'watch' path because that is the path
@@ -24,7 +38,6 @@ channels = {
     'badfile' : PathChannel('badfile', '/home/rudi/throwaway/fucking_around/problem_dir'),
 }
 
-log = get_logger()
 apiclient = apc.AirtimeApiClient(log)
 # We initialize sdb before anything because we must know what our watched
 # directories are.
