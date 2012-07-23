@@ -92,8 +92,11 @@ problem_files = ProblemFileHandler(channel=channels['badfile'])
 # A slight incosistency here, channels['watch'] is already a list while the
 # other items are single elements. For consistency we should make all the
 # values in channels lists later on
-# like now
-bs = Bootstrapper(db=sdb, last_ran=mmp.last_modified(config['index_path']), org_channels=[channels['org']], watch_channels=channels['watch'])
+# we try to not share the config object as much as possible and in this case we
+# prefer to only pass the necessary last_ran parameter instead of the whole
+# object. although this might change in the future if Bootstrapper becomes more
+# complicated
+bs = Bootstrapper(db=sdb, last_ran=config.last_ran(), org_channels=[channels['org']], watch_channels=channels['watch'])
 
 bs.flush_organize()
 bs.flush_watch()

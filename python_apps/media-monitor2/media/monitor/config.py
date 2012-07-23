@@ -4,6 +4,7 @@ import copy
 from configobj import ConfigObj
 
 from media.monitor.exceptions import NoConfigFile, ConfigAccessViolation
+import media.monitor.pure as mmp
 
 class MMConfig(object):
     def __init__(self, path):
@@ -26,6 +27,9 @@ class MMConfig(object):
         raise ConfigAccessViolation(key)
 
     def save(self): self.cfg.write()
+
+    def last_ran(self):
+        return mmp.last_modified(self.cfg['index_path'])
 
     # Remove this after debugging...
     def haxxor_set(self, key, value): self.cfg[key] = value
