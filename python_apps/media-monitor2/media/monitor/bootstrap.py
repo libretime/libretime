@@ -61,7 +61,11 @@ class Bootstrapper(Loggable):
                 # need the correct watch channel signal to call delete
                 if watch_dir in signal_by_path:
                     dispatcher.send(signal=signal_by_path[watch_dir], sender=self, event=DeleteFile(f))
-                    os.remove(to_delete)
+                    # TODO : get rid of this, we should never delete files from
+                    # the FS even if they are deleted in airtime. Instead we
+                    # should put this file on a global ignore list until it's
+                    # re-added or something
+                    # os.remove(to_delete)
                     deleted += 1
                 else:
                     self.logger.error("Could not find the signal corresponding to path: '%s'" % watch_dir)

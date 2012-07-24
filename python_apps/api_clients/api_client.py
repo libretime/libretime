@@ -441,6 +441,7 @@ class AirtimeApiClient():
             return []
 
     def list_all_watched_dirs(self):
+        # Does this include the stor directory as well?
         logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])

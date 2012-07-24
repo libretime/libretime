@@ -38,6 +38,12 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent):
     # got cookie
     def process_IN_MOVED_TO(self, event): self.process_to_organize(event)
 
+    def flush_events(self, path):
+        """organize the whole directory at path. (pretty much by doing what
+        handle does to every file"""
+        # TODO : implement me
+        pass
+
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(event))

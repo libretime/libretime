@@ -94,6 +94,7 @@ for watch_dir in sdb.list_directories():
 
 # The stor directory is the first directory in the watched directories list
 org = Organizer(channel=channels['org'],target_path=channels['watch'][0].path)
+# TODO : this is wrong
 watches = [ WatchSyncer(channel=pc) for pc in channels['watch'] ]
 problem_files = ProblemFileHandler(channel=channels['badfile'])
 

@@ -47,7 +47,8 @@ class TimeoutWatcher(threading.Thread,Loggable):
             # Note that this isn't strictly necessary since RequestSync threads
             # already chain themselves
             if self.watcher.requests_in_queue():
-                self.logger.info("We got %d requests waiting to be launched" % self.watcher.requests_left_count())
+                self.logger.info("We got %d requests waiting to be launched" %
+                        self.watcher.requests_left_count())
                 self.watcher.request_do()
             # Same for events, this behaviour is mandatory however.
             if self.watcher.events_in_queue():
@@ -73,14 +74,12 @@ class WatchSyncer(ReportHandler,Loggable):
 
     @property
     def target_path(self): return self.channel.path
+    @property
     def signal(self): return self.channel.signal
 
     def handle(self, sender, event):
         """We implement this abstract method from ReportHandler"""
-        # Using isinstance like this is usually considered to be bad style
-        # because you are supposed to use polymorphism instead however we would
-        # separate event handling itself from the events so there seems to be
-        # no better way to do this
+        # TODO : more types of events need to be handled here
         if isinstance(event, NewFile):
             try:
                 self.logger.info("'%s' : New file added: '%s'" % (self.target_path, event.path))

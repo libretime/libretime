@@ -6,6 +6,13 @@ from media.monitor.log import Loggable
 from media.monitor.exceptions import BadSongFile
 
 class Organizer(ReportHandler,Loggable):
+    """
+    Organizer is responsible to to lisenting to OrganizeListener events and
+    committing the appropriate changes to the filesystem. It does not in any
+    interact with WatchSyncer's even when the the WatchSyncer is a "storage
+    directory". The "storage" directory picks up all of its events through
+    pyinotify. (These events are fed to it through StoreWatchListener)
+    """
     def __init__(self, channel, target_path):
         self.channel = channel
         self.target_path = target_path
@@ -22,4 +29,9 @@ class Organizer(ReportHandler,Loggable):
         # probably general error in mmp.magic.move...
         except Exception as e:
             self.report_problem_file(event=event, exception=e)
+    def flush_events(self, path):
+        """organize the whole directory at path. (pretty much by doing what
+        handle does to every file"""
+        # TODO : implement me
+        pass
 
