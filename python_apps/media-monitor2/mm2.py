@@ -20,15 +20,15 @@ import media.monitor.pure as mmp
 from api_clients import api_client as apc
 
 # Execution consists of the following steps (for now)
-# 1. initialize logging
-# 2. create MMConfig from the config file
-# 3. configure the locale
-# 4. initialize all event handlers (WatchManager, OrganizeListener, etc.)
-# 5. get bootstrap db from airtime
-# 6. sync the db according to the filesystem (and vice versa in some cases)
-# 7. initialize listeners for watched and organize directories
-# 8. initialize kombu listener for receiving messages from airtime
-# 9. start the toucher thread that updates the last modified time of the index
+# 1. Initialize logging
+# 2. Create MMConfig from the config file
+# 3. Configure the locale
+# 4. Initialize all event handlers (WatchManager, OrganizeListener, etc.)
+# 5. Get bootstrap db from airtime
+# 6. Sync the db according to the filesystem (and vice versa in some cases)
+# 7. Initialize listeners for watched and organize directories
+# 8. Initialize kombu listener for receiving messages from airtime
+# 9. Start the toucher thread that updates the last modified time of the index
 #    file as the program is running
 
 log = get_logger()

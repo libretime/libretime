@@ -91,6 +91,9 @@ def truncate_to_length(item, length):
         else: return item
 
 class Metadata(Loggable):
+    @staticmethod
+    def write_unsafe(path,md):
+        pass
     def __init__(self, fpath):
         # Forcing the unicode through
         try: fpath = fpath.decode("utf-8")
