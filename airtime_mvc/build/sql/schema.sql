@@ -346,8 +346,8 @@ CREATE TABLE "cc_playlistcriteria"
 	"id" serial  NOT NULL,
 	"criteria" VARCHAR(16)  NOT NULL,
 	"modifier" VARCHAR(16)  NOT NULL,
-	"value" VARCHAR(32)  NOT NULL,
-	"extra" VARCHAR(32),
+	"value" VARCHAR(512)  NOT NULL,
+	"extra" VARCHAR(512),
 	"playlist_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );

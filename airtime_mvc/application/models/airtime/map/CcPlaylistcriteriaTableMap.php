@@ -41,8 +41,8 @@ class CcPlaylistcriteriaTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('CRITERIA', 'DbCriteria', 'VARCHAR', true, 16, null);
 		$this->addColumn('MODIFIER', 'DbModifier', 'VARCHAR', true, 16, null);
-		$this->addColumn('VALUE', 'DbValue', 'VARCHAR', true, 32, null);
-		$this->addColumn('EXTRA', 'DbExtra', 'VARCHAR', false, 32, null);
+		$this->addColumn('VALUE', 'DbValue', 'VARCHAR', true, 512, null);
+		$this->addColumn('EXTRA', 'DbExtra', 'VARCHAR', false, 512, null);
 		$this->addForeignKey('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', 'cc_playlist', 'ID', true, null, null);
 		// validators
 	} // initialize()
