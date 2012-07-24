@@ -3,9 +3,9 @@ $(document).ready(function() {
 });
 
 function setSmartPlaylistEvents() {
-    var form = $('#smart-playlist-form'),
-        sets = form.find('h2[id^=sp_set]');
+    var form = $('#smart-playlist-form');
     
+    /*
     sets.each(function(index, set){
         $(set).live('click', function(){
            if ($(this).next().hasClass('closed')) { 
@@ -15,6 +15,7 @@ function setSmartPlaylistEvents() {
            }
         });
     });
+    */
     
     form.find('.criteria_add').live('click', function(){
         
@@ -333,39 +334,32 @@ function removeSuccessMsg() {
 function appendAddButton() {
     var add_button = "<a class='ui-button sp-ui-button-icon-only criteria_add'>" +
                      "<span class='ui-icon ui-icon-plusthick'></span></a>";
+    var rows = $('#smart_playlist_options'),
+        enabled = rows.find('select[name^="sp_criteria_field"]:enabled');
 
-    var sets = $('fieldset[id^=sp_set]');
+    rows.find('.criteria_add').remove();
     
-    sets.each(function(index, ele){
-        var set = $(ele);
-        set.find('.criteria_add').remove();
-        
-        if (set.find('select[name^="sp_criteria_field"]:enabled').length > 1) {
-            set.find('select[name^="sp_criteria_field"]:enabled:last')
-                .siblings('a[id^="criteria_remove"]')
-                .after(add_button);
-        } else {
-            set.find('select[name^="sp_criteria_field"]:enabled')
-                .siblings('span[id="extra_criteria"]')
-                .after(add_button);
-        }
-    });
+    if (enabled.length > 1) {
+        rows.find('select[name^="sp_criteria_field"]:enabled:last')
+            .siblings('a[id^="criteria_remove"]')
+            .after(add_button);
+    } else {
+        enabled.siblings('span[id="extra_criteria"]')
+               .after(add_button);
+    }
 }
 
 function removeButtonCheck() {
-    var sets = $('fieldset[id^=sp_set]');
-    sets.each(function(index, ele){
-        var set = $(ele);
-        var temp = set.find('select[name^="sp_criteria_field"]:enabled');
-        var ex = temp.siblings('a[id^="criteria_remove"]');
-        if (temp.length == 1) {
-            ex.attr('disabled', 'disabled');
-            ex.hide();
-        } else {
-            ex.removeAttr('disabled');
-            ex.show();
-        }
-    });
+    var rows = $('dd[id="sp_criteria-element"]').children('div'),
+        enabled = rows.find('select[name^="sp_criteria_field"]:enabled'),
+        rmv_button = enabled.siblings('a[id^="criteria_remove"]');
+    if (enabled.length == 1) {
+        rmv_button.attr('disabled', 'disabled');
+        rmv_button.hide();
+    } else {
+        rmv_button.removeAttr('disabled');
+        rmv_button.show();
+    }
 }
 
 var criteriaTypes = {
