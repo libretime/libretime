@@ -31,6 +31,8 @@ from api_clients import api_client as apc
 # 9. Start the toucher thread that updates the last modified time of the index
 #    file as the program is running
 
+# Rewrite to use manager.Manager
+
 log = get_logger()
 global_config = u'/path/to/global/config'
 # MMConfig is a proxy around ConfigObj instances. it does not allow itself

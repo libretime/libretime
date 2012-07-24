@@ -14,14 +14,11 @@ class Manager(Loggable):
     # TODO : get rid of config object being passed? It's not actually being
     # used
     def __init__(self,config):
-
         self.wm = pyinotify.WatchManager()
         # These two instance variables are assumed to be constant
         self.watch_channel = 'watch'
         self.organize_channel = 'organize'
-
         self.watch_listener = StoreWatchListener(self.watch_channel)
-
         self.organize = {
             'organize_path' : None,
             'store_path' : None,
@@ -32,7 +29,6 @@ class Manager(Loggable):
             # which the "organized" files go to, isn't changed.
             'organizer' : None,
         }
-
         self.watched_directories = set([])
 
     def __remove_watch(self,path):
@@ -87,4 +83,7 @@ class Manager(Loggable):
                     % watch_dir)
 
     def loop(self):
+        """
+        block until we receive pyinotify events
+        """
         pyinotify.Notifier(self.wm).loop()
