@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import mutagen
 import math
+import os
 import copy
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log import Loggable
@@ -93,7 +94,17 @@ def truncate_to_length(item, length):
 class Metadata(Loggable):
     @staticmethod
     def write_unsafe(path,md):
-        pass
+        if not os.path.exists(path):
+            raise BadSongFile(path)
+        song_file = mutagen.File(path, easy=True)
+        for airtime_k, airtime_v in md.iteritems():
+            if airtime_k in airtime2mutagen:
+                song_file[ airtime2mutagen[airtime_k] ] = airtime_v
+            else:
+                song_file[ airtime2mutagen[airtime_k] ] = u""
+        song_file.save()
+
+
     def __init__(self, fpath):
         # Forcing the unicode through
         try: fpath = fpath.decode("utf-8")

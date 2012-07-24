@@ -4,6 +4,8 @@ from kombu.connection import BrokerConnection
 import json
 import copy
 
+from media.monitor.exception import BadSongFile
+from media.monitor.metadata import Metadata
 from media.monitor.log import Loggable
 
 # Do not confuse with media monitor 1's AirtimeNotifier class that more related
@@ -88,12 +90,22 @@ class AirtimeMessageReceiver(Loggable):
     # pydispatcher or do the necessary changes on the filesystem that will fire
     # the events
     def md_update(self, msg):
-        pass
+        md_path = msg['MDATA_KEY_FILEPATH']
+        try:
+            Metadata.write_unsafe(path=md_path, md=msg)
+        except BadSongFile as e:
+            self.logger.info("Cannot find metadata file: '%s'" % e.path)
+        except Exception as e:
+            # TODO : add md_path to problem path or something?
+            self.logger.info("Unknown error when writing metadata to: '%s'" % md_path)
     def new_watch(self, msg):
+        # TODO : add new watched directory by bootstrapping it with an empty
+        # database?
         pass
     def remove_watch(self, msg):
         pass
     def rescan_watch(self, msg):
+        # TODO : basically a bootstrap on the directory
         pass
     def change_storage(self, msg):
         pass
