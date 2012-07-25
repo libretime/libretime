@@ -5,6 +5,7 @@ from pydispatch import dispatcher
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
 from media.monitor.events import OrganizeFile, NewFile, DeleteFile
+from media.monitor.log import Loggable
 
 # We attempt to document a list of all special cases and hacks that the
 # following classes should be able to handle.
@@ -26,19 +27,17 @@ from media.monitor.events import OrganizeFile, NewFile, DeleteFile
 # signature?. Of course that's not possible for some modification events
 # because the md5 signature will change...
 
-
 # Note: Because of the way classes that inherit from pyinotify.ProcessEvent
 # interact with constructors. you should only instantiate objects from them
 # using keyword arguments. For example:
-# Wrong: OrganizeListener('watch_signal') <= wrong
-# Right: OrganizeListener(signal='watch_signal') <= right
-
+# OrganizeListener('watch_signal') <= wrong
+# OrganizeListener(signal='watch_signal') <= right
 
 class BaseListener(object):
     def my_init(self, signal):
         self.signal = signal
 
-class OrganizeListener(BaseListener, pyinotify.ProcessEvent):
+class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     # this class still don't handle the case where a dir was copied recursively
 
     def process_IN_CLOSE_WRITE(self, event): self.process_to_organize(event)
@@ -48,14 +47,18 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent):
     def flush_events(self, path):
         """organize the whole directory at path. (pretty much by doing what
         handle does to every file"""
-        # TODO : implement me
-        pass
+        flushed = 0
+        for f in mmp.walk_supported(path, clean_empties=True):
+            self.logger.info("Bootstrapping: File in 'organize' directory: '%s'" % f)
+            dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(f))
+            flushed += 1
+        self.logger.info("Flushed organized directory with %d files" % flushed)
 
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(event))
 
-class StoreWatchListener(BaseListener, pyinotify.ProcessEvent):
+class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
 
     def process_IN_CLOSE_WRITE(self, event): self.process_create(event)
     def process_IN_MOVED_TO(self, event): self.process_create(event)
@@ -72,9 +75,15 @@ class StoreWatchListener(BaseListener, pyinotify.ProcessEvent):
 
     def flush_events(self, path):
         """
-        walk over path and send a NewFile event for every file in this directory
+        walk over path and send a NewFile event for every file in this directory.
+        Not to be confused with bootstrapping which is a more careful process that
+        involved figuring out what's in the database first.
         """
-        # TODO : implement me
-        pass
-
+        # Songs is a dictionary where every key is the watched the directory
+        # and the value is a set with all the files in that directory.
+        added = 0
+        for f in mmp.walk_supported(path, clean_empties=False):
+            added += 1
+            dispatcher.send(signal=self.signal, sender=self, event=NewFile(f))
+        self.logger.info( "Flushed watch directory. added = %d" % added )
 

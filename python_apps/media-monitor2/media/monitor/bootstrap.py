@@ -1,6 +1,6 @@
 import os
 from pydispatch import dispatcher
-from media.monitor.events import OrganizeFile, NewFile, DeleteFile
+from media.monitor.events import NewFile, DeleteFile
 from media.monitor.log import Loggable
 import media.monitor.pure as mmp
 
@@ -14,18 +14,6 @@ class Bootstrapper(Loggable):
         self.org_channels = org_channels
         self.watch_channels = watch_channels
         self.last_ran = last_ran
-
-    def flush_organize(self):
-        """
-        walks the organize directories and sends an organize event for every file manually
-        """
-        flushed = 0
-        for pc in self.org_channels:
-            for f in mmp.walk_supported(pc.path, clean_empties=True):
-                self.logger.info("Bootstrapping: File in 'organize' directory: '%s'" % f)
-                dispatcher.send(signal=pc.signal, sender=self, event=OrganizeFile(f))
-                flushed += 1
-        self.logger.info("Flushed organized directory with %d files" % flushed)
 
     def flush_watch(self):
         """

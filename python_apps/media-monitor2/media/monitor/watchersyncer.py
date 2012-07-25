@@ -19,7 +19,7 @@ class RequestSync(threading.Thread,Loggable):
 
     @LazyProperty
     def apiclient(self):
-        return ac.AirTimeApiClient()
+        return ac.AirtimeApiClient()
 
     def run(self):
         # TODO : implement proper request sending

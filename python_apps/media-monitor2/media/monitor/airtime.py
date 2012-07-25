@@ -4,7 +4,7 @@ from kombu.connection import BrokerConnection
 import json
 import copy
 
-from media.monitor.exception import BadSongFile
+from media.monitor.exceptions import BadSongFile
 from media.monitor.metadata import Metadata
 from media.monitor.log import Loggable
 
@@ -98,6 +98,7 @@ class AirtimeMessageReceiver(Loggable):
         except Exception as e:
             # TODO : add md_path to problem path or something?
             self.logger.info("Unknown error when writing metadata to: '%s'" % md_path)
+
     def new_watch(self, msg):
         # TODO : add new watched directory by bootstrapping it with an empty
         # database?
@@ -108,6 +109,8 @@ class AirtimeMessageReceiver(Loggable):
         # TODO : basically a bootstrap on the directory
         pass
     def change_storage(self, msg):
-        pass
+        new_storage_directory = msg['directory']
+        new_storage_directory_id = str(msg['dir_id'])
+
     def file_delete(self, msg):
         pass

@@ -37,6 +37,6 @@ class SyncDB(Loggable):
         """
         returns all the files given some dir_id. this method is here for "symmetry". it's not actually used anywhere
         """
-        return self.directory_get_files(self.id_get_files[dir_id])
+        return self.directory_get_files(self.id_lookup[dir_id])
 
 

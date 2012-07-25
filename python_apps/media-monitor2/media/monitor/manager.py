@@ -128,7 +128,7 @@ class Manager(Loggable):
             self.__remove_watch(watch_dir)
         else:
             self.logger.info("'%s' is not being watched, hence cannot be removed"
-                    % watch_dir)
+                             % watch_dir)
 
     def loop(self):
         """
