@@ -190,7 +190,7 @@ EOT;
 
             $clipSec = Application_Model_Playlist::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
-            $offset_cliplength = Application_Model_Playlist::secondsToPlaylistTime($offset);
+            $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
     
             //format the length for UI.
             $formatter = new LengthFormatter($row['length']);
