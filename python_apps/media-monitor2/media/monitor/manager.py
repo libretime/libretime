@@ -48,12 +48,24 @@ class Manager(Loggable):
         self.__wd_path[path] = wd.values()[0]
 
     def __create_organizer(self, target_path):
+        """
+        private constructor for organizer so that we don't have to repeat
+        adding the channel/signal as a parameter to the original constructor
+        every time
+        """
         return Organizer(channel=self.organize_channel,target_path=target_path)
 
     def get_organize_path(self):
+        """
+        returns the current path that is being watched for organization
+        """
         return self.organize['organize_path']
 
     def set_organize_path(self, new_path):
+        """
+        sets the organize path to be new_path. Under the current scheme there is
+        only one organize path but there is no reason why more cannot be supported
+        """
         # if we are already organizing a particular directory we remove the
         # watch from it first before organizing another directory
         self.__remove_watch(self.organize['organize_path'])
@@ -66,10 +78,15 @@ class Manager(Loggable):
     organize_path = property(get_organize_path, set_organize_path)
 
     def get_store_path(self):
+        """
+        returns the store_path (should be accessed through the property usually)
+        """
         return self.organize['store_path']
 
     def set_store_path(self,new_path):
-        """set the directory where organized files go to"""
+        """
+        set the directory where organized files go to
+        """
         self.__remove_watch(self.organize['store_path'])
         self.organize['store_path'] = new_path
         self.organize['organizer'] = self.__create_organizer(new_path)
@@ -83,9 +100,18 @@ class Manager(Loggable):
     store_path = property(get_store_path, set_store_path)
 
     def has_watch(self, path):
+        """
+        returns true if the path is being watched or not. Any kind of watch:
+        organize, store, watched.
+        """
         return path in self.__wd_path
 
     def add_watch_directory(self, new_dir):
+        """
+        adds a directory to be "watched". "watched" directories are those that
+        are being monitored by media monitor for airtime in this context and
+        not directories pyinotify calls watched
+        """
         if self.has_watch(new_dir):
             self.logger.info("Cannot add '%s' to watched directories. It's \
                     already being watched" % new_dir)
@@ -94,6 +120,9 @@ class Manager(Loggable):
             self.__add_watch(new_dir, self.watch_listener)
 
     def remove_watch_directory(self, watch_dir):
+        """
+        removes a directory from being "watched". Undoes add_watch_directory
+        """
         if self.has_watch(watch_dir):
             self.logger.info("Removing watched directory: '%s'", watch_dir)
             self.__remove_watch(watch_dir)
