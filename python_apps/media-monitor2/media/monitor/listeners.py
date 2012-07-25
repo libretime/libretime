@@ -27,6 +27,13 @@ from media.monitor.events import OrganizeFile, NewFile, DeleteFile
 # because the md5 signature will change...
 
 
+# Note: Because of the way classes that inherit from pyinotify.ProcessEvent
+# interact with constructors. you should only instantiate objects from them
+# using keyword arguments. For example:
+# Wrong: OrganizeListener('watch_signal') <= wrong
+# Right: OrganizeListener(signal='watch_signal') <= right
+
+
 class BaseListener(object):
     def my_init(self, signal):
         self.signal = signal
@@ -62,5 +69,12 @@ class StoreWatchListener(BaseListener, pyinotify.ProcessEvent):
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=DeleteFile(event))
+
+    def flush_events(self, path):
+        """
+        walk over path and send a NewFile event for every file in this directory
+        """
+        # TODO : implement me
+        pass
 
 

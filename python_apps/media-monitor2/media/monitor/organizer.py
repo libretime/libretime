@@ -16,7 +16,7 @@ class Organizer(ReportHandler,Loggable):
     def __init__(self, channel, target_path):
         self.channel = channel
         self.target_path = target_path
-        super(Organizer, self).__init__(signal=self.channel.signal)
+        super(Organizer, self).__init__(signal=self.channel)
     def handle(self, sender, event):
         """Intercept events where a new file has been added to the organize
         directory and place it in the correct path (starting with self.target_path)"""
@@ -29,9 +29,4 @@ class Organizer(ReportHandler,Loggable):
         # probably general error in mmp.magic.move...
         except Exception as e:
             self.report_problem_file(event=event, exception=e)
-    def flush_events(self, path):
-        """organize the whole directory at path. (pretty much by doing what
-        handle does to every file"""
-        # TODO : implement me
-        pass
 
