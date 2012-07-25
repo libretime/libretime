@@ -2,6 +2,7 @@
 from kombu.messaging import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
 import json
+import os
 import copy
 
 from media.monitor.exceptions import BadSongFile
@@ -100,11 +101,10 @@ class AirtimeMessageReceiver(Loggable):
             self.logger.info("Unknown error when writing metadata to: '%s'" % md_path)
 
     def new_watch(self, msg):
-        # TODO : add new watched directory by bootstrapping it with an empty
-        # database?
-        pass
+        # TODO: "walk" the newly watched directory
+        self.manager.add_watch_directory(msg['directory'])
     def remove_watch(self, msg):
-        pass
+        self.manager.remove_watch_directory(msg['directory'])
     def rescan_watch(self, msg):
         # TODO : basically a bootstrap on the directory
         pass
@@ -113,4 +113,22 @@ class AirtimeMessageReceiver(Loggable):
         new_storage_directory_id = str(msg['dir_id'])
 
     def file_delete(self, msg):
-        pass
+        # deletes should be requested only from imported folder but we don't
+        # verify that.
+        # clippy confirmation: "are you really sure?"
+        if msg['delete']:
+            self.logger.info("Clippy confirmation was received, actually deleting file...")
+            if os.path.exists(msg['filepath']):
+                try:
+                    self.logger.info("Attempting to delete '%s'" % msg['filepath'])
+                    os.unlink(msg['filepath'])
+                except Exception as e:
+                    self.logger.info("Failed to delete '%s'" % msg['filepath'])
+                    self.logger.info("Error: " % str(e))
+            else:
+                self.logger.info("Attempting to delete file '%s' that does not exist. Full request coming:" % msg['filepath'])
+                self.logger.info(msg)
+        else:
+            self.logger.info("No clippy confirmation, ignoring event. Out of curiousity we will print some details.")
+            self.logger.info(msg)
+
