@@ -658,6 +658,19 @@ var AIRTIME = (function(AIRTIME){
 				redrawLib();
 			});
 	};
+    
+	mod.fnWsNew = function() {
+		var url = '/Webstream/new';
+
+		stopAudioPreview();
+		
+		$.post(url, 
+			{format: "json"}, 
+			function(json){
+				openPlaylist(json);
+				redrawLib();
+			});
+	};
 	
 	mod.fnNewBlock = function() {
         var url = '/Playlist/new';
@@ -796,6 +809,9 @@ var AIRTIME = (function(AIRTIME){
 	    /*
 		$pl.delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});*/
+
+		$pl.delegate("#ws_new", 
+	    		{"click": AIRTIME.playlist.fnWsNew});
 
 		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();

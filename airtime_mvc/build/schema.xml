@@ -216,7 +216,7 @@
             0: audiotrack
             1: webstream  
     -->
-    <column name="type" phpName="DbType" type="INTEGER" required="true" default="0"/>
+    <column name="type" phpName="DbType" type="SMALLINT" required="true" default="0"/>
     <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
     <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
@@ -303,6 +303,7 @@
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
+    <column name="stream_id" phpName="DbStreamId" type="INTEGER" required="false"/>
     <column name="clip_length" phpName="DbClipLength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="fade_in" phpName="DbFadeIn" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="fade_out" phpName="DbFadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
@@ -322,7 +323,10 @@
     <foreign-key foreignTable="cc_files" name="cc_show_file_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
     </foreign-key>
-  </table>
+    <foreign-key foreignTable="cc_webstream" name="cc_show_stream_fkey" onDelete="CASCADE">
+      <reference local="stream_id" foreign="id"/>
+    </foreign-key>
+ </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>
     <column name="userid" phpName="Userid" type="INTEGER" required="false"/>

@@ -411,6 +411,7 @@ CREATE TABLE "cc_schedule"
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"file_id" INTEGER,
+	"stream_id" INTEGER,
 	"clip_length" interval default '00:00:00',
 	"fade_in" TIME default '00:00:00',
 	"fade_out" TIME default '00:00:00',
@@ -684,6 +685,8 @@ ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid"
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_stream_fkey" FOREIGN KEY ("stream_id") REFERENCES "cc_webstream" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 

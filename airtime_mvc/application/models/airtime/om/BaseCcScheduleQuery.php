@@ -10,6 +10,7 @@
  * @method     CcScheduleQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method     CcScheduleQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
  * @method     CcScheduleQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method     CcScheduleQuery orderByDbStreamId($order = Criteria::ASC) Order by the stream_id column
  * @method     CcScheduleQuery orderByDbClipLength($order = Criteria::ASC) Order by the clip_length column
  * @method     CcScheduleQuery orderByDbFadeIn($order = Criteria::ASC) Order by the fade_in column
  * @method     CcScheduleQuery orderByDbFadeOut($order = Criteria::ASC) Order by the fade_out column
@@ -24,6 +25,7 @@
  * @method     CcScheduleQuery groupByDbStarts() Group by the starts column
  * @method     CcScheduleQuery groupByDbEnds() Group by the ends column
  * @method     CcScheduleQuery groupByDbFileId() Group by the file_id column
+ * @method     CcScheduleQuery groupByDbStreamId() Group by the stream_id column
  * @method     CcScheduleQuery groupByDbClipLength() Group by the clip_length column
  * @method     CcScheduleQuery groupByDbFadeIn() Group by the fade_in column
  * @method     CcScheduleQuery groupByDbFadeOut() Group by the fade_out column
@@ -46,6 +48,10 @@
  * @method     CcScheduleQuery rightJoinCcFiles($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method     CcScheduleQuery innerJoinCcFiles($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFiles relation
  *
+ * @method     CcScheduleQuery leftJoinCcWebstream($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcWebstream relation
+ * @method     CcScheduleQuery rightJoinCcWebstream($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcWebstream relation
+ * @method     CcScheduleQuery innerJoinCcWebstream($relationAlias = '') Adds a INNER JOIN clause to the query using the CcWebstream relation
+ *
  * @method     CcSchedule findOne(PropelPDO $con = null) Return the first CcSchedule matching the query
  * @method     CcSchedule findOneOrCreate(PropelPDO $con = null) Return the first CcSchedule matching the query, or a new CcSchedule object populated from the query conditions when no match is found
  *
@@ -53,6 +59,7 @@
  * @method     CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
  * @method     CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column
  * @method     CcSchedule findOneByDbFileId(int $file_id) Return the first CcSchedule filtered by the file_id column
+ * @method     CcSchedule findOneByDbStreamId(int $stream_id) Return the first CcSchedule filtered by the stream_id column
  * @method     CcSchedule findOneByDbClipLength(string $clip_length) Return the first CcSchedule filtered by the clip_length column
  * @method     CcSchedule findOneByDbFadeIn(string $fade_in) Return the first CcSchedule filtered by the fade_in column
  * @method     CcSchedule findOneByDbFadeOut(string $fade_out) Return the first CcSchedule filtered by the fade_out column
@@ -67,6 +74,7 @@
  * @method     array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
  * @method     array findByDbEnds(string $ends) Return CcSchedule objects filtered by the ends column
  * @method     array findByDbFileId(int $file_id) Return CcSchedule objects filtered by the file_id column
+ * @method     array findByDbStreamId(int $stream_id) Return CcSchedule objects filtered by the stream_id column
  * @method     array findByDbClipLength(string $clip_length) Return CcSchedule objects filtered by the clip_length column
  * @method     array findByDbFadeIn(string $fade_in) Return CcSchedule objects filtered by the fade_in column
  * @method     array findByDbFadeOut(string $fade_out) Return CcSchedule objects filtered by the fade_out column
@@ -293,6 +301,37 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSchedulePeer::FILE_ID, $dbFileId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the stream_id column
+	 * 
+	 * @param     int|array $dbStreamId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByDbStreamId($dbStreamId = null, $comparison = null)
+	{
+		if (is_array($dbStreamId)) {
+			$useMinMax = false;
+			if (isset($dbStreamId['min'])) {
+				$this->addUsingAlias(CcSchedulePeer::STREAM_ID, $dbStreamId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbStreamId['max'])) {
+				$this->addUsingAlias(CcSchedulePeer::STREAM_ID, $dbStreamId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcSchedulePeer::STREAM_ID, $dbStreamId, $comparison);
 	}
 
 	/**
@@ -659,6 +698,70 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
 		return $this
 			->joinCcFiles($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcFiles', 'CcFilesQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcWebstream object
+	 *
+	 * @param     CcWebstream $ccWebstream  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function filterByCcWebstream($ccWebstream, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcSchedulePeer::STREAM_ID, $ccWebstream->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcWebstream relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcScheduleQuery The current query, for fluid interface
+	 */
+	public function joinCcWebstream($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcWebstream');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcWebstream');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcWebstream relation CcWebstream object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcWebstreamQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcWebstreamQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcWebstream($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcWebstream', 'CcWebstreamQuery');
 	}
 
 	/**

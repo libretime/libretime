@@ -265,12 +265,18 @@ class Application_Model_Schedule
         sched.fade_in AS fade_in, sched.fade_out AS fade_out,
         sched.playout_status AS playout_status,
 
-        ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
-        ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists
+        --ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
+        --ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists
+
+        %%file_columns%%
 
         FROM
-        ((cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
-        RIGHT OUTER JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
+        ((
+            --cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
+            %%file_join%%
+
+        --JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
+        RIGHT JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
         JOIN cc_show AS showt ON (showt.id = si.show_id)
         )
 
@@ -284,11 +290,21 @@ class Application_Model_Schedule
             $sql .= " AND show_id IN (".implode(",", $p_shows).")";
         }
 
-        $sql .= " ORDER BY si.starts, sched.starts;";
+        $sql .= " ORDER BY si.starts, sched.starts";
+        $sql2 = $sql;
+
+        $sql = str_replace("%%file_columns%%", "ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
+            ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists", $sql);
+        $sql = str_replace("%%file_join%%", "cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)", $sql);
+
+        $sql2 = str_replace("%%file_columns%%", "ws.name AS file_track_title, ws.login AS file_artist_name,
+            ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", $sql2);
+        $sql2 = str_replace("%%file_join%%", "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)", $sql2);
+
+        $sql = "($sql) UNION ($sql2)";
 
         Logging::debug($sql);
-
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         return $rows;
     }
@@ -470,14 +486,21 @@ class Application_Model_Schedule
             ." st.cue_out AS cue_out,"
             ." st.fade_in AS fade_in,"
             ." st.fade_out AS fade_out,"
+            ." st.type AS type,"
             ." si.starts AS show_start,"
             ." si.ends AS show_end,"
+            ." f.id AS file_id"
             ." f.replay_gain AS replay_gain"
+            ." f.file_path AS file_path"
+            ." ws.id as stream_id"
+            ." ws.url as url"
             ." FROM $CC_CONFIG[scheduleTable] AS st"
             ." LEFT JOIN $CC_CONFIG[showInstances] AS si"
             ." ON st.instance_id = si.id"
             ." LEFT JOIN $CC_CONFIG[filesTable] AS f"
-            ." ON st.file_id = f.id";
+            ." ON st.file_id = f.id"
+            ." LEFT JOIN cc_webstream AS ws"
+            ." ON st.stream_id = ws.id";
 
         $predicates = " WHERE st.ends > '$p_startTime'"
         ." AND st.starts < '$p_endTime'"
@@ -599,13 +622,27 @@ class Application_Model_Schedule
                 $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
             }
 
-            $storedFile = Application_Model_StoredFile::Recall($item["file_id"]);
-            $uri = $storedFile->getFilePath();
+            Logging::log($item);
+            //TODO: need to know item type
+            //
+            //
+            if ($item['type'] == 0) {
+                //row is from cc_files
+                $media_id = $item['file_id'];
+                $uri = $item['file_path'];
+                $type = "file";
+            } else if ($item['type'] == 1) {
+                $media_id = $item['stream_id'];
+                $uri = $item['url'];
+                $type = "stream";
+            }
+
 
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
+
             $data["media"][$start] = array(
-                'id' => $storedFile->getId(),
-                'type' => "file",
+                'id' => $media_id,
+                'type' => $type,
                 'row_id' => $item["id"],
                 'uri' => $uri,
                 'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
