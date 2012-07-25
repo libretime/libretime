@@ -641,13 +641,13 @@ var AIRTIME = (function(AIRTIME){
             });
     };
 	
-	mod.fnEdit = function(id) {
-		var url = '/Playlist/edit';;
+	mod.fnEdit = function(id, type) {
+		var url = '/Playlist/edit';
 		
 		stopAudioPreview();	
 		
 		$.post(url, 
-			{format: "json", id: id}, 
+			{format: "json", id: id, type: type}, 
 			function(json){
 				openPlaylist(json);
 			});

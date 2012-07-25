@@ -94,7 +94,7 @@ class Application_Model_Block
             }
         } else {
             $this->block = new CcBlock();
-            $this->block->setDbUTime("now", new DateTimeZone("UTC"));
+            $this->block->setDbUTime(new DateTime("now", new DateTimeZone("UTC")));
             $this->block->save();
         }
     
