@@ -7,7 +7,7 @@ require_once 'formatters/BitrateFormatter.php';
 class LibraryController extends Zend_Controller_Action
 {
 
-    protected $pl_sess = null;
+    protected $obj_sess = null;
     protected $search_sess = null;
 
     public function init()
@@ -23,7 +23,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('set-num-entries', 'json')
                     ->initContext();
 
-        $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
+        $this->obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
         $this->search_sess = new Zend_Session_Namespace("search");
     }
 
@@ -49,9 +49,9 @@ class LibraryController extends Zend_Controller_Action
 
             $file = Application_Model_StoredFile::Recall($id);
 
-            if (isset($this->pl_sess->id) && $screen == "playlist") {
+            if (isset($this->obj_sess->id) && $screen == "playlist") {
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist
-                $playlist = new Application_Model_Playlist($this->pl_sess->id);
+                $playlist = new Application_Model_Playlist($this->obj_sess->id);
                 if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
                     $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                 }
@@ -65,7 +65,7 @@ class LibraryController extends Zend_Controller_Action
             $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
         } elseif ($type === "playlist") {
             $playlist = new Application_Model_Playlist($id);
-            if ($this->pl_sess->id !== $id && $screen == "playlist") {
+            if ($this->obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
                 }

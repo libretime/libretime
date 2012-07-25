@@ -7,14 +7,14 @@
 <?php endif; ?>
 
 <?php if (isset($this->obj)) : ?>
-    <input id="pl_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
-    <input id="pl_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
-    <input id='obj_type' type='hidden' value='playlist'></input>
+    <input id="bl_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
+    <input id="bl_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
+    <input id='obj_type' type='hidden' value='block'></input>
     <div class="playlist_title">
-        <h3 id="spl_name">
+        <h3 id="bl_name">
             <a id="playlist_name_display" contenteditable="true"><?php echo $this->obj->getName(); ?></a>
         </h3>
-        <h4 id="spl_length"><?php echo $this->length; ?></h4>
+        <h4 id="bl_length"><?php echo $this->length; ?></h4>
     </div>
 
     <fieldset class="toggle closed" id="fieldset-metadate_change">
@@ -32,7 +32,7 @@
         </dl>
     </fieldset>
     
-    <?php //echo $this->form; ?>
+    <?php echo $this->form; ?>
 
     <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
       	<span class="ui-icon ui-icon-closethick"></span>
@@ -49,10 +49,10 @@
     <div class="clear"></div>
     <div class="" style="clear:both; float:none; width:100%;">
 	    <ul id="spl_sortable">
-            <?php echo $this->render('playlist/update.phtml') ?>
+            <?php //echo $this->render('playlist/update.phtml') ?>
 	    </ul>
     </div>
 
 <?php else : ?>
-    <div>No open playlist</div>
+    <div>No open smart block</div>
 <?php endif; ?>

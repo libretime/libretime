@@ -1,5 +1,5 @@
 <?php
-class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
+class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 {
     
     public function init(){
@@ -241,7 +241,7 @@ class Application_Form_SmartPlaylistCriteria extends Zend_Form_SubForm
         $this->addElement($shuffle);
         
         $this->setDecorators(array(
-                array('ViewScript', array('viewScript' => 'form/smart-playlist-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
+                array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
                         'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count']))
         ));
     }

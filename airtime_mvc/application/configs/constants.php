@@ -36,7 +36,9 @@ define('UI_MDATA_VALUE_FORMAT_FILE', 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');
 
 // Session Keys
-define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
+define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
+/*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
+define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 
 // Soundcloud contants

@@ -179,23 +179,25 @@ function setSmartPlaylistEvents() {
 
 function setupUI() {
     var playlist_type = $('input:radio[name=sp_type]:checked').val();
-    if (playlist_type == "0") {
-        $('button[id="generate_button"]').show();
-        $('button[id="shuffle_button"]').show();        
-        //$('#spl_sortable').unblock();
-        //$('#spl_sortable').css("position", "static");
-        $('#spl_sortable').show();
-    } else {
-        $('button[id="generate_button"]').hide();
-        $('button[id="shuffle_button"]').hide();
-        /*
-        $('#spl_sortable').block({
-            message: "",
-            theme: true,
-            applyPlatformOpacityRules: false
-        });
-        */
-        $('#spl_sortable').hide();
+    if ($('#obj_type').val() == 'block') {
+        if (playlist_type == "0") {
+            $('button[id="generate_button"]').show();
+            $('button[id="shuffle_button"]').show();        
+            //$('#spl_sortable').unblock();
+            //$('#spl_sortable').css("position", "static");
+            $('#spl_sortable').show();
+        } else {
+            $('button[id="generate_button"]').hide();
+            $('button[id="shuffle_button"]').hide();
+            /*
+            $('#spl_sortable').block({
+                message: "",
+                theme: true,
+                applyPlatformOpacityRules: false
+            });
+            */
+            $('#spl_sortable').hide();
+        }
     }
     
     $(".playlist_type_help_icon").qtip({

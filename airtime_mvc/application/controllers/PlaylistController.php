@@ -2,7 +2,9 @@
 
 class PlaylistController extends Zend_Controller_Action
 {
-    protected $pl_sess = null;
+    /*protected $pl_sess = null;
+    protected $bl_sess = null;*/
+    protected $obj_sess = null;
 
     public function init()
     {
@@ -25,78 +27,95 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('smart-playlist-criteria-save', 'json')
                     ->addActionContext('smart-playlist-generate', 'json')
                     ->addActionContext('smart-playlist-shuffle', 'json')
+                    ->addActionContext('new-block', 'json')
                     ->initContext();
 
-        $this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
+        /*$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
+        $this->bl_sess = new Zend_Session_Namespace(UI_BLOCK_SESSNAME);*/
+        $this->obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
     }
 
-    private function getPlaylist()
+    private function getPlaylist($p_type)
     {
-        $pl = null;
+        $obj = null;
+        
+        $objInfo = $this->getObjInfo($p_type);
 
-        if (isset($this->pl_sess->id)) {
-            $pl = new Application_Model_Playlist($this->pl_sess->id);
+        if (isset($this->obj_sess->id)) {
+            $obj = new $objInfo['className']($this->obj_sess->id);
 
             $modified = $this->_getParam('modified', null);
-            if ($pl->getLastModified("U") !== $modified) {
-                $this->createFullResponse($pl);
-                throw new PlaylistOutDatedException("You are viewing an older version of {$pl->getName()}");
+            if ($obj->getLastModified("U") !== $modified) {
+                $this->createFullResponse($obj);
+                throw new PlaylistOutDatedException("You are viewing an older version of {$obj->getName()}");
             }
         }
 
-        return $pl;
+        return $obj;
     }
 
-    private function changePlaylist($pl_id)
-    {
-        if (is_null($pl_id)) {
-            unset($this->pl_sess->id);
+    private function changePlaylist($p_id, $p_type)
+    {   
+        if (is_null($p_id) || is_null($p_type)) {
+            unset($this->obj_sess->id);
+            unset($this->obj_sess->type);
         } else {
-            $this->pl_sess->id = intval($pl_id);
+            $this->obj_sess->id = intval($p_id);
+            $this->obj_sess->type = $p_type;
         }
     }
 
-    private function createUpdateResponse($pl)
+    private function createUpdateResponse($obj)
     {
-        $formatter = new LengthFormatter($pl->getLength());
+        $formatter = new LengthFormatter($obj->getLength());
         $this->view->length = $formatter->format();
 
-        $this->view->pl = $pl;
+        $this->view->obj = $obj;
         $this->view->html = $this->view->render('playlist/update.phtml');
-        $this->view->name = $pl->getName();
-        $this->view->description = $pl->getDescription();
-        $this->view->modified = $pl->getLastModified("U");
+        $this->view->name = $obj->getName();
+        $this->view->description = $obj->getDescription();
+        $this->view->modified = $obj->getLastModified("U");
 
-        unset($this->view->pl);
+        unset($this->view->obj);
     }
 
-    private function createFullResponse($pl = null, $isJson = false)
+    private function createFullResponse($obj = null, $isJson = false)
     {
-        if (isset($pl)) {
-            $formatter = new LengthFormatter($pl->getLength());
+        $isBlock = false;
+        $viewPath = 'playlist/playlist.phtml';
+        if ($obj instanceof Application_Model_Block) {
+            $isBlock = true;
+            $viewPath = 'playlist/smart-block.phtml';
+        }
+        
+        if (isset($obj)) {
+            $formatter = new LengthFormatter($obj->getLength());
             $this->view->length = $formatter->format();
             
-            $form = new Application_Form_SmartPlaylistCriteria();
-            $form->removeDecorator('DtDdWrapper');
-            $form->startForm($pl->getId());
-            
-            $this->view->form = $form;
-
-            $this->view->pl = $pl;
-            $this->view->id = $pl->getId();
-            if ($isJson){
-                return $this->view->render('playlist/playlist.phtml');
-            }else{
-                $this->view->html = $this->view->render('playlist/playlist.phtml');
+            if ($isBlock) {
+                $form = new Application_Form_SmartBlockCriteria();
+                $form->removeDecorator('DtDdWrapper');
+                $form->startForm($obj->getId());
+                $this->view->form = $form;
             }
-            unset($this->view->pl);
+
+            if ($isBlock){
+                $this->view->obj = $obj;
+                $this->view->id = $obj->getId();
+                if ($isJson) {
+                    return $this->view->render($viewPath);
+                } else {
+                    $this->view->html = $this->view->render($viewPath);
+                }
+            }else{
+                $this->view->obj = $obj;
+                $this->view->id = $obj->getId();
+                $this->view->html = $this->view->render($viewPath);
+                unset($this->view->obj);
+            }
         }
         else {
-            if ($isJson){
-                return $this->view->render('playlist/playlist.phtml');
-            }else{
-                $this->view->html = $this->view->render('playlist/playlist.phtml');
-            }
+            $this->view->html = $this->view->render($viewPath);
         }
     }
 
@@ -105,23 +124,23 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->error = $e->getMessage();
     }
 
-    private function playlistDynamic($pl)
+    private function playlistDynamic($obj)
     {
         $this->view->error = "You cannot add tracks to dynamic playlist.";
-        $this->createFullResponse($pl);
+        $this->createFullResponse($obj);
     }
     
-    private function playlistNotFound()
+    private function playlistNotFound($p_type)
     {
-        $this->view->error = "Playlist not found";
+        $this->view->error = "{$p_type} not found";
 
-        Logging::log("Playlist not found");
-        $this->changePlaylist(null);
+        Logging::log("{$p_type} not found");
+        $this->changePlaylist(null, $p_type);
         $this->createFullResponse(null);
     }
     
-    private function playlistNoPermission(){
-        $this->view->error = "You don't have permission to delete selected playlist(s).";
+    private function playlistNoPermission($p_type){
+        $this->view->error = "You don't have permission to delete selected {$p_type}(s).";
     }
 
     private function playlistUnknownError($e)
@@ -164,20 +183,21 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
-            if (isset($this->pl_sess->id)) {
-                $pl = new Application_Model_Playlist($this->pl_sess->id);
+            if (isset($this->obj_sess->id)) {
+                $objInfo = $this->getObjInfo($this->obj_sess->type);
+                $obj = new $objInfo['className']($this->obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
                 
-                if($isAdminOrPM || $pl->getCreatorId() == $userInfo->id){
-                    $this->view->pl = $pl;
-                    $form = new Application_Form_SmartPlaylistCriteria();
-                    $form->startForm($this->pl_sess->id);
-                    $this->view->form = $form;
+                if($isAdminOrPM || $obj->getCreatorId() == $userInfo->id){
+                    $this->view->obj = $obj;
+                    //$form = new Application_Form_SmartBlockCriteria();
+                    //$form->startForm($this->pl_sess->id);
+                    //$this->view->form = $form;
                 }
 
-                $formatter = new LengthFormatter($pl->getLength());
+                $formatter = new LengthFormatter($obj->getLength());
                 $this->view->length = $formatter->format();
             }
         } catch (PlaylistNotFoundException $e) {
@@ -188,27 +208,46 @@ class PlaylistController extends Zend_Controller_Action
     }
 
     public function newAction()
+    { 
+        //$pl_sess = $this->pl_sess;
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $type = $this->_getParam('type');
+        
+        $objInfo = $this->getObjInfo($type);
+        
+        $name = 'Untitled Playlist';
+        if ($type == 'block') {
+            $name = 'Untitled Smart Block';
+        }
+
+        $obj = new $objInfo['className']();
+        $obj->setName($name);
+        $obj->setMetaData('dc:creator', $userInfo->id);
+
+        $this->changePlaylist($obj->getId(), $type);
+        $this->createFullResponse($obj);
+    }
+    
+    /*public function newBlockAction()
     {
-        $pl_sess = $this->pl_sess;
+        $bl_sess = $this->bl_sess;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-        $pl = new Application_Model_Playlist();
-        $pl->setName("Untitled Playlist");
-        $pl->setPLMetaData('dc:creator', $userInfo->id);
+        $bl = new Application_Model_Block();
+        $bl->setName("Untitled Smart Block");
+        $bl->setBLMetaData('dc:creator', $userInfo->id);
 
-        $this->changePlaylist($pl->getId());
-        $this->createFullResponse($pl);
-    }
+        $this->changePlaylist($bl->getId(), 'block');
+        $this->createFullResponse($bl);
+    }*/
 
     public function editAction()
     {
         $id = $this->_getParam('id', null);
         Logging::log("editing playlist {$id}");
-        //$form = new Application_Form_SmartPlaylist();
-            
 
         if (!is_null($id)) {
-            $this->changePlaylist($id);
+            $this->changePlaylist($id, 'playlist');
         }
 
         try {
@@ -225,30 +264,37 @@ class PlaylistController extends Zend_Controller_Action
     {
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
-        $pl = null;
+        $type = $this->_getParam('type');
+        
+        $obj = null;
+     
+        $objInfo = $this->getObjInfo($type);
         
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
         try {
 
-            Logging::log("Currently active playlist {$this->pl_sess->id}");
-            if (in_array($this->pl_sess->id, $ids)) {
-                Logging::log("Deleting currently active playlist");
-                $this->changePlaylist(null);
+            Logging::log("Currently active {$type} {$this->obj_sess->id}");
+            if (in_array($this->obj_sess->id, $ids)) {
+                Logging::log("Deleting currently active {$type}");
+                $this->changePlaylist(null, $type);
             } else {
-                Logging::log("Not deleting currently active playlist");
-                $pl = new Application_Model_Playlist($this->pl_sess->id);
+                Logging::log("Not deleting currently active {$type}");
+                $obj = new $objInfo['className']($this->obj_sess->id);
             }
-
-            Application_Model_Playlist::deletePlaylists($ids, $userInfo->id);
-            $this->createFullResponse($pl);
+            if (strcmp($objInfo['className'], 'Application_Model_Playlist')==0) {
+                Application_Model_Playlist::deletePlaylists($ids, $userInfo->id);
+            } else {
+                Application_Model_Block::deleteBlocks($ids, $userInfo->id);
+            }
+            $this->createFullResponse($obj);
         }
         catch (PlaylistNoPermissionException $e) {
-            $this->playlistNoPermission();
+            $this->playlistNoPermission($type);
         }
         catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -260,24 +306,25 @@ class PlaylistController extends Zend_Controller_Action
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
         $addType = $this->_getParam('type', 'after');
+        $obj_type = $this->_getParam('obj_type');
         
         try {
-            $pl = $this->getPlaylist();
-            if ($pl->isStatic()) {
-                $pl->addAudioClips($ids, $afterItem, $addType);
-                $this->createUpdateResponse($pl);
+            $obj = $this->getPlaylist($obj_type);
+            if ($obj_type == 'playlist' || $obj->isStatic()) {
+                $obj->addAudioClips($ids, $afterItem, $addType);
+                $this->createUpdateResponse($obj);
             } else {
                 throw new PlaylistDyanmicException;
             }
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
+            $this->playlistOutdated($obj, $e);
         }
         catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($obj_type);
         }
         catch (PlaylistDyanmicException $e) {
-            $this->playlistDynamic($pl);
+            $this->playlistDynamic($obj);
         }
         catch (Exception $e) {
             $this->playlistUnknownError($e);
@@ -290,15 +337,16 @@ class PlaylistController extends Zend_Controller_Action
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
         $modified = $this->_getParam('modified');
+        $type = $this->_getParam('obj_type');
 
         try {
-            $pl = $this->getPlaylist();
-            $pl->moveAudioClips($ids, $afterItem);
-            $this->createUpdateResponse($pl);
+            $obj = $this->getPlaylist($type);
+            $obj->moveAudioClips($ids, $afterItem);
+            $this->createUpdateResponse($obj);
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -309,15 +357,16 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $modified = $this->_getParam('modified');
+        $type = $this->_getParam('obj_type');
 
         try {
-            $pl = $this->getPlaylist();
-            $pl->delAudioClips($ids);
-            $this->createUpdateResponse($pl);
+            $obj = $this->getPlaylist($type);
+            $obj->delAudioClips($ids);
+            $this->createUpdateResponse($obj);
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -328,21 +377,22 @@ class PlaylistController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         $cueIn = $this->_getParam('cueIn', null);
         $cueOut = $this->_getParam('cueOut', null);
+        $type = $this->_getParam('type');
 
         try {
-            $pl = $this->getPlaylist();
-            $response = $pl->changeClipLength($id, $cueIn, $cueOut);
+            $obj = $this->getPlaylist($type);
+            $response = $obj->changeClipLength($id, $cueIn, $cueOut);
 
             if (!isset($response["error"])) {
                 $this->view->response = $response;
-                $this->createUpdateResponse($pl);
+                $this->createUpdateResponse($obj);
             } else {
                 $this->view->cue_error = $response["error"];
             }
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -353,13 +403,14 @@ class PlaylistController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         $fadeIn = $this->_getParam('fadeIn', null);
         $fadeOut = $this->_getParam('fadeOut', null);
+        $type = $this->_getParam('type');
 
         try {
-            $pl = $this->getPlaylist();
-            $response = $pl->changeFadeInfo($id, $fadeIn, $fadeOut);
+            $obj = $this->getPlaylist($type);
+            $response = $obj->changeFadeInfo($id, $fadeIn, $fadeOut);
 
             if (!isset($response["error"])) {
-                $this->createUpdateResponse($pl);
+                $this->createUpdateResponse($obj);
                 $this->view->response = $response;
             } else {
                 $this->view->fade_error = $response["error"];
@@ -367,7 +418,7 @@ class PlaylistController extends Zend_Controller_Action
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -375,17 +426,18 @@ class PlaylistController extends Zend_Controller_Action
 
     public function getPlaylistFadesAction()
     {
+        $type = $this->_getParam('type');
         try {
-            $pl = $this->getPlaylist();
-            $fades = $pl->getFadeInfo(0);
+            $obj = $this->getPlaylist($type);
+            $fades = $obj->getFadeInfo(0);
             $this->view->fadeIn = $fades[0];
 
-            $fades = $pl->getFadeInfo($pl->getSize()-1);
+            $fades = $obj->getFadeInfo($obj->getSize()-1);
             $this->view->fadeOut = $fades[1];
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -400,15 +452,16 @@ class PlaylistController extends Zend_Controller_Action
     {
         $fadeIn = $this->_getParam('fadeIn', null);
         $fadeOut = $this->_getParam('fadeOut', null);
+        $type = $this->_getParam('type');
 
         try {
-            $pl = $this->getPlaylist();
-            $pl->setPlaylistfades($fadeIn, $fadeOut);
-            $this->view->modified = $pl->getLastModified("U");
+            $obj = $this->getPlaylist($type);
+            $obj->setPlaylistfades($fadeIn, $fadeOut);
+            $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -417,16 +470,17 @@ class PlaylistController extends Zend_Controller_Action
     public function setPlaylistNameAction()
     {
         $name = $this->_getParam('name', 'Unknown Playlist');
-
+        $type = $this->_getParam('type');
+        
         try {
-            $pl = $this->getPlaylist();
-            $pl->setName($name);
+            $obj = $this->getPlaylist($type);
+            $obj->setName($name);
             $this->view->playlistName = $name;
-            $this->view->modified = $pl->getLastModified("U");
+            $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -435,16 +489,17 @@ class PlaylistController extends Zend_Controller_Action
     public function setPlaylistDescriptionAction()
     {
         $description = $this->_getParam('description', "");
+        $type = $this->_getParam('type');
 
         try {
-            $pl = $this->getPlaylist();
-            $pl->setDescription($description);
-            $this->view->description = $pl->getDescription();
-            $this->view->modified = $pl->getLastModified("U");
+            $obj = $this->getPlaylist($type);
+            $obj->setDescription($description);
+            $this->view->description = $obj->getDescription();
+            $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -470,7 +525,7 @@ class PlaylistController extends Zend_Controller_Action
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
             }
             catch (PlaylistNotFoundException $e) {
-                $this->playlistNotFound();
+                $this->playlistNotFound('block');
             }
             catch (Exception $e) {
                 $this->playlistUnknownError($e);
@@ -491,7 +546,7 @@ class PlaylistController extends Zend_Controller_Action
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
             }
             catch (PlaylistNotFoundException $e) {
-                $this->playlistNotFound();
+                $this->playlistNotFound('block');
             }
             catch (Exception $e) {
                 $this->playlistUnknownError($e);
@@ -499,6 +554,19 @@ class PlaylistController extends Zend_Controller_Action
         }else{
             die(json_encode($result));
         }
+    }
+    
+    public function getObjInfo($p_type)
+    {
+        $info = array();
+        
+        if (strcmp($p_type, 'playlist')==0) {
+            $info['className'] = 'Application_Model_Playlist';
+        } else {
+            $info['className'] = 'Application_Model_Block';
+        }
+        
+        return $info;
     }
     
 }

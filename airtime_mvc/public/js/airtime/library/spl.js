@@ -70,7 +70,8 @@ var AIRTIME = (function(AIRTIME){
 			cueIn = $.trim(span.text()),
 			li = span.parents("li"),
 			unqid = li.attr("unqid"),
-			lastMod = getModified();
+			lastMod = getModified(),
+			type = $('#obj_type').val();
 
 		if (!isTimeValid(cueIn)){
 	        showError(span, "please put in a time '00:00:00 (.000000)'");
@@ -78,7 +79,7 @@ var AIRTIME = (function(AIRTIME){
 		}
 
 		$.post(url, 
-			{format: "json", cueIn: cueIn, id: id, modified: lastMod}, 
+			{format: "json", cueIn: cueIn, id: id, modified: lastMod, type: type}, 
 			function(json){
 		   
 				if (json.error !== undefined){
@@ -108,7 +109,8 @@ var AIRTIME = (function(AIRTIME){
 			cueOut = $.trim(span.text()),
 			li = span.parents("li"),
 			unqid = li.attr("unqid"),
-			lastMod = getModified();
+			lastMod = getModified(),
+            type = $('#obj_type').val();
 
 		if (!isTimeValid(cueOut)){
 	        showError(span, "please put in a time '00:00:00 (.000000)'");
@@ -116,7 +118,7 @@ var AIRTIME = (function(AIRTIME){
 		}
 
 		$.post(url, 
-			{format: "json", cueOut: cueOut, id: id, modified: lastMod}, 
+			{format: "json", cueOut: cueOut, id: id, modified: lastMod, type: type}, 
 			function(json){
 		   
 				if (json.error !== undefined){
@@ -146,7 +148,8 @@ var AIRTIME = (function(AIRTIME){
 			fadeIn = $.trim(span.text()),
 			li = span.parents("li"),
 			unqid = li.attr("unqid"),
-			lastMod = getModified();
+			lastMod = getModified(),
+            type = $('#obj_type').val();
 
 		if (!isFadeValid(fadeIn)){
 	        showError(span, "please put in a time in seconds '00 (.000000)'");
@@ -154,7 +157,7 @@ var AIRTIME = (function(AIRTIME){
 		}
 
 		$.post(url, 
-			{format: "json", fadeIn: fadeIn, id: id, modified: lastMod}, 
+			{format: "json", fadeIn: fadeIn, id: id, modified: lastMod, type: type}, 
 			function(json){
 			
 				if (json.error !== undefined){
@@ -183,7 +186,8 @@ var AIRTIME = (function(AIRTIME){
 			fadeOut = $.trim(span.text()),
 			li = span.parents("li"),
 			unqid = li.attr("unqid"),
-			lastMod = getModified();
+			lastMod = getModified(),
+            type = $('#obj_type').val();
 
 		if (!isFadeValid(fadeOut)){
 	        showError(span, "please put in a time in seconds '00 (.000000)'");
@@ -191,7 +195,7 @@ var AIRTIME = (function(AIRTIME){
 		}
 
 		$.post(url, 
-			{format: "json", fadeOut: fadeOut, id: id, modified: lastMod}, 
+			{format: "json", fadeOut: fadeOut, id: id, modified: lastMod, type: type}, 
 			function(json){
 			
 				if (json.error !== undefined){
@@ -256,12 +260,13 @@ var AIRTIME = (function(AIRTIME){
     
 	function editName() {
 	    var nameElement = $(this),
-	    	lastMod = getModified();
-
+	    	lastMod = getModified(),
+	    	type = $('#obj_type').val();
+	    
     	url = '/Playlist/set-playlist-name';
 
 	    $.post(url, 
-	    	{format: "json", name: nameElement.text(), modified: lastMod}, 
+	    	{format: "json", name: nameElement.text(), modified: lastMod, type: type}, 
 	    	function(json){
 	    	
 	            if (json.error !== undefined) {
@@ -378,7 +383,8 @@ var AIRTIME = (function(AIRTIME){
 		
 		//main playlist fades events
 		$pl.on("click", "#spl_crossfade", function() {
-	    	var lastMod = getModified();
+	    	var lastMod = getModified(),
+	    	    type = $('#obj_type');
 
 	        if ($(this).hasClass("ui-state-active")) {
 	            $(this).removeClass("ui-state-active");
@@ -390,7 +396,7 @@ var AIRTIME = (function(AIRTIME){
 	            var url = '/Playlist/get-playlist-fades';
 
 		        $.get(url, 
-		        	{format: "json", modified: lastMod}, 
+		        	{format: "json", modified: lastMod, type: type}, 
 		        	function(json){
 			            if (json.error !== undefined){
 			            	playlistError(json);
@@ -416,7 +422,8 @@ var AIRTIME = (function(AIRTIME){
 		    var url = "/Playlist/set-playlist-fades",
 			    span = $(this),
 			    fadeIn = $.trim(span.text()), 
-			    lastMod = getModified();
+			    lastMod = getModified(),
+	            type = $('#obj_type').val();
 		    
 		    if (!isFadeValid(fadeIn)){
 	            showError(span, "please put in a time in seconds '00 (.000000)'");
@@ -424,7 +431,7 @@ var AIRTIME = (function(AIRTIME){
 		    }
 
 		    $.post(url, 
-	    		{format: "json", fadeIn: fadeIn, modified: lastMod}, 
+	    		{format: "json", fadeIn: fadeIn, modified: lastMod, type: type}, 
 	    		function(json){       
 		            hideError(span);
 		            if (json.modified !== undefined) {
@@ -439,7 +446,8 @@ var AIRTIME = (function(AIRTIME){
 		    var url = "/Playlist/set-playlist-fades",
 		    	span = $(this),
 		    	fadeOut = $.trim(span.text()), 
-		    	lastMod = getModified();
+		    	lastMod = getModified(),
+	            type = $('#obj_type').val();
 
 		    if (!isFadeValid(fadeOut)){
 	            showError(span, "please put in a time in seconds '00 (.000000)'");
@@ -447,7 +455,7 @@ var AIRTIME = (function(AIRTIME){
 		    }
 
 		    $.post(url, 
-		    	{format: "json", fadeOut: fadeOut, modified: lastMod}, 
+		    	{format: "json", fadeOut: fadeOut, modified: lastMod, type: type}, 
 		    	function(json){
 		            hideError(span);
 		            if (json.modified !== undefined) {
@@ -485,12 +493,13 @@ var AIRTIME = (function(AIRTIME){
 	        var textarea = $pl.find("#fieldset-metadate_change textarea"),
 	        	description = textarea.val(),
 	        	url,
-	        	lastMod = getModified();;
+	        	lastMod = getModified(),
+	        	type = $('#obj_type').val();
 	        
 	        url = '/Playlist/set-playlist-description';
 
 	        $.post(url, 
-        		{format: "json", description: description, modified: lastMod}, 
+        		{format: "json", description: description, modified: lastMod, type: type}, 
         		function(json){
 		            if (json.error !== undefined){
 		            	playlistError(json);
@@ -612,12 +621,25 @@ var AIRTIME = (function(AIRTIME){
 		stopAudioPreview();
 		
 		$.post(url, 
-			{format: "json"}, 
+			{format: "json", type: 'playlist'}, 
 			function(json){
 				openPlaylist(json);
 				redrawLib();
 			});
 	};
+	
+	mod.fnNewBlock = function() {
+        var url = '/Playlist/new';
+
+        stopAudioPreview();
+        
+        $.post(url, 
+            {format: "json", type: 'block'}, 
+            function(json){
+                openPlaylist(json);
+                redrawLib();
+            });
+    };
 	
 	mod.fnEdit = function(id) {
 		var url = '/Playlist/edit';;
@@ -636,11 +658,12 @@ var AIRTIME = (function(AIRTIME){
 		
 		stopAudioPreview();	
 		id = (plid === undefined) ? getId() : plid;
-		lastMod = getModified(); 
+		lastMod = getModified();
+		type = $('#obj_type').val();
 		url = '/Playlist/delete';
 
 		$.post(url, 
-			{format: "json", ids: id, modified: lastMod}, 
+			{format: "json", ids: id, modified: lastMod, type: type}, 
 			function(json){
 				openPlaylist(json);
 				redrawLib();
@@ -690,13 +713,15 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function playlistRequest(sUrl, oData) {
-		var lastMod;
+		var lastMod,
+		    obj_type = $('#obj_type').val();
 		
 		mod.disableUI();
 		
 		lastMod = getModified();
 		
 		oData["modified"] = lastMod;
+		oData["obj_type"] = obj_type;
 		oData["format"] = "json";
 		
 		$.post(
@@ -728,9 +753,18 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.init = function() {
-		
+	    $.contextMenu({
+            selector: '#spl_new',
+            trigger: "left",
+            ignoreRightClick: true,
+            items: {
+                "sp": {name: "New Playlist", callback: AIRTIME.playlist.fnNew},
+                "sb": {name: "New Smart Block", callback: AIRTIME.playlist.fnNewBlock}
+            }
+        });
+	    /*
 		$pl.delegate("#spl_new", 
-	    		{"click": AIRTIME.playlist.fnNew});
+	    		{"click": AIRTIME.playlist.fnNew});*/
 
 		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();

@@ -765,7 +765,7 @@ class Application_Model_Playlist
         return $md;
     }
 
-    public function getPLMetaData($category)
+    public function getMetaData($category)
     {
         $cat = $this->categories[$category];
         $method = 'get' . $cat;
@@ -773,7 +773,7 @@ class Application_Model_Playlist
         return $this->$method();
     }
 
-    public function setPLMetaData($category, $value)
+    public function setMetaData($category, $value)
     {
         $cat = $this->categories[$category];
 
