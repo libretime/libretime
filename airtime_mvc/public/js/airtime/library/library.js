@@ -542,6 +542,7 @@ var AIRTIME = (function(AIRTIME) {
                 .append('<option value="0">All</option>')
                 .append('<option value="1">Files</option>')
                 .append('<option value="2">Playlists</option>')
+                .append('<option value="3">Smart Blocks</option>')
                 .end()
             .change(function(ev){
                 oTable.fnDraw();
@@ -613,7 +614,11 @@ var AIRTIME = (function(AIRTIME) {
                         }
                         else {
                             callback = function() {
-                                AIRTIME.playlist.fnEdit(data.id);
+                                if (data.ftype === "playlist") {
+                                    AIRTIME.playlist.fnEdit(data.id, 'playlist');
+                                } else {
+                                    AIRTIME.playlist.fnEdit(data.id, 'block');
+                                }
                             };
                         }
                         oItems.edit.callback = callback;

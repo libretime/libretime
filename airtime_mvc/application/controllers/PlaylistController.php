@@ -203,7 +203,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->type = $this->obj_sess->type;
             }
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($this->obj_sess->type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -230,31 +230,20 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse($obj);
     }
     
-    /*public function newBlockAction()
-    {
-        $bl_sess = $this->bl_sess;
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-        $bl = new Application_Model_Block();
-        $bl->setName("Untitled Smart Block");
-        $bl->setBLMetaData('dc:creator', $userInfo->id);
-
-        $this->changePlaylist($bl->getId(), 'block');
-        $this->createFullResponse($bl);
-    }*/
-
     public function editAction()
     {
         $id = $this->_getParam('id', null);
-        Logging::log("editing playlist {$id}");
+        $type = $this->_getParam('type');
+        $objInfo = $this->getObjInfo($type);
+        Logging::log("editing {$type} {$id}");
 
         if (!is_null($id)) {
-            $this->changePlaylist($id, 'playlist');
+            $this->changePlaylist($id, $type);
         }
 
         try {
-            $pl = new Application_Model_Playlist($id);
-            $this->createFullResponse($pl);
+            $obj = new $objInfo['className']($id);
+            $this->createFullResponse($obj);
         } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
         } catch (Exception $e) {

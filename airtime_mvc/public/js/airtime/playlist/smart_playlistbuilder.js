@@ -5,18 +5,6 @@ $(document).ready(function() {
 function setSmartPlaylistEvents() {
     var form = $('#smart-playlist-form');
     
-    /*
-    sets.each(function(index, set){
-        $(set).live('click', function(){
-           if ($(this).next().hasClass('closed')) { 
-               $(this).next().removeClass('closed sp-closed');
-           } else {
-               $(this).next().addClass('closed sp-closed');
-           }
-        });
-    });
-    */
-    
     form.find('.criteria_add').live('click', function(){
         
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();

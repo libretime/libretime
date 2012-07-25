@@ -56,7 +56,7 @@ class Application_Model_Playlist
             }
         } else {
             $this->pl = new CcPlaylist();
-            $this->pl->setDbUTime("now", new DateTimeZone("UTC"));
+            $this->pl->setDbUTime(new DateTime("now", new DateTimeZone("UTC")));
             $this->pl->save();
         }
 
@@ -135,6 +135,9 @@ class Application_Model_Playlist
 
     public function getLastModified($format = null)
     {
+        //Logging::log($this->pl->getDbMtime($format));
+        //Logging::log($this->pl);
+        Logging::log("5555");
         return $this->pl->getDbMtime($format);
     }
 

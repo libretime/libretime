@@ -50,10 +50,14 @@ class LibraryController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::Recall($id);
 
             if (isset($this->obj_sess->id) && $screen == "playlist") {
-                // if the user is not admin or pm, check the creator and see if this person owns the playlist
-                $playlist = new Application_Model_Playlist($this->obj_sess->id);
-                if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
-                    $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                // if the user is not admin or pm, check the creator and see if this person owns the playlist or Block
+                if ($this->obj_sess->type == 'playlist') {
+                    $obj = new Application_Model_Playlist($this->obj_sess->id);
+                } else {
+                    $obj = new Application_Model_Block($this->obj_sess->id);
+                }
+                if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
+                    $menu["pl_add"] = array("name"=> "Add to ".ucfirst($this->obj_sess->type), "icon" => "add-playlist", "icon" => "copy");
                 }
             }
             if ($isAdminOrPM) {
@@ -63,14 +67,19 @@ class LibraryController extends Zend_Controller_Action
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
-        } elseif ($type === "playlist") {
-            $playlist = new Application_Model_Playlist($id);
+        } elseif ($type === "playlist" || $type === "block") {
+            if ($type === 'playlist') {
+                $obj = new Application_Model_Playlist($id);
+            } else {
+                $obj = new Application_Model_Block($id);
+            }
+            
             if ($this->obj_sess->id !== $id && $screen == "playlist") {
-                if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
+                if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
                 }
             }
-            if ($isAdminOrPM || $playlist->getCreatorId() == $user->getId()) {
+            if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
         }
@@ -113,6 +122,7 @@ class LibraryController extends Zend_Controller_Action
 
         $files = array();
         $playlists = array();
+        $blocks = array();
 
         $message = null;
 
@@ -122,13 +132,19 @@ class LibraryController extends Zend_Controller_Action
                 $files[] = intval($media["id"]);
             } elseif ($media["type"] === "playlist") {
                 $playlists[] = intval($media["id"]);
+            } elseif ($media["type"] === "block") {
+                $blocks[] = intval($media["id"]);
             }
         }
 
         try {
-            Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
+            if ($media["type"] === "playlist") {
+                Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
+            } elseif ($media["type"] === "block") {
+                Application_Model_Block::deleteBlocks($blocks, $user->getId());
+            }
         } catch (PlaylistNoPermissionException $e) {
-            $this->view->message = "You don't have permission to delete selected playlists/files.";
+            $this->view->message = "You don't have permission to delete selected items.";
             return;
         }
 
@@ -155,6 +171,7 @@ class LibraryController extends Zend_Controller_Action
     public function contentsFeedAction()
     {
         $params = $this->getRequest()->getParams();
+
         $r = Application_Model_StoredFile::searchLibraryFiles($params);
 
         //TODO move this to the datatables row callback.
