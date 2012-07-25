@@ -32,6 +32,8 @@ class Manager(Loggable):
         # this is a little hacky because we are unable to have multiple wd's
         # on the same path.
         self.__wd_path = {}
+        # The following set isn't really necessary anymore. should be
+        # removed...
         self.watched_directories = set([])
 
     def __remove_watch(self,path):
@@ -40,7 +42,9 @@ class Manager(Loggable):
             self.wm.rm_watch(wd, rec=True)
             del(self.__wd_path[path])
 
-    def __add_watch(self,path,wd):
+    def __add_watch(self,path,listener):
+        wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True, auto_add=True,
+                               proc_fun=listener)
         self.__wd_path[path] = wd.values()[0]
 
     def __create_organizer(self, target_path):
@@ -57,9 +61,7 @@ class Manager(Loggable):
         # the OrganizeListener instance will walk path and dispatch an organize
         # event for every file in that directory
         self.organize['organize_listener'].flush_events(new_path)
-        wd = self.wm.add_watch(new_path, pyinotify.ALL_EVENTS, rec=True, auto_add=True,
-                proc_fun=self.organize['organize_listener'])
-        self.__add_watch(new_path, wd)
+        self.__add_watch(new_path, self.organize['organize_listener'])
 
     organize_path = property(get_organize_path, set_organize_path)
 
@@ -76,9 +78,7 @@ class Manager(Loggable):
         # for removing songs in the old store directory from the database
         # we assume that this is already done for us.
         self.watch_listener.flush_events(new_path)
-        wd = self.wm.add_watch(new_path, pyinotify.ALL_EVENTS, rec=True, auto_add=True,
-                proc_fun=self.watch_listener)
-        self.__add_watch(new_path, wd)
+        self.__add_watch(new_path, self.watch_listener)
 
     store_path = property(get_store_path, set_store_path)
 
@@ -86,22 +86,19 @@ class Manager(Loggable):
         return path in self.__wd_path
 
     def add_watch_directory(self, new_dir):
-        if new_dir in self.watched_directories:
+        if self.has_watch(new_dir):
             self.logger.info("Cannot add '%s' to watched directories. It's \
                     already being watched" % new_dir)
         else:
             self.logger.info("Adding watched directory: '%s'" % new_dir)
-            wd = self.wm.add_watch(new_dir, pyinotify.ALL_EVENTS, rec=True, auto_add=True,
-                    proc_fun=self.watch_listener)
-            self.__add_watch(new_dir, wd)
+            self.__add_watch(new_dir, self.watch_listener)
 
     def remove_watch_directory(self, watch_dir):
-        if watch_dir in self.watched_directories:
-            self.watched_directories.remove(watch_dir)
+        if self.has_watch(watch_dir):
             self.logger.info("Removing watched directory: '%s'", watch_dir)
             self.__remove_watch(watch_dir)
         else:
-            self.logger.info("'%s' is not being watched, henced cannot be removed"
+            self.logger.info("'%s' is not being watched, hence cannot be removed"
                     % watch_dir)
 
     def loop(self):
