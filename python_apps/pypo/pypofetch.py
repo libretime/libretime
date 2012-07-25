@@ -425,6 +425,11 @@ class PypoFetch(Thread):
 
             for key in media:
                 media_item = media[key]
+                """
+                {u'end': u'2012-07-26-04-05-00', u'fade_out': 500, u'show_name': u'Untitled Show', u'uri': u'http://', 
+ u'cue_in': 0, u'start': u'2012-07-26-04-00-00', u'replay_gain': u'0', u'row_id': 16, u'cue_out': 300, u'type': 
+ u'stream', u'id': 1, u'fade_in': 500}
+                """
                 if(media_item['type'] == 'file'):
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, media_item['id'] + fileExt)
@@ -455,15 +460,19 @@ class PypoFetch(Thread):
 
         for mkey in media:
             media_item = media[mkey]
-            fileExt = os.path.splitext(media_item['uri'])[1]
-            scheduled_file_set.add(media_item["id"] + fileExt)
+            if media_item['type'] == 'file':
+                fileExt = os.path.splitext(media_item['uri'])[1]
+                scheduled_file_set.add(media_item["id"] + fileExt)
 
-        unneeded_files = cached_file_set - scheduled_file_set
+        expired_files = cached_file_set - scheduled_file_set
 
-        self.logger.debug("Files to remove " + str(unneeded_files))
-        for f in unneeded_files:
-            self.logger.debug("Removing %s" % os.path.join(self.cache_dir, f))
-            os.remove(os.path.join(self.cache_dir, f))
+        self.logger.debug("Files to remove " + str(expired_files))
+        for f in expired_files:
+            try:
+                self.logger.debug("Removing %s" % os.path.join(self.cache_dir, f))
+                os.remove(os.path.join(self.cache_dir, f))
+            except Exception, e:
+                self.logger.error(e)
 
     def main(self):
         # Bootstrap: since we are just starting up, we need to grab the

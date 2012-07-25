@@ -23,7 +23,6 @@ set("harbor.bind_addr", "0.0.0.0")
 web_stream = input.harbor("test-harbor",port=8999,password="hackme")
 
 pypo_data = ref '0'
-web_stream_enabled = ref false
 stream_metadata_type = ref 0
 default_dj_fade = ref 0.
 station_name = ref ''
@@ -43,12 +42,11 @@ queue = on_metadata(notify, queue)
 queue = map_metadata(append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
-ignore(output.dummy(queue, fallible=true))
 
 queue = fallback([web_stream, queue])
+ignore(output.dummy(queue, fallible=true))
 
 server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)
-server.register(namespace="vars", "web_stream_enabled", fun (s) -> begin web_stream_enabled := (s == "true") string_of(!web_stream_enabled) end)
 server.register(namespace="vars", "stream_metadata_type", fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
 server.register(namespace="vars", "show_name", fun (s) -> begin show_name := s s end)
 server.register(namespace="vars", "station_name", fun (s) -> begin station_name := s s end)
@@ -178,20 +176,6 @@ s = switch(id="default_switch", track_sensitive=false, transitions=[transition_d
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
 
 # Attach a skip command to the source s:
-
-#web_stream_source = input.http(id="web_stream", autostart = false, buffer=0.5, max=20., "")
-
-#once the stream is started, give it a sink so that liquidsoap doesn't
-#create buffer overflow warnings in the log file.
-#output.dummy(fallible=true, web_stream_source)
-
-#s = switch(track_sensitive = false,
-#    transitions=[to_live,to_live],
-#    [
-#      ({ !web_stream_enabled }, web_stream_source),
-#      ({ true }, s)
-#    ]
-#)
 
 add_skip_command(s)
 

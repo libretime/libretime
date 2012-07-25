@@ -251,7 +251,7 @@ class Application_Model_Schedule
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "SELECT DISTINCT
+        $templateSql = "SELECT DISTINCT
 
         showt.name AS show_name, showt.color AS show_color,
         showt.background_color AS show_background_color, showt.id AS show_id,
@@ -267,13 +267,12 @@ class Application_Model_Schedule
 
         --ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
         --ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists
-
-        %%file_columns%%
+        %%columns%%
 
         FROM
         ((
             --cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
-            %%file_join%%
+            %%join%%
 
         --JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
         RIGHT JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
@@ -287,25 +286,30 @@ class Application_Model_Schedule
         OR (si.starts <= '{$p_start}' AND si.ends >= '{$p_end}'))";
 
         if (count($p_shows) > 0) {
-            $sql .= " AND show_id IN (".implode(",", $p_shows).")";
+            $templateSql .= " AND show_id IN (".implode(",", $p_shows).")";
         }
 
-        $sql .= " ORDER BY si.starts, sched.starts";
-        $sql2 = $sql;
+        $templateSql .= " ORDER BY si.starts, sched.starts";
 
-        $sql = str_replace("%%file_columns%%", "ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
-            ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists", $sql);
-        $sql = str_replace("%%file_join%%", "cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)", $sql);
+        $filesSql = str_replace("%%columns%%", 
+            "ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
+            ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists", 
+            $templateSql);
+        $filesSql= str_replace("%%join%%", 
+            "cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)", 
+            $filesSql);
 
-        $sql2 = str_replace("%%file_columns%%", "ws.name AS file_track_title, ws.login AS file_artist_name,
-            ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", $sql2);
-        $sql2 = str_replace("%%file_join%%", "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)", $sql2);
+        $streamSql = str_replace("%%columns%%", 
+            "ws.name AS file_track_title, ws.login AS file_artist_name,
+            ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", 
+            $templateSql);
+        $streamSql = str_replace("%%join%%", 
+            "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)", 
+            $streamSql);
 
-        $sql = "($sql) UNION ($sql2)";
+        $sql = "($filesSql) UNION ($streamSql)";
 
-        Logging::debug($sql);
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
         return $rows;
     }
 
@@ -486,13 +490,13 @@ class Application_Model_Schedule
             ." st.cue_out AS cue_out,"
             ." st.fade_in AS fade_in,"
             ." st.fade_out AS fade_out,"
-            ." st.type AS type,"
+            //." st.type AS type,"
             ." si.starts AS show_start,"
             ." si.ends AS show_end,"
-            ." f.id AS file_id"
-            ." f.replay_gain AS replay_gain"
-            ." f.file_path AS file_path"
-            ." ws.id as stream_id"
+            ." f.id AS file_id,"
+            ." f.replay_gain AS replay_gain,"
+            ." f.filepath AS filepath,"
+            ." ws.id as stream_id,"
             ." ws.url as url"
             ." FROM $CC_CONFIG[scheduleTable] AS st"
             ." LEFT JOIN $CC_CONFIG[showInstances] AS si"
@@ -588,13 +592,14 @@ class Application_Model_Schedule
             $data["media"][$kick_start]['end'] = $kick_start;
             $data["media"][$kick_start]['event_type'] = "kick_out";
             $data["media"][$kick_start]['type'] = "event";
+            $data["media"][$kick_start]['independent_event'] = true;
 
             if ($kick_time !== $switch_off_time) {
                 $switch_start = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
                 $data["media"][$switch_start]['start'] = $switch_start;
                 $data["media"][$switch_start]['end'] = $switch_start;
                 $data["media"][$switch_start]['event_type'] = "switch_off";
-                $data["media"][$switch_start]['type'] = "event";
+                $data["media"][$switch_start]['independent_event'] = true;
             }
         }
 
@@ -622,23 +627,22 @@ class Application_Model_Schedule
                 $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
             }
 
-            Logging::log($item);
-            //TODO: need to know item type
-            //
-            //
-            if ($item['type'] == 0) {
-                //row is from cc_files
+            if (!is_null($item['file_id'])) {
+                //row is from "file"
                 $media_id = $item['file_id'];
-                $uri = $item['file_path'];
+                $uri = $item['filepath'];
                 $type = "file";
-            } else if ($item['type'] == 1) {
+            } else if (!is_null($item['stream_id'])) {
+                //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 $type = "stream";
             }
 
+            
 
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
+            $end = Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]);
 
             $data["media"][$start] = array(
                 'id' => $media_id,
@@ -650,10 +654,24 @@ class Application_Model_Schedule
                 'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
                 'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
                 'start' => $start,
-                'end' => Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]),
+                'end' => $end,
                 'show_name' => $showName,
-                'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"]
+                'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
+                'independent_event' => false
             );
+
+            if ($type == "stream") {
+                //since a stream never ends we have to insert an additional "kick stream" event. The "start"
+                //time of this event is the "end" time of the stream.
+                $data["media"][$end] = array(
+                    'start' => $end,
+                    'end' => $end,
+                    'uri' => $uri,
+                    'type' => 'stream_end',
+                    'independent_event' => true
+                    );
+
+            }
         }
 
         return $data;
