@@ -6,7 +6,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
     }
     
-    public function startForm($p_playlistId)
+    public function startForm($p_blockId)
     {
         $criteriaOptions = array(
             0 => "Select criteria",
@@ -94,26 +94,26 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         );
         
         // load type
-        $out = CcPlaylistQuery::create()->findPk($p_playlistId);
+        $out = CcBlockQuery::create()->findPk($p_blockId);
         if ($out->getDbType() == "static") {
-            $playlistType = 0;
+            $blockType = 0;
         } else {
-            $playlistType = 1;
+            $blockType = 1;
         }
         
         
         $spType = new Zend_Form_Element_Radio('sp_type');
-        $spType->setLabel('Set smart playlist type:')
+        $spType->setLabel('Set smart block type:')
                ->setDecorators(array('viewHelper'))
                ->setMultiOptions(array(
                     'static' => 'Static',
                     'dynamic' => 'Dynamic'
                 ))
-               ->setValue($playlistType);
+               ->setValue($blockType);
         $this->addElement($spType);
-        
+       
         // load criteria from db
-        $out = CcPlaylistcriteriaQuery::create()->findByDbPlaylistId($p_playlistId);
+        $out = CcBlockcriteriaQuery::create()->findByDbBlockId($p_blockId);
         
         $storedCrit = array();
         foreach ($out as $crit) {
@@ -129,9 +129,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             }
         }
         
-        $openSmartPlaylistOption = false;
+        $openSmartBlockOption = false;
         if (!empty($storedCrit)) {
-            $openSmartPlaylistOption = true;
+            $openSmartBlockOption = true;
         }
         
         $numElements = count($criteriaOptions);
@@ -212,9 +212,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $limitValue->setValue($storedCrit["limit"]["value"]);
         }
         
-        //getting playlist content candidate count that meets criteria
-        $pl = new Application_Model_Playlist($p_playlistId);
-        $files = $pl->getListofFilesMeetCriteria();
+        //getting block content candidate count that meets criteria
+        $bl = new Application_Model_Block($p_blockId);
+        $files = $bl->getListofFilesMeetCriteria();
         
         $save = new Zend_Form_Element_Button('save_button');
         $save->setAttrib('class', 'ui-button ui-state-default sp-button');
@@ -226,7 +226,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $generate->setAttrib('title', 'Save criteria and generate playlist content');
+        $generate->setAttrib('title', 'Save criteria and generate block content');
         $generate->setIgnore(true);
         $generate->setLabel('Generate');
         $generate->setDecorators(array('viewHelper'));
@@ -234,14 +234,14 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $shuffle = new Zend_Form_Element_Button('shuffle_button');
         $shuffle->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $shuffle->setAttrib('title', 'Shuffle playlist content');
+        $shuffle->setAttrib('title', 'Shuffle block content');
         $shuffle->setIgnore(true);
         $shuffle->setLabel('Shuffle');
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
         
         $this->setDecorators(array(
-                array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartPlaylistOption,
+                array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartBlockOption,
                         'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count']))
         ));
     }

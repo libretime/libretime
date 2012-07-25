@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_playlistcontents' table.
+ * This class defines the structure of the 'cc_sectioncontents' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcPlaylistcontentsTableMap extends TableMap {
+class CcSectioncontentsTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'airtime.map.CcPlaylistcontentsTableMap';
+	const CLASS_NAME = 'airtime.map.CcSectioncontentsTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,17 +31,16 @@ class CcPlaylistcontentsTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_playlistcontents');
-		$this->setPhpName('CcPlaylistcontents');
-		$this->setClassname('CcPlaylistcontents');
+		$this->setName('cc_sectioncontents');
+		$this->setPhpName('CcSectioncontents');
+		$this->setClassname('CcSectioncontents');
 		$this->setPackage('airtime');
 		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_playlistcontents_id_seq');
+		$this->setPrimaryKeyMethodInfo('cc_sectioncontents_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addForeignKey('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', 'cc_playlist', 'ID', false, null, null);
+		$this->addForeignKey('SECTION_ID', 'DbSectionId', 'INTEGER', 'cc_section', 'ID', false, null, null);
 		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
-		$this->addForeignKey('BLOCK_ID', 'DbBlockId', 'INTEGER', 'cc_block', 'ID', false, null, null);
 		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
 		$this->addColumn('CLIPLENGTH', 'DbCliplength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEIN', 'DbCuein', 'VARCHAR', false, null, '00:00:00');
@@ -57,8 +56,7 @@ class CcPlaylistcontentsTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcBlock', 'CcBlock', RelationMap::MANY_TO_ONE, array('block_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('playlist_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcSection', 'CcSection', RelationMap::MANY_TO_ONE, array('section_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 	/**
@@ -70,8 +68,8 @@ class CcPlaylistcontentsTableMap extends TableMap {
 	public function getBehaviors()
 	{
 		return array(
-			'aggregate_column_relation' => array('foreign_table' => 'cc_playlist', 'update_method' => 'updateDbLength', ),
+			'aggregate_column_relation' => array('foreign_table' => 'cc_section', 'update_method' => 'updateDbLength', ),
 		);
 	} // getBehaviors()
 
-} // CcPlaylistcontentsTableMap
+} // CcSectioncontentsTableMap

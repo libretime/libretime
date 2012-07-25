@@ -58,6 +58,10 @@
  * @method     CcSubjsQuery rightJoinCcPlaylist($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
  * @method     CcSubjsQuery innerJoinCcPlaylist($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylist relation
  *
+ * @method     CcSubjsQuery leftJoinCcBlock($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcBlock relation
+ * @method     CcSubjsQuery rightJoinCcBlock($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcBlock relation
+ * @method     CcSubjsQuery innerJoinCcBlock($relationAlias = '') Adds a INNER JOIN clause to the query using the CcBlock relation
+ *
  * @method     CcSubjsQuery leftJoinCcPref($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPref relation
  * @method     CcSubjsQuery rightJoinCcPref($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPref relation
  * @method     CcSubjsQuery innerJoinCcPref($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPref relation
@@ -835,6 +839,70 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 		return $this
 			->joinCcPlaylist($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlaylist', 'CcPlaylistQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcBlock object
+	 *
+	 * @param     CcBlock $ccBlock  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function filterByCcBlock($ccBlock, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcSubjsPeer::ID, $ccBlock->getDbCreatorId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcBlock relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcSubjsQuery The current query, for fluid interface
+	 */
+	public function joinCcBlock($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcBlock');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcBlock');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcBlock relation CcBlock object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcBlockQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcBlockQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcBlock($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcBlock', 'CcBlockQuery');
 	}
 
 	/**

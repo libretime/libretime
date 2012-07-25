@@ -12,6 +12,7 @@
  * @method     CcPlaylistcriteriaQuery orderByDbValue($order = Criteria::ASC) Order by the value column
  * @method     CcPlaylistcriteriaQuery orderByDbExtra($order = Criteria::ASC) Order by the extra column
  * @method     CcPlaylistcriteriaQuery orderByDbPlaylistId($order = Criteria::ASC) Order by the playlist_id column
+ * @method     CcPlaylistcriteriaQuery orderByDbSetNumber($order = Criteria::ASC) Order by the set_number column
  *
  * @method     CcPlaylistcriteriaQuery groupByDbId() Group by the id column
  * @method     CcPlaylistcriteriaQuery groupByDbCriteria() Group by the criteria column
@@ -19,6 +20,7 @@
  * @method     CcPlaylistcriteriaQuery groupByDbValue() Group by the value column
  * @method     CcPlaylistcriteriaQuery groupByDbExtra() Group by the extra column
  * @method     CcPlaylistcriteriaQuery groupByDbPlaylistId() Group by the playlist_id column
+ * @method     CcPlaylistcriteriaQuery groupByDbSetNumber() Group by the set_number column
  *
  * @method     CcPlaylistcriteriaQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlaylistcriteriaQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -37,6 +39,7 @@
  * @method     CcPlaylistcriteria findOneByDbValue(string $value) Return the first CcPlaylistcriteria filtered by the value column
  * @method     CcPlaylistcriteria findOneByDbExtra(string $extra) Return the first CcPlaylistcriteria filtered by the extra column
  * @method     CcPlaylistcriteria findOneByDbPlaylistId(int $playlist_id) Return the first CcPlaylistcriteria filtered by the playlist_id column
+ * @method     CcPlaylistcriteria findOneByDbSetNumber(int $set_number) Return the first CcPlaylistcriteria filtered by the set_number column
  *
  * @method     array findByDbId(int $id) Return CcPlaylistcriteria objects filtered by the id column
  * @method     array findByDbCriteria(string $criteria) Return CcPlaylistcriteria objects filtered by the criteria column
@@ -44,6 +47,7 @@
  * @method     array findByDbValue(string $value) Return CcPlaylistcriteria objects filtered by the value column
  * @method     array findByDbExtra(string $extra) Return CcPlaylistcriteria objects filtered by the extra column
  * @method     array findByDbPlaylistId(int $playlist_id) Return CcPlaylistcriteria objects filtered by the playlist_id column
+ * @method     array findByDbSetNumber(int $set_number) Return CcPlaylistcriteria objects filtered by the set_number column
  *
  * @package    propel.generator.airtime.om
  */
@@ -287,6 +291,37 @@ abstract class BaseCcPlaylistcriteriaQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcriteriaPeer::PLAYLIST_ID, $dbPlaylistId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the set_number column
+	 * 
+	 * @param     int|array $dbSetNumber The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistcriteriaQuery The current query, for fluid interface
+	 */
+	public function filterByDbSetNumber($dbSetNumber = null, $comparison = null)
+	{
+		if (is_array($dbSetNumber)) {
+			$useMinMax = false;
+			if (isset($dbSetNumber['min'])) {
+				$this->addUsingAlias(CcPlaylistcriteriaPeer::SET_NUMBER, $dbSetNumber['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbSetNumber['max'])) {
+				$this->addUsingAlias(CcPlaylistcriteriaPeer::SET_NUMBER, $dbSetNumber['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcPlaylistcriteriaPeer::SET_NUMBER, $dbSetNumber, $comparison);
 	}
 
 	/**

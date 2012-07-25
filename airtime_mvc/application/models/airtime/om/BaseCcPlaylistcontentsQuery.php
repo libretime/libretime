@@ -9,6 +9,7 @@
  * @method     CcPlaylistcontentsQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlaylistcontentsQuery orderByDbPlaylistId($order = Criteria::ASC) Order by the playlist_id column
  * @method     CcPlaylistcontentsQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method     CcPlaylistcontentsQuery orderByDbBlockId($order = Criteria::ASC) Order by the block_id column
  * @method     CcPlaylistcontentsQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
  * @method     CcPlaylistcontentsQuery orderByDbCliplength($order = Criteria::ASC) Order by the cliplength column
  * @method     CcPlaylistcontentsQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
@@ -19,6 +20,7 @@
  * @method     CcPlaylistcontentsQuery groupByDbId() Group by the id column
  * @method     CcPlaylistcontentsQuery groupByDbPlaylistId() Group by the playlist_id column
  * @method     CcPlaylistcontentsQuery groupByDbFileId() Group by the file_id column
+ * @method     CcPlaylistcontentsQuery groupByDbBlockId() Group by the block_id column
  * @method     CcPlaylistcontentsQuery groupByDbPosition() Group by the position column
  * @method     CcPlaylistcontentsQuery groupByDbCliplength() Group by the cliplength column
  * @method     CcPlaylistcontentsQuery groupByDbCuein() Group by the cuein column
@@ -34,6 +36,10 @@
  * @method     CcPlaylistcontentsQuery rightJoinCcFiles($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method     CcPlaylistcontentsQuery innerJoinCcFiles($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFiles relation
  *
+ * @method     CcPlaylistcontentsQuery leftJoinCcBlock($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcBlock relation
+ * @method     CcPlaylistcontentsQuery rightJoinCcBlock($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcBlock relation
+ * @method     CcPlaylistcontentsQuery innerJoinCcBlock($relationAlias = '') Adds a INNER JOIN clause to the query using the CcBlock relation
+ *
  * @method     CcPlaylistcontentsQuery leftJoinCcPlaylist($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlaylist relation
  * @method     CcPlaylistcontentsQuery rightJoinCcPlaylist($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylist relation
  * @method     CcPlaylistcontentsQuery innerJoinCcPlaylist($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylist relation
@@ -44,6 +50,7 @@
  * @method     CcPlaylistcontents findOneByDbId(int $id) Return the first CcPlaylistcontents filtered by the id column
  * @method     CcPlaylistcontents findOneByDbPlaylistId(int $playlist_id) Return the first CcPlaylistcontents filtered by the playlist_id column
  * @method     CcPlaylistcontents findOneByDbFileId(int $file_id) Return the first CcPlaylistcontents filtered by the file_id column
+ * @method     CcPlaylistcontents findOneByDbBlockId(int $block_id) Return the first CcPlaylistcontents filtered by the block_id column
  * @method     CcPlaylistcontents findOneByDbPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
  * @method     CcPlaylistcontents findOneByDbCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
  * @method     CcPlaylistcontents findOneByDbCuein(string $cuein) Return the first CcPlaylistcontents filtered by the cuein column
@@ -54,6 +61,7 @@
  * @method     array findByDbId(int $id) Return CcPlaylistcontents objects filtered by the id column
  * @method     array findByDbPlaylistId(int $playlist_id) Return CcPlaylistcontents objects filtered by the playlist_id column
  * @method     array findByDbFileId(int $file_id) Return CcPlaylistcontents objects filtered by the file_id column
+ * @method     array findByDbBlockId(int $block_id) Return CcPlaylistcontents objects filtered by the block_id column
  * @method     array findByDbPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
  * @method     array findByDbCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
  * @method     array findByDbCuein(string $cuein) Return CcPlaylistcontents objects filtered by the cuein column
@@ -246,6 +254,37 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcontentsPeer::FILE_ID, $dbFileId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the block_id column
+	 * 
+	 * @param     int|array $dbBlockId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
+	 */
+	public function filterByDbBlockId($dbBlockId = null, $comparison = null)
+	{
+		if (is_array($dbBlockId)) {
+			$useMinMax = false;
+			if (isset($dbBlockId['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::BLOCK_ID, $dbBlockId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbBlockId['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::BLOCK_ID, $dbBlockId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::BLOCK_ID, $dbBlockId, $comparison);
 	}
 
 	/**
@@ -469,6 +508,70 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 		return $this
 			->joinCcFiles($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcFiles', 'CcFilesQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcBlock object
+	 *
+	 * @param     CcBlock $ccBlock  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
+	 */
+	public function filterByCcBlock($ccBlock, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcPlaylistcontentsPeer::BLOCK_ID, $ccBlock->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcBlock relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
+	 */
+	public function joinCcBlock($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcBlock');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcBlock');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcBlock relation CcBlock object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcBlockQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcBlockQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcBlock($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcBlock', 'CcBlockQuery');
 	}
 
 	/**

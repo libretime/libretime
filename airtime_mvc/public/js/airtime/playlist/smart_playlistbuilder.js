@@ -119,30 +119,30 @@ function setSmartPlaylistEvents() {
 	
     form.find('button[id="save_button"]').live("click", function(event){
         var data = $('form').serializeArray(),
-            save_action = 'Playlist/smart-playlist-criteria-save',
-            playlist_id = $('input[id="pl_id"]').val();
+            save_action = 'Playlist/smart-block-criteria-save',
+            obj_id = $('input[id="obj_id"]').val();
         
-        $.post(save_action, {format: "json", data: data, pl_id: playlist_id}, function(data){
+        $.post(save_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "save");
         });
     });
     
     form.find('button[id="generate_button"]').live("click", function(event){
         var data = $('form').serializeArray(),
-            generate_action = 'Playlist/smart-playlist-generate',
-            playlist_id = $('input[id="pl_id"]').val();
+            generate_action = 'Playlist/smart-block-generate',
+            obj_id = $('input[id="obj_id"]').val();
 		
-        $.post(generate_action, {format: "json", data: data, pl_id: playlist_id}, function(data){
+        $.post(generate_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "generate");
         });
     });
     
     form.find('button[id="shuffle_button"]').live("click", function(event){
         var data = $('form').serializeArray(),
-            shuffle_action = 'Playlist/smart-playlist-shuffle',
-            playlist_id = $('input[id="pl_id"]').val();
+            shuffle_action = 'Playlist/smart-block-shuffle',
+            obj_id = $('input[id="obj_id"]').val();
 		
-        $.post(shuffle_action, {format: "json", data: data, pl_id: playlist_id}, function(data){
+        $.post(shuffle_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "shuffle");
         });
     });

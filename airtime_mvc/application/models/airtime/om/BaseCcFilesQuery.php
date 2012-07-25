@@ -156,6 +156,10 @@
  * @method     CcFilesQuery rightJoinCcPlaylistcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcFilesQuery innerJoinCcPlaylistcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
  *
+ * @method     CcFilesQuery leftJoinCcBlockcontents($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcBlockcontents relation
+ * @method     CcFilesQuery rightJoinCcBlockcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcBlockcontents relation
+ * @method     CcFilesQuery innerJoinCcBlockcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcBlockcontents relation
+ *
  * @method     CcFilesQuery leftJoinCcSchedule($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSchedule relation
  * @method     CcFilesQuery rightJoinCcSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method     CcFilesQuery innerJoinCcSchedule($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSchedule relation
@@ -2170,6 +2174,70 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 		return $this
 			->joinCcPlaylistcontents($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlaylistcontents', 'CcPlaylistcontentsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcBlockcontents object
+	 *
+	 * @param     CcBlockcontents $ccBlockcontents  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByCcBlockcontents($ccBlockcontents, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcFilesPeer::ID, $ccBlockcontents->getDbFileId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcBlockcontents relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function joinCcBlockcontents($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcBlockcontents');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcBlockcontents');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcBlockcontents relation CcBlockcontents object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcBlockcontentsQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcBlockcontentsQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcBlockcontents($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcBlockcontents', 'CcBlockcontentsQuery');
 	}
 
 	/**

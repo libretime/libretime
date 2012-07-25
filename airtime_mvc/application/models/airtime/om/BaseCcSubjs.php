@@ -134,6 +134,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	protected $collCcPlaylists;
 
 	/**
+	 * @var        array CcBlock[] Collection to store aggregation of CcBlock objects.
+	 */
+	protected $collCcBlocks;
+
+	/**
 	 * @var        array CcPref[] Collection to store aggregation of CcPref objects.
 	 */
 	protected $collCcPrefs;
@@ -831,6 +836,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 			$this->collCcPlaylists = null;
 
+			$this->collCcBlocks = null;
+
 			$this->collCcPrefs = null;
 
 			$this->collCcSesss = null;
@@ -1010,6 +1017,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcBlocks !== null) {
+				foreach ($this->collCcBlocks as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcPrefs !== null) {
 				foreach ($this->collCcPrefs as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -1139,6 +1154,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 				if ($this->collCcPlaylists !== null) {
 					foreach ($this->collCcPlaylists as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcBlocks !== null) {
+					foreach ($this->collCcBlocks as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1514,6 +1537,12 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			foreach ($this->getCcPlaylists() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcPlaylist($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcBlocks() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcBlock($relObj->copy($deepCopy));
 				}
 			}
 
@@ -2176,6 +2205,115 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcBlocks collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcBlocks()
+	 */
+	public function clearCcBlocks()
+	{
+		$this->collCcBlocks = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcBlocks collection.
+	 *
+	 * By default this just sets the collCcBlocks collection to an empty array (like clearcollCcBlocks());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcBlocks()
+	{
+		$this->collCcBlocks = new PropelObjectCollection();
+		$this->collCcBlocks->setModel('CcBlock');
+	}
+
+	/**
+	 * Gets an array of CcBlock objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcSubjs is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcBlock[] List of CcBlock objects
+	 * @throws     PropelException
+	 */
+	public function getCcBlocks($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcBlocks || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcBlocks) {
+				// return empty collection
+				$this->initCcBlocks();
+			} else {
+				$collCcBlocks = CcBlockQuery::create(null, $criteria)
+					->filterByCcSubjs($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcBlocks;
+				}
+				$this->collCcBlocks = $collCcBlocks;
+			}
+		}
+		return $this->collCcBlocks;
+	}
+
+	/**
+	 * Returns the number of related CcBlock objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcBlock objects.
+	 * @throws     PropelException
+	 */
+	public function countCcBlocks(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcBlocks || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcBlocks) {
+				return 0;
+			} else {
+				$query = CcBlockQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcSubjs($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcBlocks);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcBlock object to this object
+	 * through the CcBlock foreign key attribute.
+	 *
+	 * @param      CcBlock $l CcBlock
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcBlock(CcBlock $l)
+	{
+		if ($this->collCcBlocks === null) {
+			$this->initCcBlocks();
+		}
+		if (!$this->collCcBlocks->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcBlocks[]= $l;
+			$l->setCcSubjs($this);
+		}
+	}
+
+	/**
 	 * Clears out the collCcPrefs collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
@@ -2566,6 +2704,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcBlocks) {
+				foreach ((array) $this->collCcBlocks as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcPrefs) {
 				foreach ((array) $this->collCcPrefs as $o) {
 					$o->clearAllReferences($deep);
@@ -2588,6 +2731,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		$this->collCcPermss = null;
 		$this->collCcShowHostss = null;
 		$this->collCcPlaylists = null;
+		$this->collCcBlocks = null;
 		$this->collCcPrefs = null;
 		$this->collCcSesss = null;
 		$this->collCcSubjsTokens = null;

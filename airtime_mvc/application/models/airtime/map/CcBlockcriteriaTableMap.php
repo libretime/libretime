@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_playlistcriteria' table.
+ * This class defines the structure of the 'cc_blockcriteria' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcPlaylistcriteriaTableMap extends TableMap {
+class CcBlockcriteriaTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'airtime.map.CcPlaylistcriteriaTableMap';
+	const CLASS_NAME = 'airtime.map.CcBlockcriteriaTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,20 +31,19 @@ class CcPlaylistcriteriaTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_playlistcriteria');
-		$this->setPhpName('CcPlaylistcriteria');
-		$this->setClassname('CcPlaylistcriteria');
+		$this->setName('cc_blockcriteria');
+		$this->setPhpName('CcBlockcriteria');
+		$this->setClassname('CcBlockcriteria');
 		$this->setPackage('airtime');
 		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_playlistcriteria_id_seq');
+		$this->setPrimaryKeyMethodInfo('cc_blockcriteria_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('CRITERIA', 'DbCriteria', 'VARCHAR', true, 16, null);
 		$this->addColumn('MODIFIER', 'DbModifier', 'VARCHAR', true, 16, null);
 		$this->addColumn('VALUE', 'DbValue', 'VARCHAR', true, 512, null);
 		$this->addColumn('EXTRA', 'DbExtra', 'VARCHAR', false, 512, null);
-		$this->addForeignKey('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', 'cc_playlist', 'ID', true, null, null);
-		$this->addColumn('SET_NUMBER', 'DbSetNumber', 'INTEGER', true, null, null);
+		$this->addForeignKey('BLOCK_ID', 'DbBlockId', 'INTEGER', 'cc_block', 'ID', true, null, null);
 		// validators
 	} // initialize()
 
@@ -53,7 +52,7 @@ class CcPlaylistcriteriaTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('playlist_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcBlock', 'CcBlock', RelationMap::MANY_TO_ONE, array('block_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
-} // CcPlaylistcriteriaTableMap
+} // CcBlockcriteriaTableMap

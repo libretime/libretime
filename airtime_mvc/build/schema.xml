@@ -238,6 +238,7 @@
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
+    <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
     <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
     <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
@@ -247,19 +248,57 @@
     <foreign-key foreignTable="cc_files" name="cc_playlistcontents_file_id_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
     </foreign-key>
+    <foreign-key foreignTable="cc_block" name="cc_playlistcontents_block_id_fkey" onDelete="CASCADE">
+      <reference local="block_id" foreign="id"/>
+    </foreign-key>
     <foreign-key foreignTable="cc_playlist" name="cc_playlistcontents_playlist_id_fkey" onDelete="CASCADE">
       <reference local="playlist_id" foreign="id"/>
     </foreign-key>
   </table>
-  <table name="cc_playlistcriteria" phpName="CcPlaylistcriteria">
+  <table name="cc_block" phpName="CcBlock">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
+    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
+    <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
+    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>
+    <column name="type" phpName="DbType" type="VARCHAR" size="7" defaultValue="static"/>
+    <behavior name="aggregate_column">
+      <parameter name="name" value="length" />
+      <parameter name="foreign_table" value="cc_blockcontents" />
+      <parameter name="expression" value="SUM(cliplength)" />
+    </behavior>
+    <foreign-key foreignTable="cc_subjs" name="cc_block_createdby_fkey">
+      <reference local="creator_id" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="cc_blockcontents" phpName="CcBlockcontents">
+    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
+    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
+    <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
+    <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="fadein" phpName="DbFadein" type="TIME" required="false" defaultValue="00:00:00"/>
+    <column name="fadeout" phpName="DbFadeout" type="TIME" required="false" defaultValue="00:00:00"/>
+    <foreign-key foreignTable="cc_files" name="cc_blockcontents_file_id_fkey" onDelete="CASCADE">
+      <reference local="file_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
+      <reference local="block_id" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="cc_blockcriteria" phpName="CcBlockcriteria">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="criteria" phpName="DbCriteria" type="VARCHAR" size="16" required="true"/>
     <column name="modifier" phpName="DbModifier" type="VARCHAR" size="16" required="true"/>
     <column name="value" phpName="DbValue" type="VARCHAR" size="512" required="true"/>
     <column name="extra" phpName="DbExtra" type="VARCHAR" size="512" required="false"/>
-    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="true"/>
-    <foreign-key foreignTable="cc_playlist" name="cc_playlistcontents_playlist_id_fkey" onDelete="CASCADE">
-      <reference local="playlist_id" foreign="id"/>
+    <column name="block_id" phpName="DbBlockId" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
+      <reference local="block_id" foreign="id"/>
     </foreign-key>    
   </table>
   <table name="cc_pref" phpName="CcPref">

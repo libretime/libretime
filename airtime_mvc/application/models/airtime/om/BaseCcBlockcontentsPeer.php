@@ -2,70 +2,67 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_playlistcontents' table.
+ * Base static class for performing query and update operations on the 'cc_blockcontents' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcPlaylistcontentsPeer {
+abstract class BaseCcBlockcontentsPeer {
 
 	/** the default database name for this class */
 	const DATABASE_NAME = 'airtime';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'cc_playlistcontents';
+	const TABLE_NAME = 'cc_blockcontents';
 
 	/** the related Propel class for this table */
-	const OM_CLASS = 'CcPlaylistcontents';
+	const OM_CLASS = 'CcBlockcontents';
 
 	/** A class that can be returned by this peer. */
-	const CLASS_DEFAULT = 'airtime.CcPlaylistcontents';
+	const CLASS_DEFAULT = 'airtime.CcBlockcontents';
 
 	/** the related TableMap class for this table */
-	const TM_CLASS = 'CcPlaylistcontentsTableMap';
+	const TM_CLASS = 'CcBlockcontentsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 10;
+	const NUM_COLUMNS = 9;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** the column name for the ID field */
-	const ID = 'cc_playlistcontents.ID';
-
-	/** the column name for the PLAYLIST_ID field */
-	const PLAYLIST_ID = 'cc_playlistcontents.PLAYLIST_ID';
-
-	/** the column name for the FILE_ID field */
-	const FILE_ID = 'cc_playlistcontents.FILE_ID';
+	const ID = 'cc_blockcontents.ID';
 
 	/** the column name for the BLOCK_ID field */
-	const BLOCK_ID = 'cc_playlistcontents.BLOCK_ID';
+	const BLOCK_ID = 'cc_blockcontents.BLOCK_ID';
+
+	/** the column name for the FILE_ID field */
+	const FILE_ID = 'cc_blockcontents.FILE_ID';
 
 	/** the column name for the POSITION field */
-	const POSITION = 'cc_playlistcontents.POSITION';
+	const POSITION = 'cc_blockcontents.POSITION';
 
 	/** the column name for the CLIPLENGTH field */
-	const CLIPLENGTH = 'cc_playlistcontents.CLIPLENGTH';
+	const CLIPLENGTH = 'cc_blockcontents.CLIPLENGTH';
 
 	/** the column name for the CUEIN field */
-	const CUEIN = 'cc_playlistcontents.CUEIN';
+	const CUEIN = 'cc_blockcontents.CUEIN';
 
 	/** the column name for the CUEOUT field */
-	const CUEOUT = 'cc_playlistcontents.CUEOUT';
+	const CUEOUT = 'cc_blockcontents.CUEOUT';
 
 	/** the column name for the FADEIN field */
-	const FADEIN = 'cc_playlistcontents.FADEIN';
+	const FADEIN = 'cc_blockcontents.FADEIN';
 
 	/** the column name for the FADEOUT field */
-	const FADEOUT = 'cc_playlistcontents.FADEOUT';
+	const FADEOUT = 'cc_blockcontents.FADEOUT';
 
 	/**
-	 * An identiy map to hold any loaded instances of CcPlaylistcontents objects.
+	 * An identiy map to hold any loaded instances of CcBlockcontents objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
 	 * queries.
-	 * @var        array CcPlaylistcontents[]
+	 * @var        array CcBlockcontents[]
 	 */
 	public static $instances = array();
 
@@ -77,12 +74,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPlaylistId', 'DbFileId', 'DbBlockId', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPlaylistId', 'dbFileId', 'dbBlockId', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::PLAYLIST_ID, self::FILE_ID, self::BLOCK_ID, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'FILE_ID', 'BLOCK_ID', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'file_id', 'block_id', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbBlockId', 'DbFileId', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbBlockId', 'dbFileId', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::BLOCK_ID, self::FILE_ID, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'BLOCK_ID', 'FILE_ID', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'block_id', 'file_id', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
 	);
 
 	/**
@@ -92,12 +89,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPlaylistId' => 1, 'DbFileId' => 2, 'DbBlockId' => 3, 'DbPosition' => 4, 'DbCliplength' => 5, 'DbCuein' => 6, 'DbCueout' => 7, 'DbFadein' => 8, 'DbFadeout' => 9, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPlaylistId' => 1, 'dbFileId' => 2, 'dbBlockId' => 3, 'dbPosition' => 4, 'dbCliplength' => 5, 'dbCuein' => 6, 'dbCueout' => 7, 'dbFadein' => 8, 'dbFadeout' => 9, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::PLAYLIST_ID => 1, self::FILE_ID => 2, self::BLOCK_ID => 3, self::POSITION => 4, self::CLIPLENGTH => 5, self::CUEIN => 6, self::CUEOUT => 7, self::FADEIN => 8, self::FADEOUT => 9, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'FILE_ID' => 2, 'BLOCK_ID' => 3, 'POSITION' => 4, 'CLIPLENGTH' => 5, 'CUEIN' => 6, 'CUEOUT' => 7, 'FADEIN' => 8, 'FADEOUT' => 9, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'file_id' => 2, 'block_id' => 3, 'position' => 4, 'cliplength' => 5, 'cuein' => 6, 'cueout' => 7, 'fadein' => 8, 'fadeout' => 9, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbBlockId' => 1, 'DbFileId' => 2, 'DbPosition' => 3, 'DbCliplength' => 4, 'DbCuein' => 5, 'DbCueout' => 6, 'DbFadein' => 7, 'DbFadeout' => 8, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbBlockId' => 1, 'dbFileId' => 2, 'dbPosition' => 3, 'dbCliplength' => 4, 'dbCuein' => 5, 'dbCueout' => 6, 'dbFadein' => 7, 'dbFadeout' => 8, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::BLOCK_ID => 1, self::FILE_ID => 2, self::POSITION => 3, self::CLIPLENGTH => 4, self::CUEIN => 5, self::CUEOUT => 6, self::FADEIN => 7, self::FADEOUT => 8, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'BLOCK_ID' => 1, 'FILE_ID' => 2, 'POSITION' => 3, 'CLIPLENGTH' => 4, 'CUEIN' => 5, 'CUEOUT' => 6, 'FADEIN' => 7, 'FADEOUT' => 8, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'block_id' => 1, 'file_id' => 2, 'position' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
 	);
 
 	/**
@@ -146,12 +143,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
 	 * @param      string $alias The alias for the current table.
-	 * @param      string $column The column name for current table. (i.e. CcPlaylistcontentsPeer::COLUMN_NAME).
+	 * @param      string $column The column name for current table. (i.e. CcBlockcontentsPeer::COLUMN_NAME).
 	 * @return     string
 	 */
 	public static function alias($alias, $column)
 	{
-		return str_replace(CcPlaylistcontentsPeer::TABLE_NAME.'.', $alias.'.', $column);
+		return str_replace(CcBlockcontentsPeer::TABLE_NAME.'.', $alias.'.', $column);
 	}
 
 	/**
@@ -169,21 +166,19 @@ abstract class BaseCcPlaylistcontentsPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::ID);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::PLAYLIST_ID);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::FILE_ID);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::BLOCK_ID);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::POSITION);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CLIPLENGTH);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CUEIN);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CUEOUT);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::FADEIN);
-			$criteria->addSelectColumn(CcPlaylistcontentsPeer::FADEOUT);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::ID);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::BLOCK_ID);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::FILE_ID);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::POSITION);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::CLIPLENGTH);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::CUEIN);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::CUEOUT);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::FADEIN);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::FADEOUT);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.PLAYLIST_ID');
-			$criteria->addSelectColumn($alias . '.FILE_ID');
 			$criteria->addSelectColumn($alias . '.BLOCK_ID');
+			$criteria->addSelectColumn($alias . '.FILE_ID');
 			$criteria->addSelectColumn($alias . '.POSITION');
 			$criteria->addSelectColumn($alias . '.CLIPLENGTH');
 			$criteria->addSelectColumn($alias . '.CUEIN');
@@ -209,21 +204,21 @@ abstract class BaseCcPlaylistcontentsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 		$criteria->setDbName(self::DATABASE_NAME); // Set the correct dbName
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 		// BasePeer returns a PDOStatement
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -241,7 +236,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 *
 	 * @param      Criteria $criteria object used to create the SELECT statement.
 	 * @param      PropelPDO $con
-	 * @return     CcPlaylistcontents
+	 * @return     CcBlockcontents
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -249,7 +244,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = CcPlaylistcontentsPeer::doSelect($critcopy, $con);
+		$objects = CcBlockcontentsPeer::doSelect($critcopy, $con);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -266,7 +261,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 */
 	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
 	{
-		return CcPlaylistcontentsPeer::populateObjects(CcPlaylistcontentsPeer::doSelectStmt($criteria, $con));
+		return CcBlockcontentsPeer::populateObjects(CcBlockcontentsPeer::doSelectStmt($criteria, $con));
 	}
 	/**
 	 * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -284,12 +279,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		if (!$criteria->hasSelectClause()) {
 			$criteria = clone $criteria;
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 
 		// Set the correct dbName
@@ -307,10 +302,10 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * to the cache in order to ensure that the same objects are always returned by doSelect*()
 	 * and retrieveByPK*() calls.
 	 *
-	 * @param      CcPlaylistcontents $value A CcPlaylistcontents object.
+	 * @param      CcBlockcontents $value A CcBlockcontents object.
 	 * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
 	 */
-	public static function addInstanceToPool(CcPlaylistcontents $obj, $key = null)
+	public static function addInstanceToPool(CcBlockcontents $obj, $key = null)
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
@@ -328,18 +323,18 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * methods in your stub classes -- you may need to explicitly remove objects
 	 * from the cache in order to prevent returning objects that no longer exist.
 	 *
-	 * @param      mixed $value A CcPlaylistcontents object or a primary key value.
+	 * @param      mixed $value A CcBlockcontents object or a primary key value.
 	 */
 	public static function removeInstanceFromPool($value)
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
-			if (is_object($value) && $value instanceof CcPlaylistcontents) {
+			if (is_object($value) && $value instanceof CcBlockcontents) {
 				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
 			} else {
-				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcPlaylistcontents object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcBlockcontents object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
 			}
 
@@ -354,7 +349,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * a multi-column primary key, a serialize()d version of the primary key will be returned.
 	 *
 	 * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-	 * @return     CcPlaylistcontents Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+	 * @return     CcBlockcontents Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
 	 * @see        getPrimaryKeyHash()
 	 */
 	public static function getInstanceFromPool($key)
@@ -378,7 +373,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to cc_playlistcontents
+	 * Method to invalidate the instance pool of all tables related to cc_blockcontents
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
@@ -430,11 +425,11 @@ abstract class BaseCcPlaylistcontentsPeer {
 		$results = array();
 	
 		// set the class once to avoid overhead in the loop
-		$cls = CcPlaylistcontentsPeer::getOMClass(false);
+		$cls = CcBlockcontentsPeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj = CcPlaylistcontentsPeer::getInstanceFromPool($key))) {
+			$key = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj = CcBlockcontentsPeer::getInstanceFromPool($key))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj->hydrate($row, 0, true); // rehydrate
@@ -443,7 +438,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 				$obj = new $cls();
 				$obj->hydrate($row);
 				$results[] = $obj;
-				CcPlaylistcontentsPeer::addInstanceToPool($obj, $key);
+				CcBlockcontentsPeer::addInstanceToPool($obj, $key);
 			} // if key exists
 		}
 		$stmt->closeCursor();
@@ -456,21 +451,21 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * @param      int $startcol The 0-based offset for reading from the resultset row.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return     array (CcPlaylistcontents object, last column rank)
+	 * @return     array (CcBlockcontents object, last column rank)
 	 */
 	public static function populateObject($row, $startcol = 0)
 	{
-		$key = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, $startcol);
-		if (null !== ($obj = CcPlaylistcontentsPeer::getInstanceFromPool($key))) {
+		$key = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, $startcol);
+		if (null !== ($obj = CcBlockcontentsPeer::getInstanceFromPool($key))) {
 			// We no longer rehydrate the object, since this can cause data loss.
 			// See http://www.propelorm.org/ticket/509
 			// $obj->hydrate($row, $startcol, true); // rehydrate
-			$col = $startcol + CcPlaylistcontentsPeer::NUM_COLUMNS;
+			$col = $startcol + CcBlockcontentsPeer::NUM_COLUMNS;
 		} else {
-			$cls = CcPlaylistcontentsPeer::OM_CLASS;
+			$cls = CcBlockcontentsPeer::OM_CLASS;
 			$obj = new $cls();
 			$col = $obj->hydrate($row, $startcol);
-			CcPlaylistcontentsPeer::addInstanceToPool($obj, $key);
+			CcBlockcontentsPeer::addInstanceToPool($obj, $key);
 		}
 		return array($obj, $col);
 	}
@@ -492,14 +487,14 @@ abstract class BaseCcPlaylistcontentsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 		
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
@@ -508,10 +503,10 @@ abstract class BaseCcPlaylistcontentsPeer {
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -542,14 +537,14 @@ abstract class BaseCcPlaylistcontentsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 		
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
@@ -558,10 +553,10 @@ abstract class BaseCcPlaylistcontentsPeer {
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -576,61 +571,11 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related CcPlaylist table
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
-	 */
-	public static function doCountJoinCcPlaylist(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		// we're going to modify criteria, so copy it first
-		$criteria = clone $criteria;
-
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
-
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
-		}
-
-		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
-
-		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doCount($criteria, $con);
-
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
-		}
-		$stmt->closeCursor();
-		return $count;
-	}
-
-
-	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with their CcFiles objects.
+	 * Selects a collection of CcBlockcontents objects pre-filled with their CcFiles objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
+	 * @return     array Array of CcBlockcontents objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -643,28 +588,28 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcBlockcontentsPeer::addSelectColumns($criteria);
+		$startcol = (CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
 		CcFilesPeer::addSelectColumns($criteria);
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
 
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
+			$key1 = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcBlockcontentsPeer::getInstanceFromPool($key1))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj1->hydrate($row, 0, true); // rehydrate
 			} else {
 
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
+				$cls = CcBlockcontentsPeer::getOMClass(false);
 
 				$obj1 = new $cls();
 				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
+				CcBlockcontentsPeer::addInstanceToPool($obj1, $key1);
 			} // if $obj1 already loaded
 
 			$key2 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -679,8 +624,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 					CcFilesPeer::addInstanceToPool($obj2, $key2);
 				} // if obj2 already loaded
 
-				// Add the $obj1 (CcPlaylistcontents) to $obj2 (CcFiles)
-				$obj2->addCcPlaylistcontents($obj1);
+				// Add the $obj1 (CcBlockcontents) to $obj2 (CcFiles)
+				$obj2->addCcBlockcontents($obj1);
 
 			} // if joined row was not null
 
@@ -692,11 +637,11 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 
 	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with their CcBlock objects.
+	 * Selects a collection of CcBlockcontents objects pre-filled with their CcBlock objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
+	 * @return     array Array of CcBlockcontents objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -709,28 +654,28 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcBlockcontentsPeer::addSelectColumns($criteria);
+		$startcol = (CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
 		CcBlockPeer::addSelectColumns($criteria);
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
 
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
+			$key1 = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcBlockcontentsPeer::getInstanceFromPool($key1))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj1->hydrate($row, 0, true); // rehydrate
 			} else {
 
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
+				$cls = CcBlockcontentsPeer::getOMClass(false);
 
 				$obj1 = new $cls();
 				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
+				CcBlockcontentsPeer::addInstanceToPool($obj1, $key1);
 			} // if $obj1 already loaded
 
 			$key2 = CcBlockPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -745,74 +690,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 					CcBlockPeer::addInstanceToPool($obj2, $key2);
 				} // if obj2 already loaded
 
-				// Add the $obj1 (CcPlaylistcontents) to $obj2 (CcBlock)
-				$obj2->addCcPlaylistcontents($obj1);
-
-			} // if joined row was not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with their CcPlaylist objects.
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinCcPlaylist(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
-		CcPlaylistPeer::addSelectColumns($criteria);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
-			} // if $obj1 already loaded
-
-			$key2 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol);
-			if ($key2 !== null) {
-				$obj2 = CcPlaylistPeer::getInstanceFromPool($key2);
-				if (!$obj2) {
-
-					$cls = CcPlaylistPeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol);
-					CcPlaylistPeer::addInstanceToPool($obj2, $key2);
-				} // if obj2 already loaded
-
-				// Add the $obj1 (CcPlaylistcontents) to $obj2 (CcPlaylist)
-				$obj2->addCcPlaylistcontents($obj1);
+				// Add the $obj1 (CcBlockcontents) to $obj2 (CcBlock)
+				$obj2->addCcBlockcontents($obj1);
 
 			} // if joined row was not null
 
@@ -840,14 +719,14 @@ abstract class BaseCcPlaylistcontentsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 		
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
@@ -856,14 +735,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -877,12 +754,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	}
 
 	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with all related objects.
+	 * Selects a collection of CcBlockcontents objects pre-filled with all related objects.
 	 *
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
+	 * @return     array Array of CcBlockcontents objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -895,8 +772,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol2 = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcBlockcontentsPeer::addSelectColumns($criteria);
+		$startcol2 = (CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
 
 		CcFilesPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
@@ -904,30 +781,25 @@ abstract class BaseCcPlaylistcontentsPeer {
 		CcBlockPeer::addSelectColumns($criteria);
 		$startcol4 = $startcol3 + (CcBlockPeer::NUM_COLUMNS - CcBlockPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcPlaylistPeer::addSelectColumns($criteria);
-		$startcol5 = $startcol4 + (CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS);
+		$criteria->addJoin(CcBlockcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
 
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
+			$key1 = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcBlockcontentsPeer::getInstanceFromPool($key1))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj1->hydrate($row, 0, true); // rehydrate
 			} else {
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
+				$cls = CcBlockcontentsPeer::getOMClass(false);
 
 				$obj1 = new $cls();
 				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
+				CcBlockcontentsPeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
 
 			// Add objects for joined CcFiles rows
@@ -944,8 +816,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 					CcFilesPeer::addInstanceToPool($obj2, $key2);
 				} // if obj2 loaded
 
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj2 (CcFiles)
-				$obj2->addCcPlaylistcontents($obj1);
+				// Add the $obj1 (CcBlockcontents) to the collection in $obj2 (CcFiles)
+				$obj2->addCcBlockcontents($obj1);
 			} // if joined row not null
 
 			// Add objects for joined CcBlock rows
@@ -962,26 +834,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 					CcBlockPeer::addInstanceToPool($obj3, $key3);
 				} // if obj3 loaded
 
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj3 (CcBlock)
-				$obj3->addCcPlaylistcontents($obj1);
-			} // if joined row not null
-
-			// Add objects for joined CcPlaylist rows
-
-			$key4 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol4);
-			if ($key4 !== null) {
-				$obj4 = CcPlaylistPeer::getInstanceFromPool($key4);
-				if (!$obj4) {
-
-					$cls = CcPlaylistPeer::getOMClass(false);
-
-					$obj4 = new $cls();
-					$obj4->hydrate($row, $startcol4);
-					CcPlaylistPeer::addInstanceToPool($obj4, $key4);
-				} // if obj4 loaded
-
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj4 (CcPlaylist)
-				$obj4->addCcPlaylistcontents($obj1);
+				// Add the $obj1 (CcBlockcontents) to the collection in $obj3 (CcBlock)
+				$obj3->addCcBlockcontents($obj1);
 			} // if joined row not null
 
 			$results[] = $obj1;
@@ -1008,14 +862,14 @@ abstract class BaseCcPlaylistcontentsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 		
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 		
 		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
@@ -1024,12 +878,10 @@ abstract class BaseCcPlaylistcontentsPeer {
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 	
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -1060,14 +912,14 @@ abstract class BaseCcPlaylistcontentsPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 		
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
+			CcBlockcontentsPeer::addSelectColumns($criteria);
 		}
 		
 		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
@@ -1076,12 +928,10 @@ abstract class BaseCcPlaylistcontentsPeer {
 		$criteria->setDbName(self::DATABASE_NAME);
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 	
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -1096,64 +946,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related CcPlaylist table
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
-	 */
-	public static function doCountJoinAllExceptCcPlaylist(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		// we're going to modify criteria, so copy it first
-		$criteria = clone $criteria;
-
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
-		
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
-		}
-
-		if (!$criteria->hasSelectClause()) {
-			CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
-
-		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-	
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doCount($criteria, $con);
-
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
-		}
-		$stmt->closeCursor();
-		return $count;
-	}
-
-
-	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with all related objects except CcFiles.
+	 * Selects a collection of CcBlockcontents objects pre-filled with all related objects except CcFiles.
 	 *
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
+	 * @return     array Array of CcBlockcontents objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -1168,35 +966,30 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol2 = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcBlockcontentsPeer::addSelectColumns($criteria);
+		$startcol2 = (CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
 
 		CcBlockPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcBlockPeer::NUM_COLUMNS - CcBlockPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcPlaylistPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + (CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
 
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
 
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
+			$key1 = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcBlockcontentsPeer::getInstanceFromPool($key1))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj1->hydrate($row, 0, true); // rehydrate
 			} else {
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
+				$cls = CcBlockcontentsPeer::getOMClass(false);
 
 				$obj1 = new $cls();
 				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
+				CcBlockcontentsPeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
 
 				// Add objects for joined CcBlock rows
@@ -1213,27 +1006,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 					CcBlockPeer::addInstanceToPool($obj2, $key2);
 				} // if $obj2 already loaded
 
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj2 (CcBlock)
-				$obj2->addCcPlaylistcontents($obj1);
-
-			} // if joined row is not null
-
-				// Add objects for joined CcPlaylist rows
-
-				$key3 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-				if ($key3 !== null) {
-					$obj3 = CcPlaylistPeer::getInstanceFromPool($key3);
-					if (!$obj3) {
-	
-						$cls = CcPlaylistPeer::getOMClass(false);
-
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CcPlaylistPeer::addInstanceToPool($obj3, $key3);
-				} // if $obj3 already loaded
-
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj3 (CcPlaylist)
-				$obj3->addCcPlaylistcontents($obj1);
+				// Add the $obj1 (CcBlockcontents) to the collection in $obj2 (CcBlock)
+				$obj2->addCcBlockcontents($obj1);
 
 			} // if joined row is not null
 
@@ -1245,12 +1019,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 
 	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with all related objects except CcBlock.
+	 * Selects a collection of CcBlockcontents objects pre-filled with all related objects except CcBlock.
 	 *
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
+	 * @return     array Array of CcBlockcontents objects.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -1265,35 +1039,30 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->setDbName(self::DATABASE_NAME);
 		}
 
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol2 = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcBlockcontentsPeer::addSelectColumns($criteria);
+		$startcol2 = (CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
 
 		CcFilesPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcPlaylistPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + (CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::PLAYLIST_ID, CcPlaylistPeer::ID, $join_behavior);
+		$criteria->addJoin(CcBlockcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
 
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
+			$key1 = CcBlockcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcBlockcontentsPeer::getInstanceFromPool($key1))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj1->hydrate($row, 0, true); // rehydrate
 			} else {
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
+				$cls = CcBlockcontentsPeer::getOMClass(false);
 
 				$obj1 = new $cls();
 				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
+				CcBlockcontentsPeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
 
 				// Add objects for joined CcFiles rows
@@ -1310,124 +1079,8 @@ abstract class BaseCcPlaylistcontentsPeer {
 					CcFilesPeer::addInstanceToPool($obj2, $key2);
 				} // if $obj2 already loaded
 
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj2 (CcFiles)
-				$obj2->addCcPlaylistcontents($obj1);
-
-			} // if joined row is not null
-
-				// Add objects for joined CcPlaylist rows
-
-				$key3 = CcPlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-				if ($key3 !== null) {
-					$obj3 = CcPlaylistPeer::getInstanceFromPool($key3);
-					if (!$obj3) {
-	
-						$cls = CcPlaylistPeer::getOMClass(false);
-
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CcPlaylistPeer::addInstanceToPool($obj3, $key3);
-				} // if $obj3 already loaded
-
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj3 (CcPlaylist)
-				$obj3->addCcPlaylistcontents($obj1);
-
-			} // if joined row is not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
-	 * Selects a collection of CcPlaylistcontents objects pre-filled with all related objects except CcPlaylist.
-	 *
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlaylistcontents objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinAllExceptCcPlaylist(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		// $criteria->getDbName() will return the same object if not set to another value
-		// so == check is okay and faster
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CcPlaylistcontentsPeer::addSelectColumns($criteria);
-		$startcol2 = (CcPlaylistcontentsPeer::NUM_COLUMNS - CcPlaylistcontentsPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		CcFilesPeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		CcBlockPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + (CcBlockPeer::NUM_COLUMNS - CcBlockPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlaylistcontentsPeer::BLOCK_ID, CcBlockPeer::ID, $join_behavior);
-
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlaylistcontentsPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlaylistcontentsPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-				$cls = CcPlaylistcontentsPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CcPlaylistcontentsPeer::addInstanceToPool($obj1, $key1);
-			} // if obj1 already loaded
-
-				// Add objects for joined CcFiles rows
-
-				$key2 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CcFilesPeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CcFilesPeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CcFilesPeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj2 (CcFiles)
-				$obj2->addCcPlaylistcontents($obj1);
-
-			} // if joined row is not null
-
-				// Add objects for joined CcBlock rows
-
-				$key3 = CcBlockPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-				if ($key3 !== null) {
-					$obj3 = CcBlockPeer::getInstanceFromPool($key3);
-					if (!$obj3) {
-	
-						$cls = CcBlockPeer::getOMClass(false);
-
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CcBlockPeer::addInstanceToPool($obj3, $key3);
-				} // if $obj3 already loaded
-
-				// Add the $obj1 (CcPlaylistcontents) to the collection in $obj3 (CcBlock)
-				$obj3->addCcPlaylistcontents($obj1);
+				// Add the $obj1 (CcBlockcontents) to the collection in $obj2 (CcFiles)
+				$obj2->addCcBlockcontents($obj1);
 
 			} // if joined row is not null
 
@@ -1454,10 +1107,10 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 */
 	public static function buildTableMap()
 	{
-	  $dbMap = Propel::getDatabaseMap(BaseCcPlaylistcontentsPeer::DATABASE_NAME);
-	  if (!$dbMap->hasTable(BaseCcPlaylistcontentsPeer::TABLE_NAME))
+	  $dbMap = Propel::getDatabaseMap(BaseCcBlockcontentsPeer::DATABASE_NAME);
+	  if (!$dbMap->hasTable(BaseCcBlockcontentsPeer::TABLE_NAME))
 	  {
-	    $dbMap->addTableObject(new CcPlaylistcontentsTableMap());
+	    $dbMap->addTableObject(new CcBlockcontentsTableMap());
 	  }
 	}
 
@@ -1474,13 +1127,13 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 */
 	public static function getOMClass($withPrefix = true)
 	{
-		return $withPrefix ? CcPlaylistcontentsPeer::CLASS_DEFAULT : CcPlaylistcontentsPeer::OM_CLASS;
+		return $withPrefix ? CcBlockcontentsPeer::CLASS_DEFAULT : CcBlockcontentsPeer::OM_CLASS;
 	}
 
 	/**
-	 * Method perform an INSERT on the database, given a CcPlaylistcontents or Criteria object.
+	 * Method perform an INSERT on the database, given a CcBlockcontents or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcPlaylistcontents object containing data that is used to create the INSERT statement.
+	 * @param      mixed $values Criteria or CcBlockcontents object containing data that is used to create the INSERT statement.
 	 * @param      PropelPDO $con the PropelPDO connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -1489,17 +1142,17 @@ abstract class BaseCcPlaylistcontentsPeer {
 	public static function doInsert($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 		} else {
-			$criteria = $values->buildCriteria(); // build Criteria from CcPlaylistcontents object
+			$criteria = $values->buildCriteria(); // build Criteria from CcBlockcontents object
 		}
 
-		if ($criteria->containsKey(CcPlaylistcontentsPeer::ID) && $criteria->keyContainsValue(CcPlaylistcontentsPeer::ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcPlaylistcontentsPeer::ID.')');
+		if ($criteria->containsKey(CcBlockcontentsPeer::ID) && $criteria->keyContainsValue(CcBlockcontentsPeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcBlockcontentsPeer::ID.')');
 		}
 
 
@@ -1521,9 +1174,9 @@ abstract class BaseCcPlaylistcontentsPeer {
 	}
 
 	/**
-	 * Method perform an UPDATE on the database, given a CcPlaylistcontents or Criteria object.
+	 * Method perform an UPDATE on the database, given a CcBlockcontents or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcPlaylistcontents object containing data that is used to create the UPDATE statement.
+	 * @param      mixed $values Criteria or CcBlockcontents object containing data that is used to create the UPDATE statement.
 	 * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -1532,7 +1185,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	public static function doUpdate($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -1540,15 +1193,15 @@ abstract class BaseCcPlaylistcontentsPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(CcPlaylistcontentsPeer::ID);
-			$value = $criteria->remove(CcPlaylistcontentsPeer::ID);
+			$comparison = $criteria->getComparison(CcBlockcontentsPeer::ID);
+			$value = $criteria->remove(CcBlockcontentsPeer::ID);
 			if ($value) {
-				$selectCriteria->add(CcPlaylistcontentsPeer::ID, $value, $comparison);
+				$selectCriteria->add(CcBlockcontentsPeer::ID, $value, $comparison);
 			} else {
-				$selectCriteria->setPrimaryTableName(CcPlaylistcontentsPeer::TABLE_NAME);
+				$selectCriteria->setPrimaryTableName(CcBlockcontentsPeer::TABLE_NAME);
 			}
 
-		} else { // $values is CcPlaylistcontents object
+		} else { // $values is CcBlockcontents object
 			$criteria = $values->buildCriteria(); // gets full criteria
 			$selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
 		}
@@ -1560,26 +1213,26 @@ abstract class BaseCcPlaylistcontentsPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the cc_playlistcontents table.
+	 * Method to DELETE all rows from the cc_blockcontents table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll($con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			$affectedRows += BasePeer::doDeleteAll(CcPlaylistcontentsPeer::TABLE_NAME, $con, CcPlaylistcontentsPeer::DATABASE_NAME);
+			$affectedRows += BasePeer::doDeleteAll(CcBlockcontentsPeer::TABLE_NAME, $con, CcBlockcontentsPeer::DATABASE_NAME);
 			// Because this db requires some delete cascade/set null emulation, we have to
 			// clear the cached instance *after* the emulation has happened (since
 			// instances get re-added by the select statement contained therein).
-			CcPlaylistcontentsPeer::clearInstancePool();
-			CcPlaylistcontentsPeer::clearRelatedInstancePool();
+			CcBlockcontentsPeer::clearInstancePool();
+			CcBlockcontentsPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -1589,9 +1242,9 @@ abstract class BaseCcPlaylistcontentsPeer {
 	}
 
 	/**
-	 * Method perform a DELETE on the database, given a CcPlaylistcontents or Criteria object OR a primary key value.
+	 * Method perform a DELETE on the database, given a CcBlockcontents or Criteria object OR a primary key value.
 	 *
-	 * @param      mixed $values Criteria or CcPlaylistcontents object or primary key or array of primary keys
+	 * @param      mixed $values Criteria or CcBlockcontents object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
 	 * @param      PropelPDO $con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -1602,27 +1255,27 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 public static function doDelete($values, PropelPDO $con = null)
 	 {
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			CcPlaylistcontentsPeer::clearInstancePool();
+			CcBlockcontentsPeer::clearInstancePool();
 			// rename for clarity
 			$criteria = clone $values;
-		} elseif ($values instanceof CcPlaylistcontents) { // it's a model object
+		} elseif ($values instanceof CcBlockcontents) { // it's a model object
 			// invalidate the cache for this single object
-			CcPlaylistcontentsPeer::removeInstanceFromPool($values);
+			CcBlockcontentsPeer::removeInstanceFromPool($values);
 			// create criteria based on pk values
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(CcPlaylistcontentsPeer::ID, (array) $values, Criteria::IN);
+			$criteria->add(CcBlockcontentsPeer::ID, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
-				CcPlaylistcontentsPeer::removeInstanceFromPool($singleval);
+				CcBlockcontentsPeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -1637,7 +1290,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$con->beginTransaction();
 			
 			$affectedRows += BasePeer::doDelete($criteria, $con);
-			CcPlaylistcontentsPeer::clearRelatedInstancePool();
+			CcBlockcontentsPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -1647,24 +1300,24 @@ abstract class BaseCcPlaylistcontentsPeer {
 	}
 
 	/**
-	 * Validates all modified columns of given CcPlaylistcontents object.
+	 * Validates all modified columns of given CcBlockcontents object.
 	 * If parameter $columns is either a single column name or an array of column names
 	 * than only those columns are validated.
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param      CcPlaylistcontents $obj The object to validate.
+	 * @param      CcBlockcontents $obj The object to validate.
 	 * @param      mixed $cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
-	public static function doValidate(CcPlaylistcontents $obj, $cols = null)
+	public static function doValidate(CcBlockcontents $obj, $cols = null)
 	{
 		$columns = array();
 
 		if ($cols) {
-			$dbMap = Propel::getDatabaseMap(CcPlaylistcontentsPeer::DATABASE_NAME);
-			$tableMap = $dbMap->getTable(CcPlaylistcontentsPeer::TABLE_NAME);
+			$dbMap = Propel::getDatabaseMap(CcBlockcontentsPeer::DATABASE_NAME);
+			$tableMap = $dbMap->getTable(CcBlockcontentsPeer::TABLE_NAME);
 
 			if (! is_array($cols)) {
 				$cols = array($cols);
@@ -1680,7 +1333,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 		}
 
-		return BasePeer::doValidate(CcPlaylistcontentsPeer::DATABASE_NAME, CcPlaylistcontentsPeer::TABLE_NAME, $columns);
+		return BasePeer::doValidate(CcBlockcontentsPeer::DATABASE_NAME, CcBlockcontentsPeer::TABLE_NAME, $columns);
 	}
 
 	/**
@@ -1688,23 +1341,23 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 *
 	 * @param      int $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
-	 * @return     CcPlaylistcontents
+	 * @return     CcBlockcontents
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
 
-		if (null !== ($obj = CcPlaylistcontentsPeer::getInstanceFromPool((string) $pk))) {
+		if (null !== ($obj = CcBlockcontentsPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria = new Criteria(CcPlaylistcontentsPeer::DATABASE_NAME);
-		$criteria->add(CcPlaylistcontentsPeer::ID, $pk);
+		$criteria = new Criteria(CcBlockcontentsPeer::DATABASE_NAME);
+		$criteria->add(CcBlockcontentsPeer::ID, $pk);
 
-		$v = CcPlaylistcontentsPeer::doSelect($criteria, $con);
+		$v = CcBlockcontentsPeer::doSelect($criteria, $con);
 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
@@ -1720,23 +1373,23 @@ abstract class BaseCcPlaylistcontentsPeer {
 	public static function retrieveByPKs($pks, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcPlaylistcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcBlockcontentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		$objs = null;
 		if (empty($pks)) {
 			$objs = array();
 		} else {
-			$criteria = new Criteria(CcPlaylistcontentsPeer::DATABASE_NAME);
-			$criteria->add(CcPlaylistcontentsPeer::ID, $pks, Criteria::IN);
-			$objs = CcPlaylistcontentsPeer::doSelect($criteria, $con);
+			$criteria = new Criteria(CcBlockcontentsPeer::DATABASE_NAME);
+			$criteria->add(CcBlockcontentsPeer::ID, $pks, Criteria::IN);
+			$objs = CcBlockcontentsPeer::doSelect($criteria, $con);
 		}
 		return $objs;
 	}
 
-} // BaseCcPlaylistcontentsPeer
+} // BaseCcBlockcontentsPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcPlaylistcontentsPeer::buildTableMap();
+BaseCcBlockcontentsPeer::buildTableMap();
 

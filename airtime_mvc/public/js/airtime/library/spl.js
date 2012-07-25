@@ -307,15 +307,15 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function getId() {
-		return parseInt($("#pl_id").val(), 10);
+		return parseInt($("#obj_id").val(), 10);
 	}
 	
 	function getModified() {
-		return parseInt($("#pl_lastMod").val(), 10);
+		return parseInt($("#obj_lastMod").val(), 10);
 	}
 	
 	function setModified(modified) {
-		$("#pl_lastMod").val(modified);
+		$("#obj_lastMod").val(modified);
 	}
 	
 	function openPlaylist(json) {

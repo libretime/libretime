@@ -24,10 +24,9 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('set-playlist-description', 'json')
                     ->addActionContext('playlist-preview', 'json')
                     ->addActionContext('get-playlist', 'json')
-                    ->addActionContext('smart-playlist-criteria-save', 'json')
-                    ->addActionContext('smart-playlist-generate', 'json')
-                    ->addActionContext('smart-playlist-shuffle', 'json')
-                    ->addActionContext('new-block', 'json')
+                    ->addActionContext('smart-block-criteria-save', 'json')
+                    ->addActionContext('smart-block-generate', 'json')
+                    ->addActionContext('smart-block-shuffle', 'json')
                     ->initContext();
 
         /*$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -192,13 +191,16 @@ class PlaylistController extends Zend_Controller_Action
                 
                 if($isAdminOrPM || $obj->getCreatorId() == $userInfo->id){
                     $this->view->obj = $obj;
-                    //$form = new Application_Form_SmartBlockCriteria();
-                    //$form->startForm($this->pl_sess->id);
-                    //$this->view->form = $form;
+                    if($this->obj_sess->type == "block"){
+                        $form = new Application_Form_SmartBlockCriteria();
+                        $form->startForm($this->obj_sess->id);
+                        $this->view->form = $form;
+                    }
                 }
 
                 $formatter = new LengthFormatter($obj->getLength());
                 $this->view->length = $formatter->format();
+                $this->view->type = $this->obj_sess->type;
             }
         } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound();
@@ -318,7 +320,7 @@ class PlaylistController extends Zend_Controller_Action
             }
         }
         catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($obj, $e);
+            $this->playlistOutdated($e);
         }
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_type);
@@ -505,24 +507,24 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
     
-    public function smartPlaylistCriteriaSaveAction()
+    public function smartBlockCriteriaSaveAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $pl = new Application_Model_Playlist($params['pl_id']);
-        $result = $pl->saveSmartPlaylistCriteria($params['data']);
+        $bl = new Application_Model_Block($params['obj_id']);
+        $result = $bl->saveSmartBlockCriteria($params['data']);
         die(json_encode($result));
     }
     
-    public function smartPlaylistGenerateAction()
+    public function smartBlockGenerateAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $pl = new Application_Model_Playlist($params['pl_id']);
-        $result = $pl->generateSmartPlaylist($params['data']);
+        $bl = new Application_Model_Block($params['obj_id']);
+        $result = $bl->generateSmartBlock($params['data']);
         if ($result['result'] == 0) {
             try {
-                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
             }
             catch (PlaylistNotFoundException $e) {
                 $this->playlistNotFound('block');
@@ -535,15 +537,15 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
     
-    public function smartPlaylistShuffleAction()
+    public function smartBlockShuffleAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $pl = new Application_Model_Playlist($params['pl_id']);
-        $result = $pl->shuffleSmartPlaylist();
+        $bl = new Application_Model_Block($params['obj_id']);
+        $result = $bl->shuffleSmartBlock();
         if ($result['result'] == 0) {
             try {
-                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
             }
             catch (PlaylistNotFoundException $e) {
                 $this->playlistNotFound('block');

@@ -334,5 +334,57 @@ class Application_Common_DateHelper
         }
         return true;
     }
+    
+    /**
+     * This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert playlist time value to float seconds
+     *
+     * @param string $plt
+     *         playlist interval value (HH:mm:ss.dddddd)
+     * @return int
+     *         seconds
+     */
+    public static function playlistTimeToSeconds($plt)
+    {
+        $arr =  preg_split('/:/', $plt);
+        if (isset($arr[2])) {
+            return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
+        }
+        if (isset($arr[1])) {
+            return intval($arr[0])*60 + floatval($arr[1]);
+        }
+    
+        return floatval($arr[0]);
+    }
+    
+    
+    /**
+     *  This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert float seconds value to playlist time format
+     *
+     * @param  float  $seconds
+     * @return string
+     *         interval in playlist time format (HH:mm:ss.d)
+     */
+    public static function secondsToPlaylistTime($p_seconds)
+    {
+        $info = explode('.', $p_seconds);
+        $seconds = $info[0];
+        if (!isset($info[1])) {
+            $milliStr = 0;
+        } else {
+            $milliStr = $info[1];
+        }
+        $hours = floor($seconds / 3600);
+        $seconds -= $hours * 3600;
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+    
+        $res = sprintf("%02d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
+    
+        return $res;
+    }
 }
 

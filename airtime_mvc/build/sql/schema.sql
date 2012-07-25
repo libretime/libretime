@@ -321,6 +321,7 @@ CREATE TABLE "cc_playlistcontents"
 	"id" serial  NOT NULL,
 	"playlist_id" INTEGER,
 	"file_id" INTEGER,
+	"block_id" INTEGER,
 	"position" INTEGER,
 	"cliplength" interval default '00:00:00',
 	"cuein" interval default '00:00:00',
@@ -335,24 +336,73 @@ COMMENT ON TABLE "cc_playlistcontents" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
--- cc_playlistcriteria
+-- cc_block
 -----------------------------------------------------------------------------
 
-DROP TABLE "cc_playlistcriteria" CASCADE;
+DROP TABLE "cc_block" CASCADE;
 
 
-CREATE TABLE "cc_playlistcriteria"
+CREATE TABLE "cc_block"
+(
+	"id" serial  NOT NULL,
+	"name" VARCHAR(255) default '' NOT NULL,
+	"mtime" TIMESTAMP(6),
+	"utime" TIMESTAMP(6),
+	"creator_id" INTEGER,
+	"description" VARCHAR(512),
+	"length" interval default '00:00:00',
+	"type" VARCHAR(7) default 'static',
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_block" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_blockcontents
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_blockcontents" CASCADE;
+
+
+CREATE TABLE "cc_blockcontents"
+(
+	"id" serial  NOT NULL,
+	"block_id" INTEGER,
+	"file_id" INTEGER,
+	"position" INTEGER,
+	"cliplength" interval default '00:00:00',
+	"cuein" interval default '00:00:00',
+	"cueout" interval default '00:00:00',
+	"fadein" TIME default '00:00:00',
+	"fadeout" TIME default '00:00:00',
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_blockcontents" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_blockcriteria
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_blockcriteria" CASCADE;
+
+
+CREATE TABLE "cc_blockcriteria"
 (
 	"id" serial  NOT NULL,
 	"criteria" VARCHAR(16)  NOT NULL,
 	"modifier" VARCHAR(16)  NOT NULL,
 	"value" VARCHAR(512)  NOT NULL,
 	"extra" VARCHAR(512),
-	"playlist_id" INTEGER  NOT NULL,
+	"block_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
 
-COMMENT ON TABLE "cc_playlistcriteria" IS '';
+COMMENT ON TABLE "cc_blockcriteria" IS '';
 
 
 SET search_path TO public;
@@ -627,9 +677,17 @@ ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KE
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
+ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
+
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_playlistcriteria" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_block" ADD CONSTRAINT "cc_block_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id");
+
+ALTER TABLE "cc_blockcontents" ADD CONSTRAINT "cc_blockcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_blockcontents" ADD CONSTRAINT "cc_blockcontents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_blockcriteria" ADD CONSTRAINT "cc_blockcontents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 

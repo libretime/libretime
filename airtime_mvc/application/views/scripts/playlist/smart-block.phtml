@@ -7,8 +7,8 @@
 <?php endif; ?>
 
 <?php if (isset($this->obj)) : ?>
-    <input id="bl_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
-    <input id="bl_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
+    <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
+    <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
     <input id='obj_type' type='hidden' value='block'></input>
     <div class="playlist_title">
         <h3 id="bl_name">
@@ -49,7 +49,7 @@
     <div class="clear"></div>
     <div class="" style="clear:both; float:none; width:100%;">
 	    <ul id="spl_sortable">
-            <?php //echo $this->render('playlist/update.phtml') ?>
+            <?php echo $this->render('playlist/update.phtml') ?>
 	    </ul>
     </div>
 

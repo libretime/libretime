@@ -3,5 +3,9 @@
 </div>
 
 <div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded">
-    <?php echo $this->render('playlist/playlist.phtml') ?>
+    <?php if ($this->type == 'block') {
+              echo $this->render('playlist/smart-block.phtml');
+          } else {
+              echo $this->render('playlist/playlist.phtml');
+          } ?>
 </div>

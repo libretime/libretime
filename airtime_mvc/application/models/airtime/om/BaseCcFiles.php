@@ -437,6 +437,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $collCcPlaylistcontentss;
 
 	/**
+	 * @var        array CcBlockcontents[] Collection to store aggregation of CcBlockcontents objects.
+	 */
+	protected $collCcBlockcontentss;
+
+	/**
 	 * @var        array CcSchedule[] Collection to store aggregation of CcSchedule objects.
 	 */
 	protected $collCcSchedules;
@@ -2829,6 +2834,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 			$this->collCcPlaylistcontentss = null;
 
+			$this->collCcBlockcontentss = null;
+
 			$this->collCcSchedules = null;
 
 		} // if (deep)
@@ -2999,6 +3006,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcBlockcontentss !== null) {
+				foreach ($this->collCcBlockcontentss as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcSchedules !== null) {
 				foreach ($this->collCcSchedules as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -3106,6 +3121,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 				if ($this->collCcPlaylistcontentss !== null) {
 					foreach ($this->collCcPlaylistcontentss as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcBlockcontentss !== null) {
+					foreach ($this->collCcBlockcontentss as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -3969,6 +3992,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				}
 			}
 
+			foreach ($this->getCcBlockcontentss() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcBlockcontents($relObj->copy($deepCopy));
+				}
+			}
+
 			foreach ($this->getCcSchedules() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcSchedule($relObj->copy($deepCopy));
@@ -4403,12 +4432,171 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array CcPlaylistcontents[] List of CcPlaylistcontents objects
 	 */
+	public function getCcPlaylistcontentssJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcPlaylistcontentsQuery::create(null, $criteria);
+		$query->joinWith('CcBlock', $join_behavior);
+
+		return $this->getCcPlaylistcontentss($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcPlaylistcontentss from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcPlaylistcontents[] List of CcPlaylistcontents objects
+	 */
 	public function getCcPlaylistcontentssJoinCcPlaylist($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = CcPlaylistcontentsQuery::create(null, $criteria);
 		$query->joinWith('CcPlaylist', $join_behavior);
 
 		return $this->getCcPlaylistcontentss($query, $con);
+	}
+
+	/**
+	 * Clears out the collCcBlockcontentss collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcBlockcontentss()
+	 */
+	public function clearCcBlockcontentss()
+	{
+		$this->collCcBlockcontentss = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcBlockcontentss collection.
+	 *
+	 * By default this just sets the collCcBlockcontentss collection to an empty array (like clearcollCcBlockcontentss());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcBlockcontentss()
+	{
+		$this->collCcBlockcontentss = new PropelObjectCollection();
+		$this->collCcBlockcontentss->setModel('CcBlockcontents');
+	}
+
+	/**
+	 * Gets an array of CcBlockcontents objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcFiles is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcBlockcontents[] List of CcBlockcontents objects
+	 * @throws     PropelException
+	 */
+	public function getCcBlockcontentss($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcBlockcontentss || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcBlockcontentss) {
+				// return empty collection
+				$this->initCcBlockcontentss();
+			} else {
+				$collCcBlockcontentss = CcBlockcontentsQuery::create(null, $criteria)
+					->filterByCcFiles($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcBlockcontentss;
+				}
+				$this->collCcBlockcontentss = $collCcBlockcontentss;
+			}
+		}
+		return $this->collCcBlockcontentss;
+	}
+
+	/**
+	 * Returns the number of related CcBlockcontents objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcBlockcontents objects.
+	 * @throws     PropelException
+	 */
+	public function countCcBlockcontentss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcBlockcontentss || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcBlockcontentss) {
+				return 0;
+			} else {
+				$query = CcBlockcontentsQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcFiles($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcBlockcontentss);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcBlockcontents object to this object
+	 * through the CcBlockcontents foreign key attribute.
+	 *
+	 * @param      CcBlockcontents $l CcBlockcontents
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcBlockcontents(CcBlockcontents $l)
+	{
+		if ($this->collCcBlockcontentss === null) {
+			$this->initCcBlockcontentss();
+		}
+		if (!$this->collCcBlockcontentss->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcBlockcontentss[]= $l;
+			$l->setCcFiles($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcBlockcontentss from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcBlockcontents[] List of CcBlockcontents objects
+	 */
+	public function getCcBlockcontentssJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcBlockcontentsQuery::create(null, $criteria);
+		$query->joinWith('CcBlock', $join_behavior);
+
+		return $this->getCcBlockcontentss($query, $con);
 	}
 
 	/**
@@ -4645,6 +4833,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcBlockcontentss) {
+				foreach ((array) $this->collCcBlockcontentss as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcSchedules) {
 				foreach ((array) $this->collCcSchedules as $o) {
 					$o->clearAllReferences($deep);
@@ -4654,6 +4847,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 		$this->collCcShowInstancess = null;
 		$this->collCcPlaylistcontentss = null;
+		$this->collCcBlockcontentss = null;
 		$this->collCcSchedules = null;
 		$this->aCcSubjs = null;
 		$this->aCcMusicDirs = null;
