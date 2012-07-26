@@ -189,42 +189,35 @@ class Application_Model_Block
      */
     public function getContents($filterFiles=false)
     {
-        Logging::log("Getting contents for block {$this->id}");
-    
+        Logging::log("Getting contents for playlist {$this->id}");
+
         $files = array();
-        $query = CcBlockcontentsQuery::create()
-        ->filterByDbBlockId($this->id);
-    
-        if ($filterFiles) {
-            $query->useCcFilesQuery()
-            ->filterByDbFileExists(true)
-            ->endUse();
-        }
-        $query->orderByDbPosition()
-        ->leftJoinWith('CcFiles');
-        $rows = $query->find($this->con);
-    
-        $i = 0;
+        $sql = <<<"EOT"
+    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc 
+    LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.block_id = {$this->id};
+EOT;
+        Logging::debug($sql);
+        $con = Propel::getConnection();
+        $rows = $con->query($sql)->fetchAll();
+
         $offset = 0;
-        foreach ($rows as $row) {
-            $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
-    
-    
-            $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($files[$i]['cliplength']);
+        foreach ($rows as &$row) {
+            Logging::log($row);
+
+            $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
     
             //format the length for UI.
-            $formatter = new LengthFormatter($files[$i]['cliplength']);
-            $files[$i]['cliplength'] = $formatter->format();
+            $formatter = new LengthFormatter($row['length']);
+            $row['length'] = $formatter->format();
     
             $formatter = new LengthFormatter($offset_cliplength);
-            $files[$i]['offset'] = $formatter->format();
-    
-            $i++;
+            $row['offset'] = $formatter->format();
         }
-    
-        return $files;
+
+        return $rows;
     }
     
     /**

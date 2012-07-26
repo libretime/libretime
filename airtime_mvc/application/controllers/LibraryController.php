@@ -79,8 +79,6 @@ class LibraryController extends Zend_Controller_Action
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($this->obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } else {
-                        $menu["pl_add"] = array("name"=> "Add to Smart Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }

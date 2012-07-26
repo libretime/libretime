@@ -621,7 +621,6 @@ class Application_Model_StoredFile
                 $plSelect[] = "login AS ".$key;
                 $blSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
-                $plSelect[] = "login AS ".$key;
                 $streamSelect[] = "login AS ".$key;
             }
             //same columns in each table.
