@@ -219,7 +219,7 @@ class PlaylistController extends Zend_Controller_Action
         
         $name = 'Untitled Playlist';
         if ($type == 'block') {
-            $name = 'Untitled Smart Block';
+            $name = 'Untitled Smart Playlist';
         }
 
         $obj = new $objInfo['className']();

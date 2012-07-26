@@ -614,11 +614,7 @@ var AIRTIME = (function(AIRTIME) {
                         }
                         else {
                             callback = function() {
-                                if (data.ftype === "playlist") {
-                                    AIRTIME.playlist.fnEdit(data.id, 'playlist');
-                                } else {
-                                    AIRTIME.playlist.fnEdit(data.id, 'block');
-                                }
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype);
                             };
                         }
                         oItems.edit.callback = callback;
