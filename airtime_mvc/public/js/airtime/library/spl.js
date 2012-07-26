@@ -796,20 +796,18 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.init = function() {
 	    $.contextMenu({
-            selector: '#spl_new',
+            selector: '#spl_new, #ws_new',
             trigger: "left",
             ignoreRightClick: true,
             items: {
                 "sp": {name: "New Playlist", callback: AIRTIME.playlist.fnNew},
-                "sb": {name: "New Smart Playlist", callback: AIRTIME.playlist.fnNewBlock}
+                "sb": {name: "New Smart Playlist", callback: AIRTIME.playlist.fnNewBlock},
+                "ws": {name: "New Webstream", callback: AIRTIME.playlist.fnWsNew}
             }
         });
 	    /*
 		$pl.delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});*/
-
-		$pl.delegate("#ws_new", 
-	    		{"click": AIRTIME.playlist.fnWsNew});
 
 		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();

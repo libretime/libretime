@@ -75,40 +75,39 @@ class Application_Model_Schedule
 
         global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played, si.ends as show_ends
-                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id LEFT JOIN cc_show_instances si on st.instance_id = si.id
-                WHERE ';
-
-        /* Alternate SQL...merge conflict and I'm not sure which on is right.... -MK
-        $sql = 'Select ft.artist_name, ft.track_title, st.starts as starts, st.ends as ends, st.media_item_played as media_item_played, si.ends as show_ends
-                FROM cc_schedule st LEFT JOIN cc_files ft ON st.file_id = ft.id
-                WHERE ';
-                */
-
-         if (isset($p_previousShowID)) {
-            if (isset($p_nextShowID) || isset($p_currentShowID))
-                $sql .= '(';
-            $sql .= 'st.instance_id = '.$p_previousShowID;
+        $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends, st.media_item_played as media_item_played, si.ends as show_ends
+ FROM cc_schedule st JOIN %%tables%% LEFT JOIN cc_show_instances si ON st.instance_id = si.id
+ WHERE ";
+                
+        $fileColumns = "ft.artist_name, ft.track_title, ";
+        $streamColumns = "ws.login as artist_name, ws.name as track_title, ";
+        
+        $fileJoin = "cc_files ft ON st.file_id = ft.id";
+        $streamJoin = "cc_webstream ws ON st.stream_id = ws.id";
+        
+        $predicateArr = array(); 
+        if (isset($p_previousShowID)) {
+        	$predicateArr[] = 'st.instance_id = '.$p_previousShowID;
+        } 
+        if (isset($p_currentShowID)) {
+        	$predicateArr[] = 'st.instance_id = '.$p_currentShowID;
+        } 
+        if (isset($p_nextShowID)) {
+        	$predicateArr[] = 'st.instance_id = '.$p_nextShowID;
         }
-        if ($p_currentShowID != null) {
-            if ($p_previousShowID != null)
-                $sql .= ' OR ';
-            else if($p_nextShowID != null)
-                $sql .= '(';
-            $sql .= 'st.instance_id = '.$p_currentShowID;
-        }
-        if ($p_nextShowID != null) {
-            if ($p_previousShowID != null || $p_currentShowID != null)
-                $sql .= ' OR ';
-            $sql .= 'st.instance_id = '.$p_nextShowID;
-            if($p_previousShowID != null || $p_currentShowID != null)
-                $sql .= ')';
-        } else if($p_previousShowID != null && $p_currentShowID != null)
-            $sql .= ')';
-
+        
+        $sql .= " (".implode(" OR ", $predicateArr).") ";
         $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
+        
+        $filesSql = str_replace("%%columns%%", $fileColumns, $sql);
+        $filesSql = str_replace("%%tables%%", $fileJoin, $filesSql);
+        
+        $streamSql = str_replace("%%columns%%", $streamColumns, $sql);
+        $streamSql = str_replace("%%tables%%", $streamJoin, $streamSql);
+        
+        $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) AS unioned ORDER BY starts";
 
-
+	
         $rows = $con->query($sql)->fetchAll();
         $numberOfRows = count($rows);
 
@@ -117,42 +116,44 @@ class Application_Model_Schedule
         $results['next'] = null;
 
         $timeNowAsMillis = strtotime($p_timeNow);
-        for ($i = 0; $i < $numberOfRows; ++$i) {
+        for ($i = 0; $i < $numberOfRows; ++$i) {        	
             // if the show is overbooked, then update the track end time to the end of the show time.
             if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-           if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)) {
-                if ($i - 1 >= 0) {
-                    $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
-                            "starts"=>$rows[$i-1]["starts"],
-                            "ends"=>$rows[$i-1]["ends"],
-                            "type"=>'track');
-                }
-                $results['current'] =  array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
-                            "starts"=>$rows[$i]["starts"],
-                            "ends"=> (($rows[$i]["ends"] > $rows[$i]["show_ends"]) ? $rows[$i]["show_ends"]: $rows[$i]["ends"]),
-                            "media_item_played"=>$rows[$i]["media_item_played"],
-                            "record"=>0,
-                            "type"=>'track');
-                if ( isset($rows[$i+1])) {
-                    $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
-                            "starts"=>$rows[$i+1]["starts"],
-                            "ends"=>$rows[$i+1]["ends"],
-                            "type"=>'track');
-                }
-                break;
-            }
-            if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
-                $previousIndex = $i;
-            }
-            if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
-                $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
-                            "starts"=>$rows[$i]["starts"],
-                            "ends"=>$rows[$i]["ends"],
-                            "type"=>'track');
-                break;
-            }
+            
+            
+            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)) {
+                 if ($i - 1 >= 0) {
+                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
+                             "starts"=>$rows[$i-1]["starts"],
+                             "ends"=>$rows[$i-1]["ends"],
+                             "type"=>'track');
+                 }
+                  $results['current'] =  array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
+                             "starts"=>$rows[$i]["starts"],
+                             "ends"=> (($rows[$i]["ends"] > $rows[$i]["show_ends"]) ? $rows[$i]["show_ends"]: $rows[$i]["ends"]),
+                             "media_item_played"=>$rows[$i]["media_item_played"],
+                             "record"=>0,
+                             "type"=>'track');
+                 if ( isset($rows[$i+1])) {
+                     $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"], 
+                             "starts"=>$rows[$i+1]["starts"],
+                             "ends"=>$rows[$i+1]["ends"],
+                             "type"=>'track');
+                 }
+                 break;
+             }
+             if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
+                 $previousIndex = $i;
+             }
+             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
+                 $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
+                             "starts"=>$rows[$i]["starts"],
+                             "ends"=>$rows[$i]["ends"],
+                             "type"=>'track');
+                 break;
+             }
         }
         //If we didn't find a a current show because the time didn't fit we may still have
         //found a previous show so use it.
