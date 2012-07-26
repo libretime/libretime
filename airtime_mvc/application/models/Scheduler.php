@@ -233,7 +233,7 @@ class Application_Model_Scheduler
             $nextDT = $this->nowDT;
 
             $length = bcsub($nEpoch , $sEpoch , 6);
-            $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
+            $cliplength = Application_Common_DateHelper::secondsToPlaylistTime($length);
 
             //fillers are for only storing a chunk of time space that has already passed.
             $filler = new CcSchedule();
@@ -574,11 +574,11 @@ class Application_Model_Scheduler
                     $sEpoch = $removedItem->getDbStarts('U.u');
 
                     $length = bcsub($nEpoch , $sEpoch , 6);
-                    $cliplength = Application_Model_Playlist::secondsToPlaylistTime($length);
+                    $cliplength = Application_Common_DateHelper::secondsToPlaylistTime($length);
 
                     $cueinSec = Application_Model_Playlist::playlistTimeToSeconds($removedItem->getDbCueIn());
                     $cueOutSec = bcadd($cueinSec , $length, 6);
-                    $cueout = Application_Model_Playlist::secondsToPlaylistTime($cueOutSec);
+                    $cueout = Application_Common_DateHelper::secondsToPlaylistTime($cueOutSec);
 
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
