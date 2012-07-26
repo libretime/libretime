@@ -495,7 +495,6 @@ class Application_Model_Schedule
             ." si.ends AS show_end,"
             ." f.id AS file_id,"
             ." f.replay_gain AS replay_gain,"
-            ." f.filepath AS filepath,"
             ." ws.id as stream_id,"
             ." ws.url as url"
             ." FROM $CC_CONFIG[scheduleTable] AS st"
@@ -630,16 +629,17 @@ class Application_Model_Schedule
             if (!is_null($item['file_id'])) {
                 //row is from "file"
                 $media_id = $item['file_id'];
-                $uri = $item['filepath'];
+                $storedFile = Application_Model_StoredFile::Recall($media_id);
+                $uri = $storedFile->getFilePath();
                 $type = "file";
+                $independent_event = false;
             } else if (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 $type = "stream";
+                $independent_event = true;
             }
-
-            
 
             $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
             $end = Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]);
@@ -657,20 +657,23 @@ class Application_Model_Schedule
                 'end' => $end,
                 'show_name' => $showName,
                 'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
-                'independent_event' => false
+                'independent_event' => $independent_event
             );
 
             if ($type == "stream") {
                 //since a stream never ends we have to insert an additional "kick stream" event. The "start"
-                //time of this event is the "end" time of the stream.
-                $data["media"][$end] = array(
-                    'start' => $end,
-                    'end' => $end,
+                //time of this event is the "end" time of the stream minus 1 second.
+                $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
+                $dt->sub(new DateInterval("PT1S"));
+                $stream_end = Application_Model_Schedule::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
+
+                $data["media"][$stream_end] = array(
+                    'start' => $stream_end,
+                    'end' => $stream_end,
                     'uri' => $uri,
                     'type' => 'stream_end',
                     'independent_event' => true
-                    );
-
+                );
             }
         }
 

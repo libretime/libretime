@@ -432,7 +432,7 @@ class PypoFetch(Thread):
                 """
                 if(media_item['type'] == 'file'):
                     fileExt = os.path.splitext(media_item['uri'])[1]
-                    dst = os.path.join(download_dir, media_item['id'] + fileExt)
+                    dst = os.path.join(download_dir, unicode(media_item['id']) + fileExt)
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
@@ -462,7 +462,7 @@ class PypoFetch(Thread):
             media_item = media[mkey]
             if media_item['type'] == 'file':
                 fileExt = os.path.splitext(media_item['uri'])[1]
-                scheduled_file_set.add(media_item["id"] + fileExt)
+                scheduled_file_set.add(unicode(media_item["id"]) + fileExt)
 
         expired_files = cached_file_set - scheduled_file_set
 

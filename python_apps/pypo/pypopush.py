@@ -242,7 +242,11 @@ class PypoPush(Thread):
         for mkey in sorted_keys:
             media_item = media_schedule[mkey]
             if media_item['independent_event']:
+                if len(current_chain) > 0:
+                    chains.append(current_chain)
+
                 chains.append([media_item])
+                current_chain = []
             elif len(current_chain) == 0:
                 current_chain.append(media_item)
             elif media_item['start'] == current_chain[-1]['end']:

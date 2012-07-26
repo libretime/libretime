@@ -48,8 +48,8 @@ class Application_Model_Webstream{
 
         $webstream->setDbLength($dblength);
         $webstream->setDbLogin($userInfo->id);
-        $webstream->setDbUtime(new DateTime());
-        $webstream->setDbMtime(new DateTime());
+        $webstream->setDbUtime(new DateTime($timezone = new DateTimeZone('UTC')));
+        $webstream->setDbMtime(new DateTime($timezone = new DateTimeZone('UTC')));
         $webstream->save();
     }
 }

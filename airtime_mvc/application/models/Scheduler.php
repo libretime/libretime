@@ -227,7 +227,7 @@ class Application_Model_Scheduler
     private function findEndTime($p_startDT, $p_duration)
     {
         $startEpoch = $p_startDT->format("U.u");
-        $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
+        $durationSeconds = Application_Common_DateHelper::playlistTimeToSeconds($p_duration);
 
         //add two float numbers to 6 subsecond precision
         //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
@@ -608,7 +608,7 @@ class Application_Model_Scheduler
                     $length = bcsub($nEpoch , $sEpoch , 6);
                     $cliplength = Application_Common_DateHelper::secondsToPlaylistTime($length);
 
-                    $cueinSec = Application_Model_Playlist::playlistTimeToSeconds($removedItem->getDbCueIn());
+                    $cueinSec = Application_Common_DateHelper::playlistTimeToSeconds($removedItem->getDbCueIn());
                     $cueOutSec = bcadd($cueinSec , $length, 6);
                     $cueout = Application_Common_DateHelper::secondsToPlaylistTime($cueOutSec);
 

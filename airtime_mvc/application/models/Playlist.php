@@ -188,7 +188,7 @@ EOT;
         foreach ($rows as &$row) {
             Logging::log($row);
 
-            $clipSec = Application_Model_Playlist::playlistTimeToSeconds($row['length']);
+            $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
     

@@ -603,7 +603,7 @@ class Application_Model_ShowInstance
     {
         $time_filled = $this->getTimeScheduled();
 
-        return Application_Model_Playlist::playlistTimeToSeconds($time_filled);
+        return Application_Common_DateHelper::playlistTimeToSeconds($time_filled);
     }
 
     public function getDurationSecs()
