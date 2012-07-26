@@ -759,7 +759,7 @@ var AIRTIME = (function(AIRTIME){
             ignoreRightClick: true,
             items: {
                 "sp": {name: "New Playlist", callback: AIRTIME.playlist.fnNew},
-                "sb": {name: "New Smart Block", callback: AIRTIME.playlist.fnNewBlock}
+                "sb": {name: "New Smart Playlist", callback: AIRTIME.playlist.fnNewBlock}
             }
         });
 	    /*
