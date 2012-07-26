@@ -440,7 +440,7 @@ var AIRTIME = (function(AIRTIME) {
                         
                         $tr = $(el).parent();
                         data = $tr.data("aData");
-                        AIRTIME.library.dblClickAdd(data.id, data.ftype);
+                        AIRTIME.library.dblClickAdd(data, data.ftype);
                     }
                     else
                     {

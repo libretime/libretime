@@ -70,6 +70,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->length = $formatter->format();
 
         $this->view->obj = $obj;
+        Logging::log($obj->getContents());
         $this->view->html = $this->view->render('playlist/update.phtml');
         $this->view->name = $obj->getName();
         $this->view->description = $obj->getDescription();
@@ -297,23 +298,31 @@ class PlaylistController extends Zend_Controller_Action
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
         $addType = $this->_getParam('type', 'after');
+        // this is the obj type of destination
         $obj_type = $this->_getParam('obj_type');
         
         try {
             $obj = $this->getPlaylist($obj_type);
-            if ($obj_type == 'playlist' || $obj->isStatic()) {
+            if ($obj_type == 'playlist') {
                 $obj->addAudioClips($ids, $afterItem, $addType);
-                $this->createUpdateResponse($obj);
+            } else if ($obj->isStatic()) {
+                // if the dest is a block object
+                $obj->addAudioClips($ids, $afterItem, $addType);
             } else {
                 throw new PlaylistDyanmicException;
             }
-        } catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($pl, $e);
-        } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
-        } catch (PlaylistDyanmicException $e) {
-            $this->playlistDynamic($pl);
-        } catch (Exception $e) {
+            $this->createUpdateResponse($obj);
+        }
+        catch (PlaylistOutDatedException $e) {
+            $this->playlistOutdated($e);
+        }
+        catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound($obj_type);
+        }
+        catch (PlaylistDyanmicException $e) {
+            $this->playlistDynamic($obj);
+        }
+        catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }

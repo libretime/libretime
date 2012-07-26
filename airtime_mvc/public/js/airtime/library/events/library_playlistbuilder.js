@@ -27,13 +27,14 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
 		var $nRow = $(nRow);
-		
 		if (aData.ftype === "audioclip") {
 			$nRow.addClass("lib-audio");
 		} else if (aData.ftype === "stream"){
             $nRow.addClass("lib-stream");
-        } else {
-			$nRow.addClass("lib-pl");
+		} else if (aData.ftype === "block") {
+			$nRow.addClass("lib-block");
+		} else {
+		    $nRow.addClass("lib-pl");
 		}
 		
 		$nRow.attr("id", aData["tr_id"])
@@ -46,7 +47,7 @@ var AIRTIME = (function(AIRTIME){
 		mod.redrawChosen();
 		mod.checkToolBarIcons();
 		
-		$('#library_display tr.lib-audio, tr.lib-stream, tr.lib-pl').draggable({
+		$('#library_display tr.lib-audio, tr.lib-stream, tr.lib-pl, tr.lib-block').draggable({
 			helper: function(){
 					
 			    var $el = $(this),
@@ -89,14 +90,12 @@ var AIRTIME = (function(AIRTIME){
 		});
 	};
 	
-	mod.dblClickAdd = function(id, type) {
+	mod.dblClickAdd = function(data, type) {
         var i,
             aMediaIds = [];
         
         //process selected files/playlists.
-        if (type === "audioclip") {
-            aMediaIds.push(id);
-        }
+        aMediaIds.push(new Array(data.id, data.ftype));
     
         AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
 	};
@@ -128,7 +127,7 @@ var AIRTIME = (function(AIRTIME){
 				//process selected files/playlists.
 				for (i = 0, length = aData.length; i < length; i++) {
 					temp = aData[i];
-					if (temp.ftype === "audioclip") {
+					if (temp.ftype === "audioclip" || temp.ftype === "block") {
 						aMediaIds.push(temp.id);
 					}
 				}

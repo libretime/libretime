@@ -174,11 +174,11 @@ class Application_Model_Playlist
         $sql = <<<"EOT"
 ((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
-    LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
+    JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
 UNION ALL
 (SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
 ws.id as item_id, (ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
-LEFT JOIN cc_webstream AS ws on pc.file_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1));
+JOIN cc_webstream AS ws on pc.file_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1));
 EOT;
         Logging::debug($sql);
         $con = Propel::getConnection();
@@ -280,22 +280,33 @@ EOT;
      */
     private function buildEntry($p_item, $pos)
     {
-        $file = CcFilesQuery::create()->findPK($p_item, $this->con);
+        $objType = $p_item[1];
+        $objId = $p_item[0];
+        if ($objType == 'audioclip') {
+            $obj = CcFilesQuery::create()->findPK($objId, $this->con);
+        } else if ($objType == "stream") {
+            $obj = CcWebstreamQuery::create()->findPK($objId, $this->con);
+        } else if ($objType == "block") {
+            $obj = CcBlockQuery::create()->findPK($objId, $this->con);
+        } else {
+            throw new Exception("Unknown file type");
+        }
 
-        if (isset($file) && $file->getDbFileExists()) {
-            $entry = $this->plItem;
-            $entry["id"] = $file->getDbId();
-            $entry["pos"] = $pos;
-            $entry["cliplength"] = $file->getDbLength();
-            $entry["cueout"] = $file->getDbLength();
-
+        if (isset($obj)) { 
+            if (($obj instanceof CcFiles && $obj->getDbFileExists()) || $obj instanceof CcWebstream || $obj instanceof CcBlock) {
+                $entry = $this->plItem;
+                $entry["id"] = $obj->getDbId();
+                $entry["pos"] = $pos;
+                $entry["cliplength"] = $obj->getDbLength();
+                $entry["cueout"] = $obj->getDbLength();
+            }
             return $entry;
         } else {
-            throw new Exception("trying to add a file that does not exist.");
+            throw new Exception("trying to add a object that does not exist.");
         }
     }
 
-    private function buildStreamEntry($p_item, $pos)
+    /*private function buildStreamEntry($p_item, $pos)
     {
         $stream = CcWebstreamQuery::create()->findPK($p_item, $this->con);
 
@@ -310,7 +321,7 @@ EOT;
         } else {
             throw new Exception("trying to add a stream that does not exist.");
         }
-    }
+    }*/
 
     /*
      * @param array $p_items
@@ -369,19 +380,8 @@ EOT;
             Logging::log("at position {$pos}");
  
             foreach ($p_items as $ac) {
-                list($item, $type) = $ac;
-                if ($type == "audioclip") {
-                    $res = $this->insertPlaylistElement($this->buildEntry($item, $pos), 0);
-                    $pos = $pos + 1;
-                } else if ($type == "playlist") {
-
-                } else if ($type == "stream") {
-                    $res = $this->insertPlaylistElement($this->buildStreamEntry($item, $pos), 1);
-                    $pos = $pos + 1;
-                } else {
-                    throw new Exception("Unknown file type");
-                }
-
+                $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos), 0);
+                $pos = $pos + 1;
                 Logging::log("Adding audio file {$ac}");
 
             }

@@ -575,8 +575,7 @@ var AIRTIME = (function(AIRTIME){
 				aSelected = AIRTIME.library.getSelectedData();
 			    
 				for (i = 0, length = aSelected.length; i < length; i++) {
-					var type = aSelected[i].ftype;
-					aItems.push(new Array(aSelected[i].id, type));
+					aItems.push(new Array(aSelected[i].id, aSelected[i].ftype));
 				}
 	
 			    aReceiveItems = aItems;
@@ -778,7 +777,6 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnAddItems = function(aItems, iAfter, sAddType) {
 		var sUrl = "/playlist/add-items";
 			oData = {"aItems": aItems, "afterItem": iAfter, "type": sAddType};
-		
 		playlistRequest(sUrl, oData);
 	};
 	
