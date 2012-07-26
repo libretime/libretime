@@ -219,7 +219,7 @@ class PlaylistController extends Zend_Controller_Action
         
         $name = 'Untitled Playlist';
         if ($type == 'block') {
-            $name = 'Untitled Smart Block';
+            $name = 'Untitled Smart Playlist';
         }
 
         $obj = new $objInfo['className']();
@@ -293,7 +293,7 @@ class PlaylistController extends Zend_Controller_Action
 
     public function addItemsAction()
     {
-        $ids = $this->_getParam('ids', array());
+        $ids = $this->_getParam('aItems', array());
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
         $addType = $this->_getParam('type', 'after');
@@ -307,17 +307,13 @@ class PlaylistController extends Zend_Controller_Action
             } else {
                 throw new PlaylistDyanmicException;
             }
-        }
-        catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($e);
-        }
-        catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound($obj_type);
-        }
-        catch (PlaylistDyanmicException $e) {
-            $this->playlistDynamic($obj);
-        }
-        catch (Exception $e) {
+        } catch (PlaylistOutDatedException $e) {
+            $this->playlistOutdated($pl, $e);
+        } catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound();
+        } catch (PlaylistDyanmicException $e) {
+            $this->playlistDynamic($pl);
+        } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
     }

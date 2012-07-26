@@ -11,6 +11,7 @@ class Application_Model_Scheduler
             "fadein" => "00:00:00",
             "fadeout" => "00:00:00",
             "sched_id" => null,
+            "type" => 0 //default type of '0' to represent files. type '1' represents a webstream
         );
 
     private $epochNow;
@@ -145,8 +146,7 @@ class Application_Model_Scheduler
 
                 $files[] = $data;
             }
-        }
-        else if ($type === "playlist") {
+        } else if ($type === "playlist") {
             
             // find if the playslit is static or dynamic
             $c = new Criteria();
@@ -190,6 +190,28 @@ class Application_Model_Scheduler
                 }
                 $files[] = $data;
             }
+        } else if ($type == "stream") {
+            //need to return
+             $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
+
+            if (is_null($stream) /* || !$file->getDbFileExists() */) {
+                throw new Exception("A selected File does not exist!");
+            } else {
+                $data = $this->fileInfo;
+                $data["id"] = $id;
+                $data["cliplength"] = $stream->getDbLength();
+                $data["cueout"] = $stream->getDbLength();
+                $data["type"] = 1;
+
+                $defaultFade = Application_Model_Preference::GetDefaultFade();
+                if (isset($defaultFade)) {
+                    //fade is in format SS.uuuuuu
+                    $data["fadein"] = $defaultFade;
+                    $data["fadeout"] = $defaultFade;
+                }
+
+                $files[] = $data;
+            }
         }
 
         return $files;
@@ -205,7 +227,7 @@ class Application_Model_Scheduler
     private function findEndTime($p_startDT, $p_duration)
     {
         $startEpoch = $p_startDT->format("U.u");
-        $durationSeconds = Application_Model_Playlist::playlistTimeToSeconds($p_duration);
+        $durationSeconds = Application_Common_DateHelper::playlistTimeToSeconds($p_duration);
 
         //add two float numbers to 6 subsecond precision
         //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
@@ -356,17 +378,27 @@ class Application_Model_Scheduler
                     } else {
                         $sched = new CcSchedule();
                     }
-                   Logging::log(print_r($file,true));
+                    Logging::log($file);
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
-                        ->setDbFileId($file['id'])
                         ->setDbCueIn($file['cuein'])
                         ->setDbCueOut($file['cueout'])
                         ->setDbFadeIn($file['fadein'])
                         ->setDbFadeOut($file['fadeout'])
                         ->setDbClipLength($file['cliplength'])
-                        ->setDbInstanceId($instance->getDbId())
-                        ->save($this->con);
+                        ->setDbInstanceId($instance->getDbId());
+                        
+                    switch ($file["type"]){
+                        case 0:
+                            $sched->setDbFileId($file['id']);
+                            break;
+                        case 1:
+                            $sched->setDbStreamId($file['id']);
+                            break;
+                        default: break;
+                    }
+                    
+                    $sched->save($this->con);
 
                     $nextStartDT = $endTimeDT;
                 }
@@ -576,7 +608,7 @@ class Application_Model_Scheduler
                     $length = bcsub($nEpoch , $sEpoch , 6);
                     $cliplength = Application_Common_DateHelper::secondsToPlaylistTime($length);
 
-                    $cueinSec = Application_Model_Playlist::playlistTimeToSeconds($removedItem->getDbCueIn());
+                    $cueinSec = Application_Common_DateHelper::playlistTimeToSeconds($removedItem->getDbCueIn());
                     $cueOutSec = bcadd($cueinSec , $length, 6);
                     $cueout = Application_Common_DateHelper::secondsToPlaylistTime($cueOutSec);
 

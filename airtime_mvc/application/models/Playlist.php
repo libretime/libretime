@@ -157,6 +157,7 @@ class Application_Model_Playlist
         Logging::log("Getting contents for playlist {$this->id}");
 
         $files = array();
+        /*
         $query = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id);
 
@@ -166,14 +167,45 @@ class Application_Model_Playlist
                   ->endUse();
         }
         $query->orderByDbPosition()
+              ->filterByDbType(0)
               ->leftJoinWith('CcFiles');
         $rows = $query->find($this->con);
+         */
+        $sql = <<<"EOT"
+((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
+    LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
+UNION ALL
+(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+ws.id as item_id, (ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
+LEFT JOIN cc_webstream AS ws on pc.file_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1));
+EOT;
+        Logging::debug($sql);
+        $con = Propel::getConnection();
+        $rows = $con->query($sql)->fetchAll();
 
+        $offset = 0;
+        foreach ($rows as &$row) {
+            Logging::log($row);
+
+            $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
+            $offset += $clipSec;
+            $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
+    
+            //format the length for UI.
+            $formatter = new LengthFormatter($row['length']);
+            $row['length'] = $formatter->format();
+    
+            $formatter = new LengthFormatter($offset_cliplength);
+            $row['offset'] = $formatter->format();
+        }
+
+        /*
         $i = 0;
         $offset = 0;
         foreach ($rows as $row) {
+          Logging::log($row);
           $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
-
 
           $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($files[$i]['cliplength']);
           $offset += $clipSec;
@@ -188,8 +220,9 @@ class Application_Model_Playlist
 
           $i++;
         }
+         */
 
-        return $files;
+        return $rows;
     }
 
     /**
@@ -199,19 +232,21 @@ class Application_Model_Playlist
     **/
     public function normalizeFade($fade)
     {
-      //First get rid of the first six characters 00:00: which will be added back later for db update
-      $fade = substr($fade, 6);
+        //First get rid of the first six characters 00:00: which will be added back later for db update
+        $fade = substr($fade, 6);
+  
+        //Second add .000000 if the fade does't have milliseconds format already
+        $dbFadeStrPos = strpos( $fade, '.' );
+        if ($dbFadeStrPos === false) {
+             $fade .= '.000000';
+        } else {
+            while (strlen($fade) < 9) {
+                 $fade .= '0';
+            }
+        }
 
-      //Second add .000000 if the fade does't have milliseconds format already
-      $dbFadeStrPos = strpos( $fade, '.' );
-      if ( $dbFadeStrPos === False )
-         $fade .= '.000000';
-      else
-         while( strlen( $fade ) < 9 )
-            $fade .= '0';
-
-      //done, just need to set back the formated values
-      return $fade;
+        //done, just need to set back the formated values
+        return $fade;
     }
 
     //aggregate column on playlistcontents cliplength column.
@@ -220,7 +255,7 @@ class Application_Model_Playlist
         return $this->pl->getDbLength();
     }
 
-    private function insertPlaylistElement($info)
+    private function insertPlaylistElement($info, $type)
     {
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($this->id);
@@ -231,6 +266,7 @@ class Application_Model_Playlist
         $row->setDbCueout($info["cueout"]);
         $row->setDbFadein($info["fadein"]);
         $row->setDbFadeout($info["fadeout"]);
+        $row->setDbType($type);
         $row->save($this->con);
         // above save result update on cc_playlist table on length column.
         // but $this->pl doesn't get updated automatically
@@ -259,6 +295,23 @@ class Application_Model_Playlist
         }
     }
 
+    private function buildStreamEntry($p_item, $pos)
+    {
+        $stream = CcWebstreamQuery::create()->findPK($p_item, $this->con);
+
+        if (isset($stream)) {
+            $entry = $this->plItem;
+            $entry["id"] = $stream->getDbId();
+            $entry["pos"] = $pos;
+            $entry["cliplength"] = $stream->getDbLength();
+            $entry["cueout"] = $stream->getDbLength();
+
+            return $entry;
+        } else {
+            throw new Exception("trying to add a stream that does not exist.");
+        }
+    }
+
     /*
      * @param array $p_items
      *     an array of audioclips to add to the playlist
@@ -267,7 +320,7 @@ class Application_Model_Playlist
      * @param string (before|after) $addAfter
      *      whether to add the clips before or after the selected item.
      */
-    public function addAudioClips($p_items, $p_afterItem=NULL, $addType = 'after')
+    public function addAudioClips($p_items, $p_afterItem=null, $addType = 'after')
     {
         $this->con->beginTransaction();
         $contentsToUpdate = array();
@@ -288,8 +341,6 @@ class Application_Model_Playlist
                     ->orderByDbPosition()
                     ->find($this->con);
 
-                Logging::log("Adding to playlist");
-                Logging::log("at position {$pos}");
             } else {
 
                 //add to the end of the playlist
@@ -312,15 +363,27 @@ class Application_Model_Playlist
                     ->orderByDbPosition()
                     ->find($this->con);
 
-                Logging::log("Adding to playlist");
-                Logging::log("at position {$pos}");
             }
 
+            Logging::log("Adding to playlist");
+            Logging::log("at position {$pos}");
+ 
             foreach ($p_items as $ac) {
+                list($item, $type) = $ac;
+                if ($type == "audioclip") {
+                    $res = $this->insertPlaylistElement($this->buildEntry($item, $pos), 0);
+                    $pos = $pos + 1;
+                } else if ($type == "playlist") {
+
+                } else if ($type == "stream") {
+                    $res = $this->insertPlaylistElement($this->buildStreamEntry($item, $pos), 1);
+                    $pos = $pos + 1;
+                } else {
+                    throw new Exception("Unknown file type");
+                }
+
                 Logging::log("Adding audio file {$ac}");
 
-                $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
-                $pos = $pos + 1;
             }
 
             //reset the positions of the remaining items.

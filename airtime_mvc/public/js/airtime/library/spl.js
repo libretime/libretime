@@ -488,7 +488,39 @@ var AIRTIME = (function(AIRTIME){
 	        	$fs.addClass("closed");
 	        }
 	    });
-		
+		$pl.on("click", "#webstream_save", function(){
+            //get all fields and POST to server
+            //description
+            //stream url
+            //default_length  
+            //playlist name
+            var description = $pl.find("#description").val();
+            var streamurl = $pl.find("#streamurl-element input").val();
+            var length = $pl.find("#streamlength-element input").val();
+            var name = $pl.find("#playlist_name_display").text(); 
+        
+            var url = 'Webstream/save';
+            $.post(url, 
+        		{format: "json", description: description, url:streamurl, length: length, name: name}, 
+        		function(json){
+                    console.log(json);
+
+                    /*
+		            if (json.error !== undefined){
+		            	playlistError(json);
+		            } else {
+		            	setModified(json.modified);
+		                textarea.val(json.description);
+		                $pl.find("#fieldset-metadate_change").addClass("closed");
+			            redrawLib();
+		            } */     
+		        });    
+        
+        
+        }
+              
+              
+              )
 		$pl.on("click", "#description_save", function(){
 	        var textarea = $pl.find("#fieldset-metadate_change textarea"),
 	        	description = textarea.val(),
@@ -543,9 +575,8 @@ var AIRTIME = (function(AIRTIME){
 				aSelected = AIRTIME.library.getSelectedData();
 			    
 				for (i = 0, length = aSelected.length; i < length; i++) {
-					if (aSelected[i].ftype === "audioclip") {
-						aItems.push(aSelected[i].id);
-					}
+					var type = aSelected[i].ftype;
+					aItems.push(new Array(aSelected[i].id, type));
 				}
 	
 			    aReceiveItems = aItems;
@@ -622,6 +653,19 @@ var AIRTIME = (function(AIRTIME){
 		
 		$.post(url, 
 			{format: "json", type: 'playlist'}, 
+			function(json){
+				openPlaylist(json);
+				redrawLib();
+			});
+	};
+    
+	mod.fnWsNew = function() {
+		var url = '/Webstream/new';
+
+		stopAudioPreview();
+		
+		$.post(url, 
+			{format: "json"}, 
 			function(json){
 				openPlaylist(json);
 				redrawLib();
@@ -733,7 +777,7 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.fnAddItems = function(aItems, iAfter, sAddType) {
 		var sUrl = "/playlist/add-items";
-			oData = {"ids": aItems, "afterItem": iAfter, "type": sAddType};
+			oData = {"aItems": aItems, "afterItem": iAfter, "type": sAddType};
 		
 		playlistRequest(sUrl, oData);
 	};
@@ -759,12 +803,15 @@ var AIRTIME = (function(AIRTIME){
             ignoreRightClick: true,
             items: {
                 "sp": {name: "New Playlist", callback: AIRTIME.playlist.fnNew},
-                "sb": {name: "New Smart Block", callback: AIRTIME.playlist.fnNewBlock}
+                "sb": {name: "New Smart Playlist", callback: AIRTIME.playlist.fnNewBlock}
             }
         });
 	    /*
 		$pl.delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});*/
+
+		$pl.delegate("#ws_new", 
+	    		{"click": AIRTIME.playlist.fnWsNew});
 
 		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();

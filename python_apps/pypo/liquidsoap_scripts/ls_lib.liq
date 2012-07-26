@@ -227,3 +227,80 @@ def add_skip_command(s)
                  description="Skip the current song.",
                  "skip",skip)
 end
+
+dyn_out = output.icecast(%wav,
+                     host="localhost",
+                     port=8999,
+                     password="hackme",
+                     mount="test-harbor",
+                     fallible=true)
+
+# Function to create a playlist source and output it.
+def create_dynamic_source(uri) =
+  # The playlist source 
+  s = input.http(uri)
+
+  # The output
+  active_dyn_out = dyn_out(s)
+
+  # We register both source and output 
+  # in the list of sources
+  dyn_sources := 
+      list.append( [(uri,s),(uri,active_dyn_out)],
+                    !dyn_sources )
+  "Done!"
+end
+
+# A function to destroy a dynamic source
+def destroy_dynamic_source(uri) = 
+  # We need to find the source in the list,
+  # remove it and destroy it. Currently, the language
+  # lacks some nice operators for that so we do it
+  # the functional way
+
+  # This function is executed on every item in the list
+  # of dynamic sources
+  def parse_list(ret, current_element) = 
+    # ret is of the form: (matching_sources, remaining_sources)
+    # We extract those two:
+    matching_sources = fst(ret)
+    remaining_sources = snd(ret)
+
+    # current_element is of the form: ("uri", source) so 
+    # we check the first element
+    current_uri = fst(current_element)
+    if current_uri == uri then
+      # In this case, we add the source to the list of
+      # matched sources
+      (list.append( [snd(current_element)], 
+                     matching_sources),
+       remaining_sources)
+    else
+      # In this case, we put the element in the list of remaining
+      # sources
+      (matching_sources,
+       list.append([current_element], 
+                    remaining_sources))
+    end
+  end
+    
+  # Now we execute the function:
+  result = list.fold(parse_list, ([], []), !dyn_sources)
+  matching_sources = fst(result)
+  remaining_sources = snd(result)
+
+  # We store the remaining sources in dyn_sources
+  dyn_sources := remaining_sources
+
+  # If no source matched, we return an error
+  if list.length(matching_sources) == 0 then
+    "Error: no matching sources!"
+  else
+    # We stop all sources
+    list.iter(source.shutdown, matching_sources)
+    # And return
+    "Done!"
+  end
+end
+
+

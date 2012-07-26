@@ -49,6 +49,12 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	protected $file_id;
 
 	/**
+	 * The value for the stream_id field.
+	 * @var        int
+	 */
+	protected $stream_id;
+
+	/**
 	 * The value for the clip_length field.
 	 * Note: this column has a database default value of: '00:00:00'
 	 * @var        string
@@ -119,6 +125,11 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	 * @var        CcFiles
 	 */
 	protected $aCcFiles;
+
+	/**
+	 * @var        CcWebstream
+	 */
+	protected $aCcWebstream;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -246,6 +257,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function getDbFileId()
 	{
 		return $this->file_id;
+	}
+
+	/**
+	 * Get the [stream_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbStreamId()
+	{
+		return $this->stream_id;
 	}
 
 	/**
@@ -525,6 +546,30 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 		return $this;
 	} // setDbFileId()
+
+	/**
+	 * Set the value of [stream_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcSchedule The current object (for fluent API support)
+	 */
+	public function setDbStreamId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->stream_id !== $v) {
+			$this->stream_id = $v;
+			$this->modifiedColumns[] = CcSchedulePeer::STREAM_ID;
+		}
+
+		if ($this->aCcWebstream !== null && $this->aCcWebstream->getDbId() !== $v) {
+			$this->aCcWebstream = null;
+		}
+
+		return $this;
+	} // setDbStreamId()
 
 	/**
 	 * Set the value of [clip_length] column.
@@ -838,15 +883,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$this->starts = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
 			$this->ends = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->file_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-			$this->clip_length = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->fade_in = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->fade_out = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->cue_in = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-			$this->cue_out = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->media_item_played = ($row[$startcol + 9] !== null) ? (boolean) $row[$startcol + 9] : null;
-			$this->instance_id = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
-			$this->playout_status = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
-			$this->broadcasted = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
+			$this->stream_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+			$this->clip_length = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->fade_in = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->fade_out = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->cue_in = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->cue_out = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+			$this->media_item_played = ($row[$startcol + 10] !== null) ? (boolean) $row[$startcol + 10] : null;
+			$this->instance_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+			$this->playout_status = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
+			$this->broadcasted = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -855,7 +901,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 13; // 13 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 14; // 14 = CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcSchedule object", $e);
@@ -880,6 +926,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 		if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
 			$this->aCcFiles = null;
+		}
+		if ($this->aCcWebstream !== null && $this->stream_id !== $this->aCcWebstream->getDbId()) {
+			$this->aCcWebstream = null;
 		}
 		if ($this->aCcShowInstances !== null && $this->instance_id !== $this->aCcShowInstances->getDbId()) {
 			$this->aCcShowInstances = null;
@@ -925,6 +974,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 			$this->aCcShowInstances = null;
 			$this->aCcFiles = null;
+			$this->aCcWebstream = null;
 		} // if (deep)
 	}
 
@@ -1054,6 +1104,13 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->setCcFiles($this->aCcFiles);
 			}
 
+			if ($this->aCcWebstream !== null) {
+				if ($this->aCcWebstream->isModified() || $this->aCcWebstream->isNew()) {
+					$affectedRows += $this->aCcWebstream->save($con);
+				}
+				$this->setCcWebstream($this->aCcWebstream);
+			}
+
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = CcSchedulePeer::ID;
 			}
@@ -1160,6 +1217,12 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->aCcWebstream !== null) {
+				if (!$this->aCcWebstream->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcWebstream->getValidationFailures());
+				}
+			}
+
 
 			if (($retval = CcSchedulePeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
@@ -1212,30 +1275,33 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				return $this->getDbFileId();
 				break;
 			case 4:
-				return $this->getDbClipLength();
+				return $this->getDbStreamId();
 				break;
 			case 5:
-				return $this->getDbFadeIn();
+				return $this->getDbClipLength();
 				break;
 			case 6:
-				return $this->getDbFadeOut();
+				return $this->getDbFadeIn();
 				break;
 			case 7:
-				return $this->getDbCueIn();
+				return $this->getDbFadeOut();
 				break;
 			case 8:
-				return $this->getDbCueOut();
+				return $this->getDbCueIn();
 				break;
 			case 9:
-				return $this->getDbMediaItemPlayed();
+				return $this->getDbCueOut();
 				break;
 			case 10:
-				return $this->getDbInstanceId();
+				return $this->getDbMediaItemPlayed();
 				break;
 			case 11:
-				return $this->getDbPlayoutStatus();
+				return $this->getDbInstanceId();
 				break;
 			case 12:
+				return $this->getDbPlayoutStatus();
+				break;
+			case 13:
 				return $this->getDbBroadcasted();
 				break;
 			default:
@@ -1266,15 +1332,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$keys[1] => $this->getDbStarts(),
 			$keys[2] => $this->getDbEnds(),
 			$keys[3] => $this->getDbFileId(),
-			$keys[4] => $this->getDbClipLength(),
-			$keys[5] => $this->getDbFadeIn(),
-			$keys[6] => $this->getDbFadeOut(),
-			$keys[7] => $this->getDbCueIn(),
-			$keys[8] => $this->getDbCueOut(),
-			$keys[9] => $this->getDbMediaItemPlayed(),
-			$keys[10] => $this->getDbInstanceId(),
-			$keys[11] => $this->getDbPlayoutStatus(),
-			$keys[12] => $this->getDbBroadcasted(),
+			$keys[4] => $this->getDbStreamId(),
+			$keys[5] => $this->getDbClipLength(),
+			$keys[6] => $this->getDbFadeIn(),
+			$keys[7] => $this->getDbFadeOut(),
+			$keys[8] => $this->getDbCueIn(),
+			$keys[9] => $this->getDbCueOut(),
+			$keys[10] => $this->getDbMediaItemPlayed(),
+			$keys[11] => $this->getDbInstanceId(),
+			$keys[12] => $this->getDbPlayoutStatus(),
+			$keys[13] => $this->getDbBroadcasted(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShowInstances) {
@@ -1282,6 +1349,9 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			}
 			if (null !== $this->aCcFiles) {
 				$result['CcFiles'] = $this->aCcFiles->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aCcWebstream) {
+				$result['CcWebstream'] = $this->aCcWebstream->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -1327,30 +1397,33 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->setDbFileId($value);
 				break;
 			case 4:
-				$this->setDbClipLength($value);
+				$this->setDbStreamId($value);
 				break;
 			case 5:
-				$this->setDbFadeIn($value);
+				$this->setDbClipLength($value);
 				break;
 			case 6:
-				$this->setDbFadeOut($value);
+				$this->setDbFadeIn($value);
 				break;
 			case 7:
-				$this->setDbCueIn($value);
+				$this->setDbFadeOut($value);
 				break;
 			case 8:
-				$this->setDbCueOut($value);
+				$this->setDbCueIn($value);
 				break;
 			case 9:
-				$this->setDbMediaItemPlayed($value);
+				$this->setDbCueOut($value);
 				break;
 			case 10:
-				$this->setDbInstanceId($value);
+				$this->setDbMediaItemPlayed($value);
 				break;
 			case 11:
-				$this->setDbPlayoutStatus($value);
+				$this->setDbInstanceId($value);
 				break;
 			case 12:
+				$this->setDbPlayoutStatus($value);
+				break;
+			case 13:
 				$this->setDbBroadcasted($value);
 				break;
 		} // switch()
@@ -1381,15 +1454,16 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDbStarts($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbEnds($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbFileId($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbClipLength($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbFadeIn($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbFadeOut($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbCueIn($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setDbCueOut($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbMediaItemPlayed($arr[$keys[9]]);
-		if (array_key_exists($keys[10], $arr)) $this->setDbInstanceId($arr[$keys[10]]);
-		if (array_key_exists($keys[11], $arr)) $this->setDbPlayoutStatus($arr[$keys[11]]);
-		if (array_key_exists($keys[12], $arr)) $this->setDbBroadcasted($arr[$keys[12]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbStreamId($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbClipLength($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbFadeIn($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbFadeOut($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbCueIn($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbCueOut($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbMediaItemPlayed($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbInstanceId($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setDbPlayoutStatus($arr[$keys[12]]);
+		if (array_key_exists($keys[13], $arr)) $this->setDbBroadcasted($arr[$keys[13]]);
 	}
 
 	/**
@@ -1405,6 +1479,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcSchedulePeer::STARTS)) $criteria->add(CcSchedulePeer::STARTS, $this->starts);
 		if ($this->isColumnModified(CcSchedulePeer::ENDS)) $criteria->add(CcSchedulePeer::ENDS, $this->ends);
 		if ($this->isColumnModified(CcSchedulePeer::FILE_ID)) $criteria->add(CcSchedulePeer::FILE_ID, $this->file_id);
+		if ($this->isColumnModified(CcSchedulePeer::STREAM_ID)) $criteria->add(CcSchedulePeer::STREAM_ID, $this->stream_id);
 		if ($this->isColumnModified(CcSchedulePeer::CLIP_LENGTH)) $criteria->add(CcSchedulePeer::CLIP_LENGTH, $this->clip_length);
 		if ($this->isColumnModified(CcSchedulePeer::FADE_IN)) $criteria->add(CcSchedulePeer::FADE_IN, $this->fade_in);
 		if ($this->isColumnModified(CcSchedulePeer::FADE_OUT)) $criteria->add(CcSchedulePeer::FADE_OUT, $this->fade_out);
@@ -1478,6 +1553,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$copyObj->setDbStarts($this->starts);
 		$copyObj->setDbEnds($this->ends);
 		$copyObj->setDbFileId($this->file_id);
+		$copyObj->setDbStreamId($this->stream_id);
 		$copyObj->setDbClipLength($this->clip_length);
 		$copyObj->setDbFadeIn($this->fade_in);
 		$copyObj->setDbFadeOut($this->fade_out);
@@ -1629,6 +1705,55 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Declares an association between this object and a CcWebstream object.
+	 *
+	 * @param      CcWebstream $v
+	 * @return     CcSchedule The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcWebstream(CcWebstream $v = null)
+	{
+		if ($v === null) {
+			$this->setDbStreamId(NULL);
+		} else {
+			$this->setDbStreamId($v->getDbId());
+		}
+
+		$this->aCcWebstream = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcWebstream object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcSchedule($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcWebstream object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcWebstream The associated CcWebstream object.
+	 * @throws     PropelException
+	 */
+	public function getCcWebstream(PropelPDO $con = null)
+	{
+		if ($this->aCcWebstream === null && ($this->stream_id !== null)) {
+			$this->aCcWebstream = CcWebstreamQuery::create()->findPk($this->stream_id, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcWebstream->addCcSchedules($this);
+			 */
+		}
+		return $this->aCcWebstream;
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1637,6 +1762,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$this->starts = null;
 		$this->ends = null;
 		$this->file_id = null;
+		$this->stream_id = null;
 		$this->clip_length = null;
 		$this->fade_in = null;
 		$this->fade_out = null;
@@ -1671,6 +1797,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 		$this->aCcShowInstances = null;
 		$this->aCcFiles = null;
+		$this->aCcWebstream = null;
 	}
 
 	/**

@@ -40,7 +40,7 @@ var AIRTIME = (function(AIRTIME) {
             cItem,
             i, length,
             count = 0,
-            reAudio=/^au/ ;
+            reAudio=/^(au|st|pl)/ ;
             
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
@@ -614,11 +614,7 @@ var AIRTIME = (function(AIRTIME) {
                         }
                         else {
                             callback = function() {
-                                if (data.ftype === "playlist") {
-                                    AIRTIME.playlist.fnEdit(data.id, 'playlist');
-                                } else {
-                                    AIRTIME.playlist.fnEdit(data.id, 'block');
-                                }
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype);
                             };
                         }
                         oItems.edit.callback = callback;

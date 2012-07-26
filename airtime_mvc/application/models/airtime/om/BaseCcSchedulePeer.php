@@ -26,7 +26,7 @@ abstract class BaseCcSchedulePeer {
 	const TM_CLASS = 'CcScheduleTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 13;
+	const NUM_COLUMNS = 14;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,6 +42,9 @@ abstract class BaseCcSchedulePeer {
 
 	/** the column name for the FILE_ID field */
 	const FILE_ID = 'cc_schedule.FILE_ID';
+
+	/** the column name for the STREAM_ID field */
+	const STREAM_ID = 'cc_schedule.STREAM_ID';
 
 	/** the column name for the CLIP_LENGTH field */
 	const CLIP_LENGTH = 'cc_schedule.CLIP_LENGTH';
@@ -86,12 +89,12 @@ abstract class BaseCcSchedulePeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbFileId', 'DbClipLength', 'DbFadeIn', 'DbFadeOut', 'DbCueIn', 'DbCueOut', 'DbMediaItemPlayed', 'DbInstanceId', 'DbPlayoutStatus', 'DbBroadcasted', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbFileId', 'dbClipLength', 'dbFadeIn', 'dbFadeOut', 'dbCueIn', 'dbCueOut', 'dbMediaItemPlayed', 'dbInstanceId', 'dbPlayoutStatus', 'dbBroadcasted', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::FILE_ID, self::CLIP_LENGTH, self::FADE_IN, self::FADE_OUT, self::CUE_IN, self::CUE_OUT, self::MEDIA_ITEM_PLAYED, self::INSTANCE_ID, self::PLAYOUT_STATUS, self::BROADCASTED, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'FILE_ID', 'CLIP_LENGTH', 'FADE_IN', 'FADE_OUT', 'CUE_IN', 'CUE_OUT', 'MEDIA_ITEM_PLAYED', 'INSTANCE_ID', 'PLAYOUT_STATUS', 'BROADCASTED', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'file_id', 'clip_length', 'fade_in', 'fade_out', 'cue_in', 'cue_out', 'media_item_played', 'instance_id', 'playout_status', 'broadcasted', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbStarts', 'DbEnds', 'DbFileId', 'DbStreamId', 'DbClipLength', 'DbFadeIn', 'DbFadeOut', 'DbCueIn', 'DbCueOut', 'DbMediaItemPlayed', 'DbInstanceId', 'DbPlayoutStatus', 'DbBroadcasted', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbStarts', 'dbEnds', 'dbFileId', 'dbStreamId', 'dbClipLength', 'dbFadeIn', 'dbFadeOut', 'dbCueIn', 'dbCueOut', 'dbMediaItemPlayed', 'dbInstanceId', 'dbPlayoutStatus', 'dbBroadcasted', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::STARTS, self::ENDS, self::FILE_ID, self::STREAM_ID, self::CLIP_LENGTH, self::FADE_IN, self::FADE_OUT, self::CUE_IN, self::CUE_OUT, self::MEDIA_ITEM_PLAYED, self::INSTANCE_ID, self::PLAYOUT_STATUS, self::BROADCASTED, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STARTS', 'ENDS', 'FILE_ID', 'STREAM_ID', 'CLIP_LENGTH', 'FADE_IN', 'FADE_OUT', 'CUE_IN', 'CUE_OUT', 'MEDIA_ITEM_PLAYED', 'INSTANCE_ID', 'PLAYOUT_STATUS', 'BROADCASTED', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'starts', 'ends', 'file_id', 'stream_id', 'clip_length', 'fade_in', 'fade_out', 'cue_in', 'cue_out', 'media_item_played', 'instance_id', 'playout_status', 'broadcasted', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
 	);
 
 	/**
@@ -101,12 +104,12 @@ abstract class BaseCcSchedulePeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbFileId' => 3, 'DbClipLength' => 4, 'DbFadeIn' => 5, 'DbFadeOut' => 6, 'DbCueIn' => 7, 'DbCueOut' => 8, 'DbMediaItemPlayed' => 9, 'DbInstanceId' => 10, 'DbPlayoutStatus' => 11, 'DbBroadcasted' => 12, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbFileId' => 3, 'dbClipLength' => 4, 'dbFadeIn' => 5, 'dbFadeOut' => 6, 'dbCueIn' => 7, 'dbCueOut' => 8, 'dbMediaItemPlayed' => 9, 'dbInstanceId' => 10, 'dbPlayoutStatus' => 11, 'dbBroadcasted' => 12, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::FILE_ID => 3, self::CLIP_LENGTH => 4, self::FADE_IN => 5, self::FADE_OUT => 6, self::CUE_IN => 7, self::CUE_OUT => 8, self::MEDIA_ITEM_PLAYED => 9, self::INSTANCE_ID => 10, self::PLAYOUT_STATUS => 11, self::BROADCASTED => 12, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'FILE_ID' => 3, 'CLIP_LENGTH' => 4, 'FADE_IN' => 5, 'FADE_OUT' => 6, 'CUE_IN' => 7, 'CUE_OUT' => 8, 'MEDIA_ITEM_PLAYED' => 9, 'INSTANCE_ID' => 10, 'PLAYOUT_STATUS' => 11, 'BROADCASTED' => 12, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'file_id' => 3, 'clip_length' => 4, 'fade_in' => 5, 'fade_out' => 6, 'cue_in' => 7, 'cue_out' => 8, 'media_item_played' => 9, 'instance_id' => 10, 'playout_status' => 11, 'broadcasted' => 12, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbStarts' => 1, 'DbEnds' => 2, 'DbFileId' => 3, 'DbStreamId' => 4, 'DbClipLength' => 5, 'DbFadeIn' => 6, 'DbFadeOut' => 7, 'DbCueIn' => 8, 'DbCueOut' => 9, 'DbMediaItemPlayed' => 10, 'DbInstanceId' => 11, 'DbPlayoutStatus' => 12, 'DbBroadcasted' => 13, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbStarts' => 1, 'dbEnds' => 2, 'dbFileId' => 3, 'dbStreamId' => 4, 'dbClipLength' => 5, 'dbFadeIn' => 6, 'dbFadeOut' => 7, 'dbCueIn' => 8, 'dbCueOut' => 9, 'dbMediaItemPlayed' => 10, 'dbInstanceId' => 11, 'dbPlayoutStatus' => 12, 'dbBroadcasted' => 13, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::STARTS => 1, self::ENDS => 2, self::FILE_ID => 3, self::STREAM_ID => 4, self::CLIP_LENGTH => 5, self::FADE_IN => 6, self::FADE_OUT => 7, self::CUE_IN => 8, self::CUE_OUT => 9, self::MEDIA_ITEM_PLAYED => 10, self::INSTANCE_ID => 11, self::PLAYOUT_STATUS => 12, self::BROADCASTED => 13, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STARTS' => 1, 'ENDS' => 2, 'FILE_ID' => 3, 'STREAM_ID' => 4, 'CLIP_LENGTH' => 5, 'FADE_IN' => 6, 'FADE_OUT' => 7, 'CUE_IN' => 8, 'CUE_OUT' => 9, 'MEDIA_ITEM_PLAYED' => 10, 'INSTANCE_ID' => 11, 'PLAYOUT_STATUS' => 12, 'BROADCASTED' => 13, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'starts' => 1, 'ends' => 2, 'file_id' => 3, 'stream_id' => 4, 'clip_length' => 5, 'fade_in' => 6, 'fade_out' => 7, 'cue_in' => 8, 'cue_out' => 9, 'media_item_played' => 10, 'instance_id' => 11, 'playout_status' => 12, 'broadcasted' => 13, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
 	);
 
 	/**
@@ -182,6 +185,7 @@ abstract class BaseCcSchedulePeer {
 			$criteria->addSelectColumn(CcSchedulePeer::STARTS);
 			$criteria->addSelectColumn(CcSchedulePeer::ENDS);
 			$criteria->addSelectColumn(CcSchedulePeer::FILE_ID);
+			$criteria->addSelectColumn(CcSchedulePeer::STREAM_ID);
 			$criteria->addSelectColumn(CcSchedulePeer::CLIP_LENGTH);
 			$criteria->addSelectColumn(CcSchedulePeer::FADE_IN);
 			$criteria->addSelectColumn(CcSchedulePeer::FADE_OUT);
@@ -196,6 +200,7 @@ abstract class BaseCcSchedulePeer {
 			$criteria->addSelectColumn($alias . '.STARTS');
 			$criteria->addSelectColumn($alias . '.ENDS');
 			$criteria->addSelectColumn($alias . '.FILE_ID');
+			$criteria->addSelectColumn($alias . '.STREAM_ID');
 			$criteria->addSelectColumn($alias . '.CLIP_LENGTH');
 			$criteria->addSelectColumn($alias . '.FADE_IN');
 			$criteria->addSelectColumn($alias . '.FADE_OUT');
@@ -591,6 +596,56 @@ abstract class BaseCcSchedulePeer {
 
 
 	/**
+	 * Returns the number of rows matching criteria, joining the related CcWebstream table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcWebstream(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcSchedulePeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcSchedulePeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
 	 * Selects a collection of CcSchedule objects pre-filled with their CcShowInstances objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -723,6 +778,72 @@ abstract class BaseCcSchedulePeer {
 
 
 	/**
+	 * Selects a collection of CcSchedule objects pre-filled with their CcWebstream objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcSchedule objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcWebstream(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcSchedulePeer::addSelectColumns($criteria);
+		$startcol = (CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS);
+		CcWebstreamPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcSchedulePeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcSchedulePeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcSchedulePeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcSchedulePeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcWebstreamPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcWebstreamPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcWebstreamPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcWebstreamPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcSchedule) to $obj2 (CcWebstream)
+				$obj2->addCcSchedule($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
 	 * Returns the number of rows matching criteria, joining all related tables
 	 *
 	 * @param      Criteria $criteria
@@ -761,6 +882,8 @@ abstract class BaseCcSchedulePeer {
 		$criteria->addJoin(CcSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
 		$criteria->addJoin(CcSchedulePeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -801,9 +924,14 @@ abstract class BaseCcSchedulePeer {
 		CcFilesPeer::addSelectColumns($criteria);
 		$startcol4 = $startcol3 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
 
+		CcWebstreamPeer::addSelectColumns($criteria);
+		$startcol5 = $startcol4 + (CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS);
+
 		$criteria->addJoin(CcSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
 		$criteria->addJoin(CcSchedulePeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -858,6 +986,24 @@ abstract class BaseCcSchedulePeer {
 				$obj3->addCcSchedule($obj1);
 			} // if joined row not null
 
+			// Add objects for joined CcWebstream rows
+
+			$key4 = CcWebstreamPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+			if ($key4 !== null) {
+				$obj4 = CcWebstreamPeer::getInstanceFromPool($key4);
+				if (!$obj4) {
+
+					$cls = CcWebstreamPeer::getOMClass(false);
+
+					$obj4 = new $cls();
+					$obj4->hydrate($row, $startcol4);
+					CcWebstreamPeer::addInstanceToPool($obj4, $key4);
+				} // if obj4 loaded
+
+				// Add the $obj1 (CcSchedule) to the collection in $obj4 (CcWebstream)
+				$obj4->addCcSchedule($obj1);
+			} // if joined row not null
+
 			$results[] = $obj1;
 		}
 		$stmt->closeCursor();
@@ -902,6 +1048,8 @@ abstract class BaseCcSchedulePeer {
 		}
 	
 		$criteria->addJoin(CcSchedulePeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -953,6 +1101,60 @@ abstract class BaseCcSchedulePeer {
 	
 		$criteria->addJoin(CcSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
 
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcWebstream table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcWebstream(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcSchedulePeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcSchedulePeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$criteria->addJoin(CcSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -992,7 +1194,12 @@ abstract class BaseCcSchedulePeer {
 		CcFilesPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
 
+		CcWebstreamPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS);
+
 		$criteria->addJoin(CcSchedulePeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
 
 
 		$stmt = BasePeer::doSelect($criteria, $con);
@@ -1031,6 +1238,25 @@ abstract class BaseCcSchedulePeer {
 
 			} // if joined row is not null
 
+				// Add objects for joined CcWebstream rows
+
+				$key3 = CcWebstreamPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+				if ($key3 !== null) {
+					$obj3 = CcWebstreamPeer::getInstanceFromPool($key3);
+					if (!$obj3) {
+	
+						$cls = CcWebstreamPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcWebstreamPeer::addInstanceToPool($obj3, $key3);
+				} // if $obj3 already loaded
+
+				// Add the $obj1 (CcSchedule) to the collection in $obj3 (CcWebstream)
+				$obj3->addCcSchedule($obj1);
+
+			} // if joined row is not null
+
 			$results[] = $obj1;
 		}
 		$stmt->closeCursor();
@@ -1065,7 +1291,12 @@ abstract class BaseCcSchedulePeer {
 		CcShowInstancesPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
 
+		CcWebstreamPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS);
+
 		$criteria->addJoin(CcSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::STREAM_ID, CcWebstreamPeer::ID, $join_behavior);
 
 
 		$stmt = BasePeer::doSelect($criteria, $con);
@@ -1101,6 +1332,122 @@ abstract class BaseCcSchedulePeer {
 
 				// Add the $obj1 (CcSchedule) to the collection in $obj2 (CcShowInstances)
 				$obj2->addCcSchedule($obj1);
+
+			} // if joined row is not null
+
+				// Add objects for joined CcWebstream rows
+
+				$key3 = CcWebstreamPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+				if ($key3 !== null) {
+					$obj3 = CcWebstreamPeer::getInstanceFromPool($key3);
+					if (!$obj3) {
+	
+						$cls = CcWebstreamPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcWebstreamPeer::addInstanceToPool($obj3, $key3);
+				} // if $obj3 already loaded
+
+				// Add the $obj1 (CcSchedule) to the collection in $obj3 (CcWebstream)
+				$obj3->addCcSchedule($obj1);
+
+			} // if joined row is not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Selects a collection of CcSchedule objects pre-filled with all related objects except CcWebstream.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcSchedule objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcWebstream(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcSchedulePeer::addSelectColumns($criteria);
+		$startcol2 = (CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcShowInstancesPeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcFilesPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcSchedulePeer::INSTANCE_ID, CcShowInstancesPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcSchedulePeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcSchedulePeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcSchedulePeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcSchedulePeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcSchedulePeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+				// Add objects for joined CcShowInstances rows
+
+				$key2 = CcShowInstancesPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+				if ($key2 !== null) {
+					$obj2 = CcShowInstancesPeer::getInstanceFromPool($key2);
+					if (!$obj2) {
+	
+						$cls = CcShowInstancesPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcShowInstancesPeer::addInstanceToPool($obj2, $key2);
+				} // if $obj2 already loaded
+
+				// Add the $obj1 (CcSchedule) to the collection in $obj2 (CcShowInstances)
+				$obj2->addCcSchedule($obj1);
+
+			} // if joined row is not null
+
+				// Add objects for joined CcFiles rows
+
+				$key3 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+				if ($key3 !== null) {
+					$obj3 = CcFilesPeer::getInstanceFromPool($key3);
+					if (!$obj3) {
+	
+						$cls = CcFilesPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcFilesPeer::addInstanceToPool($obj3, $key3);
+				} // if $obj3 already loaded
+
+				// Add the $obj1 (CcSchedule) to the collection in $obj3 (CcFiles)
+				$obj3->addCcSchedule($obj1);
 
 			} // if joined row is not null
 

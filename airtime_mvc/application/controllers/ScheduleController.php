@@ -117,6 +117,17 @@ class ScheduleController extends Zend_Controller_Action
         $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
         $this->view->events = $events;
     }
+    
+    public function getCurrentShowAction()
+    {
+        $currentShow = Application_Model_Show::GetCurrentShow();
+        if (!empty($currentShow)) {
+            $this->view->si_id = $currentShow[0]["instance_id"];
+            $this->view->current_show = true;
+        } else {
+            $this->view->current_show = false;
+        }
+    }
 
     public function moveShowAction()
     {

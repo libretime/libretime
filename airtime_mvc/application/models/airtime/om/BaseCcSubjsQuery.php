@@ -38,10 +38,6 @@
  * @method     CcSubjsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcSubjsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcSubjsQuery leftJoinCcAccess($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcAccess relation
- * @method     CcSubjsQuery rightJoinCcAccess($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcAccess relation
- * @method     CcSubjsQuery innerJoinCcAccess($relationAlias = '') Adds a INNER JOIN clause to the query using the CcAccess relation
- *
  * @method     CcSubjsQuery leftJoinCcFiles($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcFiles relation
  * @method     CcSubjsQuery rightJoinCcFiles($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method     CcSubjsQuery innerJoinCcFiles($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFiles relation
@@ -519,70 +515,6 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcSubjsPeer::LOGIN_ATTEMPTS, $dbLoginAttempts, $comparison);
-	}
-
-	/**
-	 * Filter the query by a related CcAccess object
-	 *
-	 * @param     CcAccess $ccAccess  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcSubjsQuery The current query, for fluid interface
-	 */
-	public function filterByCcAccess($ccAccess, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcSubjsPeer::ID, $ccAccess->getOwner(), $comparison);
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the CcAccess relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcSubjsQuery The current query, for fluid interface
-	 */
-	public function joinCcAccess($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcAccess');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcAccess');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the CcAccess relation CcAccess object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcAccessQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcAccessQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
-	{
-		return $this
-			->joinCcAccess($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcAccess', 'CcAccessQuery');
 	}
 
 	/**
