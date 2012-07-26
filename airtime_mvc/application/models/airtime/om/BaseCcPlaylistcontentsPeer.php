@@ -26,7 +26,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	const TM_CLASS = 'CcPlaylistcontentsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 10;
+	const NUM_COLUMNS = 11;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,6 +42,9 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 	/** the column name for the BLOCK_ID field */
 	const BLOCK_ID = 'cc_playlistcontents.BLOCK_ID';
+
+	/** the column name for the TYPE field */
+	const TYPE = 'cc_playlistcontents.TYPE';
 
 	/** the column name for the POSITION field */
 	const POSITION = 'cc_playlistcontents.POSITION';
@@ -77,12 +80,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPlaylistId', 'DbFileId', 'DbBlockId', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPlaylistId', 'dbFileId', 'dbBlockId', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::PLAYLIST_ID, self::FILE_ID, self::BLOCK_ID, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'FILE_ID', 'BLOCK_ID', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'file_id', 'block_id', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPlaylistId', 'DbFileId', 'DbBlockId', 'DbType', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPlaylistId', 'dbFileId', 'dbBlockId', 'dbType', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::PLAYLIST_ID, self::FILE_ID, self::BLOCK_ID, self::TYPE, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'FILE_ID', 'BLOCK_ID', 'TYPE', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'file_id', 'block_id', 'type', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
 	);
 
 	/**
@@ -92,12 +95,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPlaylistId' => 1, 'DbFileId' => 2, 'DbBlockId' => 3, 'DbPosition' => 4, 'DbCliplength' => 5, 'DbCuein' => 6, 'DbCueout' => 7, 'DbFadein' => 8, 'DbFadeout' => 9, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPlaylistId' => 1, 'dbFileId' => 2, 'dbBlockId' => 3, 'dbPosition' => 4, 'dbCliplength' => 5, 'dbCuein' => 6, 'dbCueout' => 7, 'dbFadein' => 8, 'dbFadeout' => 9, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::PLAYLIST_ID => 1, self::FILE_ID => 2, self::BLOCK_ID => 3, self::POSITION => 4, self::CLIPLENGTH => 5, self::CUEIN => 6, self::CUEOUT => 7, self::FADEIN => 8, self::FADEOUT => 9, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'FILE_ID' => 2, 'BLOCK_ID' => 3, 'POSITION' => 4, 'CLIPLENGTH' => 5, 'CUEIN' => 6, 'CUEOUT' => 7, 'FADEIN' => 8, 'FADEOUT' => 9, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'file_id' => 2, 'block_id' => 3, 'position' => 4, 'cliplength' => 5, 'cuein' => 6, 'cueout' => 7, 'fadein' => 8, 'fadeout' => 9, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPlaylistId' => 1, 'DbFileId' => 2, 'DbBlockId' => 3, 'DbType' => 4, 'DbPosition' => 5, 'DbCliplength' => 6, 'DbCuein' => 7, 'DbCueout' => 8, 'DbFadein' => 9, 'DbFadeout' => 10, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPlaylistId' => 1, 'dbFileId' => 2, 'dbBlockId' => 3, 'dbType' => 4, 'dbPosition' => 5, 'dbCliplength' => 6, 'dbCuein' => 7, 'dbCueout' => 8, 'dbFadein' => 9, 'dbFadeout' => 10, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::PLAYLIST_ID => 1, self::FILE_ID => 2, self::BLOCK_ID => 3, self::TYPE => 4, self::POSITION => 5, self::CLIPLENGTH => 6, self::CUEIN => 7, self::CUEOUT => 8, self::FADEIN => 9, self::FADEOUT => 10, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'FILE_ID' => 2, 'BLOCK_ID' => 3, 'TYPE' => 4, 'POSITION' => 5, 'CLIPLENGTH' => 6, 'CUEIN' => 7, 'CUEOUT' => 8, 'FADEIN' => 9, 'FADEOUT' => 10, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'file_id' => 2, 'block_id' => 3, 'type' => 4, 'position' => 5, 'cliplength' => 6, 'cuein' => 7, 'cueout' => 8, 'fadein' => 9, 'fadeout' => 10, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
 	);
 
 	/**
@@ -173,6 +176,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::PLAYLIST_ID);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::FILE_ID);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::BLOCK_ID);
+			$criteria->addSelectColumn(CcPlaylistcontentsPeer::TYPE);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::POSITION);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CLIPLENGTH);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CUEIN);
@@ -184,6 +188,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->addSelectColumn($alias . '.PLAYLIST_ID');
 			$criteria->addSelectColumn($alias . '.FILE_ID');
 			$criteria->addSelectColumn($alias . '.BLOCK_ID');
+			$criteria->addSelectColumn($alias . '.TYPE');
 			$criteria->addSelectColumn($alias . '.POSITION');
 			$criteria->addSelectColumn($alias . '.CLIPLENGTH');
 			$criteria->addSelectColumn($alias . '.CUEIN');
