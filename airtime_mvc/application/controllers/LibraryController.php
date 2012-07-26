@@ -72,6 +72,9 @@ class LibraryController extends Zend_Controller_Action
                 $obj = new Application_Model_Playlist($id);
             } else {
                 $obj = new Application_Model_Block($id);
+                if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
+                    $menu["pl_add"] = array("name"=> "Add to ".ucfirst($this->obj_sess->type), "icon" => "add-playlist", "icon" => "copy");
+                }
             }
             
             if ($this->obj_sess->id !== $id && $screen == "playlist") {
