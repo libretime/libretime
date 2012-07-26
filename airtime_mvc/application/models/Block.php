@@ -903,11 +903,11 @@ class Application_Model_Block
     
         foreach ($data['criteria'] as $key=>$d){
             $error = array();
-            $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
             // check for not selected select box
             if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
                 $error[] =  "You must select Criteria and Modifier";
             } else {
+                $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
                 // validation on type of column
                 if ($d['sp_criteria_field'] == 'length') {
                     if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {

@@ -78,7 +78,7 @@ class CcBlock extends BaseCcBlock {
 
     /**
      * Computes the value of the aggregate column length
-     * Overridden to provide a default of 00:00:00 if the playlist is empty.
+     * Overridden to provide a default of 00:00:00 if the block is empty.
      *
      * @param PropelPDO $con A connection object
      *
@@ -86,7 +86,7 @@ class CcBlock extends BaseCcBlock {
      */
     public function computeDbLength(PropelPDO $con)
     {
-        $stmt = $con->prepare('SELECT SUM(cliplength) FROM "cc_playlistcontents" WHERE cc_playlistcontents.PLAYLIST_ID = :p1');
+        $stmt = $con->prepare('SELECT SUM(cliplength) FROM "cc_blockcontents" WHERE cc_blockcontents.BLOCK_ID = :p1');
         $stmt->bindValue(':p1', $this->getDbId());
         $stmt->execute();
         $length = $stmt->fetchColumn();

@@ -40,7 +40,7 @@ class CcBlockcontents extends BaseCcBlockcontents {
      *
      * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
      *
-     * @return CcPlaylistcontents The current object (for fluent API support)
+     * @return CcBlockcontents The current object (for fluent API support)
      */
     public function setDbFadein($v)
     {
@@ -59,7 +59,7 @@ class CcBlockcontents extends BaseCcBlockcontents {
         }
     
         $this->fadein = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
+        $this->modifiedColumns[] = CcBlockcontentsPeer::FADEIN;
     
         return $this;
     } // setDbFadein()
@@ -68,7 +68,7 @@ class CcBlockcontents extends BaseCcBlockcontents {
      *
      * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
      *
-     * @return CcPlaylistcontents The current object (for fluent API support)
+     * @return CcBlockcontents The current object (for fluent API support)
      */
     public function setDbFadeout($v)
     {
@@ -87,7 +87,7 @@ class CcBlockcontents extends BaseCcBlockcontents {
         }
     
         $this->fadeout = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
+        $this->modifiedColumns[] = CcBlockcontentsPeer::FADEOUT;
     
         return $this;
     } // setDbFadeout()
