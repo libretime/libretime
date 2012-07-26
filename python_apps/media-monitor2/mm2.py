@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
-import pyinotify
 import sys
 import os
 
-from media.monitor.listeners import OrganizeListener, StoreWatchListener
-from media.monitor.organizer import Organizer
-from media.monitor.events import PathChannel
-from media.monitor.watchersyncer import WatchSyncer
-from media.monitor.handler import ProblemFileHandler
+from media.monitor.manager import Manager
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.log import get_logger
 from media.monitor.config import MMConfig
@@ -15,6 +10,7 @@ from media.monitor.toucher import ToucherThread
 from media.monitor.syncdb import SyncDB
 from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
+from media.monitor.watchersyncer import WatchSyncer
 import media.monitor.pure as mmp
 
 from api_clients import api_client as apc
@@ -34,7 +30,7 @@ from api_clients import api_client as apc
 # Rewrite to use manager.Manager
 
 log = get_logger()
-global_config = u'/path/to/global/config'
+global_config = u'/home/rudi/Airtime/python_apps/media-monitor2/tests/live_client.cfg'
 # MMConfig is a proxy around ConfigObj instances. it does not allow itself
 # users of MMConfig instances to modify any config options directly through the
 # dictionary. Users of this object muse use the correct methods designated for
@@ -62,26 +58,24 @@ except Exception as e:
     log.info("Failed to set the locale for unknown reason. Logging exception.")
     log.info(str(e))
 
-#channels = {
-     #note that org channel still has a 'watch' path because that is the path
-     #it supposed to be moving the organized files to. it doesn't matter where
-     #are all the "to organize" files are coming from
-    #'org' : PathChannel('org', '/home/rudi/throwaway/fucking_around/organize'),
-    #'watch' : [],
-    #'badfile' : PathChannel('badfile', '/home/rudi/throwaway/fucking_around/problem_dir'),
-#}
+watch_syncer = WatchSyncer(signal='watch')
 
-channels = {}
-org = config['org']
-channels['org'] = PathChannel(org['signal'], org['path'])
-channels['watch'] = []
-problem = config['problem']
-channels['badfile'] = PathChannel(problem['signal'], problem['path'])
+apiclient = apc.AirtimeApiClient.create_right_config(log=log,config_path=global_config)
 
-apiclient = apc.AirtimeApiClient(log)
-# We initialize sdb before anything because we must know what our watched
-# directories are.
+
+# TODO : Need to do setup_media_monitor call somewhere around here to get
+# import/organize dirs
 sdb = SyncDB(apiclient)
+
+manager = Manager()
+
+store = apiclient.setup_media_monitor()
+store = store[u'stor']
+
+organize_dir, import_dir  = mmp.import_organize(store)
+# Order matters here:
+manager.set_store_path(import_dir)
+manager.set_organize_path(organize_dir)
 
 for watch_dir in sdb.list_directories():
     if not os.path.exists(watch_dir):
@@ -89,53 +83,19 @@ for watch_dir in sdb.list_directories():
         try: os.makedirs(watch_dir)
         except Exception as e:
             log.error("Could not create watch directory: '%s' (given from the database)." % watch_dir)
-    # We must do another existence check for the watched directory because we
-    # the creation of it could have failed above
     if os.path.exists(watch_dir):
-        channels['watch'].append(PathChannel('watch', watch_dir))
+        manager.add_watch_directory(watch_dir)
 
-# The stor directory is the first directory in the watched directories list
-org = Organizer(channel=channels['org'],target_path=channels['watch'][0].path)
-# TODO : this is wrong
-watches = [ WatchSyncer(channel=pc) for pc in channels['watch'] ]
-problem_files = ProblemFileHandler(channel=channels['badfile'])
+last_ran=config.last_ran()
+bs = Bootstrapper( db=sdb, watch_signal='watch' )
 
-# A slight incosistency here, channels['watch'] is already a list while the
-# other items are single elements. For consistency we should make all the
-# values in channels lists later on
-# we try to not share the config object as much as possible and in this case we
-# prefer to only pass the necessary last_ran parameter instead of the whole
-# object. although this might change in the future if Bootstrapper becomes more
-# complicated
-bs = Bootstrapper(db=sdb, last_ran=config.last_ran(), org_channels=[channels['org']], watch_channels=channels['watch'])
+bs.flush_all( config.last_ran() )
 
-bs.flush_organize()
-bs.flush_watch()
-
-wm = pyinotify.WatchManager()
-
-# Listeners don't care about which directory they're related to. All they care
-# about is which signal they should respond to
-o1 = OrganizeListener(signal=channels['org'].signal)
-# We are assuming that the signals are the same for each watched directory here
-o2 = StoreWatchListener(signal=channels['watch'][0].signal)
-
-notifier = pyinotify.Notifier(wm)
-wdd1 = wm.add_watch(channels['org'].path, pyinotify.ALL_EVENTS, rec=True, auto_add=True, proc_fun=o1)
-for pc in channels['watch']:
-    wdd2 = wm.add_watch(pc.path, pyinotify.ALL_EVENTS, rec=True, auto_add=True, proc_fun=o2)
-
-# After finishing the bootstrapping + the listeners we should initialize the
-# kombu message consumer to respond to messages from airtime. we prefer to
-# leave this component of the program for last because without the *Listener
-# objects we cannot properly respond to all events from airtime anyway.
-
-airtime_receiver = AirtimeMessageReceiver(config)
+airtime_receiver = AirtimeMessageReceiver(config,manager)
 airtime_notifier = AirtimeNotifier(config, airtime_receiver)
-
 # Launch the toucher that updates the last time when the script was ran every
 # n seconds.
-tt = ToucherThread(path=config['index_path'], interval=config['touch_interval'])
+tt = ToucherThread(path=config['index_path'], interval=int(config['touch_interval']))
 
-notifier.loop()
-
+pyi = manager.pyinotify()
+pyi.loop()

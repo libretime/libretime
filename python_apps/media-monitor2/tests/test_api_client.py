@@ -4,9 +4,12 @@ import os
 import sys
 from api_clients import api_client as apc
 
+
+import prepare_tests
+
 class TestApiClient(unittest.TestCase):
     def setUp(self):
-        test_path = '/home/rudi/Airtime/python_apps/media-monitor2/tests/api_client.cfg'
+        test_path = prepare_tests.real_config
         if not os.path.exists(test_path):
             print("path for config does not exist: '%s' % test_path")
             # TODO : is there a cleaner way to exit the unit testing?

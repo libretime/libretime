@@ -19,7 +19,7 @@ class RequestSync(threading.Thread,Loggable):
 
     @LazyProperty
     def apiclient(self):
-        return ac.AirtimeApiClient()
+        return ac.AirtimeApiClient.create_right_config()
 
     def run(self):
         # TODO : implement proper request sending
@@ -28,7 +28,7 @@ class RequestSync(threading.Thread,Loggable):
         # Not forget to attach the 'is_record' to any requests that are related
         # to recorded shows
         # A simplistic request would like:
-        # self.apiclient.send_media_monitor_requests(requests)
+        self.apiclient.send_media_monitor_requests(self.requests)
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
@@ -56,8 +56,9 @@ class TimeoutWatcher(threading.Thread,Loggable):
                 self.watcher.flush_events()
 
 class WatchSyncer(ReportHandler,Loggable):
-    def __init__(self, channel, chunking_number = 50, timeout=15):
-        self.channel = channel
+    def __init__(self, signal, chunking_number = 50, timeout=15):
+        self.path = '' # TODO : get rid of this attribute everywhere
+        #self.signal = signal
         self.timeout = timeout
         self.chunking_number = chunking_number
         self.__queue = []
@@ -70,12 +71,10 @@ class WatchSyncer(ReportHandler,Loggable):
         tc = TimeoutWatcher(self, timeout)
         tc.daemon = True
         tc.start()
-        super(WatchSyncer, self).__init__(signal=channel.signal)
+        super(WatchSyncer, self).__init__(signal=signal)
 
     @property
-    def target_path(self): return self.channel.path
-    @property
-    def signal(self): return self.channel.signal
+    def target_path(self): return self.path
 
     def handle(self, sender, event):
         """We implement this abstract method from ReportHandler"""

@@ -36,6 +36,10 @@ class Manager(Loggable):
         # removed...
         self.watched_directories = set([])
 
+
+    def watch_signal(self):
+        return self.watch_listener.self.signal
+
     def __remove_watch(self,path):
         if path in self.__wd_path: # only delete if dir is actually being watched
             wd = self.__wd_path[path]
@@ -94,7 +98,7 @@ class Manager(Loggable):
         # new files are added to the database. Note that we are not responsible
         # for removing songs in the old store directory from the database
         # we assume that this is already done for us.
-        self.watch_listener.flush_events(new_path)
+        # self.watch_listener.flush_events(new_path)
         self.__add_watch(new_path, self.watch_listener)
 
     store_path = property(get_store_path, set_store_path)
@@ -129,6 +133,10 @@ class Manager(Loggable):
         else:
             self.logger.info("'%s' is not being watched, hence cannot be removed"
                              % watch_dir)
+
+    def pyinotify(self):
+        return pyinotify.Notifier(self.wm)
+
 
     def loop(self):
         """

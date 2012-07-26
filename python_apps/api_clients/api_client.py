@@ -41,6 +41,19 @@ def convert_dict_value_to_utf8(md):
 
 class AirtimeApiClient():
 
+    # This is a little hacky fix so that I don't have to pass the config object
+    # everywhere where AirtimeApiClient needs to be initialized
+    default_config = None
+    # the purpose of this custom constructor is to remember which config file
+    # it was called with. So that after the initial call:
+    # AirtimeApiClient.create_right_config('/path/to/config')
+    # All subsequence calls to create_right_config will be with that config
+    # file
+    @staticmethod
+    def create_right_config(log=None,config_path=None):
+        if config_path: default_config = config_path
+        return AirtimeApiClient( logger=None, config_path=default_config )
+
     def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
         if logger is None:
             self.logger = logging

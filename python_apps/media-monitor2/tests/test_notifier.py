@@ -6,13 +6,15 @@ from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 from mock import patch, Mock
 from media.monitor.config import MMConfig
 
+from media.monitor.manager import Manager
+
 def filter_ev(d): return { i : j for i,j in d.iteritems() if i != 'event_type' }
 
 class TestReceiver(unittest.TestCase):
     def setUp(self):
         # TODO : properly mock this later
         cfg = {}
-        self.amr = AirtimeMessageReceiver(cfg)
+        self.amr = AirtimeMessageReceiver(cfg, Manager())
 
     def test_supported_messages(self):
         self.assertTrue( len(self.amr.supported_messages()) > 0 )

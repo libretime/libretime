@@ -84,6 +84,6 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
         added = 0
         for f in mmp.walk_supported(path, clean_empties=False):
             added += 1
-            dispatcher.send(signal=self.signal, sender=self, event=NewFile(f))
+            dispatcher.send( signal=self.signal, sender=self, event=NewFile(f) )
         self.logger.info( "Flushed watch directory. added = %d" % added )
 

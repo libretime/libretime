@@ -287,6 +287,11 @@ def last_modified(path):
         return os.path.getmtime(path)
     else: 0
 
+def import_organize(store):
+    """returns a tuple of organize and imported directory from an airtime store directory"""
+    store = os.path.normpath(store)
+    return os.path.join(store,'organize'), os.path.join(store,'imported')
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()

@@ -9,55 +9,48 @@ class Bootstrapper(Loggable):
     Bootstrapper reads all the info in the filesystem flushes organize
     events and watch events
     """
-    def __init__(self,db,last_ran,org_channels,watch_channels):
+    def __init__(self,db,watch_signal):
+        """
+        db - SyncDB object; small layer over api client
+        last_ran - last time the program was ran.
+        watch_signal - the signals should send events for every file on.
+        """
         self.db = db
-        self.org_channels = org_channels
-        self.watch_channels = watch_channels
-        self.last_ran = last_ran
+        self.watch_signal = watch_signal
 
-    def flush_watch(self):
+    def flush_all(self, last_ran):
         """
-        Syncs the file system into the database. Walks over deleted/new/modified files since
-        the last run in mediamonitor and sends requests to make the database consistent with
-        file system
+        bootstrap every single watched directory. only useful at startup
         """
-        # Songs is a dictionary where every key is the watched the directory
-        # and the value is a set with all the files in that directory.
-        songs = {}
+        for d in self.db.list_directories():
+            self.flush_watch(d, last_ran)
+
+    def flush_watch(self, directory, last_ran):
+        """
+        flush a single watch/imported directory. useful when wanting to to rescan,
+        or add a watched/imported directory
+        """
+        songs = set([])
         modded = deleted = 0
-        signal_by_path = dict( (pc.signal, pc.path) for pc in self.watch_channels )
-        for pc in self.watch_channels:
-            songs[ pc.path ] = set()
-            for f in mmp.walk_supported(pc.path, clean_empties=False):
-                songs[ pc.path ].add(f)
-                # We decide whether to update a file's metadata by checking
-                # its system modification date. If it's above the value
-                # self.last_ran which is passed to us that means media monitor
-                # wasn't aware when this changes occured in the filesystem
-                # hence it will send the correct events to sync the database
-                # with the filesystem
-                if os.path.getmtime(f) > self.last_ran:
-                    modded += 1
-                    dispatcher.send(signal=pc.signal, sender=self, event=DeleteFile(f))
-                    dispatcher.send(signal=pc.signal, sender=self, event=NewFile(f))
-        # Want all files in the database that are not in the filesystem
-        for watch_dir in self.db.list_directories():
-            db_songs = self.db.directory_get_files(watch_dir)
-            # Get all the files that are in the database but in the file
-            # system. These are the files marked for deletions
-            for to_delete in db_songs.difference(songs[watch_dir]):
-                # need the correct watch channel signal to call delete
-                if watch_dir in signal_by_path:
-                    dispatcher.send(signal=signal_by_path[watch_dir], sender=self, event=DeleteFile(f))
-                    # TODO : get rid of this, we should never delete files from
-                    # the FS even if they are deleted in airtime. Instead we
-                    # should put this file on a global ignore list until it's
-                    # re-added or something
-                    # os.remove(to_delete)
-                    deleted += 1
-                else:
-                    self.logger.error("Could not find the signal corresponding to path: '%s'" % watch_dir)
+        for f in mmp.walk_supported(directory, clean_empties=False):
+            songs.add(f)
+            # We decide whether to update a file's metadata by checking
+            # its system modification date. If it's above the value
+            # self.last_ran which is passed to us that means media monitor
+            # wasn't aware when this changes occured in the filesystem
+            # hence it will send the correct events to sync the database
+            # with the filesystem
+            if os.path.getmtime(f) > last_ran:
+                modded += 1
+                dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(f))
+                dispatcher.send(signal=self.watch_signal, sender=self, event=NewFile(f))
+        db_songs = self.db.directory_get_files(directory)
+        # Get all the files that are in the database but in the file
+        # system. These are the files marked for deletions
+        for to_delete in db_songs.difference(songs):
+            dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(f))
+            deleted += 1
         self.logger.info( "Flushed watch directories. (modified, deleted) = (%d, %d)"
-                         % (modded, deleted) )
+                        % (modded, deleted) )
 
 
