@@ -93,6 +93,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "items" => "items"
         );
         
+        $modRows = array();
+        
         // load type
         $out = CcBlockQuery::create()->findPk($p_blockId);
         if ($out->getDbType() == "static") {
@@ -113,10 +115,21 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $this->addElement($spType);
        
         // load criteria from db
-        $out = CcBlockcriteriaQuery::create()->findByDbBlockId($p_blockId);
-        
+        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($p_blockId);
         $storedCrit = array();
+        
+        /* Store the previous criteria value
+         * We will use this to check if the current row has the same
+         * critieria value. If so, we know that this is a modifier row
+         
+        $tempCrit = '';
+        $modrows = array();
+        $critRowNum = 0;
+        $modRowNum = 0;
+        $j = 0;
+        */
         foreach ($out as $crit) {
+            //$tempCrit = $crit->getDbCriteria();
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
             $value = $crit->getDbValue();
@@ -127,7 +140,19 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             }else{
                 $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
             }
+            /*
+            //check if row is a modifier row
+            if ($critRowNum > 0 && strcmp($tempCrit, $storedCrit["crit"][$critRowNum-1]["criteria"])==0) {
+                $modrows[$j][$] = $modRowNum;
+                $modRowNum++;
+            } else if ($critRowNum > 0) {
+                $modRowNum = 0;
+                $j++;
+            }
+            $critRowNum++;
+            */
         }
+        //Logging::log($modrows);
         
         $openSmartBlockOption = false;
         if (!empty($storedCrit)) {
@@ -192,6 +217,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $criteriaExtra->setAttrib('disabled', 'disabled');
             }
             $this->addElement($criteriaExtra);
+            
         }
         
         $limit = new Zend_Form_Element_Select('sp_limit_options');
@@ -239,10 +265,11 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $shuffle->setLabel('Shuffle');
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
-        
+
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartBlockOption,
-                        'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count']))
+                        'criteriasLength' => count($criteriaOptions), 'poolCount' => $files['count'], 'modRows' => $modRows))
         ));
     }
+    
 }
