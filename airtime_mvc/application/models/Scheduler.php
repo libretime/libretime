@@ -147,9 +147,53 @@ class Application_Model_Scheduler
                 $files[] = $data;
             }
         } else if ($type === "playlist") {
+            $pl = new Application_Model_Playlist($id);
+            $contents = $pl->getContents();
             
+            foreach ($contents as $plItem) {
+                if ($plItem['type'] == 0){
+                    $data["id"] = $plItem['item_id'];
+                    $data["cliplength"] = $plItem['length'];
+                    $data["cuein"] = $plItem['cuein'];
+                    $data["cueout"] = $plItem['cueout'];
+                    $data["fadein"] = $plItem['fadein'];
+                    $data["fadeout"] = $plItem['fadeout'];
+                    $data["type"] = 0;
+                    $files[] = $data;
+                } else if ($plItem['type'] == 2) {
+                    // if it's a block
+                    $bl = new Application_Model_Block($plItem['item_id']);
+                    if ($bl->isStatic()) {
+                        foreach ($bl->getContents() as $track) {
+                            $data["id"] = $track['item_id'];
+                            $data["cliplength"] = $track['length'];
+                            $data["cuein"] = $track['cuein'];
+                            $data["cueout"] = $track['cueout'];
+                            $data["fadein"] = $track['fadein'];
+                            $data["fadeout"] = $track['fadeout'];
+                            $data["type"] = 0;
+                            $files[] = $data;
+                        }
+                    } else {
+                        $dynamicFiles = $bl->getListOfFilesUnderLimit();
+                        foreach ($dynamicFiles as $fileId=>$f) {
+                            $file = CcFilesQuery::create()->findPk($fileId);
+                            if (isset($file) && $file->getDbFileExists()) {
+                                $data["id"] = $file->getDbId();
+                                $data["cliplength"] = $file->getDbLength();
+                                $data["cuein"] = "00:00:00";
+                                $data["cueout"] = "00:00:00";
+                                $data["fadein"] = "00:00:00";
+                                $data["fadeout"] = "00:00:00";
+                                $data["type"] = 0;
+                                $files[] = $data;
+                            }
+                        }
+                    }
+                }
+            }
             // find if the playslit is static or dynamic
-            $c = new Criteria();
+            /*$c = new Criteria();
             $c->add(CcPlaylistPeer::ID, $id);
             $pl = CcPlaylistPeer::doSelect($c);
             $playlistType = $pl[0]->getDbType();
@@ -166,11 +210,11 @@ class Application_Model_Scheduler
 
             if (is_null($contents)) {
                 throw new Exception("A selected Playlist does not exist!");
-            }
+            }*/
 
-            foreach ($contents as $fileId => $plItem) {
+            /*foreach ($contents as $fileId => $plItem) {
                 $data = $this->fileInfo;
-                if ($playlistType == "static"){
+                if ($plItem['type'] == 0){
                     $file = $plItem->getCcFiles($this->con);
                     if (isset($file) && $file->getDbFileExists()) {
                         $data["id"] = $plItem->getDbFileId();
@@ -189,7 +233,7 @@ class Application_Model_Scheduler
                     }
                 }
                 $files[] = $data;
-            }
+            }*/
         } else if ($type == "stream") {
             //need to return
              $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
@@ -213,7 +257,6 @@ class Application_Model_Scheduler
                 $files[] = $data;
             }
         }
-
         return $files;
     }
 

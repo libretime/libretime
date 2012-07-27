@@ -189,7 +189,7 @@ class Application_Model_Block
      */
     public function getContents($filterFiles=false)
     {
-        Logging::log("Getting contents for playlist {$this->id}");
+        Logging::log("Getting contents for block {$this->id}");
 
         $files = array();
         $sql = <<<"EOT"
@@ -197,13 +197,11 @@ class Application_Model_Block
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc 
     LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.block_id = {$this->id};
 EOT;
-        Logging::debug($sql);
         $con = Propel::getConnection();
         $rows = $con->query($sql)->fetchAll();
 
         $offset = 0;
         foreach ($rows as &$row) {
-            Logging::log($row);
 
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;

@@ -172,22 +172,26 @@ class Application_Model_Playlist
         $rows = $query->find($this->con);
          */
         $sql = <<<"EOT"
+(SELECT * FROM
 ((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
     JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
 UNION ALL
 (SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
 ws.id as item_id, (ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
-JOIN cc_webstream AS ws on pc.file_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1));
+JOIN cc_webstream AS ws on pc.stream_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1)
+UNION ALL
+(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+bl.id as item_id, bl.name as title, sbj.login as creator, 't'::boolean as exists, NULL::text as path FROM cc_playlistcontents AS pc 
+JOIN cc_block AS bl on pc.block_id=bl.id 
+JOIN cc_subjs as sbj ON bl.creator_id=sbj.id WHERE pc.playlist_id = {$this->id} AND pc.type = 2)) as temp
+ORDER BY temp.position);
 EOT;
-        Logging::debug($sql);
         $con = Propel::getConnection();
         $rows = $con->query($sql)->fetchAll();
 
         $offset = 0;
         foreach ($rows as &$row) {
-            Logging::log($row);
-
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
@@ -255,17 +259,26 @@ EOT;
         return $this->pl->getDbLength();
     }
 
-    private function insertPlaylistElement($info, $type)
+    private function insertPlaylistElement($info)
     {
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($this->id);
-        $row->setDbFileId($info["id"]);
         $row->setDbPosition($info["pos"]);
         $row->setDbCliplength($info["cliplength"]);
         $row->setDbCuein($info["cuein"]);
         $row->setDbCueout($info["cueout"]);
         $row->setDbFadein($info["fadein"]);
         $row->setDbFadeout($info["fadeout"]);
+        if ($info["ftype"] == "audioclip") {
+            $row->setDbFileId($info["id"]);
+            $type = 0;
+        } else if ($info["ftype"] == "stream") {
+            $row->setDbStreamId($info["id"]);
+            $type = 1;
+        } else if ($info["ftype"] == "block") {
+            $row->setDbBlockId($info["id"]);
+            $type = 2;
+        }
         $row->setDbType($type);
         $row->save($this->con);
         // above save result update on cc_playlist table on length column.
@@ -299,6 +312,7 @@ EOT;
                 $entry["pos"] = $pos;
                 $entry["cliplength"] = $obj->getDbLength();
                 $entry["cueout"] = $obj->getDbLength();
+                $entry["ftype"] = $objType;
             }
             return $entry;
         } else {
@@ -380,9 +394,9 @@ EOT;
             Logging::log("at position {$pos}");
  
             foreach ($p_items as $ac) {
-                $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos), 0);
+                $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
                 $pos = $pos + 1;
-                Logging::log("Adding audio file {$ac}");
+                Logging::log("Adding $ac[1] $ac[0]");
 
             }
 

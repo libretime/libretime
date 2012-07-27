@@ -212,6 +212,7 @@
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
+    <column name="stream_id" phpName="DbStreamId" type="INTEGER" required="false"/>
     <!-- What type of item is stored in the playlist. 
             0: audiotrack
             1: webstream
