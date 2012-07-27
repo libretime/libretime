@@ -5,7 +5,7 @@ from pydispatch import dispatcher
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
 from media.monitor.events import OrganizeFile, NewFile, DeleteFile
-from media.monitor.log import Loggable
+from media.monitor.log import Loggable, get_logger
 
 # We attempt to document a list of all special cases and hacks that the
 # following classes should be able to handle.
@@ -33,6 +33,25 @@ from media.monitor.log import Loggable
 # OrganizeListener('watch_signal') <= wrong
 # OrganizeListener(signal='watch_signal') <= right
 
+# This could easily be a module
+class FileMediator(object):
+    ignored_set = set([])
+    logger = get_logger()
+    @staticmethod
+    def is_ignored(path): return path in FileMediator.ignored_set
+    @staticmethod
+    def ignore(path): FileMediator.ignored_set.add(path)
+    @staticmethod
+    def unignore(path): FileMediator.ignored_set.remove(path)
+
+def mediate_ignored(fn):
+    def wrapped(self, event, *args,**kwargs):
+        if FileMediator.is_ignored(event.pathname):
+            FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
+            FileMediator.unignore(event.pathname)
+        else: fn(self, event, *args, **kwargs)
+    return wrapped
+
 class BaseListener(object):
     def my_init(self, signal):
         self.signal = signal
@@ -54,6 +73,7 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
             flushed += 1
         self.logger.info("Flushed organized directory with %d files" % flushed)
 
+    @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(event))
@@ -65,10 +85,12 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     def process_IN_MOVED_FROM(self, event): self.process_delete(event)
     def process_IN_DELETE(self,event): self.process_delete(event)
 
+    @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_create(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=NewFile(event))
 
+    @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=DeleteFile(event))

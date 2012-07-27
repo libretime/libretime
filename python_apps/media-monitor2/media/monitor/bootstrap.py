@@ -48,7 +48,7 @@ class Bootstrapper(Loggable):
         # Get all the files that are in the database but in the file
         # system. These are the files marked for deletions
         for to_delete in db_songs.difference(songs):
-            dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(f))
+            dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(to_delete))
             deleted += 1
         self.logger.info( "Flushed watch directories. (modified, deleted) = (%d, %d)"
                         % (modded, deleted) )

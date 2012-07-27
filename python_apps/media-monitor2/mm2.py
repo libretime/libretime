@@ -11,6 +11,7 @@ from media.monitor.syncdb import SyncDB
 from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 from media.monitor.watchersyncer import WatchSyncer
+from media.monitor.eventdrainer import EventDrainer
 import media.monitor.pure as mmp
 
 from api_clients import api_client as apc
@@ -93,6 +94,9 @@ bs.flush_all( config.last_ran() )
 
 airtime_receiver = AirtimeMessageReceiver(config,manager)
 airtime_notifier = AirtimeNotifier(config, airtime_receiver)
+
+ed = EventDrainer(airtime_notifier.connection,interval=1)
+
 # Launch the toucher that updates the last time when the script was ran every
 # n seconds.
 tt = ToucherThread(path=config['index_path'], interval=int(config['touch_interval']))

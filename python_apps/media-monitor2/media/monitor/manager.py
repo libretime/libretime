@@ -143,3 +143,6 @@ class Manager(Loggable):
         block until we receive pyinotify events
         """
         pyinotify.Notifier(self.wm).loop()
+        #import asyncore
+        #pyinotify.AsyncNotifier(self.wm).loop()
+        #asyncore.loop()

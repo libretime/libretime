@@ -96,6 +96,7 @@ class Application_Model_StoredFile
      */
     public function setMetadata($p_md=null)
     {
+        Logging::log("entered setMetadata");
         if (is_null($p_md)) {
             $this->setDbColMetadata();
         } else {

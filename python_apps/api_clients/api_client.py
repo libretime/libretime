@@ -428,7 +428,6 @@ class AirtimeApiClient():
             response = json.loads(response)
             return response
         except Exception, e:
-            import ipdb; ipdb.set_trace()
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
             raise

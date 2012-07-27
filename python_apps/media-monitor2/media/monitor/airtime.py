@@ -12,6 +12,7 @@ from media.monitor.log import Loggable
 from media.monitor.syncdb import SyncDB
 from media.monitor.exceptions import DirectoryIsNotListed
 from media.monitor.bootstrap import Bootstrapper
+from media.monitor.listeners import FileMediator
 
 from api_clients import api_client as apc
 
@@ -33,14 +34,13 @@ class AirtimeNotifier(Loggable):
             self.logger.info("Initializing RabbitMQ message consumer...")
             schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-            #self.connection = BrokerConnection(cfg["rabbitmq_host"], cfg["rabbitmq_user"],
-                    #cfg["rabbitmq_password"], cfg["rabbitmq_vhost"])
-            connection = BrokerConnection(cfg["rabbitmq_host"], cfg["rabbitmq_user"],
+            self.connection = BrokerConnection(cfg["rabbitmq_host"], cfg["rabbitmq_user"],
                     cfg["rabbitmq_password"], cfg["rabbitmq_vhost"])
-            channel = connection.channel()
+            channel = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
             consumer.register_callback(self.handle_message)
             consumer.consume()
+            self.logger.info("Initialized RabbitMQ consumer.")
         except Exception as e:
             self.logger.info("Failed to initialize RabbitMQ consumer")
             self.logger.error(e)
@@ -181,6 +181,7 @@ class AirtimeMessageReceiver(Loggable):
             if os.path.exists(msg['filepath']):
                 try:
                     self.logger.info("Attempting to delete '%s'" % msg['filepath'])
+                    FileMediator.ignore(msg['filepath'])
                     os.unlink(msg['filepath'])
                 except Exception as e:
                     self.logger.info("Failed to delete '%s'" % msg['filepath'])

@@ -16,6 +16,7 @@ class RequestSync(threading.Thread,Loggable):
         threading.Thread.__init__(self)
         self.watcher = watcher
         self.requests = requests
+        self.retries = 3
 
     @LazyProperty
     def apiclient(self):
@@ -28,7 +29,20 @@ class RequestSync(threading.Thread,Loggable):
         # Not forget to attach the 'is_record' to any requests that are related
         # to recorded shows
         # A simplistic request would like:
-        self.apiclient.send_media_monitor_requests([ req.pack() for req in self.requests ])
+        # TODO : recorded shows aren't flagged right
+        packed_requests = [ req.pack() for req in self.requests ]
+        # Remove when finished debugging
+        def send_one(x): self.apiclient.send_media_monitor_requests( [x] )
+        def make_req(): self.apiclient.send_media_monitor_requests( packed_requests )
+        for try_index in range(0,self.retries):
+            try: make_req()
+            except ValueError:
+                self.logger.info("Api Controller is a piece of shit... will fix once I setup the damn debugger")
+                self.logger.info("Trying again...")
+            else:
+                self.logger.info("Request worked on the '%d' try" % (try_index + 1))
+                break
+        else: self.logger.info("Failed to send request after '%d' tries..." % self.retries)
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):

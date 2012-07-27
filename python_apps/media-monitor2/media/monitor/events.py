@@ -45,14 +45,14 @@ class NewFile(BaseEvent, HasMetaData):
         packs turns an event into a media monitor request
         """
         req_dict = self.metadata.extract()
-        req_dict['mode'] = 'create'
-        req_dict['MDATA_KEY_FILEPATH'] = self.path
+        req_dict['mode'] = u'create'
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return req_dict
 
 class DeleteFile(BaseEvent):
     def __init__(self, *args, **kwargs): super(DeleteFile, self).__init__(*args, **kwargs)
     def pack(self):
         req_dict = {}
-        req_dict['mode'] = 'delete'
-        req_dict['MDATA_KEY_FILEPATH'] = self.path
+        req_dict['mode'] = u'delete'
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return req_dict

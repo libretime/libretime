@@ -468,7 +468,8 @@ class ApiController extends Zend_Controller_Action
             );
         }
         Application_Model_Preference::SetImportTimestamp();
-        Logging::log("--->Mode: $mode and file: {$md['MDATA_KEY_FILEPATH']} ");
+        Logging::log("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
+        Logging::log( $md );
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = Application_Common_OsPath::normpath($filepath);
@@ -540,7 +541,6 @@ class ApiController extends Zend_Controller_Action
             return $return_hash;
         }
         $return_hash['fileid'] = $file->getId();
-        Logging::log("Have we returned jack shit???");
         return $return_hash;
     }
 
@@ -593,7 +593,6 @@ class ApiController extends Zend_Controller_Action
                 $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid'],$dry_run=$dry);
             }
         }
-        Logging::log("returning response ><<><><><><><><");
         die( json_encode($responses) );
     }
 
