@@ -408,10 +408,8 @@ class AirtimeApiClient():
                 else:
                     # We alias the value of is_record to true or false no
                     # matter what it is based on if it's absent in the action
-                    if 'is_record' in action:
-                        self.logger.debug("Sending a 'recorded' action")
-                        action['is_record'] = 1
-                    else: action['is_record'] = 0
+                    if 'is_record' not in action:
+                        action['is_record'] = 0
                     valid_actions.append(action)
             # Note that we must prefix every key with: mdX where x is a number
             # Is there a way to format the next line a little better? The
@@ -427,6 +425,7 @@ class AirtimeApiClient():
             response = self.get_response_from_server(req)
             response = json.loads(response)
             return response
+        except ValueError: raise
         except Exception, e:
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
