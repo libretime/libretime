@@ -51,8 +51,8 @@ class AirtimeApiClient():
     # file
     @staticmethod
     def create_right_config(log=None,config_path=None):
-        if config_path: default_config = config_path
-        return AirtimeApiClient( logger=None, config_path=default_config )
+        if config_path: AirtimeApiClient.default_config = config_path
+        return AirtimeApiClient( logger=None, config_path=AirtimeApiClient.default_config )
 
     def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
         if logger is None:
@@ -403,7 +403,7 @@ class AirtimeApiClient():
             # debugging
             for action in action_list:
                 if not 'mode' in action:
-                    self.logger.debug("Warning: Sending a request element without a 'mode'")
+                    self.logger.debug("Warning: Trying to send a request element without a 'mode'")
                     self.logger.debug("Here is the the request: '%s'" % str(action) )
                 else:
                     # We alias the value of is_record to true or false no
@@ -428,6 +428,7 @@ class AirtimeApiClient():
             response = json.loads(response)
             return response
         except Exception, e:
+            import ipdb; ipdb.set_trace()
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
             raise

@@ -28,7 +28,7 @@ class RequestSync(threading.Thread,Loggable):
         # Not forget to attach the 'is_record' to any requests that are related
         # to recorded shows
         # A simplistic request would like:
-        self.apiclient.send_media_monitor_requests(self.requests)
+        self.apiclient.send_media_monitor_requests([ req.pack() for req in self.requests ])
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):

@@ -92,6 +92,7 @@ def truncate_to_length(item, length):
         else: return item
 
 class Metadata(Loggable):
+
     @staticmethod
     def write_unsafe(path,md):
         if not os.path.exists(path):
