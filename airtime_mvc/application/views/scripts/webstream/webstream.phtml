@@ -13,7 +13,7 @@
         <h4 id="ws_length"><?php echo $this->ws->getDefaultLength(); ?></h4>
     </div>
 
-    <fieldset class="toggle closed" id="fieldset-metadate_change">
+    <fieldset class="toggle" id="fieldset-metadate_change">
         <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
         <dl class="zend_form">
             <dt id="description-label"><label for="description">Description</label></dt>
@@ -23,7 +23,7 @@
          <dt id="submit-label" style="display: none;">&nbsp;</dt>
          <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
          <dd id="streamurl-element">
-             <input type="text" value="http://"/>
+             <input type="text" value="http://" size="40"/>
          </dd>
          <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
          <dd id="streamlength-element">
