@@ -10,6 +10,7 @@
  * @method     CcPlaylistcontentsQuery orderByDbPlaylistId($order = Criteria::ASC) Order by the playlist_id column
  * @method     CcPlaylistcontentsQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
  * @method     CcPlaylistcontentsQuery orderByDbBlockId($order = Criteria::ASC) Order by the block_id column
+ * @method     CcPlaylistcontentsQuery orderByDbStreamId($order = Criteria::ASC) Order by the stream_id column
  * @method     CcPlaylistcontentsQuery orderByDbType($order = Criteria::ASC) Order by the type column
  * @method     CcPlaylistcontentsQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
  * @method     CcPlaylistcontentsQuery orderByDbCliplength($order = Criteria::ASC) Order by the cliplength column
@@ -22,6 +23,7 @@
  * @method     CcPlaylistcontentsQuery groupByDbPlaylistId() Group by the playlist_id column
  * @method     CcPlaylistcontentsQuery groupByDbFileId() Group by the file_id column
  * @method     CcPlaylistcontentsQuery groupByDbBlockId() Group by the block_id column
+ * @method     CcPlaylistcontentsQuery groupByDbStreamId() Group by the stream_id column
  * @method     CcPlaylistcontentsQuery groupByDbType() Group by the type column
  * @method     CcPlaylistcontentsQuery groupByDbPosition() Group by the position column
  * @method     CcPlaylistcontentsQuery groupByDbCliplength() Group by the cliplength column
@@ -53,6 +55,7 @@
  * @method     CcPlaylistcontents findOneByDbPlaylistId(int $playlist_id) Return the first CcPlaylistcontents filtered by the playlist_id column
  * @method     CcPlaylistcontents findOneByDbFileId(int $file_id) Return the first CcPlaylistcontents filtered by the file_id column
  * @method     CcPlaylistcontents findOneByDbBlockId(int $block_id) Return the first CcPlaylistcontents filtered by the block_id column
+ * @method     CcPlaylistcontents findOneByDbStreamId(int $stream_id) Return the first CcPlaylistcontents filtered by the stream_id column
  * @method     CcPlaylistcontents findOneByDbType(int $type) Return the first CcPlaylistcontents filtered by the type column
  * @method     CcPlaylistcontents findOneByDbPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
  * @method     CcPlaylistcontents findOneByDbCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
@@ -65,6 +68,7 @@
  * @method     array findByDbPlaylistId(int $playlist_id) Return CcPlaylistcontents objects filtered by the playlist_id column
  * @method     array findByDbFileId(int $file_id) Return CcPlaylistcontents objects filtered by the file_id column
  * @method     array findByDbBlockId(int $block_id) Return CcPlaylistcontents objects filtered by the block_id column
+ * @method     array findByDbStreamId(int $stream_id) Return CcPlaylistcontents objects filtered by the stream_id column
  * @method     array findByDbType(int $type) Return CcPlaylistcontents objects filtered by the type column
  * @method     array findByDbPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
  * @method     array findByDbCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
@@ -289,6 +293,37 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcontentsPeer::BLOCK_ID, $dbBlockId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the stream_id column
+	 * 
+	 * @param     int|array $dbStreamId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
+	 */
+	public function filterByDbStreamId($dbStreamId = null, $comparison = null)
+	{
+		if (is_array($dbStreamId)) {
+			$useMinMax = false;
+			if (isset($dbStreamId['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::STREAM_ID, $dbStreamId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbStreamId['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::STREAM_ID, $dbStreamId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::STREAM_ID, $dbStreamId, $comparison);
 	}
 
 	/**

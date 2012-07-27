@@ -98,26 +98,38 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $pl = new Application_Model_Playlist($playlistID);
         $result = Array();
-
-        foreach ($pl->getContents(true) as $track) {
-
-            $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
-                              'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
-                              'element_id' => isset($track['id'])?$track['id']:"",
-                              'element_position' => isset($track['position'])?$track['position']:"",
-                            );
-            $fileExtension = pathinfo($track['path'], PATHINFO_EXTENSION);
-            if (strtolower($fileExtension) === 'mp3') {
-                $elementMap['element_mp3'] = $track['item_id'];
-            } else if (strtolower($fileExtension) === 'ogg') {
-                $elementMap['element_oga'] = $track['item_id'];
-            } else {
-                //the media was neither mp3 or ogg
+        
+        foreach ($pl->getContents(true) as $ele) {
+            if ($ele['type'] == 2) {
+                // if element is a block expand and add
+                $bl = new Application_Model_Block($ele['item_id']);
+                if ($bl->isStatic()) {
+                    foreach ($bl->getContents(true) as $track) {
+                        $result[] = $this->createElementMap($track);
+                    }
+                }
+            }else{
+                $result[] = $this->createElementMap($ele);
             }
-            $result[] = $elementMap;
         }
-
         $this->_helper->json($result);
+    }
+    
+    function createElementMap($track){
+        $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
+                'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
+                'element_id' => isset($track['id'])?$track['id']:"",
+                'element_position' => isset($track['position'])?$track['position']:"",
+        );
+        $fileExtension = pathinfo($track['path'], PATHINFO_EXTENSION);
+        if (strtolower($fileExtension) === 'mp3') {
+            $elementMap['element_mp3'] = $track['item_id'];
+        } else if (strtolower($fileExtension) === 'ogg') {
+            $elementMap['element_oga'] = $track['item_id'];
+        } else {
+            //the media was neither mp3 or ogg
+        }
+        return $elementMap;
     }
 
     /**

@@ -275,7 +275,6 @@ class Application_Model_Schedule
             %%join%%
 
         --JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
-        RIGHT JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
         JOIN cc_show AS showt ON (showt.id = si.show_id)
         )
 
@@ -289,14 +288,13 @@ class Application_Model_Schedule
             $templateSql .= " AND show_id IN (".implode(",", $p_shows).")";
         }
 
-        $templateSql .= " ORDER BY si.starts, sched.starts";
-
         $filesSql = str_replace("%%columns%%", 
             "ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
             ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists", 
             $templateSql);
         $filesSql= str_replace("%%join%%", 
-            "cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)", 
+            "cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
+             RIGHT JOIN cc_show_instances AS si ON (si.id = sched.instance_id))", 
             $filesSql);
 
         $streamSql = str_replace("%%columns%%", 
@@ -304,10 +302,11 @@ class Application_Model_Schedule
             ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", 
             $templateSql);
         $streamSql = str_replace("%%join%%", 
-            "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)", 
+            "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
+             JOIN cc_show_instances AS si ON (si.id = sched.instance_id))", 
             $streamSql);
 
-        $sql = "($filesSql) UNION ($streamSql)";
+        $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) as temp ORDER BY si_starts, sched_starts";
 
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
