@@ -195,6 +195,7 @@ def compile_liquidsoap(filename="liquidsoap"):
     sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
     sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
     sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
+    sed('%s/liquidsoap-1.0.1-full/PACKAGES' % root, '#ocaml-faad', 'ocaml-faad')
     do_run('cd %s/liquidsoap-1.0.1-full && ./bootstrap' % root)
     do_run('cd %s/liquidsoap-1.0.1-full && ./configure' % root)
     do_run('cd %s/liquidsoap-1.0.1-full && make' % root)
