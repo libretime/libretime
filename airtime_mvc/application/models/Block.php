@@ -943,9 +943,9 @@ EOT;
             }
         }// foreach
 
-        $modrowSize = count($data['modrow']);
-        for ($i = 0; $i < $modrowSize; $i++) {
-            foreach ($data['modrow'][$i] as $key=>$d){
+        $modKeys = array_keys($data['modrow']);
+        for ($i = 0; $i < count($modKeys); $i++) {
+            foreach ($data['modrow'][$modKeys[$i]] as $key=>$d){
                 $error = array();
                 // check for not selected select box
                 if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
@@ -1027,9 +1027,9 @@ EOT;
         }
         
         //insert modifier rows
-        $modrowSize = count($p_criteriaData['modrow']);
-        for ($i = 0; $i < $modrowSize; $i++) {
-            foreach( $p_criteriaData['modrow'][$i] as $d){
+        $modKeys = array_keys($p_criteriaData['modrow']);
+        for ($i = 0; $i < count($modKeys); $i++) {
+            foreach( $p_criteriaData['modrow'][$modKeys[$i]] as $d){
                 $qry = new CcBlockcriteria();
                 $qry->setDbCriteria($d['sp_criteria_field'])
                 ->setDbModifier($d['sp_criteria_modifier'])
