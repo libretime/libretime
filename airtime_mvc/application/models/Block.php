@@ -1096,6 +1096,29 @@ EOT;
         return $insertList;
     }
     
+    public static function getCriteria($p_blockId)
+    {
+        // Load criteria from db
+        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($p_blockId);
+        $storedCrit = array();
+
+        foreach ($out as $crit) {
+            $criteria = $crit->getDbCriteria();
+            $modifier = $crit->getDbModifier();
+            $value = $crit->getDbValue();
+            $extra = $crit->getDbExtra();
+        
+            if ($criteria == "limit") {
+                $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
+            } else {
+                $storedCrit["crit"][$criteria][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
+            }
+        }
+        
+        return $storedCrit;
+        
+    }
+    
     // this function return list of propel object
     public function getListofFilesMeetCriteria()
     {

@@ -40,7 +40,8 @@
                 </a>
                 <br />
             </div>
-            <?php if (isset($modRows[$i])) { for ($j = 0; $j < $this->modRows[$i]; $j++) {?>
+            
+            <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {?>
                 <div>
                     <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
                     <a class='ui-button sp-ui-button-icon-only' id='modifier_add_<?php echo $i ?>'>
@@ -54,7 +55,8 @@
                     </a>
                     <br />
                 </div>
-            <?php } }?>
+            <?php } ?>
+            
         <?php } ?>
         <br />
         </dd>
