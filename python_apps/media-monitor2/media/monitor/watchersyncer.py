@@ -74,7 +74,7 @@ class TimeoutWatcher(threading.Thread,Loggable):
                 self.watcher.flush_events()
 
 class WatchSyncer(ReportHandler,Loggable):
-    def __init__(self, signal, chunking_number = 50, timeout=15):
+    def __init__(self, signal, chunking_number = 100, timeout=15):
         self.path = '' # TODO : get rid of this attribute everywhere
         #self.signal = signal
         self.timeout = timeout

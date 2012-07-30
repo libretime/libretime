@@ -7,7 +7,7 @@ import hashlib
 from configobj import ConfigObj
 import locale
 
-from media.monitor.exceptions import FailedToSetLocale
+from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
 supported_extensions =  [u"mp3", u"ogg"]
 unicode_unknown = u'unknown'
@@ -307,6 +307,17 @@ def import_organize(store):
     """returns a tuple of organize and imported directory from an airtime store directory"""
     store = os.path.normpath(store)
     return os.path.join(store,'organize'), os.path.join(store,'imported')
+
+def create_dir(path):
+    """
+    will try and make sure that path exists at all costs. raises an exception
+    if it fails at this task.
+    """
+    if not os.path.exists(path):
+        try: os.makedirs(path)
+        except Exception as e: raise FailedToCreateDir(path, e)
+        else: # if no error occurs we still need to check that dir exists
+            if not os.path.exists: raise FailedToCreateDir(path)
 
 if __name__ == '__main__':
     import doctest

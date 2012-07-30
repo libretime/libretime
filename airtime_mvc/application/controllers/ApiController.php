@@ -561,9 +561,9 @@ class ApiController extends Zend_Controller_Action
             $info_json = json_decode($raw_json, $assoc=true);
             $recorded = $info_json["is_record"];
             unset( $info_json["is_record"] );
-            unset( $info_json["MDATA_KEY_DURATION"] );
-            unset( $info_json["MDATA_KEY_SAMPLERATE"] );
-            unset( $info_json["MDATA_KEY_BITRATE"] );
+            //unset( $info_json["MDATA_KEY_DURATION"] );
+            //unset( $info_json["MDATA_KEY_SAMPLERATE"] );
+            //unset( $info_json["MDATA_KEY_BITRATE"] );
 
             if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
                 Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");

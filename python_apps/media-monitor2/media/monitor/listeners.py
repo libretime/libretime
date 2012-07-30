@@ -4,7 +4,7 @@ from pydispatch import dispatcher
 
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
-from media.monitor.events import OrganizeFile, NewFile, DeleteFile
+from media.monitor.events import OrganizeFile, NewFile, DeleteFile, ModifyFile
 from media.monitor.log import Loggable, get_logger
 
 # We attempt to document a list of all special cases and hacks that the
@@ -85,6 +85,13 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     def process_IN_MOVED_TO(self, event): self.process_create(event)
     def process_IN_MOVED_FROM(self, event): self.process_delete(event)
     def process_IN_DELETE(self,event): self.process_delete(event)
+    def process_IN_MODIFY(self,event): self.process_modify(event)
+
+
+    @mediate_ignored
+    @IncludeOnly(mmp.supported_extensions)
+    def process_modify(self, event):
+        dispatcher.send(signal=self.signal, sender=self, event=ModifyFile(event))
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
@@ -94,7 +101,6 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
-        print(event)
         dispatcher.send(signal=self.signal, sender=self, event=DeleteFile(event))
 
     def flush_events(self, path):

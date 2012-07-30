@@ -194,3 +194,4 @@ class AirtimeMessageReceiver(Loggable):
             self.logger.info("No clippy confirmation, ignoring event. Out of curiousity we will print some details.")
             self.logger.info(msg)
 
+

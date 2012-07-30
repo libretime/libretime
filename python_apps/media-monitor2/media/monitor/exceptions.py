@@ -32,3 +32,9 @@ class DirectoryIsNotListed(Exception):
     def __init__(self,dir_id):
         self.dir_id = dir_id
     def __str__(self): return "%d was not listed as a directory in the database" % self.dir_id
+
+class FailedToCreateDir(Exception):
+    def __init__(self,path, parent):
+        self.path = path
+        self.parent = parent
+    def __str__(self): return "Failed to create path '%s'" % self.path

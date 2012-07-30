@@ -34,6 +34,8 @@ class ProblemFileHandler(Handles, Loggable):
         self.problem_dir = self.channel.path
         def dummy(sender, event, exception): self.handle(sender, event, exception)
         dispatcher.connect(dummy, signal=self.signal, sender=dispatcher.Any, weak=False)
+        mmp.create_dir( self.problem_dir )
+        self.logger.info("Initialized problem file handler. Problem dir: '%s'" % self.problem_dir)
 
     def handle(self, sender, event, exception=None):
         self.logger.info("Received problem file: '%s'. Supposed to move it to problem dir", event.path)

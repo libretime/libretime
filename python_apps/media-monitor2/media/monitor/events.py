@@ -56,3 +56,30 @@ class DeleteFile(BaseEvent):
         req_dict['mode'] = u'delete'
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return req_dict
+
+class MoveFile(BaseEvent, HasMetaData):
+    """Path argument should be the new path of the file that was moved"""
+    def __init__(self, *args, **kwargs): super(MoveFile, self).__init__(*args, **kwargs)
+    def pack(self):
+        req_dict = {}
+        req_dict['mode'] = u'moved'
+        req_dict['MDATA_KEY_MD5'] = self.metadata.extract()['MDATA_KEY_MD5']
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
+        return req_dict
+
+class DeleteDir(BaseEvent):
+    def __init__(self, *args, **kwargs): super(DeleteDir, self).__init__(*args, **kwargs)
+    def pack(self):
+        req_dict = {}
+        req_dict['mode'] = u'delete_dir'
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
+        return req_dict
+
+class ModifyFile(BaseEvent, HasMetaData):
+    def __init__(self, *args, **kwargs): super(ModifyFile, self).__init__(*args, **kwargs)
+    def pack(self):
+        req_dict = self.metadata.extract()
+        req_dict['mode'] = u'modify'
+        # path to directory that is to be removed
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
+        return req_dict

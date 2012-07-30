@@ -5,12 +5,14 @@ import os
 from media.monitor.manager import Manager
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.log import get_logger
+from media.monitor.events import PathChannel
 from media.monitor.config import MMConfig
 from media.monitor.toucher import ToucherThread
 from media.monitor.syncdb import SyncDB
-from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
+from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile, FailedToCreateDir
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 from media.monitor.watchersyncer import WatchSyncer
+from media.monitor.handler import ProblemFileHandler
 from media.monitor.eventdrainer import EventDrainer
 import media.monitor.pure as mmp
 
@@ -60,6 +62,10 @@ except Exception as e:
     log.info(str(e))
 
 watch_syncer = WatchSyncer(signal='watch')
+try:
+    problem_handler = ProblemFileHandler( PathChannel(signal='badfile',path='/srv/airtime/stor/problem_files/') )
+except FailedToCreateDir as e:
+    log.info("Failed to create problem directory: '%s'" % e.path)
 
 apiclient = apc.AirtimeApiClient.create_right_config(log=log,config_path=global_config)
 
