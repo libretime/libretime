@@ -892,12 +892,16 @@ EOT;
             $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
         }
     
+        $criteriaFieldsUsed = array();
         foreach ($data['criteria'] as $key=>$d){
             $error = array();
             // check for not selected select box
             if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
                 $error[] =  "You must select Criteria and Modifier";
+            } else if (in_array($d['sp_criteria_field'], $criteriaFieldsUsed)) {
+                $error[] = "Criteria fields can only be used once";
             } else {
+                array_push($criteriaFieldsUsed, $d['sp_criteria_field']);
                 $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
                 // validation on type of column
                 if ($d['sp_criteria_field'] == 'length') {
