@@ -67,7 +67,7 @@ class AirtimeProcessEvent(ProcessEvent):
                     res = self.api_client.remove_watched_dir(path)
                     if(res is None):
                         self.logger.info("Unable to connect to the Airtime server.")
-                    # success
+                    # sucess
                     if(res['msg']['code'] == 0):
                         self.logger.info("%s removed from watch folder list successfully.", path)
                     else:
