@@ -992,9 +992,8 @@ EOT;
                     $error[] =  "Value cannot be empty";
                 }
                 if(count($error) > 0){
-                    $errors[] = array("element"=>"sp_criteria_field_".$key."_".$i, "msg"=>$error);
+                    $errors[] = array("element"=>"sp_criteria_field_".$modKeys[$i]."_".$key, "msg"=>$error);
                 }
-                $count++;
             }//end mod foreach
         }//for loop
         
