@@ -77,7 +77,7 @@ class WatchSyncer(ReportHandler,Loggable):
     def __init__(self, signal, chunking_number = 100, timeout=15):
         self.path = '' # TODO : get rid of this attribute everywhere
         #self.signal = signal
-        self.timeout = timeout
+        self.timeout = float(timeout)
         self.chunking_number = chunking_number
         self.__queue = []
         # Even though we are not blocking on the http requests, we are still
@@ -86,7 +86,7 @@ class WatchSyncer(ReportHandler,Loggable):
         self.request_running = False
         # we don't actually use this "private" instance variable anywhere
         self.__current_thread = None
-        tc = TimeoutWatcher(self, timeout)
+        tc = TimeoutWatcher(self, self.timeout)
         tc.daemon = True
         tc.start()
         super(WatchSyncer, self).__init__(signal=signal)

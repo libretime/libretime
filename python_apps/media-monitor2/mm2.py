@@ -61,7 +61,9 @@ except Exception as e:
     log.info("Failed to set the locale for unknown reason. Logging exception.")
     log.info(str(e))
 
-watch_syncer = WatchSyncer(signal='watch')
+watch_syncer = WatchSyncer(signal='watch',
+                           chunking_number=config['chunking_number'],
+                           timeout=config['request_max_wait'])
 try:
     problem_handler = ProblemFileHandler( PathChannel(signal='badfile',path='/srv/airtime/stor/problem_files/') )
 except FailedToCreateDir as e:
