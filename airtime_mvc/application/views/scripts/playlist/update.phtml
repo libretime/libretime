@@ -2,23 +2,40 @@
 $items = $this->obj->getContents();
 if (count($items)) : ?>
 <?php $i = 0; ?>
-<?php foreach($items as $item) : ?>
+<?php foreach($items as $item) :
+$staticBlock = null;
+if ($item['type'] == 2) {
+    $bl= new Application_Model_Block($item['item_id']);
+    $staticBlock = $bl->isStatic();
+}
+?>
     <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["id"]; ?>">
         <div class="list-item-container"> 
         
-            <?php if ($item['exists']):?>
+            <?php if ($item['type'] == 0 && $item['exists']):?>
             <div class="big_play" audioFile="<?php echo $item["id"]; ?>">
                 <span class="ui-icon ui-icon-play"></span>
+            </div>
+            <?php elseif ($item['type'] == 2 && $item['exists']): ?>
+            <div class="big_play ui-state-hover">
+                <span class="ui-icon ui-icon-alert"></span>
             </div>
             <?php else: ?>
             <div class="big_play ui-state-hover">
                 <span class="ui-icon ui-icon-alert"></span>
-            </div>   
-            <?php endif; ?>   
-            
+            </div>
+            <?php endif; ?>
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $item["length"] ?></span>
+                <?php if ($item['type'] == 0) {?>
                 <span class="spl_cue ui-state-default"></span>
+                <?php } else if ($item['type'] == 2) {
+                        if ($staticBlock) {?>
+                <span class="spl_block_expand close" id="expand_block_<?php echo $item['item_id']?>">Static Block Expand</span>
+                <?php   } else { ?>
+                <span class="spl_block_expand close" id="expand_block_<?php echo $item['item_id']?>">Dynamic Block</span>
+                <?php   }
+                      } ?>
                 <span class="spl_title"><?php echo $item['track_title'] ?></span>
             </div>
             <div class="text-row">
@@ -32,7 +49,7 @@ if (count($items)) : ?>
             <?php endif; ?>
             <span id="remove_<?php echo $item["id"] ?>" class="ui-icon ui-icon-closethick"></span>
         </div>
-
+        <?php if ($item['type'] == 0) {?>
         <div id="cues_<?php echo $i ?>" class="cue-edit clearfix" style="display: none">
             <?php echo $this->partial('playlist/set-cue.phtml', array(
                 'id' => $item["id"],
@@ -40,6 +57,7 @@ if (count($items)) : ?>
                 'cueOut' => $item['cueout'],
                 'origLength' => $item['length'])); ?>
         </div>
+        <?php }?>
 
 
         <?php //create a fade editor box
@@ -50,11 +68,15 @@ if (count($items)) : ?>
             <?php echo $this->partial('playlist/set-fade.phtml', array(
                 'item1' => $items[$i]['id'],
                 'item2' => $items[$i+1]['id'],
+                'item1Type' => $items[$i]['type'],
+                'item2Type' => $items[$i+1]['type'],
                 'fadeOut' => $items[$i]['fadeout'],
                 'fadeIn' => $items[$i+1]['fadein'])); ?>
         </div>
         <?php endif; ?>
-
+        <?php if ($item['type'] == 2) {?>
+        <div id="block_<?php echo $item['item_id']?>_info"></div>
+        <?php } ?>
     </li>
     <?php $i = $i+1; ?>
 <?php endforeach; ?>

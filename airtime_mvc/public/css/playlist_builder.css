@@ -79,6 +79,16 @@
 	text-align:right;
 }
 
+.spl_block_expand {
+	float:right;
+    font-size: 9px;
+    height: 15px;
+    right: 35px;
+    width: 100px;
+    margin-top:2px;
+    cursor:pointer;
+}
+
 .spl_artist {
 	font-size:12px;
 	color:#d5d5d5;
