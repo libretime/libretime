@@ -574,7 +574,7 @@ class PlaylistController extends Zend_Controller_Action
             $out = $bl->getContents();
             $out['isStatic'] = true;
         } else {
-            $out = Application_Model_Block::getCriteria($params['id']);
+            $out = $bl->getCriteria();
             $out['isStatic'] = false;
         }
         die(json_encode($out));
