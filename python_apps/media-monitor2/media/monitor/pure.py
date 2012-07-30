@@ -140,6 +140,19 @@ def default_to(dictionary, keys, default):
         if not (k in new_d): new_d[k] = default
     return new_d
 
+def remove_whitespace(dictionary):
+    """Remove values that empty whitespace in the dictionary"""
+    nd = copy.deepcopy(dictionary)
+    bad_keys = []
+    for k,v in nd.iteritems():
+        stripped = v.strip()
+        # ghetto and maybe unnecessary
+        if stripped == '' or stripped == u'':
+            bad_keys.append(k)
+    for bad_key in bad_keys: del nd[bad_key]
+    return nd
+
+
 def normalized_metadata(md, original_path):
     """ consumes a dictionary of metadata and returns a new dictionary with the
     formatted meta data. We also consume original_path because we must set
@@ -157,6 +170,7 @@ def normalized_metadata(md, original_path):
         'MDATA_KEY_BITRATE' : lambda x: str(int(x) / 1000) + "kbps",
         # note: you don't actually need the lambda here. It's only used for clarity
         'MDATA_KEY_FILEPATH' : lambda x: os.path.normpath(x),
+        'MDATA_KEY_MIME' : lambda x: x.replace('-','/')
     }
     path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
                'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
@@ -168,6 +182,7 @@ def normalized_metadata(md, original_path):
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'], default=no_extension_basename(original_path))
     new_md = default_to(dictionary=new_md, keys=path_md, default=unicode_unknown)
+    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'], default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to
     # format the MDATA_KEY_TITLE slightly differently
     # Note: I don't know why I'm doing a unicode string comparison here
@@ -182,7 +197,7 @@ def normalized_metadata(md, original_path):
         # be set to the original path of the file for airtime recorded shows
         # (before it was "organized"). We will skip this procedure for now
         # because it's not clear why it was done
-    return new_md
+    return remove_whitespace(new_md)
 
 def organized_path(old_path, root_path, normal_md):
     """

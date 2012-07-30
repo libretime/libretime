@@ -176,12 +176,13 @@ class AirtimeMessageReceiver(Loggable):
         # verify that.
         self.logger.info("Attempting to delete(maybe) '%s'" % msg['filepath'])
         if msg['delete']:
-            self.logger.info("Clippy confirmation was received, actually deleting file...")
             if os.path.exists(msg['filepath']):
                 try:
                     self.logger.info("Attempting to delete '%s'" % msg['filepath'])
                     FileMediator.ignore(msg['filepath'])
                     os.unlink(msg['filepath'])
+                    if not os.path.exists(msg['filepath']):
+                        self.logger.info("Successfully deleted: '%s'" % msg['filepath'])
                 except Exception as e:
                     self.logger.info("Failed to delete '%s'" % msg['filepath'])
                     self.logger.info("Error: " % str(e))
