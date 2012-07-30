@@ -88,8 +88,7 @@ var AIRTIME = (function(AIRTIME){
 		});
 	};
 	
-	mod.dblClickAdd = function(id, type) {
-        
+	mod.dblClickAdd = function(data, type) {
         var i,
             length,
             temp,
@@ -98,7 +97,7 @@ var AIRTIME = (function(AIRTIME){
             aData = [];
         
         //process selected files/playlists.
-        aMediaIds.push({"id": id, "type": type});
+        aMediaIds.push({"id": data.id, "type": type});
         
         $("#show_builder_table tr.cursor-selected-row").each(function(i, el){
             aData.push($(el).prev().data("aData"));
@@ -114,6 +113,7 @@ var AIRTIME = (function(AIRTIME){
             alert("Please select a cursor position on timeline.");
             return false;
         }
+        console.log(aMediaIds);
         AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
 	};
 	
