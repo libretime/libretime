@@ -46,9 +46,9 @@ airtime2mutagen = {
 # airtime metadata object will skip the attribute outright.
 
 airtime_special = {
-    "MDATA_KEY_DURATION" : lambda m: getattr(m.info, "length", 0.0),
+    "MDATA_KEY_DURATION" : lambda m: format_length(getattr(m.info, u'length', 0.0)),
     "MDATA_KEY_BITRATE" : lambda m: getattr(m.info, "bitrate", 0),
-    "MDATA_KEY_SAMPLERATE" : lambda m: format_length(getattr(m.info, "sample_rate", 0)),
+    "MDATA_KEY_SAMPLERATE" : lambda m: getattr(m.info, u'sample_rate', 0),
     "MDATA_KEY_MIME" : lambda m: m.mime[0] if len(m.mime) > 0 else u'',
 }
 mutagen2airtime = dict( (v,k) for k,v in airtime2mutagen.iteritems() if isinstance(v, str) )

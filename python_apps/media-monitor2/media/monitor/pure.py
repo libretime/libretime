@@ -145,10 +145,11 @@ def remove_whitespace(dictionary):
     nd = copy.deepcopy(dictionary)
     bad_keys = []
     for k,v in nd.iteritems():
-        stripped = v.strip()
-        # ghetto and maybe unnecessary
-        if stripped == '' or stripped == u'':
-            bad_keys.append(k)
+        if hasattr(v,'strip'):
+            stripped = v.strip()
+            # ghetto and maybe unnecessary
+            if stripped == '' or stripped == u'':
+                bad_keys.append(k)
     for bad_key in bad_keys: del nd[bad_key]
     return nd
 
