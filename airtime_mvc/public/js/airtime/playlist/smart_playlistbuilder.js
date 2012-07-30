@@ -43,6 +43,14 @@ function setSmartPlaylistEvents() {
             newRowVal = newRow.find('input[name^="sp_criteria_value"]'),
             newRowExtra = newRow.find('input[name^="sp_criteria_extra"]'),
             newRowRemove = newRow.find('a[id^="criteria_remove"]');
+
+        //remove error msg
+        if (newRow.children().hasClass('errors sp-errors')) {
+            newRow.find('span[class="errors sp-errors"]').remove();
+        }
+        
+        //hide the critieria field select box
+        newRowCrit.addClass('sp-invisible');
         
         //append modifier index to the new modifier row
         newRowCrit.attr('name', 'sp_criteria_field_'+row_index+'_'+mod_index);
@@ -65,6 +73,9 @@ function setSmartPlaylistEvents() {
         newRow.find('.criteria_add').remove();
         
         $(this).parent().after(newRow);
+        appendAddButton();
+        appendModAddButton();
+        removeButtonCheck();
     });
 	
     /********** REMOVE ROW **********/
@@ -75,7 +86,6 @@ function setSmartPlaylistEvents() {
         var list_length = list.find("div:visible").length;
         var count = list_length - curr_pos;
         var next = curr.next();
-        var add_button = form.find('a[id="criteria_add"]');
         var item_to_hide;
         
         //remove error message from current row, if any
@@ -148,8 +158,11 @@ function setSmartPlaylistEvents() {
 
         list.next().show();
         
+        reindexElements();
+        
         // always put '+' button on the last enabled row
         appendAddButton();
+        appendModAddButton();
         // remove the 'x' button if only one row is enabled
         removeButtonCheck();
     });
@@ -217,6 +230,7 @@ function setSmartPlaylistEvents() {
 
     setupUI();
     appendAddButton();
+    appendModAddButton();
     removeButtonCheck();
 }
 
@@ -227,6 +241,80 @@ function setStaticLengthHolder(lenVal) {
     static_length = lenVal;
 }
 */
+
+/* This function appends a '+' button for the last
+ * modifier row of each criteria.
+ * If there are no modifier rows, the '+' button
+ * remains at the criteria row
+ */
+function appendModAddButton() {
+    var divs = $('#smart-playlist-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
+    $.each(divs, function(i, div){
+        if (i > 0) {
+            if ($(div).find('select[name^="sp_criteria_field"]').val() == $(div).prev().find('select[name^="sp_criteria_field"]').val()) {
+             
+                $(div).prev().find('a[id^="modifier_add"]').addClass('sp-invisible');
+                if (i+1 == divs.length) {
+                    $(div).find('a[id^="modifier_add"]').removeClass('sp-invisible');
+                }
+            } else {
+                $(div).prev().find('a[id^="modifier_add"]').removeClass('sp-invisible');
+            }
+        }    
+    });
+}
+
+/* This function re-indexes all the form elements.
+ * We need to do this everytime a row gets deleted
+ */
+function reindexElements() {
+    var divs = $('#smart-playlist-form').find('div select[name^="sp_criteria_field"]').parent(),
+        index = 0,
+        modIndex = 0;
+    $.each(divs, function(i, div){
+        if (i > 0 && index < 26) {
+            /* If the current row and previous row have the same criteria field,
+             * the the current row becomes a modifier
+             */
+            if ($(div).find('select[name^="sp_criteria_field"]').val() != '0' &&
+                $(div).find('select[name^="sp_criteria_field"]').val() == $(div).prev().find('select[name^="sp_criteria_field"]').val()) {
+                
+                $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index+'_'+modIndex);
+                $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index+'_'+modIndex);
+                if (!$(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+                    $(div).find('select[name^="sp_criteria_field"]').addClass('sp-invisible');
+                }
+                $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index+'_'+modIndex);
+                $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index+'_'+modIndex);
+                $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
+                $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
+                $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index+'_'+modIndex);
+                $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index+'_'+modIndex);
+                $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
+                $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_'+index+'_'+modIndex);
+                modIndex++;
+            } else {
+                index++;
+                $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index);
+                $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index);
+                if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+                    $(div).find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
+                }
+                $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index);
+                $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index);
+                $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index);
+                $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index);
+                $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index);
+                $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index);
+                $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
+                $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_'+index);
+                modIndex = 0;
+            }
+        } else if (i > 0) {
+            $(div).remove();
+        }
+    });
+}
 
 function setupUI() {
     var playlist_type = $('input:radio[name=sp_type]:checked').val();

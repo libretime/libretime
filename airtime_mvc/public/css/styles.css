@@ -418,6 +418,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
 }
 
 /***** SMART PLAYLIST SPECIFIC STYLES BEGIN *****/
+.sp-invisible{
+    visibility: hidden;
+}
+
 .sp_input_select{
     width: 130px;
 }
@@ -1490,7 +1494,7 @@ div.errors, span.errors{
 }
 
 span.errors.sp-errors{
-    width: 466px;
+    width: 492px;
     display: block;	
 }
 

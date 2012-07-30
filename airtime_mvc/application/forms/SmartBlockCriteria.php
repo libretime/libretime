@@ -115,7 +115,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $storedCrit = Application_Model_Block::getCriteria($p_blockId);
        
         /* $modRoadMap stores the number of modifier rows each
-         * criteria row has. We need to know this so we index the
+         * criteria row has. We need to know this so we display the
          * the form elements properly
          */
         $modRowMap = array();
@@ -125,7 +125,10 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $openSmartBlockOption = true;
         }
         
-        $criteriaKeys = array_keys($storedCrit["crit"]);
+        $criteriaKeys = array();
+        if (isset($storedCrit["crit"])) {
+            $criteriaKeys = array_keys($storedCrit["crit"]);
+        }
         $numElements = count($criteriaOptions);
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
@@ -210,7 +213,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 } else if (count($storedCrit["crit"][$criteriaKeys[$i]]) > 1) {
                     $n = $j - 1;
                     $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i."_".$n);
-                    $criteria->setAttrib('class', 'input_select sp_input_select')
+                    $criteria->setAttrib('class', 'input_select sp_input_select sp-invisible')
                              ->setValue('Select criteria')
                              ->setDecorators(array('viewHelper'))
                              ->setMultiOptions($criteriaOptions)
