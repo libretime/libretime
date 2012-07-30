@@ -46,6 +46,7 @@ class FileMediator(object):
 
 def mediate_ignored(fn):
     def wrapped(self, event, *args,**kwargs):
+        event.pathname = unicode(event.pathname, "utf-8")
         if FileMediator.is_ignored(event.pathname):
             FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
             FileMediator.unignore(event.pathname)
@@ -93,6 +94,7 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
+        print(event)
         dispatcher.send(signal=self.signal, sender=self, event=DeleteFile(event))
 
     def flush_events(self, path):

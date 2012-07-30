@@ -44,7 +44,6 @@ class AirtimeNotifier(Loggable):
         except Exception as e:
             self.logger.info("Failed to initialize RabbitMQ consumer")
             self.logger.error(e)
-            raise
 
     def handle_message(self, body, message):
         """

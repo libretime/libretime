@@ -6,6 +6,7 @@ import copy
 from media.monitor.handler import ReportHandler
 from media.monitor.events import NewFile, DeleteFile
 from media.monitor.log import Loggable
+from media.monitor.listeners import FileMediator
 from media.monitor.exceptions import BadSongFile
 from media.monitor.pure import LazyProperty
 
@@ -17,6 +18,7 @@ class RequestSync(threading.Thread,Loggable):
         self.watcher = watcher
         self.requests = requests
         self.retries = 3
+        self.request_wait = 0.3
 
     @LazyProperty
     def apiclient(self):
@@ -38,11 +40,13 @@ class RequestSync(threading.Thread,Loggable):
             try: make_req()
             except ValueError:
                 self.logger.info("Api Controller is a piece of shit... will fix once I setup the damn debugger")
-                self.logger.info("Trying again...")
+                self.logger.info("Trying again after %f seconds" % self.request_wait)
+                time.sleep( self.request_wait )
             else:
                 self.logger.info("Request worked on the '%d' try" % (try_index + 1))
                 break
         else: self.logger.info("Failed to send request after '%d' tries..." % self.retries)
+        self.logger.info("Now ignoring: %d files" % len(FileMediator.ignored_set))
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):

@@ -559,6 +559,8 @@ class ApiController extends Zend_Controller_Action
             // Valid requests must start with mdXXX where XXX represents at least 1 digit
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
+            $recorded = $info_json["is_record"];
+            unset( $info_json["is_record"] );
             if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
                 Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::log( $info_json );
@@ -589,9 +591,6 @@ class ApiController extends Zend_Controller_Action
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
             // was usually called from the python api client. Now we just call it straight from the controller to
             // save the http roundtrip
-            if( $info_json['is_record'] and !array_key_exists('error', $response) ) {
-                $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid'],$dry_run=$dry);
-            }
         }
         die( json_encode($responses) );
     }
