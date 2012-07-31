@@ -542,7 +542,7 @@ var AIRTIME = (function(AIRTIME) {
                 .append('<option value="0">All</option>')
                 .append('<option value="1">Files</option>')
                 .append('<option value="2">Playlists</option>')
-                .append('<option value="3">Smart Blocks</option>')
+                .append('<option value="3">Smart Playlists</option>')
                 .end()
             .change(function(ev){
                 oTable.fnDraw();
