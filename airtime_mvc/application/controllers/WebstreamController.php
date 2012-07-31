@@ -29,19 +29,12 @@ class WebstreamController extends Zend_Controller_Action
         */
     }
 
-    public function saveAction(){
+    public function saveAction()
+    {
         $request = $this->getRequest();
 
         Application_Model_Webstream::save($request);
 
-
         $this->view->x = "hi";
-
-
-        //http://localhost/Library/contents-feed
-        // 1) Create Propel object and save these parameters
-        // 2) Make these appear in the library
-        // 3) Make Web streams + playlists draggable.
-        // 4)
     }
 }

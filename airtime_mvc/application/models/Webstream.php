@@ -2,6 +2,13 @@
 
 class Application_Model_Webstream{
 
+    private $id;
+
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
+
     public static function getName()
     {
         return "Default";
@@ -27,6 +34,48 @@ class Application_Model_Webstream{
         return "desc";
     }
 
+    public function getMetadata()
+    {
+        $webstream = CcWebstreamQuery::create()->findPK($this->id);
+        $subjs = CcSubjsQuery::create()->findPK($webstream->getDbCreatorId());
+
+        $username = $subjs->getDbLogin();
+        return array(
+            "name" => $webstream->getDbName(),
+            "length" => $webstream->getDbLength(),
+            "description" => $webstream->getDbDescription(),
+            "login"=> $username,
+            "url" => $webstream->getDbUrl(),
+        );
+
+    }
+
+    public static function deleteStreams($p_ids, $p_userId)
+    {
+        $leftOver = self::streamsNotOwnedByUser($p_ids, $p_userId);
+        if (count($leftOver) == 0) {
+            CcWebstreamQuery::create()->findPKs($p_ids)->delete();
+        } else {
+            throw new Exception("Invalid user permissions");
+        }
+    }
+    
+    // This function returns that are not owen by $p_user_id among $p_ids
+    private static function streamsNotOwnedByUser($p_ids, $p_userId)
+    {
+        $ownedByUser = CcWebstreamQuery::create()->filterByDbCreatorId($p_userId)->find()->getData();
+        $ownedStreams = array();
+        foreach ($ownedByUser as $pl) {
+            if (in_array($pl->getDbId(), $p_ids)) {
+                $ownedStreams[] = $pl->getDbId();
+            }
+        }
+        
+        $leftOvers = array_diff($p_ids, $ownedStreams);
+        return $leftOvers;
+        
+    }
+
     public static function save($request)
     {
         Logging::log($request->getParams());
@@ -47,7 +96,7 @@ class Application_Model_Webstream{
         $webstream->setDbUrl($request->getParam("url"));
 
         $webstream->setDbLength($dblength);
-        $webstream->setDbLogin($userInfo->id);
+        $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->save();

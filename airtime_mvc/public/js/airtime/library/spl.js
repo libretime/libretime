@@ -503,7 +503,9 @@ var AIRTIME = (function(AIRTIME){
             $.post(url, 
         		{format: "json", description: description, url:streamurl, length: length, name: name}, 
         		function(json){
-                    console.log(json);
+                    $("#side_playlist")
+                        .empty()
+                        .append("WHAT SHOULD I PUT HERE??!?!! :)");
 
                     /*
 		            if (json.error !== undefined){

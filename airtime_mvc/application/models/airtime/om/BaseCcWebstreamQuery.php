@@ -11,7 +11,7 @@
  * @method     CcWebstreamQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcWebstreamQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
  * @method     CcWebstreamQuery orderByDbLength($order = Criteria::ASC) Order by the length column
- * @method     CcWebstreamQuery orderByDbLogin($order = Criteria::ASC) Order by the login column
+ * @method     CcWebstreamQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcWebstreamQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method     CcWebstreamQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
  *
@@ -20,7 +20,7 @@
  * @method     CcWebstreamQuery groupByDbDescription() Group by the description column
  * @method     CcWebstreamQuery groupByDbUrl() Group by the url column
  * @method     CcWebstreamQuery groupByDbLength() Group by the length column
- * @method     CcWebstreamQuery groupByDbLogin() Group by the login column
+ * @method     CcWebstreamQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcWebstreamQuery groupByDbMtime() Group by the mtime column
  * @method     CcWebstreamQuery groupByDbUtime() Group by the utime column
  *
@@ -40,7 +40,7 @@
  * @method     CcWebstream findOneByDbDescription(string $description) Return the first CcWebstream filtered by the description column
  * @method     CcWebstream findOneByDbUrl(string $url) Return the first CcWebstream filtered by the url column
  * @method     CcWebstream findOneByDbLength(string $length) Return the first CcWebstream filtered by the length column
- * @method     CcWebstream findOneByDbLogin(string $login) Return the first CcWebstream filtered by the login column
+ * @method     CcWebstream findOneByDbCreatorId(string $creator_id) Return the first CcWebstream filtered by the creator_id column
  * @method     CcWebstream findOneByDbMtime(string $mtime) Return the first CcWebstream filtered by the mtime column
  * @method     CcWebstream findOneByDbUtime(string $utime) Return the first CcWebstream filtered by the utime column
  *
@@ -49,7 +49,7 @@
  * @method     array findByDbDescription(string $description) Return CcWebstream objects filtered by the description column
  * @method     array findByDbUrl(string $url) Return CcWebstream objects filtered by the url column
  * @method     array findByDbLength(string $length) Return CcWebstream objects filtered by the length column
- * @method     array findByDbLogin(string $login) Return CcWebstream objects filtered by the login column
+ * @method     array findByDbCreatorId(string $creator_id) Return CcWebstream objects filtered by the creator_id column
  * @method     array findByDbMtime(string $mtime) Return CcWebstream objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcWebstream objects filtered by the utime column
  *
@@ -267,25 +267,25 @@ abstract class BaseCcWebstreamQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the login column
+	 * Filter the query on the creator_id column
 	 * 
-	 * @param     string $dbLogin The value to use as filter.
+	 * @param     string $dbCreatorId The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcWebstreamQuery The current query, for fluid interface
 	 */
-	public function filterByDbLogin($dbLogin = null, $comparison = null)
+	public function filterByDbCreatorId($dbCreatorId = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($dbLogin)) {
+			if (is_array($dbCreatorId)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbLogin)) {
-				$dbLogin = str_replace('*', '%', $dbLogin);
+			} elseif (preg_match('/[\%\*]/', $dbCreatorId)) {
+				$dbCreatorId = str_replace('*', '%', $dbCreatorId);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcWebstreamPeer::LOGIN, $dbLogin, $comparison);
+		return $this->addUsingAlias(CcWebstreamPeer::CREATOR_ID, $dbCreatorId, $comparison);
 	}
 
 	/**
