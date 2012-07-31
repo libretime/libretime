@@ -521,6 +521,13 @@ var AIRTIME = (function(AIRTIME){
 	        	$fs.addClass("closed");
 	        }
 	    });
+        
+        $pl.on("click", "#webstream_cancel", function(){
+            $("#side_playlist")
+                        .empty()
+                        .append("WHAT SHOULD I PUT HERE??!?!! :)");
+            })
+        
 		$pl.on("click", "#webstream_save", function(){
             //get all fields and POST to server
             //description
