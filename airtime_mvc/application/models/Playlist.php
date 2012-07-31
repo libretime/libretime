@@ -137,7 +137,6 @@ class Application_Model_Playlist
     {
         //Logging::log($this->pl->getDbMtime($format));
         //Logging::log($this->pl);
-        Logging::log("5555");
         return $this->pl->getDbMtime($format);
     }
 
@@ -252,11 +251,29 @@ EOT;
         //done, just need to set back the formated values
         return $fade;
     }
+    
+    public function hasDynamicBlockOrWebStream(){
+        $sql = "SELECT count(*) as count FROM cc_playlistcontents as pc 
+                JOIN cc_block as bl ON pc.type=2 AND pc.block_id=bl.id AND bl.type='dynamic'
+                WHERE playlist_id={$this->id} AND (pc.type=2 OR pc.type=1)";
+        $r = $this->con->query($sql);
+        $result = $r->fetchAll(PDO::FETCH_NUM);
+        if (intval($result[0][0]) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     //aggregate column on playlistcontents cliplength column.
     public function getLength()
     {
-        return $this->pl->getDbLength();
+        Logging::log($this->hasDynamicBlockOrWebStream());
+        if ($this->hasDynamicBlockOrWebStream()){
+            return "N/A";
+        } else {
+            return $this->pl->getDbLength();
+        }
     }
 
     private function insertPlaylistElement($info)

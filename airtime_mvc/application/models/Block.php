@@ -242,10 +242,20 @@ EOT;
         return $fade;
     }
     
-    //aggregate column on blockcontents cliplength column.
+    // function return "N/A" if dynamic
     public function getLength()
     {
-        return $this->block->getDbLength();
+        $length = $this->block->getDbLength();
+        $length = $length == null ? "N/A" : $length;
+        return $length;
+    }
+    
+    // 
+    public function getStaticLength(){
+        $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id={$this->id}";
+        $r = $this->con->query($sql);
+        $result = $r->fetchAll(PDO::FETCH_NUM);
+        return $result[0][0];
     }
     
     private function insertBlockElement($info)
@@ -849,6 +859,12 @@ EOT;
         CcBlockQuery::create()->findPk($this->id)->setDbType($p_blockType)->save();
     }
     
+    public function setLength($value){
+        $this->block->setDbLength($value);
+        $this->block->save($this->con);
+    }
+    
+    
     /**
      * Saves smart block criteria
      * @param array $p_criteria
@@ -1004,14 +1020,26 @@ EOT;
         }//for loop
         
         $result = count($errors) > 0 ? 1 :0;
+        $files["count"] = 0;
+        $output = array("result"=>$result, "errors"=>$errors);
         if ($result == 0) {
             $this->storeCriteriaIntoDb($data);
+            //get number of files that meet the criteria
+            $files = $this->getListofFilesMeetCriteria();
+            $output['poolCount'] = $files["count"];
+            // if the block is dynamic, put null to the length
+            // as it cannot be calculated
+            if ($blockType == 'dynamic') {
+                $this->setLength(null);
+                $output['blockLength'] = "N/A";
+            } else {
+                $length = $this->getStaticLength();
+                $this->setLength($length);
+                $formatter = new LengthFormatter($length);
+                $output['blockLength'] = $formatter->format();
+            }
         }
-
-        //get number of files that meet the criteria
-        $files = $this->getListofFilesMeetCriteria();
-    
-        return array("result"=>$result, "errors"=>$errors, "poolCount"=>$files["count"]);
+        return $output;
     }
     
     public function storeCriteriaIntoDb($p_criteriaData){
@@ -1071,6 +1099,15 @@ EOT;
             $insertList = $this->getListOfFilesUnderLimit();
             $this->deleteAllFilesFromBlock();
             $this->addAudioClips(array_keys($insertList));
+            // update length in playlist contents.
+            $blocks = CcPlaylistcontentsQuery::create()->filterByDbBlockId($this->id)->find();
+            $blocks->getFirst();
+            $iterator = $blocks->getIterator();
+            while ($iterator->valid()) {
+                $iterator->current()->setDbClipLength($this->getLength());
+                $iterator->current()->save();
+                $iterator->next();
+            }
             return array("result"=>0);
         }
     }

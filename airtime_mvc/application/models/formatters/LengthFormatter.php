@@ -16,6 +16,9 @@ class LengthFormatter {
     }
 
     public function format() {
+        if ($this->_length == "N/A" || $this->_length == "") {
+            return "N/A";
+        }
 
         $pieces = explode(":", $this->_length);
 

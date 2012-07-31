@@ -478,6 +478,10 @@ function callback(data, type) {
                     $('#sp_pool_count_icon').removeClass('checked-icon sp-checked-icon').addClass('sp-warning-icon');  
                 }
             }
+            //redraw library table so the length gets updated
+            var dt = $('table[id="library_display"]').dataTable();
+            dt.fnStandingRedraw();
+            $('div[class="playlist_title"]').find("h4").html(json.blockLength);
         }
         setTimeout('removeSuccessMsg()', 5000);
     }

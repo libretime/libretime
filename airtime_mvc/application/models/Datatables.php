@@ -87,6 +87,14 @@ class Application_Model_Datatables
             $r = $con->query($sql);
             $r->setFetchMode(PDO::FETCH_ASSOC);
             $results = $r->fetchAll();
+            // we need to go over all items and fix length for playlist
+            // in case the playlist contains dynamic block
+            foreach ($results as &$r) {
+                if ($r['ftype'] == 'playlist') {
+                    $pl = new Application_Model_Playlist($r['id']);
+                    $r['length'] = $pl->getLength();
+                }
+            }
         } catch (Exception $e) {
             Logging::debug($e->getMessage());
         }

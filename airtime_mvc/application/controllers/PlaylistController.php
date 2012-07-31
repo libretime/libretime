@@ -199,7 +199,6 @@ class PlaylistController extends Zend_Controller_Action
                         $this->view->form = $form;
                     }
                 }
-
                 $formatter = new LengthFormatter($obj->getLength());
                 $this->view->length = $formatter->format();
                 $this->view->type = $this->obj_sess->type;
