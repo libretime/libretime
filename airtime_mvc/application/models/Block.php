@@ -1163,6 +1163,7 @@ EOT;
     
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
+                $i = 0; 
                 foreach ($crit as $criteria) {
                     $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
@@ -1180,13 +1181,18 @@ EOT;
                     }
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
                     try{
-                        $qry->filterBy($spCriteriaPhpName, $spCriteriaValue, $spCriteriaModifier);
-                        $qry->addAscendingOrderByColumn('random()');
+                        if ($i > 0) {
+                            $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                        } else {
+                            $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                        }
                     }catch (Exception $e){
                         Logging::log($e);
                     }
+                    $i++;
                 }
             }
+            $qry->addAscendingOrderByColumn('random()');
         }
         // construct limit restriction
         $limits = array();
