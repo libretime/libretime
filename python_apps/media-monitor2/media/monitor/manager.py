@@ -10,6 +10,7 @@ class Manager(Loggable):
     adding watched,store, organize directories, etc. Basically composes over
     WatchManager from pyinotify
     """
+    global_inst = None
     all_signals = set(['add_watch', 'remove_watch'])
     def __init__(self):
         self.wm = pyinotify.WatchManager()
@@ -35,7 +36,7 @@ class Manager(Loggable):
         # The following set isn't really necessary anymore. should be
         # removed...
         self.watched_directories = set([])
-
+        Manager.global_inst = self
 
     def watch_signal(self):
         return self.watch_listener.self.signal

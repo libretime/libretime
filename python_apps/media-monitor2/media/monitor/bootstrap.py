@@ -21,6 +21,8 @@ class Bootstrapper(Loggable):
     def flush_all(self, last_ran):
         """
         bootstrap every single watched directory. only useful at startup
+        note that because of the way list_directories works we also flush
+        the import directory as well I think
         """
         for d in self.db.list_directories():
             self.flush_watch(d, last_ran)

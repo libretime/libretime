@@ -65,14 +65,13 @@ sdb = SyncDB(apiclient)
 manager = Manager()
 
 store = apiclient.setup_media_monitor()
-store = store[u'stor']
-
-organize_dir, import_dir  = mmp.import_organize(store)
+organize_dir, import_dir  = mmp.import_organize(store[u'stor'])
 # Order matters here:
+# TODO : add flushing
 manager.set_store_path(import_dir)
 manager.set_organize_path(organize_dir)
 
-for watch_dir in sdb.list_directories():
+for watch_dir in store[u'watched_dirs']:
     if not os.path.exists(watch_dir):
         # Create the watch_directory here
         try: os.makedirs(watch_dir)
