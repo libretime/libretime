@@ -464,7 +464,7 @@ var AIRTIME = (function(AIRTIME) {
                             text: aData.track_title
                         },
                         ajax: {
-                            url: "/Library/get-file-meta-data",
+                            url: "/Library/get-file-metadata",
                             type: "get",
                             data: ({format: "html", id : aData.id, type: aData.ftype}),
                             success: function(data, status) {
@@ -542,7 +542,7 @@ var AIRTIME = (function(AIRTIME) {
                 .append('<option value="0">All</option>')
                 .append('<option value="1">Files</option>')
                 .append('<option value="2">Playlists</option>')
-                .append('<option value="3">Smart Blocks</option>')
+                .append('<option value="3">Smart Playlists</option>')
                 .end()
             .change(function(ev){
                 oTable.fnDraw();
@@ -614,6 +614,7 @@ var AIRTIME = (function(AIRTIME) {
                         }
                         else {
                             callback = function() {
+                                //TODO
                                 AIRTIME.playlist.fnEdit(data.id, data.ftype);
                             };
                         }

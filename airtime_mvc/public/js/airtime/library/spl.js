@@ -521,6 +521,13 @@ var AIRTIME = (function(AIRTIME){
 	        	$fs.addClass("closed");
 	        }
 	    });
+        
+        $pl.on("click", "#webstream_cancel", function(){
+            $("#side_playlist")
+                        .empty()
+                        .append("WHAT SHOULD I PUT HERE??!?!! :)");
+            })
+        
 		$pl.on("click", "#webstream_save", function(){
             //get all fields and POST to server
             //description
@@ -536,7 +543,9 @@ var AIRTIME = (function(AIRTIME){
             $.post(url, 
         		{format: "json", description: description, url:streamurl, length: length, name: name}, 
         		function(json){
-                    console.log(json);
+                    $("#side_playlist")
+                        .empty()
+                        .append("WHAT SHOULD I PUT HERE??!?!! :)");
 
                     /*
 		            if (json.error !== undefined){

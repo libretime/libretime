@@ -17,7 +17,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('delete', 'json')
                     ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
-                    ->addActionContext('get-file-meta-data', 'html')
+                    ->addActionContext('get-file-metadata', 'html')
                     ->addActionContext('upload-file-soundcloud', 'json')
                     ->addActionContext('get-upload-to-soundcloud-status', 'json')
                     ->addActionContext('set-num-entries', 'json')
@@ -91,6 +91,24 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
+        } else if ($type == "stream") {
+
+            $obj = new Application_Model_Webstream($id);
+            if (isset($this->obj_sess->id) && $screen == "playlist") {
+                if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
+                    if ($this->obj_sess->type === "playlist") {
+                        $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                    } else {
+                        $menu["pl_add"] = array("name"=> "Add to Smart Playlist", "icon" => "add-playlist", "icon" => "copy");
+                    }
+                }
+            }
+            if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
+                $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
+            }
+          
+
         }
 
         //SOUNDCLOUD MENU OPTIONS
@@ -132,6 +150,7 @@ class LibraryController extends Zend_Controller_Action
         $files = array();
         $playlists = array();
         $blocks = array();
+        $streams = array();
 
         $message = null;
 
@@ -143,18 +162,30 @@ class LibraryController extends Zend_Controller_Action
                 $playlists[] = intval($media["id"]);
             } elseif ($media["type"] === "block") {
                 $blocks[] = intval($media["id"]);
+            } elseif ($media["type"] === "stream") {
+                $streams[] = intval($media["id"]);
             }
         }
 
         try {
-            if ($media["type"] === "playlist") {
-                Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
-            } elseif ($media["type"] === "block") {
-                Application_Model_Block::deleteBlocks($blocks, $user->getId());
-            }
+            Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
         } catch (PlaylistNoPermissionException $e) {
             $this->view->message = "You don't have permission to delete selected items.";
             return;
+        }
+
+
+        try {
+            Application_Model_Block::deleteBlocks($blocks, $user->getId());
+        } catch (Exception $e) {
+            //TODO: warn user that not all blocks could be deleted. 
+        }
+
+        try {
+            Application_Model_Webstream::deleteStreams($streams, $user->getId());
+        } catch (Exception $e) {
+            //TODO: warn user that not all streams could be deleted.
+            Logging::log($e);
         }
 
         foreach ($files as $id) {
@@ -164,9 +195,8 @@ class LibraryController extends Zend_Controller_Action
             if (isset($file)) {
                 try {
                     $res = $file->delete(true);
-                }
-                //could throw a scheduled in future exception.
-                catch (Exception $e) {
+                } catch (Exception $e) {
+                    //could throw a scheduled in future exception.
                     $message = "Could not delete some scheduled files.";
                 }
             }
@@ -241,7 +271,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->form = $form;
     }
 
-    public function getFileMetaDataAction()
+    public function getFileMetadataAction()
     {
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
@@ -270,7 +300,7 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
 
-            } elseif ($type == "playlist") {
+            } else if ($type == "playlist") {
 
                 $file = new Application_Model_Playlist($id);
                 $this->view->type = $type;
@@ -281,6 +311,13 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
                 $this->view->contents = $file->getContents();
+            } else if ($type == "stream") {
+                $file = new Application_Model_Webstream($id);
+
+                $md = $file->getMetadata();
+
+                $this->view->md = $md;
+                $this->view->type = $type;
             }
         } catch (Exception $e) {
             Logging::log($e->getMessage());

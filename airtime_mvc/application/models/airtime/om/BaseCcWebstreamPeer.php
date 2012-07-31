@@ -46,8 +46,8 @@ abstract class BaseCcWebstreamPeer {
 	/** the column name for the LENGTH field */
 	const LENGTH = 'cc_webstream.LENGTH';
 
-	/** the column name for the LOGIN field */
-	const LOGIN = 'cc_webstream.LOGIN';
+	/** the column name for the CREATOR_ID field */
+	const CREATOR_ID = 'cc_webstream.CREATOR_ID';
 
 	/** the column name for the MTIME field */
 	const MTIME = 'cc_webstream.MTIME';
@@ -71,11 +71,11 @@ abstract class BaseCcWebstreamPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbDescription', 'DbUrl', 'DbLength', 'DbLogin', 'DbMtime', 'DbUtime', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbDescription', 'dbUrl', 'dbLength', 'dbLogin', 'dbMtime', 'dbUtime', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::DESCRIPTION, self::URL, self::LENGTH, self::LOGIN, self::MTIME, self::UTIME, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'DESCRIPTION', 'URL', 'LENGTH', 'LOGIN', 'MTIME', 'UTIME', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'description', 'url', 'length', 'login', 'mtime', 'utime', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbDescription', 'DbUrl', 'DbLength', 'DbCreatorId', 'DbMtime', 'DbUtime', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbDescription', 'dbUrl', 'dbLength', 'dbCreatorId', 'dbMtime', 'dbUtime', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::DESCRIPTION, self::URL, self::LENGTH, self::CREATOR_ID, self::MTIME, self::UTIME, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'DESCRIPTION', 'URL', 'LENGTH', 'CREATOR_ID', 'MTIME', 'UTIME', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'description', 'url', 'length', 'creator_id', 'mtime', 'utime', ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
@@ -86,11 +86,11 @@ abstract class BaseCcWebstreamPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbDescription' => 2, 'DbUrl' => 3, 'DbLength' => 4, 'DbLogin' => 5, 'DbMtime' => 6, 'DbUtime' => 7, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbDescription' => 2, 'dbUrl' => 3, 'dbLength' => 4, 'dbLogin' => 5, 'dbMtime' => 6, 'dbUtime' => 7, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::DESCRIPTION => 2, self::URL => 3, self::LENGTH => 4, self::LOGIN => 5, self::MTIME => 6, self::UTIME => 7, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'URL' => 3, 'LENGTH' => 4, 'LOGIN' => 5, 'MTIME' => 6, 'UTIME' => 7, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'description' => 2, 'url' => 3, 'length' => 4, 'login' => 5, 'mtime' => 6, 'utime' => 7, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbDescription' => 2, 'DbUrl' => 3, 'DbLength' => 4, 'DbCreatorId' => 5, 'DbMtime' => 6, 'DbUtime' => 7, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbDescription' => 2, 'dbUrl' => 3, 'dbLength' => 4, 'dbCreatorId' => 5, 'dbMtime' => 6, 'dbUtime' => 7, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::DESCRIPTION => 2, self::URL => 3, self::LENGTH => 4, self::CREATOR_ID => 5, self::MTIME => 6, self::UTIME => 7, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'URL' => 3, 'LENGTH' => 4, 'CREATOR_ID' => 5, 'MTIME' => 6, 'UTIME' => 7, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'description' => 2, 'url' => 3, 'length' => 4, 'creator_id' => 5, 'mtime' => 6, 'utime' => 7, ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
 	);
 
@@ -168,7 +168,7 @@ abstract class BaseCcWebstreamPeer {
 			$criteria->addSelectColumn(CcWebstreamPeer::DESCRIPTION);
 			$criteria->addSelectColumn(CcWebstreamPeer::URL);
 			$criteria->addSelectColumn(CcWebstreamPeer::LENGTH);
-			$criteria->addSelectColumn(CcWebstreamPeer::LOGIN);
+			$criteria->addSelectColumn(CcWebstreamPeer::CREATOR_ID);
 			$criteria->addSelectColumn(CcWebstreamPeer::MTIME);
 			$criteria->addSelectColumn(CcWebstreamPeer::UTIME);
 		} else {
@@ -177,7 +177,7 @@ abstract class BaseCcWebstreamPeer {
 			$criteria->addSelectColumn($alias . '.DESCRIPTION');
 			$criteria->addSelectColumn($alias . '.URL');
 			$criteria->addSelectColumn($alias . '.LENGTH');
-			$criteria->addSelectColumn($alias . '.LOGIN');
+			$criteria->addSelectColumn($alias . '.CREATOR_ID');
 			$criteria->addSelectColumn($alias . '.MTIME');
 			$criteria->addSelectColumn($alias . '.UTIME');
 		}

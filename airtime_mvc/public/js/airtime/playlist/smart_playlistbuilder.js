@@ -108,8 +108,12 @@ function setSmartPlaylistEvents() {
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
             
-            var id = curr.find('[name^="sp_criteria"]').attr('id');
-            var index = id.charAt(id.length-1); 
+            var id = curr.find('[name^="sp_criteria"]').attr('id'),
+                delimiter = '_',
+                start = 3,
+                tokens = id.split(delimiter).slice(start),
+                index = tokens.join(delimiter);
+             
             /* if current and next row have the extra criteria value
              * (for 'is in the range' modifier), then assign the next
              * extra value to current and remove that element from
@@ -162,6 +166,7 @@ function setSmartPlaylistEvents() {
         
         // always put '+' button on the last enabled row
         appendAddButton();
+        // always put '+' button on the last modifier row
         appendModAddButton();
         // remove the 'x' button if only one row is enabled
         removeButtonCheck();
@@ -219,7 +224,10 @@ function setSmartPlaylistEvents() {
     form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
         var criteria_value = $(this).next(),
             index_name = criteria_value.attr('id'),
-            index_num = index_name.charAt(index_name.length-1);
+            delimiter = '_',
+            start = 3,
+            tokens = index_name.split(delimiter).slice(start),
+            index_num = tokens.join(delimiter);
         
         if ($(this).val() == 'is in the range') {
             enableAndShowExtraField(criteria_value, index_num);
@@ -254,13 +262,14 @@ function appendModAddButton() {
             if ($(div).find('select[name^="sp_criteria_field"]').val() == $(div).prev().find('select[name^="sp_criteria_field"]').val()) {
              
                 $(div).prev().find('a[id^="modifier_add"]').addClass('sp-invisible');
-                if (i+1 == divs.length) {
-                    $(div).find('a[id^="modifier_add"]').removeClass('sp-invisible');
-                }
             } else {
                 $(div).prev().find('a[id^="modifier_add"]').removeClass('sp-invisible');
             }
-        }    
+        }
+
+        if (i+1 == divs.length) {
+            $(div).find('a[id^="modifier_add"]').removeClass('sp-invisible');
+        }
     });
 }
 

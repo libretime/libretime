@@ -56,10 +56,10 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	protected $length;
 
 	/**
-	 * The value for the login field.
+	 * The value for the creator_id field.
 	 * @var        string
 	 */
-	protected $login;
+	protected $creator_id;
 
 	/**
 	 * The value for the mtime field.
@@ -164,13 +164,13 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [login] column value.
+	 * Get the [creator_id] column value.
 	 * 
 	 * @return     string
 	 */
-	public function getDbLogin()
+	public function getDbCreatorId()
 	{
-		return $this->login;
+		return $this->creator_id;
 	}
 
 	/**
@@ -340,24 +340,24 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	} // setDbLength()
 
 	/**
-	 * Set the value of [login] column.
+	 * Set the value of [creator_id] column.
 	 * 
 	 * @param      string $v new value
 	 * @return     CcWebstream The current object (for fluent API support)
 	 */
-	public function setDbLogin($v)
+	public function setDbCreatorId($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
 		}
 
-		if ($this->login !== $v) {
-			$this->login = $v;
-			$this->modifiedColumns[] = CcWebstreamPeer::LOGIN;
+		if ($this->creator_id !== $v) {
+			$this->creator_id = $v;
+			$this->modifiedColumns[] = CcWebstreamPeer::CREATOR_ID;
 		}
 
 		return $this;
-	} // setDbLogin()
+	} // setDbCreatorId()
 
 	/**
 	 * Sets the value of [mtime] column to a normalized version of the date/time value specified.
@@ -498,7 +498,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->url = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->length = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->login = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->creator_id = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
 			$this->mtime = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
 			$this->utime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->resetModified();
@@ -842,7 +842,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 				return $this->getDbLength();
 				break;
 			case 5:
-				return $this->getDbLogin();
+				return $this->getDbCreatorId();
 				break;
 			case 6:
 				return $this->getDbMtime();
@@ -878,7 +878,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$keys[2] => $this->getDbDescription(),
 			$keys[3] => $this->getDbUrl(),
 			$keys[4] => $this->getDbLength(),
-			$keys[5] => $this->getDbLogin(),
+			$keys[5] => $this->getDbCreatorId(),
 			$keys[6] => $this->getDbMtime(),
 			$keys[7] => $this->getDbUtime(),
 		);
@@ -928,7 +928,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 				$this->setDbLength($value);
 				break;
 			case 5:
-				$this->setDbLogin($value);
+				$this->setDbCreatorId($value);
 				break;
 			case 6:
 				$this->setDbMtime($value);
@@ -965,7 +965,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		if (array_key_exists($keys[2], $arr)) $this->setDbDescription($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbUrl($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setDbLength($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbLogin($arr[$keys[5]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbCreatorId($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setDbMtime($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbUtime($arr[$keys[7]]);
 	}
@@ -984,7 +984,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcWebstreamPeer::DESCRIPTION)) $criteria->add(CcWebstreamPeer::DESCRIPTION, $this->description);
 		if ($this->isColumnModified(CcWebstreamPeer::URL)) $criteria->add(CcWebstreamPeer::URL, $this->url);
 		if ($this->isColumnModified(CcWebstreamPeer::LENGTH)) $criteria->add(CcWebstreamPeer::LENGTH, $this->length);
-		if ($this->isColumnModified(CcWebstreamPeer::LOGIN)) $criteria->add(CcWebstreamPeer::LOGIN, $this->login);
+		if ($this->isColumnModified(CcWebstreamPeer::CREATOR_ID)) $criteria->add(CcWebstreamPeer::CREATOR_ID, $this->creator_id);
 		if ($this->isColumnModified(CcWebstreamPeer::MTIME)) $criteria->add(CcWebstreamPeer::MTIME, $this->mtime);
 		if ($this->isColumnModified(CcWebstreamPeer::UTIME)) $criteria->add(CcWebstreamPeer::UTIME, $this->utime);
 
@@ -1052,7 +1052,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		$copyObj->setDbDescription($this->description);
 		$copyObj->setDbUrl($this->url);
 		$copyObj->setDbLength($this->length);
-		$copyObj->setDbLogin($this->login);
+		$copyObj->setDbCreatorId($this->creator_id);
 		$copyObj->setDbMtime($this->mtime);
 		$copyObj->setDbUtime($this->utime);
 
@@ -1281,7 +1281,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		$this->description = null;
 		$this->url = null;
 		$this->length = null;
-		$this->login = null;
+		$this->creator_id = null;
 		$this->mtime = null;
 		$this->utime = null;
 		$this->alreadyInSave = false;

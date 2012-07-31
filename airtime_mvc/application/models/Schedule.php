@@ -80,7 +80,7 @@ class Application_Model_Schedule
  WHERE ";
                 
         $fileColumns = "ft.artist_name, ft.track_title, ";
-        $streamColumns = "ws.login as artist_name, ws.name as track_title, ";
+        $streamColumns = "ws.creator_id as artist_name, ws.name as track_title, ";
         
         $fileJoin = "cc_files ft ON st.file_id = ft.id";
         $streamJoin = "cc_webstream ws ON st.stream_id = ws.id";
@@ -299,7 +299,7 @@ class Application_Model_Schedule
             $filesSql);
 
         $streamSql = str_replace("%%columns%%", 
-            "ws.name AS file_track_title, ws.login AS file_artist_name,
+            "ws.name AS file_track_title, ws.creator_id AS file_artist_name,
             ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", 
             $templateSql);
         $streamSql = str_replace("%%join%%", 

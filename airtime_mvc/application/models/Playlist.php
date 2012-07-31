@@ -178,7 +178,7 @@ class Application_Model_Playlist
     JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
 UNION ALL
 (SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-ws.id as item_id, (ws.name || ': ' || ws.url) as title, ws.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
+ws.id as item_id, (ws.name || ': ' || ws.url) as title, ws.creator_id as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
 JOIN cc_webstream AS ws on pc.stream_id=ws.id WHERE pc.playlist_id = {$this->id} AND type = 1)
 UNION ALL
 (SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
