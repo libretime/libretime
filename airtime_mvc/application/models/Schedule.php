@@ -299,7 +299,7 @@ class Application_Model_Schedule
             $filesSql);
 
         $streamSql = str_replace("%%columns%%", 
-            "ws.name AS file_track_title, ws.login AS file_artist_name,
+            "ws.name AS file_track_title, ws.creator_id AS file_artist_name,
             ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", 
             $templateSql);
         $streamSql = str_replace("%%join%%", 
