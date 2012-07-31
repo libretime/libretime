@@ -29,7 +29,7 @@
                            echo 'style=display:none';
                        } ?>>
                 <?php echo $this->element->getElement("sp_criteria_field_".$i) ?>
-                <a class='ui-button sp-ui-button-icon-only' id='modifier_add_<?php echo $i ?>'>
+                <a class='ui-button sp-ui-button-icon-only sp_no_margins' id='modifier_add_<?php echo $i ?>'>
                     <span class='ui-icon ui-icon-plusthick'></span>
                 </a>  
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i) ?>
@@ -44,7 +44,7 @@
             <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {?>
                 <div>
                     <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
-                    <a class='ui-button sp-ui-button-icon-only' id='modifier_add_<?php echo $i ?>'>
+                    <a class='ui-button sp-ui-button-icon-only sp_no_margins' id='modifier_add_<?php echo $i ?>'>
                         <span class='ui-icon ui-icon-plusthick'></span>
                     </a>  
                     <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
