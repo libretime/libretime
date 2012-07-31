@@ -193,9 +193,11 @@ class Application_Model_Block
 
         $files = array();
         $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
+    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, 
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc 
-    LEFT JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.block_id = {$this->id};
+    LEFT JOIN cc_files AS f ON pc.file_id=f.id
+    LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
+    WHERE pc.block_id = {$this->id};
 EOT;
         $con = Propel::getConnection();
         $rows = $con->query($sql)->fetchAll();
@@ -1099,10 +1101,40 @@ EOT;
         return $insertList;
     }
     
-    public static function getCriteria($p_blockId)
+    public function getCriteria()
     {
+        $criteriaOptions = array(
+                0 => "Select criteria",
+                "album_title" => "Album",
+                "bit_rate" => "Bit Rate",
+                "bpm" => "Bpm",
+                "comments" => "Comments",
+                "composer" => "Composer",
+                "conductor" => "Conductor",
+                "artist_name" => "Creator",
+                "disc_number" => "Disc Number",
+                "genre" => "Genre",
+                "isrc_number" => "ISRC",
+                "label" => "Label",
+                "language" => "Language",
+                "mtime" => "Last Modified",
+                "lptime" => "Last Played",
+                "length" => "Length",
+                "lyricist" => "Lyricist",
+                "mood" => "Mood",
+                "name" => "Name",
+                "orchestra" => "Orchestra",
+                "radio_station_name" => "Radio Station Name",
+                "rating" => "Rating",
+                "sample_rate" => "Sample Rate",
+                "track_title" => "Title",
+                "track_num" => "Track Number",
+                "utime" => "Uploaded",
+                "year" => "Year"
+        );
+        
         // Load criteria from db
-        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($p_blockId);
+        $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
         $storedCrit = array();
 
         foreach ($out as $crit) {
@@ -1114,7 +1146,7 @@ EOT;
             if ($criteria == "limit") {
                 $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
             } else {
-                $storedCrit["crit"][$criteria][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
+                $storedCrit["crit"][$criteria][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra, "display_name"=>$criteriaOptions[$criteria]);
             }
         }
         
@@ -1125,45 +1157,34 @@ EOT;
     // this function return list of propel object
     public function getListofFilesMeetCriteria()
     {
-        $out = CcBlockcriteriaQuery::create()->findByDbBlockId($this->id);
-        $storedCrit = array();
-        foreach ($out as $crit) {
-            $criteria = $crit->getDbCriteria();
-            $modifier = $crit->getDbModifier();
-            $value = $crit->getDbValue();
-            $extra = $crit->getDbExtra();
-    
-            if($criteria == "limit"){
-                $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
-            }else{
-                $storedCrit["crit"][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra);
-            }
-        }
+        $storedCrit = $this->getCriteria();
     
         $qry = CcFilesQuery::create();
     
         if (isset($storedCrit["crit"])) {
-            foreach ($storedCrit["crit"] as $criteria) {
-                $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
-                $spCriteria = $criteria['criteria'];
-    
-                $spCriteriaModifier = $criteria['modifier'];
-                $spCriteriaValue = $criteria['value'];
-                if ($spCriteriaModifier == "starts with") {
-                    $spCriteriaValue = "$spCriteriaValue%";
-                } else if ($spCriteriaModifier == "ends with") {
-                    $spCriteriaValue = "%$spCriteriaValue";
-                } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
-                    $spCriteriaValue = "%$spCriteriaValue%";
-                } else if ($spCriteriaModifier == "is in the range") {
-                    $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
-                }
-                $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
-                try{
-                    $qry->filterBy($spCriteriaPhpName, $spCriteriaValue, $spCriteriaModifier);
-                    $qry->addAscendingOrderByColumn('random()');
-                }catch (Exception $e){
-                    Logging::log($e);
+            foreach ($storedCrit["crit"] as $crit) {
+                foreach ($crit as $criteria) {
+                    $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
+                    $spCriteria = $criteria['criteria'];
+        
+                    $spCriteriaModifier = $criteria['modifier'];
+                    $spCriteriaValue = $criteria['value'];
+                    if ($spCriteriaModifier == "starts with") {
+                        $spCriteriaValue = "$spCriteriaValue%";
+                    } else if ($spCriteriaModifier == "ends with") {
+                        $spCriteriaValue = "%$spCriteriaValue";
+                    } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
+                        $spCriteriaValue = "%$spCriteriaValue%";
+                    } else if ($spCriteriaModifier == "is in the range") {
+                        $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
+                    }
+                    $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+                    try{
+                        $qry->filterBy($spCriteriaPhpName, $spCriteriaValue, $spCriteriaModifier);
+                        $qry->addAscendingOrderByColumn('random()');
+                    }catch (Exception $e){
+                        Logging::log($e);
+                    }
                 }
             }
         }

@@ -1,12 +1,16 @@
 <dl id="spl_editor" class="inline-list">
+    <?php if ($this->item1Type == 0) {?>
     <dt>Fade out (s):</dt>
     <dd id="spl_fade_out_<?php echo $this->item1; ?>" class="spl_fade_out">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeOut; ?></span>
     </dd>
     <dd class="edit-error"></dd>
+    <?php }
+    if ($this->item2Type == 0) {?>
     <dt>Fade in (s):</dt>
     <dd id="spl_fade_in_<?php echo $this->item2; ?>" class="spl_fade_in">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeIn; ?></span>
     </dd>
      <dd class="edit-error"></dd>
+    <?php }?>
 </dl>

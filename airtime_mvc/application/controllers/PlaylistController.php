@@ -27,6 +27,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('smart-block-criteria-save', 'json')
                     ->addActionContext('smart-block-generate', 'json')
                     ->addActionContext('smart-block-shuffle', 'json')
+                    ->addActionContext('get-block-info', 'json')
                     ->initContext();
 
         /*$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -124,9 +125,9 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->error = $e->getMessage();
     }
 
-    private function playlistDynamic($obj)
+    private function blockDynamic($obj)
     {
-        $this->view->error = "You cannot add tracks to dynamic playlist.";
+        $this->view->error = "You cannot add tracks to dynamic block.";
         $this->createFullResponse($obj);
     }
     
@@ -309,7 +310,7 @@ class PlaylistController extends Zend_Controller_Action
                 // if the dest is a block object
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } else {
-                throw new PlaylistDyanmicException;
+                throw new BlockDynamicException;
             }
             $this->createUpdateResponse($obj);
         }
@@ -319,8 +320,8 @@ class PlaylistController extends Zend_Controller_Action
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_type);
         }
-        catch (PlaylistDyanmicException $e) {
-            $this->playlistDynamic($obj);
+        catch (BlockDynamicException $e) {
+            $this->blockDynamic($obj);
         }
         catch (Exception $e) {
             $this->playlistUnknownError($e);
@@ -452,7 +453,7 @@ class PlaylistController extends Zend_Controller_Action
 
         try {
             $obj = $this->getPlaylist($type);
-            $obj->setPlaylistfades($fadeIn, $fadeOut);
+            $obj->setfades($fadeIn, $fadeOut);
             $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
@@ -563,6 +564,20 @@ class PlaylistController extends Zend_Controller_Action
         }
         
         return $info;
+    }
+    
+    public function getBlockInfoAction(){
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        $bl = new Application_Model_Block($params['id']);
+        if ($bl->isStatic()) {
+            $out = $bl->getContents();
+            $out['isStatic'] = true;
+        } else {
+            $out = $bl->getCriteria();
+            $out['isStatic'] = false;
+        }
+        die(json_encode($out));
     }
     
 }

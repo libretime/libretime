@@ -112,7 +112,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                ->setValue($blockType);
         $this->addElement($spType);
         
-        $storedCrit = Application_Model_Block::getCriteria($p_blockId);
+        $bl = new Application_Model_Block($p_blockId);
+        $storedCrit = $bl->getCriteria();
        
         /* $modRoadMap stores the number of modifier rows each
          * criteria row has. We need to know this so we display the

@@ -320,23 +320,6 @@ EOT;
         }
     }
 
-    /*private function buildStreamEntry($p_item, $pos)
-    {
-        $stream = CcWebstreamQuery::create()->findPK($p_item, $this->con);
-
-        if (isset($stream)) {
-            $entry = $this->plItem;
-            $entry["id"] = $stream->getDbId();
-            $entry["pos"] = $pos;
-            $entry["cliplength"] = $stream->getDbLength();
-            $entry["cueout"] = $stream->getDbLength();
-
-            return $entry;
-        } else {
-            throw new Exception("trying to add a stream that does not exist.");
-        }
-    }*/
-
     /*
      * @param array $p_items
      *     an array of audioclips to add to the playlist
@@ -612,7 +595,7 @@ EOT;
         return array("fadeIn" => $fadeIn, "fadeOut" => $fadeOut);
     }
 
-    public function setPlaylistfades($fadein, $fadeout)
+    public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
             Logging::log("Setting playlist fade in {$fadein}");
@@ -872,4 +855,3 @@ EOT;
 class PlaylistNotFoundException extends Exception {}
 class PlaylistNoPermissionException extends Exception {}
 class PlaylistOutDatedException extends Exception {}
-class PlaylistDyanmicException extends Exception {}

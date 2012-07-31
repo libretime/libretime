@@ -352,6 +352,40 @@ var AIRTIME = (function(AIRTIME){
         //add the play function to the play icon
 		$pl.delegate(".big_play",
             {"click": openAudioPreview});
+		
+		$pl.delegate(".spl_block_expand",
+		        {"click": function(ev){
+		            var id = parseInt($(this).attr("id").split("_").pop(), 10);
+		            if ($(this).hasClass('close')) {
+                        var sUrl = "/playlist/get-block-info";
+                        mod.disableUI();
+                        $.post(sUrl, {format:"json", id:id}, function(json){
+                            $html = "";
+                            var data = $.parseJSON(json);
+                            var isStatic = data.isStatic;
+                            delete data.type;
+                            if (isStatic) {
+                                $.each(data, function(index, ele){
+                                    $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
+                                })
+                            } else {
+                                for (var key in data.crit){
+                                    $.each(data.crit[key], function(index, ele){
+                                        var extra = (ele['extra']==null)?"":ele['extra'];
+                                        $html += "<div>"+ele['display_name']+"   "+ele['modifier']+"   "+ele['value']+"   "+extra+"</div>";
+                                    });
+                                }
+                                $html += "<div>"+data.limit.value+"  "+data.limit.modifier;
+                            }
+                            $pl.find("#block_"+id+"_info").html($html);
+                            mod.enableUI();
+                        });
+                        $(this).removeClass('close');
+		            } else {
+		                $pl.find("#block_"+id+"_info").html("");
+		                $(this).addClass('close');
+		            }
+                }});
 	}
 	
 	//sets events dynamically for the cue editor.
@@ -384,7 +418,7 @@ var AIRTIME = (function(AIRTIME){
 		//main playlist fades events
 		$pl.on("click", "#spl_crossfade", function() {
 	    	var lastMod = getModified(),
-	    	    type = $('#obj_type');
+	    	    type = $('#obj_type').val();
 
 	        if ($(this).hasClass("ui-state-active")) {
 	            $(this).removeClass("ui-state-active");
@@ -394,8 +428,7 @@ var AIRTIME = (function(AIRTIME){
 	            $(this).addClass("ui-state-active");
 
 	            var url = '/Playlist/get-playlist-fades';
-
-		        $.get(url, 
+		        $.post(url, 
 		        	{format: "json", modified: lastMod, type: type}, 
 		        	function(json){
 			            if (json.error !== undefined){
