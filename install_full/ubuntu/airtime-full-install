@@ -25,9 +25,9 @@ echo "----------------------------------------------------"
 dist=`lsb_release -is`
 
 if [ "$dist" = "Debian" ]; then
-    grep "deb http://www.debian-multimedia.org squeeze main non-free" /etc/apt/sources.list
+    grep "deb http://www.deb-multimedia.org squeeze main non-free" /etc/apt/sources.list
     if [ "$?" -ne "0" ]; then
-        echo "deb http://www.debian-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
+        echo "deb http://www.deb-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
     fi
 fi
 
