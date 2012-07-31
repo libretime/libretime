@@ -37,3 +37,14 @@
     <?php endforeach; ?>
 </div>
 <?php endif; ?>
+
+<?php if ($this->type == "stream") : ?>
+
+<div><span>Name:</span><span><?php echo ($this->md["name"]);?></span></div>
+<div><span>Length:</span><span><?php echo ($this->md["length"]);?></span></div>
+<div><span>Creator:</span><span><?php echo ($this->md["login"]);?></span></div>
+<div><span>Description:</span><span><?php echo ($this->md["description"]);?></span></div>
+<div><span>URL:</span><span><?php echo ($this->md["url"]);?></span></div>
+
+
+<?php endif; ?>

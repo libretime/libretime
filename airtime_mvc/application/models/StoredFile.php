@@ -621,7 +621,7 @@ class Application_Model_StoredFile
                 $plSelect[] = "login AS ".$key;
                 $blSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
-                $streamSelect[] = "login AS ".$key;
+                $streamSelect[] = "creator_id AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {

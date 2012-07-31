@@ -464,7 +464,7 @@ var AIRTIME = (function(AIRTIME) {
                             text: aData.track_title
                         },
                         ajax: {
-                            url: "/Library/get-file-meta-data",
+                            url: "/Library/get-file-metadata",
                             type: "get",
                             data: ({format: "html", id : aData.id, type: aData.ftype}),
                             success: function(data, status) {
@@ -614,6 +614,7 @@ var AIRTIME = (function(AIRTIME) {
                         }
                         else {
                             callback = function() {
+                                //TODO
                                 AIRTIME.playlist.fnEdit(data.id, data.ftype);
                             };
                         }
