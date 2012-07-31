@@ -18,20 +18,6 @@ import media.monitor.pure as mmp
 
 from api_clients import api_client as apc
 
-# Execution consists of the following steps (for now)
-# 1. Initialize logging
-# 2. Create MMConfig from the config file
-# 3. Configure the locale
-# 4. Initialize all event handlers (WatchManager, OrganizeListener, etc.)
-# 5. Get bootstrap db from airtime
-# 6. Sync the db according to the filesystem (and vice versa in some cases)
-# 7. Initialize listeners for watched and organize directories
-# 8. Initialize kombu listener for receiving messages from airtime
-# 9. Start the toucher thread that updates the last modified time of the index
-#    file as the program is running
-
-# Rewrite to use manager.Manager
-
 log = get_logger()
 global_config = u'/home/rudi/Airtime/python_apps/media-monitor2/tests/live_client.cfg'
 # MMConfig is a proxy around ConfigObj instances. it does not allow itself
@@ -103,7 +89,7 @@ bs.flush_all( config.last_ran() )
 airtime_receiver = AirtimeMessageReceiver(config,manager)
 airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
-ed = EventDrainer(airtime_notifier.connection,interval=1)
+ed = EventDrainer(airtime_notifier.connection,interval=float(config['rmq_event_wait']))
 
 # Launch the toucher that updates the last time when the script was ran every
 # n seconds.
