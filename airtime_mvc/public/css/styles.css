@@ -418,6 +418,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
 }
 
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
+.ui-tooltip-dark.file-md-long{ 
+    max-width: 415px !important;
+}
+
 .library-get-file-md tr td{
     font-size:10px;
     padding: 0px;
@@ -426,6 +430,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
 
 table.library-get-file-md{
     margin-left:15px;
+    margin-right:15px;
     width:350px;
 }
 
@@ -447,11 +452,11 @@ table.library-get-file-md.table-small{
 }
 
 .file-md-qtip-row-width-artist{
-    width:100px;
+    width:110px;
 }
 
 .file-md-qtip-row-width-small{
-    width:50x;
+    width:40x;
     text-align:right;
 }
 

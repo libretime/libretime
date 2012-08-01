@@ -55,9 +55,13 @@
         <table class='library-get-file-md'>
         <?php foreach($this->contents as $row) : ?>
             <?php
-            $maxStrLen = 35;
-            if (strlen($row["track_title"]) > $maxStrLen) {
+            $titleMaxStrLen = 35;
+            if (strlen($row["track_title"]) > $titleMaxStrLen) {
                 $row["track_title"] = substr($row["track_title"], 0, 34)."...";
+            }
+            $artistMaxStrLen = 22;
+            if (strlen($row["creator"]) > $artistMaxStrLen) {
+                $row["creator"] = substr($row["creator"], 0, 21)."...";
             }
             ?>
             <?php if ($row["type"] == 2) {
