@@ -485,14 +485,14 @@ function callback(data, type) {
             dt.fnStandingRedraw();
             $('div[class="playlist_title"]').find("h4").html(json.blockLength);
         }
-        setTimeout('removeSuccessMsg()', 5000);
+        setTimeout(removeSuccessMsg, 5000);
     }
 }
 
 function removeSuccessMsg() {
-    var form = $('#smart-playlist-form');
-    form.find('.success').text('');
-    form.find('.success').hide();
+    var $status = $('#smart-playlist-form').find('.success');
+    
+    $status.fadeOut("slow", function(){$status.empty()});
 }
 
 function appendAddButton() {

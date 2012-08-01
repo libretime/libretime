@@ -6,6 +6,7 @@
 <?php if (isset($this->ws)) : ?>
     <input id="ws_id" type="hidden" value="<?php echo $this->ws->getId(); ?>"></input>
     <input id="pl_lastMod" type="hidden" value="<?php echo $this->ws->getLastModified('U'); ?>"></input>
+    <div class="status" style="display:none;"></div>
     <div class="playlist_title">
         <h3 id="ws_name">
             <a id="playlist_name_display" contenteditable="true"><?php echo $this->ws->getName(); ?></a>
@@ -30,7 +31,6 @@
              <input type="text" value="00h 20m"/>
          </dd>        
          <dd id="submit-element" class="buttons">
-            <input class="ui-button ui-state-default" type="submit" value="Cancel" id="webstream_cancel" name="cancel">
             <input class="ui-button ui-state-default" type="submit" value="Save" id="webstream_save" name="submit">
         </dd>
        </dl>
