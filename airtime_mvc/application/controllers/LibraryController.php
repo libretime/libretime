@@ -311,6 +311,22 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
                 $this->view->contents = $file->getContents();
+            } else if ($type == "block") {
+                $file = new Application_Model_Block($id);
+                $this->view->type = $type;
+                $md = $file->getAllPLMetaData();
+
+                $formatter = new LengthFormatter($md["dcterms:extent"]);
+                $md["dcterms:extent"] = $formatter->format();
+
+                $this->view->md = $md;
+                if ($file->isStatic()) {
+                    $this->view->blType = 'Static';
+                    $this->view->contents = $file->getContents();
+                } else {
+                    $this->view->blType = 'Dynamic';
+                    $this->view->contents = $file->getCriteria();
+                }
             } else if ($type == "stream") {
                 $file = new Application_Model_Webstream($id);
 
