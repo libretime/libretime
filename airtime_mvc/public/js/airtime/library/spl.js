@@ -521,13 +521,7 @@ var AIRTIME = (function(AIRTIME){
 	        	$fs.addClass("closed");
 	        }
 	    });
-        
-        $pl.on("click", "#webstream_cancel", function(){
-            $("#side_playlist")
-                        .empty()
-                        .append("WHAT SHOULD I PUT HERE??!?!! :)");
-            })
-        
+
 		$pl.on("click", "#webstream_save", function(){
             //get all fields and POST to server
             //description
@@ -541,22 +535,13 @@ var AIRTIME = (function(AIRTIME){
         
             var url = 'Webstream/save';
             $.post(url, 
-        		{format: "json", description: description, url:streamurl, length: length, name: name}, 
-        		function(json){
-                    $("#side_playlist")
-                        .empty()
-                        .append("WHAT SHOULD I PUT HERE??!?!! :)");
-
-                    /*
-		            if (json.error !== undefined){
-		            	playlistError(json);
-		            } else {
-		            	setModified(json.modified);
-		                textarea.val(json.description);
-		                $pl.find("#fieldset-metadate_change").addClass("closed");
-			            redrawLib();
-		            } */     
-		        });    
+                {format: "json", description: description, url:streamurl, length: length, name: name}, 
+                function(json){
+                    var $status = $("#side_playlist .status");
+                    $status.html(json.statusMessage);
+                    $status.show();
+                    setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
+                });    
         
         
         }

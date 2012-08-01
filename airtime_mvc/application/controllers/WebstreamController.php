@@ -34,7 +34,8 @@ class WebstreamController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         Application_Model_Webstream::save($request);
+        
+        $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
 
-        $this->view->x = "hi";
     }
 }
