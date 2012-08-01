@@ -92,6 +92,12 @@
         <table class='library-get-file-md table-small'>
         <?php foreach ($this->contents["crit"] as $criterias) : ?>
             <?php foreach ($criterias as $crit ) : ?>
+                <?php
+                $maxStrLen = 25;
+                if (strlen($crit["value"]) > $maxStrLen) {
+                    $crit["value"] = substr($crit["value"], 0, 24)."...";
+                }
+                ?>
                 <tr>
                     <td class='file-md-qtip-criteria-width-small'><?php echo $crit["display_name"] ?></td>
                     <td class='file-md-qtip-criteria-width-small'><?php echo $crit["modifier"] ?></td>
