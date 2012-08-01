@@ -157,7 +157,7 @@ class PypoPush(Thread):
                 else:
                     """
                     We should only reach here if Pypo crashed and restarted (because self.pushed_objects was reset). In this case
-                    let's clear the entire Liquidsoap queue. 
+                    let's clear the entire Liquidsoap queue.
                     """
                     self.logger.error("ID exists in liquidsoap queue that does not exist in our pushed_objects queue: " + item)
                     self.clear_liquidsoap_queue()
@@ -169,7 +169,7 @@ class PypoPush(Thread):
     def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx, media_chain):
         """
         This function's purpose is to gracefully handle situations where
-        Liquidsoap already has a track in its queue, but the schedule 
+        Liquidsoap already has a track in its queue, but the schedule
         has changed. If the schedule has changed, this function's job is to
         call other functions that will connect to Liquidsoap and alter its
         queue.
@@ -198,11 +198,11 @@ class PypoPush(Thread):
     """
     Compare whats in the liquidsoap_queue to the new schedule we just
     received in media_schedule. This function only iterates over liquidsoap_queue_approx
-    and finds if every item in that list is still scheduled in "media_schedule". It doesn't 
+    and finds if every item in that list is still scheduled in "media_schedule". It doesn't
     take care of the case where media_schedule has more items than liquidsoap_queue_approx
     """
     def find_removed_items(self, media_schedule, liquidsoap_queue_approx):
-        #iterate through the items we got from the liquidsoap queue and 
+        #iterate through the items we got from the liquidsoap queue and
         #see if they are the same as the newly received schedule
         iteration = 0
         problem_at_iteration = None
@@ -219,12 +219,12 @@ class PypoPush(Thread):
                 else:
                     #A different item has been scheduled at the same time! Need to remove
                     #all tracks from the Liquidsoap queue starting at this point, and re-add
-                    #them. 
+                    #them.
                     problem_at_iteration = iteration
                     break
             else:
                 #There are no more items scheduled for this time! The user has shortened
-                #the playlist, so we simply need to remove tracks from the queue. 
+                #the playlist, so we simply need to remove tracks from the queue.
                 problem_at_iteration = iteration
                 break
             iteration += 1
@@ -278,16 +278,16 @@ class PypoPush(Thread):
     """
     Returns two chains, original chain and current_chain. current_chain is a subset of
     original_chain but can also be equal to original chain.
-    
+
     We return original chain because the user of this function may want to clean
     up the input 'chains' list
-    
+
     chain, original = get_current_chain(chains)
-    
-    and 
+
+    and
     chains.remove(chain) can throw a ValueError exception
-    
-    but 
+
+    but
     chains.remove(original) won't
     """
     def get_current_chain(self, chains, tnow):
@@ -311,7 +311,7 @@ class PypoPush(Thread):
 
     """
     The purpose of this function is to take a look at the last received schedule from
-    pypo-fetch and return the next chain of media_items. A chain is defined as a sequence 
+    pypo-fetch and return the next chain of media_items. A chain is defined as a sequence
     of media_items where the end time of media_item 'n' is the start time of media_item
     'n+1'
     """
@@ -374,8 +374,13 @@ class PypoPush(Thread):
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             #dynamic_source.start http://87.230.101.24:80/top100station.mp3
 
+            msg = 'dynamic_source.id %s\n' % media_item['row_id']
+            tn.write(msg)
+
+            #TODO: DO we need this?
             msg = 'streams.scheduled_play_start\n'
             tn.write(msg)
+
             msg = 'dynamic_source.start %s\n' % media_item['uri'].encode('latin-1')
             self.logger.debug(msg)
             tn.write(msg)

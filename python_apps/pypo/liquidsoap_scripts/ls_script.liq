@@ -21,6 +21,7 @@ set("harbor.bind_addr", "0.0.0.0")
 
 #TODO: Need to create a randomized password for every instance
 web_stream = input.harbor("test-harbor",port=8999,password="hackme")
+current_dyn_id = ref ''
 
 pypo_data = ref '0'
 stream_metadata_type = ref 0
@@ -53,6 +54,11 @@ server.register(namespace="vars", "station_name", fun (s) -> begin station_name 
 server.register(namespace="vars", "bootup_time", fun (s) -> begin time := s s end)
 server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
 server.register(namespace="vars", "default_dj_fade", fun (s) -> begin default_dj_fade := float_of_string(s) s end)
+server.register(namespace="dynamic_source",
+                description="Set the cc_schedule row id",
+                usage="id <id>",
+                "id",
+                set_dynamic_source_id)
 server.register(namespace="dynamic_source",
                 description="Start a new dynamic source.",
                 usage="start <uri>",

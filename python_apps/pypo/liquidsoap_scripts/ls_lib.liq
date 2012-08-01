@@ -235,20 +235,27 @@ dyn_out = output.icecast(%wav,
                      mount="test-harbor",
                      fallible=true)
 
+def set_dynamic_source_id(id) =
+    current_dyn_id := id 
+    #"Done!"
+    string_of(!current_dyn_id)
+end
+
 # Function to create a playlist source and output it.
 def create_dynamic_source(uri) =
-  # The playlist source 
-  s = input.http(uri)
+    # The playlist source 
+    s = input.http(uri)
 
-  # The output
-  active_dyn_out = dyn_out(s)
+    # The output
+    active_dyn_out = dyn_out(s)
 
-  # We register both source and output 
-  # in the list of sources
-  dyn_sources := 
-      list.append( [(uri,s),(uri,active_dyn_out)],
-                    !dyn_sources )
-  "Done!"
+    # We register both source and output 
+    # in the list of sources
+    dyn_sources := 
+      list.append([(uri,s),(uri,active_dyn_out)], !dyn_sources)
+
+    notify([("schedule_table_id", !current_dyn_id)])
+    "Done!"
 end
 
 # A function to destroy a dynamic source
