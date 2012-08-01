@@ -965,59 +965,61 @@ EOT;
             }
         }// foreach
 
-        $modKeys = array_keys($data['modrow']);
-        for ($i = 0; $i < count($modKeys); $i++) {
-            foreach ($data['modrow'][$modKeys[$i]] as $key=>$d){
-                $error = array();
-                // check for not selected select box
-                if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
-                    $error[] =  "You must select Criteria and Modifier";
-                } else {
-                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
-                    // validation on type of column
-                    if ($d['sp_criteria_field'] == 'length') {
-                        if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
-                            $error[] =  "'Length' should be in '00:00:00' format";
-                        }
-                    } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                        if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                            $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                        } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])) {
-                            // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                            $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
-                        }
-        
-                        if (isset($d['sp_criteria_extra'])) {
-                            if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+        if (isset($data['modrow'])) {
+            $modKeys = array_keys($data['modrow']);
+            for ($i = 0; $i < count($modKeys); $i++) {
+                foreach ($data['modrow'][$modKeys[$i]] as $key=>$d){
+                    $error = array();
+                    // check for not selected select box
+                    if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
+                        $error[] =  "You must select Criteria and Modifier";
+                    } else {
+                        $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
+                        // validation on type of column
+                        if ($d['sp_criteria_field'] == 'length') {
+                            if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                                $error[] =  "'Length' should be in '00:00:00' format";
+                            }
+                        } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                            if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                                 $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                            } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])) {
+                            } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])) {
                                 // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
+                                $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
+                            }
+            
+                            if (isset($d['sp_criteria_extra'])) {
+                                if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+                                    $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
+                                } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])) {
+                                    // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                    $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
+                                }
+                            }
+                        } else if ($column->getType() == PropelColumnTypes::INTEGER) {
+                            if (!is_numeric($d['sp_criteria_value'])) {
+                                $error[] = "The value has to be numeric";
+                            }
+                            // length check
+                            if (intval($d['sp_criteria_value']) >= pow(2,31)) {
+                                $error[] = "The value should be less then 2147483648";
+                            }
+                        } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
+                            if (strlen($d['sp_criteria_value']) > $column->getSize()) {
+                                $error[] = "The value should be less ".$column->getSize()." characters";
                             }
                         }
-                    } else if ($column->getType() == PropelColumnTypes::INTEGER) {
-                        if (!is_numeric($d['sp_criteria_value'])) {
-                            $error[] = "The value has to be numeric";
-                        }
-                        // length check
-                        if (intval($d['sp_criteria_value']) >= pow(2,31)) {
-                            $error[] = "The value should be less then 2147483648";
-                        }
-                    } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
-                        if (strlen($d['sp_criteria_value']) > $column->getSize()) {
-                            $error[] = "The value should be less ".$column->getSize()." characters";
-                        }
                     }
-                }
-        
-                if ($d['sp_criteria_value'] == "") {
-                    $error[] =  "Value cannot be empty";
-                }
-                if(count($error) > 0){
-                    $errors[] = array("element"=>"sp_criteria_field_".$modKeys[$i]."_".$key, "msg"=>$error);
-                }
-            }//end mod foreach
-        }//for loop
+            
+                    if ($d['sp_criteria_value'] == "") {
+                        $error[] =  "Value cannot be empty";
+                    }
+                    if(count($error) > 0){
+                        $errors[] = array("element"=>"sp_criteria_field_".$modKeys[$i]."_".$key, "msg"=>$error);
+                    }
+                }//end mod foreach
+            }//for loop
+        }//if
         
         $result = count($errors) > 0 ? 1 :0;
         $files["count"] = 0;
@@ -1060,19 +1062,21 @@ EOT;
         }
         
         //insert modifier rows
-        $modKeys = array_keys($p_criteriaData['modrow']);
-        for ($i = 0; $i < count($modKeys); $i++) {
-            foreach( $p_criteriaData['modrow'][$modKeys[$i]] as $d){
-                $qry = new CcBlockcriteria();
-                $qry->setDbCriteria($d['sp_criteria_field'])
-                ->setDbModifier($d['sp_criteria_modifier'])
-                ->setDbValue($d['sp_criteria_value'])
-                ->setDbBlockId($this->id);
-        
-                if (isset($d['sp_criteria_extra'])) {
-                    $qry->setDbExtra($d['sp_criteria_extra']);
+        if (isset($p_criteriaData['modrow'])) {
+            $modKeys = array_keys($p_criteriaData['modrow']);
+            for ($i = 0; $i < count($modKeys); $i++) {
+                foreach( $p_criteriaData['modrow'][$modKeys[$i]] as $d){
+                    $qry = new CcBlockcriteria();
+                    $qry->setDbCriteria($d['sp_criteria_field'])
+                    ->setDbModifier($d['sp_criteria_modifier'])
+                    ->setDbValue($d['sp_criteria_value'])
+                    ->setDbBlockId($this->id);
+            
+                    if (isset($d['sp_criteria_extra'])) {
+                        $qry->setDbExtra($d['sp_criteria_extra']);
+                    }
+                    $qry->save();
                 }
-                $qry->save();
             }
         }
     
@@ -1264,8 +1268,10 @@ EOT;
              */
             $tempName = $ele['name'];
             preg_match('/^\D*(?=\d)/', $tempName, $r);
-            $critIndexPos = strlen($r[0]);
-            $critIndex = $tempName[$critIndexPos];
+            if (isset($r[0])) {
+                $critIndexPos = strlen($r[0]);
+                $critIndex = $tempName[$critIndexPos];
+            }
             
             $fieldName = substr($ele['name'], 0, $index);
             
