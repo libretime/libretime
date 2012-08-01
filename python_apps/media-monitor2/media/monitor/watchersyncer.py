@@ -2,6 +2,7 @@
 import threading
 import time
 import copy
+import traceback
 
 from media.monitor.handler import ReportHandler
 from media.monitor.events import NewFile, DeleteFile
@@ -32,7 +33,15 @@ class RequestSync(threading.Thread,Loggable):
         # to recorded shows
         # A simplistic request would like:
         # TODO : recorded shows aren't flagged right
-        packed_requests = [ req.pack() for req in self.requests ]
+        packed_requests = []
+        for request in self.requests:
+            try: packed_requests.append(request.pack())
+            except BadSongFile as e:
+                self.logger.info("Bad song file: '%s'" % e.path)
+                self.logger.info("TODO : put in ignore list")
+            except Exception as e:
+                self.logger.info("An evil exception occured to packing '%s'" % request.path)
+                self.logger.error( traceback.format_exc() )
         # Remove when finished debugging
         def send_one(x): self.apiclient.send_media_monitor_requests( [x] )
         def make_req(): self.apiclient.send_media_monitor_requests( packed_requests )

@@ -33,7 +33,7 @@ class Bootstrapper(Loggable):
         or add a watched/imported directory
         """
         songs = set([])
-        modded = deleted = 0
+        added = modded = deleted = 0
         for f in mmp.walk_supported(directory, clean_empties=False):
             songs.add(f)
             # We decide whether to update a file's metadata by checking
@@ -46,13 +46,18 @@ class Bootstrapper(Loggable):
                 modded += 1
                 dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(f))
                 dispatcher.send(signal=self.watch_signal, sender=self, event=NewFile(f))
-        db_songs = self.db.directory_get_files(directory)
+        db_songs = set(( song for song in self.db.directory_get_files(directory) if mmp.sub_path(directory,song) ))
         # Get all the files that are in the database but in the file
         # system. These are the files marked for deletions
         for to_delete in db_songs.difference(songs):
             dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(to_delete))
             deleted += 1
-        self.logger.info( "Flushed watch directory(%s). (modified, deleted) = (%d, %d)"
-                        % (directory, modded, deleted) )
+        for to_add in songs.difference(db_songs):
+            if len(songs.difference(db_songs)) > 100:
+                import ipdb; ipdb.set_trace()
+            dispatcher.send(signal=self.watch_signal, sender=self, event=NewFile(to_add))
+            added += 1
+        self.logger.info( "Flushed watch directory (%s). (added, modified, deleted) = (%d, %d, %d)"
+                        % (directory, added, modded, deleted) )
 
 

@@ -45,7 +45,7 @@ class Manager(Loggable):
         Manager.global_inst = self
 
     def watch_signal(self):
-        return self.watch_listener.self.signal
+        return self.watch_listener.signal
 
     def __remove_watch(self,path):
         if path in self.__wd_path: # only delete if dir is actually being watched
@@ -111,11 +111,6 @@ class Manager(Loggable):
         self.__remove_watch(self.organize['imported_path'])
         self.organize['imported_path'] = new_path
         self.organize['organizer'] = self.__create_organizer(new_path)
-        # flush all the files in the new store_directory. this is done so that
-        # new files are added to the database. Note that we are not responsible
-        # for removing songs in the old store directory from the database
-        # we assume that this is already done for us.
-        # self.watch_listener.flush_events(new_path)
         self.__add_watch(new_path, self.watch_listener)
 
     def change_storage_root(self, store):
@@ -164,7 +159,6 @@ class Manager(Loggable):
 
     def pyinotify(self):
         return pyinotify.Notifier(self.wm)
-
 
     def loop(self):
         """

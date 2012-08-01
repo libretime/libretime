@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 import os
+from os.path import normpath
 import shutil
 import sys
 import hashlib
@@ -327,6 +328,11 @@ def create_dir(path):
         except Exception as e: raise FailedToCreateDir(path, e)
         else: # if no error occurs we still need to check that dir exists
             if not os.path.exists: raise FailedToCreateDir(path)
+
+def sub_path(directory,f):
+    normalized = normpath(directory)
+    common = os.path.commonprefix([ directory, normpath(f) ])
+    return common == normalized
 
 if __name__ == '__main__':
     import doctest

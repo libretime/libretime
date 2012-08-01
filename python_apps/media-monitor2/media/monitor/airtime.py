@@ -5,6 +5,7 @@ import json
 import os
 import time
 import copy
+import traceback
 
 from media.monitor.exceptions import BadSongFile
 from media.monitor.metadata import Metadata
@@ -95,6 +96,7 @@ class AirtimeMessageReceiver(Loggable):
         if (not directory_id) and (not directory):
             raise ValueError("You must provide either directory_id or directory")
         sdb = AirtimeDB(apc.AirtimeApiClient.create_right_config())
+        if directory: directory = os.path.normpath(directory)
         if directory_id == None: directory_id = sdb.to_id(directory)
         if directory == None: directory = sdb.to_directory(directory_id)
         try:
@@ -103,6 +105,7 @@ class AirtimeMessageReceiver(Loggable):
         except Exception as e:
             self.logger.info( "Exception bootstrapping: (dir,id)=(%s,%s)" % (directory, directory_id) )
             self.logger.info( str(e) )
+            self.logger.error( traceback.format_exc() )
             raise DirectoryIsNotListed(directory)
 
     def supported_messages(self):
@@ -126,11 +129,12 @@ class AirtimeMessageReceiver(Loggable):
             except Exception as e:
                 self.logger.info("Failed to create watched dir '%s'" % msg['directory'])
                 self.logger.info(str(e))
-            # Is this clever or stupid?
             else: self.new_watch(msg)
         else:
             # TODO : Refactor this; breaks encapsulation.
-            self.manager.watch_listener.flush_events(msg['directory'])
+            # TODO : Should not flush events, should be smarted and bootstrap
+            #self.manager.watch_listener.flush_events(msg['directory'])
+            self.__request_now_bootstrap( directory=msg['directory'] )
             self.manager.add_watch_directory(msg['directory'])
 
     def remove_watch(self, msg):

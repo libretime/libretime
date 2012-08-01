@@ -20,16 +20,9 @@ class TestManager(unittest.TestCase):
     def test_organize_path(self):
         man = Manager()
         man.set_organize_path( self.opath )
-        self.assertEqual( man.organize_path, self.opath )
+        self.assertEqual( man.get_organize_path(), self.opath )
         man.set_organize_path( self.ppath )
-        self.assertEqual( man.organize_path, self.ppath )
-
-    def test_store_path(self):
-        man = Manager()
-        man.set_store_path( self.opath )
-        self.assertEqual( man.store_path, self.opath )
-        man.set_store_path( self.ppath )
-        self.assertEqual( man.store_path, self.ppath )
+        self.assertEqual( man.get_organize_path(), self.ppath )
 
     def test_add_watch_directory(self):
         man = Manager()

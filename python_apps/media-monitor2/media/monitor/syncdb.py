@@ -83,9 +83,9 @@ class AirtimeDB(Loggable):
             raise NoDirectoryInAirtime( normal_dir, self.dir_to_id )
         all_files = self.dir_id_get_files( self.dir_to_id[normal_dir] )
         if normal_dir == self.recorded_path():
-            all_files = [ p for p in all_files if len(os.path.commonprefix([ self.recorded_path(), p ])) > 0 ]
+            all_files = [ p for p in all_files if mmp.sub_path( self.recorded_path(), p ) ]
         elif normal_dir == self.import_path():
-            all_files = [ p for p in all_files if len(os.path.commonprefix([ self.import_path(), p ])) > 0 ]
+            all_files = [ p for p in all_files if mmp.sub_path( self.import_path(), p ) ]
         elif normal_dir == self.storage_path():
             self.logger.info("Warning, you're getting all files in '%s' which includes imported + record"
                     % normal_dir)

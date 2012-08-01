@@ -87,7 +87,6 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     def process_IN_DELETE(self,event): self.process_delete(event)
     def process_IN_MODIFY(self,event): self.process_modify(event)
 
-
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_modify(self, event):
