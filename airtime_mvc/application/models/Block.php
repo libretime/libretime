@@ -76,11 +76,11 @@ class Application_Model_Block
             "mood" => "DbMood",
             "name" => "DbName",
             "orchestra" => "DbOrchestra",
-            "radio_station_name" => "DbRadioStation",
+            "radio_station_name" => "DbRadioStationName",
             "rating" => "DbRating",
             "sample_rate" => "DbSampleRate",
             "track_title" => "DbTrackTitle",
-            "track_num" => "DbTrackNum",
+            "track_number" => "DbTrackNumber",
             "year" => "DbYear"
     );
     
@@ -1169,7 +1169,7 @@ EOT;
                 "rating" => "Rating",
                 "sample_rate" => "Sample Rate",
                 "track_title" => "Title",
-                "track_num" => "Track Number",
+                "track_number" => "Track Number",
                 "utime" => "Uploaded",
                 "year" => "Year"
         );

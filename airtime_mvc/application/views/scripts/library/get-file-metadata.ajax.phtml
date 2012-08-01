@@ -102,9 +102,9 @@
                 if (strlen($crit["value"]) > $valMaxStrLen) {
                     $crit["value"] = substr($crit["value"], 0, 24)."...";
                 }
-                $critMaxStrLen = 11;
-                if (strlen($crit["display_name"] > $critMaxStrLen)) {
-                    $crit["display_name"] = substr($crit["display_name"], 0, 10)."...";
+                $critMaxStrLen = 13;
+                if (strlen($crit["display_name"]) > $critMaxStrLen) {
+                    $crit["display_name"] = substr($crit["display_name"], 0, 12)."...";
                 }
                 ?>
                 <tr>
