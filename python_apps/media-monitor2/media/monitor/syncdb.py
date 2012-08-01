@@ -1,57 +1,86 @@
 # -*- coding: utf-8 -*-
 import os
 from media.monitor.log import Loggable
+from media.monitor.exceptions import NoDirectoryInAirtime
+from os.path import normpath
 
-class SyncDB(Loggable):
-    def __init__(self, apc):
+class AirtimeDB(Loggable):
+    def __init__(self, apc, reload_now=True):
         self.apc = apc
-        dirs = self.apc.list_all_watched_dirs()
-
-        directories = None
-        try:
-            directories = dirs['dirs']
-        except KeyError as e:
-            self.logger.error("Could not find index 'dirs' in dictionary: %s", str(dirs))
-            self.logger.error(e)
-            raise
-        # self.directories is a dictionary where a key is the directory and the
-        # value is the directory's id in the db
-        self.directories = dict( (v,k) for k,v in directories.iteritems() )
-        # Just in case anybody wants to lookup a directory by its id we haev
-        self.id_lookup = directories
+        if reload_now: self.reload_directories()
 
     def reload_directories(self):
+        """
+        this is the 'real' constructor, should be called if you ever want the class reinitialized.
+        there's not much point to doing it yourself however, you should just create a new AirtimeDB
+        instance.
+        """
         # dirs_setup is a dict with keys:
         # u'watched_dirs' and u'stor' which point to lists of corresponding
         # dirs
         dirs_setup = self.apc.setup_media_monitor()
-        self.base_storage = dirs_setup[u'stor']
-        self.watched_directories = set(dirs_setup[u'watched_dirs'])
+        dirs_setup[u'stor'] = normpath( dirs_setup[u'stor'] )
+        dirs_setup[u'watched_dirs'] = map(normpath, dirs_setup[u'watched_dirs'] )
+        dirs_with_id = dict([ (k,normpath(v)) for k,v in self.apc.list_all_watched_dirs()['dirs'].iteritems() ])
 
+        self.id_to_dir = dirs_with_id
+        self.dir_to_id = dict([ (v,k) for k,v in dirs_with_id.iteritems() ])
+
+        self.base_storage = dirs_setup[u'stor']
+        self.base_id = self.dir_to_id[self.base_storage]
+
+        # hack to get around annoying schema of airtime db
+        self.dir_to_id[ self.recorded_path() ] = self.base_id
+        self.dir_to_id[ self.import_path() ] = self.base_id
+
+        # We don't know from the x_to_y dict which directory is watched or
+        # store...
+        self.watched_directories = set([ os.path.normpath(p) for p in dirs_setup[u'watched_dirs'] ])
+
+    def storage_path(self): return self.base_storage
     def organize_path(self): return os.path.join(self.base_storage, 'organize')
     def problem_path(self): return os.path.join(self.base_storage, 'problem_files')
     def import_path(self): return os.path.join(self.base_storage, 'imported')
     def recorded_path(self): return os.path.join(self.base_storage, 'recorded')
 
-    def list_directories(self):
+    def list_watched(self):
+        """
+        returns all watched directories as a list
+        """
+        return list(self.watched_directories)
+
+    def list_storable_paths(self):
         """
         returns a list of all the watched directories in the datatabase.
-        (Includes the imported directory)
+        (Includes the imported directory and the recorded directory)
         """
-        return self.directories.keys()
+        l = self.list_watched()
+        l.append(self.import_path())
+        l.append(self.recorded_path())
+        return l
+
+    def dir_id_get_files(self, dir_id):
+        base_dir = self.id_to_dir[ dir_id ]
+        return set(( os.path.join(base_dir,p) for p in self.apc.list_all_db_files( dir_id ) ))
 
     def directory_get_files(self, directory):
         """
         returns all the files(recursively) in a directory. a directory is an "actual" directory
-        path instead of its id.
+        path instead of its id. This is super hacky because you create one request for the
+        recorded directory and one for the imported directory even though they're the same dir
+        in the database so you get files for both dirs in 1 request...
         """
-        return set( [ os.path.normpath(os.path.join(directory,f)) \
-                for f in self.apc.list_all_db_files(self.directories[directory]) ] )
-
-    def id_get_files(self, dir_id):
-        """
-        returns all the files given some dir_id. this method is here for "symmetry". it's not actually used anywhere
-        """
-        return self.directory_get_files(self.id_lookup[dir_id])
+        normal_dir = os.path.normpath(unicode(directory))
+        if normal_dir not in self.dir_to_id:
+            raise NoDirectoryInAirtime( normal_dir, self.dir_to_id )
+        all_files = self.dir_id_get_files( self.dir_to_id[normal_dir] )
+        if normal_dir == self.recorded_path():
+            all_files = [ p for p in all_files if len(os.path.commonprefix([ self.recorded_path(), p ])) > 0 ]
+        elif normal_dir == self.import_path():
+            all_files = [ p for p in all_files if len(os.path.commonprefix([ self.import_path(), p ])) > 0 ]
+        elif normal_dir == self.storage_path():
+            self.logger.info("Warning, you're getting all files in '%s' which includes imported + record"
+                    % normal_dir)
+        return set(all_files)
 
 

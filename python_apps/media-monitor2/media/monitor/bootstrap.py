@@ -11,7 +11,7 @@ class Bootstrapper(Loggable):
     """
     def __init__(self,db,watch_signal):
         """
-        db - SyncDB object; small layer over api client
+        db - AirtimeDB object; small layer over api client
         last_ran - last time the program was ran.
         watch_signal - the signals should send events for every file on.
         """
@@ -24,7 +24,7 @@ class Bootstrapper(Loggable):
         note that because of the way list_directories works we also flush
         the import directory as well I think
         """
-        for d in self.db.list_directories():
+        for d in self.db.list_storable_paths():
             self.flush_watch(d, last_ran)
 
     def flush_watch(self, directory, last_ran):

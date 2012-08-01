@@ -9,7 +9,7 @@ import copy
 from media.monitor.exceptions import BadSongFile
 from media.monitor.metadata import Metadata
 from media.monitor.log import Loggable
-from media.monitor.syncdb import SyncDB
+from media.monitor.syncdb import AirtimeDB
 from media.monitor.exceptions import DirectoryIsNotListed
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.listeners import FileMediator
@@ -92,7 +92,7 @@ class AirtimeMessageReceiver(Loggable):
 
 
     def __request_now_bootstrap(self, directory_id=None, directory=None):
-        sdb = SyncDB(apc.AirtimeApiClient.create_right_config())
+        sdb = AirtimeDB(apc.AirtimeApiClient.create_right_config())
         if directory_id == None: directory_id = sdb.directories[directory]
         if directory_id in sdb.id_lookup:
             d = sdb.id_lookup[directory_id]

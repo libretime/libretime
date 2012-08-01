@@ -38,3 +38,10 @@ class FailedToCreateDir(Exception):
         self.path = path
         self.parent = parent
     def __str__(self): return "Failed to create path '%s'" % self.path
+
+class NoDirectoryInAirtime(Exception):
+    def __init__(self,path, does_exist):
+        self.path = path
+        self.does_exist = does_exist
+    def __str__(self):
+        return "Directory '%s' does not exist in Airtime.\nHowever: %s do exist." % (self.path, self.does_exist)

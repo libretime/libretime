@@ -144,6 +144,8 @@ class Manager(Loggable):
         block until we receive pyinotify events
         """
         pyinotify.Notifier(self.wm).loop()
+        # Experiments with running notifier in different modes
+        # There are 3 options: normal, async, threaded.
         #import asyncore
         #pyinotify.AsyncNotifier(self.wm).loop()
         #asyncore.loop()

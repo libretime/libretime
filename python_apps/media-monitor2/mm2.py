@@ -8,7 +8,7 @@ from media.monitor.log import get_logger
 from media.monitor.events import PathChannel
 from media.monitor.config import MMConfig
 from media.monitor.toucher import ToucherThread
-from media.monitor.syncdb import SyncDB
+from media.monitor.syncdb import AirtimeDB
 from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile, FailedToCreateDir
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 from media.monitor.watchersyncer import WatchSyncer
@@ -60,7 +60,7 @@ apiclient = apc.AirtimeApiClient.create_right_config(log=log,config_path=global_
 
 # TODO : Need to do setup_media_monitor call somewhere around here to get
 # import/organize dirs
-sdb = SyncDB(apiclient)
+sdb = AirtimeDB(apiclient)
 
 manager = Manager()
 
