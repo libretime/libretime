@@ -93,7 +93,7 @@
         
     <?php } elseif ($this->blType == "Dynamic") { ?>
         <div><span>Dynamic Playlist Criteria: </span></div>
-        <table class='library-get-file-md table-small'>
+        <table class='library-get-file-md'>
         <?php foreach ($this->contents["crit"] as $criterias) : ?>
             <?php foreach ($criterias as $crit ) : ?>
                 <?php
@@ -111,11 +111,11 @@
                     <?php } ?>
                 </tr>
             <?php endforeach; ?>
+        <?php endforeach; ?>
             <tr>
                 <td>Limit to </td>
                 <td><?php echo $this->contents["limit"]["value"] ?> <?php echo $this->contents["limit"]["modifier"] ?></td>
             </tr>
-        <?php endforeach; ?>
         </table>
     <?php } ?>
 <?php endif; ?>
