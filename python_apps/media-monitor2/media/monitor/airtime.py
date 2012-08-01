@@ -92,14 +92,18 @@ class AirtimeMessageReceiver(Loggable):
 
 
     def __request_now_bootstrap(self, directory_id=None, directory=None):
+        if (not directory_id) and (not directory):
+            raise ValueError("You must provide either directory_id or directory")
         sdb = AirtimeDB(apc.AirtimeApiClient.create_right_config())
-        if directory_id == None: directory_id = sdb.directories[directory]
-        if directory_id in sdb.id_lookup:
-            d = sdb.id_lookup[directory_id]
-            bs = Bootstrapper(sdb, self.manager.watch_signal())
-            bs.flush_watch( directory=d, last_ran=time.time() )
-        else:
-            raise DirectoryIsNotListed(directory_id)
+        if directory_id == None: directory_id = sdb.to_id(directory)
+        if directory == None: directory = sdb.to_directory(directory_id)
+        try:
+            bs = Bootstrapper( sdb, self.manager.watch_signal() )
+            bs.flush_watch( directory=directory, last_ran=time.time() )
+        except Exception as e:
+            self.logger.info( "Exception bootstrapping: (dir,id)=(%s,%s)" % (directory, directory_id) )
+            self.logger.info( str(e) )
+            raise DirectoryIsNotListed(directory)
 
     def supported_messages(self):
         return self.dispatch_table.keys()
@@ -148,28 +152,10 @@ class AirtimeMessageReceiver(Loggable):
 
     def change_storage(self, msg):
         new_storage_directory = msg['directory']
-        new_import = os.path.join(new_storage_directory, 'imported')
-        new_organize = os.path.join(new_storage_directory, 'organize')
-        for d in [new_import, new_organize]:
-            if os.path.exists(d):
-                self.logger.info("Changing storage to existing dir: '%s'" % d)
-            else:
-                try: os.makedirs(d)
-                except Exception as e:
-                    self.logger.info("Could not create dir for storage '%s'" % d)
-                    self.logger.info(str(e))
+        self.manager.change_storage_root(new_storage_directory)
 
-        if all([ os.path.exists(d) for d in [new_import, new_organize] ]):
-            self.manager.set_store_path(new_import)
-            try:
-                self.__request_now_bootstrap( directory=new_import )
-            except Exception as e:
-                self.logger.info("Did not bootstrap off directory '%s'. Probably not in airtime db" % new_import)
-                self.logger.info(str(e))
-            # set_organize_path should automatically flush new_organize
-            self.manager.set_organize_path(new_organize)
-        else:
-            self.logger.info("Change storage procedure failed, could not create directories")
+        for to_bootstrap in [ self.manager.get_recorded_path(), self.manager.get_imported_path() ]:
+            self.__request_now_bootstrap( directory=to_bootstrap )
 
     def file_delete(self, msg):
         # deletes should be requested only from imported folder but we don't

@@ -5,14 +5,12 @@ import os
 from media.monitor.manager import Manager
 from media.monitor.bootstrap import Bootstrapper
 from media.monitor.log import get_logger
-from media.monitor.events import PathChannel
 from media.monitor.config import MMConfig
 from media.monitor.toucher import ToucherThread
 from media.monitor.syncdb import AirtimeDB
-from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile, FailedToCreateDir
+from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, NoConfigFile
 from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
 from media.monitor.watchersyncer import WatchSyncer
-from media.monitor.handler import ProblemFileHandler
 from media.monitor.eventdrainer import EventDrainer
 import media.monitor.pure as mmp
 
@@ -50,10 +48,6 @@ except Exception as e:
 watch_syncer = WatchSyncer(signal='watch',
                            chunking_number=config['chunking_number'],
                            timeout=config['request_max_wait'])
-try:
-    problem_handler = ProblemFileHandler( PathChannel(signal='badfile',path='/srv/airtime/stor/problem_files/') )
-except FailedToCreateDir as e:
-    log.info("Failed to create problem directory: '%s'" % e.path)
 
 apiclient = apc.AirtimeApiClient.create_right_config(log=log,config_path=global_config)
 
@@ -64,12 +58,12 @@ sdb = AirtimeDB(apiclient)
 
 manager = Manager()
 
+airtime_receiver = AirtimeMessageReceiver(config,manager)
+airtime_notifier = AirtimeNotifier(config, airtime_receiver)
+
 store = apiclient.setup_media_monitor()
-organize_dir, import_dir  = mmp.import_organize(store[u'stor'])
-# Order matters here:
-# TODO : add flushing
-manager.set_store_path(import_dir)
-manager.set_organize_path(organize_dir)
+airtime_receiver.change_storage({ 'directory':store[u'stor'] })
+
 
 for watch_dir in store[u'watched_dirs']:
     if not os.path.exists(watch_dir):
@@ -78,15 +72,12 @@ for watch_dir in store[u'watched_dirs']:
         except Exception as e:
             log.error("Could not create watch directory: '%s' (given from the database)." % watch_dir)
     if os.path.exists(watch_dir):
-        manager.add_watch_directory(watch_dir)
+        airtime_receiver.new_watch({ 'directory':watch_dir })
 
 last_ran=config.last_ran()
 bs = Bootstrapper( db=sdb, watch_signal='watch' )
 
 bs.flush_all( config.last_ran() )
-
-airtime_receiver = AirtimeMessageReceiver(config,manager)
-airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
 ed = EventDrainer(airtime_notifier.connection,interval=float(config['rmq_event_wait']))
 

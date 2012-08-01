@@ -308,6 +308,15 @@ def import_organize(store):
     store = os.path.normpath(store)
     return os.path.join(store,'organize'), os.path.join(store,'imported')
 
+def expand_storage(store):
+    store = os.path.normpath(store)
+    return {
+        'organize' : os.path.join(store, 'organize'),
+        'recorded' : os.path.join(store, 'recorded'),
+        'problem_files' : os.path.join(store, 'problem_files'),
+        'imported' : os.path.join(store, 'imported'),
+    }
+
 def create_dir(path):
     """
     will try and make sure that path exists at all costs. raises an exception

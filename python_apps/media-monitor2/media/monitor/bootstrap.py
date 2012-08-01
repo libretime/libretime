@@ -52,7 +52,7 @@ class Bootstrapper(Loggable):
         for to_delete in db_songs.difference(songs):
             dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(to_delete))
             deleted += 1
-        self.logger.info( "Flushed watch directories. (modified, deleted) = (%d, %d)"
-                        % (modded, deleted) )
+        self.logger.info( "Flushed watch directory(%s). (modified, deleted) = (%d, %d)"
+                        % (directory, modded, deleted) )
 
 

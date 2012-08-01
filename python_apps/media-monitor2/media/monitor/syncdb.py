@@ -2,6 +2,7 @@
 import os
 from media.monitor.log import Loggable
 from media.monitor.exceptions import NoDirectoryInAirtime
+import media.monitor.pure as mmp
 from os.path import normpath
 
 class AirtimeDB(Loggable):
@@ -27,6 +28,7 @@ class AirtimeDB(Loggable):
         self.dir_to_id = dict([ (v,k) for k,v in dirs_with_id.iteritems() ])
 
         self.base_storage = dirs_setup[u'stor']
+        self.storage_paths = mmp.expand_storage( self.base_storage )
         self.base_id = self.dir_to_id[self.base_storage]
 
         # hack to get around annoying schema of airtime db
@@ -37,11 +39,17 @@ class AirtimeDB(Loggable):
         # store...
         self.watched_directories = set([ os.path.normpath(p) for p in dirs_setup[u'watched_dirs'] ])
 
+    def to_id(self, directory):
+        return self.dir_to_id[ directory ]
+
+    def to_directory(self, dir_id):
+        return self.id_to_dir[ dir_id ]
+
     def storage_path(self): return self.base_storage
-    def organize_path(self): return os.path.join(self.base_storage, 'organize')
-    def problem_path(self): return os.path.join(self.base_storage, 'problem_files')
-    def import_path(self): return os.path.join(self.base_storage, 'imported')
-    def recorded_path(self): return os.path.join(self.base_storage, 'recorded')
+    def organize_path(self): return self.storage_paths['organize']
+    def problem_path(self): return self.storage_paths['problem_files']
+    def import_path(self): return self.storage_paths['imported']
+    def recorded_path(self): return self.storage_paths['recorded']
 
     def list_watched(self):
         """
