@@ -429,7 +429,8 @@ function getCriteriaOptionType(e) {
 
 function callback(data, type) {
     var form = $('#smart-playlist-form'),
-    json = $.parseJSON(data);
+        json = $.parseJSON(data),
+        dt = $('table[id="library_display"]').dataTable();
 
     form.find('span[class="errors sp-errors"]').remove();
 	
@@ -449,7 +450,6 @@ function callback(data, type) {
             } else if (type == 'generate') {
             	form.find('.success').text('Smart playlist generated and saved');
             	//redraw library table so the length gets updated
-                var dt = $('table[id="library_display"]').dataTable();
                 dt.fnStandingRedraw();
             }
     	    form.find('.success').show();
@@ -457,6 +457,8 @@ function callback(data, type) {
         } else {
             form.find('.success').text('Criteria saved');
             form.find('.success').show();
+            //redraw library table incase block changed from static to dynamic or vice versa
+            dt.fnStandingRedraw();
             
             /* Update number of files that meet criteria and change icon to success/warning
              * as appropriate. This is also done in the form but we do not pass the form

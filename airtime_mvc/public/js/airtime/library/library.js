@@ -484,7 +484,7 @@ var AIRTIME = (function(AIRTIME) {
                         effect: false // Disable positioning animation
                     },
                     style: {
-                        classes: "ui-tooltip-dark"
+                        classes: "ui-tooltip-dark file-md-long"
                     },
                     show: 'mousedown',
                     events: {
@@ -495,7 +495,7 @@ var AIRTIME = (function(AIRTIME) {
                          }
                        }
                     },
-                    hide: 'mouseout'  
+                    hide: {event:'mouseout', delay: 50, fixed:true}  
                 });
             },
            //remove any selected nodes before the draw.

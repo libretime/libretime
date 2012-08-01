@@ -417,6 +417,66 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     vertical-align: top;
 }
 
+/***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
+.ui-tooltip-dark.file-md-long{ 
+    max-width: 415px !important;
+}
+
+.library-get-file-md tr td{
+    font-size:10px;
+    padding: 0px;
+    vertical-align:top;
+}
+
+table.library-get-file-md{
+    margin-left:15px;
+    margin-right:15px;
+    width:350px;
+}
+
+table.library-get-file-md.table-small{
+    width:290px !important;
+}
+
+.file-md-qtip-criteria-width-small{
+    width:80px;
+}
+
+.file-md-qtip-criteria-width{
+    width:120px;
+}
+
+.file-md-qtip-row-width-title{
+    width:170px;
+    padding-right:5px !important;
+}
+
+.file-md-qtip-row-width-artist{
+    width:110px;
+}
+
+.file-md-qtip-row-width-small{
+    width:40x;
+    text-align:right;
+}
+
+.file-md-qtip-playlist td{
+    font-weight: bold;
+    font-style: italic;
+}
+
+.file-md-qtip-playlist.dynamic td{
+    color: #63a2f0;
+}
+
+.file-md-qtip-playlist.static td{
+    color: #f09839;
+}
+
+
+/***** LIBRARY QTIP METADATA SPECIFIC STYLES END *****/
+
+
 /***** SMART PLAYLIST SPECIFIC STYLES BEGIN *****/
 .sp-invisible{
     visibility: hidden;
