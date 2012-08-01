@@ -39,7 +39,7 @@ class CcBlockcriteriaTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_blockcriteria_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('CRITERIA', 'DbCriteria', 'VARCHAR', true, 16, null);
+		$this->addColumn('CRITERIA', 'DbCriteria', 'VARCHAR', true, 32, null);
 		$this->addColumn('MODIFIER', 'DbModifier', 'VARCHAR', true, 16, null);
 		$this->addColumn('VALUE', 'DbValue', 'VARCHAR', true, 512, null);
 		$this->addColumn('EXTRA', 'DbExtra', 'VARCHAR', false, 512, null);
