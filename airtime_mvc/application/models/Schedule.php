@@ -665,6 +665,12 @@ class Application_Model_Schedule
                 //time of this event is the "end" time of the stream minus 1 second.
                 $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
                 $dt->sub(new DateInterval("PT1S"));
+                
+                //make sure the webstream doesn't play past the end time of the show
+                if ($dt->getTimestamp() > $showEndDateTime->getTimestamp()) {
+                    $dt = $showEndDateTime;
+                }
+
                 $stream_end = Application_Model_Schedule::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
 
                 $data["media"][$stream_end] = array(
