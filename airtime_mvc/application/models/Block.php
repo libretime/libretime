@@ -266,7 +266,7 @@ EOT;
             if ($modifier == "minutes") {
                 $timestamp = "00:".$value.":00";
             } else if ($modifier == "hours") {
-                $timestamp = $value."00:00";
+                $timestamp = $value.":00:00.0";
             }
             $formatter = new LengthFormatter($timestamp);
             $length = "~".$formatter->format();
@@ -388,9 +388,14 @@ EOT;
     
             foreach ($p_items as $ac) {
                 Logging::log("Adding audio file {$ac}");
-    
-                $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
-                $pos = $pos + 1;
+                
+                if (is_array($ac) && $ac[1] == 'audioclip') {
+                    $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
+                    $pos = $pos + 1;
+                } elseif (!is_array($ac)) {
+                    $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
+                    $pos = $pos + 1;
+                }
             }
     
             //reset the positions of the remaining items.
