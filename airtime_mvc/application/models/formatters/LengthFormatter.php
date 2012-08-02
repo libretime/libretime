@@ -16,8 +16,8 @@ class LengthFormatter {
     }
 
     public function format() {
-        if ($this->_length == "N/A" || $this->_length == "") {
-            return "N/A";
+        if (!preg_match("/^[0-9]{2}:[0-9]{2}:[0-9]{2}/", $this->_length)) {
+            return $this->_length;
         }
 
         $pieces = explode(":", $this->_length);

@@ -93,6 +93,9 @@ class Application_Model_Datatables
                 if ($r['ftype'] == 'playlist') {
                     $pl = new Application_Model_Playlist($r['id']);
                     $r['length'] = $pl->getLength();
+                } else if ($r['ftype'] == "block") {
+                    $bl = new Application_Model_Block($r['id']);
+                    $r['length'] = $bl->getLength();
                 }
             }
         } catch (Exception $e) {

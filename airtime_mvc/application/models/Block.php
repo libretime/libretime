@@ -245,8 +245,32 @@ EOT;
     // function return "N/A" if dynamic
     public function getLength()
     {
-        $length = $this->block->getDbLength();
+        if ($this->isStatic()){
+            $length = $this->block->getDbLength();
+        } else {
+            $length = $this->getDynamicBlockLength();
+        }
         $length = $length == null ? "N/A" : $length;
+        return $length;
+    }
+    
+    public function getDynamicBlockLength()
+    {
+        $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
+                ->filterByDbCriteria('limit')->findOne();
+        $modifier = $result->getDbModifier();
+        $value = $result->getDbValue();
+        if ($modifier == "items") {
+            $length = $value." ".$modifier;
+        } else {
+            if ($modifier == "minutes") {
+                $timestamp = "00:".$value.":00";
+            } else if ($modifier == "hours") {
+                $timestamp = $value."00:00";
+            }
+            $formatter = new LengthFormatter($timestamp);
+            $length = "~".$formatter->format();
+        } 
         return $length;
     }
     
@@ -1033,7 +1057,7 @@ EOT;
             // as it cannot be calculated
             if ($blockType == 'dynamic') {
                 $this->setLength(null);
-                $output['blockLength'] = "N/A";
+                $output['blockLength'] = $this->getDynamicBlockLength();
             } else {
                 $length = $this->getStaticLength();
                 $this->setLength($length);
