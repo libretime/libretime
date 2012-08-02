@@ -209,7 +209,7 @@ case "$1" in
       echo "Reconfiguration complete."
     else
 
-      if [[ "${OLDVERSION:0:3}" < "1.9" ]]; then
+      if [ -n "$OLDVERSION" ] && [[ "${OLDVERSION:0:3}" < "1.9" ]]; then
         echo "Upgrades from Airtime versions before 1.9.0 are not supported. Please back up your files and perform a clean install."
       else
 
