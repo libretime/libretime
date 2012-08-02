@@ -111,7 +111,9 @@ class WatchSyncer(ReportHandler,Loggable):
         # TODO : more types of events need to be handled here
         if hasattr(event, 'pack'):
             # We push this event into queue
-            self.logger.info("Received event '%s'. Path: '%s'" % ( "", getattr(event,'path','No path exists') ))
+            self.logger.info("Received event '%s'. Path: '%s'" % \
+                    ( event.__class__.__name__,
+                      getattr(event,'path','No path exists') ))
             try: self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)

@@ -337,6 +337,22 @@ def sub_path(directory,f):
     common = os.path.commonprefix([ directory, normpath(f) ])
     return common == normalized
 
+def auto_enum(*sequential, **named):
+    enums = dict(zip(sequential, range(len(sequential))), **named)
+    return type('Enum', (), enums)
+
+def enum(**enums):
+    """
+    >>> MyEnum = enum(ONE=1, TWO=2, THREE='three')
+    >>> MyEnum.ONE
+    1
+    >>> MyEnum.TWO
+    2
+    >>> MyEnum.THREE
+    'three'
+    """
+    return type('Enum', (), enums)
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()

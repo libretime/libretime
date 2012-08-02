@@ -35,18 +35,39 @@ from media.monitor.log import Loggable, get_logger
 
 # This could easily be a module
 class FileMediator(object):
-    ignored_set = set([])
+    ignored_set = set([]) # for paths only
+    # TODO : unify ignored and skipped.
+    # for "special" conditions. could be generalized but too lazy now.
+    skip_checks = set([])
     logger = get_logger()
+
     @staticmethod
     def is_ignored(path): return path in FileMediator.ignored_set
     @staticmethod
     def ignore(path): FileMediator.ignored_set.add(path)
     @staticmethod
     def unignore(path): FileMediator.ignored_set.remove(path)
+    @staticmethod
+    def skip_next(*what_to_skip):
+        for skip in what_to_skip:
+            # standard nasty hack, too long to explain completely in comments but
+            # the gist of it is:
+            # 1. python's scoping rules are shitty and unintuitive (no "true"
+            # lexical scoping)
+            # 2. workaround is very similar to what you do in javascript when
+            # you write stuff like (function (x,y) { console.log(x+y); })(2,4)
+            # to be avoid clobbering peoples' namespace.
+            skip_check = (lambda skip: lambda v: v.maskname == skip)(skip)
+            FileMediator.skip_checks.add( skip_check )
 
 def mediate_ignored(fn):
     def wrapped(self, event, *args,**kwargs):
         event.pathname = unicode(event.pathname, "utf-8")
+        skip_events = [s_check for s_check in FileMediator.skip_checks if s_check(event)]
+        for s_check in skip_events:
+            FileMediator.skip_checks.remove( s_check )
+            # Only process skip_checks one at a time
+            return
         if FileMediator.is_ignored(event.pathname):
             FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
             FileMediator.unignore(event.pathname)
@@ -90,6 +111,7 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_modify(self, event):
+        FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE')
         dispatcher.send(signal=self.signal, sender=self, event=ModifyFile(event))
 
     @mediate_ignored
