@@ -5,7 +5,6 @@ import copy
 import traceback
 
 from media.monitor.handler import ReportHandler
-from media.monitor.events import NewFile, DeleteFile, ModifyFile
 from media.monitor.log import Loggable
 from media.monitor.listeners import FileMediator
 from media.monitor.exceptions import BadSongFile
@@ -42,15 +41,19 @@ class RequestSync(threading.Thread,Loggable):
             except Exception as e:
                 self.logger.info("An evil exception occured to packing '%s'" % request.path)
                 self.logger.error( traceback.format_exc() )
-        # Remove when finished debugging
-        def send_one(x): self.apiclient.send_media_monitor_requests( [x] )
         def make_req(): self.apiclient.send_media_monitor_requests( packed_requests )
+        # Is this retry shit even necessary? Consider getting rid of this.
         for try_index in range(0,self.retries):
             try: make_req()
+            # most likely we did not get json response as we expected
             except ValueError:
-                self.logger.info("Api Controller is a piece of shit... will fix once I setup the damn debugger")
+                self.logger.info("Api Controller is a piece of shit\n \
+                        it's not returning json when it should\n \
+                        ... will fix once I setup the damn debugger")
                 self.logger.info("Trying again after %f seconds" % self.request_wait)
                 time.sleep( self.request_wait )
+            except Exception as e:
+                self.logger.unexpected_exception(e)
             else:
                 self.logger.info("Request worked on the '%d' try" % (try_index + 1))
                 break
@@ -111,11 +114,12 @@ class WatchSyncer(ReportHandler,Loggable):
             self.logger.info("Received event '%s'. Path: '%s'" % ( "", getattr(event,'path','No path exists') ))
             try: self.push_queue( event )
             except BadSongFile as e:
-                self.logger.info("...")
+                self.fatal_exception("Received bas song file '%s'" % e.path, e)
             except Exception as e:
                 self.unexpected_exception(e)
         else:
-            self.logger.info("Received event that cannot be packed. Printing its representation:")
+            self.logger.info("Received event that does not implement packing.\
+                    Printing its representation:")
             self.logger.info( repr(event) )
 
     def requests_left_count(self): return len(self.__requests)
