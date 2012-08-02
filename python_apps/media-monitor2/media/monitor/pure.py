@@ -305,11 +305,13 @@ def last_modified(path):
     else: 0
 
 def import_organize(store):
+    # TODO : get rid of this later
     """returns a tuple of organize and imported directory from an airtime store directory"""
     store = os.path.normpath(store)
     return os.path.join(store,'organize'), os.path.join(store,'imported')
 
 def expand_storage(store):
+    # TODO : document
     store = os.path.normpath(store)
     return {
         'organize' : os.path.join(store, 'organize'),
@@ -330,6 +332,7 @@ def create_dir(path):
             if not os.path.exists: raise FailedToCreateDir(path)
 
 def sub_path(directory,f):
+    # TODO : document
     normalized = normpath(directory)
     common = os.path.commonprefix([ directory, normpath(f) ])
     return common == normalized
