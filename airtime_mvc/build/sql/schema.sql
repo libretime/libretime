@@ -363,7 +363,7 @@ DROP TABLE "cc_blockcriteria" CASCADE;
 CREATE TABLE "cc_blockcriteria"
 (
 	"id" serial  NOT NULL,
-	"criteria" VARCHAR(16)  NOT NULL,
+	"criteria" VARCHAR(32)  NOT NULL,
 	"modifier" VARCHAR(16)  NOT NULL,
 	"value" VARCHAR(512)  NOT NULL,
 	"extra" VARCHAR(512),

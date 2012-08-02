@@ -196,7 +196,12 @@ EOT;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
     
             //format the length for UI.
-            $formatter = new LengthFormatter($row['length']);
+            if ($row['type'] == 2){
+                $bl = new Application_Model_Block($row['item_id']);
+                $formatter = new LengthFormatter($bl->getLength());
+            } else {
+                $formatter = new LengthFormatter($row['length']);
+            }
             $row['length'] = $formatter->format();
     
             $formatter = new LengthFormatter($offset_cliplength);
@@ -268,7 +273,6 @@ EOT;
     //aggregate column on playlistcontents cliplength column.
     public function getLength()
     {
-        Logging::log($this->hasDynamicBlockOrWebStream());
         if ($this->hasDynamicBlockOrWebStream()){
             return "N/A";
         } else {

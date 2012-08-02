@@ -418,11 +418,15 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
 }
 
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
+table.library-track-md{
+    width: 280px;
+}
+
 .ui-tooltip-dark.file-md-long{ 
     max-width: 415px !important;
 }
 
-.library-get-file-md tr td{
+.library-get-file-md tr td, .library-track-md tr td{
     font-size:10px;
     padding: 0px;
     vertical-align:top;
@@ -434,12 +438,20 @@ table.library-get-file-md{
     width:350px;
 }
 
-.file-md-qtip-criteria-width-small{
-    width:80px;
+table.library-get-file-md.table-small{
+    width: 290px !important;
+}    
+
+.file-md-qtip-criteria-width-crit{
+    width:70px;
+}
+
+.file-md-qtip-criteria-width-mod{
+    width:60px;
 }
 
 .file-md-qtip-criteria-width{
-    width:120px;
+    width:110px;
 }
 
 .file-md-qtip-row-width-title{
@@ -468,8 +480,6 @@ table.library-get-file-md{
 .file-md-qtip-playlist.static td{
     color: #f09839;
 }
-
-
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES END *****/
 
 

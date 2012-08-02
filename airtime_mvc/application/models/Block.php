@@ -76,11 +76,11 @@ class Application_Model_Block
             "mood" => "DbMood",
             "name" => "DbName",
             "orchestra" => "DbOrchestra",
-            "radio_station_name" => "DbRadioStation",
+            "radio_station_name" => "DbRadioStationName",
             "rating" => "DbRating",
             "sample_rate" => "DbSampleRate",
             "track_title" => "DbTrackTitle",
-            "track_num" => "DbTrackNum",
+            "track_number" => "DbTrackNumber",
             "year" => "DbYear"
     );
     
@@ -245,8 +245,32 @@ EOT;
     // function return "N/A" if dynamic
     public function getLength()
     {
-        $length = $this->block->getDbLength();
+        if ($this->isStatic()){
+            $length = $this->block->getDbLength();
+        } else {
+            $length = $this->getDynamicBlockLength();
+        }
         $length = $length == null ? "N/A" : $length;
+        return $length;
+    }
+    
+    public function getDynamicBlockLength()
+    {
+        $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
+                ->filterByDbCriteria('limit')->findOne();
+        $modifier = $result->getDbModifier();
+        $value = $result->getDbValue();
+        if ($modifier == "items") {
+            $length = $value." ".$modifier;
+        } else {
+            if ($modifier == "minutes") {
+                $timestamp = "00:".$value.":00";
+            } else if ($modifier == "hours") {
+                $timestamp = $value.":00:00.0";
+            }
+            $formatter = new LengthFormatter($timestamp);
+            $length = "~".$formatter->format();
+        } 
         return $length;
     }
     
@@ -364,9 +388,14 @@ EOT;
     
             foreach ($p_items as $ac) {
                 Logging::log("Adding audio file {$ac}");
-    
-                $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
-                $pos = $pos + 1;
+                
+                if (is_array($ac) && $ac[1] == 'audioclip') {
+                    $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
+                    $pos = $pos + 1;
+                } elseif (!is_array($ac)) {
+                    $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
+                    $pos = $pos + 1;
+                }
             }
     
             //reset the positions of the remaining items.
@@ -1033,7 +1062,7 @@ EOT;
             // as it cannot be calculated
             if ($blockType == 'dynamic') {
                 $this->setLength(null);
-                $output['blockLength'] = "N/A";
+                $output['blockLength'] = $this->getDynamicBlockLength();
             } else {
                 $length = $this->getStaticLength();
                 $this->setLength($length);
@@ -1169,7 +1198,7 @@ EOT;
                 "rating" => "Rating",
                 "sample_rate" => "Sample Rate",
                 "track_title" => "Title",
-                "track_num" => "Track Number",
+                "track_number" => "Track Number",
                 "utime" => "Uploaded",
                 "year" => "Year"
         );

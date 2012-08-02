@@ -33,7 +33,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "rating" => "Rating",
             "sample_rate" => "Sample Rate",
             "track_title" => "Title",
-            "track_num" => "Track Number",
+            "track_number" => "Track Number",
             "utime" => "Uploaded",
             "year" => "Year"               
         );
@@ -64,7 +64,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "rating" => "n",
             "sample_rate" => "n",
             "track_title" => "s",
-            "track_num" => "n",
+            "track_number" => "n",
             "year" => "n"
         );
         
