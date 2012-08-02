@@ -58,7 +58,6 @@ class AirtimeNotifier(Loggable):
         m = json.loads(message.body)
         self.handler.message(m)
 
-
 class AirtimeMessageReceiver(Loggable):
     def __init__(self, cfg, manager):
         self.dispatch_table = {

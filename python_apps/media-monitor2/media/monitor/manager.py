@@ -58,13 +58,13 @@ class Manager(Loggable):
                                proc_fun=listener)
         self.__wd_path[path] = wd.values()[0]
 
-    def __create_organizer(self, target_path):
+    def __create_organizer(self, target_path, recorded_path):
         """
         private constructor for organizer so that we don't have to repeat
         adding the channel/signal as a parameter to the original constructor
         every time
         """
-        return Organizer(channel=self.organize_channel,target_path=target_path)
+        return Organizer(channel=self.organize_channel,target_path=target_path, recorded_path=recorded_path)
 
     def get_problem_files_path(self):
         return self.organize['problem_files_path']
@@ -79,6 +79,7 @@ class Manager(Loggable):
     def set_recorded_path(self, new_path):
         self.__remove_watch(self.organize['recorded_path'])
         self.organize['recorded_path'] = new_path
+        self.organize['organizer'] = self.__create_organizer(self.organize['imported_path'], new_path)
         self.__add_watch(new_path, self.watch_listener)
 
     def get_organize_path(self):
@@ -106,11 +107,11 @@ class Manager(Loggable):
 
     def set_imported_path(self,new_path):
         """
-        set the directory where organized files go to
+        set the directory where organized files go to.
         """
         self.__remove_watch(self.organize['imported_path'])
         self.organize['imported_path'] = new_path
-        self.organize['organizer'] = self.__create_organizer(new_path)
+        self.organize['organizer'] = self.__create_organizer(new_path, self.organize['recorded_path'])
         self.__add_watch(new_path, self.watch_listener)
 
     def change_storage_root(self, store):

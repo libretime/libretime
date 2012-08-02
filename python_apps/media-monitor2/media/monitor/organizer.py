@@ -13,9 +13,10 @@ class Organizer(ReportHandler,Loggable):
     directory". The "storage" directory picks up all of its events through
     pyinotify. (These events are fed to it through StoreWatchListener)
     """
-    def __init__(self, channel, target_path):
+    def __init__(self, channel, target_path, recorded_path):
         self.channel = channel
         self.target_path = target_path
+        self.recorded_path = recorded_path
         super(Organizer, self).__init__(signal=self.channel)
     def handle(self, sender, event):
         """
@@ -23,7 +24,11 @@ class Organizer(ReportHandler,Loggable):
         directory and place it in the correct path (starting with self.target_path)
         """
         try:
-            new_path = mmp.organized_path(event.path, self.target_path, event.metadata.extract())
+            # We must select the target_path based on whether file was recorded
+            # by airtime or not.
+            # Do we need to "massage" the path using mmp.organized_path?
+            target_path = self.recorded_path if event.metadata.is_recorded() else self.target_path
+            new_path = mmp.organized_path(event.path, target_path, event.metadata.extract())
             mmp.magic_move(event.path, new_path)
             self.logger.info('Organized: "%s" into "%s"' % (event.path, new_path))
         except BadSongFile as e:

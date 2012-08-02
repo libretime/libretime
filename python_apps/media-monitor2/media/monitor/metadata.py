@@ -92,6 +92,9 @@ def truncate_to_length(item, length):
         else: return item
 
 class Metadata(Loggable):
+    # TODO : refactor the way metadata is being handled. Right now things are a
+    # little bit messy. Some of the handling is in m.m.pure while the rest is
+    # here. Also interface is not very consistent
 
     @staticmethod
     def write_unsafe(path,md):
@@ -145,6 +148,9 @@ class Metadata(Loggable):
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath)
+
+    def is_recorded(self):
+        return mmp.is_airtime_recorded( self.__metadata )
 
     def extract(self):
         return copy.deepcopy(self.__metadata)
