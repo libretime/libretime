@@ -279,7 +279,7 @@ EOT;
             if ($modifier == "minutes") {
                 $length = "00:".$value.":00";
             } else if ($modifier == "hours") {
-                $length = $value."00:00";
+                $length = $value.":00:00";
             }
         } 
         return $length;

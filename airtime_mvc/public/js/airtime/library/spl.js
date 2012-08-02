@@ -366,8 +366,11 @@ var AIRTIME = (function(AIRTIME){
                             var isStatic = data.isStatic;
                             delete data.type;
                             if (isStatic) {
+                                console.log(data);
                                 $.each(data, function(index, ele){
-                                    $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
+                                    if (ele.track_title !== undefined) {
+                                        $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
+                                    }
                                 })
                             } else {
                                 for (var key in data.crit){
