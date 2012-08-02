@@ -152,6 +152,11 @@ class Application_Common_DateHelper
     {
         return strtotime($time2) - strtotime($time1);
     }
+    
+    public static function TimeAdd($time1, $time2)
+    {
+        return strtotime($time2) + strtotime($time1);
+    }
 
     public static function ConvertMSToHHMMSSmm($time)
     {

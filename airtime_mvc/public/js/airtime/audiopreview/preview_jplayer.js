@@ -40,6 +40,8 @@ $(document).ready(function(){
     var playlistIndex = $('.playlistIndex').text();
     var showID = $('.showID').text();
     var showIndex = $('.showIndex').text();
+    var blockId = $('.blockId').text();
+    var blockIndex = $('.blockIndex').text();
 
     var numOfItems = 0;
     
@@ -49,6 +51,8 @@ $(document).ready(function(){
         playOne(audioFileID);
     }else if (showID != "") {
         playAllShow(showID, showIndex);
+    }else if(blockId != "" && blockIndex != ""){
+        playBlock(blockId, blockIndex);
     }
     
     $("#jp_container_1").on("mouseenter", "ul.jp-controls li", function(ev) {
@@ -73,6 +77,17 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
         play(p_playlistIndex);
     }else {
         buildplaylist("/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
+    }
+}
+
+function playBlock(p_blockId, p_blockIndex)
+{
+    var viewsBlockId = $('.blockId').text();
+    
+    if ( _idToPostionLookUp !== undefined && viewsBlockId == p_blockId ) {
+        play(p_blockIndex);
+    }else {
+        buildplaylist("/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
     }
 }
 

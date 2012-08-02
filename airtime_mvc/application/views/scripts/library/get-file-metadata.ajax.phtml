@@ -26,23 +26,7 @@
 <div><span>Name:</span><span><?php echo ($this->md["dc:title"]);?></span></div>
 <div><span>Creator:</span><span><?php echo ($this->md["dc:creator"]);?></span></div>
 <?php if ($this->type == "block" && $this->blType == "Dynamic") { ?>
-    <?php if ($this->contents["limit"]["modifier"] == "items") { ?>
-        <?php $len = $this->contents["limit"]["value"]." tracks"; ?>
-    <?php } elseif ($this->contents["limit"]["modifier"] == "minutes") { ?>
-        <?php
-        $mins = $this->contents["limit"]["value"];
-        if ($mins > 59) {
-            $hours = intval($mins / 60);
-            $minutes = $mins % 60;
-            $len = $hours.":".str_pad($minutes, 2, "0", STR_PAD_LEFT).":00.0";    
-        } else {
-            $len = $this->contents["limit"]["value"].":00.0";
-        }
-        ?>
-    <?php } else {?>
-        <?php $len = $this->contents["limit"]["value"].":00:00.0"; ?>
-    <?php } ?>
-    <div><span>Length:</span><span><?php echo $len;?></span></div>
+<div><span>Length:</span><span><?php echo $this->block->getFormattedLength();?></span></div>
 <?php } else { ?>
 <div><span>Length:</span><span><?php echo ($this->md["dcterms:extent"]);?></span></div>
 <?php } ?>
@@ -74,13 +58,7 @@
                 <tr class='file-md-qtip-playlist <?php if ($isStatic) echo 'static'; else echo 'dynamic';?>'>
                     <td class='file-md-qtip-row-width-title'><?php echo $row["track_title"] ?></td>
                     <td class='file-md-qtip-row-width-artist'><?php echo $row["creator"] ?></td>
-                    <?php if (!$isStatic) { ?>
-                        <?php $criteria = $bl->getCriteria();?>
-                        <?php $len = $bl->getLength();?>
-                        <td class='file-md-qtip-row-width-small'><?php echo $len ?></td>
-                    <?php } else { ?>
-                        <td class='file-md-qtip-row-width-small'><?php echo $row["length"] ?></td>
-                    <?php } ?>
+                    <td class='file-md-qtip-row-width-small'><?php echo $bl->getFormattedLength(); ?></td>
                 </tr>
             <?php } else { ?>
                 <tr>

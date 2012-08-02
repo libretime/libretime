@@ -629,6 +629,9 @@ var AIRTIME = (function(AIRTIME) {
                                 open_playlist_preview(playlistIndex, 0);
                             } else if (data.ftype === 'audioclip') {
                                 open_audio_preview(data.audioFile, data.track_title, data.artist_name);
+                            } else if (data.ftype === 'block') {
+                                blockIndex = $(this).parent().attr('id').substring(3); //remove the pl_
+                                open_block_preview(blockIndex, 0);
                             }
                         };
                         oItems.play.callback = callback;

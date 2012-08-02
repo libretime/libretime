@@ -95,7 +95,7 @@ class Application_Model_Datatables
                     $r['length'] = $pl->getLength();
                 } else if ($r['ftype'] == "block") {
                     $bl = new Application_Model_Block($r['id']);
-                    $r['length'] = $bl->getLength();
+                    $r['length'] = $bl->getFormattedLength();
                 }
             }
         } catch (Exception $e) {

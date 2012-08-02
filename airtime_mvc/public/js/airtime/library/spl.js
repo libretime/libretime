@@ -356,10 +356,11 @@ var AIRTIME = (function(AIRTIME){
 		$pl.delegate(".spl_block_expand",
 		        {"click": function(ev){
 		            var id = parseInt($(this).attr("id").split("_").pop(), 10);
+		            var blockId = parseInt($(this).attr("blockId"), 10);
 		            if ($(this).hasClass('close')) {
                         var sUrl = "/playlist/get-block-info";
                         mod.disableUI();
-                        $.post(sUrl, {format:"json", id:id}, function(json){
+                        $.post(sUrl, {format:"json", id:blockId}, function(json){
                             $html = "";
                             var data = $.parseJSON(json);
                             var isStatic = data.isStatic;

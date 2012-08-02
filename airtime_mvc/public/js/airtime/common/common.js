@@ -31,11 +31,16 @@ function openAudioPreview(p_event) {
     p_event.stopPropagation();
     
     var audioFileID = $(this).attr('audioFile');
-    var playlistID = $('#pl_id:first').attr('value');
-    var playlistIndex = $(this).parent().parent().attr('id');
-    playlistIndex = playlistIndex.substring(4); //remove the spl_
+    var objId = $('#obj_id:first').attr('value');
+    var objType = $('#obj_type:first').attr('value');
+    var playIndex = $(this).parent().parent().attr('id');
+    playIndex = playIndex.substring(4); //remove the spl_
     
-    open_playlist_preview(playlistID, playlistIndex);
+    if (objType == "playlist") {
+        open_playlist_preview(objId, playIndex);
+    } else if (objType == "block") {
+        open_block_preview(objId, playIndex);
+    }
 }
 
 function open_audio_preview(audioFileID, audioFileTitle, audioFileArtist) {
@@ -62,6 +67,17 @@ function open_playlist_preview(p_playlistID, p_playlistIndex) {
         _preview_window.playAllPlaylist(p_playlistID, p_playlistIndex);
     else
         openPreviewWindow('audiopreview/playlist-preview/playlistIndex/'+p_playlistIndex+'/playlistID/'+p_playlistID);
+    _preview_window.focus();
+}
+
+function open_block_preview(p_blockId, p_blockIndex) {
+    if (p_blockIndex == undefined) //Use a resonable default.
+        p_blockIndex = 0;
+    
+    if (_preview_window != null && !_preview_window.closed)
+        _preview_window.playBlock(p_blockId, p_blockIndex);
+    else
+        openPreviewWindow('audiopreview/block-preview/blockIndex/'+p_blockIndex+'/blockId/'+p_blockId);
     _preview_window.focus();
 }
 
