@@ -76,4 +76,4 @@ debuild --no-lintian -b -uc -us $@ || exit
 exit
 echo -n "UPLOAD? [enter|CTRL-C]" ; read
 
-scp apt.sourcefabric.org:/var/www/apt/misc/ /tmp/airtime_${VERSION}*.deb
+scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/misc/
