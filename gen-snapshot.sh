@@ -78,4 +78,4 @@ debuild --no-lintian -b -uc -us $@ || exit
 exit
 
 # optionally, copy the new package to the public server
-scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/misc/
+scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
