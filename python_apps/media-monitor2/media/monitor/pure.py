@@ -48,8 +48,8 @@ class IncludeOnly(object):
 
 def partition(f, alist):
     """
-    Partition is very similar to filter except that it also returns the elements for which f
-    return false but in a tuple.
+    Partition is very similar to filter except that it also returns the
+    elements for which f return false but in a tuple.
     >>> partition(lambda x : x > 3, [1,2,3,4,5,6])
     [4,5,6],[1,2,3]
     """
