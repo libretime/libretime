@@ -143,13 +143,16 @@ class AirtimeMessageReceiver(Loggable):
     def rescan_watch(self, msg):
         self.logger.info("Trying to rescan watched directory: '%s'" % msg['directory'])
         try:
-            self.__request_now_bootstrap(msg['id'])
+            # id is always an integer but in the dictionary the key is always a
+            # string
+            self.__request_now_bootstrap( unicode(msg['id']) )
         except DirectoryIsNotListed as e:
             self.logger.info("Bad rescan request")
             self.logger.info( str(e) )
         except Exception as e:
             self.logger.info("Bad rescan request. Unknown error.")
             self.logger.info( str(e) )
+            self.logger.info( traceback.format_exc() )
         else:
             self.logger.info("Successfully re-scanned: '%s'" % msg['directory'])
 
