@@ -2,7 +2,7 @@
 # Script for generating nightly Airtime snapshot packages
 # Run from the directory containg the files checked out from git
 
-VERSION=2.1.4~$(date "+%Y%m%d")
+VERSION=2.2.0~$(date "+%Y%m%d")
 BUILDDEST=/tmp/airtime-${VERSION}/
 DEBDIR=`pwd`/debian
 
@@ -23,9 +23,9 @@ cd ${BUILDDEST} || exit
 
 # Set the version of the snapshot package
 
-sed -i "1s:(2.1.4-1):(${VERSION}):g" debian/changelog
+sed -i "1s:(2.2.0-1):(${VERSION}):g" debian/changelog
 
-# FIXES for 2.1.4 #############
+# FIXES for 2.2.0 #############
 
 # these are all moved to debian/copyright
 rm airtime/python_apps/pypo/LICENSE
@@ -71,9 +71,11 @@ rm -r airtime/install_full/
 
 #############################
 
+echo "running the build..."
+
 debuild --no-lintian -b -uc -us $@ || exit
 
 exit
-echo -n "UPLOAD? [enter|CTRL-C]" ; read
 
-scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/misc/
+# optionally, copy the new package to the public server
+scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
