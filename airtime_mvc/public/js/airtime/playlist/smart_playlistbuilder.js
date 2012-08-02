@@ -155,7 +155,8 @@ function setSmartPlaylistEvents() {
         item_to_hide.children().attr('disabled', 'disabled');
         item_to_hide.find('[name^="sp_criteria_field"]').val(0).end()
                     .find('[name^="sp_criteria_modifier"]').val(0).end()
-                    .find('[name^="sp_criteria_value"]').val('');
+                    .find('[name^="sp_criteria_value"]').val('').end()
+                    .find('[name^="sp_criteria_extra"]').val('');
         
         sizeTextBoxes(item_to_hide.find('[name^="sp_criteria_value"]'), 'sp_extra_input_text', 'sp_input_text');
         item_to_hide.hide();

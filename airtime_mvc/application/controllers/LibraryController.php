@@ -79,7 +79,7 @@ class LibraryController extends Zend_Controller_Action
                 if (!$obj->isStatic()){
                     unset($menu["play"]);
                 }
-                if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
+                if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
                     if ($this->obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
