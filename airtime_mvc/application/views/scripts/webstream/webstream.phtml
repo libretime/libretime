@@ -8,6 +8,7 @@
     <input id="pl_lastMod" type="hidden" value="<?php echo $this->ws->getLastModified('U'); ?>"></input>
     <div class="status" style="display:none;"></div>
     <div class="playlist_title">
+        <div id="name-error" class="errors" style="display:none;"></div>
         <h3 id="ws_name">
             <a id="playlist_name_display" contenteditable="true"><?php echo $this->ws->getName(); ?></a>
         </h3>
@@ -22,10 +23,12 @@
                 <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->ws->getDescription(); ?></textarea>
             </dd>
          <dt id="submit-label" style="display: none;">&nbsp;</dt>
+         <div id="url-error" class="errors" style="display:none;"></div>
          <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
          <dd id="streamurl-element">
              <input type="text" value="http://" size="40"/>
          </dd>
+         <div id="length-error" class="errors" style="display:none;"></div>
          <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
          <dd id="streamlength-element">
              <input type="text" value="00h 20m"/>
