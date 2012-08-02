@@ -1,6 +1,6 @@
-airtime (2.1.4-1) unstable; urgency=low
+airtime (2.2.0-1) unstable; urgency=low
 
-  * Nightly snapshot of Airtime
+  * Nightly development snapshot of Airtime 2.2.x
 
  -- Daniel James <daniel@64studio.com>  Thu, 02 Aug 2012 11:19:03 +0100
 
