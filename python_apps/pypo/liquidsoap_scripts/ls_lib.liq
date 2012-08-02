@@ -86,6 +86,7 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     fallible = true,
                     url = url,
                     description = description,
+                    name = description,
                     genre = genre,
                     user = !user_ref,
                     on_error = on_error,
