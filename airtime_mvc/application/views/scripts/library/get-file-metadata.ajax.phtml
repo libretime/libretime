@@ -56,14 +56,14 @@
                     <td colspan="3"><?php if ($isStatic) echo 'Static Playlist'; else echo 'Dynamic Playlist';?></td>
                 </tr>
                 <tr class='file-md-qtip-playlist <?php if ($isStatic) echo 'static'; else echo 'dynamic';?>'>
-                    <td class='file-md-qtip-row-width-title'><?php echo $row["track_title"] ?></td>
-                    <td class='file-md-qtip-row-width-artist'><?php echo $row["creator"] ?></td>
+                    <td class='file-md-qtip-row-width-title file-md-qtip-nowrap'><?php echo $row["track_title"] ?></td>
+                    <td class='file-md-qtip-row-width-artist file-md-qtip-nowrap'><?php echo $row["creator"] ?></td>
                     <td class='file-md-qtip-row-width-small'><?php echo $bl->getFormattedLength(); ?></td>
                 </tr>
             <?php } else { ?>
                 <tr>
-                    <td class='file-md-qtip-row-width-title'><?php echo $row["track_title"] ?></td>
-                    <td class='file-md-qtip-row-width-artist'><?php echo $row["creator"] ?></td>
+                    <td class='file-md-qtip-row-width-title file-md-qtip-nowrap'><?php echo $row["track_title"] ?></td>
+                    <td class='file-md-qtip-row-width-artist file-md-qtip-nowrap'><?php echo $row["creator"] ?></td>
                     <td class='file-md-qtip-row-width-small'><?php echo $row["length"] ?></td>
                 </tr>
             <?php } ?>
@@ -86,9 +86,9 @@
                 }
                 ?>
                 <tr>
-                    <td class='file-md-qtip-criteria-width-crit'><?php echo $crit["display_name"] ?></td>
+                    <td class='file-md-qtip-criteria-width-crit file-md-qtip-nowrap'><?php echo $crit["display_name"] ?></td>
                     <td class='file-md-qtip-criteria-width-mod'><?php echo $crit["modifier"] ?></td>
-                    <td class='file-md-qtip-criteria-width'><?php echo $crit["value"] ?>
+                    <td class='file-md-qtip-criteria-width file-md-qtip-nowrap'><?php echo $crit["value"] ?>
                     <?php if (isset($crit["extra"])) { ?>
                         to <?php echo $crit["extra"] ?></td>
                     <?php } ?>
