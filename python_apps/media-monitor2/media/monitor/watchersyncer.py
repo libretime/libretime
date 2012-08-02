@@ -5,7 +5,7 @@ import copy
 import traceback
 
 from media.monitor.handler import ReportHandler
-from media.monitor.events import NewFile, DeleteFile
+from media.monitor.events import NewFile, DeleteFile, ModifyFile
 from media.monitor.log import Loggable
 from media.monitor.listeners import FileMediator
 from media.monitor.exceptions import BadSongFile
@@ -106,16 +106,17 @@ class WatchSyncer(ReportHandler,Loggable):
     def handle(self, sender, event):
         """We implement this abstract method from ReportHandler"""
         # TODO : more types of events need to be handled here
-        if isinstance(event, NewFile):
-            try:
-                self.logger.info("'%s' : New file added: '%s'" % (self.target_path, event.path))
-                self.push_queue(event)
+        if hasattr(event, 'pack'):
+            # We push this event into queue
+            self.logger.info("Received event '%s'. Path: '%s'" % ( "", getattr(event,'path','No path exists') ))
+            try: self.push_queue( event )
             except BadSongFile as e:
-                self.report_problem_file(event=event, exception=e)
-        elif isinstance(event, DeleteFile):
-            self.logger.info("'%s' : Deleted file: '%s'" % (self.target_path, event.path))
-            self.push_queue(event)
-        else: raise Exception("Unknown event: %s" % str(event))
+                self.logger.info("...")
+            except Exception as e:
+                self.unexpected_exception(e)
+        else:
+            self.logger.info("Received event that cannot be packed. Printing its representation:")
+            self.logger.info( repr(event) )
 
     def requests_left_count(self): return len(self.__requests)
     def events_left_count(self): return len(self.__queue)

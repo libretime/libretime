@@ -103,9 +103,9 @@ class Metadata(Loggable):
         song_file = mutagen.File(path, easy=True)
         for airtime_k, airtime_v in md.iteritems():
             if airtime_k in airtime2mutagen:
-                song_file[ airtime2mutagen[airtime_k] ] = airtime_v
-            else:
-                song_file[ airtime2mutagen[airtime_k] ] = u""
+                # The unicode cast here is mostly for integers that need to be
+                # strings
+                song_file[ airtime2mutagen[airtime_k] ] = unicode(airtime_v)
         song_file.save()
 
 

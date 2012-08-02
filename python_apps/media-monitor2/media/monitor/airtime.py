@@ -120,6 +120,7 @@ class AirtimeMessageReceiver(Loggable):
         except Exception as e:
             # TODO : add md_path to problem path or something?
             self.logger.info("Unknown error when writing metadata to: '%s'" % md_path)
+            self.logger.info( traceback.format_exc() )
 
     def new_watch(self, msg):
         self.logger.info("Creating watch for directory: '%s'" % msg['directory'])
