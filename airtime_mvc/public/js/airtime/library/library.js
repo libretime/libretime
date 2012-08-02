@@ -639,7 +639,7 @@ var AIRTIME = (function(AIRTIME) {
                         
                         //delete through the playlist controller, will reset
                         //playlist screen if this is the currently edited playlist.
-                        if (data.ftype === "playlist" && screen === "playlist") {
+                        if ((data.ftype === "playlist" || data.ftype === "block") && screen === "playlist") {
                             callback = function() {
                                 
                                 if (confirm('Are you sure you want to delete the selected item?')) {
