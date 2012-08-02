@@ -33,9 +33,14 @@ class WebstreamController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 
-        Application_Model_Webstream::save($request);
+        $analysis = Application_Model_Webstream::analyzeFormData($request);
         
-        $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
-
+        if (Application_Model_Webstream::isValid($analysis)) {
+            Application_Model_Webstream::save($request);
+            $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
+        } else {
+            $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>"; 
+            $this->view->analysis = $analysis;
+        }
     }
 }

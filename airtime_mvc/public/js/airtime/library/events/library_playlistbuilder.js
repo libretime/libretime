@@ -128,11 +128,14 @@ var AIRTIME = (function(AIRTIME){
 				for (i = 0, length = aData.length; i < length; i++) {
 					temp = aData[i];
 					if (temp.ftype === "audioclip" || temp.ftype === "block") {
-						aMediaIds.push(temp.id);
+						aMediaIds.push(new Array (temp.id, temp.ftype));
 					}
 				}
-			
-				AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+			    if (aMediaIds.length > 0) {
+                    AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+			    } else {
+			        alert('You cannot add playlists to smart playlists');
+			    }
 			});
 		
 		//delete from library.

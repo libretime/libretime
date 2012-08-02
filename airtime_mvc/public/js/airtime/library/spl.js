@@ -533,15 +533,30 @@ var AIRTIME = (function(AIRTIME){
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
             var name = $pl.find("#playlist_name_display").text(); 
+            
+            //hide any previous errors (if any)
+            $("#side_playlist .errors").empty().hide();
         
             var url = 'Webstream/save';
             $.post(url, 
                 {format: "json", description: description, url:streamurl, length: length, name: name}, 
                 function(json){
-                    var $status = $("#side_playlist .status");
-                    $status.html(json.statusMessage);
-                    $status.show();
-                    setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
+                    if (json.analysis){
+                        for (var s in json.analysis){
+                            var field = json.analysis[s];
+                            
+                            if (!field[0]) {
+                                var elemId = "#"+s+"-error";
+                                var $div = $("#side_playlist " + elemId).text(field[1]).show();
+                            }
+                        }
+                    } else {
+                        var $status = $("#side_playlist .status");
+                        $status.html(json.statusMessage);
+                        $status.show();
+                        setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
+                    }
+                    
                 });    
         
         

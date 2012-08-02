@@ -126,7 +126,7 @@ class PlaylistController extends Zend_Controller_Action
 
     private function blockDynamic($obj)
     {
-        $this->view->error = "You cannot add tracks to dynamic block.";
+        $this->view->error = "You cannot add tracks to dynamic blocks.";
         $this->createFullResponse($obj);
     }
     
@@ -150,6 +150,11 @@ class PlaylistController extends Zend_Controller_Action
         Logging::log("{$e->getFile()}");
         Logging::log("{$e->getLine()}");
         Logging::log("{$e->getMessage()}");
+    }
+    
+    private function playlistDenied($obj) {
+        $this->view->error = "You cannot add playlists to smart playlists.";
+        $this->createFullResponse($obj);
     }
 
     public function indexAction()
@@ -306,9 +311,15 @@ class PlaylistController extends Zend_Controller_Action
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } else if ($obj->isStatic()) {
                 // if the dest is a block object
+                //check if any items are playlists
+                foreach($ids as $id) {
+                    if (is_array($id) && isset($id[1]) && $id[1] == 'playlist') {
+                        throw new Exception('playlist to block');
+                    }
+                }
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } else {
-                throw new BlockDynamicException;
+                throw new Exception('track to dynamic');
             }
             $this->createUpdateResponse($obj);
         }
@@ -318,11 +329,14 @@ class PlaylistController extends Zend_Controller_Action
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_type);
         }
-        catch (BlockDynamicException $e) {
-            $this->blockDynamic($obj);
-        }
         catch (Exception $e) {
-            $this->playlistUnknownError($e);
+            if ($e->getMessage() == 'playlist to block') {
+                $this->playlistDenied($obj);
+            } else if ($e->getMessage() == 'track to dynamic') {
+                $this->blockDynamic($obj);
+            } else {
+                $this->playlistUnknownError($e);   
+            }
         }
     }
 
