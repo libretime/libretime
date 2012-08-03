@@ -198,7 +198,7 @@ EOT;
             //format the length for UI.
             if ($row['type'] == 2){
                 $bl = new Application_Model_Block($row['item_id']);
-                $formatter = new LengthFormatter($bl->getLength());
+                $formatter = new LengthFormatter($bl->getFormattedLength());
             } else {
                 $formatter = new LengthFormatter($row['length']);
             }
@@ -257,24 +257,39 @@ EOT;
         return $fade;
     }
     
-    public function hasDynamicBlockOrWebStream(){
-        $sql = "SELECT count(*) as count FROM cc_playlistcontents as pc 
-                JOIN cc_block as bl ON pc.type=2 AND pc.block_id=bl.id AND bl.type='dynamic'
-                WHERE playlist_id={$this->id} AND (pc.type=2 OR pc.type=1)";
-        $r = $this->con->query($sql);
-        $result = $r->fetchAll(PDO::FETCH_NUM);
-        if (intval($result[0][0]) > 0) {
+    // returns true/false and ids of dynamic blocks
+    public function hasDynamicBlock(){
+        $ids = $this->getIdsOfDynamicBlocks();
+        if (count($ids) > 0) {
             return true;
         } else {
             return false;
         }
     }
+    
+    public function getIdsOfDynamicBlocks() {
+        $sql = "SELECT bl.id FROM cc_playlistcontents as pc
+                JOIN cc_block as bl ON pc.type=2 AND pc.block_id=bl.id AND bl.type='dynamic'
+                WHERE playlist_id={$this->id} AND pc.type=2";
+        $r = $this->con->query($sql);
+        $result = $r->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 
     //aggregate column on playlistcontents cliplength column.
     public function getLength()
     {
-        if ($this->hasDynamicBlockOrWebStream()){
-            return "N/A";
+        if ($this->hasDynamicBlock()){
+            $ids = $this->getIdsOfDynamicBlocks();
+            $length = $this->pl->getDbLength();
+            foreach ($ids as $id){
+                $bl = new Application_Model_Block($id['id']);
+                if ($bl->hasItemLimit()) {
+                    return "N/A";
+                }
+            }
+            $formatter = new LengthFormatter($length);
+            return "~".$formatter->format();
         } else {
             return $this->pl->getDbLength();
         }

@@ -17,7 +17,7 @@ if ($item['type'] == 2) {
                 <span class="ui-icon ui-icon-play"></span>
             </div>
             <?php elseif ($item['type'] == 2 && $item['exists']): ?>
-            <div class="big_play ui-state-hover">
+            <div class="big_play ui-state-hover" blockId="<?php echo $item["item_id"]; ?>">
                 <span class="ui-icon ui-icon-alert"></span>
             </div>
             <?php else: ?>
@@ -31,9 +31,9 @@ if ($item['type'] == 2) {
                 <span class="spl_cue ui-state-default"></span>
                 <?php } else if ($item['type'] == 2) {
                         if ($staticBlock) {?>
-                <span class="spl_block_expand close" id="expand_block_<?php echo $item['item_id']?>">Static Block Expand</span>
+                <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">Static Block Expand</span>
                 <?php   } else { ?>
-                <span class="spl_block_expand close" id="expand_block_<?php echo $item['item_id']?>">Dynamic Block</span>
+                <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">Dynamic Block</span>
                 <?php   }
                       } ?>
                 <span class="spl_title"><?php echo $item['track_title'] ?></span>
@@ -75,7 +75,7 @@ if ($item['type'] == 2) {
         </div>
         <?php endif; ?>
         <?php if ($item['type'] == 2) {?>
-        <div id="block_<?php echo $item['item_id']?>_info"></div>
+        <div id="block_<?php echo $item["id"]?>_info"></div>
         <?php } ?>
     </li>
     <?php $i = $i+1; ?>

@@ -356,17 +356,21 @@ var AIRTIME = (function(AIRTIME){
 		$pl.delegate(".spl_block_expand",
 		        {"click": function(ev){
 		            var id = parseInt($(this).attr("id").split("_").pop(), 10);
+		            var blockId = parseInt($(this).attr("blockId"), 10);
 		            if ($(this).hasClass('close')) {
                         var sUrl = "/playlist/get-block-info";
                         mod.disableUI();
-                        $.post(sUrl, {format:"json", id:id}, function(json){
+                        $.post(sUrl, {format:"json", id:blockId}, function(json){
                             $html = "";
                             var data = $.parseJSON(json);
                             var isStatic = data.isStatic;
                             delete data.type;
                             if (isStatic) {
+                                console.log(data);
                                 $.each(data, function(index, ele){
-                                    $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
+                                    if (ele.track_title !== undefined) {
+                                        $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
+                                    }
                                 })
                             } else {
                                 for (var key in data.crit){

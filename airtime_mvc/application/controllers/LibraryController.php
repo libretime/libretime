@@ -76,7 +76,10 @@ class LibraryController extends Zend_Controller_Action
                 $obj = new Application_Model_Playlist($id);
             } else {
                 $obj = new Application_Model_Block($id);
-                if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
+                if (!$obj->isStatic()){
+                    unset($menu["play"]);
+                }
+                if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
                     if ($this->obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
@@ -312,21 +315,22 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->md = $md;
                 $this->view->contents = $file->getContents();
             } else if ($type == "block") {
-                $file = new Application_Model_Block($id);
+                $block = new Application_Model_Block($id);
                 $this->view->type = $type;
-                $md = $file->getAllPLMetaData();
+                $md = $block->getAllPLMetaData();
 
                 $formatter = new LengthFormatter($md["dcterms:extent"]);
                 $md["dcterms:extent"] = $formatter->format();
 
                 $this->view->md = $md;
-                if ($file->isStatic()) {
+                if ($block->isStatic()) {
                     $this->view->blType = 'Static';
-                    $this->view->contents = $file->getContents();
+                    $this->view->contents = $block->getContents();
                 } else {
                     $this->view->blType = 'Dynamic';
-                    $this->view->contents = $file->getCriteria();
+                    $this->view->contents = $block->getCriteria();
                 }
+                $this->view->block = $block;
             } else if ($type == "stream") {
                 $file = new Application_Model_Webstream($id);
 

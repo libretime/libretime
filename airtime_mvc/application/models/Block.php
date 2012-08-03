@@ -250,28 +250,48 @@ EOT;
         } else {
             $length = $this->getDynamicBlockLength();
         }
-        $length = $length == null ? "N/A" : $length;
+        return $length;
+    }
+    
+    public function getFormattedLength()
+    {
+        $prepend = "";
+        if ($this->isStatic()){
+            $length = $this->block->getDbLength();
+        } else {
+            $length = $this->getDynamicBlockLength();
+            if (!$this->hasItemLimit()) {
+                $prepend = "~";
+            }
+        }
+        $formatter = new LengthFormatter($length);
+        $length = $prepend.$formatter->format();
         return $length;
     }
     
     public function getDynamicBlockLength()
     {
+        list($value, $modifier) = $this->getLimitValueAndModifier();
+        if ($modifier == "items") {
+            $length = $value." ".$modifier;
+        } else {
+            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            if ($modifier == "minutes") {
+                $length = "00:".$value.":00";
+            } else if ($modifier == "hours") {
+                $length = $value.":00:00";
+            }
+        } 
+        return $length;
+    }
+    
+    public function getLimitValueAndModifier()
+    {
         $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
                 ->filterByDbCriteria('limit')->findOne();
         $modifier = $result->getDbModifier();
         $value = $result->getDbValue();
-        if ($modifier == "items") {
-            $length = $value." ".$modifier;
-        } else {
-            if ($modifier == "minutes") {
-                $timestamp = "00:".$value.":00";
-            } else if ($modifier == "hours") {
-                $timestamp = $value.":00:00.0";
-            }
-            $formatter = new LengthFormatter($timestamp);
-            $length = "~".$formatter->format();
-        } 
-        return $length;
+        return array($value, $modifier);
     }
     
     // 
@@ -891,6 +911,7 @@ EOT;
     public function setLength($value){
         $this->block->setDbLength($value);
         $this->block->save($this->con);
+        $this->updateBlockLengthInAllPlaylist();
     }
     
     
@@ -1061,16 +1082,29 @@ EOT;
             // if the block is dynamic, put null to the length
             // as it cannot be calculated
             if ($blockType == 'dynamic') {
-                $this->setLength(null);
-                $output['blockLength'] = $this->getDynamicBlockLength();
+                if ($this->hasItemLimit()) {
+                    $this->setLength(null);
+                } else {
+                    $this->setLength($this->getDynamicBlockLength());
+                }
             } else {
                 $length = $this->getStaticLength();
                 $this->setLength($length);
-                $formatter = new LengthFormatter($length);
-                $output['blockLength'] = $formatter->format();
             }
+            $output['blockLength'] = $this->getFormattedLength();
         }
+        $this->updateBlockLengthInAllPlaylist();
         return $output;
+    }
+    
+    public function hasItemLimit()
+    {
+        list($value, $modifier) = $this->getLimitValueAndModifier();
+        if ($modifier == 'items') {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public function storeCriteriaIntoDb($p_criteriaData){
@@ -1133,15 +1167,25 @@ EOT;
             $this->deleteAllFilesFromBlock();
             $this->addAudioClips(array_keys($insertList));
             // update length in playlist contents.
-            $blocks = CcPlaylistcontentsQuery::create()->filterByDbBlockId($this->id)->find();
-            $blocks->getFirst();
-            $iterator = $blocks->getIterator();
-            while ($iterator->valid()) {
-                $iterator->current()->setDbClipLength($this->getLength());
-                $iterator->current()->save();
-                $iterator->next();
-            }
+            $this->updateBlockLengthInAllPlaylist();
             return array("result"=>0);
+        }
+    }
+    
+    public function updateBlockLengthInAllPlaylist()
+    {
+        $blocks = CcPlaylistcontentsQuery::create()->filterByDbBlockId($this->id)->find();
+        $blocks->getFirst();
+        $iterator = $blocks->getIterator();
+        while ($iterator->valid()) {
+            $length = $this->getLength();
+            if (!preg_match("/^[0-9]{2}:[0-9]{2}:[0-9]{2}/", $length)) {
+                $iterator->current()->setDbClipLength(null);
+            } else {
+                $iterator->current()->setDbClipLength($length);
+            }
+            $iterator->current()->save();
+            $iterator->next();
         }
     }
     

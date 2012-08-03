@@ -442,6 +442,10 @@ table.library-get-file-md.table-small{
     width: 290px !important;
 }    
 
+.file-md-qtip-nowrap{
+    white-space: nowrap;
+}
+
 .file-md-qtip-criteria-width-crit{
     width:70px;
 }
@@ -484,6 +488,11 @@ table.library-get-file-md.table-small{
 
 
 /***** SMART PLAYLIST SPECIFIC STYLES BEGIN *****/
+.sp-scrollable{
+    overflow-x: auto;
+    width: 781px;
+}
+
 .sp-invisible{
     visibility: hidden;
 }
