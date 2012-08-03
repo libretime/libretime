@@ -4,7 +4,8 @@ from pydispatch import dispatcher
 
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
-from media.monitor.events import OrganizeFile, NewFile, DeleteFile, ModifyFile, DeleteDir
+from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
+                                 ModifyFile, DeleteDir, EventRegistry
 from media.monitor.log import Loggable, get_logger
 
 # We attempt to document a list of all special cases and hacks that the
@@ -104,13 +105,19 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
 class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
 
     def process_IN_CLOSE_WRITE(self, event): self.process_create(event)
-    def process_IN_MOVED_TO(self, event): self.process_create(event)
+    def process_IN_MOVED_TO(self, event):
+        if EventRegistry.registered(event):
+            EventRegistry.matching(event).morph_move(MoveFile(event))
+            EventRegistry.unregister(event)
+        else: self.process_create(event)
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
-        if event.is_dir: self.process_delete_dir(event)
+        if event.dir: self.process_delete_dir(event)
         else: self.process_delete(event)
+        if hasattr(event.cookie): EventRegistry.register(event)
     def process_IN_DELETE(self,event): self.process_delete(event)
-    def process_IN_MODIFY(self,event): self.process_modify(event)
+    # Capturing modify events is too brittle and error prone
+    # def process_IN_MODIFY(self,event): self.process_modify(event)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)

@@ -10,6 +10,22 @@ class PathChannel(object):
         self.signal = signal
         self.path = path
 
+class EventRegistry(object):
+    registry = {}
+    @staticmethod
+    def register(evt):
+        EventRegistry.registry[evt.cookie] = evt
+    @staticmethod
+    def unregister(evt):
+        del EventRegistry.registry[evt.cookie]
+    @staticmethod
+    def registered(evt):
+        return evt.cookie in EventRegistry.registry
+    @staticmethod
+    def matching(evt):
+        return EventRegistry.registry[evt.cookie]
+
+
 # It would be good if we could parameterize this class by the attribute
 # that would contain the path to obtain the meta data. But it would be too much
 # work
@@ -29,9 +45,15 @@ class BaseEvent(object):
             self.__raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
+        self.cookie = getattr( raw_event, 'cookie', None )
     def exists(self): return os.path.exists(self.path)
     def __str__(self):
         return "Event. Path: %s" % self.__raw_event.pathname
+
+    def morph_move(self, evt):
+        self.__raw_event = evt
+        self.path = evt.path
+        self.__class__ = evt.__class__
 
 class OrganizeFile(BaseEvent, HasMetaData):
     def __init__(self, *args, **kwargs): super(OrganizeFile, self).__init__(*args, **kwargs)
@@ -83,3 +105,4 @@ class ModifyFile(BaseEvent, HasMetaData):
         # path to directory that is to be removed
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return req_dict
+
