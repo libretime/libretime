@@ -676,6 +676,9 @@ class Application_Model_StoredFile
             case 3:
                 $fromTable = $blTable." AS Block"; //need an alias for the table if it's standalone.
                 break;
+            case 4:
+                $fromTable = $streamTable." AS StreamTable"; //need an alias for the table if it's standalone.
+                break;
             default:
                 $fromTable = $unionTable;
         }
