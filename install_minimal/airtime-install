@@ -15,6 +15,9 @@ if [[ "$DEB" = "Status: install ok installed" ]]; then
     exit 1
 fi
 
+#Update apt sources.list to point to the new deb-multimedia domain.
+sed -i s/www.debian-multimedia.org/www.deb-multimedia.org/g /etc/apt/sources.list
+
 showhelp () {
     echo "Usage: airtime-install [options]
 --help|-h                         Displays usage information.
