@@ -14,7 +14,7 @@ class Application_Model_Webstream{
             $this->webstream->setDbName("Untitled Webstream");
             $this->webstream->setDbDescription("");
             $this->webstream->setDbUrl("http://");
-            $this->webstream->setDbLength("00h 00m");
+            $this->webstream->setDbLength("00:00:00");
             $this->webstream->setDbName("Untitled Webstream");
         } else {
             $this->id = $id;
@@ -44,7 +44,7 @@ class Application_Model_Webstream{
         if (count($arr) == 3) {
             list($hours, $min, $sec) = $arr;
             $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
-            return $di->format("%Hh %im");
+            return $di->format("%Hh %Im");
         }
         return "";
     }
@@ -100,20 +100,6 @@ class Application_Model_Webstream{
         return $leftOvers;
         
     }
-/*
-Array
-(
-    [controller] => Webstream
-    [action] => save
-    [module] => default
-    [format] => json
-    [description] => desc
-    [url] => http://
-    [length] => 00h 20m
-    [name] => Default
-)
- */
-
 
     public static function analyzeFormData($request)
     {
@@ -173,7 +159,7 @@ Array
         return true;
     }
 
-    public static function save($request)
+    public static function save($request, $webstream)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -191,14 +177,7 @@ Array
             throw new Exception("Invalid date format: $length");
         }
 
-        $id = $request->getParam("id");
 
-        if (is_null($id)) {
-            $webstream = new CcWebstream();
-        } else {
-            $webstream = CcWebstreamQuery::create()->findPK($id);
-        }
-        
         $webstream->setDbName($request->getParam("name"));
         $webstream->setDbDescription($request->getParam("description"));
         $webstream->setDbUrl($request->getParam("url"));

@@ -57,7 +57,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the creator_id field.
-	 * @var        string
+	 * @var        int
 	 */
 	protected $creator_id;
 
@@ -166,7 +166,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	/**
 	 * Get the [creator_id] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
 	public function getDbCreatorId()
 	{
@@ -342,13 +342,13 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	/**
 	 * Set the value of [creator_id] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcWebstream The current object (for fluent API support)
 	 */
 	public function setDbCreatorId($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
 		if ($this->creator_id !== $v) {
@@ -498,7 +498,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$this->description = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->url = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->length = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->creator_id = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->creator_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
 			$this->mtime = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
 			$this->utime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->resetModified();
