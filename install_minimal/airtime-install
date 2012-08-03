@@ -7,16 +7,6 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-set +e
-DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
-set -e
-if [[ "$DEB" = "Status: install ok installed" ]]; then
-    echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
-    exit 1
-fi
-
-#Update apt sources.list to point to the new deb-multimedia domain.
-sed -i s/www.debian-multimedia.org/www.deb-multimedia.org/g /etc/apt/sources.list
 
 showhelp () {
     echo "Usage: airtime-install [options]
@@ -40,8 +30,9 @@ pypo="f"
 showrecorder="f"
 web="f"
 liquidsoap_keep_alive="f"
+disable_deb_check="f"
 
-set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,web,liquidsoap-keep-alive "hopnrmywl" "$@")
+set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,web,liquidsoap-keep-alive,disable-deb-check "hopnrmywld" "$@")
 while [ $# -gt 0 ]
 do
     case "$1" in
@@ -54,6 +45,7 @@ do
     (-y|--pypo) pypo="t";;
     (-w|--web) web="t";;
     (-l|--liquidsoap-keep-alive) liquidsoap_keep_alive="t";;
+    (-d|--disable-deb-check) disable_deb_check="t";;
     
     (--) shift; break;;
     (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
@@ -69,6 +61,20 @@ if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$web" = "f" ]; then
     showrecorder="t"
     web="t"
 fi
+
+if [ "$disable_deb_check" == "f" ]; then
+    set +e
+    DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
+    set -e
+    if [[ "$DEB" = "Status: install ok installed" ]]; then
+        echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
+        exit 1
+    fi
+fi
+
+
+#Update apt sources.list to point to the new deb-multimedia domain.
+sed -i s/www.debian-multimedia.org/www.deb-multimedia.org/g /etc/apt/sources.list
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
