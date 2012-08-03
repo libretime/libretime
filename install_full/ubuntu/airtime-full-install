@@ -34,6 +34,15 @@ if [ "$dist" = "Debian" ]; then
     fi
 fi
 
+codename=`lsb_release -sc`
+set +e
+grep -E "deb +http://apt.sourcefabric.org/? +$codename +main" /etc/apt/sources.list
+returncode=$?
+set -e
+if [ "$returncode" != "0" ]; then
+    echo "deb http://apt.sourcefabric.org/ $codename main" >> /etc/apt/sources.list
+fi
+
 apt-get update
 
 # Updated package list
@@ -59,15 +68,6 @@ else
 fi
 
 #Install Sourcefabric's custom Liquidsoap debian package
-codename=`lsb_release -sc`
-
-set +e
-grep -E "deb +http://apt.sourcefabric.org/? +$codename +main" /etc/apt/sources.list
-returncode=$?
-set -e
-if [ "$returncode" != "0" ]; then
-    echo "deb http://apt.sourcefabric.org/ $codename main" >> /etc/apt/sources.list
-fi
 apt-get install -y --force-yes sourcefabric-keyring
 apt-get install -y liquidsoap
 
@@ -83,7 +83,7 @@ if [ ! -f /etc/apache2/sites-available/airtime ]; then
     a2enmod rewrite php5
     service apache2 restart
 else
-	echo "Apache config for Airtime already exists..."
+    echo "Apache config for Airtime already exists..."
 fi
 
 # Enable Icecast
