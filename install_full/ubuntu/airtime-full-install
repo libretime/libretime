@@ -68,8 +68,8 @@ else
 fi
 
 #Install Sourcefabric's custom Liquidsoap debian package
-apt-get install -y --force-yes sourcefabric-keyring
-apt-get install -y liquidsoap
+apt-get -y --force-yes install sourcefabric-keyring
+apt-get -y install liquidsoap
 
 
 # Apache Config File
