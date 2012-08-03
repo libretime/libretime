@@ -86,12 +86,11 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     fallible = true,
                     url = url,
                     description = description,
-                    name = description,
+                    name = name,
                     genre = genre,
                     user = !user_ref,
                     on_error = on_error,
-                    on_connect = on_connect,
-                    name = name)
+                    on_connect = on_connect)
         if type == "mp3" then
             if bitrate == 24 then 
                 ignore(output(%mp3(bitrate = 24),s))
