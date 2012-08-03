@@ -33,8 +33,12 @@ class RequestSync(threading.Thread,Loggable):
         # A simplistic request would like:
         # TODO : recorded shows aren't flagged right
         packed_requests = []
-        for request in self.requests:
-            try: packed_requests.append(request.pack())
+        for request_event in self.requests:
+            try:
+                for request in request_event.pack():
+                    if isinstance(request, BadSongFile):
+                        self.logger.info("Bad song file: '%s'" % request.path)
+                    else: packed_requests.append(request)
             except BadSongFile as e:
                 self.logger.info("Bad song file: '%s'" % e.path)
                 self.logger.info("TODO : put in ignore list")
@@ -53,7 +57,7 @@ class RequestSync(threading.Thread,Loggable):
                 self.logger.info("Trying again after %f seconds" % self.request_wait)
                 time.sleep( self.request_wait )
             except Exception as e:
-                self.logger.unexpected_exception(e)
+                self.unexpected_exception(e)
             else:
                 self.logger.info("Request worked on the '%d' try" % (try_index + 1))
                 break

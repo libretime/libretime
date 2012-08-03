@@ -5,7 +5,8 @@ from pydispatch import dispatcher
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
 from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
-                                 ModifyFile, DeleteDir, EventRegistry
+                                 ModifyFile, DeleteDir, EventRegistry, MoveDir,\
+                                 DeleteDirWatch
 from media.monitor.log import Loggable, get_logger
 
 # We attempt to document a list of all special cases and hacks that the
@@ -103,35 +104,47 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
         dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(event))
 
 class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
-
+    # TODO : must intercept DeleteDirWatch events somehow
     def process_IN_CLOSE_WRITE(self, event): self.process_create(event)
     def process_IN_MOVED_TO(self, event):
         if EventRegistry.registered(event):
-            EventRegistry.matching(event).morph_into(MoveFile(event))
+            # We need this trick because we don't how to "expand" dir events
+            # into file events until we know for sure if we deleted or moved
+            morph = MoveDir(event) if event.dir else MoveFile(event)
+            EventRegistry.matching(event).morph_into(morph)
         else: self.process_create(event)
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
-        evt = self.process_delete_dir(event) if event.dir else self.process_delete(event)
+        evt = self.process_delete(event)
         if hasattr(event,'cookie'): EventRegistry.register(evt)
     def process_IN_DELETE(self,event): self.process_delete(event)
     # Capturing modify events is too brittle and error prone
     # def process_IN_MODIFY(self,event): self.process_modify(event)
 
+    # TODO : Remove this code. Later decided we will ignore modify events
+    # since it's too difficult to tell which ones should be handled. Much
+    # easier to just intercept IN_CLOSE_WRITE and decide what to do on the php
+    # side
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_modify(self, event):
         FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE',key='maskname')
-        dispatcher.send(signal=self.signal, sender=self, event=ModifyFile(event))
+        evt = ModifyFile(event)
+        dispatcher.send(signal=self.signal, sender=self, event=evt)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_create(self, event):
-        dispatcher.send(signal=self.signal, sender=self, event=NewFile(event))
+        evt = NewFile(event)
+        dispatcher.send(signal=self.signal, sender=self, event=evt)
+        return evt
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
-        evt = DeleteFile(event)
+        evt = None
+        if event.dir: evt = DeleteDir(event)
+        else: evt = DeleteFile(event)
         dispatcher.send(signal=self.signal, sender=self, event=evt)
         return evt
 

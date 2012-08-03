@@ -42,7 +42,9 @@ class IncludeOnly(object):
     def __call__(self, func):
         def _wrap(moi, event, *args, **kwargs):
             ext = extension(event.pathname)
-            if ext in self.exts: return func(moi, event, *args, **kwargs)
+            # Checking for emptiness b/c we don't want to skip direcotries
+            if (ext in self.exts) or event.dir:
+                return func(moi, event, *args, **kwargs)
         return _wrap
 
 
