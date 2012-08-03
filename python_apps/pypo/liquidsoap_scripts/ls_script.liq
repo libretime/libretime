@@ -20,7 +20,6 @@ queue = amplify(1., override="replay_gain", queue)
 set("harbor.bind_addr", "0.0.0.0")
 
 #TODO: Need to create a randomized password for every instance
-web_stream = input.harbor("test-harbor",port=8999,password="hackme")
 current_dyn_id = ref ''
 
 pypo_data = ref '0'
@@ -38,6 +37,9 @@ s3_namespace = ref ''
 just_switched = ref false
 
 %include "ls_lib.liq"
+
+web_stream = input.harbor("test-harbor",port=8999,password="hackme")
+web_stream = on_metadata(notify_stream, web_stream)
 
 queue = on_metadata(notify, queue)
 queue = map_metadata(append_title, queue)

@@ -3,6 +3,11 @@ def notify(m)
   system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &")
 end
 
+def notify_stream(m)
+  log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --stream --uri=#{base64.encode(m['uri'])} --title=#{base64.encode(m['title'])} &")
+  #system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --stream --uri=#{base64.encode(m['uri'])} --title=#{base64.encode(m['title'])} &")
+end
+
 # A function applied to each metadata chunk
 def append_title(m) =  
   log("Using stream_format #{!stream_metadata_type}")
