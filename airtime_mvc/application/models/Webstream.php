@@ -39,7 +39,14 @@ class Application_Model_Webstream{
 
     public function getDefaultLength()
     {
-        return $this->webstream->getDbLength();
+        $dateString = $this->webstream->getDbLength();
+        $arr = explode(":", $dateString);
+        if (count($arr) == 3) {
+            list($hours, $min, $sec) = $arr;
+            $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
+            return $di->format("%Hh %im");
+        }
+        return "";
     }
 
     public function getDescription()
