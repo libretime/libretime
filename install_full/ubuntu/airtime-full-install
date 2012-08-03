@@ -25,9 +25,12 @@ echo "----------------------------------------------------"
 dist=`lsb_release -is`
 
 if [ "$dist" = "Debian" ]; then
-    grep "deb http://www.debian-multimedia.org squeeze main non-free" /etc/apt/sources.list
-    if [ "$?" -ne "0" ]; then
-        echo "deb http://www.debian-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
+    set +e
+    grep -E "deb +http://www.deb-multimedia.org/? squeeze +main +non-free" /etc/apt/sources.list
+    returncode=$?
+    set -e
+    if [ "$returncode" -ne "0" ]; then
+        echo "deb http://www.deb-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
     fi
 fi
 
@@ -54,6 +57,20 @@ if [ "$dist" = "Debian" ]; then
 else
     apt-get -y install libzend-framework-php
 fi
+
+#Install Sourcefabric's custom Liquidsoap debian package
+codename=`lsb_release -sc`
+
+set +e
+grep -E "deb +http://apt.sourcefabric.org/? +$codename +main" /etc/apt/sources.list
+returncode=$?
+set -e
+if [ "$returncode" != "0" ]; then
+    echo "deb http://apt.sourcefabric.org/ $codename main" >> /etc/apt/sources.list
+fi
+apt-get install -y --force-yes sourcefabric-keyring
+apt-get install -y liquidsoap
+
 
 # Apache Config File
 echo "----------------------------------------------------"
