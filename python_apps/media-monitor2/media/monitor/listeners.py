@@ -52,8 +52,7 @@ class FileMediator(object):
         for skip in what_to_skip:
             # standard nasty hack, too long to explain completely in comments but
             # the gist of it is:
-            # 1. python's scoping rules are shitty and unintuitive (no "true"
-            # lexical scoping)
+            # 1. python's scoping rules are sometimes strange.
             # 2. workaround is very similar to what you do in javascript when
             # you write stuff like (function (x,y) { console.log(x+y); })(2,4)
             # to be avoid clobbering peoples' namespace.
