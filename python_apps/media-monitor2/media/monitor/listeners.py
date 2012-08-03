@@ -4,7 +4,7 @@ from pydispatch import dispatcher
 
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
-from media.monitor.events import OrganizeFile, NewFile, DeleteFile, ModifyFile
+from media.monitor.events import OrganizeFile, NewFile, DeleteFile, ModifyFile, DeleteDir
 from media.monitor.log import Loggable, get_logger
 
 # We attempt to document a list of all special cases and hacks that the
@@ -48,7 +48,9 @@ class FileMediator(object):
     @staticmethod
     def unignore(path): FileMediator.ignored_set.remove(path)
     @staticmethod
-    def skip_next(*what_to_skip):
+    def skip_next(*what_to_skip,**kwargs):
+        # Poor man's default arguments
+        if 'key' not in kwargs: kwargs['key'] = 'maskname'
         for skip in what_to_skip:
             # standard nasty hack, too long to explain completely in comments but
             # the gist of it is:
@@ -56,7 +58,7 @@ class FileMediator(object):
             # 2. workaround is very similar to what you do in javascript when
             # you write stuff like (function (x,y) { console.log(x+y); })(2,4)
             # to be avoid clobbering peoples' namespace.
-            skip_check = (lambda skip: lambda v: v.maskname == skip)(skip)
+            skip_check = (lambda skip: lambda v: getattr(v,kwargs['key']) == skip)(skip)
             FileMediator.skip_checks.add( skip_check )
 
 def mediate_ignored(fn):
@@ -103,14 +105,17 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
 
     def process_IN_CLOSE_WRITE(self, event): self.process_create(event)
     def process_IN_MOVED_TO(self, event): self.process_create(event)
-    def process_IN_MOVED_FROM(self, event): self.process_delete(event)
+    def process_IN_MOVED_FROM(self, event):
+        # Is either delete dir or delete file
+        if event.is_dir: self.process_delete_dir(event)
+        else: self.process_delete(event)
     def process_IN_DELETE(self,event): self.process_delete(event)
     def process_IN_MODIFY(self,event): self.process_modify(event)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_modify(self, event):
-        FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE')
+        FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE',key='maskname')
         dispatcher.send(signal=self.signal, sender=self, event=ModifyFile(event))
 
     @mediate_ignored
@@ -122,6 +127,10 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
         dispatcher.send(signal=self.signal, sender=self, event=DeleteFile(event))
+
+    @mediate_ignored
+    def process_delete_dir(self, event):
+        dispatcher.send(signal=self.signal, sender=self, event=DeleteDir(event))
 
     def flush_events(self, path):
         """
