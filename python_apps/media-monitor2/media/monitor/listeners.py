@@ -73,7 +73,7 @@ def mediate_ignored(fn):
         if FileMediator.is_ignored(event.pathname):
             FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
             FileMediator.unignore(event.pathname)
-        else: fn(self, event, *args, **kwargs)
+        else: return fn(self, event, *args, **kwargs)
     return wrapped
 
 class BaseListener(object):
@@ -107,14 +107,12 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     def process_IN_CLOSE_WRITE(self, event): self.process_create(event)
     def process_IN_MOVED_TO(self, event):
         if EventRegistry.registered(event):
-            EventRegistry.matching(event).morph_move(MoveFile(event))
-            EventRegistry.unregister(event)
+            EventRegistry.matching(event).morph_into(MoveFile(event))
         else: self.process_create(event)
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
-        if event.dir: self.process_delete_dir(event)
-        else: self.process_delete(event)
-        if hasattr(event.cookie): EventRegistry.register(event)
+        evt = self.process_delete_dir(event) if event.dir else self.process_delete(event)
+        if hasattr(event,'cookie'): EventRegistry.register(evt)
     def process_IN_DELETE(self,event): self.process_delete(event)
     # Capturing modify events is too brittle and error prone
     # def process_IN_MODIFY(self,event): self.process_modify(event)
@@ -133,11 +131,15 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
-        dispatcher.send(signal=self.signal, sender=self, event=DeleteFile(event))
+        evt = DeleteFile(event)
+        dispatcher.send(signal=self.signal, sender=self, event=evt)
+        return evt
 
     @mediate_ignored
     def process_delete_dir(self, event):
-        dispatcher.send(signal=self.signal, sender=self, event=DeleteDir(event))
+        evt = DeleteDir(event)
+        dispatcher.send(signal=self.signal, sender=self, event=evt)
+        return evt
 
     def flush_events(self, path):
         """

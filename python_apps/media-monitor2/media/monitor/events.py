@@ -3,6 +3,7 @@ import os
 import abc
 from media.monitor.pure import LazyProperty
 from media.monitor.metadata import Metadata
+from media.monitor.log import Loggable
 
 class PathChannel(object):
     """a dumb struct; python has no record types"""
@@ -23,7 +24,10 @@ class EventRegistry(object):
         return evt.cookie in EventRegistry.registry
     @staticmethod
     def matching(evt):
-        return EventRegistry.registry[evt.cookie]
+        event = EventRegistry.registry[evt.cookie]
+        # Want to disallow accessing the same event twice
+        EventRegistry.unregister(event)
+        return event
 
 
 # It would be good if we could parameterize this class by the attribute
@@ -35,23 +39,28 @@ class HasMetaData(object):
     def metadata(self):
         return Metadata(self.path)
 
-class BaseEvent(object):
+class BaseEvent(Loggable):
     __metaclass__ = abc.ABCMeta
     def __init__(self, raw_event):
         # TODO : clean up this idiotic hack
         # we should use keyword constructors instead of this behaviour checking
         # bs to initialize BaseEvent
         if hasattr(raw_event,"pathname"):
-            self.__raw_event = raw_event
+            self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
-        self.cookie = getattr( raw_event, 'cookie', None )
     def exists(self): return os.path.exists(self.path)
+    @LazyProperty
+    def cookie(self):
+        return getattr( self._raw_event, 'cookie', None )
     def __str__(self):
         return "Event. Path: %s" % self.__raw_event.pathname
 
-    def morph_move(self, evt):
-        self.__raw_event = evt
+    # nothing to see here, please move along
+    def morph_into(self, evt):
+        self.logger.info("Morphing '%s' into '%s'" % (self.__class__.__name__,
+            evt.__class__.__name__))
+        self._raw_event = evt
         self.path = evt.path
         self.__class__ = evt.__class__
 
