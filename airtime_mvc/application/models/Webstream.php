@@ -4,34 +4,52 @@ class Application_Model_Webstream{
 
     private $id;
 
-    public function __construct($id)
+    public function __construct($id=-1)
     {
-        $this->id = $id;
+        if ($id == -1) {
+            $this->webstream = new CcWebstream();
+
+            //We're not saving this object in the database, so -1 ID is OK.
+            $this->webstream->setDbId(-1);
+            $this->webstream->setDbName("Untitled Webstream");
+            $this->webstream->setDbDescription("");
+            $this->webstream->setDbUrl("http://");
+            $this->webstream->setDbLength("00h 00m");
+            $this->webstream->setDbName("Untitled Webstream");
+        } else {
+            $this->id = $id;
+            $this->webstream = CcWebstreamQuery::create()->findPK($this->id);
+        }
     }
 
-    public static function getName()
+    public function getName()
     {
-        return "Default";
+        return $this->webstream->getDbName();
     }
 
-    public static function getId()
+    public function getId()
     {
-        return "id";
+        return $this->webstream->getDbId();
     }
 
-    public static function getLastModified($p_type)
+    public function getLastModified($p_type)
     {
         return "modified";
     }
 
-    public static function getDefaultLength()
+    public function getDefaultLength()
     {
-        return "length";
+        return $this->webstream->getDbLength();
     }
 
-    public static function getDescription()
+    public function getDescription()
     {
-        return "desc";
+        return $this->webstream->getDbDescription();
+    }
+
+    public function getUrl()
+    {
+        return $this->webstream->getDbUrl();
     }
 
     public function getMetadata()
@@ -41,11 +59,11 @@ class Application_Model_Webstream{
 
         $username = $subjs->getDbLogin();
         return array(
-            "name" => $webstream->getDbName(),
-            "length" => $webstream->getDbLength(),
-            "description" => $webstream->getDbDescription(),
+            "name" => $this->webstream->getDbName(),
+            "length" => $this->webstream->getDbLength(),
+            "description" => $this->webstream->getDbDescription(),
             "login"=> $username,
-            "url" => $webstream->getDbUrl(),
+            "url" => $this->webstream->getDbUrl(),
         );
 
     }
@@ -93,7 +111,8 @@ Array
     public static function analyzeFormData($request)
     {
         $valid = array("length" => array(true, ''), 
-                    "url" => array(true, ''));
+            "url" => array(true, ''),
+            "name" => array(true, ''));
 
         $length = trim($request->getParam("length"));
         $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
@@ -120,6 +139,19 @@ Array
             $valid['name'][1] = 'Webstream name cannot be empty';
         }
 
+        $id = trim($request->getParam("id"));
+
+        if (!is_null($id)) {
+            // user has performed a create stream action instead of edit
+            // stream action. Check if user has the rights to edit this stream.
+
+            Logging::log("CREATE");
+        } else {
+            Logging::log("EDIT");
+        }
+
+
+
         return $valid; 
     }
 
@@ -140,6 +172,7 @@ Array
 
         $length = trim($request->getParam("length"));
         $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
+
         if ($result == 1 && count($matches) == 3) { 
             $hours = $matches[1];
             $minutes = $matches[2];
@@ -150,9 +183,15 @@ Array
             //in the controller
             throw new Exception("Invalid date format: $length");
         }
+
+        $id = $request->getParam("id");
+
+        if (is_null($id)) {
+            $webstream = new CcWebstream();
+        } else {
+            $webstream = CcWebstreamQuery::create()->findPK($id);
+        }
         
-        #TODO: These should be validated by a Zend Form.
-        $webstream = new CcWebstream();
         $webstream->setDbName($request->getParam("name"));
         $webstream->setDbDescription($request->getParam("description"));
         $webstream->setDbUrl($request->getParam("url"));

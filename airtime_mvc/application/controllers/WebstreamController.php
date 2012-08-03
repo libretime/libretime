@@ -7,6 +7,7 @@ class WebstreamController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('new', 'json')
                     ->addActionContext('save', 'json')
+                    ->addActionContext('edit', 'json')
                     ->initContext();
         //TODO
         //$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -27,6 +28,20 @@ class WebstreamController extends Zend_Controller_Action
         $this->changePlaylist($pl->getId());
         $this->createFullResponse($pl);
         */
+    }
+
+    public function editAction()
+    {
+        $request = $this->getRequest();
+
+
+        $id = $request->getParam("id");
+        if (is_null($id)) {
+            throw new Exception("Missing parameter 'id'"); 
+        }
+
+        $this->view->ws = new Application_Model_Webstream($id);
+        $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
 
     public function saveAction()

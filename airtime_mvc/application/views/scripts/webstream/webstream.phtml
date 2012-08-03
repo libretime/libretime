@@ -26,12 +26,12 @@
          <div id="url-error" class="errors" style="display:none;"></div>
          <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
          <dd id="streamurl-element">
-             <input type="text" value="http://" size="40"/>
+         <input type="text" value="<?php echo $this->ws->getUrl(); ?>" size="40"/>
          </dd>
          <div id="length-error" class="errors" style="display:none;"></div>
          <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
          <dd id="streamlength-element">
-             <input type="text" value="00h 20m"/>
+         <input type="text" value="<?php echo $this->ws->getDefaultLength() ?>"/>
          </dd>        
          <dd id="submit-element" class="buttons">
             <input class="ui-button ui-state-default" type="submit" value="Save" id="webstream_save" name="submit">
