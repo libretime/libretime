@@ -43,8 +43,7 @@ Depends: apache2,
  unzip,
  vorbis-tools,
  zendframework | libzend-framework-php,
- ${misc:Depends},
- ${python:Depends}
+ ${misc:Depends}
 Recommends: icecast2
 Suggests: airtime-audio-samples,
  alsa-utils
