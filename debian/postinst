@@ -12,7 +12,7 @@ includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
-NEWVERSION="2.1.4"
+NEWVERSION="2.2.0"
 
 case "$1" in
   configure|reconfigure)
@@ -218,10 +218,10 @@ case "$1" in
 
         if [ "${OLDVERSION:0:5}" == "${NEWVERSION}" ] ; then
           echo "Reinstallation detected..."
-          echo | ./airtime-install -rp 2> /var/log/airtime/reinstallation-errors.log
+          echo | ./airtime-install --disable-deb-check -rp 2> /var/log/airtime/reinstallation-errors.log
         else
 
-          ./airtime-install 2> /var/log/airtime/installation-errors.log
+          ./airtime-install --disable-deb-check 2> /var/log/airtime/installation-errors.log
 
         fi
 
