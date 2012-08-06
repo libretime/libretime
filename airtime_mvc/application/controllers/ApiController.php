@@ -258,29 +258,39 @@ class ApiController extends Zend_Controller_Action
 
             $request = $this->getRequest();
             $type = $request->getParam('type');
+            /* This is some *extremely* lazy programming that needs to bi fixed. For some reason
+             * we are using two entirely different codepaths for very similar functionality (type = endofday 
+             * vs type = interval). Needs to be fixed for 2.2 - MK */
             if ($type == "endofday") {
                 $limit = $request->getParam('limit');
-                if($limit == "" || !is_numeric($limit)) {
+                if ($limit == "" || !is_numeric($limit)) {
                     $limit = "5";
                 }
                 
-                // make GetNextShows use end of day
+                // make getNextShows use end of day
                 $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
                 $result = array("env"=>APPLICATION_ENV,
                                 "schedulerTime"=>gmdate("Y-m-d H:i:s"),
-                                "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd));
+                                "currentShow"=>Application_Model_Show::getCurrentShow($utcTimeNow),
+                                "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
+                            );
                 
-                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["currentShow"], 
+                        array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], 
+                        array("starts", "ends", "start_timestamp", "end_timestamp"));
             } else {
                 $result = Application_Model_Schedule::GetPlayOrderRange();
 
                 //Convert from UTC to localtime for Web Browser.
-                Application_Model_Show::convertToLocalTimeZone($result["currentShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
-                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], 
+                        array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], 
+                        array("starts", "ends", "start_timestamp", "end_timestamp"));
             }
 
-            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
-
+            //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; 
             header("Content-type: text/javascript");
             
             // If a callback is not given, then just provide the raw JSON. 

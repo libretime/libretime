@@ -1763,8 +1763,7 @@ class Application_Model_Show
         ." AND modified_instance != TRUE";
 
         // Convert back to local timezone
-        $rows = $con->query($sql)->fetchAll();
-
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 
@@ -1907,8 +1906,7 @@ class Application_Model_Show
             $sql = $sql . " LIMIT $limit";
         }
 
-        $rows = $con->query($sql)->fetchAll();
-
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 
