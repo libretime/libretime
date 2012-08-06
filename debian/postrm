@@ -103,7 +103,7 @@ case "$1" in
     dpkg-statoverride --list $datadir &>/dev/null && \
     dpkg-statoverride --remove $datadir || true
 
-    # Only remove settings if purge is called as an argument 
+    # Only remove settings if purge is called as an argument
     if [ "$1" = "purge" ]; then
                         echo "Removing configuration files from /etc/airtime/" >&2
 			rm -rf /etc/airtime || true
