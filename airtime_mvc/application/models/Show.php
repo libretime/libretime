@@ -1736,7 +1736,7 @@ class Application_Model_Show {
         ." AND modified_instance != TRUE";
 
         // Convert back to local timezone
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 
@@ -1850,7 +1850,7 @@ class Application_Model_Show {
      * @param String $timeEnd - interval end time (in UTC)
      * @return array - the next $limit number of shows within the time interval
      */
-    public static function GetNextShows($timeStart, $limit = "0", $timeEnd = "")
+    public static function getNextShows($timeStart, $limit = "0", $timeEnd = "")
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -1877,7 +1877,7 @@ class Application_Model_Show {
             $sql = $sql . " LIMIT $limit";
         }
 
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 

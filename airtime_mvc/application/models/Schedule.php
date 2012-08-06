@@ -109,7 +109,7 @@ class Application_Model_Schedule {
         $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
 
 
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $numberOfRows = count($rows);
 
         $results['previous'] = null;
