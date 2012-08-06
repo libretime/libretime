@@ -34,31 +34,18 @@ rm airtime/airtime_mvc/library/phing/LICENSE
 rm airtime/airtime_mvc/library/propel/LICENSE
 rm airtime/airtime_mvc/library/soundcloud-api/README.md
 
-# Disable install script check for Debian package, it breaks the .deb install
-sed -i '11s:DEB=$(dpkg:# DEB=$(dpkg:g' airtime/install_minimal/airtime-install
-sed -i '13s\"$DEB" = "Status: install ok installed"\-f /var/lib/dpkg/info/airtime.config\g' airtime/install_minimal/airtime-install
-sed -i '14s: Please use the debian package to upgrade.:..:g' airtime/install_minimal/airtime-install
-sed -i '15s:exit 1:# We do not exit here:g' airtime/install_minimal/airtime-install
-
 # Remove Liquidsoap binaries
 rm -r airtime/python_apps/pypo/liquidsoap_bin/
 
-# Disable installation of Liquidsoap binaries
+# Disable installation of Liquidsoap symlink
 sed -i '84s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '86s:binary_path:#binary_path:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '88s:try:#try:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '89s:open:#open:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '91s:try:#try:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '92s:os.remove:#os.remove:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '93s:except:#except:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '95s:pass:#pass:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '97s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '98s:except:#except:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '99s:    """:""":g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '107s:    """:""":g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '108s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '109s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '110s:sys.exit(1):#sys.exit(1):g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '86s:p = Popen:#p = Popen:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '87s:liq_path:#liq_path:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '89s:if p.returncode:#if p.returncode:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '90s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '91s:else:#else:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '92s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '93s:sys.exit:#sys.exit:g' airtime/python_apps/pypo/install/pypo-initialize.py
 
 #Remove phing library
 rm -r airtime/airtime_mvc/library/phing/
@@ -73,7 +60,7 @@ rm -r airtime/install_full/
 
 echo "running the build..."
 
-debuild --no-lintian -b -uc -us $@ || exit
+debuild -b -uc -us $@ || exit
 
 exit
 
