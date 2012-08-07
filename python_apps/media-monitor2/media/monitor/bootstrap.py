@@ -24,8 +24,7 @@ class Bootstrapper(Loggable):
         note that because of the way list_directories works we also flush
         the import directory as well I think
         """
-        for d in self.db.list_storable_paths():
-            self.flush_watch(d, last_ran)
+        for d in self.db.list_storable_paths(): self.flush_watch(d, last_ran)
 
     def flush_watch(self, directory, last_ran):
         """

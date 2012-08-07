@@ -127,6 +127,8 @@ class Metadata(Loggable):
                 # genre is one example. In that case mutagen will return a list
                 # of values
                 metadata[k] = v[0]
+                #if len(v) == 1: metadata[k] = v[0]
+                #else: raise Exception("Unknown mutagen %s:%s" % (k,str(v)))
             else: metadata[k] = v
         self.__metadata = {}
         # Start populating a dictionary of airtime metadata in __metadata
