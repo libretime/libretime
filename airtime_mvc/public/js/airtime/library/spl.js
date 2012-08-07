@@ -559,6 +559,8 @@ var AIRTIME = (function(AIRTIME){
                         $status.html(json.statusMessage);
                         $status.show();
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
+                        //redraw the library to show the new webstream
+                        redrawLib();
                     }
                     
                 });    
