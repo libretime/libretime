@@ -338,27 +338,29 @@ class Application_Common_DateHelper
             $retVal['errMsg'] = "'$year-$month-$day' is not a valid date";        
         } else {
             // check time
-            if (isset($timeInfo[0]) && $timeInfo[0] != "") {
-                $hour = intval($timeInfo[0]);
-            } else {
-                $hour = -1;
-            }
-            
-            if (isset($timeInfo[1]) && $timeInfo[1] != "") {
-                $min = intval($timeInfo[1]);
-            } else {
-                $min = -1;
-            }
-            
-            if (isset($timeInfo[2]) && $timeInfo[2] != "") {
-                $sec = intval($timeInfo[2]);
-            } else {
-                $sec = -1;
-            }
-            
-            if ( ($hour < 0 || $hour > 23) || ($min < 0 || $min > 59) || ($sec < 0 || $sec > 59) ) {
-                $retVal['success'] = false;
-                $retVal['errMsg'] = "'$timeInfo[0]:$timeInfo[1]:$timeInfo[2]' is not a valid time";
+            if (isset($timeInfo)) {
+                if (isset($timeInfo[0]) && $timeInfo[0] != "") {
+                    $hour = intval($timeInfo[0]);
+                } else {
+                    $hour = -1;
+                }
+                
+                if (isset($timeInfo[1]) && $timeInfo[1] != "") {
+                    $min = intval($timeInfo[1]);
+                } else {
+                    $min = -1;
+                }
+                
+                if (isset($timeInfo[2]) && $timeInfo[2] != "") {
+                    $sec = intval($timeInfo[2]);
+                } else {
+                    $sec = -1;
+                }
+                
+                if ( ($hour < 0 || $hour > 23) || ($min < 0 || $min > 59) || ($sec < 0 || $sec > 59) ) {
+                    $retVal['success'] = false;
+                    $retVal['errMsg'] = "'$timeInfo[0]:$timeInfo[1]:$timeInfo[2]' is not a valid time";
+                }
             }
         }
         return $retVal;
