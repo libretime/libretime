@@ -53,8 +53,6 @@ class Bootstrapper(Loggable):
             dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(to_delete))
             deleted += 1
         for to_add in songs.difference(db_songs):
-            #if len(songs.difference(db_songs)) > 100:
-                #import ipdb; ipdb.set_trace()
             dispatcher.send(signal=self.watch_signal, sender=self, event=NewFile(to_add))
             added += 1
         self.logger.info( "Flushed watch directory (%s). (added, modified, deleted) = (%d, %d, %d)"

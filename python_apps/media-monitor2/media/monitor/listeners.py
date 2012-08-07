@@ -105,14 +105,16 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
 
 class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     # TODO : must intercept DeleteDirWatch events somehow
-    def process_IN_CLOSE_WRITE(self, event): self.process_create(event)
+    def process_IN_CLOSE_WRITE(self, event):
+        import ipdb; ipdb.set_trace()
+        self.process_create(event)
     def process_IN_MOVED_TO(self, event):
         if EventRegistry.registered(event):
             # We need this trick because we don't how to "expand" dir events
             # into file events until we know for sure if we deleted or moved
             morph = MoveDir(event) if event.dir else MoveFile(event)
             EventRegistry.matching(event).morph_into(morph)
-        else: self.process_create(event)
+        #else: self.process_create(event)
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
         evt = self.process_delete(event)

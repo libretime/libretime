@@ -17,10 +17,8 @@ import media.monitor.pure as mmp
 from api_clients import api_client as apc
 
 global_config = u'/home/rudi/Airtime/python_apps/media-monitor2/tests/live_client.cfg'
-logfile = u'/home/rudi/throwaway/mm2.log'
+api_client_config = u'/home/rudi/Airtime/python_apps/media-monitor2/tests/live_client.cfg'
 
-setup_logging(logfile)
-log = get_logger()
 # MMConfig is a proxy around ConfigObj instances. it does not allow itself
 # users of MMConfig instances to modify any config options directly through the
 # dictionary. Users of this object muse use the correct methods designated for
@@ -28,14 +26,19 @@ log = get_logger()
 config = None
 try: config = MMConfig(global_config)
 except NoConfigFile as e:
-    log.info("Cannot run mediamonitor2 without configuration file.")
-    log.info("Current config path: '%s'" % global_config)
+    print("Cannot run mediamonitor2 without configuration file.")
+    print("Current config path: '%s'" % global_config)
     sys.exit(1)
 except Exception as e:
-    log.info("Unknown error reading configuration file: '%s'" % global_config)
-    log.info(str(e))
+    print("Unknown error reading configuration file: '%s'" % global_config)
+    print(str(e))
 
+logfile = unicode( config['logpath'] )
+
+setup_logging(logfile)
+log = get_logger()
 log.info("Attempting to set the locale...")
+
 try:
     mmp.configure_locale(mmp.get_system_locale())
 except FailedToSetLocale as e:
@@ -52,8 +55,8 @@ watch_syncer = WatchSyncer(signal='watch',
                            chunking_number=config['chunking_number'],
                            timeout=config['request_max_wait'])
 
-apiclient = apc.AirtimeApiClient.create_right_config(log=log,config_path=global_config)
-
+apiclient = apc.AirtimeApiClient.create_right_config(log=log,
+        config_path=api_client_config)
 
 # TODO : Need to do setup_media_monitor call somewhere around here to get
 # import/organize dirs
@@ -67,7 +70,6 @@ airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 store = apiclient.setup_media_monitor()
 airtime_receiver.change_storage({ 'directory':store[u'stor'] })
 
-
 for watch_dir in store[u'watched_dirs']:
     if not os.path.exists(watch_dir):
         # Create the watch_directory here
@@ -80,7 +82,7 @@ for watch_dir in store[u'watched_dirs']:
 last_ran=config.last_ran()
 bs = Bootstrapper( db=sdb, watch_signal='watch' )
 
-bs.flush_all( config.last_ran() )
+#bs.flush_all( config.last_ran() )
 
 ed = EventDrainer(airtime_notifier.connection,interval=float(config['rmq_event_wait']))
 
