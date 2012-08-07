@@ -1722,17 +1722,21 @@ div.errors{
 }
 .small-icon.recording {
 	background:url(images/icon_record.png) no-repeat 0 0;
+    margin-top: 0px !important;
 }
 .small-icon.rebroadcast {
 	background:url(images/icon_rebroadcast.png) no-repeat 0 0;
+    margin-top: 0px !important;
 }
 .small-icon.soundcloud {
 	background:url(images/icon_soundcloud.png) no-repeat 0 0;
 	width:21px;
+    margin-top: 0px !important;
 }
 .small-icon.sc-error {
 	background:url(images/icon_soundcloud_error2.png) no-repeat 0 0;
 	width:21px;
+    margin-top: 0px !important;
 }
 .small-icon.progress {
 	background:url(images/upload-icon.gif) no-repeat;
@@ -1741,6 +1745,7 @@ div.errors{
 	border-radius:2px;
 	-webkit-border-radius:2px;
 	-moz-border-radius:2px;
+    margin-top: 0px !important;
 }
 .small-icon.alert {
 	background:url(images/icon_alert.png) no-repeat;
@@ -1748,6 +1753,11 @@ div.errors{
 	width:13px;
 	margin-right:3px;
 	margin-left:1px;
+}
+.small-icon.show-empty {
+    background:url(redmond/images/ui-icons_ff5d1a_256x240.png) no-repeat 0 -144px;
+    width: 16px;
+    margin-top: 0px !important;
 }
 .medium-icon {
 	display:block;
