@@ -320,24 +320,48 @@ class Application_Common_DateHelper
     public static function checkDateTimeRangeForSQL($p_datetime){
         $info = explode(' ', $p_datetime);
         $dateInfo = explode('-', $info[0]);
-        $timeInfo = explode(':', $info[1]);
+        if (isset($info[1])) {
+            $timeInfo = explode(':', $info[1]);
+        }
+        $retVal = array();
+        $retVal["success"] = true;
         
         $year = $dateInfo[0];
         $month = $dateInfo[1];
         $day = $dateInfo[2];
         // if year is < 1753 or > 9999 it's out of range
-        if ($year < 1753 || !checkdate($month, $day, $year)) {
-            return false;
+        if ($year < 1753) {
+            $retVal['success'] = false;
+            $retVal['errMsg'] = "The year '$year' must be within the range of 1753 - 9999";
+        } else if (!checkdate($month, $day, $year)) {
+            $retVal['success'] = false;
+            $retVal['errMsg'] = "'$year-$month-$day' is not a valid date";        
         } else {
             // check time
-            $hour = intval($timeInfo[0]);
-            $min = intval($timeInfo[1]);
-            $sec = intval($timeInfo[2]);
-            if ($hour > 23 || $min > 59 || $sec > 59) {
-                return false;
+            if (isset($timeInfo[0]) && $timeInfo[0] != "") {
+                $hour = intval($timeInfo[0]);
+            } else {
+                $hour = -1;
+            }
+            
+            if (isset($timeInfo[1]) && $timeInfo[1] != "") {
+                $min = intval($timeInfo[1]);
+            } else {
+                $min = -1;
+            }
+            
+            if (isset($timeInfo[2]) && $timeInfo[2] != "") {
+                $sec = intval($timeInfo[2]);
+            } else {
+                $sec = -1;
+            }
+            
+            if ( ($hour < 0 || $hour > 23) || ($min < 0 || $min > 59) || ($sec < 0 || $sec > 59) ) {
+                $retVal['success'] = false;
+                $retVal['errMsg'] = "'$timeInfo[0]:$timeInfo[1]:$timeInfo[2]' is not a valid time";
             }
         }
-        return true;
+        return $retVal;
     }
     
     /**

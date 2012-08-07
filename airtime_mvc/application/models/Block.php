@@ -981,17 +981,23 @@ EOT;
                 } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                     if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                         $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                    } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])) {
-                        // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                        $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
+                    } else {
+                        $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
+                        if (!$result["success"]) {
+                            // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                            $error[] =  $result["errMsg"];
+                        }
                     }
     
                     if (isset($d['sp_criteria_extra'])) {
                         if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
                             $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                        } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])) {
-                            // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                            $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
+                        } else {
+                            $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
+                            if (!$result["success"]) {
+                                // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                $error[] =  $result["errMsg"];
+                            }
                         }
                     }
                 } else if ($column->getType() == PropelColumnTypes::INTEGER) {
@@ -1035,17 +1041,23 @@ EOT;
                         } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                             if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                                 $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                            } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value'])) {
-                                // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                $error[] =  "$d[sp_criteria_value] is not a valid date/time string";
+                            } else {
+                                $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
+                                if (!$result["success"]) {
+                                    // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                    $error[] =  $result["errMsg"];
+                                }
                             }
             
                             if (isset($d['sp_criteria_extra'])) {
                                 if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
                                     $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                                } else if (!Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra'])) {
-                                    // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                    $error[] =  "$d[sp_criteria_extra] is not a valid date/time string";
+                                } else {
+                                    $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
+                                    if (!$result["success"]) {
+                                        // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                        $error[] =  $result["errMsg"];
+                                    }
                                 }
                             }
                         } else if ($column->getType() == PropelColumnTypes::INTEGER) {
