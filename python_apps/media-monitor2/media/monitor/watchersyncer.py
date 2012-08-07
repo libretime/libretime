@@ -6,7 +6,7 @@ import traceback
 
 from media.monitor.handler import ReportHandler
 from media.monitor.log import Loggable
-from media.monitor.listeners import FileMediator
+#from media.monitor.listeners import FileMediator
 from media.monitor.exceptions import BadSongFile
 from media.monitor.pure import LazyProperty
 
@@ -17,7 +17,7 @@ class RequestSync(threading.Thread,Loggable):
         threading.Thread.__init__(self)
         self.watcher = watcher
         self.requests = requests
-        self.retries = 3
+        self.retries = 1
         self.request_wait = 0.3
 
     @LazyProperty
@@ -42,8 +42,8 @@ class RequestSync(threading.Thread,Loggable):
                 self.logger.info("Bad song file: '%s'" % e.path)
             except Exception as e:
                 self.logger.info("An evil exception occured")
-                import ipdb; ipdb.set_trace()
                 self.logger.error( traceback.format_exc() )
+                import ipdb; ipdb.set_trace()
         def make_req():
             self.apiclient.send_media_monitor_requests( packed_requests )
         # Is this retry shit even necessary? Consider getting rid of this.
@@ -55,6 +55,10 @@ class RequestSync(threading.Thread,Loggable):
                         it's not returning json when it should\n \
                         ... will fix once I setup the damn debugger")
                 self.logger.info("Trying again after %f seconds" % self.request_wait)
+                self.logger.info("==== choked on '%s' ====" % packed_requests)
+                print("==== choked on '%s' ====" % packed_requests)
+                #self.logger.info( traceback.format_exc() )
+                #import ipdb; ipdb.set_trace()
                 time.sleep( self.request_wait )
             except Exception as e:
                 self.unexpected_exception(e)
@@ -62,7 +66,7 @@ class RequestSync(threading.Thread,Loggable):
                 self.logger.info("Request worked on the '%d' try" % (try_index + 1))
                 break
         else: self.logger.info("Failed to send request after '%d' tries..." % self.retries)
-        self.logger.info("Now ignoring: %d files" % len(FileMediator.ignored_set))
+        #self.logger.info("Now ignoring: %d files" % len(FileMediator.ignored_set))
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
@@ -94,7 +98,7 @@ class WatchSyncer(ReportHandler,Loggable):
         self.path = '' # TODO : get rid of this attribute everywhere
         #self.signal = signal
         self.timeout = float(timeout)
-        self.chunking_number = chunking_number
+        self.chunking_number = int(chunking_number)
         self.__queue = []
         # Even though we are not blocking on the http requests, we are still
         # trying to send the http requests in order
@@ -135,7 +139,7 @@ class WatchSyncer(ReportHandler,Loggable):
 
     def push_queue(self, elem):
         self.logger.info("Added event into queue")
-        if self.events_left_count() == self.chunking_number:
+        if self.events_left_count() >= self.chunking_number:
             self.push_request()
             self.request_do() # Launch the request if nothing is running
         self.__queue.append(elem)

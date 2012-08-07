@@ -23,7 +23,6 @@ api_client_config = u'/home/rudi/Airtime/python_apps/media-monitor2/tests/live_c
 # users of MMConfig instances to modify any config options directly through the
 # dictionary. Users of this object muse use the correct methods designated for
 # modification
-config = None
 try: config = MMConfig(global_config)
 except NoConfigFile as e:
     print("Cannot run mediamonitor2 without configuration file.")
@@ -34,7 +33,6 @@ except Exception as e:
     print(str(e))
 
 logfile = unicode( config['logpath'] )
-
 setup_logging(logfile)
 log = get_logger()
 log.info("Attempting to set the locale...")

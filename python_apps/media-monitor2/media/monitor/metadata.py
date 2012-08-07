@@ -123,8 +123,10 @@ class Metadata(Loggable):
         for k,v in full_mutagen.iteritems():
             # Special handling of attributes here
             if isinstance(v, list):
-                if len(v) == 1: metadata[k] = v[0]
-                else: raise Exception("Unknown mutagen %s:%s" % (k,str(v)))
+                # TODO : some files have multiple fields for the same metadata.
+                # genre is one example. In that case mutagen will return a list
+                # of values
+                metadata[k] = v[0]
             else: metadata[k] = v
         self.__metadata = {}
         # Start populating a dictionary of airtime metadata in __metadata

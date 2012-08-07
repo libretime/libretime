@@ -3,6 +3,7 @@ import copy
 import os
 from os.path import normpath
 import shutil
+from itertools import takewhile
 import sys
 import hashlib
 from configobj import ConfigObj
@@ -156,6 +157,13 @@ def remove_whitespace(dictionary):
     for bad_key in bad_keys: del nd[bad_key]
     return nd
 
+def parse_int(s):
+    if s.isdigit(): return s
+    else:
+        try:
+            return reduce(lambda x,y: x + y,
+                    takewhile(lambda x: x.isdigit(), s))
+        except: return 0
 
 def normalized_metadata(md, original_path):
     """ consumes a dictionary of metadata and returns a new dictionary with the
@@ -170,7 +178,7 @@ def normalized_metadata(md, original_path):
         # It's very likely that the following isn't strictly necessary. But the old
         # code would cast MDATA_KEY_TRACKNUMBER to an integer as a byproduct of
         # formatting the track number to 2 digits.
-        'MDATA_KEY_TRACKNUMBER' : lambda x: int(x),
+        'MDATA_KEY_TRACKNUMBER' : parse_int,
         'MDATA_KEY_BITRATE' : lambda x: str(int(x) / 1000) + "kbps",
         # note: you don't actually need the lambda here. It's only used for clarity
         'MDATA_KEY_FILEPATH' : lambda x: os.path.normpath(x),

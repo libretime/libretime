@@ -3,7 +3,6 @@ import abc
 import traceback
 from media.monitor.pure import LazyProperty
 
-logfile = '/home/rudi/throwaway/mm2.log'
 #logger = None
 
 def setup_logging(log_path):
