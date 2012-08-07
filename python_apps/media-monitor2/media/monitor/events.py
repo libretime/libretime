@@ -114,12 +114,10 @@ class MoveFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 def map_events(directory, constructor):
-    #return map(lambda f: constructor( FakePyinotify(f) ).pack(),
-        #mmp.walk_supported(directory.replace("-unknown-path",""),
-            #clean_empties=False))
     for f in mmp.walk_supported(directory.replace("-unknown-path",""),
             clean_empties=True):
-        try: yield constructor( FakePyinotify(f) ).pack()[0]
+        try:
+            for e in constructor( FakePyinotify(f) ).pack(): yield e
         except BadSongFile as e: yield e
 
 class DeleteDir(BaseEvent):
