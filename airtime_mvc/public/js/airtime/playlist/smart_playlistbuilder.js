@@ -178,9 +178,10 @@ function setSmartPlaylistEvents() {
         var data = $('form').serializeArray(),
             save_action = 'Playlist/smart-block-criteria-save',
             obj_id = $('input[id="obj_id"]').val();
-        
+        enableLoadingIcon();
         $.post(save_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "save");
+            disableLoadingIcon();
         });
     });
     
@@ -189,9 +190,10 @@ function setSmartPlaylistEvents() {
         var data = $('form').serializeArray(),
             generate_action = 'Playlist/smart-block-generate',
             obj_id = $('input[id="obj_id"]').val();
-		
+        enableLoadingIcon();
         $.post(generate_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "generate");
+            disableLoadingIcon();
         });
     });
     
@@ -200,9 +202,10 @@ function setSmartPlaylistEvents() {
         var data = $('form').serializeArray(),
             shuffle_action = 'Playlist/smart-block-shuffle',
             obj_id = $('input[id="obj_id"]').val();
-		
+        enableLoadingIcon();
         $.post(shuffle_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "shuffle");
+            disableLoadingIcon();
         });
     });
 	
@@ -525,6 +528,19 @@ function removeButtonCheck() {
         rmv_button.removeAttr('disabled');
         rmv_button.show();
     }
+}
+
+function enableLoadingIcon() {
+    $("#side_playlist").block({ 
+        message: "Processing...",
+        theme: true,
+        allowBodyStretch: true,
+        applyPlatformOpacityRules: false
+    });
+}
+
+function disableLoadingIcon() {
+    $("#side_playlist").unblock()
 }
 
 var criteriaTypes = {
