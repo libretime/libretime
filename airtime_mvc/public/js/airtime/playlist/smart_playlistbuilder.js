@@ -163,12 +163,12 @@ function setSmartPlaylistEvents() {
 
         list.next().show();
         
-        reindexElements();
-        
         // always put '+' button on the last enabled row
         appendAddButton();
         // always put '+' button on the last modifier row
         appendModAddButton();
+        
+        reindexElements();
         // remove the 'x' button if only one row is enabled
         removeButtonCheck();
     });
@@ -263,14 +263,17 @@ function appendModAddButton() {
     var divs = $('#smart-playlist-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
     $.each(divs, function(i, div){
         if (i > 0) {
-            if ($(div).find('select[name^="sp_criteria_field"]').val() == $(div).prev().find('select[name^="sp_criteria_field"]').val()) {
-             
+            /* If the criteria field is hidden we know it is a modifier row
+             * and can hide the previous row's modifier add button
+             */
+            if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
                 $(div).prev().find('a[id^="modifier_add"]').addClass('sp-invisible');
             } else {
                 $(div).prev().find('a[id^="modifier_add"]').removeClass('sp-invisible');
             }
         }
 
+        //always add modifier add button to the last row
         if (i+1 == divs.length) {
             $(div).find('a[id^="modifier_add"]').removeClass('sp-invisible');
         }
@@ -286,17 +289,14 @@ function reindexElements() {
         modIndex = 0;
     $.each(divs, function(i, div){
         if (i > 0 && index < 26) {
-            /* If the current row and previous row have the same criteria field,
-             * the the current row becomes a modifier
+            
+            /* If the current row's criteria field is hidden we know it is
+             * a modifier row
              */
-            if ($(div).find('select[name^="sp_criteria_field"]').val() != '0' &&
-                $(div).find('select[name^="sp_criteria_field"]').val() == $(div).prev().find('select[name^="sp_criteria_field"]').val()) {
+            if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
                 
                 $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index+'_'+modIndex);
                 $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index+'_'+modIndex);
-                if (!$(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
-                    $(div).find('select[name^="sp_criteria_field"]').addClass('sp-invisible');
-                }
                 $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index+'_'+modIndex);
                 $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index+'_'+modIndex);
                 $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
@@ -310,9 +310,6 @@ function reindexElements() {
                 index++;
                 $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index);
                 $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index);
-                if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
-                    $(div).find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
-                }
                 $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index);
                 $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index);
                 $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index);
