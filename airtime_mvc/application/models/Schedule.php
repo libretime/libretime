@@ -265,16 +265,12 @@ class Application_Model_Schedule
         sched.fade_in AS fade_in, sched.fade_out AS fade_out,
         sched.playout_status AS playout_status,
 
-        --ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
-        --ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists
         %%columns%%
 
         FROM
         ((
-            --cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
             %%join%%
 
-        --JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
         JOIN cc_show AS showt ON (showt.id = si.show_id)
         )
 
@@ -298,12 +294,13 @@ class Application_Model_Schedule
             $filesSql);
 
         $streamSql = str_replace("%%columns%%", 
-            "ws.name AS file_track_title, ws.creator_id AS file_artist_name,
+            "ws.name AS file_track_title, sub.login AS file_artist_name,
             ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", 
             $templateSql);
         $streamSql = str_replace("%%join%%", 
             "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
-             JOIN cc_show_instances AS si ON (si.id = sched.instance_id))", 
+            JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
+            LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)", 
             $streamSql);
 
         $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) as temp ORDER BY si_starts, sched_starts";
