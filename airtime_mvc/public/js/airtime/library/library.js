@@ -596,9 +596,11 @@ var AIRTIME = (function(AIRTIME) {
                     
                     //define an add to playlist callback.
                     if (oItems.pl_add !== undefined) {
+                        var aItems = [];
                         
                         callback = function() {
-                            AIRTIME.playlist.fnAddItems([data.id], undefined, 'after');
+                            aItems.push(new Array(data.id, data.ftype));
+                            AIRTIME.playlist.fnAddItems(aItems, undefined, 'after');
                         };
                         
                         oItems.pl_add.callback = callback;
