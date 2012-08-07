@@ -107,8 +107,7 @@ class Application_Model_Schedule
         
         $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) AS unioned ORDER BY starts";
 
-	
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         $numberOfRows = count($rows);
 
         $results['previous'] = null;

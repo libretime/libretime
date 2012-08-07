@@ -543,6 +543,7 @@ var AIRTIME = (function(AIRTIME) {
                 .append('<option value="1">Files</option>')
                 .append('<option value="2">Playlists</option>')
                 .append('<option value="3">Smart Playlists</option>')
+                .append('<option value="4">Web Streams</option>')
                 .end()
             .change(function(ev){
                 oTable.fnDraw();
@@ -613,12 +614,18 @@ var AIRTIME = (function(AIRTIME) {
                             callback = function() {
                                 document.location.href = oItems.edit.url;
                             };
-                        }
-                        else {
+                        } else if (data.ftype === "playlist" || data.ftype === "block") {
                             callback = function() {
-                                //TODO
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype);
+		                        var url = '/Playlist/edit';
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
                             };
+                        } else if (data.ftype === "stream") {
+                            callback = function() {
+		                        var url = '/Webstream/edit';
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                            }
+                        } else {
+                            throw new Exception("Unknown type: " + data.ftype);
                         }
                         oItems.edit.callback = callback;
                     }

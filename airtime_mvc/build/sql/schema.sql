@@ -635,7 +635,7 @@ CREATE TABLE "cc_webstream"
 	"description" VARCHAR(255)  NOT NULL,
 	"url" VARCHAR(255)  NOT NULL,
 	"length" interval default '00:00:00' NOT NULL,
-	"creator_id" VARCHAR(255)  NOT NULL,
+	"creator_id" INTEGER  NOT NULL,
 	"mtime" TIMESTAMP(6)  NOT NULL,
 	"utime" TIMESTAMP(6)  NOT NULL,
 	PRIMARY KEY ("id")

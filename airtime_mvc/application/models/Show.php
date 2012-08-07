@@ -1763,8 +1763,7 @@ class Application_Model_Show
         ." AND modified_instance != TRUE";
 
         // Convert back to local timezone
-        $rows = $con->query($sql)->fetchAll();
-
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 
@@ -1894,7 +1893,7 @@ class Application_Model_Show
         }
 
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT *, si.starts as start_timestamp, si.ends as end_timestamp FROM "
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
         ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts >= TIMESTAMP '$timeStart'"
@@ -1907,8 +1906,7 @@ class Application_Model_Show
             $sql = $sql . " LIMIT $limit";
         }
 
-        $rows = $con->query($sql)->fetchAll();
-
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
     }
 

@@ -8,7 +8,7 @@ exec 2>&1
 
 if [ "$(id -u)" != "0" ]; then
     echo "Please run as root user."
-	exit 1
+    exit 1
 fi
 
 #Current dir
@@ -26,11 +26,21 @@ dist=`lsb_release -is`
 
 if [ "$dist" = "Debian" ]; then
     set +e
-    grep "deb http://www.deb-multimedia.org squeeze main non-free" /etc/apt/sources.list
+    grep -E "deb +http://www.deb-multimedia.org/? squeeze +main +non-free" /etc/apt/sources.list
+    returncode=$?
     set -e
-    if [ "$?" -ne "0" ]; then
+    if [ "$returncode" -ne "0" ]; then
         echo "deb http://www.deb-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
     fi
+fi
+
+codename=`lsb_release -sc`
+set +e
+grep -E "deb +http://apt.sourcefabric.org/? +$codename +main" /etc/apt/sources.list
+returncode=$?
+set -e
+if [ "$returncode" != "0" ]; then
+    echo "deb http://apt.sourcefabric.org/ $codename main" >> /etc/apt/sources.list
 fi
 
 apt-get update
@@ -57,6 +67,11 @@ else
     apt-get -y install libzend-framework-php
 fi
 
+#Install Sourcefabric's custom Liquidsoap debian package
+apt-get -y --force-yes install sourcefabric-keyring
+apt-get -y --force-yes install liquidsoap
+
+
 # Apache Config File
 echo "----------------------------------------------------"
 echo "2. Apache Config File"
@@ -68,7 +83,7 @@ if [ ! -f /etc/apache2/sites-available/airtime ]; then
     a2enmod rewrite php5
     service apache2 restart
 else
-	echo "Apache config for Airtime already exists..."
+    echo "Apache config for Airtime already exists..."
 fi
 
 # Enable Icecast

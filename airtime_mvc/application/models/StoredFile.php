@@ -606,7 +606,7 @@ class Application_Model_StoredFile
                 $plSelect[] = "PL.id AS ".$key;
                 $blSelect[] = "BL.id AS ".$key;
                 $fileSelect[] = $key;
-                $streamSelect[] = $key;
+                $streamSelect[] = "ws.id AS ".$key;
             } elseif ($key === "track_title") {
                 $plSelect[] = "name AS ".$key;
                 $blSelect[] = "name AS ".$key;
@@ -621,7 +621,7 @@ class Application_Model_StoredFile
                 $plSelect[] = "login AS ".$key;
                 $blSelect[] = "login AS ".$key;
                 $fileSelect[] = $key;
-                $streamSelect[] = "creator_id AS ".$key;
+                $streamSelect[] = "login AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
@@ -659,7 +659,7 @@ class Application_Model_StoredFile
         $plTable = "({$plSelect} FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))";
         $blTable = "({$blSelect} FROM cc_block AS BL LEFT JOIN cc_subjs AS sub ON (sub.id = BL.creator_id))";
         $fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
-        $streamTable = "({$streamSelect} FROM cc_webstream AS WEBSTREAM)";
+        $streamTable = "({$streamSelect} FROM cc_webstream AS ws LEFT JOIN cc_subjs AS sub ON (sub.id = ws.creator_id))";
         $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 
         //choose which table we need to select data from.
@@ -675,6 +675,9 @@ class Application_Model_StoredFile
                 break;
             case 3:
                 $fromTable = $blTable." AS Block"; //need an alias for the table if it's standalone.
+                break;
+            case 4:
+                $fromTable = $streamTable." AS StreamTable"; //need an alias for the table if it's standalone.
                 break;
             default:
                 $fromTable = $unionTable;
@@ -696,7 +699,7 @@ class Application_Model_StoredFile
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
             }
-    		
+  
             //convert mtime and utime to localtime
             $row['mtime'] = new DateTime($row['mtime'], new DateTimeZone('UTC'));
             $row['mtime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));

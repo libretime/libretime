@@ -40,7 +40,7 @@
  * @method     CcWebstream findOneByDbDescription(string $description) Return the first CcWebstream filtered by the description column
  * @method     CcWebstream findOneByDbUrl(string $url) Return the first CcWebstream filtered by the url column
  * @method     CcWebstream findOneByDbLength(string $length) Return the first CcWebstream filtered by the length column
- * @method     CcWebstream findOneByDbCreatorId(string $creator_id) Return the first CcWebstream filtered by the creator_id column
+ * @method     CcWebstream findOneByDbCreatorId(int $creator_id) Return the first CcWebstream filtered by the creator_id column
  * @method     CcWebstream findOneByDbMtime(string $mtime) Return the first CcWebstream filtered by the mtime column
  * @method     CcWebstream findOneByDbUtime(string $utime) Return the first CcWebstream filtered by the utime column
  *
@@ -49,7 +49,7 @@
  * @method     array findByDbDescription(string $description) Return CcWebstream objects filtered by the description column
  * @method     array findByDbUrl(string $url) Return CcWebstream objects filtered by the url column
  * @method     array findByDbLength(string $length) Return CcWebstream objects filtered by the length column
- * @method     array findByDbCreatorId(string $creator_id) Return CcWebstream objects filtered by the creator_id column
+ * @method     array findByDbCreatorId(int $creator_id) Return CcWebstream objects filtered by the creator_id column
  * @method     array findByDbMtime(string $mtime) Return CcWebstream objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcWebstream objects filtered by the utime column
  *
@@ -269,20 +269,29 @@ abstract class BaseCcWebstreamQuery extends ModelCriteria
 	/**
 	 * Filter the query on the creator_id column
 	 * 
-	 * @param     string $dbCreatorId The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     int|array $dbCreatorId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcWebstreamQuery The current query, for fluid interface
 	 */
 	public function filterByDbCreatorId($dbCreatorId = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbCreatorId)) {
+		if (is_array($dbCreatorId)) {
+			$useMinMax = false;
+			if (isset($dbCreatorId['min'])) {
+				$this->addUsingAlias(CcWebstreamPeer::CREATOR_ID, $dbCreatorId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbCreatorId['max'])) {
+				$this->addUsingAlias(CcWebstreamPeer::CREATOR_ID, $dbCreatorId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbCreatorId)) {
-				$dbCreatorId = str_replace('*', '%', $dbCreatorId);
-				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcWebstreamPeer::CREATOR_ID, $dbCreatorId, $comparison);

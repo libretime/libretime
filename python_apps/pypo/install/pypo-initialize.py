@@ -83,30 +83,13 @@ try:
     
     print " * Installing Liquidsoap binary"
     
-    binary_path = os.path.join(PATH_LIQUIDSOAP_BIN, "liquidsoap_%s_%s" % (codename, arch))
+    p = Popen("which liquidsoap", shell=True, stdout=PIPE)
+    liq_path = p.communicate()[0].strip()
     
-    try:
-        open(binary_path)
-        
-        try:
-            os.remove("/usr/bin/airtime-liquidsoap")
-        except OSError, e:
-            #only get here if it doesn't exist
-            pass
-        
-        os.symlink(binary_path, "/usr/bin/airtime-liquidsoap")
-    except IOError, e:
-        """
-        shutil.copy can throw this exception for two reasons. First reason is that it cannot open the source file.
-        This is when the liquidsoap file we requested does not exist, and therefore tells the user we don't support
-        their OS/System architecture. The second reason for this exception is the shutil.copy cannot open the target file.
-        Since this script is being run as root (and we cannot install to a read-only device), this should never happen. So
-        it is safe to assume this exception is a result of the first case. 
-        
-        Note: We cannot simply use os.path.exists before this, since it sometimes gives us "false" incorrectly
-        """
-        print "Unsupported OS/system architecture."
-        print e
+    if p.returncode == 0:
+        os.symlink(liq_path, "/usr/bin/airtime-liquidsoap")
+    else:
+        print " * Liquidsoap binary not found!"
         sys.exit(1)
     
     #initialize init.d scripts

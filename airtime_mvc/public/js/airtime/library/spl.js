@@ -532,6 +532,7 @@ var AIRTIME = (function(AIRTIME){
             //stream url
             //default_length  
             //playlist name
+            var id = $pl.find("#ws_id").attr("value"); 
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
@@ -542,7 +543,7 @@ var AIRTIME = (function(AIRTIME){
         
             var url = 'Webstream/save';
             $.post(url, 
-                {format: "json", description: description, url:streamurl, length: length, name: name}, 
+                {format: "json", id:id, description: description, url:streamurl, length: length, name: name}, 
                 function(json){
                     if (json.analysis){
                         for (var s in json.analysis){
@@ -730,8 +731,7 @@ var AIRTIME = (function(AIRTIME){
             });
     };
 	
-	mod.fnEdit = function(id, type) {
-		var url = '/Playlist/edit';
+	mod.fnEdit = function(id, type, url) {
 		
 		stopAudioPreview();	
 		
@@ -741,6 +741,7 @@ var AIRTIME = (function(AIRTIME){
 				openPlaylist(json);
 			});
 	};
+
 	
 	mod.fnDelete = function(plid) {
 		var url, id, lastMod;

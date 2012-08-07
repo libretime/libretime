@@ -7,6 +7,7 @@ class WebstreamController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('new', 'json')
                     ->addActionContext('save', 'json')
+                    ->addActionContext('edit', 'json')
                     ->initContext();
         //TODO
         //$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -29,14 +30,52 @@ class WebstreamController extends Zend_Controller_Action
         */
     }
 
+    public function editAction()
+    {
+        $request = $this->getRequest();
+
+        $id = $request->getParam("id");
+        if (is_null($id)) {
+            throw new Exception("Missing parameter 'id'"); 
+        }
+
+        $this->view->ws = new Application_Model_Webstream($id);
+        $this->view->html = $this->view->render('webstream/webstream.phtml');
+    }
+
     public function saveAction()
     {
         $request = $this->getRequest();
 
+        
+        $user = Application_Model_User::getCurrentUser();
+        $hasPermission = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST));
+        $id = $request->getParam("id");
+
+        if ($id == -1) {
+            $webstream = new CcWebstream();
+        } else {
+            $webstream = CcWebstreamQuery::create()->findPK($id);
+        }
+        
+        if ($id != -1) {
+            //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
+            $user = Application_Model_User::getCurrentUser();
+            if ($webstream->getDbCreatorId() != $user->getId()) {
+                header("Status: 401 Not Authorized");
+                return;
+            } 
+        } 
+
+        if (!$hasPermission) {
+            header("Status: 401 Not Authorized");
+            return;
+        }
+
         $analysis = Application_Model_Webstream::analyzeFormData($request);
         
         if (Application_Model_Webstream::isValid($analysis)) {
-            Application_Model_Webstream::save($request);
+            Application_Model_Webstream::save($request, $webstream);
             $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
         } else {
             $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>"; 
