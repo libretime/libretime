@@ -87,6 +87,13 @@ try:
     liq_path = p.communicate()[0].strip()
     
     if p.returncode == 0:
+        try:
+            os.unlink(liq_path)
+        except Exception:
+            #liq_path DNE, which is OK.
+            pass
+            
+        
         os.symlink(liq_path, "/usr/bin/airtime-liquidsoap")
     else:
         print " * Liquidsoap binary not found!"
