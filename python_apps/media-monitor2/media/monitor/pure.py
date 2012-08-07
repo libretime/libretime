@@ -43,7 +43,7 @@ class IncludeOnly(object):
         def _wrap(moi, event, *args, **kwargs):
             ext = extension(event.pathname)
             # Checking for emptiness b/c we don't want to skip direcotries
-            if (ext in self.exts) or event.dir:
+            if (ext.lower() in self.exts) or event.dir:
                 return func(moi, event, *args, **kwargs)
         return _wrap
 
@@ -59,7 +59,7 @@ def partition(f, alist):
 
 def is_file_supported(path):
     # TODO : test and document this function
-    return extension(path) in supported_extensions
+    return extension(path).lower() in supported_extensions
 
 # In the future we would like a better way to find out
 # whether a show has been recorded

@@ -31,15 +31,13 @@ class EventRegistry(object):
         EventRegistry.unregister(event)
         return event
 
-
 # It would be good if we could parameterize this class by the attribute
 # that would contain the path to obtain the meta data. But it would be too much
 # work
 class HasMetaData(object):
     __metaclass__ = abc.ABCMeta
     @LazyProperty
-    def metadata(self):
-        return Metadata(self.path)
+    def metadata(self): return Metadata(self.path)
 
 class BaseEvent(Loggable):
     __metaclass__ = abc.ABCMeta
@@ -55,11 +53,9 @@ class BaseEvent(Loggable):
     @LazyProperty
     def cookie(self):
         return getattr( self._raw_event, 'cookie', None )
-    def __str__(self):
-        return "Event. Path: %s" % self.__raw_event.pathname
 
-    def is_dir_event(self):
-        return self._raw_event.dir
+    def __str__(self): return "Event. Path: %s" % self.__raw_event.pathname
+    def is_dir_event(self): return self._raw_event.dir
 
     # As opposed to unsafe_pack...
     def safe_pack(self):
@@ -89,7 +85,6 @@ class BaseEvent(Loggable):
 class FakePyinotify(object):
     def __init__(self, path):
         self.pathname = path
-
 
 class OrganizeFile(BaseEvent, HasMetaData):
     def __init__(self, *args, **kwargs): super(OrganizeFile, self).__init__(*args, **kwargs)

@@ -44,7 +44,8 @@ class RequestSync(threading.Thread,Loggable):
                 self.logger.info("An evil exception occured")
                 import ipdb; ipdb.set_trace()
                 self.logger.error( traceback.format_exc() )
-        def make_req(): self.apiclient.send_media_monitor_requests( packed_requests )
+        def make_req():
+            self.apiclient.send_media_monitor_requests( packed_requests )
         # Is this retry shit even necessary? Consider getting rid of this.
         for try_index in range(0,self.retries):
             try: make_req()
