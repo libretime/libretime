@@ -25,25 +25,24 @@ class RequestSync(threading.Thread,Loggable):
         return ac.AirtimeApiClient.create_right_config()
 
     def run(self):
-        # TODO : implement proper request sending
-        self.logger.info("launching request with %d items." % len(self.requests))
+        self.logger.info("Attempting request with %d items." % len(self.requests))
         # Note that we must attach the appropriate mode to every response. Also
         # Not forget to attach the 'is_record' to any requests that are related
         # to recorded shows
-        # A simplistic request would like:
         # TODO : recorded shows aren't flagged right
         packed_requests = []
         for request_event in self.requests:
             try:
-                for request in request_event.pack():
+                for request in request_event.safe_pack():
                     if isinstance(request, BadSongFile):
                         self.logger.info("Bad song file: '%s'" % request.path)
                     else: packed_requests.append(request)
             except BadSongFile as e:
+                self.logger.info("This should never occur anymore!!!")
                 self.logger.info("Bad song file: '%s'" % e.path)
-                self.logger.info("TODO : put in ignore list")
             except Exception as e:
-                self.logger.info("An evil exception occured to packing '%s'" % request.path)
+                self.logger.info("An evil exception occured")
+                import ipdb; ipdb.set_trace()
                 self.logger.error( traceback.format_exc() )
         def make_req(): self.apiclient.send_media_monitor_requests( packed_requests )
         # Is this retry shit even necessary? Consider getting rid of this.

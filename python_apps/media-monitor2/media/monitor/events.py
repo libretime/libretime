@@ -61,6 +61,18 @@ class BaseEvent(Loggable):
     def is_dir_event(self):
         return self._raw_event.dir
 
+    # As opposed to unsafe_pack...
+    def safe_pack(self):
+        """
+        returns exceptions instead of throwing them to be consistent with
+        events that must catch their own BadSongFile exceptions since generate
+        a set of exceptions instead of a single one
+        """
+        # pack will only throw an exception if it processes one file but this
+        # is a little bit hacky
+        try: return self.pack()
+        except BadSongFile as e: return [e]
+
     # nothing to see here, please move along
     def morph_into(self, evt):
         """
