@@ -193,8 +193,8 @@ class Application_Model_Block
 
         $files = array();
         $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, 
-    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc 
+    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type,
+    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
     LEFT JOIN cc_files AS f ON pc.file_id=f.id
     LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
     WHERE pc.block_id = {$this->id};
@@ -281,7 +281,7 @@ EOT;
             } else if ($modifier == "hours") {
                 $length = $value.":00:00";
             }
-        } 
+        }
         return $length;
     }
     
@@ -294,7 +294,7 @@ EOT;
         return array($value, $modifier);
     }
     
-    // 
+    // this function returns sum of all track length under this block.
     public function getStaticLength(){
         $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id={$this->id}";
         $r = $this->con->query($sql);
@@ -951,8 +951,10 @@ EOT;
         } else {
             if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
                 $error[] =  "Limit cannot be empty or smaller than 0";
-            } else if (floatval($data['etc']['sp_limit_value']) < 1) {
-                $error[] =  "The value should be an integer";
+            } else if (!ctype_digit($data['etc']['sp_limit_value'])) {
+                $error[] = "The value should be an integer";
+            } else if (intval($data['etc']['sp_limit_value']) > 500) {
+                $error[] = "500 is the max item limit value you can set";
             }
         }
     
@@ -1277,7 +1279,7 @@ EOT;
     
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
-                $i = 0; 
+                $i = 0;
                 foreach ($crit as $criteria) {
                     $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
