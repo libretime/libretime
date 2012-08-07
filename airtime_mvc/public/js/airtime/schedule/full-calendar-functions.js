@@ -244,14 +244,39 @@ function eventRender(event, element, view) {
     } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -3) {
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
     }
+    
+    //add scheduled show content empty icon
+    if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+        if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
+            if (event.soundcloud_id === -1) {
+                $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon show-empty"></span>');
+            } else if (event.soundcloud_id > 0) {
+                
+            } else if (event.soundcloud_id === -2) {
+            
+            } else if (event.soundcloud_id === -3) {
+                
+            }
+        }
+    } else if (view.name === 'month') {
+        if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
+            if (event.soundcloud_id === -1) {
+                $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon show-empty"></span>');
+            } else if (event.soundcloud_id > 0) {
+                
+            } else if (event.soundcloud_id === -2) {
+            
+            } else if (event.soundcloud_id === -3) {
+                
+            }
+        }
+    }
 
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
-
         $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
     if(view.name === 'month' && event.rebroadcast === 1) {
-
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
 }
@@ -389,6 +414,24 @@ function addQtipToSCIcons(ele){
                                 "<br>"+"Error msg: "+json.error_msg+"<br>");
                     }
                 }
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        });
+    }else if ($(ele).hasClass("show-empty")){
+        $(ele).qtip({
+            content: {
+                text: "This show has no scheduled content."
             },
             position:{
                 adjust: {

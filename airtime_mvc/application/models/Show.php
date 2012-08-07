@@ -1621,6 +1621,15 @@ class Application_Model_Show {
             else if ($p_editable && $nowEpoch < $endsEpoch) {
                 $options["editable"] = true;
             }
+            
+            $showInstance = new Application_Model_ShowInstance($show["instance_id"]);
+            $showContent = $showInstance->getShowListContent();
+            if (empty($showContent)) {
+                $options["show_empty"] = 1;
+            } else {
+                $options["show_empty"] = 0;
+            }
+            
             $events[] = &self::makeFullCalendarEvent($show, $options, $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
         }
 
