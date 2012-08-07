@@ -4,7 +4,7 @@ import os
 
 from media.monitor.manager import Manager
 from media.monitor.bootstrap import Bootstrapper
-from media.monitor.log import get_logger
+from media.monitor.log import get_logger, setup_logging
 from media.monitor.config import MMConfig
 from media.monitor.toucher import ToucherThread
 from media.monitor.syncdb import AirtimeDB
@@ -16,8 +16,11 @@ import media.monitor.pure as mmp
 
 from api_clients import api_client as apc
 
-log = get_logger()
 global_config = u'/home/rudi/Airtime/python_apps/media-monitor2/tests/live_client.cfg'
+logfile = u'/home/rudi/throwaway/mm2.log'
+
+setup_logging(logfile)
+log = get_logger()
 # MMConfig is a proxy around ConfigObj instances. it does not allow itself
 # users of MMConfig instances to modify any config options directly through the
 # dictionary. Users of this object muse use the correct methods designated for

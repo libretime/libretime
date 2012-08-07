@@ -3,8 +3,12 @@ import abc
 import traceback
 from media.monitor.pure import LazyProperty
 
-logger = logging.getLogger('mediamonitor2')
-logging.basicConfig(filename='/home/rudi/throwaway/mm2.log', level=logging.DEBUG)
+logfile = '/home/rudi/throwaway/mm2.log'
+#logger = None
+
+def setup_logging(log_path):
+    #logger = logging.getLogger('mediamonitor2')
+    logging.basicConfig(filename=log_path, level=logging.DEBUG)
 
 appname = 'mediamonitor2'
 
