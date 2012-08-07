@@ -121,8 +121,10 @@ class MoveFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 def map_events(directory, constructor):
-    for f in mmp.walk_supported(directory.replace("-unknown-path",""),
-            clean_empties=True):
+    # This hack is actually not necessary:
+    #for f in mmp.walk_supported(directory.replace("-unknown-path",""),
+            #clean_empties=False)
+    for f in mmp.walk_supported(directory, clean_empties=False):
         try:
             for e in constructor( FakePyinotify(f) ).pack(): yield e
         except BadSongFile as e: yield e
@@ -142,7 +144,7 @@ class DeleteDirWatch(BaseEvent):
     def pack(self):
         req_dict = {}
         req_dict['mode'] = u'delete_dir'
-        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path + "/" )
         return [req_dict]
 
 class ModifyFile(BaseEvent, HasMetaData):

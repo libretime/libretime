@@ -107,6 +107,8 @@ class WatchSyncer(ReportHandler,Loggable):
         tc.start()
         super(WatchSyncer, self).__init__(signal=signal)
 
+    # TODO : get rid of this useless property. WatchSyncer is now uncoupled
+    # from any particular watch directory
     @property
     def target_path(self): return self.path
 

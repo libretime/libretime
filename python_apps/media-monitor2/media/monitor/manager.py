@@ -1,5 +1,7 @@
 import pyinotify
+from pydispatch import dispatcher
 
+from os.path import normpath
 from media.monitor.events import PathChannel
 from media.monitor.log import Loggable
 from media.monitor.listeners import StoreWatchListener, OrganizeListener
@@ -34,15 +36,26 @@ class Manager(Loggable):
             'organizer' : None,
             'problem_handler' : None,
         }
+        def dummy(sender, event): self.watch_move( event.path, sender=sender )
+        dispatcher.connect(dummy, signal='watch_move', sender=dispatcher.Any,
+                weak=False)
         # A private mapping path => watch_descriptor
         # we use the same dictionary for organize, watch, store wd events.
         # this is a little hacky because we are unable to have multiple wd's
         # on the same path.
         self.__wd_path = {}
-        # The following set isn't really necessary anymore. should be
+        # The following set isn't really necessary anymore. Should be
         # removed...
         self.watched_directories = set([])
         Manager.global_inst = self
+
+    # This is the only event that we are unable to process "normally". I.e.
+    # through dedicated handler objects. Because we must have access to a
+    # manager instance. Hence we must slightly break encapsulation.
+    def watch_move(self, watch_dir, sender=None):
+        self.logger.info("Watch dir '%s' has been renamed (hence removed)" %
+                watch_dir)
+        self.remove_watch_directory(normpath(watch_dir))
 
     def watch_signal(self):
         return self.watch_listener.signal

@@ -5,7 +5,7 @@ from pydispatch import dispatcher
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
 from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
-                                 ModifyFile, DeleteDir, EventRegistry, MoveDir,\
+                                 DeleteDir, EventRegistry, MoveDir,\
                                  DeleteDirWatch
 from media.monitor.log import Loggable, get_logger
 
@@ -118,19 +118,27 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
         evt = self.process_delete(event)
         if hasattr(event,'cookie'): EventRegistry.register(evt)
     def process_IN_DELETE(self,event): self.process_delete(event)
+    def process_IN_MOVE_SELF(self, event):
+        if '-unknown-path' in event.pathname:
+            event.pathname = event.pathname.replace('-unknown-path','')
+            self.delete_watch_dir(event)
     # Capturing modify events is too brittle and error prone
     # def process_IN_MODIFY(self,event): self.process_modify(event)
 
+    def delete_watch_dir(self, event):
+        e = DeleteDirWatch(event)
+        dispatcher.send(signal='watch_move', sender=self, event=e)
+        dispatcher.send(signal=self.signal, sender=self, event=e)
     # TODO : Remove this code. Later decided we will ignore modify events
     # since it's too difficult to tell which ones should be handled. Much
     # easier to just intercept IN_CLOSE_WRITE and decide what to do on the php
     # side
-    @mediate_ignored
-    @IncludeOnly(mmp.supported_extensions)
-    def process_modify(self, event):
-        FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE',key='maskname')
-        evt = ModifyFile(event)
-        dispatcher.send(signal=self.signal, sender=self, event=evt)
+    #@mediate_ignored
+    #@IncludeOnly(mmp.supported_extensions)
+    #def process_modify(self, event):
+        #FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE',key='maskname')
+        #evt = ModifyFile(event)
+        #dispatcher.send(signal=self.signal, sender=self, event=evt)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)

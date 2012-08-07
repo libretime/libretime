@@ -38,6 +38,7 @@ class ProblemFileHandler(Handles, Loggable):
         self.logger.info("Initialized problem file handler. Problem dir: '%s'" % self.problem_dir)
 
     def handle(self, sender, event, exception=None):
+        # TODO : use the exception parameter for something
         self.logger.info("Received problem file: '%s'. Supposed to move it to problem dir", event.path)
         import ipdb; ipdb.set_trace()
         try: mmp.move_to_dir(dir_path=self.problem_dir, file_path=event.path)
