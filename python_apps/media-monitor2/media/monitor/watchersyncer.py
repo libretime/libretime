@@ -101,7 +101,9 @@ class WatchSyncer(ReportHandler,Loggable):
     def target_path(self): return self.path
 
     def handle(self, sender, event):
-        """We implement this abstract method from ReportHandler"""
+        """
+        We implement this abstract method from ReportHandler
+        """
         # TODO : more types of events need to be handled here
         if hasattr(event, 'pack'):
             # We push this event into queue

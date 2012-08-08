@@ -637,8 +637,9 @@ class AirtimeApiClient():
 
     def get_files_without_replay_gain_value(self, dir_id):
         """
-        Download a list of files that need to have their ReplayGain value calculated. This list
-        of files is downloaded into a file and the path to this file is the return value.
+        Download a list of files that need to have their ReplayGain value
+        calculated. This list of files is downloaded into a file and the path
+        to this file is the return value.
         """
 
         #http://localhost/api/get-files-without-replay-gain/dir_id/1

@@ -2,14 +2,13 @@ from threading import Thread
 
 import traceback
 import os
-import logging
-import json
 
 from api_clients import api_client
 from media.update import replaygain
+from media.monitor.log import Loggable
 
 
-class ReplayGainUpdater(Thread):
+class ReplayGainUpdater(Thread, Loggable):
     """
     The purpose of the class is to query the server for a list of files which
     do not have a ReplayGain value calculated. This class will iterate over the
@@ -22,9 +21,8 @@ class ReplayGainUpdater(Thread):
     automatically have its ReplayGain value calculated.
     """
 
-    def __init__(self, logger):
+    def __init__(self):
         Thread.__init__(self)
-        self.logger = logger
         self.api_client = api_client.AirtimeApiClient()
 
     def main(self):
@@ -34,24 +32,20 @@ class ReplayGainUpdater(Thread):
 
         for dir_id, dir_path in directories.iteritems():
             try:
-                processed_data = []
-
-                #keep getting few rows at a time for current music_dir (stor or
-                #watched folder).  #When we get a response with 0 rows, then we
-                #will set 'finished' to True.
-                finished = False
-
-                while not finished:
-                    # return a list of pairs where the first value is the file's database row id
-                    # and the second value is the filepath
+                # keep getting few rows at a time for current music_dir (stor
+                # or watched folder).
+                while True:
+                    # return a list of pairs where the first value is the
+                    # file's database row id and the second value is the
+                    # filepath
                     files = self.api_client.get_files_without_replay_gain_value(dir_id)
-
+                    processed_data = []
                     for f in files:
                         full_path = os.path.join(dir_path, f['fp'])
                         processed_data.append((f['id'], replaygain.calculate_replay_gain(full_path)))
 
                     self.api_client.update_replay_gain_values(processed_data)
-                    finished = (len(files) == 0)
+                    if len(files) == 0: break
 
             except Exception, e:
                 self.logger.error(e)
@@ -63,9 +57,5 @@ class ReplayGainUpdater(Thread):
             self.logger.error(e)
 
 if __name__ == "__main__":
-    try:
-        rgu = ReplayGainUpdater(logging)
-        rgu.main()
-    except Exception, e:
-        print e
-        print traceback.format_exc()
+    rgu = ReplayGainUpdater()
+    rgu.main()
