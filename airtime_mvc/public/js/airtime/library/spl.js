@@ -262,7 +262,10 @@ var AIRTIME = (function(AIRTIME){
 	    var nameElement = $(this),
 	    	lastMod = getModified(),
 	    	type = $('#obj_type').val();
-	    
+            //remove any newlines if user somehow snuck them in (easy to do if dragging/dropping text)
+            nameElement.text(nameElement.text().replace("\n", ""));
+	   
+        /* --until we decide whether Playlist name should autosave or not
     	url = '/Playlist/set-playlist-name';
 
 	    $.post(url, 
@@ -278,6 +281,7 @@ var AIRTIME = (function(AIRTIME){
 	                redrawLib();
 	            }
 	        });
+           */
 	}
 		
 	function redrawLib() {
