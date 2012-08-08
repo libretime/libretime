@@ -562,7 +562,6 @@ var criteriaTypes = {
     "mood" : "s",
     "name" : "s",
     "orchestra" : "s",
-    "radio_station_name" : "s",
     "rating" : "n",
     "sample_rate" : "n",
     "track_title" : "s",
