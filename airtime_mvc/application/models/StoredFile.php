@@ -719,13 +719,16 @@ class Application_Model_StoredFile
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
 
+            Logging::log($type);
             if ($type == "au") {
-                //TODO:
-                Logging::log("row id: ".$row['id']);
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
-            } else {
+            } else if ($type == "pl") {
                 $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
+            } else if ($type == "st") {
+                $row['image'] = '<img title="Webstream preview" src="/css/images/record_icon.png">';
+            } else if ($type == "bl") {
+                $row['image'] = '<img title="Smart Playlist" src="/css/images/delete.png">';
             }
         }
 
