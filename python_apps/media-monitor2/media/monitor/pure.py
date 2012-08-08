@@ -182,7 +182,8 @@ def normalized_metadata(md, original_path):
         'MDATA_KEY_BITRATE' : lambda x: str(int(x) / 1000) + "kbps",
         # note: you don't actually need the lambda here. It's only used for clarity
         'MDATA_KEY_FILEPATH' : lambda x: os.path.normpath(x),
-        'MDATA_KEY_MIME' : lambda x: x.replace('-','/')
+        'MDATA_KEY_MIME' : lambda x: x.replace('-','/'),
+        'MDATA_KEY_BPM' : lambda x: x[0:8],
     }
     path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
                'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']

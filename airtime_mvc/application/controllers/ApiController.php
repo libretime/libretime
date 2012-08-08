@@ -614,6 +614,8 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
+        Logging::log( $md );
+
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
         if ($mode == "create") {
