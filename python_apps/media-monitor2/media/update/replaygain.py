@@ -45,9 +45,10 @@ def duplicate_file(file_path):
     return fdst.name
 
 def calculate_replay_gain(file_path):
-    """ This function accepts files of type mp3/ogg/flac and returns a
-    calculated ReplayGain value in dB.  If the value cannot be calculated for
-    some reason, then we default to 0 (Unity Gain).
+    """
+    This function accepts files of type mp3/ogg/flac and returns a calculated
+    ReplayGain value in dB.  If the value cannot be calculated for some reason,
+    then we default to 0 (Unity Gain).
     http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification
     """
 

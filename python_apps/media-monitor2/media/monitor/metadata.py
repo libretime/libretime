@@ -3,6 +3,8 @@ import mutagen
 import math
 import os
 import copy
+
+import media.update.replaygain as gain
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log import Loggable
 import media.monitor.pure as mmp
@@ -16,8 +18,9 @@ list of supported easy tags in mutagen version 1.20
 'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor',
 'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid',
 'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid',
-'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid',
-'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
+'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm',
+'musicbrainz_trackid', 'arranger', 'albumsort', 'replaygain_*_peak',
+'organization']
 """
 
 airtime2mutagen = {
@@ -46,10 +49,14 @@ airtime2mutagen = {
 # airtime metadata object will skip the attribute outright.
 
 airtime_special = {
-    "MDATA_KEY_DURATION" : lambda m: format_length(getattr(m.info, u'length', 0.0)),
-    "MDATA_KEY_BITRATE" : lambda m: getattr(m.info, "bitrate", 0),
-    "MDATA_KEY_SAMPLERATE" : lambda m: getattr(m.info, u'sample_rate', 0),
-    "MDATA_KEY_MIME" : lambda m: m.mime[0] if len(m.mime) > 0 else u'',
+    "MDATA_KEY_DURATION" :
+        lambda m: format_length(getattr(m.info, u'length', 0.0)),
+    "MDATA_KEY_BITRATE" :
+        lambda m: getattr(m.info, "bitrate", 0),
+    "MDATA_KEY_SAMPLERATE" :
+        lambda m: getattr(m.info, u'sample_rate', 0),
+    "MDATA_KEY_MIME" :
+        lambda m: m.mime[0] if len(m.mime) > 0 else u'',
 }
 mutagen2airtime = dict( (v,k) for k,v in airtime2mutagen.iteritems() if isinstance(v, str) )
 
@@ -139,8 +146,9 @@ class Metadata(Loggable):
                 airtime_key = mutagen2airtime[muta_k]
                 # Apply truncation in the case where airtime_key is in our
                 # truncation table
-                muta_v = truncate_to_length(muta_v, truncate_table[airtime_key]) \
-                         if airtime_key in truncate_table else muta_v
+                muta_v =  \
+                        truncate_to_length(muta_v, truncate_table[airtime_key])\
+                        if airtime_key in truncate_table else muta_v
                 self.__metadata[ airtime_key ] = muta_v
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
@@ -152,6 +160,8 @@ class Metadata(Loggable):
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath)
+        self.__metadata['MDATA_KEY_REPLAYGAIN'] = \
+                gain.calculate_replay_gain(fpath)
 
     def is_recorded(self):
         return mmp.is_airtime_recorded( self.__metadata )
