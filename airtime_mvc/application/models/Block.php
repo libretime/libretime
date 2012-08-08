@@ -76,7 +76,6 @@ class Application_Model_Block
             "mood" => "DbMood",
             "name" => "DbName",
             "orchestra" => "DbOrchestra",
-            "radio_station_name" => "DbRadioStationName",
             "rating" => "DbRating",
             "sample_rate" => "DbSampleRate",
             "track_title" => "DbTrackTitle",
@@ -1211,6 +1210,7 @@ EOT;
     
         $insertList = array();
         $totalTime = 0;
+        $totalItems = 0;
     
         // this moves the pointer to the first element in the collection
         $files->getFirst();
@@ -1220,7 +1220,9 @@ EOT;
             $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
             $insertList[$id] = $length;
             $totalTime += $length;
-            if ( !is_null($limit['items']) && $limit['items'] == count($insertList)) {
+            $totalItems++;
+            
+            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500) {
                 break;
             }
     
@@ -1252,7 +1254,6 @@ EOT;
                 "mood" => "Mood",
                 "name" => "Name",
                 "orchestra" => "Orchestra",
-                "radio_station_name" => "Radio Station Name",
                 "rating" => "Rating",
                 "sample_rate" => "Sample Rate",
                 "track_title" => "Title",

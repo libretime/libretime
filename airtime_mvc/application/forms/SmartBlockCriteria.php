@@ -29,13 +29,12 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "mood" => "Mood",
             "name" => "Name",
             "orchestra" => "Orchestra",
-            "radio_station_name" => "Radio Station Name",
             "rating" => "Rating",
             "sample_rate" => "Sample Rate",
             "track_title" => "Title",
             "track_number" => "Track Number",
             "utime" => "Uploaded",
-            "year" => "Year"               
+            "year" => "Year"
         );
         
         $criteriaTypes = array(
@@ -60,7 +59,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "mood" => "s",
             "name" => "s",
             "orchestra" => "s",
-            "radio_station_name" => "s",
             "rating" => "n",
             "sample_rate" => "n",
             "track_title" => "s",
@@ -210,7 +208,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 /* This is where the additional modifier rows get defined
                  * The additional row count starts at 0 and gets appended
                  * to the parent field name
-                 */      
+                 */
                 } else if (count($storedCrit["crit"][$criteriaKeys[$i]]) > 1) {
                     $n = $j - 1;
                     $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i."_".$n);
@@ -251,7 +249,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $this->addElement($criteriaExtra);
                 }
                         
-            }//for            
+            }//for
             
         }//for
         

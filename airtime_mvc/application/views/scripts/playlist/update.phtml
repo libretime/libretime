@@ -10,7 +10,7 @@ if ($item['type'] == 2) {
 }
 ?>
     <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["id"]; ?>">
-        <div class="list-item-container"> 
+        <div class="list-item-container">
         
             <?php if ($item['type'] == 0 && $item['exists']):?>
             <div class="big_play" audioFile="<?php echo $item["id"]; ?>">
@@ -39,11 +39,11 @@ if ($item['type'] == 2) {
                 <span class="spl_title"><?php echo $item['track_title'] ?></span>
             </div>
             <div class="text-row">
-                <span class="spl_artist"><?php echo $item['creator'] ?></span>     
+                <span class="spl_artist"><?php echo $item['creator'] ?></span>
                 <span class="spl_offset"><?php echo $item["offset"]?></span>
             </div>
             <?php //create the crossfade icon.
-                if ($i < count($items) -1):
+                if (($i < count($items) -1) && !($items[$i]['type'] == 2 && $items[$i+1]['type'])):
             ?>
             <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
             <?php endif; ?>
@@ -62,7 +62,7 @@ if ($item['type'] == 2) {
 
         <?php //create a fade editor box
               //(fadeout of current position + fade in of next position)
-            if($i < count($items) -1):
+            if(($i < count($items) -1) && !($items[$i]['type'] == 2 && $items[$i+1]['type'])):
         ?>
         <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none">
             <?php echo $this->partial('playlist/set-fade.phtml', array(
