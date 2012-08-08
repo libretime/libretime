@@ -341,6 +341,7 @@ var AIRTIME = (function(AIRTIME){
         // functions in smart_playlistbuilder.js
         setupUI();
         appendAddButton();
+        appendModAddButton();
         removeButtonCheck();
         
 	}

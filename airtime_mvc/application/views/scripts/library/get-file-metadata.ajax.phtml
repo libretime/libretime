@@ -84,10 +84,13 @@
                 if (strlen($crit["display_name"]) > $critMaxStrLen) {
                     $crit["display_name"] = substr($crit["display_name"], 0, 12)."...";
                 }
+                if (strlen($crit["modifier"]) > $critMaxStrLen) {
+                    $crit["modifier"] = substr($crit["modifier"], 0, 12)."...";
+                }
                 ?>
                 <tr>
                     <td class='file-md-qtip-criteria-width-crit file-md-qtip-nowrap'><?php echo $crit["display_name"] ?></td>
-                    <td class='file-md-qtip-criteria-width-mod'><?php echo $crit["modifier"] ?></td>
+                    <td class='file-md-qtip-criteria-width-mod file-md-qtip-nowrap'><?php echo $crit["modifier"] ?></td>
                     <td class='file-md-qtip-criteria-width file-md-qtip-nowrap'><?php echo $crit["value"] ?>
                     <?php if (isset($crit["extra"])) { ?>
                         to <?php echo $crit["extra"] ?></td>
