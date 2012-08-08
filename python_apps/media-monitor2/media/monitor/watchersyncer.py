@@ -55,10 +55,6 @@ class RequestSync(threading.Thread,Loggable):
                         it's not returning json when it should\n \
                         ... will fix once I setup the damn debugger")
                 self.logger.info("Trying again after %f seconds" % self.request_wait)
-                self.logger.info("==== choked on '%s' ====" % packed_requests)
-                print("==== choked on '%s' ====" % packed_requests)
-                #self.logger.info( traceback.format_exc() )
-                #import ipdb; ipdb.set_trace()
                 time.sleep( self.request_wait )
             except Exception as e:
                 self.unexpected_exception(e)
