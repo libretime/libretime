@@ -180,6 +180,8 @@ class WatchSyncer(ReportHandler,Loggable):
 
     def __del__(self):
         # Ideally we would like to do a little more to ensure safe shutdown
-        if self.events_in_queue(): self.logger.warn("Terminating with events in the queue still pending...")
-        if self.requests_in_queue(): self.logger.warn("Terminating with http requests still pending...")
+        if self.events_in_queue():
+            self.logger.warn("Terminating with events still in the queue...")
+        if self.requests_in_queue():
+            self.logger.warn("Terminating with http requests still pending...")
 

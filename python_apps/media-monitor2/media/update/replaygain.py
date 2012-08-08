@@ -22,7 +22,7 @@ def run_process(command):
 def get_mime_type(file_path):
     """
     Attempts to get the mime type but will return prematurely if the process
-    takes longer than 5 seconds. Note that this function should only be called 
+    takes longer than 5 seconds. Note that this function should only be called
     for files which do not have a mp3/ogg/flac extension.
     """
 
@@ -45,17 +45,16 @@ def duplicate_file(file_path):
     return fdst.name
 
 def calculate_replay_gain(file_path):
-    """
-    This function accepts files of type mp3/ogg/flac and returns a calculated ReplayGain value in dB.
-    If the value cannot be calculated for some reason, then we default to 0 (Unity Gain).
-       
+    """ This function accepts files of type mp3/ogg/flac and returns a
+    calculated ReplayGain value in dB.  If the value cannot be calculated for
+    some reason, then we default to 0 (Unity Gain).
     http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification
     """
 
     try:
         """
         Making a duplicate is required because the ReplayGain extraction utilities we use
-        make unwanted modifications to the file. 
+        make unwanted modifications to the file.
         """
 
         search = None
