@@ -4,11 +4,16 @@ import os
 import sys
 import shutil
 import tempfile
+import logging
+
+
+logger = logging.getLogger()
 
 def get_process_output(command):
     """
     Run subprocess and return stdout
     """
+    logger.debug(command)
     p = Popen(command, shell=True, stdout=PIPE)
     return p.communicate()[0].strip()
 
@@ -46,9 +51,9 @@ def duplicate_file(file_path):
 
 def calculate_replay_gain(file_path):
     """
-    This function accepts files of type mp3/ogg/flac and returns a calculated
-    ReplayGain value in dB.  If the value cannot be calculated for some reason,
-    then we default to 0 (Unity Gain).
+    This function accepts files of type mp3/ogg/flac and returns a calculated ReplayGain value in dB.
+    If the value cannot be calculated for some reason, then we default to 0 (Unity Gain).
+
     http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification
     """
 
@@ -61,14 +66,14 @@ def calculate_replay_gain(file_path):
         search = None
         temp_file_path = duplicate_file(file_path)
 
-        if re.search(r'mp3$', temp_file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "audio/mpeg":
+        if re.search(r'mp3$', file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "audio/mpeg":
             if run_process("which mp3gain > /dev/null") == 0:
                 out = get_process_output('mp3gain -q "%s" 2> /dev/null' % temp_file_path)
                 search = re.search(r'Recommended "Track" dB change: (.*)', out)
             else:
                 print "mp3gain not found"
                 #Log warning
-        elif re.search(r'ogg$', temp_file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "application/ogg":
+        elif re.search(r'og(g|a)$', file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "application/ogg":
             if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
                 run_process('vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % temp_file_path)
                 out = get_process_output('ogginfo "%s"' % temp_file_path)
@@ -76,7 +81,7 @@ def calculate_replay_gain(file_path):
             else:
                 print "vorbisgain/ogginfo not found"
                 #Log warning
-        elif re.search(r'flac$', temp_file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "audio/x-flac":
+        elif re.search(r'flac$', file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "audio/x-flac":
             if run_process("which metaflac > /dev/null") == 0:
                 out = get_process_output('metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % temp_file_path)
                 search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
