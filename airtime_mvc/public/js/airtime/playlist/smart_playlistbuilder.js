@@ -209,6 +209,7 @@ function setSmartPlaylistEvents() {
         enableLoadingIcon();
         $.post(save_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "save");
+            setFadeIcon();
             disableLoadingIcon();
         });
     });
@@ -282,6 +283,16 @@ function getRowIndex(ele) {
         index = tokens.join(delimiter);
     
     return index;
+}
+
+function setFadeIcon(){
+    var contents = $("#spl_sortable");
+    var show = contents.is(":visible");
+    if (show) {
+        $("#spl_crossfade").show();
+    } else {
+        $("#spl_crossfade").hide();
+    }
 }
 
 /* This function appends a '+' button for the last

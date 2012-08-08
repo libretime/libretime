@@ -305,9 +305,17 @@ var AIRTIME = (function(AIRTIME){
 		$('#spl_sortable')
 			.empty()
 			.append(json.html);
-		
 		setModified(json.modified);
 		redrawLib();
+	}
+	
+	function setFadeIcon(){
+	    var empty = $(".spl_empty");
+	    if (empty.length > 0) {
+	        $("#spl_crossfade").hide();
+	    } else {
+	        $("#spl_crossfade").show();
+	    }
 	}
 	
 	function getId() {
@@ -804,6 +812,7 @@ var AIRTIME = (function(AIRTIME){
 		}
 		else {
 			setPlaylistContent(json);
+			setFadeIcon();
 		}
 		
 		mod.enableUI();

@@ -1,7 +1,11 @@
+<?php
+$contents = $this->obj->getContents();
+$count = count($contents);
+?>
 <button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->obj)) : ?>
     <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
-    <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button">
+    <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button" style="display:<?php echo ($this->obj->isStatic() && $count > 0) ?"block;":"none;"?>">
         <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
     </a>
 <?php endif; ?>
@@ -49,7 +53,8 @@
     <div class="clear"></div>
     <div class="" style="clear:both; float:none; width:100%;">
 	    <ul id="spl_sortable">
-            <?php echo $this->render('playlist/update.phtml') ?>
+            <?php $this->contents = $contents;
+                echo $this->render('playlist/update.phtml') ?>
 	    </ul>
     </div>
 
