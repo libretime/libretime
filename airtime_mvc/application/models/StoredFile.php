@@ -451,8 +451,13 @@ class Application_Model_StoredFile
         return $baseUrl."/api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 
-    public static function Insert($md=null)
+    public static function Insert($md)
     {
+        // save some work by checking if filepath is given right away
+        if( !isset($md['MDATA_KEY_FILEPATH']) ) {
+            return null; 
+        } 
+
         $file = new CcFiles();
         $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
         $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
@@ -460,22 +465,14 @@ class Application_Model_StoredFile
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
 
-        if (isset($md['MDATA_KEY_FILEPATH'])) {
-            // removed "//" in the path. Always use '/' for path separator
-            $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
-            $res = $storedFile->setFilePath($filepath);
-            if ($res === -1) {
-                return null;
-            }
-        } else {
+        // removed "//" in the path. Always use '/' for path separator
+        $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
+        $res = $storedFile->setFilePath($filepath);
+        if ($res === -1) {
             return null;
         }
-
-        if (isset($md)) {
-            $storedFile->setMetadata($md);
-        }
-
-       return $storedFile;
+        $storedFile->setMetadata($md);
+        return $storedFile;
     }
 
     /**

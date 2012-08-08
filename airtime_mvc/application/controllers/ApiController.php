@@ -456,8 +456,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadataAction($md, $mode, $dry_run=false)
-    {
+    public function dispatchMetadata($md, $mode, $dry_run=false) 
+    { 
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
         if ( $dry_run ) { // for debugging we return garbage not to screw around with the db
@@ -587,7 +587,7 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=$dry);
+            $response = $this->dispatchMetadata($info_json, $mode, $dry_run=$dry);
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
