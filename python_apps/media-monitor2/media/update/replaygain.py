@@ -40,7 +40,7 @@ def duplicate_file(file_path):
     fsrc = open(file_path, 'r')
     fdst = tempfile.NamedTemporaryFile(delete=False)
 
-    print "Copying %s to %s" % (file_path, fdst.name)
+    logger.info("Copying %s to %s" % (file_path, fdst.name))
 
     shutil.copyfileobj(fsrc, fdst)
 
@@ -48,6 +48,26 @@ def duplicate_file(file_path):
     fdst.close()
 
     return fdst.name
+
+def get_file_type(file_path):
+    file_type = None
+    if re.search(r'mp3$', file_path, re.IGNORECASE):
+        file_type = 'mp3'
+    elif re.search(r'og(g|a)$', file_path, re.IGNORECASE):
+        file_type = 'vorbis'
+    elif re.search(r'flac$', file_path, re.IGNORECASE):
+        file_type = 'flac'
+    else:
+        mime_type = get_mime_type(file_path) == "audio/mpeg"
+        if 'mpeg' in mime_type:
+            file_type = 'mp3'
+        elif 'ogg' in mime_type:
+            file_type = 'vorbis'
+        elif 'flac' in mime_type:
+            file_type = 'flac'
+
+    return file_type
+
 
 def calculate_replay_gain(file_path):
     """
@@ -66,36 +86,35 @@ def calculate_replay_gain(file_path):
         search = None
         temp_file_path = duplicate_file(file_path)
 
-        if re.search(r'mp3$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "audio/mpeg":
-            if run_process("which mp3gain > /dev/null") == 0:
-                out = get_process_output('mp3gain -q "%s" 2> /dev/null' % temp_file_path)
-                search = re.search(r'Recommended "Track" dB change: (.*)', out)
+        file_type = get_file_type(file_path)
+
+        if file_type:
+            if file_type == 'mp3':
+                if run_process("which mp3gain > /dev/null") == 0:
+                    out = get_process_output('mp3gain -q "%s" 2> /dev/null' % temp_file_path)
+                    search = re.search(r'Recommended "Track" dB change: (.*)', out)
+                else:
+                    logger.warn("mp3gain not found")
+            elif file_type == 'vorbis':
+                if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
+                    run_process('vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % temp_file_path)
+                    out = get_process_output('ogginfo "%s"' % temp_file_path)
+                    search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
+                else:
+                    logger.warn("vorbisgain/ogginfo not found")
+            elif file_type == 'flac':
+                if run_process("which metaflac > /dev/null") == 0:
+                    out = get_process_output('metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % temp_file_path)
+                    search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
+                else:
+                    logger.warn("metaflac not found")
             else:
-                print "mp3gain not found"
-                #Log warning
-        elif re.search(r'og(g|a)$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "application/ogg":
-            if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
-                run_process('vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % temp_file_path)
-                out = get_process_output('ogginfo "%s"' % temp_file_path)
-                search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
-            else:
-                print "vorbisgain/ogginfo not found"
-                #Log warning
-        elif re.search(r'flac$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "audio/x-flac":
-            if run_process("which metaflac > /dev/null") == 0:
-                out = get_process_output('metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % temp_file_path)
-                search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
-            else:
-                print "metaflac not found"
-                #Log warning
-        else:
-            pass
-            #Log unknown file type.
+                pass
 
         #no longer need the temp, file simply remove it.
         os.remove(temp_file_path)
     except Exception, e:
-        print e
+        logger.error(str(e))
 
     replay_gain = 0
     if search:
