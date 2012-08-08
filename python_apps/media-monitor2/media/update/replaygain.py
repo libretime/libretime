@@ -66,14 +66,14 @@ def calculate_replay_gain(file_path):
         search = None
         temp_file_path = duplicate_file(file_path)
 
-        if re.search(r'mp3$', file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "audio/mpeg":
+        if re.search(r'mp3$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "audio/mpeg":
             if run_process("which mp3gain > /dev/null") == 0:
                 out = get_process_output('mp3gain -q "%s" 2> /dev/null' % temp_file_path)
                 search = re.search(r'Recommended "Track" dB change: (.*)', out)
             else:
                 print "mp3gain not found"
                 #Log warning
-        elif re.search(r'og(g|a)$', file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "application/ogg":
+        elif re.search(r'og(g|a)$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "application/ogg":
             if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
                 run_process('vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % temp_file_path)
                 out = get_process_output('ogginfo "%s"' % temp_file_path)
@@ -81,7 +81,7 @@ def calculate_replay_gain(file_path):
             else:
                 print "vorbisgain/ogginfo not found"
                 #Log warning
-        elif re.search(r'flac$', file_path, re.IGNORECASE) or get_mime_type(temp_file_path) == "audio/x-flac":
+        elif re.search(r'flac$', file_path, re.IGNORECASE) or get_mime_type(file_path) == "audio/x-flac":
             if run_process("which metaflac > /dev/null") == 0:
                 out = get_process_output('metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % temp_file_path)
                 search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)

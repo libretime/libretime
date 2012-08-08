@@ -30,22 +30,9 @@ class RequestSync(threading.Thread,Loggable):
         # Not forget to attach the 'is_record' to any requests that are related
         # to recorded shows
         # TODO : recorded shows aren't flagged right
-        packed_requests = []
-        for request_event in self.requests:
-            try:
-                for request in request_event.safe_pack():
-                    if isinstance(request, BadSongFile):
-                        self.logger.info("Bad song file: '%s'" % request.path)
-                    else: packed_requests.append(request)
-            except BadSongFile as e:
-                self.logger.info("This should never occur anymore!!!")
-                self.logger.info("Bad song file: '%s'" % e.path)
-            except Exception as e:
-                self.logger.info("An evil exception occured")
-                self.logger.error( traceback.format_exc() )
-        def make_req():
-            self.apiclient.send_media_monitor_requests( packed_requests )
         # Is this retry shit even necessary? Consider getting rid of this.
+        def make_req():
+            self.apiclient.send_media_monitor_requests( self.requests )
         for try_index in range(0,self.retries):
             try: make_req()
             # most likely we did not get json response as we expected
@@ -147,8 +134,10 @@ class WatchSyncer(ReportHandler,Loggable):
         self.request_do()
 
     def events_in_queue(self):
-        """returns true if there are events in the queue that haven't been
-        processed yet"""
+        """
+        returns true if there are events in the queue that haven't been
+        processed yet
+        """
         return len(self.__queue) > 0
 
     def requests_in_queue(self):
@@ -172,9 +161,22 @@ class WatchSyncer(ReportHandler,Loggable):
         self.logger.info("'%s' : Unleashing request" % self.target_path)
         # want to do request asyncly and empty the queue
         requests = copy.copy(self.__queue)
+        packed_requests = []
+        for request_event in requests:
+            try:
+                for request in request_event.safe_pack():
+                    if isinstance(request, BadSongFile):
+                        self.logger.info("Bad song file: '%s'" % request.path)
+                    else: packed_requests.append(request)
+            except BadSongFile as e:
+                self.logger.info("This should never occur anymore!!!")
+                self.logger.info("Bad song file: '%s'" % e.path)
+            except Exception as e:
+                self.logger.info("An evil exception occured")
+                self.logger.error( traceback.format_exc() )
         def launch_request():
             # Need shallow copy here
-            t = RequestSync(watcher=self, requests=requests)
+            t = RequestSync(watcher=self, requests=packed_requests)
             t.start()
             self.__current_thread = t
         self.__requests.append(launch_request)
