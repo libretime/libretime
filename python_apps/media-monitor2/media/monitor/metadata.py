@@ -4,6 +4,7 @@ import math
 import os
 import copy
 
+import media.update.replaygain as gain
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log import Loggable
 import media.monitor.pure as mmp
@@ -57,7 +58,8 @@ airtime_special = {
     "MDATA_KEY_MIME" :
         lambda m: m.mime[0] if len(m.mime) > 0 else u'',
 }
-mutagen2airtime = dict( (v,k) for k,v in airtime2mutagen.iteritems() if isinstance(v, str) )
+mutagen2airtime = dict( (v,k) for k,v in airtime2mutagen.iteritems()
+        if isinstance(v, str) )
 
 truncate_table = {
         'MDATA_KEY_GENRE' : 64,
@@ -158,9 +160,9 @@ class Metadata(Loggable):
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
-        self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath)
-        #self.__metadata['MDATA_KEY_REPLAYGAIN'] = \
-                #gain.calculate_replay_gain(fpath)
+        self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=-1)
+        self.__metadata['MDATA_KEY_REPLAYGAIN'] = \
+                gain.calculate_replay_gain(fpath)
 
     def is_recorded(self):
         return mmp.is_airtime_recorded( self.__metadata )

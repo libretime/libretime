@@ -13,7 +13,6 @@ from media.monitor.log import Loggable, get_logger
 # following classes should be able to handle.  TODO : implement all of the
 # following special cases
 #
-# - Recursive directories being added to organized dirs are not handled
 # properly as they only send a request for the dir and not for every file. Also
 # more hacks are needed to check that the directory finished moving/copying?
 #
