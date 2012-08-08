@@ -4,7 +4,6 @@ import math
 import os
 import copy
 
-import media.update.replaygain as gain
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log import Loggable
 import media.monitor.pure as mmp
@@ -160,8 +159,8 @@ class Metadata(Loggable):
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath)
-        self.__metadata['MDATA_KEY_REPLAYGAIN'] = \
-                gain.calculate_replay_gain(fpath)
+        #self.__metadata['MDATA_KEY_REPLAYGAIN'] = \
+                #gain.calculate_replay_gain(fpath)
 
     def is_recorded(self):
         return mmp.is_airtime_recorded( self.__metadata )
