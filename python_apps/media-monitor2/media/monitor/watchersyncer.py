@@ -6,7 +6,6 @@ import traceback
 
 from media.monitor.handler import ReportHandler
 from media.monitor.log import Loggable
-#from media.monitor.listeners import FileMediator
 from media.monitor.exceptions import BadSongFile
 from media.monitor.pure import LazyProperty
 
@@ -25,7 +24,8 @@ class RequestSync(threading.Thread,Loggable):
         return ac.AirtimeApiClient.create_right_config()
 
     def run(self):
-        self.logger.info("Attempting request with %d items." % len(self.requests))
+        self.logger.info("Attempting request with %d items." %
+                len(self.requests))
         # Note that we must attach the appropriate mode to every response. Also
         # Not forget to attach the 'is_record' to any requests that are related
         # to recorded shows
@@ -43,7 +43,6 @@ class RequestSync(threading.Thread,Loggable):
             except Exception as e:
                 self.logger.info("An evil exception occured")
                 self.logger.error( traceback.format_exc() )
-                import ipdb; ipdb.set_trace()
         def make_req():
             self.apiclient.send_media_monitor_requests( packed_requests )
         # Is this retry shit even necessary? Consider getting rid of this.
@@ -54,15 +53,16 @@ class RequestSync(threading.Thread,Loggable):
                 self.logger.info("Api Controller is a piece of shit\n \
                         it's not returning json when it should\n \
                         ... will fix once I setup the damn debugger")
-                self.logger.info("Trying again after %f seconds" % self.request_wait)
+                self.logger.info("Trying again after %f seconds" %
+                        self.request_wait)
                 time.sleep( self.request_wait )
-            except Exception as e:
-                self.unexpected_exception(e)
+            except Exception as e: self.unexpected_exception(e)
             else:
-                self.logger.info("Request worked on the '%d' try" % (try_index + 1))
+                self.logger.info("Request worked on the '%d' try" %
+                        (try_index + 1))
                 break
-        else: self.logger.info("Failed to send request after '%d' tries..." % self.retries)
-        #self.logger.info("Now ignoring: %d files" % len(FileMediator.ignored_set))
+        else: self.logger.info("Failed to send request after '%d' tries..." %
+                self.retries)
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
@@ -86,7 +86,8 @@ class TimeoutWatcher(threading.Thread,Loggable):
                 self.watcher.request_do()
             # Same for events, this behaviour is mandatory however.
             if self.watcher.events_in_queue():
-                self.logger.info("We got %d events that are unflushed" % self.watcher.events_left_count())
+                self.logger.info("We got %d events that are unflushed" %
+                        self.watcher.events_left_count())
                 self.watcher.flush_events()
 
 class WatchSyncer(ReportHandler,Loggable):
@@ -146,7 +147,8 @@ class WatchSyncer(ReportHandler,Loggable):
         self.request_do()
 
     def events_in_queue(self):
-        """returns true if there are events in the queue that haven't been processed yet"""
+        """returns true if there are events in the queue that haven't been
+        processed yet"""
         return len(self.__queue) > 0
 
     def requests_in_queue(self):

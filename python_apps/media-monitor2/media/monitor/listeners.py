@@ -10,8 +10,8 @@ from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
 from media.monitor.log import Loggable, get_logger
 
 # We attempt to document a list of all special cases and hacks that the
-# following classes should be able to handle.
-# TODO : implement all of the following special cases
+# following classes should be able to handle.  TODO : implement all of the
+# following special cases
 #
 # - Recursive directories being added to organized dirs are not handled
 # properly as they only send a request for the dir and not for every file. Also
@@ -54,19 +54,21 @@ class FileMediator(object):
         # Poor man's default arguments
         if 'key' not in kwargs: kwargs['key'] = 'maskname'
         for skip in what_to_skip:
-            # standard nasty hack, too long to explain completely in comments but
-            # the gist of it is:
+            # standard nasty hack, too long to explain completely in comments
+            # but the gist of it is:
             # 1. python's scoping rules are sometimes strange.
             # 2. workaround is very similar to what you do in javascript when
             # you write stuff like (function (x,y) { console.log(x+y); })(2,4)
             # to be avoid clobbering peoples' namespace.
-            skip_check = (lambda skip: lambda v: getattr(v,kwargs['key']) == skip)(skip)
+            skip_check = (lambda skip:
+                    lambda v: getattr(v,kwargs['key']) == skip)(skip)
             FileMediator.skip_checks.add( skip_check )
 
 def mediate_ignored(fn):
     def wrapped(self, event, *args,**kwargs):
         event.pathname = unicode(event.pathname, "utf-8")
-        skip_events = [s_check for s_check in FileMediator.skip_checks if s_check(event)]
+        skip_events = [s_check for s_check in FileMediator.skip_checks
+                if s_check(event)]
         for s_check in skip_events:
             FileMediator.skip_checks.remove( s_check )
             # Only process skip_checks one at a time
@@ -93,20 +95,22 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
         handle does to every file"""
         flushed = 0
         for f in mmp.walk_supported(path, clean_empties=True):
-            self.logger.info("Bootstrapping: File in 'organize' directory: '%s'" % f)
-            dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(f))
+            self.logger.info("Bootstrapping: File in 'organize' directory: \
+                    '%s'" % f)
+            dispatcher.send(signal=self.signal, sender=self,
+                    event=OrganizeFile(f))
             flushed += 1
         self.logger.info("Flushed organized directory with %d files" % flushed)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
-        dispatcher.send(signal=self.signal, sender=self, event=OrganizeFile(event))
+        dispatcher.send(signal=self.signal, sender=self,
+                event=OrganizeFile(event))
 
 class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     # TODO : must intercept DeleteDirWatch events somehow
     def process_IN_CLOSE_WRITE(self, event):
-        import ipdb; ipdb.set_trace()
         self.process_create(event)
     def process_IN_MOVED_TO(self, event):
         if EventRegistry.registered(event):
@@ -166,9 +170,10 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
 
     def flush_events(self, path):
         """
-        walk over path and send a NewFile event for every file in this directory.
-        Not to be confused with bootstrapping which is a more careful process that
-        involved figuring out what's in the database first.
+        walk over path and send a NewFile event for every file in this
+        directory.  Not to be confused with bootstrapping which is a more
+        careful process that involved figuring out what's in the database
+        first.
         """
         # Songs is a dictionary where every key is the watched the directory
         # and the value is a set with all the files in that directory.

@@ -11,13 +11,15 @@ from media.update import replaygain
 
 class ReplayGainUpdater(Thread):
     """
-    The purpose of the class is to query the server for a list of files which do not have a ReplayGain
-    value calculated. This class will iterate over the list calculate the values, update the server and
-    repeat the process until the server reports there are no files left.
+    The purpose of the class is to query the server for a list of files which
+    do not have a ReplayGain value calculated. This class will iterate over the
+    list calculate the values, update the server and repeat the process until
+    the server reports there are no files left.
 
-    This class will see heavy activity right after a 2.1->2.2 upgrade since 2.2 introduces ReplayGain
-    normalization. A fresh install of Airtime 2.2 will see this class not used at all since a file
-    imported in 2.2 will automatically have its ReplayGain value calculated.
+    This class will see heavy activity right after a 2.1->2.2 upgrade since 2.2
+    introduces ReplayGain normalization. A fresh install of Airtime 2.2 will
+    see this class not used at all since a file imported in 2.2 will
+    automatically have its ReplayGain value calculated.
     """
 
     def __init__(self, logger):
@@ -34,8 +36,9 @@ class ReplayGainUpdater(Thread):
             try:
                 processed_data = []
 
-                #keep getting few rows at a time for current music_dir (stor or watched folder).
-                #When we get a response with 0 rows, then we will set 'finished' to True.
+                #keep getting few rows at a time for current music_dir (stor or
+                #watched folder).  #When we get a response with 0 rows, then we
+                #will set 'finished' to True.
                 finished = False
 
                 while not finished:
