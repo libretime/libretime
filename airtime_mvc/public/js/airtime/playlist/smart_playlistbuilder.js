@@ -17,6 +17,7 @@ function setSmartPlaylistEvents() {
             $(this).hide();
         }
         appendAddButton();
+        appendModAddButton();
         removeButtonCheck();
     });
     
@@ -87,6 +88,8 @@ function setSmartPlaylistEvents() {
         var count = list_length - curr_pos;
         var next = curr.next();
         var item_to_hide;
+        var prev;
+        var index;
         
         //remove error message from current row, if any
         var error_element = curr.find('span[class="errors sp-errors"]');
@@ -94,10 +97,13 @@ function setSmartPlaylistEvents() {
             error_element.remove();
         }
 
-       /* assign next row to current row for all rows below and including
-        * the row getting removed
-        */
-       for (var i=0; i<count; i++) {
+        /* assign next row to current row for all rows below and including
+         * the row getting removed
+         */
+        for (var i=0; i<count; i++) {
+            
+            index = getRowIndex(curr);
+            
             var criteria = next.find('[name^="sp_criteria_field"]').val();
             curr.find('[name^="sp_criteria_field"]').val(criteria);
             
@@ -107,12 +113,6 @@ function setSmartPlaylistEvents() {
             
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
             curr.find('[name^="sp_criteria_value"]').val(criteria_value);
-            
-            var id = curr.find('[name^="sp_criteria"]').attr('id'),
-                delimiter = '_',
-                start = 3,
-                tokens = id.split(delimiter).slice(start),
-                index = tokens.join(delimiter);
              
             /* if current and next row have the extra criteria value
              * (for 'is in the range' modifier), then assign the next
@@ -143,16 +143,34 @@ function setSmartPlaylistEvents() {
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
             }
 
+            /* determine if current row is a modifier row
+             * if it is, make the criteria select invisible
+             */
+            prev = curr.prev();
+            if (curr.find('[name^="sp_criteria_field"]').val() == prev.find('[name^="sp_criteria_field"]').val()) {
+                if (!curr.find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+                    curr.find('select[name^="sp_criteria_field"]').addClass('sp-invisible');
+                }
+            } else {
+                if (curr.find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+                    curr.find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
+                }
+            }
+            
             curr = next;
             next = curr.next();
+            
         }
-		
+       
         /* Disable the last visible row since it holds the values the user removed
          * Reset the values to empty and resize the criteria value textbox
          * in case the row had the extra criteria textbox
          */
         item_to_hide = list.find('div:visible:last');
         item_to_hide.children().attr('disabled', 'disabled');
+        if (item_to_hide.find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+            item_to_hide.find('select[name^="sp_criteria_field"]').removeClass('sp-invisible');
+        }
         item_to_hide.find('[name^="sp_criteria_field"]').val(0).end()
                     .find('[name^="sp_criteria_modifier"]').val(0).end()
                     .find('[name^="sp_criteria_value"]').val('').end()
@@ -163,12 +181,22 @@ function setSmartPlaylistEvents() {
 
         list.next().show();
         
+        //check if last row is a modifier row
+        var last_row = list.find('div:visible:last');
+        if (last_row.find('[name^="sp_criteria_field"]').val() == last_row.prev().find('[name^="sp_criteria_field"]').val()) {
+            if (!last_row.find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+                last_row.find('select[name^="sp_criteria_field"]').addClass('sp-invisible');
+            }
+        }
+        
         // always put '+' button on the last enabled row
         appendAddButton();
+        
+        reindexElements();
+        
         // always put '+' button on the last modifier row
         appendModAddButton();
         
-        reindexElements();
         // remove the 'x' button if only one row is enabled
         removeButtonCheck();
     });
@@ -246,13 +274,15 @@ function setSmartPlaylistEvents() {
     removeButtonCheck();
 }
 
-var static_length = $('.playlist_title').children('h4[id$="_length"]').text();
-
-/*
-function setStaticLengthHolder(lenVal) {
-    static_length = lenVal;
+function getRowIndex(ele) {
+    var id = ele.find('[name^="sp_criteria"]').attr('id'),
+        delimiter = '_',
+        start = 3,
+        tokens = id.split(delimiter).slice(start),
+        index = tokens.join(delimiter);
+    
+    return index;
 }
-*/
 
 /* This function appends a '+' button for the last
  * modifier row of each criteria.
@@ -339,12 +369,10 @@ function setupUI() {
             $('button[id="generate_button"]').show();
             $('button[id="shuffle_button"]').show();
             $('#spl_sortable').show();
-            //$('.playlist_title').children('h4[id$="_length"]').text(static_length);
         } else {
             $('button[id="generate_button"]').hide();
             $('button[id="shuffle_button"]').hide();
             $('#spl_sortable').hide();
-            //$('.playlist_title').children('h4[id$="_length"]').text(dynamic_length);
         }
     }
     
