@@ -429,26 +429,27 @@ function sizeTextBoxes(ele, classToRemove, classToAdd) {
 }
 
 function populateModifierSelect(e) {
-    /*var criteria = $(e).val(),
-        criteria_type = criteriaTypes[criteria],*/
     var criteria_type = getCriteriaOptionType(e),
-        div = $(e).siblings('select[id^="sp_criteria_modifier"]');
+        index = getRowIndex($(e).parent()),
+        divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
 
-    div.children().remove();
-
-    if (criteria_type == 's') {
-        $.each(stringCriteriaOptions, function(key, value){
-            div.append($('<option></option>')
-               .attr('value', key)
-               .text(value));
-        });
-    } else {
-        $.each(numericCriteriaOptions, function(key, value){
-            div.append($('<option></option>')
-               .attr('value', key)
-               .text(value));
-        });
-    }
+    $.each(divs, function(i, div){
+        $(div).children().remove();
+    
+        if (criteria_type == 's') {
+            $.each(stringCriteriaOptions, function(key, value){
+                $(div).append($('<option></option>')
+                   .attr('value', key)
+                   .text(value));
+            });
+        } else {
+            $.each(numericCriteriaOptions, function(key, value){
+                $(div).append($('<option></option>')
+                   .attr('value', key)
+                   .text(value));
+            });
+        }
+    });
 }
 
 function getCriteriaOptionType(e) {
