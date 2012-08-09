@@ -31,7 +31,8 @@ class CouldNotCreateIndexFile(Exception):
 class DirectoryIsNotListed(Exception):
     def __init__(self,dir_id):
         self.dir_id = dir_id
-    def __str__(self): return "%d was not listed as a directory in the database" % self.dir_id
+    def __str__(self):
+        return "%d was not listed as a directory in the database" % self.dir_id
 
 class FailedToCreateDir(Exception):
     def __init__(self,path, parent):
@@ -44,4 +45,5 @@ class NoDirectoryInAirtime(Exception):
         self.path = path
         self.does_exist = does_exist
     def __str__(self):
-        return "Directory '%s' does not exist in Airtime.\nHowever: %s do exist." % (self.path, self.does_exist)
+        return "Directory '%s' does not exist in Airtime.\n \
+                However: %s do exist." % (self.path, self.does_exist)

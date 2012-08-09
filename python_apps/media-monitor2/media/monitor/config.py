@@ -14,8 +14,8 @@ class MMConfig(object):
 
     def __getitem__(self, key):
         """
-        We always return a copy of the config item to prevent callers from doing any modifications
-        through the returned objects methods
+        We always return a copy of the config item to prevent callers from
+        doing any modifications through the returned objects methods
         """
         return copy.deepcopy(self.cfg[key])
 
