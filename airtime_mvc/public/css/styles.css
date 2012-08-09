@@ -446,11 +446,7 @@ table.library-get-file-md.table-small{
     white-space: nowrap;
 }
 
-.file-md-qtip-criteria-width-crit{
-    width:70px;
-}
-
-.file-md-qtip-criteria-width-mod{
+.file-md-qtip-criteria-width-small{
     width:70px;
 }
 
@@ -477,13 +473,29 @@ table.library-get-file-md.table-small{
     font-style: italic;
 }
 
-.file-md-qtip-playlist.dynamic td{
-    color: #63a2f0;
+.file-md-qtip-left{
+    float: left;
+    width: 60%;
 }
 
-.file-md-qtip-playlist.static td{
+.file-md-qtip-legend {
+    float: right;
+    width: 30%;
+    font-size: 9px;
+    padding: 0px;
+    vertical-align:top;
+    line-height: 13px;
+}
+.static {
     color: #f09839;
 }
+.dynamic {
+    color: #63a2f0;
+}
+.webstream {
+    color: #4eba70;
+}
+	
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES END *****/
 
 
