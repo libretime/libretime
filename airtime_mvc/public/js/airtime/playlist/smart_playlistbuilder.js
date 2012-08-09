@@ -186,17 +186,21 @@ function setSmartPlaylistEvents() {
     });
 	
     /********** SAVE ACTION **********/
-    form.find('button[id="save_button"]').live("click", function(event){
-        var data = $('form').serializeArray(),
-            save_action = 'Playlist/smart-block-criteria-save',
+    /* moved to spl.js
+    $('#save_button').live("click", function(event){
+        var criteria = $('form').serializeArray(),
+            block_name = $('#playlist_name_display').text(),
+            block_desc = $('textarea[name="description"]').val(),
+            save_action = 'Playlist/save',
             obj_id = $('input[id="obj_id"]').val();
         enableLoadingIcon();
-        $.post(save_action, {format: "json", data: data, obj_id: obj_id}, function(data){
+        $.post(save_action, {format: "json", criteria: criteria, name: block_name, desc: block_desc, obj_id: obj_id}, function(data){
             callback(data, "save");
             setFadeIcon();
             disableLoadingIcon();
         });
     });
+    */
     
     /********** GENERATE ACTION **********/
     form.find('button[id="generate_button"]').live("click", function(event){
@@ -482,8 +486,6 @@ function callback(data, type) {
         } else {
             form.find('.success').text('Criteria saved');
             form.find('.success').show();
-            //redraw library table incase block changed from static to dynamic or vice versa
-            dt.fnStandingRedraw();
             
             /* Update number of files that meet criteria and change icon to success/warning
              * as appropriate. This is also done in the form but we do not pass the form
@@ -515,7 +517,7 @@ function callback(data, type) {
 }
 
 function removeSuccessMsg() {
-    var $status = $('#smart-playlist-form').find('.success');
+    var $status = $('.success');
     
     $status.fadeOut("slow", function(){$status.empty()});
 }

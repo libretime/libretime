@@ -590,41 +590,39 @@ var AIRTIME = (function(AIRTIME){
                 });    
         
         
-        }
-              
-              
-              )
-		$pl.on("click", "#description_save", function(){
-	        var textarea = $pl.find("#fieldset-metadate_change textarea"),
-	        	description = textarea.val(),
-	        	url,
-	        	lastMod = getModified(),
-	        	type = $('#obj_type').val();
-	        
-	        url = '/Playlist/set-playlist-description';
-
-	        $.post(url, 
-        		{format: "json", description: description, modified: lastMod, type: type}, 
-        		function(json){
-		            if (json.error !== undefined){
-		            	playlistError(json);
-		            }
-		            else{
-		            	setModified(json.modified);
-		                textarea.val(json.description);
-		                $pl.find("#fieldset-metadate_change").addClass("closed");
-			            redrawLib();
-		            }      
-		        });
-	    });
-
-		$pl.on("click", "#description_cancel", function(){
-	        var textarea = $pl.find("#fieldset-metadate_change textarea");
-	        
-	        textarea.val(cachedDescription);   
-	        $pl.find("#fieldset-metadate_change").addClass("closed");
-	    });
-		//end edit playlist description events.	
+        });
+		
+        $('#save_button').live("click", function(event){
+            /* Smart blocks: get name, description, and criteria
+             * Playlists: get name, description
+             */
+            var criteria = $('form').serializeArray(),
+                block_name = $('#playlist_name_display').text(),
+                block_desc = $('textarea[name="description"]').val(),
+                save_action = 'Playlist/save',
+                obj_id = $('input[id="obj_id"]').val(),
+                obj_type = $('#obj_type').val(),
+                lastMod = getModified(),
+                dt = $('table[id="library_display"]').dataTable();
+            enableLoadingIcon();
+            $.post(save_action,
+                    {format: "json", criteria: criteria, name: block_name, description: block_desc, obj_id: obj_id, type: obj_type, modified: lastMod},
+                    function(data){
+                        var json = $.parseJSON(data);
+                        setModified(json.modified);
+                        if (obj_type == "block") {
+        	                callback(data, "save");
+                        } else {
+                            $('.success').text('Playlist saved');
+                            $('.success').show();
+                            setTimeout(removeSuccessMsg, 5000);
+            	            dt.fnStandingRedraw();
+                        }
+                        setFadeIcon();
+                        disableLoadingIcon();
+                    }
+            );
+        });
 	}
 	
 	function setUpPlaylist() {
