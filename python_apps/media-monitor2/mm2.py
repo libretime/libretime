@@ -62,8 +62,6 @@ apiclient = apc.AirtimeApiClient.create_right_config(log=log,
 
 ReplayGainUpdater.start_reply_gain(apiclient)
 
-# TODO : Need to do setup_media_monitor call somewhere around here to get
-# import/organize dirs
 sdb = AirtimeDB(apiclient)
 
 manager = Manager()

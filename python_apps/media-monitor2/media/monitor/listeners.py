@@ -108,7 +108,6 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
                 event=OrganizeFile(event))
 
 class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
-    # TODO : must intercept DeleteDirWatch events somehow
     def process_IN_CLOSE_WRITE(self, event):
         self.process_create(event)
     def process_IN_MOVED_TO(self, event):
@@ -134,16 +133,6 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
         e = DeleteDirWatch(event)
         dispatcher.send(signal='watch_move', sender=self, event=e)
         dispatcher.send(signal=self.signal, sender=self, event=e)
-    # TODO : Remove this code. Later decided we will ignore modify events
-    # since it's too difficult to tell which ones should be handled. Much
-    # easier to just intercept IN_CLOSE_WRITE and decide what to do on the php
-    # side
-    #@mediate_ignored
-    #@IncludeOnly(mmp.supported_extensions)
-    #def process_modify(self, event):
-        #FileMediator.skip_next('IN_MODIFY','IN_CLOSE_WRITE',key='maskname')
-        #evt = ModifyFile(event)
-        #dispatcher.send(signal=self.signal, sender=self, event=evt)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)

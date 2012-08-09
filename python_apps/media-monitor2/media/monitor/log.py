@@ -3,8 +3,6 @@ import abc
 import traceback
 from media.monitor.pure import LazyProperty
 
-#logger = None
-
 def setup_logging(log_path):
     #logger = logging.getLogger('mediamonitor2')
     logging.basicConfig(filename=log_path, level=logging.DEBUG)
@@ -23,7 +21,7 @@ class Loggable(object):
         self.fatal_exception("'Unexpected' exception has occured:", e)
 
     def fatal_exception(self, message, e):
-        self.logger.error(message)
+        self.logger.error( message )
         self.logger.error( str(e) )
         self.logger.error( traceback.format_exc() )
 

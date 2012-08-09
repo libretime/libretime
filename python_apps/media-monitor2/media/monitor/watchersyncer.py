@@ -79,7 +79,6 @@ class TimeoutWatcher(threading.Thread,Loggable):
 
 class WatchSyncer(ReportHandler,Loggable):
     def __init__(self, signal, chunking_number = 100, timeout=15):
-        self.path = '' # TODO : get rid of this attribute everywhere
         #self.signal = signal
         self.timeout = float(timeout)
         self.chunking_number = int(chunking_number)
@@ -95,16 +94,10 @@ class WatchSyncer(ReportHandler,Loggable):
         tc.start()
         super(WatchSyncer, self).__init__(signal=signal)
 
-    # TODO : get rid of this useless property. WatchSyncer is now uncoupled
-    # from any particular watch directory
-    @property
-    def target_path(self): return self.path
-
     def handle(self, sender, event):
         """
         We implement this abstract method from ReportHandler
         """
-        # TODO : more types of events need to be handled here
         if hasattr(event, 'pack'):
             # We push this event into queue
             self.logger.info("Received event '%s'. Path: '%s'" % \
@@ -160,7 +153,7 @@ class WatchSyncer(ReportHandler,Loggable):
             self.__requests.pop()()
 
     def push_request(self):
-        self.logger.info("'%s' : Unleashing request" % self.target_path)
+        self.logger.info("WatchSyncer : Unleashing request")
         # want to do request asyncly and empty the queue
         requests = copy.copy(self.__queue)
         packed_requests = []
@@ -183,8 +176,6 @@ class WatchSyncer(ReportHandler,Loggable):
             self.__current_thread = t
         self.__requests.append(launch_request)
         self.__queue = []
-
-
 
     def __del__(self):
         # Ideally we would like to do a little more to ensure safe shutdown

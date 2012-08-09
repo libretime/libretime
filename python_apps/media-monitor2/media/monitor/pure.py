@@ -31,8 +31,10 @@ class LazyProperty(object):
 
 class IncludeOnly(object):
     """
-    A little decorator to help listeners only be called on extensions they support
-    NOTE: this decorator only works on methods and not functions. Maybe fix this?
+    A little decorator to help listeners only be called on extensions they
+    support
+    NOTE: this decorator only works on methods and not functions. Maybe
+    fix this?
     """
     def __init__(self, *deco_args):
         self.exts = set([])
@@ -59,16 +61,27 @@ def partition(f, alist):
     return (filter(f, alist), filter(lambda x: not f(x), alist))
 
 def is_file_supported(path):
-    # TODO : test and document this function
+    """
+    Checks if a file's path(filename) extension matches the kind that we
+    support note that this is case insensitive.
+    >>> is_file_supported("test.mp3")
+    True
+    >>> is_file_supported("/bs/path/test.mP3")
+    True
+    >>> is_file_supported("test.txt")
+    False
+    """
     return extension(path).lower() in supported_extensions
 
-# In the future we would like a better way to find out
-# whether a show has been recorded
+# TODO : In the future we would like a better way to find out whether a show
+# has been recorded
 def is_airtime_recorded(md):
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
 
 def clean_empty_dirs(path):
-    """ walks path and deletes every empty directory it finds """
+    """
+    walks path and deletes every empty directory it finds
+    """
     # TODO : test this function
     if path.endswith('/'): clean_empty_dirs(path[0:-1])
     else:
@@ -80,9 +93,9 @@ def clean_empty_dirs(path):
 
 def extension(path):
     """
-    return extension of path, empty string otherwise. Prefer
-    to return empty string instead of None because of bad handling of "maybe"
-    types in python. I.e. interpreter won't enforce None checks on the programmer
+    return extension of path, empty string otherwise. Prefer to return empty
+    string instead of None because of bad handling of "maybe" types in python.
+    I.e. interpreter won't enforce None checks on the programmer
     >>> extension("testing.php")
     'php'
     >>> extension('/no/extension')
@@ -110,42 +123,57 @@ def no_extension_basename(path):
 
 def walk_supported(directory, clean_empties=False):
     """
-    A small generator wrapper around os.walk to only give us files that support the extensions
-    we are considering. When clean_empties is True we recursively delete empty directories
-    left over in directory after the walk.
+    A small generator wrapper around os.walk to only give us files that support
+    the extensions we are considering. When clean_empties is True we
+    recursively delete empty directories left over in directory after the walk.
     """
     for root, dirs, files in os.walk(directory):
-        full_paths = ( os.path.join(root, name) for name in files if is_file_supported(name) )
+        full_paths = ( os.path.join(root, name) for name in files
+                if is_file_supported(name) )
         for fp in full_paths: yield fp
     if clean_empties: clean_empty_dirs(directory)
 
 def magic_move(old, new):
-    # TODO : document and test this function
+    """
+    Moves path old to new and constructs the necessary to directories for new
+    along the way
+    """
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
     shutil.move(old,new)
 
 def move_to_dir(dir_path,file_path):
-    # TODO : document and test this function
+    """
+    moves a file at file_path into dir_path/basename(filename)
+    """
     bs = os.path.basename(file_path)
     magic_move(file_path, os.path.join(dir_path, bs))
 
 def apply_rules_dict(d, rules):
-    # TODO : document this
+    """
+    Consumes a dictionary of rules that maps some keys to lambdas which it
+    applies to every matching element in d and returns a new dictionary with
+    the rules applied
+    """
     new_d = copy.deepcopy(d)
     for k, rule in rules.iteritems():
         if k in d: new_d[k] = rule(d[k])
     return new_d
 
 def default_to(dictionary, keys, default):
-    # TODO : document default_to
+    """
+    Checks if the list of keys 'keys' exists in 'dictionary'. If not then it
+    returns a new dictionary with all those missing keys defaults to 'default'
+    """
     new_d = copy.deepcopy(dictionary)
     for k in keys:
         if not (k in new_d): new_d[k] = default
     return new_d
 
 def remove_whitespace(dictionary):
-    """Remove values that empty whitespace in the dictionary"""
+    """
+    Remove values that empty whitespace in the dictionary
+    """
     nd = copy.deepcopy(dictionary)
     bad_keys = []
     for k,v in nd.iteritems():
@@ -158,6 +186,16 @@ def remove_whitespace(dictionary):
     return nd
 
 def parse_int(s):
+    """
+    Tries very hard to get some sort of integer result from s. Defaults to 0
+    when it failes
+    >>> parse_int("123")
+    123
+    >>> parse_int("123saf")
+    123
+    >>> parse_int("asdf")
+    0
+    """
     if s.isdigit(): return s
     else:
         try:
@@ -166,21 +204,24 @@ def parse_int(s):
         except: return 0
 
 def normalized_metadata(md, original_path):
-    """ consumes a dictionary of metadata and returns a new dictionary with the
+    """
+    consumes a dictionary of metadata and returns a new dictionary with the
     formatted meta data. We also consume original_path because we must set
-    MDATA_KEY_CREATOR based on in it sometimes """
+    MDATA_KEY_CREATOR based on in it sometimes
+    """
     new_md = copy.deepcopy(md)
     # replace all slashes with dashes
     for k,v in new_md.iteritems():
         new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
-        # It's very likely that the following isn't strictly necessary. But the old
-        # code would cast MDATA_KEY_TRACKNUMBER to an integer as a byproduct of
-        # formatting the track number to 2 digits.
+        # It's very likely that the following isn't strictly necessary. But the
+        # old code would cast MDATA_KEY_TRACKNUMBER to an integer as a
+        # byproduct of formatting the track number to 2 digits.
         'MDATA_KEY_TRACKNUMBER' : parse_int,
         'MDATA_KEY_BITRATE' : lambda x: str(int(x) / 1000) + "kbps",
-        # note: you don't actually need the lambda here. It's only used for clarity
+        # note: you don't actually need the lambda here. It's only used for
+        # clarity
         'MDATA_KEY_FILEPATH' : lambda x: os.path.normpath(x),
         'MDATA_KEY_MIME' : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM' : lambda x: x[0:8],
@@ -190,12 +231,15 @@ def normalized_metadata(md, original_path):
     # note that we could have saved a bit of code by rewriting new_md using
     # defaultdict(lambda x: "unknown"). But it seems to be too implicit and
     # could possibly lead to subtle bugs down the road. Plus the following
-    # approach gives us the flexibility to use different defaults for
-    # different attributes
+    # approach gives us the flexibility to use different defaults for different
+    # attributes
     new_md = apply_rules_dict(new_md, format_rules)
-    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'], default=no_extension_basename(original_path))
-    new_md = default_to(dictionary=new_md, keys=path_md, default=unicode_unknown)
-    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'], default=u'audioclip')
+    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
+            default=no_extension_basename(original_path))
+    new_md = default_to(dictionary=new_md, keys=path_md,
+            default=unicode_unknown)
+    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
+            default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to
     # format the MDATA_KEY_TITLE slightly differently
     # Note: I don't know why I'm doing a unicode string comparison here
@@ -216,7 +260,8 @@ def organized_path(old_path, root_path, normal_md):
     """
     old_path - path where file is store at the moment <= maybe not necessary?
     root_path - the parent directory where all organized files go
-    normal_md - original meta data of the file as given by mutagen AFTER being normalized
+    normal_md - original meta data of the file as given by mutagen AFTER being
+    normalized
     return value: new file path
     """
     filepath = None
@@ -224,18 +269,21 @@ def organized_path(old_path, root_path, normal_md):
     # The blocks for each if statement look awfully similar. Perhaps there is a
     # way to simplify this code
     if is_airtime_recorded(normal_md):
-        fname = u'%s-%s-%s.%s' % ( normal_md['MDATA_KEY_YEAR'], normal_md['MDATA_KEY_TITLE'],
+        fname = u'%s-%s-%s.%s' % ( normal_md['MDATA_KEY_YEAR'],
+                normal_md['MDATA_KEY_TITLE'],
                 normal_md['MDATA_KEY_BITRATE'], ext )
         yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',3)
         path = os.path.join(root_path, yyyy, mm)
         filepath = os.path.join(path,fname)
     elif normal_md['MDATA_KEY_TRACKNUMBER'] == unicode_unknown:
-        fname = u'%s-%s.%s' % (normal_md['MDATA_KEY_TITLE'], normal_md['MDATA_KEY_BITRATE'], ext)
+        fname = u'%s-%s.%s' % (normal_md['MDATA_KEY_TITLE'],
+                normal_md['MDATA_KEY_BITRATE'], ext)
         path = os.path.join(root_path, normal_md['MDATA_KEY_CREATOR'],
                             normal_md['MDATA_KEY_SOURCE'] )
         filepath = os.path.join(path, fname)
     else: # The "normal" case
-        fname = u'%s-%s-%s.%s' % (normal_md['MDATA_KEY_TRACKNUMBER'], normal_md['MDATA_KEY_TITLE'],
+        fname = u'%s-%s-%s.%s' % (normal_md['MDATA_KEY_TRACKNUMBER'],
+                                  normal_md['MDATA_KEY_TITLE'],
                                   normal_md['MDATA_KEY_BITRATE'], ext)
         path = os.path.join(root_path, normal_md['MDATA_KEY_CREATOR'],
                             normal_md['MDATA_KEY_SOURCE'])
@@ -244,8 +292,8 @@ def organized_path(old_path, root_path, normal_md):
 
 def file_md5(path,max_length=100):
     """
-    Get md5 of file path (if it exists). Use only max_length characters to save time and
-    memory
+    Get md5 of file path (if it exists). Use only max_length characters to save
+    time and memory
     """
     if os.path.exists(path):
         with open(path, 'rb') as f:
@@ -263,7 +311,9 @@ def encode_to(obj, encoding='utf-8'):
     return obj
 
 def convert_dict_value_to_utf8(md):
-    # TODO : add documentation + unit tests for this function
+    """
+    formats a dictionary to send as a request to api client
+    """
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 def get_system_locale(locale_path='/etc/default/locale'):
@@ -277,10 +327,13 @@ def get_system_locale(locale_path='/etc/default/locale'):
             return config
         except Exception as e:
             raise FailedToSetLocale(locale_path,cause=e)
-    else: raise ValueError("locale path '%s' does not exist. permissions issue?" % locale_path)
+    else: raise ValueError("locale path '%s' does not exist. \
+            permissions issue?" % locale_path)
 
 def configure_locale(config):
-    """ sets the locale according to the system's locale."""
+    """
+    sets the locale according to the system's locale.
+    """
     current_locale = locale.getlocale()
     if current_locale[1] is None:
         default_locale = locale.getdefaultlocale()
@@ -299,17 +352,18 @@ def configure_locale(config):
 def fondle(path,times=None):
     # TODO : write unit tests for this
     """
-    touch a file to change the last modified date. Beware of calling this function on the
-    same file from multiple threads.
+    touch a file to change the last modified date. Beware of calling this
+    function on the same file from multiple threads.
     """
     with file(path, 'a'):
         os.utime(path, times)
 
 def last_modified(path):
     """
-    return the time of the last time mm2 was ran. path refers to the index file whose
-    date modified attribute contains this information. In the case when the file does not
-    exist we set this time 0 so that any files on the filesystem were modified after it
+    return the time of the last time mm2 was ran. path refers to the index file
+    whose date modified attribute contains this information. In the case when
+    the file does not exist we set this time 0 so that any files on the
+    filesystem were modified after it
     """
     if os.path.exists(path):
         return os.path.getmtime(path)
@@ -317,12 +371,18 @@ def last_modified(path):
 
 def import_organize(store):
     # TODO : get rid of this later
-    """returns a tuple of organize and imported directory from an airtime store directory"""
+    """
+    returns a tuple of organize and imported directory from an airtime store
+    directory
+    """
     store = os.path.normpath(store)
     return os.path.join(store,'organize'), os.path.join(store,'imported')
 
 def expand_storage(store):
-    # TODO : document
+    """
+    A storage directory usually consists of 4 different subdirectories. This
+    function returns their paths
+    """
     store = os.path.normpath(store)
     return {
         'organize' : os.path.join(store, 'organize'),
@@ -343,26 +403,14 @@ def create_dir(path):
             if not os.path.exists: raise FailedToCreateDir(path)
 
 def sub_path(directory,f):
-    # TODO : document
+    """
+    returns true if 'f' is in the tree of files under directory.
+    NOTE: does not look at any symlinks or anything like that, just looks at
+    the paths.
+    """
     normalized = normpath(directory)
     common = os.path.commonprefix([ directory, normpath(f) ])
     return common == normalized
-
-def auto_enum(*sequential, **named):
-    enums = dict(zip(sequential, range(len(sequential))), **named)
-    return type('Enum', (), enums)
-
-def enum(**enums):
-    """
-    >>> MyEnum = enum(ONE=1, TWO=2, THREE='three')
-    >>> MyEnum.ONE
-    1
-    >>> MyEnum.TWO
-    2
-    >>> MyEnum.THREE
-    'three'
-    """
-    return type('Enum', (), enums)
 
 if __name__ == '__main__':
     import doctest
