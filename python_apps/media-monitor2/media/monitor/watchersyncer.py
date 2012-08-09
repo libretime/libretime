@@ -184,6 +184,8 @@ class WatchSyncer(ReportHandler,Loggable):
         self.__requests.append(launch_request)
         self.__queue = []
 
+
+
     def __del__(self):
         # Ideally we would like to do a little more to ensure safe shutdown
         if self.events_in_queue():

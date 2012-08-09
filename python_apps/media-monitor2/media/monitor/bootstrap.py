@@ -6,8 +6,8 @@ import media.monitor.pure as mmp
 
 class Bootstrapper(Loggable):
     """
-    Bootstrapper reads all the info in the filesystem flushes organize
-    events and watch events
+    Bootstrapper reads all the info in the filesystem flushes organize events
+    and watch events
     """
     def __init__(self,db,watch_signal):
         """
@@ -20,16 +20,16 @@ class Bootstrapper(Loggable):
 
     def flush_all(self, last_ran):
         """
-        bootstrap every single watched directory. only useful at startup
-        note that because of the way list_directories works we also flush
-        the import directory as well I think
+        bootstrap every single watched directory. only useful at startup note
+        that because of the way list_directories works we also flush the import
+        directory as well I think
         """
         for d in self.db.list_storable_paths(): self.flush_watch(d, last_ran)
 
     def flush_watch(self, directory, last_ran):
         """
-        flush a single watch/imported directory. useful when wanting to to rescan,
-        or add a watched/imported directory
+        flush a single watch/imported directory. useful when wanting to to
+        rescan, or add a watched/imported directory
         """
         songs = set([])
         added = modded = deleted = 0
@@ -43,18 +43,24 @@ class Bootstrapper(Loggable):
             # with the filesystem
             if os.path.getmtime(f) > last_ran:
                 modded += 1
-                dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(f))
-                dispatcher.send(signal=self.watch_signal, sender=self, event=NewFile(f))
-        db_songs = set(( song for song in self.db.directory_get_files(directory) if mmp.sub_path(directory,song) ))
+                dispatcher.send(signal=self.watch_signal, sender=self,
+                        event=DeleteFile(f))
+                dispatcher.send(signal=self.watch_signal, sender=self,
+                        event=NewFile(f))
+        db_songs = set(( song for song in self.db.directory_get_files(directory)
+            if mmp.sub_path(directory,song) ))
         # Get all the files that are in the database but in the file
         # system. These are the files marked for deletions
         for to_delete in db_songs.difference(songs):
-            dispatcher.send(signal=self.watch_signal, sender=self, event=DeleteFile(to_delete))
+            dispatcher.send(signal=self.watch_signal, sender=self,
+                    event=DeleteFile(to_delete))
             deleted += 1
         for to_add in songs.difference(db_songs):
-            dispatcher.send(signal=self.watch_signal, sender=self, event=NewFile(to_add))
+            dispatcher.send(signal=self.watch_signal, sender=self,
+                    event=NewFile(to_add))
             added += 1
-        self.logger.info( "Flushed watch directory (%s). (added, modified, deleted) = (%d, %d, %d)"
-                        % (directory, added, modded, deleted) )
+        self.logger.info( "Flushed watch directory (%s). \
+                (added, modified, deleted) = (%d, %d, %d)"
+                % (directory, added, modded, deleted) )
 
 
