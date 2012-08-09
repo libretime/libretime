@@ -101,7 +101,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         
         $spType = new Zend_Form_Element_Radio('sp_type');
-        $spType->setLabel('Set smart block type:')
+        $spType->setLabel('Set smart playlist type:')
                ->setDecorators(array('viewHelper'))
                ->setMultiOptions(array(
                     'static' => 'Static',

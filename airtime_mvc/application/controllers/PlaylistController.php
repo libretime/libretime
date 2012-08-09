@@ -55,7 +55,7 @@ class PlaylistController extends Zend_Controller_Action
     }
 
     private function changePlaylist($p_id, $p_type)
-    {   
+    {
         if (is_null($p_id) || is_null($p_type)) {
             unset($this->obj_sess->id);
             unset($this->obj_sess->type);
@@ -71,6 +71,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->length = $formatter->format();
 
         $this->view->obj = $obj;
+        $this->view->contents = $obj->getContents();
         $this->view->html = $this->view->render('playlist/update.phtml');
         $this->view->name = $obj->getName();
         $this->view->description = $obj->getDescription();
@@ -215,7 +216,7 @@ class PlaylistController extends Zend_Controller_Action
     }
 
     public function newAction()
-    { 
+    {
         //$pl_sess = $this->pl_sess;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $type = $this->_getParam('type');
@@ -335,7 +336,7 @@ class PlaylistController extends Zend_Controller_Action
             } else if ($e->getMessage() == 'track to dynamic') {
                 $this->blockDynamic($obj);
             } else {
-                $this->playlistUnknownError($e);   
+                $this->playlistUnknownError($e);
             }
         }
     }

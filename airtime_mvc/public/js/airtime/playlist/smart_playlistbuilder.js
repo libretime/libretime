@@ -25,17 +25,7 @@ function setSmartPlaylistEvents() {
     form.find('a[id^="modifier_add"]').live('click', function(){
         var id = $(this).attr('id'),
             row_index = id.charAt(id.length-1),
-            mod_index,
             criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
-        
-        //get index for the new modifier row
-        if ($(this).parent().find('select[name^="sp_criteria_modifier_'+row_index+'_"]').length == 0) {
-            mod_index = 0;
-        } else {
-            var last_mod = $(this).parent().find('select[name^="sp_criteria_modifier_'+row_index+'_"]:last');
-            var last_mod_id = last_mod.attr('id');
-            mod_index = parseInt(last_mod_id.substr(last_mod_id.length-1))+1;
-        }
         
         //make new modifier row
         var newRow = $(this).parent().clone(),
@@ -53,27 +43,21 @@ function setSmartPlaylistEvents() {
         //hide the critieria field select box
         newRowCrit.addClass('sp-invisible');
         
-        //append modifier index to the new modifier row
-        newRowCrit.attr('name', 'sp_criteria_field_'+row_index+'_'+mod_index);
-        newRowCrit.attr('id', 'sp_criteria_field_'+row_index+'_'+mod_index);
+        //keep criteria value the same
         newRowCrit.val(criteria_value);
-        newRowMod.attr('name', 'sp_criteria_modifier_'+row_index+'_'+mod_index);
-        newRowMod.attr('id', 'sp_criteria_modifier_'+row_index+'_'+mod_index);
+        
+        //reset all other values
         newRowMod.val('0');
-        newRowVal.attr('name', 'sp_criteria_value_'+row_index+'_'+mod_index);
-        newRowVal.attr('id', 'sp_criteria_value_'+row_index+'_'+mod_index);
         newRowVal.val('');
-        newRowExtra.attr('name', 'sp_criteria_extra_'+row_index+'_'+mod_index);
-        newRowExtra.attr('id', 'sp_criteria_extra_'+row_index+'_'+mod_index);
         newRowExtra.val('');
         disableAndHideExtraField(newRowVal);
         sizeTextBoxes(newRowVal, 'sp_extra_input_text', 'sp_input_text');
-        newRowRemove.attr('id', 'criteria_remove_'+row_index+'_'+mod_index);
         
         //remove the 'criteria add' button from new modifier row
         newRow.find('.criteria_add').remove();
         
         $(this).parent().after(newRow);
+        reindexElements();
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
@@ -209,6 +193,7 @@ function setSmartPlaylistEvents() {
         enableLoadingIcon();
         $.post(save_action, {format: "json", data: data, obj_id: obj_id}, function(data){
             callback(data, "save");
+            setFadeIcon();
             disableLoadingIcon();
         });
     });
@@ -282,6 +267,16 @@ function getRowIndex(ele) {
         index = tokens.join(delimiter);
     
     return index;
+}
+
+function setFadeIcon(){
+    var contents = $("#spl_sortable");
+    var show = contents.is(":visible");
+    if (show) {
+        $("#spl_crossfade").show();
+    } else {
+        $("#spl_crossfade").hide();
+    }
 }
 
 /* This function appends a '+' button for the last
@@ -429,26 +424,27 @@ function sizeTextBoxes(ele, classToRemove, classToAdd) {
 }
 
 function populateModifierSelect(e) {
-    /*var criteria = $(e).val(),
-        criteria_type = criteriaTypes[criteria],*/
     var criteria_type = getCriteriaOptionType(e),
-        div = $(e).siblings('select[id^="sp_criteria_modifier"]');
+        index = getRowIndex($(e).parent()),
+        divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
 
-    div.children().remove();
-
-    if (criteria_type == 's') {
-        $.each(stringCriteriaOptions, function(key, value){
-            div.append($('<option></option>')
-               .attr('value', key)
-               .text(value));
-        });
-    } else {
-        $.each(numericCriteriaOptions, function(key, value){
-            div.append($('<option></option>')
-               .attr('value', key)
-               .text(value));
-        });
-    }
+    $.each(divs, function(i, div){
+        $(div).children().remove();
+    
+        if (criteria_type == 's') {
+            $.each(stringCriteriaOptions, function(key, value){
+                $(div).append($('<option></option>')
+                   .attr('value', key)
+                   .text(value));
+            });
+        } else {
+            $.each(numericCriteriaOptions, function(key, value){
+                $(div).append($('<option></option>')
+                   .attr('value', key)
+                   .text(value));
+            });
+        }
+    });
 }
 
 function getCriteriaOptionType(e) {
