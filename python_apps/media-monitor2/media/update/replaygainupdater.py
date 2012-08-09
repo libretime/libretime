@@ -2,6 +2,7 @@ from threading import Thread
 
 import traceback
 import os
+import time
 
 from api_clients import api_client
 from media.update import replaygain
@@ -27,8 +28,14 @@ class ReplayGainUpdater(Thread, Loggable):
 
     def main(self):
 
-        #TODO make sure object has 'dirs' attr
-        directories = self.api_client.list_all_watched_dirs()['dirs']
+        raw_response = self.api_client.list_all_watched_dirs()
+        if 'dirs' not in raw_response:
+            self.logger.error("Could not get a list of watched directories \
+                               with a dirs attribute. Printing full request:")
+            self.logger.error( raw_response )
+            return
+
+        directories = raw_response['dirs']
 
         for dir_id, dir_path in directories.iteritems():
             try:
@@ -51,7 +58,11 @@ class ReplayGainUpdater(Thread, Loggable):
                 self.logger.error(e)
                 self.logger.debug(traceback.format_exc())
     def run(self):
-        try: self.main()
+        try:
+            while True:
+                self.main()
+                # Sleep for 5 minutes in case new files have been added
+                time.sleep(60 * 5)
         except Exception, e:
             self.logger.error('ReplayGainUpdater Exception: %s', traceback.format_exc())
             self.logger.error(e)
