@@ -8,33 +8,40 @@ from media.monitor.log import Loggable
 from media.monitor.exceptions import BadSongFile
 
 class PathChannel(object):
-    """a dumb struct; python has no record types"""
     def __init__(self, signal, path):
         self.signal = signal
         self.path = path
 
 class EventRegistry(object):
+    """
+    This class's main use is to keep track all events with a cookie attribute.
+    This is done mainly because some events must be 'morphed' into other events
+    because we later detect that they are move events instead of delete events.
+    """
     registry = {}
     @staticmethod
-    def register(evt):
-        EventRegistry.registry[evt.cookie] = evt
+    def register(evt): EventRegistry.registry[evt.cookie] = evt
     @staticmethod
-    def unregister(evt):
-        del EventRegistry.registry[evt.cookie]
+    def unregister(evt): del EventRegistry.registry[evt.cookie]
     @staticmethod
-    def registered(evt):
-        return evt.cookie in EventRegistry.registry
+    def registered(evt): return evt.cookie in EventRegistry.registry
     @staticmethod
     def matching(evt):
         event = EventRegistry.registry[evt.cookie]
         # Want to disallow accessing the same event twice
         EventRegistry.unregister(event)
         return event
+    def __init__(self,*args,**kwargs):
+        raise Exception("You can instantiate this class. Must only use class \
+                methods")
 
-# It would be good if we could parameterize this class by the attribute
-# that would contain the path to obtain the meta data. But it would be too much
-# work
 class HasMetaData(object):
+    """
+    Any class that inherits from this class gains the metadata attribute that
+    loads metadata from the class's 'path' attribute. This is done lazily so
+    there is no performance penalty to inheriting from this and subsequent
+    calls to metadata are cached
+    """
     __metaclass__ = abc.ABCMeta
     @LazyProperty
     def metadata(self): return Metadata(self.path)
@@ -83,16 +90,23 @@ class BaseEvent(Loggable):
         return self
 
 class FakePyinotify(object):
+    """
+    sometimes we must create our own pyinotify like objects to instantiate
+    objects from the classes below whenever we want to turn a single event into
+    multiple events
+    """
     def __init__(self, path):
         self.pathname = path
 
 class OrganizeFile(BaseEvent, HasMetaData):
-    def __init__(self, *args, **kwargs): super(OrganizeFile, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(OrganizeFile, self).__init__(*args, **kwargs)
     def pack(self):
-        raise AttributeError("What the hell are you doing? You can't send organize events to airtime!!!")
+        raise AttributeError("You can't send organize events to airtime!!!")
 
 class NewFile(BaseEvent, HasMetaData):
-    def __init__(self, *args, **kwargs): super(NewFile, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(NewFile, self).__init__(*args, **kwargs)
     def pack(self):
         """
         packs turns an event into a media monitor request
@@ -103,7 +117,8 @@ class NewFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 class DeleteFile(BaseEvent):
-    def __init__(self, *args, **kwargs): super(DeleteFile, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(DeleteFile, self).__init__(*args, **kwargs)
     def pack(self):
         req_dict = {}
         req_dict['mode'] = u'delete'
@@ -111,8 +126,11 @@ class DeleteFile(BaseEvent):
         return [req_dict]
 
 class MoveFile(BaseEvent, HasMetaData):
-    """Path argument should be the new path of the file that was moved"""
-    def __init__(self, *args, **kwargs): super(MoveFile, self).__init__(*args, **kwargs)
+    """
+    Path argument should be the new path of the file that was moved
+    """
+    def __init__(self, *args, **kwargs):
+        super(MoveFile, self).__init__(*args, **kwargs)
     def pack(self):
         req_dict = {}
         req_dict['mode'] = u'moved'
@@ -121,26 +139,28 @@ class MoveFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 def map_events(directory, constructor):
-    # This hack is actually not necessary:
-    #for f in mmp.walk_supported(directory.replace("-unknown-path",""),
-            #clean_empties=False)
+    # -unknown-path should not appear in the path here but more testing might
+    # be necessary
     for f in mmp.walk_supported(directory, clean_empties=False):
         try:
             for e in constructor( FakePyinotify(f) ).pack(): yield e
         except BadSongFile as e: yield e
 
 class DeleteDir(BaseEvent):
-    def __init__(self, *args, **kwargs): super(DeleteDir, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(DeleteDir, self).__init__(*args, **kwargs)
     def pack(self):
         return map_events( self.path, DeleteFile )
 
 class MoveDir(BaseEvent):
-    def __init__(self, *args, **kwargs): super(MoveDir, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(MoveDir, self).__init__(*args, **kwargs)
     def pack(self):
         return map_events( self.path, MoveFile )
 
 class DeleteDirWatch(BaseEvent):
-    def __init__(self, *args, **kwargs): super(DeleteDirWatch, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(DeleteDirWatch, self).__init__(*args, **kwargs)
     def pack(self):
         req_dict = {}
         req_dict['mode'] = u'delete_dir'
@@ -148,7 +168,8 @@ class DeleteDirWatch(BaseEvent):
         return [req_dict]
 
 class ModifyFile(BaseEvent, HasMetaData):
-    def __init__(self, *args, **kwargs): super(ModifyFile, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(ModifyFile, self).__init__(*args, **kwargs)
     def pack(self):
         req_dict = self.metadata.extract()
         req_dict['mode'] = u'modify'

@@ -35,12 +35,11 @@ class Bootstrapper(Loggable):
         added = modded = deleted = 0
         for f in mmp.walk_supported(directory, clean_empties=False):
             songs.add(f)
-            # We decide whether to update a file's metadata by checking
-            # its system modification date. If it's above the value
-            # self.last_ran which is passed to us that means media monitor
-            # wasn't aware when this changes occured in the filesystem
-            # hence it will send the correct events to sync the database
-            # with the filesystem
+            # We decide whether to update a file's metadata by checking its
+            # system modification date. If it's above the value self.last_ran
+            # which is passed to us that means media monitor wasn't aware when
+            # this changes occured in the filesystem hence it will send the
+            # correct events to sync the database with the filesystem
             if os.path.getmtime(f) > last_ran:
                 modded += 1
                 dispatcher.send(signal=self.watch_signal, sender=self,
@@ -62,5 +61,3 @@ class Bootstrapper(Loggable):
         self.logger.info( "Flushed watch directory (%s). \
                 (added, modified, deleted) = (%d, %d, %d)"
                 % (directory, added, modded, deleted) )
-
-
