@@ -11,9 +11,9 @@ import media.monitor.pure as mmp
 
 class Manager(Loggable):
     """
-    An abstraction over media monitors core pyinotify functions. These include
-    adding watched,store, organize directories, etc. Basically composes over
-    WatchManager from pyinotify
+    An abstraction over media monitors core pyinotify functions. These
+    include adding watched,store, organize directories, etc. Basically
+    composes over WatchManager from pyinotify
     """
     global_inst = None
     all_signals = set(['add_watch', 'remove_watch'])
@@ -157,9 +157,9 @@ class Manager(Loggable):
 
     def add_watch_directory(self, new_dir):
         """
-        adds a directory to be "watched". "watched" directories are those that
-        are being monitored by media monitor for airtime in this context and
-        not directories pyinotify calls watched
+        adds a directory to be "watched". "watched" directories are
+        those that are being monitored by media monitor for airtime in
+        this context and not directories pyinotify calls watched
         """
         if self.has_watch(new_dir):
             self.logger.info("Cannot add '%s' to watched directories. It's \

@@ -369,15 +369,6 @@ def last_modified(path):
         return os.path.getmtime(path)
     else: 0
 
-def import_organize(store):
-    # TODO : get rid of this later
-    """
-    returns a tuple of organize and imported directory from an airtime store
-    directory
-    """
-    store = os.path.normpath(store)
-    return os.path.join(store,'organize'), os.path.join(store,'imported')
-
 def expand_storage(store):
     """
     A storage directory usually consists of 4 different subdirectories. This

@@ -37,9 +37,9 @@ class RequestSync(threading.Thread,Loggable):
             try: make_req()
             # most likely we did not get json response as we expected
             except ValueError:
-                self.logger.info("Api Controller is a piece of shit\n \
-                        it's not returning json when it should\n \
-                        ... will fix once I setup the damn debugger")
+                self.logger.info("ApiController.php probably crashed, we \
+                        diagnose this from the fact that it did not return \
+                        valid json")
                 self.logger.info("Trying again after %f seconds" %
                         self.request_wait)
                 time.sleep( self.request_wait )
@@ -139,7 +139,9 @@ class WatchSyncer(ReportHandler,Loggable):
         return len(self.__requests) > 0
 
     def flag_done(self):
-        """ called by request thread when it finishes operating """
+        """
+        called by request thread when it finishes operating
+        """
         self.request_running = False
         self.__current_thread = None
         # This call might not be necessary but we would like
@@ -147,7 +149,9 @@ class WatchSyncer(ReportHandler,Loggable):
         if self.requests_in_queue() > 0: self.request_do()
 
     def request_do(self):
-        """ launches a request thread only if one is not running right now """
+        """
+        launches a request thread only if one is not running right now
+        """
         if not self.request_running:
             self.request_running = True
             self.__requests.pop()()
