@@ -484,7 +484,7 @@ function callback(data, type) {
     	    form.find('.success').show();
     	    form.find('#smart_playlist_options').removeClass("closed");
         } else {
-            form.find('.success').text('Criteria saved');
+            form.find('.success').text('Smart Playlist saved');
             form.find('.success').show();
             
             /* Update number of files that meet criteria and change icon to success/warning
