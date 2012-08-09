@@ -195,9 +195,9 @@ class PlaylistController extends Zend_Controller_Action
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-                $this->view->obj = $obj;
                 
                 if($isAdminOrPM || $obj->getCreatorId() == $userInfo->id){
+                    $this->view->obj = $obj;
                     if($this->obj_sess->type == "block"){
                         $form = new Application_Form_SmartBlockCriteria();
                         $form->startForm($this->obj_sess->id);
