@@ -22,9 +22,15 @@ class ReplayGainUpdater(Thread, Loggable):
     automatically have its ReplayGain value calculated.
     """
 
+    @staticmethod
+    def start_reply_gain():
+        me = ReplayGainUpdater()
+        me.daemon = True
+        me.start()
+
     def __init__(self):
         Thread.__init__(self)
-        self.api_client = api_client.AirtimeApiClient()
+        self.api_client = api_client.AirtimeApiClient.create_right_config()
 
     def main(self):
 
