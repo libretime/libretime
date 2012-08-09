@@ -641,6 +641,11 @@ class Application_Model_StoredFile
                 $blSelect[] = "NULL::int AS ".$key;
                 $fileSelect[] = $key;
                 $streamSelect[] = "NULL::int AS ".$key;
+            } else if ($key === "filepath") {
+                $plSelect[] = "NULL::VARCHAR AS ".$key;
+                $blSelect[] = "NULL::VARCHAR AS ".$key;
+                $fileSelect[] = $key;
+                $streamSelect[] = "url AS ".$key;
             } else {
                 $plSelect[] = "NULL::text AS ".$key;
                 $blSelect[] = "NULL::text AS ".$key;
@@ -719,13 +724,13 @@ class Application_Model_StoredFile
             //datatable stuff really needs to be pulled out and generalized within the project
             //access to zend view methods to access url helpers is needed.
 
-            Logging::log($type);
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
             } else if ($type == "pl") {
                 $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
             } else if ($type == "st") {
+                $row['audioFile'] = $row['id'];
                 $row['image'] = '<img title="Webstream preview" src="/css/images/record_icon.png">';
             } else if ($type == "bl") {
                 $row['image'] = '<img title="Smart Playlist" src="/css/images/delete.png">';

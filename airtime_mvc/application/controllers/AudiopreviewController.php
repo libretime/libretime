@@ -24,15 +24,22 @@ class AudiopreviewController extends Zend_Controller_Action
         $audioFileID = $this->_getParam('audioFileID');
         $audioFileArtist = $this->_getParam('audioFileArtist');
         $audioFileTitle = $this->_getParam('audioFileTitle');
+        $type = $this->_getParam('type');
 
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
+
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile(
+            $baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'], 
+            'text/javascript');
+        $this->view->headScript()->appendFile(
+            $baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'], 
+            'text/javascript');
+        $this->view->headLink()->appendStylesheet(
+            $baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
@@ -41,6 +48,17 @@ class AudiopreviewController extends Zend_Controller_Action
         } else {
             $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
         }
+
+        if ($type == "audioclip") {
+            $uri = "/api/get-media/file/".$audioFileID;
+        } else if ($type == "stream") {
+            $webstream = CcWebstreamQuery::create()->findPk($audioFileID);
+            $uri = $webstream->getDbUrl();
+        } else {
+            throw new Exception("Unknown type for audio preview!");
+        }
+
+        $this->view->uri = $uri;
         $this->view->audioFileID = $audioFileID;
         $this->view->audioFileArtist = $audioFileArtist;
         $this->view->audioFileTitle = $audioFileTitle;

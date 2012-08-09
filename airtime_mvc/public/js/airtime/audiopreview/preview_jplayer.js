@@ -35,7 +35,8 @@ $(document).ready(function(){
     
     $.jPlayer.timeFormat.showHour = true;
     
-    var audioFileID = $('.audioFileID').text();
+    var audioUri = $('.audioUri').text();
+    //var audioFileID = $('.audioFileID').text();
     var playlistID = $('.playlistID').text();
     var playlistIndex = $('.playlistIndex').text();
     var showID = $('.showID').text();
@@ -47,8 +48,8 @@ $(document).ready(function(){
     
     if (playlistID != "" && playlistID !== ""){
         playAllPlaylist(playlistID, playlistIndex);
-    }else if (audioFileID != "") {
-        playOne(audioFileID);
+    }else if (audioUri != "") {
+        playOne(audioUri);
     }else if (showID != "") {
         playAllShow(showID, showIndex);
     }else if(blockId != "" && blockIndex != ""){
@@ -179,18 +180,18 @@ function play(p_playlistIndex){
  * Playing one audio track occurs from the library. This function will create the media, setup
  * jplayer and play the track.
  */
-function playOne(p_audioFileID) {
+function playOne(uri) {
     var playlist = new Array();
-    var fileExtension = p_audioFileID.split('.').pop();
+    var fileExtension = uri.split('.').pop();
     if (fileExtension.toLowerCase() === 'mp3') {
         media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
-            mp3:"/api/get-media/file/"+p_audioFileID
+            mp3:uri
         };
-    }else if (fileExtension.toLowerCase() === 'ogg' ) {
+    } else if (fileExtension.toLowerCase() === 'ogg' ) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
-            oga:"/api/get-media/file/"+p_audioFileID
+            oga:uri
         };
     }
     _playlist_jplayer.option("autoPlay", true);
