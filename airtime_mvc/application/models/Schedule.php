@@ -256,59 +256,97 @@ class Application_Model_Schedule
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
-        $templateSql = "SELECT DISTINCT
 
-        showt.name AS show_name, showt.color AS show_color,
-        showt.background_color AS show_background_color, showt.id AS show_id,
+        $templateSql = <<<SQL
+SELECT DISTINCT sched.starts AS sched_starts,
+                sched.ends AS sched_ends,
+                sched.id AS sched_id,
+                sched.cue_in AS cue_in,
+                sched.cue_out AS cue_out,
+                sched.fade_in AS fade_in,
+                sched.fade_out AS fade_out,
+                sched.playout_status AS playout_status,
+                sched.instance_id AS sched_instance_id,
+                
+                %%columns%%
+                FROM (%%join%%)
+SQL;
 
-        si.starts AS si_starts, si.ends AS si_ends, si.time_filled AS si_time_filled,
-        si.record AS si_record, si.rebroadcast AS si_rebroadcast, si.instance_id AS parent_show,
-        si.id AS si_id, si.last_scheduled AS si_last_scheduled, si.file_id AS si_file_id,
+        $filesColumns = <<<SQL
+                ft.track_title AS file_track_title,
+                ft.artist_name AS file_artist_name,
+                ft.album_title AS file_album_title,
+                ft.length AS file_length,
+                ft.file_exists AS file_exists
+SQL;
+        $filesJoin = <<<SQL
+       cc_schedule AS sched
+       JOIN cc_files AS ft ON (sched.file_id = ft.id)
+SQL;
 
-        sched.starts AS sched_starts, sched.ends AS sched_ends, sched.id AS sched_id,
-        sched.cue_in AS cue_in, sched.cue_out AS cue_out,
-        sched.fade_in AS fade_in, sched.fade_out AS fade_out,
-        sched.playout_status AS playout_status,
-
-        %%columns%%
-
-        FROM
-        ((
-            %%join%%
-
-        JOIN cc_show AS showt ON (showt.id = si.show_id)
-        )
-
-        WHERE si.modified_instance = false AND
-
-        ((si.starts >= '{$p_start}' AND si.starts < '{$p_end}')
-        OR (si.ends > '{$p_start}' AND si.ends <= '{$p_end}')
-        OR (si.starts <= '{$p_start}' AND si.ends >= '{$p_end}'))";
-
-        if (count($p_shows) > 0) {
-            $templateSql .= " AND show_id IN (".implode(",", $p_shows).")";
-        }
 
         $filesSql = str_replace("%%columns%%", 
-            "ft.track_title AS file_track_title, ft.artist_name AS file_artist_name,
-            ft.album_title AS file_album_title, ft.length AS file_length, ft.file_exists AS file_exists", 
+            $filesColumns, 
             $templateSql);
         $filesSql= str_replace("%%join%%", 
-            "cc_schedule AS sched JOIN cc_files AS ft ON (sched.file_id = ft.id)
-             RIGHT JOIN cc_show_instances AS si ON (si.id = sched.instance_id))", 
+            $filesJoin, 
             $filesSql);
 
+        $streamColumns = <<<SQL
+                ws.name AS file_track_title,
+                sub.login AS file_artist_name,
+                ws.description AS file_album_title,
+                ws.length AS file_length,
+                't'::BOOL AS file_exists
+SQL;
+        $streamJoin = <<<SQL
+      cc_schedule AS sched
+      JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
+      LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)
+SQL;
+
         $streamSql = str_replace("%%columns%%", 
-            "ws.name AS file_track_title, sub.login AS file_artist_name,
-            ws.description AS file_album_title, ws.length AS file_length, 't'::BOOL AS file_exists", 
+            $streamColumns, 
             $templateSql);
         $streamSql = str_replace("%%join%%", 
-            "cc_schedule AS sched JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
-            JOIN cc_show_instances AS si ON (si.id = sched.instance_id))
-            LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)", 
+            $streamJoin, 
             $streamSql);
 
-        $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) as temp ORDER BY si_starts, sched_starts";
+
+        $showPredicate = "";
+        if (count($p_shows) > 0) {
+            $showPredicate = " AND show_id IN (".implode(",", $p_shows).")";
+        }
+
+        $sql = <<<SQL
+SELECT showt.name AS show_name,
+       showt.color AS show_color,
+       showt.background_color AS show_background_color,
+       showt.id AS show_id,
+       si.starts AS si_starts,
+       si.ends AS si_ends,
+       si.time_filled AS si_time_filled,
+       si.record AS si_record,
+       si.rebroadcast AS si_rebroadcast,
+       si.instance_id AS parent_show,
+       si.id AS si_id,
+       si.last_scheduled AS si_last_scheduled,
+       si.file_id AS si_file_id,
+       *
+       FROM (($filesSql) UNION ($streamSql)) as temp 
+       RIGHT JOIN cc_show_instances AS si ON (si.id = sched_instance_id)
+JOIN cc_show AS showt ON (showt.id = si.show_id)
+WHERE si.modified_instance = FALSE
+  $showPredicate
+  AND (si.starts >= '{$p_start}'
+       AND si.starts < '{$p_end}')
+  OR (si.ends > '{$p_start}'
+      AND si.ends <= '{$p_end}')
+  OR (si.starts <= '{$p_start}'
+      AND si.ends >= '{$p_end}')
+ORDER BY si_starts,
+         sched_starts;
+SQL;
 
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         return $rows;
