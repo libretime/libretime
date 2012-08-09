@@ -76,7 +76,7 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
     
     if ( _idToPostionLookUp !== undefined && viewsPlaylistID == p_playlistID ) {
         play(p_playlistIndex);
-    }else {
+    } else {
         buildplaylist("/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
     }
 }
@@ -87,7 +87,7 @@ function playBlock(p_blockId, p_blockIndex)
     
     if ( _idToPostionLookUp !== undefined && viewsBlockId == p_blockId ) {
         play(p_blockIndex);
-    }else {
+    } else {
         buildplaylist("/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
     }
 }
@@ -124,20 +124,28 @@ function buildplaylist(p_url, p_playIndex) {
         var index;
         var total = 0;
         for(index in data){
-            
-            if (data[index]['element_mp3'] != undefined){
-                media = {title: data[index]['element_title'],
+           
+            if (data[index]['type'] == 0) { 
+                if (data[index]['element_mp3'] != undefined){
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            mp3:data[index]['uri']
+                    };
+                } else if (data[index]['element_oga'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            oga:data[index]['uri']
+                    };
+                }
+            } else if (data[index]['type'] == 1) {
+                 media = {title: data[index]['element_title'],
                         artist: data[index]['element_artist'],
-                        mp3:"/api/get-media/file/"+data[index]['element_mp3']
-                };
-            }else if (data[index]['element_oga'] != undefined) {
-                media = {title: data[index]['element_title'],
-                        artist: data[index]['element_artist'],
-                        oga:"/api/get-media/file/"+data[index]['element_oga']
+                        mp3:data[index]['uri']
                 };
             }
-            myPlaylist[index] = media;
-            
+            if (media) {
+                myPlaylist[index] = media;
+            }
             // we should create a map according to the new position in the player itself
             // total is the index on the player
             _idToPostionLookUp[data[index]['element_id']] = total;

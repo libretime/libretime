@@ -173,26 +173,40 @@ class AudiopreviewController extends Zend_Controller_Action
                         $result[] = $this->createElementMap($track);
                     }
                 }
-            }else{
+            } else {
                 $result[] = $this->createElementMap($ele);
             }
         }
         $this->_helper->json($result);
     }
     
-    function createElementMap($track){
+    private function createElementMap($track) 
+    {
         $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
                 'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
                 'element_id' => isset($track['id'])?$track['id']:"",
                 'element_position' => isset($track['position'])?$track['position']:"",
-        );
-        $fileExtension = pathinfo($track['path'], PATHINFO_EXTENSION);
-        if (strtolower($fileExtension) === 'mp3') {
-            $elementMap['element_mp3'] = $track['item_id'];
-        } else if (strtolower($fileExtension) === 'ogg') {
-            $elementMap['element_oga'] = $track['item_id'];
+            );
+
+
+        $elementMap['type'] = $track['type'];
+
+        if ($track['type'] == 0) {
+            $fileExtension = pathinfo($track['path'], PATHINFO_EXTENSION);
+            //type is file
+            //TODO: use MIME type for this
+            if (strtolower($fileExtension) === 'mp3') {
+                $elementMap['element_mp3'] = $track['item_id'];
+            } else if (strtolower($fileExtension) === 'ogg') {
+                $elementMap['element_oga'] = $track['item_id'];
+            } else {
+                //the media was neither mp3 or ogg
+                throw new Exception("Unknown file type");
+            }
+
+            $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];
         } else {
-            //the media was neither mp3 or ogg
+            $elementMap['uri'] = $track['path'];
         }
         return $elementMap;
     }
