@@ -286,7 +286,7 @@ class AudiopreviewController extends Zend_Controller_Action
 
                 $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];
             } else {
-                $elementMap['uri'] = $track['path'];
+                $elementMap['uri'] = $track['filepath'];
             }
             $result[] = $elementMap;
         }
