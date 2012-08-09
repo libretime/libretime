@@ -3,7 +3,6 @@ from kombu.messaging import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
 import json
 import os
-import time
 import copy
 import traceback
 
@@ -105,7 +104,7 @@ class AirtimeMessageReceiver(Loggable):
         if directory == None: directory = sdb.to_directory(directory_id)
         try:
             bs = Bootstrapper( sdb, self.manager.watch_signal() )
-            bs.flush_watch( directory=directory, last_ran=time.time() )
+            bs.flush_watch( directory=directory, last_ran=self.cfg.last_ran() )
         except Exception as e:
             self.logger.info( "Exception bootstrapping: (dir,id)=(%s,%s)" %
                     (directory, directory_id) )
