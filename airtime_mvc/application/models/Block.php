@@ -196,7 +196,8 @@ class Application_Model_Block
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
     LEFT JOIN cc_files AS f ON pc.file_id=f.id
     LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
-    WHERE pc.block_id = {$this->id};
+    WHERE pc.block_id = {$this->id}
+    ORDER BY pc.position;
 EOT;
         $con = Propel::getConnection();
         $rows = $con->query($sql)->fetchAll();
@@ -882,6 +883,7 @@ EOT;
     public function deleteAllFilesFromBlock()
     {
         CcBlockcontentsQuery::create()->findByDbBlockId($this->id)->delete();
+        $this->block->reload();
     }
     
     // smart block functions start
@@ -943,7 +945,7 @@ EOT;
                 $error[] =  "Limit cannot be empty or smaller than 0";
             } else {
                 $mins = $data['etc']['sp_limit_value'] * $multiplier;
-                if ($mins > 14400) {
+                if ($mins > 1440) {
                     $error[] =  "Limit cannot be more than 24 hrs";
                 }
             }

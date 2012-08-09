@@ -172,19 +172,19 @@ class Application_Model_Playlist
          */
         $sql = <<<"EOT"
 (SELECT * FROM
-((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc 
+((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout,
+    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc
     JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
 UNION ALL
-(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-ws.id as item_id, (ws.name || ': ' || ws.url) as title, sub.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc 
-JOIN cc_webstream AS ws on pc.stream_id=ws.id 
+(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout,
+ws.id as item_id, (ws.name || ': ' || ws.url) as title, sub.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc
+JOIN cc_webstream AS ws on pc.stream_id=ws.id
 LEFT JOIN cc_subjs as sub on sub.id = ws.creator_id
 WHERE pc.playlist_id = {$this->id} AND pc.type = 1)
 UNION ALL
-(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, 
-bl.id as item_id, bl.name as title, sbj.login as creator, 't'::boolean as exists, NULL::text as path FROM cc_playlistcontents AS pc 
-JOIN cc_block AS bl on pc.block_id=bl.id 
+(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout,
+bl.id as item_id, bl.name as title, sbj.login as creator, 't'::boolean as exists, NULL::text as path FROM cc_playlistcontents AS pc
+JOIN cc_block AS bl on pc.block_id=bl.id
 JOIN cc_subjs as sbj ON bl.creator_id=sbj.id WHERE pc.playlist_id = {$this->id} AND pc.type = 2)) as temp
 ORDER BY temp.position);
 EOT;
@@ -343,7 +343,7 @@ EOT;
             throw new Exception("Unknown file type");
         }
 
-        if (isset($obj)) { 
+        if (isset($obj)) {
             if (($obj instanceof CcFiles && $obj->getDbFileExists()) || $obj instanceof CcWebstream || $obj instanceof CcBlock) {
                 $entry = $this->plItem;
                 $entry["id"] = $obj->getDbId();
@@ -559,8 +559,9 @@ EOT;
             ->filterByDbPosition($pos)
             ->findOne();
             
-        
-
+        if (!$row) {
+            return NULL;
+        }
         #Propel returns values in form 00.000000 format which is for only seconds.
         $fadeIn = $row->getDbFadein();
         $fadeOut = $row->getDbFadeout();
@@ -864,7 +865,7 @@ EOT;
         }
     }
     
-    // This function returns that are not owen by $p_user_id among $p_ids 
+    // This function returns that are not owen by $p_user_id among $p_ids
     private static function playlistsNotOwnedByUser($p_ids, $p_userId){
         $ownedByUser = CcPlaylistQuery::create()->filterByDbCreatorId($p_userId)->find()->getData();
         $selectedPls = $p_ids;

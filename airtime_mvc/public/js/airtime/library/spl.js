@@ -296,7 +296,7 @@ var AIRTIME = (function(AIRTIME){
 		$('#spl_name > a')
 			.empty()
 			.append(json.name);
-		$('#spl_length')
+		$('#obj_length')
 			.empty()
 			.append(json.length);
 	    $('#fieldset-metadate_change textarea')
@@ -379,7 +379,6 @@ var AIRTIME = (function(AIRTIME){
                             var isStatic = data.isStatic;
                             delete data.type;
                             if (isStatic) {
-                                console.log(data);
                                 $.each(data, function(index, ele){
                                     if (ele.track_title !== undefined) {
                                         $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
@@ -452,14 +451,26 @@ var AIRTIME = (function(AIRTIME){
 			            	playlistError(json);
 		                }
 			            else {
-			            	$pl.find("span.spl_main_fade_in")
-			                    .empty()
-			                    .append(json.fadeIn);
-				            
-			            	$pl.find("span.spl_main_fade_out")
-			                    .empty()
-			                    .append(json.fadeOut);
-		
+			                var fadeIn = $pl.find("span.spl_main_fade_in");
+			                var fadeOut = $pl.find("span.spl_main_fade_out");
+			                console.log(json);
+			                if (json.fadeIn == null) {
+			                    console.log("fadein is null");
+			                    fadeIn.parent().prev().hide();
+			                    fadeIn.hide();
+			                } else {
+			                    fadeIn.parent().prev().show();
+                                fadeIn.show();
+			                    fadeIn.empty().append(json.fadeIn);
+			                }
+			                if (json.fadeOut == null) {
+                                fadeOut.parent().prev().hide();
+                                fadeOut.hide();
+                            } else {
+                                fadeOut.parent().prev().show();
+                                fadeOut.show();
+                                fadeOut.empty().append(json.fadeOut);
+                            }
 			            	$pl.find("#crossfade_main").show();
 			            }
 		            });
