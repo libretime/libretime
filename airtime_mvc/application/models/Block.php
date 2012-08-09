@@ -883,6 +883,7 @@ EOT;
     public function deleteAllFilesFromBlock()
     {
         CcBlockcontentsQuery::create()->findByDbBlockId($this->id)->delete();
+        $this->block->reload();
     }
     
     // smart block functions start
