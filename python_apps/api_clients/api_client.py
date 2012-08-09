@@ -1,9 +1,9 @@
 ###############################################################################
 # This file holds the implementations for all the API clients.
 #
-# If you want to develop a new client, here are some suggestions:
-# Get the fetch methods working first, then the push, then the liquidsoap notifier.
-# You will probably want to create a script on your server side to automatically
+# If you want to develop a new client, here are some suggestions: Get the fetch
+# methods working first, then the push, then the liquidsoap notifier.  You will
+# probably want to create a script on your server side to automatically
 # schedule a playlist one minute from the current time.
 ###############################################################################
 import sys
@@ -55,7 +55,8 @@ class AirtimeApiClient():
         elif (not AirtimeApiClient.default_config):
             raise ValueError("Cannot slip config_path attribute when it has \
                               never been passed yet")
-        return AirtimeApiClient( logger=None, config_path=AirtimeApiClient.default_config )
+        return AirtimeApiClient( logger=None,
+                config_path=AirtimeApiClient.default_config )
 
     def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
         if logger is None:
@@ -93,14 +94,15 @@ class AirtimeApiClient():
     def get_response_into_file(self, url, block=True):
         """
         This function will query the server and download its response directly
-        into a temporary file. This is useful in the situation where the response
-        from the server can be huge and we don't want to store it into memory (potentially
-        causing Python to use hundreds of MB's of memory). By writing into a file we can
-        then open this file later, and read data a little bit at a time and be very mem
-        efficient.
+        into a temporary file. This is useful in the situation where the
+        response from the server can be huge and we don't want to store it into
+        memory (potentially causing Python to use hundreds of MB's of memory).
+        By writing into a file we can then open this file later, and read data
+        a little bit at a time and be very mem efficient.
 
-        The return value of this function is the path of the temporary file. Unless specified using
-        block = False, this function will block until a successful HTTP 200 response is received.
+        The return value of this function is the path of the temporary file.
+        Unless specified using block = False, this function will block until a
+        successful HTTP 200 response is received.
         """
 
         logger = self.logger
@@ -130,7 +132,9 @@ class AirtimeApiClient():
 
     def __get_airtime_version(self):
         logger = self.logger
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["version_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"],
+                str(self.config["base_port"]), self.config["api_base"],
+                self.config["version_url"])
         logger.debug("Trying to contact %s", url)
         url = url.replace("%%api_key%%", self.config["api_key"])
 
@@ -173,7 +177,8 @@ class AirtimeApiClient():
         elif (version[0:3] != AIRTIME_VERSION[0:3]):
             if (verbose):
                 logger.info('Airtime version found: ' + str(version))
-                logger.info('pypo is at version ' + AIRTIME_VERSION + ' and is not compatible with this version of Airtime.\n')
+                logger.info('pypo is at version ' + AIRTIME_VERSION +
+                    ' and is not compatible with this version of Airtime.\n')
             return False
         else:
             if (verbose):
@@ -387,11 +392,12 @@ class AirtimeApiClient():
 
     def send_media_monitor_requests(self, action_list, dry=False):
         """
-        Send a gang of media monitor events at a time. actions_list is a list of dictionaries
-        where every dictionary is representing an action. Every action dict must contain a 'mode'
-        key that says what kind of action it is and an optional 'is_record' key that says whether
-        the show was recorded or not. The value of this key does not matter, only if it's present
-        or not.
+        Send a gang of media monitor events at a time. actions_list is a list
+        of dictionaries where every dictionary is representing an action. Every
+        action dict must contain a 'mode' key that says what kind of action it
+        is and an optional 'is_record' key that says whether the show was
+        recorded or not. The value of this key does not matter, only if it's
+        present or not.
         """
         logger = self.logger
         try:
@@ -535,10 +541,10 @@ class AirtimeApiClient():
         return response
 
     """
-    Purpose of this method is to contact the server with a "Hey its me!" message.
-    This will allow the server to register the component's (component = media-monitor, pypo etc.)
-    ip address, and later use it to query monit via monit's http service, or download log files
-    via a http server.
+    Purpose of this method is to contact the server with a "Hey its me!"
+    message.  This will allow the server to register the component's (component
+    = media-monitor, pypo etc.) ip address, and later use it to query monit via
+    monit's http service, or download log files via a http server.
     """
     def register_component(self, component):
         logger = self.logger
@@ -606,8 +612,8 @@ class AirtimeApiClient():
             logger.error("traceback: %s", traceback.format_exc())
 
     """
-        When watched dir is missing(unplugged or something) on boot up, this function will get called
-        and will call appropriate function on Airtime.
+        When watched dir is missing(unplugged or something) on boot up, this
+        function will get called and will call appropriate function on Airtime.
     """
     def handle_watched_dir_missing(self, dir):
         logger = self.logger
@@ -667,8 +673,8 @@ class AirtimeApiClient():
 
     def update_replay_gain_values(self, pairs):
         """
-        'pairs' is a list of pairs in (x, y), where x is the file's database row id
-        and y is the file's replay_gain value in dB
+        'pairs' is a list of pairs in (x, y), where x is the file's database
+        row id and y is the file's replay_gain value in dB
         """
 
         #http://localhost/api/update-replay-gain-value/
