@@ -257,8 +257,6 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function builderFeedAction()
     {
-        $start = microtime(true);
-
         $request = $this->getRequest();
         $current_time = time();
 
@@ -279,11 +277,6 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->schedule = $data["schedule"];
         $this->view->instances = $data["showInstances"];
         $this->view->timestamp = $current_time;
-
-        $end = microtime(true);
-
-        Logging::debug("getting builder feed info took:");
-        Logging::debug(floatval($end) - floatval($start));
     }
 
     public function scheduleAddAction()
