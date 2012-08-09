@@ -35,7 +35,8 @@ $(document).ready(function(){
     
     $.jPlayer.timeFormat.showHour = true;
     
-    var audioFileID = $('.audioFileID').text();
+    var audioUri = $('.audioUri').text();
+    //var audioFileID = $('.audioFileID').text();
     var playlistID = $('.playlistID').text();
     var playlistIndex = $('.playlistIndex').text();
     var showID = $('.showID').text();
@@ -47,8 +48,8 @@ $(document).ready(function(){
     
     if (playlistID != "" && playlistID !== ""){
         playAllPlaylist(playlistID, playlistIndex);
-    }else if (audioFileID != "") {
-        playOne(audioFileID);
+    }else if (audioUri != "") {
+        playOne(audioUri);
     }else if (showID != "") {
         playAllShow(showID, showIndex);
     }else if(blockId != "" && blockIndex != ""){
@@ -75,7 +76,7 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
     
     if ( _idToPostionLookUp !== undefined && viewsPlaylistID == p_playlistID ) {
         play(p_playlistIndex);
-    }else {
+    } else {
         buildplaylist("/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
     }
 }
@@ -86,7 +87,7 @@ function playBlock(p_blockId, p_blockIndex)
     
     if ( _idToPostionLookUp !== undefined && viewsBlockId == p_blockId ) {
         play(p_blockIndex);
-    }else {
+    } else {
         buildplaylist("/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
     }
 }
@@ -123,20 +124,28 @@ function buildplaylist(p_url, p_playIndex) {
         var index;
         var total = 0;
         for(index in data){
-            
-            if (data[index]['element_mp3'] != undefined){
-                media = {title: data[index]['element_title'],
+           
+            if (data[index]['type'] == 0) { 
+                if (data[index]['element_mp3'] != undefined){
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            mp3:data[index]['uri']
+                    };
+                } else if (data[index]['element_oga'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            oga:data[index]['uri']
+                    };
+                }
+            } else if (data[index]['type'] == 1) {
+                 media = {title: data[index]['element_title'],
                         artist: data[index]['element_artist'],
-                        mp3:"/api/get-media/file/"+data[index]['element_mp3']
-                };
-            }else if (data[index]['element_oga'] != undefined) {
-                media = {title: data[index]['element_title'],
-                        artist: data[index]['element_artist'],
-                        oga:"/api/get-media/file/"+data[index]['element_oga']
+                        mp3:data[index]['uri']
                 };
             }
-            myPlaylist[index] = media;
-            
+            if (media) {
+                myPlaylist[index] = media;
+            }
             // we should create a map according to the new position in the player itself
             // total is the index on the player
             _idToPostionLookUp[data[index]['element_id']] = total;
@@ -179,18 +188,18 @@ function play(p_playlistIndex){
  * Playing one audio track occurs from the library. This function will create the media, setup
  * jplayer and play the track.
  */
-function playOne(p_audioFileID) {
+function playOne(uri) {
     var playlist = new Array();
-    var fileExtension = p_audioFileID.split('.').pop();
+    var fileExtension = uri.split('.').pop();
     if (fileExtension.toLowerCase() === 'mp3') {
         media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
-            mp3:"/api/get-media/file/"+p_audioFileID
+            mp3:uri
         };
-    }else if (fileExtension.toLowerCase() === 'ogg' ) {
+    } else if (fileExtension.toLowerCase() === 'ogg' ) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
-            oga:"/api/get-media/file/"+p_audioFileID
+            oga:uri
         };
     }
     _playlist_jplayer.option("autoPlay", true);
