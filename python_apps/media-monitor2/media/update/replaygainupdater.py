@@ -47,6 +47,7 @@ class ReplayGainUpdater(Thread, Loggable):
             try:
                 # keep getting few rows at a time for current music_dir (stor
                 # or watched folder).
+                total = 0
                 while True:
                     # return a list of pairs where the first value is the
                     # file's database row id and the second value is the
@@ -59,6 +60,7 @@ class ReplayGainUpdater(Thread, Loggable):
 
                     self.api_client.update_replay_gain_values(processed_data)
                     if len(files) == 0: break
+                self.logger.info("Processed: %d songs" % total)
 
             except Exception, e:
                 self.logger.error(e)
@@ -66,6 +68,7 @@ class ReplayGainUpdater(Thread, Loggable):
     def run(self):
         try:
             while True:
+                self.logger.info("Runnning replaygain updater")
                 self.main()
                 # Sleep for 5 minutes in case new files have been added
                 time.sleep(60 * 5)

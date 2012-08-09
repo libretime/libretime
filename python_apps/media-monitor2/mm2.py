@@ -56,6 +56,7 @@ except Exception as e:
 watch_syncer = WatchSyncer(signal='watch',
                            chunking_number=config['chunking_number'],
                            timeout=config['request_max_wait'])
+
 ReplayGainUpdater.start_reply_gain()
 
 apiclient = apc.AirtimeApiClient.create_right_config(log=log,
