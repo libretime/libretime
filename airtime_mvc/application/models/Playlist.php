@@ -154,40 +154,67 @@ class Application_Model_Playlist
     public function getContents($filterFiles=false)
     {
         Logging::log("Getting contents for playlist {$this->id}");
-
         $files = array();
-        /*
-        $query = CcPlaylistcontentsQuery::create()
-                ->filterByDbPlaylistId($this->id);
 
-        if ($filterFiles) {
-            $query->useCcFilesQuery()
-                     ->filterByDbFileExists(true)
-                  ->endUse();
-        }
-        $query->orderByDbPosition()
-              ->filterByDbType(0)
-              ->leftJoinWith('CcFiles');
-        $rows = $query->find($this->con);
-         */
-        $sql = <<<"EOT"
-(SELECT * FROM
-((SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout,
-    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_playlistcontents AS pc
-    JOIN cc_files AS f ON pc.file_id=f.id WHERE pc.playlist_id = {$this->id} AND type = 0)
-UNION ALL
-(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout,
-ws.id as item_id, (ws.name || ': ' || ws.url) as title, sub.login as creator, 't'::boolean as exists, ws.url as path FROM cc_playlistcontents AS pc
-JOIN cc_webstream AS ws on pc.stream_id=ws.id
-LEFT JOIN cc_subjs as sub on sub.id = ws.creator_id
-WHERE pc.playlist_id = {$this->id} AND pc.type = 1)
-UNION ALL
-(SELECT pc.id as id, pc.type, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout,
-bl.id as item_id, bl.name as title, sbj.login as creator, 't'::boolean as exists, NULL::text as path FROM cc_playlistcontents AS pc
-JOIN cc_block AS bl on pc.block_id=bl.id
-JOIN cc_subjs as sbj ON bl.creator_id=sbj.id WHERE pc.playlist_id = {$this->id} AND pc.type = 2)) as temp
-ORDER BY temp.position);
-EOT;
+        $sql = <<<SQL
+  (SELECT *
+   FROM (
+           (SELECT pc.id AS id,
+                   pc.type,
+                   pc.position,
+                   pc.cliplength AS LENGTH,
+                   pc.cuein,
+                   pc.cueout,
+                   pc.fadein,
+                   pc.fadeout,
+                   f.id AS item_id,
+                   f.track_title,
+                   f.artist_name AS creator,
+                   f.file_exists AS EXISTS,
+                   f.filepath AS path
+            FROM cc_playlistcontents AS pc
+            JOIN cc_files AS f ON pc.file_id=f.id
+            WHERE pc.playlist_id = {$this->id}
+              AND TYPE = 0)
+         UNION ALL
+           (SELECT pc.id AS id,
+                   pc.TYPE, pc.position,
+                            pc.cliplength AS LENGTH,
+                            pc.cuein,
+                            pc.cueout,
+                            pc.fadein,
+                            pc.fadeout,
+                            ws.id AS item_id,
+                            (ws.name || ': ' || ws.url) AS title,
+                            sub.login AS creator,
+                            't'::boolean AS EXISTS,
+                            ws.url AS path
+            FROM cc_playlistcontents AS pc
+            JOIN cc_webstream AS ws ON pc.stream_id=ws.id
+            LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
+            WHERE pc.playlist_id = {$this->id}
+              AND pc.TYPE = 1)
+         UNION ALL
+           (SELECT pc.id AS id,
+                   pc.TYPE, pc.position,
+                            pc.cliplength AS LENGTH,
+                            pc.cuein,
+                            pc.cueout,
+                            pc.fadein,
+                            pc.fadeout,
+                            bl.id AS item_id,
+                            bl.name AS title,
+                            sbj.login AS creator,
+                            't'::boolean AS EXISTS,
+                            NULL::text AS path
+            FROM cc_playlistcontents AS pc
+            JOIN cc_block AS bl ON pc.block_id=bl.id
+            JOIN cc_subjs AS sbj ON bl.creator_id=sbj.id
+            WHERE pc.playlist_id = {$this->id}
+              AND pc.TYPE = 2)) AS temp
+   ORDER BY temp.position);
+SQL;
+
         $con = Propel::getConnection();
         $rows = $con->query($sql)->fetchAll();
 
@@ -198,7 +225,7 @@ EOT;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
     
             //format the length for UI.
-            if ($row['type'] == 2){
+            if ($row['type'] == 2) {
                 $bl = new Application_Model_Block($row['item_id']);
                 $formatter = new LengthFormatter($bl->getFormattedLength());
             } else {
@@ -209,28 +236,6 @@ EOT;
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
         }
-
-        /*
-        $i = 0;
-        $offset = 0;
-        foreach ($rows as $row) {
-          Logging::log($row);
-          $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
-
-          $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($files[$i]['cliplength']);
-          $offset += $clipSec;
-          $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
-
-          //format the length for UI.
-          $formatter = new LengthFormatter($files[$i]['cliplength']);
-          $files[$i]['cliplength'] = $formatter->format();
-
-          $formatter = new LengthFormatter($offset_cliplength);
-          $files[$i]['offset'] = $formatter->format();
-
-          $i++;
-        }
-         */
 
         return $rows;
     }

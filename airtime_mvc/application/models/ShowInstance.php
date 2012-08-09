@@ -653,9 +653,8 @@ class Application_Model_ShowInstance
             WHERE s.instance_id = '{$this->_instanceId}' AND s.playout_status >= 0
             ORDER BY starts";
 
-        //Logging::log($sql);
 
-        $results = $con->query($sql)->fetchAll();
+        $results = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as &$row) {
 

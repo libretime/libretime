@@ -272,13 +272,21 @@ class AudiopreviewController extends Zend_Controller_Action
                 'element_id' => ++$position,
             );
 
-            $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
-            if (strtolower($fileExtension) === 'mp3') {
-                $elementMap['element_mp3'] = $track['item_id'];
-            } elseif (strtolower($fileExtension) === 'ogg') {
-                $elementMap['element_oga'] = $track['item_id'];
+            $elementMap['type'] = $track['type']; 
+            if ($track['type'] == 0) {
+                $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
+                if (strtolower($fileExtension) === 'mp3') {
+                    $elementMap['element_mp3'] = $track['item_id'];
+                } elseif (strtolower($fileExtension) === 'ogg') {
+                    $elementMap['element_oga'] = $track['item_id'];
+                } else {
+                    //the media was neither mp3 or ogg
+                    throw new Exception("Unknown file type");
+                }
+
+                $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];
             } else {
-                //the media was neither mp3 or ogg
+                $elementMap['uri'] = $track['path'];
             }
             $result[] = $elementMap;
         }

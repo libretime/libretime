@@ -111,8 +111,9 @@ function playAllShow(p_showID, p_index) {
 }
 
 /**
- * This function will call the AudiopreviewController to get the contents of either a show or playlist
- * Looping throught the returned contents and creating media for each track.
+ * This function will call the AudiopreviewController to get the contents of
+ * either a show or playlist Looping throught the returned contents and
+ * creating media for each track.
  *
  * Then trigger the jplayer to play the list.
  */
@@ -123,8 +124,7 @@ function buildplaylist(p_url, p_playIndex) {
         var media;
         var index;
         var total = 0;
-        for(index in data){
-           
+        for(index in data) {
             if (data[index]['type'] == 0) { 
                 if (data[index]['element_mp3'] != undefined){
                     media = {title: data[index]['element_title'],
@@ -146,8 +146,8 @@ function buildplaylist(p_url, p_playIndex) {
             if (media) {
                 myPlaylist[index] = media;
             }
-            // we should create a map according to the new position in the player itself
-            // total is the index on the player
+            // we should create a map according to the new position in the
+            // player itself total is the index on the player
             _idToPostionLookUp[data[index]['element_id']] = total;
             total++;
         }
