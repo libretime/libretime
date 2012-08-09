@@ -108,8 +108,6 @@ class LibraryController extends Zend_Controller_Action
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
                 $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
             }
-          
-
         }
 
         //SOUNDCLOUD MENU OPTIONS
@@ -135,6 +133,10 @@ class LibraryController extends Zend_Controller_Action
             }
 
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
+        }
+        
+        if (empty($menu)) {
+            $menu["noaction"] = array("name"=>"No action available");
         }
 
         $this->view->items = $menu;
