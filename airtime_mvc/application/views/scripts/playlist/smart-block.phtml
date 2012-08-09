@@ -12,7 +12,11 @@ if (isset($this->obj)) {
     </a>
 <?php endif; ?>
 
-<?php echo $this->form->getElement('save_button');?>
+<?php
+if (isset($this->form)) {
+    echo $this->form->getElement('save_button');
+}
+?>
 
 <?php if (isset($this->obj)) : ?>
     <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
