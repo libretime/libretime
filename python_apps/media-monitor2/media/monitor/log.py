@@ -12,10 +12,7 @@ appname = 'mediamonitor2'
 class Loggable(object):
     __metaclass__ = abc.ABCMeta
     @LazyProperty
-    def logger(self):
-        # TODO : Clean this up
-        if not hasattr(self,"_logger"): self._logger = logging.getLogger(appname)
-        return self._logger
+    def logger(self): return logging.getLogger(appname)
 
     def unexpected_exception(self,e):
         self.fatal_exception("'Unexpected' exception has occured:", e)

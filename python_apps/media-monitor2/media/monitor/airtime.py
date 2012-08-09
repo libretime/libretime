@@ -24,19 +24,22 @@ from api_clients import api_client as apc
 
 class AirtimeNotifier(Loggable):
     """
-    AirtimeNotifier is responsible for interecepting RabbitMQ messages and feeding them to the
-    event_handler object it was initialized with. The only thing it does to the messages is parse
-    them from json
+    AirtimeNotifier is responsible for interecepting RabbitMQ messages and
+    feeding them to the event_handler object it was initialized with. The only
+    thing it does to the messages is parse them from json
     """
     def __init__(self, cfg, message_receiver):
         self.cfg = cfg
         try:
             self.handler = message_receiver
             self.logger.info("Initializing RabbitMQ message consumer...")
-            schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
-            schedule_queue = Queue("media-monitor", exchange=schedule_exchange, key="filesystem")
-            self.connection = BrokerConnection(cfg["rabbitmq_host"], cfg["rabbitmq_user"],
-                    cfg["rabbitmq_password"], cfg["rabbitmq_vhost"])
+            schedule_exchange = Exchange("airtime-media-monitor", "direct",
+                    durable=True, auto_delete=True)
+            schedule_queue = Queue("media-monitor", exchange=schedule_exchange,
+                    key="filesystem")
+            self.connection = BrokerConnection(cfg["rabbitmq_host"],
+                    cfg["rabbitmq_user"], cfg["rabbitmq_password"],
+                    cfg["rabbitmq_vhost"])
             channel = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
             consumer.register_callback(self.handle_message)
@@ -72,9 +75,9 @@ class AirtimeMessageReceiver(Loggable):
         self.manager = manager
     def message(self, msg):
         """
-        This method is called by an AirtimeNotifier instance that consumes the Rabbit MQ events
-        that trigger this. The method return true when the event was executed and false when it
-        wasn't
+        This method is called by an AirtimeNotifier instance that consumes the
+        Rabbit MQ events that trigger this. The method return true when the
+        event was executed and false when it wasn't
         """
         msg = copy.deepcopy(msg)
         if msg['event_type'] in self.dispatch_table:
@@ -84,7 +87,8 @@ class AirtimeMessageReceiver(Loggable):
             self._execute_message(evt,msg)
             return True
         else:
-            self.logger.info("Received invalid message with 'event_type': '%s'" % msg['event_type'])
+            self.logger.info("Received invalid message with 'event_type': '%s'"
+                    % msg['event_type'])
             self.logger.info("Message details: %s" % str(msg))
             return False
     def _execute_message(self,evt,message):
@@ -93,7 +97,8 @@ class AirtimeMessageReceiver(Loggable):
 
     def __request_now_bootstrap(self, directory_id=None, directory=None):
         if (not directory_id) and (not directory):
-            raise ValueError("You must provide either directory_id or directory")
+            raise ValueError("You must provide either directory_id or \
+                    directory")
         sdb = AirtimeDB(apc.AirtimeApiClient.create_right_config())
         if directory: directory = os.path.normpath(directory)
         if directory_id == None: directory_id = sdb.to_id(directory)
@@ -102,7 +107,8 @@ class AirtimeMessageReceiver(Loggable):
             bs = Bootstrapper( sdb, self.manager.watch_signal() )
             bs.flush_watch( directory=directory, last_ran=time.time() )
         except Exception as e:
-            self.logger.info( "Exception bootstrapping: (dir,id)=(%s,%s)" % (directory, directory_id) )
+            self.logger.info( "Exception bootstrapping: (dir,id)=(%s,%s)" %
+                    (directory, directory_id) )
             self.logger.info( str(e) )
             self.logger.error( traceback.format_exc() )
             raise DirectoryIsNotListed(directory)
@@ -111,7 +117,8 @@ class AirtimeMessageReceiver(Loggable):
         return self.dispatch_table.keys()
 
     def md_update(self, msg):
-        self.logger.info("Updating metadata for: '%s'" % msg['MDATA_KEY_FILEPATH'])
+        self.logger.info("Updating metadata for: '%s'" %
+                msg['MDATA_KEY_FILEPATH'])
         md_path = msg['MDATA_KEY_FILEPATH']
         try:
             Metadata.write_unsafe(path=md_path, md=msg)
@@ -119,15 +126,18 @@ class AirtimeMessageReceiver(Loggable):
             self.logger.info("Cannot find metadata file: '%s'" % e.path)
         except Exception as e:
             # TODO : add md_path to problem path or something?
-            self.logger.info("Unknown error when writing metadata to: '%s'" % md_path)
+            self.logger.info("Unknown error when writing metadata to: '%s'" %
+                    md_path)
             self.logger.info( traceback.format_exc() )
 
     def new_watch(self, msg):
-        self.logger.info("Creating watch for directory: '%s'" % msg['directory'])
+        self.logger.info("Creating watch for directory: '%s'" %
+                msg['directory'])
         if not os.path.exists(msg['directory']):
             try: os.makedirs(msg['directory'])
             except Exception as e:
-                self.logger.info("Failed to create watched dir '%s'" % msg['directory'])
+                self.logger.info("Failed to create watched dir '%s'" %
+                        msg['directory'])
                 self.logger.info(str(e))
             else: self.new_watch(msg)
         else:
@@ -138,11 +148,13 @@ class AirtimeMessageReceiver(Loggable):
             self.manager.add_watch_directory(msg['directory'])
 
     def remove_watch(self, msg):
-        self.logger.info("Removing watch from directory: '%s'" % msg['directory'])
+        self.logger.info("Removing watch from directory: '%s'" %
+                msg['directory'])
         self.manager.remove_watch_directory(msg['directory'])
 
     def rescan_watch(self, msg):
-        self.logger.info("Trying to rescan watched directory: '%s'" % msg['directory'])
+        self.logger.info("Trying to rescan watched directory: '%s'" %
+                msg['directory'])
         try:
             # id is always an integer but in the dictionary the key is always a
             # string
@@ -161,7 +173,8 @@ class AirtimeMessageReceiver(Loggable):
         new_storage_directory = msg['directory']
         self.manager.change_storage_root(new_storage_directory)
 
-        for to_bootstrap in [ self.manager.get_recorded_path(), self.manager.get_imported_path() ]:
+        for to_bootstrap in [ self.manager.get_recorded_path(),
+                self.manager.get_imported_path() ]:
             self.__request_now_bootstrap( directory=to_bootstrap )
 
     def file_delete(self, msg):
@@ -171,20 +184,23 @@ class AirtimeMessageReceiver(Loggable):
         if msg['delete']:
             if os.path.exists(msg['filepath']):
                 try:
-                    self.logger.info("Attempting to delete '%s'" % msg['filepath'])
+                    self.logger.info("Attempting to delete '%s'" %
+                            msg['filepath'])
                     FileMediator.ignore(msg['filepath'])
                     os.unlink(msg['filepath'])
                     if not os.path.exists(msg['filepath']):
-                        self.logger.info("Successfully deleted: '%s'" % msg['filepath'])
+                        self.logger.info("Successfully deleted: '%s'" %
+                                msg['filepath'])
                 except Exception as e:
                     self.logger.info("Failed to delete '%s'" % msg['filepath'])
                     self.logger.info("Error: " % str(e))
             else:
-                self.logger.info("Attempting to delete file '%s' that does not exist. Full request coming:"
-                        % msg['filepath'])
+                self.logger.info("Attempting to delete file '%s' that does not \
+                        exist. Full request coming:" % msg['filepath'])
                 self.logger.info(msg)
         else:
-            self.logger.info("No clippy confirmation, ignoring event. Out of curiousity we will print some details.")
+            self.logger.info("No clippy confirmation, ignoring event. \
+                    Out of curiousity we will print some details.")
             self.logger.info(msg)
 
 

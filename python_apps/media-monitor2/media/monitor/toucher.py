@@ -10,7 +10,8 @@ class Toucher(Loggable):
     def __call__(self):
         try: mmp.fondle(self.path)
         except Exception as e:
-            self.logger.info("Failed to touch file: '%s'. Logging exception." % self.path)
+            self.logger.info("Failed to touch file: '%s'. Logging exception." %
+                    self.path)
             self.logger.info(str(e))
 
 #http://code.activestate.com/lists/python-ideas/8982/
@@ -21,7 +22,8 @@ import threading
 class RepeatTimer(threading.Thread):
     def __init__(self, interval, callable, args=[], kwargs={}):
         threading.Thread.__init__(self)
-        # interval_current shows number of milliseconds in currently triggered <tick>
+        # interval_current shows number of milliseconds in currently triggered
+        # <tick>
         self.interval_current = interval
         # interval_new shows number of milliseconds for next <tick>
         self.interval_new = interval

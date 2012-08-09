@@ -30,7 +30,8 @@ class Manager(Loggable):
             'problem_files_path' : None,
             # This guy doesn't need to be changed, always the same.
             # Gets hooked by wm to different directories
-            'organize_listener' : OrganizeListener(signal=self.organize_channel),
+            'organize_listener' : OrganizeListener(signal=
+                self.organize_channel),
             # Also stays the same as long as its target, the directory
             # which the "organized" files go to, isn't changed.
             'organizer' : None,
@@ -61,14 +62,15 @@ class Manager(Loggable):
         return self.watch_listener.signal
 
     def __remove_watch(self,path):
-        if path in self.__wd_path: # only delete if dir is actually being watched
+        # only delete if dir is actually being watched
+        if path in self.__wd_path:
             wd = self.__wd_path[path]
             self.wm.rm_watch(wd, rec=True)
             del(self.__wd_path[path])
 
     def __add_watch(self,path,listener):
-        wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True, auto_add=True,
-                               proc_fun=listener)
+        wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
+                auto_add=True, proc_fun=listener)
         self.__wd_path[path] = wd.values()[0]
 
     def __create_organizer(self, target_path, recorded_path):
@@ -77,14 +79,16 @@ class Manager(Loggable):
         adding the channel/signal as a parameter to the original constructor
         every time
         """
-        return Organizer(channel=self.organize_channel,target_path=target_path, recorded_path=recorded_path)
+        return Organizer(channel=self.organize_channel,target_path=target_path,
+                recorded_path=recorded_path)
 
     def get_problem_files_path(self):
         return self.organize['problem_files_path']
 
     def set_problem_files_path(self, new_path):
         self.organize['problem_files_path'] = new_path
-        self.organize['problem_handler'] = ProblemFileHandler( PathChannel(signal='badfile',path=new_path) )
+        self.organize['problem_handler'] = \
+            ProblemFileHandler( PathChannel(signal='badfile',path=new_path) )
 
     def get_recorded_path(self):
         return self.organize['recorded_path']
@@ -92,7 +96,8 @@ class Manager(Loggable):
     def set_recorded_path(self, new_path):
         self.__remove_watch(self.organize['recorded_path'])
         self.organize['recorded_path'] = new_path
-        self.organize['organizer'] = self.__create_organizer(self.organize['imported_path'], new_path)
+        self.organize['organizer'] = self.__create_organizer(
+                self.organize['imported_path'], new_path)
         self.__add_watch(new_path, self.watch_listener)
 
     def get_organize_path(self):
@@ -103,8 +108,9 @@ class Manager(Loggable):
 
     def set_organize_path(self, new_path):
         """
-        sets the organize path to be new_path. Under the current scheme there is
-        only one organize path but there is no reason why more cannot be supported
+        sets the organize path to be new_path. Under the current scheme there
+        is only one organize path but there is no reason why more cannot be
+        supported
         """
         # if we are already organizing a particular directory we remove the
         # watch from it first before organizing another directory
@@ -124,12 +130,14 @@ class Manager(Loggable):
         """
         self.__remove_watch(self.organize['imported_path'])
         self.organize['imported_path'] = new_path
-        self.organize['organizer'] = self.__create_organizer(new_path, self.organize['recorded_path'])
+        self.organize['organizer'] = self.__create_organizer(
+                new_path, self.organize['recorded_path'])
         self.__add_watch(new_path, self.watch_listener)
 
     def change_storage_root(self, store):
         """
-        hooks up all the directories for you. Problem, recorded, imported, organize.
+        hooks up all the directories for you. Problem, recorded, imported,
+        organize.
         """
         store_paths = mmp.expand_storage(store)
         self.set_problem_files_path(store_paths['problem_files'])
@@ -168,8 +176,8 @@ class Manager(Loggable):
             self.logger.info("Removing watched directory: '%s'", watch_dir)
             self.__remove_watch(watch_dir)
         else:
-            self.logger.info("'%s' is not being watched, hence cannot be removed"
-                             % watch_dir)
+            self.logger.info("'%s' is not being watched, hence cannot be \
+                    removed" % watch_dir)
 
     def pyinotify(self):
         return pyinotify.Notifier(self.wm)

@@ -21,16 +21,20 @@ class Organizer(ReportHandler,Loggable):
     def handle(self, sender, event):
         """
         Intercept events where a new file has been added to the organize
-        directory and place it in the correct path (starting with self.target_path)
+        directory and place it in the correct path (starting with
+        self.target_path)
         """
         try:
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
             # Do we need to "massage" the path using mmp.organized_path?
-            target_path = self.recorded_path if event.metadata.is_recorded() else self.target_path
-            new_path = mmp.organized_path(event.path, target_path, event.metadata.extract())
+            target_path = self.recorded_path if event.metadata.is_recorded() \
+                                             else self.target_path
+            new_path = mmp.organized_path(event.path, target_path,
+                    event.metadata.extract())
             mmp.magic_move(event.path, new_path)
-            self.logger.info('Organized: "%s" into "%s"' % (event.path, new_path))
+            self.logger.info('Organized: "%s" into "%s"' %
+                    (event.path, new_path))
         except BadSongFile as e:
             self.report_problem_file(event=event, exception=e)
         # probably general error in mmp.magic.move...
