@@ -53,7 +53,7 @@
         <?php foreach($this->contents as $row) : ?>
             <?php
             $titleMaxStrLen = 35;
-            if (strlen($row["track_title"]) > $titleMaxStrLen) {
+            if (mb_strlen($row["track_title"], 'UTF-8') > $titleMaxStrLen) {
                 $row["track_title"] = substr($row["track_title"], 0, 34)."...";
             }
             $artistMaxStrLen = 22;
