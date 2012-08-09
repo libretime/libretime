@@ -24,7 +24,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('set-playlist-description', 'json')
                     ->addActionContext('playlist-preview', 'json')
                     ->addActionContext('get-playlist', 'json')
-                    ->addActionContext('smart-block-criteria-save', 'json')
+                    ->addActionContext('save', 'json')
                     ->addActionContext('smart-block-generate', 'json')
                     ->addActionContext('smart-block-shuffle', 'json')
                     ->addActionContext('get-block-info', 'json')
@@ -153,8 +153,8 @@ class PlaylistController extends Zend_Controller_Action
         Logging::log("{$e->getMessage()}");
     }
     
-    private function playlistDenied($obj) {
-        $this->view->error = "You cannot add playlists to smart playlists.";
+    private function wrongTypeToBlock($obj) {
+        $this->view->error = "You can only add tracks to smart playlists.";
         $this->createFullResponse($obj);
     }
 
@@ -315,13 +315,15 @@ class PlaylistController extends Zend_Controller_Action
                 // if the dest is a block object
                 //check if any items are playlists
                 foreach($ids as $id) {
-                    if (is_array($id) && isset($id[1]) && $id[1] == 'playlist') {
-                        throw new Exception('playlist to block');
+                    if (is_array($id) && isset($id[1])) {
+                        if ($id[1] != 'audioclip') {
+                            throw new WrongTypeToBlockException;
+                        }
                     }
                 }
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } else {
-                throw new Exception('track to dynamic');
+                throw new BlockDynamicException;
             }
             $this->createUpdateResponse($obj);
         }
@@ -331,14 +333,14 @@ class PlaylistController extends Zend_Controller_Action
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_type);
         }
+        catch (WrongTypeToBlockException $e) {
+            $this->wrongTypeToBlock($obj);
+        }
+        catch (BlockDynamicException $e) {
+            $this->blockDynamic($obj);
+        }
         catch (Exception $e) {
-            if ($e->getMessage() == 'playlist to block') {
-                $this->playlistDenied($obj);
-            } else if ($e->getMessage() == 'track to dynamic') {
-                $this->blockDynamic($obj);
-            } else {
-                $this->playlistUnknownError($e);
-            }
+            $this->playlistUnknownError($e);
         }
     }
 
@@ -478,14 +480,17 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function setPlaylistNameAction()
+    public function setPlaylistNameDescAction()
     {
         $name = $this->_getParam('name', 'Unknown Playlist');
+        $description = $this->_getParam('description', "");
         $type = $this->_getParam('type');
         
         try {
             $obj = $this->getPlaylist($type);
             $obj->setName($name);
+            $obj->setDescription($description);
+            $this->view->description = $obj->getDescription();
             $this->view->playlistName = $name;
             $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
@@ -497,6 +502,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
+    /*
     public function setPlaylistDescriptionAction()
     {
         $description = $this->_getParam('description', "");
@@ -515,13 +521,22 @@ class PlaylistController extends Zend_Controller_Action
             $this->playlistUnknownError($e);
         }
     }
+    */
     
-    public function smartBlockCriteriaSaveAction()
+    public function saveAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $bl = new Application_Model_Block($params['obj_id']);
-        $result = $bl->saveSmartBlockCriteria($params['data']);
+        $result = array();
+        
+        $this->setPlaylistNameDescAction();
+        
+        if ($params['type'] == 'block') {
+            $bl = new Application_Model_Block($params['obj_id']);
+            $result = $bl->saveSmartBlockCriteria($params['criteria']);
+        }
+        
+        $result["modified"] = $this->view->modified;
         die(json_encode($result));
     }
     
@@ -593,5 +608,6 @@ class PlaylistController extends Zend_Controller_Action
         }
         die(json_encode($out));
     }
-    
 }
+class WrongTypeToBlockException extends Exception {}
+class BlockDynamicException extends Exception {}

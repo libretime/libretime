@@ -18,7 +18,6 @@
             <?php $i = $i + 1; ?>
             <?php endforeach; ?>
             
-            <?php echo $this->element->getElement('save_button') ?>
             <?php echo $this->element->getElement('generate_button') ?>
             <?php echo $this->element->getElement('shuffle_button') ?>
         </dd>
@@ -96,10 +95,5 @@
         
         
     </dl>
-    <?php /*
-        for($i=0; $i<$this->numOfSubForm; $i++){
-            echo $this->parent_form->getSubform('sp_set_'.$i);
-        }*/
-    ?>
 </fieldset>
 </form>
