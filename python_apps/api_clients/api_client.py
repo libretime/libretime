@@ -52,6 +52,9 @@ class AirtimeApiClient():
     @staticmethod
     def create_right_config(log=None,config_path=None):
         if config_path: AirtimeApiClient.default_config = config_path
+        elif (not AirtimeApiClient.default_config):
+            raise ValueError("Cannot slip config_path attribute when it has \
+                              never been passed yet")
         return AirtimeApiClient( logger=None, config_path=AirtimeApiClient.default_config )
 
     def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
@@ -465,6 +468,7 @@ class AirtimeApiClient():
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
+            self.logger.debug(traceback.format_exc())
 
         return response
 

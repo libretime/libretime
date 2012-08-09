@@ -57,10 +57,10 @@ watch_syncer = WatchSyncer(signal='watch',
                            chunking_number=config['chunking_number'],
                            timeout=config['request_max_wait'])
 
-ReplayGainUpdater.start_reply_gain()
-
 apiclient = apc.AirtimeApiClient.create_right_config(log=log,
         config_path=api_client_config)
+
+ReplayGainUpdater.start_reply_gain(apiclient)
 
 # TODO : Need to do setup_media_monitor call somewhere around here to get
 # import/organize dirs

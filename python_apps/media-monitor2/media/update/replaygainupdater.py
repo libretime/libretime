@@ -4,7 +4,6 @@ import traceback
 import os
 import time
 
-from api_clients import api_client
 from media.update import replaygain
 from media.monitor.log import Loggable
 
@@ -23,17 +22,16 @@ class ReplayGainUpdater(Thread, Loggable):
     """
 
     @staticmethod
-    def start_reply_gain():
-        me = ReplayGainUpdater()
+    def start_reply_gain(apc):
+        me = ReplayGainUpdater(apc)
         me.daemon = True
         me.start()
 
-    def __init__(self):
+    def __init__(self,apc):
         Thread.__init__(self)
-        self.api_client = api_client.AirtimeApiClient.create_right_config()
+        self.api_client = apc
 
     def main(self):
-
         raw_response = self.api_client.list_all_watched_dirs()
         if 'dirs' not in raw_response:
             self.logger.error("Could not get a list of watched directories \
