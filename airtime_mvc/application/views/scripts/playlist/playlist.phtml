@@ -1,6 +1,8 @@
 <?php
-$contents = $this->obj->getContents();
-$count = count($contents);
+if (isset($this->obj)) {
+    $contents = $this->obj->getContents();
+    $count = count($contents);
+}
 ?>
 <button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->obj)) : ?>
