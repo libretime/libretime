@@ -59,7 +59,7 @@ class LibraryController extends Zend_Controller_Action
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($this->obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } else {
+                    } else if ($this->obj_sess->type === "block") {
                         $menu["pl_add"] = array("name"=> "Add to Smart Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
@@ -101,8 +101,6 @@ class LibraryController extends Zend_Controller_Action
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($this->obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } else {
-                        $menu["pl_add"] = array("name"=> "Add to Smart Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }
@@ -181,7 +179,7 @@ class LibraryController extends Zend_Controller_Action
         try {
             Application_Model_Block::deleteBlocks($blocks, $user->getId());
         } catch (Exception $e) {
-            //TODO: warn user that not all blocks could be deleted. 
+            //TODO: warn user that not all blocks could be deleted.
         }
 
         try {

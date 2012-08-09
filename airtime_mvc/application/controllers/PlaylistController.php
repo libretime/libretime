@@ -153,8 +153,8 @@ class PlaylistController extends Zend_Controller_Action
         Logging::log("{$e->getMessage()}");
     }
     
-    private function playlistDenied($obj) {
-        $this->view->error = "You cannot add playlists to smart playlists.";
+    private function wrongTypeToBlock($obj) {
+        $this->view->error = "You can only add tracks to smart playlists.";
         $this->createFullResponse($obj);
     }
 
@@ -315,13 +315,15 @@ class PlaylistController extends Zend_Controller_Action
                 // if the dest is a block object
                 //check if any items are playlists
                 foreach($ids as $id) {
-                    if (is_array($id) && isset($id[1]) && $id[1] == 'playlist') {
-                        throw new Exception('playlist to block');
+                    if (is_array($id) && isset($id[1])) {
+                        if ($id[1] != 'audioclip') {
+                            throw new WrongTypeToBlockException;
+                        }
                     }
                 }
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } else {
-                throw new Exception('track to dynamic');
+                throw new BlockDynamicException;
             }
             $this->createUpdateResponse($obj);
         }
@@ -331,14 +333,14 @@ class PlaylistController extends Zend_Controller_Action
         catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_type);
         }
+        catch (WrongTypeToBlockException $e) {
+            $this->wrongTypeToBlock($obj);
+        }
+        catch (BlockDynamicException $e) {
+            $this->blockDynamic($obj);
+        }
         catch (Exception $e) {
-            if ($e->getMessage() == 'playlist to block') {
-                $this->playlistDenied($obj);
-            } else if ($e->getMessage() == 'track to dynamic') {
-                $this->blockDynamic($obj);
-            } else {
-                $this->playlistUnknownError($e);
-            }
+            $this->playlistUnknownError($e);
         }
     }
 
@@ -593,5 +595,6 @@ class PlaylistController extends Zend_Controller_Action
         }
         die(json_encode($out));
     }
-    
 }
+class WrongTypeToBlockException extends Exception {}
+class BlockDynamicException extends Exception {}
