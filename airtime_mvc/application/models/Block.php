@@ -944,7 +944,7 @@ EOT;
             if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
                 $error[] =  "Limit cannot be empty or smaller than 0";
             } else {
-                $mins = $data['etc']['sp_limit_value'] * $multiplier;
+                $mins = floatval($data['etc']['sp_limit_value']) * $multiplier;
                 if ($mins > 1440) {
                     $error[] =  "Limit cannot be more than 24 hrs";
                 }
@@ -1332,7 +1332,7 @@ EOT;
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
             } else {
-                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval($storedCrit['limit']['value']) * 60 * 60 : intval($storedCrit['limit']['value'] * 60);
+                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval(floatval($storedCrit['limit']['value']) * 60 * 60) : intval($storedCrit['limit']['value'] * 60);
                 $limits['items'] = null;
             }
         }
