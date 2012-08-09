@@ -945,7 +945,7 @@ EOT;
                 $error[] =  "Limit cannot be empty or smaller than 0";
             } else {
                 $mins = $data['etc']['sp_limit_value'] * $multiplier;
-                if ($mins > 14400) {
+                if ($mins > 1440) {
                     $error[] =  "Limit cannot be more than 24 hrs";
                 }
             }
