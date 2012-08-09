@@ -19,10 +19,10 @@ if (isset($this->obj)) {
     <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
     <input id='obj_type' type='hidden' value='block'></input>
     <div class="playlist_title">
-        <h3 id="bl_name">
+        <h3 id="obj_name">
             <a id="playlist_name_display" contenteditable="true"><?php echo $this->obj->getName(); ?></a>
         </h3>
-        <h4 id="bl_length"><?php echo $this->length; ?></h4>
+        <h4 id="obj_length"><?php echo $this->length; ?></h4>
     </div>
 
     <fieldset class="toggle closed" id="fieldset-metadate_change">

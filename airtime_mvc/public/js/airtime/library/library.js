@@ -423,7 +423,9 @@ var AIRTIME = (function(AIRTIME) {
                         playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
                         open_playlist_preview(playlistIndex, 0);
                     } else if (aData.ftype === 'audioclip') {
-                        open_audio_preview(aData.audioFile, aData.track_title, aData.artist_name);
+                        open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                    } else if (aData.ftype == 'stream') {
+                        open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
                     }
                     return false;
                 });
@@ -637,7 +639,7 @@ var AIRTIME = (function(AIRTIME) {
                                 playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
                                 open_playlist_preview(playlistIndex, 0);
                             } else if (data.ftype === 'audioclip') {
-                                open_audio_preview(data.audioFile, data.track_title, data.artist_name);
+                                open_audio_preview(data.ftype, data.audioFile, data.track_title, data.artist_name);
                             } else if (data.ftype === 'block') {
                                 blockIndex = $(this).parent().attr('id').substring(3); //remove the pl_
                                 open_block_preview(blockIndex, 0);

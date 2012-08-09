@@ -296,7 +296,7 @@ var AIRTIME = (function(AIRTIME){
 		$('#spl_name > a')
 			.empty()
 			.append(json.name);
-		$('#spl_length')
+		$('#obj_length')
 			.empty()
 			.append(json.length);
 	    $('#fieldset-metadate_change textarea')
