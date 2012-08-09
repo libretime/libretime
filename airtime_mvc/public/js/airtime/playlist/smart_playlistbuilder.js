@@ -475,7 +475,7 @@ function callback(data, type) {
             AIRTIME.playlist.fnOpenPlaylist(json);
             form = $('#smart-playlist-form');
             if (type == 'shuffle') {
-                form.find('.success').text('Playlist shuffled');
+                form.find('.success').text('Smart playlist shuffled');
             } else if (type == 'generate') {
             	form.find('.success').text('Smart playlist generated and saved');
             	//redraw library table so the length gets updated
@@ -484,8 +484,8 @@ function callback(data, type) {
     	    form.find('.success').show();
     	    form.find('#smart_playlist_options').removeClass("closed");
         } else {
-            form.find('.success').text('Smart Playlist saved');
-            form.find('.success').show();
+            $('#sp-success-saved').text('Smart playlist saved');
+            $('#sp-success-saved').show();
             
             /* Update number of files that meet criteria and change icon to success/warning
              * as appropriate. This is also done in the form but we do not pass the form
