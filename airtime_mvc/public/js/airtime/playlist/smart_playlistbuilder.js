@@ -23,9 +23,7 @@ function setSmartPlaylistEvents() {
     
     /********** ADD MODIFIER ROW **********/
     form.find('a[id^="modifier_add"]').live('click', function(){
-        var id = $(this).attr('id'),
-            row_index = id.charAt(id.length-1),
-            criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
+        var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
         
         //make new modifier row
         var newRow = $(this).parent().clone(),
@@ -244,11 +242,7 @@ function setSmartPlaylistEvents() {
     /********** MODIFIER CHANGE **********/
     form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
         var criteria_value = $(this).next(),
-            index_name = criteria_value.attr('id'),
-            delimiter = '_',
-            start = 3,
-            tokens = index_name.split(delimiter).slice(start),
-            index_num = tokens.join(delimiter);
+            index_num = getRowIndex($(this).parent());
         
         if ($(this).val() == 'is in the range') {
             enableAndShowExtraField(criteria_value, index_num);
@@ -264,7 +258,7 @@ function setSmartPlaylistEvents() {
 }
 
 function getRowIndex(ele) {
-    var id = ele.find('[name^="sp_criteria"]').attr('id'),
+    var id = ele.find('[name^="sp_criteria_field"]').attr('id'),
         delimiter = '_',
         start = 3,
         tokens = id.split(delimiter).slice(start),
@@ -465,6 +459,9 @@ function callback(data, type) {
 	
     if (json.result == "1") {
         form.find('.success').hide();
+        if ($('#smart_playlist_options').hasClass('closed')) {
+            $('#smart_playlist_options').removeClass('closed');
+        }
         $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
