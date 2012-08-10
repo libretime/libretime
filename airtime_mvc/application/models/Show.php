@@ -1902,7 +1902,7 @@ class Application_Model_Show
         }
 
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends"
+        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends FROM"
         ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
         ." WHERE si.show_id = s.id"
         ." AND si.starts >= TIMESTAMP '$timeStart'"
