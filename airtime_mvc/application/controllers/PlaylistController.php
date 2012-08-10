@@ -566,7 +566,14 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         $bl = new Application_Model_Block($params['obj_id']);
-        $result = $bl->shuffleSmartBlock();
+        
+        //we need to save criteria in case user hasn't clicked Save or Generate yet
+        $result = $bl->saveSmartBlockCriteria($params['data']);
+        
+        //only shuffle if there are no criteria errors
+        if ($result['result'] == 0) {
+            $result = $bl->shuffleSmartBlock();
+        }
         if ($result['result'] == 0) {
             try {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
