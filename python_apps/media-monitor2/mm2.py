@@ -83,10 +83,7 @@ def main(global_config, api_client_config):
         if os.path.exists(watch_dir):
             airtime_receiver.new_watch({ 'directory':watch_dir })
 
-    last_ran=config.last_ran()
     bs = Bootstrapper( db=sdb, watch_signal='watch' )
-
-    #bs.flush_all( config.last_ran() )
 
     ed = EventDrainer(airtime_notifier.connection,
             interval=float(config['rmq_event_wait']))
