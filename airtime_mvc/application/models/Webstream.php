@@ -53,8 +53,7 @@ class Application_Model_Webstream{
 
     public function getMetadata()
     {
-        $webstream = CcWebstreamQuery::create()->findPK($this->id);
-        $subjs = CcSubjsQuery::create()->findPK($webstream->getDbCreatorId());
+        $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
 
         $username = $subjs->getDbLogin();
         return array(

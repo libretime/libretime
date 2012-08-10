@@ -333,11 +333,10 @@ class LibraryController extends Zend_Controller_Action
                 }
                 $this->view->block = $block;
             } else if ($type == "stream") {
-                    
                 $webstream = CcWebstreamQuery::create()->findPK($id);
-                $file = new Application_Model_Webstream($webstream);
+                $ws = new Application_Model_Webstream($webstream);
 
-                $md = $file->getMetadata();
+                $md = $ws->getMetadata();
 
                 $this->view->md = $md;
                 $this->view->type = $type;
