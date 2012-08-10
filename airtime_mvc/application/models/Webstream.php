@@ -22,6 +22,11 @@ class Application_Model_Webstream{
         }
     }
 
+    public function getOrm()
+    {
+        return $this->webstream;
+    }
+
     public function getName()
     {
         return $this->webstream->getDbName();
@@ -151,7 +156,7 @@ class Application_Model_Webstream{
     public static function isValid($analysis)
     {
         foreach ($analysis as $k => $v) {
-            if ($v[0] == false) {
+            if ($v[0] === false) {
                 return false;
             }
         }
@@ -159,7 +164,34 @@ class Application_Model_Webstream{
         return true;
     }
 
-    public static function save($request, $webstream)
+    /*
+     * This function is a callback used by curl to let us work
+     * with the contents returned from an http request. We don't
+     * actually want to work with the contents however (we just want
+     * the response headers), so immediately return a -1 in this function
+     * which tells curl not to download the response body at all.
+     */
+    private function writefn($ch, $chunk) 
+    { 
+        return -1;
+    }
+
+    private function discoverStreamMime()
+    {
+        Logging::log($this->webstream->getDbUrl());
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->webstream->getDbUrl());
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, array($this, 'writefn'));
+        $result = curl_exec($ch);
+        $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        curl_close($ch);       
+
+        Logging::log($mime);
+        return $mime;
+    }
+
+    public static function save($request, $id)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -178,6 +210,10 @@ class Application_Model_Webstream{
         }
 
 
+        //$ws = new Application_Model_Webstream($id);
+        //$webstream = $ws->getOrm();
+
+        $webstream = new CcWebstream();
         $webstream->setDbName($request->getParam("name"));
         $webstream->setDbDescription($request->getParam("description"));
         $webstream->setDbUrl($request->getParam("url"));
@@ -186,6 +222,16 @@ class Application_Model_Webstream{
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
+        $webstream->save();
+
+        $ws = new Application_Model_Webstream($webstream->getDbId());
+       
+        $mime = $ws->discoverStreamMime();
+        if ($mime !== false) {
+            $webstream->setDbMime($mime);
+        } else {
+            throw new Exception("Couldn't get MIME type!");
+        }
         $webstream->save();
     }
 }

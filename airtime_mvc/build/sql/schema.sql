@@ -638,6 +638,7 @@ CREATE TABLE "cc_webstream"
 	"creator_id" INTEGER  NOT NULL,
 	"mtime" TIMESTAMP(6)  NOT NULL,
 	"utime" TIMESTAMP(6)  NOT NULL,
+	"mime" VARCHAR(255),
 	PRIMARY KEY ("id")
 );
 

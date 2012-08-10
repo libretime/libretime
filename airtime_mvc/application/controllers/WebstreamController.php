@@ -52,13 +52,8 @@ class WebstreamController extends Zend_Controller_Action
         $hasPermission = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST));
         $id = $request->getParam("id");
 
-        if ($id == -1) {
-            $webstream = new CcWebstream();
-        } else {
-            $webstream = CcWebstreamQuery::create()->findPK($id);
-        }
-        
         if ($id != -1) {
+            $webstream = CcWebstreamQuery::create()->findPK($id);
             //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
             $user = Application_Model_User::getCurrentUser();
             if ($webstream->getDbCreatorId() != $user->getId()) {
@@ -73,11 +68,14 @@ class WebstreamController extends Zend_Controller_Action
         }
 
         $analysis = Application_Model_Webstream::analyzeFormData($request);
-        
-        if (Application_Model_Webstream::isValid($analysis)) {
-            Application_Model_Webstream::save($request, $webstream);
-            $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
-        } else {
+        try { 
+            if (Application_Model_Webstream::isValid($analysis)) {
+                Application_Model_Webstream::save($request, $id);
+                $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception $e) {
             $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>"; 
             $this->view->analysis = $analysis;
         }
