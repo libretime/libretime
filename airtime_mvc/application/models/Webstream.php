@@ -4,22 +4,9 @@ class Application_Model_Webstream{
 
     private $id;
 
-    public function __construct($id=-1)
+    public function __construct($webstream)
     {
-        if ($id == -1) {
-            $this->webstream = new CcWebstream();
-
-            //We're not saving this object in the database, so -1 ID is OK.
-            $this->webstream->setDbId(-1);
-            $this->webstream->setDbName("Untitled Webstream");
-            $this->webstream->setDbDescription("");
-            $this->webstream->setDbUrl("http://");
-            $this->webstream->setDbLength("00:00:00");
-            $this->webstream->setDbName("Untitled Webstream");
-        } else {
-            $this->id = $id;
-            $this->webstream = CcWebstreamQuery::create()->findPK($this->id);
-        }
+            $this->webstream = $webstream; 
     }
 
     public function getOrm()
@@ -103,16 +90,15 @@ class Application_Model_Webstream{
         
         $leftOvers = array_diff($p_ids, $ownedStreams);
         return $leftOvers;
-        
     }
 
-    public static function analyzeFormData($request)
+    public static function analyzeFormData($parameters)
     {
         $valid = array("length" => array(true, ''), 
             "url" => array(true, ''),
             "name" => array(true, ''));
 
-        $length = trim($request->getParam("length"));
+        $length = $parameters["length"];
         $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
         if (!$result == 1 || !count($matches) == 3) { 
             $valid['length'][0] = false;
@@ -120,7 +106,7 @@ class Application_Model_Webstream{
         }
 
 
-        $url = trim($request->getParam("url"));
+        $url = $parameters["url"];
         //simple validator that checks to make sure that the url starts with http(s),
         //and that the domain is at least 1 letter long followed by a period.
         $result = preg_match("/^(http|https):\/\/.+\./", $url, $matches);
@@ -131,13 +117,13 @@ class Application_Model_Webstream{
         }
 
 
-        $name = trim($request->getParam("name"));
+        $name = $parameters["name"];
         if (strlen($name) == 0) {
             $valid['name'][0] = false;
             $valid['name'][1] = 'Webstream name cannot be empty';
         }
 
-        $id = trim($request->getParam("id"));
+        $id = $parameters["id"];
 
         if (!is_null($id)) {
             // user has performed a create stream action instead of edit
@@ -147,8 +133,6 @@ class Application_Model_Webstream{
         } else {
             Logging::log("EDIT");
         }
-
-
 
         return $valid; 
     }
@@ -191,11 +175,11 @@ class Application_Model_Webstream{
         return $mime;
     }
 
-    public static function save($request, $id)
+    public static function save($parameters)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-        $length = trim($request->getParam("length"));
+        $length = $parameters["length"];
         $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
 
         if ($result == 1 && count($matches) == 3) { 
@@ -209,22 +193,17 @@ class Application_Model_Webstream{
             throw new Exception("Invalid date format: $length");
         }
 
-
-        //$ws = new Application_Model_Webstream($id);
-        //$webstream = $ws->getOrm();
-
         $webstream = new CcWebstream();
-        $webstream->setDbName($request->getParam("name"));
-        $webstream->setDbDescription($request->getParam("description"));
-        $webstream->setDbUrl($request->getParam("url"));
+        $webstream->setDbName($parameters["name"]);
+        $webstream->setDbDescription($parameters["description"]);
+        $webstream->setDbUrl($parameters["url"]);
 
         $webstream->setDbLength($dblength);
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
-        $webstream->save();
 
-        $ws = new Application_Model_Webstream($webstream->getDbId());
+        $ws = new Application_Model_Webstream($webstream);
        
         $mime = $ws->discoverStreamMime();
         if ($mime !== false) {

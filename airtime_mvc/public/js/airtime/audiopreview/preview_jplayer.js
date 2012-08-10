@@ -36,6 +36,7 @@ $(document).ready(function(){
     $.jPlayer.timeFormat.showHour = true;
     
     var audioUri = $('.audioUri').text();
+    var audioMime = $('.audioMime').text();
     //var audioFileID = $('.audioFileID').text();
     var playlistID = $('.playlistID').text();
     var playlistIndex = $('.playlistIndex').text();
@@ -49,7 +50,7 @@ $(document).ready(function(){
     if (playlistID != "" && playlistID !== ""){
         playAllPlaylist(playlistID, playlistIndex);
     }else if (audioUri != "") {
-        playOne(audioUri);
+        playOne(audioUri, audioMime);
     }else if (showID != "") {
         playAllShow(showID, showIndex);
     }else if(blockId != "" && blockIndex != ""){
@@ -188,20 +189,21 @@ function play(p_playlistIndex){
  * Playing one audio track occurs from the library. This function will create the media, setup
  * jplayer and play the track.
  */
-function playOne(uri) {
+function playOne(uri, mime) {
     var playlist = new Array();
-    var fileExtension = uri.split('.').pop();
-    if (fileExtension.toLowerCase() === 'mp3') {
+    
+    if (mime.search(/mp3/i) > 0 || mime.search(/mpeg/i) > 0) {
         media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
             mp3:uri
         };
-    } else if (fileExtension.toLowerCase() === 'ogg' ) {
+    } else if (mime.search(/og(g|a)/i) > 0 || mime.search(/vorbis/i) > 0) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
             artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
             oga:uri
         };
     }
+
     _playlist_jplayer.option("autoPlay", true);
     playlist[0] = media;
     //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready

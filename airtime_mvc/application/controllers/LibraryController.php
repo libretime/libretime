@@ -76,7 +76,7 @@ class LibraryController extends Zend_Controller_Action
                 $obj = new Application_Model_Playlist($id);
             } else {
                 $obj = new Application_Model_Block($id);
-                if (!$obj->isStatic()){
+                if (!$obj->isStatic()) {
                     unset($menu["play"]);
                 }
                 if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
@@ -96,7 +96,8 @@ class LibraryController extends Zend_Controller_Action
             }
         } else if ($type == "stream") {
 
-            $obj = new Application_Model_Webstream($id);
+            $webstream = CcWebstreamQuery::create()->findPK($id);
+            $obj = new Application_Model_Webstream($webstream);
             if (isset($this->obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($this->obj_sess->type === "playlist") {
@@ -330,7 +331,9 @@ class LibraryController extends Zend_Controller_Action
                 }
                 $this->view->block = $block;
             } else if ($type == "stream") {
-                $file = new Application_Model_Webstream($id);
+                    
+                $webstream = CcWebstreamQuery::create()->findPK($id);
+                $file = new Application_Model_Webstream($webstream);
 
                 $md = $file->getMetadata();
 
