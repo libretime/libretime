@@ -276,8 +276,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $files = $bl->getListofFilesMeetCriteria();
         
         $save = new Zend_Form_Element_Button('save_button');
-        $save->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $save->setAttrib('title', 'Save criteria only');
+        $save->setAttrib('class', 'ui-button ui-state-default sp-save');
+        $save->setAttrib('title', 'Save playlist');
         $save->setIgnore(true);
         $save->setLabel('Save');
         $save->setDecorators(array('viewHelper'));
@@ -285,7 +285,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $generate->setAttrib('title', 'Save criteria and generate block content');
+        $generate->setAttrib('title', 'Generate playlist content');
         $generate->setIgnore(true);
         $generate->setLabel('Generate');
         $generate->setDecorators(array('viewHelper'));
@@ -293,7 +293,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $shuffle = new Zend_Form_Element_Button('shuffle_button');
         $shuffle->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $shuffle->setAttrib('title', 'Shuffle block content');
+        $shuffle->setAttrib('title', 'Shuffle playlist content');
         $shuffle->setIgnore(true);
         $shuffle->setLabel('Shuffle');
         $shuffle->setDecorators(array('viewHelper'));

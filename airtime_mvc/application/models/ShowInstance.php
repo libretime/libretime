@@ -648,14 +648,39 @@ class Application_Model_ShowInstance
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT *
-            FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id)
-            WHERE s.instance_id = '{$this->_instanceId}' AND s.playout_status >= 0
-            ORDER BY starts";
+        $sql = <<<SQL
+SELECT *
+FROM (
+        (SELECT s.starts,
+                0::INTEGER as type ,
+                f.id AS item_id,
+                f.track_title,
+                f.artist_name AS creator,
+                f.file_exists AS EXISTS,
+                f.filepath AS filepath
+         FROM cc_schedule AS s
+         LEFT JOIN cc_files AS f ON f.id = s.file_id
+         WHERE s.instance_id = '{$this->_instanceId}'
+           AND s.playout_status >= 0
+           AND s.file_id IS NOT NULL)
+      UNION
+        (SELECT s.starts,
+                1::INTEGER as type,
+                ws.id AS item_id,
+                (ws.name || ': ' || ws.url) AS title,
+                sub.login AS creator,
+                't'::boolean AS EXISTS,
+                ws.url AS filepath
+         FROM cc_schedule AS s
+         LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
+         LEFT JOIN cc_subjs AS sub ON ws.creator_id = sub.id
+         WHERE s.instance_id = '{$this->_instanceId}'
+           AND s.playout_status >= 0
+           AND s.stream_id IS NOT NULL)) AS temp
+ORDER BY starts;
+SQL;
 
-        //Logging::log($sql);
-
-        $results = $con->query($sql)->fetchAll();
+        $results = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as &$row) {
 
@@ -682,7 +707,7 @@ class Application_Model_ShowInstance
 
         $query = $con->query($sql)->fetchColumn(0);
 
-        return ($query !== false) ? $query : NULL;
+        return ($query !== false) ? $query : null;
     }
 
     public function getShowEndGapTime()

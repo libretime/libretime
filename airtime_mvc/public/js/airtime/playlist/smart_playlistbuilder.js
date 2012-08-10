@@ -23,9 +23,7 @@ function setSmartPlaylistEvents() {
     
     /********** ADD MODIFIER ROW **********/
     form.find('a[id^="modifier_add"]').live('click', function(){
-        var id = $(this).attr('id'),
-            row_index = id.charAt(id.length-1),
-            criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
+        var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
         
         //make new modifier row
         var newRow = $(this).parent().clone(),
@@ -186,17 +184,21 @@ function setSmartPlaylistEvents() {
     });
 	
     /********** SAVE ACTION **********/
-    form.find('button[id="save_button"]').live("click", function(event){
-        var data = $('form').serializeArray(),
-            save_action = 'Playlist/smart-block-criteria-save',
+    /* moved to spl.js
+    $('#save_button').live("click", function(event){
+        var criteria = $('form').serializeArray(),
+            block_name = $('#playlist_name_display').text(),
+            block_desc = $('textarea[name="description"]').val(),
+            save_action = 'Playlist/save',
             obj_id = $('input[id="obj_id"]').val();
         enableLoadingIcon();
-        $.post(save_action, {format: "json", data: data, obj_id: obj_id}, function(data){
+        $.post(save_action, {format: "json", criteria: criteria, name: block_name, desc: block_desc, obj_id: obj_id}, function(data){
             callback(data, "save");
             setFadeIcon();
             disableLoadingIcon();
         });
     });
+    */
     
     /********** GENERATE ACTION **********/
     form.find('button[id="generate_button"]').live("click", function(event){
@@ -240,11 +242,7 @@ function setSmartPlaylistEvents() {
     /********** MODIFIER CHANGE **********/
     form.find('select[id^="sp_criteria_modifier"]').live("change", function(){
         var criteria_value = $(this).next(),
-            index_name = criteria_value.attr('id'),
-            delimiter = '_',
-            start = 3,
-            tokens = index_name.split(delimiter).slice(start),
-            index_num = tokens.join(delimiter);
+            index_num = getRowIndex($(this).parent());
         
         if ($(this).val() == 'is in the range') {
             enableAndShowExtraField(criteria_value, index_num);
@@ -260,7 +258,7 @@ function setSmartPlaylistEvents() {
 }
 
 function getRowIndex(ele) {
-    var id = ele.find('[name^="sp_criteria"]').attr('id'),
+    var id = ele.find('[name^="sp_criteria_field"]').attr('id'),
         delimiter = '_',
         start = 3,
         tokens = id.split(delimiter).slice(start),
@@ -461,6 +459,9 @@ function callback(data, type) {
 	
     if (json.result == "1") {
         form.find('.success').hide();
+        if ($('#smart_playlist_options').hasClass('closed')) {
+            $('#smart_playlist_options').removeClass('closed');
+        }
         $.each(json.errors, function(index, error){
             $.each(error.msg, function(index, message){
                 $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
@@ -471,7 +472,7 @@ function callback(data, type) {
             AIRTIME.playlist.fnOpenPlaylist(json);
             form = $('#smart-playlist-form');
             if (type == 'shuffle') {
-                form.find('.success').text('Playlist shuffled');
+                form.find('.success').text('Smart playlist shuffled');
             } else if (type == 'generate') {
             	form.find('.success').text('Smart playlist generated and saved');
             	//redraw library table so the length gets updated
@@ -480,10 +481,8 @@ function callback(data, type) {
     	    form.find('.success').show();
     	    form.find('#smart_playlist_options').removeClass("closed");
         } else {
-            form.find('.success').text('Criteria saved');
-            form.find('.success').show();
-            //redraw library table incase block changed from static to dynamic or vice versa
-            dt.fnStandingRedraw();
+            $('#sp-success-saved').text('Smart playlist saved');
+            $('#sp-success-saved').show();
             
             /* Update number of files that meet criteria and change icon to success/warning
              * as appropriate. This is also done in the form but we do not pass the form
@@ -515,7 +514,7 @@ function callback(data, type) {
 }
 
 function removeSuccessMsg() {
-    var $status = $('#smart-playlist-form').find('.success');
+    var $status = $('.success');
     
     $status.fadeOut("slow", function(){$status.empty()});
 }

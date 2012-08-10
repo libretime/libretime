@@ -24,7 +24,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('set-playlist-description', 'json')
                     ->addActionContext('playlist-preview', 'json')
                     ->addActionContext('get-playlist', 'json')
-                    ->addActionContext('smart-block-criteria-save', 'json')
+                    ->addActionContext('save', 'json')
                     ->addActionContext('smart-block-generate', 'json')
                     ->addActionContext('smart-block-shuffle', 'json')
                     ->addActionContext('get-block-info', 'json')
@@ -195,9 +195,9 @@ class PlaylistController extends Zend_Controller_Action
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-                $this->view->obj = $obj;
                 
                 if($isAdminOrPM || $obj->getCreatorId() == $userInfo->id){
+                    $this->view->obj = $obj;
                     if($this->obj_sess->type == "block"){
                         $form = new Application_Form_SmartBlockCriteria();
                         $form->startForm($this->obj_sess->id);
@@ -480,14 +480,17 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
-    public function setPlaylistNameAction()
+    public function setPlaylistNameDescAction()
     {
         $name = $this->_getParam('name', 'Unknown Playlist');
+        $description = $this->_getParam('description', "");
         $type = $this->_getParam('type');
         
         try {
             $obj = $this->getPlaylist($type);
             $obj->setName($name);
+            $obj->setDescription($description);
+            $this->view->description = $obj->getDescription();
             $this->view->playlistName = $name;
             $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
@@ -499,6 +502,7 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
 
+    /*
     public function setPlaylistDescriptionAction()
     {
         $description = $this->_getParam('description', "");
@@ -517,13 +521,22 @@ class PlaylistController extends Zend_Controller_Action
             $this->playlistUnknownError($e);
         }
     }
+    */
     
-    public function smartBlockCriteriaSaveAction()
+    public function saveAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $bl = new Application_Model_Block($params['obj_id']);
-        $result = $bl->saveSmartBlockCriteria($params['data']);
+        $result = array();
+        
+        $this->setPlaylistNameDescAction();
+        
+        if ($params['type'] == 'block') {
+            $bl = new Application_Model_Block($params['obj_id']);
+            $result = $bl->saveSmartBlockCriteria($params['criteria']);
+        }
+        
+        $result["modified"] = $this->view->modified;
         die(json_encode($result));
     }
     
@@ -553,7 +566,14 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         $bl = new Application_Model_Block($params['obj_id']);
-        $result = $bl->shuffleSmartBlock();
+        
+        //we need to save criteria in case user hasn't clicked Save or Generate yet
+        $result = $bl->saveSmartBlockCriteria($params['data']);
+        
+        //only shuffle if there are no criteria errors
+        if ($result['result'] == 0) {
+            $result = $bl->shuffleSmartBlock();
+        }
         if ($result['result'] == 0) {
             try {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
