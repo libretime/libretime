@@ -276,7 +276,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $files = $bl->getListofFilesMeetCriteria();
         
         $save = new Zend_Form_Element_Button('save_button');
-        $save->setAttrib('class', 'ui-button ui-state-default sp-button');
+        $save->setAttrib('class', 'ui-button ui-state-default sp-save');
         $save->setAttrib('title', 'Save playlist');
         $save->setIgnore(true);
         $save->setLabel('Save');

@@ -554,6 +554,10 @@ input.input_text.sp_extra_input_text{
     margin-left: 10px !important;
 }
 
+.sp-save{
+    margin-left: 7px !important;
+}
+
 .sp-checked-icon{
     width: 16px !important;
     display: inline-block !important;
