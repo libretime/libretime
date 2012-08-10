@@ -71,6 +71,7 @@ def mediate_ignored(fn):
         for s_check in skip_events:
             FileMediator.skip_checks.remove( s_check )
             # Only process skip_checks one at a time
+            FileMediator.logger.info("Skip checked: '%s'" % str(event))
             return
         if FileMediator.is_ignored(event.pathname):
             FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
@@ -108,7 +109,6 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
-        import ipdb; ipdb.set_trace()
         dispatcher.send(signal=self.signal, sender=self,
                 event=OrganizeFile(event))
 
@@ -121,7 +121,7 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
             # into file events until we know for sure if we deleted or moved
             morph = MoveDir(event) if event.dir else MoveFile(event)
             EventRegistry.matching(event).morph_into(morph)
-        #else: self.process_create(event)
+        else: self.process_create(event)
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
         evt = self.process_delete(event)

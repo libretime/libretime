@@ -75,12 +75,22 @@ class Manager(Loggable):
 
     def __create_organizer(self, target_path, recorded_path):
         """
-        private constructor for organizer so that we don't have to repeat
-        adding the channel/signal as a parameter to the original constructor
-        every time
+        creates an organizer at new destination path or modifies the old one
         """
-        return Organizer(channel=self.organize_channel,target_path=target_path,
-                recorded_path=recorded_path)
+        # We avoid creating new instances of organize because of the way it
+        # interacts with pydispatch. We must be careful to never have more than
+        # one instance of OrganizeListener but this is not so easy. (The
+        # singleton hack in Organizer) doesn't work. This is the only thing
+        # that seems to work.
+        if self.organize['organizer']:
+            o = self.organize['organizer']
+            o.channel = self.organize_channel
+            o.target_path = target_path
+            o.recorded_path = recorded_path
+        else:
+            self.organize['organizer'] = Organizer(channel=
+                    self.organize_channel, target_path=target_path,
+                    recorded_path=recorded_path)
 
     def get_problem_files_path(self):
         return self.organize['problem_files_path']
@@ -96,8 +106,7 @@ class Manager(Loggable):
     def set_recorded_path(self, new_path):
         self.__remove_watch(self.organize['recorded_path'])
         self.organize['recorded_path'] = new_path
-        self.organize['organizer'] = self.__create_organizer(
-                self.organize['imported_path'], new_path)
+        self.__create_organizer( self.organize['imported_path'], new_path)
         self.__add_watch(new_path, self.watch_listener)
 
     def get_organize_path(self):
@@ -130,8 +139,7 @@ class Manager(Loggable):
         """
         self.__remove_watch(self.organize['imported_path'])
         self.organize['imported_path'] = new_path
-        self.organize['organizer'] = self.__create_organizer(
-                new_path, self.organize['recorded_path'])
+        self.__create_organizer( new_path, self.organize['recorded_path'])
         self.__add_watch(new_path, self.watch_listener)
 
     def change_storage_root(self, store):

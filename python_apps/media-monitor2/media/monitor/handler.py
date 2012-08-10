@@ -24,7 +24,6 @@ class ReportHandler(Handles):
                 weak=weak)
 
     def report_problem_file(self, event, exception=None):
-        import ipdb; ipdb.set_trace()
         dispatcher.send(signal=self.report_signal, sender=self, event=event,
                 exception=exception)
 
