@@ -8,6 +8,7 @@ from media.monitor.handler import ReportHandler
 from media.monitor.log import Loggable
 from media.monitor.exceptions import BadSongFile
 from media.monitor.pure import LazyProperty
+from media.monitor.eventcontractor import EventContractor
 
 import api_clients.api_client as ac
 
@@ -31,8 +32,21 @@ class RequestSync(threading.Thread,Loggable):
         # to recorded shows
         # TODO : recorded shows aren't flagged right
         # Is this retry shit even necessary? Consider getting rid of this.
+        packed_requests = []
+        for request_event in self.requests:
+            try:
+                for request in request_event.safe_pack():
+                    if isinstance(request, BadSongFile):
+                        self.logger.info("Bad song file: '%s'" % request.path)
+                    else: packed_requests.append(request)
+            except BadSongFile as e:
+                self.logger.info("This should never occur anymore!!!")
+                self.logger.info("Bad song file: '%s'" % e.path)
+            except Exception as e:
+                self.logger.info("An evil exception occured")
+                self.logger.error( traceback.format_exc() )
         def make_req():
-            self.apiclient.send_media_monitor_requests( self.requests )
+            self.apiclient.send_media_monitor_requests( packed_requests )
         for try_index in range(0,self.retries):
             try: make_req()
             # most likely we did not get json response as we expected
@@ -89,6 +103,7 @@ class WatchSyncer(ReportHandler,Loggable):
         self.request_running = False
         # we don't actually use this "private" instance variable anywhere
         self.__current_thread = None
+        self.contractor = EventContractor()
         tc = TimeoutWatcher(self, self.timeout)
         tc.daemon = True
         tc.start()
@@ -103,7 +118,11 @@ class WatchSyncer(ReportHandler,Loggable):
             self.logger.info("Received event '%s'. Path: '%s'" % \
                     ( event.__class__.__name__,
                       getattr(event,'path','No path exists') ))
-            try: self.push_queue( event )
+            try:
+                self.push_queue( event )
+                # If there is a strange bug anywhere in the code the next line
+                # should be a suspect
+                self.contractor.register( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
             except Exception as e:
@@ -160,22 +179,9 @@ class WatchSyncer(ReportHandler,Loggable):
         self.logger.info("WatchSyncer : Unleashing request")
         # want to do request asyncly and empty the queue
         requests = copy.copy(self.__queue)
-        packed_requests = []
-        for request_event in requests:
-            try:
-                for request in request_event.safe_pack():
-                    if isinstance(request, BadSongFile):
-                        self.logger.info("Bad song file: '%s'" % request.path)
-                    else: packed_requests.append(request)
-            except BadSongFile as e:
-                self.logger.info("This should never occur anymore!!!")
-                self.logger.info("Bad song file: '%s'" % e.path)
-            except Exception as e:
-                self.logger.info("An evil exception occured")
-                self.logger.error( traceback.format_exc() )
         def launch_request():
             # Need shallow copy here
-            t = RequestSync(watcher=self, requests=packed_requests)
+            t = RequestSync(watcher=self, requests=requests)
             t.start()
             self.__current_thread = t
         self.__requests.append(launch_request)

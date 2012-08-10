@@ -36,6 +36,7 @@ def main(global_config, api_client_config):
         print(str(e))
 
     logfile = unicode( config['logpath'] )
+    setup_logging(logfile)
     log = get_logger()
     log.info("Attempting to set the locale...")
 
@@ -118,5 +119,4 @@ if __name__ == '__main__':
             print("'%s' must exist" % args[k])
             sys.exit(0)
     print("Running mm1.99")
-    setup_logging(args['--log'])
     main(args['--config'],args['--apiclient'])

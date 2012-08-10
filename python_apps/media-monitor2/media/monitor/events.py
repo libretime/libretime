@@ -56,6 +56,7 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
+        self._pack_hook = lambda _ : _ # no op
     def exists(self): return os.path.exists(self.path)
     @LazyProperty
     def cookie(self):
@@ -63,6 +64,8 @@ class BaseEvent(Loggable):
 
     def __str__(self): return "Event. Path: %s" % self.__raw_event.pathname
     def is_dir_event(self): return self._raw_event.dir
+
+    def add_safe_pack_hook(self,k): self._pack_hook = k
 
     # As opposed to unsafe_pack...
     def safe_pack(self):
@@ -73,19 +76,18 @@ class BaseEvent(Loggable):
         """
         # pack will only throw an exception if it processes one file but this
         # is a little bit hacky
-        try: return self.pack()
+        try:
+            return self.pack()
+            self._pack_hook()
         except BadSongFile as e: return [e]
 
     # nothing to see here, please move along
     def morph_into(self, evt):
-        """
-        'Morphing' should preserve the self.cookie invariant. I.e.
-        either should either stay an integer or stay none.
-        """
         self.logger.info("Morphing '%s' into '%s'" % (self.__class__.__name__,
             evt.__class__.__name__))
         self._raw_event = evt
         self.path = evt.path
+        self.add_safe_pack_hook(evt._pack_hook)
         self.__class__ = evt.__class__
         return self
 
@@ -138,9 +140,19 @@ class MoveFile(BaseEvent, HasMetaData):
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return [req_dict]
 
+class ModifyFile(BaseEvent, HasMetaData):
+    def __init__(self, *args, **kwargs):
+        super(ModifyFile, self).__init__(*args, **kwargs)
+    def pack(self):
+        req_dict = self.metadata.extract()
+        req_dict['mode'] = u'modify'
+        # path to directory that is to be removed
+        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
+        return [req_dict]
+
 def map_events(directory, constructor):
-    # -unknown-path should not appear in the path here but more testing might
-    # be necessary
+    # -unknown-path should not appear in the path here but more testing
+    # might be necessary
     for f in mmp.walk_supported(directory, clean_empties=False):
         try:
             for e in constructor( FakePyinotify(f) ).pack(): yield e
@@ -165,15 +177,5 @@ class DeleteDirWatch(BaseEvent):
         req_dict = {}
         req_dict['mode'] = u'delete_dir'
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path + "/" )
-        return [req_dict]
-
-class ModifyFile(BaseEvent, HasMetaData):
-    def __init__(self, *args, **kwargs):
-        super(ModifyFile, self).__init__(*args, **kwargs)
-    def pack(self):
-        req_dict = self.metadata.extract()
-        req_dict['mode'] = u'modify'
-        # path to directory that is to be removed
-        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return [req_dict]
 
