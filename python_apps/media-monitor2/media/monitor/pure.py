@@ -138,7 +138,6 @@ def magic_move(old, new):
     Moves path old to new and constructs the necessary to directories for new
     along the way
     """
-    print("'%s' ==> '%s'" % (old, new))
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
     shutil.move(old,new)

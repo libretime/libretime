@@ -108,7 +108,6 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
-        print("I AM COMPLETELY INNOCENT")
         import ipdb; ipdb.set_trace()
         dispatcher.send(signal=self.signal, sender=self,
                 event=OrganizeFile(event))

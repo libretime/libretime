@@ -30,7 +30,6 @@ class Organizer(ReportHandler,Loggable):
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
             # Do we need to "massage" the path using mmp.organized_path?
-            print("Organizing: %s" % event.path)
             target_path = self.recorded_path if event.metadata.is_recorded() \
                                              else self.target_path
             new_path = mmp.organized_path(event.path, target_path,
