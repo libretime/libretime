@@ -13,7 +13,7 @@ def get_process_output(command):
     """
     Run subprocess and return stdout
     """
-    logger.debug(command)
+    #logger.debug(command)
     p = Popen(command, shell=True, stdout=PIPE)
     return p.communicate()[0].strip()
 
@@ -40,7 +40,7 @@ def duplicate_file(file_path):
     fsrc = open(file_path, 'r')
     fdst = tempfile.NamedTemporaryFile(delete=False)
 
-    logger.info("Copying %s to %s" % (file_path, fdst.name))
+    #logger.info("Copying %s to %s" % (file_path, fdst.name))
 
     shutil.copyfileobj(fsrc, fdst)
 

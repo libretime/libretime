@@ -11,7 +11,7 @@ import locale
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
-supported_extensions =  [u"mp3", u"ogg"]
+supported_extensions =  [u"mp3", u"ogg", u"oga"]
 unicode_unknown = u'unknown'
 
 class LazyProperty(object):
@@ -31,8 +31,8 @@ class LazyProperty(object):
 
 class IncludeOnly(object):
     """
-    A little decorator to help listeners only be called on extensions they
-    support
+    A little decorator to help listeners only be called on extensions
+    they support
     NOTE: this decorator only works on methods and not functions. Maybe
     fix this?
     """
@@ -138,6 +138,7 @@ def magic_move(old, new):
     Moves path old to new and constructs the necessary to directories for new
     along the way
     """
+    print("'%s' ==> '%s'" % (old, new))
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
     shutil.move(old,new)

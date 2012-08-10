@@ -16,14 +16,15 @@ class Handles(object):
 
 class ReportHandler(Handles):
     __metaclass__ = abc.ABCMeta
-    def __init__(self, signal):
+    def __init__(self, signal, weak=False):
         self.signal = signal
         self.report_signal = "badfile"
         def dummy(sender, event): self.handle(sender,event)
         dispatcher.connect(dummy, signal=signal, sender=dispatcher.Any,
-                weak=False)
+                weak=weak)
 
     def report_problem_file(self, event, exception=None):
+        import ipdb; ipdb.set_trace()
         dispatcher.send(signal=self.report_signal, sender=self, event=event,
                 exception=exception)
 

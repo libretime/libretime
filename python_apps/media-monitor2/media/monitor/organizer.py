@@ -13,11 +13,13 @@ class Organizer(ReportHandler,Loggable):
     directory". The "storage" directory picks up all of its events through
     pyinotify. (These events are fed to it through StoreWatchListener)
     """
+
     def __init__(self, channel, target_path, recorded_path):
         self.channel = channel
         self.target_path = target_path
         self.recorded_path = recorded_path
-        super(Organizer, self).__init__(signal=self.channel)
+        super(Organizer, self).__init__(signal=self.channel, weak=True)
+
     def handle(self, sender, event):
         """
         Intercept events where a new file has been added to the organize
@@ -28,6 +30,7 @@ class Organizer(ReportHandler,Loggable):
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
             # Do we need to "massage" the path using mmp.organized_path?
+            print("Organizing: %s" % event.path)
             target_path = self.recorded_path if event.metadata.is_recorded() \
                                              else self.target_path
             new_path = mmp.organized_path(event.path, target_path,
@@ -39,5 +42,6 @@ class Organizer(ReportHandler,Loggable):
             self.report_problem_file(event=event, exception=e)
         # probably general error in mmp.magic.move...
         except Exception as e:
+            self.unexpected_exception( e )
             self.report_problem_file(event=event, exception=e)
 

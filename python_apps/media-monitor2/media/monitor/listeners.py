@@ -85,13 +85,17 @@ class BaseListener(object):
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     # this class still don't handle the case where a dir was copied recursively
 
-    def process_IN_CLOSE_WRITE(self, event): self.process_to_organize(event)
+    def process_IN_CLOSE_WRITE(self, event):
+        self.process_to_organize(event)
     # got cookie
-    def process_IN_MOVED_TO(self, event): self.process_to_organize(event)
+    def process_IN_MOVED_TO(self, event):
+        self.process_to_organize(event)
 
     def flush_events(self, path):
-        """organize the whole directory at path. (pretty much by doing what
-        handle does to every file"""
+        """
+        organize the whole directory at path. (pretty much by doing what
+        handle does to every file
+        """
         flushed = 0
         for f in mmp.walk_supported(path, clean_empties=True):
             self.logger.info("Bootstrapping: File in 'organize' directory: \
@@ -104,6 +108,8 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
+        print("I AM COMPLETELY INNOCENT")
+        import ipdb; ipdb.set_trace()
         dispatcher.send(signal=self.signal, sender=self,
                 event=OrganizeFile(event))
 
