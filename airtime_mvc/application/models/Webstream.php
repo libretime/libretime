@@ -107,9 +107,10 @@ class Application_Model_Webstream{
 
 
         $url = $parameters["url"];
-        //simple validator that checks to make sure that the url starts with http(s),
-        //and that the domain is at least 1 letter long followed by a period.
-        $result = preg_match("/^(http|https):\/\/.+\./", $url, $matches);
+        //simple validator that checks to make sure that the url starts with 
+        //http(s),
+        //and that the domain is at least 1 letter long
+        $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
 
         if ($result == 0) {
             $valid['url'][0] = false;
