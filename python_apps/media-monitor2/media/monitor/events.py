@@ -79,8 +79,8 @@ class BaseEvent(Loggable):
     # nothing to see here, please move along
     def morph_into(self, evt):
         """
-        'Morphing' should preserve the self.cookie invariant. I.e. either
-        None -> None or int -> int
+        'Morphing' should preserve the self.cookie invariant. I.e.
+        either should either stay an integer or stay none.
         """
         self.logger.info("Morphing '%s' into '%s'" % (self.__class__.__name__,
             evt.__class__.__name__))

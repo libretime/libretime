@@ -36,7 +36,6 @@ def main(global_config, api_client_config):
         print(str(e))
 
     logfile = unicode( config['logpath'] )
-    setup_logging(logfile)
     log = get_logger()
     log.info("Attempting to set the locale...")
 
@@ -96,10 +95,28 @@ def main(global_config, api_client_config):
     pyi = manager.pyinotify()
     pyi.loop()
 
+__doc__ = """
+Usage:
+    mm2.py --config=<path> --apiclient=<path> --log=<path>
+
+Options:
+    -h --help          Show this screen
+    --config=<path>    path to mm2 config
+    --apiclient=<path> path to apiclient config
+    --log=<path>       log at <path>
+"""
+
+    #base_path = u'/home/rudi/Airtime/python_apps/media-monitor2/tests'
+    #global_config = os.path.join(base_path, u'live_client.cfg')
+    #api_client_config = global_config
+
 if __name__ == '__main__':
-    # TODO : parse these from command line arguments
-    # TODO : add log config stuff
-    base_path = u'/home/rudi/Airtime/python_apps/media-monitor2/tests'
-    global_config = os.path.join(base_path, u'live_client.cfg')
-    api_client_config = global_config
-    main(global_config, api_client_config)
+    from docopt import docopt
+    args = docopt(__doc__,version="mm1.99")
+    for k in ['--apiclient','--config']:
+        if not os.path.exists(args[k]):
+            print("'%s' must exist" % args[k])
+            sys.exit(0)
+    print("Running mm1.99")
+    setup_logging(args['--log'])
+    main(args['--config'],args['--apiclient'])
