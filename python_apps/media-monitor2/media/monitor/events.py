@@ -91,9 +91,9 @@ class BaseEvent(Loggable):
 
 class FakePyinotify(object):
     """
-    sometimes we must create our own pyinotify like objects to instantiate
-    objects from the classes below whenever we want to turn a single event into
-    multiple events
+    sometimes we must create our own pyinotify like objects to
+    instantiate objects from the classes below whenever we want to turn
+    a single event into multiple events
     """
     def __init__(self, path):
         self.pathname = path

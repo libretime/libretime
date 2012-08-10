@@ -125,14 +125,15 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
         evt = self.process_delete(event)
-        if hasattr(event,'cookie'): EventRegistry.register(evt)
+        # evt can be none whenever event points that a file that would be
+        # ignored by @IncludeOnly
+        if hasattr(event,'cookie') and (evt != None):
+            EventRegistry.register(evt)
     def process_IN_DELETE(self,event): self.process_delete(event)
     def process_IN_MOVE_SELF(self, event):
         if '-unknown-path' in event.pathname:
             event.pathname = event.pathname.replace('-unknown-path','')
             self.delete_watch_dir(event)
-    # Capturing modify events is too brittle and error prone
-    # def process_IN_MODIFY(self,event): self.process_modify(event)
 
     def delete_watch_dir(self, event):
         e = DeleteDirWatch(event)

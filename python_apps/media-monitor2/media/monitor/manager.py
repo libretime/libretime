@@ -77,11 +77,12 @@ class Manager(Loggable):
         """
         creates an organizer at new destination path or modifies the old one
         """
-        # We avoid creating new instances of organize because of the way it
-        # interacts with pydispatch. We must be careful to never have more than
-        # one instance of OrganizeListener but this is not so easy. (The
-        # singleton hack in Organizer) doesn't work. This is the only thing
-        # that seems to work.
+        # TODO : find a proper fix for the following hack
+        # We avoid creating new instances of organize because of the way
+        # it interacts with pydispatch. We must be careful to never have
+        # more than one instance of OrganizeListener but this is not so
+        # easy. (The singleton hack in Organizer) doesn't work. This is
+        # the only thing that seems to work.
         if self.organize['organizer']:
             o = self.organize['organizer']
             o.channel = self.organize_channel

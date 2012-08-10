@@ -7,11 +7,12 @@ from media.monitor.exceptions import BadSongFile
 
 class Organizer(ReportHandler,Loggable):
     """
-    Organizer is responsible to to listening to OrganizeListener events and
-    committing the appropriate changes to the filesystem. It does not in any
-    interact with WatchSyncer's even when the the WatchSyncer is a "storage
-    directory". The "storage" directory picks up all of its events through
-    pyinotify. (These events are fed to it through StoreWatchListener)
+    Organizer is responsible to to listening to OrganizeListener events
+    and committing the appropriate changes to the filesystem. It does
+    not in any interact with WatchSyncer's even when the the WatchSyncer
+    is a "storage directory". The "storage" directory picks up all of
+    its events through pyinotify. (These events are fed to it through
+    StoreWatchListener)
     """
 
     _instance = None
