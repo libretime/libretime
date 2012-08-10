@@ -1104,6 +1104,9 @@ EOT;
                 }
             } else {
                 $length = $this->getStaticLength();
+                if (!$length) {
+                    $length = "00:00:00";
+                }
                 $this->setLength($length);
             }
             $output['blockLength'] = $this->getFormattedLength();
