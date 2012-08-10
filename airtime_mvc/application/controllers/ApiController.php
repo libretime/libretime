@@ -249,7 +249,7 @@ class ApiController extends Zend_Controller_Action
             $request = $this->getRequest();
             $type = $request->getParam('type');
             /* This is some *extremely* lazy programming that needs to bi fixed. For some reason
-             * we are using two entirely different codepaths for very similar functionality (type = endofday 
+             * we are using two entirely different codepaths for very similar functionality (type = endofday
              * vs type = interval). Needs to be fixed for 2.2 - MK */
             if ($type == "endofday") {
                 $limit = $request->getParam('limit');
@@ -265,25 +265,25 @@ class ApiController extends Zend_Controller_Action
                                 "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
                             );
                 
-                Application_Model_Show::convertToLocalTimeZone($result["currentShow"], 
+                Application_Model_Show::convertToLocalTimeZone($result["currentShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
-                Application_Model_Show::convertToLocalTimeZone($result["nextShow"], 
+                Application_Model_Show::convertToLocalTimeZone($result["nextShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
             } else {
                 $result = Application_Model_Schedule::GetPlayOrderRange();
 
                 //Convert from UTC to localtime for Web Browser.
-                Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"], 
+                Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
-                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"], 
+                Application_Model_Show::ConvertToLocalTimeZone($result["nextShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
             }
 
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
-            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; 
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
             header("Content-type: text/javascript");
             
-            // If a callback is not given, then just provide the raw JSON. 
+            // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
@@ -317,8 +317,8 @@ class ApiController extends Zend_Controller_Action
             }
         $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
-            
-            // If a callback is not given, then just provide the raw JSON. 
+            Logging::log($result);
+            // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
@@ -456,8 +456,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadataAction($md, $mode, $dry_run=false) 
-    { 
+    public function dispatchMetadataAction($md, $mode, $dry_run=false)
+    {
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
         if ( $dry_run ) { // for debugging we return garbage not to screw around with the db
@@ -540,7 +540,7 @@ class ApiController extends Zend_Controller_Action
         }
         $return_hash['fileid'] = $file->getId();
         return $return_hash;
-    } 
+    }
 
     public function reloadMetadataGroupAction()
     {
@@ -585,7 +585,7 @@ class ApiController extends Zend_Controller_Action
             $response['key'] = $k;
             array_push($responses, $response);
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
-            // was usually called from the python api client. Now we just call it straight from the controller to 
+            // was usually called from the python api client. Now we just call it straight from the controller to
             // save the http roundtrip
             if( $info_json['is_record'] and !array_key_exists('error', $response) ) {
                 $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid'],$dry_run=$dry);
