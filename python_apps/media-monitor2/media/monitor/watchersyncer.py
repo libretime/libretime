@@ -96,7 +96,7 @@ class WatchSyncer(ReportHandler,Loggable):
         #self.signal = signal
         self.timeout = float(timeout)
         self.chunking_number = int(chunking_number)
-        self.__queue = []
+        self.__reset_queue()
         # Even though we are not blocking on the http requests, we are still
         # trying to send the http requests in order
         self.__requests = []
@@ -119,10 +119,12 @@ class WatchSyncer(ReportHandler,Loggable):
                     ( event.__class__.__name__,
                       getattr(event,'path','No path exists') ))
             try:
-                self.push_queue( event )
                 # If there is a strange bug anywhere in the code the next line
                 # should be a suspect
-                self.contractor.register( event )
+                if self.contractor.register( event ):
+                    # only if the event was actually registered we add it.
+                    # Otherwise some other event is mutated somewhere
+                    self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
             except Exception as e:
@@ -140,7 +142,7 @@ class WatchSyncer(ReportHandler,Loggable):
         if self.events_left_count() >= self.chunking_number:
             self.push_request()
             self.request_do() # Launch the request if nothing is running
-        self.__queue.append(elem)
+        self.__queue.add(elem)
 
     def flush_events(self):
         self.logger.info("Force flushing events...")
@@ -185,7 +187,9 @@ class WatchSyncer(ReportHandler,Loggable):
             t.start()
             self.__current_thread = t
         self.__requests.append(launch_request)
-        self.__queue = []
+        self.__reset_queue()
+
+    def __reset_queue(self): self.__queue = set([])
 
     def __del__(self):
         # Ideally we would like to do a little more to ensure safe shutdown
