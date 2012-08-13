@@ -1301,9 +1301,16 @@ EOT;
                 foreach ($crit as $criteria) {
                     $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
-        
                     $spCriteriaModifier = $criteria['modifier'];
-                    $spCriteriaValue = $criteria['value'];
+                    
+                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
+                    // if the column is timestamp, convert it into UTC
+                    if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                        $spCriteriaValue = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['value']);
+                    } else {
+                        $spCriteriaValue = $criteria['value'];
+                    }
+                    
                     if ($spCriteriaModifier == "starts with") {
                         $spCriteriaValue = "$spCriteriaValue%";
                     } else if ($spCriteriaModifier == "ends with") {
