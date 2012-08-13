@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
-from media.monitor.log import Loggable
+from media.monitor.log        import Loggable
 from media.monitor.exceptions import NoDirectoryInAirtime
+from os.path                  import normpath
 import media.monitor.pure as mmp
-from os.path import normpath
 
 class AirtimeDB(Loggable):
     def __init__(self, apc, reload_now=True):

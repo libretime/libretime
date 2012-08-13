@@ -1,11 +1,11 @@
 import pyinotify
 from pydispatch import dispatcher
 
-from os.path import normpath
-from media.monitor.events import PathChannel
-from media.monitor.log import Loggable
+from os.path                 import normpath
+from media.monitor.events    import PathChannel
+from media.monitor.log       import Loggable
 from media.monitor.listeners import StoreWatchListener, OrganizeListener
-from media.monitor.handler import ProblemFileHandler
+from media.monitor.handler   import ProblemFileHandler
 from media.monitor.organizer import Organizer
 import media.monitor.pure as mmp
 

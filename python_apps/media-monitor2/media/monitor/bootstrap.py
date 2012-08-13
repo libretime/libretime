@@ -1,7 +1,7 @@
 import os
-from pydispatch import dispatcher
+from pydispatch           import dispatcher
 from media.monitor.events import NewFile, DeleteFile
-from media.monitor.log import Loggable
+from media.monitor.log    import Loggable
 import media.monitor.pure as mmp
 
 class Bootstrapper(Loggable):

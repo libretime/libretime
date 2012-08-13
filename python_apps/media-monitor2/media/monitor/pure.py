@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import copy
 import os
-from os.path import normpath
 import shutil
-from itertools import takewhile
 import sys
 import hashlib
-from configobj import ConfigObj
 import locale
+
+from os.path   import normpath
+from itertools import takewhile
+from configobj import ConfigObj
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 

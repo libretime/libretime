@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from media.monitor.handler import ReportHandler
 import media.monitor.pure as mmp
-from media.monitor.log import Loggable
+from media.monitor.handler    import ReportHandler
+from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 
 class Organizer(ReportHandler,Loggable):

@@ -1,5 +1,5 @@
 import socket
-from media.monitor.log import Loggable
+from media.monitor.log     import Loggable
 from media.monitor.toucher import RepeatTimer
 
 class EventDrainer(Loggable):

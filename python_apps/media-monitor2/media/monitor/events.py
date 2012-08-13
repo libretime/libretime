@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
 import abc
-from media.monitor.pure import LazyProperty
 import media.monitor.pure as mmp
-from media.monitor.metadata import Metadata
-from media.monitor.log import Loggable
+from media.monitor.pure       import LazyProperty
+from media.monitor.metadata   import Metadata
+from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 
 class PathChannel(object):

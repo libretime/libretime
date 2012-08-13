@@ -5,7 +5,7 @@ import os
 import copy
 
 from media.monitor.exceptions import BadSongFile
-from media.monitor.log import Loggable
+from media.monitor.log        import Loggable
 import media.monitor.pure as mmp
 
 """

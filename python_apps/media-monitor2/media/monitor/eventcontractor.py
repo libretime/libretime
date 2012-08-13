@@ -1,4 +1,4 @@
-from media.monitor.log import Loggable
+from media.monitor.log    import Loggable
 from media.monitor.events import DeleteFile
 
 class EventContractor(Loggable):

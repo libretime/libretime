@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import media.monitor.pure as mmp
 import os
-from media.monitor.log import Loggable
+from media.monitor.log        import Loggable
 from media.monitor.exceptions import CouldNotCreateIndexFile
 
 class Toucher(Loggable):
