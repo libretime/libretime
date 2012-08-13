@@ -61,18 +61,15 @@ var AIRTIME = (function(AIRTIME){
 	        .hide();
 	}
 
-	function changeCueIn(event) {
-	    event.stopPropagation();
-
-		var span = $(this),
-			id = span.parent().attr("id").split("_").pop(),
-			url = "/Playlist/set-cue",
-			cueIn = $.trim(span.text()),
-			li = span.parents("li"),
-			unqid = li.attr("unqid"),
-			lastMod = getModified(),
-			type = $('#obj_type').val();
-
+    function changeCueIn(span) {
+        var id = span.parent().attr("id").split("_").pop(),
+            url = "/Playlist/set-cue",
+            cueIn = $.trim(span.text()),
+            li = span.parents("li"),
+            unqid = li.attr("unqid"),
+            lastMod = getModified(),
+            type = $('#obj_type').val();
+		
 		if (!isTimeValid(cueIn)){
 	        showError(span, "please put in a time '00:00:00 (.000000)'");
 	        return;
@@ -100,16 +97,13 @@ var AIRTIME = (function(AIRTIME){
 			});
 	}
 
-	function changeCueOut(event) {
-	    event.stopPropagation();
-
-		var span = $(this),
-			id = span.parent().attr("id").split("_").pop(),
-			url = "/Playlist/set-cue",
-			cueOut = $.trim(span.text()),
-			li = span.parents("li"),
-			unqid = li.attr("unqid"),
-			lastMod = getModified(),
+    function changeCueOut(span) {
+        var id = span.parent().attr("id").split("_").pop(),
+            url = "/Playlist/set-cue",
+            cueOut = $.trim(span.text()),
+            li = span.parents("li"),
+            unqid = li.attr("unqid"),
+            lastMod = getModified(),
             type = $('#obj_type').val();
 
 		if (!isTimeValid(cueOut)){
@@ -140,7 +134,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 
 	function changeFadeIn(event) {
-	    event.stopPropagation();
+	    event.preventDefault();
 
 		var span = $(this),
 			id = span.parent().attr("id").split("_").pop(),
@@ -406,14 +400,26 @@ var AIRTIME = (function(AIRTIME){
 	
 	//sets events dynamically for the cue editor.
 	function setCueEvents() {
-	
-		$pl.delegate(".spl_cue_in span", 
-	    		{"focusout": changeCueIn, 
-	    		"keydown": submitOnEnter});
-	    
-		$pl.delegate(".spl_cue_out span", 
-	    		{"focusout": changeCueOut, 
-	    		"keydown": submitOnEnter});
+        
+        $('.spl_cue_in span').blur(function(e){
+            e.stopPropagation();
+            changeCueIn($(this));
+        });
+        
+        $('.spl_cue_in span').keydown(function(e){
+            e.stopPropagation();
+            submitOnEnter(e);
+        });
+        
+        $('.spl_cue_out span').blur(function(e){
+            e.stopPropagation();
+            changeCueOut($(this));
+        });
+        
+        $('.spl_cue_out span').keydown(function(e){
+            e.stopPropagation();
+            submitOnEnter(e);
+        });
 	}
 	
 	//sets events dynamically for the fade editor.
