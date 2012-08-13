@@ -13,6 +13,11 @@ from media.monitor.eventcontractor import EventContractor
 import api_clients.api_client as ac
 
 class RequestSync(threading.Thread,Loggable):
+    """
+    This class is responsible for making the api call to send a request
+    to airtime. In the process it packs the requests and retries for
+    some number of times
+    """
     def __init__(self, watcher, requests):
         threading.Thread.__init__(self)
         self.watcher = watcher
@@ -67,6 +72,10 @@ class RequestSync(threading.Thread,Loggable):
         self.watcher.flag_done()
 
 class TimeoutWatcher(threading.Thread,Loggable):
+    """
+    The job of this thread is to keep an eye on WatchSyncer and force a
+    request whenever the requests go over time out
+    """
     def __init__(self, watcher, timeout=5):
         self.logger.info("Created timeout thread...")
         threading.Thread.__init__(self)
@@ -132,10 +141,23 @@ class WatchSyncer(ReportHandler,Loggable):
                     Printing its representation:")
             self.logger.info( repr(event) )
 
-    def requests_left_count(self): return len(self.__requests)
-    def events_left_count(self): return len(self.__queue)
+    def requests_left_count(self):
+        """
+        returns the number of requests left in the queue. requests are
+        functions that create RequestSync threads
+        """
+        return len(self.__requests)
+    def events_left_count(self):
+        """
+        Returns the number of events left in the queue to create a request
+        """
+        return len(self.__queue)
 
     def push_queue(self, elem):
+        """
+        Added 'elem' to the event queue and launch a request if we are
+        over the the chunking number
+        """
         self.logger.info("Added event into queue")
         if self.events_left_count() >= self.chunking_number:
             self.push_request()
@@ -143,6 +165,9 @@ class WatchSyncer(ReportHandler,Loggable):
         self.__queue.append(elem)
 
     def flush_events(self):
+        """
+        Force flush the current events held in the queue
+        """
         self.logger.info("Force flushing events...")
         self.push_request()
         self.request_do()
@@ -155,6 +180,9 @@ class WatchSyncer(ReportHandler,Loggable):
         return len(self.__queue) > 0
 
     def requests_in_queue(self):
+        """
+        Returns true if there are any requests in the queue. False otherwise.
+        """
         return len(self.__requests) > 0
 
     def flag_done(self):
@@ -163,8 +191,8 @@ class WatchSyncer(ReportHandler,Loggable):
         """
         self.request_running = False
         self.__current_thread = None
-        # This call might not be necessary but we would like
-        # to get the ball running with the requests as soon as possible
+        # This call might not be necessary but we would like to get the
+        # ball running with the requests as soon as possible
         if self.requests_in_queue() > 0: self.request_do()
 
     def request_do(self):
@@ -176,6 +204,9 @@ class WatchSyncer(ReportHandler,Loggable):
             self.__requests.pop()()
 
     def push_request(self):
+        """
+        Create a request from the current events in the queue and schedule it
+        """
         self.logger.info("WatchSyncer : Unleashing request")
         # want to do request asyncly and empty the queue
         requests = copy.copy(self.__queue)
