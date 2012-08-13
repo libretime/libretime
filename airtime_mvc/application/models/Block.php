@@ -277,7 +277,12 @@ EOT;
         } else {
             $value = str_pad($value, 2, "0", STR_PAD_LEFT);
             if ($modifier == "minutes") {
-                $length = "00:".$value.":00";
+                $hour = "00";
+                if ($value >59) {
+                    $hour = intval($value/60);
+                    $value = $value%60;
+                }
+                $length = $hour.":".$value.":00";
             } else if ($modifier == "hours") {
                 $length = $value.":00:00";
             }
