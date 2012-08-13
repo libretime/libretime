@@ -16,12 +16,9 @@ class TestReceiver(unittest.TestCase):
         cfg = {}
         self.amr = AirtimeMessageReceiver(cfg, Manager())
 
-    def test_supported_messages(self):
-        self.assertTrue( len(self.amr.supported_messages()) > 0 )
-
     def test_supported(self):
         # Every supported message should fire something
-        for event_type in self.amr.supported_messages():
+        for event_type in self.amr.dispatch_tables.keys():
             msg = { 'event_type' : event_type, 'extra_param' : 123 }
             filtered = filter_ev(msg)
             # There should be a better way to test the following without

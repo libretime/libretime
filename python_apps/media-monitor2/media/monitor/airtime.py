@@ -112,9 +112,6 @@ class AirtimeMessageReceiver(Loggable):
             self.logger.error( traceback.format_exc() )
             raise DirectoryIsNotListed(directory)
 
-    def supported_messages(self):
-        return self.dispatch_table.keys()
-
     def md_update(self, msg):
         self.logger.info("Updating metadata for: '%s'" %
                 msg['MDATA_KEY_FILEPATH'])

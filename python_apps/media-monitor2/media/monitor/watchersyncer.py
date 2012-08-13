@@ -102,7 +102,6 @@ class TimeoutWatcher(threading.Thread,Loggable):
 
 class WatchSyncer(ReportHandler,Loggable):
     def __init__(self, signal, chunking_number = 100, timeout=15):
-        #self.signal = signal
         self.timeout = float(timeout)
         self.chunking_number = int(chunking_number)
         self.__reset_queue()

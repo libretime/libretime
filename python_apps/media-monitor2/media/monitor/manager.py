@@ -94,14 +94,23 @@ class Manager(Loggable):
                     recorded_path=recorded_path)
 
     def get_problem_files_path(self):
+        """
+        returns the path where problem files should go
+        """
         return self.organize['problem_files_path']
 
     def set_problem_files_path(self, new_path):
+        """
+        Set the path where problem files should go
+        """
         self.organize['problem_files_path'] = new_path
         self.organize['problem_handler'] = \
             ProblemFileHandler( PathChannel(signal='badfile',path=new_path) )
 
     def get_recorded_path(self):
+        """
+        returns the path of the recorded directory
+        """
         return self.organize['recorded_path']
 
     def set_recorded_path(self, new_path):
