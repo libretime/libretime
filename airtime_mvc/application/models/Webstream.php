@@ -63,7 +63,6 @@ class Application_Model_Webstream{
             "login"=> $username,
             "url" => $this->webstream->getDbUrl(),
         );
-
     }
 
     public static function deleteStreams($p_ids, $p_userId)
@@ -113,9 +112,16 @@ class Application_Model_Webstream{
 
         if ($result == 0) {
             $valid['url'][0] = false;
-            $valid['url'][1] = 'URL should be of form "http://www.domain.com/mount"';
-        }
+            $valid['url'][1] = 'URL should be of form "http://domain"';
+        } else {
 
+            try {
+                $mime = Application_Model_Webstream::discoverStreamMime($url);
+            } catch (Exception $e) {
+                $valid['url'][0] = false;
+                $valid['url'][1] = $e->getMessage();
+            }
+        }
 
         $name = $parameters["name"];
         if (strlen($name) == 0) {
@@ -134,7 +140,7 @@ class Application_Model_Webstream{
             Logging::log("EDIT");
         }
 
-        return $valid; 
+        return array($valid, $mime); 
     }
 
     public static function isValid($analysis)
@@ -148,34 +154,34 @@ class Application_Model_Webstream{
         return true;
     }
 
-    /*
-     * This function is a callback used by curl to let us work
-     * with the contents returned from an http request. We don't
-     * actually want to work with the contents however (we just want
-     * the response headers), so immediately return a -1 in this function
-     * which tells curl not to download the response body at all.
-     */
-    private function writefn($ch, $chunk) 
-    { 
-        return -1;
-    }
-
-    private function discoverStreamMime()
+    private static function discoverStreamMime($url)
     {
-        Logging::log($this->webstream->getDbUrl());
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->webstream->getDbUrl());
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, array($this, 'writefn'));
-        $result = curl_exec($ch);
-        $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-        curl_close($ch);       
+        $headers = get_headers($url);
+        $mime = null;
+        foreach ($headers as $h) {
+            if (preg_match("/^content-type:/i", $h)) {
+                list(, $value) = explode(":", $h, 2);
+                $mime = trim($value);
+            }
+            if (preg_match("/^content-length:/i", $h)) {
+                //if content-length appears, this is not a web stream!!!!
+                //Aborting the save process. 
+                throw new Exception("Invalid webstream - This appears to be a file download.");
+            }
+        }
 
-        Logging::log($mime);
+        if (is_null($mime)) {
+            throw new Exception("No MIME type found for webstream.");
+        } else {
+            if (!preg_match("/(mpeg|ogg)/", $mime)) {
+                throw new Exception("Unrecognized stream type: $mime");
+            }
+        }
+
         return $mime;
     }
 
-    public static function save($parameters)
+    public static function save($parameters, $mime)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -205,12 +211,7 @@ class Application_Model_Webstream{
 
         $ws = new Application_Model_Webstream($webstream);
        
-        $mime = $ws->discoverStreamMime();
-        if ($mime !== false) {
-            $webstream->setDbMime($mime);
-        } else {
-            throw new Exception("Couldn't get MIME type!");
-        }
+        $webstream->setDbMime($mime);
         $webstream->save();
     }
 }
