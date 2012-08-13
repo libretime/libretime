@@ -36,7 +36,8 @@ from media.monitor.log import Loggable, get_logger
 # OrganizeListener('watch_signal') <= wrong
 # OrganizeListener(signal='watch_signal') <= right
 
-# This could easily be a module
+# TODO : remove this FileMediator stuff it's not used anywhere and it's too
+# complicated
 class FileMediator(object):
     ignored_set = set([]) # for paths only
     # TODO : unify ignored and skipped.

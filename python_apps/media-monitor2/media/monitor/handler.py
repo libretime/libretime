@@ -15,6 +15,10 @@ class Handles(object):
 # cause a memory leak
 
 class ReportHandler(Handles):
+    """
+    A handler that can also report problem files when things go wrong
+    through the report_problem_file routine
+    """
     __metaclass__ = abc.ABCMeta
     def __init__(self, signal, weak=False):
         self.signal = signal
@@ -28,6 +32,10 @@ class ReportHandler(Handles):
                 exception=exception)
 
 class ProblemFileHandler(Handles, Loggable):
+    """
+    Responsible for answering to events passed through the 'badfile'
+    signal. Moves the problem file passed to the designated directory.
+    """
     def __init__(self, channel, **kwargs):
         self.channel = channel
         self.signal = self.channel.signal

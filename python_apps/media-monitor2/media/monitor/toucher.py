@@ -5,6 +5,9 @@ from media.monitor.log import Loggable
 from media.monitor.exceptions import CouldNotCreateIndexFile
 
 class Toucher(Loggable):
+    """
+    Class responsible for touching a file at a certain path when called
+    """
     def __init__(self,path):
         self.path = path
     def __call__(self):
@@ -61,6 +64,9 @@ class RepeatTimer(threading.Thread):
 
 
 class ToucherThread(Loggable):
+    """
+    Creates a thread that touches a file 'path' every 'interval' seconds
+    """
     def __init__(self, path, interval=5):
         if not os.path.exists(path):
             try:

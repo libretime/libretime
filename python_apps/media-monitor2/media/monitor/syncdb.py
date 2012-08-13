@@ -42,9 +42,15 @@ class AirtimeDB(Loggable):
             dirs_setup[u'watched_dirs'] ])
 
     def to_id(self, directory):
+        """
+        directory path -> id
+        """
         return self.dir_to_id[ directory ]
 
     def to_directory(self, dir_id):
+        """
+        id -> directory path
+        """
         return self.id_to_dir[ dir_id ]
 
     def storage_path(self): return self.base_storage
@@ -70,6 +76,9 @@ class AirtimeDB(Loggable):
         return l
 
     def dir_id_get_files(self, dir_id):
+        """
+        Get all files in a directory with id dir_id
+        """
         base_dir = self.id_to_dir[ dir_id ]
         return set(( os.path.join(base_dir,p) for p in
             self.apc.list_all_db_files( dir_id ) ))

@@ -77,7 +77,9 @@ truncate_table = {
 }
 
 def format_length(mutagen_length):
-    """Convert mutagen length to airtime length"""
+    """
+    Convert mutagen length to airtime length
+    """
     t = float(mutagen_length)
     h = int(math.floor(t / 3600))
     t = t % 3600
@@ -105,6 +107,9 @@ class Metadata(Loggable):
 
     @staticmethod
     def write_unsafe(path,md):
+        """
+        Writes 'md' metadata into 'path' through mutagen
+        """
         if not os.path.exists(path):
             raise BadSongFile(path)
         song_file = mutagen.File(path, easy=True)
@@ -162,10 +167,21 @@ class Metadata(Loggable):
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
 
     def is_recorded(self):
+        """
+        returns true if the file has been created by airtime through recording
+        """
         return mmp.is_airtime_recorded( self.__metadata )
 
     def extract(self):
+        """
+        returns a copy of the metadata that was loaded when object was
+        constructed
+        """
         return copy.deepcopy(self.__metadata)
 
     def utf8(self):
+        """
+        Returns a unicode aware representation of the data that is compatible
+        with what is spent to airtime
+        """
         return mmp.convert_dict_value_to_utf8(self.extract())

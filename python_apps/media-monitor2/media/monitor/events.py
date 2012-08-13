@@ -33,7 +33,7 @@ class EventRegistry(object):
         return event
     def __init__(self,*args,**kwargs):
         raise Exception("You can instantiate this class. Must only use class \
-                methods")
+                         methods")
 
 class HasMetaData(object):
     """
@@ -70,7 +70,12 @@ class BaseEvent(Loggable):
         return "Event(%s). Path(%s)" % ( self.path, self.__class__.__name__)
     def is_dir_event(self): return self._raw_event.dir
 
-    def add_safe_pack_hook(self,k): self._pack_hook = k
+    def add_safe_pack_hook(self,k):
+        """
+        adds a callable object (function) that will be called after the event
+        has been "safe_packed"
+        """
+        self._pack_hook = k
 
     # As opposed to unsafe_pack...
     def safe_pack(self):

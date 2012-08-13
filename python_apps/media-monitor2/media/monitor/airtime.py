@@ -168,14 +168,13 @@ class AirtimeMessageReceiver(Loggable):
     def change_storage(self, msg):
         new_storage_directory = msg['directory']
         self.manager.change_storage_root(new_storage_directory)
-
         for to_bootstrap in [ self.manager.get_recorded_path(),
                 self.manager.get_imported_path() ]:
             self.__request_now_bootstrap( directory=to_bootstrap )
 
     def file_delete(self, msg):
-        # deletes should be requested only from imported folder but we
-        # don't verify that.
+        # Deletes should be requested only from imported folder but we
+        # don't verify that. Security risk perhaps?
         self.logger.info("Attempting to delete(maybe) '%s'" % msg['filepath'])
         if msg['delete']:
             if os.path.exists(msg['filepath']):
