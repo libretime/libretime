@@ -3,7 +3,6 @@ import threading
 import time
 import copy
 import traceback
-from itertools import ifilter
 
 from media.monitor.handler import ReportHandler
 from media.monitor.log import Loggable
@@ -34,8 +33,7 @@ class RequestSync(threading.Thread,Loggable):
         # TODO : recorded shows aren't flagged right
         # Is this retry shit even necessary? Consider getting rid of this.
         packed_requests = []
-        for request_event in ifilter(lambda x: not x.morph_target(),
-                self.requests):
+        for request_event in self.requests:
             try:
                 for request in request_event.safe_pack():
                     if isinstance(request, BadSongFile):
@@ -123,8 +121,8 @@ class WatchSyncer(ReportHandler,Loggable):
             try:
                 # If there is a strange bug anywhere in the code the next line
                 # should be a suspect
-                self.contractor.register( event )
-                self.push_queue( event )
+                if self.contractor.register( event ):
+                    self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
             except Exception as e:

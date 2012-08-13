@@ -82,8 +82,9 @@ class BaseEvent(Loggable):
         # pack will only throw an exception if it processes one file but this
         # is a little bit hacky
         try:
-            return self.pack()
+            ret = self.pack()
             self._pack_hook()
+            return ret
         except BadSongFile as e: return [e]
 
     # nothing to see here, please move along
