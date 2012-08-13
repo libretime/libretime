@@ -275,17 +275,24 @@ EOT;
         if ($modifier == "items") {
             $length = $value." ".$modifier;
         } else {
-            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            $hour = "00";
             if ($modifier == "minutes") {
-                $hour = "00";
                 if ($value >59) {
                     $hour = intval($value/60);
                     $value = $value%60;
+                    
                 }
-                $length = $hour.":".$value.":00";
             } else if ($modifier == "hours") {
-                $length = $value.":00:00";
+                $mins = $value * 60;
+                if ($mins >59) {
+                    $hour = intval($mins/60);
+                    $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
+                    $value = $mins%60;
+                }
             }
+            $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
+            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            $length = $hour.":".$value.":00";
         }
         return $length;
     }
