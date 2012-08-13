@@ -96,9 +96,22 @@ class Application_Model_Webstream{
             "url" => array(true, ''),
             "name" => array(true, ''));
 
+        $di = null;
         $length = $parameters["length"];
-        $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
-        if (!$result == 1 || !count($matches) == 3) { 
+        $result = preg_match("/^([0-9]{1,2})h ([0-5]?[0-9])m$/", $length, $matches);
+        if ($result == 1 && count($matches) == 3) { 
+            $hours = $matches[1];
+            $minutes = $matches[2];
+            $di = new DateInterval("PT{$hours}H{$minutes}M");
+
+            $totalMinutes = $di->h * 60 + $di->i;
+
+            if ($totalMinutes == 0) {
+                $valid['length'][0] = false;
+                $valid['length'][1] = 'Length needs to be greater than 0 minutes';
+            }
+
+        } else {
             $valid['length'][0] = false;
             $valid['length'][1] = 'Length should be of form "00h 00m"';
         }
@@ -110,6 +123,7 @@ class Application_Model_Webstream{
         //and that the domain is at least 1 letter long
         $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
 
+        $mime = null;
         if ($result == 0) {
             $valid['url'][0] = false;
             $valid['url'][1] = 'URL should be of form "http://domain"';
@@ -140,7 +154,7 @@ class Application_Model_Webstream{
             Logging::log("EDIT");
         }
 
-        return array($valid, $mime); 
+        return array($valid, $mime, $di); 
     }
 
     public static function isValid($analysis)
@@ -181,29 +195,16 @@ class Application_Model_Webstream{
         return $mime;
     }
 
-    public static function save($parameters, $mime)
+    public static function save($parameters, $mime, $di)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-        $length = $parameters["length"];
-        $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
-
-        if ($result == 1 && count($matches) == 3) { 
-            $hours = $matches[1];
-            $minutes = $matches[2];
-            $di = new DateInterval("PT{$hours}H{$minutes}M"); 
-            $dblength = $di->format("%H:%I"); 
-        } else {
-            //This should never happen because we should have already validated
-            //in the controller
-            throw new Exception("Invalid date format: $length");
-        }
 
         $webstream = new CcWebstream();
         $webstream->setDbName($parameters["name"]);
         $webstream->setDbDescription($parameters["description"]);
         $webstream->setDbUrl($parameters["url"]);
 
+        $dblength = $di->format("%H:%I"); 
         $webstream->setDbLength($dblength);
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));

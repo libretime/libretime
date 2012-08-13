@@ -75,10 +75,10 @@ class WebstreamController extends Zend_Controller_Action
             return;
         }
 
-        list($analysis, $mime) = Application_Model_Webstream::analyzeFormData($parameters);
+        list($analysis, $mime, $di) = Application_Model_Webstream::analyzeFormData($parameters);
         try { 
             if (Application_Model_Webstream::isValid($analysis)) {
-                Application_Model_Webstream::save($parameters, $mime);
+                Application_Model_Webstream::save($parameters, $mime, $di);
                 $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
             } else {
                 throw new Exception("isValid returned false");
