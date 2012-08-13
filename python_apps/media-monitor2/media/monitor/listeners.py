@@ -36,13 +36,12 @@ from media.monitor.log import Loggable, get_logger
 # OrganizeListener('watch_signal') <= wrong
 # OrganizeListener(signal='watch_signal') <= right
 
-# TODO : remove this FileMediator stuff it's not used anywhere and it's too
-# complicated
 class FileMediator(object):
+    """
+    FileMediator is used an intermediate mechanism that filters out certain
+    events.
+    """
     ignored_set = set([]) # for paths only
-    # TODO : unify ignored and skipped.
-    # for "special" conditions. could be generalized but too lazy now.
-    skip_checks = set([])
     logger = get_logger()
 
     @staticmethod
@@ -51,31 +50,10 @@ class FileMediator(object):
     def ignore(path): FileMediator.ignored_set.add(path)
     @staticmethod
     def unignore(path): FileMediator.ignored_set.remove(path)
-    @staticmethod
-    def skip_next(*what_to_skip,**kwargs):
-        # Poor man's default arguments
-        if 'key' not in kwargs: kwargs['key'] = 'maskname'
-        for skip in what_to_skip:
-            # standard nasty hack, too long to explain completely in comments
-            # but the gist of it is:
-            # 1. python's scoping rules are sometimes strange.
-            # 2. workaround is very similar to what you do in javascript when
-            # you write stuff like (function (x,y) { console.log(x+y); })(2,4)
-            # to be avoid clobbering peoples' namespace.
-            skip_check = (lambda skip:
-                    lambda v: getattr(v,kwargs['key']) == skip)(skip)
-            FileMediator.skip_checks.add( skip_check )
 
 def mediate_ignored(fn):
     def wrapped(self, event, *args,**kwargs):
         event.pathname = unicode(event.pathname, "utf-8")
-        skip_events = [s_check for s_check in FileMediator.skip_checks
-                if s_check(event)]
-        for s_check in skip_events:
-            FileMediator.skip_checks.remove( s_check )
-            # Only process skip_checks one at a time
-            FileMediator.logger.info("Skip checked: '%s'" % str(event))
-            return
         if FileMediator.is_ignored(event.pathname):
             FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
             FileMediator.unignore(event.pathname)

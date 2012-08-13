@@ -95,11 +95,11 @@ class BaseEvent(Loggable):
     # nothing to see here, please move along
     def morph_into(self, evt):
         self.logger.info("Morphing %s into %s" % ( str(self), str(evt) ) )
-        self._raw_event = evt
-        self.path = evt.path
-        self.add_safe_pack_hook(evt._pack_hook)
-        self.__class__ = evt.__class__
+        self._raw_event   = evt
+        self.path         = evt.path
+        self.__class__    = evt.__class__
         evt._morph_target = True
+        self.add_safe_pack_hook(evt._pack_hook)
         return self
 
 class FakePyinotify(object):
@@ -186,7 +186,7 @@ class DeleteDirWatch(BaseEvent):
         super(DeleteDirWatch, self).__init__(*args, **kwargs)
     def pack(self):
         req_dict = {}
-        req_dict['mode'] = u'delete_dir'
+        req_dict['mode']               = u'delete_dir'
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path + "/" )
         return [req_dict]
 

@@ -2,20 +2,22 @@
 import sys
 import os
 
-from media.monitor.manager import Manager
-from media.monitor.bootstrap import Bootstrapper
-from media.monitor.log import get_logger, setup_logging
-from media.monitor.config import MMConfig
-from media.monitor.toucher import ToucherThread
-from media.monitor.syncdb import AirtimeDB
-from media.monitor.exceptions import FailedToObtainLocale, FailedToSetLocale, \
-                                     NoConfigFile
-from media.monitor.airtime import AirtimeNotifier, AirtimeMessageReceiver
-from media.monitor.watchersyncer import WatchSyncer
-from media.monitor.eventdrainer import EventDrainer
+from media.monitor.manager          import Manager
+from media.monitor.bootstrap        import Bootstrapper
+from media.monitor.log              import get_logger, setup_logging
+from media.monitor.config           import MMConfig
+from media.monitor.toucher          import ToucherThread
+from media.monitor.syncdb           import AirtimeDB
+from media.monitor.exceptions       import FailedToObtainLocale, \
+                                           FailedToSetLocale, \
+                                           NoConfigFile
+from media.monitor.airtime          import AirtimeNotifier, \
+                                           AirtimeMessageReceiver
+from media.monitor.watchersyncer    import WatchSyncer
+from media.monitor.eventdrainer     import EventDrainer
 from media.update.replaygainupdater import ReplayGainUpdater
-import media.monitor.pure as mmp
 
+import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
 

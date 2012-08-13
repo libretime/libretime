@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from kombu.messaging import Exchange, Queue, Consumer
+from kombu.messaging  import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
 import json
 import os
@@ -7,12 +7,12 @@ import copy
 import traceback
 
 from media.monitor.exceptions import BadSongFile
-from media.monitor.metadata import Metadata
-from media.monitor.log import Loggable
-from media.monitor.syncdb import AirtimeDB
+from media.monitor.metadata   import Metadata
+from media.monitor.log        import Loggable
+from media.monitor.syncdb     import AirtimeDB
 from media.monitor.exceptions import DirectoryIsNotListed
-from media.monitor.bootstrap import Bootstrapper
-from media.monitor.listeners import FileMediator
+from media.monitor.bootstrap  import Bootstrapper
+from media.monitor.listeners  import FileMediator
 
 from api_clients import api_client as apc
 
@@ -39,7 +39,7 @@ class AirtimeNotifier(Loggable):
             self.connection = BrokerConnection(cfg["rabbitmq_host"],
                     cfg["rabbitmq_user"], cfg["rabbitmq_password"],
                     cfg["rabbitmq_vhost"])
-            channel = self.connection.channel()
+            channel  = self.connection.channel()
             consumer = Consumer(channel, schedule_queue)
             consumer.register_callback(self.handle_message)
             consumer.consume()
@@ -63,12 +63,12 @@ class AirtimeNotifier(Loggable):
 class AirtimeMessageReceiver(Loggable):
     def __init__(self, cfg, manager):
         self.dispatch_table = {
-                'md_update' : self.md_update,
-                'new_watch' : self.new_watch,
+                'md_update'    : self.md_update,
+                'new_watch'    : self.new_watch,
                 'remove_watch' : self.remove_watch,
                 'rescan_watch' : self.rescan_watch,
-                'change_stor' : self.change_storage,
-                'file_delete' : self.file_delete,
+                'change_stor'  : self.change_storage,
+                'file_delete'  : self.file_delete,
         }
         self.cfg = cfg
         self.manager = manager
@@ -99,9 +99,9 @@ class AirtimeMessageReceiver(Loggable):
             raise ValueError("You must provide either directory_id or \
                     directory")
         sdb = AirtimeDB(apc.AirtimeApiClient.create_right_config())
-        if directory: directory = os.path.normpath(directory)
-        if directory_id == None: directory_id = sdb.to_id(directory)
-        if directory == None: directory = sdb.to_directory(directory_id)
+        if directory            : directory = os.path.normpath(directory)
+        if directory_id == None : directory_id = sdb.to_id(directory)
+        if directory    == None : directory = sdb.to_directory(directory_id)
         try:
             bs = Bootstrapper( sdb, self.manager.watch_signal() )
             bs.flush_watch( directory=directory, last_ran=self.cfg.last_ran() )
@@ -181,6 +181,11 @@ class AirtimeMessageReceiver(Loggable):
                 try:
                     self.logger.info("Attempting to delete '%s'" %
                             msg['filepath'])
+                    # We use FileMediator to ignore any paths with
+                    # msg['filepath'] so that we do not send a duplicate delete
+                    # request that we'd normally get form pyinotify. But right
+                    # now event contractor would take care of this sort of
+                    # thing anyway so this might not be necessary after all
                     FileMediator.ignore(msg['filepath'])
                     os.unlink(msg['filepath'])
                     if not os.path.exists(msg['filepath']):
@@ -189,11 +194,11 @@ class AirtimeMessageReceiver(Loggable):
                 except Exception as e:
                     self.logger.info("Failed to delete '%s'" % msg['filepath'])
                     self.logger.info("Error: " % str(e))
-            else:
+            else: # validation for filepath existence failed
                 self.logger.info("Attempting to delete file '%s' that does not \
                         exist. Full request coming:" % msg['filepath'])
                 self.logger.info(msg)
-        else:
+        else: # we did not get the special 'delete' tag. no deleting
             self.logger.info("No clippy confirmation, ignoring event. \
                     Out of curiousity we will print some details.")
             self.logger.info(msg)
