@@ -42,7 +42,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "album_title" => "s",
             "artist_name" => "s",
             "bit_rate" => "n",
-            "bpm" => "n",
+            "bpm" => "s",
             "comments" => "s",
             "composer" => "s",
             "conductor" => "s",

@@ -76,7 +76,7 @@ class LibraryController extends Zend_Controller_Action
                 $obj = new Application_Model_Playlist($id);
             } else {
                 $obj = new Application_Model_Block($id);
-                if (!$obj->isStatic()){
+                if (!$obj->isStatic()) {
                     unset($menu["play"]);
                 }
                 if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
@@ -96,7 +96,8 @@ class LibraryController extends Zend_Controller_Action
             }
         } else if ($type == "stream") {
 
-            $obj = new Application_Model_Webstream($id);
+            $webstream = CcWebstreamQuery::create()->findPK($id);
+            $obj = new Application_Model_Webstream($webstream);
             if (isset($this->obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($this->obj_sess->type === "playlist") {
@@ -108,8 +109,6 @@ class LibraryController extends Zend_Controller_Action
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
                 $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
             }
-          
-
         }
 
         //SOUNDCLOUD MENU OPTIONS
@@ -135,6 +134,10 @@ class LibraryController extends Zend_Controller_Action
             }
 
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
+        }
+        
+        if (empty($menu)) {
+            $menu["noaction"] = array("name"=>"No action available");
         }
 
         $this->view->items = $menu;
@@ -265,7 +268,7 @@ class LibraryController extends Zend_Controller_Action
                 Logging::log($data['MDATA_KEY_FILEPATH']);
                 Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
-                $this->_redirect('playlist/index');
+                $this->_redirect('Playlist');
             }
         }
 
@@ -330,9 +333,10 @@ class LibraryController extends Zend_Controller_Action
                 }
                 $this->view->block = $block;
             } else if ($type == "stream") {
-                $file = new Application_Model_Webstream($id);
+                $webstream = CcWebstreamQuery::create()->findPK($id);
+                $ws = new Application_Model_Webstream($webstream);
 
-                $md = $file->getMetadata();
+                $md = $ws->getMetadata();
 
                 $this->view->md = $md;
                 $this->view->type = $type;

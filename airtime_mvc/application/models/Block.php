@@ -275,12 +275,24 @@ EOT;
         if ($modifier == "items") {
             $length = $value." ".$modifier;
         } else {
-            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            $hour = "00";
             if ($modifier == "minutes") {
-                $length = "00:".$value.":00";
+                if ($value >59) {
+                    $hour = intval($value/60);
+                    $value = $value%60;
+                    
+                }
             } else if ($modifier == "hours") {
-                $length = $value.":00:00";
+                $mins = $value * 60;
+                if ($mins >59) {
+                    $hour = intval($mins/60);
+                    $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
+                    $value = $mins%60;
+                }
             }
+            $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
+            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            $length = $hour.":".$value.":00";
         }
         return $length;
     }
@@ -976,7 +988,7 @@ EOT;
                 $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
                 // validation on type of column
                 if ($d['sp_criteria_field'] == 'length') {
-                    if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                    if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})$/", $d['sp_criteria_value'])) {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
                 } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
@@ -1104,6 +1116,9 @@ EOT;
                 }
             } else {
                 $length = $this->getStaticLength();
+                if (!$length) {
+                    $length = "00:00:00";
+                }
                 $this->setLength($length);
             }
             $output['blockLength'] = $this->getFormattedLength();
@@ -1298,9 +1313,20 @@ EOT;
                 foreach ($crit as $criteria) {
                     $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
-        
                     $spCriteriaModifier = $criteria['modifier'];
-                    $spCriteriaValue = $criteria['value'];
+                    
+                    $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
+                    // if the column is timestamp, convert it into UTC
+                    if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                        $spCriteriaValue = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['value']);
+                    } else if($spCriteria == "bit_rate") {
+                        // multiply 1000 because we store only number value
+                        // e.g 192kps is stored as 192000
+                        $spCriteriaValue = $criteria['value']*1000;
+                    } else {
+                        $spCriteriaValue = $criteria['value'];
+                    }
+                    
                     if ($spCriteriaModifier == "starts with") {
                         $spCriteriaValue = "$spCriteriaValue%";
                     } else if ($spCriteriaModifier == "ends with") {

@@ -4,22 +4,14 @@ class Application_Model_Webstream{
 
     private $id;
 
-    public function __construct($id=-1)
+    public function __construct($webstream)
     {
-        if ($id == -1) {
-            $this->webstream = new CcWebstream();
+            $this->webstream = $webstream; 
+    }
 
-            //We're not saving this object in the database, so -1 ID is OK.
-            $this->webstream->setDbId(-1);
-            $this->webstream->setDbName("Untitled Webstream");
-            $this->webstream->setDbDescription("");
-            $this->webstream->setDbUrl("http://");
-            $this->webstream->setDbLength("00:00:00");
-            $this->webstream->setDbName("Untitled Webstream");
-        } else {
-            $this->id = $id;
-            $this->webstream = CcWebstreamQuery::create()->findPK($this->id);
-        }
+    public function getOrm()
+    {
+        return $this->webstream;
     }
 
     public function getName()
@@ -61,8 +53,7 @@ class Application_Model_Webstream{
 
     public function getMetadata()
     {
-        $webstream = CcWebstreamQuery::create()->findPK($this->id);
-        $subjs = CcSubjsQuery::create()->findPK($webstream->getDbCreatorId());
+        $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
 
         $username = $subjs->getDbLogin();
         return array(
@@ -98,16 +89,15 @@ class Application_Model_Webstream{
         
         $leftOvers = array_diff($p_ids, $ownedStreams);
         return $leftOvers;
-        
     }
 
-    public static function analyzeFormData($request)
+    public static function analyzeFormData($parameters)
     {
         $valid = array("length" => array(true, ''), 
             "url" => array(true, ''),
             "name" => array(true, ''));
 
-        $length = trim($request->getParam("length"));
+        $length = $parameters["length"];
         $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
         if (!$result == 1 || !count($matches) == 3) { 
             $valid['length'][0] = false;
@@ -115,10 +105,11 @@ class Application_Model_Webstream{
         }
 
 
-        $url = trim($request->getParam("url"));
-        //simple validator that checks to make sure that the url starts with http(s),
-        //and that the domain is at least 1 letter long followed by a period.
-        $result = preg_match("/^(http|https):\/\/.+\./", $url, $matches);
+        $url = $parameters["url"];
+        //simple validator that checks to make sure that the url starts with 
+        //http(s),
+        //and that the domain is at least 1 letter long
+        $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
 
         if ($result == 0) {
             $valid['url'][0] = false;
@@ -126,13 +117,13 @@ class Application_Model_Webstream{
         }
 
 
-        $name = trim($request->getParam("name"));
+        $name = $parameters["name"];
         if (strlen($name) == 0) {
             $valid['name'][0] = false;
             $valid['name'][1] = 'Webstream name cannot be empty';
         }
 
-        $id = trim($request->getParam("id"));
+        $id = $parameters["id"];
 
         if (!is_null($id)) {
             // user has performed a create stream action instead of edit
@@ -143,15 +134,13 @@ class Application_Model_Webstream{
             Logging::log("EDIT");
         }
 
-
-
         return $valid; 
     }
 
     public static function isValid($analysis)
     {
         foreach ($analysis as $k => $v) {
-            if ($v[0] == false) {
+            if ($v[0] === false) {
                 return false;
             }
         }
@@ -159,11 +148,38 @@ class Application_Model_Webstream{
         return true;
     }
 
-    public static function save($request, $webstream)
+    /*
+     * This function is a callback used by curl to let us work
+     * with the contents returned from an http request. We don't
+     * actually want to work with the contents however (we just want
+     * the response headers), so immediately return a -1 in this function
+     * which tells curl not to download the response body at all.
+     */
+    private function writefn($ch, $chunk) 
+    { 
+        return -1;
+    }
+
+    private function discoverStreamMime()
+    {
+        Logging::log($this->webstream->getDbUrl());
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->webstream->getDbUrl());
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, array($this, 'writefn'));
+        $result = curl_exec($ch);
+        $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+        curl_close($ch);       
+
+        Logging::log($mime);
+        return $mime;
+    }
+
+    public static function save($parameters)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-        $length = trim($request->getParam("length"));
+        $length = $parameters["length"];
         $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
 
         if ($result == 1 && count($matches) == 3) { 
@@ -177,15 +193,24 @@ class Application_Model_Webstream{
             throw new Exception("Invalid date format: $length");
         }
 
-
-        $webstream->setDbName($request->getParam("name"));
-        $webstream->setDbDescription($request->getParam("description"));
-        $webstream->setDbUrl($request->getParam("url"));
+        $webstream = new CcWebstream();
+        $webstream->setDbName($parameters["name"]);
+        $webstream->setDbDescription($parameters["description"]);
+        $webstream->setDbUrl($parameters["url"]);
 
         $webstream->setDbLength($dblength);
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
+
+        $ws = new Application_Model_Webstream($webstream);
+       
+        $mime = $ws->discoverStreamMime();
+        if ($mime !== false) {
+            $webstream->setDbMime($mime);
+        } else {
+            throw new Exception("Couldn't get MIME type!");
+        }
         $webstream->save();
     }
 }

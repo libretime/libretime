@@ -46,6 +46,7 @@ class CcWebstreamTableMap extends TableMap {
 		$this->addColumn('CREATOR_ID', 'DbCreatorId', 'INTEGER', true, null, null);
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', true, 6, null);
 		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', true, 6, null);
+		$this->addColumn('MIME', 'DbMime', 'VARCHAR', false, 255, null);
 		// validators
 	} // initialize()
 

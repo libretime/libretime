@@ -74,6 +74,12 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	protected $utime;
 
 	/**
+	 * The value for the mime field.
+	 * @var        string
+	 */
+	protected $mime;
+
+	/**
 	 * @var        array CcSchedule[] Collection to store aggregation of CcSchedule objects.
 	 */
 	protected $collCcSchedules;
@@ -237,6 +243,16 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		} else {
 			return $dt->format($format);
 		}
+	}
+
+	/**
+	 * Get the [mime] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbMime()
+	{
+		return $this->mime;
 	}
 
 	/**
@@ -458,6 +474,26 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	} // setDbUtime()
 
 	/**
+	 * Set the value of [mime] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcWebstream The current object (for fluent API support)
+	 */
+	public function setDbMime($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->mime !== $v) {
+			$this->mime = $v;
+			$this->modifiedColumns[] = CcWebstreamPeer::MIME;
+		}
+
+		return $this;
+	} // setDbMime()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -501,6 +537,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$this->creator_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
 			$this->mtime = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
 			$this->utime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->mime = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -509,7 +546,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 8; // 8 = CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 9; // 9 = CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcWebstream object", $e);
@@ -850,6 +887,9 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			case 7:
 				return $this->getDbUtime();
 				break;
+			case 8:
+				return $this->getDbMime();
+				break;
 			default:
 				return null;
 				break;
@@ -881,6 +921,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$keys[5] => $this->getDbCreatorId(),
 			$keys[6] => $this->getDbMtime(),
 			$keys[7] => $this->getDbUtime(),
+			$keys[8] => $this->getDbMime(),
 		);
 		return $result;
 	}
@@ -936,6 +977,9 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			case 7:
 				$this->setDbUtime($value);
 				break;
+			case 8:
+				$this->setDbMime($value);
+				break;
 		} // switch()
 	}
 
@@ -968,6 +1012,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		if (array_key_exists($keys[5], $arr)) $this->setDbCreatorId($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setDbMtime($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbUtime($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbMime($arr[$keys[8]]);
 	}
 
 	/**
@@ -987,6 +1032,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcWebstreamPeer::CREATOR_ID)) $criteria->add(CcWebstreamPeer::CREATOR_ID, $this->creator_id);
 		if ($this->isColumnModified(CcWebstreamPeer::MTIME)) $criteria->add(CcWebstreamPeer::MTIME, $this->mtime);
 		if ($this->isColumnModified(CcWebstreamPeer::UTIME)) $criteria->add(CcWebstreamPeer::UTIME, $this->utime);
+		if ($this->isColumnModified(CcWebstreamPeer::MIME)) $criteria->add(CcWebstreamPeer::MIME, $this->mime);
 
 		return $criteria;
 	}
@@ -1055,6 +1101,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		$copyObj->setDbCreatorId($this->creator_id);
 		$copyObj->setDbMtime($this->mtime);
 		$copyObj->setDbUtime($this->utime);
+		$copyObj->setDbMime($this->mime);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1284,6 +1331,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		$this->creator_id = null;
 		$this->mtime = null;
 		$this->utime = null;
+		$this->mime = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

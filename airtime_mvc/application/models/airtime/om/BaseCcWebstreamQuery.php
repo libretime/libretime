@@ -14,6 +14,7 @@
  * @method     CcWebstreamQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcWebstreamQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method     CcWebstreamQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
+ * @method     CcWebstreamQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
  *
  * @method     CcWebstreamQuery groupByDbId() Group by the id column
  * @method     CcWebstreamQuery groupByDbName() Group by the name column
@@ -23,6 +24,7 @@
  * @method     CcWebstreamQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcWebstreamQuery groupByDbMtime() Group by the mtime column
  * @method     CcWebstreamQuery groupByDbUtime() Group by the utime column
+ * @method     CcWebstreamQuery groupByDbMime() Group by the mime column
  *
  * @method     CcWebstreamQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcWebstreamQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -43,6 +45,7 @@
  * @method     CcWebstream findOneByDbCreatorId(int $creator_id) Return the first CcWebstream filtered by the creator_id column
  * @method     CcWebstream findOneByDbMtime(string $mtime) Return the first CcWebstream filtered by the mtime column
  * @method     CcWebstream findOneByDbUtime(string $utime) Return the first CcWebstream filtered by the utime column
+ * @method     CcWebstream findOneByDbMime(string $mime) Return the first CcWebstream filtered by the mime column
  *
  * @method     array findByDbId(int $id) Return CcWebstream objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcWebstream objects filtered by the name column
@@ -52,6 +55,7 @@
  * @method     array findByDbCreatorId(int $creator_id) Return CcWebstream objects filtered by the creator_id column
  * @method     array findByDbMtime(string $mtime) Return CcWebstream objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcWebstream objects filtered by the utime column
+ * @method     array findByDbMime(string $mime) Return CcWebstream objects filtered by the mime column
  *
  * @package    propel.generator.airtime.om
  */
@@ -357,6 +361,28 @@ abstract class BaseCcWebstreamQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcWebstreamPeer::UTIME, $dbUtime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the mime column
+	 * 
+	 * @param     string $dbMime The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcWebstreamQuery The current query, for fluid interface
+	 */
+	public function filterByDbMime($dbMime = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbMime)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbMime)) {
+				$dbMime = str_replace('*', '%', $dbMime);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcWebstreamPeer::MIME, $dbMime, $comparison);
 	}
 
 	/**

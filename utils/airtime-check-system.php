@@ -17,7 +17,7 @@ if (substr($sapi_type, 0, 3) == 'cli') {
 
 
     $status = AirtimeCheck::GetStatus($baseUrl, $base_port, $apiKey);
-    AirtimeCheck::PrintStatus($baseUrl, $status);
+    AirtimeCheck::PrintStatus($baseUrl, $base_port, $status);
 }
 
 class AirtimeCheck {
@@ -92,8 +92,9 @@ class AirtimeCheck {
         return $os_string." ".$machine;
     }
     
-    public static function GetServerType($p_baseUrl){
-        $headerInfo = get_headers("http://$p_baseUrl",1);
+    public static function GetServerType($p_baseUrl, $p_basePort)
+    {
+        $headerInfo = get_headers("http://$p_baseUrl:$p_basePort",1);
         
         if (!isset($headerInfo['Server'][0]))
             return self::UNKNOWN;
@@ -120,7 +121,7 @@ class AirtimeCheck {
         return $data;
     }
 
-    public static function PrintStatus($p_baseUrl, $p_status){
+    public static function PrintStatus($p_baseUrl, $p_basePort, $p_status){
         
         if ($p_status === false){
             self::output_status("AIRTIME_SERVER_RESPONDING", "FAILED");
@@ -150,7 +151,7 @@ class AirtimeCheck {
             }
             self::output_status("OS", self::CheckOsTypeVersion());
             self::output_status("CPU", self::GetCpuInfo());
-            self::output_status("WEB_SERVER", self::GetServerType($p_baseUrl));
+            self::output_status("WEB_SERVER", self::GetServerType($p_baseUrl, $p_basePort));
             
             if (isset($data->services)) {
                 $services = $data->services;

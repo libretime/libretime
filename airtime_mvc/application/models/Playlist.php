@@ -157,7 +157,7 @@ class Application_Model_Playlist
         $files = array();
 
         $sql = <<<SQL
-  (SELECT *
+  SELECT *
    FROM (
            (SELECT pc.id AS id,
                    pc.type,
@@ -212,11 +212,11 @@ class Application_Model_Playlist
             JOIN cc_subjs AS sbj ON bl.creator_id=sbj.id
             WHERE pc.playlist_id = {$this->id}
               AND pc.TYPE = 2)) AS temp
-   ORDER BY temp.position);
+   ORDER BY temp.position;
 SQL;
 
         $con = Propel::getConnection();
-        $rows = $con->query($sql)->fetchAll();
+        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         $offset = 0;
         foreach ($rows as &$row) {
