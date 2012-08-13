@@ -976,7 +976,7 @@ EOT;
                 $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
                 // validation on type of column
                 if ($d['sp_criteria_field'] == 'length') {
-                    if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                    if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})$/", $d['sp_criteria_value'])) {
                         $error[] =  "'Length' should be in '00:00:00' format";
                     }
                 } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
