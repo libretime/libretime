@@ -57,12 +57,17 @@ class BaseEvent(Loggable):
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
         self._pack_hook = lambda _ : _ # no op
+        self._morph_target = False # returns true if event was used to moprh
+        # into another event
     def exists(self): return os.path.exists(self.path)
     @LazyProperty
     def cookie(self):
         return getattr( self._raw_event, 'cookie', None )
 
-    def __str__(self): return "Event. Path: %s" % self.__raw_event.pathname
+    def morph_target(self): return self._morph_target
+
+    def __str__(self):
+        return "Event(%s). Path(%s)" % ( self.path, self.__class__.__name__)
     def is_dir_event(self): return self._raw_event.dir
 
     def add_safe_pack_hook(self,k): self._pack_hook = k
@@ -83,12 +88,12 @@ class BaseEvent(Loggable):
 
     # nothing to see here, please move along
     def morph_into(self, evt):
-        self.logger.info("Morphing '%s' into '%s'" % (self.__class__.__name__,
-            evt.__class__.__name__))
+        self.logger.info("Morphing %s into %s" % ( str(self), str(evt) ) )
         self._raw_event = evt
         self.path = evt.path
         self.add_safe_pack_hook(evt._pack_hook)
         self.__class__ = evt.__class__
+        evt._morph_target = True
         return self
 
 class FakePyinotify(object):

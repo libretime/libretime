@@ -72,11 +72,12 @@ class AirtimeMessageReceiver(Loggable):
         }
         self.cfg = cfg
         self.manager = manager
+
     def message(self, msg):
         """
-        This method is called by an AirtimeNotifier instance that consumes the
-        Rabbit MQ events that trigger this. The method return true when the
-        event was executed and false when it wasn't
+        This method is called by an AirtimeNotifier instance that
+        consumes the Rabbit MQ events that trigger this. The method
+        return true when the event was executed and false when it wasn't
         """
         msg = copy.deepcopy(msg)
         if msg['event_type'] in self.dispatch_table:
@@ -92,7 +93,6 @@ class AirtimeMessageReceiver(Loggable):
             return False
     def _execute_message(self,evt,message):
         self.dispatch_table[evt](message)
-
 
     def __request_now_bootstrap(self, directory_id=None, directory=None):
         if (not directory_id) and (not directory):
@@ -177,8 +177,8 @@ class AirtimeMessageReceiver(Loggable):
             self.__request_now_bootstrap( directory=to_bootstrap )
 
     def file_delete(self, msg):
-        # deletes should be requested only from imported folder but we don't
-        # verify that.
+        # deletes should be requested only from imported folder but we
+        # don't verify that.
         self.logger.info("Attempting to delete(maybe) '%s'" % msg['filepath'])
         if msg['delete']:
             if os.path.exists(msg['filepath']):

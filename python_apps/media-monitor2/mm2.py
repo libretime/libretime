@@ -35,6 +35,7 @@ def main(global_config, api_client_config):
         print("Unknown error reading configuration file: '%s'" % global_config)
         print(str(e))
 
+    # TODO : use the logging config file.
     logfile = unicode( config['logpath'] )
     setup_logging(logfile)
     log = get_logger()

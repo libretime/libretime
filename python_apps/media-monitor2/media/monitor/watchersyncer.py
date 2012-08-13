@@ -3,6 +3,7 @@ import threading
 import time
 import copy
 import traceback
+from itertools import ifilter
 
 from media.monitor.handler import ReportHandler
 from media.monitor.log import Loggable
@@ -27,13 +28,14 @@ class RequestSync(threading.Thread,Loggable):
     def run(self):
         self.logger.info("Attempting request with %d items." %
                 len(self.requests))
-        # Note that we must attach the appropriate mode to every response. Also
-        # Not forget to attach the 'is_record' to any requests that are related
-        # to recorded shows
+        # Note that we must attach the appropriate mode to every
+        # response. Also Not forget to attach the 'is_record' to any
+        # requests that are related to recorded shows
         # TODO : recorded shows aren't flagged right
         # Is this retry shit even necessary? Consider getting rid of this.
         packed_requests = []
-        for request_event in self.requests:
+        for request_event in ifilter(lambda x: not x.morph_target(),
+                self.requests):
             try:
                 for request in request_event.safe_pack():
                     if isinstance(request, BadSongFile):
@@ -78,9 +80,9 @@ class TimeoutWatcher(threading.Thread,Loggable):
         # so that the people do not have to wait for the queue to fill up
         while True:
             time.sleep(self.timeout)
-            # If there is any requests left we launch em.
-            # Note that this isn't strictly necessary since RequestSync threads
-            # already chain themselves
+            # If there is any requests left we launch em. Note that this
+            # isn't strictly necessary since RequestSync threads already
+            # chain themselves
             if self.watcher.requests_in_queue():
                 self.logger.info("We got %d requests waiting to be launched" %
                         self.watcher.requests_left_count())
@@ -121,10 +123,8 @@ class WatchSyncer(ReportHandler,Loggable):
             try:
                 # If there is a strange bug anywhere in the code the next line
                 # should be a suspect
-                if self.contractor.register( event ):
-                    # only if the event was actually registered we add it.
-                    # Otherwise some other event is mutated somewhere
-                    self.push_queue( event )
+                self.contractor.register( event )
+                self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
             except Exception as e:
@@ -142,7 +142,7 @@ class WatchSyncer(ReportHandler,Loggable):
         if self.events_left_count() >= self.chunking_number:
             self.push_request()
             self.request_do() # Launch the request if nothing is running
-        self.__queue.add(elem)
+        self.__queue.append(elem)
 
     def flush_events(self):
         self.logger.info("Force flushing events...")
@@ -189,7 +189,7 @@ class WatchSyncer(ReportHandler,Loggable):
         self.__requests.append(launch_request)
         self.__reset_queue()
 
-    def __reset_queue(self): self.__queue = set([])
+    def __reset_queue(self): self.__queue = []
 
     def __del__(self):
         # Ideally we would like to do a little more to ensure safe shutdown
