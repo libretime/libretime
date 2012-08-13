@@ -1307,6 +1307,10 @@ EOT;
                     // if the column is timestamp, convert it into UTC
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                         $spCriteriaValue = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['value']);
+                    } else if($spCriteria == "bit_rate") {
+                        // multiply 1000 because we store only number value
+                        // e.g 192kps is stored as 192000
+                        $spCriteriaValue = $criteria['value']*1000;
                     } else {
                         $spCriteriaValue = $criteria['value'];
                     }
