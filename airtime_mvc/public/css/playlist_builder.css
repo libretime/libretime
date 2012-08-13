@@ -67,6 +67,10 @@
 	margin-top: 7px;
 }
 
+.sp-closethick-center {
+    margin-top: auto !important;
+}
+
 .spl_title {
 	font-size:14px;
 }
