@@ -55,8 +55,8 @@ def main(global_config, api_client_config):
         log.info(str(e))
 
     watch_syncer = WatchSyncer(signal='watch',
-                            chunking_number=config['chunking_number'],
-                            timeout=config['request_max_wait'])
+                               chunking_number=config['chunking_number'],
+                               timeout=config['request_max_wait'])
 
     apiclient = apc.AirtimeApiClient.create_right_config(log=log,
             config_path=api_client_config)
@@ -91,7 +91,7 @@ def main(global_config, api_client_config):
     # Launch the toucher that updates the last time when the script was
     # ran every n seconds.
     tt = ToucherThread(path=config['index_path'],
-            interval=int(config['touch_interval']))
+                       interval=int(config['touch_interval']))
 
     pyi = manager.pyinotify()
     pyi.loop()
@@ -107,6 +107,7 @@ Options:
     --log=<path>       log at <path>
 """
 
+    #original debugging paths
     #base_path = u'/home/rudi/Airtime/python_apps/media-monitor2/tests'
     #global_config = os.path.join(base_path, u'live_client.cfg')
     #api_client_config = global_config

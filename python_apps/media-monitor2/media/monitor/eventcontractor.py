@@ -9,7 +9,7 @@ class EventContractor(Loggable):
         return evt.path in self.store
 
     def get_old_event(self, evt):
-        return evt.store[ evt.path ]
+        return self.store[ evt.path ]
 
     def register(self, evt):
         if self.event_registered(evt):
