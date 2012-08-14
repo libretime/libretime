@@ -935,6 +935,7 @@ EOT;
     public function saveSmartBlockCriteria($p_criteria)
     {
         $data = $this->organizeSmartPlyalistCriteria($p_criteria);
+
         // things we need to check
         // 1. limit value shouldn't be empty and has upperbound of 24 hrs
         // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
@@ -1312,10 +1313,9 @@ EOT;
              */
             $fieldName = substr($ele['name'], 0, $index);
             
-            /* Get criteria row index.
-             * We only need this if there is a modifier row
-             */
+            // Get criteria row index.   
             $tempName = $ele['name'];
+            // Get the last digit in the field name
             preg_match('/^\D*(?=\d)/', $tempName, $r);
             if (isset($r[0])) {
                 $critIndexPos = strlen($r[0]);
