@@ -106,8 +106,10 @@ class LibraryController extends Zend_Controller_Action
                 }
             }
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
+                if ($screen == "playlist") {
                 $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
+            }
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
         }
 

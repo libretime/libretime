@@ -63,7 +63,6 @@ class Application_Model_Webstream{
             "login"=> $username,
             "url" => $this->webstream->getDbUrl(),
         );
-
     }
 
     public static function deleteStreams($p_ids, $p_userId)
@@ -97,9 +96,22 @@ class Application_Model_Webstream{
             "url" => array(true, ''),
             "name" => array(true, ''));
 
+        $di = null;
         $length = $parameters["length"];
-        $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
-        if (!$result == 1 || !count($matches) == 3) { 
+        $result = preg_match("/^([0-9]{1,2})h ([0-5]?[0-9])m$/", $length, $matches);
+        if ($result == 1 && count($matches) == 3) { 
+            $hours = $matches[1];
+            $minutes = $matches[2];
+            $di = new DateInterval("PT{$hours}H{$minutes}M");
+
+            $totalMinutes = $di->h * 60 + $di->i;
+
+            if ($totalMinutes == 0) {
+                $valid['length'][0] = false;
+                $valid['length'][1] = 'Length needs to be greater than 0 minutes';
+            }
+
+        } else {
             $valid['length'][0] = false;
             $valid['length'][1] = 'Length should be of form "00h 00m"';
         }
@@ -111,11 +123,19 @@ class Application_Model_Webstream{
         //and that the domain is at least 1 letter long
         $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
 
+        $mime = null;
         if ($result == 0) {
             $valid['url'][0] = false;
-            $valid['url'][1] = 'URL should be of form "http://www.domain.com/mount"';
-        }
+            $valid['url'][1] = 'URL should be of form "http://domain"';
+        } else {
 
+            try {
+                $mime = Application_Model_Webstream::discoverStreamMime($url);
+            } catch (Exception $e) {
+                $valid['url'][0] = false;
+                $valid['url'][1] = $e->getMessage();
+            }
+        }
 
         $name = $parameters["name"];
         if (strlen($name) == 0) {
@@ -134,7 +154,7 @@ class Application_Model_Webstream{
             Logging::log("EDIT");
         }
 
-        return $valid; 
+        return array($valid, $mime, $di); 
     }
 
     public static function isValid($analysis)
@@ -148,56 +168,43 @@ class Application_Model_Webstream{
         return true;
     }
 
-    /*
-     * This function is a callback used by curl to let us work
-     * with the contents returned from an http request. We don't
-     * actually want to work with the contents however (we just want
-     * the response headers), so immediately return a -1 in this function
-     * which tells curl not to download the response body at all.
-     */
-    private function writefn($ch, $chunk) 
-    { 
-        return -1;
-    }
-
-    private function discoverStreamMime()
+    private static function discoverStreamMime($url)
     {
-        Logging::log($this->webstream->getDbUrl());
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->webstream->getDbUrl());
-        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, array($this, 'writefn'));
-        $result = curl_exec($ch);
-        $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-        curl_close($ch);       
+        $headers = get_headers($url);
+        $mime = null;
+        foreach ($headers as $h) {
+            if (preg_match("/^content-type:/i", $h)) {
+                list(, $value) = explode(":", $h, 2);
+                $mime = trim($value);
+            }
+            if (preg_match("/^content-length:/i", $h)) {
+                //if content-length appears, this is not a web stream!!!!
+                //Aborting the save process. 
+                throw new Exception("Invalid webstream - This appears to be a file download.");
+            }
+        }
 
-        Logging::log($mime);
+        if (is_null($mime)) {
+            throw new Exception("No MIME type found for webstream.");
+        } else {
+            if (!preg_match("/(mpeg|ogg)/", $mime)) {
+                throw new Exception("Unrecognized stream type: $mime");
+            }
+        }
+
         return $mime;
     }
 
-    public static function save($parameters)
+    public static function save($parameters, $mime, $di)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-
-        $length = $parameters["length"];
-        $result = preg_match("/^([0-9]{1,2})h ([0-5][0-9])m$/", $length, $matches);
-
-        if ($result == 1 && count($matches) == 3) { 
-            $hours = $matches[1];
-            $minutes = $matches[2];
-            $di = new DateInterval("PT{$hours}H{$minutes}M"); 
-            $dblength = $di->format("%H:%I"); 
-        } else {
-            //This should never happen because we should have already validated
-            //in the controller
-            throw new Exception("Invalid date format: $length");
-        }
 
         $webstream = new CcWebstream();
         $webstream->setDbName($parameters["name"]);
         $webstream->setDbDescription($parameters["description"]);
         $webstream->setDbUrl($parameters["url"]);
 
+        $dblength = $di->format("%H:%I"); 
         $webstream->setDbLength($dblength);
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
@@ -205,12 +212,7 @@ class Application_Model_Webstream{
 
         $ws = new Application_Model_Webstream($webstream);
        
-        $mime = $ws->discoverStreamMime();
-        if ($mime !== false) {
-            $webstream->setDbMime($mime);
-        } else {
-            throw new Exception("Couldn't get MIME type!");
-        }
+        $webstream->setDbMime($mime);
         $webstream->save();
     }
 }
