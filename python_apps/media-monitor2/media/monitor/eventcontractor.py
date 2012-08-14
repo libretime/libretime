@@ -40,5 +40,4 @@ class EventContractor(Loggable):
         return True # We actually added something, hence we return true.
 
     # events are unregistered automatically no need to screw around with them
-    def __unregister(self, evt):
-        del self.store[evt.path]
+    def __unregister(self, evt): del self.store[evt.path]

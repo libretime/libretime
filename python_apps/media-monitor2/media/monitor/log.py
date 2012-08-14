@@ -6,6 +6,9 @@ from media.monitor.pure import LazyProperty
 appname = 'root'
 
 def setup_logging(log_path):
+    """
+    Setup logging by writing log to 'log_path'
+    """
     #logger = logging.getLogger(appname)
     logging.basicConfig(filename=log_path, level=logging.DEBUG)
 
@@ -16,6 +19,10 @@ def get_logger():
     return logging.getLogger()
 
 class Loggable(object):
+    """
+    Any class that wants to log can inherit from this class and automatically
+    get a logger attribute that can be used like: self.logger.info(...) etc.
+    """
     __metaclass__ = abc.ABCMeta
     @LazyProperty
     def logger(self): return get_logger()

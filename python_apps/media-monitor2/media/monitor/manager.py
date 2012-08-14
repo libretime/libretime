@@ -20,22 +20,18 @@ class Manager(Loggable):
     def __init__(self):
         self.wm = pyinotify.WatchManager()
         # These two instance variables are assumed to be constant
-        self.watch_channel = 'watch'
+        self.watch_channel    = 'watch'
         self.organize_channel = 'organize'
-        self.watch_listener = StoreWatchListener(signal=self.watch_channel)
+        self.watch_listener   = StoreWatchListener(signal = self.watch_channel)
         self.organize = {
-            'organize_path' : None,
-            'imported_path' : None,
-            'recorded_path' : None,
+            'organize_path'      : None,
+            'imported_path'      : None,
+            'recorded_path'      : None,
             'problem_files_path' : None,
-            # This guy doesn't need to be changed, always the same.
-            # Gets hooked by wm to different directories
-            'organize_listener' : OrganizeListener(signal=
+            'organizer'          : None,
+            'problem_handler'    : None,
+            'organize_listener'  : OrganizeListener(signal=
                 self.organize_channel),
-            # Also stays the same as long as its target, the directory
-            # which the "organized" files go to, isn't changed.
-            'organizer' : None,
-            'problem_handler' : None,
         }
         def dummy(sender, event): self.watch_move( event.path, sender=sender )
         dispatcher.connect(dummy, signal='watch_move', sender=dispatcher.Any,
@@ -54,12 +50,14 @@ class Manager(Loggable):
     # through dedicated handler objects. Because we must have access to a
     # manager instance. Hence we must slightly break encapsulation.
     def watch_move(self, watch_dir, sender=None):
+        """
+        handle 'watch move' events directly sent from listener
+        """
         self.logger.info("Watch dir '%s' has been renamed (hence removed)" %
                 watch_dir)
         self.remove_watch_directory(normpath(watch_dir))
 
-    def watch_signal(self):
-        return self.watch_listener.signal
+    def watch_signal(self): return self.watch_listener.signal
 
     def __remove_watch(self,path):
         # only delete if dir is actually being watched
@@ -84,9 +82,9 @@ class Manager(Loggable):
         # easy. (The singleton hack in Organizer) doesn't work. This is
         # the only thing that seems to work.
         if self.organize['organizer']:
-            o = self.organize['organizer']
-            o.channel = self.organize_channel
-            o.target_path = target_path
+            o               = self.organize['organizer']
+            o.channel       = self.organize_channel
+            o.target_path   = target_path
             o.recorded_path = recorded_path
         else:
             self.organize['organizer'] = Organizer(channel=
