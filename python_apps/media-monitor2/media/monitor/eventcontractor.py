@@ -10,9 +10,16 @@ class EventContractor(Loggable):
         self.store = {}
 
     def event_registered(self, evt):
+        """
+        returns true if the event is registered which means that there is
+        another "unpacked" event somewhere out there with the same path
+        """
         return evt.path in self.store
 
     def get_old_event(self, evt):
+        """
+        get the previously registered event with the same path as 'evt'
+        """
         return self.store[ evt.path ]
 
     def register(self, evt):

@@ -9,11 +9,11 @@ class EventDrainer(Loggable):
     """
     def __init__(self, connection, interval=1):
         def cb():
-            try: connection.drain_events(timeout=0.3)
-            except socket.timeout: pass
-            except Exception as e:
-                self.logger.error("Error flushing events")
-                self.logger.error( str(e) )
-        t = RepeatTimer(interval, cb)
+            try                   : connection.drain_events(timeout=0.3)
+            except socket.timeout : pass
+            except Exception as e :
+                self.fatal_exception("Error flushing events", e)
+
+        t        = RepeatTimer(interval, cb)
         t.daemon = True
         t.start()
