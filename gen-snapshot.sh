@@ -41,11 +41,16 @@ rm -r airtime/python_apps/pypo/liquidsoap_bin/
 sed -i '84s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
 sed -i '86s:p = Popen:#p = Popen:g' airtime/python_apps/pypo/install/pypo-initialize.py
 sed -i '87s:liq_path:#liq_path:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '89s:if p.returncode:#if p.returncode:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '90s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '91s:else:#else:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '92s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '93s:sys.exit:#sys.exit:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '88s:symlink_path:#symlink_path:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '90s:if p.returncode:#if p.returncode:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '91s:tr:#tr:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '92s:os.unlink:#os.unlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '93s:except:#except:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '95s:pass:#pass:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '98s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '99s:else:#else:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '100s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '101s:sys.exit:#sys.exit:g' airtime/python_apps/pypo/install/pypo-initialize.py
 
 #Remove phing library
 rm -r airtime/airtime_mvc/library/phing/
