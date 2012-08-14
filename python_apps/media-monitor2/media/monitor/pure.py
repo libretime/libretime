@@ -13,7 +13,7 @@ from configobj import ConfigObj
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
-supported_extensions =  [u"mp3", u"ogg", u"oga"]
+supported_extensions =  [u"mp3", u"ogg", u"oga", u"flac", u"aac", u"bwf"]
 unicode_unknown = u'unknown'
 
 class LazyProperty(object):
