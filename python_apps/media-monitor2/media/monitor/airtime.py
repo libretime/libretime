@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from kombu.messaging  import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
+
 import json
 import os
 import copy
@@ -15,11 +16,6 @@ from media.monitor.bootstrap  import Bootstrapper
 from media.monitor.listeners  import FileMediator
 
 from api_clients import api_client as apc
-
-# Do not confuse with media monitor 1's AirtimeNotifier class that more related
-# to pyinotify's Notifier class. AirtimeNotifier just notifies when events come
-# from Airtime itself. I.E. changes made in the web UI that must be updated
-# through media monitor
 
 class AirtimeNotifier(Loggable):
     """
@@ -70,14 +66,14 @@ class AirtimeMessageReceiver(Loggable):
                 'change_stor'  : self.change_storage,
                 'file_delete'  : self.file_delete,
         }
-        self.cfg = cfg
+        self.cfg     = cfg
         self.manager = manager
 
     def message(self, msg):
         """
         This method is called by an AirtimeNotifier instance that
         consumes the Rabbit MQ events that trigger this. The method
-        return true when the event was executed and false when it wasn't
+        return true when the event was executed and false when it wasn't.
         """
         msg = copy.deepcopy(msg)
         if msg['event_type'] in self.dispatch_table:
@@ -175,32 +171,32 @@ class AirtimeMessageReceiver(Loggable):
     def file_delete(self, msg):
         # Deletes should be requested only from imported folder but we
         # don't verify that. Security risk perhaps?
-        self.logger.info("Attempting to delete(maybe) '%s'" % msg['filepath'])
-        if msg['delete']:
-            if os.path.exists(msg['filepath']):
-                try:
-                    self.logger.info("Attempting to delete '%s'" %
-                            msg['filepath'])
-                    # We use FileMediator to ignore any paths with
-                    # msg['filepath'] so that we do not send a duplicate delete
-                    # request that we'd normally get form pyinotify. But right
-                    # now event contractor would take care of this sort of
-                    # thing anyway so this might not be necessary after all
-                    FileMediator.ignore(msg['filepath'])
-                    os.unlink(msg['filepath'])
-                    if not os.path.exists(msg['filepath']):
-                        self.logger.info("Successfully deleted: '%s'" %
-                                msg['filepath'])
-                except Exception as e:
-                    self.logger.info("Failed to delete '%s'" % msg['filepath'])
-                    self.logger.info("Error: " % str(e))
-            else: # validation for filepath existence failed
-                self.logger.info("Attempting to delete file '%s' that does not \
-                        exist. Full request coming:" % msg['filepath'])
-                self.logger.info(msg)
-        else: # we did not get the special 'delete' tag. no deleting
+        # we only delete if we are passed the special delete flag that is
+        # necessary with every "delete_file" request
+        if not msg['delete']:
             self.logger.info("No clippy confirmation, ignoring event. \
                     Out of curiousity we will print some details.")
             self.logger.info(msg)
-
-
+            return
+        if os.path.exists(msg['filepath']):
+            try:
+                self.logger.info("Attempting to delete '%s'" %
+                        msg['filepath'])
+                # We use FileMediator to ignore any paths with
+                # msg['filepath'] so that we do not send a duplicate delete
+                # request that we'd normally get form pyinotify. But right
+                # now event contractor would take care of this sort of
+                # thing anyway so this might not be necessary after all
+                FileMediator.ignore(msg['filepath'])
+                os.unlink(msg['filepath'])
+                # Verify deletion:
+                if not os.path.exists(msg['filepath']):
+                    self.logger.info("Successfully deleted: '%s'" %
+                            msg['filepath'])
+            except Exception as e:
+                self.logger.info("Failed to delete '%s'" % msg['filepath'])
+                self.logger.info("Error: " % str(e))
+        else: # validation for filepath existence failed
+            self.logger.info("Attempting to delete file '%s' that does not \
+                    exist. Full request coming:" % msg['filepath'])
+            self.logger.info(msg)
