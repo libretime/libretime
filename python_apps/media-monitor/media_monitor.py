@@ -1,21 +1,11 @@
 import logging
 import time
 import sys
+import mm2.mm2 as mm2
 from std_err_override import LogWriter
-# configure logging
-try:
-    logging.config.fileConfig("logging.cfg")
 
-    #need to wait for Python 2.7 for this..
-    #logging.captureWarnings(True)
+global_cfg = '/etc/airtime/media-monitor.cfg'
+api_client_cfg = '/etc/airtime/api_client.cfg'
+logging_cfg = '/usr/lib/airtime/media-monitor/logging.cfg'
 
-    logger = logging.getLogger()
-    LogWriter.override_std_err(logger)
-
-except Exception, e:
-    print 'Error configuring logging: ', e
-    sys.exit(1)
-
-while True:
-    print("testing")
-    time.sleep(5)
+mm2.main( global_cfg, api_client_cfg, logging_cfg )

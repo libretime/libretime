@@ -59,7 +59,9 @@ try:
     #copy python files
     copy_dir("%s/.."%current_script_dir, config["bin_dir"])
     # mm2
-    #copy_dir("%s/../../media-monitor2/"%current_script_dir, config["bin_dir"])
+    mm2_source = os.path.realpath(os.path.join(current_script_dir,
+        "../../media-monitor2"))
+    copy_dir(mm2_source, os.path.join( config["bin_dir"], "mm2" ))
 
     #copy init.d script
     shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")

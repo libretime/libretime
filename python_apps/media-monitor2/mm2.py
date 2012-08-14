@@ -24,7 +24,8 @@ import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
 
-def main(global_config, api_client_config, log_config):
+def main(global_config, api_client_config, log_config,
+        index_create_attempt=False):
     for cfg in [global_config, api_client_config]:
         if not os.path.exists(cfg): raise NoConfigFile(cfg)
     # MMConfig is a proxy around ConfigObj instances. it does not allow
@@ -40,8 +41,8 @@ def main(global_config, api_client_config, log_config):
         print("Unknown error reading configuration file: '%s'" % global_config)
         print(str(e))
 
-    # TODO : use the logging config file.
-    logging.config.fileConfig(log_config)
+
+    #logging.config.fileConfig(log_config)
 
     #need to wait for Python 2.7 for this..
     #logging.captureWarnings(True)
@@ -51,6 +52,26 @@ def main(global_config, api_client_config, log_config):
     logfile = unicode( config['logpath'] )
     setup_logging(logfile)
     log = get_logger()
+
+    if not index_create_attempt:
+        if not os.path.exists(config['index_path']):
+            log.info("Attempting to create index file:...")
+            try:
+                f = open(config['index_path'])
+                f.write(" ")
+                f.close()
+            except Exception as e:
+                log.info("Failed to create index file with exception: %s" % str(e))
+            else:
+                log.info("Created index file, reloading configuration:")
+                main( global_config,  api_client_config, log_config,
+                        index_create_attempt=True )
+    else:
+        log.info("Already tried to create index. Will not try again ")
+
+    if not os.path.exists(config['index_path']):
+        log.info("Index file does not exist. Terminating")
+
     log.info("Attempting to set the locale...")
 
     try:
