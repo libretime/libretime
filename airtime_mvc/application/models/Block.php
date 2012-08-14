@@ -935,6 +935,7 @@ EOT;
     public function saveSmartBlockCriteria($p_criteria)
     {
         $data = $this->organizeSmartPlyalistCriteria($p_criteria);
+
         // things we need to check
         // 1. limit value shouldn't be empty and has upperbound of 24 hrs
         // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
@@ -976,70 +977,11 @@ EOT;
         }
     
         $criteriaFieldsUsed = array();
-        foreach ($data['criteria'] as $key=>$d){
-            $error = array();
-            // check for not selected select box
-            if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
-                $error[] =  "You must select Criteria and Modifier";
-            } else if (in_array($d['sp_criteria_field'], $criteriaFieldsUsed)) {
-                $error[] = "Criteria fields can only be used once";
-            } else {
-                array_push($criteriaFieldsUsed, $d['sp_criteria_field']);
-                $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
-                // validation on type of column
-                if ($d['sp_criteria_field'] == 'length') {
-                    if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})$/", $d['sp_criteria_value'])) {
-                        $error[] =  "'Length' should be in '00:00:00' format";
-                    }
-                } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                    if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                        $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                    } else {
-                        $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
-                        if (!$result["success"]) {
-                            // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                            $error[] =  $result["errMsg"];
-                        }
-                    }
-    
-                    if (isset($d['sp_criteria_extra'])) {
-                        if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
-                            $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                        } else {
-                            $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
-                            if (!$result["success"]) {
-                                // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                $error[] =  $result["errMsg"];
-                            }
-                        }
-                    }
-                } else if ($column->getType() == PropelColumnTypes::INTEGER) {
-                    if (!is_numeric($d['sp_criteria_value'])) {
-                        $error[] = "The value has to be numeric";
-                    }
-                    // length check
-                    if (intval($d['sp_criteria_value']) >= pow(2,31)) {
-                        $error[] = "The value should be less then 2147483648";
-                    }
-                } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
-                    if (strlen($d['sp_criteria_value']) > $column->getSize()) {
-                        $error[] = "The value should be less ".$column->getSize()." characters";
-                    }
-                }
-            }
-    
-            if ($d['sp_criteria_value'] == "") {
-                $error[] =  "Value cannot be empty";
-            }
-            if(count($error) > 0){
-                $errors[] = array("element"=>"sp_criteria_field_".$key, "msg"=>$error);
-            }
-        }// foreach
 
-        if (isset($data['modrow'])) {
-            $modKeys = array_keys($data['modrow']);
-            for ($i = 0; $i < count($modKeys); $i++) {
-                foreach ($data['modrow'][$modKeys[$i]] as $key=>$d){
+        if (isset($data['criteria'])) {
+            $critKeys = array_keys($data['criteria']);
+            for ($i = 0; $i < count($critKeys); $i++) {
+                foreach ($data['criteria'][$critKeys[$i]] as $key=>$d){
                     $error = array();
                     // check for not selected select box
                     if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
@@ -1092,9 +1034,9 @@ EOT;
                         $error[] =  "Value cannot be empty";
                     }
                     if(count($error) > 0){
-                        $errors[] = array("element"=>"sp_criteria_field_".$modKeys[$i]."_".$key, "msg"=>$error);
+                        $errors[] = array("element"=>"sp_criteria_field_".$critKeys[$i]."_".$key, "msg"=>$error);
                     }
-                }//end mod foreach
+                }//end foreach
             }//for loop
         }//if
         
@@ -1140,25 +1082,12 @@ EOT;
     public function storeCriteriaIntoDb($p_criteriaData){
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-    
-        foreach( $p_criteriaData['criteria'] as $d){
-            $qry = new CcBlockcriteria();
-            $qry->setDbCriteria($d['sp_criteria_field'])
-            ->setDbModifier($d['sp_criteria_modifier'])
-            ->setDbValue($d['sp_criteria_value'])
-            ->setDbBlockId($this->id);
-    
-            if (isset($d['sp_criteria_extra'])) {
-                $qry->setDbExtra($d['sp_criteria_extra']);
-            }
-            $qry->save();
-        }
         
         //insert modifier rows
-        if (isset($p_criteriaData['modrow'])) {
-            $modKeys = array_keys($p_criteriaData['modrow']);
-            for ($i = 0; $i < count($modKeys); $i++) {
-                foreach( $p_criteriaData['modrow'][$modKeys[$i]] as $d){
+        if (isset($p_criteriaData['criteria'])) {
+            $critKeys = array_keys($p_criteriaData['criteria']);
+            for ($i = 0; $i < count($critKeys); $i++) {
+                foreach( $p_criteriaData['criteria'][$critKeys[$i]] as $d){
                     $qry = new CcBlockcriteria();
                     $qry->setDbCriteria($d['sp_criteria_field'])
                     ->setDbModifier($d['sp_criteria_modifier'])
@@ -1379,41 +1308,40 @@ EOT;
             
             $index = strrpos($ele['name'], '_');
             
-            /* Get criteria row index.
-             * We only need this if there is a modifier row
+            /* Strip field name of modifier index
+             * Ex: sp_criteria_field_0_0 -> sp_criteria_field_0
              */
+            $fieldName = substr($ele['name'], 0, $index);
+            
+            // Get criteria row index.   
             $tempName = $ele['name'];
+            // Get the last digit in the field name
             preg_match('/^\D*(?=\d)/', $tempName, $r);
             if (isset($r[0])) {
                 $critIndexPos = strlen($r[0]);
                 $critIndex = $tempName[$critIndexPos];
             }
+            $lastChar = substr($ele['name'], -1);
             
-            $fieldName = substr($ele['name'], 0, $index);
+            // If lastChar is an integer we should strip it off
+            if (!preg_match("/^[a-zA-Z]$/", $lastChar)) {
+                /* Strip field name of criteria index
+                 * Ex: sp_criteria_field_0 -> sp_criteria_field
+                 * We do this to check if the field name is a criteria
+                 * or the block type
+                 */
+                $n = strrpos($fieldName, '_');
+                $fieldName = substr($fieldName, 0, $n);
+            }
             
-            /* Determine if this is a modifier row
-             * We will know if $fieldName's last character is an integer
-             */
-            $modRow = $fieldName[strlen($fieldName)-1];
-            if (!preg_match("/^[a-zA-Z]$/", $modRow)) {
-                $modIndex = strrpos($fieldName, '_');
-                $fieldName = substr($fieldName, 0, $modIndex);
-                if (in_array($fieldName, $fieldNames)) {
-                    $rowNum = intval($tempName[strlen($tempName)-1]);
-                    $output['modrow'][$critIndex][$rowNum][$fieldName] = trim($ele['value']);
-                }else{
-                    $output['etc'][$ele['name']] = $ele['value'];
-                }
-            } else {
-                if (in_array($fieldName, $fieldNames)) {
-                    $rowNum = intval(substr($ele['name'], $index+1));
-                    $output['criteria'][$rowNum][$fieldName] = trim($ele['value']);
-                }else{
-                    $output['etc'][$ele['name']] = $ele['value'];
-                }
+            if (in_array($fieldName, $fieldNames)) {
+                $rowNum = intval(substr($ele['name'], $index+1));
+                $output['criteria'][$critIndex][$lastChar][$fieldName] = trim($ele['value']);
+            }else{
+                $output['etc'][$ele['name']] = $ele['value'];
             }
         }
-    
+
         return $output;
     }
     // smart block functions end

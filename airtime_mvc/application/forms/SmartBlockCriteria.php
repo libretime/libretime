@@ -112,10 +112,10 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $bl = new Application_Model_Block($p_blockId);
         $storedCrit = $bl->getCriteria();
-       
-        /* $modRoadMap stores the number of modifier rows each
-         * criteria row has. We need to know this so we display the
-         * the form elements properly
+
+        /* $modRoadMap stores the number of same criteria
+         * Ex: 3 Album titles, and 2 Track titles
+         * We need to know this so we display the form elements properly
          */
         $modRowMap = array();
         
@@ -138,117 +138,78 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $critCount = 1;
             }
             
-            $modRowMap[$i] = $critCount-1;
+            $modRowMap[$i] = $critCount;
             
             /* Loop through all criteria with the same field
              * Ex: all criteria for 'Album'
              */
             for ($j = 0; $j < $critCount; $j++) {
                 /****************** CRITERIA ***********/
-                if ($j < 1) {
-                    $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i);
-                    $criteria->setAttrib('class', 'input_select sp_input_select')
-                             ->setValue('Select criteria')
-                             ->setDecorators(array('viewHelper'))
-                             ->setMultiOptions($criteriaOptions);
-                    if ($i != 0 && !isset($criteriaKeys[$i])) {
-                        $criteria->setAttrib('disabled', 'disabled');
-                    }
-                    
-                    if (isset($criteriaKeys[$i])) {
-                        $criteriaType = $criteriaTypes[$storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]];
-                        $criteria->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
-                    }
-                    $this->addElement($criteria);
-                    
-                    /****************** MODIFIER ***********/
-                    $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$i);
-                    $criteriaModifers->setValue('Select modifier')
-                                     ->setAttrib('class', 'input_select sp_input_select')
-                                     ->setDecorators(array('viewHelper'));
-                    if ($i != 0 && !isset($criteriaKeys[$i])) {
-                        $criteriaModifers->setAttrib('disabled', 'disabled');
-                    }
-                    if (isset($criteriaKeys[$i])) {
-                        if($criteriaType == "s"){
-                            $criteriaModifers->setMultiOptions($stringCriteriaOptions);
-                        }else{
-                            $criteriaModifers->setMultiOptions($numericCriteriaOptions);
-                        }
-                        $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
-                    }else{
-                        $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
-                    }
-                    $this->addElement($criteriaModifers);
-                    
-                    /****************** VALUE ***********/
-                    $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$i);
-                    $criteriaValue->setAttrib('class', 'input_text sp_input_text')
-                                  ->setDecorators(array('viewHelper'));
-                    if ($i != 0 && !isset($criteriaKeys[$i])){
-                        $criteriaValue->setAttrib('disabled', 'disabled');
-                    }
-                    if (isset($criteriaKeys[$i])) {
-                        $criteriaValue->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
-                    }
-                    $this->addElement($criteriaValue);
-                    
-                    /****************** EXTRA ***********/
-                    $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$i);
-                    $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
-                                  ->setDecorators(array('viewHelper'));
-                    if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
-                        $criteriaExtra->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
-                        $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
-                    }else{
-                        $criteriaExtra->setAttrib('disabled', 'disabled');
-                    }
-                    $this->addElement($criteriaExtra);
-                    
-                /* This is where the additional modifier rows get defined
-                 * The additional row count starts at 0 and gets appended
-                 * to the parent field name
-                 */
-                } else if (count($storedCrit["crit"][$criteriaKeys[$i]]) > 1) {
-                    $n = $j - 1;
-                    $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i."_".$n);
-                    $criteria->setAttrib('class', 'input_select sp_input_select sp-invisible')
-                             ->setValue('Select criteria')
-                             ->setDecorators(array('viewHelper'))
-                             ->setMultiOptions($criteriaOptions)
-                             ->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
-                    $this->addElement($criteria);
-                    
-                    $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$i."_".$n);
-                    $criteriaModifers->setValue('Select modifier')
-                                     ->setAttrib('class', 'input_select sp_input_select')
-                                     ->setDecorators(array('viewHelper'));
+                if ($j > 0) {
+                    $invisible = ' sp-invisible';
+                } else {
+                    $invisible = '';
+                }
+                
+                $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i."_".$j);
+                $criteria->setAttrib('class', 'input_select sp_input_select'.$invisible)
+                         ->setValue('Select criteria')
+                         ->setDecorators(array('viewHelper'))
+                         ->setMultiOptions($criteriaOptions);
+                if ($i != 0 && !isset($criteriaKeys[$i])) {
+                    $criteria->setAttrib('disabled', 'disabled');
+                }
+                
+                if (isset($criteriaKeys[$i])) {
+                    $criteriaType = $criteriaTypes[$storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]];
+                    $criteria->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
+                }
+                $this->addElement($criteria);
+                
+                /****************** MODIFIER ***********/
+                $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$i."_".$j);
+                $criteriaModifers->setValue('Select modifier')
+                                 ->setAttrib('class', 'input_select sp_input_select')
+                                 ->setDecorators(array('viewHelper'));
+                if ($i != 0 && !isset($criteriaKeys[$i])) {
+                    $criteriaModifers->setAttrib('disabled', 'disabled');
+                }
+                if (isset($criteriaKeys[$i])) {
                     if($criteriaType == "s"){
                         $criteriaModifers->setMultiOptions($stringCriteriaOptions);
                     }else{
                         $criteriaModifers->setMultiOptions($numericCriteriaOptions);
                     }
                     $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
-                    $this->addElement($criteriaModifers);
-                    
-                    $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$i."_".$n);
-                    $criteriaValue->setAttrib('class', 'input_text sp_input_text')
-                                  ->setDecorators(array('viewHelper'))
-                                  ->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
-                    $this->addElement($criteriaValue);
-                    
-                    $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$i."_".$n);
-                    $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
-                                  ->setDecorators(array('viewHelper'));
-                    if (isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
-                        $criteriaExtra->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
-                        $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
-                    }else{
-                        $criteriaExtra->setAttrib('disabled', 'disabled');
-                    }
-                    $this->addElement($criteriaExtra);
+                }else{
+                    $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
                 }
-                        
+                $this->addElement($criteriaModifers);
+                
+                /****************** VALUE ***********/
+                $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$i."_".$j);
+                $criteriaValue->setAttrib('class', 'input_text sp_input_text')
+                              ->setDecorators(array('viewHelper'));
+                if ($i != 0 && !isset($criteriaKeys[$i])){
+                    $criteriaValue->setAttrib('disabled', 'disabled');
+                }
+                if (isset($criteriaKeys[$i])) {
+                    $criteriaValue->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
+                }
+                $this->addElement($criteriaValue);
+                
+                /****************** EXTRA ***********/
+                $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$i."_".$j);
+                $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
+                              ->setDecorators(array('viewHelper'));
+                if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
+                    $criteriaExtra->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
+                    $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
+                }else{
+                    $criteriaExtra->setAttrib('disabled', 'disabled');
+                }
+                $this->addElement($criteriaExtra);
+                    
             }//for
             
         }//for

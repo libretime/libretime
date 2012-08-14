@@ -317,32 +317,22 @@ function reindexElements() {
              * a modifier row
              */
             if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
-                
-                $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index+'_'+modIndex);
-                $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index+'_'+modIndex);
-                $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index+'_'+modIndex);
-                $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index+'_'+modIndex);
-                $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
-                $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
-                $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index+'_'+modIndex);
-                $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index+'_'+modIndex);
-                $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
-                $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_'+index+'_'+modIndex);
                 modIndex++;
             } else {
                 index++;
-                $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index);
-                $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index);
-                $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index);
-                $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index);
-                $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index);
-                $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index);
-                $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index);
-                $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index);
-                $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
-                $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_'+index);
                 modIndex = 0;
             }
+            
+            $(div).find('select[name^="sp_criteria_field"]').attr('name', 'sp_criteria_field_'+index+'_'+modIndex);
+            $(div).find('select[name^="sp_criteria_field"]').attr('id', 'sp_criteria_field_'+index+'_'+modIndex);
+            $(div).find('select[name^="sp_criteria_modifier"]').attr('name', 'sp_criteria_modifier_'+index+'_'+modIndex);
+            $(div).find('select[name^="sp_criteria_modifier"]').attr('id', 'sp_criteria_modifier_'+index+'_'+modIndex);
+            $(div).find('input[name^="sp_criteria_value"]').attr('name', 'sp_criteria_value_'+index+'_'+modIndex);
+            $(div).find('input[name^="sp_criteria_value"]').attr('id', 'sp_criteria_value_'+index+'_'+modIndex);
+            $(div).find('input[name^="sp_criteria_extra"]').attr('name', 'sp_criteria_extra_'+index+'_'+modIndex);
+            $(div).find('input[name^="sp_criteria_extra"]').attr('id', 'sp_criteria_extra_'+index+'_'+modIndex);
+            $(div).find('a[name^="modifier_add"]').attr('id', 'modifier_add_'+index);
+            $(div).find('a[id^="criteria_remove"]').attr('id', 'criteria_remove_'+index+'_'+modIndex);
         } else if (i > 0) {
             $(div).remove();
         }

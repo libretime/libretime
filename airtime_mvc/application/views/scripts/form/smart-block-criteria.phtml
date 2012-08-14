@@ -24,36 +24,22 @@
         
         <dd id='sp_criteria-element'>
         <?php for ($i = 0; $i < $this->criteriasLength; $i++) {?>
-            <div <?php if (($i > 0) && ($this->element->getElement("sp_criteria_field_".$i)->getAttrib('disabled') == 'disabled')) {
+        <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {?>
+            <div <?php if (($i > 0) && ($this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled')) {
                            echo 'style=display:none';
                        } ?>>
-                <?php echo $this->element->getElement("sp_criteria_field_".$i) ?>
+                <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
                 <a class='ui-button sp-ui-button-icon-only sp_no_margins' id='modifier_add_<?php echo $i ?>'>
                     <span class='ui-icon ui-icon-plusthick'></span>
                 </a>  
-                <?php echo $this->element->getElement("sp_criteria_modifier_".$i) ?>
-                <?php echo $this->element->getElement("sp_criteria_value_".$i) ?>
-                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i) ?></span> 
+                <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
+                <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
+                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span> 
                 <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
                     <span class='ui-icon ui-icon-closethick'></span>
                 </a>
                 <br />
             </div>
-            
-            <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {?>
-                <div>
-                    <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
-                    <a class='ui-button sp-ui-button-icon-only sp_no_margins' id='modifier_add_<?php echo $i ?>'>
-                        <span class='ui-icon ui-icon-plusthick'></span>
-                    </a>  
-                    <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
-                    <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
-                    <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span> 
-                    <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
-                        <span class='ui-icon ui-icon-closethick'></span>
-                    </a>
-                    <br />
-                </div>
             <?php } ?>
             
         <?php } ?>
