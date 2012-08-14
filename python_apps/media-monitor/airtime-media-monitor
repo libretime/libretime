@@ -8,7 +8,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 media_monitor_path="/usr/lib/airtime/media-monitor/"
 media_monitor_script="media_monitor.py"
 
-api_client_path="/usr/lib/airtime/"
+api_client_path="/usr/lib/airtime/:/usr/lib/airtime/media-monitor/mm2/"
 
 cd ${media_monitor_path}
 

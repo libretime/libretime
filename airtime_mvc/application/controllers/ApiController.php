@@ -456,8 +456,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadataAction($md, $mode, $dry_run=false)
-    {
+    public function dispatchMetadata($md, $mode, $dry_run=false) 
+    { 
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
         if ( $dry_run ) { // for debugging we return garbage not to screw around with the db
@@ -468,6 +468,8 @@ class ApiController extends Zend_Controller_Action
             );
         }
         Application_Model_Preference::SetImportTimestamp();
+        Logging::log("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
+        Logging::log( $md );
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = Application_Common_OsPath::normpath($filepath);
@@ -557,6 +559,12 @@ class ApiController extends Zend_Controller_Action
             // Valid requests must start with mdXXX where XXX represents at least 1 digit
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc=true);
+            $recorded = $info_json["is_record"];
+            unset( $info_json["is_record"] );
+            //unset( $info_json["MDATA_KEY_DURATION"] );
+            //unset( $info_json["MDATA_KEY_SAMPLERATE"] );
+            //unset( $info_json["MDATA_KEY_BITRATE"] );
+
             if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
                 Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::log( $info_json );
@@ -579,17 +587,14 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadataAction($info_json, $mode, $dry_run=$dry);
-            // We attack the 'key' back to every request in case the would like to associate
+            $response = $this->dispatchMetadata($info_json, $mode, $dry_run=$dry);
+            // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
             array_push($responses, $response);
             // On recorded show requests we do some extra work here. Not sure what it actually is and it
             // was usually called from the python api client. Now we just call it straight from the controller to
             // save the http roundtrip
-            if( $info_json['is_record'] and !array_key_exists('error', $response) ) {
-                $this->uploadRecordedActionParam($info_json['showinstanceid'],$info_json['fileid'],$dry_run=$dry);
-            }
         }
         die( json_encode($responses) );
     }
@@ -608,6 +613,8 @@ class ApiController extends Zend_Controller_Action
                 $md[$key] = $value;
             }
         }
+
+        Logging::log( $md );
 
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();

@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 import os
-from configobj import ConfigObj
 import copy
+from configobj import ConfigObj
 
-from media.monitor.log import Loggable
 from media.monitor.exceptions import NoConfigFile, ConfigAccessViolation
+import media.monitor.pure as mmp
 
-class MMConfig(Loggable):
+class MMConfig(object):
     def __init__(self, path):
         if not os.path.exists(path):
-            self.logger.error("Configuration file does not exist. Path: '%s'" % path)
             raise NoConfigFile(path)
         self.cfg = ConfigObj(path)
 
     def __getitem__(self, key):
         """
-        We always return a copy of the config item to prevent callers from doing any modifications
-        through the returned objects methods
+        We always return a copy of the config item to prevent callers from
+        doing any modifications through the returned objects methods
         """
         return copy.deepcopy(self.cfg[key])
 
@@ -29,8 +28,9 @@ class MMConfig(Loggable):
 
     def save(self): self.cfg.write()
 
+    def last_ran(self):
+        return mmp.last_modified(self.cfg['index_path'])
+
     # Remove this after debugging...
     def haxxor_set(self, key, value): self.cfg[key] = value
     def haxxor_get(self, key): return self.cfg[key]
-
-

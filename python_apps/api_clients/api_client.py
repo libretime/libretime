@@ -1,9 +1,9 @@
 ###############################################################################
 # This file holds the implementations for all the API clients.
 #
-# If you want to develop a new client, here are some suggestions:
-# Get the fetch methods working first, then the push, then the liquidsoap notifier.
-# You will probably want to create a script on your server side to automatically
+# If you want to develop a new client, here are some suggestions: Get the fetch
+# methods working first, then the push, then the liquidsoap notifier.  You will
+# probably want to create a script on your server side to automatically
 # schedule a playlist one minute from the current time.
 ###############################################################################
 import sys
@@ -41,6 +41,23 @@ def convert_dict_value_to_utf8(md):
 
 class AirtimeApiClient():
 
+    # This is a little hacky fix so that I don't have to pass the config object
+    # everywhere where AirtimeApiClient needs to be initialized
+    default_config = None
+    # the purpose of this custom constructor is to remember which config file
+    # it was called with. So that after the initial call:
+    # AirtimeApiClient.create_right_config('/path/to/config')
+    # All subsequence calls to create_right_config will be with that config
+    # file
+    @staticmethod
+    def create_right_config(log=None,config_path=None):
+        if config_path: AirtimeApiClient.default_config = config_path
+        elif (not AirtimeApiClient.default_config):
+            raise ValueError("Cannot slip config_path attribute when it has \
+                              never been passed yet")
+        return AirtimeApiClient( logger=None,
+                config_path=AirtimeApiClient.default_config )
+
     def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
         if logger is None:
             self.logger = logging
@@ -77,14 +94,15 @@ class AirtimeApiClient():
     def get_response_into_file(self, url, block=True):
         """
         This function will query the server and download its response directly
-        into a temporary file. This is useful in the situation where the response
-        from the server can be huge and we don't want to store it into memory (potentially
-        causing Python to use hundreds of MB's of memory). By writing into a file we can
-        then open this file later, and read data a little bit at a time and be very mem
-        efficient.
+        into a temporary file. This is useful in the situation where the
+        response from the server can be huge and we don't want to store it into
+        memory (potentially causing Python to use hundreds of MB's of memory).
+        By writing into a file we can then open this file later, and read data
+        a little bit at a time and be very mem efficient.
 
-        The return value of this function is the path of the temporary file. Unless specified using
-        block = False, this function will block until a successful HTTP 200 response is received.
+        The return value of this function is the path of the temporary file.
+        Unless specified using block = False, this function will block until a
+        successful HTTP 200 response is received.
         """
 
         logger = self.logger
@@ -114,7 +132,9 @@ class AirtimeApiClient():
 
     def __get_airtime_version(self):
         logger = self.logger
-        url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["version_url"])
+        url = "http://%s:%s/%s/%s" % (self.config["base_url"],
+                str(self.config["base_port"]), self.config["api_base"],
+                self.config["version_url"])
         logger.debug("Trying to contact %s", url)
         url = url.replace("%%api_key%%", self.config["api_key"])
 
@@ -157,7 +177,8 @@ class AirtimeApiClient():
         elif (version[0:3] != AIRTIME_VERSION[0:3]):
             if (verbose):
                 logger.info('Airtime version found: ' + str(version))
-                logger.info('pypo is at version ' + AIRTIME_VERSION + ' and is not compatible with this version of Airtime.\n')
+                logger.info('pypo is at version ' + AIRTIME_VERSION +
+                    ' and is not compatible with this version of Airtime.\n')
             return False
         else:
             if (verbose):
@@ -338,6 +359,8 @@ class AirtimeApiClient():
             url = self.construct_url("update_media_url")
             url = url.replace("%%mode%%", mode)
 
+            self.logger.info("Requesting url %s" % url)
+
             md = convert_dict_value_to_utf8(md)
 
             data = urllib.urlencode(md)
@@ -345,6 +368,8 @@ class AirtimeApiClient():
 
             response = self.get_response_from_server(req)
             logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
+            self.logger.info("Received response:")
+            self.logger.info(response)
             try: response = json.loads(response)
             except ValueError:
                 logger.info("Could not parse json from response: '%s'" % response)
@@ -367,11 +392,12 @@ class AirtimeApiClient():
 
     def send_media_monitor_requests(self, action_list, dry=False):
         """
-        Send a gang of media monitor events at a time. actions_list is a list of dictionaries
-        where every dictionary is representing an action. Every action dict must contain a 'mode'
-        key that says what kind of action it is and an optional 'is_record' key that says whether
-        the show was recorded or not. The value of this key does not matter, only if it's present
-        or not.
+        Send a gang of media monitor events at a time. actions_list is a list
+        of dictionaries where every dictionary is representing an action. Every
+        action dict must contain a 'mode' key that says what kind of action it
+        is and an optional 'is_record' key that says whether the show was
+        recorded or not. The value of this key does not matter, only if it's
+        present or not.
         """
         logger = self.logger
         try:
@@ -386,15 +412,13 @@ class AirtimeApiClient():
             # debugging
             for action in action_list:
                 if not 'mode' in action:
-                    self.logger.debug("Warning: Sending a request element without a 'mode'")
+                    self.logger.debug("Warning: Trying to send a request element without a 'mode'")
                     self.logger.debug("Here is the the request: '%s'" % str(action) )
                 else:
                     # We alias the value of is_record to true or false no
                     # matter what it is based on if it's absent in the action
-                    if 'is_record' in action:
-                        self.logger.debug("Sending a 'recorded' action")
-                        action['is_record'] = 1
-                    else: action['is_record'] = 0
+                    if 'is_record' not in action:
+                        action['is_record'] = 0
                     valid_actions.append(action)
             # Note that we must prefix every key with: mdX where x is a number
             # Is there a way to format the next line a little better? The
@@ -410,6 +434,7 @@ class AirtimeApiClient():
             response = self.get_response_from_server(req)
             response = json.loads(response)
             return response
+        except ValueError: raise
         except Exception, e:
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
@@ -422,11 +447,8 @@ class AirtimeApiClient():
     def list_all_db_files(self, dir_id):
         logger = self.logger
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_db_files"])
-
-            url = url.replace("%%api_key%%", self.config["api_key"])
+            url = self.construct_url("list_all_db_files")
             url = url.replace("%%dir_id%%", dir_id)
-
             response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
@@ -440,6 +462,7 @@ class AirtimeApiClient():
             return []
 
     def list_all_watched_dirs(self):
+        # Does this include the stor directory as well?
         logger = self.logger
         try:
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["list_all_watched_dirs"])
@@ -451,6 +474,7 @@ class AirtimeApiClient():
         except Exception, e:
             response = None
             logger.error("Exception: %s", e)
+            self.logger.debug(traceback.format_exc())
 
         return response
 
@@ -517,10 +541,10 @@ class AirtimeApiClient():
         return response
 
     """
-    Purpose of this method is to contact the server with a "Hey its me!" message.
-    This will allow the server to register the component's (component = media-monitor, pypo etc.)
-    ip address, and later use it to query monit via monit's http service, or download log files
-    via a http server.
+    Purpose of this method is to contact the server with a "Hey its me!"
+    message.  This will allow the server to register the component's (component
+    = media-monitor, pypo etc.) ip address, and later use it to query monit via
+    monit's http service, or download log files via a http server.
     """
     def register_component(self, component):
         logger = self.logger
@@ -588,8 +612,8 @@ class AirtimeApiClient():
             logger.error("traceback: %s", traceback.format_exc())
 
     """
-        When watched dir is missing(unplugged or something) on boot up, this function will get called
-        and will call appropriate function on Airtime.
+        When watched dir is missing(unplugged or something) on boot up, this
+        function will get called and will call appropriate function on Airtime.
     """
     def handle_watched_dir_missing(self, dir):
         logger = self.logger
@@ -605,16 +629,13 @@ class AirtimeApiClient():
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
 
-    """
-        Retrive infomations needed on bootstrap time
-    """
     def get_bootstrap_info(self):
+        """
+        Retrive infomations needed on bootstrap time
+        """
         logger = self.logger
         try:
-            url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["get_bootstrap_info"])
-
-            url = url.replace("%%api_key%%", self.config["api_key"])
-
+            url = self.construct_url("get_bootstrap_info")
             response = self.get_response_from_server(url)
             response = json.loads(response)
             logger.info("Bootstrap info retrieved %s", response)
@@ -626,8 +647,9 @@ class AirtimeApiClient():
 
     def get_files_without_replay_gain_value(self, dir_id):
         """
-        Download a list of files that need to have their ReplayGain value calculated. This list
-        of files is downloaded into a file and the path to this file is the return value.
+        Download a list of files that need to have their ReplayGain value
+        calculated. This list of files is downloaded into a file and the path
+        to this file is the return value.
         """
 
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
@@ -651,8 +673,8 @@ class AirtimeApiClient():
 
     def update_replay_gain_values(self, pairs):
         """
-        'pairs' is a list of pairs in (x, y), where x is the file's database row id
-        and y is the file's replay_gain value in dB
+        'pairs' is a list of pairs in (x, y), where x is the file's database
+        row id and y is the file's replay_gain value in dB
         """
 
         #http://localhost/api/update-replay-gain-value/
