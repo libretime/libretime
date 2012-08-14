@@ -61,8 +61,10 @@ var AIRTIME = (function(AIRTIME){
 	        .hide();
 	}
 
-    function changeCueIn(span) {
-        var id = span.parent().attr("id").split("_").pop(),
+    function changeCueIn(event) {
+        event.stopPropagation();
+        var span = $(this),
+            id = span.parent().attr("id").split("_").pop(),
             url = "/Playlist/set-cue",
             cueIn = $.trim(span.text()),
             li = span.parents("li"),
@@ -74,7 +76,6 @@ var AIRTIME = (function(AIRTIME){
 	        showError(span, "please put in a time '00:00:00 (.000000)'");
 	        return;
 		}
-
 		$.post(url, 
 			{format: "json", cueIn: cueIn, id: id, modified: lastMod, type: type}, 
 			function(json){
@@ -97,8 +98,10 @@ var AIRTIME = (function(AIRTIME){
 			});
 	}
 
-    function changeCueOut(span) {
-        var id = span.parent().attr("id").split("_").pop(),
+    function changeCueOut(event) {
+        event.stopPropagation();
+        var span = $(this),
+            id = span.parent().attr("id").split("_").pop(),
             url = "/Playlist/set-cue",
             cueOut = $.trim(span.text()),
             li = span.parents("li"),
@@ -286,7 +289,6 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function setPlaylistContent(json) {
-		
 		$('#spl_name > a')
 			.empty()
 			.append(json.name);
@@ -296,9 +298,13 @@ var AIRTIME = (function(AIRTIME){
 	    $('#fieldset-metadate_change textarea')
 	        .empty()
 	        .val(json.description);
-		$('#spl_sortable')
-			.empty()
-			.append(json.html);
+	    
+	    $('#spl_sortable').unbind();
+	    $('#spl_sortable')
+        .empty()
+        .append(json.html);
+	    setCueEvents();
+	    setFadeEvents();
 		setModified(json.modified);
 		redrawLib();
 	}
@@ -400,38 +406,22 @@ var AIRTIME = (function(AIRTIME){
 	
 	//sets events dynamically for the cue editor.
 	function setCueEvents() {
-        
-        $('.spl_cue_in span').blur(function(e){
-            e.stopPropagation();
-            changeCueIn($(this));
-        });
-        
-        $('.spl_cue_in span').keydown(function(e){
-            e.stopPropagation();
-            submitOnEnter(e);
-        });
-        
-        $('.spl_cue_out span').blur(function(e){
-            e.stopPropagation();
-            changeCueOut($(this));
-        });
-        
-        $('.spl_cue_out span').keydown(function(e){
-            e.stopPropagation();
-            submitOnEnter(e);
-        });
+	    var temp = $('#spl_sortable');
+	    temp.on("blur", ".spl_cue_in span", changeCueIn);
+	    temp.on("keydown", ".spl_cue_in span", submitOnEnter);
+	    
+	    temp.on("blur", ".spl_cue_out span", changeCueOut);
+	    temp.on("keydown", ".spl_cue_out span", submitOnEnter);
 	}
 	
 	//sets events dynamically for the fade editor.
 	function setFadeEvents() {
-	
-		$pl.delegate(".spl_fade_in span", 
-	    		{"focusout": changeFadeIn, 
-	    		"keydown": submitOnEnter});
-	    
-		$pl.delegate(".spl_fade_out span", 
-	    		{"focusout": changeFadeOut, 
-	    		"keydown": submitOnEnter});
+	    var temp = $('#spl_sortable');
+        temp.on("blur", ".spl_fade_in span", changeFadeIn);
+        temp.on("keydown", ".spl_fade_in span", submitOnEnter);
+        
+        temp.on("blur", ".spl_fade_out span", changeFadeOut);
+        temp.on("keydown", ".spl_fade_out span", submitOnEnter);
 	}
 	
 	function initialEvents() {	
@@ -459,9 +449,7 @@ var AIRTIME = (function(AIRTIME){
 			            else {
 			                var fadeIn = $pl.find("span.spl_main_fade_in");
 			                var fadeOut = $pl.find("span.spl_main_fade_out");
-			                console.log(json);
 			                if (json.fadeIn == null) {
-			                    console.log("fadein is null");
 			                    fadeIn.parent().prev().hide();
 			                    fadeIn.hide();
 			                } else {
