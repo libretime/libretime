@@ -102,25 +102,21 @@ class AirtimeMessageReceiver(Loggable):
             bs = Bootstrapper( sdb, self.manager.watch_signal() )
             bs.flush_watch( directory=directory, last_ran=self.cfg.last_ran() )
         except Exception as e:
-            self.logger.info( "Exception bootstrapping: (dir,id)=(%s,%s)" %
-                    (directory, directory_id) )
-            self.logger.info( str(e) )
-            self.logger.error( traceback.format_exc() )
-            raise DirectoryIsNotListed(directory)
+            self.fatal_exception("Exception bootstrapping: (dir,id)=(%s,%s)" %
+                                 (directory, directory_id), e)
+            raise DirectoryIsNotListed(directory, cause=e)
 
     def md_update(self, msg):
         self.logger.info("Updating metadata for: '%s'" %
                 msg['MDATA_KEY_FILEPATH'])
         md_path = msg['MDATA_KEY_FILEPATH']
-        try:
-            Metadata.write_unsafe(path=md_path, md=msg)
+        try: Metadata.write_unsafe(path=md_path, md=msg)
         except BadSongFile as e:
             self.logger.info("Cannot find metadata file: '%s'" % e.path)
         except Exception as e:
             # TODO : add md_path to problem path or something?
-            self.logger.info("Unknown error when writing metadata to: '%s'" %
-                    md_path)
-            self.logger.info( traceback.format_exc() )
+            self.fatal_exception("Unknown error when writing metadata to: '%s'"
+                    % md_path, e)
 
     def new_watch(self, msg):
         self.logger.info("Creating watch for directory: '%s'" %
@@ -128,14 +124,10 @@ class AirtimeMessageReceiver(Loggable):
         if not os.path.exists(msg['directory']):
             try: os.makedirs(msg['directory'])
             except Exception as e:
-                self.logger.info("Failed to create watched dir '%s'" %
-                        msg['directory'])
-                self.logger.info(str(e))
+                self.fatal_exception("Failed to create watched dir '%s'" %
+                        msg['directory'],e)
             else: self.new_watch(msg)
         else:
-            # TODO : Refactor this; breaks encapsulation.
-            # TODO : Should not flush events, should be smarted and bootstrap
-            #self.manager.watch_listener.flush_events(msg['directory'])
             self.__request_now_bootstrap( directory=msg['directory'] )
             self.manager.add_watch_directory(msg['directory'])
 

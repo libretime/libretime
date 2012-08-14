@@ -50,11 +50,11 @@ class Bootstrapper(Loggable):
         # system. These are the files marked for deletions
         for to_delete in db_songs.difference(songs):
             dispatcher.send(signal=self.watch_signal, sender=self,
-                    event=DeleteFile(to_delete))
+                            event=DeleteFile(to_delete))
             deleted += 1
         for to_add in songs.difference(db_songs):
             dispatcher.send(signal=self.watch_signal, sender=self,
-                    event=NewFile(to_add))
+                            event=NewFile(to_add))
             added += 1
         self.logger.info( "Flushed watch directory (%s). \
                 (added, modified, deleted) = (%d, %d, %d)"

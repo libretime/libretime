@@ -29,8 +29,9 @@ class CouldNotCreateIndexFile(Exception):
     def __str__(self): return "Failed to create touch file '%s'" % self.path
 
 class DirectoryIsNotListed(Exception):
-    def __init__(self,dir_id):
+    def __init__(self,dir_id,cause=None):
         self.dir_id = dir_id
+        self.cause = cause
     def __str__(self):
         return "%d was not listed as a directory in the database" % self.dir_id
 
