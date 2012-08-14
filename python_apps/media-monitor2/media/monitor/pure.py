@@ -5,6 +5,7 @@ import shutil
 import sys
 import hashlib
 import locale
+import operator as op
 
 from os.path   import normpath
 from itertools import takewhile
@@ -200,8 +201,7 @@ def parse_int(s):
     if s.isdigit(): return s
     else:
         try:
-            return reduce(lambda x,y: x + y,
-                    takewhile(lambda x: x.isdigit(), s))
+            return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
         except: return 0
 
 def normalized_metadata(md, original_path):
@@ -305,8 +305,7 @@ def file_md5(path,max_length=100):
 
 def encode_to(obj, encoding='utf-8'):
     # TODO : add documentation + unit tests for this function
-    if isinstance(obj, unicode):
-        obj = obj.encode(encoding)
+    if isinstance(obj, unicode): obj = obj.encode(encoding)
     return obj
 
 def convert_dict_value_to_utf8(md):
@@ -354,8 +353,7 @@ def fondle(path,times=None):
     touch a file to change the last modified date. Beware of calling this
     function on the same file from multiple threads.
     """
-    with file(path, 'a'):
-        os.utime(path, times)
+    with file(path, 'a'): os.utime(path, times)
 
 def last_modified(path):
     """
@@ -364,9 +362,8 @@ def last_modified(path):
     the file does not exist we set this time 0 so that any files on the
     filesystem were modified after it
     """
-    if os.path.exists(path):
-        return os.path.getmtime(path)
-    else: 0
+    if os.path.exists(path): return os.path.getmtime(path)
+    else: return 0
 
 def expand_storage(store):
     """
