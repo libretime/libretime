@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import logging
+import logging.config
 
 from media.monitor.manager          import Manager
 from media.monitor.bootstrap        import Bootstrapper
@@ -16,12 +18,13 @@ from media.monitor.airtime          import AirtimeNotifier, \
 from media.monitor.watchersyncer    import WatchSyncer
 from media.monitor.eventdrainer     import EventDrainer
 from media.update.replaygainupdater import ReplayGainUpdater
+from std_err_override               import LogWriter
 
 import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
 
-def main(global_config, api_client_config):
+def main(global_config, api_client_config, log_config):
     for cfg in [global_config, api_client_config]:
         if not os.path.exists(cfg): raise NoConfigFile(cfg)
     # MMConfig is a proxy around ConfigObj instances. it does not allow
@@ -38,6 +41,13 @@ def main(global_config, api_client_config):
         print(str(e))
 
     # TODO : use the logging config file.
+    logging.config.fileConfig(log_config)
+
+    #need to wait for Python 2.7 for this..
+    #logging.captureWarnings(True)
+
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
     logfile = unicode( config['logpath'] )
     setup_logging(logfile)
     log = get_logger()
@@ -107,7 +117,7 @@ Options:
     -h --help          Show this screen
     --config=<path>    path to mm2 config
     --apiclient=<path> path to apiclient config
-    --log=<path>       log at <path>
+    --log=<path>       log config at <path>
 """
 
     #original debugging paths
@@ -118,9 +128,9 @@ Options:
 if __name__ == '__main__':
     from docopt import docopt
     args = docopt(__doc__,version="mm1.99")
-    for k in ['--apiclient','--config']:
+    for k in ['--apiclient','--config','--log']:
         if not os.path.exists(args[k]):
             print("'%s' must exist" % args[k])
             sys.exit(0)
     print("Running mm1.99")
-    main(args['--config'],args['--apiclient'])
+    main(args['--config'],args['--apiclient'],args['--log'])
