@@ -42,7 +42,7 @@ def main(global_config, api_client_config, log_config,
         print(str(e))
 
 
-    #logging.config.fileConfig(log_config)
+    logging.config.fileConfig(log_config)
 
     #need to wait for Python 2.7 for this..
     #logging.captureWarnings(True)

@@ -3,16 +3,22 @@ import abc
 import traceback
 from media.monitor.pure import LazyProperty
 
+appname = 'root'
+
 def setup_logging(log_path):
-    #logger = logging.getLogger('mediamonitor2')
+    #logger = logging.getLogger(appname)
     logging.basicConfig(filename=log_path, level=logging.DEBUG)
 
-appname = 'mediamonitor2'
+def get_logger():
+    """
+    in case we want to use the common logger from a procedural interface
+    """
+    return logging.getLogger()
 
 class Loggable(object):
     __metaclass__ = abc.ABCMeta
     @LazyProperty
-    def logger(self): return logging.getLogger(appname)
+    def logger(self): return get_logger()
 
     def unexpected_exception(self,e):
         """
@@ -28,8 +34,3 @@ class Loggable(object):
         self.logger.error( str(e) )
         self.logger.error( traceback.format_exc() )
 
-def get_logger():
-    """
-    in case we want to use the common logger from a procedural interface
-    """
-    return logging.getLogger(appname)

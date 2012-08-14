@@ -57,14 +57,11 @@ class BaseEvent(Loggable):
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
         self._pack_hook = lambda: None # no op
-        self._morph_target = False # returns true if event was used to moprh
         # into another event
     def exists(self): return os.path.exists(self.path)
     @LazyProperty
     def cookie(self):
         return getattr( self._raw_event, 'cookie', None )
-
-    def morph_target(self): return self._morph_target
 
     def __str__(self):
         return "Event(%s). Path(%s)" % ( self.path, self.__class__.__name__)
@@ -98,7 +95,6 @@ class BaseEvent(Loggable):
         self._raw_event   = evt
         self.path         = evt.path
         self.__class__    = evt.__class__
-        evt._morph_target = True
         self.add_safe_pack_hook(evt._pack_hook)
         return self
 
