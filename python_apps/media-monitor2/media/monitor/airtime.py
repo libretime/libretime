@@ -5,7 +5,6 @@ from kombu.connection import BrokerConnection
 import json
 import os
 import copy
-import traceback
 
 from media.monitor.exceptions import BadSongFile
 from media.monitor.metadata   import Metadata
@@ -138,18 +137,15 @@ class AirtimeMessageReceiver(Loggable):
 
     def rescan_watch(self, msg):
         self.logger.info("Trying to rescan watched directory: '%s'" %
-                msg['directory'])
+                         msg['directory'])
         try:
             # id is always an integer but in the dictionary the key is always a
             # string
             self.__request_now_bootstrap( unicode(msg['id']) )
         except DirectoryIsNotListed as e:
-            self.logger.info("Bad rescan request")
-            self.logger.info( str(e) )
+            self.fatal_exception("Bad rescan request", e)
         except Exception as e:
-            self.logger.info("Bad rescan request. Unknown error.")
-            self.logger.info( str(e) )
-            self.logger.info( traceback.format_exc() )
+            self.fatal_exception("Bad rescan request. Unknown error.", e)
         else:
             self.logger.info("Successfully re-scanned: '%s'" % msg['directory'])
 
@@ -186,9 +182,9 @@ class AirtimeMessageReceiver(Loggable):
                     self.logger.info("Successfully deleted: '%s'" %
                             msg['filepath'])
             except Exception as e:
-                self.logger.info("Failed to delete '%s'" % msg['filepath'])
-                self.logger.info("Error: " % str(e))
+                self.fatal_exception("Failed to delete '%s'" % msg['filepath'],
+                        e)
         else: # validation for filepath existence failed
             self.logger.info("Attempting to delete file '%s' that does not \
-                    exist. Full request coming:" % msg['filepath'])
+                    exist. Full request:" % msg['filepath'])
             self.logger.info(msg)
