@@ -1,6 +1,6 @@
 import os
 from pydispatch           import dispatcher
-from media.monitor.events import NewFile, DeleteFile
+from media.monitor.events import NewFile, DeleteFile, ModifyFile
 from media.monitor.log    import Loggable
 import media.monitor.pure as mmp
 
@@ -15,7 +15,7 @@ class Bootstrapper(Loggable):
         last_ran - last time the program was ran.
         watch_signal - the signals should send events for every file on.
         """
-        self.db = db
+        self.db           = db
         self.watch_signal = watch_signal
 
     def flush_all(self, last_ran):
@@ -43,9 +43,7 @@ class Bootstrapper(Loggable):
             if os.path.getmtime(f) > last_ran:
                 modded += 1
                 dispatcher.send(signal=self.watch_signal, sender=self,
-                        event=DeleteFile(f))
-                dispatcher.send(signal=self.watch_signal, sender=self,
-                        event=NewFile(f))
+                        event=ModifyFile(f))
         db_songs = set(( song for song in self.db.directory_get_files(directory)
             if mmp.sub_path(directory,song) ))
         # Get all the files that are in the database but in the file
