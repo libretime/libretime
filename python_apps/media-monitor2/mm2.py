@@ -141,11 +141,6 @@ Options:
     --log=<path>       log config at <path>
 """
 
-    #original debugging paths
-    #base_path = u'/home/rudi/Airtime/python_apps/media-monitor2/tests'
-    #global_config = os.path.join(base_path, u'live_client.cfg')
-    #api_client_config = global_config
-
 if __name__ == '__main__':
     from docopt import docopt
     args = docopt(__doc__,version="mm1.99")
