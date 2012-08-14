@@ -56,7 +56,7 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
-        self._pack_hook = lambda _ : _ # no op
+        self._pack_hook = lambda: None # no op
         self._morph_target = False # returns true if event was used to moprh
         # into another event
     def exists(self): return os.path.exists(self.path)
