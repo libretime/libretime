@@ -21,7 +21,7 @@ class LazyProperty(object):
     property should represent non-mutable data, as it replaces itself.
     """
     def __init__(self,fget):
-        self.fget = fget
+        self.fget      = fget
         self.func_name = fget.__name__
 
     def __get__(self,obj,cls):
@@ -220,12 +220,10 @@ def normalized_metadata(md, original_path):
         # old code would cast MDATA_KEY_TRACKNUMBER to an integer as a
         # byproduct of formatting the track number to 2 digits.
         'MDATA_KEY_TRACKNUMBER' : parse_int,
-        'MDATA_KEY_BITRATE' : lambda x: str(int(x) / 1000) + "kbps",
-        # note: you don't actually need the lambda here. It's only used for
-        # clarity
-        'MDATA_KEY_FILEPATH' : lambda x: os.path.normpath(x),
-        'MDATA_KEY_MIME' : lambda x: x.replace('-','/'),
-        'MDATA_KEY_BPM' : lambda x: x[0:8],
+        'MDATA_KEY_BITRATE'     : lambda x: str(int(x) / 1000) + "kbps",
+        'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
+        'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
+        'MDATA_KEY_BPM'         : lambda x: x[0:8],
     }
     path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
                'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
@@ -259,7 +257,7 @@ def normalized_metadata(md, original_path):
 
 def organized_path(old_path, root_path, normal_md):
     """
-    old_path - path where file is store at the moment <= maybe not necessary?
+    old_path  - path where file is store at the moment <= maybe not necessary?
     root_path - the parent directory where all organized files go
     normal_md - original meta data of the file as given by mutagen AFTER being
     normalized
@@ -294,7 +292,7 @@ def organized_path(old_path, root_path, normal_md):
 def file_md5(path,max_length=100):
     """
     Get md5 of file path (if it exists). Use only max_length characters to save
-    time and memory
+    time and memory. Pass max_length=-1 to read the whole file (like in mm1)
     """
     if os.path.exists(path):
         with open(path, 'rb') as f:
@@ -377,10 +375,10 @@ def expand_storage(store):
     """
     store = os.path.normpath(store)
     return {
-        'organize' : os.path.join(store, 'organize'),
-        'recorded' : os.path.join(store, 'recorded'),
+        'organize'      : os.path.join(store, 'organize'),
+        'recorded'      : os.path.join(store, 'recorded'),
         'problem_files' : os.path.join(store, 'problem_files'),
-        'imported' : os.path.join(store, 'imported'),
+        'imported'      : os.path.join(store, 'imported'),
     }
 
 def create_dir(path):
@@ -389,8 +387,8 @@ def create_dir(path):
     if it fails at this task.
     """
     if not os.path.exists(path):
-        try: os.makedirs(path)
-        except Exception as e: raise FailedToCreateDir(path, e)
+        try                   : os.makedirs(path)
+        except Exception as e : raise FailedToCreateDir(path, e)
         else: # if no error occurs we still need to check that dir exists
             if not os.path.exists: raise FailedToCreateDir(path)
 
@@ -401,7 +399,7 @@ def sub_path(directory,f):
     the paths.
     """
     normalized = normpath(directory)
-    common = os.path.commonprefix([ directory, normpath(f) ])
+    common     = os.path.commonprefix([ directory, normpath(f) ])
     return common == normalized
 
 if __name__ == '__main__':

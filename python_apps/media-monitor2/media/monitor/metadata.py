@@ -23,21 +23,21 @@ list of supported easy tags in mutagen version 1.20
 """
 
 airtime2mutagen = {
-    "MDATA_KEY_TITLE": "title",
-    "MDATA_KEY_CREATOR": "artist",
-    "MDATA_KEY_SOURCE": "album",
-    "MDATA_KEY_GENRE": "genre",
-    "MDATA_KEY_MOOD": "mood",
-    "MDATA_KEY_TRACKNUMBER": "tracknumber",
-    "MDATA_KEY_BPM": "bpm",
-    "MDATA_KEY_LABEL": "organization",
-    "MDATA_KEY_COMPOSER": "composer",
-    "MDATA_KEY_ENCODER": "encodedby",
-    "MDATA_KEY_CONDUCTOR": "conductor",
-    "MDATA_KEY_YEAR": "date",
-    "MDATA_KEY_URL": "website",
-    "MDATA_KEY_ISRC": "isrc",
-    "MDATA_KEY_COPYRIGHT": "copyright",
+    "MDATA_KEY_TITLE"       : "title",
+    "MDATA_KEY_CREATOR"     : "artist",
+    "MDATA_KEY_SOURCE"      : "album",
+    "MDATA_KEY_GENRE"       : "genre",
+    "MDATA_KEY_MOOD"        : "mood",
+    "MDATA_KEY_TRACKNUMBER" : "tracknumber",
+    "MDATA_KEY_BPM"         : "bpm",
+    "MDATA_KEY_LABEL"       : "organization",
+    "MDATA_KEY_COMPOSER"    : "composer",
+    "MDATA_KEY_ENCODER"     : "encodedby",
+    "MDATA_KEY_CONDUCTOR"   : "conductor",
+    "MDATA_KEY_YEAR"        : "date",
+    "MDATA_KEY_URL"         : "website",
+    "MDATA_KEY_ISRC"        : "isrc",
+    "MDATA_KEY_COPYRIGHT"   : "copyright",
 }
 
 # Some airtime attributes are special because they must use the mutagen object
@@ -61,18 +61,18 @@ mutagen2airtime = dict( (v,k) for k,v in airtime2mutagen.iteritems()
         if isinstance(v, str) )
 
 truncate_table = {
-        'MDATA_KEY_GENRE' : 64,
-        'MDATA_KEY_TITLE' : 512,
-        'MDATA_KEY_CREATOR' : 512,
-        'MDATA_KEY_SOURCE' : 512,
-        'MDATA_KEY_MOOD' : 64,
-        'MDATA_KEY_LABEL' : 512,
-        'MDATA_KEY_COMPOSER' : 512,
-        'MDATA_KEY_ENCODER' : 255,
+        'MDATA_KEY_GENRE'     : 64,
+        'MDATA_KEY_TITLE'     : 512,
+        'MDATA_KEY_CREATOR'   : 512,
+        'MDATA_KEY_SOURCE'    : 512,
+        'MDATA_KEY_MOOD'      : 64,
+        'MDATA_KEY_LABEL'     : 512,
+        'MDATA_KEY_COMPOSER'  : 512,
+        'MDATA_KEY_ENCODER'   : 255,
         'MDATA_KEY_CONDUCTOR' : 512,
-        'MDATA_KEY_YEAR' : 16,
-        'MDATA_KEY_URL' : 512,
-        'MDATA_KEY_ISRC' : 512,
+        'MDATA_KEY_YEAR'      : 16,
+        'MDATA_KEY_URL'       : 512,
+        'MDATA_KEY_ISRC'      : 512,
         'MDATA_KEY_COPYRIGHT' : 512,
 }
 
