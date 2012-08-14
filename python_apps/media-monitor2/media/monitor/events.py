@@ -58,14 +58,14 @@ class BaseEvent(Loggable):
         else: self.path = raw_event
         self._pack_hook = lambda: None # no op
         # into another event
+
     def exists(self): return os.path.exists(self.path)
+
     @LazyProperty
-    def cookie(self):
-        return getattr( self._raw_event, 'cookie', None )
+    def cookie(self): return getattr( self._raw_event, 'cookie', None )
 
     def __str__(self):
         return "Event(%s). Path(%s)" % ( self.path, self.__class__.__name__)
-    def is_dir_event(self): return self._raw_event.dir
 
     def add_safe_pack_hook(self,k):
         """
