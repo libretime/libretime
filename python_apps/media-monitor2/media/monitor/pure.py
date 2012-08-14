@@ -182,8 +182,7 @@ def remove_whitespace(dictionary):
         if hasattr(v,'strip'):
             stripped = v.strip()
             # ghetto and maybe unnecessary
-            if stripped == '' or stripped == u'':
-                bad_keys.append(k)
+            if stripped == '' or stripped == u'': bad_keys.append(k)
     for bad_key in bad_keys: del nd[bad_key]
     return nd
 
@@ -200,8 +199,7 @@ def parse_int(s):
     """
     if s.isdigit(): return s
     else:
-        try:
-            return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
+        try   : return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
         except: return 0
 
 def normalized_metadata(md, original_path):
@@ -212,8 +210,7 @@ def normalized_metadata(md, original_path):
     """
     new_md = copy.deepcopy(md)
     # replace all slashes with dashes
-    for k,v in new_md.iteritems():
-        new_md[k] = unicode(v).replace('/','-')
+    for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
         # It's very likely that the following isn't strictly necessary. But the
