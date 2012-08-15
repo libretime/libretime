@@ -51,7 +51,7 @@ airtime_special = {
     "MDATA_KEY_DURATION" :
         lambda m: format_length(getattr(m.info, u'length', 0.0)),
     "MDATA_KEY_BITRATE" :
-        lambda m: getattr(m.info, "bitrate", ''),
+        lambda m: getattr(m.info, "bitrate", 0),
     "MDATA_KEY_SAMPLERATE" :
         lambda m: getattr(m.info, u'sample_rate', 0),
     "MDATA_KEY_MIME" :

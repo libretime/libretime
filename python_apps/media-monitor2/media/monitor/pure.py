@@ -209,12 +209,12 @@ def parse_int(s):
     >>> parse_int("123saf")
     123
     >>> parse_int("asdf")
-    ''
+    0
     """
     if s.isdigit(): return s
     else:
-        try   : return str(reduce(op.add, takewhile(lambda x: x.isdigit(), s)))
-        except: return ''
+        try   : return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
+        except: return 0
 
 def normalized_metadata(md, original_path):
     """
@@ -241,10 +241,10 @@ def normalized_metadata(md, original_path):
     # could possibly lead to subtle bugs down the road. Plus the following
     # approach gives us the flexibility to use different defaults for different
     # attributes
-    new_md = remove_whitespace(new_md)
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
             default=no_extension_basename(original_path))
+    new_md = remove_whitespace(new_md)
     new_md = default_to(dictionary=new_md, keys=path_md,
             default=u'')
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],

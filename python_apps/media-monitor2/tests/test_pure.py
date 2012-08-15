@@ -67,9 +67,4 @@ class TestMMP(unittest.TestCase):
         self.assertTrue( mmp.sub_path(d1, f1) )
         self.assertTrue( mmp.sub_path(d2, f1) )
 
-    def test_parse_int(self):
-        self.assertEqual( mmp.parse_int("123"), "123" )
-        self.assertEqual( mmp.parse_int("123asf"), "123" )
-        self.assertEqual( mmp.parse_int("asdf"), "" )
-
 if __name__ == '__main__': unittest.main()
