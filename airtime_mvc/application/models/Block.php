@@ -1160,12 +1160,13 @@ EOT;
                     } else if ($spCriteriaModifier == "is in the range") {
                         $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
                     }
+                    
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
                     try{
                         if ($i > 0) {
-                            $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            $qry->addOr($spCriteria, addslashes($spCriteriaValue), $spCriteriaModifier);
                         } else {
-                            $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
+                            $qry->add($spCriteria, addslashes($spCriteriaValue), $spCriteriaModifier);
                         }
                     }catch (Exception $e){
                         Logging::log($e);
