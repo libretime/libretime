@@ -400,7 +400,11 @@ class PypoPush(Thread):
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
-            msg = 'dynamic_source.read_start\n'
+            msg = 'dynamic_source.id %s\n' % media_item['row_id']
+            tn.write(msg)
+
+            #example: dynamic_source.read_start http://87.230.101.24:80/top100station.mp3
+            msg = 'dynamic_source.read_start %s\n' % media_item['uri'].encode('latin-1')
             self.logger.debug(msg)
             tn.write(msg)
 
@@ -412,15 +416,10 @@ class PypoPush(Thread):
             self.telnet_lock.release()
 
 
-
     def start_web_stream(self, media_item):
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            #dynamic_source.start http://87.230.101.24:80/top100station.mp3
-
-            msg = 'dynamic_source.id %s\n' % media_item['row_id']
-            tn.write(msg)
 
             #TODO: DO we need this?
             msg = 'streams.scheduled_play_start\n'

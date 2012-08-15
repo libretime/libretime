@@ -709,6 +709,7 @@ SQL;
                     'start' => $stream_buffer_start,
                     'end' => $stream_buffer_start,
                     'uri' => $uri,
+                    'row_id' => $item["id"],
                     'type' => 'stream_buffer_start',
                     'independent_event' => true
                 );
