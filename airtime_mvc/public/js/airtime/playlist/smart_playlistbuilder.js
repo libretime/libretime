@@ -414,7 +414,8 @@ function sizeTextBoxes(ele, classToRemove, classToAdd) {
 function populateModifierSelect(e) {
     var criteria_type = getCriteriaOptionType(e),
         index = getRowIndex($(e).parent()),
-        divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
+        critIndex = index.substring(0, 1),
+        divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+critIndex+'"]');
 
     $.each(divs, function(i, div){
         $(div).children().remove();
