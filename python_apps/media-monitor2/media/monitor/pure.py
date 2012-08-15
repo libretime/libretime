@@ -14,6 +14,7 @@ from configobj import ConfigObj
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
 supported_extensions =  [u"mp3", u"ogg", u"oga"]
+#supported_extensions =  [u"mp3", u"ogg", u"oga", u"flac", u"aac", u"bwf"]
 unicode_unknown = u'unknown'
 
 class LazyProperty(object):
@@ -182,8 +183,7 @@ def remove_whitespace(dictionary):
         if hasattr(v,'strip'):
             stripped = v.strip()
             # ghetto and maybe unnecessary
-            if stripped == '' or stripped == u'':
-                bad_keys.append(k)
+            if stripped == '' or stripped == u'': bad_keys.append(k)
     for bad_key in bad_keys: del nd[bad_key]
     return nd
 
@@ -200,8 +200,7 @@ def parse_int(s):
     """
     if s.isdigit(): return s
     else:
-        try:
-            return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
+        try   : return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
         except: return 0
 
 def normalized_metadata(md, original_path):
@@ -212,8 +211,7 @@ def normalized_metadata(md, original_path):
     """
     new_md = copy.deepcopy(md)
     # replace all slashes with dashes
-    for k,v in new_md.iteritems():
-        new_md[k] = unicode(v).replace('/','-')
+    for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
         # It's very likely that the following isn't strictly necessary. But the
@@ -244,7 +242,7 @@ def normalized_metadata(md, original_path):
     # Note: I don't know why I'm doing a unicode string comparison here
     # that part is copied from the original code
     if is_airtime_recorded(new_md):
-        hour,minute,second,name = md['MDATA_KEY_TITLE'].split("-",4)
+        hour,minute,second,name = md['MDATA_KEY_TITLE'].split("-",3)
         # We assume that MDATA_KEY_YEAR is always given for airtime recorded
         # shows
         new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \

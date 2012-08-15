@@ -61,13 +61,17 @@ rm -r airtime/airtime_mvc/library/ZFDebug/
 #Strip un-needed install scripts
 rm -r airtime/install_full/
 
+#Fix permissions
+chmod -x airtime/python_apps/media-monitor2/mm1.99.sh
+
 #############################
 
 echo "running the build..."
 
 debuild -b -uc -us $@ || exit
 
-exit
-
-# optionally, copy the new package to the public server
+# copy the new package to the public server
 scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
+
+# copy the build log too
+scp /tmp/airtime_${VERSION}_amd64.build apt.sourcefabric.org:/var/www/apt/snapshots/

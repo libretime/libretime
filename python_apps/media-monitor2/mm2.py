@@ -57,9 +57,7 @@ def main(global_config, api_client_config, log_config,
         if not os.path.exists(config['index_path']):
             log.info("Attempting to create index file:...")
             try:
-                f = open(config['index_path'])
-                f.write(" ")
-                f.close()
+                with open(config['index_path']) as f: f.write(" ")
             except Exception as e:
                 log.info("Failed to create index file with exception: %s" % str(e))
             else:
@@ -140,11 +138,6 @@ Options:
     --apiclient=<path> path to apiclient config
     --log=<path>       log config at <path>
 """
-
-    #original debugging paths
-    #base_path = u'/home/rudi/Airtime/python_apps/media-monitor2/tests'
-    #global_config = os.path.join(base_path, u'live_client.cfg')
-    #api_client_config = global_config
 
 if __name__ == '__main__':
     from docopt import docopt
