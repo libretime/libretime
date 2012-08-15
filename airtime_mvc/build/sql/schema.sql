@@ -639,6 +639,7 @@ CREATE TABLE "cc_webstream"
 	"mtime" TIMESTAMP(6)  NOT NULL,
 	"utime" TIMESTAMP(6)  NOT NULL,
 	"mime" VARCHAR(255),
+	"liquidsoap_data" VARCHAR(1024),
 	PRIMARY KEY ("id")
 );
 
