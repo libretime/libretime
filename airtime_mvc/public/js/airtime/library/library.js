@@ -426,7 +426,7 @@ var AIRTIME = (function(AIRTIME) {
                         open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
                     } else if (aData.ftype == 'stream') {
                         open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
-                    } else if (aData.ftype == 'block') {
+                    } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
                         blockIndex = $(this).parent().attr('id').substring(3); //remove the bl_
                         open_block_preview(blockIndex, 0);
                     }

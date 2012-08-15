@@ -40,6 +40,10 @@ var AIRTIME = (function(AIRTIME){
 		$nRow.attr("id", aData["tr_id"])
 	    	.data("aData", aData)
 	    	.data("screen", "playlist");
+		
+		if (aData["bl_type"] !== undefined) {
+		    $nRow.attr("bl_type", aData["bl_type"]);
+		}
 	};
 	
 	mod.fnDrawCallback = function() {
