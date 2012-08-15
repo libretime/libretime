@@ -8,6 +8,7 @@ set("server.telnet.port", 1234)
 
 #Dynamic source list
 dyn_sources = ref []
+webstream_enabled = ref false
 
 time = ref string_of(gettimeofday())
 
@@ -27,7 +28,7 @@ stream_metadata_type = ref 0
 default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
-current_media_id = ref ''
+#current_media_id = ref ''
 
 s1_connected = ref ''
 s2_connected = ref ''
@@ -47,16 +48,43 @@ queue = map_metadata(append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
 
-queue = fallback([web_stream, queue])
+queue = switch(track_sensitive=false, [({!webstream_enabled},web_stream), ({true}, queue)])
+
 ignore(output.dummy(queue, fallible=true))
 
-server.register(namespace="vars", "pypo_data", fun (s) -> begin pypo_data := s "Done" end)
-server.register(namespace="vars", "stream_metadata_type", fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
-server.register(namespace="vars", "show_name", fun (s) -> begin show_name := s s end)
-server.register(namespace="vars", "station_name", fun (s) -> begin station_name := s s end)
-server.register(namespace="vars", "bootup_time", fun (s) -> begin time := s s end)
-server.register(namespace="streams", "connection_status", fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
-server.register(namespace="vars", "default_dj_fade", fun (s) -> begin default_dj_fade := float_of_string(s) s end)
+server.register(namespace="vars", 
+                "pypo_data", 
+                fun (s) -> begin pypo_data := s "Done" end)
+server.register(namespace="vars", 
+                "stream_metadata_type", 
+                fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
+server.register(namespace="vars", 
+                "show_name", 
+                fun (s) -> begin show_name := s s end)
+server.register(namespace="vars", 
+                "station_name", 
+                fun (s) -> begin station_name := s s end)
+server.register(namespace="vars", 
+                "bootup_time", 
+                fun (s) -> begin time := s s end)
+server.register(namespace="streams", 
+                "connection_status", 
+                fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
+server.register(namespace="vars", 
+                "default_dj_fade", 
+                fun (s) -> begin default_dj_fade := float_of_string(s) s end)
+
+server.register(namespace="dynamic_source",
+                description="Enable webstream output",
+                usage='start',
+                "output_start",
+                fun (s) -> begin webstream_enabled := true "enabled" end)
+server.register(namespace="dynamic_source",
+                description="Enable webstream output",
+                usage='stop',
+                "output_stop",
+                fun (s) -> begin webstream_enabled := false "disabled" end)
+
 server.register(namespace="dynamic_source",
                 description="Set the cc_schedule row id",
                 usage="id <id>",
@@ -65,12 +93,12 @@ server.register(namespace="dynamic_source",
 server.register(namespace="dynamic_source",
                 description="Start a new dynamic source.",
                 usage="start <uri>",
-                "start",
+                "read_start",
                 create_dynamic_source)
 server.register(namespace="dynamic_source",
                 description="Stop a dynamic source.",
                 usage="stop <uri>",
-                "stop",
+                "read_stop",
                 destroy_dynamic_source)
 
 default = amplify(id="silence_src", 0.00001, noise())

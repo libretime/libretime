@@ -698,6 +698,22 @@ SQL;
             );
 
             if ($type == "stream") {
+                //create an event to start stream buffering 5 seconds ahead of the streams actual time.
+                $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
+                $buffer_start->sub(new DateInterval("PT5S"));
+
+                $stream_buffer_start = Application_Model_Schedule::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
+
+                //TODO: Make sure no other media is being overwritten!
+                $data["media"][$stream_buffer_start] = array(
+                    'start' => $stream_buffer_start,
+                    'end' => $stream_buffer_start,
+                    'uri' => $uri,
+                    'type' => 'stream_buffer_start',
+                    'independent_event' => true
+                );
+
+
                 //since a stream never ends we have to insert an additional "kick stream" event. The "start"
                 //time of this event is the "end" time of the stream minus 1 second.
                 $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
@@ -920,7 +936,7 @@ SQL;
             $hValue = trim(substr($data["add_show_duration"], 0, $hPos));
         }
         if ($mPos !== false) {
-            $hPos = $hPos === FALSE ? 0 : $hPos+1;
+            $hPos = $hPos === false ? 0 : $hPos+1;
             $mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
         }
 
