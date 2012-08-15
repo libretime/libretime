@@ -1,11 +1,15 @@
 def notify(m)
-  log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &")
-  system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &")
+  current_media_id := string_of(m['schedule_table_id'])
+  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &"
+  log(command)
+  system(command)
 end
 
 def notify_stream(m)
-  log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --stream --uri=#{base64.encode(m['uri'])} --title=#{base64.encode(m['title'])} &")
-  #system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --stream --uri=#{base64.encode(m['uri'])} --title=#{base64.encode(m['title'])} &")
+  json_str = string.replace(pattern="\n",(fun (s) -> ""), json_of(m))
+  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --webstream='#{json_str}' --media-id=#{!current_media_id} &"
+  log(command)
+  system(command)
 end
 
 # A function applied to each metadata chunk

@@ -34,6 +34,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('get-bootstrap-info', 'json')
                 ->addActionContext('get-files-without-replay-gain', 'json')
                 ->addActionContext('reload-metadata-group', 'json')
+                ->addActionContext('notify-webstream-data', 'json')
                 ->initContext();
     }
 
@@ -349,12 +350,15 @@ class ApiController extends Zend_Controller_Action
         
         //set a 'last played' timestamp for media item
         //needed for smart playlists
-        try{
+        try {
             $file_id = Application_Model_Schedule::GetFileId($media_id);
-            $file = Application_Model_StoredFile::Recall($file_id);
-            $now = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setLastPlayedTime($now);
-        }catch(Exception $e){
+            if (!is_null($file_id)) {
+                //we are dealing with a file not a stream
+                $file = Application_Model_StoredFile::Recall($file_id);
+                $now = new DateTime("now", new DateTimeZone("UTC"));
+                $file->setLastPlayedTime($now);
+            }
+        } catch (Exception $e) {
             Logging::log($e);
         }
         
@@ -368,9 +372,11 @@ class ApiController extends Zend_Controller_Action
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
 
-        $this->view->shows = Application_Model_Show::getShows(Application_Common_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
-                                                                Application_Common_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
-                                                                $excludeInstance=NULL, $onlyRecord=TRUE);
+        $this->view->shows = 
+            Application_Model_Show::getShows(
+                Application_Common_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
+                Application_Common_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
+                $excludeInstance = null, $onlyRecord = true);
 
 
         $this->view->is_recording = false;
@@ -394,11 +400,12 @@ class ApiController extends Zend_Controller_Action
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
 
         if (!is_null($result)) {
-            die('{"jsonrpc" : "2.0", "error" : {"code": '.$result[code].', "message" : "'.$result[message].'"}}');
+            die('{"jsonrpc" : "2.0", "error" : {"code": '.$result['code'].', "message" : "'.$result['message'].'"}}');
         }
     }
 
-    public function uploadRecordedAction() {
+    public function uploadRecordedAction()
+    {
         $show_instance_id = $this->_getParam('showinstanceid');
         $file_id = $this->_getParam('fileid');
         $this->view->fileid = $file_id;
@@ -422,7 +429,7 @@ class ApiController extends Zend_Controller_Action
             $show_genre = $show_inst->getGenre();
             $show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
-         } catch (Exception $e) {
+        } catch (Exception $e) {
             //we've reached here probably because the show was
             //cancelled, and therefore the show instance does not
             //exist anymore (ShowInstance constructor threw this error).
@@ -1015,4 +1022,34 @@ class ApiController extends Zend_Controller_Action
             $file->save();
         }
     }
+
+    public function notifyWebstreamDataAction()
+    {
+        $request = $this->getRequest();
+        $data = $request->getParam("data");
+        $media_id = $request->getParam("media_id");
+
+        $schedule = CcScheduleQuery::create()->findPK($media_id);
+        $stream_id = $schedule->getDbStreamId();
+
+        if (!is_null($stream_id)) {
+            $webstream = CcWebstreamQuery::create()->findPK($stream_id);    
+            if (strlen($data) <= 1024) {
+                $data_arr = json_decode($data);
+                if (isset($data_arr->title)) {
+                    $webstream->setDbLiquidsoapData($data_arr->title);
+                } else {
+                    $webstream->setDbLiquidsoapData('');
+                }
+                $webstream->save();
+            }
+        } else {
+            throw new Error("Unexpected error. media_id $media_id has a null stream value in cc_schedule!");
+        }
+
+        Logging::log(json_decode($data));
+        $this->view->response = $data;
+        $this->view->media_id = $media_id;
+    }
+
 }

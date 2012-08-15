@@ -26,7 +26,7 @@ abstract class BaseCcWebstreamPeer {
 	const TM_CLASS = 'CcWebstreamTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -58,6 +58,9 @@ abstract class BaseCcWebstreamPeer {
 	/** the column name for the MIME field */
 	const MIME = 'cc_webstream.MIME';
 
+	/** the column name for the LIQUIDSOAP_DATA field */
+	const LIQUIDSOAP_DATA = 'cc_webstream.LIQUIDSOAP_DATA';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcWebstream objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -74,12 +77,12 @@ abstract class BaseCcWebstreamPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbDescription', 'DbUrl', 'DbLength', 'DbCreatorId', 'DbMtime', 'DbUtime', 'DbMime', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbDescription', 'dbUrl', 'dbLength', 'dbCreatorId', 'dbMtime', 'dbUtime', 'dbMime', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::DESCRIPTION, self::URL, self::LENGTH, self::CREATOR_ID, self::MTIME, self::UTIME, self::MIME, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'DESCRIPTION', 'URL', 'LENGTH', 'CREATOR_ID', 'MTIME', 'UTIME', 'MIME', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'description', 'url', 'length', 'creator_id', 'mtime', 'utime', 'mime', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbDescription', 'DbUrl', 'DbLength', 'DbCreatorId', 'DbMtime', 'DbUtime', 'DbMime', 'DbLiquidsoapData', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbDescription', 'dbUrl', 'dbLength', 'dbCreatorId', 'dbMtime', 'dbUtime', 'dbMime', 'dbLiquidsoapData', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::DESCRIPTION, self::URL, self::LENGTH, self::CREATOR_ID, self::MTIME, self::UTIME, self::MIME, self::LIQUIDSOAP_DATA, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'DESCRIPTION', 'URL', 'LENGTH', 'CREATOR_ID', 'MTIME', 'UTIME', 'MIME', 'LIQUIDSOAP_DATA', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'description', 'url', 'length', 'creator_id', 'mtime', 'utime', 'mime', 'liquidsoap_data', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -89,12 +92,12 @@ abstract class BaseCcWebstreamPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbDescription' => 2, 'DbUrl' => 3, 'DbLength' => 4, 'DbCreatorId' => 5, 'DbMtime' => 6, 'DbUtime' => 7, 'DbMime' => 8, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbDescription' => 2, 'dbUrl' => 3, 'dbLength' => 4, 'dbCreatorId' => 5, 'dbMtime' => 6, 'dbUtime' => 7, 'dbMime' => 8, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::DESCRIPTION => 2, self::URL => 3, self::LENGTH => 4, self::CREATOR_ID => 5, self::MTIME => 6, self::UTIME => 7, self::MIME => 8, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'URL' => 3, 'LENGTH' => 4, 'CREATOR_ID' => 5, 'MTIME' => 6, 'UTIME' => 7, 'MIME' => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'description' => 2, 'url' => 3, 'length' => 4, 'creator_id' => 5, 'mtime' => 6, 'utime' => 7, 'mime' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbDescription' => 2, 'DbUrl' => 3, 'DbLength' => 4, 'DbCreatorId' => 5, 'DbMtime' => 6, 'DbUtime' => 7, 'DbMime' => 8, 'DbLiquidsoapData' => 9, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbDescription' => 2, 'dbUrl' => 3, 'dbLength' => 4, 'dbCreatorId' => 5, 'dbMtime' => 6, 'dbUtime' => 7, 'dbMime' => 8, 'dbLiquidsoapData' => 9, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::DESCRIPTION => 2, self::URL => 3, self::LENGTH => 4, self::CREATOR_ID => 5, self::MTIME => 6, self::UTIME => 7, self::MIME => 8, self::LIQUIDSOAP_DATA => 9, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'URL' => 3, 'LENGTH' => 4, 'CREATOR_ID' => 5, 'MTIME' => 6, 'UTIME' => 7, 'MIME' => 8, 'LIQUIDSOAP_DATA' => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'description' => 2, 'url' => 3, 'length' => 4, 'creator_id' => 5, 'mtime' => 6, 'utime' => 7, 'mime' => 8, 'liquidsoap_data' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -175,6 +178,7 @@ abstract class BaseCcWebstreamPeer {
 			$criteria->addSelectColumn(CcWebstreamPeer::MTIME);
 			$criteria->addSelectColumn(CcWebstreamPeer::UTIME);
 			$criteria->addSelectColumn(CcWebstreamPeer::MIME);
+			$criteria->addSelectColumn(CcWebstreamPeer::LIQUIDSOAP_DATA);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
@@ -185,6 +189,7 @@ abstract class BaseCcWebstreamPeer {
 			$criteria->addSelectColumn($alias . '.MTIME');
 			$criteria->addSelectColumn($alias . '.UTIME');
 			$criteria->addSelectColumn($alias . '.MIME');
+			$criteria->addSelectColumn($alias . '.LIQUIDSOAP_DATA');
 		}
 	}
 
