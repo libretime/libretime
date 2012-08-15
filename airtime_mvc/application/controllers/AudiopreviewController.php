@@ -191,8 +191,14 @@ class AudiopreviewController extends Zend_Controller_Action
                 'element_id' => isset($track['id'])?$track['id']:"",
                 'element_position' => isset($track['position'])?$track['position']:"",
             );
-
-
+        
+        /* If the track type is static we know it must be
+         * a track because static blocks can only contain
+         * tracks
+         */
+        if ($track['type'] == 'static') {
+            $track['type'] = 0;
+        }
         $elementMap['type'] = $track['type'];
 
         if ($track['type'] == 0) {
