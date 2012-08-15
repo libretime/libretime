@@ -19,6 +19,10 @@ class BitrateFormatter {
     {
         $Kbps = bcdiv($this->_bitrate, 1000, 0);
 
-        return "{$Kbps} Kbps";
+        if($Kbps == 0) {
+            return "";
+        } else {
+            return "{$Kbps} Kbps";
+        }
     }
 }
