@@ -60,4 +60,11 @@ class TestMMP(unittest.TestCase):
         self.assertRaises( ValueError, lambda : mmp.file_md5('/bull/shit/path') )
         self.assertTrue( m1 == mmp.file_md5(p) )
 
+    def test_sub_path(self):
+        f1 = "/home/testing/123.mp3"
+        d1 = "/home/testing"
+        d2 = "/home/testing/"
+        self.assertTrue( mmp.sub_path(d1, f1) )
+        self.assertTrue( mmp.sub_path(d2, f1) )
+
 if __name__ == '__main__': unittest.main()
