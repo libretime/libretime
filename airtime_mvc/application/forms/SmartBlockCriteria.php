@@ -266,4 +266,153 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         ));
     }
     
+    function isValid($params){
+        Logging::log("isvalid called");
+        $isValid = true;
+        // reconstruct the params['criteria'] so we can populate the form
+        $formData = array();
+        foreach ($params['data'] as $ele) {
+            $formData[$ele['name']] = $ele['value'];
+        }
+        $this->populate($formData);
+        $criteria2PeerMap = array(
+                0 => "Select criteria",
+                "album_title" => "DbAlbumTitle",
+                "artist_name" => "DbArtistName",
+                "bit_rate" => "DbBitRate",
+                "bpm" => "DbBpm",
+                "comments" => "DbComments",
+                "composer" => "DbComposer",
+                "conductor" => "DbConductor",
+                "utime" => "DbUtime",
+                "mtime" => "DbMtime",
+                "lptime" => "DbLPtime",
+                "disc_number" => "DbDiscNumber",
+                "genre" => "DbGenre",
+                "isrc_number" => "DbIsrcNumber",
+                "label" => "DbLabel",
+                "language" => "DbLanguage",
+                "length" => "DbLength",
+                "lyricist" => "DbLyricist",
+                "mood" => "DbMood",
+                "name" => "DbName",
+                "orchestra" => "DbOrchestra",
+                "rating" => "DbRating",
+                "sample_rate" => "DbSampleRate",
+                "track_title" => "DbTrackTitle",
+                "track_number" => "DbTrackNumber",
+                "year" => "DbYear"
+        );
+        $data = Application_Model_Block::organizeSmartPlyalistCriteria($params['data']);
+        // things we need to check
+        // 1. limit value shouldn't be empty and has upperbound of 24 hrs
+        // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
+        // 3. validate formate according to DB column type
+        $multiplier = 1;
+        $result = 0;
+        $errors = array();
+        $error = array();
+        
+        // validation start
+        if ($data['etc']['sp_limit_options'] == 'hours') {
+            $multiplier = 60;
+        }
+        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
+            $element = $this->getElement("sp_limit_value");
+            if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
+                $element->addError("Limit cannot be empty or smaller than 0");
+                $isValid = false;
+            } else {
+                $mins = floatval($data['etc']['sp_limit_value']) * $multiplier;
+                if ($mins > 1440) {
+                    $element->addError("Limit cannot be more than 24 hrs");
+                    $isValid = false;
+                }
+            }
+        } else {
+            $element = $this->getElement("sp_limit_value");
+            if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
+                $element->addError("Limit cannot be empty or smaller than 0");
+                $isValid = false;
+            } else if (!ctype_digit($data['etc']['sp_limit_value'])) {
+                $element->addError("The value should be an integer");
+                $isValid = false;
+            } else if (intval($data['etc']['sp_limit_value']) > 500) {
+                $element->addError("500 is the max item limit value you can set");
+                $isValid = false;
+            }
+        }
+        
+        $criteriaFieldsUsed = array();
+        
+        if (isset($data['criteria'])) {
+            foreach ($data['criteria'] as $rowKey=>$row) {
+                foreach ($row as $key=>$d){
+                    $element = $this->getElement("sp_criteria_field_".$rowKey."_".$key);
+                    $error = array();
+                    // check for not selected select box
+                    if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
+                        $element->addError("You must select Criteria and Modifier");
+                        $isValid = false;
+                    } else {
+                        $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
+                        // validation on type of column
+                        if ($d['sp_criteria_field'] == 'length') {
+                            if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                                $element->addError("'Length' should be in '00:00:00' format");
+                                $isValid = false;
+                            }
+                        } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                            if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
+                                $element->addError("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00");
+                                $isValid = false;
+                            } else {
+                                $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
+                                if (!$result["success"]) {
+                                    // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                    $element->addError($result["errMsg"]);
+                                    $isValid = false;
+                                }
+                            }
+        
+                            if (isset($d['sp_criteria_extra'])) {
+                                if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
+                                    $element->addError("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00");
+                                    $isValid = false;
+                                } else {
+                                    $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
+                                    if (!$result["success"]) {
+                                        // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
+                                        $element->addError($result["errMsg"]);
+                                        $isValid = false;
+                                    }
+                                }
+                            }
+                        } else if ($column->getType() == PropelColumnTypes::INTEGER) {
+                            if (!is_numeric($d['sp_criteria_value'])) {
+                                $element->addError("The value has to be numeric");
+                                $isValid = false;
+                            }
+                            // length check
+                            if (intval($d['sp_criteria_value']) >= pow(2,31)) {
+                                $element->addError("The value should be less then 2147483648");
+                                $isValid = false;
+                            }
+                        } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
+                            if (strlen($d['sp_criteria_value']) > $column->getSize()) {
+                                $element->addError("The value should be less ".$column->getSize()." characters");
+                                $isValid = false;
+                            }
+                        }
+                    }
+        
+                    if ($d['sp_criteria_value'] == "") {
+                        $element->addError("Value cannot be empty");
+                        $isValid = false;
+                    }
+                }//end foreach
+            }//for loop
+        }//if
+        return $isValid;
+    }
 }

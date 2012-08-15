@@ -227,7 +227,7 @@ SQL;
             //format the length for UI.
             if ($row['type'] == 2) {
                 $bl = new Application_Model_Block($row['item_id']);
-                $formatter = new LengthFormatter($bl->getFormattedLength());
+                $formatter = new LengthFormatter($bl->getLength());
             } else {
                 $formatter = new LengthFormatter($row['length']);
             }
