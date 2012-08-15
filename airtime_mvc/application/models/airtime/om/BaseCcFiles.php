@@ -189,7 +189,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the bpm field.
-	 * @var        string
+	 * @var        int
 	 */
 	protected $bpm;
 
@@ -814,7 +814,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * Get the [bpm] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
 	public function getDbBpm()
 	{
@@ -1822,13 +1822,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * Set the value of [bpm] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
 	public function setDbBpm($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
 		if ($this->bpm !== $v) {
@@ -2678,7 +2678,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->track_number = ($row[$startcol + 23] !== null) ? (int) $row[$startcol + 23] : null;
 			$this->channels = ($row[$startcol + 24] !== null) ? (int) $row[$startcol + 24] : null;
 			$this->url = ($row[$startcol + 25] !== null) ? (string) $row[$startcol + 25] : null;
-			$this->bpm = ($row[$startcol + 26] !== null) ? (string) $row[$startcol + 26] : null;
+			$this->bpm = ($row[$startcol + 26] !== null) ? (int) $row[$startcol + 26] : null;
 			$this->rating = ($row[$startcol + 27] !== null) ? (string) $row[$startcol + 27] : null;
 			$this->encoded_by = ($row[$startcol + 28] !== null) ? (string) $row[$startcol + 28] : null;
 			$this->disc_number = ($row[$startcol + 29] !== null) ? (string) $row[$startcol + 29] : null;

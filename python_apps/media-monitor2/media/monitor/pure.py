@@ -62,7 +62,7 @@ def partition(f, alist):
     Partition is very similar to filter except that it also returns the
     elements for which f return false but in a tuple.
     >>> partition(lambda x : x > 3, [1,2,3,4,5,6])
-    [4,5,6],[1,2,3]
+    ([4, 5, 6], [1, 2, 3])
     """
     return (filter(f, alist), filter(lambda x: not f(x), alist))
 
@@ -104,6 +104,8 @@ def extension(path):
     I.e. interpreter won't enforce None checks on the programmer
     >>> extension("testing.php")
     'php'
+    >>> extension("a.b.c.d.php")
+    'php'
     >>> extension('/no/extension')
     ''
     >>> extension('/path/extension.ml')
@@ -117,15 +119,17 @@ def no_extension_basename(path):
     """
     returns the extensionsless basename of a filepath
     >>> no_extension_basename("/home/test.mp3")
-    'test'
+    u'test'
     >>> no_extension_basename("/home/test")
-    'test'
+    u'test'
     >>> no_extension_basename('blah.ml')
-    'blah'
+    u'blah'
+    >>> no_extension_basename('a.b.c.d.mp3')
+    u'a.b.c.d'
     """
     base = unicode(os.path.basename(path))
     if extension(base) == "": return base
-    else: return base.split(".")[-2]
+    else: return '.'.join(base.split(".")[0:-1])
 
 def walk_supported(directory, clean_empties=False):
     """
@@ -203,16 +207,16 @@ def parse_int(s):
     Tries very hard to get some sort of integer result from s. Defaults to 0
     when it failes
     >>> parse_int("123")
-    123
+    '123'
     >>> parse_int("123saf")
-    123
+    '123'
     >>> parse_int("asdf")
-    0
+    ''
     """
     if s.isdigit(): return s
     else:
-        try   : return reduce(op.add, takewhile(lambda x: x.isdigit(), s))
-        except: return 0
+        try   : return str(reduce(op.add, takewhile(lambda x: x.isdigit(), s)))
+        except: return ''
 
 def normalized_metadata(md, original_path):
     """
@@ -239,14 +243,13 @@ def normalized_metadata(md, original_path):
     # could possibly lead to subtle bugs down the road. Plus the following
     # approach gives us the flexibility to use different defaults for different
     # attributes
+    new_md = remove_whitespace(new_md)
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
-            default=no_extension_basename(original_path))
-    new_md = remove_whitespace(new_md)
-    new_md = default_to(dictionary=new_md, keys=path_md,
-            default=u'')
+                        default=no_extension_basename(original_path))
+    new_md = default_to(dictionary=new_md, keys=path_md, default=u'')
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
-            default=u'audioclip')
+                        default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to
     # format the MDATA_KEY_TITLE slightly differently
     # Note: I don't know why I'm doing a unicode string comparison here

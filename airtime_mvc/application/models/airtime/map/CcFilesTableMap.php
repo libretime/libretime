@@ -64,7 +64,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('TRACK_NUMBER', 'DbTrackNumber', 'INTEGER', false, null, null);
 		$this->addColumn('CHANNELS', 'DbChannels', 'INTEGER', false, null, null);
 		$this->addColumn('URL', 'DbUrl', 'VARCHAR', false, 1024, null);
-		$this->addColumn('BPM', 'DbBpm', 'VARCHAR', false, 8, null);
+		$this->addColumn('BPM', 'DbBpm', 'INTEGER', false, null, null);
 		$this->addColumn('RATING', 'DbRating', 'VARCHAR', false, 8, null);
 		$this->addColumn('ENCODED_BY', 'DbEncodedBy', 'VARCHAR', false, 255, null);
 		$this->addColumn('DISC_NUMBER', 'DbDiscNumber', 'VARCHAR', false, 8, null);

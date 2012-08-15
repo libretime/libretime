@@ -1148,7 +1148,7 @@ EOT;
                         // e.g 192kps is stored as 192000
                         $spCriteriaValue = $criteria['value']*1000;
                     } else {
-                        $spCriteriaValue = $criteria['value'];
+                        $spCriteriaValue = addslashes($criteria['value']);
                     }
                     
                     if ($spCriteriaModifier == "starts with") {
@@ -1158,8 +1158,9 @@ EOT;
                     } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
                         $spCriteriaValue = "%$spCriteriaValue%";
                     } else if ($spCriteriaModifier == "is in the range") {
-                        $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria < '$criteria[extra]'";
+                        $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria <= '$criteria[extra]'";
                     }
+                    
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
                     try{
                         if ($i > 0) {

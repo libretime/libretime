@@ -38,7 +38,7 @@
     <column name="track_number" phpName="DbTrackNumber" type="INTEGER" required="false"/>
     <column name="channels" phpName="DbChannels" type="INTEGER" required="false"/>
     <column name="url" phpName="DbUrl" type="VARCHAR" size="1024" required="false"/>
-    <column name="bpm" phpName="DbBpm" type="VARCHAR" size="8" required="false"/>
+    <column name="bpm" phpName="DbBpm" type="INTEGER" required="false"/>
     <column name="rating" phpName="DbRating" type="VARCHAR" size="8" required="false"/>
     <column name="encoded_by" phpName="DbEncodedBy" type="VARCHAR" size="255" required="false"/>
     <column name="disc_number" phpName="DbDiscNumber" type="VARCHAR" size="8" required="false"/>

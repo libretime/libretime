@@ -634,7 +634,7 @@ class Application_Model_StoredFile
                 $streamSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
             }
             //need to cast certain data as ints for the union to search on.
-            else if (in_array($key, array("track_number", "bit_rate", "sample_rate"))) {
+            else if (in_array($key, array("track_number", "bit_rate", "sample_rate", "bpm"))) {
                 $plSelect[] = "NULL::int AS ".$key;
                 $blSelect[] = "NULL::int AS ".$key;
                 $fileSelect[] = $key;
