@@ -57,6 +57,13 @@
             <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></span>
             <?php echo $this->element->getElement('sp_limit_value')?>
             <?php echo $this->element->getElement('sp_limit_options') ?>
+            <?php if($this->element->getElement("sp_limit_value")->hasErrors()) : ?>
+                <?php foreach($this->element->getElement("sp_limit_value")->getMessages() as $error): ?>
+                <span class='errors sp-errors'>
+                   <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
+            <?php endif; ?>
         <br />
         </dd>
         <div class='sp_text_font sp_text_font_bold'>
