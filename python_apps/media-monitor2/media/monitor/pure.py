@@ -62,7 +62,7 @@ def partition(f, alist):
     Partition is very similar to filter except that it also returns the
     elements for which f return false but in a tuple.
     >>> partition(lambda x : x > 3, [1,2,3,4,5,6])
-    [4,5,6],[1,2,3]
+    ([4, 5, 6], [1, 2, 3])
     """
     return (filter(f, alist), filter(lambda x: not f(x), alist))
 
@@ -103,6 +103,8 @@ def extension(path):
     string instead of None because of bad handling of "maybe" types in python.
     I.e. interpreter won't enforce None checks on the programmer
     >>> extension("testing.php")
+    'php'
+    >>> extension("a.b.c.d.php")
     'php'
     >>> extension('/no/extension')
     ''
@@ -205,9 +207,9 @@ def parse_int(s):
     Tries very hard to get some sort of integer result from s. Defaults to 0
     when it failes
     >>> parse_int("123")
-    123
+    '123'
     >>> parse_int("123saf")
-    123
+    '123'
     >>> parse_int("asdf")
     ''
     """
@@ -244,11 +246,10 @@ def normalized_metadata(md, original_path):
     new_md = remove_whitespace(new_md)
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
-            default=no_extension_basename(original_path))
-    new_md = default_to(dictionary=new_md, keys=path_md,
-            default=u'')
+                        default=no_extension_basename(original_path))
+    new_md = default_to(dictionary=new_md, keys=path_md, default=u'')
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
-            default=u'audioclip')
+                        default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to
     # format the MDATA_KEY_TITLE slightly differently
     # Note: I don't know why I'm doing a unicode string comparison here
