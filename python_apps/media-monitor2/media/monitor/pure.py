@@ -17,6 +17,9 @@ supported_extensions =  [u"mp3", u"ogg", u"oga"]
 #supported_extensions =  [u"mp3", u"ogg", u"oga", u"flac", u"aac", u"bwf"]
 unicode_unknown = u'unknown'
 
+path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
+            'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
+
 class LazyProperty(object):
     """
     meant to be used for lazy evaluation of an object attribute.
@@ -163,15 +166,23 @@ def apply_rules_dict(d, rules):
         if k in d: new_d[k] = rule(d[k])
     return new_d
 
+def default_to_f(dictionary, keys, default, condition):
+    new_d = copy.deepcopy(dictionary)
+    for k in keys:
+        if condition(dictionary=new_d, key=k): new_d[k] = default
+    return new_d
+
 def default_to(dictionary, keys, default):
     """
     Checks if the list of keys 'keys' exists in 'dictionary'. If not then it
     returns a new dictionary with all those missing keys defaults to 'default'
     """
-    new_d = copy.deepcopy(dictionary)
-    for k in keys:
-        if not (k in new_d): new_d[k] = default
-    return new_d
+    cnd = lambda dictionary, key: key not in dictionary
+    return default_to_f(dictionary, keys, default, cnd)
+    #new_d = copy.deepcopy(dictionary)
+    #for k in keys:
+        #if not (k in new_d): new_d[k] = default
+    #return new_d
 
 def remove_whitespace(dictionary):
     """
@@ -223,8 +234,6 @@ def normalized_metadata(md, original_path):
         'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
     }
-    path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
-               'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
     # note that we could have saved a bit of code by rewriting new_md using
     # defaultdict(lambda x: "unknown"). But it seems to be too implicit and
     # could possibly lead to subtle bugs down the road. Plus the following
@@ -233,8 +242,9 @@ def normalized_metadata(md, original_path):
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
             default=no_extension_basename(original_path))
+    new_md = remove_whitespace(new_md)
     new_md = default_to(dictionary=new_md, keys=path_md,
-            default=unicode_unknown)
+            default=u'')
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
             default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to
@@ -251,13 +261,13 @@ def normalized_metadata(md, original_path):
         # be set to the original path of the file for airtime recorded shows
         # (before it was "organized"). We will skip this procedure for now
         # because it's not clear why it was done
-    return remove_whitespace(new_md)
+    return new_md
 
-def organized_path(old_path, root_path, normal_md):
+def organized_path(old_path, root_path, orig_md):
     """
     old_path  - path where file is store at the moment <= maybe not necessary?
     root_path - the parent directory where all organized files go
-    normal_md - original meta data of the file as given by mutagen AFTER being
+    orig_md - original meta data of the file as given by mutagen AFTER being
     normalized
     return value: new file path
     """
@@ -265,6 +275,8 @@ def organized_path(old_path, root_path, normal_md):
     ext = extension(old_path)
     # The blocks for each if statement look awfully similar. Perhaps there is a
     # way to simplify this code
+    normal_md = default_to_f(orig_md, path_md, unicode_unknown,
+                             lambda dictionary, key: len(dictionary[key]) == 0)
     if is_airtime_recorded(normal_md):
         fname = u'%s-%s-%s.%s' % ( normal_md['MDATA_KEY_YEAR'],
                 normal_md['MDATA_KEY_TITLE'],
@@ -321,8 +333,7 @@ def get_system_locale(locale_path='/etc/default/locale'):
         try:
             config = ConfigObj(locale_path)
             return config
-        except Exception as e:
-            raise FailedToSetLocale(locale_path,cause=e)
+        except Exception as e: raise FailedToSetLocale(locale_path,cause=e)
     else: raise ValueError("locale path '%s' does not exist. \
             permissions issue?" % locale_path)
 
@@ -336,8 +347,7 @@ def configure_locale(config):
         if default_locale[1] is None:
             lang = config.get('LANG')
             new_locale = lang
-        else:
-            new_locale = default_locale
+        else: new_locale = default_locale
         locale.setlocale(locale.LC_ALL, new_locale)
     reload(sys)
     sys.setdefaultencoding("UTF-8")
@@ -394,7 +404,7 @@ def sub_path(directory,f):
     the paths.
     """
     normalized = normpath(directory)
-    common     = os.path.commonprefix([ directory, normpath(f) ])
+    common     = os.path.commonprefix([ normalized, normpath(f) ])
     return common == normalized
 
 if __name__ == '__main__':
