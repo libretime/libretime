@@ -56,7 +56,7 @@ CREATE TABLE "cc_files"
 	"track_number" INTEGER,
 	"channels" INTEGER,
 	"url" VARCHAR(1024),
-	"bpm" VARCHAR(8),
+	"bpm" INTEGER,
 	"rating" VARCHAR(8),
 	"encoded_by" VARCHAR(255),
 	"disc_number" VARCHAR(8),
