@@ -8,8 +8,7 @@ import media.monitor.pure as mmp
 
 class MMConfig(object):
     def __init__(self, path):
-        if not os.path.exists(path):
-            raise NoConfigFile(path)
+        if not os.path.exists(path): raise NoConfigFile(path)
         self.cfg = ConfigObj(path)
 
     def __getitem__(self, key):
@@ -29,6 +28,10 @@ class MMConfig(object):
     def save(self): self.cfg.write()
 
     def last_ran(self):
+        """
+        Returns the last time media monitor was ran by looking at the time when
+        the file at 'index_path' was modified
+        """
         return mmp.last_modified(self.cfg['index_path'])
 
     # Remove this after debugging...

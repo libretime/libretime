@@ -51,7 +51,7 @@ airtime_special = {
     "MDATA_KEY_DURATION" :
         lambda m: format_length(getattr(m.info, u'length', 0.0)),
     "MDATA_KEY_BITRATE" :
-        lambda m: getattr(m.info, "bitrate", 0),
+        lambda m: getattr(m.info, "bitrate", ''),
     "MDATA_KEY_SAMPLERATE" :
         lambda m: getattr(m.info, u'sample_rate', 0),
     "MDATA_KEY_MIME" :
@@ -110,8 +110,7 @@ class Metadata(Loggable):
         """
         Writes 'md' metadata into 'path' through mutagen
         """
-        if not os.path.exists(path):
-            raise BadSongFile(path)
+        if not os.path.exists(path): raise BadSongFile(path)
         song_file = mutagen.File(path, easy=True)
         for airtime_k, airtime_v in md.iteritems():
             if airtime_k in airtime2mutagen:
@@ -119,7 +118,6 @@ class Metadata(Loggable):
                 # strings
                 song_file[ airtime2mutagen[airtime_k] ] = unicode(airtime_v)
         song_file.save()
-
 
     def __init__(self, fpath):
         # Forcing the unicode through

@@ -27,6 +27,7 @@ stream_metadata_type = ref 0
 default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
+current_media_id = ref ''
 
 s1_connected = ref ''
 s2_connected = ref ''

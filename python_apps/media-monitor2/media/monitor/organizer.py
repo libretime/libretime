@@ -18,8 +18,8 @@ class Organizer(ReportHandler,Loggable):
     _instance = None
     def __new__(cls, channel, target_path, recorded_path):
         if cls._instance:
-            cls._instance.channel = channel
-            cls._instance.target_path = target_path
+            cls._instance.channel       = channel
+            cls._instance.target_path   = target_path
             cls._instance.recorded_path = recorded_path
         else:
             cls._instance = super(Organizer, cls).__new__( cls, channel,
@@ -27,8 +27,8 @@ class Organizer(ReportHandler,Loggable):
         return cls._instance
 
     def __init__(self, channel, target_path, recorded_path):
-        self.channel = channel
-        self.target_path = target_path
+        self.channel       = channel
+        self.target_path   = target_path
         self.recorded_path = recorded_path
         super(Organizer, self).__init__(signal=self.channel, weak=False)
 

@@ -15,6 +15,7 @@
  * @method     CcWebstreamQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method     CcWebstreamQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
  * @method     CcWebstreamQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
+ * @method     CcWebstreamQuery orderByDbLiquidsoapData($order = Criteria::ASC) Order by the liquidsoap_data column
  *
  * @method     CcWebstreamQuery groupByDbId() Group by the id column
  * @method     CcWebstreamQuery groupByDbName() Group by the name column
@@ -25,6 +26,7 @@
  * @method     CcWebstreamQuery groupByDbMtime() Group by the mtime column
  * @method     CcWebstreamQuery groupByDbUtime() Group by the utime column
  * @method     CcWebstreamQuery groupByDbMime() Group by the mime column
+ * @method     CcWebstreamQuery groupByDbLiquidsoapData() Group by the liquidsoap_data column
  *
  * @method     CcWebstreamQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcWebstreamQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,6 +48,7 @@
  * @method     CcWebstream findOneByDbMtime(string $mtime) Return the first CcWebstream filtered by the mtime column
  * @method     CcWebstream findOneByDbUtime(string $utime) Return the first CcWebstream filtered by the utime column
  * @method     CcWebstream findOneByDbMime(string $mime) Return the first CcWebstream filtered by the mime column
+ * @method     CcWebstream findOneByDbLiquidsoapData(string $liquidsoap_data) Return the first CcWebstream filtered by the liquidsoap_data column
  *
  * @method     array findByDbId(int $id) Return CcWebstream objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcWebstream objects filtered by the name column
@@ -56,6 +59,7 @@
  * @method     array findByDbMtime(string $mtime) Return CcWebstream objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcWebstream objects filtered by the utime column
  * @method     array findByDbMime(string $mime) Return CcWebstream objects filtered by the mime column
+ * @method     array findByDbLiquidsoapData(string $liquidsoap_data) Return CcWebstream objects filtered by the liquidsoap_data column
  *
  * @package    propel.generator.airtime.om
  */
@@ -383,6 +387,28 @@ abstract class BaseCcWebstreamQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcWebstreamPeer::MIME, $dbMime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the liquidsoap_data column
+	 * 
+	 * @param     string $dbLiquidsoapData The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcWebstreamQuery The current query, for fluid interface
+	 */
+	public function filterByDbLiquidsoapData($dbLiquidsoapData = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbLiquidsoapData)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbLiquidsoapData)) {
+				$dbLiquidsoapData = str_replace('*', '%', $dbLiquidsoapData);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcWebstreamPeer::LIQUIDSOAP_DATA, $dbLiquidsoapData, $comparison);
 	}
 
 	/**

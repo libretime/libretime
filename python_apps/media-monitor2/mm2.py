@@ -122,6 +122,8 @@ def main(global_config, api_client_config, log_config,
 
     # Launch the toucher that updates the last time when the script was
     # ran every n seconds.
+    # TODO : verify that this does not interfere with bootstrapping because the
+    # toucher thread might update the last_ran variable too fast
     tt = ToucherThread(path=config['index_path'],
                        interval=int(config['touch_interval']))
 

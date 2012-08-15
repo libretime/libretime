@@ -81,9 +81,17 @@ class AirtimeApiClient():
                 successful_response = True
             except IOError, e:
                 logger.error('Error Authenticating with remote server: %s', e)
+                if isinstance(url, urllib2.Request):
+                    logger.debug(url.get_full_url())
+                else:
+                    logger.debug(url)
             except Exception, e:
                 logger.error('Couldn\'t connect to remote server. Is it running?')
                 logger.error("%s" % e)
+                if isinstance(url, urllib2.Request):
+                    logger.debug(url.get_full_url())
+                else:
+                    logger.debug(url)
 
             if not successful_response:
                 logger.error("Error connecting to server, waiting 5 seconds and trying again.")
@@ -684,7 +692,25 @@ class AirtimeApiClient():
             data = urllib.urlencode({'data': json.dumps(pairs)})
             request = urllib2.Request(url, data)
 
-            self.get_response_from_server(request)
+            self.logger.debug(self.get_response_from_server(request))
         except Exception, e:
             self.logger.error("Exception: %s", e)
             raise
+
+
+    def notify_webstream_data(self, data, media_id):
+        """
+        Update the server with the latest metadata we've received from the
+        external webstream
+        """
+        try:
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(notify_webstream_data)s/" % (self.config)
+            url = url.replace("%%media_id%%", str(media_id))
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            data = urllib.urlencode({'data': data})
+            self.logger.debug(url)
+            request = urllib2.Request(url, data)
+
+            self.logger.info(self.get_response_from_server(request))
+        except Exception, e:
+            self.logger.error("Exception: %s", e)

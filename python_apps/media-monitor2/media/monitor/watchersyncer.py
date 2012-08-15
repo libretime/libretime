@@ -2,7 +2,6 @@
 import threading
 import time
 import copy
-import traceback
 
 from media.monitor.handler         import ReportHandler
 from media.monitor.log             import Loggable
@@ -47,9 +46,7 @@ class RequestSync(threading.Thread,Loggable):
             except BadSongFile as e:
                 self.logger.info("This should never occur anymore!!!")
                 self.logger.info("Bad song file: '%s'" % e.path)
-            except Exception as e:
-                self.logger.info("An evil exception occured")
-                self.logger.error( traceback.format_exc() )
+            except Exception as e: self.unexpected_exception( e )
         def make_req():
             self.apiclient.send_media_monitor_requests( packed_requests )
         for try_index in range(0,self.retries):
@@ -102,16 +99,14 @@ class TimeoutWatcher(threading.Thread,Loggable):
 
 class WatchSyncer(ReportHandler,Loggable):
     def __init__(self, signal, chunking_number = 100, timeout=15):
-        self.timeout = float(timeout)
-        self.chunking_number = int(chunking_number)
-        self.__reset_queue()
-        # Even though we are not blocking on the http requests, we are still
-        # trying to send the http requests in order
-        self.__requests = []
-        self.request_running = False
-        # we don't actually use this "private" instance variable anywhere
+        self.timeout          = float(timeout)
+        self.chunking_number  = int(chunking_number)
+        self.request_running  = False
         self.__current_thread = None
-        self.contractor = EventContractor()
+        self.__requests       = []
+        self.contractor       = EventContractor()
+        self.__reset_queue()
+
         tc = TimeoutWatcher(self, self.timeout)
         tc.daemon = True
         tc.start()
