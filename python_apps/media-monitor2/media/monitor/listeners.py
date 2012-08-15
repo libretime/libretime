@@ -65,8 +65,6 @@ class BaseListener(object):
         self.signal = signal
 
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
-    # this class still don't handle the case where a dir was copied recursively
-
     def process_IN_CLOSE_WRITE(self, event):
         self.process_to_organize(event)
     # got cookie
