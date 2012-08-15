@@ -441,14 +441,12 @@ function getCriteriaOptionType(e) {
 }
 
 function callback(data, type) {
-    var form = $('#smart-playlist-form'),
-        json = $.parseJSON(data),
+    var json = $.parseJSON(data),
         dt = $('table[id="library_display"]').dataTable();
 
-    form.find('span[class="errors sp-errors"]').remove();
     if (type == 'shuffle' || type == 'generate') {
         AIRTIME.playlist.fnOpenPlaylist(json);
-        form = $('#smart-playlist-form');
+        var form = $('#smart-playlist-form');
         if (json.result == "0") {
             if (type == 'shuffle') {
                 form.find('.success').text('Smart playlist shuffled');
@@ -462,6 +460,7 @@ function callback(data, type) {
 	    form.find('#smart_playlist_options').removeClass("closed");
     } else {
         AIRTIME.playlist.fnOpenPlaylist(json);
+        var form = $('#smart-playlist-form');
         if (json.result == "0") {
             $('#sp-success-saved').text('Smart playlist saved');
             $('#sp-success-saved').show();
@@ -470,6 +469,7 @@ function callback(data, type) {
             var dt = $('table[id="library_display"]').dataTable();
             dt.fnStandingRedraw();
         }
+        form.find('#smart_playlist_options').removeClass("closed");
     }
     setTimeout(removeSuccessMsg, 5000);
 }
@@ -529,7 +529,7 @@ var criteriaTypes = {
     "album_title" : "s",
     "artist_name" : "s",
     "bit_rate" : "n",
-    "bpm" : "s",
+    "bpm" : "n",
     "comments" : "s",
     "composer" : "s",
     "conductor" : "s",
