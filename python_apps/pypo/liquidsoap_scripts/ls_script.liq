@@ -11,7 +11,6 @@ dyn_sources = ref []
 webstream_enabled = ref false
 
 time = ref string_of(gettimeofday())
-
 queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
 queue = cue_cut(queue)
 queue = amplify(1., override="replay_gain", queue)
@@ -40,7 +39,7 @@ just_switched = ref false
 
 %include "ls_lib.liq"
 
-web_stream = input.harbor("test-harbor",port=8999,password="hackme")
+web_stream = mksafe(input.harbor("test-harbor", port=8999, password="hackme"))
 web_stream = on_metadata(notify_stream, web_stream)
 
 queue = on_metadata(notify, queue)
@@ -48,7 +47,7 @@ queue = map_metadata(append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
 
-queue = switch(track_sensitive=false, [({!webstream_enabled},web_stream), ({true}, queue)])
+queue = switch(id="stream_queue_switch", track_sensitive=false, [({!webstream_enabled},web_stream), ({true}, queue)])
 
 ignore(output.dummy(queue, fallible=true))
 

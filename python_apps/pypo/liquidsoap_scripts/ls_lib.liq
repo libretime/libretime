@@ -253,7 +253,7 @@ end
 # Function to create a playlist source and output it.
 def create_dynamic_source(uri) =
     # The playlist source 
-    s = input.http(buffer=4., max=12., uri)
+    s = input.http(buffer=2., max=12., uri)
 
     # The output
     active_dyn_out = dyn_out(s)
