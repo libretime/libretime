@@ -446,21 +446,10 @@ function callback(data, type) {
         dt = $('table[id="library_display"]').dataTable();
 
     form.find('span[class="errors sp-errors"]').remove();
-	
-    if (json.result == "1") {
-        form.find('.success').hide();
-        if ($('#smart_playlist_options').hasClass('closed')) {
-            $('#smart_playlist_options').removeClass('closed');
-        }
-        $.each(json.errors, function(index, error){
-            $.each(error.msg, function(index, message){
-                $('#'+error.element).parent().append("<span class='errors sp-errors'>"+message+"</span>");
-            });
-        });
-    } else {
-        if (type == 'shuffle' || type == 'generate') {
-            AIRTIME.playlist.fnOpenPlaylist(json);
-            form = $('#smart-playlist-form');
+    if (type == 'shuffle' || type == 'generate') {
+        AIRTIME.playlist.fnOpenPlaylist(json);
+        form = $('#smart-playlist-form');
+        if (json.result == "0") {
             if (type == 'shuffle') {
                 form.find('.success').text('Smart playlist shuffled');
             } else if (type == 'generate') {
@@ -468,39 +457,21 @@ function callback(data, type) {
             	//redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }
-    	    form.find('.success').show();
-    	    form.find('#smart_playlist_options').removeClass("closed");
-        } else {
+            form.find('.success').show();
+        }
+	    form.find('#smart_playlist_options').removeClass("closed");
+    } else {
+        AIRTIME.playlist.fnOpenPlaylist(json);
+        if (json.result == "0") {
             $('#sp-success-saved').text('Smart playlist saved');
             $('#sp-success-saved').show();
-            
-            /* Update number of files that meet criteria and change icon to success/warning
-             * as appropriate. This is also done in the form but we do not pass the form
-             * back on a 'Save' callback.
-             */
-            if (json.poolCount > 1) {
-                $('#sp_pool_count').text(json.poolCount+' files meet the criteria');
-                if ($('#sp_pool_count_icon').hasClass('sp-warning-icon')) {
-                    $('#sp_pool_count_icon').removeClass('sp-warning-icon').addClass('checked-icon sp-checked-icon');  
-                }
-            } else if (json.poolCount == 1) {
-                $('#sp_pool_count').text('1 file meets the criteria');
-                if ($('#sp_pool_count_icon').hasClass('sp-warning-icon')) {
-                    $('#sp_pool_count_icon').removeClass('sp-warning-icon').addClass('checked-icon sp-checked-icon');  
-                }
-            } else {
-                $('#sp_pool_count').text('0 files meet the criteria');
-                if ($('#sp_pool_count_icon').hasClass('checked-icon sp-checked-icon')) {
-                    $('#sp_pool_count_icon').removeClass('checked-icon sp-checked-icon').addClass('sp-warning-icon');  
-                }
-            }
+        
             //redraw library table so the length gets updated
             var dt = $('table[id="library_display"]').dataTable();
             dt.fnStandingRedraw();
-            $('div[class="playlist_title"]').find("h4").html(json.blockLength);
         }
-        setTimeout(removeSuccessMsg, 5000);
     }
+    setTimeout(removeSuccessMsg, 5000);
 }
 
 function removeSuccessMsg() {

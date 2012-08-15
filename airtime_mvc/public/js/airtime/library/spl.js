@@ -600,7 +600,7 @@ var AIRTIME = (function(AIRTIME){
                 dt = $('table[id="library_display"]').dataTable();
             enableLoadingIcon();
             $.post(save_action,
-                    {format: "json", criteria: criteria, name: block_name, description: block_desc, obj_id: obj_id, type: obj_type, modified: lastMod},
+                    {format: "json", data: criteria, name: block_name, description: block_desc, obj_id: obj_id, type: obj_type, modified: lastMod},
                     function(data){
                         var json = $.parseJSON(data);
                         setModified(json.modified);

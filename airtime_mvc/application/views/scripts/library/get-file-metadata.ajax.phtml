@@ -27,7 +27,7 @@
     <span>Name:</span><span><?php echo ($this->md["dc:title"]);?></span><br />
     <span>Creator:</span><span><?php echo ($this->md["dc:creator"]);?></span><br />
     <?php if ($this->type == "block" && $this->blType == "Dynamic") { ?>
-    <span>Length:</span><span><?php echo $this->block->getFormattedLength();?></span><br />
+    <span>Length:</span><span><?php echo $this->block->getLength();?></span><br />
     <?php } else { ?>
     <span>Length:</span><span><?php echo ($this->md["dcterms:extent"]);?></span><br />
     <?php } ?>
@@ -67,7 +67,7 @@
                 <tr class='file-md-qtip-playlist <?php if ($isStatic) echo 'static'; else echo 'dynamic';?>'>
                     <td class='file-md-qtip-row-width-title file-md-qtip-nowrap'><?php echo $row["track_title"] ?></td>
                     <td class='file-md-qtip-row-width-artist file-md-qtip-nowrap'><?php echo $row["creator"] ?></td>
-                    <td class='file-md-qtip-row-width-small'><?php echo $bl->getFormattedLength(); ?></td>
+                    <td class='file-md-qtip-row-width-small'><?php echo $bl->getLength(); ?></td>
                 </tr>
             <?php } else if ($row["type"] == 1) {?>
                 <tr class='file-md-qtip-playlist webstream'>

@@ -97,10 +97,8 @@ class PlaylistController extends Zend_Controller_Action
                 $form = new Application_Form_SmartBlockCriteria();
                 $form->removeDecorator('DtDdWrapper');
                 $form->startForm($obj->getId());
+                
                 $this->view->form = $form;
-            }
-
-            if ($isBlock){
                 $this->view->obj = $obj;
                 $this->view->id = $obj->getId();
                 if ($isJson) {
@@ -532,8 +530,21 @@ class PlaylistController extends Zend_Controller_Action
         $this->setPlaylistNameDescAction();
         
         if ($params['type'] == 'block') {
+            $form = new Application_Form_SmartBlockCriteria();
+            $form->startForm($params['obj_id']);
             $bl = new Application_Model_Block($params['obj_id']);
-            $result = $bl->saveSmartBlockCriteria($params['criteria']);
+            if ($form->isValid($params)) {
+                $result = $bl->saveSmartBlockCriteria($params['data']);
+                $result['html'] = $this->createFullResponse($bl, true);
+                $result['result'] = 0;
+            } else {
+                $this->view->obj = $bl;
+                $this->view->id = $bl->getId();
+                $this->view->form = $form;
+                $viewPath = 'playlist/smart-block.phtml';
+                $result['html'] = $this->view->render($viewPath);
+                $result['result'] = 1;
+            }
         }
         
         $result["modified"] = $this->view->modified;
@@ -544,9 +555,11 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $params = $request->getPost();
+        $form = new Application_Form_SmartBlockCriteria();
+        $form->startForm($params['obj_id']);
         $bl = new Application_Model_Block($params['obj_id']);
-        $result = $bl->generateSmartBlock($params['data']);
-        if ($result['result'] == 0) {
+        if ($form->isValid($params)) {
+            $result = $bl->generateSmartBlock($params['data']);
             try {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
             }
@@ -557,6 +570,12 @@ class PlaylistController extends Zend_Controller_Action
                 $this->playlistUnknownError($e);
             }
         }else{
+            $this->view->obj = $bl;
+            $this->view->id = $bl->getId();
+            $this->view->form = $form;
+            $viewPath = 'playlist/smart-block.phtml';
+            $result['html'] = $this->view->render($viewPath);
+            $result['result'] = 1;
             die(json_encode($result));
         }
     }
@@ -566,14 +585,8 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         $bl = new Application_Model_Block($params['obj_id']);
+        $result = $bl->shuffleSmartBlock();
         
-        //we need to save criteria in case user hasn't clicked Save or Generate yet
-        $result = $bl->saveSmartBlockCriteria($params['data']);
-        
-        //only shuffle if there are no criteria errors
-        if ($result['result'] == 0) {
-            $result = $bl->shuffleSmartBlock();
-        }
         if ($result['result'] == 0) {
             try {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));

@@ -242,9 +242,9 @@ EOT;
         return $fade;
     }
     
-    // function return "N/A" if dynamic
-    public function getLength()
+    public function getUnformatedLength()
     {
+        $this->block->reload();
         if ($this->isStatic()){
             $length = $this->block->getDbLength();
         } else {
@@ -253,8 +253,9 @@ EOT;
         return $length;
     }
     
-    public function getFormattedLength()
+    public function getLength()
     {
+        $this->block->reload();
         $prepend = "";
         if ($this->isStatic()){
             $length = $this->block->getDbLength();
@@ -808,7 +809,7 @@ EOT;
             throw $e;
         }
     
-        return array("cliplength"=> $cliplength, "cueIn"=> $cueIn, "cueOut"=> $cueOut, "length"=> $this->getLength(),
+        return array("cliplength"=> $cliplength, "cueIn"=> $cueIn, "cueOut"=> $cueOut, "length"=> $this->getUnformatedLength(),
         "fadeIn"=> $fadeIn, "fadeOut"=> $fadeOut);
     }
     
@@ -935,136 +936,30 @@ EOT;
     public function saveSmartBlockCriteria($p_criteria)
     {
         $data = $this->organizeSmartPlyalistCriteria($p_criteria);
-
-        // things we need to check
-        // 1. limit value shouldn't be empty and has upperbound of 24 hrs
-        // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
-        // 3. validate formate according to DB column type
-        $multiplier = 1;
-        $result = 0;
-        $errors = array();
-        $error = array();
-    
         // saving dynamic/static flag
         $blockType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
         $this->saveType($blockType);
-    
-        // validation start
-        if ($data['etc']['sp_limit_options'] == 'hours') {
-            $multiplier = 60;
-        }
-        if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
-            if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
-                $error[] =  "Limit cannot be empty or smaller than 0";
+        $this->storeCriteriaIntoDb($data);
+        //get number of files that meet the criteria
+        $files = $this->getListofFilesMeetCriteria();
+        //$output['poolCount'] = $files["count"];
+        // if the block is dynamic, put null to the length
+        // as it cannot be calculated
+        if ($blockType == 'dynamic') {
+            if ($this->hasItemLimit()) {
+                $this->setLength(null);
             } else {
-                $mins = floatval($data['etc']['sp_limit_value']) * $multiplier;
-                if ($mins > 1440) {
-                    $error[] =  "Limit cannot be more than 24 hrs";
-                }
+                $this->setLength($this->getDynamicBlockLength());
             }
         } else {
-            if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
-                $error[] =  "Limit cannot be empty or smaller than 0";
-            } else if (!ctype_digit($data['etc']['sp_limit_value'])) {
-                $error[] = "The value should be an integer";
-            } else if (intval($data['etc']['sp_limit_value']) > 500) {
-                $error[] = "500 is the max item limit value you can set";
+            $length = $this->getStaticLength();
+            if (!$length) {
+                $length = "00:00:00";
             }
+            $this->setLength($length);
         }
-    
-        if (count($error) > 0){
-            $errors[] = array("element"=>"sp_limit_value", "msg"=>$error);
-        }
-    
-        $criteriaFieldsUsed = array();
-
-        if (isset($data['criteria'])) {
-            $critKeys = array_keys($data['criteria']);
-            for ($i = 0; $i < count($critKeys); $i++) {
-                foreach ($data['criteria'][$critKeys[$i]] as $key=>$d){
-                    $error = array();
-                    // check for not selected select box
-                    if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
-                        $error[] =  "You must select Criteria and Modifier";
-                    } else {
-                        $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$d['sp_criteria_field']]);
-                        // validation on type of column
-                        if ($d['sp_criteria_field'] == 'length') {
-                            if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
-                                $error[] =  "'Length' should be in '00:00:00' format";
-                            }
-                        } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                            if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                                $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                            } else {
-                                $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
-                                if (!$result["success"]) {
-                                    // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                    $error[] =  $result["errMsg"];
-                                }
-                            }
-            
-                            if (isset($d['sp_criteria_extra'])) {
-                                if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
-                                    $error[] =  "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00";
-                                } else {
-                                    $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
-                                    if (!$result["success"]) {
-                                        // check for if it is in valid range( 1753-01-01 ~ 12/31/9999 )
-                                        $error[] =  $result["errMsg"];
-                                    }
-                                }
-                            }
-                        } else if ($column->getType() == PropelColumnTypes::INTEGER) {
-                            if (!is_numeric($d['sp_criteria_value'])) {
-                                $error[] = "The value has to be numeric";
-                            }
-                            // length check
-                            if (intval($d['sp_criteria_value']) >= pow(2,31)) {
-                                $error[] = "The value should be less then 2147483648";
-                            }
-                        } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
-                            if (strlen($d['sp_criteria_value']) > $column->getSize()) {
-                                $error[] = "The value should be less ".$column->getSize()." characters";
-                            }
-                        }
-                    }
-            
-                    if ($d['sp_criteria_value'] == "") {
-                        $error[] =  "Value cannot be empty";
-                    }
-                    if(count($error) > 0){
-                        $errors[] = array("element"=>"sp_criteria_field_".$critKeys[$i]."_".$key, "msg"=>$error);
-                    }
-                }//end foreach
-            }//for loop
-        }//if
+        //$output['blockLength'] = $this->getFormattedLength();
         
-        $result = count($errors) > 0 ? 1 :0;
-        $files["count"] = 0;
-        $output = array("result"=>$result, "errors"=>$errors);
-        if ($result == 0) {
-            $this->storeCriteriaIntoDb($data);
-            //get number of files that meet the criteria
-            $files = $this->getListofFilesMeetCriteria();
-            $output['poolCount'] = $files["count"];
-            // if the block is dynamic, put null to the length
-            // as it cannot be calculated
-            if ($blockType == 'dynamic') {
-                if ($this->hasItemLimit()) {
-                    $this->setLength(null);
-                } else {
-                    $this->setLength($this->getDynamicBlockLength());
-                }
-            } else {
-                $length = $this->getStaticLength();
-                if (!$length) {
-                    $length = "00:00:00";
-                }
-                $this->setLength($length);
-            }
-            $output['blockLength'] = $this->getFormattedLength();
-        }
         $this->updateBlockLengthInAllPlaylist();
         return $output;
     }
@@ -1082,7 +977,7 @@ EOT;
     public function storeCriteriaIntoDb($p_criteriaData){
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        
+        Logging::log($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
@@ -1119,16 +1014,16 @@ EOT;
     public function generateSmartBlock($p_criteria, $returnList=false)
     {
         $result = $this->saveSmartBlockCriteria($p_criteria);
-        if ($result['result'] != 0) {
+        /*if ($result['result'] != 0) {
             return $result;
-        } else {
+        } else {*/
             $insertList = $this->getListOfFilesUnderLimit();
             $this->deleteAllFilesFromBlock();
             $this->addAudioClips(array_keys($insertList));
             // update length in playlist contents.
             $this->updateBlockLengthInAllPlaylist();
             return array("result"=>0);
-        }
+        //}
     }
     
     public function updateBlockLengthInAllPlaylist()
@@ -1137,7 +1032,7 @@ EOT;
         $blocks->getFirst();
         $iterator = $blocks->getIterator();
         while ($iterator->valid()) {
-            $length = $this->getLength();
+            $length = $this->getUnformatedLength();
             if (!preg_match("/^[0-9]{2}:[0-9]{2}:[0-9]{2}/", $length)) {
                 $iterator->current()->setDbClipLength(null);
             } else {
@@ -1300,7 +1195,7 @@ EOT;
     
     }
     
-    private static function organizeSmartPlyalistCriteria($p_criteria)
+    public static function organizeSmartPlyalistCriteria($p_criteria)
     {
         $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
         $output = array();
@@ -1313,7 +1208,7 @@ EOT;
              */
             $fieldName = substr($ele['name'], 0, $index);
             
-            // Get criteria row index.   
+            // Get criteria row index.
             $tempName = $ele['name'];
             // Get the last digit in the field name
             preg_match('/^\D*(?=\d)/', $tempName, $r);
