@@ -17,6 +17,9 @@ supported_extensions =  [u"mp3", u"ogg", u"oga"]
 #supported_extensions =  [u"mp3", u"ogg", u"oga", u"flac", u"aac", u"bwf"]
 unicode_unknown = u'unknown'
 
+path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
+            'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
+
 class LazyProperty(object):
     """
     meant to be used for lazy evaluation of an object attribute.
@@ -223,8 +226,6 @@ def normalized_metadata(md, original_path):
         'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
     }
-    path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
-               'MDATA_KEY_TRACKNUMBER', 'MDATA_KEY_BITRATE']
     # note that we could have saved a bit of code by rewriting new_md using
     # defaultdict(lambda x: "unknown"). But it seems to be too implicit and
     # could possibly lead to subtle bugs down the road. Plus the following
