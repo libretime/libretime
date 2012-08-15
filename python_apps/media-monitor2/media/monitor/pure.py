@@ -117,15 +117,17 @@ def no_extension_basename(path):
     """
     returns the extensionsless basename of a filepath
     >>> no_extension_basename("/home/test.mp3")
-    'test'
+    u'test'
     >>> no_extension_basename("/home/test")
-    'test'
+    u'test'
     >>> no_extension_basename('blah.ml')
-    'blah'
+    u'blah'
+    >>> no_extension_basename('a.b.c.d.mp3')
+    u'a.b.c.d'
     """
     base = unicode(os.path.basename(path))
     if extension(base) == "": return base
-    else: return base.split(".")[-2]
+    else: return '.'.join(base.split(".")[0:-1])
 
 def walk_supported(directory, clean_empties=False):
     """
