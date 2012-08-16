@@ -488,7 +488,7 @@ class PlaylistController extends Zend_Controller_Action
             $obj = $this->getPlaylist($type);
             $obj->setName($name);
             $obj->setDescription($description);
-            $this->view->description = $description();
+            $this->view->description = $description;
             $this->view->playlistName = $name;
             $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
