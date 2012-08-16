@@ -199,7 +199,13 @@ class Application_Model_Webstream{
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-        $webstream = new CcWebstream();
+        $id = $parameters['id'];
+        if ($id != -1) {
+            $webstream = CcWebstreamQuery::create()->findPK($id);
+        } else {
+            $webstream = new CcWebstream();
+        }
+
         $webstream->setDbName($parameters["name"]);
         $webstream->setDbDescription($parameters["description"]);
         $webstream->setDbUrl($parameters["url"]);
@@ -214,5 +220,7 @@ class Application_Model_Webstream{
        
         $webstream->setDbMime($mime);
         $webstream->save();
+
+        return $webstream->getDbId();
     }
 }

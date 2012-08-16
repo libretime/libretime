@@ -51,6 +51,12 @@ class WebstreamController extends Zend_Controller_Action
         
         $user = Application_Model_User::getCurrentUser();
         $hasPermission = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST));
+
+        if (!$hasPermission) {
+            header("Status: 401 Not Authorized");
+            return;
+        }
+
         $id = $request->getParam("id");
 
         $parameters = array();
@@ -70,21 +76,19 @@ class WebstreamController extends Zend_Controller_Action
             } 
         } 
 
-        if (!$hasPermission) {
-            header("Status: 401 Not Authorized");
-            return;
-        }
 
         list($analysis, $mime, $di) = Application_Model_Webstream::analyzeFormData($parameters);
         try { 
             if (Application_Model_Webstream::isValid($analysis)) {
-                Application_Model_Webstream::save($parameters, $mime, $di);
+                $streamId = Application_Model_Webstream::save($parameters, $mime, $di);
                 $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
+                $this->view->streamId = $streamId;
             } else {
                 throw new Exception("isValid returned false");
             }
         } catch (Exception $e) {
             $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>"; 
+            $this->view->streamId = -1;
             $this->view->analysis = $analysis;
         }
     }

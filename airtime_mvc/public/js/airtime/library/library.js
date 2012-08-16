@@ -641,7 +641,7 @@ var AIRTIME = (function(AIRTIME) {
                            if (data.ftype === 'playlist' && data.length !== '0.0'){
                                 playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
                                 open_playlist_preview(playlistIndex, 0);
-                            } else if (data.ftype === 'audioclip') {
+                            } else if (data.ftype === 'audioclip' || data.ftype === 'stream') {
                                 open_audio_preview(data.ftype, data.audioFile, data.track_title, data.artist_name);
                             } else if (data.ftype === 'block') {
                                 blockIndex = $(this).parent().attr('id').substring(3); //remove the pl_

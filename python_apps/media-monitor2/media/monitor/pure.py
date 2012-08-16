@@ -229,20 +229,13 @@ def normalized_metadata(md, original_path):
     for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
-        # It's very likely that the following isn't strictly necessary. But the
-        # old code would cast MDATA_KEY_TRACKNUMBER to an integer as a
-        # byproduct of formatting the track number to 2 digits.
         'MDATA_KEY_TRACKNUMBER' : parse_int,
         'MDATA_KEY_BITRATE'     : lambda x: str(int(x) / 1000) + "kbps",
         'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
         'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
     }
-    # note that we could have saved a bit of code by rewriting new_md using
-    # defaultdict(lambda x: "unknown"). But it seems to be too implicit and
-    # could possibly lead to subtle bugs down the road. Plus the following
-    # approach gives us the flexibility to use different defaults for different
-    # attributes
+
     new_md = remove_whitespace(new_md)
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
@@ -287,7 +280,7 @@ def organized_path(old_path, root_path, orig_md):
         yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',3)
         path = os.path.join(root_path, yyyy, mm)
         filepath = os.path.join(path,fname)
-    elif normal_md['MDATA_KEY_TRACKNUMBER'] == unicode_unknown:
+    elif len(normal_md['MDATA_KEY_TRACKNUMBER']) == 0:
         fname = u'%s-%s.%s' % (normal_md['MDATA_KEY_TITLE'],
                 normal_md['MDATA_KEY_BITRATE'], ext)
         path = os.path.join(root_path, normal_md['MDATA_KEY_CREATOR'],

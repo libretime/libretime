@@ -580,6 +580,10 @@ var AIRTIME = (function(AIRTIME){
                         $status.html(json.statusMessage);
                         $status.show();
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
+
+                        var $ws_id = $("#ws_id");
+                        $ws_id.attr("value", json.streamId);
+
                         //redraw the library to show the new webstream
                         redrawLib();
                     }

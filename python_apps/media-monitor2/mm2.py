@@ -57,7 +57,7 @@ def main(global_config, api_client_config, log_config,
         if not os.path.exists(config['index_path']):
             log.info("Attempting to create index file:...")
             try:
-                with open(config['index_path']) as f: f.write(" ")
+                with open(config['index_path'], 'w') as f: f.write(" ")
             except Exception as e:
                 log.info("Failed to create index file with exception: %s" % str(e))
             else:
