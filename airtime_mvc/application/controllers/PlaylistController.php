@@ -488,7 +488,7 @@ class PlaylistController extends Zend_Controller_Action
             $obj = $this->getPlaylist($type);
             $obj->setName($name);
             $obj->setDescription($description);
-            $this->view->description = $obj->getDescription();
+            $this->view->description = $description();
             $this->view->playlistName = $name;
             $this->view->modified = $obj->getLastModified("U");
         } catch (PlaylistOutDatedException $e) {
@@ -499,27 +499,6 @@ class PlaylistController extends Zend_Controller_Action
             $this->playlistUnknownError($e);
         }
     }
-
-    /*
-    public function setPlaylistDescriptionAction()
-    {
-        $description = $this->_getParam('description', "");
-        $type = $this->_getParam('type');
-
-        try {
-            $obj = $this->getPlaylist($type);
-            $obj->setDescription($description);
-            $this->view->description = $obj->getDescription();
-            $this->view->modified = $obj->getLastModified("U");
-        } catch (PlaylistOutDatedException $e) {
-            $this->playlistOutdated($e);
-        } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound($type);
-        } catch (Exception $e) {
-            $this->playlistUnknownError($e);
-        }
-    }
-    */
     
     public function saveAction()
     {
