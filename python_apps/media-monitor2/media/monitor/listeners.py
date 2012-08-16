@@ -61,17 +61,17 @@ def mediate_ignored(fn):
     return wrapped
 
 class BaseListener(object):
-    def my_init(self, signal):
-        self.signal = signal
+    def my_init(self, signal): self.signal = signal
 
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     def process_IN_CLOSE_WRITE(self, event):
-        self.logger.info("===> IN_CLOSE_WRITE : '%s'" % event.pathname)
         self.process_to_organize(event)
     # got cookie
     def process_IN_MOVED_TO(self, event):
-        self.logger.info("===> IN_MOVED_TO : '%s'" % event.pathname)
         self.process_to_organize(event)
+
+    def process_default(self, event):
+        self.logger.info("===> Not handling: '%s'" % str(event))
 
     def flush_events(self, path):
         """
