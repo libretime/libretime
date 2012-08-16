@@ -133,8 +133,8 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @IncludeOnly(mmp.supported_extensions)
     def process_delete(self, event):
         evt = None
-        if event.dir: evt = DeleteDir(event)
-        else: evt = DeleteFile(event)
+        if event.dir : evt = DeleteDir(event)
+        else         : evt = DeleteFile(event)
         dispatcher.send(signal=self.signal, sender=self, event=evt)
         return evt
 
