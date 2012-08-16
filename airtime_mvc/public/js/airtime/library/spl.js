@@ -337,6 +337,8 @@ var AIRTIME = (function(AIRTIME){
 			.append(json.html);
 				
 		setUpPlaylist();
+		setCueEvents();
+		setFadeEvents();
 		
         // functions in smart_playlistbuilder.js
         setupUI();
