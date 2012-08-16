@@ -67,6 +67,8 @@ class Manager(Loggable):
             del(self.__wd_path[path])
 
     def __add_watch(self,path,listener):
+        self.logger.info("Adding listener '%s' to '%s'" %
+                         ( listener.__class__.__name__, path) )
         wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
                 auto_add=True, proc_fun=listener)
         self.__wd_path[path] = wd.values()[0]

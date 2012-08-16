@@ -61,8 +61,7 @@ def mediate_ignored(fn):
     return wrapped
 
 class BaseListener(object):
-    def my_init(self, signal):
-        self.signal = signal
+    def my_init(self, signal): self.signal = signal
 
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     def process_IN_CLOSE_WRITE(self, event):
@@ -70,6 +69,9 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     # got cookie
     def process_IN_MOVED_TO(self, event):
         self.process_to_organize(event)
+
+    def process_default(self, event):
+        self.logger.info("===> Not handling: '%s'" % str(event))
 
     def flush_events(self, path):
         """
@@ -85,7 +87,6 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
             flushed += 1
         self.logger.info("Flushed organized directory with %d files" % flushed)
 
-    @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
         dispatcher.send(signal=self.signal, sender=self,
