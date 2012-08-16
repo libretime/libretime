@@ -184,44 +184,16 @@ function setSmartPlaylistEvents() {
     });
 	
     /********** SAVE ACTION **********/
-    /* moved to spl.js
-    $('#save_button').live("click", function(event){
-        var criteria = $('form').serializeArray(),
-            block_name = $('#playlist_name_display').text(),
-            block_desc = $('textarea[name="description"]').val(),
-            save_action = 'Playlist/save',
-            obj_id = $('input[id="obj_id"]').val();
-        enableLoadingIcon();
-        $.post(save_action, {format: "json", criteria: criteria, name: block_name, desc: block_desc, obj_id: obj_id}, function(data){
-            callback(data, "save");
-            setFadeIcon();
-            disableLoadingIcon();
-        });
-    });
-    */
+    // moved to spl.js
     
     /********** GENERATE ACTION **********/
-    form.find('button[id="generate_button"]').live("click", function(event){
-        var data = $('form').serializeArray(),
-            generate_action = 'Playlist/smart-block-generate',
-            obj_id = $('input[id="obj_id"]').val();
-        enableLoadingIcon();
-        $.post(generate_action, {format: "json", data: data, obj_id: obj_id}, function(data){
-            callback(data, "generate");
-            disableLoadingIcon();
-        });
+    $('button[id="generate_button"]').live("click", function(){
+        buttonClickAction('generate', 'Playlist/smart-block-generate');
     });
     
     /********** SHUFFLE ACTION **********/
-    form.find('button[id="shuffle_button"]').live("click", function(event){
-        var data = $('form').serializeArray(),
-            shuffle_action = 'Playlist/smart-block-shuffle',
-            obj_id = $('input[id="obj_id"]').val();
-        enableLoadingIcon();
-        $.post(shuffle_action, {format: "json", data: data, obj_id: obj_id}, function(data){
-            callback(data, "shuffle");
-            disableLoadingIcon();
-        });
+    $('button[id="shuffle_button"]').live("click", function(){
+        buttonClickAction('shuffle', 'Playlist/smart-block-shuffle');
     });
 	
     /********** CHANGE PLAYLIST TYPE **********/
@@ -339,11 +311,40 @@ function reindexElements() {
     });
 }
 
+function buttonClickAction(clickType, url){
+    var data = $('#smart-playlist-form').serializeArray(),
+        obj_id = $('input[id="obj_id"]').val();
+    
+    enableLoadingIcon();
+    $.post(url, {format: "json", data: data, obj_id: obj_id}, function(data){
+        callback(data, clickType);
+        disableLoadingIcon();
+    });
+}
+
 function setupUI() {
     var playlist_type = $('input:radio[name=sp_type]:checked').val();
     var target_length = $('input[name="sp_limit_value"]').val();
     if (target_length == '') {
         target_length = '0.0';
+    }
+    
+    /* Activate or Deactivate shuffle button
+     * It is only active if playlist is not empty
+     */
+    var plContents = $('#spl_sortable').children();
+    var shuffleButton = $('button[id="shuffle_button"]');
+    
+    if (plContents.length > 1) {
+        if (shuffleButton.hasClass('ui-state-disabled')) {
+            shuffleButton.removeClass('ui-state-disabled');
+        }
+        shuffleButton.live('click', function(){
+            buttonClickAction('shuffle', 'Playlist/smart-block-shuffle');
+        });
+    } else if (!shuffleButton.hasClass('ui-state-disabled')) {
+        shuffleButton.addClass('ui-state-disabled');
+        shuffleButton.die('click');
     }
     
     var dynamic_length = target_length;
