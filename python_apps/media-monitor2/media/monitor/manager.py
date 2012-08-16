@@ -1,4 +1,6 @@
 import pyinotify
+import threading
+import time
 from pydispatch import dispatcher
 
 from os.path                 import normpath
@@ -8,6 +10,17 @@ from media.monitor.listeners import StoreWatchListener, OrganizeListener
 from media.monitor.handler   import ProblemFileHandler
 from media.monitor.organizer import Organizer
 import media.monitor.pure as mmp
+
+
+class ManagerTimeout(threading.Thread,Loggable):
+    def __init__(self, manager):
+        threading.Thread.__init__(self)
+        self.manager = manager
+    def run(self):
+        while True:
+            time.sleep(3)
+            self.manager.flush_organize()
+            self.logger.info("Force flushed organize...")
 
 class Manager(Loggable):
     """
@@ -23,6 +36,10 @@ class Manager(Loggable):
         self.watch_channel    = 'watch'
         self.organize_channel = 'organize'
         self.watch_listener   = StoreWatchListener(signal = self.watch_channel)
+        # TODO : change this to  a weak ref
+        self.__timeout_thread = ManagerTimeout(self)
+        self.__timeout_thread.daemon = True
+        self.__timeout_thread.start()
         self.organize = {
             'organize_path'      : None,
             'imported_path'      : None,
@@ -139,6 +156,10 @@ class Manager(Loggable):
         # event for every file in that directory
         self.organize['organize_listener'].flush_events(new_path)
         self.__add_watch(new_path, self.organize['organize_listener'])
+
+    def flush_organize(self):
+        path = self.organize['organize_path']
+        self.organize['organize_listener'].flush_events(path)
 
     def get_imported_path(self):
         return self.organize['imported_path']
