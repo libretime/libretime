@@ -15,16 +15,16 @@ class Organizer(ReportHandler,Loggable):
     StoreWatchListener)
     """
 
-    _instance = None
-    def __new__(cls, channel, target_path, recorded_path):
-        if cls._instance:
-            cls._instance.channel       = channel
-            cls._instance.target_path   = target_path
-            cls._instance.recorded_path = recorded_path
-        else:
-            cls._instance = super(Organizer, cls).__new__( cls, channel,
-                    target_path, recorded_path)
-        return cls._instance
+    #_instance = None
+    #def __new__(cls, channel, target_path, recorded_path):
+        #if cls._instance:
+            #cls._instance.channel       = channel
+            #cls._instance.target_path   = target_path
+            #cls._instance.recorded_path = recorded_path
+        #else:
+            #cls._instance = super(Organizer, cls).__new__( cls, channel,
+                    #target_path, recorded_path)
+        #return cls._instance
 
     def __init__(self, channel, target_path, recorded_path):
         self.channel       = channel
