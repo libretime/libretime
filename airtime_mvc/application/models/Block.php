@@ -215,6 +215,10 @@ EOT;
     
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
+            
+            $fades = $this->getFadeInfo($row['position']);
+            $row['fadein'] = $fades[0];
+            $row['fadeout'] = $fades[1];
         }
 
         return $rows;
