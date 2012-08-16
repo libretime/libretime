@@ -18,7 +18,7 @@ class TestReceiver(unittest.TestCase):
 
     def test_supported(self):
         # Every supported message should fire something
-        for event_type in self.amr.dispatch_tables.keys():
+        for event_type in self.amr.dispatch_table.keys():
             msg = { 'event_type' : event_type, 'extra_param' : 123 }
             filtered = filter_ev(msg)
             # There should be a better way to test the following without
