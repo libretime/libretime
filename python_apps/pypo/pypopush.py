@@ -386,31 +386,46 @@ class PypoPush(Thread):
                         PypoFetch.disconnect_source(self.logger, self.telnet_lock, "live_dj")
                     elif media_item['event_type'] == "switch_off":
                         PypoFetch.switch_source(self.logger, self.telnet_lock, "live_dj", "off")
+                elif media_item['type'] == 'stream_buffer_start':
+                    self.start_web_stream_buffer(media_item)
                 elif media_item['type'] == "stream":
-                    """
-                    Source is a stream that we need to being downloading to a file. Then we may simply
-                    point Liquidsoap to play this file.
-                    """
                     self.start_web_stream(media_item)
                 elif media_item['type'] == "stream_end":
                     self.stop_web_stream(media_item)
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)
 
+    def start_web_stream_buffer(self, media_item):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+            msg = 'dynamic_source.id %s\n' % media_item['row_id']
+            tn.write(msg)
+
+            #example: dynamic_source.read_start http://87.230.101.24:80/top100station.mp3
+            msg = 'dynamic_source.read_start %s\n' % media_item['uri'].encode('latin-1')
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+
     def start_web_stream(self, media_item):
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            #dynamic_source.start http://87.230.101.24:80/top100station.mp3
-
-            msg = 'dynamic_source.id %s\n' % media_item['row_id']
-            tn.write(msg)
 
             #TODO: DO we need this?
             msg = 'streams.scheduled_play_start\n'
             tn.write(msg)
 
-            msg = 'dynamic_source.start %s\n' % media_item['uri'].encode('latin-1')
+            msg = 'dynamic_source.output_start\n'
             self.logger.debug(msg)
             tn.write(msg)
 
@@ -429,7 +444,11 @@ class PypoPush(Thread):
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
-            msg = 'dynamic_source.stop %s\n' % media_item['uri'].encode('latin-1')
+            msg = 'dynamic_source.read_stop %s\n' % media_item['uri'].encode('latin-1')
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            msg = 'dynamic_source.output_stop\n'
             self.logger.debug(msg)
             tn.write(msg)
 

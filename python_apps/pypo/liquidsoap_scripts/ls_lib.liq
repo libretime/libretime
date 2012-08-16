@@ -1,5 +1,5 @@
 def notify(m)
-  current_media_id := string_of(m['schedule_table_id'])
+  #current_media_id := string_of(m['schedule_table_id'])
   command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
@@ -7,7 +7,7 @@ end
 
 def notify_stream(m)
   json_str = string.replace(pattern="\n",(fun (s) -> ""), json_of(m))
-  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --webstream='#{json_str}' --media-id=#{!current_media_id} &"
+  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
   log(command)
   system(command)
 end
@@ -253,7 +253,7 @@ end
 # Function to create a playlist source and output it.
 def create_dynamic_source(uri) =
     # The playlist source 
-    s = input.http(uri)
+    s = input.http(buffer=2., max=12., uri)
 
     # The output
     active_dyn_out = dyn_out(s)

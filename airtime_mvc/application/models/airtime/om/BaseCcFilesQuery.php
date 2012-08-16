@@ -191,7 +191,7 @@
  * @method     CcFiles findOneByDbTrackNumber(int $track_number) Return the first CcFiles filtered by the track_number column
  * @method     CcFiles findOneByDbChannels(int $channels) Return the first CcFiles filtered by the channels column
  * @method     CcFiles findOneByDbUrl(string $url) Return the first CcFiles filtered by the url column
- * @method     CcFiles findOneByDbBpm(string $bpm) Return the first CcFiles filtered by the bpm column
+ * @method     CcFiles findOneByDbBpm(int $bpm) Return the first CcFiles filtered by the bpm column
  * @method     CcFiles findOneByDbRating(string $rating) Return the first CcFiles filtered by the rating column
  * @method     CcFiles findOneByDbEncodedBy(string $encoded_by) Return the first CcFiles filtered by the encoded_by column
  * @method     CcFiles findOneByDbDiscNumber(string $disc_number) Return the first CcFiles filtered by the disc_number column
@@ -255,7 +255,7 @@
  * @method     array findByDbTrackNumber(int $track_number) Return CcFiles objects filtered by the track_number column
  * @method     array findByDbChannels(int $channels) Return CcFiles objects filtered by the channels column
  * @method     array findByDbUrl(string $url) Return CcFiles objects filtered by the url column
- * @method     array findByDbBpm(string $bpm) Return CcFiles objects filtered by the bpm column
+ * @method     array findByDbBpm(int $bpm) Return CcFiles objects filtered by the bpm column
  * @method     array findByDbRating(string $rating) Return CcFiles objects filtered by the rating column
  * @method     array findByDbEncodedBy(string $encoded_by) Return CcFiles objects filtered by the encoded_by column
  * @method     array findByDbDiscNumber(string $disc_number) Return CcFiles objects filtered by the disc_number column
@@ -1061,20 +1061,29 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the bpm column
 	 * 
-	 * @param     string $dbBpm The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     int|array $dbBpm The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
 	public function filterByDbBpm($dbBpm = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbBpm)) {
+		if (is_array($dbBpm)) {
+			$useMinMax = false;
+			if (isset($dbBpm['min'])) {
+				$this->addUsingAlias(CcFilesPeer::BPM, $dbBpm['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbBpm['max'])) {
+				$this->addUsingAlias(CcFilesPeer::BPM, $dbBpm['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbBpm)) {
-				$dbBpm = str_replace('*', '%', $dbBpm);
-				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::BPM, $dbBpm, $comparison);
