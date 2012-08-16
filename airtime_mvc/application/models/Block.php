@@ -643,7 +643,7 @@ EOT;
         return array("fadeIn" => $fadeIn, "fadeOut" => $fadeOut);
     }
         
-    public function setBlockfades($fadein, $fadeout)
+    public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
             Logging::log("Setting block fade in {$fadein}");
