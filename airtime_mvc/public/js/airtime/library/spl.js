@@ -17,7 +17,8 @@ var AIRTIME = (function(AIRTIME){
 		width;
 	
 	function isTimeValid(time) {
-		var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
+		//var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
+	    var regExpr = new RegExp("^\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1,6})?$");
 		
 		return regExpr.test(time);
 	}
@@ -337,6 +338,8 @@ var AIRTIME = (function(AIRTIME){
 			.append(json.html);
 				
 		setUpPlaylist();
+		setCueEvents();
+		setFadeEvents();
 		
         // functions in smart_playlistbuilder.js
         setupUI();
