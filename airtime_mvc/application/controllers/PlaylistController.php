@@ -534,7 +534,7 @@ class PlaylistController extends Zend_Controller_Action
             $form->startForm($params['obj_id']);
             $bl = new Application_Model_Block($params['obj_id']);
             if ($form->isValid($params)) {
-                $result = $bl->saveSmartBlockCriteria($params['data']);
+                $bl->saveSmartBlockCriteria($params['data']);
                 $result['html'] = $this->createFullResponse($bl, true);
                 $result['result'] = 0;
             } else {

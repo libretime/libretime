@@ -947,7 +947,6 @@ EOT;
         $this->storeCriteriaIntoDb($data);
         //get number of files that meet the criteria
         $files = $this->getListofFilesMeetCriteria();
-        //$output['poolCount'] = $files["count"];
         // if the block is dynamic, put null to the length
         // as it cannot be calculated
         if ($blockType == 'dynamic') {
@@ -963,10 +962,8 @@ EOT;
             }
             $this->setLength($length);
         }
-        //$output['blockLength'] = $this->getFormattedLength();
         
         $this->updateBlockLengthInAllPlaylist();
-        return $output;
     }
     
     public function hasItemLimit()
@@ -1018,17 +1015,13 @@ EOT;
      */
     public function generateSmartBlock($p_criteria, $returnList=false)
     {
-        $result = $this->saveSmartBlockCriteria($p_criteria);
-        /*if ($result['result'] != 0) {
-            return $result;
-        } else {*/
-            $insertList = $this->getListOfFilesUnderLimit();
-            $this->deleteAllFilesFromBlock();
-            $this->addAudioClips(array_keys($insertList));
-            // update length in playlist contents.
-            $this->updateBlockLengthInAllPlaylist();
-            return array("result"=>0);
-        //}
+        $this->saveSmartBlockCriteria($p_criteria);
+        $insertList = $this->getListOfFilesUnderLimit();
+        $this->deleteAllFilesFromBlock();
+        $this->addAudioClips(array_keys($insertList));
+        // update length in playlist contents.
+        $this->updateBlockLengthInAllPlaylist();
+        return array("result"=>0);
     }
     
     public function updateBlockLengthInAllPlaylist()
