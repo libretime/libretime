@@ -37,6 +37,7 @@ class Manager(Loggable):
         self.organize_channel = 'organize'
         self.watch_listener   = StoreWatchListener(signal = self.watch_channel)
         # TODO : change this to  a weak ref
+        # TODO : get rid of this hack once cc-4235 is fixed
         self.__timeout_thread = ManagerTimeout(self)
         self.__timeout_thread.daemon = True
         self.__timeout_thread.start()
