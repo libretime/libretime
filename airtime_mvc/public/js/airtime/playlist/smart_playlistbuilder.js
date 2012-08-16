@@ -335,7 +335,7 @@ function setupUI() {
     var plContents = $('#spl_sortable').children();
     var shuffleButton = $('button[id="shuffle_button"]');
     
-    if (plContents.length > 1) {
+    if (plContents.text() !== 'Empty playlist') {
         if (shuffleButton.hasClass('ui-state-disabled')) {
             shuffleButton.removeClass('ui-state-disabled');
         }
