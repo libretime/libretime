@@ -58,7 +58,7 @@ class PypoFetch(Thread):
             if not os.path.isdir(dir):
                 """
                 We get here if path does not exist, or path does exist but
-                is a file. We are not handling the second case, but don't 
+                is a file. We are not handling the second case, but don't
                 think we actually care about handling it.
                 """
                 self.logger.debug("Cache dir does not exist. Creating...")
@@ -426,8 +426,8 @@ class PypoFetch(Thread):
             for key in media:
                 media_item = media[key]
                 """
-                {u'end': u'2012-07-26-04-05-00', u'fade_out': 500, u'show_name': u'Untitled Show', u'uri': u'http://', 
- u'cue_in': 0, u'start': u'2012-07-26-04-00-00', u'replay_gain': u'0', u'row_id': 16, u'cue_out': 300, u'type': 
+                {u'end': u'2012-07-26-04-05-00', u'fade_out': 500, u'show_name': u'Untitled Show', u'uri': u'http://',
+ u'cue_in': 0, u'start': u'2012-07-26-04-00-00', u'replay_gain': u'0', u'row_id': 16, u'cue_out': 300, u'type':
  u'stream', u'id': 1, u'fade_in': 500}
                 """
                 if (media_item['type'] == 'file'):
@@ -456,7 +456,7 @@ class PypoFetch(Thread):
         """
         Get list of all files in the cache dir and remove them if they aren't being used anymore.
         Input dict() media, lists all files that are scheduled or currently playing. Not being in this
-        dict() means the file is safe to remove. 
+        dict() means the file is safe to remove.
         """
         cached_file_set = set(os.listdir(self.cache_dir))
         scheduled_file_set = set()
@@ -479,7 +479,7 @@ class PypoFetch(Thread):
 
     def main(self):
         # Bootstrap: since we are just starting up, we need to grab the
-        # most recent schedule.  After that we can just wait for updates. 
+        # most recent schedule.  After that we can just wait for updates.
         success, self.schedule_data = self.api_client.get_schedule()
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
@@ -493,14 +493,14 @@ class PypoFetch(Thread):
                 """
                 our simple_queue.get() requires a timeout, in which case we
                 fetch the Airtime schedule manually. It is important to fetch
-                the schedule periodically because if we didn't, we would only 
-                get schedule updates via RabbitMq if the user was constantly 
-                using the Airtime interface. 
-                
+                the schedule periodically because if we didn't, we would only
+                get schedule updates via RabbitMq if the user was constantly
+                using the Airtime interface.
+
                 If the user is not using the interface, RabbitMq messages are not
-                sent, and we will have very stale (or non-existent!) data about the 
+                sent, and we will have very stale (or non-existent!) data about the
                 schedule.
-                
+
                 Currently we are checking every POLL_INTERVAL seconds
                 """
 
