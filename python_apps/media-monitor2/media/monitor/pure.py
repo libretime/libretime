@@ -238,7 +238,8 @@ def normalized_metadata(md, original_path):
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
                         default=no_extension_basename(original_path))
-    new_md = default_to(dictionary=new_md, keys=path_md, default=u'')
+    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_CREATOR',
+        'MDATA_KEY_SOURCE'], default=u'')
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
                         default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to
