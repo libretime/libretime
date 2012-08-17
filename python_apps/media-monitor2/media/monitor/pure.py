@@ -209,7 +209,7 @@ def parse_int(s):
     >>> parse_int("123saf")
     '123'
     >>> parse_int("asdf")
-    nothing
+    None
     """
     if s.isdigit(): return s
     else:
