@@ -2,14 +2,22 @@
 if (isset($this->obj)) {
     $contents = $this->obj->getContents();
     $count = count($contents);
+    $displayFades = true;
+    if ($count > 0) {
+        if ($contents[0]['type'] == 2 && $contents[$count-1]['type'] == 2) {
+            $displayFades = false;
+        }
+    }
 }
 ?>
 <button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->obj)) : ?>
     <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
+    <?php if ($displayFades) :?>
     <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button" style="display:<?php echo $count > 0 ?"block;":"none;"?>">
         <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
     </a>
+    <?php endif; ?>
 <?php endif; ?>
 
 <?php if (isset($this->obj)) : ?>

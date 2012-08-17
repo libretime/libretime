@@ -239,16 +239,6 @@ function getRowIndex(ele) {
     return index;
 }
 
-function setFadeIcon(){
-    var contents = $("#spl_sortable");
-    var show = contents.is(":visible");
-    if (show) {
-        $("#spl_crossfade").show();
-    } else {
-        $("#spl_crossfade").hide();
-    }
-}
-
 /* This function appends a '+' button for the last
  * modifier row of each criteria.
  * If there are no modifier rows, the '+' button
