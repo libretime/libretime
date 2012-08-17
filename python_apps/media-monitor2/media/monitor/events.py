@@ -59,6 +59,10 @@ class BaseEvent(Loggable):
         self._pack_hook = lambda: None # no op
         # into another event
 
+    def reset_hook(self):
+        self._pack_hook()
+        self._pack_hook = lambda: None
+
     def exists(self): return os.path.exists(self.path)
 
     @LazyProperty

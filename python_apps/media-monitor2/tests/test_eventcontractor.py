@@ -49,4 +49,22 @@ class TestMMP(unittest.TestCase):
         self.assertTrue( ev.register(e3) )
         self.assertTrue( ev.register(e2) )
 
+
+    def test_register2(self):
+        ev = EventContractor()
+        p = 'bullshit.mp3'
+        events = [
+                NewFile( FakePyinotify(p) ),
+                NewFile( FakePyinotify(p) ),
+                DeleteFile( FakePyinotify(p) ),
+                NewFile( FakePyinotify(p) ),
+                NewFile( FakePyinotify(p) ), ]
+        actual_events = []
+        for e in events:
+            if ev.register(e):
+                actual_events.append(e)
+        self.assertEqual( len(ev.store.keys()), 1 )
+        packed = [ x.safe_pack() for x in actual_events ]
+        print(packed)
+
 if __name__ == '__main__': unittest.main()

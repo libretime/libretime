@@ -20,7 +20,7 @@ class ManagerTimeout(threading.Thread,Loggable):
         while True:
             time.sleep(3)
             self.manager.flush_organize()
-            self.logger.info("Force flushed organize...")
+            #self.logger.info("Force flushed organize...")
 
 class Manager(Loggable):
     """
