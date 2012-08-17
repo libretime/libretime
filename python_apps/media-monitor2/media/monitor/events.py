@@ -104,8 +104,7 @@ class FakePyinotify(object):
     instantiate objects from the classes below whenever we want to turn
     a single event into multiple events
     """
-    def __init__(self, path):
-        self.pathname = path
+    def __init__(self, path): self.pathname = path
 
 class OrganizeFile(BaseEvent, HasMetaData):
     def __init__(self, *args, **kwargs):
