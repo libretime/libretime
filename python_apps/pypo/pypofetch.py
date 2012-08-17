@@ -436,9 +436,6 @@ class PypoFetch(Thread):
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
-                elif media_item['type'] == 'stream':
-                    #flag to indicate whether the stream started prebuffering
-                    media_item['prebuffer_started'] = False
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
         except Exception, e: self.logger.error("%s", e)

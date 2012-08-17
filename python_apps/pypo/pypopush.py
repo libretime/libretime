@@ -50,6 +50,7 @@ class PypoPush(Thread):
         self.pushed_objects = {}
         self.logger = logging.getLogger('push')
         self.current_stream_info = None
+        self.current_prebuffering_stream_id = None
 
     def main(self):
         loops = 0
@@ -389,7 +390,7 @@ class PypoPush(Thread):
                 elif media_item['type'] == 'stream_buffer_start':
                     self.start_web_stream_buffer(media_item)
                 elif media_item['type'] == "stream":
-                    if not media_item['prebuffer_started']:
+                    if media_item['row_id'] != self.current_prebuffering_stream_id
                         #this is called if the stream wasn't scheduled sufficiently ahead of time
                         #so that the prebuffering stage could take effect. Let's do the prebuffering now.
                         self.start_web_stream_buffer(media_item)
@@ -416,7 +417,7 @@ class PypoPush(Thread):
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-            media_item['prebuffer_started'] = True
+            self.current_prebuffering_stream_id = media_item['row_id']
         except Exception, e:
             self.logger.error(str(e))
         finally:
@@ -441,6 +442,7 @@ class PypoPush(Thread):
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
+            self.current_prebuffering_stream_id = None
             self.current_stream_info = media_item
         except Exception, e:
             self.logger.error(str(e))
