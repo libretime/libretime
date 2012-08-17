@@ -43,7 +43,7 @@ web_stream = mksafe(input.harbor("test-harbor", port=8999, password="hackme"))
 web_stream = on_metadata(notify_stream, web_stream)
 
 queue = on_metadata(notify, queue)
-queue = map_metadata(append_title, queue)
+queue = map_metadata(update=false, append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
 
