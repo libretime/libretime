@@ -90,7 +90,7 @@ function setSmartPlaylistEvents() {
             curr.find('[name^="sp_criteria_field"]').val(criteria);
             
             var modifier = next.find('[name^="sp_criteria_modifier"]').val();
-            populateModifierSelect(curr.find('[name^="sp_criteria_field"]'));
+            populateModifierSelect(curr.find('[name^="sp_criteria_field"]'), false);
             curr.find('[name^="sp_criteria_modifier"]').val(modifier);
             
             var criteria_value = next.find('[name^="sp_criteria_value"]').val();
@@ -208,7 +208,7 @@ function setSmartPlaylistEvents() {
         
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index_num);
-        populateModifierSelect(this);
+        populateModifierSelect(this, true);
     });
     
     /********** MODIFIER CHANGE **********/
@@ -413,12 +413,16 @@ function sizeTextBoxes(ele, classToRemove, classToAdd) {
     }
 }
 
-function populateModifierSelect(e) {
+function populateModifierSelect(e, popAllMods) {
     var criteria_type = getCriteriaOptionType(e),
         index = getRowIndex($(e).parent()),
-        critIndex = index.substring(0, 1),
-        divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+critIndex+'"]');
-
+        divs;
+ 
+    if (popAllMods) {
+        index = index.substring(0, 1);
+    }
+    divs = $(e).parents().find('select[id^="sp_criteria_modifier_'+index+'"]');
+    
     $.each(divs, function(i, div){
         $(div).children().remove();
     
