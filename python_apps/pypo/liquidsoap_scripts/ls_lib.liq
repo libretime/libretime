@@ -7,6 +7,9 @@ end
 
 def notify_stream(m)
   json_str = string.replace(pattern="\n",(fun (s) -> ""), json_of(m))
+  #if a string has a single apostrophe in it, let's comment it out by ending the string before right before it
+  #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
+  json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
   command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
   log(command)
   system(command)
