@@ -47,9 +47,13 @@ queue = map_metadata(update=false, append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
 
-queue = switch(id="stream_queue_switch", track_sensitive=false, [({!webstream_enabled},web_stream), ({true}, queue)])
+#make sure we are clearing all buffered data even when the source isn't being actively used
+output.dummy(queue, fallible=true)
+output.dummy(web_stream, fallible=true)
 
-ignore(output.dummy(queue, fallible=true))
+stream_queue = switch(id="stream_queue_switch", track_sensitive=false, transitions=[transition, transition], [({!webstream_enabled},web_stream), ({true}, queue)])
+
+ignore(output.dummy(stream_queue, fallible=true))
 
 server.register(namespace="vars", 
                 "pypo_data", 
@@ -208,7 +212,7 @@ def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, 
     end
 end
 
-s = switch(id="default_switch", track_sensitive=false, transitions=[transition_default, transition], [({!scheduled_play_enabled},queue),({true},default)])
+s = switch(id="default_switch", track_sensitive=false, transitions=[transition_default, transition], [({!scheduled_play_enabled},stream_queue),({true},default)])
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
 
 # Attach a skip command to the source s:
