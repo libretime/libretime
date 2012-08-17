@@ -29,7 +29,7 @@ just_switched = ref false
 %include "ls_lib.liq"
 
 queue = on_metadata(notify, queue)
-queue = map_metadata(append_title, queue)
+queue = map_metadata(update=false, append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
 ignore(output.dummy(queue, fallible=true))
