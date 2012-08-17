@@ -1,0 +1,15 @@
+argparse==1.2.1
+amqplib==1.0.2
+PyDispatcher==2.0.3
+anyjson==0.3.3
+kombu==2.2.6
+pyinotify==0.9.3
+poster==0.8.1
+mock==1.0b1
+pytz==2011k
+wsgiref==0.1.2
+configobj==4.7.2
+distribute==0.6.24
+mutagen==1.20
+docopt==0.4.2
+ipdb==0.7
