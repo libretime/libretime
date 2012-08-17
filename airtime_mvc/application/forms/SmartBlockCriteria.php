@@ -235,14 +235,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $bl = new Application_Model_Block($p_blockId);
         $files = $bl->getListofFilesMeetCriteria();
         
-        $save = new Zend_Form_Element_Button('save_button');
-        $save->setAttrib('class', 'ui-button ui-state-default sp-save');
-        $save->setAttrib('title', 'Save playlist');
-        $save->setIgnore(true);
-        $save->setLabel('Save');
-        $save->setDecorators(array('viewHelper'));
-        $this->addElement($save);
-        
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
         $generate->setAttrib('title', 'Generate playlist content');

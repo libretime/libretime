@@ -10,13 +10,8 @@ if (isset($this->obj)) {
     <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button" style="display:<?php echo ($this->obj->isStatic() && $count > 0) ?"block;":"none;"?>">
         <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
     </a>
+    <button class="ui-button ui-state-default sp-save" type="button" id="save_button">Save</button>
 <?php endif; ?>
-
-<?php
-if (isset($this->form)) {
-    echo $this->form->getElement('save_button');
-}
-?>
 
 <?php if (isset($this->obj)) : ?>
     <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
