@@ -163,11 +163,13 @@ def apply_rules_dict(d, rules):
     """
     Consumes a dictionary of rules that maps some keys to lambdas which it
     applies to every matching element in d and returns a new dictionary with
-    the rules applied
+    the rules applied. If a rule returns none then it's not applied
     """
     new_d = copy.deepcopy(d)
     for k, rule in rules.iteritems():
-        if k in d: new_d[k] = rule(d[k])
+        if k in d:
+            new_val = rule(d[k])
+            if new_val is not None: new_d[k] = new_val
     return new_d
 
 def default_to_f(dictionary, keys, default, condition):
@@ -183,10 +185,6 @@ def default_to(dictionary, keys, default):
     """
     cnd = lambda dictionary, key: key not in dictionary
     return default_to_f(dictionary, keys, default, cnd)
-    #new_d = copy.deepcopy(dictionary)
-    #for k in keys:
-        #if not (k in new_d): new_d[k] = default
-    #return new_d
 
 def remove_whitespace(dictionary):
     """
@@ -205,18 +203,18 @@ def remove_whitespace(dictionary):
 def parse_int(s):
     """
     Tries very hard to get some sort of integer result from s. Defaults to 0
-    when it failes
+    when it fails
     >>> parse_int("123")
     '123'
     >>> parse_int("123saf")
     '123'
     >>> parse_int("asdf")
-    ''
+    None
     """
     if s.isdigit(): return s
     else:
         try   : return str(reduce(op.add, takewhile(lambda x: x.isdigit(), s)))
-        except: return ''
+        except: return None
 
 def normalized_metadata(md, original_path):
     """
@@ -240,7 +238,8 @@ def normalized_metadata(md, original_path):
     new_md = apply_rules_dict(new_md, format_rules)
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
                         default=no_extension_basename(original_path))
-    new_md = default_to(dictionary=new_md, keys=path_md, default=u'')
+    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_CREATOR',
+        'MDATA_KEY_SOURCE'], default=u'')
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
                         default=u'audioclip')
     # In the case where the creator is 'Airtime Show Recorder' we would like to

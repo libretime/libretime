@@ -121,10 +121,10 @@ class Metadata(Loggable):
 
     def __init__(self, fpath):
         # Forcing the unicode through
-        try: fpath = fpath.decode("utf-8")
-        except: pass
-        try: full_mutagen  = mutagen.File(fpath, easy=True)
-        except Exception: raise BadSongFile(fpath)
+        try    : fpath = fpath.decode("utf-8")
+        except : pass
+        try              : full_mutagen  = mutagen.File(fpath, easy=True)
+        except Exception : raise BadSongFile(fpath)
         self.path = fpath
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
@@ -162,6 +162,8 @@ class Metadata(Loggable):
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
+        # TODO : perhaps we shouldn't hard code how many bytes we're reading
+        # from the file?
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
 
     def is_recorded(self):
