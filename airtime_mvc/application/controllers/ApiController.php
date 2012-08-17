@@ -484,16 +484,10 @@ class ApiController extends Zend_Controller_Action
             if (is_null($file)) {
                 $file = Application_Model_StoredFile::Insert($md);
             } else {
-                // path already exist
-                if ($file->getFileExistsFlag()) {
-                    // file marked as exists
-                    $return_hash['error'] =  "File already exists in Airtime.";
-                    return $return_hash;
-                } else {
-                    // file marked as not exists
-                    $file->setFileExistsFlag(true);
-                    $file->setMetadata($md);
-                }
+                // If the file already exists we will update and make sure that
+                // it's marked as 'exists'.
+                $file->setFileExistsFlag(true);
+                $file->setMetadata($md);
             }
         }
         else if ($mode == "modify") {

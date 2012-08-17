@@ -19,9 +19,9 @@ class RequestSync(threading.Thread,Loggable):
     """
     def __init__(self, watcher, requests):
         threading.Thread.__init__(self)
-        self.watcher = watcher
-        self.requests = requests
-        self.retries = 1
+        self.watcher      = watcher
+        self.requests     = requests
+        self.retries      = 1
         self.request_wait = 0.3
 
     @LazyProperty
@@ -124,9 +124,8 @@ class WatchSyncer(ReportHandler,Loggable):
             try:
                 # If there is a strange bug anywhere in the code the next line
                 # should be a suspect
-                #if self.contractor.register( event ):
-                    #self.push_queue( event )
-                self.push_queue( event )
+                if self.contractor.register(event): self.push_queue( event )
+                #self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
             except Exception as e:

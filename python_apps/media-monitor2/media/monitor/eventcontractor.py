@@ -29,6 +29,7 @@ class EventContractor(Loggable):
         some other event in the storage was morphed into this newer one.
         Which should mean that the old event should be discarded.
         """
+        self.logger.info("Attempting to register: '%s'" % str(evt))
         if self.event_registered(evt):
             old_e = self.get_old_event(evt)
             # TODO : Perhaps there are other events that we can "contract"
@@ -42,11 +43,20 @@ class EventContractor(Loggable):
             elif isinstance(evt, DeleteFile):
                 old_e.morph_into(evt)
                 return False
+            # Unregister the old event anyway, because we only want to keep
+            # track of the old one. This means that the old event cannot be
+            # morphed again and new events with the same path will only be
+            # checked against the newest event 'evt' in this case
+            self.unregister( old_e )
         evt.add_safe_pack_hook( lambda : self.__unregister(evt) )
         self.store[ evt.path ] = evt
         return True # We actually added something, hence we return true.
 
+    def unregister(self, evt):
+        evt.reset_hook()
+
     def __unregister(self, evt):
-        self.logger.info("Unregistering. Left: '%d'" % len(self.store.keys()))
         try: del self.store[evt.path]
-        except Exception as e: self.unexpected_exception(e)
+        except Exception as e:
+            self.unexpected_exception(e)
+        self.logger.info("Unregistering. Left: '%d'" % len(self.store.keys()))

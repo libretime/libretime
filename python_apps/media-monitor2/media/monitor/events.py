@@ -10,7 +10,7 @@ from media.monitor.exceptions import BadSongFile
 class PathChannel(object):
     def __init__(self, signal, path):
         self.signal = signal
-        self.path = path
+        self.path   = path
 
 class EventRegistry(object):
     """
@@ -59,6 +59,10 @@ class BaseEvent(Loggable):
         self._pack_hook = lambda: None # no op
         # into another event
 
+    def reset_hook(self):
+        self._pack_hook()
+        self._pack_hook = lambda: None
+
     def exists(self): return os.path.exists(self.path)
 
     @LazyProperty
@@ -84,8 +88,8 @@ class BaseEvent(Loggable):
         # pack will only throw an exception if it processes one file but this
         # is a little bit hacky
         try:
-            ret = self.pack()
             self._pack_hook()
+            ret = self.pack()
             return ret
         except BadSongFile as e: return [e]
 
@@ -95,7 +99,7 @@ class BaseEvent(Loggable):
         self._raw_event   = evt
         self.path         = evt.path
         self.__class__    = evt.__class__
-        self.add_safe_pack_hook(evt._pack_hook)
+        # We don't transfer the _pack_hook over to the new event
         return self
 
 class FakePyinotify(object):
@@ -104,8 +108,7 @@ class FakePyinotify(object):
     instantiate objects from the classes below whenever we want to turn
     a single event into multiple events
     """
-    def __init__(self, path):
-        self.pathname = path
+    def __init__(self, path): self.pathname = path
 
 class OrganizeFile(BaseEvent, HasMetaData):
     def __init__(self, *args, **kwargs):
