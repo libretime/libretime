@@ -2,67 +2,52 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_webstream' table.
+ * Base static class for performing query and update operations on the 'cc_webstream_metadata' table.
  *
  * 
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcWebstreamPeer {
+abstract class BaseCcWebstreamMetadataPeer {
 
 	/** the default database name for this class */
 	const DATABASE_NAME = 'airtime';
 
 	/** the table name for this class */
-	const TABLE_NAME = 'cc_webstream';
+	const TABLE_NAME = 'cc_webstream_metadata';
 
 	/** the related Propel class for this table */
-	const OM_CLASS = 'CcWebstream';
+	const OM_CLASS = 'CcWebstreamMetadata';
 
 	/** A class that can be returned by this peer. */
-	const CLASS_DEFAULT = 'airtime.CcWebstream';
+	const CLASS_DEFAULT = 'airtime.CcWebstreamMetadata';
 
 	/** the related TableMap class for this table */
-	const TM_CLASS = 'CcWebstreamTableMap';
+	const TM_CLASS = 'CcWebstreamMetadataTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
 
 	/** the column name for the ID field */
-	const ID = 'cc_webstream.ID';
+	const ID = 'cc_webstream_metadata.ID';
 
-	/** the column name for the NAME field */
-	const NAME = 'cc_webstream.NAME';
+	/** the column name for the INSTANCE_ID field */
+	const INSTANCE_ID = 'cc_webstream_metadata.INSTANCE_ID';
 
-	/** the column name for the DESCRIPTION field */
-	const DESCRIPTION = 'cc_webstream.DESCRIPTION';
+	/** the column name for the START_TIME field */
+	const START_TIME = 'cc_webstream_metadata.START_TIME';
 
-	/** the column name for the URL field */
-	const URL = 'cc_webstream.URL';
-
-	/** the column name for the LENGTH field */
-	const LENGTH = 'cc_webstream.LENGTH';
-
-	/** the column name for the CREATOR_ID field */
-	const CREATOR_ID = 'cc_webstream.CREATOR_ID';
-
-	/** the column name for the MTIME field */
-	const MTIME = 'cc_webstream.MTIME';
-
-	/** the column name for the UTIME field */
-	const UTIME = 'cc_webstream.UTIME';
-
-	/** the column name for the MIME field */
-	const MIME = 'cc_webstream.MIME';
+	/** the column name for the LIQUIDSOAP_DATA field */
+	const LIQUIDSOAP_DATA = 'cc_webstream_metadata.LIQUIDSOAP_DATA';
 
 	/**
-	 * An identiy map to hold any loaded instances of CcWebstream objects.
+	 * An identiy map to hold any loaded instances of CcWebstreamMetadata objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
 	 * queries.
-	 * @var        array CcWebstream[]
+	 * @var        array CcWebstreamMetadata[]
 	 */
 	public static $instances = array();
 
@@ -74,12 +59,12 @@ abstract class BaseCcWebstreamPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbDescription', 'DbUrl', 'DbLength', 'DbCreatorId', 'DbMtime', 'DbUtime', 'DbMime', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbDescription', 'dbUrl', 'dbLength', 'dbCreatorId', 'dbMtime', 'dbUtime', 'dbMime', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::DESCRIPTION, self::URL, self::LENGTH, self::CREATOR_ID, self::MTIME, self::UTIME, self::MIME, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'DESCRIPTION', 'URL', 'LENGTH', 'CREATOR_ID', 'MTIME', 'UTIME', 'MIME', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'description', 'url', 'length', 'creator_id', 'mtime', 'utime', 'mime', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbInstanceId', 'DbStartTime', 'DbLiquidsoapData', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbInstanceId', 'dbStartTime', 'dbLiquidsoapData', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::INSTANCE_ID, self::START_TIME, self::LIQUIDSOAP_DATA, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'INSTANCE_ID', 'START_TIME', 'LIQUIDSOAP_DATA', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'instance_id', 'start_time', 'liquidsoap_data', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -89,12 +74,12 @@ abstract class BaseCcWebstreamPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbDescription' => 2, 'DbUrl' => 3, 'DbLength' => 4, 'DbCreatorId' => 5, 'DbMtime' => 6, 'DbUtime' => 7, 'DbMime' => 8, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbDescription' => 2, 'dbUrl' => 3, 'dbLength' => 4, 'dbCreatorId' => 5, 'dbMtime' => 6, 'dbUtime' => 7, 'dbMime' => 8, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::DESCRIPTION => 2, self::URL => 3, self::LENGTH => 4, self::CREATOR_ID => 5, self::MTIME => 6, self::UTIME => 7, self::MIME => 8, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'DESCRIPTION' => 2, 'URL' => 3, 'LENGTH' => 4, 'CREATOR_ID' => 5, 'MTIME' => 6, 'UTIME' => 7, 'MIME' => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'description' => 2, 'url' => 3, 'length' => 4, 'creator_id' => 5, 'mtime' => 6, 'utime' => 7, 'mime' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbInstanceId' => 1, 'DbStartTime' => 2, 'DbLiquidsoapData' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbInstanceId' => 1, 'dbStartTime' => 2, 'dbLiquidsoapData' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::INSTANCE_ID => 1, self::START_TIME => 2, self::LIQUIDSOAP_DATA => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'INSTANCE_ID' => 1, 'START_TIME' => 2, 'LIQUIDSOAP_DATA' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'instance_id' => 1, 'start_time' => 2, 'liquidsoap_data' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -143,12 +128,12 @@ abstract class BaseCcWebstreamPeer {
 	 *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
 	 * </code>
 	 * @param      string $alias The alias for the current table.
-	 * @param      string $column The column name for current table. (i.e. CcWebstreamPeer::COLUMN_NAME).
+	 * @param      string $column The column name for current table. (i.e. CcWebstreamMetadataPeer::COLUMN_NAME).
 	 * @return     string
 	 */
 	public static function alias($alias, $column)
 	{
-		return str_replace(CcWebstreamPeer::TABLE_NAME.'.', $alias.'.', $column);
+		return str_replace(CcWebstreamMetadataPeer::TABLE_NAME.'.', $alias.'.', $column);
 	}
 
 	/**
@@ -166,25 +151,15 @@ abstract class BaseCcWebstreamPeer {
 	public static function addSelectColumns(Criteria $criteria, $alias = null)
 	{
 		if (null === $alias) {
-			$criteria->addSelectColumn(CcWebstreamPeer::ID);
-			$criteria->addSelectColumn(CcWebstreamPeer::NAME);
-			$criteria->addSelectColumn(CcWebstreamPeer::DESCRIPTION);
-			$criteria->addSelectColumn(CcWebstreamPeer::URL);
-			$criteria->addSelectColumn(CcWebstreamPeer::LENGTH);
-			$criteria->addSelectColumn(CcWebstreamPeer::CREATOR_ID);
-			$criteria->addSelectColumn(CcWebstreamPeer::MTIME);
-			$criteria->addSelectColumn(CcWebstreamPeer::UTIME);
-			$criteria->addSelectColumn(CcWebstreamPeer::MIME);
+			$criteria->addSelectColumn(CcWebstreamMetadataPeer::ID);
+			$criteria->addSelectColumn(CcWebstreamMetadataPeer::INSTANCE_ID);
+			$criteria->addSelectColumn(CcWebstreamMetadataPeer::START_TIME);
+			$criteria->addSelectColumn(CcWebstreamMetadataPeer::LIQUIDSOAP_DATA);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.NAME');
-			$criteria->addSelectColumn($alias . '.DESCRIPTION');
-			$criteria->addSelectColumn($alias . '.URL');
-			$criteria->addSelectColumn($alias . '.LENGTH');
-			$criteria->addSelectColumn($alias . '.CREATOR_ID');
-			$criteria->addSelectColumn($alias . '.MTIME');
-			$criteria->addSelectColumn($alias . '.UTIME');
-			$criteria->addSelectColumn($alias . '.MIME');
+			$criteria->addSelectColumn($alias . '.INSTANCE_ID');
+			$criteria->addSelectColumn($alias . '.START_TIME');
+			$criteria->addSelectColumn($alias . '.LIQUIDSOAP_DATA');
 		}
 	}
 
@@ -204,21 +179,21 @@ abstract class BaseCcWebstreamPeer {
 		// We need to set the primary table name, since in the case that there are no WHERE columns
 		// it will be impossible for the BasePeer::createSelectSql() method to determine which
 		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcWebstreamPeer::TABLE_NAME);
+		$criteria->setPrimaryTableName(CcWebstreamMetadataPeer::TABLE_NAME);
 
 		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
 			$criteria->setDistinct();
 		}
 
 		if (!$criteria->hasSelectClause()) {
-			CcWebstreamPeer::addSelectColumns($criteria);
+			CcWebstreamMetadataPeer::addSelectColumns($criteria);
 		}
 
 		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 		$criteria->setDbName(self::DATABASE_NAME); // Set the correct dbName
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 		// BasePeer returns a PDOStatement
 		$stmt = BasePeer::doCount($criteria, $con);
@@ -236,7 +211,7 @@ abstract class BaseCcWebstreamPeer {
 	 *
 	 * @param      Criteria $criteria object used to create the SELECT statement.
 	 * @param      PropelPDO $con
-	 * @return     CcWebstream
+	 * @return     CcWebstreamMetadata
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
@@ -244,7 +219,7 @@ abstract class BaseCcWebstreamPeer {
 	{
 		$critcopy = clone $criteria;
 		$critcopy->setLimit(1);
-		$objects = CcWebstreamPeer::doSelect($critcopy, $con);
+		$objects = CcWebstreamMetadataPeer::doSelect($critcopy, $con);
 		if ($objects) {
 			return $objects[0];
 		}
@@ -261,7 +236,7 @@ abstract class BaseCcWebstreamPeer {
 	 */
 	public static function doSelect(Criteria $criteria, PropelPDO $con = null)
 	{
-		return CcWebstreamPeer::populateObjects(CcWebstreamPeer::doSelectStmt($criteria, $con));
+		return CcWebstreamMetadataPeer::populateObjects(CcWebstreamMetadataPeer::doSelectStmt($criteria, $con));
 	}
 	/**
 	 * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -279,12 +254,12 @@ abstract class BaseCcWebstreamPeer {
 	public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		if (!$criteria->hasSelectClause()) {
 			$criteria = clone $criteria;
-			CcWebstreamPeer::addSelectColumns($criteria);
+			CcWebstreamMetadataPeer::addSelectColumns($criteria);
 		}
 
 		// Set the correct dbName
@@ -302,10 +277,10 @@ abstract class BaseCcWebstreamPeer {
 	 * to the cache in order to ensure that the same objects are always returned by doSelect*()
 	 * and retrieveByPK*() calls.
 	 *
-	 * @param      CcWebstream $value A CcWebstream object.
+	 * @param      CcWebstreamMetadata $value A CcWebstreamMetadata object.
 	 * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
 	 */
-	public static function addInstanceToPool(CcWebstream $obj, $key = null)
+	public static function addInstanceToPool(CcWebstreamMetadata $obj, $key = null)
 	{
 		if (Propel::isInstancePoolingEnabled()) {
 			if ($key === null) {
@@ -323,18 +298,18 @@ abstract class BaseCcWebstreamPeer {
 	 * methods in your stub classes -- you may need to explicitly remove objects
 	 * from the cache in order to prevent returning objects that no longer exist.
 	 *
-	 * @param      mixed $value A CcWebstream object or a primary key value.
+	 * @param      mixed $value A CcWebstreamMetadata object or a primary key value.
 	 */
 	public static function removeInstanceFromPool($value)
 	{
 		if (Propel::isInstancePoolingEnabled() && $value !== null) {
-			if (is_object($value) && $value instanceof CcWebstream) {
+			if (is_object($value) && $value instanceof CcWebstreamMetadata) {
 				$key = (string) $value->getDbId();
 			} elseif (is_scalar($value)) {
 				// assume we've been passed a primary key
 				$key = (string) $value;
 			} else {
-				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcWebstream object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+				$e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcWebstreamMetadata object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
 				throw $e;
 			}
 
@@ -349,7 +324,7 @@ abstract class BaseCcWebstreamPeer {
 	 * a multi-column primary key, a serialize()d version of the primary key will be returned.
 	 *
 	 * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-	 * @return     CcWebstream Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+	 * @return     CcWebstreamMetadata Found object or NULL if 1) no instance exists for specified key or 2) instance pooling has been disabled.
 	 * @see        getPrimaryKeyHash()
 	 */
 	public static function getInstanceFromPool($key)
@@ -373,14 +348,11 @@ abstract class BaseCcWebstreamPeer {
 	}
 	
 	/**
-	 * Method to invalidate the instance pool of all tables related to cc_webstream
+	 * Method to invalidate the instance pool of all tables related to cc_webstream_metadata
 	 * by a foreign key with ON DELETE CASCADE
 	 */
 	public static function clearRelatedInstancePool()
 	{
-		// Invalidate objects in CcSchedulePeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcSchedulePeer::clearInstancePool();
 	}
 
 	/**
@@ -428,11 +400,11 @@ abstract class BaseCcWebstreamPeer {
 		$results = array();
 	
 		// set the class once to avoid overhead in the loop
-		$cls = CcWebstreamPeer::getOMClass(false);
+		$cls = CcWebstreamMetadataPeer::getOMClass(false);
 		// populate the object(s)
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key = CcWebstreamPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj = CcWebstreamPeer::getInstanceFromPool($key))) {
+			$key = CcWebstreamMetadataPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj = CcWebstreamMetadataPeer::getInstanceFromPool($key))) {
 				// We no longer rehydrate the object, since this can cause data loss.
 				// See http://www.propelorm.org/ticket/509
 				// $obj->hydrate($row, 0, true); // rehydrate
@@ -441,7 +413,7 @@ abstract class BaseCcWebstreamPeer {
 				$obj = new $cls();
 				$obj->hydrate($row);
 				$results[] = $obj;
-				CcWebstreamPeer::addInstanceToPool($obj, $key);
+				CcWebstreamMetadataPeer::addInstanceToPool($obj, $key);
 			} // if key exists
 		}
 		$stmt->closeCursor();
@@ -454,24 +426,258 @@ abstract class BaseCcWebstreamPeer {
 	 * @param      int $startcol The 0-based offset for reading from the resultset row.
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
-	 * @return     array (CcWebstream object, last column rank)
+	 * @return     array (CcWebstreamMetadata object, last column rank)
 	 */
 	public static function populateObject($row, $startcol = 0)
 	{
-		$key = CcWebstreamPeer::getPrimaryKeyHashFromRow($row, $startcol);
-		if (null !== ($obj = CcWebstreamPeer::getInstanceFromPool($key))) {
+		$key = CcWebstreamMetadataPeer::getPrimaryKeyHashFromRow($row, $startcol);
+		if (null !== ($obj = CcWebstreamMetadataPeer::getInstanceFromPool($key))) {
 			// We no longer rehydrate the object, since this can cause data loss.
 			// See http://www.propelorm.org/ticket/509
 			// $obj->hydrate($row, $startcol, true); // rehydrate
-			$col = $startcol + CcWebstreamPeer::NUM_COLUMNS;
+			$col = $startcol + CcWebstreamMetadataPeer::NUM_COLUMNS;
 		} else {
-			$cls = CcWebstreamPeer::OM_CLASS;
+			$cls = CcWebstreamMetadataPeer::OM_CLASS;
 			$obj = new $cls();
 			$col = $obj->hydrate($row, $startcol);
-			CcWebstreamPeer::addInstanceToPool($obj, $key);
+			CcWebstreamMetadataPeer::addInstanceToPool($obj, $key);
 		}
 		return array($obj, $col);
 	}
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcSchedule table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcSchedule(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcWebstreamMetadataPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcWebstreamMetadataPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcWebstreamMetadataPeer::INSTANCE_ID, CcSchedulePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of CcWebstreamMetadata objects pre-filled with their CcSchedule objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcWebstreamMetadata objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcSchedule(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcWebstreamMetadataPeer::addSelectColumns($criteria);
+		$startcol = (CcWebstreamMetadataPeer::NUM_COLUMNS - CcWebstreamMetadataPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcSchedulePeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcWebstreamMetadataPeer::INSTANCE_ID, CcSchedulePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcWebstreamMetadataPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcWebstreamMetadataPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcWebstreamMetadataPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcWebstreamMetadataPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcSchedulePeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcSchedulePeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcSchedulePeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcSchedulePeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcWebstreamMetadata) to $obj2 (CcSchedule)
+				$obj2->addCcWebstreamMetadata($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining all related tables
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcWebstreamMetadataPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcWebstreamMetadataPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcWebstreamMetadataPeer::INSTANCE_ID, CcSchedulePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+	/**
+	 * Selects a collection of CcWebstreamMetadata objects pre-filled with all related objects.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcWebstreamMetadata objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAll(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcWebstreamMetadataPeer::addSelectColumns($criteria);
+		$startcol2 = (CcWebstreamMetadataPeer::NUM_COLUMNS - CcWebstreamMetadataPeer::NUM_LAZY_LOAD_COLUMNS);
+
+		CcSchedulePeer::addSelectColumns($criteria);
+		$startcol3 = $startcol2 + (CcSchedulePeer::NUM_COLUMNS - CcSchedulePeer::NUM_LAZY_LOAD_COLUMNS);
+
+		$criteria->addJoin(CcWebstreamMetadataPeer::INSTANCE_ID, CcSchedulePeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcWebstreamMetadataPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcWebstreamMetadataPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcWebstreamMetadataPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcWebstreamMetadataPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+			// Add objects for joined CcSchedule rows
+
+			$key2 = CcSchedulePeer::getPrimaryKeyHashFromRow($row, $startcol2);
+			if ($key2 !== null) {
+				$obj2 = CcSchedulePeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcSchedulePeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol2);
+					CcSchedulePeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 loaded
+
+				// Add the $obj1 (CcWebstreamMetadata) to the collection in $obj2 (CcSchedule)
+				$obj2->addCcWebstreamMetadata($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
 	/**
 	 * Returns the TableMap related to this peer.
 	 * This method is not needed for general use but a specific application could have a need.
@@ -489,10 +695,10 @@ abstract class BaseCcWebstreamPeer {
 	 */
 	public static function buildTableMap()
 	{
-	  $dbMap = Propel::getDatabaseMap(BaseCcWebstreamPeer::DATABASE_NAME);
-	  if (!$dbMap->hasTable(BaseCcWebstreamPeer::TABLE_NAME))
+	  $dbMap = Propel::getDatabaseMap(BaseCcWebstreamMetadataPeer::DATABASE_NAME);
+	  if (!$dbMap->hasTable(BaseCcWebstreamMetadataPeer::TABLE_NAME))
 	  {
-	    $dbMap->addTableObject(new CcWebstreamTableMap());
+	    $dbMap->addTableObject(new CcWebstreamMetadataTableMap());
 	  }
 	}
 
@@ -509,13 +715,13 @@ abstract class BaseCcWebstreamPeer {
 	 */
 	public static function getOMClass($withPrefix = true)
 	{
-		return $withPrefix ? CcWebstreamPeer::CLASS_DEFAULT : CcWebstreamPeer::OM_CLASS;
+		return $withPrefix ? CcWebstreamMetadataPeer::CLASS_DEFAULT : CcWebstreamMetadataPeer::OM_CLASS;
 	}
 
 	/**
-	 * Method perform an INSERT on the database, given a CcWebstream or Criteria object.
+	 * Method perform an INSERT on the database, given a CcWebstreamMetadata or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcWebstream object containing data that is used to create the INSERT statement.
+	 * @param      mixed $values Criteria or CcWebstreamMetadata object containing data that is used to create the INSERT statement.
 	 * @param      PropelPDO $con the PropelPDO connection to use
 	 * @return     mixed The new primary key.
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -524,17 +730,17 @@ abstract class BaseCcWebstreamPeer {
 	public static function doInsert($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 		} else {
-			$criteria = $values->buildCriteria(); // build Criteria from CcWebstream object
+			$criteria = $values->buildCriteria(); // build Criteria from CcWebstreamMetadata object
 		}
 
-		if ($criteria->containsKey(CcWebstreamPeer::ID) && $criteria->keyContainsValue(CcWebstreamPeer::ID) ) {
-			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcWebstreamPeer::ID.')');
+		if ($criteria->containsKey(CcWebstreamMetadataPeer::ID) && $criteria->keyContainsValue(CcWebstreamMetadataPeer::ID) ) {
+			throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcWebstreamMetadataPeer::ID.')');
 		}
 
 
@@ -556,9 +762,9 @@ abstract class BaseCcWebstreamPeer {
 	}
 
 	/**
-	 * Method perform an UPDATE on the database, given a CcWebstream or Criteria object.
+	 * Method perform an UPDATE on the database, given a CcWebstreamMetadata or Criteria object.
 	 *
-	 * @param      mixed $values Criteria or CcWebstream object containing data that is used to create the UPDATE statement.
+	 * @param      mixed $values Criteria or CcWebstreamMetadata object containing data that is used to create the UPDATE statement.
 	 * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 * @throws     PropelException Any exceptions caught during processing will be
@@ -567,7 +773,7 @@ abstract class BaseCcWebstreamPeer {
 	public static function doUpdate($values, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		$selectCriteria = new Criteria(self::DATABASE_NAME);
@@ -575,15 +781,15 @@ abstract class BaseCcWebstreamPeer {
 		if ($values instanceof Criteria) {
 			$criteria = clone $values; // rename for clarity
 
-			$comparison = $criteria->getComparison(CcWebstreamPeer::ID);
-			$value = $criteria->remove(CcWebstreamPeer::ID);
+			$comparison = $criteria->getComparison(CcWebstreamMetadataPeer::ID);
+			$value = $criteria->remove(CcWebstreamMetadataPeer::ID);
 			if ($value) {
-				$selectCriteria->add(CcWebstreamPeer::ID, $value, $comparison);
+				$selectCriteria->add(CcWebstreamMetadataPeer::ID, $value, $comparison);
 			} else {
-				$selectCriteria->setPrimaryTableName(CcWebstreamPeer::TABLE_NAME);
+				$selectCriteria->setPrimaryTableName(CcWebstreamMetadataPeer::TABLE_NAME);
 			}
 
-		} else { // $values is CcWebstream object
+		} else { // $values is CcWebstreamMetadata object
 			$criteria = $values->buildCriteria(); // gets full criteria
 			$selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
 		}
@@ -595,26 +801,26 @@ abstract class BaseCcWebstreamPeer {
 	}
 
 	/**
-	 * Method to DELETE all rows from the cc_webstream table.
+	 * Method to DELETE all rows from the cc_webstream_metadata table.
 	 *
 	 * @return     int The number of affected rows (if supported by underlying database driver).
 	 */
 	public static function doDeleteAll($con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 		$affectedRows = 0; // initialize var to track total num of affected rows
 		try {
 			// use transaction because $criteria could contain info
 			// for more than one table or we could emulating ON DELETE CASCADE, etc.
 			$con->beginTransaction();
-			$affectedRows += BasePeer::doDeleteAll(CcWebstreamPeer::TABLE_NAME, $con, CcWebstreamPeer::DATABASE_NAME);
+			$affectedRows += BasePeer::doDeleteAll(CcWebstreamMetadataPeer::TABLE_NAME, $con, CcWebstreamMetadataPeer::DATABASE_NAME);
 			// Because this db requires some delete cascade/set null emulation, we have to
 			// clear the cached instance *after* the emulation has happened (since
 			// instances get re-added by the select statement contained therein).
-			CcWebstreamPeer::clearInstancePool();
-			CcWebstreamPeer::clearRelatedInstancePool();
+			CcWebstreamMetadataPeer::clearInstancePool();
+			CcWebstreamMetadataPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -624,9 +830,9 @@ abstract class BaseCcWebstreamPeer {
 	}
 
 	/**
-	 * Method perform a DELETE on the database, given a CcWebstream or Criteria object OR a primary key value.
+	 * Method perform a DELETE on the database, given a CcWebstreamMetadata or Criteria object OR a primary key value.
 	 *
-	 * @param      mixed $values Criteria or CcWebstream object or primary key or array of primary keys
+	 * @param      mixed $values Criteria or CcWebstreamMetadata object or primary key or array of primary keys
 	 *              which is used to create the DELETE statement
 	 * @param      PropelPDO $con the connection to use
 	 * @return     int 	The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -637,27 +843,27 @@ abstract class BaseCcWebstreamPeer {
 	 public static function doDelete($values, PropelPDO $con = null)
 	 {
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
 		}
 
 		if ($values instanceof Criteria) {
 			// invalidate the cache for all objects of this type, since we have no
 			// way of knowing (without running a query) what objects should be invalidated
 			// from the cache based on this Criteria.
-			CcWebstreamPeer::clearInstancePool();
+			CcWebstreamMetadataPeer::clearInstancePool();
 			// rename for clarity
 			$criteria = clone $values;
-		} elseif ($values instanceof CcWebstream) { // it's a model object
+		} elseif ($values instanceof CcWebstreamMetadata) { // it's a model object
 			// invalidate the cache for this single object
-			CcWebstreamPeer::removeInstanceFromPool($values);
+			CcWebstreamMetadataPeer::removeInstanceFromPool($values);
 			// create criteria based on pk values
 			$criteria = $values->buildPkeyCriteria();
 		} else { // it's a primary key, or an array of pks
 			$criteria = new Criteria(self::DATABASE_NAME);
-			$criteria->add(CcWebstreamPeer::ID, (array) $values, Criteria::IN);
+			$criteria->add(CcWebstreamMetadataPeer::ID, (array) $values, Criteria::IN);
 			// invalidate the cache for this object(s)
 			foreach ((array) $values as $singleval) {
-				CcWebstreamPeer::removeInstanceFromPool($singleval);
+				CcWebstreamMetadataPeer::removeInstanceFromPool($singleval);
 			}
 		}
 
@@ -672,7 +878,7 @@ abstract class BaseCcWebstreamPeer {
 			$con->beginTransaction();
 			
 			$affectedRows += BasePeer::doDelete($criteria, $con);
-			CcWebstreamPeer::clearRelatedInstancePool();
+			CcWebstreamMetadataPeer::clearRelatedInstancePool();
 			$con->commit();
 			return $affectedRows;
 		} catch (PropelException $e) {
@@ -682,24 +888,24 @@ abstract class BaseCcWebstreamPeer {
 	}
 
 	/**
-	 * Validates all modified columns of given CcWebstream object.
+	 * Validates all modified columns of given CcWebstreamMetadata object.
 	 * If parameter $columns is either a single column name or an array of column names
 	 * than only those columns are validated.
 	 *
 	 * NOTICE: This does not apply to primary or foreign keys for now.
 	 *
-	 * @param      CcWebstream $obj The object to validate.
+	 * @param      CcWebstreamMetadata $obj The object to validate.
 	 * @param      mixed $cols Column name or array of column names.
 	 *
 	 * @return     mixed TRUE if all columns are valid or the error message of the first invalid column.
 	 */
-	public static function doValidate(CcWebstream $obj, $cols = null)
+	public static function doValidate(CcWebstreamMetadata $obj, $cols = null)
 	{
 		$columns = array();
 
 		if ($cols) {
-			$dbMap = Propel::getDatabaseMap(CcWebstreamPeer::DATABASE_NAME);
-			$tableMap = $dbMap->getTable(CcWebstreamPeer::TABLE_NAME);
+			$dbMap = Propel::getDatabaseMap(CcWebstreamMetadataPeer::DATABASE_NAME);
+			$tableMap = $dbMap->getTable(CcWebstreamMetadataPeer::TABLE_NAME);
 
 			if (! is_array($cols)) {
 				$cols = array($cols);
@@ -715,7 +921,7 @@ abstract class BaseCcWebstreamPeer {
 
 		}
 
-		return BasePeer::doValidate(CcWebstreamPeer::DATABASE_NAME, CcWebstreamPeer::TABLE_NAME, $columns);
+		return BasePeer::doValidate(CcWebstreamMetadataPeer::DATABASE_NAME, CcWebstreamMetadataPeer::TABLE_NAME, $columns);
 	}
 
 	/**
@@ -723,23 +929,23 @@ abstract class BaseCcWebstreamPeer {
 	 *
 	 * @param      int $pk the primary key.
 	 * @param      PropelPDO $con the connection to use
-	 * @return     CcWebstream
+	 * @return     CcWebstreamMetadata
 	 */
 	public static function retrieveByPK($pk, PropelPDO $con = null)
 	{
 
-		if (null !== ($obj = CcWebstreamPeer::getInstanceFromPool((string) $pk))) {
+		if (null !== ($obj = CcWebstreamMetadataPeer::getInstanceFromPool((string) $pk))) {
 			return $obj;
 		}
 
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria = new Criteria(CcWebstreamPeer::DATABASE_NAME);
-		$criteria->add(CcWebstreamPeer::ID, $pk);
+		$criteria = new Criteria(CcWebstreamMetadataPeer::DATABASE_NAME);
+		$criteria->add(CcWebstreamMetadataPeer::ID, $pk);
 
-		$v = CcWebstreamPeer::doSelect($criteria, $con);
+		$v = CcWebstreamMetadataPeer::doSelect($criteria, $con);
 
 		return !empty($v) > 0 ? $v[0] : null;
 	}
@@ -755,23 +961,23 @@ abstract class BaseCcWebstreamPeer {
 	public static function retrieveByPKs($pks, PropelPDO $con = null)
 	{
 		if ($con === null) {
-			$con = Propel::getConnection(CcWebstreamPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+			$con = Propel::getConnection(CcWebstreamMetadataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
 		$objs = null;
 		if (empty($pks)) {
 			$objs = array();
 		} else {
-			$criteria = new Criteria(CcWebstreamPeer::DATABASE_NAME);
-			$criteria->add(CcWebstreamPeer::ID, $pks, Criteria::IN);
-			$objs = CcWebstreamPeer::doSelect($criteria, $con);
+			$criteria = new Criteria(CcWebstreamMetadataPeer::DATABASE_NAME);
+			$criteria->add(CcWebstreamMetadataPeer::ID, $pks, Criteria::IN);
+			$objs = CcWebstreamMetadataPeer::doSelect($criteria, $con);
 		}
 		return $objs;
 	}
 
-} // BaseCcWebstreamPeer
+} // BaseCcWebstreamMetadataPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcWebstreamPeer::buildTableMap();
+BaseCcWebstreamMetadataPeer::buildTableMap();
 

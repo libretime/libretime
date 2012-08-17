@@ -83,10 +83,11 @@ class Application_Model_Schedule
         $fileJoin = "FROM cc_schedule st JOIN cc_files ft ON st.file_id = ft.id
             LEFT JOIN cc_show_instances si ON st.instance_id = si.id";
         
-        $streamColumns = "ws.name as artist_name, ws.liquidsoap_data as track_title, ";
-        $streamJoin = "FROM cc_schedule st JOIN cc_webstream ws ON st.stream_id = ws.id
-            LEFT JOIN cc_show_instances si ON st.instance_id = si.id
-            LEFT JOIN cc_subjs as sub on sub.id = ws.creator_id";
+        $streamColumns = "ws.name AS artist_name, wm.liquidsoap_data AS track_title, ";
+        $streamJoin = "FROM cc_schedule AS st JOIN cc_webstream ws ON st.stream_id = ws.id
+            LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
+            LEFT JOIN cc_subjs AS sub on sub.id = ws.creator_id
+            LEFT JOIN (SELECT * FROM cc_webstream_metadata ORDER BY start_time DESC LIMIT 1) AS wm on st.id = wm.instance_id";
         
         $predicateArr = array(); 
         if (isset($p_previousShowID)) {

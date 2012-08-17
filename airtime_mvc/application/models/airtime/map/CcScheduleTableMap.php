@@ -63,6 +63,7 @@ class CcScheduleTableMap extends TableMap {
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
     $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
     $this->addRelation('CcWebstream', 'CcWebstream', RelationMap::MANY_TO_ONE, array('stream_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcWebstreamMetadata', 'CcWebstreamMetadata', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcScheduleTableMap

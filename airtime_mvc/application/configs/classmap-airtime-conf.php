@@ -176,4 +176,11 @@ return array (
   'BaseCcWebstreamPeer' => 'airtime/om/BaseCcWebstreamPeer.php',
   'BaseCcWebstream' => 'airtime/om/BaseCcWebstream.php',
   'BaseCcWebstreamQuery' => 'airtime/om/BaseCcWebstreamQuery.php',
+  'CcWebstreamMetadataTableMap' => 'airtime/map/CcWebstreamMetadataTableMap.php',
+  'CcWebstreamMetadataPeer' => 'airtime/CcWebstreamMetadataPeer.php',
+  'CcWebstreamMetadata' => 'airtime/CcWebstreamMetadata.php',
+  'CcWebstreamMetadataQuery' => 'airtime/CcWebstreamMetadataQuery.php',
+  'BaseCcWebstreamMetadataPeer' => 'airtime/om/BaseCcWebstreamMetadataPeer.php',
+  'BaseCcWebstreamMetadata' => 'airtime/om/BaseCcWebstreamMetadata.php',
+  'BaseCcWebstreamMetadataQuery' => 'airtime/om/BaseCcWebstreamMetadataQuery.php',
 );

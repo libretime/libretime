@@ -132,6 +132,11 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	protected $aCcWebstream;
 
 	/**
+	 * @var        array CcWebstreamMetadata[] Collection to store aggregation of CcWebstreamMetadata objects.
+	 */
+	protected $collCcWebstreamMetadatas;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -975,6 +980,8 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$this->aCcShowInstances = null;
 			$this->aCcFiles = null;
 			$this->aCcWebstream = null;
+			$this->collCcWebstreamMetadatas = null;
+
 		} // if (deep)
 	}
 
@@ -1134,6 +1141,14 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
+			if ($this->collCcWebstreamMetadatas !== null) {
+				foreach ($this->collCcWebstreamMetadatas as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -1228,6 +1243,14 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 				$failureMap = array_merge($failureMap, $retval);
 			}
 
+
+				if ($this->collCcWebstreamMetadatas !== null) {
+					foreach ($this->collCcWebstreamMetadatas as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
 
 
 			$this->alreadyInValidation = false;
@@ -1564,6 +1587,20 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$copyObj->setDbPlayoutStatus($this->playout_status);
 		$copyObj->setDbBroadcasted($this->broadcasted);
 
+		if ($deepCopy) {
+			// important: temporarily setNew(false) because this affects the behavior of
+			// the getter/setter methods for fkey referrer objects.
+			$copyObj->setNew(false);
+
+			foreach ($this->getCcWebstreamMetadatas() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcWebstreamMetadata($relObj->copy($deepCopy));
+				}
+			}
+
+		} // if ($deepCopy)
+
+
 		$copyObj->setNew(true);
 		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
 	}
@@ -1754,6 +1791,115 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcWebstreamMetadatas collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcWebstreamMetadatas()
+	 */
+	public function clearCcWebstreamMetadatas()
+	{
+		$this->collCcWebstreamMetadatas = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcWebstreamMetadatas collection.
+	 *
+	 * By default this just sets the collCcWebstreamMetadatas collection to an empty array (like clearcollCcWebstreamMetadatas());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcWebstreamMetadatas()
+	{
+		$this->collCcWebstreamMetadatas = new PropelObjectCollection();
+		$this->collCcWebstreamMetadatas->setModel('CcWebstreamMetadata');
+	}
+
+	/**
+	 * Gets an array of CcWebstreamMetadata objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcSchedule is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcWebstreamMetadata[] List of CcWebstreamMetadata objects
+	 * @throws     PropelException
+	 */
+	public function getCcWebstreamMetadatas($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcWebstreamMetadatas || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcWebstreamMetadatas) {
+				// return empty collection
+				$this->initCcWebstreamMetadatas();
+			} else {
+				$collCcWebstreamMetadatas = CcWebstreamMetadataQuery::create(null, $criteria)
+					->filterByCcSchedule($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcWebstreamMetadatas;
+				}
+				$this->collCcWebstreamMetadatas = $collCcWebstreamMetadatas;
+			}
+		}
+		return $this->collCcWebstreamMetadatas;
+	}
+
+	/**
+	 * Returns the number of related CcWebstreamMetadata objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcWebstreamMetadata objects.
+	 * @throws     PropelException
+	 */
+	public function countCcWebstreamMetadatas(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcWebstreamMetadatas || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcWebstreamMetadatas) {
+				return 0;
+			} else {
+				$query = CcWebstreamMetadataQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcSchedule($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcWebstreamMetadatas);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcWebstreamMetadata object to this object
+	 * through the CcWebstreamMetadata foreign key attribute.
+	 *
+	 * @param      CcWebstreamMetadata $l CcWebstreamMetadata
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcWebstreamMetadata(CcWebstreamMetadata $l)
+	{
+		if ($this->collCcWebstreamMetadatas === null) {
+			$this->initCcWebstreamMetadatas();
+		}
+		if (!$this->collCcWebstreamMetadatas->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcWebstreamMetadatas[]= $l;
+			$l->setCcSchedule($this);
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1793,8 +1939,14 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
+			if ($this->collCcWebstreamMetadatas) {
+				foreach ((array) $this->collCcWebstreamMetadatas as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
+		$this->collCcWebstreamMetadatas = null;
 		$this->aCcShowInstances = null;
 		$this->aCcFiles = null;
 		$this->aCcWebstream = null;
