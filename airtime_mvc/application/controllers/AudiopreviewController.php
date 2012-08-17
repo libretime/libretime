@@ -66,6 +66,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->view->audioFileID = $audioFileID;
         $this->view->audioFileArtist = $audioFileArtist;
         $this->view->audioFileTitle = $audioFileTitle;
+        $this->view->type = $type;
 
         $this->_helper->viewRenderer->setRender('audio-preview');
     }

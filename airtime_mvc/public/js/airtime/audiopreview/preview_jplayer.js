@@ -206,7 +206,6 @@ function playOne(uri, mime) {
 
     _playlist_jplayer.option("autoPlay", true);
     playlist[0] = media;
-    //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
     _playlist_jplayer._initPlaylist(playlist);
     _playlist_jplayer.play(0);
     
