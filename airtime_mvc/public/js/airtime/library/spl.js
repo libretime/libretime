@@ -311,11 +311,25 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function setFadeIcon(){
+	    var contents = $("#spl_sortable");
+        var show = contents.is(":visible");
 	    var empty = $(".spl_empty");
-	    if (empty.length > 0) {
+	    
+	    if (!show || empty.length > 0) {
 	        $("#spl_crossfade").hide();
 	    } else {
-	        $("#spl_crossfade").show();
+	        //get list of playlist contents
+	        var list = contents.children();
+	        
+	        //if first and last items are blocks, hide the fade icon
+	        var first = list.first();
+	        var last = list.last();
+	        if (first.find(':first-child').children().attr('blockid') !== undefined &&
+	            last.find(':first-child').children().attr('blockid') !== undefined) {
+	            $("#spl_crossfade").hide();
+	        } else {
+	            $("#spl_crossfade").show();
+	        }
 	    }
 	}
 	
@@ -468,7 +482,9 @@ var AIRTIME = (function(AIRTIME){
                                 fadeOut.show();
                                 fadeOut.empty().append(json.fadeOut);
                             }
-			            	$pl.find("#crossfade_main").show();
+			                if (json.fadeIn != null || json.fadeOut != null) {
+			            	    $pl.find("#crossfade_main").show();
+			                }
 			            }
 		            });
 	        }
@@ -889,6 +905,7 @@ var AIRTIME = (function(AIRTIME){
 		setPlaylistEntryEvents();
 		setCueEvents();
 		setFadeEvents();
+		setFadeIcon();
 		
 		initialEvents();
 		setUpPlaylist();

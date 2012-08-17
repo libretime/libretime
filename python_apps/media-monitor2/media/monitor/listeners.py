@@ -88,7 +88,7 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
             dispatcher.send(signal=self.signal, sender=self,
                     event=OrganizeFile(f))
             flushed += 1
-        self.logger.info("Flushed organized directory with %d files" % flushed)
+        #self.logger.info("Flushed organized directory with %d files" % flushed)
 
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
