@@ -95,6 +95,7 @@ class BaseEvent(Loggable):
         self._raw_event   = evt
         self.path         = evt.path
         self.__class__    = evt.__class__
+        # We don't transfer the _pack_hook over to the new event
         return self
 
 class FakePyinotify(object):
