@@ -138,7 +138,7 @@ var AIRTIME = (function(AIRTIME){
 			    if (aMediaIds.length > 0) {
                     AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
 			    } else {
-			        alert('You cannot add playlists to smart playlists');
+			        alert('You can only add tracks to smart playlists.');
 			    }
 			});
 		
