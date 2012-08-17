@@ -905,6 +905,7 @@ var AIRTIME = (function(AIRTIME){
 		setPlaylistEntryEvents();
 		setCueEvents();
 		setFadeEvents();
+		setFadeIcon();
 		
 		initialEvents();
 		setUpPlaylist();
