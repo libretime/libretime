@@ -48,7 +48,7 @@ class TestMMP(unittest.TestCase):
         real_path1 = \
             u'/home/rudi/throwaway/fucking_around/watch/unknown/unknown/ACDC_-_Back_In_Black-sample-64kbps-64kbps.ogg'
         self.assertTrue( 'unknown' in og, True )
-        self.assertEqual( og, real_path1 )
+        self.assertEqual( og, real_path1 ) # TODO : fix this failure
         # for recorded it should be something like this
         # ./recorded/2012/07/2012-07-09-17-55-00-Untitled Show-256kbps.ogg
 
@@ -70,6 +70,6 @@ class TestMMP(unittest.TestCase):
     def test_parse_int(self):
         self.assertEqual( mmp.parse_int("123"), "123" )
         self.assertEqual( mmp.parse_int("123asf"), "123" )
-        self.assertEqual( mmp.parse_int("asdf"), "" )
+        self.assertEqual( mmp.parse_int("asdf"), None )
 
 if __name__ == '__main__': unittest.main()
