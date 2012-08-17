@@ -39,7 +39,7 @@ just_switched = ref false
 
 %include "ls_lib.liq"
 
-web_stream = mksafe(input.harbor("test-harbor", port=8999, password="hackme"))
+web_stream = input.harbor("test-harbor", port=8999, password="hackme")
 web_stream = on_metadata(notify_stream, web_stream)
 
 queue = on_metadata(notify, queue)
@@ -48,8 +48,8 @@ queue = map_metadata(update=false, append_title, queue)
 queue = crossfade(queue)
 
 #make sure we are clearing all buffered data even when the source isn't being actively used
-output.dummy(queue, fallible=true)
-output.dummy(web_stream, fallible=true)
+#output.dummy(queue, fallible=true)
+#output.dummy(web_stream, fallible=true)
 
 stream_queue = switch(id="stream_queue_switch", track_sensitive=false, transitions=[transition, transition], [({!webstream_enabled},web_stream), ({true}, queue)])
 
@@ -328,4 +328,4 @@ if s3_enable == true then
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3", s3_connected, s3_description)
 end
 
-ignore(output.dummy(blank()))
+#ignore(output.dummy(blank()))
