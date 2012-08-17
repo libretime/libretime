@@ -360,7 +360,6 @@ var AIRTIME = (function(AIRTIME){
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
-        
 	}
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
@@ -599,6 +598,9 @@ var AIRTIME = (function(AIRTIME){
 
                         var $ws_id = $("#ws_id");
                         $ws_id.attr("value", json.streamId);
+
+                        var $ws_id = $("#ws_delete");
+                        $ws_id.show();
 
                         //redraw the library to show the new webstream
                         redrawLib();

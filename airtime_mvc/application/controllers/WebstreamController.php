@@ -27,6 +27,7 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbName("Untitled Webstream");
 
         $this->view->ws = new Application_Model_Webstream($webstream);
+        $this->view->action = "new";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
 
@@ -41,6 +42,7 @@ class WebstreamController extends Zend_Controller_Action
 
         $webstream = CcWebstreamQuery::create()->findPK($id);
         $this->view->ws = new Application_Model_Webstream($webstream);
+        $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
 
