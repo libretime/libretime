@@ -1023,25 +1023,35 @@ class ApiController extends Zend_Controller_Action
         $data = $request->getParam("data");
         $media_id = $request->getParam("media_id");
 
-        $schedule = CcScheduleQuery::create()->findPK($media_id);
-        $stream_id = $schedule->getDbStreamId();
+        $data_arr = json_decode($data);
 
-        if (!is_null($stream_id)) {
-            $webstream = CcWebstreamQuery::create()->findPK($stream_id);    
-            if (strlen($data) <= 1024) {
-                $data_arr = json_decode($data);
-                if (isset($data_arr->title)) {
-                    $webstream->setDbLiquidsoapData($data_arr->title);
-                } else {
-                    $webstream->setDbLiquidsoapData('');
+        if (!is_null($media_id) && isset($data_arr->title) && strlen($data_arr->title) < 1024) {
+
+            $previous_metadata = CcWebstreamMetadataQuery::create()
+                ->orderByDbStartTime('desc')
+                ->filterByDbInstanceId($media_id)
+                ->findOne();
+
+            $do_insert = true;
+            if ($previous_metadata) {
+                if ($previous_metadata->getDbLiquidsoapData() == $data_arr->title) {
+                    Logging::debug("Duplicate found: ".$data_arr->title);
+                    $do_insert = false;
                 }
-                $webstream->save();
             }
+
+            if ($do_insert) {
+                $webstream_metadata = new CcWebstreamMetadata();
+                $webstream_metadata->setDbInstanceId($media_id);
+                $webstream_metadata->setDbStartTime(new DateTime("now", new DateTimeZone("UTC")));
+                $webstream_metadata->setDbLiquidsoapData($data_arr->title);
+                $webstream_metadata->save();
+            }
+
         } else {
             throw new Error("Unexpected error. media_id $media_id has a null stream value in cc_schedule!");
         }
 
-        Logging::log(json_decode($data));
         $this->view->response = $data;
         $this->view->media_id = $media_id;
     }

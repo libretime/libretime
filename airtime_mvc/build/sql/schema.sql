@@ -639,11 +639,30 @@ CREATE TABLE "cc_webstream"
 	"mtime" TIMESTAMP(6)  NOT NULL,
 	"utime" TIMESTAMP(6)  NOT NULL,
 	"mime" VARCHAR(255),
-	"liquidsoap_data" VARCHAR(1024),
 	PRIMARY KEY ("id")
 );
 
 COMMENT ON TABLE "cc_webstream" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_webstream_metadata
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_webstream_metadata" CASCADE;
+
+
+CREATE TABLE "cc_webstream_metadata"
+(
+	"id" serial  NOT NULL,
+	"instance_id" INTEGER  NOT NULL,
+	"start_time" TIMESTAMP  NOT NULL,
+	"liquidsoap_data" VARCHAR(1024)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_webstream_metadata" IS '';
 
 
 SET search_path TO public;
@@ -694,3 +713,5 @@ ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_stream_fkey" FOREIGN KEY ("str
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey" FOREIGN KEY ("user_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_webstream_metadata" ADD CONSTRAINT "cc_schedule_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_schedule" ("id") ON DELETE CASCADE;

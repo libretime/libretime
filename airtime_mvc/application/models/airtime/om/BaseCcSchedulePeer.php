@@ -403,6 +403,9 @@ abstract class BaseCcSchedulePeer {
 	 */
 	public static function clearRelatedInstancePool()
 	{
+		// Invalidate objects in CcWebstreamMetadataPeer instance pool, 
+		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+		CcWebstreamMetadataPeer::clearInstancePool();
 	}
 
 	/**

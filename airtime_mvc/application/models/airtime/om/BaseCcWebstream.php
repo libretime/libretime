@@ -80,12 +80,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	protected $mime;
 
 	/**
-	 * The value for the liquidsoap_data field.
-	 * @var        string
-	 */
-	protected $liquidsoap_data;
-
-	/**
 	 * @var        array CcSchedule[] Collection to store aggregation of CcSchedule objects.
 	 */
 	protected $collCcSchedules;
@@ -259,16 +253,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	public function getDbMime()
 	{
 		return $this->mime;
-	}
-
-	/**
-	 * Get the [liquidsoap_data] column value.
-	 * 
-	 * @return     string
-	 */
-	public function getDbLiquidsoapData()
-	{
-		return $this->liquidsoap_data;
 	}
 
 	/**
@@ -510,26 +494,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 	} // setDbMime()
 
 	/**
-	 * Set the value of [liquidsoap_data] column.
-	 * 
-	 * @param      string $v new value
-	 * @return     CcWebstream The current object (for fluent API support)
-	 */
-	public function setDbLiquidsoapData($v)
-	{
-		if ($v !== null) {
-			$v = (string) $v;
-		}
-
-		if ($this->liquidsoap_data !== $v) {
-			$this->liquidsoap_data = $v;
-			$this->modifiedColumns[] = CcWebstreamPeer::LIQUIDSOAP_DATA;
-		}
-
-		return $this;
-	} // setDbLiquidsoapData()
-
-	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -574,7 +538,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$this->mtime = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
 			$this->utime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->mime = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->liquidsoap_data = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -583,7 +546,7 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 10; // 10 = CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 9; // 9 = CcWebstreamPeer::NUM_COLUMNS - CcWebstreamPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcWebstream object", $e);
@@ -927,9 +890,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			case 8:
 				return $this->getDbMime();
 				break;
-			case 9:
-				return $this->getDbLiquidsoapData();
-				break;
 			default:
 				return null;
 				break;
@@ -962,7 +922,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			$keys[6] => $this->getDbMtime(),
 			$keys[7] => $this->getDbUtime(),
 			$keys[8] => $this->getDbMime(),
-			$keys[9] => $this->getDbLiquidsoapData(),
 		);
 		return $result;
 	}
@@ -1021,9 +980,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 			case 8:
 				$this->setDbMime($value);
 				break;
-			case 9:
-				$this->setDbLiquidsoapData($value);
-				break;
 		} // switch()
 	}
 
@@ -1057,7 +1013,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		if (array_key_exists($keys[6], $arr)) $this->setDbMtime($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbUtime($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbMime($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbLiquidsoapData($arr[$keys[9]]);
 	}
 
 	/**
@@ -1078,7 +1033,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcWebstreamPeer::MTIME)) $criteria->add(CcWebstreamPeer::MTIME, $this->mtime);
 		if ($this->isColumnModified(CcWebstreamPeer::UTIME)) $criteria->add(CcWebstreamPeer::UTIME, $this->utime);
 		if ($this->isColumnModified(CcWebstreamPeer::MIME)) $criteria->add(CcWebstreamPeer::MIME, $this->mime);
-		if ($this->isColumnModified(CcWebstreamPeer::LIQUIDSOAP_DATA)) $criteria->add(CcWebstreamPeer::LIQUIDSOAP_DATA, $this->liquidsoap_data);
 
 		return $criteria;
 	}
@@ -1148,7 +1102,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		$copyObj->setDbMtime($this->mtime);
 		$copyObj->setDbUtime($this->utime);
 		$copyObj->setDbMime($this->mime);
-		$copyObj->setDbLiquidsoapData($this->liquidsoap_data);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1379,7 +1332,6 @@ abstract class BaseCcWebstream extends BaseObject  implements Persistent
 		$this->mtime = null;
 		$this->utime = null;
 		$this->mime = null;
-		$this->liquidsoap_data = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
