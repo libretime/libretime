@@ -389,11 +389,16 @@ class PypoPush(Thread):
                 elif media_item['type'] == 'stream_buffer_start':
                     self.start_web_stream_buffer(media_item)
                 elif media_item['type'] == "stream":
+                    if not media_item['prebuffer_started']:
+                        #this is called if the stream wasn't scheduled sufficiently ahead of time
+                        #so that the prebuffering stage could take effect. Let's do the prebuffering now.
+                        self.start_web_stream_buffer(media_item)
                     self.start_web_stream(media_item)
                 elif media_item['type'] == "stream_end":
                     self.stop_web_stream(media_item)
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)
+
 
     def start_web_stream_buffer(self, media_item):
         try:
@@ -410,6 +415,8 @@ class PypoPush(Thread):
 
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
+
+            media_item['prebuffer_started'] = True
         except Exception, e:
             self.logger.error(str(e))
         finally:
@@ -424,6 +431,8 @@ class PypoPush(Thread):
             #TODO: DO we need this?
             msg = 'streams.scheduled_play_start\n'
             tn.write(msg)
+
+
 
             msg = 'dynamic_source.output_start\n'
             self.logger.debug(msg)

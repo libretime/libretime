@@ -430,12 +430,15 @@ class PypoFetch(Thread):
  u'cue_in': 0, u'start': u'2012-07-26-04-00-00', u'replay_gain': u'0', u'row_id': 16, u'cue_out': 300, u'type': 
  u'stream', u'id': 1, u'fade_in': 500}
                 """
-                if(media_item['type'] == 'file'):
+                if (media_item['type'] == 'file'):
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, unicode(media_item['id']) + fileExt)
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
+                else if media_item['type'] == 'stream':
+                    #flag to indicate whether the stream started prebuffering
+                    media_item['prebuffer_start'] = False
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
         except Exception, e: self.logger.error("%s", e)
