@@ -10,7 +10,7 @@ from media.monitor.exceptions import BadSongFile
 class PathChannel(object):
     def __init__(self, signal, path):
         self.signal = signal
-        self.path = path
+        self.path   = path
 
 class EventRegistry(object):
     """
