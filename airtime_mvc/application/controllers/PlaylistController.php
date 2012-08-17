@@ -155,6 +155,11 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->error = "You can only add tracks to smart playlists.";
         $this->createFullResponse($obj);
     }
+    
+    private function wrongTypeToPlaylist($obj) {
+        $this->view->error = "You can only add tracks and smart playlists to playlists.";
+        $this->createFullResponse($obj);
+    }
 
     public function indexAction()
     {
@@ -308,6 +313,13 @@ class PlaylistController extends Zend_Controller_Action
         try {
             $obj = $this->getPlaylist($obj_type);
             if ($obj_type == 'playlist') {
+                foreach($ids as $id) {
+                    if (is_array($id) && isset($id[1])) {
+                        if ($id[1] == 'playlist') {
+                            throw new WrongTypeToPlaylistException;
+                        }
+                    }
+                }
                 $obj->addAudioClips($ids, $afterItem, $addType);
             } else if ($obj->isStatic()) {
                 // if the dest is a block object
@@ -333,6 +345,9 @@ class PlaylistController extends Zend_Controller_Action
         }
         catch (WrongTypeToBlockException $e) {
             $this->wrongTypeToBlock($obj);
+        }
+        catch (WrongTypeToPlaylistException $e) {
+            $this->wrongTypeToPlaylist($obj);
         }
         catch (BlockDynamicException $e) {
             $this->blockDynamic($obj);
@@ -609,4 +624,5 @@ class PlaylistController extends Zend_Controller_Action
     }
 }
 class WrongTypeToBlockException extends Exception {}
+class WrongTypeToPlaylistException extends Exception {}
 class BlockDynamicException extends Exception {}
