@@ -84,8 +84,8 @@ class BaseEvent(Loggable):
         # pack will only throw an exception if it processes one file but this
         # is a little bit hacky
         try:
-            ret = self.pack()
             self._pack_hook()
+            ret = self.pack()
             return ret
         except BadSongFile as e: return [e]
 
@@ -95,7 +95,6 @@ class BaseEvent(Loggable):
         self._raw_event   = evt
         self.path         = evt.path
         self.__class__    = evt.__class__
-        self.add_safe_pack_hook(evt._pack_hook)
         return self
 
 class FakePyinotify(object):
