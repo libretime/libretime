@@ -329,9 +329,20 @@ function setupUI() {
         if (shuffleButton.hasClass('ui-state-disabled')) {
             shuffleButton.removeClass('ui-state-disabled');
         }
-        shuffleButton.live('click', function(){
-            buttonClickAction('shuffle', 'Playlist/smart-block-shuffle');
+        //check if shuffle button already has a click event
+        var clickEvents = $(document).data('events').click;
+        var hasEvent = false;
+        $.each(clickEvents, function(i, event) {
+            if (event.selector == shuffleButton.selector) {
+                hasEvent = true;
+                return false;
+            }
         });
+        if (!hasEvent) {
+            shuffleButton.live('click', function(){
+                buttonClickAction('shuffle', 'Playlist/smart-block-shuffle');
+            });
+        }
     } else if (!shuffleButton.hasClass('ui-state-disabled')) {
         shuffleButton.addClass('ui-state-disabled');
         shuffleButton.die('click');
