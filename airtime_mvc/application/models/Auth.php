@@ -27,9 +27,10 @@ class Application_Model_Auth
 
         $e_link_protocol = empty($_SERVER['HTTPS']) ? "http" : "https";
         $e_link_base = $_SERVER['SERVER_NAME'];
+        $e_link_port = $_SERVER['SERVER_PORT'];
         $e_link_path = $view->url(array('user_id' => $user->getDbId(), 'token' => $token), 'password-change');
 
-        $message = "Click this link: {$e_link_protocol}://{$e_link_base}{$e_link_path}";
+        $message = "Click this link: {$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
 
         $success = Application_Model_Email::send('Airtime Password Reset', $message, $user->getDbEmail());
 
