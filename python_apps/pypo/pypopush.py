@@ -390,7 +390,7 @@ class PypoPush(Thread):
                 elif media_item['type'] == 'stream_buffer_start':
                     self.start_web_stream_buffer(media_item)
                 elif media_item['type'] == "stream":
-                    if media_item['row_id'] != self.current_prebuffering_stream_id
+                    if media_item['row_id'] != self.current_prebuffering_stream_id:
                         #this is called if the stream wasn't scheduled sufficiently ahead of time
                         #so that the prebuffering stage could take effect. Let's do the prebuffering now.
                         self.start_web_stream_buffer(media_item)
