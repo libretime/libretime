@@ -205,22 +205,11 @@ class PypoFetch(Thread):
         fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
         fh.close()
 
-    def stop_liquidsoap(self):
-        self.telnet_lock.acquire()
+    def restart_liquidsoap(self):
         try:
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
-            # we are manually adjusting the bootup time variable so the status msg will get
-            # updated.
-            tn.write("system.shutdown\n")
-            tn.write('exit\n')
-
-            output = tn.read_all()
+            subprocess.call('/etc/init.d/airtime-liquidsoap restart', shell=True)
         except Exception, e:
-            self.logger.error(str(e))
-        finally:
-            self.telnet_lock.release()
-
+            self.logger.error(e)
 
     def regenerate_liquidsoap_conf(self, setting):
         existing = {}
@@ -232,7 +221,7 @@ class PypoFetch(Thread):
         except IOError, e:
             #file does not exist
             self.write_liquidsoap_config(setting)
-            self.stop_liquidsoap()
+            self.restart_liquidsoap()
 
         self.logger.info("Reading existing config...")
         # read existing conf file and build dict
@@ -313,7 +302,7 @@ class PypoFetch(Thread):
         # rewrite
         if restart:
             self.write_liquidsoap_config(setting)
-            self.stop_liquidsoap()
+            self.restart_liquidsoap()
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
