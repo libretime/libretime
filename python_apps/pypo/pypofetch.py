@@ -86,7 +86,7 @@ class PypoFetch(Thread):
                 self.process_schedule(self.schedule_data)
             elif command == 'update_stream_setting':
                 self.logger.info("Updating stream setting...")
-                self.regenerateLiquidsoapConf(m['setting'])
+                self.regenerate_liquidsoap_conf(m['setting'])
             elif command == 'update_stream_format':
                 self.logger.info("Updating stream format...")
                 self.update_liquidsoap_stream_format(m['stream_format'])
@@ -204,12 +204,25 @@ class PypoFetch(Thread):
             fh.write(api_client.encode_to(buffer_str))
         fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
         fh.close()
-        # restarting pypo.
-        # we could just restart liquidsoap but it take more time somehow.
-        self.logger.info("Restarting pypo...")
-        sys.exit(0)
 
-    def regenerateLiquidsoapConf(self, setting):
+    def stop_liquidsoap(self):
+        self.telnet_lock.acquire()
+        try:
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
+            # we are manually adjusting the bootup time variable so the status msg will get
+            # updated.
+            tn.write("system.shutdown\n")
+            tn.write('exit\n')
+
+            output = tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+
+    def regenerate_liquidsoap_conf(self, setting):
         existing = {}
         # create a temp file
 
@@ -219,6 +232,7 @@ class PypoFetch(Thread):
         except IOError, e:
             #file does not exist
             self.write_liquidsoap_config(setting)
+            self.stop_liquidsoap()
 
         self.logger.info("Reading existing config...")
         # read existing conf file and build dict
@@ -299,6 +313,7 @@ class PypoFetch(Thread):
         # rewrite
         if restart:
             self.write_liquidsoap_config(setting)
+            self.stop_liquidsoap()
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()

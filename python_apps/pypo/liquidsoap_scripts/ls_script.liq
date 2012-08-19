@@ -76,6 +76,9 @@ server.register(namespace="streams",
 server.register(namespace="vars", 
                 "default_dj_fade", 
                 fun (s) -> begin default_dj_fade := float_of_string(s) s end)
+server.register(namespace="system",
+                "shutdown", 
+                fun (s) -> begin shutdown() "Shutting Down" end)
 
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
@@ -105,7 +108,7 @@ server.register(namespace="dynamic_source",
                 destroy_dynamic_source)
 
 default = amplify(id="silence_src", 0.00001, noise())
-default = rewrite_metadata([("artist","Airtime"), ("title", "offline")],default)
+default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)
 ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false
