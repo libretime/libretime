@@ -4,7 +4,6 @@ import sys
 import subprocess
 import random
 import string
-import upgrade2dot2
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -63,9 +62,6 @@ try:
     mm2_source = os.path.realpath(os.path.join(current_script_dir,
         "../../media-monitor2"))
     copy_dir(mm2_source, os.path.join( config["bin_dir"], "mm2" ))
-    # upgrade mm2 config
-    upgrade2dot2.upgrade(('%s/../media-monitor.cfg'%current_script_dir),
-        PATH_INI_FILE)
 
     #copy init.d script
     shutil.copy(config["bin_dir"]+"/airtime-media-monitor-init-d", "/etc/init.d/airtime-media-monitor")

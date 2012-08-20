@@ -273,6 +273,8 @@ def organized_path(old_path, root_path, orig_md):
     def default_f(dictionary, key):
         if key in dictionary: return len(dictionary[key]) == 0
         else: return True
+    # We set some metadata elements to a default "unknown" value because we use
+    # these fields to create a path hence they cannot be empty
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
     if is_airtime_recorded(normal_md):
         fname = u'%s-%s-%s.%s' % ( normal_md['MDATA_KEY_YEAR'],
