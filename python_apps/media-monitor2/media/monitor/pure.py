@@ -247,7 +247,7 @@ def normalized_metadata(md, original_path):
     # Note: I don't know why I'm doing a unicode string comparison here
     # that part is copied from the original code
     if is_airtime_recorded(new_md):
-        hour,minute,second,name = md['MDATA_KEY_TITLE'].split("-",3)
+        hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
         # We assume that MDATA_KEY_YEAR is always given for airtime recorded
         # shows
         new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
@@ -280,7 +280,7 @@ def organized_path(old_path, root_path, orig_md):
         fname = u'%s-%s-%s.%s' % ( normal_md['MDATA_KEY_YEAR'],
                 normal_md['MDATA_KEY_TITLE'],
                 normal_md['MDATA_KEY_BITRATE'], ext )
-        yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',3)
+        yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',2)
         path = os.path.join(root_path, yyyy, mm)
         filepath = os.path.join(path,fname)
     elif len(normal_md['MDATA_KEY_TRACKNUMBER']) == 0:
