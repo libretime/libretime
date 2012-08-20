@@ -88,9 +88,8 @@ ln -sf /usr/lib/airtime/utils/airtime-test-stream /usr/bin/airtime-test-stream
 echo "* Creating /var/log/airtime"
 mkdir -p /var/log/airtime
 chmod a+x /var/log/airtime
-touch /var/log/airtime/zendphp.log
-chown www-data:www-data /var/log/airtime/zendphp.log
-chmod 644 /var/log/airtime/zendphp.log
+chown www-data:www-data /var/log/airtime/
+
 
 if [ "$web" = "t" ]; then
     echo "* Creating /usr/share/airtime"
