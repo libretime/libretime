@@ -160,19 +160,18 @@ end
 
 #auth function for live stream
 def check_master_dj_client(user,password) =
+        log("master connected")
         #get the output of the php script
         ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
         #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
         ret = list.hd(ret)
+        
         #return true to let the client transmit data, or false to tell harbor to decline
-        if (ret == "True") then
-            true
-        else
-            false
-        end
+        ret == "True"
 end
 
 def check_dj_client(user,password) =
+        log("live dj connected")
         #get the output of the php script
         ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
         #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...

@@ -13,6 +13,6 @@ if dj_type == '--master':
 elif dj_type == '--dj':
     source_type = 'dj'
 
-response = api_clients.check_live_stream_auth(username, password, type)
+response = api_clients.check_live_stream_auth(username, password, source_type)
 
 print response['msg']
