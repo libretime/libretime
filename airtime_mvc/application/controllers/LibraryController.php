@@ -60,7 +60,7 @@ class LibraryController extends Zend_Controller_Action
                     if ($this->obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     } else if ($this->obj_sess->type === "block") {
-                        $menu["pl_add"] = array("name"=> "Add to Smart Playlist", "icon" => "add-playlist", "icon" => "copy");
+                        $menu["pl_add"] = array("name"=> "Add to Smart Block", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }

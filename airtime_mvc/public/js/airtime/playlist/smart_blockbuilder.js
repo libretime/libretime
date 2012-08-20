@@ -1,9 +1,9 @@
 $(document).ready(function() {
-    setSmartPlaylistEvents();
+    setSmartBlockEvents();
 });
 
-function setSmartPlaylistEvents() {
-    var form = $('#smart-playlist-form');
+function setSmartBlockEvents() {
+    var form = $('#smart-block-form');
     
     /********** ADD CRITERIA ROW **********/
     form.find('.criteria_add').live('click', function(){
@@ -245,7 +245,7 @@ function getRowIndex(ele) {
  * remains at the criteria row
  */
 function appendModAddButton() {
-    var divs = $('#smart-playlist-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
+    var divs = $('#smart-block-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
     $.each(divs, function(i, div){
         if (i > 0) {
             /* If the criteria field is hidden we know it is a modifier row
@@ -269,7 +269,7 @@ function appendModAddButton() {
  * We need to do this everytime a row gets deleted
  */
 function reindexElements() {
-    var divs = $('#smart-playlist-form').find('div select[name^="sp_criteria_field"]').parent(),
+    var divs = $('#smart-block-form').find('div select[name^="sp_criteria_field"]').parent(),
         index = 0,
         modIndex = 0;
     $.each(divs, function(i, div){
@@ -302,7 +302,7 @@ function reindexElements() {
 }
 
 function buttonClickAction(clickType, url){
-    var data = $('#smart-playlist-form').serializeArray(),
+    var data = $('#smart-block-form').serializeArray(),
         obj_id = $('input[id="obj_id"]').val();
     
     enableLoadingIcon();
@@ -407,7 +407,7 @@ function disableAndHideExtraField(valEle, index) {
 }
 
 function sizeTextBoxes(ele, classToRemove, classToAdd) {
-    var form = $('#smart-playlist-form');
+    var form = $('#smart-block-form');
     if (ele.hasClass(classToRemove)) {
         ele.removeClass(classToRemove).addClass(classToAdd);
     }
@@ -453,30 +453,30 @@ function callback(data, type) {
 
     if (type == 'shuffle' || type == 'generate') {
         AIRTIME.playlist.fnOpenPlaylist(json);
-        var form = $('#smart-playlist-form');
+        var form = $('#smart-block-form');
         if (json.result == "0") {
             if (type == 'shuffle') {
-                form.find('.success').text('Smart playlist shuffled');
+                form.find('.success').text('Smart block shuffled');
             } else if (type == 'generate') {
-            	form.find('.success').text('Smart playlist generated and saved');
+            	form.find('.success').text('Smart block generated and saved');
             	//redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }
             form.find('.success').show();
         }
-	    form.find('#smart_playlist_options').removeClass("closed");
+	    form.find('#smart_block_options').removeClass("closed");
     } else {
         AIRTIME.playlist.fnOpenPlaylist(json);
-        var form = $('#smart-playlist-form');
+        var form = $('#smart-block-form');
         if (json.result == "0") {
-            $('#sp-success-saved').text('Smart playlist saved');
+            $('#sp-success-saved').text('Smart block saved');
             $('#sp-success-saved').show();
         
             //redraw library table so the length gets updated
             var dt = $('table[id="library_display"]').dataTable();
             dt.fnStandingRedraw();
         }
-        form.find('#smart_playlist_options').removeClass("closed");
+        form.find('#smart_block_options').removeClass("closed");
     }
     setTimeout(removeSuccessMsg, 5000);
 }
@@ -490,7 +490,7 @@ function removeSuccessMsg() {
 function appendAddButton() {
     var add_button = "<a class='ui-button sp-ui-button-icon-only criteria_add'>" +
                      "<span class='ui-icon ui-icon-plusthick'></span></a>";
-    var rows = $('#smart_playlist_options'),
+    var rows = $('#smart_block_options'),
         enabled = rows.find('select[name^="sp_criteria_field"]:enabled');
 
     rows.find('.criteria_add').remove();

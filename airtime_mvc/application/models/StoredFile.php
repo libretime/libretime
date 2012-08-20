@@ -731,7 +731,7 @@ class Application_Model_StoredFile
                 $row['audioFile'] = $row['id'];
                 $row['image'] = '<img title="Webstream preview" src="/css/images/record_icon.png">';
             } else if ($type == "bl") {
-                $row['image'] = '<img title="Smart Playlist" src="/css/images/delete.png">';
+                $row['image'] = '<img title="Smart Block" src="/css/images/delete.png">';
             }
         }
 

@@ -23,7 +23,7 @@ $pages = array(
 		'resource'	=>	'plupload'
 	),
 	array(
-		'label'      => 'Playlist Builder',
+		'label'      => 'Library',
 		'module'     => 'default',
 		'controller' => 'Playlist',
 		'action'     => 'index',

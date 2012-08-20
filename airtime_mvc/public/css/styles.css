@@ -499,7 +499,7 @@ table.library-get-file-md.table-small{
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES END *****/
 
 
-/***** SMART PLAYLIST SPECIFIC STYLES BEGIN *****/
+/***** SMART BLOCK SPECIFIC STYLES BEGIN *****/
 .sp-invisible{
     visibility: hidden;
 }
@@ -580,7 +580,7 @@ input.input_text.sp_extra_input_text{
 .sp-closed{
 	border-width: 0 0 0 !important;
 }
-/***** SMART PLAYLIST SPECIFIC STYLES END *****/
+/***** SMART BLOCK SPECIFIC STYLES END *****/
 
 label {
 	font-size:13px;
