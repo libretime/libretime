@@ -6,7 +6,7 @@ var AIRTIME = (function(AIRTIME){
 	
 	if (AIRTIME.playlist === undefined) {
 		AIRTIME.playlist = {};
-	}
+    }
 	
 	var mod = AIRTIME.playlist,
 		viewport,
@@ -802,6 +802,23 @@ var AIRTIME = (function(AIRTIME){
 				redrawLib();
 			});
 	};
+    
+	mod.fnWsDelete = function(wsid) {
+		var url, id, lastMod;
+		
+		stopAudioPreview();	
+		id = (wsid === undefined) ? getId() : wsid;
+		lastMod = getModified();
+		type = $('#obj_type').val();
+		url = '/Webstream/delete';
+        
+		$.post(url, 
+			{format: "json", ids: id, modified: lastMod, type: type}, 
+			function(json){
+				openPlaylist(json);
+				redrawLib();
+			});
+	};
 	
 	mod.disableUI = function() {
     	
@@ -902,6 +919,10 @@ var AIRTIME = (function(AIRTIME){
 
 		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();
+		}});
+        
+		$pl.delegate("#ws_delete", {"click": function(ev){
+            AIRTIME.playlist.fnWsDelete();
 		}});
 		
 		setPlaylistEntryEvents();

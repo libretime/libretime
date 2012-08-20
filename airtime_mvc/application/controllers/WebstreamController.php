@@ -8,6 +8,7 @@ class WebstreamController extends Zend_Controller_Action
         $ajaxContext->addActionContext('new', 'json')
                     ->addActionContext('save', 'json')
                     ->addActionContext('edit', 'json')
+                    ->addActionContext('delete', 'json')
                     ->initContext();
         //TODO
         //$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
@@ -44,6 +45,15 @@ class WebstreamController extends Zend_Controller_Action
         $this->view->ws = new Application_Model_Webstream($webstream);
         $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
+    }
+
+    public function deleteAction()
+    {
+        $request = $this->getRequest();
+        $id = $request->getParam("ids");
+
+        $webstream = CcWebstreamQuery::create()->findPK($id)->delete();
+
     }
 
     public function saveAction()

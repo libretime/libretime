@@ -4,9 +4,11 @@
 <?php endif; ?>
 
 <?php if (isset($this->ws)) : ?>
-    <input id="ws_id" type="hidden" value="<?php echo $this->ws->getId(); ?>"></input>
-    <input id="pl_lastMod" type="hidden" value="<?php echo $this->ws->getLastModified('U'); ?>"></input>
+    <input id="obj_id" type="hidden" value="<?php echo $this->ws->getId(); ?>"></input>
+    <input id="obj_lastMod" type="hidden" value="<?php echo "1";//$this->ws->getLastModified('U'); ?>"></input>
+    <input id="obj_type" type="hidden" value="webstream"></input>
     <div class="status" style="display:none;"></div>
+
     <div class="playlist_title">
         <div id="name-error" class="errors" style="display:none;"></div>
         <h3 id="ws_name">
