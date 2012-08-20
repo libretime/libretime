@@ -2,11 +2,6 @@ import os
 from configobj import ConfigObj
 import traceback
 
-upgrades_config = {
-    '/etc/airtime/media-monitor.cfg' : '../media-monitor/media-monitor.cfg',
-    '/etc/airtime/api_client.cfg' : '../api_clients/api_client.cfg',
-}
-
 def upgrade(source, destination):
     """
     Must be ran as sudo. will do upgrade of configuration files by filling in
@@ -23,5 +18,3 @@ def upgrade(source, destination):
     except Exception:
         print("Error upgrading")
         print( traceback.format_exc() )
-
-if __name__ == "__main__": upgrade(upgrades_config)
