@@ -31,8 +31,13 @@ try:
         sys.exit(1)
         
     os.system("invoke-rc.d airtime-playout stop")
+    os.system("invoke-rc.d airtime-liquidsoap stop")
+    
     os.system("rm -f /etc/init.d/airtime-playout")
+    os.system("rm -f /etc/init.d/airtime-liquidsoap")
+    
     os.system("update-rc.d -f airtime-playout remove >/dev/null 2>&1")
+    os.system("update-rc.d -f airtime-liquidsoap remove >/dev/null 2>&1")
 
     #remove logrotate script
     os.system("rm -f /etc/logrotate.d/airtime-liquidsoap")
@@ -44,7 +49,7 @@ try:
     remove_path(config["cache_base_dir"])
     
     print "Removing symlinks"
-    os.system("rm -f /usr/bin/airtime-playout")
+    os.system("rm -f /usr/bin/airtime-liquidsoap")
     
     print "Removing pypo files"
     remove_path(config["bin_dir"])

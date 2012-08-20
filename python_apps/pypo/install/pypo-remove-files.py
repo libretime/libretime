@@ -30,6 +30,7 @@ try:
     #remove init.d script
     print " * Removing Pypo init.d Script"
     remove_file("/etc/init.d/airtime-playout")
+    remove_file("/etc/init.d/airtime-liquidsoap")
 
     #remove bin, cache, tmp and file dir
     print " * Removing Pypo Program Directory"
