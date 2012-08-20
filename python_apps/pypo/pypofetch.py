@@ -213,7 +213,7 @@ class PypoFetch(Thread):
             self.logger.info("Restarting Liquidsoap")
             subprocess.call('/etc/init.d/airtime-liquidsoap restart', shell=True)
 
-            #Wait here until Liquidsoap has started up
+            #Wait here and poll Liquidsoap until it has started up
             self.logger.info("Waiting for Liquidsoap to start")
             while True:
                 try:
