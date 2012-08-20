@@ -349,7 +349,7 @@ class ApiController extends Zend_Controller_Action
         $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
         
         //set a 'last played' timestamp for media item
-        //needed for smart playlists
+        //needed for smart blocks
         try {
             $file_id = Application_Model_Schedule::GetFileId($media_id);
             if (!is_null($file_id)) {

@@ -355,7 +355,7 @@ var AIRTIME = (function(AIRTIME){
 		setCueEvents();
 		setFadeEvents();
 		
-        // functions in smart_playlistbuilder.js
+        // functions in smart_blockbuilder.js
         setupUI();
         appendAddButton();
         appendModAddButton();
@@ -909,7 +909,7 @@ var AIRTIME = (function(AIRTIME){
             ignoreRightClick: true,
             items: {
                 "sp": {name: "New Playlist", callback: AIRTIME.playlist.fnNew},
-                "sb": {name: "New Smart Playlist", callback: AIRTIME.playlist.fnNewBlock},
+                "sb": {name: "New Smart Block", callback: AIRTIME.playlist.fnNewBlock},
                 "ws": {name: "New Webstream", callback: AIRTIME.playlist.fnWsNew}
             }
         });

@@ -100,7 +100,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         
         $spType = new Zend_Form_Element_Radio('sp_type');
-        $spType->setLabel('Set smart playlist type:')
+        $spType->setLabel('Set smart block type:')
                ->setDecorators(array('viewHelper'))
                ->setMultiOptions(array(
                     'static' => 'Static',
@@ -229,6 +229,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $this->addElement($limitValue);
         if (isset($storedCrit["limit"])) {
             $limitValue->setValue($storedCrit["limit"]["value"]);
+        } else {
+            // setting default to 1 hour
+            $limitValue->setValue(1);
         }
         
         //getting block content candidate count that meets criteria

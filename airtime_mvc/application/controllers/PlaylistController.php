@@ -152,12 +152,12 @@ class PlaylistController extends Zend_Controller_Action
     }
     
     private function wrongTypeToBlock($obj) {
-        $this->view->error = "You can only add tracks to smart playlists.";
+        $this->view->error = "You can only add tracks to smart block.";
         $this->createFullResponse($obj);
     }
     
     private function wrongTypeToPlaylist($obj) {
-        $this->view->error = "You can only add tracks and smart playlists to playlists.";
+        $this->view->error = "You can only add tracks and smart blocks to playlists.";
         $this->createFullResponse($obj);
     }
 
@@ -188,7 +188,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_playlistbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
@@ -229,7 +229,7 @@ class PlaylistController extends Zend_Controller_Action
         
         $name = 'Untitled Playlist';
         if ($type == 'block') {
-            $name = 'Untitled Smart Playlist';
+            $name = 'Untitled Smart Block';
         }
 
         $obj = new $objInfo['className']();
