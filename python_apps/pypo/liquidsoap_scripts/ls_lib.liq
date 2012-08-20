@@ -237,7 +237,7 @@ def add_skip_command(s)
  server.register(namespace="source",
                  usage="skip",
                  description="Skip the current song.",
-                 "skip",skip)
+                 "skip",fun(s) -> begin log("source.skip") skip(s) end)
 end
 
 dyn_out = output.icecast(%wav,

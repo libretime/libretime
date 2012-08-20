@@ -9,80 +9,30 @@
 # Short-Description: Manage airtime-playout daemon
 ### END INIT INFO
 
-USERID=pypo
-ROOTUSERID=root
-GROUPID=pypo
-NAME=Airtime\ Playout
+USERID=root
+NAME="Airtime Scheduler Engine"
 
-DAEMON0=/usr/lib/airtime/pypo/bin/airtime-playout
-PIDFILE0=/var/run/airtime-playout.pid
-
-DAEMON1=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
-PIDFILE1=/var/run/airtime-liquidsoap.pid
-
-liquidsoap_start () {
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
-        --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
-        
-        monit monitor airtime-liquidsoap >/dev/null 2>&1
-}
-
-liquidsoap_stop () {
-        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
-        /usr/lib/airtime/airtime_virtualenv/bin/python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py
-        
-        # Send TERM after 5 seconds, wait at most 30 seconds.
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
-        rm -f $PIDFILE1
-}
-
-stop_pypo () {
-        monit unmonitor airtime-playout >/dev/null 2>&1
-        
-        # Send TERM after 5 seconds, wait at most 30 seconds.
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
-        rm -f $PIDFILE0
-}
+DAEMON=/usr/lib/airtime/pypo/bin/airtime-playout
+PIDFILE=/var/run/airtime-playout.pid
 
 start () {
         chown pypo:pypo /etc/airtime
         chown pypo:pypo /etc/airtime/liquidsoap.cfg
     
-        start-stop-daemon --start --background --quiet --chuid $ROOTUSERID:$ROOTUSERID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
+        start-stop-daemon --start --background --quiet --chuid $USERID:$USERID --make-pidfile --pidfile $PIDFILE --startas $DAEMON
         monit monitor airtime-playout >/dev/null 2>&1
-        
-        liquidsoap_start
 }
 
 stop () {
         # Send TERM after 5 seconds, wait at most 30 seconds.
         
         monit unmonitor airtime-playout >/dev/null 2>&1
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
-        rm -f $PIDFILE0
-        
-        liquidsoap_stop
-}
-
-monit_restart() {
-        
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE0
-        rm -f $PIDFILE0
-        
-        /usr/lib/airtime/airtime_virtualenv/bin/python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py
-        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE1
-        rm -f $PIDFILE1
-        
-        start-stop-daemon --start --background --quiet --chuid $ROOTUSERID:$ROOTUSERID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0
-        
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
-        --nicelevel -15 --make-pidfile --pidfile $PIDFILE1 --startas $DAEMON1
-        
+        start-stop-daemon --stop --oknodo --retry TERM/5/0/30 --quiet --pidfile $PIDFILE
+        rm -f $PIDFILE
 }
 
 start_no_monit() {
-        start-stop-daemon --start --background --quiet --chuid $ROOTUSERID:$ROOTUSERID --make-pidfile --pidfile $PIDFILE0 --startas $DAEMON0        
-        liquidsoap_start
+        start-stop-daemon --start --background --quiet --chuid $USERID:$USERID --make-pidfile --pidfile $PIDFILE --startas $DAEMON        
 }
 
 case "${1:-''}" in
@@ -111,41 +61,13 @@ case "${1:-''}" in
            start_no_monit
            echo "Done."
         ;;
-  'monit-restart')
-           # restart commands here
-           echo -n "Monit Restarting $NAME: "
-           monit_restart
-           echo "Done."
-        ;;
   'status')
            # status commands here
            /usr/bin/airtime-check-system
-        ;;
-  'stop-liquidsoap')
-           echo -n "Stopping Liquidsoap: "
-           liquidsoap_stop
-           echo "Done."
-        ;;
-  'start-liquidsoap')
-           echo -n "Starting Liquidsoap: "
-           liquidsoap_start
-           echo "Done."
-        ;;
-  'restart-liquidsoap')
-           # restart commands here
-           echo -n "Restarting Liquidsoap: "
-           liquidsoap_stop
-           liquidsoap_start
-           echo "Done."
-        ;;
-  'pypo-stop')
-           # restart commands here
-           echo -n "Restarting Pypo: "
-           stop_pypo
-           echo "Done."
         ;;
   *)      # no parameter specified
         echo "Usage: $SELF start|stop|restart|status"
         exit 1
         ;;
+
 esac

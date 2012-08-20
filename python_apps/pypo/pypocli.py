@@ -130,7 +130,7 @@ def liquidsoap_running_test(telnet_lock, host, port, logger):
         msg = "version\n"
         tn.write(msg)
         tn.write("exit\n")
-        logger.info("Liquidsoap version %s", tn.read_all())
+        logger.info("Found: %s", tn.read_all())
     except Exception, e:
         logger.error(str(e))
         success = False
@@ -210,7 +210,7 @@ if __name__ == '__main__':
     recorder.start()
 
     # all join() are commented out because we want to exit entire pypo
-    # if pypofetch is exiting 
+    # if pypofetch is exiting
     #pmh.join()
     #recorder.join()
     #pp.join()

@@ -1,6 +1,6 @@
 <button id="ws_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
 <?php if (isset($this->ws)) : ?>
-    <button id="ws_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
+<button id="ws_delete" class="ui-button ui-widget ui-state-default" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?> role="button" aria-disabled="false">Delete</button>
 <?php endif; ?>
 
 <?php if (isset($this->ws)) : ?>

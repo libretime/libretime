@@ -8,6 +8,7 @@ import json
 import telnetlib
 import copy
 from threading import Thread
+import subprocess
 
 from Queue import Empty
 
@@ -86,7 +87,7 @@ class PypoFetch(Thread):
                 self.process_schedule(self.schedule_data)
             elif command == 'update_stream_setting':
                 self.logger.info("Updating stream setting...")
-                self.regenerateLiquidsoapConf(m['setting'])
+                self.regenerate_liquidsoap_conf(m['setting'])
             elif command == 'update_stream_format':
                 self.logger.info("Updating stream format...")
                 self.update_liquidsoap_stream_format(m['stream_format'])
@@ -142,14 +143,14 @@ class PypoFetch(Thread):
     def switch_source(logger, lock, sourcename, status):
         logger.debug('Switching source: %s to "%s" status', sourcename, status)
         command = "streams."
-        if(sourcename == "master_dj"):
+        if sourcename == "master_dj":
             command += "master_dj_"
-        elif(sourcename == "live_dj"):
+        elif sourcename == "live_dj":
             command += "live_dj_"
-        elif(sourcename == "scheduled_play"):
+        elif sourcename == "scheduled_play":
             command += "scheduled_play_"
 
-        if(status == "on"):
+        if status == "on":
             command += "start\n"
         else:
             command += "stop\n"
@@ -204,12 +205,41 @@ class PypoFetch(Thread):
             fh.write(api_client.encode_to(buffer_str))
         fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
         fh.close()
-        # restarting pypo.
-        # we could just restart liquidsoap but it take more time somehow.
-        self.logger.info("Restarting pypo...")
-        sys.exit(0)
 
-    def regenerateLiquidsoapConf(self, setting):
+    def restart_liquidsoap(self):
+
+        self.telnet_lock.acquire()
+        try:
+            self.logger.info("Restarting Liquidsoap")
+            subprocess.call('/etc/init.d/airtime-liquidsoap restart', shell=True)
+
+            #Wait here and poll Liquidsoap until it has started up
+            self.logger.info("Waiting for Liquidsoap to start")
+            while True:
+                try:
+                    tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                    tn.write("exit\n")
+                    tn.read_all()
+                    self.logger.info("Liquidsoap is up and running")
+                    break
+                except Exception, e:
+                    #sleep 0.5 seconds and try again
+                    time.sleep(0.5)
+
+        except Exception, e:
+            self.logger.error(e)
+        finally:
+            self.telnet_lock.release()
+
+        try:
+            self.set_bootstrap_variables()
+            #get the most up to date schedule, which will #initiate the process
+            #of making sure Liquidsoap is playing the schedule
+            self.manual_schedule_fetch()
+        except Exception, e:
+            self.logger.error(str(e))
+
+    def regenerate_liquidsoap_conf(self, setting):
         existing = {}
         # create a temp file
 
@@ -218,7 +248,8 @@ class PypoFetch(Thread):
             fh = open('/etc/airtime/liquidsoap.cfg', 'r')
         except IOError, e:
             #file does not exist
-            self.write_liquidsoap_config(setting)
+            self.restart_liquidsoap()
+            return
 
         self.logger.info("Reading existing config...")
         # read existing conf file and build dict
@@ -246,10 +277,10 @@ class PypoFetch(Thread):
             existing[key] = value
         fh.close()
 
-        # dict flag for any change in cofig
+        # dict flag for any change in config
         change = {}
         # this flag is to detect disable -> disable change
-        # in that case, we don't want to restart even if there are chnges.
+        # in that case, we don't want to restart even if there are changes.
         state_change_restart = {}
         #restart flag
         restart = False
@@ -284,7 +315,7 @@ class PypoFetch(Thread):
                     if stream not in change:
                         change[stream] = False
                     if not (s[u'value'] == existing[s[u'keyname']]):
-                        self.logger.info("Keyname: %s, Curent value: %s, New Value: %s", s[u'keyname'], existing[s[u'keyname']], s[u'value'])
+                        self.logger.info("Keyname: %s, Current value: %s, New Value: %s", s[u'keyname'], existing[s[u'keyname']], s[u'value'])
                         change[stream] = True
 
         # set flag change for sound_device alway True
@@ -298,21 +329,21 @@ class PypoFetch(Thread):
                 restart = True
         # rewrite
         if restart:
-            self.write_liquidsoap_config(setting)
+            self.restart_liquidsoap()
         else:
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
 
     def update_liquidsoap_connection_status(self):
         """
-        updates the status of liquidsoap connection to the streaming server
-        This fucntion updates the bootup time variable in liquidsoap script
+        updates the status of Liquidsoap connection to the streaming server
+        This function updates the bootup time variable in Liquidsoap script
         """
 
         self.telnet_lock.acquire()
         try:
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            # update the boot up time of liquidsoap. Since liquidsoap is not restarting,
+            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
             # we are manually adjusting the bootup time variable so the status msg will get
             # updated.
             current_time = time.time()
@@ -474,13 +505,18 @@ class PypoFetch(Thread):
             except Exception, e:
                 self.logger.error(e)
 
+    def manual_schedule_fetch(self):
+        success, self.schedule_data = self.api_client.get_schedule()
+        if success:
+            self.process_schedule(self.schedule_data)
+        return success
+
     def main(self):
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates.
-        success, self.schedule_data = self.api_client.get_schedule()
+        success = self.manual_schedule_fetch()
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
-            self.process_schedule(self.schedule_data)
             self.set_bootstrap_variables()
 
         loops = 1
@@ -506,9 +542,7 @@ class PypoFetch(Thread):
                 self.handle_message(message)
             except Empty, e:
                 self.logger.info("Queue timeout. Fetching schedule manually")
-                success, self.schedule_data = self.api_client.get_schedule()
-                if success:
-                    self.process_schedule(self.schedule_data)
+                self.manual_schedule_fetch()
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()

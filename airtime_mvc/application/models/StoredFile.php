@@ -893,7 +893,7 @@ class Application_Model_StoredFile
                         #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
                         #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
                         unlink($audio_file);//remove the file after failed rename
-                        $result = array("code" => 108, "message" => "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space.");
+                        $result = array("code" => 108, "message" => "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space or the stor directory does not have correct write permissions.");
                     }
                 } else {
                     $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
