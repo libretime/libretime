@@ -57,55 +57,52 @@ ignore(output.dummy(stream_queue, fallible=true))
 
 server.register(namespace="vars", 
                 "pypo_data", 
-                fun (s) -> begin pypo_data := s "Done" end)
+                fun (s) -> begin log("vars.pypo_data") pypo_data := s "Done" end)
 server.register(namespace="vars", 
                 "stream_metadata_type", 
-                fun (s) -> begin stream_metadata_type := int_of_string(s) s end)
+                fun (s) -> begin log("vars.stream_metadata_type") stream_metadata_type := int_of_string(s) s end)
 server.register(namespace="vars", 
                 "show_name", 
-                fun (s) -> begin show_name := s s end)
+                fun (s) -> begin log("vars.show_name") show_name := s s end)
 server.register(namespace="vars", 
                 "station_name", 
-                fun (s) -> begin station_name := s s end)
+                fun (s) -> begin log("vars.station_name") station_name := s s end)
 server.register(namespace="vars", 
                 "bootup_time", 
-                fun (s) -> begin time := s s end)
+                fun (s) -> begin log("vars.bootup_time") time := s s end)
 server.register(namespace="streams", 
                 "connection_status", 
-                fun (s) -> begin "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
+                fun (s) -> begin log("streams.connection_status") "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
 server.register(namespace="vars", 
                 "default_dj_fade", 
-                fun (s) -> begin default_dj_fade := float_of_string(s) s end)
-server.register(namespace="system",
-                "shutdown", 
-                fun (s) -> begin shutdown() "Shutting Down" end)
+                fun (s) -> begin log("vars.default_dj_fade") default_dj_fade := float_of_string(s) s end)
 
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='start',
                 "output_start",
-                fun (s) -> begin webstream_enabled := true "enabled" end)
+                fun (s) -> begin log("dynamic_source.output_start") webstream_enabled := true "enabled" end)
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='stop',
                 "output_stop",
-                fun (s) -> begin webstream_enabled := false "disabled" end)
+                fun (s) -> begin log("dynamic_source.output_stop") webstream_enabled := false "disabled" end)
 
 server.register(namespace="dynamic_source",
                 description="Set the cc_schedule row id",
                 usage="id <id>",
                 "id",
-                set_dynamic_source_id)
+                fun (s) -> begin log("dynamic_source.id") set_dynamic_source_id(s) end)
 server.register(namespace="dynamic_source",
                 description="Start a new dynamic source.",
                 usage="start <uri>",
                 "read_start",
-                create_dynamic_source)
+                fun (s) -> begin log("dynamic_source.read_start") create_dynamic_source(s) end)
 server.register(namespace="dynamic_source",
                 description="Stop a dynamic source.",
                 usage="stop <uri>",
                 "read_stop",
-                destroy_dynamic_source)
+                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source(s) end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)
@@ -226,32 +223,32 @@ server.register(namespace="streams",
                 description="Stop Master DJ source.",
                 usage="master_dj_stop",
                 "master_dj_stop",
-                fun (s) -> begin make_master_dj_unavailable() "Done." end)
+                fun (s) -> begin log("streams.master_dj_stop") make_master_dj_unavailable() "Done." end)
 server.register(namespace="streams",
                 description="Start Master DJ source.",
                 usage="master_dj_start",
                 "master_dj_start",
-                fun (s) -> begin make_master_dj_available() "Done." end)
+                fun (s) -> begin log("streams.master_dj_start") make_master_dj_available() "Done." end)
 server.register(namespace="streams",
                 description="Stop Live DJ source.",
                 usage="live_dj_stop",
                 "live_dj_stop",
-                fun (s) -> begin make_live_dj_unavailable() "Done." end)
+                fun (s) -> begin log("streams.live_dj_stop") make_live_dj_unavailable() "Done." end)
 server.register(namespace="streams",
                 description="Start Live DJ source.",
                 usage="live_dj_start",
                 "live_dj_start",
-                fun (s) -> begin make_live_dj_available() "Done." end)
+                fun (s) -> begin log("streams.live_dj_start") make_live_dj_available() "Done." end)
 server.register(namespace="streams",
                 description="Stop Scheduled Play source.",
                 usage="scheduled_play_stop",
                 "scheduled_play_stop",
-                fun (s) -> begin make_scheduled_play_unavailable() "Done." end)
+                fun (s) -> begin log("streams.scheduled_play_stop") make_scheduled_play_unavailable() "Done." end)
 server.register(namespace="streams",
                 description="Start Scheduled Play source.",
                 usage="scheduled_play_start",
                 "scheduled_play_start",
-                fun (s) -> begin make_scheduled_play_available() "Done." end)
+                fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
 
 if output_sound_device then
 	
@@ -306,7 +303,7 @@ if s1_enable == true then
     else
         s1_namespace := s1_mount
     end
-    server.register(namespace=!s1_namespace, "connected", fun (s) -> begin !s1_connected end)
+    server.register(namespace=!s1_namespace, "connected", fun (s) -> begin log("#{!s1_namespace}.connected") !s1_connected end)
     output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1", s1_connected, s1_description)
 end
 
@@ -316,7 +313,7 @@ if s2_enable == true then
     else
         s2_namespace := s2_mount
     end
-    server.register(namespace=!s2_namespace, "connected", fun (s) -> begin !s2_connected end)
+    server.register(namespace=!s2_namespace, "connected", fun (s) -> begin log("#{!s2_namespace}.connected") !s2_connected end)
     output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2", s2_connected, s2_description)
     
 end
@@ -327,7 +324,7 @@ if s3_enable == true then
     else
         s3_namespace := s3_mount
     end
-    server.register(namespace=!s3_namespace, "connected", fun (s) -> begin !s3_connected end)
+    server.register(namespace=!s3_namespace, "connected", fun (s) -> begin log("#{!s3_namespace}.connected") !s3_connected end)
     output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3", s3_connected, s3_description)
 end
 
