@@ -275,7 +275,6 @@ class PlaylistController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
 
         try {
-
             Logging::log("Currently active {$type} {$this->obj_sess->id}");
             if (in_array($this->obj_sess->id, $ids)) {
                 Logging::log("Deleting currently active {$type}");
@@ -290,11 +289,9 @@ class PlaylistController extends Zend_Controller_Action
                 Application_Model_Block::deleteBlocks($ids, $userInfo->id);
             }
             $this->createFullResponse($obj);
-        }
-        catch (PlaylistNoPermissionException $e) {
+        } catch (PlaylistNoPermissionException $e) {
             $this->playlistNoPermission($type);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
