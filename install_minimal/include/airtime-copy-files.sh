@@ -97,6 +97,8 @@ if [ "$web" = "t" ]; then
     rm -rf "/usr/share/airtime"
     mkdir -p /usr/share/airtime
     cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
+    rm -f /etc/logrotate.d/airtime-php
+    cp $AIRTIMEROOT/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
 fi
 
 echo "* Creating /var/log/airtime"

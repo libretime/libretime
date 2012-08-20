@@ -1,0 +1,12 @@
+/var/log/airtime/zendphp.log {
+  compress
+  rotate 10
+  size 1000k
+  missingok
+  notifempty
+  sharedscripts
+  postrotate
+    touch /var/log/airtime/zendphp.log
+    chown www-data:www-data /var/log/airtime/zendphp.log
+  endscript
+}
