@@ -38,7 +38,7 @@ class TestUpgrade(unittest.TestCase):
         self.assertTrue( os.path.exists(cf['source']['path']) )
         self.assertTrue( os.path.exists(cf['dest']['path']) )
         # Finished preparing
-        upgrade2dot2.upgrade({ cf['source']['path'] : cf['dest']['path'] })
+        upgrade2dot2.upgrade(cf['source']['path'], cf['dest']['path'] )
         c1, c2 = ConfigObj(cf['source']['path']), ConfigObj(cf['dest']['path'])
         self.assertEqual( c2['key2'], 'val2')
         self.assertEqual( c2['key4'], '10')

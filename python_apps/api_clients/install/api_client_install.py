@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 from configobj import ConfigObj
+import upgrade2dot2
 
 def get_current_script_dir():
     return os.path.dirname(os.path.realpath(__file__))
@@ -14,12 +15,14 @@ def copy_dir(src_dir, dest_dir):
         shutil.copytree(src_dir, dest_dir)
 
 PATH_INI_FILE = '/etc/airtime/api_client.cfg'
-    
+
 current_script_dir = get_current_script_dir()
 
 if not os.path.exists(PATH_INI_FILE):
     shutil.copy('%s/../api_client.cfg'%current_script_dir, PATH_INI_FILE)
-    
+
+upgrade2dot2.upgrade('%s/../api_client.cfg'% current_script_dir, PATH_INI_FILE)
+
 """load config file"""
 try:
     config = ConfigObj("%s/../api_client.cfg" % current_script_dir)
