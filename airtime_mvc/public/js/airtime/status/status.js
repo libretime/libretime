@@ -44,22 +44,24 @@ function generatePartitions(partitions){
 function success(data, textStatus, jqXHR){
     var services = data.status.services;
 
-    for (var key in services){
+    for (var key in services) {
         var s = services[key];
-        var children = $("#"+s.name).children();
-        $(children[0]).text(s.name);
-        
-        var status_class = "not-available-icon";
-        if (s.status == 0){
-            status_class = "checked-icon";
-        } else if (s.status == 1) {
-            status_class = "warning-icon";
+        if (s) {
+            var children = $("#"+s.name).children();
+            $(children[0]).text(s.name);
+            
+            var status_class = "not-available-icon";
+            if (s.status == 0){
+                status_class = "checked-icon";
+            } else if (s.status == 1) {
+                status_class = "warning-icon";
+            }
+            
+            $($(children[1]).children()[0]).attr("class", status_class);
+            $(children[2]).text(sprintf('%(days)sd %(hours)sh %(minutes)sm %(seconds)ss', convertSecondsToDaysHoursMinutesSeconds(s.uptime_seconds)));
+            $(children[3]).text(s.cpu_perc);
+            $(children[4]).text(sprintf('%01.1fMB (%s)', parseInt(s.memory_kb)/1000, s.memory_perc));
         }
-        
-        $($(children[1]).children()[0]).attr("class", status_class);
-        $(children[2]).text(sprintf('%(days)sd %(hours)sh %(minutes)sm %(seconds)ss', convertSecondsToDaysHoursMinutesSeconds(s.uptime_seconds)));
-        $(children[3]).text(s.cpu_perc);
-        $(children[4]).text(sprintf('%01.1fMB (%s)', parseInt(s.memory_kb)/1000, s.memory_perc));
     }
     if (data.status.partitions){
         generatePartitions(data.status.partitions);

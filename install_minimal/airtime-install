@@ -178,7 +178,7 @@ fi
 if [ -e /etc/init.d/airtime-playout ]; then
     invoke-rc.d airtime-playout stop > /dev/null 2>&1
 fi
-if [ -e /etc/init.d/airtime-playout ]; then
+if [ -e /etc/init.d/airtime-liquidsoap ]; then
     invoke-rc.d airtime-liquidsoap stop > /dev/null 2>&1
 fi
 

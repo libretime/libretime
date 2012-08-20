@@ -13,6 +13,7 @@ echo "Are you sure you want to do this? Press Enter to continue..."
 read
 
 service airtime-playout stop >/dev/null 2>&1
+service airtime-liquidsoap stop >/dev/null 2>&1
 service airtime-media-monitor stop >/dev/null 2>&1
 service airtime-show-recorder stop >/dev/null 2>&1
 
