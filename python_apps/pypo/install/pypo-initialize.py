@@ -85,16 +85,16 @@ try:
     
     p = Popen("which liquidsoap", shell=True, stdout=PIPE)
     liq_path = p.communicate()[0].strip()
+    symlink_path = "/usr/bin/airtime-liquidsoap"
     
     if p.returncode == 0:
         try:
-            os.unlink(liq_path)
+            os.remove(symlink_path)
         except Exception:
             #liq_path DNE, which is OK.
             pass
             
-        
-        os.symlink(liq_path, "/usr/bin/airtime-liquidsoap")
+        os.symlink(liq_path, symlink_path)
     else:
         print " * Liquidsoap binary not found!"
         sys.exit(1)
