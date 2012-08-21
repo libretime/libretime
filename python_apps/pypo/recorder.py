@@ -73,16 +73,18 @@ class ShowRecorder(Thread):
         else:
             filetype = "ogg";
 
-        filepath = "%s%s.%s" % (config["base_recorded_files"], filename, filetype)
+        joined_path = os.path.join(config["base_recorded_files"], filename)
+        filepath = "%s.%s" % (joined_path, filetype)
 
         br = config["record_bitrate"]
         sr = config["record_samplerate"]
-        c = config["record_channels"]
+        c  = config["record_channels"]
         ss = config["record_sample_size"]
 
         #-f:16,2,44100
         #-b:256
-        command = "ecasound -f:%s,%s,%s -i alsa -o %s,%s000 -t:%s" % (ss, c, sr, filepath, br, length)
+        command = "ecasound -f:%s,%s,%s -i alsa -o %s,%s000 -t:%s" % \
+                                (ss, c, sr, filepath, br, length)
         args = command.split(" ")
 
         self.logger.info("starting record")
