@@ -127,6 +127,8 @@ def main(global_config, api_client_config, log_config,
     tt = ToucherThread(path=config['index_path'],
                        interval=int(config['touch_interval']))
 
+    apiclient.register_component('media-monitor')
+
     pyi = manager.pyinotify()
     pyi.loop()
 
