@@ -157,7 +157,6 @@ class ShowRecorder(Thread):
             recorded_file.save()
 
         except Exception, e:
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -308,6 +307,7 @@ class Recorder(Thread):
                             self.process_recorder_schedule(temp)
                         self.logger.info("updated recorder schedule received: %s", temp)
                     except Exception, e:
+                        self.logger.error( traceback.format_exc() )
                         self.logger.error(e)
                 try: self.handle_message()
                 except Exception, e:
@@ -316,7 +316,6 @@ class Recorder(Thread):
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
         except Exception, e :
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
