@@ -8,7 +8,7 @@ require_once 'formatters/LengthFormatter.php';
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-class Application_Model_Playlist
+class Application_Model_Playlist implements Application_Model_LibraryEditable
 {
     /**
      * propel connection object.
@@ -835,7 +835,7 @@ SQL;
         return $this->$method();
     }
 
-    public function setMetaData($category, $value)
+    public function setMetadata($category, $value)
     {
         $cat = $this->categories[$category];
 
@@ -897,19 +897,6 @@ SQL;
     public function deleteAllFilesFromPlaylist()
     {
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
-    }
-
-    public static function getObjInfo($p_type)
-    {
-        $info = array();
-        
-        if (strcmp($p_type, 'playlist')==0) {
-            $info['className'] = 'Application_Model_Playlist';
-        } else {
-            $info['className'] = 'Application_Model_Block';
-        }
-        
-        return $info;
     }
 
 } // class Playlist

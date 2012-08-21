@@ -58,8 +58,10 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
+
             if (isset($this->obj_sess->id)) {
-                $objInfo = Application_Model_Playlist::getObjInfo($this->obj_sess->type);
+                $objInfo = Application_Model_Library::getObjInfo($this->obj_sess->type);
+                Logging::log($this->obj_sess->id);
                 $obj = new $objInfo['className']($this->obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);

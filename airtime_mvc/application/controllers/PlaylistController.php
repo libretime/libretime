@@ -2,8 +2,6 @@
 
 class PlaylistController extends Zend_Controller_Action
 {
-    /*protected $pl_sess = null;
-    protected $bl_sess = null;*/
     protected $obj_sess = null;
 
     public function init()
@@ -30,16 +28,13 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('get-block-info', 'json')
                     ->initContext();
 
-        /*$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
-        $this->bl_sess = new Zend_Session_Namespace(UI_BLOCK_SESSNAME);*/
         $this->obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
     }
 
     private function getPlaylist($p_type)
     {
         $obj = null;
-        
-        $objInfo = Application_Model_Playlist::getObjInfo($p_type);
+        $objInfo = Application_Model_Library::getObjInfo($p_type);
 
         if (isset($this->obj_sess->id)) {
             $obj = new $objInfo['className']($this->obj_sess->id);
@@ -54,16 +49,6 @@ class PlaylistController extends Zend_Controller_Action
         return $obj;
     }
 
-    private function changePlaylist($p_id, $p_type)
-    {
-        if (is_null($p_id) || is_null($p_type)) {
-            unset($this->obj_sess->id);
-            unset($this->obj_sess->type);
-        } else {
-            $this->obj_sess->id = intval($p_id);
-            $this->obj_sess->type = $p_type;
-        }
-    }
 
     private function createUpdateResponse($obj)
     {
@@ -133,7 +118,7 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->error = "{$p_type} not found";
 
         Logging::log("{$p_type} not found");
-        $this->changePlaylist(null, $p_type);
+        Application_Model_Library::changePlaylist(null, $p_type);
         $this->createFullResponse(null);
     }
     
@@ -163,71 +148,13 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse($obj);
     }
 
-    public function indexAction()
-    {
-        global $CC_CONFIG;
-
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
-
-        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'), 'text/javascript');
-
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
-
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
-
-        try {
-            if (isset($this->obj_sess->id)) {
-                $objInfo = Application_Model_Playlist::getObjInfo($this->obj_sess->type);
-                $obj = new $objInfo['className']($this->obj_sess->id);
-                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                $user = new Application_Model_User($userInfo->id);
-                $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-                
-                if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
-                    $this->view->obj = $obj;
-                    if ($this->obj_sess->type == "block") {
-                        $form = new Application_Form_SmartBlockCriteria();
-                        $form->startForm($this->obj_sess->id);
-                        $this->view->form = $form;
-                    }
-                }
-                
-                $formatter = new LengthFormatter($obj->getLength());
-                $this->view->length = $formatter->format();
-                $this->view->type = $this->obj_sess->type;
-            }
-        } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound($this->obj_sess->type);
-        } catch (Exception $e) {
-            $this->playlistUnknownError($e);
-        }
-    }
-
     public function newAction()
     {
         //$pl_sess = $this->pl_sess;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $type = $this->_getParam('type');
         
-        $objInfo = Application_Model_Playlist::getObjInfo($type);
+        $objInfo = Application_Model_Library::getObjInfo($type);
         
         $name = 'Untitled Playlist';
         if ($type == 'block') {
@@ -236,9 +163,9 @@ class PlaylistController extends Zend_Controller_Action
 
         $obj = new $objInfo['className']();
         $obj->setName($name);
-        $obj->setMetaData('dc:creator', $userInfo->id);
+        $obj->setMetadata('dc:creator', $userInfo->id);
 
-        $this->changePlaylist($obj->getId(), $type);
+        Application_Model_Library::changePlaylist($obj->getId(), $type);
         $this->createFullResponse($obj);
     }
     
@@ -246,11 +173,11 @@ class PlaylistController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id', null);
         $type = $this->_getParam('type');
-        $objInfo = Application_Model_Playlist::getObjInfo($type);
+        $objInfo = Application_Model_Library::getObjInfo($type);
         Logging::log("editing {$type} {$id}");
 
         if (!is_null($id)) {
-            $this->changePlaylist($id, $type);
+            Application_Model_Library::changePlaylist($id, $type);
         }
 
         try {
@@ -271,7 +198,7 @@ class PlaylistController extends Zend_Controller_Action
         
         $obj = null;
      
-        $objInfo = Application_Model_Playlist::getObjInfo($type);
+        $objInfo = Application_Model_Library::getObjInfo($type);
         
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -280,7 +207,7 @@ class PlaylistController extends Zend_Controller_Action
             Logging::log("Currently active {$type} {$this->obj_sess->id}");
             if (in_array($this->obj_sess->id, $ids)) {
                 Logging::log("Deleting currently active {$type}");
-                $this->changePlaylist(null, $type);
+                Application_Model_Library::changePlaylist(null, $type);
             } else {
                 Logging::log("Not deleting currently active {$type}");
                 $obj = new $objInfo['className']($this->obj_sess->id);

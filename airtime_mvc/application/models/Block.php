@@ -8,7 +8,7 @@ require_once 'formatters/LengthFormatter.php';
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-class Application_Model_Block
+class Application_Model_Block implements Application_Model_LibraryEditable
 {
     /**
      * propel connection object.
@@ -839,7 +839,7 @@ EOT;
         return $this->$method();
     }
     
-    public function setMetaData($category, $value)
+    public function setMetadata($category, $value)
     {
         $cat = $this->categories[$category];
     

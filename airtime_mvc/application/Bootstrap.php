@@ -12,7 +12,6 @@ require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
-
 //DateTime in PHP 5.3.0+ need a default timezone set. Set to UTC initially
 //in case Application_Model_Preference::GetTimezone fails and creates needs to create
 //a log entry. This log entry requires a call to date(), which then complains that
@@ -67,10 +66,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $baseUrl = Zend_Controller_Front::getInstance()->getBaseUrl();
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.7.2.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-1.7.2.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/sprintf/sprintf-0.7-beta1.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendScript("var baseUrl='$baseUrl/'");
