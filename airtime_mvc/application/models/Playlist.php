@@ -874,11 +874,19 @@ SQL;
      */
     public static function deletePlaylists($p_ids, $p_userId)
     {
-        $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
+            if (count($leftOver) == 0) {
+                CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new PlaylistNoPermissionException;
+            }
         } else {
-            throw new PlaylistNoPermissionException;
+            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
         }
     }
     

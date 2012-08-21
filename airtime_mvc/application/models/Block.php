@@ -875,11 +875,20 @@ EOT;
     */
     public static function deleteBlocks($p_ids, $p_userId)
     {
-        $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcBlockQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
+        
+            if (count($leftOver) == 0) {
+                CcBlockQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new BlockNoPermissionException;
+            }
         } else {
-            throw new BlockNoPermissionException;
+            CcBlockQuery::create()->findPKs($p_ids)->delete();
         }
     }
     
