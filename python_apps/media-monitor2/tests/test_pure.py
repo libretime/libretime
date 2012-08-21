@@ -48,9 +48,13 @@ class TestMMP(unittest.TestCase):
                 'artist': [u'Airtime Show Recorder'],
                 'title': [u'record-2012-08-21-11:29:00']
         })
-        orga['MDATA_KEY_FTYPE'] = u'audioclip'
+        orga['MDATA_KEY_FTYPE']   = u'audioclip'
+        orig['MDATA_KEY_BITRATE'] = u'256000'
+        orga['MDATA_KEY_BITRATE'] = u'256kbps'
+
         old_path = "/home/rudi/recorded/2012-08-21-11:29:00.ogg"
         normalized = mmp.normalized_metadata(orig, old_path)
+        print(normalized)
         self.assertEqual( orga, normalized )
 
         organized_base_name = "2012-08-21-11-29-00-record-256kbps.ogg"
