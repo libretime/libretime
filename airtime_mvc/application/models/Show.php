@@ -1549,7 +1549,7 @@ class Application_Model_Show
             $sql = $sql." AND ({$exclude})";
         }
 
-        $result = $con->query($sql);
+        $result = $con->query($sql)->fetchAll();
         return $result;
     }
 

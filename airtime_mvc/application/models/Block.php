@@ -192,7 +192,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
 
         $files = array();
         $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type,
+    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, f.length as orig_length,
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
     LEFT JOIN cc_files AS f ON pc.file_id=f.id
     LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
@@ -220,6 +220,10 @@ EOT;
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
+            
+            //format original length
+            $formatter = new LengthFormatter($row['orig_length']);
+            $row['orig_length'] = $formatter->format();
         }
 
         return $rows;
@@ -871,11 +875,20 @@ EOT;
     */
     public static function deleteBlocks($p_ids, $p_userId)
     {
-        $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcBlockQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
+        
+            if (count($leftOver) == 0) {
+                CcBlockQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new BlockNoPermissionException;
+            }
         } else {
-            throw new BlockNoPermissionException;
+            CcBlockQuery::create()->findPKs($p_ids)->delete();
         }
     }
     

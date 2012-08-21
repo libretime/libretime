@@ -2,6 +2,7 @@
 import copy
 import os
 import shutil
+import re
 import sys
 import hashlib
 import locale
@@ -228,34 +229,33 @@ def normalized_metadata(md, original_path):
     # Specific rules that are applied in a per attribute basis
     format_rules = {
         'MDATA_KEY_TRACKNUMBER' : parse_int,
-        'MDATA_KEY_BITRATE'     : lambda x: str(int(x) / 1000) + "kbps",
         'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
         'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
     }
 
-    new_md = remove_whitespace(new_md)
+    new_md = remove_whitespace(new_md) # remove whitespace fields
+    # Format all the fields in format_rules
     new_md = apply_rules_dict(new_md, format_rules)
-    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
-                        default=no_extension_basename(original_path))
-    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_CREATOR',
-        'MDATA_KEY_SOURCE'], default=u'')
+    # set filetype to audioclip by default
     new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
                         default=u'audioclip')
-    # In the case where the creator is 'Airtime Show Recorder' we would like to
-    # format the MDATA_KEY_TITLE slightly differently
-    # Note: I don't know why I'm doing a unicode string comparison here
-    # that part is copied from the original code
+
+    # Try to parse bpm but delete the whole key if that fails
+    if 'MDATA_KEY_BPM' in new_md:
+        new_md['MDATA_KEY_BPM'] = parse_int(new_md['MDATA_KEY_BPM'])
+        if new_md['MDATA_KEY_BPM'] is None:
+            del new_md['MDATA_KEY_BPM']
+
     if is_airtime_recorded(new_md):
-        hour,minute,second,name = md['MDATA_KEY_TITLE'].split("-",3)
-        # We assume that MDATA_KEY_YEAR is always given for airtime recorded
-        # shows
+        hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
         new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
             (name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
-        # IMPORTANT: in the original code. MDATA_KEY_FILEPATH would also
-        # be set to the original path of the file for airtime recorded shows
-        # (before it was "organized"). We will skip this procedure for now
-        # because it's not clear why it was done
+    else:
+        # Read title from filename if it does not exist
+        new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
+                            default=no_extension_basename(original_path))
+
     return new_md
 
 def organized_path(old_path, root_path, orig_md):
@@ -274,15 +274,26 @@ def organized_path(old_path, root_path, orig_md):
         if key in dictionary: return len(dictionary[key]) == 0
         else: return True
     # We set some metadata elements to a default "unknown" value because we use
-    # these fields to create a path hence they cannot be empty
+    # these fields to create a path hence they cannot be empty Here "normal"
+    # means normalized only for organized path
+
+    # MDATA_KEY_BITRATE is in bytes/second i.e. (256000) we want to turn this
+    # into 254kbps
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
+    if normal_md['MDATA_KEY_BITRATE']:
+        formatted = str(int(normal_md['MDATA_KEY_BITRATE']) / 1000)
+        normal_md['MDATA_KEY_BITRATE'] = formatted + 'kbps'
+    else: normal_md['MDATA_KEY_BITRATE'] = unicode_unknown
+
     if is_airtime_recorded(normal_md):
-        fname = u'%s-%s-%s.%s' % ( normal_md['MDATA_KEY_YEAR'],
-                normal_md['MDATA_KEY_TITLE'],
-                normal_md['MDATA_KEY_BITRATE'], ext )
-        yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',3)
-        path = os.path.join(root_path, yyyy, mm)
-        filepath = os.path.join(path,fname)
+        title_re = re.match("(?P<show>\w+)-(?P<date>\d+-\d+-\d+-\d+:\d+:\d+)$",
+                normal_md['MDATA_KEY_TITLE'])
+        show_name,  = title_re.group('show'),
+        date        = title_re.group('date').replace(':','-')
+        yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',2)
+        fname_base  = '%s-%s-%s.%s' % \
+                (date, show_name, normal_md['MDATA_KEY_BITRATE'], ext)
+        filepath = os.path.join(root_path, yyyy, mm, fname_base)
     elif len(normal_md['MDATA_KEY_TRACKNUMBER']) == 0:
         fname = u'%s-%s.%s' % (normal_md['MDATA_KEY_TITLE'],
                 normal_md['MDATA_KEY_BITRATE'], ext)

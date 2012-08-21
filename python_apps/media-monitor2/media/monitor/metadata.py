@@ -106,9 +106,37 @@ class Metadata(Loggable):
     # here. Also interface is not very consistent
 
     @staticmethod
+    def airtime_dict(d):
+        """
+        Converts mutagen dictionary 'd' into airtime dictionary
+        """
+        temp_dict = {}
+        for m_key, m_val in d.iteritems():
+            # TODO : some files have multiple fields for the same metadata.
+            # genre is one example. In that case mutagen will return a list
+            # of values
+            assign_val = m_val[0] if isinstance(m_val, list) else m_val
+            temp_dict[ m_key ] = assign_val
+        airtime_dictionary = {}
+        for muta_k, muta_v in temp_dict.iteritems():
+            # We must check if we can actually translate the mutagen key into
+            # an airtime key before doing the conversion
+            if muta_k in mutagen2airtime:
+                airtime_key = mutagen2airtime[muta_k]
+                # Apply truncation in the case where airtime_key is in our
+                # truncation table
+                muta_v =  \
+                        truncate_to_length(muta_v, truncate_table[airtime_key])\
+                        if airtime_key in truncate_table else muta_v
+                airtime_dictionary[ airtime_key ] = muta_v
+        return airtime_dictionary
+
+    @staticmethod
     def write_unsafe(path,md):
         """
-        Writes 'md' metadata into 'path' through mutagen
+        Writes 'md' metadata into 'path' through mutagen. Converts all
+        dictionary values to strings because mutagen will not write anything
+        else
         """
         if not os.path.exists(path): raise BadSongFile(path)
         song_file = mutagen.File(path, easy=True)
@@ -128,37 +156,13 @@ class Metadata(Loggable):
         self.path = fpath
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
-        metadata = {}
-        # Load only the metadata avilable in mutagen into metdata
-        for k,v in full_mutagen.iteritems():
-            # Special handling of attributes here
-            if isinstance(v, list):
-                # TODO : some files have multiple fields for the same metadata.
-                # genre is one example. In that case mutagen will return a list
-                # of values
-                metadata[k] = v[0]
-                #if len(v) == 1: metadata[k] = v[0]
-                #else: raise Exception("Unknown mutagen %s:%s" % (k,str(v)))
-            else: metadata[k] = v
-        self.__metadata = {}
-        # Start populating a dictionary of airtime metadata in __metadata
-        for muta_k, muta_v in metadata.iteritems():
-            # We must check if we can actually translate the mutagen key into
-            # an airtime key before doing the conversion
-            if muta_k in mutagen2airtime:
-                airtime_key = mutagen2airtime[muta_k]
-                # Apply truncation in the case where airtime_key is in our
-                # truncation table
-                muta_v =  \
-                        truncate_to_length(muta_v, truncate_table[airtime_key])\
-                        if airtime_key in truncate_table else muta_v
-                self.__metadata[ airtime_key ] = muta_v
+        self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
         for special_key,f in airtime_special.iteritems():
             new_val = f(full_mutagen)
             if new_val is not None:
-                self.__metadata[special_key] = f(full_mutagen)
+                self.__metadata[special_key] = new_val
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:

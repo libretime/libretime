@@ -9,6 +9,7 @@ import sys
 import pytz
 import signal
 import math
+import traceback
 
 from configobj import ConfigObj
 
@@ -55,16 +56,16 @@ class ShowRecorder(Thread):
 
     def __init__ (self, show_instance, show_name, filelength, start_time):
         Thread.__init__(self)
-        self.logger = logging.getLogger('recorder')
-        self.api_client = api_client(self.logger)
-        self.filelength = filelength
-        self.start_time = start_time
+        self.logger        = logging.getLogger('recorder')
+        self.api_client    = api_client(self.logger)
+        self.filelength    = filelength
+        self.start_time    = start_time
         self.show_instance = show_instance
-        self.show_name = show_name
-        self.p = None
+        self.show_name     = show_name
+        self.p             = None
 
     def record_show(self):
-        length = str(self.filelength) + ".0"
+        length   = str(self.filelength) + ".0"
         filename = self.start_time
         filename = filename.replace(" ", "-")
 
@@ -73,16 +74,18 @@ class ShowRecorder(Thread):
         else:
             filetype = "ogg";
 
-        filepath = "%s%s.%s" % (config["base_recorded_files"], filename, filetype)
+        joined_path = os.path.join(config["base_recorded_files"], filename)
+        filepath = "%s.%s" % (joined_path, filetype)
 
         br = config["record_bitrate"]
         sr = config["record_samplerate"]
-        c = config["record_channels"]
+        c  = config["record_channels"]
         ss = config["record_sample_size"]
 
         #-f:16,2,44100
         #-b:256
-        command = "ecasound -f:%s,%s,%s -i alsa -o %s,%s000 -t:%s" % (ss, c, sr, filepath, br, length)
+        command = "ecasound -f:%s,%s,%s -i alsa -o %s,%s000 -t:%s" % \
+                                (ss, c, sr, filepath, br, length)
         args = command.split(" ")
 
         self.logger.info("starting record")
@@ -144,17 +147,16 @@ class ShowRecorder(Thread):
             artist = "Airtime Show Recorder"
 
             #set some metadata for our file daemon
-            recorded_file = mutagen.File(filepath, easy=True)
-            recorded_file['title'] = name
+            recorded_file           = mutagen.File(filepath, easy = True)
+            recorded_file['title']  = name
             recorded_file['artist'] = artist
-            recorded_file['date'] = md[0]
+            recorded_file['date']   = md[0]
             #recorded_file['date'] = md[0].split("-")[0]
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
             recorded_file.save()
 
         except Exception, e:
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -180,20 +182,20 @@ class ShowRecorder(Thread):
 class Recorder(Thread):
     def __init__(self, q):
         Thread.__init__(self)
-        self.logger = logging.getLogger('recorder')
-        self.api_client = api_client(self.logger)
-        self.api_client.register_component("show-recorder")
-        self.sr = None
+        self.logger          = logging.getLogger('recorder')
+        self.api_client      = api_client(self.logger)
+        self.sr              = None
         self.shows_to_record = {}
         self.server_timezone = ''
-        self.queue = q
+        self.queue           = q
+        self.loops           = 0
+        self.api_client.register_component("show-recorder")
         self.logger.info("RecorderFetch: init complete")
-        self.loops = 0
 
     def handle_message(self):
         if not self.queue.empty():
             message = self.queue.get()
-            msg = json.loads(message)
+            msg     = json.loads(message)
             command = msg["event_type"]
             self.logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == 'cancel_recording':
@@ -212,8 +214,8 @@ class Recorder(Thread):
         shows = m['shows']
         for show in shows:
             show_starts = getDateTimeObj(show[u'starts'])
-            show_end = getDateTimeObj(show[u'ends'])
-            time_delta = show_end - show_starts
+            show_end    = getDateTimeObj(show[u'ends'])
+            time_delta  = show_end - show_starts
 
             temp_shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name'], m['server_timezone']]
         self.shows_to_record = temp_shows_to_record
@@ -223,10 +225,10 @@ class Recorder(Thread):
             tnow = datetime.datetime.utcnow()
             sorted_show_keys = sorted(self.shows_to_record.keys())
 
-            start_time = sorted_show_keys[0]
-            next_show = getDateTimeObj(start_time)
+            start_time       = sorted_show_keys[0]
+            next_show        = getDateTimeObj(start_time)
 
-            delta = next_show - tnow
+            delta            = next_show - tnow
             s = '%s.%s' % (delta.seconds, delta.microseconds)
             out = float(s)
 
@@ -237,36 +239,35 @@ class Recorder(Thread):
         return out
 
     def start_record(self):
-        if len(self.shows_to_record) != 0:
-            try:
-                delta = self.get_time_till_next_show()
-                if delta < 5:
-                    self.logger.debug("sleeping %s seconds until show", delta)
-                    time.sleep(delta)
+        if len(self.shows_to_record) == 0: return None
+        try:
+            delta = self.get_time_till_next_show()
+            if delta < 5:
+                self.logger.debug("sleeping %s seconds until show", delta)
+                time.sleep(delta)
 
-                    sorted_show_keys = sorted(self.shows_to_record.keys())
-                    start_time = sorted_show_keys[0]
-                    show_length = self.shows_to_record[start_time][0]
-                    show_instance = self.shows_to_record[start_time][1]
-                    show_name = self.shows_to_record[start_time][2]
-                    server_timezone = self.shows_to_record[start_time][3]
+                sorted_show_keys = sorted(self.shows_to_record.keys())
+                start_time       = sorted_show_keys[0]
+                show_length      = self.shows_to_record[start_time][0]
+                show_instance    = self.shows_to_record[start_time][1]
+                show_name        = self.shows_to_record[start_time][2]
+                server_timezone  = self.shows_to_record[start_time][3]
 
-                    T = pytz.timezone(server_timezone)
-                    start_time_on_UTC = getDateTimeObj(start_time)
-                    start_time_on_server = start_time_on_UTC.replace(tzinfo=pytz.utc).astimezone(T)
-                    start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
-                        {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day, \
-                         'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
-                    self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted)
-                    self.sr.start()
-                    #remove show from shows to record.
-                    del self.shows_to_record[start_time]
-                    #self.time_till_next_show = self.get_time_till_next_show()
-            except Exception, e :
-                import traceback
-                top = traceback.format_exc()
-                self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", top)
+                T = pytz.timezone(server_timezone)
+                start_time_on_UTC = getDateTimeObj(start_time)
+                start_time_on_server = start_time_on_UTC.replace(tzinfo=pytz.utc).astimezone(T)
+                start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
+                    {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day, \
+                        'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
+                self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted)
+                self.sr.start()
+                #remove show from shows to record.
+                del self.shows_to_record[start_time]
+                #self.time_till_next_show = self.get_time_till_next_show()
+        except Exception, e :
+            top = traceback.format_exc()
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", top)
 
     """
     Main loop of the thread:
@@ -284,6 +285,7 @@ class Recorder(Thread):
                     self.process_recorder_schedule(temp)
                 self.logger.info("Bootstrap recorder schedule received: %s", temp)
             except Exception, e:
+                self.logger.error( traceback.format_exc() )
                 self.logger.error(e)
 
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
@@ -305,14 +307,15 @@ class Recorder(Thread):
                             self.process_recorder_schedule(temp)
                         self.logger.info("updated recorder schedule received: %s", temp)
                     except Exception, e:
+                        self.logger.error( traceback.format_exc() )
                         self.logger.error(e)
                 try: self.handle_message()
                 except Exception, e:
+                    self.logger.error( traceback.format_exc() )
                     self.logger.error('Pypo Recorder Exception: %s', e)
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
         except Exception, e :
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)

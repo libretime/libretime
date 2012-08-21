@@ -171,7 +171,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                    f.track_title,
                    f.artist_name AS creator,
                    f.file_exists AS EXISTS,
-                   f.filepath AS path
+                   f.filepath AS path,
+                   f.length AS orig_length
             FROM cc_playlistcontents AS pc
             JOIN cc_files AS f ON pc.file_id=f.id
             WHERE pc.playlist_id = {$this->id}
@@ -188,7 +189,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                             (ws.name || ': ' || ws.url) AS title,
                             sub.login AS creator,
                             't'::boolean AS EXISTS,
-                            ws.url AS path
+                            ws.url AS path,
+                            ws.length AS orig_length
             FROM cc_playlistcontents AS pc
             JOIN cc_webstream AS ws ON pc.stream_id=ws.id
             LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
@@ -206,7 +208,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                             bl.name AS title,
                             sbj.login AS creator,
                             't'::boolean AS EXISTS,
-                            NULL::text AS path
+                            NULL::text AS path,
+                            bl.length AS orig_length
             FROM cc_playlistcontents AS pc
             JOIN cc_block AS bl ON pc.block_id=bl.id
             JOIN cc_subjs AS sbj ON bl.creator_id=sbj.id
@@ -240,6 +243,10 @@ SQL;
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
+            
+            //format original length
+            $formatter = new LengthFormatter($row['orig_length']);
+            $row['orig_length'] = $formatter->format();
         }
 
         return $rows;
@@ -867,11 +874,19 @@ SQL;
      */
     public static function deletePlaylists($p_ids, $p_userId)
     {
-        $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
+            if (count($leftOver) == 0) {
+                CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new PlaylistNoPermissionException;
+            }
         } else {
-            throw new PlaylistNoPermissionException;
+            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
         }
     }
     
