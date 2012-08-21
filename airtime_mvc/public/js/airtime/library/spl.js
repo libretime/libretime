@@ -568,7 +568,7 @@ var AIRTIME = (function(AIRTIME){
             //stream url
             //default_length  
             //playlist name
-            var id = $pl.find("#ws_id").attr("value"); 
+            var id = $pl.find("#obj_id").attr("value"); 
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
@@ -596,7 +596,7 @@ var AIRTIME = (function(AIRTIME){
                         $status.show();
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
 
-                        var $ws_id = $("#ws_id");
+                        var $ws_id = $("#obj_id");
                         $ws_id.attr("value", json.streamId);
 
                         var $ws_id = $("#ws_delete");
