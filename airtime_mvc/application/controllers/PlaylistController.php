@@ -39,7 +39,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $obj = null;
         
-        $objInfo = $this->getObjInfo($p_type);
+        $objInfo = Application_Model_Playlist::getObjInfo($p_type);
 
         if (isset($this->obj_sess->id)) {
             $obj = new $objInfo['className']($this->obj_sess->id);
@@ -195,7 +195,7 @@ class PlaylistController extends Zend_Controller_Action
 
         try {
             if (isset($this->obj_sess->id)) {
-                $objInfo = $this->getObjInfo($this->obj_sess->type);
+                $objInfo = Application_Model_Playlist::getObjInfo($this->obj_sess->type);
                 $obj = new $objInfo['className']($this->obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
@@ -227,7 +227,7 @@ class PlaylistController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $type = $this->_getParam('type');
         
-        $objInfo = $this->getObjInfo($type);
+        $objInfo = Application_Model_Playlist::getObjInfo($type);
         
         $name = 'Untitled Playlist';
         if ($type == 'block') {
@@ -246,7 +246,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id', null);
         $type = $this->_getParam('type');
-        $objInfo = $this->getObjInfo($type);
+        $objInfo = Application_Model_Playlist::getObjInfo($type);
         Logging::log("editing {$type} {$id}");
 
         if (!is_null($id)) {
@@ -271,7 +271,7 @@ class PlaylistController extends Zend_Controller_Action
         
         $obj = null;
      
-        $objInfo = $this->getObjInfo($type);
+        $objInfo = Application_Model_Playlist::getObjInfo($type);
         
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -586,19 +586,6 @@ class PlaylistController extends Zend_Controller_Action
         } else {
             die(json_encode($result));
         }
-    }
-    
-    public function getObjInfo($p_type)
-    {
-        $info = array();
-        
-        if (strcmp($p_type, 'playlist')==0) {
-            $info['className'] = 'Application_Model_Playlist';
-        } else {
-            $info['className'] = 'Application_Model_Block';
-        }
-        
-        return $info;
     }
     
     public function getBlockInfoAction()

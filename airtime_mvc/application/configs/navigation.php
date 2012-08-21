@@ -25,7 +25,7 @@ $pages = array(
 	array(
 		'label'      => 'Library',
 		'module'     => 'default',
-		'controller' => 'Playlist',
+		'controller' => 'Library',
 		'action'     => 'index',
 		'resource'	=>	'playlist'
 	),
