@@ -140,6 +140,8 @@ class PlaylistController extends Zend_Controller_Action
     private function playlistNoPermission($p_type)
     {
         $this->view->error = "You don't have permission to delete selected {$p_type}(s).";
+        $this->changePlaylist(null, $p_type);
+        $this->createFullResponse(null);
     }
 
     private function playlistUnknownError($e)
@@ -293,6 +295,8 @@ class PlaylistController extends Zend_Controller_Action
             }
             $this->createFullResponse($obj);
         } catch (PlaylistNoPermissionException $e) {
+            $this->playlistNoPermission($type);
+        } catch (BlockNoPermissionException $e) {
             $this->playlistNoPermission($type);
         } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($type);
