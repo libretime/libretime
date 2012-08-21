@@ -64,6 +64,5 @@ class TestMMP(unittest.TestCase):
                 actual_events.append(e)
         self.assertEqual( len(ev.store.keys()), 1 )
         packed = [ x.safe_pack() for x in actual_events ]
-        print(packed)
 
 if __name__ == '__main__': unittest.main()
