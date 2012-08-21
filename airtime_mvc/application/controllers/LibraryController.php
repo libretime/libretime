@@ -27,6 +27,65 @@ class LibraryController extends Zend_Controller_Action
         $this->search_sess = new Zend_Session_Namespace("search");
     }
 
+    public function indexAction()
+    {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'), 'text/javascript');
+
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
+
+        try {
+            if (isset($this->obj_sess->id)) {
+                $objInfo = Application_Model_Playlist::getObjInfo($this->obj_sess->type);
+                $obj = new $objInfo['className']($this->obj_sess->id);
+                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+                $user = new Application_Model_User($userInfo->id);
+                $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+                
+                if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
+                    $this->view->obj = $obj;
+                    if ($this->obj_sess->type == "block") {
+                        $form = new Application_Form_SmartBlockCriteria();
+                        $form->startForm($this->obj_sess->id);
+                        $this->view->form = $form;
+                    }
+                }
+                
+                $formatter = new LengthFormatter($obj->getLength());
+                $this->view->length = $formatter->format();
+                $this->view->type = $this->obj_sess->type;
+            }
+        } catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound($this->obj_sess->type);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
+        }
+    }
+
+
     public function contextMenuAction()
     {
         $id = $this->_getParam('id');
@@ -270,7 +329,7 @@ class LibraryController extends Zend_Controller_Action
                 Logging::log($data['MDATA_KEY_FILEPATH']);
                 Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
-                $this->_redirect('Playlist');
+                $this->_redirect('Library');
             }
         }
 

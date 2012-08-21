@@ -94,7 +94,6 @@ try:
             #liq_path DNE, which is OK.
             pass
 
-
         os.symlink(liq_path, symlink_path)
     else:
         print " * Liquidsoap binary not found!"

@@ -39,7 +39,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $obj = null;
         
-        $objInfo = $this->getObjInfo($p_type);
+        $objInfo = Application_Model_Playlist::getObjInfo($p_type);
 
         if (isset($this->obj_sess->id)) {
             $obj = new $objInfo['className']($this->obj_sess->id);
@@ -106,14 +106,13 @@ class PlaylistController extends Zend_Controller_Action
                 } else {
                     $this->view->html = $this->view->render($viewPath);
                 }
-            }else{
+            } else {
                 $this->view->obj = $obj;
                 $this->view->id = $obj->getId();
                 $this->view->html = $this->view->render($viewPath);
                 unset($this->view->obj);
             }
-        }
-        else {
+        } else {
             $this->view->html = $this->view->render($viewPath);
         }
     }
@@ -138,7 +137,8 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse(null);
     }
     
-    private function playlistNoPermission($p_type){
+    private function playlistNoPermission($p_type)
+    {
         $this->view->error = "You don't have permission to delete selected {$p_type}(s).";
     }
 
@@ -151,12 +151,14 @@ class PlaylistController extends Zend_Controller_Action
         Logging::log("{$e->getMessage()}");
     }
     
-    private function wrongTypeToBlock($obj) {
+    private function wrongTypeToBlock($obj)
+    {
         $this->view->error = "You can only add tracks to smart block.";
         $this->createFullResponse($obj);
     }
     
-    private function wrongTypeToPlaylist($obj) {
+    private function wrongTypeToPlaylist($obj)
+    {
         $this->view->error = "You can only add tracks and smart blocks to playlists.";
         $this->createFullResponse($obj);
     }
@@ -168,40 +170,40 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'),'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'), 'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
             if (isset($this->obj_sess->id)) {
-                $objInfo = $this->getObjInfo($this->obj_sess->type);
+                $objInfo = Application_Model_Playlist::getObjInfo($this->obj_sess->type);
                 $obj = new $objInfo['className']($this->obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
                 
-                if($isAdminOrPM || $obj->getCreatorId() == $userInfo->id){
+                if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
                     $this->view->obj = $obj;
-                    if($this->obj_sess->type == "block"){
+                    if ($this->obj_sess->type == "block") {
                         $form = new Application_Form_SmartBlockCriteria();
                         $form->startForm($this->obj_sess->id);
                         $this->view->form = $form;
@@ -225,7 +227,7 @@ class PlaylistController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $type = $this->_getParam('type');
         
-        $objInfo = $this->getObjInfo($type);
+        $objInfo = Application_Model_Playlist::getObjInfo($type);
         
         $name = 'Untitled Playlist';
         if ($type == 'block') {
@@ -244,7 +246,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id', null);
         $type = $this->_getParam('type');
-        $objInfo = $this->getObjInfo($type);
+        $objInfo = Application_Model_Playlist::getObjInfo($type);
         Logging::log("editing {$type} {$id}");
 
         if (!is_null($id)) {
@@ -269,7 +271,7 @@ class PlaylistController extends Zend_Controller_Action
         
         $obj = null;
      
-        $objInfo = $this->getObjInfo($type);
+        $objInfo = Application_Model_Playlist::getObjInfo($type);
         
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -283,6 +285,7 @@ class PlaylistController extends Zend_Controller_Action
                 Logging::log("Not deleting currently active {$type}");
                 $obj = new $objInfo['className']($this->obj_sess->id);
             }
+
             if (strcmp($objInfo['className'], 'Application_Model_Playlist')==0) {
                 Application_Model_Playlist::deletePlaylists($ids, $userInfo->id);
             } else {
@@ -310,7 +313,7 @@ class PlaylistController extends Zend_Controller_Action
         try {
             $obj = $this->getPlaylist($obj_type);
             if ($obj_type == 'playlist') {
-                foreach($ids as $id) {
+                foreach ($ids as $id) {
                     if (is_array($id) && isset($id[1])) {
                         if ($id[1] == 'playlist') {
                             throw new WrongTypeToPlaylistException;
@@ -321,7 +324,7 @@ class PlaylistController extends Zend_Controller_Action
             } else if ($obj->isStatic()) {
                 // if the dest is a block object
                 //check if any items are playlists
-                foreach($ids as $id) {
+                foreach ($ids as $id) {
                     if (is_array($id) && isset($id[1])) {
                         if ($id[1] != 'audioclip') {
                             throw new WrongTypeToBlockException;
@@ -333,11 +336,9 @@ class PlaylistController extends Zend_Controller_Action
                 throw new BlockDynamicException;
             }
             $this->createUpdateResponse($obj);
-        }
-        catch (PlaylistOutDatedException $e) {
+        } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
-        }
-        catch (PlaylistNotFoundException $e) {
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_type);
         }
         catch (WrongTypeToBlockException $e) {
@@ -553,14 +554,12 @@ class PlaylistController extends Zend_Controller_Action
             $result = $bl->generateSmartBlock($params['data']);
             try {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
-            }
-            catch (PlaylistNotFoundException $e) {
+            } catch (PlaylistNotFoundException $e) {
                 $this->playlistNotFound('block');
-            }
-            catch (Exception $e) {
+            } catch (Exception $e) {
                 $this->playlistUnknownError($e);
             }
-        }else{
+        } else {
             $this->view->obj = $bl;
             $this->view->id = $bl->getId();
             $this->view->form = $form;
@@ -581,32 +580,16 @@ class PlaylistController extends Zend_Controller_Action
         if ($result['result'] == 0) {
             try {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
-            }
-            catch (PlaylistNotFoundException $e) {
+            } catch (PlaylistNotFoundException $e) {
                 $this->playlistNotFound('block');
             }
-            catch (Exception $e) {
-                $this->playlistUnknownError($e);
-            }
-        }else{
+        } else {
             die(json_encode($result));
         }
     }
     
-    public function getObjInfo($p_type)
+    public function getBlockInfoAction()
     {
-        $info = array();
-        
-        if (strcmp($p_type, 'playlist')==0) {
-            $info['className'] = 'Application_Model_Playlist';
-        } else {
-            $info['className'] = 'Application_Model_Block';
-        }
-        
-        return $info;
-    }
-    
-    public function getBlockInfoAction(){
         $request = $this->getRequest();
         $params = $request->getPost();
         $bl = new Application_Model_Block($params['id']);
