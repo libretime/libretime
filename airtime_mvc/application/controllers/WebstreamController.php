@@ -27,6 +27,8 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbLength("00:00:00");
         $webstream->setDbName("Untitled Webstream");
 
+        Application_Model_Library::changePlaylist($obj->getId(), $type);
+
         $this->view->ws = new Application_Model_Webstream($webstream);
         $this->view->action = "new";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
@@ -52,12 +54,42 @@ class WebstreamController extends Zend_Controller_Action
         $request = $this->getRequest();
         $id = $request->getParam("ids");
 
+        if (!$this->isAuthorized($id)) {
+            header("Status: 401 Not Authorized");
+            return;
+        }       
+        
+        $type = "stream";
+        Application_Model_Library::changePlaylist(null, $type);
+
         $webstream = CcWebstreamQuery::create()->findPK($id)->delete();
 
         $this->view->ws = null;
         $this->view->action = "delete";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
 
+    }
+
+    public function isAuthorized($id)
+    {
+        $hasPermission = false;
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            $hasPermission = true;
+        }
+
+        if ($user->isUserType(UTYPE_HOST)) {
+            if ($id != -1) {
+                $webstream = CcWebstreamQuery::create()->findPK($id);
+                //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
+                $user = Application_Model_User::getCurrentUser();
+
+                if ($webstream->getDbCreatorId() == $user->getId()) {
+                    $hasPermission = true;
+                }
+            }
+        }
+
+        return $hasPermission;
     }
 
     public function saveAction()
@@ -68,11 +100,6 @@ class WebstreamController extends Zend_Controller_Action
         $user = Application_Model_User::getCurrentUser();
         $hasPermission = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST));
 
-        if (!$hasPermission) {
-            header("Status: 401 Not Authorized");
-            return;
-        }
-
         $id = $request->getParam("id");
 
         $parameters = array();
@@ -82,15 +109,10 @@ class WebstreamController extends Zend_Controller_Action
         $parameters['description'] = trim($request->getParam("description"));
         $parameters['url'] = trim($request->getParam("url"));
 
-        if ($parameters['id'] != -1) {
-            $webstream = CcWebstreamQuery::create()->findPK($parameters['id']);
-            //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
-            $user = Application_Model_User::getCurrentUser();
-            if ($webstream->getDbCreatorId() != $user->getId()) {
-                header("Status: 401 Not Authorized");
-                return;
-            } 
-        } 
+        if (!$this->isAuthorized($id)) {
+            header("Status: 401 Not Authorized");
+            return;
+        }
 
 
         list($analysis, $mime, $di) = Application_Model_Webstream::analyzeFormData($parameters);
