@@ -27,7 +27,6 @@ stream_metadata_type = ref 0
 default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
-#current_media_id = ref ''
 
 s1_connected = ref ''
 s2_connected = ref ''
@@ -47,9 +46,6 @@ queue = map_metadata(update=false, append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
 
-#make sure we are clearing all buffered data even when the source isn't being actively used
-#output.dummy(queue, fallible=true)
-#output.dummy(web_stream, fallible=true)
 
 stream_queue = switch(id="stream_queue_switch", track_sensitive=false, transitions=[transition, transition], [({!webstream_enabled},web_stream), ({true}, queue)])
 
