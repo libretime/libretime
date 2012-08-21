@@ -286,6 +286,7 @@ class Recorder(Thread):
                     self.process_recorder_schedule(temp)
                 self.logger.info("Bootstrap recorder schedule received: %s", temp)
             except Exception, e:
+                self.logger.error( traceback.format_exc() )
                 self.logger.error(e)
 
             self.logger.info("Bootstrap complete: got initial copy of the schedule")
