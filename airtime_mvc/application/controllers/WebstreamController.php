@@ -54,6 +54,10 @@ class WebstreamController extends Zend_Controller_Action
 
         $webstream = CcWebstreamQuery::create()->findPK($id)->delete();
 
+        $this->view->ws = null;
+        $this->view->action = "delete";
+        $this->view->html = $this->view->render('webstream/webstream.phtml');
+
     }
 
     public function saveAction()

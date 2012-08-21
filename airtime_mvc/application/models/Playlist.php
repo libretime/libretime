@@ -899,6 +899,19 @@ SQL;
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
     }
 
+    public static function getObjInfo($p_type)
+    {
+        $info = array();
+        
+        if (strcmp($p_type, 'playlist')==0) {
+            $info['className'] = 'Application_Model_Playlist';
+        } else {
+            $info['className'] = 'Application_Model_Block';
+        }
+        
+        return $info;
+    }
+
 } // class Playlist
 
 class PlaylistNotFoundException extends Exception {}
