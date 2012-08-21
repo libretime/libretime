@@ -240,7 +240,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
-        $generate->setAttrib('title', 'Generate playlist content');
+        $generate->setAttrib('title', 'Generate playlist content and save criteria');
         $generate->setIgnore(true);
         $generate->setLabel('Generate');
         $generate->setDecorators(array('viewHelper'));
