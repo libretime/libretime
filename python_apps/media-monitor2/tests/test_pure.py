@@ -2,6 +2,7 @@
 import unittest
 import os
 import media.monitor.pure as mmp
+from media.monitor.metadata import Metadata
 
 class TestMMP(unittest.TestCase):
     def setUp(self):
@@ -34,23 +35,28 @@ class TestMMP(unittest.TestCase):
         for k in def_keys: self.assertEqual( sd[k], 'DEF' )
 
     def test_normalized_metadata(self):
-        normal = mmp.normalized_metadata(self.md1,"")
-        self.assertTrue(hasattr(normal['MDATA_KEY_CREATOR'],'startswith'))
-        self.assertTrue('MDATA_KEY_CREATOR' in normal)
-        self.assertTrue('MDATA_KEY_SOURCE' in normal)
+        # Recorded show test first
+        orig = Metadata.airtime_dict({
+                'date': [u'2012-08-21'],
+                'tracknumber': [u'2'],
+                'title': [u'11-29-00-record'],
+                'artist': [u'Airtime Show Recorder']
+        })
+        orga = Metadata.airtime_dict({
+                'date': [u'2012-08-21'],
+                'tracknumber': [u'2'],
+                'artist': [u'Airtime Show Recorder'],
+                'title': [u'record-2012-08-21-11:29:00']
+        })
+        orga['MDATA_KEY_FTYPE'] = u'audioclip'
+        old_path = "/home/rudi/recorded/2012-08-21-11:29:00.ogg"
+        normalized = mmp.normalized_metadata(orig, old_path)
+        self.assertEqual( orga, normalized )
 
-    def test_organized_path(self):
-        o_path = '/home/rudi/throwaway/ACDC_-_Back_In_Black-sample-64kbps.ogg'
-        normal = mmp.normalized_metadata(self.md1,o_path)
-        og = mmp.organized_path(o_path,
-                                '/home/rudi/throwaway/fucking_around/watch/',
-                                normal)
-        real_path1 = \
-            u'/home/rudi/throwaway/fucking_around/watch/unknown/unknown/ACDC_-_Back_In_Black-sample-64kbps-64kbps.ogg'
-        self.assertTrue( 'unknown' in og, True )
-        self.assertEqual( og, real_path1 ) # TODO : fix this failure
-        # for recorded it should be something like this
-        # ./recorded/2012/07/2012-07-09-17-55-00-Untitled Show-256kbps.ogg
+        organized_base_name = "2012-08-21-11-29-00-record-256kbps.ogg"
+        base = "/srv/airtime/stor/"
+        organized_path = mmp.organized_path(old_path,base, normalized)
+        self.assertEqual(os.path.basename(organized_path), organized_base_name)
 
     def test_file_md5(self):
         p = os.path.realpath(__file__)
