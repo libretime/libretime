@@ -110,7 +110,7 @@ class Application_Model_Scheduler
             $ts = intval($instanceInfo[$id]);
             $lastSchedTs = intval($instance->getDbLastScheduled("U")) ? : 0;
             if ($ts < $lastSchedTs) {
-                Logging::log("ts {$ts} last sched {$lastSchedTs}");
+                Logging::info("ts {$ts} last sched {$lastSchedTs}");
                 throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
             }
         }
@@ -317,7 +317,7 @@ class Application_Model_Scheduler
     */
     private function removeGaps($showInstance, $exclude=null)
     {
-        Logging::log("removing gaps from show instance #".$showInstance);
+        Logging::info("removing gaps from show instance #".$showInstance);
 
         $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
         if (is_null($instance)) {
@@ -416,7 +416,7 @@ class Application_Model_Scheduler
                     } else {
                         $sched = new CcSchedule();
                     }
-                    Logging::log($file);
+                    Logging::info($file);
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
                         ->setDbCueIn($file['cuein'])

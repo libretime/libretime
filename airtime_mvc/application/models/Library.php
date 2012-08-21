@@ -21,7 +21,7 @@ class Application_Model_Library
     public static function changePlaylist($p_id, $p_type)
     {
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
-        Logging::log($obj_sess);
+        Logging::info($obj_sess);
 
         if (is_null($p_id) || is_null($p_type)) {
             unset($obj_sess->id);

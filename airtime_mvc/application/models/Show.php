@@ -216,8 +216,8 @@ class Application_Model_Show
             $con->commit();
         } catch (Exception $e) {
             $con->rollback();
-            Logging::log("Couldn't update schedule status.");
-            Logging::log($e->getMessage());
+            Logging::info("Couldn't update schedule status.");
+            Logging::info($e->getMessage());
         }
 
         Application_Model_RabbitMq::PushSchedule();
@@ -277,27 +277,27 @@ class Application_Model_Show
                         ->filterByDbShowId($this->getId())
                         ->find();
 
-        Logging::log("Unchecked days:");
+        Logging::info("Unchecked days:");
         foreach ($p_uncheckedDays as $day) {
-            Logging::log($day);
+            Logging::info($day);
         }
 
         foreach ($showDays as $showDay) {
-            //Logging::log("Local show day is: {$showDay->getDbDay()}");
-            //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
-            //Logging::log("Id show days is: {$showDay->getDbId()}");
+            //Logging::info("Local show day is: {$showDay->getDbDay()}");
+            //Logging::info("First show day is: {$showDay->getDbFirstShow()}");
+            //Logging::info("Id show days is: {$showDay->getDbId()}");
 
             if (in_array($showDay->getDbDay(), $p_uncheckedDays)) {
                $showDay->reload();
-               //Logging::log("Local show day is: {$showDay->getDbDay()}");
-               //Logging::log("First show day is: {$showDay->getDbFirstShow()}");
-               //Logging::log("Id show days is: {$showDay->getDbId()}");
+               //Logging::info("Local show day is: {$showDay->getDbDay()}");
+               //Logging::info("First show day is: {$showDay->getDbFirstShow()}");
+               //Logging::info("Id show days is: {$showDay->getDbId()}");
                $startDay = new DateTime("{$showDay->getDbFirstShow()} {$showDay->getDbStartTime()}", new DateTimeZone($showDay->getDbTimezone()));
-               //Logging::log("Show start day: {$startDay->format('Y-m-d H:i:s')}");
+               //Logging::info("Show start day: {$startDay->format('Y-m-d H:i:s')}");
                $startDay->setTimezone(new DateTimeZone("UTC"));
-               //Logging::log("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
+               //Logging::info("Show start day UTC: {$startDay->format('Y-m-d H:i:s')}");
                $daysRemovedUTC[] = $startDay->format('w');
-               //Logging::log("UTC show day is: {$startDay->format('w')}");
+               //Logging::info("UTC show day is: {$startDay->format('w')}");
             }
         }
 
@@ -368,7 +368,7 @@ class Application_Model_Show
             ."WHERE instance_id = (SELECT id FROM cc_show_instances WHERE show_id = $showId ORDER BY starts LIMIT 1) AND rebroadcast = 1 "
             ."ORDER BY starts";
 
-        //Logging::log($sql);
+        //Logging::info($sql);
 
         $rebroadcasts = $con->query($sql)->fetchAll();
 
@@ -1160,8 +1160,8 @@ class Application_Model_Show
                 $con->commit();
             } catch (Exception $e) {
                 $con->rollback();
-                Logging::log("Couldn't update schedule status.");
-                Logging::log($e->getMessage());
+                Logging::info("Couldn't update schedule status.");
+                Logging::info($e->getMessage());
             }
         }
 
@@ -1590,7 +1590,7 @@ class Application_Model_Show
                 WHERE last_show IS NULL
                 OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
 
-        //Logging::log($sql);
+        //Logging::info($sql);
         $res = $con->query($sql)->fetchAll();
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
@@ -1723,7 +1723,7 @@ class Application_Model_Show
         $showDay->setDbFirstShow($dt)->setDbStartTime($dt)
         ->save();
 
-        //Logging::log("setting show's first show.");
+        //Logging::info("setting show's first show.");
     }
 
     /* Takes in a UTC DateTime object

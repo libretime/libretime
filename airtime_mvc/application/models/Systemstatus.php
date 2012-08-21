@@ -224,7 +224,7 @@ class Application_Model_Systemstatus
 
             $partitions[$totalSpace]->totalSpace = $totalSpace;
             $partitions[$totalSpace]->totalFreeSpace = $totalSpace - $usedSpace;
-            Logging::log($partitions[$totalSpace]->totalFreeSpace);
+            Logging::info($partitions[$totalSpace]->totalFreeSpace);
         } else {
             /* First lets get all the watched directories. Then we can group them
             * into the same partitions by comparing the partition sizes. */

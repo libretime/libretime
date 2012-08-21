@@ -188,7 +188,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      */
     public function getContents($filterFiles=false)
     {
-        Logging::log("Getting contents for block {$this->id}");
+        Logging::info("Getting contents for block {$this->id}");
 
         $files = array();
         $sql = <<<"EOT"
@@ -387,11 +387,11 @@ EOT;
         try {
     
             if (is_numeric($p_afterItem)) {
-                Logging::log("Finding block content item {$p_afterItem}");
+                Logging::info("Finding block content item {$p_afterItem}");
     
                 $afterItem = CcBlockcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::log("index is {$index}");
+                Logging::info("index is {$index}");
                 $pos = ($addType == 'after') ? $index + 1 : $index;
     
                 $contentsToUpdate = CcBlockcontentsQuery::create()
@@ -400,8 +400,8 @@ EOT;
                 ->orderByDbPosition()
                 ->find($this->con);
     
-                Logging::log("Adding to block");
-                Logging::log("at position {$pos}");
+                Logging::info("Adding to block");
+                Logging::info("at position {$pos}");
             } else {
     
                 //add to the end of the block
@@ -424,12 +424,12 @@ EOT;
                 ->orderByDbPosition()
                 ->find($this->con);
     
-                Logging::log("Adding to block");
-                Logging::log("at position {$pos}");
+                Logging::info("Adding to block");
+                Logging::info("at position {$pos}");
             }
     
             foreach ($p_items as $ac) {
-                Logging::log("Adding audio file {$ac}");
+                Logging::info("Adding audio file {$ac}");
                 
                 if (is_array($ac) && $ac[1] == 'audioclip') {
                     $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
@@ -485,32 +485,32 @@ EOT;
             $pos = 0;
             //moving items to beginning of the block.
             if (is_null($p_afterItem)) {
-                Logging::log("moving items to beginning of block");
+                Logging::info("moving items to beginning of block");
     
                 foreach ($contentsToMove as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
             } else {
-                Logging::log("moving items after {$p_afterItem}");
+                Logging::info("moving items after {$p_afterItem}");
     
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
     
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
-                            Logging::log("item {$move->getDbId()} to pos {$pos}");
+                            Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
                             $pos = $pos + 1;
@@ -570,7 +570,7 @@ EOT;
     
     public function getFadeInfo($pos)
     {
-        Logging::log("Getting fade info for pos {$pos}");
+        Logging::info("Getting fade info for pos {$pos}");
     
         $row = CcBlockcontentsQuery::create()
         ->joinWith(CcFilesPeer::OM_CLASS)
@@ -655,7 +655,7 @@ EOT;
     public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
-            Logging::log("Setting block fade in {$fadein}");
+            Logging::info("Setting block fade in {$fadein}");
             $row = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition(0)
@@ -665,7 +665,7 @@ EOT;
         }
         
         if (isset($fadeout)) {
-            Logging::log("Setting block fade out {$fadeout}");
+            Logging::info("Setting block fade out {$fadeout}");
             $row = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition($this->getSize()-1)
@@ -992,7 +992,7 @@ EOT;
     public function storeCriteriaIntoDb($p_criteriaData){
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        Logging::log($p_criteriaData);
+        Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
@@ -1188,7 +1188,7 @@ EOT;
                             $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
                     }catch (Exception $e){
-                        Logging::log($e);
+                        Logging::info($e);
                     }
                     $i++;
                 }
@@ -1210,7 +1210,7 @@ EOT;
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         }catch(Exception $e){
-            Logging::log($e);
+            Logging::info($e);
         }
     
     }

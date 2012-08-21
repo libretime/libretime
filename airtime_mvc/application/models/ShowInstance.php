@@ -571,9 +571,9 @@ class Application_Model_ShowInstance
                 $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
                 $rebroad->addFileToShow($file_id, false);
             } catch (Exception $e) {
-                Logging::log("{$e->getFile()}");
-                Logging::log("{$e->getLine()}");
-                Logging::log("{$e->getMessage()}");
+                Logging::info("{$e->getFile()}");
+                Logging::info("{$e->getLine()}");
+                Logging::info("{$e->getMessage()}");
             }
         }
     }

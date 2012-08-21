@@ -318,7 +318,7 @@ class ApiController extends Zend_Controller_Action
             }
         $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
-            Logging::log($result);
+            Logging::info($result);
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
@@ -359,7 +359,7 @@ class ApiController extends Zend_Controller_Action
                 $file->setLastPlayedTime($now);
             }
         } catch (Exception $e) {
-            Logging::log($e);
+            Logging::info($e);
         }
         
         echo json_encode(array("status"=>1, "message"=>""));
@@ -475,8 +475,8 @@ class ApiController extends Zend_Controller_Action
             );
         }
         Application_Model_Preference::SetImportTimestamp();
-        Logging::log("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
-        Logging::log( $md );
+        Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
+        Logging::info( $md );
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = Application_Common_OsPath::normpath($filepath);
@@ -567,8 +567,8 @@ class ApiController extends Zend_Controller_Action
             //unset( $info_json["MDATA_KEY_BITRATE"] );
 
             if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
-                Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
-                Logging::log( $info_json );
+                Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
+                Logging::info( $info_json );
                 array_push( $responses, array(
                     'error' => "Bad request. no 'mode' parameter passed.",
                     'key' => $k));
@@ -577,8 +577,8 @@ class ApiController extends Zend_Controller_Action
                 // A request still has a chance of being invalid even if it exists but it's validated
                 // by $valid_modes array
                 $mode = $info_json['mode'];
-                Logging::log("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
-                Logging::log( $info_json );
+                Logging::info("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
+                Logging::info( $info_json );
                 array_push( $responses, array(
                     'error' => "Bad request. 'mode' parameter is invalid",
                     'key' => $k,
@@ -615,7 +615,7 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
-        Logging::log( $md );
+        Logging::info( $md );
 
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
@@ -781,7 +781,7 @@ class ApiController extends Zend_Controller_Action
 
         $component = $request->getParam('component');
         $remoteAddr = Application_Model_ServiceRegister::GetRemoteIpAddr();
-        Logging::log("Registered Component: ".$component."@".$remoteAddr);
+        Logging::info("Registered Component: ".$component."@".$remoteAddr);
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
     }
@@ -902,7 +902,7 @@ class ApiController extends Zend_Controller_Action
     public function rabbitmqDoPushAction()
     {
         $request = $this->getRequest();
-        Logging::log("Notifying RabbitMQ to send message to pypo");
+        Logging::info("Notifying RabbitMQ to send message to pypo");
 
         Application_Model_RabbitMq::PushSchedule();
     }

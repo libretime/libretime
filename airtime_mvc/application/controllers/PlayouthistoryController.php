@@ -69,8 +69,8 @@ class PlayouthistoryController extends Zend_Controller_Action
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
-        Logging::log("history starts {$startsDT->format("Y-m-d H:i:s")}");
-        Logging::log("history ends {$endsDT->format("Y-m-d H:i:s")}");
+        Logging::info("history starts {$startsDT->format("Y-m-d H:i:s")}");
+        Logging::info("history ends {$endsDT->format("Y-m-d H:i:s")}");
 
         $history = new Application_Model_PlayoutHistory($startsDT, $endsDT, $params);
 

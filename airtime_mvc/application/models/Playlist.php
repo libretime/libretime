@@ -135,8 +135,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
 
     public function getLastModified($format = null)
     {
-        //Logging::log($this->pl->getDbMtime($format));
-        //Logging::log($this->pl);
+        //Logging::info($this->pl->getDbMtime($format));
+        //Logging::info($this->pl);
         return $this->pl->getDbMtime($format);
     }
 
@@ -153,7 +153,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
      */
     public function getContents($filterFiles=false)
     {
-        Logging::log("Getting contents for playlist {$this->id}");
+        Logging::info("Getting contents for playlist {$this->id}");
         $files = array();
 
         $sql = <<<SQL
@@ -391,11 +391,11 @@ SQL;
         try {
 
             if (is_numeric($p_afterItem)) {
-                Logging::log("Finding playlist content item {$p_afterItem}");
+                Logging::info("Finding playlist content item {$p_afterItem}");
 
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::log("index is {$index}");
+                Logging::info("index is {$index}");
                 $pos = ($addType == 'after') ? $index + 1 : $index;
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
@@ -428,13 +428,13 @@ SQL;
 
             }
 
-            Logging::log("Adding to playlist");
-            Logging::log("at position {$pos}");
+            Logging::info("Adding to playlist");
+            Logging::info("at position {$pos}");
  
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
                 $pos = $pos + 1;
-                Logging::log("Adding $ac[1] $ac[0]");
+                Logging::info("Adding $ac[1] $ac[0]");
 
             }
 
@@ -483,32 +483,32 @@ SQL;
             $pos = 0;
             //moving items to beginning of the playlist.
             if (is_null($p_afterItem)) {
-                Logging::log("moving items to beginning of playlist");
+                Logging::info("moving items to beginning of playlist");
 
                 foreach ($contentsToMove as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
             } else {
-                Logging::log("moving items after {$p_afterItem}");
+                Logging::info("moving items after {$p_afterItem}");
 
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
 
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
-                            Logging::log("item {$move->getDbId()} to pos {$pos}");
+                            Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
                             $pos = $pos + 1;
@@ -568,7 +568,7 @@ SQL;
 
     public function getFadeInfo($pos)
     {
-        Logging::log("Getting fade info for pos {$pos}");
+        Logging::info("Getting fade info for pos {$pos}");
 
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
@@ -654,7 +654,7 @@ SQL;
     public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
-            Logging::log("Setting playlist fade in {$fadein}");
+            Logging::info("Setting playlist fade in {$fadein}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition(0)
@@ -664,7 +664,7 @@ SQL;
         }
 
         if (isset($fadeout)) {
-            Logging::log("Setting playlist fade out {$fadeout}");
+            Logging::info("Setting playlist fade out {$fadeout}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize()-1)
