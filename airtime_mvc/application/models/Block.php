@@ -192,7 +192,7 @@ class Application_Model_Block
 
         $files = array();
         $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type,
+    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, f.length as orig_length,
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
     LEFT JOIN cc_files AS f ON pc.file_id=f.id
     LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
@@ -220,6 +220,10 @@ EOT;
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
+            
+            //format original length
+            $formatter = new LengthFormatter($row['orig_length']);
+            $row['orig_length'] = $formatter->format();
         }
 
         return $rows;
