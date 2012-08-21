@@ -41,7 +41,6 @@ class TestMMP(unittest.TestCase):
         self.assertTrue( isinstance(morphed, DeleteFile) )
 
         delete_ev = e1.safe_pack()[0]
-        print( ev.store )
         self.assertEqual( delete_ev['mode'], u'delete')
         self.assertTrue( len(ev.store.keys()) == 0 )
 
