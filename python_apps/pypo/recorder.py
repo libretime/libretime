@@ -9,6 +9,7 @@ import sys
 import pytz
 import signal
 import math
+import traceback
 
 from configobj import ConfigObj
 
@@ -310,6 +311,7 @@ class Recorder(Thread):
                         self.logger.error(e)
                 try: self.handle_message()
                 except Exception, e:
+                    self.logger.error( traceback.format_exc() )
                     self.logger.error('Pypo Recorder Exception: %s', e)
                 time.sleep(PUSH_INTERVAL)
                 self.loops += 1
