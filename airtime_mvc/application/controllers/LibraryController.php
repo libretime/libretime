@@ -8,7 +8,6 @@ class LibraryController extends Zend_Controller_Action
 {
 
     protected $obj_sess = null;
-    protected $search_sess = null;
 
     public function init()
     {
@@ -23,8 +22,6 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('set-num-entries', 'json')
                     ->initContext();
 
-        $this->obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
-        $this->search_sess = new Zend_Session_Namespace("search");
     }
 
     public function indexAction()
@@ -59,32 +56,90 @@ class LibraryController extends Zend_Controller_Action
 
         try {
 
-            if (isset($this->obj_sess->id)) {
-                Logging::info($this->obj_sess->type);
+            $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+            //Application_Model_Library::changePlaylist(null, null);
+            if (isset($obj_sess->id)) {
+                Logging::info($obj_sess->type);
                 $objInfo = Application_Model_Library::getObjInfo($this->obj_sess->type);
-                Logging::info($this->obj_sess->id);
-                $obj = new $objInfo['className']($this->obj_sess->id);
+                Logging::info($obj_sess->id);
+                $obj = new $objInfo['className']($obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
                 
                 if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
                     $this->view->obj = $obj;
-                    if ($this->obj_sess->type == "block") {
+                    if ($obj_sess->type == "block") {
                         $form = new Application_Form_SmartBlockCriteria();
-                        $form->startForm($this->obj_sess->id);
+                        $form->startForm($obj_sess->id);
                         $this->view->form = $form;
                     }
                 }
                 
                 $formatter = new LengthFormatter($obj->getLength());
                 $this->view->length = $formatter->format();
-                $this->view->type = $this->obj_sess->type;
+                $this->view->type = $obj_sess->type;
             }
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound($this->obj_sess->type);
+            $this->playlistNotFound($obj_sess->type);
         } catch (Exception $e) {
-            $this->playlistUnknownError($e);
+            $this->playlistNotFound($obj_sess->type);
+            //$this->playlistUnknownError($e);
+        }
+    }
+
+    private function playlistNotFound($p_type)
+    {
+        $this->view->error = "{$p_type} not found";
+
+        Logging::info("{$p_type} not found");
+        Application_Model_Library::changePlaylist(null, $p_type);
+        $this->createFullResponse(null);
+    }
+
+    private function playlistUnknownError($e)
+    {
+        $this->view->error = "Something went wrong.";
+
+        Logging::info("{$e->getFile()}");
+        Logging::info("{$e->getLine()}");
+        Logging::info("{$e->getMessage()}");
+    }
+
+    private function createFullResponse($obj = null, $isJson = false)
+    {
+        $isBlock = false;
+        $viewPath = 'playlist/playlist.phtml';
+        if ($obj instanceof Application_Model_Block) {
+            $isBlock = true;
+            $viewPath = 'playlist/smart-block.phtml';
+        }
+        
+        if (isset($obj)) {
+            $formatter = new LengthFormatter($obj->getLength());
+            $this->view->length = $formatter->format();
+            
+            if ($isBlock) {
+                $form = new Application_Form_SmartBlockCriteria();
+                $form->removeDecorator('DtDdWrapper');
+                $form->startForm($obj->getId());
+                
+                $this->view->form = $form;
+                $this->view->obj = $obj;
+                $this->view->id = $obj->getId();
+                if ($isJson) {
+                    return $this->view->render($viewPath);
+                } else {
+                    $this->view->html = $this->view->render($viewPath);
+                }
+            } else {
+                $this->view->obj = $obj;
+                $this->view->id = $obj->getId();
+                $this->view->html = $this->view->render($viewPath);
+                unset($this->view->obj);
+            }
+        } else {
+            $this->view->html = $this->view->render($viewPath);
         }
     }
 
