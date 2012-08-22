@@ -300,7 +300,7 @@ var AIRTIME = (function(AIRTIME){
 	        .empty()
 	        .val(json.description);
 	    
-	    $('#spl_sortable').unbind();
+	    $('#spl_sortable').off('focusout keydown');
 	    $('#spl_sortable')
         .empty()
         .append(json.html);
@@ -423,20 +423,20 @@ var AIRTIME = (function(AIRTIME){
 	//sets events dynamically for the cue editor.
 	function setCueEvents() {
 	    var temp = $('#spl_sortable');
-	    temp.on("blur", ".spl_cue_in span", changeCueIn);
+	    temp.on("focusout", ".spl_cue_in span", changeCueIn);
 	    temp.on("keydown", ".spl_cue_in span", submitOnEnter);
 	    
-	    temp.on("blur", ".spl_cue_out span", changeCueOut);
+	    temp.on("focusout", ".spl_cue_out span", changeCueOut);
 	    temp.on("keydown", ".spl_cue_out span", submitOnEnter);
 	}
 	
 	//sets events dynamically for the fade editor.
 	function setFadeEvents() {
 	    var temp = $('#spl_sortable');
-        temp.on("blur", ".spl_fade_in span", changeFadeIn);
+        temp.on("focusout", ".spl_fade_in span", changeFadeIn);
         temp.on("keydown", ".spl_fade_in span", submitOnEnter);
         
-        temp.on("blur", ".spl_fade_out span", changeFadeOut);
+        temp.on("focusout", ".spl_fade_out span", changeFadeOut);
         temp.on("keydown", ".spl_fade_out span", submitOnEnter);
 	}
 	

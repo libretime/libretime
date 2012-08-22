@@ -57,8 +57,4 @@ class EventContractor(Loggable):
 
     def __unregister(self, evt):
         try: del self.store[evt.path]
-        except Exception as e:
-            self.unexpected_exception(e)
-        # the next line is commented out because it clutters up logging real
-        # bad
-        #self.logger.info("Unregistering. Left: '%d'" % len(self.store.keys()))
+        except Exception as e: self.unexpected_exception(e)

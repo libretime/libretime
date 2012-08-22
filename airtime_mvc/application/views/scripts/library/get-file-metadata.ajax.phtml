@@ -54,11 +54,11 @@
             <?php
             $titleMaxStrLen = 35;
             if (mb_strlen($row["track_title"], 'UTF-8') > $titleMaxStrLen) {
-                $row["track_title"] = substr($row["track_title"], 0, 34)."...";
+                $row["track_title"] = mb_substr($row["track_title"], 0, 34, 'UTF-8')."...";
             }
             $artistMaxStrLen = 22;
-            if (strlen($row["creator"]) > $artistMaxStrLen) {
-                $row["creator"] = substr($row["creator"], 0, 21)."...";
+            if (mb_strlen($row["creator"], 'UTF-8') > $artistMaxStrLen) {
+                $row["creator"] = mb_substr($row["creator"], 0, 21, 'UTF-8')."...";
             }
             ?>
             <?php if ($row["type"] == 2) {
