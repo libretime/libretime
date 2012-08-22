@@ -4,7 +4,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     private $criteriaOptions = array(
             0 => "Select criteria",
             "album_title" => "Album",
-            "bit_rate" => "Bit Rate",
+            "bit_rate" => "Bit Rate (Kbps)",
             "bpm" => "Bpm",
             "comments" => "Comments",
             "composer" => "Composer",
@@ -23,7 +23,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "name" => "Name",
             "orchestra" => "Orchestra",
             "rating" => "Rating",
-            "sample_rate" => "Sample Rate",
+            "sample_rate" => "Sample Rate (kHz)",
             "track_title" => "Title",
             "track_number" => "Track Number",
             "utime" => "Uploaded",
