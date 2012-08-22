@@ -154,6 +154,11 @@ class Metadata(Loggable):
         try              : full_mutagen  = mutagen.File(fpath, easy=True)
         except Exception : raise BadSongFile(fpath)
         self.path = fpath
+        if not os.path.exists(self.path):
+            self.logger.info("Attempting to read metadata of file \
+                    that does not exist. Setting metadata to {}")
+            self.__metadata = {}
+            return
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
         self.__metadata = Metadata.airtime_dict(full_mutagen)
