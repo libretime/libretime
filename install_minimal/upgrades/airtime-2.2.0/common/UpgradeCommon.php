@@ -18,7 +18,7 @@ class UpgradeCommon{
     {       
         $sql = "SELECT valstr from cc_pref WHERE keystr = 'timezone'";
 
-        $result = self::queryDb($sql);
+        $result   = self::queryDb($sql);
         $timezone = $result->fetchColumn();
                 
         date_default_timezone_set($timezone);
