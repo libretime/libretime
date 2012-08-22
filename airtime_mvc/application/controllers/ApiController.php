@@ -547,26 +547,24 @@ class ApiController extends Zend_Controller_Action
 
     public function reloadMetadataGroupAction()
     {
-        $request = $this->getRequest();
         // extract all file metadata params from the request.
         // The value is a json encoded hash that has all the information related to this action
         // The key(mdXXX) does not have any meaning as of yet but it could potentially correspond
         // to some unique id.
-        $responses = array();
-        $dry = $request->getParam('dry') || false;
-        $params = $request->getParams();
+        $request     = $this->getRequest();
+        $responses   = array();
+        $dry         = $request->getParam('dry') || false;
+        $params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
         foreach ($request->getParams() as $k => $raw_json) {
-            // Valid requests must start with mdXXX where XXX represents at least 1 digit
+            // Valid requests must start with mdXXX where XXX represents at
+            // least 1 digit
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
-            $info_json = json_decode($raw_json, $assoc=true);
-            $recorded = $info_json["is_record"];
+            $info_json = json_decode($raw_json, $assoc = true);
+            $recorded  = $info_json["is_record"];
             unset( $info_json["is_record"] );
-            //unset( $info_json["MDATA_KEY_DURATION"] );
-            //unset( $info_json["MDATA_KEY_SAMPLERATE"] );
-            //unset( $info_json["MDATA_KEY_BITRATE"] );
-
-            if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
+            // Log invalid requests
+            if( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::info( $info_json );
                 array_push( $responses, array(
@@ -574,8 +572,8 @@ class ApiController extends Zend_Controller_Action
                     'key' => $k));
                 continue;
             } elseif ( !in_array($info_json['mode'], $valid_modes) )  {
-                // A request still has a chance of being invalid even if it exists but it's validated
-                // by $valid_modes array
+                // A request still has a chance of being invalid even if it
+                // exists but it's validated by $valid_modes array
                 $mode = $info_json['mode'];
                 Logging::info("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
                 Logging::info( $info_json );
@@ -588,14 +586,12 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadata($info_json, $mode, $dry_run=$dry);
+            $response = $this->dispatchMetadata($info_json, $mode,
+                $dry_run=$dry);
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
             array_push($responses, $response);
-            // On recorded show requests we do some extra work here. Not sure what it actually is and it
-            // was usually called from the python api client. Now we just call it straight from the controller to
-            // save the http roundtrip
         }
         die( json_encode($responses) );
     }

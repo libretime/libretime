@@ -95,7 +95,7 @@ class UpgradeCommon{
         // Backup the config files
         $suffix = date("Ymdhis")."-".UpgradeCommon::VERSION_NUMBER;
         foreach ($configFiles as $conf) {
-            // do not back up monit cfg
+            // do not back up monit cfg -- ok?? not being done anyway
             if (file_exists($conf)) {
                 echo "Backing up $conf to $conf$suffix.bak".PHP_EOL;
                 //copy($conf, $conf.$suffix.".bak");
@@ -210,11 +210,11 @@ class UpgradeCommon{
     private static function UpdateIniValue($p_filename, $p_property, $p_value)
     {
         $lines = file($p_filename);
-        $n=count($lines);
+        $n     = count($lines);
         foreach ($lines as &$line) {
             if ($line[0] != "#"){
                 $key_value = explode("=", $line);
-                $key = trim($key_value[0]);
+                $key       = trim($key_value[0]);
 
                 if ($key == $p_property){
                     $line = "$p_property = $p_value".PHP_EOL;
