@@ -55,11 +55,10 @@ class LibraryController extends Zend_Controller_Action
         try {
 
             $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
-            //Application_Model_Library::changePlaylist(null, null);
             if (isset($obj_sess->id)) {
-                Logging::info($obj_sess->type);
-                $objInfo = Application_Model_Library::getObjInfo($this->obj_sess->type);
                 Logging::info($obj_sess->id);
+                Logging::info($obj_sess->type);
+                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
                 $obj = new $objInfo['className']($obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
@@ -82,6 +81,7 @@ class LibraryController extends Zend_Controller_Action
             $this->playlistNotFound($obj_sess->type);
         } catch (Exception $e) {
             $this->playlistNotFound($obj_sess->type);
+            Logging::info($e->getMessage());
             //$this->playlistUnknownError($e);
         }
     }
