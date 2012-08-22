@@ -32,9 +32,17 @@ class Application_Model_User
         return $this->getType() == UTYPE_GUEST;
     }
 
+    public function isHostOfShow($showId)
+    {
+        $userId = $this->_userInstance->getDbId();
+        return CcShowHostsQuery::create()
+            ->filterByDbShow($showId)
+            ->filterByDbHost($userId)->count() > 0;
+    }
+
     public function isHost($showId)
     {
-        return $this->isUserType(UTYPE_HOST, $showId);
+        return $this->isUserType(UTYPE_HOST);
     }
 
     public function isPM()
@@ -61,7 +69,7 @@ class Application_Model_User
         return $result;
     }
 
-    public function isUserType($type, $showId='')
+    public function isUserType($type)
     {
         if (is_array($type)) {
             $result = false;
@@ -71,10 +79,7 @@ class Application_Model_User
                         $result = $this->_userInstance->getDbType() === 'A';
                         break;
                     case UTYPE_HOST:
-                        $userId = $this->_userInstance->getDbId();
-                        $result = CcShowHostsQuery::create()
-                                    ->filterByDbShow($showId)
-                                    ->filterByDbHost($userId)->count() > 0;
+                        $result = $this->_userInstance->getDbType() === 'H';
                         break;
                     case UTYPE_PROGRAM_MANAGER:
                         $result = $this->_userInstance->getDbType() === 'P';
@@ -89,9 +94,7 @@ class Application_Model_User
                 case UTYPE_ADMIN:
                     return $this->_userInstance->getDbType() === 'A';
                 case UTYPE_HOST:
-                    $userId = $this->_userInstance->getDbId();
-
-                    return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
+                    return $this->_userInstance->getDbId() === 'H';
                 case UTYPE_PROGRAM_MANAGER:
                     return $this->_userInstance->getDbType() === 'P';
             }

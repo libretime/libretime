@@ -7,9 +7,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     public function __construct($webstream)
     {
         //TODO: hacky...
-        Logging::info("x ".$webstream);
         if (is_int($webstream)) {
             $this->webstream = CcWebstreamQuery::create()->findPK($webstream);
+            if (is_null($this->webstream)) {
+                throw new Exception();
+            }
         } else {
             $this->webstream = $webstream; 
         }
