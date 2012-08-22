@@ -127,7 +127,7 @@ class UpgradeCommon{
             "../etc/api_client.cfg"    => self::CONF_FILE_API_CLIENT
         );
 
-        echo "Copying configs:";
+        echo "Copying configs:\n";
         foreach ($config_copy as $path_part => $destination) {
             $full_path = OsPath::normpath(OsPath::join(__DIR__, 
                                                        "$path_part.$suffix"));
@@ -139,13 +139,8 @@ class UpgradeCommon{
         }
     }
 
-    private static function MergeConfigFiles($configFiles, $suffix) {
+    private static function MergeConfigFiles(array $configFiles, $suffix) {
         foreach ($configFiles as $conf) {
-            // we want to use new liquidsoap.cfg so don't merge
-            // also for monit
-            if( $conf == self::CONF_FILE_LIQUIDSOAP){
-                continue;
-            }
             if (file_exists("$conf$suffix.bak")) {
 
                 if($conf === self::CONF_FILE_AIRTIME) {
