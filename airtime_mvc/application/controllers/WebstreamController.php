@@ -16,10 +16,15 @@ class WebstreamController extends Zend_Controller_Action
     {
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        if (!$this->isAuthorized(-1)) {
+            header("Status: 401 Not Authorized");
+            return;
+        }
+
         $webstream = new CcWebstream();
 
         //we're not saving this primary key in the DB so it's OK
-        //$webstream->setDbId(-1);
+        $webstream->setDbId(-1);
         $webstream->setDbName("Untitled Webstream");
         $webstream->setDbDescription("");
         $webstream->setDbUrl("http://");
@@ -28,8 +33,9 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
-        $webstream->save();
+        //$webstream->save();
 
+        /*
         $type = "stream";
         $objInfo = Application_Model_Library::getObjInfo($type);
         
@@ -39,6 +45,7 @@ class WebstreamController extends Zend_Controller_Action
 
         $type = "stream";
         Application_Model_Library::changePlaylist($obj->getId(), $type);
+        */
 
         $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "new";
@@ -81,7 +88,7 @@ class WebstreamController extends Zend_Controller_Action
 
     }
 
-    public function isAuthorized($id)
+    public function isAuthorized($webstream_id)
     {
         $hasPermission = false;
         $user = Application_Model_User::getCurrentUser();
@@ -89,15 +96,18 @@ class WebstreamController extends Zend_Controller_Action
             $hasPermission = true;
         }
 
-        if (!$hasPermission) {
-            if ($id != -1) {
-                $webstream = CcWebstreamQuery::create()->findPK($id);
+        if ($user->isHost()) {
+            if ($webstream_id != -1) {
+                $webstream = CcWebstreamQuery::create()->findPK($webstream_id);
                 //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
                 $user = Application_Model_User::getCurrentUser();
 
                 if ($webstream->getDbCreatorId() == $user->getId()) {
                     $hasPermission = true;
                 }
+            } else {
+                //we are creating a new stream. Don't need to check whether the DJ/Host owns the stream
+                $hasPermission = true;
             }
         }
 
@@ -107,10 +117,6 @@ class WebstreamController extends Zend_Controller_Action
     public function saveAction()
     {
         $request = $this->getRequest();
-
-        
-        $user = Application_Model_User::getCurrentUser();
-        $hasPermission = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST));
 
         $id = $request->getParam("id");
 
@@ -131,6 +137,9 @@ class WebstreamController extends Zend_Controller_Action
         try { 
             if (Application_Model_Webstream::isValid($analysis)) {
                 $streamId = Application_Model_Webstream::save($parameters, $mime, $di);
+
+                Application_Model_Library::changePlaylist($streamId, "stream");
+
                 $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
                 $this->view->streamId = $streamId;
             } else {
