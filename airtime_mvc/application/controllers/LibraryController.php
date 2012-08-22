@@ -55,11 +55,10 @@ class LibraryController extends Zend_Controller_Action
         try {
 
             $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
-            //Application_Model_Library::changePlaylist(null, null);
             if (isset($obj_sess->id)) {
-                Logging::info($obj_sess->type);
-                $objInfo = Application_Model_Library::getObjInfo($this->obj_sess->type);
                 Logging::info($obj_sess->id);
+                Logging::info($obj_sess->type);
+                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
                 $obj = new $objInfo['className']($obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
@@ -82,6 +81,7 @@ class LibraryController extends Zend_Controller_Action
             $this->playlistNotFound($obj_sess->type);
         } catch (Exception $e) {
             $this->playlistNotFound($obj_sess->type);
+            Logging::info($e->getMessage());
             //$this->playlistUnknownError($e);
         }
     }
@@ -160,16 +160,17 @@ class LibraryController extends Zend_Controller_Action
 
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
+        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+
         if ($type === "audioclip") {
 
             $file = Application_Model_StoredFile::Recall($id);
 
-            $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
             if (isset($obj_sess->id) && $screen == "playlist") {
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist or Block
                 if ($obj_sess->type == 'playlist') {
                     $obj = new Application_Model_Playlist($obj_sess->id);
-                } else {
+                } else if ($obj_sess->type == 'block') {
                     $obj = new Application_Model_Block($obj_sess->id);
                 }
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
@@ -187,10 +188,10 @@ class LibraryController extends Zend_Controller_Action
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
-        } elseif ($type === "playlist" || $type === "block") {
+        } else if ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
-            } else {
+            } else if ($type === 'block') {
                 $obj = new Application_Model_Block($id);
                 if (!$obj->isStatic()) {
                     unset($menu["play"]);
