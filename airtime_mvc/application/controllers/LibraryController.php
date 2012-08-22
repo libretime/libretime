@@ -7,8 +7,6 @@ require_once 'formatters/BitrateFormatter.php';
 class LibraryController extends Zend_Controller_Action
 {
 
-    protected $obj_sess = null;
-
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
@@ -88,7 +86,7 @@ class LibraryController extends Zend_Controller_Action
         }
     }
 
-    private function playlistNotFound($p_type)
+    protected function playlistNotFound($p_type)
     {
         $this->view->error = "{$p_type} not found";
 
@@ -97,7 +95,7 @@ class LibraryController extends Zend_Controller_Action
         $this->createFullResponse(null);
     }
 
-    private function playlistUnknownError($e)
+    protected function playlistUnknownError($e)
     {
         $this->view->error = "Something went wrong.";
 
@@ -106,7 +104,7 @@ class LibraryController extends Zend_Controller_Action
         Logging::info("{$e->getMessage()}");
     }
 
-    private function createFullResponse($obj = null, $isJson = false)
+    protected function createFullResponse($obj = null, $isJson = false)
     {
         $isBlock = false;
         $viewPath = 'playlist/playlist.phtml';
@@ -166,17 +164,18 @@ class LibraryController extends Zend_Controller_Action
 
             $file = Application_Model_StoredFile::Recall($id);
 
-            if (isset($this->obj_sess->id) && $screen == "playlist") {
+            $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+            if (isset($obj_sess->id) && $screen == "playlist") {
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist or Block
-                if ($this->obj_sess->type == 'playlist') {
-                    $obj = new Application_Model_Playlist($this->obj_sess->id);
+                if ($obj_sess->type == 'playlist') {
+                    $obj = new Application_Model_Playlist($obj_sess->id);
                 } else {
-                    $obj = new Application_Model_Block($this->obj_sess->id);
+                    $obj = new Application_Model_Block($obj_sess->id);
                 }
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    if ($this->obj_sess->type === "playlist") {
+                    if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } else if ($this->obj_sess->type === "block") {
+                    } else if ($obj_sess->type === "block") {
                         $menu["pl_add"] = array("name"=> "Add to Smart Block", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
@@ -197,13 +196,13 @@ class LibraryController extends Zend_Controller_Action
                     unset($menu["play"]);
                 }
                 if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
-                    if ($this->obj_sess->type === "playlist") {
+                    if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }
             
-            if ($this->obj_sess->id !== $id && $screen == "playlist") {
+            if ($obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
                 }
@@ -215,9 +214,9 @@ class LibraryController extends Zend_Controller_Action
 
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
-            if (isset($this->obj_sess->id) && $screen == "playlist") {
+            if (isset($obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    if ($this->obj_sess->type === "playlist") {
+                    if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
