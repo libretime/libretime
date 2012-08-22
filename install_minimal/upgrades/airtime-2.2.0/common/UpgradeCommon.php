@@ -3,16 +3,16 @@
  * creating connections to a database, backing up config files etc.
  */
 class UpgradeCommon{
-    const CONF_FILE_AIRTIME = "/etc/airtime/airtime.conf";
-    const CONF_FILE_PYPO = "/etc/airtime/pypo.cfg";
-    const CONF_FILE_LIQUIDSOAP = "/etc/airtime/liquidsoap.cfg";
+    const CONF_FILE_AIRTIME      = "/etc/airtime/airtime.conf";
+    const CONF_FILE_PYPO         = "/etc/airtime/pypo.cfg";
+    const CONF_FILE_LIQUIDSOAP   = "/etc/airtime/liquidsoap.cfg";
     const CONF_FILE_MEDIAMONITOR = "/etc/airtime/media-monitor.cfg";
-    const CONF_FILE_API_CLIENT = "/etc/airtime/api_client.cfg";
+    const CONF_FILE_API_CLIENT   = "/etc/airtime/api_client.cfg";
 
-    const CONF_PYPO_GRP = "pypo";
-    const CONF_WWW_DATA_GRP = "www-data";
-    const CONF_BACKUP_SUFFIX = "220";
-    const VERSION_NUMBER = "2.2.0";
+    const CONF_PYPO_GRP          = "pypo";
+    const CONF_WWW_DATA_GRP      = "www-data";
+    const CONF_BACKUP_SUFFIX     = "220";
+    const VERSION_NUMBER         = "2.2.0";
     
     public static function SetDefaultTimezone()
     {       
