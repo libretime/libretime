@@ -37,24 +37,24 @@ class TestMMP(unittest.TestCase):
     def test_normalized_metadata(self):
         # Recorded show test first
         orig = Metadata.airtime_dict({
-                'date': [u'2012-08-21'],
-                'tracknumber': [u'2'],
-                'title': [u'11-29-00-record'],
-                'artist': [u'Airtime Show Recorder']
+                'date'        : [u'2012-08-21'],
+                'tracknumber' : [u'2'],
+                'title'       : [u'11-29-00-record'],
+                'artist'      : [u'Airtime Show Recorder']
         })
         orga = Metadata.airtime_dict({
-                'date': [u'2012-08-21'],
-                'tracknumber': [u'2'],
-                'artist': [u'Airtime Show Recorder'],
-                'title': [u'record-2012-08-21-11:29:00']
+                'date'        : [u'2012-08-21'],
+                'tracknumber' : [u'2'],
+                'artist'      : [u'Airtime Show Recorder'],
+                'title'       : [u'record-2012-08-21-11:29:00']
         })
         orga['MDATA_KEY_FTYPE']   = u'audioclip'
         orig['MDATA_KEY_BITRATE'] = u'256000'
-        orga['MDATA_KEY_BITRATE'] = u'256kbps'
-
+        orga['MDATA_KEY_BITRATE'] = u'256000'
         old_path = "/home/rudi/recorded/2012-08-21-11:29:00.ogg"
         normalized = mmp.normalized_metadata(orig, old_path)
-        print(normalized)
+        normalized['MDATA_KEY_BITRATE'] = u'256000'
+
         self.assertEqual( orga, normalized )
 
         organized_base_name = "2012-08-21-11-29-00-record-256kbps.ogg"

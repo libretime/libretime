@@ -41,7 +41,6 @@ class TestMMP(unittest.TestCase):
         self.assertTrue( isinstance(morphed, DeleteFile) )
 
         delete_ev = e1.safe_pack()[0]
-        print( ev.store )
         self.assertEqual( delete_ev['mode'], u'delete')
         self.assertTrue( len(ev.store.keys()) == 0 )
 
@@ -65,6 +64,5 @@ class TestMMP(unittest.TestCase):
                 actual_events.append(e)
         self.assertEqual( len(ev.store.keys()), 1 )
         packed = [ x.safe_pack() for x in actual_events ]
-        print(packed)
 
 if __name__ == '__main__': unittest.main()
