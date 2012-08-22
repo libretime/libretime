@@ -83,6 +83,7 @@ def is_file_supported(path):
 # TODO : In the future we would like a better way to find out whether a show
 # has been recorded
 def is_airtime_recorded(md):
+    if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
 
 def clean_empty_dirs(path):
