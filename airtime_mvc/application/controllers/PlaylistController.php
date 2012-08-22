@@ -2,7 +2,6 @@
 
 class PlaylistController extends Zend_Controller_Action
 {
-    protected $obj_sess = null;
 
     public function init()
     {
@@ -28,7 +27,6 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('get-block-info', 'json')
                     ->initContext();
 
-        $this->obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
     }
 
     private function getPlaylist($p_type)
@@ -36,8 +34,9 @@ class PlaylistController extends Zend_Controller_Action
         $obj = null;
         $objInfo = Application_Model_Library::getObjInfo($p_type);
 
-        if (isset($this->obj_sess->id)) {
-            $obj = new $objInfo['className']($this->obj_sess->id);
+        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+        if (isset($obj_sess->id)) {
+            $obj = new $objInfo['className']($obj_sess->id);
 
             $modified = $this->_getParam('modified', null);
             if ($obj->getLastModified("U") !== $modified) {
@@ -205,14 +204,17 @@ class PlaylistController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
+
+        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+
         try {
-            Logging::info("Currently active {$type} {$this->obj_sess->id}");
-            if (in_array($this->obj_sess->id, $ids)) {
+            Logging::info("Currently active {$type} {$obj_sess->id}");
+            if (in_array($obj_sess->id, $ids)) {
                 Logging::info("Deleting currently active {$type}");
                 Application_Model_Library::changePlaylist(null, $type);
             } else {
                 Logging::info("Not deleting currently active {$type}");
-                $obj = new $objInfo['className']($this->obj_sess->id);
+                $obj = new $objInfo['className']($obj_sess->id);
             }
 
             if (strcmp($objInfo['className'], 'Application_Model_Playlist')==0) {

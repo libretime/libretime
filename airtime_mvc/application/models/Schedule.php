@@ -1065,10 +1065,11 @@ SQL;
         if ($update) {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
                     where ends <= '{$show_end->format('Y-m-d H:i:s')}'
-                    and id != ".$instanceId. " order by ends";
+                    and modified_instance = false and id != ".$instanceId. " order by ends";
         } else {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where ends <= '{$show_end->format('Y-m-d H:i:s')}' order by ends";
+                    where ends <= '{$show_end->format('Y-m-d H:i:s')}'
+                    and modified_instance = false order by ends";
         }
         $rows = $con->query($sql);
 
