@@ -86,7 +86,9 @@ class UpgradeCommon{
 
         $configFiles = array(UpgradeCommon::CONF_FILE_AIRTIME,
                              UpgradeCommon::CONF_FILE_PYPO,
-                             UpgradeCommon::CONF_FILE_LIQUIDSOAP,
+                             //this is not necessary because liquidsoap configs
+                             //are automatically generated
+                             //UpgradeCommon::CONF_FILE_LIQUIDSOAP,
                              UpgradeCommon::CONF_FILE_MEDIAMONITOR,
                              UpgradeCommon::CONF_FILE_API_CLIENT);
 
@@ -118,21 +120,22 @@ class UpgradeCommon{
             }
         }
 
-        if (!copy(__DIR__."/../etc/airtime.conf.$suffix", self::CONF_FILE_AIRTIME)){
-            echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
-            exit(1);
-        }
-        if (!copy(__DIR__."/../etc/pypo.cfg.$suffix", self::CONF_FILE_PYPO)){
-            echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
-            exit(1);
-        }
-        if (!copy(__DIR__."/../etc/media-monitor.cfg.$suffix", self::CONF_FILE_MEDIAMONITOR)){
-            echo "Could not copy meadia-monitor.cfg to /etc/airtime/. Exiting.";
-            exit(1);
-        }
-        if (!copy(__DIR__."/../etc/api_client.cfg.$suffix", self::CONF_FILE_API_CLIENT)){
-            echo "Could not copy api_client.cfg to /etc/monit/conf.d/. Exiting.";
-            exit(1);
+        $config_copy = array(
+            "../etc/airtime.conf"      => self::CONF_FILE_AIRTIME,
+            "../etc/pypo.cfg"          => self::CONF_FILE_PYPO,
+            "../etc/media-monitor.cfg" => self::CONF_FILE_MEDIAMONITOR,
+            "../etc/api_client.cfg"    => self::CONF_FILE_API_CLIENT
+        );
+
+        echo "Copying configs:";
+        foreach ($config_copy as $path_part => $destination) {
+            $full_path = OsPath::normpath(OsPath::join(__DIR__, 
+                                                       "$path_part.$suffix"));
+            echo "'$full_path' --> '$destination'\n";
+            if(!copy($full_path, $destination)) {
+                echo "Failed on the copying operation above\n";
+                exit(1);
+            }
         }
     }
 
@@ -242,5 +245,71 @@ class UpgradeCommon{
         }
 
         return $result;
+    }
+}
+
+class OsPath {
+    // this function is from http://stackoverflow.com/questions/2670299/is-there-a-php-equivalent-function-to-the-python-os-path-normpath
+    public static function normpath($path)
+    {
+        if (empty($path))
+            return '.';
+    
+        if (strpos($path, '/') === 0)
+            $initial_slashes = true;
+        else
+            $initial_slashes = false;
+        if (
+            ($initial_slashes) &&
+            (strpos($path, '//') === 0) &&
+            (strpos($path, '///') === false)
+        )
+            $initial_slashes = 2;
+        $initial_slashes = (int) $initial_slashes;
+    
+        $comps = explode('/', $path);
+        $new_comps = array();
+        foreach ($comps as $comp)
+        {
+            if (in_array($comp, array('', '.')))
+                continue;
+            if (
+                ($comp != '..') ||
+                (!$initial_slashes && !$new_comps) ||
+                ($new_comps && (end($new_comps) == '..'))
+            )
+                array_push($new_comps, $comp);
+            elseif ($new_comps)
+                array_pop($new_comps);
+        }
+        $comps = $new_comps;
+        $path = implode('/', $comps);
+        if ($initial_slashes)
+            $path = str_repeat('/', $initial_slashes) . $path;
+        if ($path)
+            return $path;
+        else
+            return '.';
+    }
+    
+    /* Similar to the os.path.join python method
+     * http://stackoverflow.com/a/1782990/276949 */
+    public static function join() {
+        $args = func_get_args();
+        $paths = array();
+
+        foreach($args as $arg) {
+            $paths = array_merge($paths, (array)$arg);
+        }
+
+        foreach($paths as &$path) {
+            $path = trim($path, DIRECTORY_SEPARATOR);
+        }
+
+        if (substr($args[0], 0, 1) == DIRECTORY_SEPARATOR) {
+            $paths[0] = DIRECTORY_SEPARATOR . $paths[0];
+        }
+
+        return join(DIRECTORY_SEPARATOR, $paths);
     }
 }
