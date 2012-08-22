@@ -46,6 +46,8 @@ class WebstreamController extends Zend_Controller_Action
         $type = "stream";
         Application_Model_Library::changePlaylist($obj->getId(), $type);
         */
+        //clear the session in case an old playlist was open: CC-4196
+        Application_Model_Library::changePlaylist(null, null);
 
         $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "new";
@@ -61,7 +63,11 @@ class WebstreamController extends Zend_Controller_Action
             throw new Exception("Missing parameter 'id'"); 
         }
 
+
         $webstream = CcWebstreamQuery::create()->findPK($id);
+        if ($webstream) {
+            Application_Model_Library::changePlaylist($id, "stream");
+        }
         $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
