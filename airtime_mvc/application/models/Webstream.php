@@ -6,7 +6,13 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     public function __construct($webstream)
     {
+        //TODO: hacky...
+        Logging::info("x ".$webstream);
+        if (is_int($webstream)) {
+            $this->webstream = CcWebstreamQuery::create()->findPK($webstream);
+        } else {
             $this->webstream = $webstream; 
+        }
     }
 
     public function getOrm()
@@ -39,6 +45,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             return $di->format("%Hh %Im");
         }
         return "";
+    }
+
+    public function getLength()
+    {
+        return $this->getDefaultLength();
     }
 
     public function getDescription()

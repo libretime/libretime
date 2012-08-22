@@ -290,14 +290,14 @@ class ShowbuilderController extends Zend_Controller_Action
             $scheduler->scheduleAfter($scheduledItems, $mediaItems);
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
-            Logging::log($e->getMessage());
-            Logging::log("{$e->getFile()}");
-            Logging::log("{$e->getLine()}");
+            Logging::info($e->getMessage());
+            Logging::info("{$e->getFile()}");
+            Logging::info("{$e->getLine()}");
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
-            Logging::log($e->getMessage());
-            Logging::log("{$e->getFile()}");
-            Logging::log("{$e->getLine()}");
+            Logging::info($e->getMessage());
+            Logging::info("{$e->getFile()}");
+            Logging::info("{$e->getLine()}");
         }
     }
 
@@ -311,14 +311,14 @@ class ShowbuilderController extends Zend_Controller_Action
             $scheduler->removeItems($items);
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
-            Logging::log($e->getMessage());
-            Logging::log("{$e->getFile()}");
-            Logging::log("{$e->getLine()}");
+            Logging::info($e->getMessage());
+            Logging::info("{$e->getFile()}");
+            Logging::info("{$e->getLine()}");
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
-            Logging::log($e->getMessage());
-            Logging::log("{$e->getFile()}");
-            Logging::log("{$e->getLine()}");
+            Logging::info($e->getMessage());
+            Logging::info("{$e->getFile()}");
+            Logging::info("{$e->getLine()}");
         }
     }
 
@@ -333,14 +333,14 @@ class ShowbuilderController extends Zend_Controller_Action
             $scheduler->moveItem($selectedItems, $afterItem);
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
-            Logging::log($e->getMessage());
-            Logging::log("{$e->getFile()}");
-            Logging::log("{$e->getLine()}");
+            Logging::info($e->getMessage());
+            Logging::info("{$e->getFile()}");
+            Logging::info("{$e->getLine()}");
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
-            Logging::log($e->getMessage());
-            Logging::log("{$e->getFile()}");
-            Logging::log("{$e->getLine()}");
+            Logging::info($e->getMessage());
+            Logging::info("{$e->getFile()}");
+            Logging::info("{$e->getLine()}");
         }
     }
 

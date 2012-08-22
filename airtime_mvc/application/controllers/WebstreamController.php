@@ -10,26 +10,37 @@ class WebstreamController extends Zend_Controller_Action
                     ->addActionContext('edit', 'json')
                     ->addActionContext('delete', 'json')
                     ->initContext();
-        //TODO
-        //$this->pl_sess = new Zend_Session_Namespace(UI_PLAYLIST_SESSNAME);
     }
 
     public function newAction()
     {
 
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $webstream = new CcWebstream();
 
         //we're not saving this primary key in the DB so it's OK
-        $webstream->setDbId(-1);
+        //$webstream->setDbId(-1);
         $webstream->setDbName("Untitled Webstream");
         $webstream->setDbDescription("");
         $webstream->setDbUrl("http://");
         $webstream->setDbLength("00:00:00");
         $webstream->setDbName("Untitled Webstream");
+        $webstream->setDbCreatorId($userInfo->id);
+        $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
+        $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
+        $webstream->save();
 
+        $type = "stream";
+        $objInfo = Application_Model_Library::getObjInfo($type);
+        
+        $obj = new $objInfo['className']($webstream);
+        $obj->setName($webstream->getDbName());
+        $obj->setMetadata('dc:creator', $userInfo->id);
+
+        $type = "stream";
         Application_Model_Library::changePlaylist($obj->getId(), $type);
 
-        $this->view->ws = new Application_Model_Webstream($webstream);
+        $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "new";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
@@ -44,7 +55,7 @@ class WebstreamController extends Zend_Controller_Action
         }
 
         $webstream = CcWebstreamQuery::create()->findPK($id);
-        $this->view->ws = new Application_Model_Webstream($webstream);
+        $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
@@ -64,7 +75,7 @@ class WebstreamController extends Zend_Controller_Action
 
         $webstream = CcWebstreamQuery::create()->findPK($id)->delete();
 
-        $this->view->ws = null;
+        $this->view->obj = null;
         $this->view->action = "delete";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
 
@@ -73,11 +84,12 @@ class WebstreamController extends Zend_Controller_Action
     public function isAuthorized($id)
     {
         $hasPermission = false;
+        $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $hasPermission = true;
         }
 
-        if ($user->isUserType(UTYPE_HOST)) {
+        if (!$hasPermission) {
             if ($id != -1) {
                 $webstream = CcWebstreamQuery::create()->findPK($id);
                 //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 

@@ -864,9 +864,9 @@ class ScheduleController extends Zend_Controller_Action
                 Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
             } catch (Exception $e) {
                 $this->view->error = $e->getMessage();
-                Logging::log($e->getMessage());
-                Logging::log("{$e->getFile()}");
-                Logging::log("{$e->getLine()}");
+                Logging::info($e->getMessage());
+                Logging::info("{$e->getFile()}");
+                Logging::info("{$e->getLine()}");
             }
         }
     }

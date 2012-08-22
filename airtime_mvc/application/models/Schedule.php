@@ -32,7 +32,7 @@ class Application_Model_Schedule
     {
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
-            Logging::log("Invalid range parameters: $p_prev or $p_next");
+            Logging::info("Invalid range parameters: $p_prev or $p_next");
             return array();
         }
 

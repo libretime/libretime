@@ -96,7 +96,7 @@ class Application_Model_StoredFile
      */
     public function setMetadata($p_md=null)
     {
-        Logging::log("entered setMetadata");
+        Logging::info("entered setMetadata");
         if (is_null($p_md)) {
             $this->setDbColMetadata();
         } else {
@@ -153,7 +153,7 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method = "set$propelColumn";
-                    Logging::log($method);
+                    Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
             }
@@ -446,7 +446,7 @@ class Application_Model_StoredFile
      */
     public function getRelativeFileUrl($baseUrl)
     {
-        Logging::log("getting media!");
+        Logging::info("getting media!");
 
         return $baseUrl."/api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
@@ -760,7 +760,7 @@ class Application_Model_StoredFile
         $chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
         $chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Logging::log(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
+        Logging::info(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
         // Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
         //$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
@@ -852,7 +852,7 @@ class Application_Model_StoredFile
     public static function copyFileToStor($p_targetDir, $fileName, $tempname)
     {
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
-        Logging::log('copyFileToStor: moving file '.$audio_file);
+        Logging::info('copyFileToStor: moving file '.$audio_file);
         $md5 = md5_file($audio_file);
         $duplicate = Application_Model_StoredFile::RecallByMd5($md5, true);
 
@@ -877,7 +877,7 @@ class Application_Model_StoredFile
             }
 
             if (chmod($audio_file, 0644) === false) {
-                Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
+                Logging::info("Warning: couldn't change permissions of $audio_file to 0644");
             }
 
             //check to see if there is enough space in $stor to continue.
@@ -886,7 +886,7 @@ class Application_Model_StoredFile
 
                 if (self::liquidsoapFilePlayabilityTest($audio_file)) {
 
-                    Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
+                    Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
 
                     //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
                     if (@rename($audio_file, $audio_stor) === false) {
@@ -1004,7 +1004,7 @@ class Application_Model_StoredFile
             return count($rows);
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::info("Could not connect to database.");
             exit;
         }
 

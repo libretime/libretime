@@ -66,7 +66,7 @@ class Application_Model_StreamSetting
             $ids[] = substr($row["keyname"], 0, strpos($row["keyname"], "_"));
         }
 
-        //Logging::log(print_r($ids, true));
+        //Logging::info(print_r($ids, true));
         return $ids;
     }
 

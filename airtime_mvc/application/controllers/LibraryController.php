@@ -60,8 +60,9 @@ class LibraryController extends Zend_Controller_Action
         try {
 
             if (isset($this->obj_sess->id)) {
+                Logging::info($this->obj_sess->type);
                 $objInfo = Application_Model_Library::getObjInfo($this->obj_sess->type);
-                Logging::log($this->obj_sess->id);
+                Logging::info($this->obj_sess->id);
                 $obj = new $objInfo['className']($this->obj_sess->id);
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
@@ -252,7 +253,7 @@ class LibraryController extends Zend_Controller_Action
             Application_Model_Webstream::deleteStreams($streams, $user->getId());
         } catch (Exception $e) {
             //TODO: warn user that not all streams could be deleted.
-            Logging::log($e);
+            Logging::info($e);
         }
 
         foreach ($files as $id) {
@@ -328,7 +329,7 @@ class LibraryController extends Zend_Controller_Action
 
                 // set MDATA_KEY_FILEPATH
                 $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
-                Logging::log($data['MDATA_KEY_FILEPATH']);
+                Logging::info($data['MDATA_KEY_FILEPATH']);
                 Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
                 $this->_redirect('Library');
@@ -405,7 +406,7 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->type = $type;
             }
         } catch (Exception $e) {
-            Logging::log($e->getMessage());
+            Logging::info($e->getMessage());
         }
     }
 

@@ -117,7 +117,7 @@ class PlaylistController extends Zend_Controller_Action
     {
         $this->view->error = "{$p_type} not found";
 
-        Logging::log("{$p_type} not found");
+        Logging::info("{$p_type} not found");
         Application_Model_Library::changePlaylist(null, $p_type);
         $this->createFullResponse(null);
     }
@@ -133,9 +133,9 @@ class PlaylistController extends Zend_Controller_Action
     {
         $this->view->error = "Something went wrong.";
 
-        Logging::log("{$e->getFile()}");
-        Logging::log("{$e->getLine()}");
-        Logging::log("{$e->getMessage()}");
+        Logging::info("{$e->getFile()}");
+        Logging::info("{$e->getLine()}");
+        Logging::info("{$e->getMessage()}");
     }
     
     private function wrongTypeToBlock($obj)
@@ -176,7 +176,7 @@ class PlaylistController extends Zend_Controller_Action
         $id = $this->_getParam('id', null);
         $type = $this->_getParam('type');
         $objInfo = Application_Model_Library::getObjInfo($type);
-        Logging::log("editing {$type} {$id}");
+        Logging::info("editing {$type} {$id}");
 
         if (!is_null($id)) {
             Application_Model_Library::changePlaylist($id, $type);
@@ -206,12 +206,12 @@ class PlaylistController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
 
         try {
-            Logging::log("Currently active {$type} {$this->obj_sess->id}");
+            Logging::info("Currently active {$type} {$this->obj_sess->id}");
             if (in_array($this->obj_sess->id, $ids)) {
-                Logging::log("Deleting currently active {$type}");
+                Logging::info("Deleting currently active {$type}");
                 Application_Model_Library::changePlaylist(null, $type);
             } else {
-                Logging::log("Not deleting currently active {$type}");
+                Logging::info("Not deleting currently active {$type}");
                 $obj = new $objInfo['className']($this->obj_sess->id);
             }
 
