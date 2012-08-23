@@ -459,8 +459,10 @@ class Application_Model_StoredFile
         } 
 
         $file = new CcFiles();
-        $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
-        $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+
+        $file->setDbUtime($now);
+        $file->setDbMtime($now);
 
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
