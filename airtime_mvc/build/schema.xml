@@ -75,8 +75,8 @@
     <column name="soundcloud_link_to_file" phpName="DbSoundcloudLinkToFile" type="VARCHAR" size="4096" required="false"/>
     <column name="soundcloud_upload_time" phpName="DbSoundCloundUploadTime" type="TIMESTAMP" size="6" required="false"/>
     <column name="replay_gain" phpName="DbReplayGain" type="VARCHAR" size="16" required="false"/>
-    <column name="owner_id" phpName="ownerId" type="INTEGER" required="false"/>
-    <foreign-key foreignTable="cc_subjs" name="cc_owner_fkey">
+    <column name="owner_id" phpName="ownerId" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="cc_subjs" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
     <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">

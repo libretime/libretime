@@ -93,6 +93,7 @@ CREATE TABLE "cc_files"
 	"soundcloud_link_to_file" VARCHAR(4096),
 	"soundcloud_upload_time" TIMESTAMP(6),
 	"replay_gain" VARCHAR(16),
+	"owner_id" INTEGER  NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -666,6 +667,8 @@ COMMENT ON TABLE "cc_webstream_metadata" IS '';
 
 
 SET search_path TO public;
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey" FOREIGN KEY ("owner_id") REFERENCES "cc_subjs" ("id");
+
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey" FOREIGN KEY ("directory") REFERENCES "cc_music_dirs" ("id");
