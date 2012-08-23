@@ -466,6 +466,9 @@ class Application_Model_StoredFile
         $storedFile->_file = $file;
 
         // removed "//" in the path. Always use '/' for path separator
+        // TODO : it might be better to just call OsPath::normpath on the file
+        // path. Also note that mediamonitor normalizes the paths anyway
+        // before passing them to php so it's not necessary to do this at all
         $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
         $res = $storedFile->setFilePath($filepath);
         if ($res === -1) {

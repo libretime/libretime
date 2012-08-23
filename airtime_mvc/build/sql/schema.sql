@@ -93,7 +93,7 @@ CREATE TABLE "cc_files"
 	"soundcloud_link_to_file" VARCHAR(4096),
 	"soundcloud_upload_time" TIMESTAMP(6),
 	"replay_gain" VARCHAR(16),
-	"owner_id" INTEGER  NOT NULL,
+	"owner_id" INTEGER,
 	PRIMARY KEY ("id")
 );
 

@@ -543,7 +543,7 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function joinCcFilesRelatedByownerId($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function joinCcFilesRelatedByownerId($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
 		$relationMap = $tableMap->getRelation('CcFilesRelatedByownerId');
@@ -578,7 +578,7 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	 *
 	 * @return    CcFilesQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcFilesRelatedByownerIdQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function useCcFilesRelatedByownerIdQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
 			->joinCcFilesRelatedByownerId($relationAlias, $joinType)
