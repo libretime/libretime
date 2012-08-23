@@ -2,12 +2,74 @@
 
 class Application_Model_Datatables
 {
+    private static function buildWhereClauseForAdvancedSearch($dbname2searchTerm)
+    {
+        $where = array();
+        foreach ($dbname2searchTerm as $dbname=>$term) {
+            $isRange = false;
+            if (strstr($term, '~')) {
+                $info = explode('~', $term);
+                $input1 = isset($info[0])?$info[0]:null;
+                $input2 = isset($info[1])?$info[1]:null;
+                $isRange = true;
+            } else {
+                $input1 = $term;
+            }
+            
+            if ($isRange) {
+                $sub = array();
+                if ($input1 != null) {
+                    $sub[] = $dbname." >= '".$input1."'";
+                }
+                if ($input2 != null) {
+                    $sub[] = $dbname." <= '".$input2."'";
+                }
+                if (!empty($sub)) {
+                    $where[] = "(".implode(' AND ', $sub).")";
+                }
+            } else {
+                if (trim($input1) !== "") {
+                    $where[] = $dbname." ILIKE "."'%".$input1."%'";
+                }
+            }
+        }
+        return implode(" AND ", $where);
+    }
     /*
      * query used to return data for a paginated/searchable datatable.
      */
     public static function findEntries($con, $displayColumns, $fromTable, $data, $dataProp = "aaData")
     {
+        $librarySetting = Application_Model_Preference::getCurrentLibraryTableSetting();
+        
+        // map that maps original column position to db name
+        $current2dbname = array();
+        // array of search terms
+        $orig2searchTerm= array();
+        foreach ($data as $key=>$d) {
+            if (strstr($key, "mDataProp_")) {
+                list($dump, $index) = explode("_", $key);
+                $current2dbname[$index] = $d;
+            } else if (strstr($key, "sSearch_")) {
+                list($dump, $index) = explode("_", $key);
+                $orig2searchTerm[$index] = $d;
+            }
+        }
+        // map that maps current column position to original position
+        $current2orig = $librarySetting['ColReorder'];
+        
+        // map that maps dbname to searchTerm
+        $dbname2searchTerm = array();
+        foreach ($current2dbname as $currentPos=>$dbname) {
+            $dbname2searchTerm[$dbname] = $orig2searchTerm[$current2orig[$currentPos]];
+        }
+        
         $where = array();
+        
+        $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
+        if ($advancedWhere != "") {
+            $where[] = $advancedWhere;
+        }
 
         if ($data["sSearch"] !== "") {
             $searchTerms = explode(" ", $data["sSearch"]);

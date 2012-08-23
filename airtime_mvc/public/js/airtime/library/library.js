@@ -8,6 +8,35 @@ var AIRTIME = (function(AIRTIME) {
         chosenItems = {},
         visibleChosenItems = {};
     
+    var criteriaTypes = {
+        0 : "",
+        "album_title" : "s",
+        "artist_name" : "s",
+        "bit_rate" : "n",
+        "bpm" : "n",
+        "comments" : "s",
+        "composer" : "s",
+        "conductor" : "s",
+        "utime" : "n",
+        "mtime" : "n",
+        "lptime" : "n",
+        "disc_number" : "n",
+        "genre" : "s",
+        "isrc_number" : "s",
+        "label" : "s",
+        "language" : "s",
+        "length" : "n",
+        "lyricist" : "s",
+        "mood" : "s",
+        "name" : "s",
+        "orchestra" : "s",
+        "rating" : "n",
+        "sample_rate" : "n",
+        "track_title" : "s",
+        "track_num" : "n",
+        "year" : "n"               
+    };
+    
     if (AIRTIME.library === undefined) {
         AIRTIME.library = {};
     }
@@ -303,10 +332,56 @@ var AIRTIME = (function(AIRTIME) {
                 $el.removeClass("ui-state-hover");
             } 
         });
-              
+        
+        var colReorderMap = new Array();
+        
         $libTable = $libContent.find("table");
         
         var tableHeight = $libContent.height() - 130;
+        
+        function setColumnFilter(oTable){
+            var aoCols = oTable.fnSettings().aoColumns;
+            var colsForAdvancedSearch = new Array();
+            var advanceSearchDiv = $("div#advanced_search");
+            advanceSearchDiv.empty();
+            $.each(aoCols, function(i,ele){
+                if (ele.bSearchable) {
+                    var currentColId = ele._ColReorder_iOrigCol;
+                    if (ele.bVisible) {
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"'><span>"+ele.sTitle+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                    } else {
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' style='display:none;'><span>"+ele.sTitle+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                    }
+                    if (criteriaTypes[ele.mDataProp] == "s") {
+                        var obj = { sSelector: "#"+ele.mDataProp }
+                    } else {
+                        var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
+                    }
+                    colsForAdvancedSearch.push(obj);
+                } else {
+                    colsForAdvancedSearch.push(null);
+                }
+            });
+            
+            oTable.columnFilter({
+                aoColumns: colsForAdvancedSearch,
+                bUseColVis: true,
+                sPlaceHolder: "head:before"
+                }
+            );
+        }
+        
+        function setFilterElement(iColumn, bVisible){
+            var actualId = colReorderMap[iColumn];
+            var selector = "div#advanced_search_col_"+actualId;
+            if (bVisible) {
+                $(selector).show();
+            } else {
+                $(selector).hide();
+            }
+        }
+        
+        var currentColOrder = new Array();
         
         oTable = $libTable.dataTable( {
             
@@ -323,19 +398,19 @@ var AIRTIME = (function(AIRTIME) {
               /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
               /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time", "sWidth": "125px"},
               /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time", "sWidth": "125px"},
-              /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
-              /* Mood */          {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood", "sWidth": "70px"},
-              /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm", "sWidth": "50px"},
-              /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer", "sWidth": "150px"},
-              /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url", "sWidth": "150px"},
-              /* Bit Rate */  {"sTitle": "Bit Rate", "mDataProp": "bit_rate", "bSearchable": false, "bVisible": false, "sClass": "library_bitrate", "sWidth": "80px"},
-              /* Sample Rate */  {"sTitle": "Sample", "mDataProp": "sample_rate", "bSearchable": false, "bVisible": false, "sClass": "library_sr", "sWidth": "80px"},
-              /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bSearchable": false, "bVisible": false, "sClass": "library_isrc", "sWidth": "150px"},
-              /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bSearchable": false, "bVisible": false, "sClass": "library_encoded", "sWidth": "150px"},
-              /* Label */  {"sTitle": "Label", "mDataProp": "label", "bSearchable": false, "bVisible": false, "sClass": "library_label", "sWidth": "125px"},
-              /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bSearchable": false, "bVisible": false, "sClass": "library_copyright", "sWidth": "125px"},
-              /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bSearchable": false, "bVisible": false, "sClass": "library_mime", "sWidth": "80px"},
-              /* Language */  {"sTitle": "Language", "mDataProp": "language", "bSearchable": false, "bVisible": false, "sClass": "library_language", "sWidth": "125px"}
+              /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
+              /* Mood */          {"sTitle": "Mood", "mDataProp": "mood", "bVisible": false, "sClass": "library_mood", "sWidth": "70px"},
+              /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bVisible": false, "sClass": "library_bpm", "sWidth": "50px"},
+              /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bVisible": false, "sClass": "library_composer", "sWidth": "150px"},
+              /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bVisible": false, "sClass": "library_url", "sWidth": "150px"},
+              /* Bit Rate */  {"sTitle": "Bit Rate", "mDataProp": "bit_rate", "bVisible": false, "sClass": "library_bitrate", "sWidth": "80px"},
+              /* Sample Rate */  {"sTitle": "Sample", "mDataProp": "sample_rate", "bVisible": false, "sClass": "library_sr", "sWidth": "80px"},
+              /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bVisible": false, "sClass": "library_isrc", "sWidth": "150px"},
+              /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bVisible": false, "sClass": "library_encoded", "sWidth": "150px"},
+              /* Label */  {"sTitle": "Label", "mDataProp": "label", "bVisible": false, "sClass": "library_label", "sWidth": "125px"},
+              /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bVisible": false, "sClass": "library_copyright", "sWidth": "125px"},
+              /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bVisible": false, "sClass": "library_mime", "sWidth": "80px"},
+              /* Language */  {"sTitle": "Language", "mDataProp": "language", "bVisible": false, "sClass": "library_language", "sWidth": "125px"}
               ],
                           
             "bProcessing": true,
@@ -350,15 +425,15 @@ var AIRTIME = (function(AIRTIME) {
                 delete oData.aoSearchCols;
             },
             "fnStateSave": function (oSettings, oData) {
-               
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
-                
                 $.ajax({
                     url: "/usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
                   });
+                
+                colReorderMap = oData.ColReorder;
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-library');
@@ -371,7 +446,7 @@ var AIRTIME = (function(AIRTIME) {
                 var i,
                     length,
                     a = oData.abVisCols;
-            
+                
                 //putting serialized data back into the correct js type to make
                 //sure everything works properly.
                 for (i = 0, length = a.length; i < length; i++) {
@@ -386,7 +461,7 @@ var AIRTIME = (function(AIRTIME) {
                         a[i] = parseInt(a[i], 10);
                     }
                 }
-               
+                
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
                 oData.iStart = parseInt(oData.iStart, 10);
@@ -526,7 +601,8 @@ var AIRTIME = (function(AIRTIME) {
             "oColVis": {
                 "sAlign": "right",
                 "aiExclude": [0, 1, 2],
-                "sSize": "css"
+                "sSize": "css",
+                "fnStateChange": setFilterElement
             },
             
             "oColReorder": {
@@ -534,6 +610,7 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
+        setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
        
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
