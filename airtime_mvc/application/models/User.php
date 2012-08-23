@@ -246,7 +246,7 @@ class Application_Model_User
         $sql     = $sql_gen;
 
         $type = array_map( function($t) {
-            return "type = '{$type[$i]}'";
+            return "type = '{$t}'";
         }, $type);
 
         $sql_type = join(" OR ", $type);

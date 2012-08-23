@@ -38,9 +38,9 @@
  * @method     CcSubjsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcSubjsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcSubjsQuery leftJoinCcFilesRelatedByownerId($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcFilesRelatedByownerId relation
- * @method     CcSubjsQuery rightJoinCcFilesRelatedByownerId($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFilesRelatedByownerId relation
- * @method     CcSubjsQuery innerJoinCcFilesRelatedByownerId($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFilesRelatedByownerId relation
+ * @method     CcSubjsQuery leftJoinCcFilesRelatedByDbOwnerId($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcFilesRelatedByDbOwnerId relation
+ * @method     CcSubjsQuery rightJoinCcFilesRelatedByDbOwnerId($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFilesRelatedByDbOwnerId relation
+ * @method     CcSubjsQuery innerJoinCcFilesRelatedByDbOwnerId($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFilesRelatedByDbOwnerId relation
  *
  * @method     CcSubjsQuery leftJoinCcFilesRelatedByDbEditedby($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcFilesRelatedByDbEditedby relation
  * @method     CcSubjsQuery rightJoinCcFilesRelatedByDbEditedby($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFilesRelatedByDbEditedby relation
@@ -529,24 +529,24 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function filterByCcFilesRelatedByownerId($ccFiles, $comparison = null)
+	public function filterByCcFilesRelatedByDbOwnerId($ccFiles, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcSubjsPeer::ID, $ccFiles->getownerId(), $comparison);
+			->addUsingAlias(CcSubjsPeer::ID, $ccFiles->getDbOwnerId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcFilesRelatedByownerId relation
+	 * Adds a JOIN clause to the query using the CcFilesRelatedByDbOwnerId relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcSubjsQuery The current query, for fluid interface
 	 */
-	public function joinCcFilesRelatedByownerId($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function joinCcFilesRelatedByDbOwnerId($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcFilesRelatedByownerId');
+		$relationMap = $tableMap->getRelation('CcFilesRelatedByDbOwnerId');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -561,14 +561,14 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcFilesRelatedByownerId');
+			$this->addJoinObject($join, 'CcFilesRelatedByDbOwnerId');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcFilesRelatedByownerId relation CcFiles object
+	 * Use the CcFilesRelatedByDbOwnerId relation CcFiles object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -578,11 +578,11 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
 	 *
 	 * @return    CcFilesQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcFilesRelatedByownerIdQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function useCcFilesRelatedByDbOwnerIdQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
-			->joinCcFilesRelatedByownerId($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcFilesRelatedByownerId', 'CcFilesQuery');
+			->joinCcFilesRelatedByDbOwnerId($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcFilesRelatedByDbOwnerId', 'CcFilesQuery');
 	}
 
 	/**

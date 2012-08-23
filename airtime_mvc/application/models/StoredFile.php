@@ -484,9 +484,11 @@ class Application_Model_StoredFile
         } 
 
         $file = new CcFiles();
-        $now  = new DateTime("now", new DateTimeZone("UTC"));
-        $file->setDbUtime($now);
-        $file->setDbMtime($now);
+        //$now  = new DateTime("now", new DateTimeZone("UTC"));
+        $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
+        $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        //$file->setDbUtime($now);
+        //$file->setDbMtime($now);
 
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
@@ -605,9 +607,9 @@ class Application_Model_StoredFile
                         ->find();
         $res = array();
         foreach ($files as $file) {
-            $storedFile = new Application_Model_StoredFile();
+            $storedFile        = new Application_Model_StoredFile();
             $storedFile->_file = $file;
-            $res[] = $storedFile;
+            $res[]             = $storedFile;
         }
 
         return $res;

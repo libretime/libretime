@@ -111,7 +111,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	/**
 	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
 	 */
-	protected $collCcFilessRelatedByownerId;
+	protected $collCcFilessRelatedByDbOwnerId;
 
 	/**
 	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
@@ -826,7 +826,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collCcFilessRelatedByownerId = null;
+			$this->collCcFilessRelatedByDbOwnerId = null;
 
 			$this->collCcFilessRelatedByDbEditedby = null;
 
@@ -977,8 +977,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collCcFilessRelatedByownerId !== null) {
-				foreach ($this->collCcFilessRelatedByownerId as $referrerFK) {
+			if ($this->collCcFilessRelatedByDbOwnerId !== null) {
+				foreach ($this->collCcFilessRelatedByDbOwnerId as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
@@ -1120,8 +1120,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			}
 
 
-				if ($this->collCcFilessRelatedByownerId !== null) {
-					foreach ($this->collCcFilessRelatedByownerId as $referrerFK) {
+				if ($this->collCcFilessRelatedByDbOwnerId !== null) {
+					foreach ($this->collCcFilessRelatedByDbOwnerId as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1510,9 +1510,9 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
-			foreach ($this->getCcFilessRelatedByownerId() as $relObj) {
+			foreach ($this->getCcFilessRelatedByDbOwnerId() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcFilesRelatedByownerId($relObj->copy($deepCopy));
+					$copyObj->addCcFilesRelatedByDbOwnerId($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1610,32 +1610,32 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Clears out the collCcFilessRelatedByownerId collection
+	 * Clears out the collCcFilessRelatedByDbOwnerId collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
 	 * them to be refetched by subsequent calls to accessor method.
 	 *
 	 * @return     void
-	 * @see        addCcFilessRelatedByownerId()
+	 * @see        addCcFilessRelatedByDbOwnerId()
 	 */
-	public function clearCcFilessRelatedByownerId()
+	public function clearCcFilessRelatedByDbOwnerId()
 	{
-		$this->collCcFilessRelatedByownerId = null; // important to set this to NULL since that means it is uninitialized
+		$this->collCcFilessRelatedByDbOwnerId = null; // important to set this to NULL since that means it is uninitialized
 	}
 
 	/**
-	 * Initializes the collCcFilessRelatedByownerId collection.
+	 * Initializes the collCcFilessRelatedByDbOwnerId collection.
 	 *
-	 * By default this just sets the collCcFilessRelatedByownerId collection to an empty array (like clearcollCcFilessRelatedByownerId());
+	 * By default this just sets the collCcFilessRelatedByDbOwnerId collection to an empty array (like clearcollCcFilessRelatedByDbOwnerId());
 	 * however, you may wish to override this method in your stub class to provide setting appropriate
 	 * to your application -- for example, setting the initial array to the values stored in database.
 	 *
 	 * @return     void
 	 */
-	public function initCcFilessRelatedByownerId()
+	public function initCcFilessRelatedByDbOwnerId()
 	{
-		$this->collCcFilessRelatedByownerId = new PropelObjectCollection();
-		$this->collCcFilessRelatedByownerId->setModel('CcFiles');
+		$this->collCcFilessRelatedByDbOwnerId = new PropelObjectCollection();
+		$this->collCcFilessRelatedByDbOwnerId->setModel('CcFiles');
 	}
 
 	/**
@@ -1652,23 +1652,23 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
 	 * @throws     PropelException
 	 */
-	public function getCcFilessRelatedByownerId($criteria = null, PropelPDO $con = null)
+	public function getCcFilessRelatedByDbOwnerId($criteria = null, PropelPDO $con = null)
 	{
-		if(null === $this->collCcFilessRelatedByownerId || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcFilessRelatedByownerId) {
+		if(null === $this->collCcFilessRelatedByDbOwnerId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFilessRelatedByDbOwnerId) {
 				// return empty collection
-				$this->initCcFilessRelatedByownerId();
+				$this->initCcFilessRelatedByDbOwnerId();
 			} else {
-				$collCcFilessRelatedByownerId = CcFilesQuery::create(null, $criteria)
-					->filterByCcSubjsRelatedByownerId($this)
+				$collCcFilessRelatedByDbOwnerId = CcFilesQuery::create(null, $criteria)
+					->filterByOwner($this)
 					->find($con);
 				if (null !== $criteria) {
-					return $collCcFilessRelatedByownerId;
+					return $collCcFilessRelatedByDbOwnerId;
 				}
-				$this->collCcFilessRelatedByownerId = $collCcFilessRelatedByownerId;
+				$this->collCcFilessRelatedByDbOwnerId = $collCcFilessRelatedByDbOwnerId;
 			}
 		}
-		return $this->collCcFilessRelatedByownerId;
+		return $this->collCcFilessRelatedByDbOwnerId;
 	}
 
 	/**
@@ -1680,10 +1680,10 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     int Count of related CcFiles objects.
 	 * @throws     PropelException
 	 */
-	public function countCcFilessRelatedByownerId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcFilessRelatedByDbOwnerId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
 	{
-		if(null === $this->collCcFilessRelatedByownerId || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcFilessRelatedByownerId) {
+		if(null === $this->collCcFilessRelatedByDbOwnerId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFilessRelatedByDbOwnerId) {
 				return 0;
 			} else {
 				$query = CcFilesQuery::create(null, $criteria);
@@ -1691,11 +1691,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 					$query->distinct();
 				}
 				return $query
-					->filterByCcSubjsRelatedByownerId($this)
+					->filterByOwner($this)
 					->count($con);
 			}
 		} else {
-			return count($this->collCcFilessRelatedByownerId);
+			return count($this->collCcFilessRelatedByDbOwnerId);
 		}
 	}
 
@@ -1707,14 +1707,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public function addCcFilesRelatedByownerId(CcFiles $l)
+	public function addCcFilesRelatedByDbOwnerId(CcFiles $l)
 	{
-		if ($this->collCcFilessRelatedByownerId === null) {
-			$this->initCcFilessRelatedByownerId();
+		if ($this->collCcFilessRelatedByDbOwnerId === null) {
+			$this->initCcFilessRelatedByDbOwnerId();
 		}
-		if (!$this->collCcFilessRelatedByownerId->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcFilessRelatedByownerId[]= $l;
-			$l->setCcSubjsRelatedByownerId($this);
+		if (!$this->collCcFilessRelatedByDbOwnerId->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcFilessRelatedByDbOwnerId[]= $l;
+			$l->setOwner($this);
 		}
 	}
 
@@ -1724,7 +1724,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * an identical criteria, it returns the collection.
 	 * Otherwise if this CcSubjs is new, it will return
 	 * an empty collection; or if this CcSubjs has previously
-	 * been saved, it will retrieve related CcFilessRelatedByownerId from storage.
+	 * been saved, it will retrieve related CcFilessRelatedByDbOwnerId from storage.
 	 *
 	 * This method is protected by default in order to keep the public
 	 * api reasonable.  You can provide public methods for those you
@@ -1735,12 +1735,12 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
 	 */
-	public function getCcFilessRelatedByownerIdJoinCcMusicDirs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcFilessRelatedByDbOwnerIdJoinCcMusicDirs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = CcFilesQuery::create(null, $criteria);
 		$query->joinWith('CcMusicDirs', $join_behavior);
 
-		return $this->getCcFilessRelatedByownerId($query, $con);
+		return $this->getCcFilessRelatedByDbOwnerId($query, $con);
 	}
 
 	/**
@@ -2704,8 +2704,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collCcFilessRelatedByownerId) {
-				foreach ((array) $this->collCcFilessRelatedByownerId as $o) {
+			if ($this->collCcFilessRelatedByDbOwnerId) {
+				foreach ((array) $this->collCcFilessRelatedByDbOwnerId as $o) {
 					$o->clearAllReferences($deep);
 				}
 			}
@@ -2751,7 +2751,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
-		$this->collCcFilessRelatedByownerId = null;
+		$this->collCcFilessRelatedByDbOwnerId = null;
 		$this->collCcFilessRelatedByDbEditedby = null;
 		$this->collCcPermss = null;
 		$this->collCcShowHostss = null;
