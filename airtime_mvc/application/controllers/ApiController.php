@@ -318,7 +318,7 @@ class ApiController extends Zend_Controller_Action
             }
         $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
             header("Content-type: text/javascript");
-            Logging::log($result);
+            Logging::info($result);
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
@@ -359,7 +359,7 @@ class ApiController extends Zend_Controller_Action
                 $file->setLastPlayedTime($now);
             }
         } catch (Exception $e) {
-            Logging::log($e);
+            Logging::info($e);
         }
         
         echo json_encode(array("status"=>1, "message"=>""));
@@ -475,8 +475,8 @@ class ApiController extends Zend_Controller_Action
             );
         }
         Application_Model_Preference::SetImportTimestamp();
-        Logging::log("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
-        Logging::log( $md );
+        Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
+        Logging::info( $md );
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = Application_Common_OsPath::normpath($filepath);
@@ -547,38 +547,36 @@ class ApiController extends Zend_Controller_Action
 
     public function reloadMetadataGroupAction()
     {
-        $request = $this->getRequest();
         // extract all file metadata params from the request.
         // The value is a json encoded hash that has all the information related to this action
         // The key(mdXXX) does not have any meaning as of yet but it could potentially correspond
         // to some unique id.
-        $responses = array();
-        $dry = $request->getParam('dry') || false;
-        $params = $request->getParams();
+        $request     = $this->getRequest();
+        $responses   = array();
+        $dry         = $request->getParam('dry') || false;
+        $params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
         foreach ($request->getParams() as $k => $raw_json) {
-            // Valid requests must start with mdXXX where XXX represents at least 1 digit
+            // Valid requests must start with mdXXX where XXX represents at
+            // least 1 digit
             if( !preg_match('/^md\d+$/', $k) ) { continue; }
-            $info_json = json_decode($raw_json, $assoc=true);
-            $recorded = $info_json["is_record"];
+            $info_json = json_decode($raw_json, $assoc = true);
+            $recorded  = $info_json["is_record"];
             unset( $info_json["is_record"] );
-            //unset( $info_json["MDATA_KEY_DURATION"] );
-            //unset( $info_json["MDATA_KEY_SAMPLERATE"] );
-            //unset( $info_json["MDATA_KEY_BITRATE"] );
-
-            if( !array_key_exists('mode', $info_json) ) { // Log invalid requests
-                Logging::log("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
-                Logging::log( $info_json );
+            // Log invalid requests
+            if( !array_key_exists('mode', $info_json) ) {
+                Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
+                Logging::info( $info_json );
                 array_push( $responses, array(
                     'error' => "Bad request. no 'mode' parameter passed.",
                     'key' => $k));
                 continue;
             } elseif ( !in_array($info_json['mode'], $valid_modes) )  {
-                // A request still has a chance of being invalid even if it exists but it's validated
-                // by $valid_modes array
+                // A request still has a chance of being invalid even if it
+                // exists but it's validated by $valid_modes array
                 $mode = $info_json['mode'];
-                Logging::log("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
-                Logging::log( $info_json );
+                Logging::info("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
+                Logging::info( $info_json );
                 array_push( $responses, array(
                     'error' => "Bad request. 'mode' parameter is invalid",
                     'key' => $k,
@@ -588,14 +586,12 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadata($info_json, $mode, $dry_run=$dry);
+            $response = $this->dispatchMetadata($info_json, $mode,
+                $dry_run=$dry);
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
             array_push($responses, $response);
-            // On recorded show requests we do some extra work here. Not sure what it actually is and it
-            // was usually called from the python api client. Now we just call it straight from the controller to
-            // save the http roundtrip
         }
         die( json_encode($responses) );
     }
@@ -615,7 +611,7 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
-        Logging::log( $md );
+        Logging::info( $md );
 
         // update import timestamp
         Application_Model_Preference::SetImportTimestamp();
@@ -781,7 +777,7 @@ class ApiController extends Zend_Controller_Action
 
         $component = $request->getParam('component');
         $remoteAddr = Application_Model_ServiceRegister::GetRemoteIpAddr();
-        Logging::log("Registered Component: ".$component."@".$remoteAddr);
+        Logging::info("Registered Component: ".$component."@".$remoteAddr);
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
     }
@@ -902,7 +898,7 @@ class ApiController extends Zend_Controller_Action
     public function rabbitmqDoPushAction()
     {
         $request = $this->getRequest();
-        Logging::log("Notifying RabbitMQ to send message to pypo");
+        Logging::info("Notifying RabbitMQ to send message to pypo");
 
         Application_Model_RabbitMq::PushSchedule();
     }

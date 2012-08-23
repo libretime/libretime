@@ -96,7 +96,7 @@ class Application_Model_LiveLog
             return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("GetLiveShowDuration - Could not connect to database.");
+            Logging::info("GetLiveShowDuration - Could not connect to database.");
             exit;
         }
     }
@@ -254,7 +254,7 @@ class Application_Model_LiveLog
             return $minutes;
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("GetScheduledDuration - Could not connect to database.");
+            Logging::info("GetScheduledDuration - Could not connect to database.");
             exit;
         }
     }
@@ -301,7 +301,7 @@ class Application_Model_LiveLog
 
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("SetNewLogTime - Could not connect to database.");
+            Logging::info("SetNewLogTime - Could not connect to database.");
             exit;
         }
     }
@@ -338,7 +338,7 @@ class Application_Model_LiveLog
 
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("SetEndTime - Could not connect to database.");
+            Logging::info("SetEndTime - Could not connect to database.");
             exit;
         }
     }

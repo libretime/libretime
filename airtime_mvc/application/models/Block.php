@@ -8,7 +8,7 @@ require_once 'formatters/LengthFormatter.php';
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-class Application_Model_Block
+class Application_Model_Block implements Application_Model_LibraryEditable
 {
     /**
      * propel connection object.
@@ -188,11 +188,11 @@ class Application_Model_Block
      */
     public function getContents($filterFiles=false)
     {
-        Logging::log("Getting contents for block {$this->id}");
+        Logging::info("Getting contents for block {$this->id}");
 
         $files = array();
         $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type,
+    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, f.length as orig_length,
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
     LEFT JOIN cc_files AS f ON pc.file_id=f.id
     LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
@@ -220,6 +220,10 @@ EOT;
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
+            
+            //format original length
+            $formatter = new LengthFormatter($row['orig_length']);
+            $row['orig_length'] = $formatter->format();
         }
 
         return $rows;
@@ -383,11 +387,11 @@ EOT;
         try {
     
             if (is_numeric($p_afterItem)) {
-                Logging::log("Finding block content item {$p_afterItem}");
+                Logging::info("Finding block content item {$p_afterItem}");
     
                 $afterItem = CcBlockcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::log("index is {$index}");
+                Logging::info("index is {$index}");
                 $pos = ($addType == 'after') ? $index + 1 : $index;
     
                 $contentsToUpdate = CcBlockcontentsQuery::create()
@@ -396,8 +400,8 @@ EOT;
                 ->orderByDbPosition()
                 ->find($this->con);
     
-                Logging::log("Adding to block");
-                Logging::log("at position {$pos}");
+                Logging::info("Adding to block");
+                Logging::info("at position {$pos}");
             } else {
     
                 //add to the end of the block
@@ -420,12 +424,12 @@ EOT;
                 ->orderByDbPosition()
                 ->find($this->con);
     
-                Logging::log("Adding to block");
-                Logging::log("at position {$pos}");
+                Logging::info("Adding to block");
+                Logging::info("at position {$pos}");
             }
     
             foreach ($p_items as $ac) {
-                Logging::log("Adding audio file {$ac}");
+                Logging::info("Adding audio file {$ac}");
                 
                 if (is_array($ac) && $ac[1] == 'audioclip') {
                     $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
@@ -481,32 +485,32 @@ EOT;
             $pos = 0;
             //moving items to beginning of the block.
             if (is_null($p_afterItem)) {
-                Logging::log("moving items to beginning of block");
+                Logging::info("moving items to beginning of block");
     
                 foreach ($contentsToMove as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
             } else {
-                Logging::log("moving items after {$p_afterItem}");
+                Logging::info("moving items after {$p_afterItem}");
     
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
     
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
-                            Logging::log("item {$move->getDbId()} to pos {$pos}");
+                            Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
                             $pos = $pos + 1;
@@ -566,7 +570,7 @@ EOT;
     
     public function getFadeInfo($pos)
     {
-        Logging::log("Getting fade info for pos {$pos}");
+        Logging::info("Getting fade info for pos {$pos}");
     
         $row = CcBlockcontentsQuery::create()
         ->joinWith(CcFilesPeer::OM_CLASS)
@@ -651,7 +655,7 @@ EOT;
     public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
-            Logging::log("Setting block fade in {$fadein}");
+            Logging::info("Setting block fade in {$fadein}");
             $row = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition(0)
@@ -661,7 +665,7 @@ EOT;
         }
         
         if (isset($fadeout)) {
-            Logging::log("Setting block fade out {$fadeout}");
+            Logging::info("Setting block fade out {$fadeout}");
             $row = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition($this->getSize()-1)
@@ -839,7 +843,7 @@ EOT;
         return $this->$method();
     }
     
-    public function setMetaData($category, $value)
+    public function setMetadata($category, $value)
     {
         $cat = $this->categories[$category];
     
@@ -871,11 +875,20 @@ EOT;
     */
     public static function deleteBlocks($p_ids, $p_userId)
     {
-        $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcBlockQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
+        
+            if (count($leftOver) == 0) {
+                CcBlockQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new BlockNoPermissionException;
+            }
         } else {
-            throw new BlockNoPermissionException;
+            CcBlockQuery::create()->findPKs($p_ids)->delete();
         }
     }
     
@@ -979,7 +992,7 @@ EOT;
     public function storeCriteriaIntoDb($p_criteriaData){
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        Logging::log($p_criteriaData);
+        Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
@@ -1141,10 +1154,21 @@ EOT;
                     // if the column is timestamp, convert it into UTC
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                         $spCriteriaValue = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['value']);
-                    } else if($spCriteria == "bit_rate") {
+                        /* Check if only a date was supplied and trim
+                         * the time after it is converted to UTC time
+                         */
+                        if (strlen($criteria['value']) <= 10) {
+                            //extract date only from timestamp in db
+                            $spCriteria = 'date('.$spCriteria.')';
+                            $spCriteriaValue = substr($spCriteriaValue, 0, 10);
+                        }
+                    } else if($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
                         $spCriteriaValue = $criteria['value']*1000;
+                        if (isset($criteria['extra'])) {
+                            $criteria['extra'] *= 1000;
+                        }
                     } else {
                         $spCriteriaValue = addslashes($criteria['value']);
                     }
@@ -1156,7 +1180,7 @@ EOT;
                     } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
                         $spCriteriaValue = "%$spCriteriaValue%";
                     } else if ($spCriteriaModifier == "is in the range") {
-                        $spCriteriaValue = "$spCriteria > '$spCriteriaValue' AND $spCriteria <= '$criteria[extra]'";
+                        $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$criteria[extra]'";
                     }
                     
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
@@ -1167,7 +1191,7 @@ EOT;
                             $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
                     }catch (Exception $e){
-                        Logging::log($e);
+                        Logging::info($e);
                     }
                     $i++;
                 }
@@ -1189,7 +1213,7 @@ EOT;
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         }catch(Exception $e){
-            Logging::log($e);
+            Logging::info($e);
         }
     
     }

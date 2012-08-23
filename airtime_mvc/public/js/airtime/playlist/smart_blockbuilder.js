@@ -458,7 +458,7 @@ function callback(data, type) {
             if (type == 'shuffle') {
                 form.find('.success').text('Smart block shuffled');
             } else if (type == 'generate') {
-            	form.find('.success').text('Smart block generated and saved');
+            	form.find('.success').text('Smart block generated and criteria saved');
             	//redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }

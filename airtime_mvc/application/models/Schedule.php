@@ -32,7 +32,7 @@ class Application_Model_Schedule
     {
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
-            Logging::log("Invalid range parameters: $p_prev or $p_next");
+            Logging::info("Invalid range parameters: $p_prev or $p_next");
             return array();
         }
 
@@ -1065,10 +1065,11 @@ SQL;
         if ($update) {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
                     where ends <= '{$show_end->format('Y-m-d H:i:s')}'
-                    and id != ".$instanceId. " order by ends";
+                    and modified_instance = false and id != ".$instanceId. " order by ends";
         } else {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where ends <= '{$show_end->format('Y-m-d H:i:s')}' order by ends";
+                    where ends <= '{$show_end->format('Y-m-d H:i:s')}'
+                    and modified_instance = false order by ends";
         }
         $rows = $con->query($sql);
 

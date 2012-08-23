@@ -7,9 +7,6 @@ require_once 'formatters/BitrateFormatter.php';
 class LibraryController extends Zend_Controller_Action
 {
 
-    protected $obj_sess = null;
-    protected $search_sess = null;
-
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
@@ -23,9 +20,128 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('set-num-entries', 'json')
                     ->initContext();
 
-        $this->obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
-        $this->search_sess = new Zend_Session_Namespace("search");
     }
+
+    public function indexAction()
+    {
+        global $CC_CONFIG;
+
+        $request = $this->getRequest();
+        $baseUrl = $request->getBaseUrl();
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($this->view->baseUrl('/js/airtime/library/events/library_playlistbuilder.js'), 'text/javascript');
+
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
+
+        try {
+
+            $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+            if (isset($obj_sess->id)) {
+                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
+                Logging::info($obj_sess->id);
+                Logging::info($obj_sess->type);
+                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
+                $obj = new $objInfo['className']($obj_sess->id);
+                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+                $user = new Application_Model_User($userInfo->id);
+                $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+                
+                if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
+                    $this->view->obj = $obj;
+                    if ($obj_sess->type == "block") {
+                        $form = new Application_Form_SmartBlockCriteria();
+                        $form->startForm($obj_sess->id);
+                        $this->view->form = $form;
+                    }
+                }
+                
+                $formatter = new LengthFormatter($obj->getLength());
+                $this->view->length = $formatter->format();
+                $this->view->type = $obj_sess->type;
+            }
+        } catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound($obj_sess->type);
+        } catch (Exception $e) {
+            $this->playlistNotFound($obj_sess->type);
+            Logging::info($e->getMessage());
+            //$this->playlistUnknownError($e);
+        }
+    }
+
+    protected function playlistNotFound($p_type)
+    {
+        $this->view->error = "{$p_type} not found";
+
+        Logging::info("{$p_type} not found");
+        Application_Model_Library::changePlaylist(null, $p_type);
+        $this->createFullResponse(null);
+    }
+
+    protected function playlistUnknownError($e)
+    {
+        $this->view->error = "Something went wrong.";
+
+        Logging::info("{$e->getFile()}");
+        Logging::info("{$e->getLine()}");
+        Logging::info("{$e->getMessage()}");
+    }
+
+    protected function createFullResponse($obj = null, $isJson = false)
+    {
+        $isBlock = false;
+        $viewPath = 'playlist/playlist.phtml';
+        if ($obj instanceof Application_Model_Block) {
+            $isBlock = true;
+            $viewPath = 'playlist/smart-block.phtml';
+        }
+        
+        if (isset($obj)) {
+            $formatter = new LengthFormatter($obj->getLength());
+            $this->view->length = $formatter->format();
+            
+            if ($isBlock) {
+                $form = new Application_Form_SmartBlockCriteria();
+                $form->removeDecorator('DtDdWrapper');
+                $form->startForm($obj->getId());
+                
+                $this->view->form = $form;
+                $this->view->obj = $obj;
+                $this->view->id = $obj->getId();
+                if ($isJson) {
+                    return $this->view->render($viewPath);
+                } else {
+                    $this->view->html = $this->view->render($viewPath);
+                }
+            } else {
+                $this->view->obj = $obj;
+                $this->view->id = $obj->getId();
+                $this->view->html = $this->view->render($viewPath);
+                unset($this->view->obj);
+            }
+        } else {
+            $this->view->html = $this->view->render($viewPath);
+        }
+    }
+
 
     public function contextMenuAction()
     {
@@ -45,21 +161,23 @@ class LibraryController extends Zend_Controller_Action
 
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
+        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+
         if ($type === "audioclip") {
 
             $file = Application_Model_StoredFile::Recall($id);
 
-            if (isset($this->obj_sess->id) && $screen == "playlist") {
+            if (isset($obj_sess->id) && $screen == "playlist") {
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist or Block
-                if ($this->obj_sess->type == 'playlist') {
-                    $obj = new Application_Model_Playlist($this->obj_sess->id);
-                } else {
-                    $obj = new Application_Model_Block($this->obj_sess->id);
+                if ($obj_sess->type == 'playlist') {
+                    $obj = new Application_Model_Playlist($obj_sess->id);
+                } else if ($obj_sess->type == 'block') {
+                    $obj = new Application_Model_Block($obj_sess->id);
                 }
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    if ($this->obj_sess->type === "playlist") {
+                    if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } else if ($this->obj_sess->type === "block") {
+                    } else if ($obj_sess->type === "block") {
                         $menu["pl_add"] = array("name"=> "Add to Smart Block", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
@@ -71,22 +189,22 @@ class LibraryController extends Zend_Controller_Action
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
-        } elseif ($type === "playlist" || $type === "block") {
+        } else if ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
-            } else {
+            } else if ($type === 'block') {
                 $obj = new Application_Model_Block($id);
                 if (!$obj->isStatic()) {
                     unset($menu["play"]);
                 }
                 if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
-                    if ($this->obj_sess->type === "playlist") {
+                    if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }
             
-            if ($this->obj_sess->id !== $id && $screen == "playlist") {
+            if ($obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
                 }
@@ -98,9 +216,9 @@ class LibraryController extends Zend_Controller_Action
 
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
-            if (isset($this->obj_sess->id) && $screen == "playlist") {
+            if (isset($obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    if ($this->obj_sess->type === "playlist") {
+                    if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
@@ -191,7 +309,7 @@ class LibraryController extends Zend_Controller_Action
             Application_Model_Webstream::deleteStreams($streams, $user->getId());
         } catch (Exception $e) {
             //TODO: warn user that not all streams could be deleted.
-            Logging::log($e);
+            Logging::info($e);
         }
 
         foreach ($files as $id) {
@@ -267,10 +385,10 @@ class LibraryController extends Zend_Controller_Action
 
                 // set MDATA_KEY_FILEPATH
                 $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
-                Logging::log($data['MDATA_KEY_FILEPATH']);
+                Logging::info($data['MDATA_KEY_FILEPATH']);
                 Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
 
-                $this->_redirect('Playlist');
+                $this->_redirect('Library');
             }
         }
 
@@ -344,7 +462,7 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->type = $type;
             }
         } catch (Exception $e) {
-            Logging::log($e->getMessage());
+            Logging::info($e->getMessage());
         }
     }
 

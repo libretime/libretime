@@ -440,31 +440,37 @@ table.library-get-file-md{
 
 table.library-get-file-md.table-small{
     width: 290px !important;
-}    
+}
 
 .file-md-qtip-nowrap{
     white-space: nowrap;
+    overflow: hidden;
 }
 
 .file-md-qtip-criteria-width-small{
     width:70px;
+    max-width: 70px;
 }
 
 .file-md-qtip-criteria-width{
     width:110px;
+    max-width: 110px;
 }
 
 .file-md-qtip-row-width-title{
     width:170px;
+    max-width: 170px;
     padding-right:5px !important;
 }
 
 .file-md-qtip-row-width-artist{
     width:110px;
+    max-width: 110px;
 }
 
 .file-md-qtip-row-width-small{
     width:40x;
+    max-width: 40px;
     text-align:right;
 }
 

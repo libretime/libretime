@@ -5,7 +5,7 @@ class Logging {
     private static $_logger;
     private static $_path;
 
-    public static function getLogger()
+    private static function getLogger()
     {
         if (!isset(self::$_logger)) {
             $writer = new Zend_Log_Writer_Stream(self::$_path);
@@ -37,7 +37,7 @@ class Logging {
         }
     }
     
-    public static function log($p_msg)
+    public static function info($p_msg)
     {
         $bt = debug_backtrace();
 

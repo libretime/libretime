@@ -96,7 +96,7 @@ class Application_Model_StoredFile
      */
     public function setMetadata($p_md=null)
     {
-        Logging::log("entered setMetadata");
+        Logging::info("entered setMetadata");
         if (is_null($p_md)) {
             $this->setDbColMetadata();
         } else {
@@ -153,7 +153,7 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method = "set$propelColumn";
-                    Logging::log($method);
+                    Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
             }
@@ -446,7 +446,7 @@ class Application_Model_StoredFile
      */
     public function getRelativeFileUrl($baseUrl)
     {
-        Logging::log("getting media!");
+        Logging::info("getting media!");
 
         return $baseUrl."/api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
@@ -760,7 +760,7 @@ class Application_Model_StoredFile
         $chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
         $chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        Logging::log(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
+        Logging::info(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
         // Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.
         //$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
@@ -852,59 +852,56 @@ class Application_Model_StoredFile
     public static function copyFileToStor($p_targetDir, $fileName, $tempname)
     {
         $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
-        Logging::log('copyFileToStor: moving file '.$audio_file);
-        $md5 = md5_file($audio_file);
-        $duplicate = Application_Model_StoredFile::RecallByMd5($md5, true);
+        Logging::info('copyFileToStor: moving file '.$audio_file);
 
-        $result = null;
-        if ($duplicate) {
-            if (file_exists($duplicate->getFilePath())) {
-                $duplicateName = $duplicate->getMetadataValue('MDATA_KEY_TITLE');
-                $result = array( "code" => 106, "message" => "An identical audioclip named '$duplicateName' already exists on the server.");
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $stor    = $storDir->getDirectory();
+        // check if "organize" dir exists and if not create one
+        if (!file_exists($stor."/organize")) {
+            if (!mkdir($stor."/organize", 0777)) {
+                return array(
+                    "code"    => 109,
+                    "message" => "Failed to create 'organize' directory.");
             }
         }
 
-        if (!isset($result)) {//The file has no duplicate, so proceed to copy.
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $stor = $storDir->getDirectory();
-            // check if "organize" dir exists and if not create one
-            if (!file_exists($stor."/organize")) {
-                if (!mkdir($stor."/organize", 0777)) {
-                    $result = array("code" => 109, "message" => "Failed to create 'organize' directory.");
-
-                    return $result;
-                }
-            }
-
-            if (chmod($audio_file, 0644) === false) {
-                Logging::log("Warning: couldn't change permissions of $audio_file to 0644");
-            }
-
-            //check to see if there is enough space in $stor to continue.
-            if (self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
-                $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
-
-                if (self::liquidsoapFilePlayabilityTest($audio_file)) {
-
-                    Logging::log("copyFileToStor: moving file $audio_file to $audio_stor");
-
-                    //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
-                    if (@rename($audio_file, $audio_stor) === false) {
-                        #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
-                        #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-                        unlink($audio_file);//remove the file after failed rename
-                        $result = array("code" => 108, "message" => "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space or the stor directory does not have correct write permissions.");
-                    }
-                } else {
-                    $result = array("code" => 110, "message" => "This file appears to be corrupted and will not be added to media library.");
-                }
-
-            } else {
-                $result = array("code" => 107, "message" => "The file was not uploaded, there is ".$freeSpace."MB of disk space left and the file you are uploading has a size of  ".$fileSize."MB.");
-            }
+        if (chmod($audio_file, 0644) === false) {
+            Logging::info("Warning: couldn't change permissions of $audio_file to 0644");
         }
 
-        return $result;
+        // Check if we have enough space before copying
+        if(!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
+            $freeSpace = disk_free_space($stor);
+            return array("code" => 107,
+                "message" => "The file was not uploaded, there is 
+                             ".$freeSpace."MB of disk space left and the file you are
+                             uploading has a size of  ".$fileSize."MB.");
+        }
+
+        // Check if liquidsoap can play this file
+        if(!self::liquidsoapFilePlayabilityTest($audio_file)) {
+            return array(
+                "code" => 110,
+                "message" => "This file appears to be corrupted and will not 
+                be added to media library.");
+        }
+
+        // Did all the checks for realz, now trying to copy
+        $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
+        Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
+        //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+        if (@rename($audio_file, $audio_stor) === false) {
+            #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
+            #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+            unlink($audio_file);//remove the file after failed rename
+            return array(
+                "code" => 108,
+                "message" => "
+                The file was not uploaded, this error can occur if the computer
+                hard drive does not have enough disk space or the stor
+                directory does not have correct write permissions.  ");
+        }
+        return null;
     }
 
     /*
@@ -1004,7 +1001,7 @@ class Application_Model_StoredFile
             return count($rows);
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::log("Could not connect to database.");
+            Logging::info("Could not connect to database.");
             exit;
         }
 

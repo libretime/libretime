@@ -1,12 +1,20 @@
 <?php
 
-class Application_Model_Webstream{
-
+class Application_Model_Webstream implements Application_Model_LibraryEditable
+{
     private $id;
 
     public function __construct($webstream)
     {
+        //TODO: hacky...
+        if (is_int($webstream)) {
+            $this->webstream = CcWebstreamQuery::create()->findPK($webstream);
+            if (is_null($this->webstream)) {
+                throw new Exception();
+            }
+        } else {
             $this->webstream = $webstream; 
+        }
     }
 
     public function getOrm()
@@ -39,6 +47,11 @@ class Application_Model_Webstream{
             return $di->format("%Hh %Im");
         }
         return "";
+    }
+
+    public function getLength()
+    {
+        return $this->getDefaultLength();
     }
 
     public function getDescription()
@@ -145,15 +158,6 @@ class Application_Model_Webstream{
 
         $id = $parameters["id"];
 
-        if (!is_null($id)) {
-            // user has performed a create stream action instead of edit
-            // stream action. Check if user has the rights to edit this stream.
-
-            Logging::log("CREATE");
-        } else {
-            Logging::log("EDIT");
-        }
-
         return array($valid, $mime, $di); 
     }
 
@@ -166,6 +170,18 @@ class Application_Model_Webstream{
         }
 
         return true;
+    }
+
+    public function setMetadata($key, $val) 
+    {
+
+    }
+
+
+    public function setName($name) 
+    {
+
+
     }
 
     private static function discoverStreamMime($url)

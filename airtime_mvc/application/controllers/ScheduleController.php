@@ -238,7 +238,7 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHost($instance->getShowId());
+        $isDJ = $user->isHostOfShow($instance->getShowId());
 
         $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
         $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
@@ -338,7 +338,7 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId()))
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER) && $user->isHostOfShow($show->getShowId())))
             $show->clearShow();
     }
 
@@ -403,7 +403,7 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER, UTYPE_HOST),$show->getShowId())) {
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER) && $user->isHostOfShow($show->getShowId()))) {
             $show->removeGroupFromShow($group_id);
         }
 
@@ -543,7 +543,7 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHost($showInstance->getShowId());
+        $isDJ = $user->isHostOfShow($showInstance->getShowId());
 
         if (!($isAdminOrPM || $isDJ)) {
             return;
@@ -864,9 +864,9 @@ class ScheduleController extends Zend_Controller_Action
                 Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
             } catch (Exception $e) {
                 $this->view->error = $e->getMessage();
-                Logging::log($e->getMessage());
-                Logging::log("{$e->getFile()}");
-                Logging::log("{$e->getLine()}");
+                Logging::info($e->getMessage());
+                Logging::info("{$e->getFile()}");
+                Logging::info("{$e->getLine()}");
             }
         }
     }

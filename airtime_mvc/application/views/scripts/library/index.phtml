@@ -1,0 +1,19 @@
+<div id="library_content" class="lib-content ui-widget ui-widget-content block-shadow alpha-block padded" style="z-index:254">
+    <?php echo $this->render('library/library.phtml') ?>
+</div>
+
+<div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded">
+    <?php if ($this->type == 'block') {
+            echo $this->render('playlist/smart-block.phtml');
+        } else if ($this->type == 'playlist') {
+            echo $this->render('playlist/playlist.phtml');
+        } else if ($this->type == 'stream') {
+            echo $this->render('webstream/webstream.phtml');
+        } else {
+            echo $this->render('webstream/webstream.phtml');
+            //throw new Exception("Unrecognized type: '{$this->type}'");
+        }
+
+
+?>
+</div>

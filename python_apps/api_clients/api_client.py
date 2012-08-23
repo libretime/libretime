@@ -18,7 +18,7 @@ from configobj import ConfigObj
 import string
 import traceback
 
-AIRTIME_VERSION = "2.1.3"
+AIRTIME_VERSION = "2.2.0"
 
 def to_unicode(obj, encoding='utf-8'):
     if isinstance(obj, basestring):

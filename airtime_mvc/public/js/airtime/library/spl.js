@@ -6,7 +6,7 @@ var AIRTIME = (function(AIRTIME){
 	
 	if (AIRTIME.playlist === undefined) {
 		AIRTIME.playlist = {};
-	}
+    }
 	
 	var mod = AIRTIME.playlist,
 		viewport,
@@ -300,7 +300,7 @@ var AIRTIME = (function(AIRTIME){
 	        .empty()
 	        .val(json.description);
 	    
-	    $('#spl_sortable').unbind();
+	    $('#spl_sortable').off('focusout keydown');
 	    $('#spl_sortable')
         .empty()
         .append(json.html);
@@ -423,20 +423,20 @@ var AIRTIME = (function(AIRTIME){
 	//sets events dynamically for the cue editor.
 	function setCueEvents() {
 	    var temp = $('#spl_sortable');
-	    temp.on("blur", ".spl_cue_in span", changeCueIn);
+	    temp.on("focusout", ".spl_cue_in span", changeCueIn);
 	    temp.on("keydown", ".spl_cue_in span", submitOnEnter);
 	    
-	    temp.on("blur", ".spl_cue_out span", changeCueOut);
+	    temp.on("focusout", ".spl_cue_out span", changeCueOut);
 	    temp.on("keydown", ".spl_cue_out span", submitOnEnter);
 	}
 	
 	//sets events dynamically for the fade editor.
 	function setFadeEvents() {
 	    var temp = $('#spl_sortable');
-        temp.on("blur", ".spl_fade_in span", changeFadeIn);
+        temp.on("focusout", ".spl_fade_in span", changeFadeIn);
         temp.on("keydown", ".spl_fade_in span", submitOnEnter);
         
-        temp.on("blur", ".spl_fade_out span", changeFadeOut);
+        temp.on("focusout", ".spl_fade_out span", changeFadeOut);
         temp.on("keydown", ".spl_fade_out span", submitOnEnter);
 	}
 	
@@ -568,7 +568,7 @@ var AIRTIME = (function(AIRTIME){
             //stream url
             //default_length  
             //playlist name
-            var id = $pl.find("#ws_id").attr("value"); 
+            var id = $pl.find("#obj_id").attr("value"); 
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
@@ -596,7 +596,7 @@ var AIRTIME = (function(AIRTIME){
                         $status.show();
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
 
-                        var $ws_id = $("#ws_id");
+                        var $ws_id = $("#obj_id");
                         $ws_id.attr("value", json.streamId);
 
                         var $ws_id = $("#ws_delete");
@@ -802,6 +802,23 @@ var AIRTIME = (function(AIRTIME){
 				redrawLib();
 			});
 	};
+    
+	mod.fnWsDelete = function(wsid) {
+		var url, id, lastMod;
+		
+		stopAudioPreview();	
+		id = (wsid === undefined) ? getId() : wsid;
+		lastMod = getModified();
+		type = $('#obj_type').val();
+		url = '/Webstream/delete';
+        
+		$.post(url, 
+			{format: "json", ids: id, modified: lastMod, type: type}, 
+			function(json){
+				openPlaylist(json);
+				redrawLib();
+			});
+	};
 	
 	mod.disableUI = function() {
     	
@@ -902,6 +919,10 @@ var AIRTIME = (function(AIRTIME){
 
 		$pl.delegate("#spl_delete", {"click": function(ev){
 			AIRTIME.playlist.fnDelete();
+		}});
+        
+		$pl.delegate("#ws_delete", {"click": function(ev){
+            AIRTIME.playlist.fnWsDelete();
 		}});
 		
 		setPlaylistEntryEvents();

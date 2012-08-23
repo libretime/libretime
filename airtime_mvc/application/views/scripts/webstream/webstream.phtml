@@ -1,18 +1,20 @@
 <button id="ws_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
-<?php if (isset($this->ws)) : ?>
+<?php if (isset($this->obj)) : ?>
 <button id="ws_delete" class="ui-button ui-widget ui-state-default" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?> role="button" aria-disabled="false">Delete</button>
 <?php endif; ?>
 
-<?php if (isset($this->ws)) : ?>
-    <input id="ws_id" type="hidden" value="<?php echo $this->ws->getId(); ?>"></input>
-    <input id="pl_lastMod" type="hidden" value="<?php echo $this->ws->getLastModified('U'); ?>"></input>
+<?php if (isset($this->obj)) : ?>
+    <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
+    <input id="obj_lastMod" type="hidden" value="<?php echo "1";//$this->obj->getLastModified('U'); ?>"></input>
+    <input id="obj_type" type="hidden" value="webstream"></input>
     <div class="status" style="display:none;"></div>
+
     <div class="playlist_title">
         <div id="name-error" class="errors" style="display:none;"></div>
         <h3 id="ws_name">
-            <a id="playlist_name_display" contenteditable="true"><?php echo $this->ws->getName(); ?></a>
+            <a id="playlist_name_display" contenteditable="true"><?php echo $this->obj->getName(); ?></a>
         </h3>
-        <h4 id="ws_length"><?php echo $this->ws->getDefaultLength(); ?></h4>
+        <h4 id="ws_length"><?php echo $this->obj->getDefaultLength(); ?></h4>
     </div>
 
     <fieldset class="toggle" id="fieldset-metadate_change">
@@ -20,18 +22,18 @@
         <dl class="zend_form">
             <dt id="description-label"><label for="description">Description</label></dt>
             <dd id="description-element">
-                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->ws->getDescription(); ?></textarea>
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
             </dd>
          <dt id="submit-label" style="display: none;">&nbsp;</dt>
          <div id="url-error" class="errors" style="display:none;"></div>
          <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
          <dd id="streamurl-element">
-         <input type="text" value="<?php echo $this->ws->getUrl(); ?>" size="40"/>
+         <input type="text" value="<?php echo $this->obj->getUrl(); ?>" size="40"/>
          </dd>
          <div id="length-error" class="errors" style="display:none;"></div>
          <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
          <dd id="streamlength-element">
-         <input type="text" value="<?php echo $this->ws->getDefaultLength() ?>"/>
+         <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>"/>
          </dd>        
          <dd id="submit-element" class="buttons">
             <input class="ui-button ui-state-default" type="submit" value="Save" id="webstream_save" name="submit">

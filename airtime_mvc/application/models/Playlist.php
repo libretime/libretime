@@ -8,7 +8,7 @@ require_once 'formatters/LengthFormatter.php';
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-class Application_Model_Playlist
+class Application_Model_Playlist implements Application_Model_LibraryEditable
 {
     /**
      * propel connection object.
@@ -135,8 +135,8 @@ class Application_Model_Playlist
 
     public function getLastModified($format = null)
     {
-        //Logging::log($this->pl->getDbMtime($format));
-        //Logging::log($this->pl);
+        //Logging::info($this->pl->getDbMtime($format));
+        //Logging::info($this->pl);
         return $this->pl->getDbMtime($format);
     }
 
@@ -153,7 +153,7 @@ class Application_Model_Playlist
      */
     public function getContents($filterFiles=false)
     {
-        Logging::log("Getting contents for playlist {$this->id}");
+        Logging::info("Getting contents for playlist {$this->id}");
         $files = array();
 
         $sql = <<<SQL
@@ -171,7 +171,8 @@ class Application_Model_Playlist
                    f.track_title,
                    f.artist_name AS creator,
                    f.file_exists AS EXISTS,
-                   f.filepath AS path
+                   f.filepath AS path,
+                   f.length AS orig_length
             FROM cc_playlistcontents AS pc
             JOIN cc_files AS f ON pc.file_id=f.id
             WHERE pc.playlist_id = {$this->id}
@@ -188,7 +189,8 @@ class Application_Model_Playlist
                             (ws.name || ': ' || ws.url) AS title,
                             sub.login AS creator,
                             't'::boolean AS EXISTS,
-                            ws.url AS path
+                            ws.url AS path,
+                            ws.length AS orig_length
             FROM cc_playlistcontents AS pc
             JOIN cc_webstream AS ws ON pc.stream_id=ws.id
             LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
@@ -206,7 +208,8 @@ class Application_Model_Playlist
                             bl.name AS title,
                             sbj.login AS creator,
                             't'::boolean AS EXISTS,
-                            NULL::text AS path
+                            NULL::text AS path,
+                            bl.length AS orig_length
             FROM cc_playlistcontents AS pc
             JOIN cc_block AS bl ON pc.block_id=bl.id
             JOIN cc_subjs AS sbj ON bl.creator_id=sbj.id
@@ -240,6 +243,10 @@ SQL;
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
+            
+            //format original length
+            $formatter = new LengthFormatter($row['orig_length']);
+            $row['orig_length'] = $formatter->format();
         }
 
         return $rows;
@@ -384,11 +391,11 @@ SQL;
         try {
 
             if (is_numeric($p_afterItem)) {
-                Logging::log("Finding playlist content item {$p_afterItem}");
+                Logging::info("Finding playlist content item {$p_afterItem}");
 
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::log("index is {$index}");
+                Logging::info("index is {$index}");
                 $pos = ($addType == 'after') ? $index + 1 : $index;
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
@@ -421,13 +428,13 @@ SQL;
 
             }
 
-            Logging::log("Adding to playlist");
-            Logging::log("at position {$pos}");
+            Logging::info("Adding to playlist");
+            Logging::info("at position {$pos}");
  
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
                 $pos = $pos + 1;
-                Logging::log("Adding $ac[1] $ac[0]");
+                Logging::info("Adding $ac[1] $ac[0]");
 
             }
 
@@ -476,32 +483,32 @@ SQL;
             $pos = 0;
             //moving items to beginning of the playlist.
             if (is_null($p_afterItem)) {
-                Logging::log("moving items to beginning of playlist");
+                Logging::info("moving items to beginning of playlist");
 
                 foreach ($contentsToMove as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
             } else {
-                Logging::log("moving items after {$p_afterItem}");
+                Logging::info("moving items after {$p_afterItem}");
 
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
 
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
-                            Logging::log("item {$move->getDbId()} to pos {$pos}");
+                            Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
                             $pos = $pos + 1;
@@ -561,7 +568,7 @@ SQL;
 
     public function getFadeInfo($pos)
     {
-        Logging::log("Getting fade info for pos {$pos}");
+        Logging::info("Getting fade info for pos {$pos}");
 
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
@@ -647,7 +654,7 @@ SQL;
     public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
-            Logging::log("Setting playlist fade in {$fadein}");
+            Logging::info("Setting playlist fade in {$fadein}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition(0)
@@ -657,7 +664,7 @@ SQL;
         }
 
         if (isset($fadeout)) {
-            Logging::log("Setting playlist fade out {$fadeout}");
+            Logging::info("Setting playlist fade out {$fadeout}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize()-1)
@@ -835,7 +842,7 @@ SQL;
         return $this->$method();
     }
 
-    public function setMetaData($category, $value)
+    public function setMetadata($category, $value)
     {
         $cat = $this->categories[$category];
 
@@ -867,11 +874,19 @@ SQL;
      */
     public static function deletePlaylists($p_ids, $p_userId)
     {
-        $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
+            if (count($leftOver) == 0) {
+                CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new PlaylistNoPermissionException;
+            }
         } else {
-            throw new PlaylistNoPermissionException;
+            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
         }
     }
     

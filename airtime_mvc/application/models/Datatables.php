@@ -152,17 +152,21 @@ class Application_Model_Datatables
             // we need to go over all items and fix length for playlist
             // in case the playlist contains dynamic block
             foreach ($results as &$r) {
-                if ($r['ftype'] == 'playlist') {
-                    $pl = new Application_Model_Playlist($r['id']);
-                    $r['length'] = $pl->getLength();
-                } else if ($r['ftype'] == "block") {
-                    $bl = new Application_Model_Block($r['id']);
-                    if ($bl->isStatic()) {
-                        $r['bl_type'] = 'static';
-                    } else {
-                        $r['bl_type'] = 'dynamic';
+                //this function is also called for Manage Users so in
+                //this case there will be no 'ftype'
+                if (isset($r['ftype'])) {
+                    if ($r['ftype'] == 'playlist') {
+                        $pl = new Application_Model_Playlist($r['id']);
+                        $r['length'] = $pl->getLength();
+                    } else if ($r['ftype'] == "block") {
+                        $bl = new Application_Model_Block($r['id']);
+                        if ($bl->isStatic()) {
+                            $r['bl_type'] = 'static';
+                        } else {
+                            $r['bl_type'] = 'dynamic';
+                        }
+                        $r['length'] = $bl->getLength();
                     }
-                    $r['length'] = $bl->getLength();
                 }
             }
         } catch (Exception $e) {
