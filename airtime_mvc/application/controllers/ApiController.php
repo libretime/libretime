@@ -463,17 +463,10 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadata($md, $mode, $dry_run=false) 
+    public function dispatchMetadata($md, $mode) 
     { 
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
-        if ( $dry_run ) { // for debugging we return garbage not to screw around with the db
-            return array(
-                'md' => $md,
-                'mode' => $mode,
-                'fileid' => 123456
-            );
-        }
         Application_Model_Preference::SetImportTimestamp();
         Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
         Logging::info( $md );
@@ -586,8 +579,7 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadata($info_json, $mode,
-                $dry_run=$dry);
+            $response = $this->dispatchMetadata($info_json, $mode);
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
