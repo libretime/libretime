@@ -240,22 +240,23 @@ class Application_Model_User
 
     public static function getUsers(array $type, $search=null)
     {
-        $con = Propel::getConnection();
+        $con     = Propel::getConnection();
 
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
-        $sql = $sql_gen;
+        $sql     = $sql_gen;
 
         $type = array_map( function($t) {
             return "type = '{$type[$i]}'";
         }, $type);
+
         $sql_type = join(" OR ", $type);
 
-        $sql = $sql_gen ." WHERE (". $sql_type.") ";
+        $sql      = $sql_gen ." WHERE (". $sql_type.") ";
 
         if (!is_null($search)) {
             $like = "login ILIKE '%{$search}%'";
 
-            $sql = $sql . " AND ".$like;
+            $sql  = $sql . " AND ".$like;
         }
 
         $sql = $sql ." ORDER BY login";
