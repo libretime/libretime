@@ -24,30 +24,30 @@ class Application_Model_StoredFile
      * array of db metadata -> propel
      */
     private $_dbMD = array (
-        "track_title" => "DbTrackTitle",
-        "artist_name" => "DbArtistName",
-        "album_title" => "DbAlbumTitle",
-        "genre" => "DbGenre",
-        "mood" => "DbMood",
+        "track_title"  => "DbTrackTitle",
+        "artist_name"  => "DbArtistName",
+        "album_title"  => "DbAlbumTitle",
+        "genre"        => "DbGenre",
+        "mood"         => "DbMood",
         "track_number" => "DbTrackNumber",
-        "bpm" => "DbBpm",
-        "label" => "DbLabel",
-        "composer" => "DbComposer",
-        "encoded_by" => "DbEncodedBy",
-        "conductor" => "DbConductor",
-        "year" => "DbYear",
-        "info_url" => "DbInfoUrl",
-        "isrc_number" => "DbIsrcNumber",
-        "copyright" => "DbCopyright",
-        "length" => "DbLength",
-        "bit_rate" => "DbBitRate",
-        "sample_rate" => "DbSampleRate",
-        "mime" => "DbMime",
-        "md5" => "DbMd5",
-        "ftype" => "DbFtype",
-        "language" => "DbLanguage",
-        "replay_gain" => "DbReplayGain",
-        "directory" => "DbDirectory"
+        "bpm"          => "DbBpm",
+        "label"        => "DbLabel",
+        "composer"     => "DbComposer",
+        "encoded_by"   => "DbEncodedBy",
+        "conductor"    => "DbConductor",
+        "year"         => "DbYear",
+        "info_url"     => "DbInfoUrl",
+        "isrc_number"  => "DbIsrcNumber",
+        "copyright"    => "DbCopyright",
+        "length"       => "DbLength",
+        "bit_rate"     => "DbBitRate",
+        "sample_rate"  => "DbSampleRate",
+        "mime"         => "DbMime",
+        "md5"          => "DbMd5",
+        "ftype"        => "DbFtype",
+        "language"     => "DbLanguage",
+        "replay_gain"  => "DbReplayGain",
+        "directory"    => "DbDirectory"
     );
 
     public function __construct()
@@ -266,8 +266,8 @@ class Application_Model_StoredFile
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
                 if (isset($dbmd_copy[$value])) {
-                    $propelColumn = $dbmd_copy[$value];
-                    $method = "get$propelColumn";
+                    $propelColumn  = $dbmd_copy[$value];
+                    $method        = "get$propelColumn";
                     $md[$constant] = $this->_file->$method();
                 }
             }
@@ -594,31 +594,31 @@ class Application_Model_StoredFile
             "language", "filepath"
         );
 
-        $plSelect = array();
-        $blSelect = array();
-        $fileSelect = array();
+        $plSelect     = array();
+        $blSelect     = array();
+        $fileSelect   = array();
         $streamSelect = array();
         foreach ($displayColumns as $key) {
 
             if ($key === "id") {
-                $plSelect[] = "PL.id AS ".$key;
-                $blSelect[] = "BL.id AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "PL.id AS ".$key;
+                $blSelect[]     = "BL.id AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "ws.id AS ".$key;
             } elseif ($key === "track_title") {
-                $plSelect[] = "name AS ".$key;
-                $blSelect[] = "name AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "name AS ".$key;
+                $blSelect[]     = "name AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "name AS ".$key;
             } elseif ($key === "ftype") {
-                $plSelect[] = "'playlist'::varchar AS ".$key;
-                $blSelect[] = "'block'::varchar AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "'playlist'::varchar AS ".$key;
+                $blSelect[]     = "'block'::varchar AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "'stream'::varchar AS ".$key;
             } elseif ($key === "artist_name") {
-                $plSelect[] = "login AS ".$key;
-                $blSelect[] = "login AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "login AS ".$key;
+                $blSelect[]     = "login AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "login AS ".$key;
             }
             //same columns in each table.
@@ -635,26 +635,26 @@ class Application_Model_StoredFile
             }
             //need to cast certain data as ints for the union to search on.
             else if (in_array($key, array("track_number", "bit_rate", "sample_rate", "bpm"))) {
-                $plSelect[] = "NULL::int AS ".$key;
-                $blSelect[] = "NULL::int AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::int AS ".$key;
+                $blSelect[]     = "NULL::int AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::int AS ".$key;
             } else if ($key === "filepath") {
-                $plSelect[] = "NULL::VARCHAR AS ".$key;
-                $blSelect[] = "NULL::VARCHAR AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::VARCHAR AS ".$key;
+                $blSelect[]     = "NULL::VARCHAR AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "url AS ".$key;
             } else {
-                $plSelect[] = "NULL::text AS ".$key;
-                $blSelect[] = "NULL::text AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::text AS ".$key;
+                $blSelect[]     = "NULL::text AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::text AS ".$key;
             }
         }
 
-        $plSelect = "SELECT ". join(",", $plSelect);
-        $blSelect = "SELECT ". join(",", $blSelect);
-        $fileSelect = "SELECT ". join(",", $fileSelect);
+        $plSelect     = "SELECT ". join(",", $plSelect);
+        $blSelect     = "SELECT ". join(",", $blSelect);
+        $fileSelect   = "SELECT ". join(",", $fileSelect);
         $streamSelect = "SELECT ". join(",", $streamSelect);
 
         $type = intval($datatables["type"]);
@@ -881,8 +881,8 @@ class Application_Model_StoredFile
         // Check if liquidsoap can play this file
         if(!self::liquidsoapFilePlayabilityTest($audio_file)) {
             return array(
-                "code" => 110,
-                "message" => "This file appears to be corrupted and will not 
+                "code"    => 110,
+                "message" => "This file appears to be corrupted and will not
                 be added to media library.");
         }
 
@@ -895,11 +895,17 @@ class Application_Model_StoredFile
             #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
             unlink($audio_file);//remove the file after failed rename
             return array(
-                "code" => 108,
+                "code"    => 108,
                 "message" => "
                 The file was not uploaded, this error can occur if the computer
                 hard drive does not have enough disk space or the stor
                 directory does not have correct write permissions.  ");
+        }
+        // Now that we successfully added this file, we will add another tag
+        // file that will identify the user that owns it
+        $uid = Application_Model_User::getCurrentUser()->getId();
+        if (file_put_contents($audio_stor,$uid) === false)  {
+            Logging::info("Could write file to identify user: '$uid'");
         }
         return null;
     }
