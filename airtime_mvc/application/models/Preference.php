@@ -1099,4 +1099,8 @@ class Application_Model_Preference
             return true;
         }
     }
+    
+    public static function getCurrentLibraryTableSetting(){
+        return unserialize(self::getValue("library_datatable"));
+    }
 }
