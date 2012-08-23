@@ -150,6 +150,7 @@ class Application_Model_StoredFile
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
+                // if owner is not present then we will 
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method = "set$propelColumn";
@@ -459,8 +460,7 @@ class Application_Model_StoredFile
         } 
 
         $file = new CcFiles();
-        $now = new DateTime("now", new DateTimeZone("UTC"));
-
+        $now  = new DateTime("now", new DateTimeZone("UTC"));
         $file->setDbUtime($now);
         $file->setDbMtime($now);
 
@@ -472,6 +472,18 @@ class Application_Model_StoredFile
         // path. Also note that mediamonitor normalizes the paths anyway
         // before passing them to php so it's not necessary to do this at all
         $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
+        // if MDATA_OWNER_ID is not set then we default to the first admin user
+        // we find
+        if (!array_key_exists($md, 'MDATA_OWNER_ID')) {
+            $admins = Application_Model_User::getUsers(array('A'));
+            if (count($admins) > 0) { // found admin => pick first one
+                $md['MDATA_OWNER_ID'] = $admins[0]->getId();
+            }
+            else {
+                Logging::info("Could not find any admin users in the database
+                    for inserted file. Defaulting to NULL");
+            }
+        }
         $res = $storedFile->setFilePath($filepath);
         if ($res === -1) {
             return null;
