@@ -47,7 +47,8 @@ class Application_Model_StoredFile
         "ftype"        => "DbFtype",
         "language"     => "DbLanguage",
         "replay_gain"  => "DbReplayGain",
-        "directory"    => "DbDirectory"
+        "directory"    => "DbDirectory",
+        "owner_id"     => "DbOwnerId"
     );
 
     public function __construct()
@@ -145,15 +146,38 @@ class Application_Model_StoredFile
                 $this->_file->$method(null);
             }
         } else {
+            // if owner_id is already set we don't want to set it again. 
+            $owner = $this->_file->getOwner();
+            if($owner) {
+                $owner = null;
+                // if MDATA_OWNER_ID is not set then we default to the 
+                // first admin user we find
+                if (!array_key_exists($md, 'MDATA_OWNER_ID')) {
+                    $admins = Application_Model_User::getUsers(array('A'));
+                    if (count($admins) > 0) { // found admin => pick first one
+                        $owner = $admins[0];
+                    }
+                }
+                // get the user by id and set it like that
+                else {
+                    // this is wrong
+                    $user = CcSubjsQuery::create()->findPk($p_md['MDATA_OWNER_ID']);
+                    if ($user) {
+                        $owner = $user;
+                    }
+                }
+                if ($owner) { 
+                    $this->_file->setDbOwner($owner);
+                }
+            }
             foreach ($p_md as $dbColumn => $mdValue) {
                 //don't blank out name, defaults to original filename on first insertion to database.
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
-                // if owner is not present then we will 
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
-                    $method = "set$propelColumn";
+                    $method       = "set$propelColumn";
                     Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
@@ -472,18 +496,6 @@ class Application_Model_StoredFile
         // path. Also note that mediamonitor normalizes the paths anyway
         // before passing them to php so it's not necessary to do this at all
         $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
-        // if MDATA_OWNER_ID is not set then we default to the first admin user
-        // we find
-        if (!array_key_exists($md, 'MDATA_OWNER_ID')) {
-            $admins = Application_Model_User::getUsers(array('A'));
-            if (count($admins) > 0) { // found admin => pick first one
-                $md['MDATA_OWNER_ID'] = $admins[0]->getId();
-            }
-            else {
-                Logging::info("Could not find any admin users in the database
-                    for inserted file. Defaulting to NULL");
-            }
-        }
         $res = $storedFile->setFilePath($filepath);
         if ($res === -1) {
             return null;
