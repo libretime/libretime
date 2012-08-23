@@ -873,9 +873,9 @@ class Application_Model_StoredFile
         if(!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
             $freeSpace = disk_free_space($stor);
             return array("code" => 107,
-                "message" => "The file was not uploaded, there is 
-                             ".$freeSpace."MB of disk space left and the file you are
-                             uploading has a size of  ".$fileSize."MB.");
+                "message" => "The file was not uploaded, there is
+                ".$freeSpace."MB of disk space left and the file you are
+                uploading has a size of  ".$fileSize."MB.");
         }
 
         // Check if liquidsoap can play this file
@@ -889,23 +889,31 @@ class Application_Model_StoredFile
         // Did all the checks for realz, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
         Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
-        //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+        // Martin K.: changed to rename: Much less load + quicker since this is
+        // an atomic operation
         if (@rename($audio_file, $audio_stor) === false) {
-            #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
-            #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-            unlink($audio_file);//remove the file after failed rename
+            //something went wrong likely there wasn't enough space in the audio_stor to move the file too.
+            //warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+            unlink($audio_file); //remove the file after failed rename
             return array(
                 "code"    => 108,
                 "message" => "
                 The file was not uploaded, this error can occur if the computer
                 hard drive does not have enough disk space or the stor
-                directory does not have correct write permissions.  ");
+                directory does not have correct write permissions.");
         }
         // Now that we successfully added this file, we will add another tag
         // file that will identify the user that owns it
         $uid = Application_Model_User::getCurrentUser()->getId();
-        if (file_put_contents($audio_stor,$uid) === false)  {
-            Logging::info("Could write file to identify user: '$uid'");
+        $id_file = "$audio_stor.identifier";
+        if (file_put_contents($id_file,$uid) === false)  {
+            Logging::info("Could not write file to identify user: '$uid'");
+            Logging::info("Id file path: '$id_file'");
+            Logging::info("Defaulting to admin (no identification file was
+                written)");
+        } else {
+            Logging::info("Successfully written identification file for
+                uploaded '$audio_stor'");
         }
         return null;
     }
