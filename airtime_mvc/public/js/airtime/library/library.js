@@ -339,7 +339,7 @@ var AIRTIME = (function(AIRTIME) {
         
         var tableHeight = $libContent.height() - 130;
         
-        function setColumnFilter(){
+        function setColumnFilter(oTable){
             var aoCols = oTable.fnSettings().aoColumns;
             var colsForAdvancedSearch = new Array();
             var advanceSearchDiv = $("div#advanced_search");
@@ -610,7 +610,7 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
-        setColumnFilter();
+        setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
        
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
