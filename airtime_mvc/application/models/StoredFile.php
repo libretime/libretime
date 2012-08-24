@@ -97,7 +97,6 @@ class Application_Model_StoredFile
      */
     public function setMetadata($p_md=null)
     {
-        Logging::info("entered setMetadata");
         if (is_null($p_md)) {
             $this->setDbColMetadata();
         } else {
@@ -146,13 +145,13 @@ class Application_Model_StoredFile
                 $this->_file->$method(null);
             }
         } else {
-            // if owner_id is already set we don't want to set it again. 
             $owner = $this->_file->getOwner();
-            if($owner) {
+            // if owner_id is already set we don't want to set it again. 
+            if(!$owner) { // no owner detected, we try to assign one.
                 $owner = null;
                 // if MDATA_OWNER_ID is not set then we default to the 
                 // first admin user we find
-                if (!array_key_exists($md, 'MDATA_OWNER_ID')) {
+                if (!array_key_exists('MDATA_OWNER_ID', $p_md)) {
                     $admins = Application_Model_User::getUsers(array('A'));
                     if (count($admins) > 0) { // found admin => pick first one
                         $owner = $admins[0];
@@ -160,8 +159,8 @@ class Application_Model_StoredFile
                 }
                 // get the user by id and set it like that
                 else {
-                    // this is wrong
-                    $user = CcSubjsQuery::create()->findPk($p_md['MDATA_OWNER_ID']);
+                    $user = CcSubjsQuery::create()
+                        ->findPk($p_md['MDATA_OWNER_ID']);
                     if ($user) {
                         $owner = $user;
                     }
@@ -781,7 +780,7 @@ class Application_Model_StoredFile
 
         // Settings
         $cleanupTargetDir = false; // Remove old files
-        $maxFileAge = 60 * 60; // Temp file age in seconds
+        $maxFileAge       = 60 * 60; // Temp file age in seconds
 
         // 5 minutes execution time
         @set_time_limit(5 * 60);
