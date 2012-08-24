@@ -5,7 +5,7 @@ class Logging {
     private static $_logger;
     private static $_path;
 
-    private static function getLogger()
+    public static function getLogger()
     {
         if (!isset(self::$_logger)) {
             $writer = new Zend_Log_Writer_Stream(self::$_path);

@@ -1,17 +1,4 @@
 <?php
-
-require_once __DIR__."/logging/Logging.php";
-Logging::setLogPath('/var/log/airtime/zendphp.log');
-require_once __DIR__."/configs/conf.php";
-require_once __DIR__."/configs/ACL.php";
-require_once 'propel/runtime/lib/Propel.php';
-Propel::init(__DIR__."/configs/airtime-conf-production.php");
-require_once __DIR__."/configs/constants.php";
-require_once 'Preference.php';
-require_once "DateHelper.php";
-require_once "OsPath.php";
-require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
-
 //DateTime in PHP 5.3.0+ need a default timezone set. Set to UTC initially
 //in case Application_Model_Preference::GetTimezone fails and creates needs to create
 //a log entry. This log entry requires a call to date(), which then complains that
@@ -19,7 +6,36 @@ require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 //that getting the real timezone failed, without PHP complaining that it cannot log because
 //there is no timezone :|.
 date_default_timezone_set('UTC');
+
+require_once __DIR__."/logging/Logging.php";
+Logging::setLogPath('/var/log/airtime/zendphp.log');
+require_once __DIR__."/configs/conf.php";
+require_once __DIR__."/configs/ACL.php";
+require_once 'propel/runtime/lib/Propel.php';
+
+Propel::init(__DIR__."/configs/airtime-conf-production.php");
+if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development") {
+    $logger = Logging::getLogger();
+    Propel::setLogger($logger);
+
+    $con = Propel::getConnection();
+    $con->useDebug(true);
+
+    $config = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
+    $config->setParameter('debugpdo.logging.details.method.enabled', true);
+    $config->setParameter('debugpdo.logging.details.time.enabled', true);
+    $config->setParameter('debugpdo.logging.details.mem.enabled', true);
+}
+
+require_once __DIR__."/configs/constants.php";
+require_once 'Preference.php';
+require_once "DateHelper.php";
+require_once "OsPath.php";
+require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
+
+
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
+
 
 global $CC_CONFIG;
 $airtime_version = Application_Model_Preference::GetAirtimeVersion();
@@ -90,7 +106,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $view->headScript()->appendScript("var userType = '$userType';");
 
-        if(isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1){
+        if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {
             $view->headScript()->appendFile($baseUrl.'/js/libs/google-analytics.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         }
     }
@@ -109,7 +125,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initZFDebug()
     {
-        if (APPLICATION_ENV == "development"){
+        if (APPLICATION_ENV == "development") {
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
 
@@ -129,7 +145,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initRouter()
     {
-    	$front = Zend_Controller_Front::getInstance();
+        $front = Zend_Controller_Front::getInstance();
         $router = $front->getRouter();
 
         $router->addRoute(
