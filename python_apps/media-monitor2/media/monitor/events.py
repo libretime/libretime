@@ -2,6 +2,7 @@
 import os
 import abc
 import media.monitor.pure as mmp
+import media.monitor.owners as owners
 from media.monitor.pure       import LazyProperty
 from media.monitor.metadata   import Metadata
 from media.monitor.log        import Loggable
@@ -12,6 +13,8 @@ class PathChannel(object):
         self.signal = signal
         self.path   = path
 
+# TODO : Move this to it's file. Also possible unsingleton and use it as a
+# simple module just like m.m.owners
 class EventRegistry(object):
     """
     This class's main use is to keep track all events with a cookie attribute.
@@ -56,6 +59,7 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
+        self.owner = owners.get_owner()
         self._pack_hook = lambda: None # no op
         # into another event
 
@@ -90,6 +94,7 @@ class BaseEvent(Loggable):
         try:
             self._pack_hook()
             ret = self.pack()
+            owners.remove_file_owner(self.path)
             return ret
         except BadSongFile as e: return [e]
 
@@ -101,6 +106,14 @@ class BaseEvent(Loggable):
         self.__class__    = evt.__class__
         # We don't transfer the _pack_hook over to the new event
         return self
+
+    def assign_owner(self,req):
+        """
+        Packs self.owner to req if the owner is valid. I.e. it's not -1. This
+        method is used by various events that would like to pass owner as a
+        parameter. NewFile for example.
+        """
+        if self.owner != -1: req['MDATA_KEY_OWNER_ID']
 
 class FakePyinotify(object):
     """
@@ -125,6 +138,7 @@ class NewFile(BaseEvent, HasMetaData):
         """
         req_dict = self.metadata.extract()
         req_dict['mode'] = u'create'
+        self.assign_owner(req_dict)
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return [req_dict]
 
