@@ -335,8 +335,6 @@ function setupUI() {
     } else if (!shuffleButton.hasClass('ui-state-disabled')) {
         if (!shuffleButton.hasClass('ui-state-disabled')) {
             shuffleButton.addClass('ui-state-disabled');
-        }
-        if (shuffleButton.attr('disabled') === undefined) {
             shuffleButton.attr('disabled', 'disabled');
         }
     }
