@@ -69,4 +69,26 @@ class Logging {
             $logger->debug("[$file : $function() : line $line] - ".self::toString($p_msg));            
         }
     }
+
+    public static function enablePropelLogging()
+    {
+        $logger = Logging::getLogger();
+        Propel::setLogger($logger);
+
+        $con = Propel::getConnection();
+        $con->useDebug(true);
+
+        $config = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
+        $config->setParameter('debugpdo.logging.details.method.enabled', true);
+        $config->setParameter('debugpdo.logging.details.time.enabled', true);
+        $config->setParameter('debugpdo.logging.details.mem.enabled', true);
+    }
+
+    public static function disablePropelLogging()
+    {
+        $con = Propel::getConnection();
+        $con->useDebug(false);
+        Propel::setLogger(null);
+    }
+
 }

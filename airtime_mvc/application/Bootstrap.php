@@ -14,18 +14,6 @@ require_once __DIR__."/configs/ACL.php";
 require_once 'propel/runtime/lib/Propel.php';
 
 Propel::init(__DIR__."/configs/airtime-conf-production.php");
-if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development") {
-    $logger = Logging::getLogger();
-    Propel::setLogger($logger);
-
-    $con = Propel::getConnection();
-    $con->useDebug(true);
-
-    $config = Propel::getConfiguration(PropelConfiguration::TYPE_OBJECT);
-    $config->setParameter('debugpdo.logging.details.method.enabled', true);
-    $config->setParameter('debugpdo.logging.details.time.enabled', true);
-    $config->setParameter('debugpdo.logging.details.mem.enabled', true);
-}
 
 require_once __DIR__."/configs/constants.php";
 require_once 'Preference.php';

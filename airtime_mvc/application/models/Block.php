@@ -949,7 +949,8 @@ EOT;
         CcBlockQuery::create()->findPk($this->id)->setDbType($p_blockType)->save();
     }
     
-    public function setLength($value){
+    public function setLength($value)
+    {
         $this->block->setDbLength($value);
         $this->block->save($this->con);
         $this->updateBlockLengthInAllPlaylist();
@@ -998,7 +999,8 @@ EOT;
         }
     }
     
-    public function storeCriteriaIntoDb($p_criteriaData){
+    public function storeCriteriaIntoDb($p_criteriaData)
+    {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
         Logging::info($p_criteriaData);
@@ -1006,7 +1008,7 @@ EOT;
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
-                foreach( $p_criteriaData['criteria'][$critKeys[$i]] as $d){
+                foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
                     $qry = new CcBlockcriteria();
                     $qry->setDbCriteria($d['sp_criteria_field'])
                     ->setDbModifier($d['sp_criteria_modifier'])
@@ -1214,7 +1216,9 @@ EOT;
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
             } else {
-                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? intval(floatval($storedCrit['limit']['value']) * 60 * 60) : intval($storedCrit['limit']['value'] * 60);
+                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? 
+                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) : 
+                    intval($storedCrit['limit']['value'] * 60);
                 $limits['items'] = null;
             }
         }
