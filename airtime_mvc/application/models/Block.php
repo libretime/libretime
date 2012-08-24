@@ -1181,7 +1181,17 @@ EOT;
                             $criteria['extra'] *= 1000;
                         }
                     } else {
-                        $spCriteriaValue = addslashes($criteria['value']);
+                        /* Propel does not escape special characters properly when using LIKE/ILIKE
+                         * We have to add extra slashes in these cases
+                         */
+                        $tempModifier = trim(self::$modifier2CriteriaMap[$spCriteriaModifier]);
+                        if ($tempModifier == 'ILIKE') {
+                            $spCriteriaValue = addslashes($criteria['value']);
+                            // addslashes() does not esapce '%' so we have to do it manually
+                            $spCriteriaValue = str_replace('%', '\%', $spCriteriaValue);
+                        } else {
+                            $spCriteriaValue = ($criteria['value']);
+                        }
                     }
                     
                     if ($spCriteriaModifier == "starts with") {
@@ -1224,7 +1234,6 @@ EOT;
         }
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
-
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);
