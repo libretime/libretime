@@ -205,7 +205,7 @@ class Application_Model_ShowInstance
      * @return $newDateTime
      *      php DateTime, $dateTime with the added time deltas.
      */
-    private static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
     {
         $newDateTime = clone $dateTime;
 
