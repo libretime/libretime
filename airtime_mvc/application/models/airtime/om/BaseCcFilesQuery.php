@@ -69,6 +69,7 @@
  * @method     CcFilesQuery orderByDbSoundcloudLinkToFile($order = Criteria::ASC) Order by the soundcloud_link_to_file column
  * @method     CcFilesQuery orderByDbSoundCloundUploadTime($order = Criteria::ASC) Order by the soundcloud_upload_time column
  * @method     CcFilesQuery orderByDbReplayGain($order = Criteria::ASC) Order by the replay_gain column
+ * @method     CcFilesQuery orderByDbOwnerId($order = Criteria::ASC) Order by the owner_id column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbName() Group by the name column
@@ -133,14 +134,19 @@
  * @method     CcFilesQuery groupByDbSoundcloudLinkToFile() Group by the soundcloud_link_to_file column
  * @method     CcFilesQuery groupByDbSoundCloundUploadTime() Group by the soundcloud_upload_time column
  * @method     CcFilesQuery groupByDbReplayGain() Group by the replay_gain column
+ * @method     CcFilesQuery groupByDbOwnerId() Group by the owner_id column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcFilesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcFilesQuery leftJoinCcSubjs($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSubjs relation
- * @method     CcFilesQuery rightJoinCcSubjs($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjs relation
- * @method     CcFilesQuery innerJoinCcSubjs($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSubjs relation
+ * @method     CcFilesQuery leftJoinFkOwner($relationAlias = '') Adds a LEFT JOIN clause to the query using the FkOwner relation
+ * @method     CcFilesQuery rightJoinFkOwner($relationAlias = '') Adds a RIGHT JOIN clause to the query using the FkOwner relation
+ * @method     CcFilesQuery innerJoinFkOwner($relationAlias = '') Adds a INNER JOIN clause to the query using the FkOwner relation
+ *
+ * @method     CcFilesQuery leftJoinCcSubjsRelatedByDbEditedby($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
+ * @method     CcFilesQuery rightJoinCcSubjsRelatedByDbEditedby($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
+ * @method     CcFilesQuery innerJoinCcSubjsRelatedByDbEditedby($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  *
  * @method     CcFilesQuery leftJoinCcMusicDirs($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcMusicDirs relation
  * @method     CcFilesQuery rightJoinCcMusicDirs($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcMusicDirs relation
@@ -228,6 +234,7 @@
  * @method     CcFiles findOneByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return the first CcFiles filtered by the soundcloud_link_to_file column
  * @method     CcFiles findOneByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return the first CcFiles filtered by the soundcloud_upload_time column
  * @method     CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
+ * @method     CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -292,6 +299,7 @@
  * @method     array findByDbSoundcloudLinkToFile(string $soundcloud_link_to_file) Return CcFiles objects filtered by the soundcloud_link_to_file column
  * @method     array findByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return CcFiles objects filtered by the soundcloud_upload_time column
  * @method     array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
+ * @method     array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -1904,6 +1912,37 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query on the owner_id column
+	 * 
+	 * @param     int|array $dbOwnerId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbOwnerId($dbOwnerId = null, $comparison = null)
+	{
+		if (is_array($dbOwnerId)) {
+			$useMinMax = false;
+			if (isset($dbOwnerId['min'])) {
+				$this->addUsingAlias(CcFilesPeer::OWNER_ID, $dbOwnerId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbOwnerId['max'])) {
+				$this->addUsingAlias(CcFilesPeer::OWNER_ID, $dbOwnerId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::OWNER_ID, $dbOwnerId, $comparison);
+	}
+
+	/**
 	 * Filter the query by a related CcSubjs object
 	 *
 	 * @param     CcSubjs $ccSubjs  the related object to use as filter
@@ -1911,24 +1950,24 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByCcSubjs($ccSubjs, $comparison = null)
+	public function filterByFkOwner($ccSubjs, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcFilesPeer::EDITEDBY, $ccSubjs->getDbId(), $comparison);
+			->addUsingAlias(CcFilesPeer::OWNER_ID, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcSubjs relation
+	 * Adds a JOIN clause to the query using the FkOwner relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function joinCcSubjs($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function joinFkOwner($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcSubjs');
+		$relationMap = $tableMap->getRelation('FkOwner');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -1943,14 +1982,14 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcSubjs');
+			$this->addJoinObject($join, 'FkOwner');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcSubjs relation CcSubjs object
+	 * Use the FkOwner relation CcSubjs object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -1960,11 +1999,75 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	 *
 	 * @return    CcSubjsQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcSubjsQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function useFkOwnerQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
-			->joinCcSubjs($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcSubjs', 'CcSubjsQuery');
+			->joinFkOwner($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'FkOwner', 'CcSubjsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcSubjs object
+	 *
+	 * @param     CcSubjs $ccSubjs  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByCcSubjsRelatedByDbEditedby($ccSubjs, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcFilesPeer::EDITEDBY, $ccSubjs->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function joinCcSubjsRelatedByDbEditedby($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcSubjsRelatedByDbEditedby');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcSubjsRelatedByDbEditedby');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcSubjsRelatedByDbEditedby relation CcSubjs object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcSubjsQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcSubjsRelatedByDbEditedbyQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcSubjsRelatedByDbEditedby($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcSubjsRelatedByDbEditedby', 'CcSubjsQuery');
 	}
 
 	/**
