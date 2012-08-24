@@ -11,6 +11,14 @@ def reset_owners():
     global owners
     owners = {}
 
+
+def get_owner(f):
+    """
+    Get the owner id of the file 'f'
+    """
+    return owners[f] if f in owners else -1
+
+
 def add_file_owner(f,owner):
     """
     Associate file f with owner. If owner is -1 then do we will not record it
@@ -40,7 +48,5 @@ def remove_file_owner(f):
     if f in owners:
         del owners[f]
         return True
-    else:
-        log.warn("Trying to delete file that does not exist: '%s'" % f)
-        return False
+    else: return False
 
