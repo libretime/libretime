@@ -20,6 +20,17 @@ class Application_Form_PasswordRestore extends Zend_Form
                 'ViewHelper'
             )
         ));
+        
+        $this->addElement('text', 'username', array(
+            'label' => 'Username',
+            'required' => false,
+            'filters' => array(
+                'stringTrim',
+            ),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
 
         $this->addElement('submit', 'submit', array(
             'label' => 'Restore password',

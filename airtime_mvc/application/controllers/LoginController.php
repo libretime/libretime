@@ -110,9 +110,16 @@ class LoginController extends Zend_Controller_Action
 
             $request = $this->getRequest();
             if ($request->isPost() && $form->isValid($request->getPost())) {
-                $user = CcSubjsQuery::create()
-                    ->filterByDbEmail($form->email->getValue())
-                    ->findOne();
+                if (is_null($form->username->getValue()) || $form->username->getValue() == '') {
+                    $user = CcSubjsQuery::create()
+                        ->filterByDbEmail($form->email->getValue())
+                        ->findOne();
+                } else {
+                    $user = CcSubjsQuery::create()
+                        ->filterByDbEmail($form->email->getValue())
+                        ->filterByDbLogin($form->username->getValue())
+                        ->findOne();
+                }
 
                 if (!empty($user)) {
                     $auth = new Application_Model_Auth();
