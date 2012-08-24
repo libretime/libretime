@@ -24,30 +24,31 @@ class Application_Model_StoredFile
      * array of db metadata -> propel
      */
     private $_dbMD = array (
-        "track_title" => "DbTrackTitle",
-        "artist_name" => "DbArtistName",
-        "album_title" => "DbAlbumTitle",
-        "genre" => "DbGenre",
-        "mood" => "DbMood",
+        "track_title"  => "DbTrackTitle",
+        "artist_name"  => "DbArtistName",
+        "album_title"  => "DbAlbumTitle",
+        "genre"        => "DbGenre",
+        "mood"         => "DbMood",
         "track_number" => "DbTrackNumber",
-        "bpm" => "DbBpm",
-        "label" => "DbLabel",
-        "composer" => "DbComposer",
-        "encoded_by" => "DbEncodedBy",
-        "conductor" => "DbConductor",
-        "year" => "DbYear",
-        "info_url" => "DbInfoUrl",
-        "isrc_number" => "DbIsrcNumber",
-        "copyright" => "DbCopyright",
-        "length" => "DbLength",
-        "bit_rate" => "DbBitRate",
-        "sample_rate" => "DbSampleRate",
-        "mime" => "DbMime",
-        "md5" => "DbMd5",
-        "ftype" => "DbFtype",
-        "language" => "DbLanguage",
-        "replay_gain" => "DbReplayGain",
-        "directory" => "DbDirectory"
+        "bpm"          => "DbBpm",
+        "label"        => "DbLabel",
+        "composer"     => "DbComposer",
+        "encoded_by"   => "DbEncodedBy",
+        "conductor"    => "DbConductor",
+        "year"         => "DbYear",
+        "info_url"     => "DbInfoUrl",
+        "isrc_number"  => "DbIsrcNumber",
+        "copyright"    => "DbCopyright",
+        "length"       => "DbLength",
+        "bit_rate"     => "DbBitRate",
+        "sample_rate"  => "DbSampleRate",
+        "mime"         => "DbMime",
+        "md5"          => "DbMd5",
+        "ftype"        => "DbFtype",
+        "language"     => "DbLanguage",
+        "replay_gain"  => "DbReplayGain",
+        "directory"    => "DbDirectory",
+        "owner_id"     => "DbOwnerId"
     );
 
     public function __construct()
@@ -96,7 +97,6 @@ class Application_Model_StoredFile
      */
     public function setMetadata($p_md=null)
     {
-        Logging::info("entered setMetadata");
         if (is_null($p_md)) {
             $this->setDbColMetadata();
         } else {
@@ -145,14 +145,44 @@ class Application_Model_StoredFile
                 $this->_file->$method(null);
             }
         } else {
+            $owner = $this->_file->getFkOwner();
+            // if owner_id is already set we don't want to set it again. 
+            if(!$owner) { // no owner detected, we try to assign one.
+                // if MDATA_OWNER_ID is not set then we default to the 
+                // first admin user we find
+                if (!array_key_exists('MDATA_OWNER_ID', $p_md)) {
+                    //$admins = Application_Model_User::getUsers(array('A'));
+                    $admins = Application_Model_User::getUsersOfType('A');
+                    //$admins = array();
+                    if (count($admins) > 0) { // found admin => pick first one
+                        $owner = $admins[0];
+                    }
+                }
+                // get the user by id and set it like that
+                else {
+                    $user = CcSubjsQuery::create()
+                        ->findPk($p_md['MDATA_OWNER_ID']);
+                    if ($user) {
+                        $owner = $user;
+                    }
+                }
+                if ($owner) { 
+                    $this->_file->setDbOwnerId( $owner->getDbId() );
+                }
+                else {
+                    Logging::info("Could not find suitable owner for file
+                        '".$p_md['MDATA_KEY_FILEPATH']."'");
+                }
+            }
             foreach ($p_md as $dbColumn => $mdValue) {
-                //don't blank out name, defaults to original filename on first insertion to database.
+                // don't blank out name, defaults to original filename on first
+                // insertion to database.
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
-                    $method = "set$propelColumn";
+                    $method       = "set$propelColumn";
                     Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
@@ -266,8 +296,8 @@ class Application_Model_StoredFile
         foreach ($c['user'] as $constant => $value) {
             if (preg_match('/^MDATA_KEY/', $constant)) {
                 if (isset($dbmd_copy[$value])) {
-                    $propelColumn = $dbmd_copy[$value];
-                    $method = "get$propelColumn";
+                    $propelColumn  = $dbmd_copy[$value];
+                    $method        = "get$propelColumn";
                     $md[$constant] = $this->_file->$method();
                 }
             }
@@ -372,12 +402,11 @@ class Application_Model_StoredFile
      */
     public function getFilePath()
     {
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->
+            _file->getDbDirectory());
         $directory = $music_dir->getDirectory();
-
-        $filepath = $this->_file->getDbFilepath();
-
-        return $directory.$filepath;
+        $filepath  = $this->_file->getDbFilepath();
+        return OsPath::join($directory, $filepath);
     }
 
     /**
@@ -459,13 +488,18 @@ class Application_Model_StoredFile
         } 
 
         $file = new CcFiles();
-        $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
-        $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $now  = new DateTime("now", new DateTimeZone("UTC"));
+        $file->setDbUtime($now);
+        $file->setDbMtime($now);
 
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
 
         // removed "//" in the path. Always use '/' for path separator
+        // TODO : it might be better to just call OsPath::normpath on the file
+        // path. Also note that mediamonitor normalizes the paths anyway
+        // before passing them to php so it's not necessary to do this at all
+
         $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
         $res = $storedFile->setFilePath($filepath);
         if ($res === -1) {
@@ -576,9 +610,9 @@ class Application_Model_StoredFile
                         ->find();
         $res = array();
         foreach ($files as $file) {
-            $storedFile = new Application_Model_StoredFile();
+            $storedFile        = new Application_Model_StoredFile();
             $storedFile->_file = $file;
-            $res[] = $storedFile;
+            $res[]             = $storedFile;
         }
 
         return $res;
@@ -594,31 +628,31 @@ class Application_Model_StoredFile
             "language", "filepath"
         );
 
-        $plSelect = array();
-        $blSelect = array();
-        $fileSelect = array();
+        $plSelect     = array();
+        $blSelect     = array();
+        $fileSelect   = array();
         $streamSelect = array();
         foreach ($displayColumns as $key) {
 
             if ($key === "id") {
-                $plSelect[] = "PL.id AS ".$key;
-                $blSelect[] = "BL.id AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "PL.id AS ".$key;
+                $blSelect[]     = "BL.id AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "ws.id AS ".$key;
             } elseif ($key === "track_title") {
-                $plSelect[] = "name AS ".$key;
-                $blSelect[] = "name AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "name AS ".$key;
+                $blSelect[]     = "name AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "name AS ".$key;
             } elseif ($key === "ftype") {
-                $plSelect[] = "'playlist'::varchar AS ".$key;
-                $blSelect[] = "'block'::varchar AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "'playlist'::varchar AS ".$key;
+                $blSelect[]     = "'block'::varchar AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "'stream'::varchar AS ".$key;
             } elseif ($key === "artist_name") {
-                $plSelect[] = "login AS ".$key;
-                $blSelect[] = "login AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "login AS ".$key;
+                $blSelect[]     = "login AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "login AS ".$key;
             }
             //same columns in each table.
@@ -635,26 +669,26 @@ class Application_Model_StoredFile
             }
             //need to cast certain data as ints for the union to search on.
             else if (in_array($key, array("track_number", "bit_rate", "sample_rate", "bpm"))) {
-                $plSelect[] = "NULL::int AS ".$key;
-                $blSelect[] = "NULL::int AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::int AS ".$key;
+                $blSelect[]     = "NULL::int AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::int AS ".$key;
             } else if ($key === "filepath") {
-                $plSelect[] = "NULL::VARCHAR AS ".$key;
-                $blSelect[] = "NULL::VARCHAR AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::VARCHAR AS ".$key;
+                $blSelect[]     = "NULL::VARCHAR AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "url AS ".$key;
             } else {
-                $plSelect[] = "NULL::text AS ".$key;
-                $blSelect[] = "NULL::text AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::text AS ".$key;
+                $blSelect[]     = "NULL::text AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::text AS ".$key;
             }
         }
 
-        $plSelect = "SELECT ". join(",", $plSelect);
-        $blSelect = "SELECT ". join(",", $blSelect);
-        $fileSelect = "SELECT ". join(",", $fileSelect);
+        $plSelect     = "SELECT ". join(",", $plSelect);
+        $blSelect     = "SELECT ". join(",", $blSelect);
+        $fileSelect   = "SELECT ". join(",", $fileSelect);
         $streamSelect = "SELECT ". join(",", $streamSelect);
 
         $type = intval($datatables["type"]);
@@ -750,7 +784,7 @@ class Application_Model_StoredFile
 
         // Settings
         $cleanupTargetDir = false; // Remove old files
-        $maxFileAge = 60 * 60; // Temp file age in seconds
+        $maxFileAge       = 60 * 60; // Temp file age in seconds
 
         // 5 minutes execution time
         @set_time_limit(5 * 60);
@@ -873,34 +907,49 @@ class Application_Model_StoredFile
         if(!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
             $freeSpace = disk_free_space($stor);
             return array("code" => 107,
-                "message" => "The file was not uploaded, there is 
-                             ".$freeSpace."MB of disk space left and the file you are
-                             uploading has a size of  ".$fileSize."MB.");
+                "message" => "The file was not uploaded, there is
+                ".$freeSpace."MB of disk space left and the file you are
+                uploading has a size of  ".$fileSize."MB.");
         }
 
         // Check if liquidsoap can play this file
         if(!self::liquidsoapFilePlayabilityTest($audio_file)) {
             return array(
-                "code" => 110,
-                "message" => "This file appears to be corrupted and will not 
+                "code"    => 110,
+                "message" => "This file appears to be corrupted and will not
                 be added to media library.");
         }
 
         // Did all the checks for realz, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
+        $uid = Application_Model_User::getCurrentUser()->getId();
+        $id_file = "$audio_stor.identifier";
+        if (file_put_contents($id_file,$uid) === false)  {
+            Logging::info("Could not write file to identify user: '$uid'");
+            Logging::info("Id file path: '$id_file'");
+            Logging::info("Defaulting to admin (no identification file was
+                written)");
+        } else {
+            Logging::info("Successfully written identification file for
+                uploaded '$audio_stor'");
+        }
         Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
-        //Martin K.: changed to rename: Much less load + quicker since this is an atomic operation
+        // Martin K.: changed to rename: Much less load + quicker since this is
+        // an atomic operation
         if (@rename($audio_file, $audio_stor) === false) {
-            #something went wrong likely there wasn't enough space in the audio_stor to move the file too.
-            #warn the user that the file wasn't uploaded and they should check if there is enough disk space.
-            unlink($audio_file);//remove the file after failed rename
+            //something went wrong likely there wasn't enough space in the audio_stor to move the file too.
+            //warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+            unlink($audio_file); //remove the file after failed rename
+            unlink($id_file); // Also remove the identifier file
             return array(
-                "code" => 108,
+                "code"    => 108,
                 "message" => "
                 The file was not uploaded, this error can occur if the computer
                 hard drive does not have enough disk space or the stor
-                directory does not have correct write permissions.  ");
+                directory does not have correct write permissions.");
         }
+        // Now that we successfully added this file, we will add another tag
+        // file that will identify the user that owns it
         return null;
     }
 
