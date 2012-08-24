@@ -143,7 +143,16 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         } else {
 
             try {
-                $mime = Application_Model_Webstream::discoverStreamMime($url);
+                list($mime, $content_length_found) = self::discoverStreamMime($url);
+                if (is_null($mime)) {
+                    throw new Exception("No MIME type found for webstream.");
+                }
+                //TODO: return url
+                $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
+
+                if (preg_match("/xspf\+xml/", $mime)) {
+                     list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
+                }
             } catch (Exception $e) {
                 $valid['url'][0] = false;
                 $valid['url'][1] = $e->getMessage();
@@ -158,7 +167,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $id = $parameters["id"];
 
-        return array($valid, $mime, $di); 
+        return array($valid, $mime, $mediaUrl, $di); 
     }
 
     public static function isValid($analysis)
@@ -184,34 +193,79 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     }
 
+    private static function getXspfUrl($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // grab URL and pass it to the browser
+        //TODO: What if invalid url?
+        $content = curl_exec($ch);
+
+        Logging::info($content);
+
+        // close cURL resource, and free up system resources
+        curl_close($ch);
+
+        $dom = new DOMDocument;
+        //TODO: What if invalid xml?
+        $dom->loadXML($content);
+        $tracks = $dom->getElementsByTagName('track');
+
+        foreach ($tracks as $track) {
+            $locations = $track->getElementsByTagName('location');
+            foreach ($locations as $loc) {
+                return $loc->nodeValue;
+            }
+        }
+
+        throw new Exception("Could not parse XSPF playlist");
+    }
+
+    private static function getMediaUrl($url, $mime, $content_length_found)
+    { 
+        if (preg_match("/(mpeg|ogg)/", $mime)) {
+            if ($content_length_found) {
+                throw new Exception("Invalid webstream - This appears to be a file download.");
+            } 
+            $media_url = $url;
+        } else if (preg_match("/x-mpegurl/", $mime)) {
+            $media_url = $url;
+        } else if (preg_match("/xspf\+xml/", $mime)) {
+            $media_url = self::getXspfUrl($url); 
+        } else {
+            throw new Exception("Unrecognized stream type: $mime");
+        }
+
+        return $media_url;
+       
+    }
+
     private static function discoverStreamMime($url)
     {
+        //TODO: What if invalid URL?
         $headers = get_headers($url);
         $mime = null;
+        $content_length_found = false;
         foreach ($headers as $h) {
             if (preg_match("/^content-type:/i", $h)) {
                 list(, $value) = explode(":", $h, 2);
                 $mime = trim($value);
             }
             if (preg_match("/^content-length:/i", $h)) {
+                $content_length_found = true;
                 //if content-length appears, this is not a web stream!!!!
                 //Aborting the save process. 
-                throw new Exception("Invalid webstream - This appears to be a file download.");
             }
         }
 
-        if (is_null($mime)) {
-            throw new Exception("No MIME type found for webstream.");
-        } else {
-            if (!preg_match("/(mpeg|ogg)/", $mime)) {
-                throw new Exception("Unrecognized stream type: $mime");
-            }
-        }
 
-        return $mime;
+        return array($mime, $content_length_found);
     }
 
-    public static function save($parameters, $mime, $di)
+    public static function save($parameters, $mime, $mediaUrl, $di)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
@@ -224,7 +278,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $webstream->setDbName($parameters["name"]);
         $webstream->setDbDescription($parameters["description"]);
-        $webstream->setDbUrl($parameters["url"]);
+        $webstream->setDbUrl($mediaUrl);
 
         $dblength = $di->format("%H:%I"); 
         $webstream->setDbLength($dblength);

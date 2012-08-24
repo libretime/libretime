@@ -28,7 +28,7 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbName("Untitled Webstream");
         $webstream->setDbDescription("");
         $webstream->setDbUrl("http://");
-        $webstream->setDbLength("00:00:00");
+        $webstream->setDbLength("00:30:00");
         $webstream->setDbName("Untitled Webstream");
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
@@ -139,10 +139,10 @@ class WebstreamController extends Zend_Controller_Action
         }
 
 
-        list($analysis, $mime, $di) = Application_Model_Webstream::analyzeFormData($parameters);
+        list($analysis, $mime, $mediaUrl, $di) = Application_Model_Webstream::analyzeFormData($parameters);
         try { 
             if (Application_Model_Webstream::isValid($analysis)) {
-                $streamId = Application_Model_Webstream::save($parameters, $mime, $di);
+                $streamId = Application_Model_Webstream::save($parameters, $mime, $mediaUrl, $di);
 
                 Application_Model_Library::changePlaylist($streamId, "stream");
 
