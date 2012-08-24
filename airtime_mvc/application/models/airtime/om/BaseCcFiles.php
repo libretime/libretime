@@ -419,7 +419,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	/**
 	 * @var        CcSubjs
 	 */
-	protected $aOwner;
+	protected $aFkOwner;
 
 	/**
 	 * @var        CcSubjs
@@ -2626,8 +2626,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcFilesPeer::OWNER_ID;
 		}
 
-		if ($this->aOwner !== null && $this->aOwner->getDbId() !== $v) {
-			$this->aOwner = null;
+		if ($this->aFkOwner !== null && $this->aFkOwner->getDbId() !== $v) {
+			$this->aFkOwner = null;
 		}
 
 		return $this;
@@ -2798,8 +2798,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->aCcSubjsRelatedByDbEditedby !== null && $this->editedby !== $this->aCcSubjsRelatedByDbEditedby->getDbId()) {
 			$this->aCcSubjsRelatedByDbEditedby = null;
 		}
-		if ($this->aOwner !== null && $this->owner_id !== $this->aOwner->getDbId()) {
-			$this->aOwner = null;
+		if ($this->aFkOwner !== null && $this->owner_id !== $this->aFkOwner->getDbId()) {
+			$this->aFkOwner = null;
 		}
 	} // ensureConsistency
 
@@ -2840,7 +2840,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aOwner = null;
+			$this->aFkOwner = null;
 			$this->aCcSubjsRelatedByDbEditedby = null;
 			$this->aCcMusicDirs = null;
 			$this->collCcShowInstancess = null;
@@ -2966,11 +2966,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aOwner !== null) {
-				if ($this->aOwner->isModified() || $this->aOwner->isNew()) {
-					$affectedRows += $this->aOwner->save($con);
+			if ($this->aFkOwner !== null) {
+				if ($this->aFkOwner->isModified() || $this->aFkOwner->isNew()) {
+					$affectedRows += $this->aFkOwner->save($con);
 				}
-				$this->setOwner($this->aOwner);
+				$this->setFkOwner($this->aFkOwner);
 			}
 
 			if ($this->aCcSubjsRelatedByDbEditedby !== null) {
@@ -3113,9 +3113,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aOwner !== null) {
-				if (!$this->aOwner->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aOwner->getValidationFailures());
+			if ($this->aFkOwner !== null) {
+				if (!$this->aFkOwner->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aFkOwner->getValidationFailures());
 				}
 			}
 
@@ -3484,8 +3484,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[63] => $this->getDbOwnerId(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aOwner) {
-				$result['Owner'] = $this->aOwner->toArray($keyType, $includeLazyLoadColumns, true);
+			if (null !== $this->aFkOwner) {
+				$result['FkOwner'] = $this->aFkOwner->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 			if (null !== $this->aCcSubjsRelatedByDbEditedby) {
 				$result['CcSubjsRelatedByDbEditedby'] = $this->aCcSubjsRelatedByDbEditedby->toArray($keyType, $includeLazyLoadColumns, true);
@@ -4085,7 +4085,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @return     CcFiles The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setOwner(CcSubjs $v = null)
+	public function setFkOwner(CcSubjs $v = null)
 	{
 		if ($v === null) {
 			$this->setDbOwnerId(NULL);
@@ -4093,7 +4093,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->setDbOwnerId($v->getDbId());
 		}
 
-		$this->aOwner = $v;
+		$this->aFkOwner = $v;
 
 		// Add binding for other direction of this n:n relationship.
 		// If this object has already been added to the CcSubjs object, it will not be re-added.
@@ -4112,19 +4112,19 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @return     CcSubjs The associated CcSubjs object.
 	 * @throws     PropelException
 	 */
-	public function getOwner(PropelPDO $con = null)
+	public function getFkOwner(PropelPDO $con = null)
 	{
-		if ($this->aOwner === null && ($this->owner_id !== null)) {
-			$this->aOwner = CcSubjsQuery::create()->findPk($this->owner_id, $con);
+		if ($this->aFkOwner === null && ($this->owner_id !== null)) {
+			$this->aFkOwner = CcSubjsQuery::create()->findPk($this->owner_id, $con);
 			/* The following can be used additionally to
 			   guarantee the related object contains a reference
 			   to this object.  This level of coupling may, however, be
 			   undesirable since it could result in an only partially populated collection
 			   in the referenced object.
-			   $this->aOwner->addCcFilessRelatedByDbOwnerId($this);
+			   $this->aFkOwner->addCcFilessRelatedByDbOwnerId($this);
 			 */
 		}
-		return $this->aOwner;
+		return $this->aFkOwner;
 	}
 
 	/**
@@ -4952,7 +4952,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->collCcPlaylistcontentss = null;
 		$this->collCcBlockcontentss = null;
 		$this->collCcSchedules = null;
-		$this->aOwner = null;
+		$this->aFkOwner = null;
 		$this->aCcSubjsRelatedByDbEditedby = null;
 		$this->aCcMusicDirs = null;
 	}

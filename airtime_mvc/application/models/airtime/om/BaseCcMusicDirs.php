@@ -999,10 +999,10 @@ abstract class BaseCcMusicDirs extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
 	 */
-	public function getCcFilessJoinOwner($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcFilessJoinFkOwner($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = CcFilesQuery::create(null, $criteria);
-		$query->joinWith('Owner', $join_behavior);
+		$query->joinWith('FkOwner', $join_behavior);
 
 		return $this->getCcFiless($query, $con);
 	}

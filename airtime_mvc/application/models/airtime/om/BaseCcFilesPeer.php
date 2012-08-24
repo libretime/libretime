@@ -758,7 +758,7 @@ abstract class BaseCcFilesPeer {
 	}
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related Owner table
+	 * Returns the number of rows matching criteria, joining the related FkOwner table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -766,7 +766,7 @@ abstract class BaseCcFilesPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinOwner(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinFkOwner(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -916,7 +916,7 @@ abstract class BaseCcFilesPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinOwner(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinFkOwner(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 
@@ -1274,7 +1274,7 @@ abstract class BaseCcFilesPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related Owner table
+	 * Returns the number of rows matching criteria, joining the related FkOwner table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -1282,7 +1282,7 @@ abstract class BaseCcFilesPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinAllExceptOwner(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinAllExceptFkOwner(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -1426,7 +1426,7 @@ abstract class BaseCcFilesPeer {
 
 
 	/**
-	 * Selects a collection of CcFiles objects pre-filled with all related objects except Owner.
+	 * Selects a collection of CcFiles objects pre-filled with all related objects except FkOwner.
 	 *
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -1435,7 +1435,7 @@ abstract class BaseCcFilesPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAllExceptOwner(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinAllExceptFkOwner(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 

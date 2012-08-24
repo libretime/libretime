@@ -110,7 +110,7 @@ class CcFilesTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('Owner', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
+    $this->addRelation('FkOwner', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
     $this->addRelation('CcSubjsRelatedByDbEditedby', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
     $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), null, null);
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);

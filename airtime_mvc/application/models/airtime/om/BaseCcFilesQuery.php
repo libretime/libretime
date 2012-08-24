@@ -140,9 +140,9 @@
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcFilesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcFilesQuery leftJoinOwner($relationAlias = '') Adds a LEFT JOIN clause to the query using the Owner relation
- * @method     CcFilesQuery rightJoinOwner($relationAlias = '') Adds a RIGHT JOIN clause to the query using the Owner relation
- * @method     CcFilesQuery innerJoinOwner($relationAlias = '') Adds a INNER JOIN clause to the query using the Owner relation
+ * @method     CcFilesQuery leftJoinFkOwner($relationAlias = '') Adds a LEFT JOIN clause to the query using the FkOwner relation
+ * @method     CcFilesQuery rightJoinFkOwner($relationAlias = '') Adds a RIGHT JOIN clause to the query using the FkOwner relation
+ * @method     CcFilesQuery innerJoinFkOwner($relationAlias = '') Adds a INNER JOIN clause to the query using the FkOwner relation
  *
  * @method     CcFilesQuery leftJoinCcSubjsRelatedByDbEditedby($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
  * @method     CcFilesQuery rightJoinCcSubjsRelatedByDbEditedby($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSubjsRelatedByDbEditedby relation
@@ -1950,24 +1950,24 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByOwner($ccSubjs, $comparison = null)
+	public function filterByFkOwner($ccSubjs, $comparison = null)
 	{
 		return $this
 			->addUsingAlias(CcFilesPeer::OWNER_ID, $ccSubjs->getDbId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the Owner relation
+	 * Adds a JOIN clause to the query using the FkOwner relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function joinOwner($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function joinFkOwner($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('Owner');
+		$relationMap = $tableMap->getRelation('FkOwner');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -1982,14 +1982,14 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'Owner');
+			$this->addJoinObject($join, 'FkOwner');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the Owner relation CcSubjs object
+	 * Use the FkOwner relation CcSubjs object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -1999,11 +1999,11 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	 *
 	 * @return    CcSubjsQuery A secondary query class using the current class as primary query
 	 */
-	public function useOwnerQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function useFkOwnerQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
-			->joinOwner($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'Owner', 'CcSubjsQuery');
+			->joinFkOwner($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'FkOwner', 'CcSubjsQuery');
 	}
 
 	/**

@@ -1660,7 +1660,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->initCcFilessRelatedByDbOwnerId();
 			} else {
 				$collCcFilessRelatedByDbOwnerId = CcFilesQuery::create(null, $criteria)
-					->filterByOwner($this)
+					->filterByFkOwner($this)
 					->find($con);
 				if (null !== $criteria) {
 					return $collCcFilessRelatedByDbOwnerId;
@@ -1691,7 +1691,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 					$query->distinct();
 				}
 				return $query
-					->filterByOwner($this)
+					->filterByFkOwner($this)
 					->count($con);
 			}
 		} else {
@@ -1714,7 +1714,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 		}
 		if (!$this->collCcFilessRelatedByDbOwnerId->contains($l)) { // only add it if the **same** object is not already associated
 			$this->collCcFilessRelatedByDbOwnerId[]= $l;
-			$l->setOwner($this);
+			$l->setFkOwner($this);
 		}
 	}
 
