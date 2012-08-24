@@ -201,7 +201,6 @@
     <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
     <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
     <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>
-    <column name="type" phpName="DbType" type="VARCHAR" size="7" defaultValue="static"/>
     <behavior name="aggregate_column">
       <parameter name="name" value="length" />
       <parameter name="foreign_table" value="cc_playlistcontents" />

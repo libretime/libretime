@@ -269,7 +269,6 @@ CREATE TABLE "cc_playlist"
 	"creator_id" INTEGER,
 	"description" VARCHAR(512),
 	"length" interval default '00:00:00',
-	"type" VARCHAR(7) default 'static',
 	PRIMARY KEY ("id")
 );
 

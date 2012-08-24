@@ -69,13 +69,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	protected $length;
 
 	/**
-	 * The value for the type field.
-	 * Note: this column has a database default value of: 'static'
-	 * @var        string
-	 */
-	protected $type;
-
-	/**
 	 * @var        CcSubjs
 	 */
 	protected $aCcSubjs;
@@ -109,7 +102,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	{
 		$this->name = '';
 		$this->length = '00:00:00';
-		$this->type = 'static';
 	}
 
 	/**
@@ -236,16 +228,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	public function getDbLength()
 	{
 		return $this->length;
-	}
-
-	/**
-	 * Get the [type] column value.
-	 * 
-	 * @return     string
-	 */
-	public function getDbType()
-	{
-		return $this->type;
 	}
 
 	/**
@@ -451,26 +433,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	} // setDbLength()
 
 	/**
-	 * Set the value of [type] column.
-	 * 
-	 * @param      string $v new value
-	 * @return     CcPlaylist The current object (for fluent API support)
-	 */
-	public function setDbType($v)
-	{
-		if ($v !== null) {
-			$v = (string) $v;
-		}
-
-		if ($this->type !== $v || $this->isNew()) {
-			$this->type = $v;
-			$this->modifiedColumns[] = CcPlaylistPeer::TYPE;
-		}
-
-		return $this;
-	} // setDbType()
-
-	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -485,10 +447,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			}
 
 			if ($this->length !== '00:00:00') {
-				return false;
-			}
-
-			if ($this->type !== 'static') {
 				return false;
 			}
 
@@ -521,7 +479,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$this->creator_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
 			$this->description = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
 			$this->length = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->type = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -530,7 +487,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 8; // 8 = CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 7; // 7 = CcPlaylistPeer::NUM_COLUMNS - CcPlaylistPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlaylist object", $e);
@@ -896,9 +853,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			case 6:
 				return $this->getDbLength();
 				break;
-			case 7:
-				return $this->getDbType();
-				break;
 			default:
 				return null;
 				break;
@@ -930,7 +884,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$keys[4] => $this->getDbCreatorId(),
 			$keys[5] => $this->getDbDescription(),
 			$keys[6] => $this->getDbLength(),
-			$keys[7] => $this->getDbType(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcSubjs) {
@@ -988,9 +941,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			case 6:
 				$this->setDbLength($value);
 				break;
-			case 7:
-				$this->setDbType($value);
-				break;
 		} // switch()
 	}
 
@@ -1022,7 +972,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if (array_key_exists($keys[4], $arr)) $this->setDbCreatorId($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setDbDescription($arr[$keys[5]]);
 		if (array_key_exists($keys[6], $arr)) $this->setDbLength($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbType($arr[$keys[7]]);
 	}
 
 	/**
@@ -1041,7 +990,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcPlaylistPeer::CREATOR_ID)) $criteria->add(CcPlaylistPeer::CREATOR_ID, $this->creator_id);
 		if ($this->isColumnModified(CcPlaylistPeer::DESCRIPTION)) $criteria->add(CcPlaylistPeer::DESCRIPTION, $this->description);
 		if ($this->isColumnModified(CcPlaylistPeer::LENGTH)) $criteria->add(CcPlaylistPeer::LENGTH, $this->length);
-		if ($this->isColumnModified(CcPlaylistPeer::TYPE)) $criteria->add(CcPlaylistPeer::TYPE, $this->type);
 
 		return $criteria;
 	}
@@ -1109,7 +1057,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		$copyObj->setDbCreatorId($this->creator_id);
 		$copyObj->setDbDescription($this->description);
 		$copyObj->setDbLength($this->length);
-		$copyObj->setDbType($this->type);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1387,7 +1334,6 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		$this->creator_id = null;
 		$this->description = null;
 		$this->length = null;
-		$this->type = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
