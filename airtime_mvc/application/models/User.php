@@ -238,6 +238,9 @@ class Application_Model_User
         return $user;
     }
 
+    public static function getUsersOfType($type) {
+        return CcSubjsQuery::create()->filterByDbType($type)->find();
+    }
     public static function getUsers(array $type, $search=null)
     {
         $con     = Propel::getConnection();
