@@ -145,14 +145,15 @@ class Application_Model_StoredFile
                 $this->_file->$method(null);
             }
         } else {
-            $owner = $this->_file->getOwner();
+            $owner = $this->_file->getFkOwner();
             // if owner_id is already set we don't want to set it again. 
             if(!$owner) { // no owner detected, we try to assign one.
-                $owner = null;
                 // if MDATA_OWNER_ID is not set then we default to the 
                 // first admin user we find
                 if (!array_key_exists('MDATA_OWNER_ID', $p_md)) {
-                    $admins = Application_Model_User::getUsers(array('A'));
+                    //$admins = Application_Model_User::getUsers(array('A'));
+                    $admins = Application_Model_User::getUsersOfType('A');
+                    //$admins = array();
                     if (count($admins) > 0) { // found admin => pick first one
                         $owner = $admins[0];
                     }
@@ -166,13 +167,16 @@ class Application_Model_StoredFile
                     }
                 }
                 if ($owner) { 
-                    Logging::info("Suppose to to set owner as ". 
-                        var_export($owner,true));
-                    $this->_file->setFkOwner($owner);
+                    $this->_file->setDbOwnerId( $owner->getDbId() );
+                }
+                else {
+                    Logging::info("Could not find suitable owner for file
+                        '".$p_md['MDATA_KEY_FILEPATH']."'");
                 }
             }
             foreach ($p_md as $dbColumn => $mdValue) {
-                //don't blank out name, defaults to original filename on first insertion to database.
+                // don't blank out name, defaults to original filename on first
+                // insertion to database.
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
