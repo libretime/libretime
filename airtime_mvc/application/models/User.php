@@ -238,28 +238,28 @@ class Application_Model_User
         return $user;
     }
 
-    public static function getUsers($type, $search=null)
+    public static function getUsersOfType($type) {
+        return CcSubjsQuery::create()->filterByDbType($type)->find();
+    }
+    public static function getUsers(array $type, $search=null)
     {
-        $con = Propel::getConnection();
+        $con     = Propel::getConnection();
 
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
-        $sql = $sql_gen;
+        $sql     = $sql_gen;
 
-        if (is_array($type)) {
-            for ($i=0; $i<count($type); $i++) {
-                $type[$i] = "type = '{$type[$i]}'";
-            }
-            $sql_type = join(" OR ", $type);
-        } else {
-            $sql_type = "type = {$type}";
-        }
+        $type = array_map( function($t) {
+            return "type = '{$t}'";
+        }, $type);
 
-        $sql = $sql_gen ." WHERE (". $sql_type.") ";
+        $sql_type = join(" OR ", $type);
+
+        $sql      = $sql_gen ." WHERE (". $sql_type.") ";
 
         if (!is_null($search)) {
             $like = "login ILIKE '%{$search}%'";
 
-            $sql = $sql . " AND ".$like;
+            $sql  = $sql . " AND ".$like;
         }
 
         $sql = $sql ." ORDER BY login";
@@ -345,16 +345,14 @@ class Application_Model_User
 
         if (is_null($userinfo)) {
             return null;
-        } else {
-            try {
-                return new self($userinfo->id);
-            } catch (Exception $e) {
-                //we get here if $userinfo->id is defined, but doesn't exist
-                //in the database anymore.
-                Zend_Auth::getInstance()->clearIdentity();
-
-                return null;
-            }
+        }
+        try {
+            return new self($userinfo->id);
+        } catch (Exception $e) {
+            //we get here if $userinfo->id is defined, but doesn't exist
+            //in the database anymore.
+            Zend_Auth::getInstance()->clearIdentity();
+            return null;
         }
     }
 }

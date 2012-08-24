@@ -411,9 +411,20 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $replay_gain;
 
 	/**
+	 * The value for the owner_id field.
+	 * @var        int
+	 */
+	protected $owner_id;
+
+	/**
 	 * @var        CcSubjs
 	 */
-	protected $aCcSubjs;
+	protected $aFkOwner;
+
+	/**
+	 * @var        CcSubjs
+	 */
+	protected $aCcSubjsRelatedByDbEditedby;
 
 	/**
 	 * @var        CcMusicDirs
@@ -1205,6 +1216,16 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Get the [owner_id] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbOwnerId()
+	{
+		return $this->owner_id;
+	}
+
+	/**
 	 * Set the value of [id] column.
 	 * 
 	 * @param      int $v new value
@@ -1385,8 +1406,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcFilesPeer::EDITEDBY;
 		}
 
-		if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
-			$this->aCcSubjs = null;
+		if ($this->aCcSubjsRelatedByDbEditedby !== null && $this->aCcSubjsRelatedByDbEditedby->getDbId() !== $v) {
+			$this->aCcSubjsRelatedByDbEditedby = null;
 		}
 
 		return $this;
@@ -2589,6 +2610,30 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbReplayGain()
 
 	/**
+	 * Set the value of [owner_id] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbOwnerId($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->owner_id !== $v) {
+			$this->owner_id = $v;
+			$this->modifiedColumns[] = CcFilesPeer::OWNER_ID;
+		}
+
+		if ($this->aFkOwner !== null && $this->aFkOwner->getDbId() !== $v) {
+			$this->aFkOwner = null;
+		}
+
+		return $this;
+	} // setDbOwnerId()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -2715,6 +2760,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->soundcloud_link_to_file = ($row[$startcol + 60] !== null) ? (string) $row[$startcol + 60] : null;
 			$this->soundcloud_upload_time = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
 			$this->replay_gain = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
+			$this->owner_id = ($row[$startcol + 63] !== null) ? (int) $row[$startcol + 63] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -2723,7 +2769,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 63; // 63 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 64; // 64 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcFiles object", $e);
@@ -2749,8 +2795,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->aCcMusicDirs !== null && $this->directory !== $this->aCcMusicDirs->getId()) {
 			$this->aCcMusicDirs = null;
 		}
-		if ($this->aCcSubjs !== null && $this->editedby !== $this->aCcSubjs->getDbId()) {
-			$this->aCcSubjs = null;
+		if ($this->aCcSubjsRelatedByDbEditedby !== null && $this->editedby !== $this->aCcSubjsRelatedByDbEditedby->getDbId()) {
+			$this->aCcSubjsRelatedByDbEditedby = null;
+		}
+		if ($this->aFkOwner !== null && $this->owner_id !== $this->aFkOwner->getDbId()) {
+			$this->aFkOwner = null;
 		}
 	} // ensureConsistency
 
@@ -2791,7 +2840,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->aCcSubjs = null;
+			$this->aFkOwner = null;
+			$this->aCcSubjsRelatedByDbEditedby = null;
 			$this->aCcMusicDirs = null;
 			$this->collCcShowInstancess = null;
 
@@ -2916,11 +2966,18 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCcSubjs !== null) {
-				if ($this->aCcSubjs->isModified() || $this->aCcSubjs->isNew()) {
-					$affectedRows += $this->aCcSubjs->save($con);
+			if ($this->aFkOwner !== null) {
+				if ($this->aFkOwner->isModified() || $this->aFkOwner->isNew()) {
+					$affectedRows += $this->aFkOwner->save($con);
 				}
-				$this->setCcSubjs($this->aCcSubjs);
+				$this->setFkOwner($this->aFkOwner);
+			}
+
+			if ($this->aCcSubjsRelatedByDbEditedby !== null) {
+				if ($this->aCcSubjsRelatedByDbEditedby->isModified() || $this->aCcSubjsRelatedByDbEditedby->isNew()) {
+					$affectedRows += $this->aCcSubjsRelatedByDbEditedby->save($con);
+				}
+				$this->setCcSubjsRelatedByDbEditedby($this->aCcSubjsRelatedByDbEditedby);
 			}
 
 			if ($this->aCcMusicDirs !== null) {
@@ -3056,9 +3113,15 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			// method.  This object relates to these object(s) by a
 			// foreign key reference.
 
-			if ($this->aCcSubjs !== null) {
-				if (!$this->aCcSubjs->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aCcSubjs->getValidationFailures());
+			if ($this->aFkOwner !== null) {
+				if (!$this->aFkOwner->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aFkOwner->getValidationFailures());
+				}
+			}
+
+			if ($this->aCcSubjsRelatedByDbEditedby !== null) {
+				if (!$this->aCcSubjsRelatedByDbEditedby->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcSubjsRelatedByDbEditedby->getValidationFailures());
 				}
 			}
 
@@ -3328,6 +3391,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 62:
 				return $this->getDbReplayGain();
 				break;
+			case 63:
+				return $this->getDbOwnerId();
+				break;
 			default:
 				return null;
 				break;
@@ -3415,10 +3481,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[60] => $this->getDbSoundcloudLinkToFile(),
 			$keys[61] => $this->getDbSoundCloundUploadTime(),
 			$keys[62] => $this->getDbReplayGain(),
+			$keys[63] => $this->getDbOwnerId(),
 		);
 		if ($includeForeignObjects) {
-			if (null !== $this->aCcSubjs) {
-				$result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns, true);
+			if (null !== $this->aFkOwner) {
+				$result['FkOwner'] = $this->aFkOwner->toArray($keyType, $includeLazyLoadColumns, true);
+			}
+			if (null !== $this->aCcSubjsRelatedByDbEditedby) {
+				$result['CcSubjsRelatedByDbEditedby'] = $this->aCcSubjsRelatedByDbEditedby->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 			if (null !== $this->aCcMusicDirs) {
 				$result['CcMusicDirs'] = $this->aCcMusicDirs->toArray($keyType, $includeLazyLoadColumns, true);
@@ -3643,6 +3713,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 62:
 				$this->setDbReplayGain($value);
 				break;
+			case 63:
+				$this->setDbOwnerId($value);
+				break;
 		} // switch()
 	}
 
@@ -3730,6 +3803,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[60], $arr)) $this->setDbSoundcloudLinkToFile($arr[$keys[60]]);
 		if (array_key_exists($keys[61], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[61]]);
 		if (array_key_exists($keys[62], $arr)) $this->setDbReplayGain($arr[$keys[62]]);
+		if (array_key_exists($keys[63], $arr)) $this->setDbOwnerId($arr[$keys[63]]);
 	}
 
 	/**
@@ -3804,6 +3878,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE)) $criteria->add(CcFilesPeer::SOUNDCLOUD_LINK_TO_FILE, $this->soundcloud_link_to_file);
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME)) $criteria->add(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $this->soundcloud_upload_time);
 		if ($this->isColumnModified(CcFilesPeer::REPLAY_GAIN)) $criteria->add(CcFilesPeer::REPLAY_GAIN, $this->replay_gain);
+		if ($this->isColumnModified(CcFilesPeer::OWNER_ID)) $criteria->add(CcFilesPeer::OWNER_ID, $this->owner_id);
 
 		return $criteria;
 	}
@@ -3927,6 +4002,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbSoundcloudLinkToFile($this->soundcloud_link_to_file);
 		$copyObj->setDbSoundCloundUploadTime($this->soundcloud_upload_time);
 		$copyObj->setDbReplayGain($this->replay_gain);
+		$copyObj->setDbOwnerId($this->owner_id);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -4009,20 +4085,20 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @return     CcFiles The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcSubjs(CcSubjs $v = null)
+	public function setFkOwner(CcSubjs $v = null)
 	{
 		if ($v === null) {
-			$this->setDbEditedby(NULL);
+			$this->setDbOwnerId(NULL);
 		} else {
-			$this->setDbEditedby($v->getDbId());
+			$this->setDbOwnerId($v->getDbId());
 		}
 
-		$this->aCcSubjs = $v;
+		$this->aFkOwner = $v;
 
 		// Add binding for other direction of this n:n relationship.
 		// If this object has already been added to the CcSubjs object, it will not be re-added.
 		if ($v !== null) {
-			$v->addCcFiles($this);
+			$v->addCcFilesRelatedByDbOwnerId($this);
 		}
 
 		return $this;
@@ -4036,19 +4112,68 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	 * @return     CcSubjs The associated CcSubjs object.
 	 * @throws     PropelException
 	 */
-	public function getCcSubjs(PropelPDO $con = null)
+	public function getFkOwner(PropelPDO $con = null)
 	{
-		if ($this->aCcSubjs === null && ($this->editedby !== null)) {
-			$this->aCcSubjs = CcSubjsQuery::create()->findPk($this->editedby, $con);
+		if ($this->aFkOwner === null && ($this->owner_id !== null)) {
+			$this->aFkOwner = CcSubjsQuery::create()->findPk($this->owner_id, $con);
 			/* The following can be used additionally to
 			   guarantee the related object contains a reference
 			   to this object.  This level of coupling may, however, be
 			   undesirable since it could result in an only partially populated collection
 			   in the referenced object.
-			   $this->aCcSubjs->addCcFiless($this);
+			   $this->aFkOwner->addCcFilessRelatedByDbOwnerId($this);
 			 */
 		}
-		return $this->aCcSubjs;
+		return $this->aFkOwner;
+	}
+
+	/**
+	 * Declares an association between this object and a CcSubjs object.
+	 *
+	 * @param      CcSubjs $v
+	 * @return     CcFiles The current object (for fluent API support)
+	 * @throws     PropelException
+	 */
+	public function setCcSubjsRelatedByDbEditedby(CcSubjs $v = null)
+	{
+		if ($v === null) {
+			$this->setDbEditedby(NULL);
+		} else {
+			$this->setDbEditedby($v->getDbId());
+		}
+
+		$this->aCcSubjsRelatedByDbEditedby = $v;
+
+		// Add binding for other direction of this n:n relationship.
+		// If this object has already been added to the CcSubjs object, it will not be re-added.
+		if ($v !== null) {
+			$v->addCcFilesRelatedByDbEditedby($this);
+		}
+
+		return $this;
+	}
+
+
+	/**
+	 * Get the associated CcSubjs object
+	 *
+	 * @param      PropelPDO Optional Connection object.
+	 * @return     CcSubjs The associated CcSubjs object.
+	 * @throws     PropelException
+	 */
+	public function getCcSubjsRelatedByDbEditedby(PropelPDO $con = null)
+	{
+		if ($this->aCcSubjsRelatedByDbEditedby === null && ($this->editedby !== null)) {
+			$this->aCcSubjsRelatedByDbEditedby = CcSubjsQuery::create()->findPk($this->editedby, $con);
+			/* The following can be used additionally to
+			   guarantee the related object contains a reference
+			   to this object.  This level of coupling may, however, be
+			   undesirable since it could result in an only partially populated collection
+			   in the referenced object.
+			   $this->aCcSubjsRelatedByDbEditedby->addCcFilessRelatedByDbEditedby($this);
+			 */
+		}
+		return $this->aCcSubjsRelatedByDbEditedby;
 	}
 
 	/**
@@ -4779,6 +4904,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->soundcloud_link_to_file = null;
 		$this->soundcloud_upload_time = null;
 		$this->replay_gain = null;
+		$this->owner_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -4826,7 +4952,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->collCcPlaylistcontentss = null;
 		$this->collCcBlockcontentss = null;
 		$this->collCcSchedules = null;
-		$this->aCcSubjs = null;
+		$this->aFkOwner = null;
+		$this->aCcSubjsRelatedByDbEditedby = null;
 		$this->aCcMusicDirs = null;
 	}
 

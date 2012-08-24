@@ -111,7 +111,12 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	/**
 	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
 	 */
-	protected $collCcFiless;
+	protected $collCcFilessRelatedByDbOwnerId;
+
+	/**
+	 * @var        array CcFiles[] Collection to store aggregation of CcFiles objects.
+	 */
+	protected $collCcFilessRelatedByDbEditedby;
 
 	/**
 	 * @var        array CcPerms[] Collection to store aggregation of CcPerms objects.
@@ -821,7 +826,9 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 
 		if ($deep) {  // also de-associate any related objects?
 
-			$this->collCcFiless = null;
+			$this->collCcFilessRelatedByDbOwnerId = null;
+
+			$this->collCcFilessRelatedByDbEditedby = null;
 
 			$this->collCcPermss = null;
 
@@ -970,8 +977,16 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 				$this->resetModified(); // [HL] After being saved an object is no longer 'modified'
 			}
 
-			if ($this->collCcFiless !== null) {
-				foreach ($this->collCcFiless as $referrerFK) {
+			if ($this->collCcFilessRelatedByDbOwnerId !== null) {
+				foreach ($this->collCcFilessRelatedByDbOwnerId as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collCcFilessRelatedByDbEditedby !== null) {
+				foreach ($this->collCcFilessRelatedByDbEditedby as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
@@ -1105,8 +1120,16 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			}
 
 
-				if ($this->collCcFiless !== null) {
-					foreach ($this->collCcFiless as $referrerFK) {
+				if ($this->collCcFilessRelatedByDbOwnerId !== null) {
+					foreach ($this->collCcFilessRelatedByDbOwnerId as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcFilessRelatedByDbEditedby !== null) {
+					foreach ($this->collCcFilessRelatedByDbEditedby as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1487,9 +1510,15 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			// the getter/setter methods for fkey referrer objects.
 			$copyObj->setNew(false);
 
-			foreach ($this->getCcFiless() as $relObj) {
+			foreach ($this->getCcFilessRelatedByDbOwnerId() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcFiles($relObj->copy($deepCopy));
+					$copyObj->addCcFilesRelatedByDbOwnerId($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcFilessRelatedByDbEditedby() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcFilesRelatedByDbEditedby($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1581,32 +1610,32 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Clears out the collCcFiless collection
+	 * Clears out the collCcFilessRelatedByDbOwnerId collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
 	 * them to be refetched by subsequent calls to accessor method.
 	 *
 	 * @return     void
-	 * @see        addCcFiless()
+	 * @see        addCcFilessRelatedByDbOwnerId()
 	 */
-	public function clearCcFiless()
+	public function clearCcFilessRelatedByDbOwnerId()
 	{
-		$this->collCcFiless = null; // important to set this to NULL since that means it is uninitialized
+		$this->collCcFilessRelatedByDbOwnerId = null; // important to set this to NULL since that means it is uninitialized
 	}
 
 	/**
-	 * Initializes the collCcFiless collection.
+	 * Initializes the collCcFilessRelatedByDbOwnerId collection.
 	 *
-	 * By default this just sets the collCcFiless collection to an empty array (like clearcollCcFiless());
+	 * By default this just sets the collCcFilessRelatedByDbOwnerId collection to an empty array (like clearcollCcFilessRelatedByDbOwnerId());
 	 * however, you may wish to override this method in your stub class to provide setting appropriate
 	 * to your application -- for example, setting the initial array to the values stored in database.
 	 *
 	 * @return     void
 	 */
-	public function initCcFiless()
+	public function initCcFilessRelatedByDbOwnerId()
 	{
-		$this->collCcFiless = new PropelObjectCollection();
-		$this->collCcFiless->setModel('CcFiles');
+		$this->collCcFilessRelatedByDbOwnerId = new PropelObjectCollection();
+		$this->collCcFilessRelatedByDbOwnerId->setModel('CcFiles');
 	}
 
 	/**
@@ -1623,23 +1652,23 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
 	 * @throws     PropelException
 	 */
-	public function getCcFiless($criteria = null, PropelPDO $con = null)
+	public function getCcFilessRelatedByDbOwnerId($criteria = null, PropelPDO $con = null)
 	{
-		if(null === $this->collCcFiless || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcFiless) {
+		if(null === $this->collCcFilessRelatedByDbOwnerId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFilessRelatedByDbOwnerId) {
 				// return empty collection
-				$this->initCcFiless();
+				$this->initCcFilessRelatedByDbOwnerId();
 			} else {
-				$collCcFiless = CcFilesQuery::create(null, $criteria)
-					->filterByCcSubjs($this)
+				$collCcFilessRelatedByDbOwnerId = CcFilesQuery::create(null, $criteria)
+					->filterByFkOwner($this)
 					->find($con);
 				if (null !== $criteria) {
-					return $collCcFiless;
+					return $collCcFilessRelatedByDbOwnerId;
 				}
-				$this->collCcFiless = $collCcFiless;
+				$this->collCcFilessRelatedByDbOwnerId = $collCcFilessRelatedByDbOwnerId;
 			}
 		}
-		return $this->collCcFiless;
+		return $this->collCcFilessRelatedByDbOwnerId;
 	}
 
 	/**
@@ -1651,10 +1680,10 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     int Count of related CcFiles objects.
 	 * @throws     PropelException
 	 */
-	public function countCcFiless(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcFilessRelatedByDbOwnerId(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
 	{
-		if(null === $this->collCcFiless || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcFiless) {
+		if(null === $this->collCcFilessRelatedByDbOwnerId || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFilessRelatedByDbOwnerId) {
 				return 0;
 			} else {
 				$query = CcFilesQuery::create(null, $criteria);
@@ -1662,11 +1691,11 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 					$query->distinct();
 				}
 				return $query
-					->filterByCcSubjs($this)
+					->filterByFkOwner($this)
 					->count($con);
 			}
 		} else {
-			return count($this->collCcFiless);
+			return count($this->collCcFilessRelatedByDbOwnerId);
 		}
 	}
 
@@ -1678,14 +1707,14 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public function addCcFiles(CcFiles $l)
+	public function addCcFilesRelatedByDbOwnerId(CcFiles $l)
 	{
-		if ($this->collCcFiless === null) {
-			$this->initCcFiless();
+		if ($this->collCcFilessRelatedByDbOwnerId === null) {
+			$this->initCcFilessRelatedByDbOwnerId();
 		}
-		if (!$this->collCcFiless->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcFiless[]= $l;
-			$l->setCcSubjs($this);
+		if (!$this->collCcFilessRelatedByDbOwnerId->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcFilessRelatedByDbOwnerId[]= $l;
+			$l->setFkOwner($this);
 		}
 	}
 
@@ -1695,7 +1724,7 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * an identical criteria, it returns the collection.
 	 * Otherwise if this CcSubjs is new, it will return
 	 * an empty collection; or if this CcSubjs has previously
-	 * been saved, it will retrieve related CcFiless from storage.
+	 * been saved, it will retrieve related CcFilessRelatedByDbOwnerId from storage.
 	 *
 	 * This method is protected by default in order to keep the public
 	 * api reasonable.  You can provide public methods for those you
@@ -1706,12 +1735,146 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
 	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
 	 */
-	public function getCcFilessJoinCcMusicDirs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcFilessRelatedByDbOwnerIdJoinCcMusicDirs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$query = CcFilesQuery::create(null, $criteria);
 		$query->joinWith('CcMusicDirs', $join_behavior);
 
-		return $this->getCcFiless($query, $con);
+		return $this->getCcFilessRelatedByDbOwnerId($query, $con);
+	}
+
+	/**
+	 * Clears out the collCcFilessRelatedByDbEditedby collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcFilessRelatedByDbEditedby()
+	 */
+	public function clearCcFilessRelatedByDbEditedby()
+	{
+		$this->collCcFilessRelatedByDbEditedby = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcFilessRelatedByDbEditedby collection.
+	 *
+	 * By default this just sets the collCcFilessRelatedByDbEditedby collection to an empty array (like clearcollCcFilessRelatedByDbEditedby());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcFilessRelatedByDbEditedby()
+	{
+		$this->collCcFilessRelatedByDbEditedby = new PropelObjectCollection();
+		$this->collCcFilessRelatedByDbEditedby->setModel('CcFiles');
+	}
+
+	/**
+	 * Gets an array of CcFiles objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcSubjs is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
+	 * @throws     PropelException
+	 */
+	public function getCcFilessRelatedByDbEditedby($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcFilessRelatedByDbEditedby || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFilessRelatedByDbEditedby) {
+				// return empty collection
+				$this->initCcFilessRelatedByDbEditedby();
+			} else {
+				$collCcFilessRelatedByDbEditedby = CcFilesQuery::create(null, $criteria)
+					->filterByCcSubjsRelatedByDbEditedby($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcFilessRelatedByDbEditedby;
+				}
+				$this->collCcFilessRelatedByDbEditedby = $collCcFilessRelatedByDbEditedby;
+			}
+		}
+		return $this->collCcFilessRelatedByDbEditedby;
+	}
+
+	/**
+	 * Returns the number of related CcFiles objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcFiles objects.
+	 * @throws     PropelException
+	 */
+	public function countCcFilessRelatedByDbEditedby(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcFilessRelatedByDbEditedby || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFilessRelatedByDbEditedby) {
+				return 0;
+			} else {
+				$query = CcFilesQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcSubjsRelatedByDbEditedby($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcFilessRelatedByDbEditedby);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcFiles object to this object
+	 * through the CcFiles foreign key attribute.
+	 *
+	 * @param      CcFiles $l CcFiles
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcFilesRelatedByDbEditedby(CcFiles $l)
+	{
+		if ($this->collCcFilessRelatedByDbEditedby === null) {
+			$this->initCcFilessRelatedByDbEditedby();
+		}
+		if (!$this->collCcFilessRelatedByDbEditedby->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcFilessRelatedByDbEditedby[]= $l;
+			$l->setCcSubjsRelatedByDbEditedby($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcSubjs is new, it will return
+	 * an empty collection; or if this CcSubjs has previously
+	 * been saved, it will retrieve related CcFilessRelatedByDbEditedby from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcSubjs.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcFiles[] List of CcFiles objects
+	 */
+	public function getCcFilessRelatedByDbEditedbyJoinCcMusicDirs($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcFilesQuery::create(null, $criteria);
+		$query->joinWith('CcMusicDirs', $join_behavior);
+
+		return $this->getCcFilessRelatedByDbEditedby($query, $con);
 	}
 
 	/**
@@ -2541,8 +2704,13 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 	public function clearAllReferences($deep = false)
 	{
 		if ($deep) {
-			if ($this->collCcFiless) {
-				foreach ((array) $this->collCcFiless as $o) {
+			if ($this->collCcFilessRelatedByDbOwnerId) {
+				foreach ((array) $this->collCcFilessRelatedByDbOwnerId as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collCcFilessRelatedByDbEditedby) {
+				foreach ((array) $this->collCcFilessRelatedByDbEditedby as $o) {
 					$o->clearAllReferences($deep);
 				}
 			}
@@ -2583,7 +2751,8 @@ abstract class BaseCcSubjs extends BaseObject  implements Persistent
 			}
 		} // if ($deep)
 
-		$this->collCcFiless = null;
+		$this->collCcFilessRelatedByDbOwnerId = null;
+		$this->collCcFilessRelatedByDbEditedby = null;
 		$this->collCcPermss = null;
 		$this->collCcShowHostss = null;
 		$this->collCcPlaylists = null;
