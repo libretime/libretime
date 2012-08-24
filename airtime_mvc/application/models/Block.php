@@ -1171,7 +1171,7 @@ EOT;
                             $spCriteria = 'date('.$spCriteria.')';
                             $spCriteriaValue = substr($spCriteriaValue, 0, 10);
                         }
-                    } else if($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
+                    } else if ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
                         $spCriteriaValue = $criteria['value']*1000;
@@ -1193,13 +1193,13 @@ EOT;
                     }
                     
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
-                    try{
+                    try {
                         if ($i > 0) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
                             $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
-                    }catch (Exception $e){
+                    } catch (Exception $e) {
                         Logging::info($e);
                     }
                     $i++;
@@ -1218,13 +1218,13 @@ EOT;
                 $limits['items'] = null;
             }
         }
-        try{
+        try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
+
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
-        }catch(Exception $e){
+        } catch (Exception $e) {
             Logging::info($e);
         }
-    
     }
     
     public static function organizeSmartPlyalistCriteria($p_criteria)
