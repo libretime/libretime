@@ -166,7 +166,9 @@ class Application_Model_StoredFile
                     }
                 }
                 if ($owner) { 
-                    $this->_file->setDbOwner($owner);
+                    Logging::info("Suppose to to set owner as ". 
+                        var_export($owner,true));
+                    $this->_file->setFkOwner($owner);
                 }
             }
             foreach ($p_md as $dbColumn => $mdValue) {
@@ -396,12 +398,11 @@ class Application_Model_StoredFile
      */
     public function getFilePath()
     {
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->
+            _file->getDbDirectory());
         $directory = $music_dir->getDirectory();
-
-        $filepath = $this->_file->getDbFilepath();
-
-        return $directory.$filepath;
+        $filepath  = $this->_file->getDbFilepath();
+        return OsPath::join($directory, $filepath);
     }
 
     /**
@@ -483,11 +484,9 @@ class Application_Model_StoredFile
         } 
 
         $file = new CcFiles();
-        //$now  = new DateTime("now", new DateTimeZone("UTC"));
-        $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
-        $file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
-        //$file->setDbUtime($now);
-        //$file->setDbMtime($now);
+        $now  = new DateTime("now", new DateTimeZone("UTC"));
+        $file->setDbUtime($now);
+        $file->setDbMtime($now);
 
         $storedFile = new Application_Model_StoredFile();
         $storedFile->_file = $file;
@@ -496,6 +495,7 @@ class Application_Model_StoredFile
         // TODO : it might be better to just call OsPath::normpath on the file
         // path. Also note that mediamonitor normalizes the paths anyway
         // before passing them to php so it's not necessary to do this at all
+
         $filepath = str_replace("//", "/", $md['MDATA_KEY_FILEPATH']);
         $res = $storedFile->setFilePath($filepath);
         if ($res === -1) {
