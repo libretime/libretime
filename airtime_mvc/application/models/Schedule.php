@@ -1062,13 +1062,21 @@ SQL;
 
         $con = Propel::getConnection();
 
+        /* If a show is being edited, exclude it from the query
+         * In both cases (new and edit) we only grab shows that
+         * are scheduled 2 days prior
+         */
         if ($update) {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where ends <= '{$show_end->format('Y-m-d H:i:s')}'
+                    where (ends <= '{$show_end->format('Y-m-d H:i:s')}'
+                    or starts <= '{$show_end->format('Y-m-d H:i:s')}')
+                    and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
                     and modified_instance = false and id != ".$instanceId. " order by ends";
         } else {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where ends <= '{$show_end->format('Y-m-d H:i:s')}'
+                    where (ends <= '{$show_end->format('Y-m-d H:i:s')}'
+                    or starts <= '{$show_end->format('Y-m-d H:i:s')}')
+                    and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
                     and modified_instance = false order by ends";
         }
         $rows = $con->query($sql);
