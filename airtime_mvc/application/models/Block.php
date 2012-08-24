@@ -430,13 +430,16 @@ EOT;
     
             foreach ($p_items as $ac) {
                 Logging::info("Adding audio file {$ac}");
-                
-                if (is_array($ac) && $ac[1] == 'audioclip') {
-                    $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
-                    $pos = $pos + 1;
-                } elseif (!is_array($ac)) {
-                    $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
-                    $pos = $pos + 1;
+                try {
+                    if (is_array($ac) && $ac[1] == 'audioclip') {
+                        $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
+                        $pos = $pos + 1;
+                    } elseif (!is_array($ac)) {
+                        $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
+                        $pos = $pos + 1;
+                    }
+                } catch (Exception $e) {
+                    Logging::log($e->getMessage());
                 }
             }
     
@@ -1223,8 +1226,8 @@ EOT;
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
             } else {
-                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? 
-                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) : 
+                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ?
+                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) :
                     intval($storedCrit['limit']['value'] * 60);
                 $limits['items'] = null;
             }
