@@ -452,8 +452,7 @@ EOT;
     
             $this->con->commit();
             
-            //check if block is in any playlists and update the playlist's length
-            Application_Model_Playlist::updatePlaylistsLengthWithBlock($this->id, $this->getLength());
+            $this->updateBlockLengthInAllPlaylist();
             
         } catch (Exception $e) {
             $this->con->rollback();
@@ -567,9 +566,7 @@ EOT;
     
             $this->con->commit();
             
-                        
-            //check if block is in any playlists and update the playlist's length
-            Application_Model_Playlist::updatePlaylistsLengthWithBlock($this->id, $this->getLength());
+            $this->updateBlockLengthInAllPlaylist();
             
         } catch (Exception $e) {
             $this->con->rollback();
