@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import media.monitor.pure as mmp
+import media.monitor.pure   as mmp
+import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
@@ -47,6 +48,7 @@ class Organizer(ReportHandler,Loggable):
             new_path = mmp.organized_path(event.path, target_path,
                     event.metadata.extract())
             mmp.magic_move(event.path, new_path)
+            owners.add_file_owner(event.path, mmp.owner_id(event.path) )
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))
         except BadSongFile as e:
