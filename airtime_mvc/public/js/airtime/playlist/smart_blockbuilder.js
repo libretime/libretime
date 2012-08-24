@@ -333,9 +333,9 @@ function setupUI() {
             shuffleButton.removeAttr('disabled');
         }
     } else if (!shuffleButton.hasClass('ui-state-disabled')) {
-        if (!shuffleButton.hasClass('ui-state-disabled')) {
-            shuffleButton.addClass('ui-state-disabled');
+        if (shuffleButton.attr('disabled') === undefined) {
             shuffleButton.attr('disabled', 'disabled');
+            shuffleButton.addClass('ui-state-disabled');
         }
     }
     
