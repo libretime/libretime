@@ -913,26 +913,6 @@ SQL;
     {
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
     }
-    
-    /**
-     * After items get deleted/added from/to a block
-     * this function updates the length of playlists
-     * that contain that block
-     */
-    public static function updatePlaylistsLengthWithBlock($p_blockId, $p_blockLength) {
-        $playlists = CcPlaylistQuery::create()->find();
-        foreach ($playlists as $pl) {
-            $contents = CcPlaylistcontentsQuery::create()->findByDbPlaylistId($pl->getDbId());
-            //check if the block is in each playlist
-            foreach ($contents as $item) {
-                if ($item->getDbBlockId() == $p_blockId) {
-                    $item->setDbCliplength($p_blockLength);
-                    $con = Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
-                    $item->save($con);
-                }
-            }
-        }
-    }
 
 } // class Playlist
 

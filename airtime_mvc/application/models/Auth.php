@@ -30,7 +30,8 @@ class Application_Model_Auth
         $e_link_port = $_SERVER['SERVER_PORT'];
         $e_link_path = $view->url(array('user_id' => $user->getDbId(), 'token' => $token), 'password-change');
 
-        $message = "Click this link: {$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
+        $message = "Hi {$user->getDbLogin()}, \n\nClick this link to reset your password: ";
+        $message .= "{$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
 
         $success = Application_Model_Email::send('Airtime Password Reset', $message, $user->getDbEmail());
 

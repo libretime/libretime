@@ -328,24 +328,11 @@ function setupUI() {
     if (plContents.text() !== 'Empty playlist') {
         if (shuffleButton.hasClass('ui-state-disabled')) {
             shuffleButton.removeClass('ui-state-disabled');
-        }
-        //check if shuffle button already has a click event
-        var clickEvents = $(document).data('events').click;
-        var hasEvent = false;
-        $.each(clickEvents, function(i, event) {
-            if (event.selector == shuffleButton.selector) {
-                hasEvent = true;
-                return false;
-            }
-        });
-        if (!hasEvent) {
-            shuffleButton.live('click', function(){
-                buttonClickAction('shuffle', 'Playlist/smart-block-shuffle');
-            });
+            shuffleButton.removeAttr('disabled');
         }
     } else if (!shuffleButton.hasClass('ui-state-disabled')) {
         shuffleButton.addClass('ui-state-disabled');
-        shuffleButton.die('click');
+        shuffleButton.attr('disabled', 'disabled');
     }
     
     var dynamic_length = target_length;

@@ -430,13 +430,16 @@ EOT;
     
             foreach ($p_items as $ac) {
                 Logging::info("Adding audio file {$ac}");
-                
-                if (is_array($ac) && $ac[1] == 'audioclip') {
-                    $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
-                    $pos = $pos + 1;
-                } elseif (!is_array($ac)) {
-                    $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
-                    $pos = $pos + 1;
+                try {
+                    if (is_array($ac) && $ac[1] == 'audioclip') {
+                        $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
+                        $pos = $pos + 1;
+                    } elseif (!is_array($ac)) {
+                        $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
+                        $pos = $pos + 1;
+                    }
+                } catch (Exception $e) {
+                    Logging::log($e->getMessage());
                 }
             }
     
@@ -452,8 +455,7 @@ EOT;
     
             $this->con->commit();
             
-            //check if block is in any playlists and update the playlist's length
-            Application_Model_Playlist::updatePlaylistsLengthWithBlock($this->id, $this->getLength());
+            $this->updateBlockLengthInAllPlaylist();
             
         } catch (Exception $e) {
             $this->con->rollback();
@@ -567,9 +569,7 @@ EOT;
     
             $this->con->commit();
             
-                        
-            //check if block is in any playlists and update the playlist's length
-            Application_Model_Playlist::updatePlaylistsLengthWithBlock($this->id, $this->getLength());
+            $this->updateBlockLengthInAllPlaylist();
             
         } catch (Exception $e) {
             $this->con->rollback();
@@ -1181,7 +1181,17 @@ EOT;
                             $criteria['extra'] *= 1000;
                         }
                     } else {
-                        $spCriteriaValue = addslashes($criteria['value']);
+                        /* Propel does not escape special characters properly when using LIKE/ILIKE
+                         * We have to add extra slashes in these cases
+                         */
+                        $tempModifier = trim(self::$modifier2CriteriaMap[$spCriteriaModifier]);
+                        if ($tempModifier == 'ILIKE') {
+                            $spCriteriaValue = addslashes($criteria['value']);
+                            // addslashes() does not esapce '%' so we have to do it manually
+                            $spCriteriaValue = str_replace('%', '\%', $spCriteriaValue);
+                        } else {
+                            $spCriteriaValue = ($criteria['value']);
+                        }
                     }
                     
                     if ($spCriteriaModifier == "starts with") {
@@ -1216,15 +1226,14 @@ EOT;
                 $limits['time'] = 1440 * 60;
                 $limits['items'] = $storedCrit['limit']['value'];
             } else {
-                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ? 
-                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) : 
+                $limits['time'] = $storedCrit['limit']['modifier'] == "hours" ?
+                    intval(floatval($storedCrit['limit']['value']) * 60 * 60) :
                     intval($storedCrit['limit']['value'] * 60);
                 $limits['items'] = null;
             }
         }
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
-
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);

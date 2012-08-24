@@ -13,7 +13,6 @@
  * @method     CcPlaylistQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcPlaylistQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method     CcPlaylistQuery orderByDbLength($order = Criteria::ASC) Order by the length column
- * @method     CcPlaylistQuery orderByDbType($order = Criteria::ASC) Order by the type column
  *
  * @method     CcPlaylistQuery groupByDbId() Group by the id column
  * @method     CcPlaylistQuery groupByDbName() Group by the name column
@@ -22,7 +21,6 @@
  * @method     CcPlaylistQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcPlaylistQuery groupByDbDescription() Group by the description column
  * @method     CcPlaylistQuery groupByDbLength() Group by the length column
- * @method     CcPlaylistQuery groupByDbType() Group by the type column
  *
  * @method     CcPlaylistQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlaylistQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -46,7 +44,6 @@
  * @method     CcPlaylist findOneByDbCreatorId(int $creator_id) Return the first CcPlaylist filtered by the creator_id column
  * @method     CcPlaylist findOneByDbDescription(string $description) Return the first CcPlaylist filtered by the description column
  * @method     CcPlaylist findOneByDbLength(string $length) Return the first CcPlaylist filtered by the length column
- * @method     CcPlaylist findOneByDbType(string $type) Return the first CcPlaylist filtered by the type column
  *
  * @method     array findByDbId(int $id) Return CcPlaylist objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcPlaylist objects filtered by the name column
@@ -55,7 +52,6 @@
  * @method     array findByDbCreatorId(int $creator_id) Return CcPlaylist objects filtered by the creator_id column
  * @method     array findByDbDescription(string $description) Return CcPlaylist objects filtered by the description column
  * @method     array findByDbLength(string $length) Return CcPlaylist objects filtered by the length column
- * @method     array findByDbType(string $type) Return CcPlaylist objects filtered by the type column
  *
  * @package    propel.generator.airtime.om
  */
@@ -339,28 +335,6 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistPeer::LENGTH, $dbLength, $comparison);
-	}
-
-	/**
-	 * Filter the query on the type column
-	 * 
-	 * @param     string $dbType The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlaylistQuery The current query, for fluid interface
-	 */
-	public function filterByDbType($dbType = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbType)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbType)) {
-				$dbType = str_replace('*', '%', $dbType);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcPlaylistPeer::TYPE, $dbType, $comparison);
 	}
 
 	/**

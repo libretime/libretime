@@ -100,8 +100,11 @@ var AIRTIME = (function(AIRTIME){
         
         //process selected files/playlists.
         aMediaIds.push(new Array(data.id, data.ftype));
-    
-        AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+        
+        //check if a playlist/block is open before adding items
+        if ($('input[id="obj_type"]').val() == 'playlist' || $('input[id="obj_type"]').val() == 'block') {
+            AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+        }
 	};
 	
 	mod.setupLibraryToolbar = function() {

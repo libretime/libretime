@@ -172,6 +172,39 @@ class Application_Model_Show
         if ($deltaDay > 0) {
             return "Shows can have a max length of 24 hours.";
         }
+        
+        $showInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->_showId)
+            ->find($con);
+        
+        /* Check if the show being resized and any of its repeats
+         * overlap with other scheduled shows
+         */
+        foreach ($showInstances as $si) {
+            $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
+            $endsDateTime = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
+            
+            /* The user is moving the show on the calendar from the perspective of local time.
+             * incase a show is moved across a time change border offsets should be added to the local
+             * timestamp and then converted back to UTC to avoid show time changes
+             */ 
+            $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+    
+            $newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
+            $newEndsDateTime = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
+    
+            //convert our new starts/ends to UTC.
+            $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
+            $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
+        
+            $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime,
+                $newEndsDateTime, true, $si->getDbId());
+            if ($overlapping) {
+                return "Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
+                       "affects all of its repeats.";
+            }
+        }
 
         $hours = $deltaMin/60;
         if ($hours > 0) {
