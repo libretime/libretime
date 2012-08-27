@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import abc
-import media.monitor.pure as mmp
+import media.monitor.pure   as mmp
 import media.monitor.owners as owners
 from media.monitor.pure       import LazyProperty
 from media.monitor.metadata   import Metadata
@@ -130,6 +130,10 @@ class OrganizeFile(BaseEvent, HasMetaData):
         raise AttributeError("You can't send organize events to airtime!!!")
 
 class NewFile(BaseEvent, HasMetaData):
+    """
+    NewFile events are the only events that contain MDATA_KEY_OWNER_ID metadata
+    in them.
+    """
     def __init__(self, *args, **kwargs):
         super(NewFile, self).__init__(*args, **kwargs)
     def pack(self):
@@ -143,6 +147,11 @@ class NewFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 class DeleteFile(BaseEvent):
+    """
+    DeleteFile event only contains the path to be deleted. No other metadata
+    can be or is included.  (This is because this event is fired after the
+    deletion occurs).
+    """
     def __init__(self, *args, **kwargs):
         super(DeleteFile, self).__init__(*args, **kwargs)
     def pack(self):
@@ -175,6 +184,10 @@ class ModifyFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 def map_events(directory, constructor):
+    """
+    Walks 'directory' and creates an event using 'constructor'. Returns a list
+    of the constructed events.
+    """
     # -unknown-path should not appear in the path here but more testing
     # might be necessary
     for f in mmp.walk_supported(directory, clean_empties=False):
@@ -183,18 +196,30 @@ def map_events(directory, constructor):
         except BadSongFile as e: yield e
 
 class DeleteDir(BaseEvent):
+    """
+    A DeleteDir event unfolds itself into a list of DeleteFile events for every
+    file in the directory.
+    """
     def __init__(self, *args, **kwargs):
         super(DeleteDir, self).__init__(*args, **kwargs)
     def pack(self):
         return map_events( self.path, DeleteFile )
 
 class MoveDir(BaseEvent):
+    """
+    A MoveDir event unfolds itself into a list of MoveFile events for every
+    file in the directory.
+    """
     def __init__(self, *args, **kwargs):
         super(MoveDir, self).__init__(*args, **kwargs)
     def pack(self):
         return map_events( self.path, MoveFile )
 
 class DeleteDirWatch(BaseEvent):
+    """
+    Deleting a watched directory is different from deleting any other
+    directory.  Hence we must have a separate event to handle this case
+    """
     def __init__(self, *args, **kwargs):
         super(DeleteDirWatch, self).__init__(*args, **kwargs)
     def pack(self):
