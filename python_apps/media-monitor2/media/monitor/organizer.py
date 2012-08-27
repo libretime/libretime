@@ -5,6 +5,7 @@ import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
+from media.monitor.events import OrganizeFile
 
 class Organizer(ReportHandler,Loggable):
     """
@@ -39,6 +40,8 @@ class Organizer(ReportHandler,Loggable):
         directory and place it in the correct path (starting with
         self.target_path)
         """
+        # Only handle this event type
+        assert isinstance(event, OrganizeFile)
         try:
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
