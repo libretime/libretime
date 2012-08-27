@@ -130,7 +130,7 @@ class UpgradeCommon{
         echo "Copying configs:\n";
         foreach ($config_copy as $path_part => $destination) {
             $full_path = OsPath::normpath(OsPath::join(__DIR__, 
-                                                       "$path_part.$suffix"));
+                "$path_part.$suffix"));
             echo "'$full_path' --> '$destination'\n";
             if(!copy($full_path, $destination)) {
                 echo "Failed on the copying operation above\n";

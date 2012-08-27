@@ -54,6 +54,10 @@ class Manager(Loggable):
         def dummy(sender, event): self.watch_move( event.path, sender=sender )
         dispatcher.connect(dummy, signal='watch_move', sender=dispatcher.Any,
                 weak=False)
+        def subwatch_add(sender, directory):
+            self.__add_watch(directory, self.watch_listener)
+        dispatcher.connect(subwatch_add, signal='add_subwatch',
+                sender=dispatcher.Any, weak=False)
         # A private mapping path => watch_descriptor
         # we use the same dictionary for organize, watch, store wd events.
         # this is a little hacky because we are unable to have multiple wd's

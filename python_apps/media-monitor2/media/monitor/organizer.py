@@ -5,7 +5,9 @@ import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
-from media.monitor.events import OrganizeFile
+from media.monitor.events     import OrganizeFile
+from pydispatch               import dispatcher
+from os.path                  import dirname
 
 class Organizer(ReportHandler,Loggable):
     """
@@ -55,7 +57,16 @@ class Organizer(ReportHandler,Loggable):
                                              else self.target_path
             new_path = mmp.organized_path(event.path, target_path,
                     event.metadata.extract())
-            mmp.magic_move(event.path, new_path)
+
+            # disgusting stuff... See hack in mmp.magic_move
+            def new_dir_watch(d):
+                def cb():
+                    dispatcher.send(signal="add_subwatch", sender=self,
+                            directory=d)
+                return cb
+
+            mmp.magic_move(event.path, new_path,
+                    after_dir_make=new_dir_watch(dirname(new_path)))
             owners.add_file_owner(new_path, mmp.owner_id(event.path) )
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))

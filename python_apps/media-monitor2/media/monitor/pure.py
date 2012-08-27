@@ -145,13 +145,17 @@ def walk_supported(directory, clean_empties=False):
         for fp in full_paths: yield fp
     if clean_empties: clean_empty_dirs(directory)
 
-def magic_move(old, new):
+def magic_move(old, new, after_dir_make=lambda : None):
     """
     Moves path old to new and constructs the necessary to directories for new
     along the way
     """
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
+    # We need this crusty hack because anytime a directory is created we must
+    # re-add it with add_watch otherwise putting files in it will not trigger
+    # pyinotify events
+    after_dir_make()
     shutil.move(old,new)
 
 def move_to_dir(dir_path,file_path):
