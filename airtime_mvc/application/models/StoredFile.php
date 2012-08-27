@@ -125,6 +125,9 @@ class Application_Model_StoredFile
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)) {
                     $dbMd[constant($mdConst)] = $mdValue;
+                } else {
+                    Logging::info("Warning: using metadata that is not defined.
+                        [$mdConst] => [$mdValue]");
                 }
             }
             $this->setDbColMetadata($dbMd);
@@ -153,7 +156,6 @@ class Application_Model_StoredFile
                 if (!array_key_exists('MDATA_KEY_OWNER_ID', $p_md)) {
                     //$admins = Application_Model_User::getUsers(array('A'));
                     $admins = Application_Model_User::getUsersOfType('A');
-                    //$admins = array();
                     if (count($admins) > 0) { // found admin => pick first one
                         $owner = $admins[0];
                     }
