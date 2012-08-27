@@ -241,6 +241,15 @@ class Application_Model_User
     public static function getUsersOfType($type) {
         return CcSubjsQuery::create()->filterByDbType($type)->find();
     }
+    public static function getFirstAdminId() {
+        $admins = Application_Model_User::getUsersOfType('A');
+        if (count($admins) > 0) { // found admin => pick first one
+            return $admins[0]->getDbId();
+        } else {
+            Logging::warn("Warning. no admins found in database");
+            return null;
+        }
+    }
     public static function getUsers(array $type, $search=null)
     {
         $con     = Propel::getConnection();
@@ -342,7 +351,6 @@ class Application_Model_User
     public static function getCurrentUser()
     {
         $userinfo = Zend_Auth::getInstance()->getStorage()->read();
-
         if (is_null($userinfo)) {
             return null;
         }
