@@ -129,8 +129,7 @@ def main(global_config, api_client_config, log_config,
 
     apiclient.register_component('media-monitor')
 
-    pyi = manager.pyinotify()
-    pyi.loop()
+    manager.loop()
 
 __doc__ = """
 Usage:
