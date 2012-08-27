@@ -113,7 +113,7 @@ class BaseEvent(Loggable):
         method is used by various events that would like to pass owner as a
         parameter. NewFile for example.
         """
-        if self.owner != -1: req['MDATA_KEY_OWNER_ID']
+        if self.owner != -1: req['MDATA_KEY_OWNER_ID'] = self.owner
 
 class FakePyinotify(object):
     """
