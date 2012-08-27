@@ -128,7 +128,7 @@ class Application_Model_StoredFile
                 if (defined($mdConst)) {
                     $dbMd[constant($mdConst)] = $mdValue;
                 } else {
-                    Logging::info("Warning: using metadata that is not defined.
+                    Logging::warn("using metadata that is not defined.
                         [$mdConst] => [$mdValue]");
                 }
             }
