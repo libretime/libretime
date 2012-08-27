@@ -102,24 +102,24 @@ function setSmartBlockEvents() {
              * next row
              */
             if (curr.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled"
-                && next.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled") {
+                && next.find('#extra_criteria').is(':visible')) {
             	
                 var criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
-                disableAndHideExtraField(next.find(':first-child'), index+1);
+                disableAndHideExtraField(next.find(':first-child'), getRowIndex(next));
             
             /* if only the current row has the extra criteria value,
              * then just remove the current row's extra criteria element
              */
             } else if (curr.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled"
-                       && next.find('[name^="sp_criteria_extra"]').attr("disabled") == "disabled") {
+                       && next.find('#extra_criteria').not(':visible')) {
                 disableAndHideExtraField(curr.find(':first-child'), index);
                 
             /* if only the next row has the extra criteria value,
              * then add the extra criteria element to current row
              * and assign next row's value to it
              */
-            } else if (next.find('[name^="sp_criteria_extra"]').attr("disabled") != "disabled") {
+            } else if (next.find('#extra_criteria').is(':visible')) {
                 criteria_extra = next.find('[name^="sp_criteria_extra"]').val();
                 enableAndShowExtraField(curr.find(':first-child'), index);
                 curr.find('[name^="sp_criteria_extra"]').val(criteria_extra);
@@ -203,11 +203,10 @@ function setSmartBlockEvents() {
     
     /********** CRITERIA CHANGE **********/
     form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
-        var index_name = $(this).attr('id'),
-            index_num = index_name.charAt(index_name.length-1);
+        var index = getRowIndex($(this).parent());
         
         // disable extra field and hide the span
-        disableAndHideExtraField($(this), index_num);
+        disableAndHideExtraField($(this), index);
         populateModifierSelect(this, true);
     });
     
@@ -394,7 +393,6 @@ function disableAndHideExtraField(valEle, index) {
 }
 
 function sizeTextBoxes(ele, classToRemove, classToAdd) {
-    var form = $('#smart-block-form');
     if (ele.hasClass(classToRemove)) {
         ele.removeClass(classToRemove).addClass(classToAdd);
     }
