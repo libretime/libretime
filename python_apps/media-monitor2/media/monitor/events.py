@@ -9,6 +9,10 @@ from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 
 class PathChannel(object):
+    """
+    Simple struct to hold a 'signal' string and a related 'path'. Basically
+    used as a named tuple
+    """
     def __init__(self, signal, path):
         self.signal = signal
         self.path   = path
@@ -64,6 +68,11 @@ class BaseEvent(Loggable):
         # into another event
 
     def reset_hook(self):
+        """
+        Resets the hook that is called after an event is packed. Before
+        resetting the hook we execute it to make sure that whatever cleanup
+        operations were queued are executed.
+        """
         self._pack_hook()
         self._pack_hook = lambda: None
 
@@ -124,6 +133,10 @@ class FakePyinotify(object):
     def __init__(self, path): self.pathname = path
 
 class OrganizeFile(BaseEvent, HasMetaData):
+    """
+    The only kind of event that does support the pack protocol. It's used
+    internally with mediamonitor to move files in the organize directory.
+    """
     def __init__(self, *args, **kwargs):
         super(OrganizeFile, self).__init__(*args, **kwargs)
     def pack(self):
