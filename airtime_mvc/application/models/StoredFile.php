@@ -122,6 +122,8 @@ class Application_Model_StoredFile
                 $p_md["MDATA_KEY_YEAR"] = $year;
             }
 
+            # Translate metadata attributes from media monitor (MDATA_KEY_*)
+            # to their counterparts in constants.php (usually the column names)
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)) {
                     $dbMd[constant($mdConst)] = $mdValue;
