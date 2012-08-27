@@ -17,6 +17,10 @@ class Organizer(ReportHandler,Loggable):
     StoreWatchListener)
     """
 
+    # Commented out making this class a singleton because it's just a band aid
+    # for the real issue. The real issue being making multiple Organizer
+    # instances with pydispatch
+
     #_instance = None
     #def __new__(cls, channel, target_path, recorded_path):
         #if cls._instance:
@@ -41,7 +45,8 @@ class Organizer(ReportHandler,Loggable):
         self.target_path)
         """
         # Only handle this event type
-        assert isinstance(event, OrganizeFile) == True
+        assert isinstance(event, OrganizeFile), \
+            "Organizer can only handle OrganizeFile events.Given '%s'" % event
         try:
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
