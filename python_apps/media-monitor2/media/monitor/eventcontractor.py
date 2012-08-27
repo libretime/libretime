@@ -29,7 +29,6 @@ class EventContractor(Loggable):
         some other event in the storage was morphed into this newer one.
         Which should mean that the old event should be discarded.
         """
-        self.logger.info("Attempting to register: '%s'" % str(evt))
         if self.event_registered(evt):
             old_e = self.get_old_event(evt)
             # TODO : Perhaps there are other events that we can "contract"

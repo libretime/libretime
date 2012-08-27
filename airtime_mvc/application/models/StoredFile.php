@@ -183,7 +183,6 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
-                    Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
             }
