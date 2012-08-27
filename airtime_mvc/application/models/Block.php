@@ -1173,12 +1173,19 @@ EOT;
                             $spCriteria = 'date('.$spCriteria.')';
                             $spCriteriaValue = substr($spCriteriaValue, 0, 10);
                         }
+                    
+                        if (isset($criteria['extra'])) {
+                            $spCriteriaExtra = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['extra']);
+                            if (strlen($criteria['extra']) <= 10) {
+                                $spCriteriaExtra = substr($spCriteriaExtra, 0, 10);
+                            }
+                        }
                     } else if ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
                         $spCriteriaValue = $criteria['value']*1000;
                         if (isset($criteria['extra'])) {
-                            $criteria['extra'] *= 1000;
+                            $spCriteriaExtra = $criteria['extra']*1000;
                         }
                     } else {
                         /* Propel does not escape special characters properly when using LIKE/ILIKE
@@ -1201,7 +1208,7 @@ EOT;
                     } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
                         $spCriteriaValue = "%$spCriteriaValue%";
                     } else if ($spCriteriaModifier == "is in the range") {
-                        $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$criteria[extra]'";
+                        $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$spCriteriaExtra'";
                     }
                     
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
