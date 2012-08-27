@@ -63,7 +63,7 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
-        self.owner = owners.get_owner()
+        self.owner = owners.get_owner(self.path)
         self._pack_hook = lambda: None # no op
         # into another event
 
