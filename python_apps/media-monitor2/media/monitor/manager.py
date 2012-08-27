@@ -219,14 +219,13 @@ class Manager(Loggable):
             self.logger.info("'%s' is not being watched, hence cannot be \
                     removed" % watch_dir)
 
-    def pyinotify(self):
-        return pyinotify.Notifier(self.wm)
-
     def loop(self):
         """
         block until we receive pyinotify events
         """
-        pyinotify.Notifier(self.wm).loop()
+        notifier = pyinotify.Notifier(self.wm)
+        notifier.coalesce_events()
+        notifier.loop()
         # Experiments with running notifier in different modes
         # There are 3 options: normal, async, threaded.
         #import asyncore
