@@ -51,7 +51,7 @@ class Organizer(ReportHandler,Loggable):
             new_path = mmp.organized_path(event.path, target_path,
                     event.metadata.extract())
             mmp.magic_move(event.path, new_path)
-            owners.add_file_owner(event.path, mmp.owner_id(event.path) )
+            owners.add_file_owner(new_path, mmp.owner_id(event.path) )
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))
         except BadSongFile as e:
