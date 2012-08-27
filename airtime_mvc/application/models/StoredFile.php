@@ -122,9 +122,14 @@ class Application_Model_StoredFile
                 $p_md["MDATA_KEY_YEAR"] = $year;
             }
 
+            # Translate metadata attributes from media monitor (MDATA_KEY_*)
+            # to their counterparts in constants.php (usually the column names)
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)) {
                     $dbMd[constant($mdConst)] = $mdValue;
+                } else {
+                    Logging::warn("using metadata that is not defined.
+                        [$mdConst] => [$mdValue]");
                 }
             }
             $this->setDbColMetadata($dbMd);
@@ -150,10 +155,9 @@ class Application_Model_StoredFile
             if(!$owner) { // no owner detected, we try to assign one.
                 // if MDATA_OWNER_ID is not set then we default to the 
                 // first admin user we find
-                if (!array_key_exists('MDATA_OWNER_ID', $p_md)) {
+                if (!array_key_exists('owner_id', $p_md)) {
                     //$admins = Application_Model_User::getUsers(array('A'));
                     $admins = Application_Model_User::getUsersOfType('A');
-                    //$admins = array();
                     if (count($admins) > 0) { // found admin => pick first one
                         $owner = $admins[0];
                     }
@@ -161,7 +165,7 @@ class Application_Model_StoredFile
                 // get the user by id and set it like that
                 else {
                     $user = CcSubjsQuery::create()
-                        ->findPk($p_md['MDATA_OWNER_ID']);
+                        ->findPk($p_md['owner_id']);
                     if ($user) {
                         $owner = $user;
                     }
@@ -174,6 +178,12 @@ class Application_Model_StoredFile
                         '".$p_md['MDATA_KEY_FILEPATH']."'");
                 }
             }
+            # We don't want to process owner_id in bulk because we already
+            # processed it in the code above. This is done because owner_id
+            # needs special handling
+            if (array_key_exists('owner_id', $p_md)) {
+                unset($p_md['owner_id']);
+            }
             foreach ($p_md as $dbColumn => $mdValue) {
                 // don't blank out name, defaults to original filename on first
                 // insertion to database.
@@ -183,7 +193,6 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
-                    Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
             }
@@ -794,6 +803,8 @@ class Application_Model_StoredFile
         $chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
         $chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
         $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
+        # TODO : should not log __FILE__ itself. there is general logging for
+        #  this
         Logging::info(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
         // Clean the fileName for security reasons
         //this needs fixing for songs not in ascii.

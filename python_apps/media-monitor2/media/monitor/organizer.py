@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import media.monitor.pure as mmp
+import media.monitor.pure   as mmp
+import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
+from media.monitor.events import OrganizeFile
 
 class Organizer(ReportHandler,Loggable):
     """
@@ -14,6 +16,10 @@ class Organizer(ReportHandler,Loggable):
     its events through pyinotify. (These events are fed to it through
     StoreWatchListener)
     """
+
+    # Commented out making this class a singleton because it's just a band aid
+    # for the real issue. The real issue being making multiple Organizer
+    # instances with pydispatch
 
     #_instance = None
     #def __new__(cls, channel, target_path, recorded_path):
@@ -38,6 +44,9 @@ class Organizer(ReportHandler,Loggable):
         directory and place it in the correct path (starting with
         self.target_path)
         """
+        # Only handle this event type
+        assert isinstance(event, OrganizeFile), \
+            "Organizer can only handle OrganizeFile events.Given '%s'" % event
         try:
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
@@ -47,6 +56,7 @@ class Organizer(ReportHandler,Loggable):
             new_path = mmp.organized_path(event.path, target_path,
                     event.metadata.extract())
             mmp.magic_move(event.path, new_path)
+            owners.add_file_owner(new_path, mmp.owner_id(event.path) )
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))
         except BadSongFile as e:

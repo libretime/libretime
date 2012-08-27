@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 import os
 import abc
-import media.monitor.pure as mmp
+import media.monitor.pure   as mmp
+import media.monitor.owners as owners
 from media.monitor.pure       import LazyProperty
 from media.monitor.metadata   import Metadata
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 
 class PathChannel(object):
+    """
+    Simple struct to hold a 'signal' string and a related 'path'. Basically
+    used as a named tuple
+    """
     def __init__(self, signal, path):
         self.signal = signal
         self.path   = path
 
+# TODO : Move this to it's file. Also possible unsingleton and use it as a
+# simple module just like m.m.owners
 class EventRegistry(object):
     """
     This class's main use is to keep track all events with a cookie attribute.
@@ -56,10 +63,16 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
+        self.owner = owners.get_owner(self.path)
         self._pack_hook = lambda: None # no op
         # into another event
 
     def reset_hook(self):
+        """
+        Resets the hook that is called after an event is packed. Before
+        resetting the hook we execute it to make sure that whatever cleanup
+        operations were queued are executed.
+        """
         self._pack_hook()
         self._pack_hook = lambda: None
 
@@ -85,11 +98,12 @@ class BaseEvent(Loggable):
         events that must catch their own BadSongFile exceptions since generate
         a set of exceptions instead of a single one
         """
-        # pack will only throw an exception if it processes one file but this
-        # is a little bit hacky
         try:
             self._pack_hook()
             ret = self.pack()
+            # Remove owner of this file only after packing. Otherwise packing
+            # will not serialize the owner correctly into the airtime request
+            owners.remove_file_owner(self.path)
             return ret
         except BadSongFile as e: return [e]
 
@@ -100,7 +114,17 @@ class BaseEvent(Loggable):
         self.path         = evt.path
         self.__class__    = evt.__class__
         # We don't transfer the _pack_hook over to the new event
+        # TODO : perhaps we should call the old events pack_hook just to make
+        # sure everything is done cleanly?
         return self
+
+    def assign_owner(self,req):
+        """
+        Packs self.owner to req if the owner is valid. I.e. it's not -1. This
+        method is used by various events that would like to pass owner as a
+        parameter. NewFile for example.
+        """
+        if self.owner != -1: req['MDATA_KEY_OWNER_ID'] = self.owner
 
 class FakePyinotify(object):
     """
@@ -111,12 +135,20 @@ class FakePyinotify(object):
     def __init__(self, path): self.pathname = path
 
 class OrganizeFile(BaseEvent, HasMetaData):
+    """
+    The only kind of event that does support the pack protocol. It's used
+    internally with mediamonitor to move files in the organize directory.
+    """
     def __init__(self, *args, **kwargs):
         super(OrganizeFile, self).__init__(*args, **kwargs)
     def pack(self):
         raise AttributeError("You can't send organize events to airtime!!!")
 
 class NewFile(BaseEvent, HasMetaData):
+    """
+    NewFile events are the only events that contain MDATA_KEY_OWNER_ID metadata
+    in them.
+    """
     def __init__(self, *args, **kwargs):
         super(NewFile, self).__init__(*args, **kwargs)
     def pack(self):
@@ -125,10 +157,16 @@ class NewFile(BaseEvent, HasMetaData):
         """
         req_dict = self.metadata.extract()
         req_dict['mode'] = u'create'
+        self.assign_owner(req_dict)
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return [req_dict]
 
 class DeleteFile(BaseEvent):
+    """
+    DeleteFile event only contains the path to be deleted. No other metadata
+    can be or is included.  (This is because this event is fired after the
+    deletion occurs).
+    """
     def __init__(self, *args, **kwargs):
         super(DeleteFile, self).__init__(*args, **kwargs)
     def pack(self):
@@ -161,6 +199,10 @@ class ModifyFile(BaseEvent, HasMetaData):
         return [req_dict]
 
 def map_events(directory, constructor):
+    """
+    Walks 'directory' and creates an event using 'constructor'. Returns a list
+    of the constructed events.
+    """
     # -unknown-path should not appear in the path here but more testing
     # might be necessary
     for f in mmp.walk_supported(directory, clean_empties=False):
@@ -169,18 +211,30 @@ def map_events(directory, constructor):
         except BadSongFile as e: yield e
 
 class DeleteDir(BaseEvent):
+    """
+    A DeleteDir event unfolds itself into a list of DeleteFile events for every
+    file in the directory.
+    """
     def __init__(self, *args, **kwargs):
         super(DeleteDir, self).__init__(*args, **kwargs)
     def pack(self):
         return map_events( self.path, DeleteFile )
 
 class MoveDir(BaseEvent):
+    """
+    A MoveDir event unfolds itself into a list of MoveFile events for every
+    file in the directory.
+    """
     def __init__(self, *args, **kwargs):
         super(MoveDir, self).__init__(*args, **kwargs)
     def pack(self):
         return map_events( self.path, MoveFile )
 
 class DeleteDirWatch(BaseEvent):
+    """
+    Deleting a watched directory is different from deleting any other
+    directory.  Hence we must have a separate event to handle this case
+    """
     def __init__(self, *args, **kwargs):
         super(DeleteDirWatch, self).__init__(*args, **kwargs)
     def pack(self):

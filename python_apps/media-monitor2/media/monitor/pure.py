@@ -418,6 +418,26 @@ def sub_path(directory,f):
     common     = os.path.commonprefix([ normalized, normpath(f) ])
     return common == normalized
 
+def owner_id(original_path):
+    """
+    Given 'original_path' return the file name of the of 'identifier' file.
+    return the id that is contained in it. If no file is found or nothing is
+    read then -1 is returned. File is deleted after the number has been read
+    """
+    fname = "%s.identifier" % original_path
+    owner_id = -1
+    try:
+        f = open(fname)
+        for line in f:
+            owner_id = int(line)
+            break
+        f.close()
+    except Exception: pass
+    else:
+        try: os.unlink(fname)
+        except Exception: raise
+    return owner_id
+
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
