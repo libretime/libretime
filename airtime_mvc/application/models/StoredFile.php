@@ -122,9 +122,14 @@ class Application_Model_StoredFile
                 $p_md["MDATA_KEY_YEAR"] = $year;
             }
 
+            # Translate metadata attributes from media monitor (MDATA_KEY_*)
+            # to their counterparts in constants.php (usually the column names)
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)) {
                     $dbMd[constant($mdConst)] = $mdValue;
+                } else {
+                    Logging::info("Warning: using metadata that is not defined.
+                        [$mdConst] => [$mdValue]");
                 }
             }
             $this->setDbColMetadata($dbMd);
@@ -150,10 +155,9 @@ class Application_Model_StoredFile
             if(!$owner) { // no owner detected, we try to assign one.
                 // if MDATA_OWNER_ID is not set then we default to the 
                 // first admin user we find
-                if (!array_key_exists('MDATA_OWNER_ID', $p_md)) {
+                if (!array_key_exists('MDATA_KEY_OWNER_ID', $p_md)) {
                     //$admins = Application_Model_User::getUsers(array('A'));
                     $admins = Application_Model_User::getUsersOfType('A');
-                    //$admins = array();
                     if (count($admins) > 0) { // found admin => pick first one
                         $owner = $admins[0];
                     }
@@ -183,7 +187,6 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
-                    Logging::info($method);
                     $this->_file->$method($mdValue);
                 }
             }

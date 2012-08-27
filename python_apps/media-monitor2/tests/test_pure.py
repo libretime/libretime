@@ -82,4 +82,16 @@ class TestMMP(unittest.TestCase):
         self.assertEqual( mmp.parse_int("123asf"), "123" )
         self.assertEqual( mmp.parse_int("asdf"), None )
 
+    def test_owner_id(self):
+        start_path = "testing.mp3"
+        id_path    = "testing.mp3.identifier"
+        o_id   = 123
+        f = open(id_path, 'w')
+        f.write("123")
+        f.close()
+        possible_id = mmp.owner_id(start_path)
+        self.assertFalse( os.path.exists(id_path) )
+        self.assertEqual( possible_id, o_id )
+        self.assertEqual( -1, mmp.owner_id("something.random") )
+
 if __name__ == '__main__': unittest.main()
