@@ -1199,6 +1199,8 @@ EOT;
                         } else {
                             $spCriteriaValue = ($criteria['value']);
                         }
+                        
+                        $spCriteriaExtra = $criteria['extra'];
                     }
                     
                     if ($spCriteriaModifier == "starts with") {
