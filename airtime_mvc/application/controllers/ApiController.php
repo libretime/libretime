@@ -516,7 +516,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $return_hash['error'] =  "File doesn't exist in Airtime.";
+                $return_hash['error'] = "File doesn't exist in Airtime.";
                 Logging::warn("Attempt to delete file that doesn't exist.
                     Path: '$filepath'");
                 return $return_hash;
