@@ -41,7 +41,7 @@ class Organizer(ReportHandler,Loggable):
         self.target_path)
         """
         # Only handle this event type
-        assert isinstance(event, OrganizeFile)
+        assert isinstance(event, OrganizeFile) == True
         try:
             # We must select the target_path based on whether file was recorded
             # by airtime or not.
