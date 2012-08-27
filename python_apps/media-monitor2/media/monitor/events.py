@@ -98,11 +98,11 @@ class BaseEvent(Loggable):
         events that must catch their own BadSongFile exceptions since generate
         a set of exceptions instead of a single one
         """
-        # pack will only throw an exception if it processes one file but this
-        # is a little bit hacky
         try:
             self._pack_hook()
             ret = self.pack()
+            # Remove owner of this file only after packing. Otherwise packing
+            # will not serialize the owner correctly into the airtime request
             owners.remove_file_owner(self.path)
             return ret
         except BadSongFile as e: return [e]
@@ -114,6 +114,8 @@ class BaseEvent(Loggable):
         self.path         = evt.path
         self.__class__    = evt.__class__
         # We don't transfer the _pack_hook over to the new event
+        # TODO : perhaps we should call the old events pack_hook just to make
+        # sure everything is done cleanly?
         return self
 
     def assign_owner(self,req):
