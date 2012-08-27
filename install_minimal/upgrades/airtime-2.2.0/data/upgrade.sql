@@ -8,6 +8,13 @@ DROP TABLE cc_access;
 
 DROP SEQUENCE cc_access_id_seq;
 
+CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
+    AS 
+    'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
+
 CREATE SEQUENCE cc_block_id_seq
 	START WITH 1
 	INCREMENT BY 1
@@ -97,7 +104,7 @@ CREATE TABLE cc_webstream_metadata (
 ALTER TABLE cc_files
 	DROP COLUMN gunid,
 	ADD COLUMN replay_gain character varying(16),
-	ALTER COLUMN bpm TYPE integer /* TYPE change - table: cc_files original: character varying(8) new: integer */;
+	ALTER COLUMN bpm TYPE integer using airtime_to_int(bpm) /* TYPE change - table: cc_files original: character varying(8) new: integer */;
 
 ALTER TABLE cc_playlistcontents
 	ADD COLUMN block_id integer,
@@ -145,3 +152,5 @@ ALTER TABLE cc_schedule
 
 ALTER TABLE cc_webstream_metadata
 	ADD CONSTRAINT cc_schedule_inst_fkey FOREIGN KEY (instance_id) REFERENCES cc_schedule(id) ON DELETE CASCADE;
+
+DROP FUNCTION airtime_to_int(chartoconvert character varying);
