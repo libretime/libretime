@@ -382,7 +382,7 @@ class Application_Model_StoredFile
         if ($deleteFromPlaylist) {
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         }
-        // set file_exists falg to false
+        // set file_exists flag to false
         $this->_file->setDbFileExists(false);
         $this->_file->save();
     }
@@ -415,7 +415,7 @@ class Application_Model_StoredFile
             _file->getDbDirectory());
         $directory = $music_dir->getDirectory();
         $filepath  = $this->_file->getDbFilepath();
-        return OsPath::join($directory, $filepath);
+        return Application_Common_OsPath::join($directory, $filepath);
     }
 
     /**
