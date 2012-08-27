@@ -25,5 +25,12 @@ class TestMMP(unittest.TestCase):
         self.assertTrue( owners.remove_file_owner(self.f) )
         self.assertFalse( owners.remove_file_owner(self.f) )
 
+    def test_get_owner(self):
+        owners.reset_owners()
+        self.assertTrue( owners.add_file_owner(self.f, 123) )
+        self.assertEqual( owners.get_owner(self.f), 123, "file is owned" )
+        self.assertEqual( owners.get_owner("random_stuff.txt"), -1,
+                "file is not owned" )
+
 if __name__ == '__main__': unittest.main()
 
