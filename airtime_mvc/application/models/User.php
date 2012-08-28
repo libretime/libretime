@@ -233,6 +233,7 @@ class Application_Model_User
     public function getOwnedFiles() 
     {
         $user = $this->_userInstance;
+        // do we need a find call at the end here?
         return $user->getCcFilessRelatedByDbOwnerId();
     }
 
@@ -242,6 +243,11 @@ class Application_Model_User
         foreach ($my_files as $file) {
             $file->reassignTo($user);
         }
+    }
+
+    public function deleteAllFiles()
+    {
+        $my_files = $this->getOwnedFiles();
     }
 
     private function createUser()
