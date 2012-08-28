@@ -1003,8 +1003,7 @@ class Application_Model_StoredFile
      * @param $dir_id - if this is not provided, it returns all files with full path constructed.
      * @param $propelObj - if this is true, it returns array of proepl obj
      */
-    public static function listAllFiles($dir_id=null, $propelObj=false, 
-        $all=false)
+    public static function listAllFiles($dir_id=null, $all, $propelObj=false)
     {
         $con = Propel::getConnection();
 
@@ -1017,8 +1016,8 @@ class Application_Model_StoredFile
                     ." ON m.id = f.directory WHERE m.id = $dir_id $file_exists";
         } else {
             $sql = "SELECT filepath as fp"
-                    ." FROM CC_FILES"
-                    ." WHERE directory = $dir_id $file_exists";
+                    ." FROM CC_FILES as f"
+                    ." WHERE f.directory = $dir_id $file_exists";
         }
         $rows = $con->query($sql)->fetchAll();
 

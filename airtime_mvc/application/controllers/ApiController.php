@@ -690,7 +690,7 @@ class ApiController extends Zend_Controller_Action
         $dir_id = $request->getParam('dir_id');
 
         $this->view->files = 
-            Application_Model_StoredFile::listAllFiles($dir_id, $all=true);
+            Application_Model_StoredFile::listAllFiles($dir_id,$all=true);
     }
 
     public function listAllWatchedDirsAction()
@@ -863,7 +863,8 @@ class ApiController extends Zend_Controller_Action
 
                     $watchDir = Application_Model_MusicDir::getDirByPath($rd);
                     // get all the files that is under $dirPath
-                    $files = Application_Model_StoredFile::listAllFiles($dir->getId(), true);
+                    $files = Application_Model_StoredFile::listAllFiles(
+                        $dir->getId(),$all=false, true);
                     foreach ($files as $f) {
                         // if the file is from this mount
                         if (substr($f->getFilePath(), 0, strlen($rd)) === $rd) {
