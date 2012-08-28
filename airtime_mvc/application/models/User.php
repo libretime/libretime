@@ -230,6 +230,19 @@ class Application_Model_User
             $this->_userInstance->delete();
         }
     }
+    public function getOwnedFiles() 
+    {
+        $user = $this->_userInstance;
+        return $user->getCcFilessRelatedByDbOwnerId();
+    }
+
+    public function donateFilesTo($user)
+    {
+        $my_files = $this->getOwnedFiles();
+        foreach ($my_files as $file) {
+            $file->reassignTo($user);
+        }
+    }
 
     private function createUser()
     {

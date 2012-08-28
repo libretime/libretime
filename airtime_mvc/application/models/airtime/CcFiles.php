@@ -40,5 +40,8 @@ class CcFiles extends BaseCcFiles {
         return $this;
     }
 
+    public function reassignTo($user) {
+        $this->setDbOwnerId( $user->getDbId() );
+    }
 
 } // CcFiles
