@@ -128,6 +128,8 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         if (!$invalid_date_interval) { 
 
+            //Due to the way our Regular Expression is set up, we could have $minutes or $hours
+            //not set. Do simple test here
             if (!is_numeric($hours)) {
                 $hours = 0;
             }
@@ -135,7 +137,13 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 $minutes = 0;
             }
 
+
+            //minutes cannot be over 59. Need to convert anything > 59 minutes into hours.
+            $hours += intval($minutes/60);
+            $minutes = $minutes%60;
+
             $di = new DateInterval("PT{$hours}H{$minutes}M");
+
 
             $totalMinutes = $di->h * 60 + $di->i;
 

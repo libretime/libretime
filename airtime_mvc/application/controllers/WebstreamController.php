@@ -152,6 +152,7 @@ class WebstreamController extends Zend_Controller_Action
                 throw new Exception("isValid returned false");
             }
         } catch (Exception $e) {
+            Logging::debug($e->getMessage());
             $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>"; 
             $this->view->streamId = -1;
             $this->view->analysis = $analysis;
