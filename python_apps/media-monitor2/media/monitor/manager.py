@@ -91,9 +91,10 @@ class Manager(Loggable):
     def __add_watch(self,path,listener):
         self.logger.info("Adding listener '%s' to '%s'" %
                          ( listener.__class__.__name__, path) )
-        wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
-                auto_add=True, proc_fun=listener)
-        if wd: self.__wd_path[path] = wd.values()[0]
+        if not self.has_watch(path):
+            wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
+                    auto_add=True, proc_fun=listener)
+            if wd: self.__wd_path[path] = wd.values()[0]
 
     def __create_organizer(self, target_path, recorded_path):
         """
