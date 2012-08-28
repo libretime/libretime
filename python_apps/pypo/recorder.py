@@ -145,12 +145,11 @@ class ShowRecorder(Thread):
             record_time = md[1].replace(":", "-")
             self.logger.info("time: %s" % record_time)
 
-            show_title = time + "-" + self.show_name
             artist = "Airtime Show Recorder"
 
             #set some metadata for our file daemon
             recorded_file           = mutagen.File(filepath, easy = True)
-            recorded_file['title']  = show_title
+            recorded_file['title']  = record_time + "-" + self.show_name
             recorded_file['artist'] = artist
             recorded_file['date']   = md[0]
             #recorded_file['date'] = md[0].split("-")[0]
