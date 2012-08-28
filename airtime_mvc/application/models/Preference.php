@@ -1089,6 +1089,16 @@ class Application_Model_Preference
     {
         return self::getValue("mail_server_port");
     }
+    
+    public static function SetMailServerRequiresAuth($value)
+    {
+        self::setValue("mail_server_requires_auth", $value, false);
+    }
+    
+    public static function GetMailServerRequiresAuth()
+    {
+        return self::getValue("mail_server_requires_auth");
+    }
     /* User specific preferences end */
 
     public static function ShouldShowPopUp()

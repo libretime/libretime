@@ -50,6 +50,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetMailServerEmailAddress($values["preferences_email_server"]["email"]);
                     Application_Model_Preference::SetMailServerPassword($values["preferences_email_server"]["ms_password"]);
                     Application_Model_Preference::SetMailServerPort($values["preferences_email_server"]["port"]);
+                    Application_Model_Preference::SetMailServerRequiresAuth($values["preferences_email_server"]["msRequiresAuth"]);
                 }
 
                 Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["preferences_soundcloud"]["UseSoundCloud"]);
