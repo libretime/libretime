@@ -102,7 +102,7 @@ class WebstreamController extends Zend_Controller_Action
             $hasPermission = true;
         }
 
-        if ($user->isHost()) {
+        if (!$hasPermission && $user->isHost()) {
             if ($webstream_id != -1) {
                 $webstream = CcWebstreamQuery::create()->findPK($webstream_id);
                 //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
