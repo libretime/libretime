@@ -157,6 +157,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
 
         $mime = null;
+        $mediaUrl = null;
         if ($result == 0) {
             $valid['url'][0] = false;
             $valid['url'][1] = 'URL should be of form "http://domain"';
