@@ -134,21 +134,22 @@ class ShowRecorder(Thread):
         self.api_client.upload_recorded_show(datagen, headers)
 
     def set_metadata_and_save(self, filepath):
+        """
+        Writes song to 'filepath'. Uses metadata from:
+            self.start_time, self.show_name, self.show_instance
+        """
         try:
             date = self.start_time
             md = date.split(" ")
-            # TODO : rename 'time' variable to something better so that there
-            # is no naming conflicts with the time module that is being
-            # imported
-            time = md[1].replace(":", "-")
-            self.logger.info("time: %s" % time)
 
-            name = time + "-" + self.show_name
+            record_time = md[1].replace(":", "-")
+            self.logger.info("time: %s" % record_time)
+
             artist = "Airtime Show Recorder"
 
             #set some metadata for our file daemon
             recorded_file           = mutagen.File(filepath, easy = True)
-            recorded_file['title']  = name
+            recorded_file['title']  = record_time + "-" + self.show_name
             recorded_file['artist'] = artist
             recorded_file['date']   = md[0]
             #recorded_file['date'] = md[0].split("-")[0]

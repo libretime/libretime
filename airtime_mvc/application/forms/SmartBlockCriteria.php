@@ -88,7 +88,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
     }
     
-    public function startForm($p_blockId)
+    public function startForm($p_blockId, $p_isValid = false)
     {
         // load type
         $out = CcBlockQuery::create()->findPk($p_blockId);
@@ -236,7 +236,13 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         //getting block content candidate count that meets criteria
         $bl = new Application_Model_Block($p_blockId);
-        $files = $bl->getListofFilesMeetCriteria();
+        if ($p_isValid) {
+            $files = $bl->getListofFilesMeetCriteria();
+            $showPoolCount = true;
+        } else {
+            $files = null;
+            $showPoolCount = false;
+        }
         
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
@@ -256,7 +262,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartBlockOption,
-                        'criteriasLength' => count($this->criteriaOptions), 'poolCount' => $files['count'], 'modRowMap' => $modRowMap))
+                        'criteriasLength' => count($this->criteriaOptions), 'poolCount' => $files['count'], 'modRowMap' => $modRowMap,
+                        'showPoolCount' => $showPoolCount))
         ));
     }
     
