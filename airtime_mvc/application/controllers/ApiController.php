@@ -891,7 +891,6 @@ class ApiController extends Zend_Controller_Action
      * out a message to pypo that a potential change has been made. */
     public function rabbitmqDoPushAction()
     {
-        $request = $this->getRequest();
         Logging::info("Notifying RabbitMQ to send message to pypo");
 
         Application_Model_RabbitMq::PushSchedule();

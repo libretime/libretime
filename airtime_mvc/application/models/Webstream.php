@@ -111,10 +111,30 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $di = null;
         $length = $parameters["length"];
-        $result = preg_match("/^([0-9]{1,2})h ([0-5]?[0-9])m$/", $length, $matches);
-        if ($result == 1 && count($matches) == 3) { 
+        $result = preg_match("/^(?:([0-9]{1,2})h)?\s*(?:([0-6]?[0-9])m)?$/", $length, $matches);
+
+        $invalid_date_interval = false;
+        if ($result == 1 && count($matches) == 2) {
+            $hours = $matches[1];
+            $minutes = 0;
+        } else if ($result == 1 && count($matches) == 3) {
             $hours = $matches[1];
             $minutes = $matches[2];
+        } else {
+            $invalid_date_interval = true;
+        }
+
+
+
+        if (!$invalid_date_interval) { 
+
+            if (!is_numeric($hours)) {
+                $hours = 0;
+            }
+            if (!is_numeric($minutes)) {
+                $minutes = 0;
+            }
+
             $di = new DateInterval("PT{$hours}H{$minutes}M");
 
             $totalMinutes = $di->h * 60 + $di->i;
