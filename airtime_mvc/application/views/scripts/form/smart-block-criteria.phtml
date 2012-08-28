@@ -66,32 +66,35 @@
             <?php endif; ?>
         <br />
         </dd>
-        <div class='sp_text_font sp_text_font_bold'>
-            <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
-            <?php
-            if ($this->poolCount > 1) {
-                echo $this->poolCount;
-            ?>
-                files meet the criteria
-                </span>
-                <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
-            <?php
-            } else if ($this->poolCount == 1) {
-                echo $this->poolCount;
-            ?>
-                file meets the criteria
-                </span>
-                <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
-            <?php
-            } else {
-            ?>
-                0 files meet the criteria
-                </span>
-                <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
-            <?php
-            }
-            ?>
-        </div>
+
+        <?php if ($this->showPoolCount) { ?>
+            <div class='sp_text_font sp_text_font_bold'>
+                <span id='sp_pool_count' class='sp_text_font sp_text_font_bold'>
+                <?php
+                if ($this->poolCount > 1) {
+                    echo $this->poolCount;
+                ?>
+                    files meet the criteria
+                    </span>
+                    <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
+                <?php
+                } else if ($this->poolCount == 1) {
+                    echo $this->poolCount;
+                ?>
+                    file meets the criteria
+                    </span>
+                    <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
+                <?php
+                } else {
+                ?>
+                    0 files meet the criteria
+                    </span>
+                    <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
+                <?php
+                }
+                ?>
+            </div>
+        <?php } ?>
         
         
     </dl>

@@ -40,7 +40,7 @@ class Application_Model_User
             ->filterByDbHost($userId)->count() > 0;
     }
 
-    public function isHost($showId)
+    public function isHost()
     {
         return $this->isUserType(UTYPE_HOST);
     }

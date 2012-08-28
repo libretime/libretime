@@ -13,23 +13,31 @@ class Application_Model_Email
     public static function send($subject, $message, $tos, $from = null)
     {
         $mailServerConfigured = Application_Model_Preference::GetMailServerConfigured() == true ? true : false;
+        $mailServerRequiresAuth = Application_Model_Preference::GetMailServerRequiresAuth() == true ? true : false;
         $success = true;
 
         if ($mailServerConfigured) {
-            $username = Application_Model_Preference::GetMailServerEmailAddress();
-            $password = Application_Model_Preference::GetMailServerPassword();
             $mailServer = Application_Model_Preference::GetMailServer();
             $mailServerPort = Application_Model_Preference::GetMailServerPort();
             if (!empty($mailServerPort)) {
                 $port = Application_Model_Preference::GetMailServerPort();
             }
 
-            $config = array(
-                'auth' => 'login',
-                'ssl' => 'ssl',
-                'username' => $username,
-                'password' => $password
-            );
+            if ($mailServerRequiresAuth) {
+                $username = Application_Model_Preference::GetMailServerEmailAddress();
+                $password = Application_Model_Preference::GetMailServerPassword();
+                
+                $config = array(
+                    'auth' => 'login',
+                    'ssl' => 'ssl',
+                    'username' => $username,
+                    'password' => $password
+                );
+            } else {
+                $config = array(
+                    'ssl' => 'ssl'
+                );
+            }
 
             if (isset($port)) {
                 $config['port'] = $port;

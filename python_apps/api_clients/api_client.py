@@ -229,6 +229,22 @@ class AirtimeApiClient():
         except Exception, e:
             logger.error("%s", e)
 
+    def notify_liquidsoap_started(self):
+        logger = self.logger
+
+        try:
+            url = "http://%s:%s/%s/%s" % (self.config["base_url"], \
+                    str(self.config["base_port"]), \
+                    self.config["api_base"], \
+                    self.config["notify_liquidsoap_started"])
+
+            url = url.replace("%%api_key%%", self.config["api_key"])
+
+            self.get_response_from_server(url)
+        except Exception, e:
+            logger.error("Exception: %s", str(e))
+
+
     """
     This is a callback from liquidsoap, we use this to notify about the
     currently playing *song*.  We get passed a JSON string which we handed to

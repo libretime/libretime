@@ -44,7 +44,13 @@
                 <label class="required" for="mailServer"><?php echo $this->element->getElement('mailServer')->getLabel() ?>
                 <span class="info-text-small">(Required)</span>:
                 </label>
+                
+                <label class="required" for="msRequiresAuth">
+                    <?php echo $this->element->getElement('msRequiresAuth') ?>
+                    <?php echo $this->element->getElement('msRequiresAuth')->getLabel() ?>
+                </label>
             </dt>
+            
             <dd id="mailServer-element" class="block-display">
                 <?php echo $this->element->getElement('mailServer') ?>
                 <?php if($this->element->getElement('mailServer')->hasErrors()) : ?>
@@ -54,6 +60,14 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?> 
+            </dd>
+            
+            <dt id="port-label" class="block-display">
+                <label class="required" for="port"><?php echo $this->element->getElement('port')->getLabel() ?>:
+                </label>
+            </dt>
+            <dd id="port-element" class="block-display">
+                <?php echo $this->element->getElement('port') ?>
             </dd>
             
             <dt id="email-label" class="block-display">
@@ -86,14 +100,6 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-            </dd>
-            
-            <dt id="port-label" class="block-display">
-                <label class="required" for="port"><?php echo $this->element->getElement('port')->getLabel() ?>:
-                </label>
-            </dt>
-            <dd id="port-element" class="block-display">
-                <?php echo $this->element->getElement('port') ?>
             </dd>
             
             
