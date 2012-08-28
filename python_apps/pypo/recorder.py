@@ -134,6 +134,10 @@ class ShowRecorder(Thread):
         self.api_client.upload_recorded_show(datagen, headers)
 
     def set_metadata_and_save(self, filepath):
+        """
+        Writes song to 'filepath'. Uses metadata from:
+            self.start_time, self.show_name, self.show_instance
+        """
         try:
             date = self.start_time
             md = date.split(" ")
