@@ -13,6 +13,7 @@ class UsersettingsController extends Zend_Controller_Action
                     ->addActionContext('get-timeline-datatable', 'json')
                     ->addActionContext('set-timeline-datatable', 'json')
                     ->addActionContext('remindme', 'json')
+                    ->addActionContext('remindme-never', 'json')
                     ->addActionContext('donotshowregistrationpopup', 'json')
                     ->initContext();
     }
@@ -87,6 +88,13 @@ class UsersettingsController extends Zend_Controller_Action
         // unset session
         Zend_Session::namespaceUnset('referrer');
         Application_Model_Preference::SetRemindMeDate();
+    }
+    
+    public function remindmeNeverAction()
+    {
+        Zend_Session::namespaceUnset('referrer');
+        //pass in true to indicate 'Remind me never' was clicked
+        Application_Model_Preference::SetRemindMeDate(true);
     }
 
     public function donotshowregistrationpopupAction()
