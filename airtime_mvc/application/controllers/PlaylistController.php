@@ -64,7 +64,7 @@ class PlaylistController extends Zend_Controller_Action
         unset($this->view->obj);
     }
 
-    private function createFullResponse($obj = null, $isJson = false)
+    private function createFullResponse($obj = null, $isJson = false, $formIsValid = false)
     {
         $isBlock = false;
         $viewPath = 'playlist/playlist.phtml';
@@ -80,11 +80,12 @@ class PlaylistController extends Zend_Controller_Action
             if ($isBlock) {
                 $form = new Application_Form_SmartBlockCriteria();
                 $form->removeDecorator('DtDdWrapper');
-                $form->startForm($obj->getId());
-                
+                $form->startForm($obj->getId(), $formIsValid);
+
                 $this->view->form = $form;
                 $this->view->obj = $obj;
                 $this->view->id = $obj->getId();
+                
                 if ($isJson) {
                     return $this->view->render($viewPath);
                 } else {
@@ -460,7 +461,7 @@ class PlaylistController extends Zend_Controller_Action
             $bl = new Application_Model_Block($params['obj_id']);
             if ($form->isValid($params)) {
                 $bl->saveSmartBlockCriteria($params['data']);
-                $result['html'] = $this->createFullResponse($bl, true);
+                $result['html'] = $this->createFullResponse($bl, true, true);
                 $result['result'] = 0;
             } else {
                 $this->view->obj = $bl;
@@ -486,7 +487,7 @@ class PlaylistController extends Zend_Controller_Action
         if ($form->isValid($params)) {
             $result = $bl->generateSmartBlock($params['data']);
             try {
-                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true))));
             } catch (PlaylistNotFoundException $e) {
                 $this->playlistNotFound('block');
             } catch (Exception $e) {
