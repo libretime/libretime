@@ -25,6 +25,18 @@ export PYTHONPATH=${api_client_path}:$PYTHONPATH
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 export TERM=xterm
 
+
+#If Pypo is starting from scratch let's restart Liquidsoap as well. This is so
+#that the Liquidsoap queue #is emptied and we can start from a known state.
+/etc/init.d/airtime-liquidsoap status
+status="$?"
+
+if [ "$status" == "0" ]; then
+    /etc/init.d/airtime-liquidsoap restart
+else
+    /etc/init.d/airtime-liquidsoap start
+fi
+
 exec python ${pypo_path}${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1
 
 # EOF
