@@ -35,7 +35,7 @@ class TestMMP(unittest.TestCase):
         for k in def_keys: self.assertEqual( sd[k], 'DEF' )
 
     def test_normalized_metadata(self):
-        # Recorded show test first
+        #Recorded show test first
         orig = Metadata.airtime_dict({
                 'date'        : [u'2012-08-21'],
                 'tracknumber' : [u'2'],
@@ -61,6 +61,24 @@ class TestMMP(unittest.TestCase):
         base = "/srv/airtime/stor/"
         organized_path = mmp.organized_path(old_path,base, normalized)
         self.assertEqual(os.path.basename(organized_path), organized_base_name)
+
+    def test_normalized_metadata2(self):
+        """
+        cc-4305
+        """
+        orig = Metadata.airtime_dict({
+            'date'        : [u'2012-08-27'],
+            'tracknumber' : [u'3'],
+            'title'       : [u'18-11-00-Untitled Show'],
+            'artist'      : [u'Airtime Show Recorder']
+        })
+        old_path = "/home/rudi/recorded/doesnt_really_matter.ogg"
+        normalized = mmp.normalized_metadata(orig, old_path)
+        normalized['MDATA_KEY_BITRATE'] = u'256000'
+        opath = mmp.organized_path(old_path, "/srv/airtime/stor/",
+                normalized)
+        self.assertTrue( len(opath) > 0 )
+
 
     def test_file_md5(self):
         p = os.path.realpath(__file__)

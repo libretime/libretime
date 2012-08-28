@@ -290,8 +290,9 @@ def organized_path(old_path, root_path, orig_md):
         normal_md['MDATA_KEY_BITRATE'] = formatted + 'kbps'
     else: normal_md['MDATA_KEY_BITRATE'] = unicode_unknown
 
+
     if is_airtime_recorded(normal_md):
-        title_re = re.match("(?P<show>\w+)-(?P<date>\d+-\d+-\d+-\d+:\d+:\d+)$",
+        title_re = re.match("(?P<show>.+)-(?P<date>\d+-\d+-\d+-\d+:\d+:\d+)$",
                 normal_md['MDATA_KEY_TITLE'])
         show_name   = title_re.group('show')
         date        = title_re.group('date').replace(':','-')
