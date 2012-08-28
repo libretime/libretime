@@ -1187,6 +1187,16 @@ EOT;
                         if (isset($criteria['extra'])) {
                             $spCriteriaExtra = $criteria['extra']*1000;
                         }
+                     /*
+                     * If user is searching for an exact match of length we need to
+                     * search as if it starts with the specified length because the
+                     * user only sees the rounded version (i.e. 4:02.7 is 4:02.761625
+                     * in the database)
+                     */
+                    } else if ($spCriteria == 'length' && $spCriteriaModifier == "is") {
+                        $spCriteriaModifier = "starts with";
+                        $spCriteria = $spCriteria.'::text';
+                        $spCriteriaValue = $criteria['value'];
                     } else {
                         /* Propel does not escape special characters properly when using LIKE/ILIKE
                          * We have to add extra slashes in these cases
@@ -1214,6 +1224,7 @@ EOT;
                     }
                     
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
+
                     try {
                         if ($i > 0) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
