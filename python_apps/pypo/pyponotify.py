@@ -42,6 +42,8 @@ parser.add_option("-t", "--time", help="Liquidsoap boot up time", action="store"
 parser.add_option("-x", "--source-name", help="source connection name", metavar="source_name")
 parser.add_option("-y", "--source-status", help="source connection status", metavar="source_status")
 parser.add_option("-w", "--webstream", help="JSON metadata associated with webstream", metavar="json_data")
+parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started", metavar="json_data", action="store_true", default=True)
+
 
 # parse options
 (options, args) = parser.parse_args()
@@ -66,6 +68,11 @@ except Exception, e:
 class Notify:
     def __init__(self):
         self.api_client = api_client.AirtimeApiClient()
+
+    def notify_liquidsoap_started(self):
+        logger = logging.getLogger("notify")
+        logger.debug("Notifying server that Liquidsoap has started")
+        self.api_client.notify_liquidsoap_started()
 
     def notify_media_start_playing(self, data, media_id):
         logger = logging.getLogger("notify")
@@ -105,7 +112,6 @@ class Notify:
         logger.debug('#################################################')
         response = self.api_client.notify_webstream_data(data, media_id)
 
-        pass
 
 if __name__ == '__main__':
     print
@@ -138,6 +144,12 @@ if __name__ == '__main__':
         try:
             n = Notify()
             n.notify_webstream_data(options.webstream, options.media_id)
+        except Exception, e:
+            print e
+    elif options.liquidsoap_started:
+        try:
+            n = Notify()
+            n.notify_liquidsoap_started()
         except Exception, e:
             print e
     else:

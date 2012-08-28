@@ -55,6 +55,18 @@ case "${1:-''}" in
            start
            echo "Done."
         ;;
+
+  'status')
+        if [ -f "/var/run/airtime-liquidsoap.pid" ]; then
+            pid=`cat /var/run/airtime-liquidsoap.pid`
+            if [ -d "/proc/$pid" ]; then
+                echo "Liquidsoap is running"
+                exit 0
+            fi
+        fi
+        echo "Liquidsoap is not running"
+        exit 1
+        ;;
   'start-no-monit')
            # restart commands here
            echo -n "Starting $NAME: "

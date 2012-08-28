@@ -170,7 +170,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 //TODO: return url
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
-                if (preg_match("/xspf\+xml/", $mime)) {
+                if (preg_match("/(x-mpegurl)|(xspf\+xml)/", $mime)) {
                      list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
                 }
             } catch (Exception $e) {
@@ -244,17 +244,46 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         throw new Exception("Could not parse XSPF playlist");
     }
 
+    private static function getM3uUrl($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // grab URL and pass it to the browser
+        //TODO: What if invalid url?
+        $content = curl_exec($ch);
+        Logging::info($content);
+        curl_close($ch);
+
+        //split into lines:
+        $delim = "\n";
+        if (strpos($content, "\r\n") !== false) {
+            $delim = "\r\n";
+        } 
+        $lines = explode("$delim", $content);
+        #$lines = preg_split('/$\R?^/m', $content);
+
+        if (count($lines) > 0) {
+            return $lines[0];
+        }
+
+        throw new Exception("Could not parse M3U playlist");
+    }
+
     private static function getMediaUrl($url, $mime, $content_length_found)
     { 
-        if (preg_match("/(mpeg|ogg)/", $mime)) {
+
+        if (preg_match("/x-mpegurl/", $mime)) {
+            $media_url = self::getM3uUrl($url); 
+        } else if (preg_match("/xspf\+xml/", $mime)) {
+            $media_url = self::getXspfUrl($url); 
+        } else if (preg_match("/(mpeg|ogg)/", $mime)) {
             if ($content_length_found) {
                 throw new Exception("Invalid webstream - This appears to be a file download.");
             } 
             $media_url = $url;
-        } else if (preg_match("/x-mpegurl/", $mime)) {
-            $media_url = $url;
-        } else if (preg_match("/xspf\+xml/", $mime)) {
-            $media_url = self::getXspfUrl($url); 
         } else {
             throw new Exception("Unrecognized stream type: $mime");
         }
