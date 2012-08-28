@@ -932,8 +932,14 @@ class Application_Model_StoredFile
         }
 
         // Did all the checks for realz, now trying to copy
-        $audio_stor = Application_Common_OsPath::join($stor, "organize", $fileName);
-        $uid = Application_Model_User::getCurrentUser()->getId();
+        $audio_stor = Application_Common_OsPath::join($stor, "organize",
+            $fileName);
+        $user = Application_Model_User::getCurrentUser();
+        if (is_null($user)) {
+            $uid = Application_Model_User::getFirstAdminId();
+        } else {
+            $uid = $user->getId();
+        }
         $id_file = "$audio_stor.identifier";
         if (file_put_contents($id_file,$uid) === false)  {
             Logging::info("Could not write file to identify user: '$uid'");
