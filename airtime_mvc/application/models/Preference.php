@@ -587,10 +587,14 @@ class Application_Model_Preference
         }
     }
 
-    public static function SetRemindMeDate()
+    public static function SetRemindMeDate($p_never = false)
     {
-        $weekAfter = mktime(0, 0, 0, gmdate("m"), gmdate("d")+7, gmdate("Y"));
-           self::setValue("remindme", $weekAfter);
+        if ($p_never) {
+            self::setValue("remindme", -1);
+        } else {
+            $weekAfter = mktime(0, 0, 0, gmdate("m"), gmdate("d")+7, gmdate("Y"));
+            self::setValue("remindme", $weekAfter);
+        }
     }
 
     public static function GetRemindMeDate()
@@ -1105,9 +1109,13 @@ class Application_Model_Preference
     {
         $today = mktime(0, 0, 0, gmdate("m"), gmdate("d"), gmdate("Y"));
         $remindDate = Application_Model_Preference::GetRemindMeDate();
-        if ($remindDate == NULL || $today >= $remindDate) {
-            return true;
+        $retVal = false;
+        
+        if ($remindDate == NULL || ($remindDate != -1 && $today >= $remindDate)) {
+            $retVal = true;
         }
+        
+        return $retVal;
     }
     
     public static function getCurrentLibraryTableSetting(){
