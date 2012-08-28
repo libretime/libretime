@@ -51,15 +51,15 @@ class TestMMP(unittest.TestCase):
         orga['MDATA_KEY_FTYPE']   = u'audioclip'
         orig['MDATA_KEY_BITRATE'] = u'256000'
         orga['MDATA_KEY_BITRATE'] = u'256000'
-        old_path = "/home/rudi/recorded/2012-08-21-11:29:00.ogg"
+        old_path   = "/home/rudi/recorded/2012-08-21-11:29:00.ogg"
         normalized = mmp.normalized_metadata(orig, old_path)
         normalized['MDATA_KEY_BITRATE'] = u'256000'
 
         self.assertEqual( orga, normalized )
 
         organized_base_name = "2012-08-21-11-29-00-record-256kbps.ogg"
-        base = "/srv/airtime/stor/"
-        organized_path = mmp.organized_path(old_path,base, normalized)
+        base                = "/srv/airtime/stor/"
+        organized_path      = mmp.organized_path(old_path,base, normalized)
         self.assertEqual(os.path.basename(organized_path), organized_base_name)
 
     def test_normalized_metadata2(self):
@@ -72,13 +72,13 @@ class TestMMP(unittest.TestCase):
             'title'       : [u'18-11-00-Untitled Show'],
             'artist'      : [u'Airtime Show Recorder']
         })
-        old_path = "/home/rudi/recorded/doesnt_really_matter.ogg"
+        old_path   = "/home/rudi/recorded/doesnt_really_matter.ogg"
         normalized = mmp.normalized_metadata(orig, old_path)
         normalized['MDATA_KEY_BITRATE'] = u'256000'
         opath = mmp.organized_path(old_path, "/srv/airtime/stor/",
                 normalized)
+        # TODO : add a better test than this...
         self.assertTrue( len(opath) > 0 )
-
 
     def test_file_md5(self):
         p = os.path.realpath(__file__)
