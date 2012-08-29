@@ -104,6 +104,7 @@ CREATE TABLE cc_webstream_metadata (
 ALTER TABLE cc_files
 	DROP COLUMN gunid,
 	ADD COLUMN replay_gain character varying(16),
+    ADD COLUMN owner_id integer;
 	ALTER COLUMN bpm TYPE integer using airtime_to_int(bpm) /* TYPE change - table: cc_files original: character varying(8) new: integer */;
 
 ALTER TABLE cc_playlistcontents
@@ -154,3 +155,9 @@ ALTER TABLE cc_webstream_metadata
 	ADD CONSTRAINT cc_schedule_inst_fkey FOREIGN KEY (instance_id) REFERENCES cc_schedule(id) ON DELETE CASCADE;
 
 DROP FUNCTION airtime_to_int(chartoconvert character varying);
+
+UPDATE cc_files
+SET owner_id=(SELECT id FROM cc_subjs WHERE type='A' LIMIT 1)
+WHERE owner_id is NULL
+
+
