@@ -154,6 +154,18 @@ class Application_Model_StreamSetting
         return $rows;
     }
 
+
+    private static function saveStreamSetting($key, $value)
+    {
+        $stream_setting = CcStreamSettingQuery::create()->filterByDbKeyName($key)->findOne();
+        if (is_null($stream_setting)) {
+            throw new Exception("Keyname $key does not exist!");
+        }
+
+        $stream_setting->setDbValue($value);
+        $stream_setting->save();
+    }
+
     /*
      * function that take all the information of stream and sets them.
      * This is used by stream setting via UI.
@@ -168,11 +180,10 @@ class Application_Model_StreamSetting
         foreach ($data as $key => $d) {
             if ($key == "output_sound_device" || $key == "icecast_vorbis_metadata") {
                 $v = $d == 1?"true":"false";
-                $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$key'";
-                $con->exec($sql);
+
+                self::saveStreamSetting($key, $v);
             } elseif ($key == "output_sound_device_type") {
-                $sql = "UPDATE cc_stream_setting SET value='$d' WHERE keyname='$key'";
-                $con->exec($sql);
+                self::saveStreamSetting($key, $v);
             } elseif (is_array($d)) {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
@@ -182,14 +193,7 @@ class Application_Model_StreamSetting
                         $v = $d['enable'] == 1 ? 'true' : 'false';
                     }
                     $v = trim($v);
-
-                    $stream_setting = CcStreamSettingQuery::create()->filterByDbKeyName($keyname)->findOne();
-                    if (is_null($stream_setting)) {
-                        throw new Exception("Keyname $keyname does not exist!");
-                    }
-
-                    $stream_setting->setDbValue($v);
-                    $stream_setting->save();
+                    self::saveStreamSetting($keyname, $v);
                 }
             }
         }
