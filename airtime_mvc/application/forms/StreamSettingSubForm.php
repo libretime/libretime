@@ -83,6 +83,16 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         }
         $this->addElement($output);
 
+        $channels = new Zend_Form_Element_Select('channels');
+        $channels->setLabel("Channels:")
+                ->setMultiOptions(array("mono"=>"1 - Mono", "stereo"=>"2 - Stereo"))
+                ->setValue(isset($setting[$prefix.'_channels']) ? $setting[$prefix.'_channels'] : "stereo")
+                ->setDecorators(array('ViewHelper'));
+        if ($disable_all) {
+            $channels->setAttrib("disabled", "disabled");
+        }
+        $this->addElement($channels);
+
         $host = new Zend_Form_Element_Text('host');
         $host->setLabel("Server")
                 ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")

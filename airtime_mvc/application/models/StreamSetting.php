@@ -183,11 +183,13 @@ class Application_Model_StreamSetting
                     }
                     $v = trim($v);
 
-                    #escape double single quotes CC-3926
-                    $v = str_replace("'", "''", $v);
-                    $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
+                    $stream_setting = CcStreamSettingQuery::create()->filterByDbKeyName($keyname)->findOne();
+                    if (is_null($stream_setting)) {
+                        throw new Exception("Keyname $keyname does not exist!");
+                    }
 
-                    $con->exec($sql);
+                    $stream_setting->setDbValue($v);
+                    $stream_setting->save();
                 }
             }
         }

@@ -74,7 +74,8 @@ def to_live(old,new) =
 end
 
 
-def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected, name) =
+def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, description, genre, user, s, stream, connected, name, channels) =
+    source = ref s
     def on_error(msg)
         connected := "false"
         system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &")
@@ -86,12 +87,28 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &")
         log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &")
     end
+
+    stereo = (channels == "stereo")
+
     if output_type == "icecast" then
         user_ref = ref user
         if user == "" then
             user_ref := "source"
         end
-        output = output.icecast(host = host,
+        output_mono = output.icecast(host = host,
+                    port = port,
+                    password = pass,
+                    mount = mount_point,
+                    fallible = true,
+                    url = url,
+                    description = description,
+                    name = name,
+                    genre = genre,
+                    user = !user_ref,
+                    on_error = on_error,
+                    on_connect = on_connect)
+
+        output_stereo = output.icecast(host = host,
                     port = port,
                     password = pass,
                     mount = mount_point,
@@ -105,55 +122,131 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     on_connect = on_connect)
         if type == "mp3" then
             if bitrate == 24 then 
-                ignore(output(%mp3(bitrate = 24),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 24, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 24, stereo = false), mean(!source)))
+                end
             elsif bitrate == 32 then
-                ignore(output(%mp3(bitrate = 32),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 32, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 32, stereo = false), mean(!source)))
+                end
             elsif bitrate == 48 then
-                ignore(output(%mp3(bitrate = 48),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 48, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 48, stereo = false), mean(!source)))
+                end
             elsif bitrate == 64 then
-                ignore(output(%mp3(bitrate = 64),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 64, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 64, stereo = false), mean(!source)))
+                end
             elsif bitrate == 96 then
-                ignore(output(%mp3(bitrate = 96),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 96, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 96, stereo = false), mean(!source)))
+                end
             elsif bitrate == 128 then
-                ignore(output(%mp3(bitrate = 128),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 128, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 128, stereo = false), mean(!source)))
+                end
             elsif bitrate == 160 then
-                ignore(output(%mp3(bitrate = 160),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 160, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 160, stereo = false), mean(!source)))
+                end
             elsif bitrate == 192 then
-                ignore(output(%mp3(bitrate = 192),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 192, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 192, stereo = false), mean(!source)))
+                end
             elsif bitrate == 224 then
-                ignore(output(%mp3(bitrate = 224),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 224, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 224, stereo = false), mean(!source)))
+                end
             elsif bitrate == 256 then
-                ignore(output(%mp3(bitrate = 256),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 256, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 256, stereo = false), mean(!source)))
+                end
             elsif bitrate == 320 then
-                ignore(output(%mp3(bitrate = 320),s))
+                if stereo then
+                    ignore(output_stereo(%mp3(bitrate = 320, stereo = true), !source))
+                else
+                    ignore(output_mono(%mp3(bitrate = 320, stereo = false), mean(!source)))
+                end
             end
         else
-            source = ref s
             if not icecast_vorbis_metadata then
-                source := add(normalize=false, [amplify(0.00001, noise()),s])
+                source := add(normalize=false, [amplify(0.00001, noise()), !source])
             end
-            if bitrate == 24 then 
-                ignore(output(%vorbis(quality=-0.1),!source))
-            elsif bitrate == 32 then
-                ignore(output(%vorbis(quality=-0.1),!source))
-            elsif bitrate == 48 then
-                ignore(output(%vorbis(quality=-0.1),!source))
+
+            if bitrate == 24 or bitrate == 32 or bitrate == 48 then 
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=-0.1, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=-0.1, channels = 1), mean(!source)))
+                end
             elsif bitrate == 64 then
-                ignore(output(%vorbis(quality=0),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0, channels = 1), mean(!source)))
+                end
             elsif bitrate == 96 then
-                ignore(output(%vorbis(quality=0.2),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.2, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.2, channels = 1), mean(!source)))
+                end
             elsif bitrate == 128 then
-                ignore(output(%vorbis(quality=0.4),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.4, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.4, channels = 1), mean(!source)))
+                end
             elsif bitrate == 160 then
-                ignore(output(%vorbis(quality=0.5),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.5, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.5, channels = 1), mean(!source)))
+                end
             elsif bitrate == 192 then
-                ignore(output(%vorbis(quality=0.6),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.6, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.6, channels = 1), mean(!source)))
+                end
             elsif bitrate == 224 then
-                ignore(output(%vorbis(quality=0.7),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.7, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.7, channels = 1), mean(!source)))
+                end
             elsif bitrate == 256 then
-                ignore(output(%vorbis(quality=0.8),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.8, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.8, channels = 1), mean(!source)))
+                end
             elsif bitrate == 320 then
-                ignore(output(%vorbis(quality=0.9),!source))
+                if stereo then
+                    ignore(output_stereo(%vorbis(quality=0.9, channels = 2), !source))
+                else
+                    ignore(output_mono(%vorbis(quality=0.9, channels = 1), mean(!source)))
+                end
             end
         end
     else
@@ -176,7 +269,7 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         if url == "" then
             url_ref := "N/A"
         end
-        output.shoutcast = output.shoutcast(id = "shoutcast_stream_#{stream}",
+        output.shoutcast_mono = output.shoutcast(id = "shoutcast_stream_#{stream}",
                     host = host,
                     port = port,
                     password = pass,
@@ -187,28 +280,85 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     user = !user_ref,
                     on_error = on_error,
                     on_connect = on_connect)
+
+        output.shoutcast_stereo = output.shoutcast(id = "shoutcast_stream_#{stream}",
+                    host = host,
+                    port = port,
+                    password = pass,
+                    fallible = true,
+                    url = !url_ref,
+                    genre = !genre_ref,
+                    name = !description_ref,
+                    user = !user_ref,
+                    on_error = on_error,
+                    on_connect = on_connect)
+
          if bitrate == 24 then 
-                ignore(output.shoutcast(%mp3(bitrate = 24),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 24, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 24, stereo = false), mean(!source)))
+                end
             elsif bitrate == 32 then
-                ignore(output.shoutcast(%mp3(bitrate = 32),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 32, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 32, stereo = false), mean(!source)))
+                end
             elsif bitrate == 48 then
-                ignore(output.shoutcast(%mp3(bitrate = 48),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 48, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 48, stereo = false), mean(!source)))
+                end
             elsif bitrate == 64 then
-                ignore(output.shoutcast(%mp3(bitrate = 64),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 64, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 64, stereo = false), mean(!source)))
+                end
             elsif bitrate == 96 then
-                ignore(output.shoutcast(%mp3(bitrate = 96),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 96, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 96, stereo = false), mean(!source)))
+                end
             elsif bitrate == 128 then
-                ignore(output.shoutcast(%mp3(bitrate = 128),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 128, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 128, stereo = false), mean(!source)))
+                end
             elsif bitrate == 160 then
-                ignore(output.shoutcast(%mp3(bitrate = 160),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 160, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 160, stereo = false), mean(!source)))
+                end
             elsif bitrate == 192 then
-                ignore(output.shoutcast(%mp3(bitrate = 192),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 192, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 192, stereo = false), mean(!source)))
+                end
             elsif bitrate == 224 then
-                ignore(output.shoutcast(%mp3(bitrate = 224),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 224, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 224, stereo = false), mean(!source)))
+                end
             elsif bitrate == 256 then
-                ignore(output.shoutcast(%mp3(bitrate = 256),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 256, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 256, stereo = false), mean(!source)))
+                end
             elsif bitrate == 320 then
-                ignore(output.shoutcast(%mp3(bitrate = 320),s))
+                if stereo then
+                    ignore(output.shoutcast_stereo(%mp3(bitrate = 320, stereo = true), !source))
+                else
+                    ignore(output.shoutcast_mono(%mp3(bitrate = 320, stereo = false), mean(!source)))
+                end
             end
     end
 end
