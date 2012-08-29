@@ -35,7 +35,7 @@ class Application_Model_Email
                 );
             } else {
                 $config = array(
-                    'ssl' => 'ssl'
+                    'ssl' => 'tls'
                 );
             }
 

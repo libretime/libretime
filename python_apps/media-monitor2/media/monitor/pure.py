@@ -14,8 +14,8 @@ from configobj import ConfigObj
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
-supported_extensions =  [u"mp3", u"ogg", u"oga"]
-#supported_extensions =  [u"mp3", u"ogg", u"oga", u"flac", u"aac", u"bwf"]
+#supported_extensions =  [u"mp3", u"ogg", u"oga"]
+supported_extensions = [u"mp3", u"ogg", u"oga", u"flac", u"aac", u"bwf"]
 unicode_unknown = u'unknown'
 
 path_md = ['MDATA_KEY_TITLE', 'MDATA_KEY_CREATOR', 'MDATA_KEY_SOURCE',
@@ -285,11 +285,11 @@ def organized_path(old_path, root_path, orig_md):
     # MDATA_KEY_BITRATE is in bytes/second i.e. (256000) we want to turn this
     # into 254kbps
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
-    if normal_md['MDATA_KEY_BITRATE']:
+    try:
         formatted = str(int(normal_md['MDATA_KEY_BITRATE']) / 1000)
         normal_md['MDATA_KEY_BITRATE'] = formatted + 'kbps'
-    else: normal_md['MDATA_KEY_BITRATE'] = unicode_unknown
-
+    except:
+        normal_md['MDATA_KEY_BITRATE'] = unicode_unknown
 
     if is_airtime_recorded(normal_md):
         title_re = re.match("(?P<show>.+)-(?P<date>\d+-\d+-\d+-\d+:\d+:\d+)$",

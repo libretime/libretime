@@ -79,9 +79,16 @@ class Manager(Loggable):
                 watch_dir)
         self.remove_watch_directory(normpath(watch_dir))
 
-    def watch_signal(self): return self.watch_listener.signal
+    def watch_signal(self):
+        """
+        Return the signal string our watch_listener is reading events from
+        """
+        return self.watch_listener.signal
 
     def __remove_watch(self,path):
+        """
+        Remove path from being watched (first will check if 'path' is watched)
+        """
         # only delete if dir is actually being watched
         if path in self.__wd_path:
             wd = self.__wd_path[path]
@@ -89,11 +96,16 @@ class Manager(Loggable):
             del(self.__wd_path[path])
 
     def __add_watch(self,path,listener):
+        """
+        Start watching 'path' using 'listener'. First will check if directory
+        is being watched before adding another watch
+        """
         self.logger.info("Adding listener '%s' to '%s'" %
                          ( listener.__class__.__name__, path) )
-        wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
-                auto_add=True, proc_fun=listener)
-        self.__wd_path[path] = wd.values()[0]
+        if not self.has_watch(path):
+            wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
+                    auto_add=True, proc_fun=listener)
+            if wd: self.__wd_path[path] = wd.values()[0]
 
     def __create_organizer(self, target_path, recorded_path):
         """

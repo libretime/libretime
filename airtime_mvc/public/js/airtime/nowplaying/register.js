@@ -27,6 +27,18 @@ $(document).ready(function(){
             	}
             },
             {
+                id: "remind_never",
+                text: "Remind me never",
+                click: function() {
+                    var url ='/Usersettings/remindme-never';
+                    $.ajax({
+                        url: url,
+                        data: {format:"json"}
+                    });
+                    $(this).dialog("close");
+                }
+            },
+            {
             	id: "help_airtime",
             	text: "Yes, help Airtime",
             	click: function() {
