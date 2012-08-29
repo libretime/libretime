@@ -437,6 +437,9 @@ function callback(data, type) {
         dt = $('table[id="library_display"]').dataTable();
 
     if (type == 'shuffle' || type == 'generate') {
+        if (json.error !== undefined) {
+            alert(json.error);
+        }
         AIRTIME.playlist.fnOpenPlaylist(json);
         var form = $('#smart-block-form');
         if (json.result == "0") {
