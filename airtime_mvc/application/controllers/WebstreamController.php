@@ -18,6 +18,7 @@ class WebstreamController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         if (!$this->isAuthorized(-1)) {
             header("Status: 401 Not Authorized");
+
             return;
         }
 
@@ -38,7 +39,7 @@ class WebstreamController extends Zend_Controller_Action
         /*
         $type = "stream";
         $objInfo = Application_Model_Library::getObjInfo($type);
-        
+
         $obj = new $objInfo['className']($webstream);
         $obj->setName($webstream->getDbName());
         $obj->setMetadata('dc:creator', $userInfo->id);
@@ -60,9 +61,8 @@ class WebstreamController extends Zend_Controller_Action
 
         $id = $request->getParam("id");
         if (is_null($id)) {
-            throw new Exception("Missing parameter 'id'"); 
+            throw new Exception("Missing parameter 'id'");
         }
-
 
         $webstream = CcWebstreamQuery::create()->findPK($id);
         if ($webstream) {
@@ -80,9 +80,10 @@ class WebstreamController extends Zend_Controller_Action
 
         if (!$this->isAuthorized($id)) {
             header("Status: 401 Not Authorized");
+
             return;
-        }       
-        
+        }
+
         $type = "stream";
         Application_Model_Library::changePlaylist(null, $type);
 
@@ -105,7 +106,7 @@ class WebstreamController extends Zend_Controller_Action
         if (!$hasPermission && $user->isHost()) {
             if ($webstream_id != -1) {
                 $webstream = CcWebstreamQuery::create()->findPK($webstream_id);
-                //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission. 
+                //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission.
                 $user = Application_Model_User::getCurrentUser();
 
                 if ($webstream->getDbCreatorId() == $user->getId()) {
@@ -135,12 +136,13 @@ class WebstreamController extends Zend_Controller_Action
 
         if (!$this->isAuthorized($id)) {
             header("Status: 401 Not Authorized");
+
             return;
         }
 
 
         list($analysis, $mime, $mediaUrl, $di) = Application_Model_Webstream::analyzeFormData($parameters);
-        try { 
+        try {
             if (Application_Model_Webstream::isValid($analysis)) {
                 $streamId = Application_Model_Webstream::save($parameters, $mime, $mediaUrl, $di);
 
@@ -153,7 +155,7 @@ class WebstreamController extends Zend_Controller_Action
             }
         } catch (Exception $e) {
             Logging::debug($e->getMessage());
-            $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>"; 
+            $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>";
             $this->view->streamId = -1;
             $this->view->analysis = $analysis;
         }

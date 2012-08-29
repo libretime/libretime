@@ -257,7 +257,7 @@ class ApiController extends Zend_Controller_Action
                 if ($limit == "" || !is_numeric($limit)) {
                     $limit = "5";
                 }
-                
+
                 // make getNextShows use end of day
                 $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
                 $result = array("env"=>APPLICATION_ENV,
@@ -265,7 +265,7 @@ class ApiController extends Zend_Controller_Action
                                 "currentShow"=>Application_Model_Show::getCurrentShow($utcTimeNow),
                                 "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
                             );
-                
+
                 Application_Model_Show::convertToLocalTimeZone($result["currentShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
                 Application_Model_Show::convertToLocalTimeZone($result["nextShow"],
@@ -283,7 +283,7 @@ class ApiController extends Zend_Controller_Action
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
             header("Content-type: text/javascript");
-            
+
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
@@ -347,7 +347,7 @@ class ApiController extends Zend_Controller_Action
         $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
         $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
-        
+
         //set a 'last played' timestamp for media item
         //needed for smart blocks
         try {
@@ -361,7 +361,7 @@ class ApiController extends Zend_Controller_Action
         } catch (Exception $e) {
             Logging::info($e);
         }
-        
+
         echo json_encode(array("status"=>1, "message"=>""));
     }
 
@@ -372,12 +372,11 @@ class ApiController extends Zend_Controller_Action
         $end_timestamp = $now->add(new DateInterval("PT2H"));
         $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
 
-        $this->view->shows = 
+        $this->view->shows =
             Application_Model_Show::getShows(
                 Application_Common_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
                 Application_Common_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
                 $excludeInstance = null, $onlyRecord = true);
-
 
         $this->view->is_recording = false;
         $this->view->server_timezone = Application_Model_Preference::GetTimezone();
@@ -463,8 +462,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadata($md, $mode) 
-    { 
+    public function dispatchMetadata($md, $mode)
+    {
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
         Application_Model_Preference::SetImportTimestamp();
@@ -482,35 +481,32 @@ class ApiController extends Zend_Controller_Action
                 $file->setFileExistsFlag(true);
                 $file->setMetadata($md);
             }
-        }
-        else if ($mode == "modify") {
+        } elseif ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             //File is not in database anymore.
             if (is_null($file)) {
                 $return_hash['error'] = "File does not exist in Airtime.";
+
                 return $return_hash;
             }
             //Updating a metadata change.
             else {
                 $file->setMetadata($md);
             }
-        }
-        else if ($mode == "moved") {
+        } elseif ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {
                 return "File doesn't exist in Airtime.";
-            }
-            else {
+            } else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
             }
-        }
-        else if ($mode == "delete") {
+        } elseif ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -519,24 +515,25 @@ class ApiController extends Zend_Controller_Action
                 $return_hash['error'] = "File doesn't exist in Airtime.";
                 Logging::warn("Attempt to delete file that doesn't exist.
                     Path: '$filepath'");
+
                 return $return_hash;
-            }
-            else {
+            } else {
                 $file->deleteByMediaMonitor();
             }
-        }
-        else if ($mode == "delete_dir") {
+        } elseif ($mode == "delete_dir") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
 
-            foreach($files as $file){
+            foreach ($files as $file) {
                 $file->deleteByMediaMonitor();
             }
             $return_hash['success'] = 1;
+
             return $return_hash;
         }
         $return_hash['fileid'] = $file->getId();
+
         return $return_hash;
     }
 
@@ -554,19 +551,19 @@ class ApiController extends Zend_Controller_Action
         foreach ($request->getParams() as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at
             // least 1 digit
-            if( !preg_match('/^md\d+$/', $k) ) { continue; }
+            if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
             $recorded  = $info_json["is_record"];
             unset( $info_json["is_record"] );
             // Log invalid requests
-            if( !array_key_exists('mode', $info_json) ) {
+            if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::info( $info_json );
                 array_push( $responses, array(
                     'error' => "Bad request. no 'mode' parameter passed.",
                     'key' => $k));
                 continue;
-            } elseif ( !in_array($info_json['mode'], $valid_modes) )  {
+            } elseif ( !in_array($info_json['mode'], $valid_modes) ) {
                 // A request still has a chance of being invalid even if it
                 // exists but it's validated by $valid_modes array
                 $mode = $info_json['mode'];
@@ -631,7 +628,7 @@ class ApiController extends Zend_Controller_Action
                     $file->setMetadata($md);
                 }
             }
-        } else if ($mode == "modify") {
+        } elseif ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -645,7 +642,7 @@ class ApiController extends Zend_Controller_Action
                 //Updating a metadata change.
                 $file->setMetadata($md);
             }
-        } else if ($mode == "moved") {
+        } elseif ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
@@ -658,7 +655,7 @@ class ApiController extends Zend_Controller_Action
                 //$filepath = str_replace("\\", "", $filepath);
                 $file->setFilePath($filepath);
             }
-        } else if ($mode == "delete") {
+        } elseif ($mode == "delete") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -670,7 +667,7 @@ class ApiController extends Zend_Controller_Action
             } else {
                 $file->deleteByMediaMonitor();
             }
-        } else if ($mode == "delete_dir") {
+        } elseif ($mode == "delete_dir") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             //$filepath = str_replace("\\", "", $filepath);
             $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
@@ -833,7 +830,7 @@ class ApiController extends Zend_Controller_Action
                 // if mount path itself was watched
                 if ($dirPath == $ad) {
                     Application_Model_MusicDir::addWatchedDir($dirPath, false);
-                } else if (substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
+                } elseif (substr($dirPath, 0, strlen($ad)) === $ad && $dir->getExistsFlag() == false) {
                     // if dir contains any dir in removed_list( if watched dir resides on new mounted path )
                     Application_Model_MusicDir::addWatchedDir($dirPath, false);
                 } elseif (substr($ad, 0, strlen($dirPath)) === $dirPath) {
@@ -983,7 +980,7 @@ class ApiController extends Zend_Controller_Action
 
         //connect to db and get get sql
         $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
-        
+
         echo json_encode($rows);
     }
 
@@ -995,10 +992,10 @@ class ApiController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
-        
+
         foreach ($data as $pair) {
             list($id, $gain) = $pair;
-            
+
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
             $file->setDbReplayGain($gain);
             $file->save();

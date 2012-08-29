@@ -65,7 +65,7 @@ class LibraryController extends Zend_Controller_Action
                 $userInfo = Zend_Auth::getInstance()->getStorage()->read();
                 $user = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-                
+
                 if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
                     $this->view->obj = $obj;
                     if ($obj_sess->type == "block") {
@@ -74,7 +74,7 @@ class LibraryController extends Zend_Controller_Action
                         $this->view->form = $form;
                     }
                 }
-                
+
                 $formatter = new LengthFormatter($obj->getLength());
                 $this->view->length = $formatter->format();
                 $this->view->type = $obj_sess->type;
@@ -114,16 +114,16 @@ class LibraryController extends Zend_Controller_Action
             $isBlock = true;
             $viewPath = 'playlist/smart-block.phtml';
         }
-        
+
         if (isset($obj)) {
             $formatter = new LengthFormatter($obj->getLength());
             $this->view->length = $formatter->format();
-            
+
             if ($isBlock) {
                 $form = new Application_Form_SmartBlockCriteria();
                 $form->removeDecorator('DtDdWrapper');
                 $form->startForm($obj->getId());
-                
+
                 $this->view->form = $form;
                 $this->view->obj = $obj;
                 $this->view->id = $obj->getId();
@@ -142,7 +142,6 @@ class LibraryController extends Zend_Controller_Action
             $this->view->html = $this->view->render($viewPath);
         }
     }
-
 
     public function contextMenuAction()
     {
@@ -172,13 +171,13 @@ class LibraryController extends Zend_Controller_Action
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist or Block
                 if ($obj_sess->type == 'playlist') {
                     $obj = new Application_Model_Playlist($obj_sess->id);
-                } else if ($obj_sess->type == 'block') {
+                } elseif ($obj_sess->type == 'block') {
                     $obj = new Application_Model_Block($obj_sess->id);
                 }
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } else if ($obj_sess->type === "block") {
+                    } elseif ($obj_sess->type === "block") {
                         $menu["pl_add"] = array("name"=> "Add to Smart Block", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
@@ -190,10 +189,10 @@ class LibraryController extends Zend_Controller_Action
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
-        } else if ($type === "playlist" || $type === "block") {
+        } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
-            } else if ($type === 'block') {
+            } elseif ($type === 'block') {
                 $obj = new Application_Model_Block($id);
                 if (!$obj->isStatic()) {
                     unset($menu["play"]);
@@ -204,7 +203,7 @@ class LibraryController extends Zend_Controller_Action
                     }
                 }
             }
-            
+
             if ($obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
@@ -213,7 +212,7 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
             }
-        } else if ($type == "stream") {
+        } elseif ($type == "stream") {
 
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
@@ -256,7 +255,7 @@ class LibraryController extends Zend_Controller_Action
 
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => "/library/upload-file-soundcloud/id/{$id}");
         }
-        
+
         if (empty($menu)) {
             $menu["noaction"] = array("name"=>"No action available");
         }
@@ -296,9 +295,9 @@ class LibraryController extends Zend_Controller_Action
             Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
         } catch (PlaylistNoPermissionException $e) {
             $this->view->message = "You don't have permission to delete selected items.";
+
             return;
         }
-
 
         try {
             Application_Model_Block::deleteBlocks($blocks, $user->getId());
@@ -425,7 +424,7 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
 
-            } else if ($type == "playlist") {
+            } elseif ($type == "playlist") {
 
                 $file = new Application_Model_Playlist($id);
                 $this->view->type = $type;
@@ -436,7 +435,7 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
                 $this->view->contents = $file->getContents();
-            } else if ($type == "block") {
+            } elseif ($type == "block") {
                 $block = new Application_Model_Block($id);
                 $this->view->type = $type;
                 $md = $block->getAllPLMetaData();
@@ -453,7 +452,7 @@ class LibraryController extends Zend_Controller_Action
                     $this->view->contents = $block->getCriteria();
                 }
                 $this->view->block = $block;
-            } else if ($type == "stream") {
+            } elseif ($type == "stream") {
                 $webstream = CcWebstreamQuery::create()->findPK($id);
                 $ws = new Application_Model_Webstream($webstream);
 

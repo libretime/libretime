@@ -29,14 +29,13 @@ class AudiopreviewController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
         $this->view->headScript()->appendFile(
-            $baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'], 
+            $baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],
             'text/javascript');
         $this->view->headScript()->appendFile(
-            $baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'], 
+            $baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],
             'text/javascript');
         $this->view->headLink()->appendStylesheet(
             $baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
@@ -53,7 +52,7 @@ class AudiopreviewController extends Zend_Controller_Action
             $uri = "/api/get-media/file/".$audioFileID;
             $media = Application_Model_StoredFile::Recall($audioFileID);
             $mime = $media->getPropelOrm()->getDbMime();
-        } else if ($type == "stream") {
+        } elseif ($type == "stream") {
             $webstream = CcWebstreamQuery::create()->findPk($audioFileID);
             $uri = $webstream->getDbUrl();
             $mime = $webstream->getDbMime();
@@ -107,20 +106,20 @@ class AudiopreviewController extends Zend_Controller_Action
     public function blockPreviewAction()
     {
         global $CC_CONFIG;
-        
+
         $blockIndex = $this->_getParam('blockIndex');
         $blockId = $this->_getParam('blockId');
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        
+
         $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
-        
+
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
@@ -129,7 +128,7 @@ class AudiopreviewController extends Zend_Controller_Action
         }
         $this->view->blockIndex= $blockIndex;
         $this->view->blockId = $blockId;
-        
+
         $this->_helper->viewRenderer->setRender('audio-preview');
     }
     public function getBlockAction()
@@ -137,13 +136,13 @@ class AudiopreviewController extends Zend_Controller_Action
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        
+
         $blockId = $this->_getParam('blockId');
-        
+
         if (!isset($blockId)) {
             return;
         }
-        
+
         $bl = new Application_Model_Block($blockId);
         $result = array();
         foreach ($bl->getContents(true) as $ele) {
@@ -168,7 +167,7 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $pl = new Application_Model_Playlist($playlistID);
         $result = Array();
-        
+
         foreach ($pl->getContents(true) as $ele) {
             if ($ele['type'] == 2) {
                 // if element is a block expand and add
@@ -184,15 +183,15 @@ class AudiopreviewController extends Zend_Controller_Action
         }
         $this->_helper->json($result);
     }
-    
-    private function createElementMap($track) 
+
+    private function createElementMap($track)
     {
         $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
                 'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
                 'element_id' => isset($track['id'])?$track['id']:"",
                 'element_position' => isset($track['position'])?$track['position']:"",
             );
-        
+
         /* If the track type is static we know it must be
          * a track because static blocks can only contain
          * tracks
@@ -208,7 +207,7 @@ class AudiopreviewController extends Zend_Controller_Action
             //TODO: use MIME type for this
             if (strtolower($fileExtension) === 'mp3') {
                 $elementMap['element_mp3'] = $track['item_id'];
-            } else if (strtolower($fileExtension) === 'ogg') {
+            } elseif (strtolower($fileExtension) === 'ogg') {
                 $elementMap['element_oga'] = $track['item_id'];
             } else {
                 //the media was neither mp3 or ogg
@@ -219,6 +218,7 @@ class AudiopreviewController extends Zend_Controller_Action
         } else {
             $elementMap['uri'] = $track['path'];
         }
+
         return $elementMap;
     }
 
@@ -283,7 +283,7 @@ class AudiopreviewController extends Zend_Controller_Action
                 'element_id' => ++$position,
             );
 
-            $elementMap['type'] = $track['type']; 
+            $elementMap['type'] = $track['type'];
             if ($track['type'] == 0) {
                 $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
                 if (strtolower($fileExtension) === 'mp3') {
