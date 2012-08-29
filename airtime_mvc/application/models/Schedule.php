@@ -33,6 +33,7 @@ class Application_Model_Schedule
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
             Logging::info("Invalid range parameters: $p_prev or $p_next");
+
             return array();
         }
 
@@ -75,40 +76,40 @@ class Application_Model_Schedule
 
         global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends, 
+        $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends,
             st.media_item_played as media_item_played, si.ends as show_ends
             %%tables%% WHERE ";
-                
+
         $fileColumns = "ft.artist_name, ft.track_title, ";
         $fileJoin = "FROM cc_schedule st JOIN cc_files ft ON st.file_id = ft.id
             LEFT JOIN cc_show_instances si ON st.instance_id = si.id";
-        
+
         $streamColumns = "ws.name AS artist_name, wm.liquidsoap_data AS track_title, ";
         $streamJoin = "FROM cc_schedule AS st JOIN cc_webstream ws ON st.stream_id = ws.id
             LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
             LEFT JOIN cc_subjs AS sub on sub.id = ws.creator_id
             LEFT JOIN (SELECT * FROM cc_webstream_metadata ORDER BY start_time DESC LIMIT 1) AS wm on st.id = wm.instance_id";
-        
-        $predicateArr = array(); 
+
+        $predicateArr = array();
         if (isset($p_previousShowID)) {
             $predicateArr[] = 'st.instance_id = '.$p_previousShowID;
-        } 
+        }
         if (isset($p_currentShowID)) {
             $predicateArr[] = 'st.instance_id = '.$p_currentShowID;
-        } 
+        }
         if (isset($p_nextShowID)) {
             $predicateArr[] = 'st.instance_id = '.$p_nextShowID;
         }
-        
+
         $sql .= " (".implode(" OR ", $predicateArr).") ";
         $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
-        
+
         $filesSql = str_replace("%%columns%%", $fileColumns, $sql);
         $filesSql = str_replace("%%tables%%", $fileJoin, $filesSql);
-        
+
         $streamSql = str_replace("%%columns%%", $streamColumns, $sql);
         $streamSql = str_replace("%%tables%%", $streamJoin, $streamSql);
-        
+
         $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) AS unioned ORDER BY starts";
 
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
@@ -119,13 +120,12 @@ class Application_Model_Schedule
         $results['next'] = null;
 
         $timeNowAsMillis = strtotime($p_timeNow);
-        for ($i = 0; $i < $numberOfRows; ++$i) {        	
+        for ($i = 0; $i < $numberOfRows; ++$i) {
             // if the show is overbooked, then update the track end time to the end of the show time.
             if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-            
-            
+
             if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)) {
                 if ($i - 1 >= 0) {
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
@@ -140,7 +140,7 @@ class Application_Model_Schedule
                             "record"=>0,
                             "type"=>'track');
                 if (isset($rows[$i+1])) {
-                    $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"], 
+                    $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
                             "starts"=>$rows[$i+1]["starts"],
                             "ends"=>$rows[$i+1]["ends"],
                             "type"=>'track');
@@ -191,7 +191,6 @@ class Application_Model_Schedule
 
         return $row;
     }
-
 
     public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId)
     {
@@ -266,7 +265,7 @@ SELECT DISTINCT sched.starts AS sched_starts,
                 sched.fade_out AS fade_out,
                 sched.playout_status AS playout_status,
                 sched.instance_id AS sched_instance_id,
-                
+
                 %%columns%%
                 FROM (%%join%%)
 SQL;
@@ -284,11 +283,11 @@ SQL;
 SQL;
 
 
-        $filesSql = str_replace("%%columns%%", 
-            $filesColumns, 
+        $filesSql = str_replace("%%columns%%",
+            $filesColumns,
             $templateSql);
-        $filesSql= str_replace("%%join%%", 
-            $filesJoin, 
+        $filesSql= str_replace("%%join%%",
+            $filesJoin,
             $filesSql);
 
         $streamColumns = <<<SQL
@@ -304,11 +303,11 @@ SQL;
       LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)
 SQL;
 
-        $streamSql = str_replace("%%columns%%", 
-            $streamColumns, 
+        $streamSql = str_replace("%%columns%%",
+            $streamColumns,
             $templateSql);
-        $streamSql = str_replace("%%join%%", 
-            $streamJoin, 
+        $streamSql = str_replace("%%join%%",
+            $streamJoin,
             $streamSql);
 
 
@@ -332,7 +331,7 @@ SELECT showt.name AS show_name,
        si.last_scheduled AS si_last_scheduled,
        si.file_id AS si_file_id,
        *
-       FROM (($filesSql) UNION ($streamSql)) as temp 
+       FROM (($filesSql) UNION ($streamSql)) as temp
        RIGHT JOIN cc_show_instances AS si ON (si.id = sched_instance_id)
 JOIN cc_show AS showt ON (showt.id = si.show_id)
 WHERE si.modified_instance = FALSE
@@ -348,6 +347,7 @@ ORDER BY si_starts,
 SQL;
 
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
         return $rows;
     }
 
@@ -671,7 +671,7 @@ SQL;
                 $uri = $storedFile->getFilePath();
                 $type = "file";
                 $independent_event = false;
-            } else if (!is_null($item['stream_id'])) {
+            } elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
@@ -720,7 +720,7 @@ SQL;
                 //time of this event is the "end" time of the stream minus 1 second.
                 $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
                 $dt->sub(new DateInterval("PT1S"));
-                
+
                 //make sure the webstream doesn't play past the end time of the show
                 if ($dt->getTimestamp() > $showEndDateTime->getTimestamp()) {
                     $dt = $showEndDateTime;
@@ -1094,10 +1094,11 @@ SQL;
 
         return $overlapping;
     }
-    
+
     public static function GetFileId($p_scheduleId)
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
+
         return $scheduledItem->getDbFileId();
     }
 }

@@ -35,6 +35,7 @@ class Application_Model_User
     public function isHostOfShow($showId)
     {
         $userId = $this->_userInstance->getDbId();
+
         return CcShowHostsQuery::create()
             ->filterByDbShow($showId)
             ->filterByDbHost($userId)->count() > 0;
@@ -238,15 +239,19 @@ class Application_Model_User
         return $user;
     }
 
-    public static function getUsersOfType($type) {
+    public static function getUsersOfType($type)
+    {
         return CcSubjsQuery::create()->filterByDbType($type)->find();
     }
-    public static function getFirstAdminId() {
+    public static function getFirstAdminId()
+    {
         $admins = Application_Model_User::getUsersOfType('A');
         if (count($admins) > 0) { // found admin => pick first one
+
             return $admins[0]->getDbId();
         } else {
             Logging::warn("Warning. no admins found in database");
+
             return null;
         }
     }
@@ -360,6 +365,7 @@ class Application_Model_User
             //we get here if $userinfo->id is defined, but doesn't exist
             //in the database anymore.
             Zend_Auth::getInstance()->clearIdentity();
+
             return null;
         }
     }

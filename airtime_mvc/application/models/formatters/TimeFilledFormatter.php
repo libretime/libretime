@@ -1,7 +1,7 @@
 <?php
 
-class TimeFilledFormatter {
-
+class TimeFilledFormatter
+{
     /**
      * @string seconds
      */

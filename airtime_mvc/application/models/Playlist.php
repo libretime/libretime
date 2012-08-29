@@ -226,7 +226,7 @@ SQL;
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
-    
+
             //format the length for UI.
             if ($row['type'] == 2) {
                 $bl = new Application_Model_Block($row['item_id']);
@@ -235,15 +235,15 @@ SQL;
                 $formatter = new LengthFormatter($row['length']);
             }
             $row['length'] = $formatter->format();
-    
+
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
-            
+
             //format the fades in format 00(.000000)
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
-            
+
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
@@ -261,7 +261,7 @@ SQL;
     {
         //First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
-  
+
         //Second add .000000 if the fade does't have milliseconds format already
         $dbFadeStrPos = strpos( $fade, '.' );
         if ($dbFadeStrPos === false) {
@@ -275,9 +275,10 @@ SQL;
         //done, just need to set back the formated values
         return $fade;
     }
-    
+
     // returns true/false and ids of dynamic blocks
-    public function hasDynamicBlock(){
+    public function hasDynamicBlock()
+    {
         $ids = $this->getIdsOfDynamicBlocks();
         if (count($ids) > 0) {
             return true;
@@ -285,29 +286,32 @@ SQL;
             return false;
         }
     }
-    
-    public function getIdsOfDynamicBlocks() {
+
+    public function getIdsOfDynamicBlocks()
+    {
         $sql = "SELECT bl.id FROM cc_playlistcontents as pc
                 JOIN cc_block as bl ON pc.type=2 AND pc.block_id=bl.id AND bl.type='dynamic'
                 WHERE playlist_id={$this->id} AND pc.type=2";
         $r = $this->con->query($sql);
         $result = $r->fetchAll(PDO::FETCH_ASSOC);
+
         return $result;
     }
 
     //aggregate column on playlistcontents cliplength column.
     public function getLength()
     {
-        if ($this->hasDynamicBlock()){
+        if ($this->hasDynamicBlock()) {
             $ids = $this->getIdsOfDynamicBlocks();
             $length = $this->pl->getDbLength();
-            foreach ($ids as $id){
+            foreach ($ids as $id) {
                 $bl = new Application_Model_Block($id['id']);
                 if ($bl->hasItemLimit()) {
                     return "N/A";
                 }
             }
             $formatter = new LengthFormatter($length);
+
             return "~".$formatter->format();
         } else {
             return $this->pl->getDbLength();
@@ -327,10 +331,10 @@ SQL;
         if ($info["ftype"] == "audioclip") {
             $row->setDbFileId($info["id"]);
             $type = 0;
-        } else if ($info["ftype"] == "stream") {
+        } elseif ($info["ftype"] == "stream") {
             $row->setDbStreamId($info["id"]);
             $type = 1;
-        } else if ($info["ftype"] == "block") {
+        } elseif ($info["ftype"] == "block") {
             $row->setDbBlockId($info["id"]);
             $type = 2;
         }
@@ -352,9 +356,9 @@ SQL;
         $objId = $p_item[0];
         if ($objType == 'audioclip') {
             $obj = CcFilesQuery::create()->findPK($objId, $this->con);
-        } else if ($objType == "stream") {
+        } elseif ($objType == "stream") {
             $obj = CcWebstreamQuery::create()->findPK($objId, $this->con);
-        } else if ($objType == "block") {
+        } elseif ($objType == "block") {
             $obj = CcBlockQuery::create()->findPK($objId, $this->con);
         } else {
             throw new Exception("Unknown file type");
@@ -369,6 +373,7 @@ SQL;
                 $entry["cueout"] = $obj->getDbLength();
                 $entry["ftype"] = $objType;
             }
+
             return $entry;
         } else {
             throw new Exception("trying to add a object that does not exist.");
@@ -430,7 +435,7 @@ SQL;
 
             Logging::info("Adding to playlist");
             Logging::info("at position {$pos}");
- 
+
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
                 $pos = $pos + 1;
@@ -575,15 +580,16 @@ SQL;
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
-            
+
         if (!$row) {
             return NULL;
         }
         #Propel returns values in form 00.000000 format which is for only seconds.
         $fadeIn = $row->getDbFadein();
         $fadeOut = $row->getDbFadeout();
+
         return array($fadeIn, $fadeOut);
-	}
+    }
 
     /**
      * Change fadeIn and fadeOut values for playlist Element
@@ -877,7 +883,7 @@ SQL;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        
+
         if (!$isAdminOrPM) {
             $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
             if (count($leftOver) == 0) {
@@ -889,9 +895,10 @@ SQL;
             CcPlaylistQuery::create()->findPKs($p_ids)->delete();
         }
     }
-    
+
     // This function returns that are not owen by $p_user_id among $p_ids
-    private static function playlistsNotOwnedByUser($p_ids, $p_userId){
+    private static function playlistsNotOwnedByUser($p_ids, $p_userId)
+    {
         $ownedByUser = CcPlaylistQuery::create()->filterByDbCreatorId($p_userId)->find()->getData();
         $selectedPls = $p_ids;
         $ownedPls = array();
@@ -900,11 +907,12 @@ SQL;
                 $ownedPls[] = $pl->getDbId();
             }
         }
-        
+
         $leftOvers = array_diff($selectedPls, $ownedPls);
+
         return $leftOvers;
     }
-    
+
     /**
      * Delete all files from playlist
      * @param int $p_playlistId

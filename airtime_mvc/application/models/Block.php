@@ -14,14 +14,14 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      * propel connection object.
      */
     private $con;
-    
+
     /**
      * unique id for the block.
      */
     private $id;
-    
+
     private $block;
-    
+
     /**
      * info needed to insert a new block element.
      */
@@ -34,7 +34,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "fadein" => "0.0",
             "fadeout" => "0.0",
     );
-    
+
     //using propel's phpNames.
     private $categories = array(
             "dc:title" => "Name",
@@ -42,7 +42,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "dc:description" => "Description",
             "dcterms:extent" => "Length"
     );
-    
+
     private static $modifier2CriteriaMap = array(
             "contains" => Criteria::ILIKE,
             "does not contain" => Criteria::NOT_ILIKE,
@@ -53,7 +53,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "is greater than" => Criteria::GREATER_THAN,
             "is less than" => Criteria::LESS_THAN,
             "is in the range" => Criteria::CUSTOM);
-    
+
     private static $criteria2PeerMap = array(
             0 => "Select criteria",
             "album_title" => "DbAlbumTitle",
@@ -82,12 +82,12 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "track_number" => "DbTrackNumber",
             "year" => "DbYear"
     );
-    
+
     public function __construct($id=null, $con=null)
     {
         if (isset($id)) {
             $this->block = CcBlockQuery::create()->findPk($id);
-    
+
             if (is_null($this->block)) {
                 throw new BlockNotFoundException();
             }
@@ -96,19 +96,19 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             $this->block->setDbUTime(new DateTime("now", new DateTimeZone("UTC")));
             $this->block->save();
         }
-    
+
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if ($defaultFade !== "") {
             //fade is in format SS.uuuuuu
-    
+
             $this->blockItem["fadein"] = $defaultFade;
             $this->blockItem["fadeout"] = $defaultFade;
         }
-    
+
         $this->con = isset($con) ? $con : Propel::getConnection(CcBlockPeer::DATABASE_NAME);
         $this->id = $this->block->getDbId();
     }
-    
+
     /**
      * Return local ID of virtual file.
      *
@@ -118,7 +118,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     {
         return $this->id;
     }
-    
+
     /**
      * Rename stored virtual block
      *
@@ -130,7 +130,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->block->save($this->con);
     }
-    
+
     /**
      * Get mnemonic block name
      *
@@ -140,46 +140,46 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     {
         return $this->block->getDbName();
     }
-    
+
     public function setDescription($p_description)
     {
         $this->block->setDbDescription($p_description);
         $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->block->save($this->con);
     }
-    
+
     public function getDescription()
     {
         return $this->block->getDbDescription();
     }
-    
+
     public function getCreator()
     {
         return $this->block->getCcSubjs()->getDbLogin();
     }
-    
+
     public function getCreatorId()
     {
         return $this->block->getCcSubjs()->getDbId();
     }
-    
+
     public function setCreator($p_id)
     {
         $this->block->setDbCreatorId($p_id);
         $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->block->save($this->con);
     }
-    
+
     public function getLastModified($format = null)
     {
         return $this->block->getDbMtime($format);
     }
-    
+
     public function getSize()
     {
         return $this->block->countCcBlockcontentss();
     }
-    
+
     /**
      * Get the entire block as a two dimentional array, sorted in order of play.
      * @param boolean $filterFiles if this is true, it will only return files that has
@@ -208,19 +208,19 @@ EOT;
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
-    
+
             //format the length for UI.
             $formatter = new LengthFormatter($row['length']);
             $row['length'] = $formatter->format();
-    
+
             $formatter = new LengthFormatter($offset_cliplength);
             $row['offset'] = $formatter->format();
-            
+
             //format the fades in format 00(.000000)
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
-            
+
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
@@ -228,7 +228,7 @@ EOT;
 
         return $rows;
     }
-    
+
     /**
      * The database stores fades in 00:00:00 Time format with optional millisecond resolution .000000
      * but this isn't practical since fades shouldn't be very long usuall 1 second or less. This function
@@ -238,7 +238,7 @@ EOT;
     {
         //First get rid of the first six characters 00:00: which will be added back later for db update
         $fade = substr($fade, 6);
-    
+
         //Second add .000000 if the fade does't have milliseconds format already
         $dbFadeStrPos = strpos( $fade, '.' );
         if ( $dbFadeStrPos === False )
@@ -246,27 +246,28 @@ EOT;
         else
             while( strlen( $fade ) < 9 )
             $fade .= '0';
-    
+
         //done, just need to set back the formated values
         return $fade;
     }
-    
+
     public function getUnformatedLength()
     {
         $this->block->reload();
-        if ($this->isStatic()){
+        if ($this->isStatic()) {
             $length = $this->block->getDbLength();
         } else {
             $length = $this->getDynamicBlockLength();
         }
+
         return $length;
     }
-    
+
     public function getLength()
     {
         $this->block->reload();
         $prepend = "";
-        if ($this->isStatic()){
+        if ($this->isStatic()) {
             $length = $this->block->getDbLength();
         } else {
             $length = $this->getDynamicBlockLength();
@@ -276,9 +277,10 @@ EOT;
         }
         $formatter = new LengthFormatter($length);
         $length = $prepend.$formatter->format();
+
         return $length;
     }
-    
+
     public function getDynamicBlockLength()
     {
         list($value, $modifier) = $this->getLimitValueAndModifier();
@@ -290,9 +292,9 @@ EOT;
                 if ($value >59) {
                     $hour = intval($value/60);
                     $value = $value%60;
-                    
+
                 }
-            } else if ($modifier == "hours") {
+            } elseif ($modifier == "hours") {
                 $mins = $value * 60;
                 if ($mins >59) {
                     $hour = intval($mins/60);
@@ -304,26 +306,30 @@ EOT;
             $value = str_pad($value, 2, "0", STR_PAD_LEFT);
             $length = $hour.":".$value.":00";
         }
+
         return $length;
     }
-    
+
     public function getLimitValueAndModifier()
     {
         $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
                 ->filterByDbCriteria('limit')->findOne();
         $modifier = $result->getDbModifier();
         $value = $result->getDbValue();
+
         return array($value, $modifier);
     }
-    
+
     // this function returns sum of all track length under this block.
-    public function getStaticLength(){
+    public function getStaticLength()
+    {
         $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id={$this->id}";
         $r = $this->con->query($sql);
         $result = $r->fetchAll(PDO::FETCH_NUM);
+
         return $result[0][0];
     }
-    
+
     private function insertBlockElement($info)
     {
         $row = new CcBlockcontents();
@@ -342,35 +348,36 @@ EOT;
         // It is something to do FORMAT_ON_DEMAND( Lazy Loading )
         $this->block = CcBlockQuery::create()->findPK($this->id);
     }
-    
+
     /*
      *
     */
     private function buildEntry($p_item, $pos)
     {
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
-    
+
         if (isset($file) && $file->getDbFileExists()) {
             $entry = $this->blockItem;
             $entry["id"] = $file->getDbId();
             $entry["pos"] = $pos;
             $entry["cliplength"] = $file->getDbLength();
             $entry["cueout"] = $file->getDbLength();
-    
+
             return $entry;
         } else {
             throw new Exception("trying to add a file that does not exist.");
         }
     }
-    
-    public function isStatic(){
+
+    public function isStatic()
+    {
         if ($this->block->getDbType() == "static") {
             return true;
         } else {
             return false;
         }
     }
-    
+
     /*
      * @param array $p_items
     *     an array of audioclips to add to the block
@@ -383,27 +390,27 @@ EOT;
     {
         $this->con->beginTransaction();
         $contentsToUpdate = array();
-    
+
         try {
-    
+
             if (is_numeric($p_afterItem)) {
                 Logging::info("Finding block content item {$p_afterItem}");
-    
+
                 $afterItem = CcBlockcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
                 Logging::info("index is {$index}");
                 $pos = ($addType == 'after') ? $index + 1 : $index;
-    
+
                 $contentsToUpdate = CcBlockcontentsQuery::create()
                 ->filterByDbBlockId($this->id)
                 ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                 ->orderByDbPosition()
                 ->find($this->con);
-    
+
                 Logging::info("Adding to block");
                 Logging::info("at position {$pos}");
             } else {
-    
+
                 //add to the end of the block
                 if ($addType == 'after') {
                     $pos = $this->getSize();
@@ -411,23 +418,23 @@ EOT;
                 //add to the beginning of the block.
                 else {
                     $pos = 0;
-    
+
                     $contentsToUpdate = CcBlockcontentsQuery::create()
                     ->filterByDbBlockId($this->id)
                     ->orderByDbPosition()
                     ->find($this->con);
                 }
-    
+
                 $contentsToUpdate = CcBlockcontentsQuery::create()
                 ->filterByDbBlockId($this->id)
                 ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
                 ->orderByDbPosition()
                 ->find($this->con);
-    
+
                 Logging::info("Adding to block");
                 Logging::info("at position {$pos}");
             }
-    
+
             foreach ($p_items as $ac) {
                 Logging::info("Adding audio file {$ac}");
                 try {
@@ -442,27 +449,27 @@ EOT;
                     Logging::log($e->getMessage());
                 }
             }
-    
+
             //reset the positions of the remaining items.
             for ($i = 0; $i < count($contentsToUpdate); $i++) {
                 $contentsToUpdate[$i]->setDbPosition($pos);
                 $contentsToUpdate[$i]->save($this->con);
                 $pos = $pos + 1;
             }
-    
+
             $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->block->save($this->con);
-    
+
             $this->con->commit();
-            
+
             $this->updateBlockLengthInAllPlaylist();
-            
+
         } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
     }
-    
+
     /**
      * Move audioClip to the new position in the block
      *
@@ -474,25 +481,25 @@ EOT;
     public function moveAudioClips($p_items, $p_afterItem=NULL)
     {
         $this->con->beginTransaction();
-    
+
         try {
-    
+
             $contentsToMove = CcBlockcontentsQuery::create()
             ->filterByDbId($p_items, Criteria::IN)
             ->orderByDbPosition()
             ->find($this->con);
-    
+
             $otherContent = CcBlockcontentsQuery::create()
             ->filterByDbId($p_items, Criteria::NOT_IN)
             ->filterByDbBlockId($this->id)
             ->orderByDbPosition()
             ->find($this->con);
-    
+
             $pos = 0;
             //moving items to beginning of the block.
             if (is_null($p_afterItem)) {
                 Logging::info("moving items to beginning of block");
-    
+
                 foreach ($contentsToMove as $item) {
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
@@ -507,13 +514,13 @@ EOT;
                 }
             } else {
                 Logging::info("moving items after {$p_afterItem}");
-    
+
                 foreach ($otherContent as $item) {
                     Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
-    
+
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
                             Logging::info("item {$move->getDbId()} to pos {$pos}");
@@ -524,18 +531,18 @@ EOT;
                     }
                 }
             }
-    
+
             $this->con->commit();
         } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
-    
+
         $this->block = CcBlockQuery::create()->findPK($this->id);
         $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->block->save($this->con);
     }
-    
+
     /**
      * Remove audioClip from block
      *
@@ -544,57 +551,58 @@ EOT;
      */
     public function delAudioClips($p_items)
     {
-    
+
         $this->con->beginTransaction();
-    
+
         try {
-    
+
             CcBlockcontentsQuery::create()
             ->findPKs($p_items)
             ->delete($this->con);
-    
+
             $contents = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->orderByDbPosition()
             ->find($this->con);
-    
+
             //reset the positions of the remaining items.
             for ($i = 0; $i < count($contents); $i++) {
                 $contents[$i]->setDbPosition($i);
                 $contents[$i]->save($this->con);
             }
-    
+
             $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->block->save($this->con);
-    
+
             $this->con->commit();
-            
+
             $this->updateBlockLengthInAllPlaylist();
-            
+
         } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
     }
-    
+
     public function getFadeInfo($pos)
     {
         Logging::info("Getting fade info for pos {$pos}");
-    
+
         $row = CcBlockcontentsQuery::create()
         ->joinWith(CcFilesPeer::OM_CLASS)
         ->filterByDbBlockId($this->id)
         ->filterByDbPosition($pos)
         ->findOne();
-    
-    
-    
+
+
+
         #Propel returns values in form 00.000000 format which is for only seconds.
         $fadeIn = $row->getDbFadein();
         $fadeOut = $row->getDbFadeout();
+
         return array($fadeIn, $fadeOut);
     }
-    
+
     /**
     * Change fadeIn and fadeOut values for block Element
     *
@@ -613,22 +621,22 @@ EOT;
         //setting it to nonNull for checks down below
         $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
-        
+
         $this->con->beginTransaction();
-        
+
         $errArray= array();
-        
+
         try {
             $row = CcBlockcontentsQuery::create()->findPK($id);
-        
+
             if (is_null($row)) {
                 throw new Exception("Block item does not exist.");
             }
-        
+
             $clipLength = $row->getDbCliplength();
-        
+
             if (!is_null($fadeIn)) {
-            
+
                 $sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
@@ -638,7 +646,7 @@ EOT;
                 $row->setDbFadein($fadeIn);
             }
             if (!is_null($fadeOut)) {
-            
+
                 $sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
@@ -647,20 +655,20 @@ EOT;
                 }
                 $row->setDbFadeout($fadeOut);
             }
-        
+
             $row->save($this->con);
             $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->block->save($this->con);
-    
+
             $this->con->commit();
         } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
-        
+
         return array("fadeIn" => $fadeIn, "fadeOut" => $fadeOut);
     }
-        
+
     public function setfades($fadein, $fadeout)
     {
         if (isset($fadein)) {
@@ -669,21 +677,21 @@ EOT;
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition(0)
             ->findOne($this->con);
-        
+
             $this->changeFadeInfo($row->getDbId(), $fadein, null);
         }
-        
+
         if (isset($fadeout)) {
             Logging::info("Setting block fade out {$fadeout}");
             $row = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
             ->filterByDbPosition($this->getSize()-1)
             ->findOne($this->con);
-            
+
             $this->changeFadeInfo($row->getDbId(), null, $fadeout);
         }
     }
-    
+
     /**
     * Change cueIn/cueOut values for block element
     *
@@ -698,152 +706,152 @@ EOT;
     public function changeClipLength($id, $cueIn, $cueOut)
     {
         $this->con->beginTransaction();
-    
+
         $errArray= array();
-    
+
         try {
             if (is_null($cueIn) && is_null($cueOut)) {
                 $errArray["error"] = "Cue in and cue out are null.";
-            
+
                 return $errArray;
             }
-    
+
             $row = CcBlockcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByPrimaryKey($id)
             ->findOne($this->con);
-            
+
             if (is_null($row)) {
                 throw new Exception("Block item does not exist.");
             }
-    
+
             $oldCueIn = $row->getDBCuein();
             $oldCueOut = $row->getDbCueout();
             $fadeIn = $row->getDbFadein();
             $fadeOut = $row->getDbFadeout();
-            
+
             $file = $row->getCcFiles($this->con);
             $origLength = $file->getDbLength();
-    
+
             if (!is_null($cueIn) && !is_null($cueOut)) {
-    
+
                 if ($cueOut === "") {
                     $cueOut = $origLength;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
-                
+
                     return $errArray;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
-        
+
                     return $errArray;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
                 $r = $this->con->query($sql);
                 $cliplength = $r->fetchColumn(0);
-            
+
                 $row->setDbCuein($cueIn);
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
-        
+
             } elseif (!is_null($cueIn)) {
-    
+
                 $sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
-            
+
                     return $errArray;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
                 $r = $this->con->query($sql);
                 $cliplength = $r->fetchColumn(0);
-        
+
                 $row->setDbCuein($cueIn);
                 $row->setDBCliplength($cliplength);
             } elseif (!is_null($cueOut)) {
-    
+
                 if ($cueOut === "") {
                     $cueOut = $origLength;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue out to be smaller than cue in.";
-                
+
                     return $errArray;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
                 $r = $this->con->query($sql);
                 if ($r->fetchColumn(0)) {
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
-                
+
                     return $errArray;
                 }
-    
+
                 $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$oldCueIn}'";
                 $r = $this->con->query($sql);
                 $cliplength = $r->fetchColumn(0);
-        
+
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
             }
-    
+
             $cliplength = $row->getDbCliplength();
-    
+
             $sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
             $r = $this->con->query($sql);
             if ($r->fetchColumn(0)) {
                 $fadeIn = $cliplength;
                 $row->setDbFadein($fadeIn);
             }
-    
+
             $sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
             $r = $this->con->query($sql);
             if ($r->fetchColumn(0)) {
                 $fadeOut = $cliplength;
                 $row->setDbFadein($fadeOut);
             }
-    
+
             $row->save($this->con);
             $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->block->save($this->con);
-    
+
             $this->con->commit();
         } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
-    
+
         return array("cliplength"=> $cliplength, "cueIn"=> $cueIn, "cueOut"=> $cueOut, "length"=> $this->getUnformatedLength(),
         "fadeIn"=> $fadeIn, "fadeOut"=> $fadeOut);
     }
-    
+
     public function getAllPLMetaData()
     {
         $categories = $this->categories;
         $md = array();
-    
+
         foreach ($categories as $key => $val) {
             $method = 'get' . $val;
             $md[$key] = $this->$method();
         }
-    
+
         return $md;
     }
-    
+
     public function getMetaData($category)
     {
         $cat = $this->categories[$category];
@@ -851,24 +859,24 @@ EOT;
 
         return $this->$method();
     }
-    
+
     public function setMetadata($category, $value)
     {
         $cat = $this->categories[$category];
-    
+
         $method = 'set' . $cat;
         $this->$method($value);
     }
-    
+
     public static function getBlockCount()
     {
         global $CC_CONFIG;
          $con = Propel::getConnection();
          $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
-    
+
          return $con->query($sql)->fetchColumn(0);
      }
-    
+
     /**
     * Delete the file from all blocks.
     * @param string $p_fileId
@@ -877,7 +885,7 @@ EOT;
     {
          CcBlockcontentsQuery::create()->filterByDbFileId($p_fileId)->delete();
     }
-    
+
     /**
     * Delete blocks that match the ids..
     * @param array $p_ids
@@ -887,10 +895,10 @@ EOT;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        
+
         if (!$isAdminOrPM) {
             $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
-        
+
             if (count($leftOver) == 0) {
                 CcBlockQuery::create()->findPKs($p_ids)->delete();
             } else {
@@ -900,7 +908,7 @@ EOT;
             CcBlockQuery::create()->findPKs($p_ids)->delete();
         }
     }
-    
+
     // This function returns that are not owen by $p_user_id among $p_ids
     private static function blocksNotOwnedByUser($p_ids, $p_userId)
     {
@@ -912,11 +920,12 @@ EOT;
                 $ownedPls[] = $pl->getDbId();
             }
         }
-    
+
         $leftOvers = array_diff($selectedPls, $ownedPls);
+
         return $leftOvers;
     }
-    
+
     /**
     * Delete all files from block
     */
@@ -925,9 +934,10 @@ EOT;
         CcBlockcontentsQuery::create()->findByDbBlockId($this->id)->delete();
         $this->block->reload();
     }
-    
+
     // smart block functions start
-    public function shuffleSmartBlock(){
+    public function shuffleSmartBlock()
+    {
         // if it here that means it's static pl
         $this->saveType("static");
         $contents = CcBlockcontentsQuery::create()
@@ -940,23 +950,24 @@ EOT;
             $item->setDbPosition(array_shift($shuffledPos));
             $item->save();
         }
+
         return array("result"=>0);
     }
-    
+
     public function saveType($p_blockType)
     {
         // saving dynamic/static flag
         CcBlockQuery::create()->findPk($this->id)->setDbType($p_blockType)->save();
     }
-    
+
     public function setLength($value)
     {
         $this->block->setDbLength($value);
         $this->block->save($this->con);
         $this->updateBlockLengthInAllPlaylist();
     }
-    
-    
+
+
     /**
      * Saves smart block criteria
      * @param array $p_criteria
@@ -985,10 +996,10 @@ EOT;
             }
             $this->setLength($length);
         }
-        
+
         $this->updateBlockLengthInAllPlaylist();
     }
-    
+
     public function hasItemLimit()
     {
         list($value, $modifier) = $this->getLimitValueAndModifier();
@@ -998,7 +1009,7 @@ EOT;
             return false;
         }
     }
-    
+
     public function storeCriteriaIntoDb($p_criteriaData)
     {
         // delete criteria under $p_blockId
@@ -1014,7 +1025,7 @@ EOT;
                     ->setDbModifier($d['sp_criteria_modifier'])
                     ->setDbValue($d['sp_criteria_value'])
                     ->setDbBlockId($this->id);
-            
+
                     if (isset($d['sp_criteria_extra'])) {
                         $qry->setDbExtra($d['sp_criteria_extra']);
                     }
@@ -1022,7 +1033,7 @@ EOT;
                 }
             }
         }
-    
+
         // insert limit info
         $qry = new CcBlockcriteria();
         $qry->setDbCriteria("limit")
@@ -1031,7 +1042,7 @@ EOT;
         ->setDbBlockId($this->id)
         ->save();
     }
-    
+
     /**
      * generate list of tracks. This function saves creiteria and generate
      * tracks.
@@ -1045,9 +1056,10 @@ EOT;
         $this->addAudioClips(array_keys($insertList));
         // update length in playlist contents.
         $this->updateBlockLengthInAllPlaylist();
+
         return array("result"=>0);
     }
-    
+
     public function updateBlockLengthInAllPlaylist()
     {
         $blocks = CcPlaylistcontentsQuery::create()->filterByDbBlockId($this->id)->find();
@@ -1064,17 +1076,17 @@ EOT;
             $iterator->next();
         }
     }
-    
+
     public function getListOfFilesUnderLimit()
     {
         $info = $this->getListofFilesMeetCriteria();
         $files = $info['files'];
         $limit = $info['limit'];
-    
+
         $insertList = array();
         $totalTime = 0;
         $totalItems = 0;
-    
+
         // this moves the pointer to the first element in the collection
         $files->getFirst();
         $iterator = $files->getIterator();
@@ -1084,16 +1096,17 @@ EOT;
             $insertList[$id] = $length;
             $totalTime += $length;
             $totalItems++;
-            
+
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500) {
                 break;
             }
-    
+
             $iterator->next();
         }
+
         return $insertList;
     }
-    
+
     public function getCriteria()
     {
         $criteriaOptions = array(
@@ -1124,7 +1137,7 @@ EOT;
                 "utime" => "Uploaded",
                 "year" => "Year"
         );
-        
+
         // Load criteria from db
         $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
         $storedCrit = array();
@@ -1134,25 +1147,25 @@ EOT;
             $modifier = $crit->getDbModifier();
             $value = $crit->getDbValue();
             $extra = $crit->getDbExtra();
-        
+
             if ($criteria == "limit") {
                 $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
             } else {
                 $storedCrit["crit"][$criteria][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra, "display_name"=>$criteriaOptions[$criteria]);
             }
         }
-        
+
         return $storedCrit;
-        
+
     }
-    
+
     // this function return list of propel object
     public function getListofFilesMeetCriteria()
     {
         $storedCrit = $this->getCriteria();
-    
+
         $qry = CcFilesQuery::create();
-    
+
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
@@ -1160,7 +1173,7 @@ EOT;
                     $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
-                    
+
                     $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
                     // if the column is timestamp, convert it into UTC
                     if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
@@ -1173,14 +1186,14 @@ EOT;
                             $spCriteria = 'date('.$spCriteria.')';
                             $spCriteriaValue = substr($spCriteriaValue, 0, 10);
                         }
-                    
+
                         if (isset($criteria['extra'])) {
                             $spCriteriaExtra = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['extra']);
                             if (strlen($criteria['extra']) <= 10) {
                                 $spCriteriaExtra = substr($spCriteriaExtra, 0, 10);
                             }
                         }
-                    } else if ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
+                    } elseif ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value
                         // e.g 192kps is stored as 192000
                         $spCriteriaValue = $criteria['value']*1000;
@@ -1193,7 +1206,7 @@ EOT;
                      * user only sees the rounded version (i.e. 4:02.7 is 4:02.761625
                      * in the database)
                      */
-                    } else if ($spCriteria == 'length' && $spCriteriaModifier == "is") {
+                    } elseif ($spCriteria == 'length' && $spCriteriaModifier == "is") {
                         $spCriteriaModifier = "starts with";
                         $spCriteria = $spCriteria.'::text';
                         $spCriteriaValue = $criteria['value'];
@@ -1209,20 +1222,20 @@ EOT;
                         } else {
                             $spCriteriaValue = ($criteria['value']);
                         }
-                        
+
                         $spCriteriaExtra = $criteria['extra'];
                     }
-                    
+
                     if ($spCriteriaModifier == "starts with") {
                         $spCriteriaValue = "$spCriteriaValue%";
-                    } else if ($spCriteriaModifier == "ends with") {
+                    } elseif ($spCriteriaModifier == "ends with") {
                         $spCriteriaValue = "%$spCriteriaValue";
-                    } else if ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
+                    } elseif ($spCriteriaModifier == "contains" || $spCriteriaModifier == "does not contain") {
                         $spCriteriaValue = "%$spCriteriaValue%";
-                    } else if ($spCriteriaModifier == "is in the range") {
+                    } elseif ($spCriteriaModifier == "is in the range") {
                         $spCriteriaValue = "$spCriteria >= '$spCriteriaValue' AND $spCriteria <= '$spCriteriaExtra'";
                     }
-                    
+
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
 
                     try {
@@ -1254,25 +1267,26 @@ EOT;
         }
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
+
             return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);
         }
     }
-    
+
     public static function organizeSmartPlyalistCriteria($p_criteria)
     {
         $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
         $output = array();
         foreach ($p_criteria as $ele) {
-            
+
             $index = strrpos($ele['name'], '_');
-            
+
             /* Strip field name of modifier index
              * Ex: sp_criteria_field_0_0 -> sp_criteria_field_0
              */
             $fieldName = substr($ele['name'], 0, $index);
-            
+
             // Get criteria row index.
             $tempName = $ele['name'];
             // Get the last digit in the field name
@@ -1282,7 +1296,7 @@ EOT;
                 $critIndex = $tempName[$critIndexPos];
             }
             $lastChar = substr($ele['name'], -1);
-            
+
             // If lastChar is an integer we should strip it off
             if (!preg_match("/^[a-zA-Z]$/", $lastChar)) {
                 /* Strip field name of criteria index
@@ -1293,11 +1307,11 @@ EOT;
                 $n = strrpos($fieldName, '_');
                 $fieldName = substr($fieldName, 0, $n);
             }
-            
+
             if (in_array($fieldName, $fieldNames)) {
                 $rowNum = intval(substr($ele['name'], $index+1));
                 $output['criteria'][$critIndex][$lastChar][$fieldName] = trim($ele['value']);
-            }else{
+            } else {
                 $output['etc'][$ele['name']] = $ele['value'];
             }
         }

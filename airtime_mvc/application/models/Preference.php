@@ -1089,12 +1089,12 @@ class Application_Model_Preference
     {
         return self::getValue("mail_server_port");
     }
-    
+
     public static function SetMailServerRequiresAuth($value)
     {
         self::setValue("mail_server_requires_auth", $value, false);
     }
-    
+
     public static function GetMailServerRequiresAuth()
     {
         return self::getValue("mail_server_requires_auth");
@@ -1109,8 +1109,9 @@ class Application_Model_Preference
             return true;
         }
     }
-    
-    public static function getCurrentLibraryTableSetting(){
+
+    public static function getCurrentLibraryTableSetting()
+    {
         return unserialize(self::getValue("library_datatable"));
     }
 }

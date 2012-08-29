@@ -1,22 +1,22 @@
 <?php
 
-class Application_Model_Library 
+class Application_Model_Library
 {
 
     public static function getObjInfo($p_type)
     {
         $info = array();
-        
+
         if (strcmp($p_type, 'playlist')==0) {
             $info['className'] = 'Application_Model_Playlist';
-        } else if (strcmp($p_type, 'block')==0) {
+        } elseif (strcmp($p_type, 'block')==0) {
             $info['className'] = 'Application_Model_Block';
-        } else if (strcmp($p_type, 'stream')==0) {
+        } elseif (strcmp($p_type, 'stream')==0) {
             $info['className'] = 'Application_Model_Webstream';
         } else {
             throw new Exception("Unknown object type: '$p_type'");
         }
-        
+
         return $info;
     }
 

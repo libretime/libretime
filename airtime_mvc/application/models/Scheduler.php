@@ -146,12 +146,12 @@ class Application_Model_Scheduler
 
                 $files[] = $data;
             }
-        } else if ($type === "playlist") {
+        } elseif ($type === "playlist") {
             $pl = new Application_Model_Playlist($id);
             $contents = $pl->getContents();
-            
+
             foreach ($contents as $plItem) {
-                if ($plItem['type'] == 0){
+                if ($plItem['type'] == 0) {
                     $data["id"] = $plItem['item_id'];
                     $data["cliplength"] = $plItem['length'];
                     $data["cuein"] = $plItem['cuein'];
@@ -160,7 +160,7 @@ class Application_Model_Scheduler
                     $data["fadeout"] = $plItem['fadeout'];
                     $data["type"] = 0;
                     $files[] = $data;
-                } else if ($plItem['type'] == 2) {
+                } elseif ($plItem['type'] == 2) {
                     // if it's a block
                     $bl = new Application_Model_Block($plItem['item_id']);
                     if ($bl->isStatic()) {
@@ -196,7 +196,7 @@ class Application_Model_Scheduler
                     }
                 }
             }
-        } else if ($type == "stream") {
+        } elseif ($type == "stream") {
             //need to return
              $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
 
@@ -218,7 +218,7 @@ class Application_Model_Scheduler
 
                 $files[] = $data;
             }
-        } else if ($type == "block") {
+        } elseif ($type == "block") {
             $bl = new Application_Model_Block($id);
             if ($bl->isStatic()) {
                 foreach ($bl->getContents() as $track) {
@@ -252,6 +252,7 @@ class Application_Model_Scheduler
                 }
             }
         }
+
         return $files;
     }
 
@@ -425,8 +426,8 @@ class Application_Model_Scheduler
                         ->setDbFadeOut($file['fadeout'])
                         ->setDbClipLength($file['cliplength'])
                         ->setDbInstanceId($instance->getDbId());
-                        
-                    switch ($file["type"]){
+
+                    switch ($file["type"]) {
                         case 0:
                             $sched->setDbFileId($file['id']);
                             break;
@@ -435,7 +436,7 @@ class Application_Model_Scheduler
                             break;
                         default: break;
                     }
-                    
+
                     $sched->save($this->con);
 
                     $nextStartDT = $endTimeDT;

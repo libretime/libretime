@@ -1,17 +1,18 @@
 <?php
-class Application_Model_ServiceRegister 
+class Application_Model_ServiceRegister
 {
     public static function GetRemoteIpAddr()
     {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             //check ip from share internet
             $ip=$_SERVER['HTTP_CLIENT_IP'];
-        } else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             //to check ip is pass from proxy
             $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
             $ip=$_SERVER['REMOTE_ADDR'];
         }
+
         return $ip;
     }
 

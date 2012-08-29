@@ -26,7 +26,7 @@ class Application_Model_Email
             if ($mailServerRequiresAuth) {
                 $username = Application_Model_Preference::GetMailServerEmailAddress();
                 $password = Application_Model_Preference::GetMailServerPassword();
-                
+
                 $config = array(
                     'auth' => 'login',
                     'ssl' => 'ssl',

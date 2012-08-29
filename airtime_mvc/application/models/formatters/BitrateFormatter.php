@@ -1,7 +1,7 @@
 <?php
 
-class BitrateFormatter {
-
+class BitrateFormatter
+{
     /**
      * @string length
      */
@@ -19,7 +19,7 @@ class BitrateFormatter {
     {
         $Kbps = bcdiv($this->_bitrate, 1000, 0);
 
-        if($Kbps == 0) {
+        if ($Kbps == 0) {
             return "";
         } else {
             return "{$Kbps} Kbps";

@@ -13,7 +13,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 throw new Exception();
             }
         } else {
-            $this->webstream = $webstream; 
+            $this->webstream = $webstream;
         }
     }
 
@@ -44,8 +44,10 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         if (count($arr) == 3) {
             list($hours, $min, $sec) = $arr;
             $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
+
             return $di->format("%Hh %Im");
         }
+
         return "";
     }
 
@@ -69,6 +71,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $subjs = CcSubjsQuery::create()->findPK($this->webstream->getDbCreatorId());
 
         $username = $subjs->getDbLogin();
+
         return array(
             "name" => $this->webstream->getDbName(),
             "length" => $this->webstream->getDbLength(),
@@ -87,7 +90,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             throw new Exception("Invalid user permissions");
         }
     }
-    
+
     // This function returns that are not owen by $p_user_id among $p_ids
     private static function streamsNotOwnedByUser($p_ids, $p_userId)
     {
@@ -98,14 +101,15 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 $ownedStreams[] = $pl->getDbId();
             }
         }
-        
+
         $leftOvers = array_diff($p_ids, $ownedStreams);
+
         return $leftOvers;
     }
 
     public static function analyzeFormData($parameters)
     {
-        $valid = array("length" => array(true, ''), 
+        $valid = array("length" => array(true, ''),
             "url" => array(true, ''),
             "name" => array(true, ''));
 
@@ -117,16 +121,14 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         if ($result == 1 && count($matches) == 2) {
             $hours = $matches[1];
             $minutes = 0;
-        } else if ($result == 1 && count($matches) == 3) {
+        } elseif ($result == 1 && count($matches) == 3) {
             $hours = $matches[1];
             $minutes = $matches[2];
         } else {
             $invalid_date_interval = true;
         }
 
-
-
-        if (!$invalid_date_interval) { 
+        if (!$invalid_date_interval) {
 
             //Due to the way our Regular Expression is set up, we could have $minutes or $hours
             //not set. Do simple test here
@@ -137,13 +139,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 $minutes = 0;
             }
 
-
             //minutes cannot be over 59. Need to convert anything > 59 minutes into hours.
             $hours += intval($minutes/60);
             $minutes = $minutes%60;
 
             $di = new DateInterval("PT{$hours}H{$minutes}M");
-
 
             $totalMinutes = $di->h * 60 + $di->i;
 
@@ -157,9 +157,8 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $valid['length'][1] = 'Length should be of form "00h 00m"';
         }
 
-
         $url = $parameters["url"];
-        //simple validator that checks to make sure that the url starts with 
+        //simple validator that checks to make sure that the url starts with
         //http(s),
         //and that the domain is at least 1 letter long
         $result = preg_match("/^(http|https):\/\/.+/", $url, $matches);
@@ -196,7 +195,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $id = $parameters["id"];
 
-        return array($valid, $mime, $mediaUrl, $di); 
+        return array($valid, $mime, $mediaUrl, $di);
     }
 
     public static function isValid($analysis)
@@ -210,15 +209,13 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return true;
     }
 
-    public function setMetadata($key, $val) 
+    public function setMetadata($key, $val)
     {
 
     }
 
-
-    public function setName($name) 
+    public function setName($name)
     {
-
 
     }
 
@@ -270,7 +267,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $delim = "\n";
         if (strpos($content, "\r\n") !== false) {
             $delim = "\r\n";
-        } 
+        }
         $lines = explode("$delim", $content);
         #$lines = preg_split('/$\R?^/m', $content);
 
@@ -282,23 +279,23 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     }
 
     private static function getMediaUrl($url, $mime, $content_length_found)
-    { 
+    {
 
         if (preg_match("/x-mpegurl/", $mime)) {
-            $media_url = self::getM3uUrl($url); 
-        } else if (preg_match("/xspf\+xml/", $mime)) {
-            $media_url = self::getXspfUrl($url); 
-        } else if (preg_match("/(mpeg|ogg)/", $mime)) {
+            $media_url = self::getM3uUrl($url);
+        } elseif (preg_match("/xspf\+xml/", $mime)) {
+            $media_url = self::getXspfUrl($url);
+        } elseif (preg_match("/(mpeg|ogg)/", $mime)) {
             if ($content_length_found) {
                 throw new Exception("Invalid webstream - This appears to be a file download.");
-            } 
+            }
             $media_url = $url;
         } else {
             throw new Exception("Unrecognized stream type: $mime");
         }
 
         return $media_url;
-       
+
     }
 
     private static function discoverStreamMime($url)
@@ -315,10 +312,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             if (preg_match("/^content-length:/i", $h)) {
                 $content_length_found = true;
                 //if content-length appears, this is not a web stream!!!!
-                //Aborting the save process. 
+                //Aborting the save process.
             }
         }
-
 
         return array($mime, $content_length_found);
     }
@@ -338,14 +334,14 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $webstream->setDbDescription($parameters["description"]);
         $webstream->setDbUrl($mediaUrl);
 
-        $dblength = $di->format("%H:%I"); 
+        $dblength = $di->format("%H:%I");
         $webstream->setDbLength($dblength);
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
 
         $ws = new Application_Model_Webstream($webstream);
-       
+
         $webstream->setDbMime($mime);
         $webstream->save();
 

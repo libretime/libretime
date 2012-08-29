@@ -172,32 +172,32 @@ class Application_Model_Show
         if ($deltaDay > 0) {
             return "Shows can have a max length of 24 hours.";
         }
-        
+
         $showInstances = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
             ->find($con);
-        
+
         /* Check if the show being resized and any of its repeats
          * overlap with other scheduled shows
          */
         foreach ($showInstances as $si) {
             $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
             $endsDateTime = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
-            
+
             /* The user is moving the show on the calendar from the perspective of local time.
              * incase a show is moved across a time change border offsets should be added to the local
              * timestamp and then converted back to UTC to avoid show time changes
-             */ 
+             */
             $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
             $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-    
+
             $newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
             $newEndsDateTime = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
-    
+
             //convert our new starts/ends to UTC.
             $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
             $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
-        
+
             $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime,
                 $newEndsDateTime, true, $si->getDbId());
             if ($overlapping) {
@@ -1583,6 +1583,7 @@ class Application_Model_Show
         }
 
         $result = $con->query($sql)->fetchAll();
+
         return $result;
     }
 
@@ -1662,13 +1663,13 @@ class Application_Model_Show
             }
             $startsDT = DateTime::createFromFormat("Y-m-d G:i:s", $show["starts"], new DateTimeZone("UTC"));
             $endsDT = DateTime::createFromFormat("Y-m-d G:i:s", $show["ends"], new DateTimeZone("UTC"));
-            
+
             $startsEpochStr = $startsDT->format("U");
             $endsEpochStr = $endsDT->format("U");
-            
+
             $startsEpoch = intval($startsEpochStr);
             $endsEpoch = intval($endsEpochStr);
-            
+
             $startsDT->setTimezone(new DateTimeZone($timezone));
             $endsDT->setTimezone(new DateTimeZone($timezone));
 
@@ -1679,7 +1680,7 @@ class Application_Model_Show
             } elseif ($p_editable && $nowEpoch < $endsEpoch) {
                 $options["editable"] = true;
             }
-            
+
             $showInstance = new Application_Model_ShowInstance($show["instance_id"]);
             $showContent = $showInstance->getShowListContent();
             if (empty($showContent)) {
@@ -1687,7 +1688,7 @@ class Application_Model_Show
             } else {
                 $options["show_empty"] = 0;
             }
-            
+
             $events[] = &self::makeFullCalendarEvent($show, $options, $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
         }
 
@@ -1727,15 +1728,15 @@ class Application_Model_Show
         if ($show["color"] != "") {
             $event["textColor"] = "#".$show["color"];
         }
-        
+
         if ($show["background_color"] != "") {
             $event["color"] = "#".$show["background_color"];
         }
-        
+
         foreach ($options as $key => $value) {
             $event[$key] = $value;
         }
-        
+
         return $event;
     }
 
@@ -1806,6 +1807,7 @@ class Application_Model_Show
 
         // Convert back to local timezone
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
         return $rows;
     }
 
@@ -1949,6 +1951,7 @@ class Application_Model_Show
         }
 
         $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
         return $rows;
     }
 

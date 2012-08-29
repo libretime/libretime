@@ -75,7 +75,7 @@ class Application_Model_StoredFile
     {
         $this->_file->setDbFtype($p_format);
     }
-    
+
     /* This function is only called after liquidsoap
      * has notified that a track has started playing.
      */
@@ -83,7 +83,7 @@ class Application_Model_StoredFile
     {
         $this->_file->setDbLPtime($p_now);
         /* Normally we would only call save after all columns have been set
-         * like in setDbColMetadata(). But since we are only setting one 
+         * like in setDbColMetadata(). But since we are only setting one
          * column in this case it is OK.
          */
         $this->_file->save();
@@ -151,9 +151,9 @@ class Application_Model_StoredFile
             }
         } else {
             $owner = $this->_file->getFkOwner();
-            // if owner_id is already set we don't want to set it again. 
-            if(!$owner) { // no owner detected, we try to assign one.
-                // if MDATA_OWNER_ID is not set then we default to the 
+            // if owner_id is already set we don't want to set it again.
+            if (!$owner) { // no owner detected, we try to assign one.
+                // if MDATA_OWNER_ID is not set then we default to the
                 // first admin user we find
                 if (!array_key_exists('owner_id', $p_md)) {
                     //$admins = Application_Model_User::getUsers(array('A'));
@@ -170,10 +170,9 @@ class Application_Model_StoredFile
                         $owner = $user;
                     }
                 }
-                if ($owner) { 
+                if ($owner) {
                     $this->_file->setDbOwnerId( $owner->getDbId() );
-                }
-                else {
+                } else {
                     Logging::info("Could not find suitable owner for file
                         '".$p_md['MDATA_KEY_FILEPATH']."'");
                 }
@@ -415,6 +414,7 @@ class Application_Model_StoredFile
             _file->getDbDirectory());
         $directory = $music_dir->getDirectory();
         $filepath  = $this->_file->getDbFilepath();
+
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
@@ -492,9 +492,9 @@ class Application_Model_StoredFile
     public static function Insert($md)
     {
         // save some work by checking if filepath is given right away
-        if( !isset($md['MDATA_KEY_FILEPATH']) ) {
-            return null; 
-        } 
+        if ( !isset($md['MDATA_KEY_FILEPATH']) ) {
+            return null;
+        }
 
         $file = new CcFiles();
         $now  = new DateTime("now", new DateTimeZone("UTC"));
@@ -515,6 +515,7 @@ class Application_Model_StoredFile
             return null;
         }
         $storedFile->setMetadata($md);
+
         return $storedFile;
     }
 
@@ -682,7 +683,7 @@ class Application_Model_StoredFile
                 $blSelect[]     = "NULL::int AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::int AS ".$key;
-            } else if ($key === "filepath") {
+            } elseif ($key === "filepath") {
                 $plSelect[]     = "NULL::VARCHAR AS ".$key;
                 $blSelect[]     = "NULL::VARCHAR AS ".$key;
                 $fileSelect[]   = $key;
@@ -745,7 +746,7 @@ class Application_Model_StoredFile
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
             }
-  
+
             //convert mtime and utime to localtime
             $row['mtime'] = new DateTime($row['mtime'], new DateTimeZone('UTC'));
             $row['mtime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
@@ -753,7 +754,7 @@ class Application_Model_StoredFile
             $row['utime'] = new DateTime($row['utime'], new DateTimeZone('UTC'));
             $row['utime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
             $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
-            
+
             // add checkbox row
             $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
 
@@ -768,12 +769,12 @@ class Application_Model_StoredFile
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
-            } else if ($type == "pl") {
+            } elseif ($type == "pl") {
                 $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
-            } else if ($type == "st") {
+            } elseif ($type == "st") {
                 $row['audioFile'] = $row['id'];
                 $row['image'] = '<img title="Webstream preview" src="/css/images/record_icon.png">';
-            } else if ($type == "bl") {
+            } elseif ($type == "bl") {
                 $row['image'] = '<img title="Smart Block" src="/css/images/delete.png">';
             }
         }
@@ -915,8 +916,9 @@ class Application_Model_StoredFile
         }
 
         // Check if we have enough space before copying
-        if(!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
+        if (!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
             $freeSpace = disk_free_space($stor);
+
             return array("code" => 107,
                 "message" => "The file was not uploaded, there is
                 ".$freeSpace."MB of disk space left and the file you are
@@ -924,7 +926,7 @@ class Application_Model_StoredFile
         }
 
         // Check if liquidsoap can play this file
-        if(!self::liquidsoapFilePlayabilityTest($audio_file)) {
+        if (!self::liquidsoapFilePlayabilityTest($audio_file)) {
             return array(
                 "code"    => 110,
                 "message" => "This file appears to be corrupted and will not
@@ -941,7 +943,7 @@ class Application_Model_StoredFile
             $uid = $user->getId();
         }
         $id_file = "$audio_stor.identifier";
-        if (file_put_contents($id_file,$uid) === false)  {
+        if (file_put_contents($id_file,$uid) === false) {
             Logging::info("Could not write file to identify user: '$uid'");
             Logging::info("Id file path: '$id_file'");
             Logging::info("Defaulting to admin (no identification file was
@@ -958,6 +960,7 @@ class Application_Model_StoredFile
             //warn the user that the file wasn't uploaded and they should check if there is enough disk space.
             unlink($audio_file); //remove the file after failed rename
             unlink($id_file); // Also remove the identifier file
+
             return array(
                 "code"    => 108,
                 "message" => "
@@ -1044,8 +1047,9 @@ class Application_Model_StoredFile
         if (!is_null($limit) && is_int($limit)) {
             $sql .= " LIMIT $limit";
         }
-                
+
         $rows = $con->query($sql, PDO::FETCH_ASSOC)->fetchAll();
+
         return $rows;
     }
 

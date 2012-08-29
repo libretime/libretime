@@ -1,7 +1,7 @@
 <?php
 
-class LengthFormatter {
-
+class LengthFormatter
+{
     /**
      * @string length
      */
@@ -15,7 +15,8 @@ class LengthFormatter {
         $this->_length = $length;
     }
 
-    public function format() {
+    public function format()
+    {
         if (!preg_match("/^[0-9]{2}:[0-9]{2}:[0-9]{2}/", $this->_length)) {
             return $this->_length;
         }
@@ -45,11 +46,9 @@ class LengthFormatter {
 
         if (isset($hours) && isset($minutes) && isset($seconds)) {
             $time = sprintf("%d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
-        }
-        else if (isset($minutes) && isset($seconds)) {
+        } elseif (isset($minutes) && isset($seconds)) {
             $time = sprintf("%d:%02d.%s", $minutes, $seconds, $milliStr);
-        }
-        else {
+        } else {
             $time = sprintf("%d.%s", $seconds, $milliStr);
         }
 

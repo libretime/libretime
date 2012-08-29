@@ -15,7 +15,7 @@ class Application_Model_Datatables
             } else {
                 $input1 = $term;
             }
-            
+
             if ($isRange) {
                 $sub = array();
                 if ($input1 != null) {
@@ -33,6 +33,7 @@ class Application_Model_Datatables
                 }
             }
         }
+
         return implode(" AND ", $where);
     }
     /*
@@ -41,7 +42,7 @@ class Application_Model_Datatables
     public static function findEntries($con, $displayColumns, $fromTable, $data, $dataProp = "aaData")
     {
         $librarySetting = Application_Model_Preference::getCurrentLibraryTableSetting();
-        
+
         // map that maps original column position to db name
         $current2dbname = array();
         // array of search terms
@@ -50,22 +51,22 @@ class Application_Model_Datatables
             if (strstr($key, "mDataProp_")) {
                 list($dump, $index) = explode("_", $key);
                 $current2dbname[$index] = $d;
-            } else if (strstr($key, "sSearch_")) {
+            } elseif (strstr($key, "sSearch_")) {
                 list($dump, $index) = explode("_", $key);
                 $orig2searchTerm[$index] = $d;
             }
         }
         // map that maps current column position to original position
         $current2orig = $librarySetting['ColReorder'];
-        
+
         // map that maps dbname to searchTerm
         $dbname2searchTerm = array();
         foreach ($current2dbname as $currentPos=>$dbname) {
             $dbname2searchTerm[$dbname] = $orig2searchTerm[$current2orig[$currentPos]];
         }
-        
+
         $where = array();
-        
+
         $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
         if ($advancedWhere != "") {
             $where[] = $advancedWhere;
@@ -158,7 +159,7 @@ class Application_Model_Datatables
                     if ($r['ftype'] == 'playlist') {
                         $pl = new Application_Model_Playlist($r['id']);
                         $r['length'] = $pl->getLength();
-                    } else if ($r['ftype'] == "block") {
+                    } elseif ($r['ftype'] == "block") {
                         $bl = new Application_Model_Block($r['id']);
                         if ($bl->isStatic()) {
                             $r['bl_type'] = 'static';
