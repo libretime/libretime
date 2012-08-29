@@ -97,7 +97,11 @@ class PlaylistController extends Zend_Controller_Action
                 unset($this->view->obj);
             }
         } else {
-            $this->view->html = $this->view->render($viewPath);
+            if ($isJson) {
+                return $this->view->render($viewPath);
+            } else {
+                $this->view->html = $this->view->render($viewPath);
+            }
         }
     }
 
@@ -112,13 +116,19 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse($obj);
     }
 
-    private function playlistNotFound($p_type)
+    private function playlistNotFound($p_type, $p_isJson = false)
     {
+        $p_type = ucfirst($p_type);
         $this->view->error = "{$p_type} not found";
 
         Logging::info("{$p_type} not found");
         Application_Model_Library::changePlaylist(null, $p_type);
-        $this->createFullResponse(null);
+        
+        if (!$p_isJson) {
+            $this->createFullResponse(null);
+        } else {
+            die(json_encode(array("error"=>$this->view->error, "result"=>1, "html"=>$this->createFullResponse(null, $p_isJson))));
+        }
     }
 
     private function playlistNoPermission($p_type)
@@ -278,6 +288,8 @@ class PlaylistController extends Zend_Controller_Action
             $this->wrongTypeToPlaylist($obj);
         } catch (BlockDynamicException $e) {
             $this->blockDynamic($obj);
+        } catch (BlockNotFoundException $e) {
+            $this->playlistNotFound($obj_type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -446,14 +458,13 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         $result = array();
-
-        $this->setPlaylistNameDescAction();
-
+        
         if ($params['type'] == 'block') {
             $form = new Application_Form_SmartBlockCriteria();
             $form->startForm($params['obj_id']);
             $bl = new Application_Model_Block($params['obj_id']);
             if ($form->isValid($params)) {
+                $this->setPlaylistNameDescAction();
                 $bl->saveSmartBlockCriteria($params['data']);
                 $result['html'] = $this->createFullResponse($bl, true, true);
                 $result['result'] = 0;
@@ -461,10 +472,14 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->obj = $bl;
                 $this->view->id = $bl->getId();
                 $this->view->form = $form;
+                $this->view->unsavedName = $params['name'];
+                $this->view->unsavedDesc = $params['description'];
                 $viewPath = 'playlist/smart-block.phtml';
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
             }
+        } else if ($params['type'] == 'playlist') {
+            $this->setPlaylistNameDescAction();
         }
 
         $result["modified"] = $this->view->modified;
@@ -475,26 +490,29 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $form = new Application_Form_SmartBlockCriteria();
-        $form->startForm($params['obj_id']);
-        $bl = new Application_Model_Block($params['obj_id']);
-        if ($form->isValid($params)) {
-            $result = $bl->generateSmartBlock($params['data']);
-            try {
+        
+        //make sure block exists
+        try {
+            $bl = new Application_Model_Block($params['obj_id']);
+            
+            $form = new Application_Form_SmartBlockCriteria();
+            $form->startForm($params['obj_id']);
+            if ($form->isValid($params)) {
+                $result = $bl->generateSmartBlock($params['data']);
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true))));
-            } catch (PlaylistNotFoundException $e) {
-                $this->playlistNotFound('block');
-            } catch (Exception $e) {
-                $this->playlistUnknownError($e);
+            } else {
+                $this->view->obj = $bl;
+                $this->view->id = $bl->getId();
+                $this->view->form = $form;
+                $viewPath = 'playlist/smart-block.phtml';
+                $result['html'] = $this->view->render($viewPath);
+                $result['result'] = 1;
+                die(json_encode($result));
             }
-        } else {
-            $this->view->obj = $bl;
-            $this->view->id = $bl->getId();
-            $this->view->form = $form;
-            $viewPath = 'playlist/smart-block.phtml';
-            $result['html'] = $this->view->render($viewPath);
-            $result['result'] = 1;
-            die(json_encode($result));
+        } catch (BlockNotFoundException $e) {
+            $this->playlistNotFound('block', true);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
         }
     }
 
@@ -502,17 +520,19 @@ class PlaylistController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $params = $request->getPost();
-        $bl = new Application_Model_Block($params['obj_id']);
-        $result = $bl->shuffleSmartBlock();
-
-        if ($result['result'] == 0) {
-            try {
+        try {
+            $bl = new Application_Model_Block($params['obj_id']);
+            $result = $bl->shuffleSmartBlock();
+    
+            if ($result['result'] == 0) {
                 die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
-            } catch (PlaylistNotFoundException $e) {
-                $this->playlistNotFound('block');
+            } else {
+                die(json_encode($result));
             }
-        } else {
-            die(json_encode($result));
+        } catch (BlockNotFoundException $e) {
+            $this->playlistNotFound('block', true);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
         }
     }
 

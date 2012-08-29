@@ -18,8 +18,11 @@ class Application_Form_RegisterAirtime extends Zend_Form
         }
 
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/register-dialog.phtml', 'privacyChecked'=>$privacyChecked)),
-            array('File', array('viewScript' => 'form/register-dialog.phtml', 'placement' => false)))
+            array('ViewScript', array('viewScript' =>
+            'form/register-dialog.phtml', 'privacyChecked'=>$privacyChecked)),
+
+            array('File', array('viewScript' => 'form/register-dialog.phtml',
+            'placement' => false)))
         );
 
         // Station Name
@@ -36,7 +39,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
             'label'      => 'Phone:',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetPhone(),
+            'value'      => Application_Model_Preference::GetPhone(),
             'decorators' => array(
                 'ViewHelper'
             )
@@ -48,7 +51,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
             'label'      => 'Email:',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetEmail(),
+            'value'      => Application_Model_Preference::GetEmail(),
             'decorators' => array(
                 'ViewHelper'
             )
@@ -68,10 +71,10 @@ class Application_Form_RegisterAirtime extends Zend_Form
         // county list dropdown
         $this->addElement('select', 'Country', array(
             'label'        => 'Country:',
-            'required'    => false,
+            'required'     => false,
             'value'        => Application_Model_Preference::GetStationCountry(),
-            'multiOptions'    => $country_list,
-            'decorators' => array(
+            'multiOptions' => $country_list,
+            'decorators'   => array(
                 'ViewHelper'
             )
         ));
@@ -128,13 +131,13 @@ class Application_Form_RegisterAirtime extends Zend_Form
 
         // text area for sending detail
         $this->addElement('textarea', 'SendInfo', array(
-            'class'        => 'sending_textarea',
+            'class'      => 'sending_textarea',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'readonly'    => true,
-            'rows'        => 5,
-            'cols'     => 61,
-            'value' => Application_Model_Preference::GetSystemInfo(false, true),
+            'readonly'   => true,
+            'rows'       => 5,
+            'cols'       => 61,
+            'value'  => Application_Model_Preference::GetSystemInfo(false, true),
             'decorators' => array(
                 'ViewHelper'
             )

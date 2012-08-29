@@ -141,7 +141,11 @@ var AIRTIME = (function(AIRTIME){
 			    if (aMediaIds.length > 0) {
                     AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
 			    } else {
-			        alert('You can only add tracks to smart blocks.');
+			        if ($('#obj_type').val() == 'block') {
+			            alert('You can only add tracks to smart blocks.');
+			        } else if ($('#obj_type').val() == 'playlist') {
+			            alert('You can only add tracks and smart blocks to playlists.');
+			        }
 			    }
 			});
 		
