@@ -45,10 +45,10 @@ class Application_Form_Login extends Zend_Form
         ));
 
         $recaptchaNeeded = false;
-        if(Application_Model_LoginAttempts::getAttempts($_SERVER['REMOTE_ADDR']) >= 3){
+        if (Application_Model_LoginAttempts::getAttempts($_SERVER['REMOTE_ADDR']) >= 3) {
             $recaptchaNeeded = true;
         }
-        if($recaptchaNeeded){
+        if ($recaptchaNeeded) {
             // recaptcha
             $this->addRecaptcha();
         }
@@ -65,7 +65,8 @@ class Application_Form_Login extends Zend_Form
 
     }
 
-    public function addRecaptcha(){
+    public function addRecaptcha()
+    {
         $pubKey = '6Ld4JsISAAAAAIxUKT4IjjOGi3DHqdoH2zk6WkYG';
         $privKey = '6Ld4JsISAAAAAJynYlXdrE4hfTReTSxYFe5szdyv';
 
@@ -84,6 +85,4 @@ class Application_Form_Login extends Zend_Form
         $this->addElement($captcha);
     }
 
-
 }
-

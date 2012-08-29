@@ -9,7 +9,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/add-show-rebroadcast-absolute.phtml'))
         ));
 
-        for($i=1; $i<=10; $i++) {
+        for ($i=1; $i<=10; $i++) {
 
             $text = new Zend_Form_Element_Text("add_show_rebroadcast_date_absolute_$i");
             $text->setAttrib('class', 'input_text');
@@ -30,43 +30,41 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
         }
     }
 
-    public function disable(){
+    public function disable()
+    {
         $elements = $this->getElements();
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 
-    public function checkReliantFields($formData) {
-
+    public function checkReliantFields($formData)
+    {
         $noError = true;
 
-        for($i=1; $i<=10; $i++) {
+        for ($i=1; $i<=10; $i++) {
 
             $valid = true;
             $day = $formData['add_show_rebroadcast_date_absolute_'.$i];
             $time = $formData['add_show_rebroadcast_time_absolute_'.$i];
 
-            if(trim($day) == "" && trim($time) == "") {
+            if (trim($day) == "" && trim($time) == "") {
                 continue;
             }
 
-            if (trim($day) == ""){
+            if (trim($day) == "") {
                 $this->getElement('add_show_rebroadcast_date_absolute_'.$i)->setErrors(array("Day must be specified"));
                 $valid = false;
             }
 
-
-            if (trim($time) == ""){
+            if (trim($time) == "") {
                 $this->getElement('add_show_rebroadcast_time_absolute_'.$i)->setErrors(array("Time must be specified"));
                 $valid = false;
             }
 
-            if($valid === false) {
+            if ($valid === false) {
                 $noError = false;
                 continue;
             }
@@ -84,7 +82,7 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
             $rebroad_start = $day." ".$formData['add_show_rebroadcast_time_absolute_'.$i];
             $rebroad_start = new DateTime($rebroad_start);
 
-            if($rebroad_start < $show_end) {
+            if ($rebroad_start < $show_end) {
                 $this->getElement('add_show_rebroadcast_time_absolute_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
                 $valid = false;
                 $noError = false;
@@ -94,4 +92,3 @@ class Application_Form_AddShowAbsoluteRebroadcastDates extends Zend_Form_SubForm
         return $noError;
     }
 }
-

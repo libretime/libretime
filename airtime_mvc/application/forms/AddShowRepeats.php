@@ -56,28 +56,28 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         ));
     }
 
-    public function disable(){
+    public function disable()
+    {
         $elements = $this->getElements();
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 
-    public function checkReliantFields($formData) {
-
-        if (!$formData['add_show_no_end']){
+    public function checkReliantFields($formData)
+    {
+        if (!$formData['add_show_no_end']) {
             $start_timestamp = $formData['add_show_start_date'];
             $end_timestamp = $formData['add_show_end_date'];
 
             $start_epoch = strtotime($start_timestamp);
             $end_epoch = strtotime($end_timestamp);
 
-            if($end_epoch < $start_epoch) {
+            if ($end_epoch < $start_epoch) {
                 $this->getElement('add_show_end_date')->setErrors(array('End date must be after start date'));
+
                 return false;
             }
         }
@@ -86,4 +86,3 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
     }
 
 }
-

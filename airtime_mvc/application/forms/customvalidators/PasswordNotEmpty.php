@@ -1,6 +1,7 @@
 <?php
 
-class PasswordNotEmpty extends ConditionalNotEmpty {
+class PasswordNotEmpty extends ConditionalNotEmpty
+{
     public function isValid($value, $context = null)
     {
         $result = parent::isValid($value, $context);
@@ -11,8 +12,7 @@ class PasswordNotEmpty extends ConditionalNotEmpty {
                 return true;
             }
         }
+
         return $result;
     }
 }
-
-?>

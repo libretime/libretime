@@ -29,7 +29,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "utime" => "Uploaded",
             "year" => "Year"
     );
-    
+
     private $criteriaTypes = array(
             0 => "",
             "album_title" => "s",
@@ -58,7 +58,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "track_number" => "n",
             "year" => "n"
     );
-    
+
     private $stringCriteriaOptions = array(
             "0" => "Select modifier",
             "contains" => "contains",
@@ -68,7 +68,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "starts with" => "starts with",
             "ends with" => "ends with"
     );
-    
+
     private $numericCriteriaOptions = array(
             "0" => "Select modifier",
             "is" => "is",
@@ -77,17 +77,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "is less than" => "is less than",
             "is in the range" => "is in the range"
     );
-    
+
     private $limitOptions = array(
             "hours" => "hours",
             "minutes" => "minutes",
             "items" => "items"
     );
-    
-    public function init(){
-        
+
+    public function init()
+    {
     }
-    
+
     public function startForm($p_blockId, $p_isValid = false)
     {
         // load type
@@ -97,8 +97,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         } else {
             $blockType = 1;
         }
-        
-        
+
         $spType = new Zend_Form_Element_Radio('sp_type');
         $spType->setLabel('Set smart block type:')
                ->setDecorators(array('viewHelper'))
@@ -108,7 +107,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 ))
                ->setValue($blockType);
         $this->addElement($spType);
-        
+
         $bl = new Application_Model_Block($p_blockId);
         $storedCrit = $bl->getCriteria();
 
@@ -117,12 +116,12 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
          * We need to know this so we display the form elements properly
          */
         $modRowMap = array();
-        
+
         $openSmartBlockOption = false;
         if (!empty($storedCrit)) {
             $openSmartBlockOption = true;
         }
-        
+
         $criteriaKeys = array();
         if (isset($storedCrit["crit"])) {
             $criteriaKeys = array_keys($storedCrit["crit"]);
@@ -130,15 +129,15 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $numElements = count($this->criteriaOptions);
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
-            
+
             if (isset($criteriaKeys[$i])) {
                 $critCount = count($storedCrit["crit"][$criteriaKeys[$i]]);
             } else {
                 $critCount = 1;
             }
-            
+
             $modRowMap[$i] = $critCount;
-            
+
             /* Loop through all criteria with the same field
              * Ex: all criteria for 'Album'
              */
@@ -149,7 +148,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 } else {
                     $invisible = '';
                 }
-                
+
                 $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$i."_".$j);
                 $criteria->setAttrib('class', 'input_select sp_input_select'.$invisible)
                          ->setValue('Select criteria')
@@ -158,13 +157,13 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 if ($i != 0 && !isset($criteriaKeys[$i])) {
                     $criteria->setAttrib('disabled', 'disabled');
                 }
-                
+
                 if (isset($criteriaKeys[$i])) {
                     $criteriaType = $this->criteriaTypes[$storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]];
                     $criteria->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["criteria"]);
                 }
                 $this->addElement($criteria);
-                
+
                 /****************** MODIFIER ***********/
                 $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$i."_".$j);
                 $criteriaModifers->setValue('Select modifier')
@@ -174,29 +173,29 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $criteriaModifers->setAttrib('disabled', 'disabled');
                 }
                 if (isset($criteriaKeys[$i])) {
-                    if($criteriaType == "s"){
+                    if ($criteriaType == "s") {
                         $criteriaModifers->setMultiOptions($this->stringCriteriaOptions);
-                    }else{
+                    } else {
                         $criteriaModifers->setMultiOptions($this->numericCriteriaOptions);
                     }
                     $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
-                }else{
+                } else {
                     $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
                 }
                 $this->addElement($criteriaModifers);
-                
+
                 /****************** VALUE ***********/
                 $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$i."_".$j);
                 $criteriaValue->setAttrib('class', 'input_text sp_input_text')
                               ->setDecorators(array('viewHelper'));
-                if ($i != 0 && !isset($criteriaKeys[$i])){
+                if ($i != 0 && !isset($criteriaKeys[$i])) {
                     $criteriaValue->setAttrib('disabled', 'disabled');
                 }
                 if (isset($criteriaKeys[$i])) {
                     $criteriaValue->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["value"]);
                 }
                 $this->addElement($criteriaValue);
-                
+
                 /****************** EXTRA ***********/
                 $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$i."_".$j);
                 $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
@@ -204,15 +203,15 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 if (isset($criteriaKeys[$i]) && isset($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"])) {
                     $criteriaExtra->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["extra"]);
                     $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
-                }else{
+                } else {
                     $criteriaExtra->setAttrib('disabled', 'disabled');
                 }
                 $this->addElement($criteriaExtra);
-                    
+
             }//for
-            
+
         }//for
-        
+
         $limit = new Zend_Form_Element_Select('sp_limit_options');
         $limit->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
@@ -221,7 +220,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $limit->setValue($storedCrit["limit"]["modifier"]);
         }
         $this->addElement($limit);
-        
+
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
         $limitValue->setAttrib('class', 'sp_input_text_limit')
                    ->setLabel('Limit to')
@@ -233,7 +232,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             // setting default to 1 hour
             $limitValue->setValue(1);
         }
-        
+
         //getting block content candidate count that meets criteria
         $bl = new Application_Model_Block($p_blockId);
         if ($p_isValid) {
@@ -243,7 +242,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $files = null;
             $showPoolCount = false;
         }
-        
+
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'ui-button ui-state-default sp-button');
         $generate->setAttrib('title', 'Generate playlist content and save criteria');
@@ -251,7 +250,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $generate->setLabel('Generate');
         $generate->setDecorators(array('viewHelper'));
         $this->addElement($generate);
-        
+
         $shuffle = new Zend_Form_Element_Button('shuffle_button');
         $shuffle->setAttrib('class', 'ui-button ui-state-default sp-button');
         $shuffle->setAttrib('title', 'Shuffle playlist content');
@@ -266,77 +265,78 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         'showPoolCount' => $showPoolCount))
         ));
     }
-    
-    function preValidation($params) {
+
+    public function preValidation($params)
+    {
         $data = Application_Model_Block::organizeSmartPlyalistCriteria($params['data']);
         // add elelments that needs to be added
         // set multioption for modifier according to creiteria_field
         $modRowMap = array();
         foreach ($data['criteria'] as $critKey=>$d) {
             $count = 1;
-            foreach($d as $modKey=>$modInfo) {
+            foreach ($d as $modKey=>$modInfo) {
                 if ($modKey == 0) {
                     $eleCrit = $this->getElement("sp_criteria_field_".$critKey."_".$modKey);
                     $eleCrit->setValue($this->criteriaOptions[$modInfo['sp_criteria_field']]);
                     $eleCrit->setAttrib("disabled", null);
-                    
+
                     $eleMod = $this->getElement("sp_criteria_modifier_".$critKey."_".$modKey);
                     $criteriaType = $this->criteriaTypes[$modInfo['sp_criteria_field']];
                     if ($criteriaType == "s") {
                         $eleMod->setMultiOptions($this->stringCriteriaOptions);
-                    } else if ($criteriaType == "n") {
+                    } elseif ($criteriaType == "n") {
                         $eleMod->setMultiOptions($this->numericCriteriaOptions);
                     } else {
                         $eleMod->setMultiOptions(array('0' => 'Select modifier'));
                     }
                     $eleMod->setValue($modInfo['sp_criteria_modifier']);
                     $eleMod->setAttrib("disabled", null);
-                    
+
                     $eleValue = $this->getElement("sp_criteria_value_".$critKey."_".$modKey);
                     $eleValue->setValue($modInfo['sp_criteria_value']);
                     $eleValue->setAttrib("disabled", null);
-                    
+
                     if (isset($modInfo['sp_criteria_extra'])) {
                         $eleExtra = $this->getElement("sp_criteria_extra_".$critKey."_".$modKey);
                         $eleExtra->setValue($modInfo['sp_criteria_extra']);
                         $eleValue->setAttrib('class', 'input_text sp_extra_input_text');
                         $eleExtra->setAttrib("disabled", null);
                     }
-                    
+
                 } else {
                     $criteria = new Zend_Form_Element_Select("sp_criteria_field_".$critKey."_".$modKey);
                     $criteria->setAttrib('class', 'input_select sp_input_select sp-invisible')
                     ->setValue('Select criteria')
                     ->setDecorators(array('viewHelper'))
                     ->setMultiOptions($this->criteriaOptions);
-                    
+
                     $criteriaType = $this->criteriaTypes[$modInfo['sp_criteria_field']];
                     $criteria->setValue($this->criteriaOptions[$modInfo['sp_criteria_field']]);
                     $this->addElement($criteria);
-                    
+
                     /****************** MODIFIER ***********/
                     $criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_".$critKey."_".$modKey);
                     $criteriaModifers->setValue('Select modifier')
                     ->setAttrib('class', 'input_select sp_input_select')
                     ->setDecorators(array('viewHelper'));
-                    
+
                     if ($criteriaType == "s") {
                         $criteriaModifers->setMultiOptions($this->stringCriteriaOptions);
-                    } else if ($criteriaType == "n") {
+                    } elseif ($criteriaType == "n") {
                         $criteriaModifers->setMultiOptions($this->numericCriteriaOptions);
                     } else {
                         $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
                     }
                     $criteriaModifers->setValue($modInfo['sp_criteria_modifier']);
                     $this->addElement($criteriaModifers);
-                    
+
                     /****************** VALUE ***********/
                     $criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_".$critKey."_".$modKey);
                     $criteriaValue->setAttrib('class', 'input_text sp_input_text')
                     ->setDecorators(array('viewHelper'));
                     $criteriaValue->setValue($modInfo['sp_criteria_value']);
                     $this->addElement($criteriaValue);
-                    
+
                     /****************** EXTRA ***********/
                     $criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_".$critKey."_".$modKey);
                     $criteriaExtra->setAttrib('class', 'input_text sp_extra_input_text')
@@ -344,7 +344,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     if (isset($modInfo['sp_criteria_extra'])) {
                         $criteriaExtra->setValue($modInfo['sp_criteria_extra']);
                         $criteriaValue->setAttrib('class', 'input_text sp_extra_input_text');
-                    }else{
+                    } else {
                         $criteriaExtra->setAttrib('disabled', 'disabled');
                     }
                     $this->addElement($criteriaExtra);
@@ -353,25 +353,27 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             }
             $modRowMap[$critKey] = $count;
         }
-        
+
         $decorator = $this->getDecorator("ViewScript");
         $existingModRow = $decorator->getOption("modRowMap");
         foreach ($modRowMap as $key=>$v) {
             $existingModRow[$key] = $v;
         }
         $decorator->setOption("modRowMap", $existingModRow);
-        
+
         // reconstruct the params['criteria'] so we can populate the form
         $formData = array();
         foreach ($params['data'] as $ele) {
             $formData[$ele['name']] = $ele['value'];
         }
-        
+
         $this->populate($formData);
+
         return $data;
     }
-    
-    function isValid($params){
+
+    public function isValid($params)
+    {
         $isValid = true;
         $data = $this->preValidation($params);
         $criteria2PeerMap = array(
@@ -402,7 +404,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "track_number" => "DbTrackNumber",
                 "year" => "DbYear"
         );
-        
+
         // things we need to check
         // 1. limit value shouldn't be empty and has upperbound of 24 hrs
         // 2. sp_criteria or sp_criteria_modifier shouldn't be 0
@@ -411,7 +413,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $result = 0;
         $errors = array();
         $error = array();
-        
+
         // validation start
         if ($data['etc']['sp_limit_options'] == 'hours') {
             $multiplier = 60;
@@ -433,24 +435,24 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
                 $element->addError("Limit cannot be empty or smaller than 0");
                 $isValid = false;
-            } else if (!ctype_digit($data['etc']['sp_limit_value'])) {
+            } elseif (!ctype_digit($data['etc']['sp_limit_value'])) {
                 $element->addError("The value should be an integer");
                 $isValid = false;
-            } else if (intval($data['etc']['sp_limit_value']) > 500) {
+            } elseif (intval($data['etc']['sp_limit_value']) > 500) {
                 $element->addError("500 is the max item limit value you can set");
                 $isValid = false;
             }
         }
-        
+
         $criteriaFieldsUsed = array();
-        
+
         if (isset($data['criteria'])) {
             foreach ($data['criteria'] as $rowKey=>$row) {
-                foreach ($row as $key=>$d){
+                foreach ($row as $key=>$d) {
                     $element = $this->getElement("sp_criteria_field_".$rowKey."_".$key);
                     $error = array();
                     // check for not selected select box
-                    if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0"){
+                    if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0") {
                         $element->addError("You must select Criteria and Modifier");
                         $isValid = false;
                     } else {
@@ -461,7 +463,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $element->addError("'Length' should be in '00:00:00' format");
                                 $isValid = false;
                             }
-                        } else if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                        } elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                             if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
                                 $element->addError("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00");
                                 $isValid = false;
@@ -473,7 +475,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                     $isValid = false;
                                 }
                             }
-        
+
                             if (isset($d['sp_criteria_extra'])) {
                                 if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
                                     $element->addError("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00");
@@ -487,7 +489,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                     }
                                 }
                             }
-                        } else if ($column->getType() == PropelColumnTypes::INTEGER) {
+                        } elseif ($column->getType() == PropelColumnTypes::INTEGER) {
                             if (!is_numeric($d['sp_criteria_value'])) {
                                 $element->addError("The value has to be numeric");
                                 $isValid = false;
@@ -497,14 +499,14 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $element->addError("The value should be less then 2147483648");
                                 $isValid = false;
                             }
-                        } else if ($column->getType() == PropelColumnTypes::VARCHAR) {
+                        } elseif ($column->getType() == PropelColumnTypes::VARCHAR) {
                             if (strlen($d['sp_criteria_value']) > $column->getSize()) {
                                 $element->addError("The value should be less ".$column->getSize()." characters");
                                 $isValid = false;
                             }
                         }
                     }
-        
+
                     if ($d['sp_criteria_value'] == "") {
                         $element->addError("Value cannot be empty");
                         $isValid = false;
@@ -512,6 +514,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 }//end foreach
             }//for loop
         }//if
+
         return $isValid;
     }
 }

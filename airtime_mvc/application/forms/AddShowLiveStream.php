@@ -44,7 +44,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
         $this->addElement($custom_password);
 
         $connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
-        if(trim($connection_url) == ""){
+        if (trim($connection_url) == "") {
             $connection_url = "N/A";
         }
 
@@ -53,21 +53,23 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
         ));
     }
 
-    public function isValid($data){
+    public function isValid($data)
+    {
         $isValid = parent::isValid($data);
 
-        if($data['cb_custom_auth'] == 1){
-            if(trim($data['custom_username']) == ''){
+        if ($data['cb_custom_auth'] == 1) {
+            if (trim($data['custom_username']) == '') {
                 $element = $this->getElement("custom_username");
                 $element->addError("Username field cannot be empty.");
                 $isValid = false;
             }
-            if(trim($data['custom_password']) == ''){
+            if (trim($data['custom_password']) == '') {
                 $element = $this->getElement("custom_password");
                 $element->addError("Password field cannot be empty.");
                 $isValid = false;
             }
         }
+
         return $isValid;
     }
 }

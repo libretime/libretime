@@ -11,7 +11,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
-        if($defaultFade == ""){
+        if ($defaultFade == "") {
             $defaultFade = '00.000000';
         }
 
@@ -50,9 +50,9 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($master_username);
 
         //Master password
-        if($isDemo){
+        if ($isDemo) {
                 $master_password = new Zend_Form_Element_Text('master_password');
-        }else{
+        } else {
                 $master_password = new Zend_Form_Element_Password('master_password');
                 $master_password->setAttrib('renderPassword','true');
         }
@@ -121,19 +121,18 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $this->addElement($live_dj_mount);
         }
         // demo only code
-        if(!$isStreamConfigable){
+        if (!$isStreamConfigable) {
             $elements = $this->getElements();
-            foreach ($elements as $element)
-            {
-                if ($element->getType() != 'Zend_Form_Element_Hidden')
-                {
+            foreach ($elements as $element) {
+                if ($element->getType() != 'Zend_Form_Element_Hidden') {
                     $element->setAttrib("disabled", "disabled");
                 }
             }
         }
     }
 
-    public function updateVariables(){
+    public function updateVariables()
+    {
         global $CC_CONFIG;
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
@@ -146,50 +145,52 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         ));
     }
 
-    public function isValid($data){
+    public function isValid($data)
+    {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $isValid = parent::isValid($data);
         if (!$isSaas) {
             $master_harbor_input_port = $data['master_harbor_input_port'];
             $dj_harbor_input_port = $data['dj_harbor_input_port'];
 
-            if($master_harbor_input_port == $dj_harbor_input_port && $master_harbor_input_port != ""){
+            if ($master_harbor_input_port == $dj_harbor_input_port && $master_harbor_input_port != "") {
                 $element = $this->getElement("dj_harbor_input_port");
                 $element->addError("You cannot use same port as Master DJ port.");
             }
-            if($master_harbor_input_port != ""){
-                if(is_numeric($master_harbor_input_port)){
-                    if($master_harbor_input_port != Application_Model_StreamSetting::getMasterLiveStreamPort()){
+            if ($master_harbor_input_port != "") {
+                if (is_numeric($master_harbor_input_port)) {
+                    if ($master_harbor_input_port != Application_Model_StreamSetting::getMasterLiveStreamPort()) {
                         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
                         $res = socket_bind($sock, 0, $master_harbor_input_port);
-                        if(!$res){
+                        if (!$res) {
                             $element = $this->getElement("master_harbor_input_port");
                             $element->addError("Port '$master_harbor_input_port' is not available.");
                             $isValid = false;
                         }
                         socket_close($sock);
                     }
-                }else{
+                } else {
                     $isValid = false;
                 }
             }
-            if($dj_harbor_input_port != ""){
-                if(is_numeric($dj_harbor_input_port)){
-                    if($dj_harbor_input_port != Application_Model_StreamSetting::getDjLiveStreamPort()){
+            if ($dj_harbor_input_port != "") {
+                if (is_numeric($dj_harbor_input_port)) {
+                    if ($dj_harbor_input_port != Application_Model_StreamSetting::getDjLiveStreamPort()) {
                         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
                         $res = socket_bind($sock, 0, $dj_harbor_input_port);
-                        if(!$res){
+                        if (!$res) {
                             $element = $this->getElement("dj_harbor_input_port");
                             $element->addError("Port '$dj_harbor_input_port' is not available.");
                             $isValid = false;
                         }
                         socket_close($sock);
                     }
-                }else{
+                } else {
                     $isValid = false;
                 }
             }
         }
+
         return $isValid;
     }
 

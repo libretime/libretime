@@ -109,7 +109,7 @@ class Application_Form_SupportSettings extends Zend_Form
         $upload->setAttrib('accept', 'image/*');
         $this->addElement($upload);
 
-        if(!$isSass){
+        if (!$isSass) {
             //enable support feedback
             $this->addElement('checkbox', 'SupportFeedback', array(
                 'label'      => 'Send support feedback',
@@ -126,7 +126,7 @@ class Application_Form_SupportSettings extends Zend_Form
                               ->setRequired(false)
                               ->setDecorators(array('ViewHelper'))
                               ->setValue(Application_Model_Preference::GetPublicise());
-            if(Application_Model_Preference::GetSupportFeedback() == '0'){
+            if (Application_Model_Preference::GetSupportFeedback() == '0') {
                 $checkboxPublicise->setAttrib("disabled", "disabled");
             }
             $this->addElement($checkboxPublicise);
@@ -165,19 +165,19 @@ class Application_Form_SupportSettings extends Zend_Form
     public function isValid ($data)
     {
         $isValid = parent::isValid($data);
-        if(!$this->isSass){
-            if($data['Publicise'] != 1){
+        if (!$this->isSass) {
+            if ($data['Publicise'] != 1) {
                 $isValid = true;
             }
-            if(isset($data["Privacy"])){
+            if (isset($data["Privacy"])) {
                 $checkPrivacy = $this->getElement('Privacy');
-                if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
+                if ($data["SupportFeedback"] == "1" && $data["Privacy"] != "1") {
                     $checkPrivacy->addError("You have to agree to privacy policy.");
                     $isValid = false;
                 }
             }
         }
+
         return $isValid;
     }
 }
-

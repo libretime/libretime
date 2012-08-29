@@ -13,7 +13,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
         $country_list = Application_Model_Preference::GetCountryList();
 
         $privacyChecked = false;
-        if(Application_Model_Preference::GetPrivacyPolicyCheck() == 1){
+        if (Application_Model_Preference::GetPrivacyPolicyCheck() == 1) {
             $privacyChecked = true;
         }
 
@@ -151,17 +151,17 @@ class Application_Form_RegisterAirtime extends Zend_Form
     public function isValid ($data)
     {
         $isValid = parent::isValid($data);
-        if($data['Publicise'] != 1){
+        if ($data['Publicise'] != 1) {
             $isValid = true;
         }
-        if(isset($data["Privacy"])){
+        if (isset($data["Privacy"])) {
             $checkPrivacy = $this->getElement('Privacy');
-            if($data["SupportFeedback"] == "1" && $data["Privacy"] != "1"){
+            if ($data["SupportFeedback"] == "1" && $data["Privacy"] != "1") {
                 $checkPrivacy->addError("You have to agree to privacy policy.");
                 $isValid = false;
             }
         }
+
         return $isValid;
     }
 }
-

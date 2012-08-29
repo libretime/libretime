@@ -24,7 +24,6 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
             array('stringLength', false, array(6, 6))
         ));
 
-
     // Add show color input
         $this->addElement('text', 'add_show_color', array(
             'label'      => 'Text Colour:',
@@ -45,16 +44,14 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         ));
     }
 
-    public function disable(){
+    public function disable()
+    {
         $elements = $this->getElements();
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 
 }
-

@@ -92,13 +92,14 @@ class Application_Form_AddUser extends Zend_Form
         $this->addElement($submit);
     }
 
-    public function validateLogin($data){
-
-        if (strlen($data['user_id']) == 0){
+    public function validateLogin($data)
+    {
+        if (strlen($data['user_id']) == 0) {
             $count = CcSubjsQuery::create()->filterByDbLogin($data['login'])->count();
 
-            if ($count != 0){
+            if ($count != 0) {
                 $this->getElement('login')->setErrors(array("Login name is not unique."));
+
                 return false;
             }
         }
@@ -106,4 +107,3 @@ class Application_Form_AddUser extends Zend_Form
         return true;
     }
 }
-

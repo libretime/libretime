@@ -66,15 +66,13 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
     }
 
-    public function disable(){
+    public function disable()
+    {
         $elements = $this->getElements();
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 }
-

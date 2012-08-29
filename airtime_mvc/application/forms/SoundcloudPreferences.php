@@ -149,6 +149,4 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $this->addElement($select);
     }
 
-
 }
-

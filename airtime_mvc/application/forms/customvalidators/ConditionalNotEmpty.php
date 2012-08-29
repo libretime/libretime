@@ -3,8 +3,8 @@
 /**
  * Check if a field is empty but only when specific fields have specific values
  */
-class ConditionalNotEmpty extends Zend_Validate_Abstract {
-
+class ConditionalNotEmpty extends Zend_Validate_Abstract
+{
     const KEY_IS_EMPTY   = 'keyIsEmpty';
 
     protected $_messageTemplates = array(
@@ -32,8 +32,8 @@ class ConditionalNotEmpty extends Zend_Validate_Abstract {
      * this function returns true if the expected values doesn't match the actual user input,
      * or if $value is not empty. Returns false otherwise.
      *
-     * @param String $value - this field's value
-     * @param array $context - names and values of the rest of the fields in this form
+     * @param  String  $value   - this field's value
+     * @param  array   $context - names and values of the rest of the fields in this form
      * @return boolean - true if valid; false otherwise
      */
     public function isValid($value, $context = null)
@@ -43,7 +43,7 @@ class ConditionalNotEmpty extends Zend_Validate_Abstract {
         }
 
         if (is_array($context)) {
-            foreach($this->_fieldValues as $fieldName=>$fieldValue) {
+            foreach ($this->_fieldValues as $fieldName=>$fieldValue) {
                 if (!isset($context[$fieldName]) || $context[$fieldName] != $fieldValue) {
                     return true;
                 }
@@ -55,8 +55,7 @@ class ConditionalNotEmpty extends Zend_Validate_Abstract {
         }
 
         $this->_error(self::KEY_IS_EMPTY);
+
         return false;
     }
 }
-
-?>

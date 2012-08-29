@@ -20,7 +20,7 @@ class Application_Form_PasswordRestore extends Zend_Form
                 'ViewHelper'
             )
         ));
-        
+
         $this->addElement('text', 'username', array(
             'label' => 'Username',
             'required' => false,

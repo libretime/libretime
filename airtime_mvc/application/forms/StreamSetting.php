@@ -9,19 +9,21 @@ class Application_Form_StreamSetting extends Zend_Form
 
     }
 
-    public function setSetting($setting){
+    public function setSetting($setting)
+    {
         $this->setting = $setting;
     }
 
-    public function startFrom() {
+    public function startFrom()
+    {
         $setting = $this->setting;
-        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+        if (Application_Model_Preference::GetPlanLevel() == 'disabled') {
             $output_sound_device = new Zend_Form_Element_Checkbox('output_sound_device');
             $output_sound_device->setLabel('Hardware Audio Output')
                                 ->setRequired(false)
                                 ->setValue(($setting['output_sound_device'] == "true")?1:0)
                                 ->setDecorators(array('ViewHelper'));
-            if (Application_Model_Preference::GetEnableStreamConf() == "false"){
+            if (Application_Model_Preference::GetEnableStreamConf() == "false") {
                 $output_sound_device->setAttrib("readonly", true);
             }
             $this->addElement($output_sound_device);
@@ -32,7 +34,7 @@ class Application_Form_StreamSetting extends Zend_Form
                     ->setMultiOptions($output_types)
                     ->setValue($setting['output_sound_device_type'])
                     ->setDecorators(array('ViewHelper'));
-            if($setting['output_sound_device'] != "true"){
+            if ($setting['output_sound_device'] != "true") {
                 $output_type->setAttrib("disabled", "disabled");
             }
             $this->addElement($output_type);
@@ -43,7 +45,7 @@ class Application_Form_StreamSetting extends Zend_Form
                                 ->setRequired(false)
                                 ->setValue(($setting['icecast_vorbis_metadata'] == "true")?1:0)
                                 ->setDecorators(array('ViewHelper'));
-        if (Application_Model_Preference::GetEnableStreamConf() == "false"){
+        if (Application_Model_Preference::GetEnableStreamConf() == "false") {
             $icecast_vorbis_metadata->setAttrib("readonly", true);
         }
         $this->addElement($icecast_vorbis_metadata);
@@ -58,18 +60,20 @@ class Application_Form_StreamSetting extends Zend_Form
         $this->addElement($stream_format);
     }
 
-    public function isValid($data){
-        if(isset($data['output_sound_device'])){
+    public function isValid($data)
+    {
+        if (isset($data['output_sound_device'])) {
             $d = array();
             $d["output_sound_device"] = $data['output_sound_device'];
             $d["icecast_vorbis_metadata"] = $data['icecast_vorbis_metadata'];
-            if(isset($data['output_sound_device_type'])){
+            if (isset($data['output_sound_device_type'])) {
                 $d["output_sound_device_type"] = $data['output_sound_device_type'];
             }
             $d["streamFormat"] = $data['streamFormat'];
             $this->populate($d);
         }
         $isValid = parent::isValid($data);
+
         return $isValid;
     }
 }

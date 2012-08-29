@@ -83,7 +83,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
-    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null) {
+    public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null)
+    {
         $valid = true;
 
         $hours;
@@ -96,14 +97,14 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $nowDateTime = new DateTime();
         $showStartDateTime = new DateTime($start_time);
         $showEndDateTime = new DateTime($end_time);
-        if ($validateStartDate){
-            if($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+        if ($validateStartDate) {
+            if ($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
                 $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
                 $valid = false;
             }
             // if edit action, check if original show start time is in the past. CC-3864
-            if($originalStartDate){
-                if($originalStartDate->getTimestamp() < $nowDateTime->getTimestamp()) {
+            if ($originalStartDate) {
+                if ($originalStartDate->getTimestamp() < $nowDateTime->getTimestamp()) {
                     $this->getElement('add_show_start_time')->setValue($originalStartDate->format("H:i"));
                     $this->getElement('add_show_start_date')->setValue($originalStartDate->format("Y-m-d"));
                     $this->getElement('add_show_start_time')->setErrors(array('Cannot modify start date/time of the show that is already started'));
@@ -114,7 +115,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }
 
         // if end time is in the past, return error
-        if($showEndDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+        if ($showEndDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
             $this->getElement('add_show_end_time')->setErrors(array('End date/time cannot be in the past'));
             $valid = false;
         }
@@ -124,20 +125,19 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         if (preg_match($pattern, $formData['add_show_duration'], $matches) && count($matches) == 3) {
             $hours = $matches[1];
             $minutes = $matches[2];
-            if( $formData["add_show_duration"] == "00h 00m" ) {
+            if ($formData["add_show_duration"] == "00h 00m") {
                 $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
                 $valid = false;
-            }elseif(strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
+            } elseif (strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
                 if ($hours > 24 || ($hours == 24 && $minutes > 0)) {
                     $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));
                     $valid = false;
                 }
-            }elseif( strstr($formData["add_show_duration"], '-') ){
+            } elseif ( strstr($formData["add_show_duration"], '-') ) {
                 $this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
                 $valid = false;
             }
-        }
-        else {
+        } else {
             $valid = false;
         }
 
@@ -188,11 +188,11 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                  */
                 if (!$overlapping) {
                     $startDow = date("w", $show_start->getTimestamp());
-                    foreach($formData["add_show_day_check"] as $day) {
+                    foreach ($formData["add_show_day_check"] as $day) {
                         $repeatShowStart = clone $show_start;
                         $repeatShowEnd = clone $show_end;
                         $daysAdd=0;
-                        if ($startDow !== $day){
+                        if ($startDow !== $day) {
                             if ($startDow > $day)
                                 $daysAdd = 6 - $startDow + 1 + $day;
                             else
@@ -263,34 +263,31 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         return $valid;
     }
 
-    public function disable(){
+    public function disable()
+    {
         $elements = $this->getElements();
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 
-    public function disableRepeatCheckbox(){
+    public function disableRepeatCheckbox()
+    {
         $element = $this->getElement('add_show_repeats');
-        if ($element->getType() != 'Zend_Form_Element_Hidden')
-        {
+        if ($element->getType() != 'Zend_Form_Element_Hidden') {
             $element->setAttrib('disabled','disabled');
         }
     }
 
-    public function disableStartDateAndTime(){
+    public function disableStartDateAndTime()
+    {
         $elements = array($this->getElement('add_show_start_date'), $this->getElement('add_show_start_time'));
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 }
-

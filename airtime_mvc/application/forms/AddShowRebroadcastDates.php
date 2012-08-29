@@ -11,11 +11,11 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
 
         $relativeDates = array();
         $relativeDates[""] = "";
-        for($i=0; $i<=30; $i++) {
+        for ($i=0; $i<=30; $i++) {
            $relativeDates["$i days"] = "+$i days";
         }
 
-        for($i=1; $i<=10; $i++) {
+        for ($i=1; $i<=10; $i++) {
 
             $select = new Zend_Form_Element_Select("add_show_rebroadcast_date_$i");
             $select->setAttrib('class', 'input_select');
@@ -35,43 +35,41 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
         }
     }
 
-    public function disable(){
+    public function disable()
+    {
         $elements = $this->getElements();
-        foreach ($elements as $element)
-        {
-            if ($element->getType() != 'Zend_Form_Element_Hidden')
-            {
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
         }
     }
 
-    public function checkReliantFields($formData) {
-
+    public function checkReliantFields($formData)
+    {
         $noError = true;
 
-        for($i=1; $i<=10; $i++) {
+        for ($i=1; $i<=10; $i++) {
 
             $valid = true;
             $days = $formData['add_show_rebroadcast_date_'.$i];
             $time = $formData['add_show_rebroadcast_time_'.$i];
 
-            if(trim($days) == "" && trim($time) == "") {
+            if (trim($days) == "" && trim($time) == "") {
                 continue;
             }
 
-            if (trim($days) == ""){
+            if (trim($days) == "") {
                 $this->getElement('add_show_rebroadcast_date_'.$i)->setErrors(array("Day must be specified"));
                 $valid = false;
             }
 
-
-            if (trim($time) == ""){
+            if (trim($time) == "") {
                 $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Time must be specified"));
                 $valid = false;
             }
 
-            if($valid === false) {
+            if ($valid === false) {
                 $noError = false;
                 continue;
             }
@@ -93,7 +91,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $rebroad_start = new DateTime($rebroad_start);
             $rebroad_start->add(new DateInterval("P".$day."D"));
 
-            if($rebroad_start < $show_end) {
+            if ($rebroad_start < $show_end) {
                 $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
                 $valid = false;
                 $noError = false;
@@ -103,4 +101,3 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
         return $noError;
     }
 }
-

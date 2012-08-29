@@ -41,13 +41,13 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
                 'viewHelper'
             )
         ));
-        
+
         $this->addElement('checkbox', 'msRequiresAuth', array(
             'label' => 'Requires Authentication',
             'required' => false,
             'value' => Application_Model_Preference::GetMailServerRequiresAuth(),
             'decorators' => array(
-            	'viewHelper'
+                'viewHelper'
             )
         ));
 
@@ -60,7 +60,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
             'allowEmpty' => false,
             'validators' => array(
                 new ConditionalNotEmpty(array(
-                	'configureMailServer' => '1'
+                    'configureMailServer' => '1'
                 ))
             )
         ));
@@ -74,7 +74,7 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
             'allowEmpty' => false,
             'validators' => array(
                 new ConditionalNotEmpty(array(
-                	'configureMailServer' => '1',
+                    'configureMailServer' => '1',
                     'msRequiresAuth' => '1'
                 ))
             )
@@ -89,8 +89,8 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
             'allowEmpty' => false,
             'validators' => array(
                 new ConditionalNotEmpty(array(
-                	'configureMailServer' => '1',
-                	'msRequiresAuth' => '1'
+                    'configureMailServer' => '1',
+                    'msRequiresAuth' => '1'
                 ))
             ),
             'renderPassword' => true
@@ -108,6 +108,4 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
 
     }
 
-
 }
-

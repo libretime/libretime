@@ -14,7 +14,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ));
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
-        if($defaultFade == ""){
+        if ($defaultFade == "") {
             $defaultFade = '0.500000';
         }
 
@@ -70,7 +70,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $this->addElement($week_start_day);
     }
 
-    private function getTimezones(){
+    private function getTimezones()
+    {
         $regions = array(
             'Africa' => DateTimeZone::AFRICA,
             'America' => DateTimeZone::AMERICA,
@@ -86,9 +87,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $tzlist = array();
 
-        foreach ($regions as $name => $mask){
+        foreach ($regions as $name => $mask) {
             $ids = DateTimeZone::listIdentifiers($mask);
-            foreach ($ids as $id){
+            foreach ($ids as $id) {
                 $tzlist[$id] = str_replace("_", " ", $id);
             }
         }
@@ -96,8 +97,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         return $tzlist;
     }
 
-
-    private function getWeekStartDays() {
+    private function getWeekStartDays()
+    {
         $days = array(
             'Sunday',
             'Monday',
@@ -107,7 +108,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'Friday',
             'Saturday'
         );
+
         return $days;
     }
 }
-
