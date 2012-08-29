@@ -271,10 +271,10 @@ class LibraryController extends Zend_Controller_Action
         $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
-        $files = array();
+        $files     = array();
         $playlists = array();
-        $blocks = array();
-        $streams = array();
+        $blocks    = array();
+        $streams   = array();
 
         $message = null;
 
