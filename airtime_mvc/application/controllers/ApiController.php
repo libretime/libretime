@@ -405,9 +405,9 @@ class ApiController extends Zend_Controller_Action
 
     public function uploadRecordedAction()
     {
-        $show_instance_id = $this->_getParam('showinstanceid');
-        $file_id = $this->_getParam('fileid');
-        $this->view->fileid = $file_id;
+        $show_instance_id           = $this->_getParam('showinstanceid');
+        $file_id                    = $this->_getParam('fileid');
+        $this->view->fileid         = $file_id;
         $this->view->showinstanceid = $show_instance_id;
         $this->uploadRecordedActionParam($show_instance_id, $file_id);
     }
