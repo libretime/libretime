@@ -509,8 +509,6 @@ class PlaylistController extends Zend_Controller_Action
             }
         } catch (BlockNotFoundException $e) {
             $this->playlistNotFound('block', true);
-        } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound('block');
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
@@ -531,8 +529,6 @@ class PlaylistController extends Zend_Controller_Action
             }
         } catch (BlockNotFoundException $e) {
             $this->playlistNotFound('block', true);
-        } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound('block');
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
