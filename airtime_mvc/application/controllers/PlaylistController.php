@@ -466,6 +466,8 @@ class PlaylistController extends Zend_Controller_Action
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
             }
+        } else if ($params['type'] == 'playlist') {
+            $this->setPlaylistNameDescAction();
         }
 
         $result["modified"] = $this->view->modified;
