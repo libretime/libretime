@@ -17,6 +17,9 @@ DAEMON=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE=/var/run/airtime-liquidsoap.pid
 
 start () {
+        chown pypo:pypo /var/log/airtime/pypo
+        chown pypo:pypo /var/log/airtime/pypo-liquidsoap
+
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
         --nicelevel -15 --make-pidfile --pidfile $PIDFILE --startas $DAEMON
         

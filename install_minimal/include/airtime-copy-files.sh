@@ -89,6 +89,8 @@ echo "* Creating /var/log/airtime"
 mkdir -p /var/log/airtime
 chmod a+x /var/log/airtime
 chown www-data:www-data /var/log/airtime/
+chown pypo:pypo /var/log/airtime/pypo
+chown pypo:pypo /var/log/airtime/pypo-liquidsoap
 
 
 if [ "$web" = "t" ]; then
