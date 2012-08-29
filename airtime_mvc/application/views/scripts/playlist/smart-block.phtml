@@ -19,7 +19,12 @@ if (isset($this->obj)) {
     <input id='obj_type' type='hidden' value='block'></input>
     <div class="playlist_title">
         <h3 id="obj_name">
-            <a id="playlist_name_display" contenteditable="true"><?php echo $this->obj->getName(); ?></a>
+            <a id="playlist_name_display" contenteditable="true">
+            <?php
+                if (isset($this->unsavedName)) echo $this->unsavedName;
+                else echo $this->obj->getName();
+            ?>
+            </a>
         </h3>
         <h4 id="obj_length"><?php echo $this->length; ?></h4>
     </div>
@@ -30,7 +35,10 @@ if (isset($this->obj)) {
         <dl class="zend_form">
             <dt id="description-label"><label for="description">Description</label></dt>
             <dd id="description-element">
-                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
+                <textarea cols="80" rows="24" id="description" name="description"><?php
+                    if (isset($this->unsavedDesc)) echo $this->unsavedDesc;
+                    else echo $this->obj->getDescription();?>
+                </textarea>
             </dd>
         </dl>
     </fieldset>

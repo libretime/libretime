@@ -446,14 +446,13 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         $result = array();
-
-        $this->setPlaylistNameDescAction();
-
+        
         if ($params['type'] == 'block') {
             $form = new Application_Form_SmartBlockCriteria();
             $form->startForm($params['obj_id']);
             $bl = new Application_Model_Block($params['obj_id']);
             if ($form->isValid($params)) {
+                $this->setPlaylistNameDescAction();
                 $bl->saveSmartBlockCriteria($params['data']);
                 $result['html'] = $this->createFullResponse($bl, true, true);
                 $result['result'] = 0;
@@ -461,10 +460,14 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->obj = $bl;
                 $this->view->id = $bl->getId();
                 $this->view->form = $form;
+                $this->view->unsavedName = $params['name'];
+                $this->view->unsavedDesc = $params['description'];
                 $viewPath = 'playlist/smart-block.phtml';
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
             }
+        } else if ($params['type'] == 'playlist') {
+            $this->setPlaylistNameDescAction();
         }
 
         $result["modified"] = $this->view->modified;
