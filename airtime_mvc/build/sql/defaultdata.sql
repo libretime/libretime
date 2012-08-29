@@ -302,3 +302,9 @@ INSERT INTO cc_country (isocode, name) VALUES ('ESH', 'Western Sahara ');
 INSERT INTO cc_country (isocode, name) VALUES ('YEM', 'Yemen ');
 INSERT INTO cc_country (isocode, name) VALUES ('ZMB', 'Zambia ');
 INSERT INTO cc_country (isocode, name) VALUES ('ZWE', 'Zimbabwe ');
+
+
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_channels', 'stereo', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'stereo', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
+

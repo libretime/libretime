@@ -163,7 +163,6 @@ class PreferenceController extends Zend_Controller_Action
         foreach ($temp as $t) {
             $setting[$t['keyname']] = $t['value'];
         }
-
         // get predefined type and bitrate from pref table
         $temp_types = Application_Model_Preference::GetStreamType();
         $stream_types = array();
@@ -204,12 +203,11 @@ class PreferenceController extends Zend_Controller_Action
             $form->addSubForm($subform, "s".$i."_subform");
         }
         if ($request->isPost()) {
-            $post_data = $request->getPost();
+            $values = $request->getPost();
 
             $error = false;
-            $values = $post_data;
 
-            if ($form->isValid($post_data)) {
+            if ($form->isValid($values)) {
                 if (!$isSaas) {
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
                     $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
@@ -264,7 +262,7 @@ class PreferenceController extends Zend_Controller_Action
                 $data = array();
                 $info = Application_Model_StreamSetting::getStreamSetting();
                 $data['setting'] = $info;
-                for ($i=1;$i<=$num_of_stream;$i++) {
+                for ($i=1; $i<=$num_of_stream; $i++) {
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
 

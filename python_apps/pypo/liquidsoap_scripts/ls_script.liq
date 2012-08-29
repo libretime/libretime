@@ -299,7 +299,9 @@ if s1_enable == true then
         s1_namespace := s1_mount
     end
     server.register(namespace=!s1_namespace, "connected", fun (s) -> begin log("#{!s1_namespace}.connected") !s1_connected end)
-    output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1", s1_connected, s1_description)
+    output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, 
+                s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1", 
+                s1_connected, s1_name, s1_channels)
 end
 
 if s2_enable == true then
@@ -309,7 +311,9 @@ if s2_enable == true then
         s2_namespace := s2_mount
     end
     server.register(namespace=!s2_namespace, "connected", fun (s) -> begin log("#{!s2_namespace}.connected") !s2_connected end)
-    output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2", s2_connected, s2_description)
+    output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, 
+                s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2", 
+                s2_connected, s2_name, s2_channels)
     
 end
 
@@ -320,7 +324,9 @@ if s3_enable == true then
         s3_namespace := s3_mount
     end
     server.register(namespace=!s3_namespace, "connected", fun (s) -> begin log("#{!s3_namespace}.connected") !s3_connected end)
-    output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, s3_mount, s3_url, s3_description, s3_genre, s3_user, s, "3", s3_connected, s3_description)
+    output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, 
+                s3_mount, s3_url, s3_name, s3_genre, s3_user, s, "3", 
+                s3_connected, s3_description, s3_channels)
 end
 
 command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --liquidsoap-started &"

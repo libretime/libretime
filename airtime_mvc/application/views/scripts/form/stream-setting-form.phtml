@@ -60,7 +60,14 @@
             <dd id="<?php echo $s_name?>Output-element">
                 <?php echo $this->element->getElement('output')?>
             </dd>
-            
+
+             <dt id="<?php echo $s_name?>Channels-label">
+                <label for="<?php echo $s_name?>Channels"><?php echo $this->element->getElement('channels')->getLabel()?></label>
+            </dt>
+            <dd id="<?php echo $s_name?>Channels-element">
+                <?php echo $this->element->getElement('channels')?>
+            </dd>
+           
             <fieldset class="padded top-margin display_field toggle closed" id="output_setting">
                 <legend style="cursor: pointer;">
                     <span class="ui-icon ui-icon-triangle-2-n-s"></span>
