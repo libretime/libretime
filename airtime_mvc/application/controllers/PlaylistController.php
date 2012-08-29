@@ -124,10 +124,10 @@ class PlaylistController extends Zend_Controller_Action
         Logging::info("{$p_type} not found");
         Application_Model_Library::changePlaylist(null, $p_type);
         
-        if ($p_type == 'Playlist') {
+        if (!$p_isJson) {
             $this->createFullResponse(null);
         } else {
-            die(json_encode(array("error"=>$this->view->error, "result"=>1, "html"=>$this->createFullResponse(null, true))));
+            die(json_encode(array("error"=>$this->view->error, "result"=>1, "html"=>$this->createFullResponse(null, $p_isJson))));
         }
     }
 
@@ -288,6 +288,8 @@ class PlaylistController extends Zend_Controller_Action
             $this->wrongTypeToPlaylist($obj);
         } catch (BlockDynamicException $e) {
             $this->blockDynamic($obj);
+        } catch (BlockNotFoundException $e) {
+            $this->playlistNotFound($obj_type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
