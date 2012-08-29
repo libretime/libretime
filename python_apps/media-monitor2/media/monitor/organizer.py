@@ -6,6 +6,7 @@ from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 from media.monitor.events     import OrganizeFile
+from media.monitor.metadata   import Metadata
 from pydispatch               import dispatcher
 from os.path                  import dirname
 
@@ -65,8 +66,11 @@ class Organizer(ReportHandler,Loggable):
                             directory=d)
                 return cb
 
+            Metadata.fix_title(event.path)
+
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
+
             owners.add_file_owner(new_path, mmp.owner_id(event.path) )
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))

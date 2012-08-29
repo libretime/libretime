@@ -252,15 +252,21 @@ def normalized_metadata(md, original_path):
         if new_md['MDATA_KEY_BPM'] is None:
             del new_md['MDATA_KEY_BPM']
 
+
     if is_airtime_recorded(new_md):
         hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
         new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
             (name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
     else:
         # Read title from filename if it does not exist
+        default_title = no_extension_basename(original_path)
+        if re.match(".+-%s-.+$" % unicode_unknown, default_title):
+            default_title = u''
         new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
-                            default=no_extension_basename(original_path))
+                            default=default_title)
 
+    new_md['MDATA_KEY_TITLE'] = re.sub(r'-?%s-?' % unicode_unknown, u'',
+            new_md['MDATA_KEY_TITLE'])
     return new_md
 
 def organized_path(old_path, root_path, orig_md):

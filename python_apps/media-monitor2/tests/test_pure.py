@@ -80,6 +80,22 @@ class TestMMP(unittest.TestCase):
         # TODO : add a better test than this...
         self.assertTrue( len(opath) > 0 )
 
+    def test_normalized_metadata3(self):
+        """
+        Test the case where the metadata is empty
+        """
+        orig = Metadata.airtime_dict({})
+        paths_unknown_title = [
+                ("/testin/unknown-unknown-unknown.mp3",""),
+                ("/testin/01-unknown-123kbps.mp3",""),
+                ("/testin/02-unknown-140kbps.mp3",""),
+                ("/testin/unknown-unknown-123kbps.mp3",""),
+                ("/testin/unknown-bibimbop-unknown.mp3","bibimbop"),
+        ]
+        for p,res in paths_unknown_title:
+            normalized = mmp.normalized_metadata(orig, p)
+            self.assertEqual( normalized['MDATA_KEY_TITLE'], res)
+
     def test_file_md5(self):
         p = os.path.realpath(__file__)
         m1 = mmp.file_md5(p)
