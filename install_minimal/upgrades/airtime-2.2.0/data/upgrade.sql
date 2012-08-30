@@ -2,6 +2,10 @@ DELETE FROM cc_pref WHERE keystr = 'system_version';
 INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.2.0');
 
 
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_name', 'Airtime!', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_name', '', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_name', '', 'string');
+
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_channels', 'stereo', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'stereo', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
