@@ -250,14 +250,12 @@ class AirtimeApiClient():
     currently playing *song*.  We get passed a JSON string which we handed to
     liquidsoap in get_liquidsoap_data().
     """
-    def notify_media_item_start_playing(self, data, media_id):
+    def notify_media_item_start_playing(self, media_id):
         logger = self.logger
         response = ''
         try:
-            schedule_id = data
             url = "http://%s:%s/%s/%s" % (self.config["base_url"], str(self.config["base_port"]), self.config["api_base"], self.config["update_start_playing_url"])
             url = url.replace("%%media_id%%", str(media_id))
-            url = url.replace("%%schedule_id%%", str(schedule_id))
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
 
