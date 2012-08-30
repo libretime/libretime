@@ -24,9 +24,16 @@ class UserController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/user/user.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $js_files = array(
+            '/js/datatables/js/jquery.dataTables.js?',
+            '/js/datatables/plugin/dataTables.pluginAPI.js?',
+            '/js/airtime/user/user.js?'
+        );
+
+        foreach ($js_files as $js) {
+            $this->view->headScript()->appendFile(
+                $baseUrl.$js.$CC_CONFIG['airtime_version'],'text/javascript');
+        }
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/users.css?'.$CC_CONFIG['airtime_version']);
 
