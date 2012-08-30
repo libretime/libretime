@@ -46,12 +46,8 @@ $(document).ready(function() {
 	var uploadProgress = false;
 	
 	uploader.bind('QueueChanged', function(){
-		if(uploader.files.length > 0){
-			uploadProgress = true;
-		}else{
-			uploadProgress = false;
-		}
-	});
+        uploadProgress = (uploader.files.length > 0)
+ 	});
 	
 	uploader.bind('UploadComplete', function(){
 		uploadProgress = false;
