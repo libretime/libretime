@@ -160,6 +160,15 @@ class Application_Model_Scheduler
                     $data["fadeout"] = $plItem['fadeout'];
                     $data["type"] = 0;
                     $files[] = $data;
+                } elseif ($plItem['type'] == 1) {
+                    $data["id"] = $plItem['item_id'];
+                    $data["cliplength"] = $plItem['length'];
+                    $data["cuein"] = $plItem['cuein'];
+                    $data["cueout"] = $plItem['cueout'];
+                    $data["fadein"] = "00.500000";//$plItem['fadein'];
+                    $data["fadeout"] = "00.500000";//$plItem['fadeout'];
+                    $data["type"] = 1;
+                    $files[] = $data;
                 } elseif ($plItem['type'] == 2) {
                     // if it's a block
                     $bl = new Application_Model_Block($plItem['item_id']);
