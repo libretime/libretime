@@ -106,7 +106,7 @@ class Metadata(Loggable):
     # here. Also interface is not very consistent
 
     @staticmethod
-    def fix_title(self, path):
+    def fix_title(path):
         # If we have no title in path we will format it
         # TODO : this is very hacky so make sure to fix it
         m = mutagen.File(path, easy=True)
