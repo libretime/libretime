@@ -67,27 +67,21 @@ except Exception, e:
 
 class Notify:
     def __init__(self):
-        self.api_client = api_client.AirtimeApiClient()
+        self.api_client = api_client.AirtimeApiClient(logger=logger)
 
     def notify_liquidsoap_started(self):
-        logger = logging.getLogger("notify")
         logger.debug("Notifying server that Liquidsoap has started")
         self.api_client.notify_liquidsoap_started()
 
-    def notify_media_start_playing(self, data, media_id):
-        logger = logging.getLogger("notify")
-
+    def notify_media_start_playing(self, media_id):
         logger.debug('#################################################')
         logger.debug('# Calling server to update about what\'s playing #')
         logger.debug('#################################################')
-        logger.debug('data = ' + str(data))
-        response = self.api_client.notify_media_item_start_playing(data, media_id)
+        response = self.api_client.notify_media_item_start_playing(media_id)
         logger.debug("Response: " + json.dumps(response))
 
     # @pram time: time that LS started
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger = logging.getLogger("notify")
-
         logger.debug('#################################################')
         logger.debug('# Calling server to update liquidsoap status    #')
         logger.debug('#################################################')
@@ -96,8 +90,6 @@ class Notify:
         logger.debug("Response: " + json.dumps(response))
 
     def notify_source_status(self, source_name, status):
-        logger = logging.getLogger("notify")
-
         logger.debug('#################################################')
         logger.debug('# Calling server to update source status        #')
         logger.debug('#################################################')
@@ -106,7 +98,6 @@ class Notify:
         logger.debug("Response: " + json.dumps(response))
 
     def notify_webstream_data(self, data, media_id):
-        logger = logging.getLogger("notify")
         logger.debug('#################################################')
         logger.debug('# Calling server to update webstream data       #')
         logger.debug('#################################################')
@@ -121,7 +112,6 @@ if __name__ == '__main__':
     print '#########################################'
 
     # initialize
-    logger = logging.getLogger("notify")
     if options.error and options.stream_id:
         try:
             n = Notify()
@@ -146,23 +136,17 @@ if __name__ == '__main__':
             n.notify_webstream_data(options.webstream, options.media_id)
         except Exception, e:
             print e
+    elif options.media_id:
+
+        try:
+            n = Notify()
+            n.notify_media_start_playing(options.media_id)
+        except Exception, e:
+            print e
     elif options.liquidsoap_started:
         try:
             n = Notify()
             n.notify_liquidsoap_started()
         except Exception, e:
             print e
-    else:
-        if not options.data:
-            print "NOTICE: 'data' command-line argument not given."
-            sys.exit()
 
-        if not options.media_id:
-            print "NOTICE: 'media_id' command-line argument not given."
-            sys.exit()
-
-        try:
-            n = Notify()
-            n.notify_media_start_playing(options.data, options.media_id)
-        except Exception, e:
-            print e
