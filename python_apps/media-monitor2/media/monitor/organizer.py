@@ -66,8 +66,8 @@ class Organizer(ReportHandler,Loggable):
                             directory=d)
                 return cb
 
-            Metadata.fix_title(event.path)
-
+            # TODO : Workaround doesn't work. Fix later
+            #Metadata.fix_title(event.path)
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
 
