@@ -97,14 +97,39 @@ class UserController extends Zend_Controller_Action
         // action body
         $delId = $this->_getParam('id');
 
+        $valid_actions = array("delete_cascade", "reassign_to");
+
+        $files_action = $this->_getParam('deleted_files');
+
+        # TODO : remove this. we only use default for now not to break the UI.
+        if (!$files_action) { # set default action
+            $files_action = "delete_cascade";
+        }
+
+        # only delete when valid action is selected for the owned files
+        if (! in_array($files_action, $valid_actions) ) {
+            return;
+        } 
+
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $userId = $userInfo->id;
 
-        if ($delId != $userId) {
-            $user = new Application_Model_User($delId);
-            $this->view->entries = $user->delete();
+        # Don't let users delete themselves
+        if ($delId == $userId) {
+            return;
         }
 
-    }
+        $user = new Application_Model_User($delId);
 
+        # Take care of the user's files by either assigning them to somebody
+        # or deleting them all
+        if ($files_action == "delete_cascade") {
+            $user->deleteAllFiles();
+        } elseif ($files_action == "reassign_to") {
+            $new_owner = $this->_getParam("new_owner");
+            $user->reassignTo( $new_owner );
+        }
+        # Finally delete the user
+        $this->view->entries = $user->delete();
+    }
 }

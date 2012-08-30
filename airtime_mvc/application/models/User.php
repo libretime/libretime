@@ -249,6 +249,9 @@ class Application_Model_User
     public function deleteAllFiles()
     {
         $my_files = $this->getOwnedFiles();
+        foreach ($files as $file) {
+            $file->delete();
+        }
     }
 
     private function createUser()
