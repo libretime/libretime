@@ -9,7 +9,7 @@ $(document).ready(function() {
 		unique_names: 'true',
 		multiple_queues : 'true',
 		filters : [
-			{title: "Audio Files", extensions: "ogg,mp3"}
+			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,aac,bwf"}
 		]
 	});
 
@@ -27,7 +27,9 @@ $(document).ready(function() {
 			$("#plupload_error table").css("display", "inline-table");
 		}else{
 		    var tempFileName = j.tempfilepath;
-		    $.get('/Plupload/copyfile/format/json/name/'+encodeURIComponent(file.name)+'/tempname/'+encodeURIComponent(tempFileName), function(json){
+		    $.get('/Plupload/copyfile/format/json/name/' +
+                  encodeURIComponent(file.name)+'/tempname/' +
+                  encodeURIComponent(tempFileName), function(json){
 		        var jr = jQuery.parseJSON(json);
 		        if(jr.error !== undefined) {
 		            var row = $("<tr/>")
