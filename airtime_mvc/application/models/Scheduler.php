@@ -660,9 +660,12 @@ class Application_Model_Scheduler
                     $cueOutSec = bcadd($cueinSec , $length, 6);
                     $cueout = Application_Common_DateHelper::secondsToPlaylistTime($cueOutSec);
 
+                    //Set DbEnds - 1 second because otherwise there can be a timing issue
+                    //when sending the new schedule to Pypo where Pypo thinks the track is still
+                    //playing.
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
-                        ->setDbEnds($this->nowDT)
+                        ->setDbEnds($this->nowDT->sub(new DateInteval("PT1S")))
                         ->save($this->con);
                 } else {
                     $removedItem->delete($this->con);

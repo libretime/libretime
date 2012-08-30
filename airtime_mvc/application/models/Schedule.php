@@ -605,7 +605,7 @@ SQL;
         }
 
         // Scheduler wants everything in a playlist
-        $items = Application_Model_Schedule::GetItems($range_start, $range_end);
+        $items = self::GetItems($range_start, $range_end);
 
         $data = array();
         $utcTimeZone = new DateTimeZone("UTC");
