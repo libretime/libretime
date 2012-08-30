@@ -71,7 +71,7 @@ class AirtimeApiClient():
             self.logger.error('Error loading config file: %s', e)
             sys.exit(1)
 
-    def get_response_from_server(self, url):
+    def get_response_from_server(self, url, attempts=-1):
         logger = self.logger
         successful_response = False
 
@@ -92,6 +92,14 @@ class AirtimeApiClient():
                     logger.debug(url.get_full_url())
                 else:
                     logger.debug(url)
+
+            #If the user passed in a positive attempts number then that means
+            #attempts will roll over 0 and we stop. If attempts was initially negative,
+            #then we have unlimited attempts
+            if attempts > 0:
+                attempts = attempts - 1
+                if attempts == 0:
+                    successful_response = True
 
             if not successful_response:
                 logger.error("Error connecting to server, waiting 5 seconds and trying again.")
@@ -240,7 +248,7 @@ class AirtimeApiClient():
 
             url = url.replace("%%api_key%%", self.config["api_key"])
 
-            self.get_response_from_server(url)
+            self.get_response_from_server(url, attempts=5)
         except Exception, e:
             logger.error("Exception: %s", str(e))
 
@@ -259,7 +267,7 @@ class AirtimeApiClient():
             logger.debug(url)
             url = url.replace("%%api_key%%", self.config["api_key"])
 
-            response = self.get_response_from_server(url)
+            response = self.get_response_from_server(url, attempts = 5)
             response = json.loads(response)
             logger.info("API-Status %s", response['status'])
             logger.info("API-Message %s", response['message'])
@@ -591,7 +599,7 @@ class AirtimeApiClient():
             url = url.replace("%%stream_id%%", stream_id)
             url = url.replace("%%boot_time%%", time)
 
-            self.get_response_from_server(url)
+            self.get_response_from_server(url, attempts = 5)
         except Exception, e:
             logger.error("Exception: %s", e)
 
@@ -604,7 +612,7 @@ class AirtimeApiClient():
             url = url.replace("%%sourcename%%", sourcename)
             url = url.replace("%%status%%", status)
 
-            self.get_response_from_server(url)
+            self.get_response_from_server(url, attempts = 5)
         except Exception, e:
             logger.error("Exception: %s", e)
 
@@ -725,6 +733,6 @@ class AirtimeApiClient():
             self.logger.debug(url)
             request = urllib2.Request(url, data)
 
-            self.logger.info(self.get_response_from_server(request))
+            self.logger.info(self.get_response_from_server(request, attempts = 5))
         except Exception, e:
             self.logger.error("Exception: %s", e)
