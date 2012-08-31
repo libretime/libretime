@@ -39,15 +39,17 @@ class Application_Model_Datatables
     /*
      * query used to return data for a paginated/searchable datatable.
      */
-    public static function findEntries($con, $displayColumns, $fromTable, $data, $dataProp = "aaData")
+    public static function findEntries($con, $displayColumns, $fromTable,
+        $data, $dataProp = "aaData")
     {
         $librarySetting = Application_Model_Preference::getCurrentLibraryTableSetting();
+        //$displayColumns[] = 'owner';
 
         // map that maps original column position to db name
         $current2dbname = array();
         // array of search terms
-        $orig2searchTerm= array();
-        foreach ($data as $key=>$d) {
+        $orig2searchTerm = array();
+        foreach ($data as $key => $d) {
             if (strstr($key, "mDataProp_")) {
                 list($dump, $index) = explode("_", $key);
                 $current2dbname[$index] = $d;
@@ -81,6 +83,7 @@ class Application_Model_Datatables
 
         $sql = $selectorCount." FROM ".$fromTable;
         $sqlTotalRows = $sql;
+
 
         if (isset($searchTerms)) {
             $searchCols = array();
@@ -135,8 +138,8 @@ class Application_Model_Datatables
                 $sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
             }
         }
-
         try {
+            
             $r = $con->query($sqlTotalRows);
             $totalRows = $r->fetchColumn(0);
 
@@ -173,12 +176,11 @@ class Application_Model_Datatables
         } catch (Exception $e) {
             Logging::debug($e->getMessage());
         }
-
         return array(
-            "sEcho" => intval($data["sEcho"]),
+            "sEcho"                => intval($data["sEcho"]),
             "iTotalDisplayRecords" => intval($totalDisplayRows),
-            "iTotalRecords" => intval($totalRows),
-            $dataProp => $results
+            "iTotalRecords"        => intval($totalRows),
+            $dataProp              => $results
         );
     }
 }
