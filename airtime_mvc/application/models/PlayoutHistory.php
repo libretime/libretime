@@ -16,22 +16,22 @@ class Application_Model_PlayoutHistory
     private $opts;
 
     private $mDataPropMap = array(
-        "artist" => "file.artist_name",
-        "title" => "file.track_title",
-        "played" => "playout.played",
-        "length" => "file.length",
-        "composer" => "file.composer",
+        "artist"    => "file.artist_name",
+        "title"     => "file.track_title",
+        "played"    => "playout.played",
+        "length"    => "file.length",
+        "composer"  => "file.composer",
         "copyright" => "file.copyright",
     );
 
     public function __construct($p_startDT, $p_endDT, $p_opts)
     {
-        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-        $this->startDT = $p_startDT;
-        $this->endDT = $p_endDT;
-        $this->timezone = date_default_timezone_get();
+        $this->con       = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $this->startDT   = $p_startDT;
+        $this->endDT     = $p_endDT;
+        $this->timezone  = date_default_timezone_get();
         $this->epoch_now = time();
-        $this->opts = $p_opts;
+        $this->opts      = $p_opts;
     }
 
     /*
