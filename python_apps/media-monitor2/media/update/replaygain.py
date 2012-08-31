@@ -121,6 +121,8 @@ def calculate_replay_gain(file_path):
         matches = search.groups()
         if len(matches) == 1:
             replay_gain = matches[0]
+        else:
+            logger.warn("Received more than 1 match in: '%s'" % str(matches))
 
     return replay_gain
 
