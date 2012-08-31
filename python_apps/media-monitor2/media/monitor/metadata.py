@@ -161,8 +161,7 @@ class Metadata(Loggable):
         # Forcing the unicode through
         try    : fpath = fpath.decode("utf-8")
         except : pass
-        if not mmp.file_playable(fpath):
-            raise BadSongFile(fpath)
+        if not mmp.file_playable(fpath): raise BadSongFile(fpath)
         try              : full_mutagen  = mutagen.File(fpath, easy=True)
         except Exception : raise BadSongFile(fpath)
         self.path = fpath
