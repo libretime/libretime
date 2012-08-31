@@ -459,7 +459,7 @@ def file_playable(pathname):
     #is opened with write permissions, and this causes an inotify ON_CLOSE_WRITE
     #event to be fired :/
 
-    command = ("sudo -u pypo airtime-liquidsoap -c 'output.dummy" + \
+    command = ("airtime-liquidsoap -c 'output.dummy" + \
         "(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1") % \
         pathname.replace("'", "'\\''")
     return_code = subprocess.call(command, shell=True)
