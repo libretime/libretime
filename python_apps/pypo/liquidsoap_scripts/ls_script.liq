@@ -99,6 +99,11 @@ server.register(namespace="dynamic_source",
                 usage="stop <uri>",
                 "read_stop",
                 fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source(s) end)
+server.register(namespace="dynamic_source",
+                description="Stop a dynamic source.",
+                usage="stop <uri>",
+                "read_stop_all",
+                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source(s) end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)

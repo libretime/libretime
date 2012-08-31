@@ -150,6 +150,7 @@ class WebstreamController extends Zend_Controller_Action
 
                 $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
                 $this->view->streamId = $streamId;
+                $this->view->length = $di->format("%Hh %Im");
             } else {
                 throw new Exception("isValid returned false");
             }
