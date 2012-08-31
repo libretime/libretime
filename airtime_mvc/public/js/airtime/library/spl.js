@@ -602,6 +602,10 @@ var AIRTIME = (function(AIRTIME){
                         var $ws_id = $("#ws_delete");
                         $ws_id.show();
 
+
+                        var length = $("#side_playlist #ws_length");
+                        length.text(json.length);
+
                         //redraw the library to show the new webstream
                         redrawLib();
                     }
