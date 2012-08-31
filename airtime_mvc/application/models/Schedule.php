@@ -14,11 +14,8 @@ class Application_Model_Schedule
         $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE file_id = {$p_fileId} AND ends > NOW() AT TIME ZONE 'UTC'";
         $count = $con->query($sql)->fetchColumn(0);
-        if (is_numeric($count) && ($count != '0')) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+
+        return (is_numeric($count) && ($count != '0'));
     }
 
     /**
