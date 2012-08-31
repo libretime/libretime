@@ -9,7 +9,7 @@ $(document).ready(function() {
 		unique_names: 'true',
 		multiple_queues : 'true',
 		filters : [
-			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,aac,bwf"}
+			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,aac,wav"}
 		]
 	});
 
