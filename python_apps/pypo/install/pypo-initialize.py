@@ -81,7 +81,7 @@ try:
     (codename, fullname) = get_os_codename()
     print " Found %s (%s) on %s architecture" % (fullname, codename, arch)
 
-    print " * Installing Liquidsoap binary"
+    print " * Creating symlink to Liquidsoap binary"
 
     p = Popen("which liquidsoap", shell=True, stdout=PIPE)
     liq_path = p.communicate()[0].strip()
