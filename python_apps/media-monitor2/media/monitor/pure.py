@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+import subprocess
 import os
 import shutil
 import re
@@ -448,6 +449,21 @@ def owner_id(original_path):
         try: os.unlink(fname)
         except Exception: raise
     return owner_id
+
+def file_playable(pathname):
+
+    #when there is an single apostrophe inside of a string quoted by
+    #apostrophes, we can only escape it by replace that apostrophe with '\''.
+    #This breaks the string into two, and inserts an escaped single quote in
+    #between them.  We run the command as pypo because otherwise the target file
+    #is opened with write permissions, and this causes an inotify ON_CLOSE_WRITE
+    #event to be fired :/
+
+    command = ("sudo -u pypo airtime-liquidsoap -c 'output.dummy" + \
+        "(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1") % \
+        pathname.replace("'", "'\\''")
+    return_code = subprocess.call(command, shell=True)
+    return (return_code == 0)
 
 if __name__ == '__main__':
     import doctest

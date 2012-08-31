@@ -635,8 +635,10 @@ class Application_Model_StoredFile
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
             "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "filepath"
+            "language", "filepath","owner"
         );
+
+        //Logging::info($datatables);
 
         $plSelect     = array();
         $blSelect     = array();
@@ -647,7 +649,7 @@ class Application_Model_StoredFile
             if ($key === "id") {
                 $plSelect[]     = "PL.id AS ".$key;
                 $blSelect[]     = "BL.id AS ".$key;
-                $fileSelect[]   = $key;
+                $fileSelect[]   = "FILES.id AS $key";
                 $streamSelect[] = "ws.id AS ".$key;
             } elseif ($key === "track_title") {
                 $plSelect[]     = "name AS ".$key;
@@ -663,6 +665,11 @@ class Application_Model_StoredFile
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = $key;
+                $streamSelect[] = "login AS ".$key;
+            } elseif ($key === "owner") {
+                $plSelect[]     = "login AS ".$key;
+                $blSelect[]     = "login AS ".$key;
+                $fileSelect[]   = "sub.login AS $key";
                 $streamSelect[] = "login AS ".$key;
             }
             //same columns in each table.
@@ -705,7 +712,8 @@ class Application_Model_StoredFile
 
         $plTable = "({$plSelect} FROM cc_playlist AS PL LEFT JOIN cc_subjs AS sub ON (sub.id = PL.creator_id))";
         $blTable = "({$blSelect} FROM cc_block AS BL LEFT JOIN cc_subjs AS sub ON (sub.id = BL.creator_id))";
-        $fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
+        $fileTable = "({$fileSelect} FROM cc_files AS FILES LEFT JOIN cc_subjs AS sub ON (sub.id = FILES.owner_id) WHERE file_exists = 'TRUE')";
+        //$fileTable = "({$fileSelect} FROM cc_files AS FILES WHERE file_exists = 'TRUE')";
         $streamTable = "({$streamSelect} FROM cc_webstream AS ws LEFT JOIN cc_subjs AS sub ON (sub.id = ws.creator_id))";
         $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 

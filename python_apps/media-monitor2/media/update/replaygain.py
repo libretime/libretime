@@ -87,34 +87,34 @@ def calculate_replay_gain(file_path):
         temp_file_path = duplicate_file(file_path)
 
         file_type = get_file_type(file_path)
+        nice_level = '15'
 
         if file_type:
             if file_type == 'mp3':
                 if run_process("which mp3gain > /dev/null") == 0:
-                    out = get_process_output('mp3gain -q "%s" 2> /dev/null' % temp_file_path)
+                    out = get_process_output('nice -n %s mp3gain -q "%s" 2> /dev/null' % (nice_level, temp_file_path))
                     search = re.search(r'Recommended "Track" dB change: (.*)', out)
                 else:
                     logger.warn("mp3gain not found")
             elif file_type == 'vorbis':
                 if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
-                    run_process('vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % temp_file_path)
+                    run_process('nice -n %s vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % (nice_level,temp_file_path))
                     out = get_process_output('ogginfo "%s"' % temp_file_path)
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else:
                     logger.warn("vorbisgain/ogginfo not found")
             elif file_type == 'flac':
                 if run_process("which metaflac > /dev/null") == 0:
-                    out = get_process_output('metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % temp_file_path)
+                    out = get_process_output('nice -n %s metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % (nice_level, temp_file_path))
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
-                else:
-                    logger.warn("metaflac not found")
-            else:
-                pass
+                else: logger.warn("metaflac not found")
 
-        #no longer need the temp, file simply remove it.
-        os.remove(temp_file_path)
     except Exception, e:
         logger.error(str(e))
+    finally:
+        #no longer need the temp, file simply remove it.
+        try: os.remove(temp_file_path)
+        except: pass
 
     replay_gain = 0
     if search:
