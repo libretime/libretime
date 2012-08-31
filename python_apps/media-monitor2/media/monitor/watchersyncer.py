@@ -46,7 +46,11 @@ class RequestSync(threading.Thread,Loggable):
             except BadSongFile as e:
                 self.logger.info("This should never occur anymore!!!")
                 self.logger.info("Bad song file: '%s'" % e.path)
-            except Exception as e: self.unexpected_exception( e )
+            except Exception as e:
+                self.unexpected_exception( e )
+                if hasattr(request_event, 'path'):
+                    self.logger.info("Possibly related to path: '%s'" %
+                            request_event.path)
         def make_req():
             self.apiclient.send_media_monitor_requests( packed_requests )
         for try_index in range(0,self.retries):
