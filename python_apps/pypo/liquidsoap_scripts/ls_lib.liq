@@ -438,19 +438,19 @@ def destroy_dynamic_source(uri) =
     # current_element is of the form: ("uri", source) so 
     # we check the first element
     current_uri = fst(current_element)
-    if current_uri == uri then
+    #if current_uri == uri then
       # In this case, we add the source to the list of
       # matched sources
       (list.append( [snd(current_element)], 
                      matching_sources),
        remaining_sources)
-    else
+    #else
       # In this case, we put the element in the list of remaining
       # sources
-      (matching_sources,
-       list.append([current_element], 
-                    remaining_sources))
-    end
+      #(matching_sources,
+      # list.append([current_element], 
+      #              remaining_sources))
+    #end
   end
     
   # Now we execute the function:
