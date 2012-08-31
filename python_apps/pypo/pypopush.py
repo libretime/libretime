@@ -88,23 +88,6 @@ class PypoPush(Thread):
                     except ValueError, e:
                         self.logger.error(str(e))
 
-                    if len(liquidsoap_queue_approx) == 0 and not self.current_stream_info:
-                        #Nothing is currently being playing by Liquidsoap
-                        if current_event_chain[0]['type'] == 'file':
-                            #Something is scheduled but Liquidsoap is not playing anything!
-                            #Need to schedule it immediately..this might happen if Liquidsoap crashed.
-                            self.modify_cue_point(current_event_chain[0])
-                            next_media_item_chain = current_event_chain
-                            time_until_next_play = 0
-                            #sleep for 0.2 seconds to give pypo-file time to copy.
-                            time.sleep(0.2)
-                            continue
-                        if current_event_chain[0]['type'] == 'stream':
-                            #a stream is schedule but Liquidsoap is not playing it. Need to start it.
-                            next_media_item_chain = current_event_chain
-                            time_until_next_play = 0
-                            continue
-
                 #At this point we know that Liquidsoap is playing something, and that something
                 #is scheduled. We need to verify whether the schedule we just received matches
                 #what Liquidsoap is playing, and if not, correct it.
