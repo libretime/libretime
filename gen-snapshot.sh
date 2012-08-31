@@ -47,10 +47,10 @@ sed -i '91s:tr:#tr:g' airtime/python_apps/pypo/install/pypo-initialize.py
 sed -i '92s:os.unlink:#os.unlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
 sed -i '93s:except:#except:g' airtime/python_apps/pypo/install/pypo-initialize.py
 sed -i '95s:pass:#pass:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '98s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '99s:else:#else:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '100s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '101s:sys.exit:#sys.exit:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '97s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '98s:else:#else:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '99s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
+sed -i '100s:sys.exit:#sys.exit:g' airtime/python_apps/pypo/install/pypo-initialize.py
 
 #Remove phing library
 rm -r airtime/airtime_mvc/library/phing/
