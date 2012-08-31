@@ -202,7 +202,7 @@ class PypoPush(Thread):
 
 
         if self.current_stream_info:
-            if current_event_chain[0]['type'] == "stream":
+            if len(current_event_chain) > 0 && current_event_chain[0]['type'] == "stream":
                 if self.current_stream_info['uri'] != stream_chain[0]['uri']:
                     #Liquidsoap is rebroadcasting a webstream and a webstream is scheduled
                     #to play, but they are not the same!
