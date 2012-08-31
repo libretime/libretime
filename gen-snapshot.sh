@@ -71,7 +71,7 @@ echo "running the build..."
 debuild -b -uc -us $@ || exit
 
 # copy the new package to the public server
-scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
+# scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
 
 # copy the build log too
-scp /tmp/airtime_${VERSION}_amd64.build apt.sourcefabric.org:/var/www/apt/snapshots/
+# scp /tmp/airtime_${VERSION}_amd64.build apt.sourcefabric.org:/var/www/apt/snapshots/
