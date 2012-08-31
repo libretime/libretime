@@ -37,21 +37,6 @@ rm airtime/airtime_mvc/library/soundcloud-api/README.md
 # Remove Liquidsoap binaries
 rm -r airtime/python_apps/pypo/liquidsoap_bin/
 
-# Disable installation of Liquidsoap symlink
-sed -i '84s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '86s:p = Popen:#p = Popen:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '87s:liq_path:#liq_path:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '88s:symlink_path:#symlink_path:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '90s:if p.returncode:#if p.returncode:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '91s:tr:#tr:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '92s:os.unlink:#os.unlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '93s:except:#except:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '95s:pass:#pass:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '98s:os.symlink:#os.symlink:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '99s:else:#else:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '100s:print:#print:g' airtime/python_apps/pypo/install/pypo-initialize.py
-sed -i '101s:sys.exit:#sys.exit:g' airtime/python_apps/pypo/install/pypo-initialize.py
-
 #Remove phing library
 rm -r airtime/airtime_mvc/library/phing/
 
@@ -71,7 +56,7 @@ echo "running the build..."
 debuild -b -uc -us $@ || exit
 
 # copy the new package to the public server
-scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
+# scp /tmp/airtime_${VERSION}_all.deb apt.sourcefabric.org:/var/www/apt/snapshots/
 
 # copy the build log too
-scp /tmp/airtime_${VERSION}_amd64.build apt.sourcefabric.org:/var/www/apt/snapshots/
+# scp /tmp/airtime_${VERSION}_amd64.build apt.sourcefabric.org:/var/www/apt/snapshots/

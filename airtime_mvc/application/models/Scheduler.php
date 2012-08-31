@@ -24,7 +24,11 @@ class Application_Model_Scheduler
     {
         $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
-        $this->epochNow = microtime(true);
+        //subtracting one because sometimes when we cancel a track, we set its end time
+        //to epochNow and then send the new schedule to pypo. Sometimes the currently cancelled
+        //track can still be included in the new schedule because it may have a few ms left to play.
+        //subtracting 1 second from epochNow resolves this issue.
+        $this->epochNow = microtime(true)-1;
         $this->nowDT = DateTime::createFromFormat("U.u", $this->epochNow, new DateTimeZone("UTC"));
 
         if ($this->nowDT === false) {
@@ -324,6 +328,8 @@ class Application_Model_Scheduler
      * @param int $showInstance
     * @param array $exclude
     *   ids of sched items to remove from the calulation.
+    *   This function squeezes all items of a show together so that
+    *   there are no gaps between them.
     */
     private function removeGaps($showInstance, $exclude=null)
     {
@@ -660,6 +666,9 @@ class Application_Model_Scheduler
                     $cueOutSec = bcadd($cueinSec , $length, 6);
                     $cueout = Application_Common_DateHelper::secondsToPlaylistTime($cueOutSec);
 
+                    //Set DbEnds - 1 second because otherwise there can be a timing issue
+                    //when sending the new schedule to Pypo where Pypo thinks the track is still
+                    //playing.
                     $removedItem->setDbCueOut($cueout)
                         ->setDbClipLength($cliplength)
                         ->setDbEnds($this->nowDT)

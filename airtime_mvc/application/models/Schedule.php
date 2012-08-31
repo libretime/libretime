@@ -14,11 +14,8 @@ class Application_Model_Schedule
         $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
         ." WHERE file_id = {$p_fileId} AND ends > NOW() AT TIME ZONE 'UTC'";
         $count = $con->query($sql)->fetchColumn(0);
-        if (is_numeric($count) && ($count != '0')) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+
+        return (is_numeric($count) && ($count != '0'));
     }
 
     /**
@@ -605,7 +602,7 @@ SQL;
         }
 
         // Scheduler wants everything in a playlist
-        $items = Application_Model_Schedule::GetItems($range_start, $range_end);
+        $items = self::GetItems($range_start, $range_end);
 
         $data = array();
         $utcTimeZone = new DateTimeZone("UTC");
