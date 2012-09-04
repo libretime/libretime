@@ -43,9 +43,6 @@ class RequestSync(threading.Thread,Loggable):
                     if isinstance(request, BadSongFile):
                         self.logger.info("Bad song file: '%s'" % request.path)
                     else: packed_requests.append(request)
-            except BadSongFile as e:
-                self.logger.info("This should never occur anymore!!!")
-                self.logger.info("Bad song file: '%s'" % e.path)
             except Exception as e:
                 self.unexpected_exception( e )
                 if hasattr(request_event, 'path'):
