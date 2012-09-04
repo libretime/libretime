@@ -616,23 +616,23 @@ SQL;
             $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
             // we round down transition time since PHP cannot handle millisecond. We need to
             // handle this better in the future
-            $transition_time = intval($temp[0]);
+            $transition_time   = intval($temp[0]);
             $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
-            $switch_off_time = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
-            $switch_off_time = $switch_off_time->format("Y-m-d H:i:s");
+            $switch_off_time   = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
+            $switch_off_time   = $switch_off_time->format("Y-m-d H:i:s");
 
             $kick_start = Application_Model_Schedule::AirtimeTimeToPypoTime($kick_time);
-            $data["media"][$kick_start]['start'] = $kick_start;
-            $data["media"][$kick_start]['end'] = $kick_start;
-            $data["media"][$kick_start]['event_type'] = "kick_out";
-            $data["media"][$kick_start]['type'] = "event";
+            $data["media"][$kick_start]['start']             = $kick_start;
+            $data["media"][$kick_start]['end']               = $kick_start;
+            $data["media"][$kick_start]['event_type']        = "kick_out";
+            $data["media"][$kick_start]['type']              = "event";
             $data["media"][$kick_start]['independent_event'] = true;
 
             if ($kick_time !== $switch_off_time) {
                 $switch_start = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
-                $data["media"][$switch_start]['start'] = $switch_start;
-                $data["media"][$switch_start]['end'] = $switch_start;
-                $data["media"][$switch_start]['event_type'] = "switch_off";
+                $data["media"][$switch_start]['start']             = $switch_start;
+                $data["media"][$switch_start]['end']               = $switch_start;
+                $data["media"][$switch_start]['event_type']        = "switch_off";
                 $data["media"][$switch_start]['independent_event'] = true;
             }
         }
@@ -757,12 +757,12 @@ SQL;
     {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
-        $formWhat = new Application_Form_AddShowWhat();
-        $formWho = new Application_Form_AddShowWho();
-        $formWhen = new Application_Form_AddShowWhen();
+        $formWhat    = new Application_Form_AddShowWhat();
+        $formWho     = new Application_Form_AddShowWho();
+        $formWhen    = new Application_Form_AddShowWhen();
         $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle = new Application_Form_AddShowStyle();
-        $formLive = new Application_Form_AddShowLiveStream();
+        $formStyle   = new Application_Form_AddShowStyle();
+        $formLive    = new Application_Form_AddShowLiveStream();
 
         $formWhat->removeDecorator('DtDdWrapper');
         $formWho->removeDecorator('DtDdWrapper');
@@ -813,12 +813,12 @@ SQL;
     {
         $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
 
-        $formWhat = new Application_Form_AddShowWhat();
-        $formWhen = new Application_Form_AddShowWhen();
+        $formWhat    = new Application_Form_AddShowWhat();
+        $formWhen    = new Application_Form_AddShowWhen();
         $formRepeats = new Application_Form_AddShowRepeats();
-        $formWho = new Application_Form_AddShowWho();
-        $formStyle = new Application_Form_AddShowStyle();
-        $formLive = new Application_Form_AddShowLiveStream();
+        $formWho     = new Application_Form_AddShowWho();
+        $formStyle   = new Application_Form_AddShowStyle();
+        $formLive    = new Application_Form_AddShowLiveStream();
 
         $formWhat->removeDecorator('DtDdWrapper');
         $formWhen->removeDecorator('DtDdWrapper');
@@ -898,12 +898,12 @@ SQL;
         $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
         $record = false;
 
-        $formWhat = new Application_Form_AddShowWhat();
-        $formWho = new Application_Form_AddShowWho();
-        $formWhen = new Application_Form_AddShowWhen();
+        $formWhat    = new Application_Form_AddShowWhat();
+        $formWho     = new Application_Form_AddShowWho();
+        $formWhen    = new Application_Form_AddShowWhen();
         $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle = new Application_Form_AddShowStyle();
-        $formLive = new Application_Form_AddShowLiveStream();
+        $formStyle   = new Application_Form_AddShowStyle();
+        $formLive    = new Application_Form_AddShowLiveStream();
 
         $formWhat->removeDecorator('DtDdWrapper');
         $formWho->removeDecorator('DtDdWrapper');
