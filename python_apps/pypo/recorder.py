@@ -149,9 +149,11 @@ class ShowRecorder(Thread):
 
             #set some metadata for our file daemon
             recorded_file           = mutagen.File(filepath, easy = True)
-            recorded_file['title']  = record_time + "-" + self.show_name
+            #recorded_file['title']  = record_time + "-" + self.show_name
             recorded_file['artist'] = artist
             recorded_file['date']   = md[0]
+            recorded_file['title'] = "%s-%s-%s" % (self.show_name,
+                    recorded_file['date'], md[1])
             #recorded_file['date'] = md[0].split("-")[0]
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
@@ -218,7 +220,8 @@ class Recorder(Thread):
             show_end    = getDateTimeObj(show[u'ends'])
             time_delta  = show_end - show_starts
 
-            temp_shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name'], m['server_timezone']]
+            temp_shows_to_record[show[u'starts']] = [time_delta,
+                    show[u'instance_id'], show[u'name'], m['server_timezone']]
         self.shows_to_record = temp_shows_to_record
 
     def get_time_till_next_show(self):
@@ -270,12 +273,12 @@ class Recorder(Thread):
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
 
-    """
-    Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there arent any,
-    poll the server to get the upcoming schedule.
-    """
     def run(self):
+        """
+        Main loop of the thread:
+        Wait for schedule updates from RabbitMQ, but in case there arent any,
+        poll the server to get the upcoming schedule.
+        """
         try:
             self.logger.info("Started...")
             # Bootstrap: since we are just starting up, we need to grab the
