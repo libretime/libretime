@@ -1831,9 +1831,9 @@ SELECT si.starts AS start_timestamp,
 FROM cc_show_instances si,
      cc_show s
 WHERE si.show_id = s.id
-  AND si.starts <= TIMESTAMP ':timeNow1'
-  AND si.ends > TIMESTAMP ':timeNow2'
-  AND modified_instance != TRUE"
+  AND si.starts <= :timeNow1::timestamp
+  AND si.ends > :timeNow2::timestamp
+  AND modified_instance != TRUE
 SQL;
 
         $stmt = $con->prepare($sql);
@@ -1873,15 +1873,16 @@ SELECT si.starts AS start_timestamp,
 FROM cc_show_instances si,
      cc_show s
 WHERE si.show_id = s.id
-  AND si.starts > TIMESTAMP ':timeNow1' - INTERVAL '2 days'
-  AND si.ends < TIMESTAMP ':timeNow2' + INTERVAL '2 days'
+  AND si.starts > :timeNow1::timestamp - INTERVAL '2 days'
+  AND si.ends < :timeNow2::timestamp + INTERVAL '2 days'
   AND modified_instance != TRUE
 ORDER BY si.starts
 SQL;
 
         $stmt = $con->prepare($sql);
-        $stmt->bindParam(':timeNow1', $p_timeNow);
-        $stmt->bindParam(':timeNow2', $p_timeNow);
+
+        $stmt->bindValue(':timeNow1', $p_timeNow);
+        $stmt->bindValue(':timeNow2', $p_timeNow);
 
         if ($stmt->execute()) {
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -2010,8 +2011,8 @@ SELECT si.starts AS start_timestamp,
 FROM cc_show_instances,
      cc_show
 WHERE si.show_id = s.id"
-  AND si.starts >= TIMESTAMP ':timeStart'
-  AND si.starts < TIMESTAMP ':timeEnd'
+  AND si.starts >= :timeStart::timestamp
+  AND si.starts < :timeEnd::timestamp
   AND modified_instance != TRUE
 ORDER BY si.starts
 LIMIT :lim
