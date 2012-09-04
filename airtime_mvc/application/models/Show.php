@@ -1627,12 +1627,15 @@ class Application_Model_Show
             WHERE last_show IS NULL
             OR first_show < :endTimeString AND last_show > :startTimeString");
 
-        $stmt->execute(array(
-            ':endTimeString' => $endTimeString,
-            ':startTimeString' => $startTimeString
-        ));
+        //$stmt->execute(array(
+            //':endTimeString' => $endTimeString,
+            //':startTimeString' => $startTimeString
+        //));
+        $stmt->bindParam(':endTimeString', $endTimeString);
+        $stmt->bindParam(':startTimeString', $startTimeString);
 
-        $res = $stmt->fetchAll();
+
+        $res = $stmt->execute()->fetchAll();
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
         }
