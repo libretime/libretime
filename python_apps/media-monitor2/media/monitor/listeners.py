@@ -105,7 +105,6 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_create(self, event):
-        self.logger.info("PYINOTIFY")
         evt = NewFile(event)
         dispatcher.send(signal=self.signal, sender=self, event=evt)
         return evt
