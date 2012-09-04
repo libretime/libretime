@@ -762,10 +762,13 @@ class Application_Model_Show
         $date = new Application_Common_DateHelper;
         $timestamp = $date->getUtcTimestamp();
 
-        $sql = "UPDATE cc_show_days "
-                ."SET duration = '$p_data[add_show_duration]' "
-                ."WHERE show_id = $p_data[add_show_id]";
-        $con->exec($sql);
+        $stmt =  $con->prepare("UPDATE cc_show_days "
+                 ."SET duration = :add_show_duration"
+                 ."WHERE show_id = :add_show_id" );
+        $stmt->execute( array(
+            ':add_show_duration' => $p_data[add_show_duration],
+            ':add_show_id' => $p_data[add_show_id]
+        ));
 
         $sql = "UPDATE cc_show_instances "
                 ."SET ends = starts + INTERVAL '$p_data[add_show_duration]' "
@@ -1271,14 +1274,14 @@ class Application_Model_Show
     {
         $con = Propel::getConnection();
 
-        $show_id = $p_showRow["show_id"];
+        $show_id    = $p_showRow["show_id"];
         $first_show = $p_showRow["first_show"]; //non-UTC
         $start_time = $p_showRow["start_time"]; //non-UTC
-        $duration = $p_showRow["duration"];
-        $day = $p_showRow["day"];
-        $record = $p_showRow["record"];
-        $timezone = $p_showRow["timezone"];
-        $start = $first_show." ".$start_time;
+        $duration   = $p_showRow["duration"];
+        $day        = $p_showRow["day"];
+        $record     = $p_showRow["record"];
+        $timezone   = $p_showRow["timezone"];
+        $start      = $first_show." ".$start_time;
 
         //start & end UTC DateTimes for the show.
         list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
@@ -1335,15 +1338,15 @@ class Application_Model_Show
     {
         $con = Propel::getConnection();
 
-        $show_id = $p_showDaysRow["show_id"];
+        $show_id       = $p_showDaysRow["show_id"];
         $next_pop_date = $p_showDaysRow["next_pop_date"];
-        $first_show = $p_showDaysRow["first_show"]; //non-UTC
-        $last_show = $p_showDaysRow["last_show"]; //non-UTC
-        $start_time = $p_showDaysRow["start_time"]; //non-UTC
-        $duration = $p_showDaysRow["duration"];
-        $day = $p_showDaysRow["day"];
-        $record = $p_showDaysRow["record"];
-        $timezone = $p_showDaysRow["timezone"];
+        $first_show    = $p_showDaysRow["first_show"]; //non-UTC
+        $last_show     = $p_showDaysRow["last_show"]; //non-UTC
+        $start_time    = $p_showDaysRow["start_time"]; //non-UTC
+        $duration      = $p_showDaysRow["duration"];
+        $day           = $p_showDaysRow["day"];
+        $record        = $p_showDaysRow["record"];
+        $timezone      = $p_showDaysRow["timezone"];
 
         $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
 
@@ -1667,39 +1670,47 @@ class Application_Model_Show
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
 
+            $utc = new DateTimeZone("UTC");
+
             if (isset($show["parent_starts"])) {
-                $parentStartsDT = new DateTime($show["parent_starts"], new DateTimeZone("UTC"));
+                $parentStartsDT = new DateTime($show["parent_starts"], $utc);
                 $parentStartsEpoch = intval($parentStartsDT->format("U"));
             }
-            $startsDT = DateTime::createFromFormat("Y-m-d G:i:s", $show["starts"], new DateTimeZone("UTC"));
-            $endsDT = DateTime::createFromFormat("Y-m-d G:i:s", $show["ends"], new DateTimeZone("UTC"));
+
+            $startsDT = DateTime::createFromFormat("Y-m-d G:i:s", 
+                $show["starts"],$utc);
+            $endsDT   = DateTime::createFromFormat("Y-m-d G:i:s",
+                $show["ends"], $utc);
 
             $startsEpochStr = $startsDT->format("U");
-            $endsEpochStr = $endsDT->format("U");
+            $endsEpochStr   = $endsDT->format("U");
 
-            $startsEpoch = intval($startsEpochStr);
-            $endsEpoch = intval($endsEpochStr);
+            $startsEpoch    = intval($startsEpochStr);
+            $endsEpoch      = intval($endsEpochStr);
 
             $startsDT->setTimezone(new DateTimeZone($timezone));
             $endsDT->setTimezone(new DateTimeZone($timezone));
 
-            if ($p_editable && $show["record"] && $nowEpoch > $startsEpoch) {
-                $options["editable"] = false;
-            } elseif ($p_editable && $show["rebroadcast"] && $nowEpoch > $parentStartsEpoch) {
-                $options["editable"] = false;
-            } elseif ($p_editable && $nowEpoch < $endsEpoch) {
-                $options["editable"] = true;
+            if( $p_editable ) {
+                if ($show["record"] && $nowEpoch > $startsEpoch) {
+                    $options["editable"] = false;
+                } elseif ($show["rebroadcast"] &&
+                    $nowEpoch > $parentStartsEpoch) {
+                    $options["editable"] = false;
+                } elseif ($nowEpoch < $endsEpoch) {
+                    $options["editable"] = true;
+                }
             }
 
-            $showInstance = new Application_Model_ShowInstance($show["instance_id"]);
+
+            $showInstance = new Application_Model_ShowInstance(
+                $show["instance_id"]);
             $showContent = $showInstance->getShowListContent();
-            if (empty($showContent)) {
-                $options["show_empty"] = 1;
-            } else {
-                $options["show_empty"] = 0;
-            }
 
-            $events[] = &self::makeFullCalendarEvent($show, $options, $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
+            $options["show_empty"] = empty($showContent) ? 1 : 0;
+
+            $events[] = &self::makeFullCalendarEvent($show, $options,
+                $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
         }
 
         return $events;
