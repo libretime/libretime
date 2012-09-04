@@ -92,12 +92,12 @@ class TimeoutWatcher(threading.Thread,Loggable):
             # isn't strictly necessary since RequestSync threads already
             # chain themselves
             if self.watcher.requests_in_queue():
-                self.logger.info("We got %d requests waiting to be launched" %
+                self.logger.info("We have %d requests waiting to be launched" %
                         self.watcher.requests_left_count())
                 self.watcher.request_do()
             # Same for events, this behaviour is mandatory however.
             if self.watcher.events_in_queue():
-                self.logger.info("We got %d events that are unflushed" %
+                self.logger.info("We have %d events that are unflushed" %
                         self.watcher.events_left_count())
                 self.watcher.flush_events()
 
