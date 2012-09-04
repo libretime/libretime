@@ -1223,9 +1223,10 @@ class Application_Model_Show
             $p_populateUntilDateTime = $date;
         }
 
-        $con->prepare("SELECT * FROM cc_show_days WHERE show_id = :show_id");
-        $con->bindParam(':show_id', $p_showId);
-        $res = $con->execute()->fetchAll();
+        $stmt = $con->prepare("SELECT * FROM cc_show_days WHERE show_id = :show_id");
+        $stmt->bindParam(':show_id', $p_showId);
+
+        $res = $stmt->execute()->fetchAll();
 
         foreach ($res as $showDaysRow) {
             Application_Model_Show::populateShow($showDaysRow, $p_populateUntilDateTime);
@@ -1621,17 +1622,17 @@ class Application_Model_Show
             $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
         }
 
-        $con->prepare("
+        $stmt = $con->prepare("
             SELECT * FROM cc_show_days
             WHERE last_show IS NULL
             OR first_show < :endTimeString AND last_show > :startTimeString");
 
-        $stmt = $con->execute(array(
+        $stmt->execute(array(
             ':endTimeString' => $endTimeString,
             ':startTimeString' => $startTimeString
         ));
 
-        $res = $stm->fetchAll();
+        $res = $stmt->fetchAll();
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
         }
