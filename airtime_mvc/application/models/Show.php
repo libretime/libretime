@@ -1223,8 +1223,10 @@ class Application_Model_Show
             $p_populateUntilDateTime = $date;
         }
 
-        $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
-        $res = $con->query($sql)->fetchAll();
+        $stmt = $con->prepare("SELECT * FROM cc_show_days WHERE show_id = :show_id");
+        $stmt->bindParam(':show_id', $p_showId);
+
+        $res = $stmt->execute()->fetchAll();
 
         foreach ($res as $showDaysRow) {
             Application_Model_Show::populateShow($showDaysRow, $p_populateUntilDateTime);
@@ -1620,12 +1622,20 @@ class Application_Model_Show
             $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
         }
 
-        $sql = "SELECT * FROM cc_show_days
-                WHERE last_show IS NULL
-                OR first_show < '{$endTimeString}' AND last_show > '{$startTimeString}'";
+        $stmt = $con->prepare("
+            SELECT * FROM cc_show_days
+            WHERE last_show IS NULL
+            OR first_show < :endTimeString AND last_show > :startTimeString");
 
-        //Logging::info($sql);
-        $res = $con->query($sql)->fetchAll();
+        //$stmt->execute(array(
+            //':endTimeString' => $endTimeString,
+            //':startTimeString' => $startTimeString
+        //));
+        $stmt->bindParam(':endTimeString', $endTimeString);
+        $stmt->bindParam(':startTimeString', $startTimeString);
+
+
+        $res = $stmt->execute()->fetchAll();
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
         }
