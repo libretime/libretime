@@ -1250,6 +1250,8 @@ class Application_Model_Show
      */
     private static function populateShow($p_showDaysRow, $p_populateUntilDateTime)
     {
+        // TODO : use constants instead of int values here? or maybe php will
+        // get enum types by the time somebody gets around to fix this. -- RG
         if ($p_showDaysRow["repeat_type"] == -1) {
             Application_Model_Show::populateNonRepeatingShow($p_showDaysRow, $p_populateUntilDateTime);
         } elseif ($p_showDaysRow["repeat_type"] == 0) {
