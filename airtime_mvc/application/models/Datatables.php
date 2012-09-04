@@ -9,8 +9,13 @@ class Application_Model_Datatables
             $isRange = false;
             if (strstr($term, '~')) {
                 $info = explode('~', $term);
-                $input1 = isset($info[0])?Application_Common_DateHelper::ConvertToUtcDateTimeString($info[0]):null;
-                $input2 = isset($info[1])?Application_Common_DateHelper::ConvertToUtcDateTimeString($info[1]):null;
+                if ($dbname == 'utime' || $dbname == 'mtime') {
+                    $input1 = isset($info[0])?Application_Common_DateHelper::ConvertToUtcDateTimeString($info[0]):null;
+                    $input2 = isset($info[1])?Application_Common_DateHelper::ConvertToUtcDateTimeString($info[1]):null;
+                } else {
+                    $input1 = isset($info[0])?$info[0]:null;
+                    $input2 = isset($info[1])?$info[1]:null;
+                }
                 $isRange = true;
             } else {
                 $input1 = $term;
