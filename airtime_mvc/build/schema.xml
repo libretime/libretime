@@ -420,7 +420,7 @@
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" />
     <!-- TODO, remove hardlimit on this column length? -->
     <column name="description" phpName="DbDescription" type="VARCHAR" size="255" required="true" />
-    <column name="url" phpName="DbUrl" type="VARCHAR" size="255" required="true" />
+    <column name="url" phpName="DbUrl" type="VARCHAR" size="512" required="true" />
     <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" required="true" defaultValue="00:00:00"/>
     <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="true" />
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="true" />

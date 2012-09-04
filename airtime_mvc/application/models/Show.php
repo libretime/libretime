@@ -475,10 +475,9 @@ class Application_Model_Show
             ->filterByDbShowId($this->_showId)
             ->findOne();
 
-        if (!is_null($showDaysRow)) {
+        if (!is_null($showDaysRow))  
             return $showDaysRow->getDbRepeatType();
-        } else
-
+        else
             return -1;
     }
 
@@ -607,31 +606,36 @@ class Application_Model_Show
      * Get the start date of the current show in UTC timezone.
      *
      * @return string
-     *      The start date in the format YYYY-MM-DD
+     *      The start date in the format YYYY-MM-DD or empty string in case
+     *      start date could not be found
      */
     public function getStartDateAndTime()
     {
         $con = Propel::getConnection();
 
         $showId = $this->getId();
-        $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
-            ." WHERE show_id = $showId"
+        $stmt = $con->prepare(
+            "SELECT first_show, start_time, timezone FROM cc_show_days"
+            ." WHERE show_id = :showId"
             ." ORDER BY first_show"
-            ." LIMIT 1";
+            ." LIMIT 1");
 
-        $query = $con->query($sql);
+        $stmt->bindParam(':showId', $showId);
+        $stmt->execute();
 
-        if ($query->rowCount() == 0) {
+        //$query = $con->query($sql);
+
+        if (!$stmt) {
             return "";
-        } else {
-            $rows = $query->fetchAll();
-            $row = $rows[0];
-
-            $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-
-            return $dt->format("Y-m-d H:i");
         }
+
+        $rows = $stmt->fetchAll();
+        $row = $rows[0];
+
+        $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
+        $dt->setTimezone(new DateTimeZone("UTC"));
+
+        return $dt->format("Y-m-d H:i");
     }
 
     /**
@@ -670,12 +674,12 @@ class Application_Model_Show
      */
     public function getEndDate()
     {
-        $startDate = $this->getStartDate();
-        $startTime = $this->getStartTime();
-        $duration = $this->getDuration();
+        $startDate     = $this->getStartDate();
+        $startTime     = $this->getStartTime();
+        $duration      = $this->getDuration();
 
         $startDateTime = new DateTime($startDate.' '.$startTime);
-        $duration = explode(":", $duration);
+        $duration      = explode(":", $duration);
 
         $endDate = $startDateTime->add(new DateInterval('PT'.$duration[0].'H'.$duration[1].'M'));
 
@@ -877,7 +881,7 @@ class Application_Model_Show
             $ccShow = CcShowQuery::create()->findPK($this->_showId);
             $info['custom_username'] = $ccShow->getDbLiveStreamUser();
             $info['cb_airtime_auth'] = $ccShow->getDbLiveStreamUsingAirtimeAuth();
-            $info['cb_custom_auth'] = $ccShow->getDbLiveStreamUsingCustomAuth();
+            $info['cb_custom_auth']  = $ccShow->getDbLiveStreamUsingCustomAuth();
             $info['custom_username'] = $ccShow->getDbLiveStreamUser();
             $info['custom_password'] = $ccShow->getDbLiveStreamPass();
 
@@ -1064,8 +1068,8 @@ class Application_Model_Show
         $ccShow->setDbGenre($data['add_show_genre']);
         $ccShow->setDbColor($data['add_show_color']);
         $ccShow->setDbBackgroundColor($data['add_show_background_color']);
-        $ccShow->setDbLiveStreamUsingAirtimeAuth($data['cb_airtime_auth'] == 1?true:false);
-        $ccShow->setDbLiveStreamUsingCustomAuth($data['cb_custom_auth'] == 1?true:false);
+        $ccShow->setDbLiveStreamUsingAirtimeAuth($data['cb_airtime_auth'] == 1);
+        $ccShow->setDbLiveStreamUsingCustomAuth($data['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($data['custom_username']);
         $ccShow->setDbLiveStreamPass($data['custom_password']);
         $ccShow->save();
@@ -1250,6 +1254,8 @@ class Application_Model_Show
      */
     private static function populateShow($p_showDaysRow, $p_populateUntilDateTime)
     {
+        // TODO : use constants instead of int values here? or maybe php will
+        // get enum types by the time somebody gets around to fix this. -- RG
         if ($p_showDaysRow["repeat_type"] == -1) {
             Application_Model_Show::populateNonRepeatingShow($p_showDaysRow, $p_populateUntilDateTime);
         } elseif ($p_showDaysRow["repeat_type"] == 0) {
@@ -1730,17 +1736,18 @@ class Application_Model_Show
     {
         $event = array();
 
-        $event["id"] = intval($show["instance_id"]);
-        $event["title"] = $show["name"];
-        $event["start"] = $startDateTime->format("Y-m-d H:i:s");
-        $event["startUnix"] = $startsEpoch;
-        $event["end"] = $endDateTime->format("Y-m-d H:i:s");
-        $event["endUnix"] = $endsEpoch;
-        $event["allDay"] = false;
-        $event["showId"] = intval($show["show_id"]);
-        $event["record"] = intval($show["record"]);
-        $event["rebroadcast"] = intval($show["rebroadcast"]);
-        $event["soundcloud_id"] = is_null($show["soundcloud_id"]) ? -1 : $show["soundcloud_id"];
+        $event["id"]            = intval($show["instance_id"]);
+        $event["title"]         = $show["name"];
+        $event["start"]         = $startDateTime->format("Y-m-d H:i:s");
+        $event["startUnix"]     = $startsEpoch;
+        $event["end"]           = $endDateTime->format("Y-m-d H:i:s");
+        $event["endUnix"]       = $endsEpoch;
+        $event["allDay"]        = false;
+        $event["showId"]        = intval($show["show_id"]);
+        $event["record"]        = intval($show["record"]);
+        $event["rebroadcast"]   = intval($show["rebroadcast"]);
+        $event["soundcloud_id"] = is_null($show["soundcloud_id"])
+            ? -1 : $show["soundcloud_id"];
 
         //event colouring
         if ($show["color"] != "") {
