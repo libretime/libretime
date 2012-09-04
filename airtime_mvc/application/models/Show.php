@@ -475,10 +475,9 @@ class Application_Model_Show
             ->filterByDbShowId($this->_showId)
             ->findOne();
 
-        if (!is_null($showDaysRow)) {
+        if (!is_null($showDaysRow))  
             return $showDaysRow->getDbRepeatType();
-        } else
-
+        else
             return -1;
     }
 

@@ -356,9 +356,9 @@ SQL;
                 ." SET media_item_played=TRUE";
         // we need to update 'broadcasted' column as well
         // check the current switch status
-        $live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on'?true:false;
-        $master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on'?true:false;
-        $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on'?true:false;
+        $live_dj        = Application_Model_Preference::GetSourceSwitchStatus('live_dj')        == 'on';
+        $master_dj      = Application_Model_Preference::GetSourceSwitchStatus('master_dj')      == 'on';
+        $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on';
 
         if (!$live_dj && !$master_dj && $scheduled_play) {
             $sql .= ", broadcasted=1";
