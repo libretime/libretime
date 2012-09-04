@@ -1064,8 +1064,8 @@ class Application_Model_Show
         $ccShow->setDbGenre($data['add_show_genre']);
         $ccShow->setDbColor($data['add_show_color']);
         $ccShow->setDbBackgroundColor($data['add_show_background_color']);
-        $ccShow->setDbLiveStreamUsingAirtimeAuth($data['cb_airtime_auth'] == 1?true:false);
-        $ccShow->setDbLiveStreamUsingCustomAuth($data['cb_custom_auth'] == 1?true:false);
+        $ccShow->setDbLiveStreamUsingAirtimeAuth($data['cb_airtime_auth'] == 1);
+        $ccShow->setDbLiveStreamUsingCustomAuth($data['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($data['custom_username']);
         $ccShow->setDbLiveStreamPass($data['custom_password']);
         $ccShow->save();
