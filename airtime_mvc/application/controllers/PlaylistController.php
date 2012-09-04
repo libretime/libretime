@@ -155,7 +155,7 @@ class PlaylistController extends Zend_Controller_Action
 
     private function wrongTypeToPlaylist($obj)
     {
-        $this->view->error = "You can only add tracks and smart blocks to playlists.";
+        $this->view->error = "You can only add tracks, smart blocks, and webstreams to playlists.";
         $this->createFullResponse($obj);
     }
 

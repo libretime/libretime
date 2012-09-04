@@ -134,7 +134,8 @@ var AIRTIME = (function(AIRTIME){
 				//process selected files/playlists.
 				for (i = 0, length = aData.length; i < length; i++) {
 					temp = aData[i];
-					if (temp.ftype === "audioclip" || temp.ftype === "block") {
+					if (temp.ftype === "audioclip" || temp.ftype === "block" ||
+					    (temp.ftype === "stream" && $("#obj_type").val() === "playlist")) {
 						aMediaIds.push(new Array (temp.id, temp.ftype));
 					}
 				}
@@ -144,7 +145,7 @@ var AIRTIME = (function(AIRTIME){
 			        if ($('#obj_type').val() == 'block') {
 			            alert('You can only add tracks to smart blocks.');
 			        } else if ($('#obj_type').val() == 'playlist') {
-			            alert('You can only add tracks and smart blocks to playlists.');
+			            alert('You can only add tracks, smart blocks, and webstreams to playlists.');
 			        }
 			    }
 			});
