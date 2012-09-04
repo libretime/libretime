@@ -259,9 +259,12 @@ def normalized_metadata(md, original_path):
 
 
     if is_airtime_recorded(new_md):
-        hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
-        new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
-            (name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
+        #hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
+        #new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
+            #(name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
+        # We changed show recorder to output correct metadata for recorded
+        # shows
+        pass
     else:
         # Read title from filename if it does not exist
         default_title = no_extension_basename(original_path)
