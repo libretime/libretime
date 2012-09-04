@@ -6,7 +6,6 @@ from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 from media.monitor.events     import OrganizeFile
-from media.monitor.metadata   import Metadata
 from pydispatch               import dispatcher
 from os.path                  import dirname
 
@@ -59,15 +58,13 @@ class Organizer(ReportHandler,Loggable):
             new_path = mmp.organized_path(event.path, target_path,
                     event.metadata.extract())
 
-            # disgusting stuff... See hack in mmp.magic_move
+            # See hack in mmp.magic_move
             def new_dir_watch(d):
                 def cb():
                     dispatcher.send(signal="add_subwatch", sender=self,
                             directory=d)
                 return cb
 
-            # TODO : Workaround doesn't work. Fix later
-            #Metadata.fix_title(event.path)
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
 

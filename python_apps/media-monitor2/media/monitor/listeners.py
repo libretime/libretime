@@ -9,27 +9,6 @@ from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
                                  DeleteDirWatch
 from media.monitor.log import Loggable, get_logger
 
-# We attempt to document a list of all special cases and hacks that the
-# following classes should be able to handle. TODO : implement all of
-# the following special cases
-#
-# properly as they only send a request for the dir and not for every
-# file. Also more hacks are needed to check that the directory finished
-# moving/copying?
-#
-# - In the case when a 'watched' directory's subdirectory is delete we
-# should send a special request telling ApiController to delete a whole
-# dir. This is done becasue pyinotify will not send an individual file
-# delete event for every file in that directory
-#
-# - Special move events are required whenever a file is moved
-# from a 'watched' directory into another 'watched' directory (or
-# subdirectory). In this case we must identify the file by its md5
-# signature instead of it's filepath like we usually do. Maybe it's
-# best to always identify a file based on its md5 signature?. Of course
-# that's not possible for some modification events because the md5
-# signature will change...
-
 # Note: Because of the way classes that inherit from pyinotify.ProcessEvent
 # interact with constructors. you should only instantiate objects from them
 # using keyword arguments. For example:
@@ -126,6 +105,7 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_create(self, event):
+        self.logger.info("PYINOTIFY")
         evt = NewFile(event)
         dispatcher.send(signal=self.signal, sender=self, event=evt)
         return evt
