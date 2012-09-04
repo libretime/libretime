@@ -1223,8 +1223,9 @@ class Application_Model_Show
             $p_populateUntilDateTime = $date;
         }
 
-        $sql = "SELECT * FROM cc_show_days WHERE show_id = $p_showId";
-        $res = $con->query($sql)->fetchAll();
+        $con->prepare("SELECT * FROM cc_show_days WHERE show_id = :show_id");
+        $con->bindParam(':show_id', $p_showId);
+        $res = $con->execute()->fetchAll();
 
         foreach ($res as $showDaysRow) {
             Application_Model_Show::populateShow($showDaysRow, $p_populateUntilDateTime);
