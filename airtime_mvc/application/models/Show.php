@@ -1730,17 +1730,18 @@ class Application_Model_Show
     {
         $event = array();
 
-        $event["id"] = intval($show["instance_id"]);
-        $event["title"] = $show["name"];
-        $event["start"] = $startDateTime->format("Y-m-d H:i:s");
-        $event["startUnix"] = $startsEpoch;
-        $event["end"] = $endDateTime->format("Y-m-d H:i:s");
-        $event["endUnix"] = $endsEpoch;
-        $event["allDay"] = false;
-        $event["showId"] = intval($show["show_id"]);
-        $event["record"] = intval($show["record"]);
-        $event["rebroadcast"] = intval($show["rebroadcast"]);
-        $event["soundcloud_id"] = is_null($show["soundcloud_id"]) ? -1 : $show["soundcloud_id"];
+        $event["id"]            = intval($show["instance_id"]);
+        $event["title"]         = $show["name"];
+        $event["start"]         = $startDateTime->format("Y-m-d H:i:s");
+        $event["startUnix"]     = $startsEpoch;
+        $event["end"]           = $endDateTime->format("Y-m-d H:i:s");
+        $event["endUnix"]       = $endsEpoch;
+        $event["allDay"]        = false;
+        $event["showId"]        = intval($show["show_id"]);
+        $event["record"]        = intval($show["record"]);
+        $event["rebroadcast"]   = intval($show["rebroadcast"]);
+        $event["soundcloud_id"] = is_null($show["soundcloud_id"])
+            ? -1 : $show["soundcloud_id"];
 
         //event colouring
         if ($show["color"] != "") {
