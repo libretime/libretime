@@ -2,6 +2,7 @@
 import copy
 import subprocess
 import os
+import math
 import shutil
 import re
 import sys
@@ -11,6 +12,9 @@ import operator as op
 
 from os.path   import normpath
 from itertools import takewhile
+# you need to import reduce in python 3
+try: from functools import reduce
+except: pass
 from configobj import ConfigObj
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
@@ -280,8 +284,6 @@ def organized_path(old_path, root_path, orig_md):
     """
     filepath = None
     ext = extension(old_path)
-    # The blocks for each if statement look awfully similar. Perhaps there is a
-    # way to simplify this code
     def default_f(dictionary, key):
         if key in dictionary: return len(dictionary[key]) == 0
         else: return True
@@ -464,6 +466,46 @@ def file_playable(pathname):
         pathname.replace("'", "'\\''")
     return_code = subprocess.call(command, shell=True)
     return (return_code == 0)
+
+def toposort(data):
+    for k, v in data.items():
+        v.discard(k) # Ignore self dependencies
+    extra_items_in_deps = reduce(set.union, data.values()) - set(data.keys())
+    data.update({item:set() for item in extra_items_in_deps})
+    while True:
+        ordered = set(item for item,dep in data.items() if not dep)
+        if not ordered: break
+        for e in sorted(ordered): yield e
+        data = dict((item,(dep - ordered)) for item,dep in data.items()
+                if item not in ordered)
+    assert not data, "A cyclic dependency exists amongst %r" % data
+
+def truncate_to_length(item, length):
+    """
+    Truncates 'item' to 'length'
+    """
+    if isinstance(item, int): item = str(item)
+    if isinstance(item, basestring):
+        if len(item) > length: return item[0:length]
+        else: return item
+
+def format_length(mutagen_length):
+    """
+    Convert mutagen length to airtime length
+    """
+    t = float(mutagen_length)
+    h = int(math.floor(t / 3600))
+    t = t % 3600
+    m = int(math.floor(t / 60))
+    s = t % 60
+    # will be ss.uuu
+    s = str(s)
+    seconds = s.split(".")
+    s = seconds[0]
+    # have a maximum of 6 subseconds.
+    if len(seconds[1]) >= 6: ss = seconds[1][0:6]
+    else: ss = seconds[1][0:]
+    return "%s:%s:%s.%s" % (h, m, s, ss)
 
 if __name__ == '__main__':
     import doctest
