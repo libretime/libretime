@@ -1630,15 +1630,11 @@ class Application_Model_Show
             WHERE last_show IS NULL
             OR first_show < :endTimeString AND last_show > :startTimeString");
 
-        //$stmt->execute(array(
-            //':endTimeString' => $endTimeString,
-            //':startTimeString' => $startTimeString
-        //));
         $stmt->bindParam(':endTimeString', $endTimeString);
         $stmt->bindParam(':startTimeString', $startTimeString);
+        $stmt->execute();
 
-
-        $res = $stmt->execute()->fetchAll();
+        $res = $stmt->fetchAll();
         foreach ($res as $row) {
             Application_Model_Show::populateShow($row, $p_endTimestamp);
         }
@@ -1894,8 +1890,8 @@ SQL;
         $numberOfRows = count($rows);
 
         $results['previousShow'] = array();
-        $results['currentShow'] =  array();
-        $results['nextShow'] =  array();
+        $results['currentShow']  = array();
+        $results['nextShow']     = array();
 
         $timeNowAsMillis = strtotime($p_timeNow);
 
@@ -1905,32 +1901,32 @@ SQL;
                 && (strtotime($rows[$i]['ends']) > $timeNowAsMillis)) {
                 if ($i-1 >= 0) {
                     $results['previousShow'][0] = array(
-                                "id"=>$rows[$i-1]['id'],
-                                "instance_id"=>$rows[$i-1]['instance_id'],
-                                "name"=>$rows[$i-1]['name'],
-                                "url"=>$rows[$i-1]['url'],
-                                "start_timestamp"=>$rows[$i-1]['start_timestamp'],
-                                "end_timestamp"=>$rows[$i-1]['end_timestamp'],
-                                "starts"=>$rows[$i-1]['starts'],
-                                "ends"=>$rows[$i-1]['ends'],
-                                "record"=>$rows[$i-1]['record'],
-                                "type"=>"show");
+                                "id"              => $rows[$i-1]['id'],
+                                "instance_id"     => $rows[$i-1]['instance_id'],
+                                "name"            => $rows[$i-1]['name'],
+                                "url"             => $rows[$i-1]['url'],
+                                "start_timestamp" => $rows[$i-1]['start_timestamp'],
+                                "end_timestamp"   => $rows[$i-1]['end_timestamp'],
+                                "starts"          => $rows[$i-1]['starts'],
+                                "ends"            => $rows[$i-1]['ends'],
+                                "record"          => $rows[$i-1]['record'],
+                                "type"            => "show");
                 }
 
                 $results['currentShow'][0] =  $rows[$i];
 
                 if (isset($rows[$i+1])) {
                     $results['nextShow'][0] =  array(
-                                "id"=>$rows[$i+1]['id'],
-                                "instance_id"=>$rows[$i+1]['instance_id'],
-                                "name"=>$rows[$i+1]['name'],
-                                "url"=>$rows[$i+1]['url'],
-                                "start_timestamp"=>$rows[$i+1]['start_timestamp'],
-                                "end_timestamp"=>$rows[$i+1]['end_timestamp'],
-                                "starts"=>$rows[$i+1]['starts'],
-                                "ends"=>$rows[$i+1]['ends'],
-                                "record"=>$rows[$i+1]['record'],
-                                "type"=>"show");
+                                "id"              => $rows[$i+1]['id'],
+                                "instance_id"     => $rows[$i+1]['instance_id'],
+                                "name"            => $rows[$i+1]['name'],
+                                "url"             => $rows[$i+1]['url'],
+                                "start_timestamp" => $rows[$i+1]['start_timestamp'],
+                                "end_timestamp"   => $rows[$i+1]['end_timestamp'],
+                                "starts"          => $rows[$i+1]['starts'],
+                                "ends"            => $rows[$i+1]['ends'],
+                                "record"          => $rows[$i+1]['record'],
+                                "type"            => "show");
                 }
                 break;
             }
@@ -1941,16 +1937,16 @@ SQL;
             //if we hit this we know we've gone to far and can stop looping.
             if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
                 $results['nextShow'][0] = array(
-                                "id"=>$rows[$i]['id'],
-                                "instance_id"=>$rows[$i]['instance_id'],
-                                "name"=>$rows[$i]['name'],
-                                "url"=>$rows[$i]['url'],
-                                "start_timestamp"=>$rows[$i]['start_timestamp'],
-                                "end_timestamp"=>$rows[$i]['end_timestamp'],
-                                "starts"=>$rows[$i]['starts'],
-                                "ends"=>$rows[$i]['ends'],
-                                "record"=>$rows[$i]['record'],
-                                "type"=>"show");
+                                "id"              => $rows[$i]['id'],
+                                "instance_id"     => $rows[$i]['instance_id'],
+                                "name"            => $rows[$i]['name'],
+                                "url"             => $rows[$i]['url'],
+                                "start_timestamp" => $rows[$i]['start_timestamp'],
+                                "end_timestamp"   => $rows[$i]['end_timestamp'],
+                                "starts"          => $rows[$i]['starts'],
+                                "ends"            => $rows[$i]['ends'],
+                                "record"          => $rows[$i]['record'],
+                                "type"            => "show");
                 break;
             }
         }
@@ -1958,15 +1954,15 @@ SQL;
         //found a previous show so use it.
         if (count($results['previousShow']) == 0 && isset($previousShowIndex)) {
                 $results['previousShow'][0] = array(
-                    "id"=>$rows[$previousShowIndex]['id'],
-                    "instance_id"=>$rows[$previousShowIndex]['instance_id'],
-                    "name"=>$rows[$previousShowIndex]['name'],
-                    "start_timestamp"=>$rows[$previousShowIndex]['start_timestamp'],
-                    "end_timestamp"=>$rows[$previousShowIndex]['end_timestamp'],
-                    "starts"=>$rows[$previousShowIndex]['starts'],
-                    "ends"=>$rows[$previousShowIndex]['ends'],
-                    "record"=>$rows[$previousShowIndex]['record'],
-                    "type"=>"show");
+                    "id"              => $rows[$previousShowIndex]['id'],
+                    "instance_id"     => $rows[$previousShowIndex]['instance_id'],
+                    "name"            => $rows[$previousShowIndex]['name'],
+                    "start_timestamp" => $rows[$previousShowIndex]['start_timestamp'],
+                    "end_timestamp"   => $rows[$previousShowIndex]['end_timestamp'],
+                    "starts"          => $rows[$previousShowIndex]['starts'],
+                    "ends"            => $rows[$previousShowIndex]['ends'],
+                    "record"          => $rows[$previousShowIndex]['record'],
+                    "type"            => "show");
         }
 
         return $results;
