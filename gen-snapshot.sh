@@ -46,9 +46,6 @@ rm -r airtime/airtime_mvc/library/ZFDebug/
 #Strip un-needed install scripts
 rm -r airtime/install_full/
 
-#Fix permissions
-chmod -x airtime/python_apps/media-monitor2/mm1.99.sh
-
 #############################
 
 echo "running the build..."
