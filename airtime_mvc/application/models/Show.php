@@ -615,24 +615,28 @@ class Application_Model_Show
         $con = Propel::getConnection();
 
         $showId = $this->getId();
-        $sql = "SELECT first_show, start_time, timezone FROM cc_show_days"
-            ." WHERE show_id = $showId"
+        $stmt = $con->prepare(
+            "SELECT first_show, start_time, timezone FROM cc_show_days"
+            ." WHERE show_id = :showId"
             ." ORDER BY first_show"
-            ." LIMIT 1";
+            ." LIMIT 1");
 
-        $query = $con->query($sql);
+        $stmt->bindParam(':showId', $showId);
+        $stmt->execute();
 
-        if ($query->rowCount() == 0) {
+        //$query = $con->query($sql);
+
+        if (!$stmt) {
             return "";
-        } else {
-            $rows = $query->fetchAll();
-            $row = $rows[0];
-
-            $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
-            $dt->setTimezone(new DateTimeZone("UTC"));
-
-            return $dt->format("Y-m-d H:i");
         }
+
+        $rows = $stmt->fetchAll();
+        $row = $rows[0];
+
+        $dt = new DateTime($row["first_show"]." ".$row["start_time"], new DateTimeZone($row["timezone"]));
+        $dt->setTimezone(new DateTimeZone("UTC"));
+
+        return $dt->format("Y-m-d H:i");
     }
 
     /**
@@ -671,12 +675,12 @@ class Application_Model_Show
      */
     public function getEndDate()
     {
-        $startDate = $this->getStartDate();
-        $startTime = $this->getStartTime();
-        $duration = $this->getDuration();
+        $startDate     = $this->getStartDate();
+        $startTime     = $this->getStartTime();
+        $duration      = $this->getDuration();
 
         $startDateTime = new DateTime($startDate.' '.$startTime);
-        $duration = explode(":", $duration);
+        $duration      = explode(":", $duration);
 
         $endDate = $startDateTime->add(new DateInterval('PT'.$duration[0].'H'.$duration[1].'M'));
 
@@ -878,7 +882,7 @@ class Application_Model_Show
             $ccShow = CcShowQuery::create()->findPK($this->_showId);
             $info['custom_username'] = $ccShow->getDbLiveStreamUser();
             $info['cb_airtime_auth'] = $ccShow->getDbLiveStreamUsingAirtimeAuth();
-            $info['cb_custom_auth'] = $ccShow->getDbLiveStreamUsingCustomAuth();
+            $info['cb_custom_auth']  = $ccShow->getDbLiveStreamUsingCustomAuth();
             $info['custom_username'] = $ccShow->getDbLiveStreamUser();
             $info['custom_password'] = $ccShow->getDbLiveStreamPass();
 
