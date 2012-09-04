@@ -607,7 +607,8 @@ class Application_Model_Show
      * Get the start date of the current show in UTC timezone.
      *
      * @return string
-     *      The start date in the format YYYY-MM-DD
+     *      The start date in the format YYYY-MM-DD or empty string in case
+     *      start date could not be found
      */
     public function getStartDateAndTime()
     {
