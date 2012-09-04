@@ -1788,7 +1788,7 @@ class Application_Model_Show
      * @param  String $timeNow - current time (in UTC)
      * @return array  - show being played right now
      */
-    public static function GetCurrentShow($timeNow=null)
+    public static function getCurrentShow($timeNow=null)
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -1797,16 +1797,34 @@ class Application_Model_Show
             $timeNow = $date->getUtcTimestamp();
         }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name,"
-        ." s.id, si.id as instance_id, si.record, s.url, starts, ends"
-        ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
-        ." WHERE si.show_id = s.id"
-        ." AND si.starts <= TIMESTAMP '$timeNow'"
-        ." AND si.ends > TIMESTAMP '$timeNow'"
-        ." AND modified_instance != TRUE";
+        $sql = <<<SQL
+SELECT si.starts AS start_timestamp,
+       si.ends AS end_timestamp,
+       s.name,
+       s.id,
+       si.id AS instance_id,
+       si.record,
+       s.url,
+       starts,
+       ends
+FROM cc_show_instances si,
+     cc_show s
+WHERE si.show_id = s.id
+  AND si.starts <= TIMESTAMP ':timeNow1'
+  AND si.ends > TIMESTAMP ':timeNow2'
+  AND modified_instance != TRUE"
+SQL;
 
-        // Convert back to local timezone
-        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':timeNow1', $timeNow);
+        $stmt->bindParam(':timeNow2', $timeNow);
+
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll();
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
 
         return $rows;
     }
@@ -1819,17 +1837,38 @@ class Application_Model_Show
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
+        //
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name,"
-        ." s.id, si.id as instance_id, si.record, s.url, starts, ends"
-        ." FROM $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
-        ." WHERE si.show_id = s.id"
-        ." AND si.starts > TIMESTAMP '$p_timeNow' - INTERVAL '2 days'"
-        ." AND si.ends < TIMESTAMP '$p_timeNow' + INTERVAL '2 days'"
-        ." AND modified_instance != TRUE"
-        ." ORDER BY si.starts";
+        $sql = <<<SQL
+SELECT si.starts AS start_timestamp,
+       si.ends AS end_timestamp,
+       s.name,
+       s.id,
+       si.id AS instance_id,
+       si.record,
+       s.url,
+       starts,
+       ends
+FROM cc_show_instances si,
+     cc_show s
+WHERE si.show_id = s.id
+  AND si.starts > TIMESTAMP ':timeNow1' - INTERVAL '2 days'
+  AND si.ends < TIMESTAMP ':timeNow2' + INTERVAL '2 days'
+  AND modified_instance != TRUE
+ORDER BY si.starts
+SQL;
 
-        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':timeNow1', $p_timeNow);
+        $stmt->bindParam(':timeNow2', $p_timeNow);
+
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+
         $numberOfRows = count($rows);
 
         $results['previousShow'] = array();
@@ -1923,7 +1962,7 @@ class Application_Model_Show
      * @param  String $timeEnd   - interval end time (in UTC)
      * @return array  - the next $limit number of shows within the time interval
      */
-    public static function getNextShows($timeStart, $limit = "0", $timeEnd = "")
+    public static function getNextShows($timeStart, $limit = "ALL", $timeEnd = "")
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
@@ -1937,20 +1976,37 @@ class Application_Model_Show
         }
 
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
-        $sql = "SELECT si.starts as start_timestamp, si.ends as end_timestamp, s.name, s.id, si.id as instance_id, si.record, s.url, starts, ends FROM"
-        ." $CC_CONFIG[showInstances] si, $CC_CONFIG[showTable] s"
-        ." WHERE si.show_id = s.id"
-        ." AND si.starts >= TIMESTAMP '$timeStart'"
-        ." AND si.starts < TIMESTAMP $timeEnd"
-        ." AND modified_instance != TRUE"
-        ." ORDER BY si.starts";
+        $sql = <<<SQL
+SELECT si.starts AS start_timestamp,
+       si.ends AS end_timestamp,
+       s.name,
+       s.id,
+       si.id AS instance_id,
+       si.record,
+       s.url,
+       starts,
+       ends
+FROM cc_show_instances,
+     cc_show
+WHERE si.show_id = s.id"
+  AND si.starts >= TIMESTAMP ':timeStart'
+  AND si.starts < TIMESTAMP ':timeEnd'
+  AND modified_instance != TRUE
+ORDER BY si.starts
+LIMIT :lim
+SQL;
 
-        // defaults to retrieve all shows within the interval if $limit not set
-        if ($limit != "0") {
-            $sql = $sql . " LIMIT $limit";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':timeStart', $timeStart);
+        $stmt->bindParam(':timeEnd', $timeEnd);
+        $stmt->bindParam(':lim', $limit);
+
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
         }
-
-        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
         return $rows;
     }
@@ -1981,6 +2037,7 @@ class Application_Model_Show
         global $CC_CONFIG;
         $con = Propel::getConnection();
 
+        //Not using prepared statement here since not using an variable input.
         $sql = "SELECT column_name, character_maximum_length FROM information_schema.columns"
         ." WHERE table_name = 'cc_show' AND character_maximum_length > 0";
         $result = $con->query($sql)->fetchAll();

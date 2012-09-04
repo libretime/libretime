@@ -121,7 +121,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentShowAction()
     {
-        $currentShow = Application_Model_Show::GetCurrentShow();
+        $currentShow = Application_Model_Show::getCurrentShow();
         if (!empty($currentShow)) {
             $this->view->si_id = $currentShow[0]["instance_id"];
             $this->view->current_show = true;
@@ -346,7 +346,7 @@ class ScheduleController extends Zend_Controller_Action
     public function getCurrentPlaylistAction()
     {
         $range = Application_Model_Schedule::GetPlayOrderRange();
-        $show = Application_Model_Show::GetCurrentShow();
+        $show = Application_Model_Show::getCurrentShow();
 
         /* Convert all UTC times to localtime before sending back to user. */
         if (isset($range["previous"])) {

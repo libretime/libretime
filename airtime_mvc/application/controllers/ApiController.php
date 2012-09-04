@@ -382,7 +382,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->is_recording = false;
         $this->view->server_timezone = Application_Model_Preference::GetTimezone();
 
-        $rows = Application_Model_Show::GetCurrentShow($today_timestamp);
+        $rows = Application_Model_Show::getCurrentShow($today_timestamp);
         Application_Model_Show::convertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
 
         if (count($rows) > 0) {
@@ -928,7 +928,7 @@ class ApiController extends Zend_Controller_Action
             }
         } elseif ($djtype == "dj") {
             //check against show dj auth
-            $showInfo = Application_Model_Show::GetCurrentShow();
+            $showInfo = Application_Model_Show::getCurrentShow();
             // there is current playing show
             if (isset($showInfo[0]['id'])) {
                 $current_show_id = $showInfo[0]['id'];
