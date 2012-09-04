@@ -95,7 +95,7 @@ CREATE TABLE cc_webstream (
 	id integer DEFAULT nextval('cc_webstream_id_seq'::regclass) NOT NULL,
 	name character varying(255) NOT NULL,
 	description character varying(255) NOT NULL,
-	url character varying(255) NOT NULL,
+	url character varying(512) NOT NULL,
 	length interval DEFAULT '00:00:00'::interval NOT NULL,
 	creator_id integer NOT NULL,
 	mtime timestamp(6) without time zone NOT NULL,

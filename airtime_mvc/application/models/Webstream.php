@@ -168,6 +168,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         if ($result == 0) {
             $valid['url'][0] = false;
             $valid['url'][1] = 'URL should be of form "http://domain"';
+        } elseif (strlen($url) > 512) {
+            $valid['url'][0] = false;
+            $valid['url'][1] = 'URL should be 512 characters or less';      
         } else {
 
             try {
