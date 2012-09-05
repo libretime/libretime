@@ -261,7 +261,6 @@ def normalized_metadata(md, original_path):
         if new_md['MDATA_KEY_BPM'] is None:
             del new_md['MDATA_KEY_BPM']
 
-
     if is_airtime_recorded(new_md):
         #hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
         #new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
@@ -314,10 +313,11 @@ def organized_path(old_path, root_path, orig_md):
         r = "(?P<show>.+)-(?P<date>\d+-\d+-\d+)-(?P<time>\d+:\d+:\d+)$"
         title_re    = re.match(r, normal_md['MDATA_KEY_TITLE'])
         show_name   = title_re.group('show')
-        date        = title_re.group('date')
+        #date        = title_re.group('date')
         yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',2)
         fname_base  = '%s-%s-%s.%s' % \
-                (date, show_name, normal_md['MDATA_KEY_BITRATE'], ext)
+                (title_re.group('time'), show_name,
+                        normal_md['MDATA_KEY_BITRATE'], ext)
         filepath = os.path.join(root_path, yyyy, mm, fname_base)
     elif len(normal_md['MDATA_KEY_TRACKNUMBER']) == 0:
         fname = u'%s-%s.%s' % (normal_md['MDATA_KEY_TITLE'],
