@@ -275,9 +275,14 @@ def normalized_metadata(md, original_path):
             default_title = u''
         new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
                             default=default_title)
+        new_md['MDATA_KEY_TITLE'] = re.sub(r'-\d+kbps$', u'',
+                new_md['MDATA_KEY_TITLE'])
 
+    # TODO : wtf is this for again?
     new_md['MDATA_KEY_TITLE'] = re.sub(r'-?%s-?' % unicode_unknown, u'',
             new_md['MDATA_KEY_TITLE'])
+    # ugly mother fucking band aid until enterprise metadata framework is
+    # working
     return new_md
 
 def organized_path(old_path, root_path, orig_md):
