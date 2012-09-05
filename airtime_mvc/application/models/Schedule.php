@@ -1102,7 +1102,7 @@ SQL;
             ));
         }
         //$rows = $con->query($sql);
-        $rows->fetchAll();
+        $rows = $stmt->fetchAll();
 
         foreach ($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));

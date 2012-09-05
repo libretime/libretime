@@ -324,24 +324,28 @@ class Application_Model_ShowInstance
     {
         $con = Propel::getConnection();
 
-        $hours = $deltaMin/60;
-        if($hours > 0)
-            $hours = floor($hours);
-        else
-            $hours = ceil($hours);
+        $hours = $deltaMin / 60;
 
-        $mins = abs($deltaMin%60);
+        $hours = ($hours > 0) ? floor($hours) : ceil($hours);
+
+        $mins = abs($deltaMin % 60);
 
         $today_timestamp = gmdate("Y-m-d H:i:s");
-        $starts = $this->getShowInstanceStart();
-        $ends = $this->getShowInstanceEnd();
+        $starts          = $this->getShowInstanceStart();
+        $ends            = $this->getShowInstanceEnd();
 
         if (strtotime($today_timestamp) > strtotime($starts)) {
             return "can't resize a past show";
         }
 
-        $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $new_ends = $con->query($sql)->fetchColumn(0);
+        //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
+        $sql = "SELECT timestamp :ends + interval :deltaDays + interval :deltaTime";
+
+        $now_ends = Application_Common_Database::prepareAndExecute($sql, 
+            array(':ends'      => $ends,
+                  ':deltaDays' => "$deltaDay days",
+                  ':deltaTime' => "{$hours}:{$mins}"), 'column'
+        );
 
         //only need to check overlap if show increased in size.
         if (strtotime($new_ends) > strtotime($ends)) {
@@ -381,7 +385,7 @@ class Application_Model_ShowInstance
 
         $scheduler = new Application_Model_Scheduler();
         $scheduler->scheduleAfter(
-            array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
+            array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
     }
@@ -663,7 +667,7 @@ FROM (
                 f.filepath AS filepath
          FROM cc_schedule AS s
          LEFT JOIN cc_files AS f ON f.id = s.file_id
-         WHERE s.instance_id = '{$this->_instanceId}'
+         WHERE s.instance_id = :instance_id1
            AND s.playout_status >= 0
            AND s.file_id IS NOT NULL)
       UNION
@@ -680,13 +684,18 @@ FROM (
          FROM cc_schedule AS s
          LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
          LEFT JOIN cc_subjs AS sub ON ws.creator_id = sub.id
-         WHERE s.instance_id = '{$this->_instanceId}'
+         WHERE s.instance_id = :instance_id2
            AND s.playout_status >= 0
            AND s.stream_id IS NOT NULL)) AS temp
 ORDER BY starts;
 SQL;
 
-        $results = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $con->prepare($sql);
+        $stmt->execute(array(
+            ':instance_id1' => $this->_instanceId,
+            ':instance_id2' => $this->_instanceId
+        ));
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as &$row) {
 
