@@ -175,15 +175,13 @@ class Application_Model_StreamSetting
      */
     public static function setStreamSetting($data)
     {
-        $con = Propel::getConnection();
-
         foreach ($data as $key => $d) {
             if ($key == "output_sound_device" || $key == "icecast_vorbis_metadata") {
-                $v = $d == 1?"true":"false";
+                $v = ($d == 1) ? "true" : "false";
 
                 self::saveStreamSetting($key, $v);
             } elseif ($key == "output_sound_device_type") {
-                self::saveStreamSetting($key, $v);
+                self::saveStreamSetting($key, $d);
             } elseif (is_array($d)) {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];

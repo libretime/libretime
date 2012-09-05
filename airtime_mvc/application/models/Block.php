@@ -196,11 +196,19 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
     LEFT JOIN cc_files AS f ON pc.file_id=f.id
     LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
-    WHERE pc.block_id = {$this->id}
+    WHERE pc.block_id = :block_id
     ORDER BY pc.position;
 EOT;
         $con = Propel::getConnection();
-        $rows = $con->query($sql)->fetchAll();
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':block_id', $this->id);
+        
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll();
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
 
         $offset = 0;
         foreach ($rows as &$row) {
@@ -323,10 +331,17 @@ EOT;
     // this function returns sum of all track length under this block.
     public function getStaticLength()
     {
-        $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id={$this->id}";
-        $r = $this->con->query($sql);
-        $result = $r->fetchAll(PDO::FETCH_NUM);
-
+        $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id = :block_id";
+        $stmt = $this->con->prepare($sql);
+        $stmt->bindParam(':block_id', $this->id);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->fetchAll(PDO::FETCH_NUM);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("error: $msg");
+        }
+        
         return $result[0][0];
     }
 
@@ -446,7 +461,7 @@ EOT;
                         $pos = $pos + 1;
                     }
                 } catch (Exception $e) {
-                    Logging::log($e->getMessage());
+                    Logging::info($e->getMessage());
                 }
             }
 
@@ -637,21 +652,40 @@ EOT;
 
             if (!is_null($fadeIn)) {
 
-                $sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    //"Fade In can't be larger than overall playlength.";
-                    $fadeIn = $clipLength;
+                $sql = "SELECT :fade_in::INTERVAL > :clip_length::INTERVAL";
+                
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':fade_in', $fadeIn);
+                $stmt->bindParam(':clip_length', $clipLength);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        //"Fade In can't be larger than overall playlength.";
+                        $fadeIn = $clipLength;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
+                
                 $row->setDbFadein($fadeIn);
             }
             if (!is_null($fadeOut)) {
 
-                $sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    //Fade Out can't be larger than overall playlength.";
-                    $fadeOut = $clipLength;
+                $sql = "SELECT :fade_out::INTERVAL > :clip_length::INTERVAL";
+
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':fade_out', $fadeOut);
+                $stmt->bindParam(':clip_length', $clipLength);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        //Fade Out can't be larger than overall playlength.";
+                        $fadeOut = $clipLength;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
                 $row->setDbFadeout($fadeOut);
             }
@@ -739,25 +773,52 @@ EOT;
                     $cueOut = $origLength;
                 }
 
-                $sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                $sql = "SELECT :cue_in::INTERVAL > :cue_out::INTERVAL";
 
-                    return $errArray;
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_in', $cueIn);
+                $stmt->bindParam(':cue_out', $cueOut);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        $errArray["error"] = "Can't set cue in to be larger than cue out.";
+    
+                        return $errArray;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
 
-                $sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                $sql = "SELECT :cue_out::INTERVAL > INTERVAL :orig_length::INTERVAL";
 
-                    return $errArray;
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_out', $cueOut);
+                $stmt->bindParam(':orig_length', $origLength);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        $errArray["error"] = "Can't set cue out to be greater than file length.";
+    
+                        return $errArray;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
 
-                $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
-                $r = $this->con->query($sql);
-                $cliplength = $r->fetchColumn(0);
+                $sql = "SELECT :cue_out::INTERVAL - :cue_in::INTERVAL";
+
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_out', $cueOut);
+                $stmt->bindParam(':cue_in', $cueIn);
+                
+                if ($stmt->execute()) {
+                    $cliplength = $stmt->fetchColumn(0);
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
+                }
 
                 $row->setDbCuein($cueIn);
                 $row->setDbCueout($cueOut);
@@ -765,17 +826,35 @@ EOT;
 
             } elseif (!is_null($cueIn)) {
 
-                $sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
-
-                    return $errArray;
+                $sql = "SELECT :cue_in::INTERVAL > :old_cue_out::INTERVAL";
+                
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_in', $cueIn);
+                $stmt->bindParam(':old_cue_out', $oldCueOut);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        $errArray["error"] = "Can't set cue in to be larger than cue out.";
+    
+                        return $errArray;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
 
-                $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
-                $r = $this->con->query($sql);
-                $cliplength = $r->fetchColumn(0);
+                $sql = "SELECT :old_cue_out::INTERVAL - :cue_in::INTERVAL";
+
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':old_cue_out', $oldCueOut);
+                $stmt->bindParam(':cue_in', $cueIn);
+                
+                if ($stmt->execute()) {
+                    $cliplength = $stmt->fetchColumn(0);
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
+                }
 
                 $row->setDbCuein($cueIn);
                 $row->setDBCliplength($cliplength);
@@ -785,25 +864,52 @@ EOT;
                     $cueOut = $origLength;
                 }
 
-                $sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    $errArray["error"] = "Can't set cue out to be smaller than cue in.";
+                $sql = "SELECT :cue_out::INTERVAL < :old_cue_in::INTERVAL";
 
-                    return $errArray;
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_out', $cueOut);
+                $stmt->bindParam(':old_cue_in', $oldCueIn);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        $errArray["error"] = "Can't set cue out to be smaller than cue in.";
+    
+                        return $errArray;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
 
-                $sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-                $r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
-                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                $sql = "SELECT :cue_out::INTERVAL > :orig_length::INTERVAL";
 
-                    return $errArray;
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_out', $cueOut);
+                $stmt->bindParam(':orig_length', $origLength);
+                
+                if ($stmt->execute()) {
+                    if ($stmt->fetchColumn(0)) {
+                        $errArray["error"] = "Can't set cue out to be greater than file length.";
+    
+                        return $errArray;
+                    }
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
                 }
 
-                $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$oldCueIn}'";
-                $r = $this->con->query($sql);
-                $cliplength = $r->fetchColumn(0);
+                $sql = "SELECT :cue_out::INTERVAL - :old_cue_in::INTERVAL";
+
+                $stmt = $this->con->prepare($sql);
+                $stmt->bindParam(':cue_out', $cueOut);
+                $stmt->bindParam(':old_cue_in', $oldCueIn);
+                
+                if ($stmt->execute()) {
+                    $cliplength = $stmt->fetchColumn(0);
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
+                }
 
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
@@ -811,18 +917,36 @@ EOT;
 
             $cliplength = $row->getDbCliplength();
 
-            $sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
-            $r = $this->con->query($sql);
-            if ($r->fetchColumn(0)) {
-                $fadeIn = $cliplength;
-                $row->setDbFadein($fadeIn);
+            $sql = "SELECT :fade_in::INTERVAL > :clip_length::INTERVAL";
+
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindParam(':fade_in', $fadeIn);
+            $stmt->bindParam(':clip_length', $cliplength);
+            
+            if ($stmt->execute()) {
+                if ($stmt->fetchColumn(0)) {
+                    $fadeIn = $cliplength;
+                    $row->setDbFadein($fadeIn);
+                }
+            } else {
+                $msg = implode(',', $stmt->errorInfo());
+                throw new Exception("Error: $msg");
             }
 
-            $sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
-            $r = $this->con->query($sql);
-            if ($r->fetchColumn(0)) {
-                $fadeOut = $cliplength;
-                $row->setDbFadein($fadeOut);
+            $sql = "SELECT :fade_out::INTERVAL > :clip_length::INTERVAL";
+            
+            $stmt = $this->con->prepare($sql);
+            $stmt->bindParam(':fade_out', $fadeOut);
+            $stmt->bindParam(':clip_length', $cliplength);
+            
+            if ($stmt->execute()) {
+                if ($stmt->fetchColumn(0)) {
+                    $fadeOut = $cliplength;
+                    $row->setDbFadein($fadeOut);
+                }
+            } else {
+                $msg = implode(',', $stmt->errorInfo());
+                throw new Exception("Error: $msg");
             }
 
             $row->save($this->con);

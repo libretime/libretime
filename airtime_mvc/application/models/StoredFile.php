@@ -322,10 +322,21 @@ class Application_Model_StoredFile
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
+
         $sql = "SELECT playlist_id "
-            ." FROM ".$CC_CONFIG['playistTable']
-            ." WHERE file_id='{$this->id}'";
-        $ids = $con->query($sql)->fetchAll();
+            ." FROM cc_playlist"
+            ." WHERE file_id = :file_id";
+
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':file_id', $this->id, PDO::PARAM_INT);
+        
+        if ($stmt->execute()) {
+            $ids = $stmt->fetchAll();
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+
         $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
             foreach ($ids as $id) {
@@ -951,7 +962,7 @@ class Application_Model_StoredFile
             $uid = $user->getId();
         }
         $id_file = "$audio_stor.identifier";
-        if (file_put_contents($id_file,$uid) === false) {
+        if (file_put_contents($id_file, $uid) === false) {
             Logging::info("Could not write file to identify user: '$uid'");
             Logging::info("Id file path: '$id_file'");
             Logging::info("Defaulting to admin (no identification file was
@@ -1003,7 +1014,7 @@ class Application_Model_StoredFile
         global $CC_CONFIG;
         $con = Propel::getConnection();
 
-        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG["filesTable"]." WHERE file_exists";
+        $sql = "SELECT count(*) as cnt FROM cc_files WHERE file_exists";
 
         return $con->query($sql)->fetchColumn(0);
     }
@@ -1012,53 +1023,59 @@ class Application_Model_StoredFile
      *
      * Enter description here ...
      * @param $dir_id - if this is not provided, it returns all files with full path constructed.
-     * @param $propelObj - if this is true, it returns array of proepl obj
      */
-    public static function listAllFiles($dir_id=null, $all, $propelObj=false)
+    public static function listAllFiles($dir_id=null, $all)
     {
         $con = Propel::getConnection();
 
-        $file_exists = $all ? "" : "and f.file_exists = 'TRUE'";
-
-        if ($propelObj) {
-            $sql = "SELECT m.directory || f.filepath as fp"
-                    ." FROM CC_MUSIC_DIRS m"
-                    ." LEFT JOIN CC_FILES f"
-                    ." ON m.id = f.directory WHERE m.id = $dir_id $file_exists";
-        } else {
-            $sql = "SELECT filepath as fp"
-                    ." FROM CC_FILES as f"
-                    ." WHERE f.directory = $dir_id $file_exists";
+        $sql = "SELECT filepath as fp"
+                ." FROM CC_FILES as f"
+                ." WHERE f.directory = :dir_id";
+                
+        if (!$all) {
+            $sql .= " AND f.file_exists = 'TRUE'";
         }
-        $rows = $con->query($sql)->fetchAll();
 
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':dir_id', $dir_id);
+        
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll();
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+                
         $results = array();
         foreach ($rows as $row) {
-            if ($propelObj) {
-                $results[] = Application_Model_StoredFile::RecallByFilepath($row["fp"]);
-            } else {
-                $results[] = $row["fp"];
-            }
+            $results[] = $row["fp"];
         }
 
         return $results;
     }
 
     //TODO: MERGE THIS FUNCTION AND "listAllFiles" -MK
-    public static function listAllFiles2($dir_id=null, $limit=null)
+    public static function listAllFiles2($dir_id=null, $limit="ALL")
     {
         $con = Propel::getConnection();
 
         $sql = "SELECT id, filepath as fp"
                 ." FROM CC_FILES"
-                ." WHERE directory = $dir_id"
+                ." WHERE directory = :dir_id"
                 ." AND file_exists = 'TRUE'"
-                ." AND replay_gain is NULL";
-        if (!is_null($limit) && is_int($limit)) {
-            $sql .= " LIMIT $limit";
-        }
+                ." AND replay_gain is NULL"
+                ." LIMIT :lim";
 
-        $rows = $con->query($sql, PDO::FETCH_ASSOC)->fetchAll();
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':dir_id', $dir_id);
+        $stmt->bindParam(':lim', $limit);
+
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
 
         return $rows;
     }
