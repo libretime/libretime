@@ -470,8 +470,8 @@ class ApiController extends Zend_Controller_Action
         // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
         Application_Model_Preference::SetImportTimestamp();
-        Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
-        Logging::info( $md );
+        //Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
+        //Logging::info( $md );
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = Application_Common_OsPath::normpath($filepath);
