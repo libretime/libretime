@@ -25,7 +25,8 @@ class Application_Model_RabbitMq
                                          $CC_CONFIG["rabbitmq"]["password"],
                                          $CC_CONFIG["rabbitmq"]["vhost"]);
         $channel = $conn->channel();
-        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
+        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
+            true, true);
 
         $EXCHANGE = 'airtime-pypo';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
@@ -50,7 +51,8 @@ class Application_Model_RabbitMq
                                          $CC_CONFIG["rabbitmq"]["password"],
                                          $CC_CONFIG["rabbitmq"]["vhost"]);
         $channel = $conn->channel();
-        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
+        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
+            true, true);
 
         $EXCHANGE = 'airtime-media-monitor';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
@@ -73,7 +75,8 @@ class Application_Model_RabbitMq
                                         $CC_CONFIG["rabbitmq"]["password"],
                                          $CC_CONFIG["rabbitmq"]["vhost"]);
         $channel = $conn->channel();
-        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false, true, true);
+        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
+            true, true);
 
         $EXCHANGE = 'airtime-pypo';
         $channel->exchange_declare($EXCHANGE, 'direct', false, true);
@@ -84,7 +87,8 @@ class Application_Model_RabbitMq
         $temp['event_type'] = $event_type;
         $temp['server_timezone'] = Application_Model_Preference::GetTimezone();
         if ($event_type == "update_recorder_schedule") {
-            $temp['shows'] = Application_Model_Show::getShows($now, $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+            $temp['shows'] = Application_Model_Show::getShows($now,
+                $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
         }
         $data = json_encode($temp);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));

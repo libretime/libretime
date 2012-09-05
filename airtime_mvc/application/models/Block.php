@@ -461,7 +461,7 @@ EOT;
                         $pos = $pos + 1;
                     }
                 } catch (Exception $e) {
-                    Logging::log($e->getMessage());
+                    Logging::info($e->getMessage());
                 }
             }
 
