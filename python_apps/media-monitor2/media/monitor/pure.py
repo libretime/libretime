@@ -2,6 +2,7 @@
 import copy
 import subprocess
 import os
+import math
 import shutil
 import re
 import sys
@@ -11,6 +12,9 @@ import operator as op
 
 from os.path   import normpath
 from itertools import takewhile
+# you need to import reduce in python 3
+try: from functools import reduce
+except: pass
 from configobj import ConfigObj
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
@@ -84,6 +88,10 @@ def is_file_supported(path):
 # TODO : In the future we would like a better way to find out whether a show
 # has been recorded
 def is_airtime_recorded(md):
+    """
+    Takes a metadata dictionary and returns True if it belongs to a file that
+    was recorded by Airtime.
+    """
     if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
 
@@ -253,11 +261,13 @@ def normalized_metadata(md, original_path):
         if new_md['MDATA_KEY_BPM'] is None:
             del new_md['MDATA_KEY_BPM']
 
-
     if is_airtime_recorded(new_md):
-        hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
-        new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
-            (name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
+        #hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
+        #new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
+            #(name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
+        # We changed show recorder to output correct metadata for recorded
+        # shows
+        pass
     else:
         # Read title from filename if it does not exist
         default_title = no_extension_basename(original_path)
@@ -265,9 +275,14 @@ def normalized_metadata(md, original_path):
             default_title = u''
         new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
                             default=default_title)
+        new_md['MDATA_KEY_TITLE'] = re.sub(r'-\d+kbps$', u'',
+                new_md['MDATA_KEY_TITLE'])
 
+    # TODO : wtf is this for again?
     new_md['MDATA_KEY_TITLE'] = re.sub(r'-?%s-?' % unicode_unknown, u'',
             new_md['MDATA_KEY_TITLE'])
+    # ugly mother fucking band aid until enterprise metadata framework is
+    # working
     return new_md
 
 def organized_path(old_path, root_path, orig_md):
@@ -280,8 +295,6 @@ def organized_path(old_path, root_path, orig_md):
     """
     filepath = None
     ext = extension(old_path)
-    # The blocks for each if statement look awfully similar. Perhaps there is a
-    # way to simplify this code
     def default_f(dictionary, key):
         if key in dictionary: return len(dictionary[key]) == 0
         else: return True
@@ -291,6 +304,8 @@ def organized_path(old_path, root_path, orig_md):
 
     # MDATA_KEY_BITRATE is in bytes/second i.e. (256000) we want to turn this
     # into 254kbps
+    # Some metadata elements cannot be empty, hence we default them to some
+    # value just so that we can create a correct path
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
     try:
         formatted = str(int(normal_md['MDATA_KEY_BITRATE']) / 1000)
@@ -299,13 +314,15 @@ def organized_path(old_path, root_path, orig_md):
         normal_md['MDATA_KEY_BITRATE'] = unicode_unknown
 
     if is_airtime_recorded(normal_md):
-        title_re = re.match("(?P<show>.+)-(?P<date>\d+-\d+-\d+-\d+:\d+:\d+)$",
-                normal_md['MDATA_KEY_TITLE'])
+        # normal_md['MDATA_KEY_TITLE'] = 'show_name-yyyy-mm-dd-hh:mm:ss'
+        r = "(?P<show>.+)-(?P<date>\d+-\d+-\d+)-(?P<time>\d+:\d+:\d+)$"
+        title_re    = re.match(r, normal_md['MDATA_KEY_TITLE'])
         show_name   = title_re.group('show')
-        date        = title_re.group('date').replace(':','-')
+        #date        = title_re.group('date')
         yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',2)
         fname_base  = '%s-%s-%s.%s' % \
-                (date, show_name, normal_md['MDATA_KEY_BITRATE'], ext)
+                (title_re.group('time'), show_name,
+                        normal_md['MDATA_KEY_BITRATE'], ext)
         filepath = os.path.join(root_path, yyyy, mm, fname_base)
     elif len(normal_md['MDATA_KEY_TRACKNUMBER']) == 0:
         fname = u'%s-%s.%s' % (normal_md['MDATA_KEY_TITLE'],
@@ -451,7 +468,9 @@ def owner_id(original_path):
     return owner_id
 
 def file_playable(pathname):
-
+    """
+    Returns True if 'pathname' is playable by liquidsoap. False otherwise.
+    """
     #when there is an single apostrophe inside of a string quoted by
     #apostrophes, we can only escape it by replace that apostrophe with '\''.
     #This breaks the string into two, and inserts an escaped single quote in
@@ -464,6 +483,54 @@ def file_playable(pathname):
         pathname.replace("'", "'\\''")
     return_code = subprocess.call(command, shell=True)
     return (return_code == 0)
+
+def toposort(data):
+    """
+    Topological sort on 'data' where 'data' is of the form:
+        data = [
+            'one' : set('two','three'),
+            'two' : set('three'),
+            'three' : set()
+        ]
+    """
+    for k, v in data.items():
+        v.discard(k) # Ignore self dependencies
+    extra_items_in_deps = reduce(set.union, data.values()) - set(data.keys())
+    data.update({item:set() for item in extra_items_in_deps})
+    while True:
+        ordered = set(item for item,dep in data.items() if not dep)
+        if not ordered: break
+        for e in sorted(ordered): yield e
+        data = dict((item,(dep - ordered)) for item,dep in data.items()
+                if item not in ordered)
+    assert not data, "A cyclic dependency exists amongst %r" % data
+
+def truncate_to_length(item, length):
+    """
+    Truncates 'item' to 'length'
+    """
+    if isinstance(item, int): item = str(item)
+    if isinstance(item, basestring):
+        if len(item) > length: return item[0:length]
+        else: return item
+
+def format_length(mutagen_length):
+    """
+    Convert mutagen length to airtime length
+    """
+    t = float(mutagen_length)
+    h = int(math.floor(t / 3600))
+    t = t % 3600
+    m = int(math.floor(t / 60))
+    s = t % 60
+    # will be ss.uuu
+    s = str(s)
+    seconds = s.split(".")
+    s = seconds[0]
+    # have a maximum of 6 subseconds.
+    if len(seconds[1]) >= 6: ss = seconds[1][0:6]
+    else: ss = seconds[1][0:]
+    return "%s:%s:%s.%s" % (h, m, s, ss)
 
 if __name__ == '__main__':
     import doctest

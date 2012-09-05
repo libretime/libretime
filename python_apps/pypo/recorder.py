@@ -37,6 +37,8 @@ except Exception, e:
     print ('Error loading config file: %s', e)
     sys.exit()
 
+# TODO : add docstrings everywhere in this module
+
 def getDateTimeObj(time):
     # TODO : clean up for this function later.
     # - use tuples to parse result from split (instead of indices)
@@ -139,20 +141,17 @@ class ShowRecorder(Thread):
             self.start_time, self.show_name, self.show_instance
         """
         try:
-            date = self.start_time
-            md = date.split(" ")
-
-            record_time = md[1].replace(":", "-")
-            self.logger.info("time: %s" % record_time)
-
+            full_date, full_time = self.start_time.split(" ",1)
+            # No idea why we translated - to : before
+            #full_time = full_time.replace(":","-")
+            self.logger.info("time: %s" % full_time)
             artist = "Airtime Show Recorder"
-
             #set some metadata for our file daemon
             recorded_file           = mutagen.File(filepath, easy = True)
-            recorded_file['title']  = record_time + "-" + self.show_name
             recorded_file['artist'] = artist
-            recorded_file['date']   = md[0]
-            #recorded_file['date'] = md[0].split("-")[0]
+            recorded_file['date']   = full_date
+            recorded_file['title'] = "%s-%s-%s" % (self.show_name,
+                    full_date, full_time)
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
             recorded_file.save()
@@ -218,7 +217,8 @@ class Recorder(Thread):
             show_end    = getDateTimeObj(show[u'ends'])
             time_delta  = show_end - show_starts
 
-            temp_shows_to_record[show[u'starts']] = [time_delta, show[u'instance_id'], show[u'name'], m['server_timezone']]
+            temp_shows_to_record[show[u'starts']] = [time_delta,
+                    show[u'instance_id'], show[u'name'], m['server_timezone']]
         self.shows_to_record = temp_shows_to_record
 
     def get_time_till_next_show(self):
@@ -270,12 +270,12 @@ class Recorder(Thread):
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
 
-    """
-    Main loop of the thread:
-    Wait for schedule updates from RabbitMQ, but in case there arent any,
-    poll the server to get the upcoming schedule.
-    """
     def run(self):
+        """
+        Main loop of the thread:
+        Wait for schedule updates from RabbitMQ, but in case there arent any,
+        poll the server to get the upcoming schedule.
+        """
         try:
             self.logger.info("Started...")
             # Bootstrap: since we are just starting up, we need to grab the
