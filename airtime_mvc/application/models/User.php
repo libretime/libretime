@@ -284,45 +284,38 @@ class Application_Model_User
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
         $sql     = $sql_gen;
 
-        $type = array_map( function($t) {
-            return "type = '{$t}'";
-        }, $type);
+        $types = array();
+        $params = array();
+        for ($i=0; $i<count($type); $i++) {
+            $p = ":type{$i}";
+            $types[] = "type = $p";
+            $params[$p] = $type[$i];
+        }
 
-        $sql_type = join(" OR ", $type);
+        $sql_type = join(" OR ", $types);
 
         $sql      = $sql_gen ." WHERE (". $sql_type.") ";
 
         if (!is_null($search)) {
+            //need to use addslashes for 'LIKE' values
+            $search = addslashes($search);
             $like = "login ILIKE '%{$search}%'";
 
             $sql  = $sql . " AND ".$like;
         }
 
+        echo $sql.PHP_EOL;
+        print_r($params);
         $sql = $sql ." ORDER BY login";
 
-        return $con->query($sql)->fetchAll();;
+        return Application_Common_Database::prepareAndExecute($sql, $params, "all");
     }
 
     public static function getUserCount($type=null)
     {
         $con = Propel::getConnection();
         $sql = '';
-        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs ";
-
-        if (!isset($type)) {
-            $sql = $sql_gen;
-        } else {
-            if (is_array($type)) {
-                for ($i=0; $i<count($type); $i++) {
-                    $type[$i] = "type = '{$type[$i]}'";
-                }
-                $sql_type = join(" OR ", $type);
-            } else {
-                $sql_type = "type = {$type}";
-            }
-
-            $sql = $sql_gen ." WHERE (". $sql_type.") ";
-        }
+        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs";
 
         $query = $con->query($sql)->fetchColumn(0);
 
@@ -366,13 +359,11 @@ class Application_Model_User
 
     public static function getUserData($id)
     {
-        $con = Propel::getConnection();
-
         $sql = "SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact, jabber_contact"
         ." FROM cc_subjs"
-        ." WHERE id = $id";
+        ." WHERE id = :id";
 
-        return $con->query($sql)->fetch();
+        return Application_Common_Database::prepareAndExecute($sql, array(":id" => $id), 'single');
     }
 
     public static function getCurrentUser()
