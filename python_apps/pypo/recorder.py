@@ -37,6 +37,8 @@ except Exception, e:
     print ('Error loading config file: %s', e)
     sys.exit()
 
+# TODO : add docstrings everywhere in this module
+
 def getDateTimeObj(time):
     # TODO : clean up for this function later.
     # - use tuples to parse result from split (instead of indices)

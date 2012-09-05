@@ -88,6 +88,10 @@ def is_file_supported(path):
 # TODO : In the future we would like a better way to find out whether a show
 # has been recorded
 def is_airtime_recorded(md):
+    """
+    Takes a metadata dictionary and returns True if it belongs to a file that
+    was recorded by Airtime.
+    """
     if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
 
@@ -456,7 +460,9 @@ def owner_id(original_path):
     return owner_id
 
 def file_playable(pathname):
-
+    """
+    Returns True if 'pathname' is playable by liquidsoap. False otherwise.
+    """
     #when there is an single apostrophe inside of a string quoted by
     #apostrophes, we can only escape it by replace that apostrophe with '\''.
     #This breaks the string into two, and inserts an escaped single quote in
@@ -471,6 +477,14 @@ def file_playable(pathname):
     return (return_code == 0)
 
 def toposort(data):
+    """
+    Topological sort on 'data' where 'data' is of the form:
+        data = [
+            'one' : set('two','three'),
+            'two' : set('three'),
+            'three' : set()
+        ]
+    """
     for k, v in data.items():
         v.discard(k) # Ignore self dependencies
     extra_items_in_deps = reduce(set.union, data.values()) - set(data.keys())
