@@ -159,6 +159,9 @@ class ShowRecorder(Thread):
             #recorded_file['date'] = md[0].split("-")[0]
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
+            self.logger.info("self.start_time: %s" % self.start_time)
+            self.logger.info("title:(%s).date:(%s)" % (recorded_file['title'],
+                recorded_file['date']) )
             recorded_file.save()
 
         except Exception, e:
