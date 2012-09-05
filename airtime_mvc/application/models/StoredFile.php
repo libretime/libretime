@@ -405,12 +405,16 @@ class Application_Model_StoredFile
      */
     public function getFileExtension()
     {
+        // TODO : what's the point of having this function? Can we not just use
+        // the extension from the file_path column from cc_files?
         $mime = $this->_file->getDbMime();
 
         if ($mime == "audio/vorbis" || $mime == "application/ogg") {
             return "ogg";
         } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg") {
             return "mp3";
+        } elseif ($mime == "audio/x/flac") {
+            return "flac";
         }
     }
 

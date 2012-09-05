@@ -35,15 +35,10 @@ cd $target
 
 echo "Checking out tag airtime-${suffix}"
 git checkout airtime-${suffix}
-git submodule init
-git submodule update
 
-cd python_apps/pypo/liquidsoap_bin/
-git checkout master
-git pull origin master
 
 cd $target
-rm -rf .git .gitignore .gitmodules .zfproject.xml dev_tools/ audio_samples/ python_apps/pypo/liquidsoap_bin/.git
+rm -rf .git .gitignore .gitmodules .zfproject.xml dev_tools/ audio_samples/ 
 
 #echo "Minimizing Airtime Javascript files..."
 #cd $dir
