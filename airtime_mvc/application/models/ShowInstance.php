@@ -718,11 +718,12 @@ SQL;
         $con = Propel::getConnection();
 
         $sql = "SELECT ends FROM cc_schedule "
-            ."WHERE instance_id = {$this->_instanceId} "
+            ."WHERE instance_id = :instanceId"
             ."ORDER BY ends DESC "
             ."LIMIT 1";
 
-        $query = $con->query($sql)->fetchColumn(0);
+        $query = Application_Common_Database::prepareAndExecute( $sql,
+            array(':instanceId' => $this->_instanceId), 'column');
 
         return ($query !== false) ? $query : null;
     }
