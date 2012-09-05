@@ -172,7 +172,7 @@ class Metadata(Loggable):
             return
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
-        if full_mutagen is None: full_mutagen = {}
+        if full_mutagen is None: raise BadSongFile(fpath)
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
