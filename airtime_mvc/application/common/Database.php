@@ -1,6 +1,8 @@
 <?php
-class Application_Common_Database{
-    public static function prepareAndExecute($sql, array $paramValueMap, $type='all'){
+class Application_Common_Database
+{
+    public static function prepareAndExecute($sql, $paramValueMap, $type='all')
+    {
         $con = Propel::getConnection();
         $stmt = $con->prepare($sql);
         foreach ($paramValueMap as $param => $v) {
