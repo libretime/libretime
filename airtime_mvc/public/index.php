@@ -40,6 +40,7 @@ $application = new Zend_Application(
     APPLICATION_PATH . '/configs/application.ini'
 );
 
+$sapi_type = php_sapi_name();
 if (substr($sapi_type, 0, 3) == 'cli') {
     set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());
     require_once("Bootstrap.php");
