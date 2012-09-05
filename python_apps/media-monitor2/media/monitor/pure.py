@@ -300,6 +300,8 @@ def organized_path(old_path, root_path, orig_md):
 
     # MDATA_KEY_BITRATE is in bytes/second i.e. (256000) we want to turn this
     # into 254kbps
+    # Some metadata elements cannot be empty, hence we default them to some
+    # value just so that we can create a correct path
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
     try:
         formatted = str(int(normal_md['MDATA_KEY_BITRATE']) / 1000)
@@ -308,10 +310,11 @@ def organized_path(old_path, root_path, orig_md):
         normal_md['MDATA_KEY_BITRATE'] = unicode_unknown
 
     if is_airtime_recorded(normal_md):
-        title_re = re.match("(?P<show>.+)-(?P<date>\d+-\d+-\d+-\d+:\d+:\d+)$",
-                normal_md['MDATA_KEY_TITLE'])
+        # normal_md['MDATA_KEY_TITLE'] = 'show_name-yyyy-mm-dd-hh:mm:ss'
+        r = "(?P<show>.+)-(?P<date>\d+-\d+-\d+)-(?P<time>\d+:\d+:\d+)$"
+        title_re    = re.match(r, normal_md['MDATA_KEY_TITLE'])
         show_name   = title_re.group('show')
-        date        = title_re.group('date').replace(':','-')
+        date        = title_re.group('date')
         yyyy, mm, _ = normal_md['MDATA_KEY_YEAR'].split('-',2)
         fname_base  = '%s-%s-%s.%s' % \
                 (date, show_name, normal_md['MDATA_KEY_BITRATE'], ext)

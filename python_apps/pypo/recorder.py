@@ -141,27 +141,19 @@ class ShowRecorder(Thread):
             self.start_time, self.show_name, self.show_instance
         """
         try:
-            date = self.start_time
-            md = date.split(" ")
-
-            record_time = md[1].replace(":", "-")
-            self.logger.info("time: %s" % record_time)
-
+            full_date, full_time = self.start_time.split(" ",1)
+            # No idea why we translated - to : before
+            #full_time = full_time.replace(":","-")
+            self.logger.info("time: %s" % full_time)
             artist = "Airtime Show Recorder"
-
             #set some metadata for our file daemon
             recorded_file           = mutagen.File(filepath, easy = True)
-            #recorded_file['title']  = record_time + "-" + self.show_name
             recorded_file['artist'] = artist
-            recorded_file['date']   = md[0]
+            recorded_file['date']   = full_date
             recorded_file['title'] = "%s-%s-%s" % (self.show_name,
-                    recorded_file['date'], md[1])
-            #recorded_file['date'] = md[0].split("-")[0]
+                    full_date, full_time)
             #You cannot pass ints into the metadata of a file. Even tracknumber needs to be a string
             recorded_file['tracknumber'] = unicode(self.show_instance)
-            self.logger.info("self.start_time: %s" % self.start_time)
-            self.logger.info("title:(%s).date:(%s)" % (recorded_file['title'],
-                recorded_file['date']) )
             recorded_file.save()
 
         except Exception, e:
