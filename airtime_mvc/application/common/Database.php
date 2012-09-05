@@ -1,6 +1,7 @@
 <?php
 class Application_Common_Database{
-    public static function prepareAndExcute($sql, $paramValueMap, $type='all'){
+    public static function prepareAndExecute($sql, $paramValueMap, $type='all')
+    {
         $con = Propel::getConnection();
         $stmt = $con->prepare($sql);
         foreach ($paramValueMap as $param => $v) {
@@ -10,7 +11,7 @@ class Application_Common_Database{
         if ($stmt->execute()) {
             if ($type == 'single') {
                 $rows = $stmt->fetch(PDO::FETCH_ASSOC);
-            } else if ($type == 'column'){
+            } elseif ($type == 'column'){
                 $rows = $stmt->fetchColumn();
             } else {
                 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
