@@ -1832,7 +1832,7 @@ SELECT si.starts AS start_timestamp,
        s.url,
        starts,
        ends
-FROM cc_show_instances si,
+FROM cc_show_instances si
      LEFT JOIN cc_show s
      ON si.instance_id = s.id
 WHERE si.show_id = s.id
@@ -1875,7 +1875,7 @@ SELECT si.starts AS start_timestamp,
        s.url,
        starts,
        ends
-FROM cc_show_instances si,
+FROM cc_show_instances si
      LEFT JOIN cc_show s
      ON si.instance_id = s.id
 WHERE si.show_id = s.id
