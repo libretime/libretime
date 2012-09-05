@@ -120,6 +120,8 @@ class ApiController extends Zend_Controller_Action
         if ($media != null) {
 
             $filepath = $media->getFilePath();
+            // Make sure we don't have some wrong result beecause of caching
+            clearstatcache();
             if (is_file($filepath)) {
                 $full_path = $media->getPropelOrm()->getDbFilepath();
 
