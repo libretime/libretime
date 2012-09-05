@@ -655,6 +655,9 @@ FROM (
                 0::INTEGER as type ,
                 f.id AS item_id,
                 f.track_title,
+                f.album_title AS album,
+                f.genre AS genre,
+                f.length AS length,
                 f.artist_name AS creator,
                 f.file_exists AS EXISTS,
                 f.filepath AS filepath
@@ -668,6 +671,9 @@ FROM (
                 1::INTEGER as type,
                 ws.id AS item_id,
                 (ws.name || ': ' || ws.url) AS title,
+                null AS album,
+                null AS genre,
+                ws.length AS length,
                 sub.login AS creator,
                 't'::boolean AS EXISTS,
                 ws.url AS filepath
@@ -688,8 +694,10 @@ SQL;
             $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
             $row["starts"] = $dt->format("Y-m-d H:i:s");
 
-            $formatter = new LengthFormatter($row["clip_length"]);
-            $row["clip_length"] = $formatter->format();
+            if (isset($row['length'])) {
+                $formatter = new LengthFormatter($row["length"]);
+                $row["length"] = $formatter->format();
+            }
         }
 
 
