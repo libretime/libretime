@@ -488,8 +488,8 @@ def toposort(data):
     """
     Topological sort on 'data' where 'data' is of the form:
         data = [
-            'one' : set('two','three'),
-            'two' : set('three'),
+            'one'   : set('two','three'),
+            'two'   : set('three'),
             'three' : set()
         ]
     """
