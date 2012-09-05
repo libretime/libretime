@@ -663,7 +663,7 @@ FROM (
                 f.filepath AS filepath
          FROM cc_schedule AS s
          LEFT JOIN cc_files AS f ON f.id = s.file_id
-         WHERE s.instance_id = '{$this->_instanceId}'
+         WHERE s.instance_id = :instance_id1
            AND s.playout_status >= 0
            AND s.file_id IS NOT NULL)
       UNION
@@ -680,13 +680,18 @@ FROM (
          FROM cc_schedule AS s
          LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
          LEFT JOIN cc_subjs AS sub ON ws.creator_id = sub.id
-         WHERE s.instance_id = '{$this->_instanceId}'
+         WHERE s.instance_id = :instance_id2
            AND s.playout_status >= 0
            AND s.stream_id IS NOT NULL)) AS temp
 ORDER BY starts;
 SQL;
 
-        $results = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $con->prepare($sql);
+        $stmt->execute(array(
+            ':instance_id1' => $this->_instanceId,
+            ':instance_id2' => $this->_instanceId
+        ));
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as &$row) {
 
