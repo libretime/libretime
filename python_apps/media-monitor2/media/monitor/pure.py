@@ -268,8 +268,8 @@ def normalized_metadata(md, original_path):
     else:
         # Read title from filename if it does not exist
         default_title = no_extension_basename(original_path)
-        if re.match(".+-%s-.+$" % unicode_unknown, default_title):
-            default_title = u''
+        #if re.match(".+-%s-.+$" % unicode_unknown, default_title):
+            #default_title = u''
         new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
                             default=default_title)
 
