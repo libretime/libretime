@@ -16,9 +16,6 @@ class Application_Model_Preference
                 $id = $auth->getIdentity()->id;
             }
 
-            $key = pg_escape_string($key);
-            $value = pg_escape_string($value);
-
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
             ." WHERE keystr = '$key'";

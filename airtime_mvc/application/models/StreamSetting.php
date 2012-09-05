@@ -3,50 +3,63 @@ class Application_Model_StreamSetting
 {
     public static function setValue($key, $value, $type)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-
-        $key = pg_escape_string($key);
-        $value = pg_escape_string($value);
 
         // Check if key already exists
         $sql = "SELECT COUNT(*) FROM cc_stream_setting"
-            ." WHERE keyname = '$key'";
+            ." WHERE keyname = :key";
 
-        $result = $con->query($sql)->fetchColumn(0);
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':key', $key);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->fetchColumn(0);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
 
         if ($result == 1) {
             $sql = "UPDATE cc_stream_setting"
-            ." SET value = '$value', type='$type'"
-            ." WHERE keyname = '$key'";
+            ." SET value = :value, type = :type"
+            ." WHERE keyname = :key";
         } else {
             $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
-            ." VALUES ('$key', '$value', '$type')";
+            ." VALUES (:key, :value, :type)";
         }
 
-        return $con->exec($sql);
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':key', $key);
+        $stmt->bindParam(':value', $value);
+        $stmt->bindParam(':type', $type);
+        
+        if ($stmt->execute()) {
+            //do nothing
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
     }
 
     public static function getValue($key)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-
+        
         //Check if key already exists
-        $sql = "SELECT COUNT(*) FROM cc_stream_setting"
-        ." WHERE keyname = '$key'";
-        $result = $con->query($sql)->fetchColumn(0);
+        $sql = "SELECT value FROM cc_stream_setting"
+        ." WHERE keyname = :key";
 
-        if ($result == 0) {
-            return "";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':key', $key);
+        
+        if ($stmt->execute()) {
+            $result = $stmt->fetchColumn(0);
         } else {
-            $sql = "SELECT value FROM cc_stream_setting"
-                ." WHERE keyname = '$key'";
-
-            $result = $con->query($sql)->fetchColumn(0);
-
-            return ($result !== false) ? $result : null;
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
         }
+
+        return $result ? $result : "";
     }
 
     /* Returns the id's of all streams that are enabled in an array. An
@@ -95,9 +108,18 @@ class Application_Model_StreamSetting
         $con = Propel::getConnection();
         $sql = "SELECT * "
                 ."FROM cc_stream_setting "
-                ."WHERE keyname LIKE '${p_streamId}_%'";
+                ."WHERE keyname LIKE :stream_id";
 
-        $rows = $con->query($sql)->fetchAll();
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':stream_id', "${p_streamId}_%");
+        
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll();
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+
         $data = array();
 
         foreach ($rows as $row) {
@@ -198,21 +220,6 @@ class Application_Model_StreamSetting
     }
 
     /*
-     * Sets indivisual stream setting.
-     *
-     * $data - data array. $data is [].
-     */
-    public static function setIndivisualStreamSetting($data)
-    {
-        $con = Propel::getConnection();
-
-        foreach ($data as $keyname => $v) {
-            $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
-            $con->exec($sql);
-        }
-    }
-
-    /*
      * Stores liquidsoap status if $boot_time > save time.
      * save time is the time that user clicked save on stream setting page
      */
@@ -224,17 +231,37 @@ class Application_Model_StreamSetting
         if ($boot_time == null || $boot_time > $update_time) {
             $keyname = "s".$stream_id."_liquidsoap_error";
             $sql = "SELECT COUNT(*) FROM cc_stream_setting"
-                ." WHERE keyname = '$keyname'";
-            $result = $con->query($sql)->fetchColumn(0);
+                ." WHERE keyname = :keyname";
+
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':keyname', $keyname);
+
+            if ($stmt->execute()) {
+                $result= $stmt->fetchColumn(0);
+            } else {
+                $msg = implode(',', $stmt->errorInfo());
+                throw new Exception("Error: $msg");
+            }
+
             if ($result == 1) {
                 $sql = "UPDATE cc_stream_setting"
-                    ." SET value = '$msg'"
-                    ." WHERE keyname = '$keyname'";
+                    ." SET value = :msg"
+                    ." WHERE keyname = :keyname";
             } else {
                 $sql = "INSERT INTO cc_stream_setting (keyname, value, type)"
-                    ." VALUES ('$keyname', '$msg', 'string')";
+                    ." VALUES (:keyname, :msg, 'string')";
             }
-            $res = $con->exec($sql);
+
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':keyname', $keyname);
+            $stmt->bindParam(':msg', $msg);
+
+            if ($stmt->execute()) {
+                //do nothing
+            } else {
+                $msg = implode(',', $stmt->errorInfo());
+                throw new Exception("Error: $msg");
+            }
         }
     }
 
@@ -244,8 +271,17 @@ class Application_Model_StreamSetting
 
         $keyname = "s".$stream_id."_liquidsoap_error";
         $sql = "SELECT value FROM cc_stream_setting"
-            ." WHERE keyname = '$keyname'";
-        $result = $con->query($sql)->fetchColumn(0);
+            ." WHERE keyname = :keyname";
+
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':keyname', $keyname);
+
+        if ($stmt->execute()) {
+            $result= $stmt->fetchColumn(0);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
 
         return ($result !== false) ? $result : null;
     }
@@ -256,15 +292,19 @@ class Application_Model_StreamSetting
 
         $keyname = "s" . $stream_id . "_enable";
         $sql = "SELECT value FROM cc_stream_setting"
-        ." WHERE keyname = '$keyname'";
-        $result = $con->query($sql)->fetchColumn(0);
-        if ($result == 'false') {
-            $result = false;
+        ." WHERE keyname = :keyname";
+
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':keyname', $keyname);
+
+        if ($stmt->execute()) {
+            $result= $stmt->fetchColumn(0);
         } else {
-            $result = true;
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
         }
 
-        return $result;
+        return ($result != 'false');
     }
 
     /*
@@ -279,13 +319,22 @@ class Application_Model_StreamSetting
         $enabled_stream = self::getEnabledStreamIds();
 
         foreach ($enabled_stream as $stream) {
-            $keys = "'".$stream."_output', "."'".$stream."_type', "."'"
-                .$stream."_bitrate', "."'".$stream."_host'";
+            $keys = array("{$stream}_output", "{$stream}_type", "{$stream}_bitrate", "{$stream}_host");
+            $key_csv = implode(',', $keys);
 
             $sql = "SELECT keyname, value FROM cc_stream_setting"
-                ." WHERE keyname IN ($keys)";
+                ." WHERE keyname IN (:key_csv)";
 
-            $rows = $con->query($sql)->fetchAll();
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':key_csv', $key_csv);
+
+            if ($stmt->execute()) {
+                $rows = $stmt->fetchAll();
+            } else {
+                $msg = implode(',', $stmt->errorInfo());
+                throw new Exception("Error: $msg");
+            }
+
             $info = array();
             foreach ($rows as $r) {
                 $temp = explode("_", $r['keyname']);
