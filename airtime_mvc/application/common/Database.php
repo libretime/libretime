@@ -1,5 +1,7 @@
 <?php
-class Application_Common_Database{
+class Application_Common_Database
+{
+
     public static function prepareAndExecute($sql, $paramValueMap, $type='all')
     {
         $con = Propel::getConnection();
