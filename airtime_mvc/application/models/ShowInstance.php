@@ -385,7 +385,7 @@ class Application_Model_ShowInstance
 
         $scheduler = new Application_Model_Scheduler();
         $scheduler->scheduleAfter(
-            array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
+            array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
     }
