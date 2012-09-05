@@ -278,7 +278,7 @@ class AudiopreviewController extends Zend_Controller_Action
 
             $elementMap = array(
                 'element_title' => isset($track['track_title']) ? $track['track_title'] : "",
-                'element_artist' => isset($track['artist_name']) ? $track['artist_name'] : "",
+                'element_artist' => isset($track['creator']) ? $track['creator'] : "",
                 'element_position' => $position,
                 'element_id' => ++$position,
             );
