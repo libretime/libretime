@@ -324,24 +324,28 @@ class Application_Model_ShowInstance
     {
         $con = Propel::getConnection();
 
-        $hours = $deltaMin/60;
-        if($hours > 0)
-            $hours = floor($hours);
-        else
-            $hours = ceil($hours);
+        $hours = $deltaMin / 60;
 
-        $mins = abs($deltaMin%60);
+        $hours = ($hours > 0) ? floor($hours) : ceil($hours);
+
+        $mins = abs($deltaMin % 60);
 
         $today_timestamp = gmdate("Y-m-d H:i:s");
-        $starts = $this->getShowInstanceStart();
-        $ends = $this->getShowInstanceEnd();
+        $starts          = $this->getShowInstanceStart();
+        $ends            = $this->getShowInstanceEnd();
 
         if (strtotime($today_timestamp) > strtotime($starts)) {
             return "can't resize a past show";
         }
 
-        $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $new_ends = $con->query($sql)->fetchColumn(0);
+        //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
+        $sql = "SELECT timestamp :ends + interval :deltaDays + interval :deltaTime";
+
+        $now_ends = Application_Common_Database::prepareAndExecute($sql, 
+            array(':ends'      => $ends,
+                  ':deltaDays' => "$deltaDay days",
+                  ':deltaTime' => "{$hours}:{$mins}"), 'column'
+        );
 
         //only need to check overlap if show increased in size.
         if (strtotime($new_ends) > strtotime($ends)) {
