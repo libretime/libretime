@@ -1833,7 +1833,8 @@ SELECT si.starts AS start_timestamp,
        starts,
        ends
 FROM cc_show_instances si,
-     cc_show s
+     LEFT JOIN cc_show s
+     ON si.instance_id = s.id
 WHERE si.show_id = s.id
   AND si.starts <= :timeNow1::timestamp
   AND si.ends > :timeNow2::timestamp
@@ -1875,7 +1876,8 @@ SELECT si.starts AS start_timestamp,
        starts,
        ends
 FROM cc_show_instances si,
-     cc_show s
+     LEFT JOIN cc_show s
+     ON si.instance_id = s.id
 WHERE si.show_id = s.id
   AND si.starts > :timeNow1::timestamp - INTERVAL '2 days'
   AND si.ends < :timeNow2::timestamp + INTERVAL '2 days'
@@ -2012,9 +2014,10 @@ SELECT si.starts AS start_timestamp,
        s.url,
        starts,
        ends
-FROM cc_show_instances,
-     cc_show
-WHERE si.show_id = s.id"
+FROM cc_show_instances si
+     LEFT JOIN cc_show s
+     ON si.instance_id = s.id
+WHERE si.show_id = s.id
   AND si.starts >= :timeStart::timestamp
   AND si.starts < :timeEnd::timestamp
   AND modified_instance != TRUE

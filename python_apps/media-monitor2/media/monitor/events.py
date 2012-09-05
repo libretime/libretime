@@ -113,9 +113,9 @@ class BaseEvent(Loggable):
         self._raw_event   = evt
         self.path         = evt.path
         self.__class__    = evt.__class__
-        # We don't transfer the _pack_hook over to the new event
-        # TODO : perhaps we should call the old events pack_hook just to make
-        # sure everything is done cleanly?
+        # Clean up old hook and transfer the new events hook
+        self.reset_hook()
+        self.add_safe_pack_hook( evt._pack_hook )
         return self
 
     def assign_owner(self,req):
