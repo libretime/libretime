@@ -27,7 +27,7 @@ set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_pat
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
 //Zend framework
-if (file_exists('/usr/share/php/libzend-framework-php')){
+if (file_exists('/usr/share/php/libzend-framework-php')) {
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
 }
 
@@ -39,5 +39,13 @@ $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
-$application->bootstrap()
+
+if (substr($sapi_type, 0, 3) == 'cli') {
+    set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());
+    require_once("Bootstrap.php");
+} else {
+    $application->bootstrap()
             ->run();
+}
+
+
