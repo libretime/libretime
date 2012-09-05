@@ -4,7 +4,8 @@ class Application_Model_Datatables
 {
     private static function buildWhereClauseForAdvancedSearch($dbname2searchTerm)
     {
-        $where = array();
+        $where['clause'] = array();
+        $where['params'] = array();
         foreach ($dbname2searchTerm as $dbname=>$term) {
             $isRange = false;
             if (strstr($term, '~')) {
@@ -24,22 +25,27 @@ class Application_Model_Datatables
             if ($isRange) {
                 $sub = array();
                 if ($input1 != null) {
-                    $sub[] = $dbname." >= '".$input1."'";
+                    $sub[] = $dbname." >= :" . $dbname . "1";
                 }
                 if ($input2 != null) {
-                    $sub[] = $dbname." <= '".$input2."'";
+                    $sub[] = $dbname." <= :" . $dbname . "2";
                 }
                 if (!empty($sub)) {
-                    $where[] = "(".implode(' AND ', $sub).")";
+                    $where['clause'][$dbname] = "(".implode(' AND ', $sub).")";
+                    $where['params'][$dbname."1"] = $input1;
+                    if ($input2 != null) {
+                        $where['params'][$dbname."2"] = $input2;
+                    }
                 }
             } else {
                 if (trim($input1) !== "") {
-                    $where[] = $dbname." ILIKE "."'%".$input1."%'";
+                    $where['clause'][$dbname] = $dbname." ILIKE :" . $dbname."1";
+                    $where['params'][$dbname."1"] = "%".$input1."%";
                 }
             }
         }
 
-        return implode(" AND ", $where);
+        return $where;
     }
     /*
      * query used to return data for a paginated/searchable datatable.
@@ -73,10 +79,15 @@ class Application_Model_Datatables
         }
 
         $where = array();
+        /* Holds the parameters for binding after the
+         * statement has been prepared
+         */
+        $params = array();
 
         $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
-        if ($advancedWhere != "") {
-            $where[] = $advancedWhere;
+        if (!empty($advancedWhere['clause'])) {
+            $where[] = join(" AND ", $advancedWhere['clause']);
+            $params = $advancedWhere['params'];
         }
 
         if ($data["sSearch"] !== "") {
@@ -99,17 +110,19 @@ class Application_Model_Datatables
             }
 
             $outerCond = array();
+            $simpleWhere = array();
 
             foreach ($searchTerms as $term) {
                 $innerCond = array();
 
                 foreach ($searchCols as $col) {
-                    $escapedTerm = pg_escape_string($term);
-                    $innerCond[] = "{$col}::text ILIKE '%{$escapedTerm}%'";
+                    $simpleWhere['clause']["simple_".$col] = "{$col}::text ILIKE :simple_".$col;
+                    $simpleWhere['params']["simple_".$col] = "%".$term."%"; 
                 }
-                $outerCond[] = "(".join(" OR ", $innerCond).")";
+                $outerCond[] = "(".implode(" OR ", $simpleWhere['clause']).")";
             }
-            $where[] = "(".join(" AND ", $outerCond).")";
+            $where[] = "(" .implode(" AND ", $outerCond). ")";
+            $params = array_merge($params, $simpleWhere['params']);
         }
         // End Where clause
 
@@ -124,8 +137,10 @@ class Application_Model_Datatables
         // End Order By clause
 
         $displayLength = intval($data["iDisplayLength"]);
+        $needToBind = false;
         if (count($where) > 0) {
-            $where = join(" AND ", $where);
+            $needToBind = true;
+            $where = join(" OR ", $where);
             $sql = $selectorCount." FROM ".$fromTable." WHERE ".$where;
             $sqlTotalDisplayRows = $sql;
 
@@ -149,15 +164,41 @@ class Application_Model_Datatables
             $totalRows = $r->fetchColumn(0);
 
             if (isset($sqlTotalDisplayRows)) {
-                $r = $con->query($sqlTotalDisplayRows);
-                $totalDisplayRows = $r->fetchColumn(0);
+                $stmt = $con->prepare($sqlTotalDisplayRows);
+                foreach($params as $param=>&$value) {
+                    $stmt->bindParam(":$param", $value);
+                }
+                if ($stmt->execute()) {
+                    $totalDisplayRows = $stmt->fetchColumn(0);
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
+                }
             } else {
                 $totalDisplayRows = $totalRows;
             }
 
-            $r = $con->query($sql);
-            $r->setFetchMode(PDO::FETCH_ASSOC);
-            $results = $r->fetchAll();
+            //TODO
+            if ($needToBind) {
+                $stmt = $con->prepare($sql);
+                
+                foreach($params as $param=>&$value) {
+                    $stmt->bindParam(":$param", $value);
+                }
+                
+                if ($stmt->execute()) {
+                    $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                    $results = $stmt->fetchAll();
+                } else {
+                    $msg = implode(',', $stmt->errorInfo());
+                    throw new Exception("Error: $msg");
+                }
+            } else {
+                $stmt = $con->query($sql);
+                $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                $results = $stmt->fetchAll();
+            }
+            
             // we need to go over all items and fix length for playlist
             // in case the playlist contains dynamic block
             foreach ($results as &$r) {
