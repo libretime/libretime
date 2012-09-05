@@ -1,7 +1,7 @@
 <?php
 class Application_Common_Database
 {
-    public static function prepareAndExecute($sql, $paramValueMap, $type='all', $fetchType=PDO::FETCH_ASSOC)
+    public static function prepareAndExecute($sql, array $paramValueMap, $type='all', $fetchType=PDO::FETCH_ASSOC)
     {
         $con = Propel::getConnection();
         $stmt = $con->prepare($sql);
