@@ -796,11 +796,11 @@ SQL;
         $timestamp = $date->getUtcTimestamp();
 
         $stmt =  $con->prepare("UPDATE cc_show_days "
-                 ."SET duration = :add_show_duration"
+                 ."SET duration = :add_show_duration "
                  ."WHERE show_id = :add_show_id" );
         $stmt->execute( array(
-            ':add_show_duration' => $p_data[add_show_duration],
-            ':add_show_id' => $p_data[add_show_id]
+            ':add_show_duration' => $p_data['add_show_duration'],
+            ':add_show_id' => $p_data['add_show_id']
         ));
 
         $sql = "UPDATE cc_show_instances "
