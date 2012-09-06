@@ -1873,7 +1873,7 @@ SELECT si.starts AS start_timestamp,
        ends
 FROM cc_show_instances si
      LEFT JOIN cc_show s
-     ON si.instance_id = s.id
+     ON si.show_id = s.id
 WHERE si.show_id = s.id
   AND si.starts <= :timeNow1::timestamp
   AND si.ends > :timeNow2::timestamp
@@ -1916,7 +1916,7 @@ SELECT si.starts AS start_timestamp,
        ends
 FROM cc_show_instances si
      LEFT JOIN cc_show s
-     ON si.instance_id = s.id
+     ON si.show_id = s.id
 WHERE si.show_id = s.id
   AND si.starts > :timeNow1::timestamp - INTERVAL '2 days'
   AND si.ends < :timeNow2::timestamp + INTERVAL '2 days'
@@ -1930,7 +1930,7 @@ SQL;
         $stmt->bindValue(':timeNow2', $p_timeNow);
 
         if ($stmt->execute()) {
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rows = $stmt->fetchAll();
         } else {
             $msg = implode(',', $stmt->errorInfo());
             throw new Exception("Error: $msg");
@@ -2055,7 +2055,7 @@ SELECT si.starts AS start_timestamp,
        ends
 FROM cc_show_instances si
      LEFT JOIN cc_show s
-     ON si.instance_id = s.id
+     ON si.show_id = s.id
 WHERE si.show_id = s.id
   AND si.starts >= :timeStart::timestamp
   AND si.starts < :timeEnd::timestamp

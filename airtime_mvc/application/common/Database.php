@@ -1,7 +1,7 @@
 <?php
 class Application_Common_Database
 {
-    public static function prepareAndExecute($sql, array $paramValueMap, 
+    public static function prepareAndExecute($sql, array $paramValueMap,
         $type='all', $fetchType=PDO::FETCH_ASSOC)
     {
         $con = Propel::getConnection();
@@ -15,8 +15,13 @@ class Application_Common_Database
                 $rows = $stmt->fetch($fetchType);
             } else if ($type == 'column'){
                 $rows = $stmt->fetchColumn();
-            } else {
+            } else if ($type == 'all') {
                 $rows = $stmt->fetchAll($fetchType);
+            } else if ($type == 'execute') {
+                $rows = null;
+            } else {
+                $msg = "bad type passed: type($type)";
+                throw new Exception("Error: $msg");
             }
         } else {
             $msg = implode(',', $stmt->errorInfo());
