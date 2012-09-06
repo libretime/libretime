@@ -781,7 +781,10 @@ class ScheduleController extends Zend_Controller_Action
         $data['add_show_record'] = $show->isRecorded();
 
         $origianlShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
-        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate, $origianlShowStartDateTime, true, $data['add_show_instance_id']);
+
+        $success = Application_Model_Schedule::addUpdateShow($data, $this,
+            $validateStartDate, $origianlShowStartDateTime, true,
+            $data['add_show_instance_id']);
 
         if ($success) {
             $this->view->addNewShow = true;
@@ -810,22 +813,29 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
-        $data['add_show_hosts'] =  $this->_getParam('hosts');
-        $data['add_show_day_check'] =  $this->_getParam('days');
+        $data['add_show_hosts']     = $this->_getParam('hosts');
+        $data['add_show_day_check'] = $this->_getParam('days');
 
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
 
         $validateStartDate = true;
-        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate);
+        $success = Application_Model_Schedule::addUpdateShow($data, $this,
+            $validateStartDate);
 
         if ($success) {
             $this->view->addNewShow = true;
-            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+            $this->view->newForm = $this->view->render(
+                'schedule/add-show-form.phtml');
+            Logging::debug("Show creation succeeded");
+            Logging::debug_sparse( $data );
         } else {
             $this->view->addNewShow = true;
-            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+            $this->view->form = $this->view->render(
+                'schedule/add-show-form.phtml');
+            Logging::debug("Show creation failed");
+            Logging::debug_sparse( $data );
         }
     }
 

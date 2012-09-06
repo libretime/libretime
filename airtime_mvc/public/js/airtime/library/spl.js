@@ -632,6 +632,10 @@ var AIRTIME = (function(AIRTIME){
                     {format: "json", data: criteria, name: block_name, description: block_desc, obj_id: obj_id, type: obj_type, modified: lastMod},
                     function(data){
                         var json = $.parseJSON(data);
+                        if (json.error !== undefined) {
+                            alert(json.error);
+                        }
+                        AIRTIME.playlist.fnOpenPlaylist(json);
                         setModified(json.modified);
                         if (obj_type == "block") {
         	                callback(data, "save");

@@ -164,35 +164,14 @@ class Application_Model_Datatables
             $totalRows = $r->fetchColumn(0);
 
             if (isset($sqlTotalDisplayRows)) {
-                $stmt = $con->prepare($sqlTotalDisplayRows);
-                foreach($params as $param=>&$value) {
-                    $stmt->bindParam(":$param", $value);
-                }
-                if ($stmt->execute()) {
-                    $totalDisplayRows = $stmt->fetchColumn(0);
-                } else {
-                    $msg = implode(',', $stmt->errorInfo());
-                    throw new Exception("Error: $msg");
-                }
+                $totalDisplayRows = Application_Common_Database::prepareAndExecute($sqlTotalDisplayRows, $params, 'column');
             } else {
                 $totalDisplayRows = $totalRows;
             }
 
             //TODO
             if ($needToBind) {
-                $stmt = $con->prepare($sql);
-                
-                foreach($params as $param=>&$value) {
-                    $stmt->bindParam(":$param", $value);
-                }
-                
-                if ($stmt->execute()) {
-                    $stmt->setFetchMode(PDO::FETCH_ASSOC);
-                    $results = $stmt->fetchAll();
-                } else {
-                    $msg = implode(',', $stmt->errorInfo());
-                    throw new Exception("Error: $msg");
-                }
+                $results = Application_Common_Database::prepareAndExecute($sql, $params);
             } else {
                 $stmt = $con->query($sql);
                 $stmt->setFetchMode(PDO::FETCH_ASSOC);

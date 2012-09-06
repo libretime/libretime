@@ -447,7 +447,7 @@ class PlaylistController extends Zend_Controller_Action
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound($type);
+            $this->playlistNotFound($type, true);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }

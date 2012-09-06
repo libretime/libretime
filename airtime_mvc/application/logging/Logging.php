@@ -69,6 +69,10 @@ class Logging {
     
     public static function debug($p_msg)
     {
+        if (!(defined('APPLICATION_ENV') && APPLICATION_ENV == "development")) {
+            return;
+        }
+
         $bt = debug_backtrace();
 
         $caller = array_shift($bt);
@@ -78,11 +82,16 @@ class Logging {
         $caller = array_shift($bt);
         $function = $caller['function'];
 
-        
-        if (defined('APPLICATION_ENV') && APPLICATION_ENV == "development") {
-            $logger = self::getLogger();
-            $logger->debug("[$file : $function() : line $line] - ".self::toString($p_msg));            
-        }
+        $logger = self::getLogger();
+        $logger->debug("[$file : $function() : line $line] - ".self::toString($p_msg));            
+    }
+    // kind of like debug but for printing arrays more compactly (skipping
+    // empty elements
+
+    public static function debug_sparse(array $p_msg)
+    {
+        Logging::debug("Sparse output:");
+        Logging::debug( array_filter($p_msg) );
     }
 
     public static function enablePropelLogging()
