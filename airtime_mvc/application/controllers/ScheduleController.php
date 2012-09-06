@@ -781,7 +781,10 @@ class ScheduleController extends Zend_Controller_Action
         $data['add_show_record'] = $show->isRecorded();
 
         $origianlShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
-        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate, $origianlShowStartDateTime, true, $data['add_show_instance_id']);
+
+        $success = Application_Model_Schedule::addUpdateShow($data, $this,
+            $validateStartDate, $origianlShowStartDateTime, true,
+            $data['add_show_instance_id']);
 
         if ($success) {
             $this->view->addNewShow = true;
@@ -818,14 +821,17 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $validateStartDate = true;
-        $success = Application_Model_Schedule::addUpdateShow($data, $this, $validateStartDate);
+        $success = Application_Model_Schedule::addUpdateShow($data, $this,
+            $validateStartDate);
 
         if ($success) {
             $this->view->addNewShow = true;
-            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+            $this->view->newForm = $this->view->render(
+                'schedule/add-show-form.phtml');
         } else {
             $this->view->addNewShow = true;
-            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+            $this->view->form = $this->view->render('
+                schedule/add-show-form.phtml');
         }
     }
 
