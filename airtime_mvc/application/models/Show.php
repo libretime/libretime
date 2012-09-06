@@ -127,14 +127,14 @@ class Application_Model_Show
 
         $sql = "SELECT first_name, last_name
                 FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
-                    WHERE show_id = {$this->_showId}";
+                    WHERE show_id = :show_id";
 
-        $hosts = $con->query($sql)->fetchAll();
+        $hosts = Application_Common_Database::prepareAndExecute( $sql,
+            array( ':show_id' => $this->_showId ), 'all');
 
-        $res = array();
-        foreach ($hosts as $host) {
-            $res[] = $host['first_name']." ".$host['last_name'];
-        }
+        $res = array_map( function($host) {
+            return $host['first_name']." ".$host['last_name'];
+        }, $hosts);
 
         return $res;
     }
