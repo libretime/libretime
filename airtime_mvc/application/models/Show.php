@@ -803,12 +803,23 @@ SQL;
             ':add_show_id' => $p_data['add_show_id']
         ));
 
-        $sql = "UPDATE cc_show_instances "
-                ."SET ends = starts + INTERVAL '$p_data[add_show_duration]' "
-                ."WHERE show_id = $p_data[add_show_id] "
-                ."AND ends > TIMESTAMP '$timestamp'";
-        $con->exec($sql);
-
+        // TODO : get rid of this
+        //$sql = "UPDATE cc_show_instances "
+                //."SET ends = starts + INTERVAL '$p_data[add_show_duration]' "
+                //."WHERE show_id = $p_data[add_show_id] "
+                //."AND ends > TIMESTAMP '$timestamp'";
+        $sql = <<<SQL
+UPDATE cc_show_instances 
+SET ends = starts + INTERVAL :add_show_duration
+WHERE show_id = :show_id
+AND ends > TIMESTAMP :timestamp
+SQL;
+        
+        Application_Common_Database::prepareAndExecute( $sql,
+            array( 
+                ':add_show_duration' => $p_data['add_show_duration'],
+                ':show_id' => $p_data['add_show_id'],
+                ':timestamp' => $timestamp), "execute");
     }
 
     private function updateStartDateTime($p_data, $p_endDate)
