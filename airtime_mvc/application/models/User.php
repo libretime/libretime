@@ -311,13 +311,12 @@ class Application_Model_User
         return Application_Common_Database::prepareAndExecute($sql, $params, "all");
     }
 
-    public static function getUserCount($type=null)
+    public static function getUserCount()
     {
         $con = Propel::getConnection();
-        $sql = '';
         $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs";
 
-        $query = $con->query($sql)->fetchColumn(0);
+        $query = $con->query($sql_gen)->fetchColumn(0);
 
         return ($query !== false) ? $query : null;
     }
