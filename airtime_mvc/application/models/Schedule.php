@@ -861,12 +861,12 @@ SQL;
             $formStyle->disable();
             //$formLive->disable();
 
-            $controller->view->what = $formWhat;
-            $controller->view->when = $formWhen;
+            $controller->view->what    = $formWhat;
+            $controller->view->when    = $formWhen;
             $controller->view->repeats = $formRepeats;
-            $controller->view->who = $formWho;
-            $controller->view->style = $formStyle;
-            $controller->view->live = $formLive;
+            $controller->view->who     = $formWho;
+            $controller->view->style   = $formStyle;
+            $controller->view->live    = $formLive;
             if (!$isSaas) {
                 $controller->view->rr = $formRecord;
                 $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
