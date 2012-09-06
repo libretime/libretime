@@ -52,7 +52,8 @@ class Application_Model_Schedule
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
             "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z"));
+            "timezoneOffset"=> date("Z")
+        );
 
         return $range;
     }
@@ -71,7 +72,6 @@ class Application_Model_Schedule
             return;
         }
 
-        global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends,
             st.media_item_played as media_item_played, si.ends as show_ends
