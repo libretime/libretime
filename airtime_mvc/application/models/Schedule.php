@@ -1063,23 +1063,25 @@ SQL;
          * In both cases (new and edit) we only grab shows that
          * are scheduled 2 days prior
          */
-        $se = $show_end->format('Y-m-d H:i:s');
+        //$se = $show_end->format('Y-m-d H:i:s');
         if ($update) {
             $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
                     where (ends <= '{$show_end->format('Y-m-d H:i:s')}'
                     or starts <= '{$show_end->format('Y-m-d H:i:s')}')
                     and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
                     and modified_instance = false and id != ".$instanceId. " order by ends";
-            $stmt = $con->prepare("SELECT id, starts, ends FROM :showInstances
+
+            $stmt = $con->prepare("SELECT id, starts, ends FROM {$CC_CONFIG['showInstances']}
                     where (ends <= :show_end1
                     or starts <= :show_end2)
                     and date(starts) >= (date(:show_end3) - INTERVAL '2 days')
                     and modified_instance = false and id != :instanceId order by ends");
+            
             $stmt->execute(array(
                 ':showInstances' => $CC_CONFIG['showInstances'],
-                ':show_end1'     => $se,
-                ':show_end2'     => $se,
-                ':show_end3'     => $se,
+                ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
+                ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
+                ':show_end3'     => $show_end->format('Y-m-d H:i:s'),
                 ':instanceId'    => $instanceId
             ));
         } else {
@@ -1089,16 +1091,17 @@ SQL;
                     or starts <= '{$show_end->format('Y-m-d H:i:s')}')
                     and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
                     and modified_instance = false order by ends";
-            $stmt = $con->prepare("SELECT id, starts, ends FROM :showInstances
-                    where (ends <= :show_end1
-                    or starts <= :show_end2)
+
+            $stmt = $con->prepare("SELECT id, starts, ends FROM 
+                    {$CC_CONFIG['showInstances']}
+                    where (ends <= :show_end1 or starts <= :show_end2)
                     and date(starts) >= (date(:show_end3) - INTERVAL '2 days')
                     and modified_instance = false order by ends");
+
             $stmt->execute(array(
-                ':showInstances' => $CC_CONFIG['showInstances'],
-                ':show_end1'     => $se,
-                ':show_end2'     => $se,
-                ':show_end3'     => $se,
+                ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
+                ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
+                ':show_end3'     => $show_end->format('Y-m-d H:i:s')
             ));
         }
         //$rows = $con->query($sql);
@@ -1106,7 +1109,7 @@ SQL;
 
         foreach ($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
-            $end = new DateTime($row["ends"], new DateTimeZone('UTC'));
+            $end   = new DateTime($row["ends"], new DateTimeZone('UTC'));
 
             if ($show_start->getTimestamp() < $end->getTimestamp() &&
                 $show_end->getTimestamp() > $start->getTimestamp()) {
