@@ -412,7 +412,8 @@ var AIRTIME = (function(AIRTIME) {
               /* Copyright     */  { "sTitle" : "Copyright"     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        }             , 
               /* Mime          */  { "sTitle" : "Mime"          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         }             , 
               /* Language      */  { "sTitle" : "Language"      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             , 
-              /* Owner         */  { "sTitle" : "Owner"         , "mDataProp" : "owner"        , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        } 
+              /* Owner         */  { "sTitle" : "Owner"         , "mDataProp" : "owner"        , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             ,
+              /* Conductor     */  { "sTitle" : "Conductor"     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        }
               ],
                           
             "bProcessing": true,
