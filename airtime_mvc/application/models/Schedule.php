@@ -51,7 +51,8 @@ class Application_Model_Schedule
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
             "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z"));
+            "timezoneOffset"=> date("Z")
+        );
 
         return $range;
     }
@@ -70,7 +71,6 @@ class Application_Model_Schedule
             return;
         }
 
-        global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends,
             st.media_item_played as media_item_played, si.ends as show_ends
@@ -1076,7 +1076,6 @@ SQL;
                     and modified_instance = false and id != :instanceId order by ends");
             
             $stmt->execute(array(
-                ':showInstances' => $CC_CONFIG['showInstances'],
                 ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
                 ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
                 ':show_end3'     => $show_end->format('Y-m-d H:i:s'),

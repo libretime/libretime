@@ -23,6 +23,7 @@ echo " 1. Install Packages"
 echo "----------------------------------------------------"
 
 dist=`lsb_release -is`
+code=`lsb_release -cs`
 
 if [ "$dist" = "Debian" ]; then
     set +e
@@ -66,6 +67,13 @@ if [ "$dist" = "Debian" ]; then
 else
     apt-get -y install libzend-framework-php
 fi
+
+if [ "$code" = "lucid" ]; then
+    apt-get -y install timeout 
+else
+    apt-get -y install coreutils
+fi
+
 
 #Install Sourcefabric's custom Liquidsoap debian package
 apt-get -y --force-yes install sourcefabric-keyring
