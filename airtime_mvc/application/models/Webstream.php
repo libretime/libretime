@@ -115,7 +115,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         $di = null;
         $length = $parameters["length"];
-        $result = preg_match("/^(?:([0-9]{1,2})h)?\s*(?:([0-6]?[0-9])m)?$/", $length, $matches);
+        $result = preg_match("/^(?:([0-9]{1,2})h)?\s*(?:([0-9]{1,2})m)?$/", $length, $matches);
 
         $invalid_date_interval = false;
         if ($result == 1 && count($matches) == 2) {
