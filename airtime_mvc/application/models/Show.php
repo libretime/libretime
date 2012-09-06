@@ -145,9 +145,10 @@ class Application_Model_Show
 
         $sql = "SELECT subjs_id
                 FROM cc_show_hosts
-                WHERE show_id = {$this->_showId}";
+                WHERE show_id = :show_id";
 
-        $hosts = $con->query($sql)->fetchAll();
+        $hosts = Application_Common_Database::prepareAndExecute(
+            $sql, array( ':show_id' => $this->getId() ), 'all');
 
         return $hosts;
     }
