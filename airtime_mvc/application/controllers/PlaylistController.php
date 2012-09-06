@@ -460,9 +460,13 @@ class PlaylistController extends Zend_Controller_Action
         $result = array();
         
         if ($params['type'] == 'block') {
+            try {
+                $bl = new Application_Model_Block($params['obj_id']);
+            } catch (BlockNotFoundException $e) {
+                $this->playlistNotFound('block', true);
+            }
             $form = new Application_Form_SmartBlockCriteria();
             $form->startForm($params['obj_id']);
-            $bl = new Application_Model_Block($params['obj_id']);
             if ($form->isValid($params)) {
                 $this->setPlaylistNameDescAction();
                 $bl->saveSmartBlockCriteria($params['data']);
