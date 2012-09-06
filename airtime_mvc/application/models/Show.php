@@ -220,18 +220,46 @@ class Application_Model_Show
         $current_timestamp = gmdate("Y-m-d H:i:s");
 
         //update all cc_show_instances that are in the future.
-        $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                WHERE (show_id = {$this->_showId} AND ends > '$current_timestamp')
-                AND ((ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}' - starts) <= interval '24:00');";
+        $sql = "UPDATE cc_show_instances 
+            SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
+            WHERE (show_id = {$this->_showId} AND ends > '$current_timestamp')
+            AND ((ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}' - starts) <= interval '24:00');";
 
         //update cc_show_days so future shows can be created with the new duration.
         //only setting new duration if it is less than or equal to 24 hours.
-        $sql = $sql . " UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                WHERE show_id = {$this->_showId}
-                AND ((CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}') <= interval '24:00')";
+        $sql = $sql . " 
+            UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
+            WHERE show_id = {$this->_showId}
+            AND ((CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}') <= interval '24:00')";
+
+        $sql_gen = <<<SQL
+UPDATE cc_show_instances 
+SET ends = (ends + interval :deltaDay1 + interval :interval1)
+WHERE (show_id = :show_id1 AND ends > :current_timestamp1)
+AND ((ends + interval :deltaDay2 + interval :interval2 - starts) <= interval '24:00')
+ 
+UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval :deltaDay3 + interval :interval3)
+WHERE show_id = :show_id2
+AND ((CAST(duration AS interval) + interval :deltaDay4 + interval :interval4) <= interval '24:00')
+SQL;
+
+        Application_Common_Database::prepareAndExecute($sql_gen,
+            array(
+                ':deltaDay1'          => "$deltaDay days",
+                ':interval1'          => "$hours:$mins",
+                ':show_id1'           =>  $this->_showId,
+                ':current_timestamp1' =>  $current_timestamp,
+                ':deltaDay2'          => "$deltaDay days",
+                ':interval2'          => "$hours:$mins",
+                ':deltaDay3'          => "$deltaDay days",
+                ':interval3'          => "$hours:$mins",
+                ':show_id2'           =>  $this->_showId,
+                ':deltaDay4'          => "$deltaDay days",
+                ':interval4'          => "$hours:$mins"
+            ), "execute");
 
         //do both the queries at once.
-        $con->exec($sql);
+        //$con->exec($sql);
 
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $con->beginTransaction();
@@ -768,11 +796,11 @@ class Application_Model_Show
         $timestamp = $date->getUtcTimestamp();
 
         $stmt =  $con->prepare("UPDATE cc_show_days "
-                 ."SET duration = :add_show_duration"
+                 ."SET duration = :add_show_duration "
                  ."WHERE show_id = :add_show_id" );
         $stmt->execute( array(
-            ':add_show_duration' => $p_data[add_show_duration],
-            ':add_show_id' => $p_data[add_show_id]
+            ':add_show_duration' => $p_data['add_show_duration'],
+            ':add_show_id' => $p_data['add_show_id']
         ));
 
         $sql = "UPDATE cc_show_instances "

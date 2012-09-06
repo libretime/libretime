@@ -1078,7 +1078,6 @@ SQL;
                     and modified_instance = false and id != :instanceId order by ends");
             
             $stmt->execute(array(
-                ':showInstances' => $CC_CONFIG['showInstances'],
                 ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
                 ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
                 ':show_end3'     => $show_end->format('Y-m-d H:i:s'),
