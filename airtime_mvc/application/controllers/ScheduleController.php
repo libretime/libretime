@@ -813,8 +813,8 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
-        $data['add_show_hosts'] =  $this->_getParam('hosts');
-        $data['add_show_day_check'] =  $this->_getParam('days');
+        $data['add_show_hosts']     = $this->_getParam('hosts');
+        $data['add_show_day_check'] = $this->_getParam('days');
 
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
@@ -828,10 +828,14 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render(
                 'schedule/add-show-form.phtml');
+            Logging::debug("Show creation succeeded");
+            Logging::sparse_debug( $data );
         } else {
             $this->view->addNewShow = true;
             $this->view->form = $this->view->render('
                 schedule/add-show-form.phtml');
+            Logging::debug("Show creation failed");
+            Logging::sparse_debug( $data );
         }
     }
 
