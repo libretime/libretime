@@ -127,14 +127,14 @@ class Application_Model_Show
 
         $sql = "SELECT first_name, last_name
                 FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
-                    WHERE show_id = {$this->_showId}";
+                    WHERE show_id = :show_id";
 
-        $hosts = $con->query($sql)->fetchAll();
+        $hosts = Application_Common_Database::prepareAndExecute( $sql,
+            array( ':show_id' => $this->getId() ), 'all');
 
-        $res = array();
-        foreach ($hosts as $host) {
-            $res[] = $host['first_name']." ".$host['last_name'];
-        }
+        $res = array_map( function($host) {
+            return $host['first_name']." ".$host['last_name'];
+        }, $hosts);
 
         return $res;
     }
@@ -145,9 +145,10 @@ class Application_Model_Show
 
         $sql = "SELECT subjs_id
                 FROM cc_show_hosts
-                WHERE show_id = {$this->_showId}";
+                WHERE show_id = :show_id";
 
-        $hosts = $con->query($sql)->fetchAll();
+        $hosts = Application_Common_Database::prepareAndExecute(
+            $sql, array( ':show_id' => $this->getId() ), 'all');
 
         return $hosts;
     }
@@ -1319,8 +1320,9 @@ class Application_Model_Show
                 $showInstance->correctScheduleStartTimes();
             }
 
-            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-            $rebroadcasts = $con->query($sql)->fetchAll();
+            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
+            $rebroadcasts = Application_Common_Database::prepareAndExecute($sql,
+                array( ':show_id' => $show_id ), 'all');
 
             if ($showInstance->isRecorded()) {
                 $showInstance->deleteRebroadcasts();
@@ -1367,8 +1369,10 @@ class Application_Model_Show
         //convert $last_show into a UTC DateTime object, or null if there is no last show.
         $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
-        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-        $rebroadcasts = $con->query($sql)->fetchAll();
+        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
+
+        $rebroadcasts = Application_Common_Database::prepareAndExecute( $sql,
+            array( ':show_id' => $show_id ), 'all');
 
         $show = new Application_Model_Show($show_id);
 
