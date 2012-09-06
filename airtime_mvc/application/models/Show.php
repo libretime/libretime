@@ -130,7 +130,7 @@ class Application_Model_Show
                     WHERE show_id = :show_id";
 
         $hosts = Application_Common_Database::prepareAndExecute( $sql,
-            array( ':show_id' => $this->_showId ), 'all');
+            array( ':show_id' => $this->getId() ), 'all');
 
         $res = array_map( function($host) {
             return $host['first_name']." ".$host['last_name'];
