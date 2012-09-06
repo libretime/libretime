@@ -304,8 +304,8 @@ class Application_Model_User
             $sql  = $sql . " AND ".$like;
         }
 
-        echo $sql.PHP_EOL;
-        print_r($params);
+        //echo $sql.PHP_EOL;
+        //print_r($params);
         $sql = $sql ." ORDER BY login";
 
         return Application_Common_Database::prepareAndExecute($sql, $params, "all");
