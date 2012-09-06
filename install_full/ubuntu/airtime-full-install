@@ -23,6 +23,7 @@ echo " 1. Install Packages"
 echo "----------------------------------------------------"
 
 dist=`lsb_release -is`
+code=`lsb_release -cs`
 
 if [ "$dist" = "Debian" ]; then
     set +e
@@ -51,8 +52,7 @@ php-pear php5-gd postgresql odbc-postgresql python libsoundtouch-ocaml \
 libtaglib-ocaml libao-ocaml libmad-ocaml ecasound \
 libesd0 libportaudio2 libsamplerate0 rabbitmq-server patch \
 php5-curl mpg123 monit python-virtualenv multitail libcamomile-ocaml-data \
-libpulse0 vorbis-tools lsb-release lsof sudo mp3gain vorbisgain flac vorbis-tools \
-timeout
+libpulse0 vorbis-tools lsb-release lsof sudo mp3gain vorbisgain flac vorbis-tools
 
 #install packages with --force-yes option (this is useful in the case
 #of Debian, where these packages are unauthorized)
@@ -67,6 +67,13 @@ if [ "$dist" = "Debian" ]; then
 else
     apt-get -y install libzend-framework-php
 fi
+
+if [ "$code" = "lucid" ]; then
+    apt-get -y install timeout 
+else
+    apt-get -y install coreutils
+fi
+
 
 #Install Sourcefabric's custom Liquidsoap debian package
 apt-get -y --force-yes install sourcefabric-keyring
