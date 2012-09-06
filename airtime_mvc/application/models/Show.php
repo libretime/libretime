@@ -1320,8 +1320,9 @@ class Application_Model_Show
                 $showInstance->correctScheduleStartTimes();
             }
 
-            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-            $rebroadcasts = $con->query($sql)->fetchAll();
+            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
+            $rebroadcasts = Application_Common_Database::prepareAndExecute($sql,
+                array( ':show_id' => $show_id ), 'all');
 
             if ($showInstance->isRecorded()) {
                 $showInstance->deleteRebroadcasts();
@@ -1368,8 +1369,10 @@ class Application_Model_Show
         //convert $last_show into a UTC DateTime object, or null if there is no last show.
         $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
-        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id={$show_id}";
-        $rebroadcasts = $con->query($sql)->fetchAll();
+        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
+
+        $rebroadcasts = Application_Common_Database::prepareAndExecute( $sql,
+            array( ':show_id' => $show_id ), 'all');
 
         $show = new Application_Model_Show($show_id);
 
