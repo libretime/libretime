@@ -663,8 +663,6 @@ SQL;
         $stmt->bindParam(':showId', $showId);
         $stmt->execute();
 
-        //$query = $con->query($sql);
-
         if (!$stmt) {
             return "";
         }
@@ -770,25 +768,20 @@ SQL;
      */
     public function getAllFutureInstanceIds()
     {
-        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT id
+FROM cc_show_instances
+WHERE show_id :showId
+  AND starts > :timestamp::TIMESTAMP
+  AND modified_instance != TRUE
+SQL;
+        $rows = Application_Common_Database::prepareAndExecute($sql,
+            array( ':showId'    => $this->getId(),
+                   ':timestamp' => gmdate("Y-m-d H:i:s")), "all");
 
-        $date = new Application_Common_DateHelper;
-        $timestamp = $date->getTimestamp();
-
-        $showId = $this->getId();
-        $sql = "SELECT id from cc_show_instances"
-            ." WHERE show_id = $showId"
-            ." AND starts > TIMESTAMP '$timestamp'"
-            ." AND modified_instance != TRUE";
-
-        $rows = $con->query($sql)->fetchAll();
-
-        $instance_ids = array();
-        foreach ($rows as $row) {
-            $instance_ids[] = $row["id"];
-        }
-
-        return $instance_ids;
+        return array_map( function($i) {
+            return $i['id'];
+        }, $rows);
     }
 
     /* Called when a show's duration is changed (edited).
@@ -2086,7 +2079,6 @@ SQL;
             throw new Exception("Error: $msg");
         }
 
-        return $rows;
     }
 
     /**
