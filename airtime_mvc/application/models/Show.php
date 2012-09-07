@@ -1630,18 +1630,27 @@ SQL;
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
         if ($onlyRecord) {
+            $sql .= " AND (si1.starts >= :start::TIMESTAMP AND si1.starts < timestamp :end::TIMESTAMP)";
+            $sql .= " AND (si1.record = 1)";
 
-            $sql = $sql." AND (si1.starts >= '{$start_string}' AND si1.starts < timestamp '{$end_string}')";
-            $sql = $sql." AND (si1.record = 1)";
+            return Application_Common_Database::prepareAndExecute( $sql,
+                array( ':start' => $start_string,
+                       ':end'   => $end_string ), 'all');
 
         } else {
-
-            $sql = $sql." AND ((si1.starts >= '{$start_string}' AND si1.starts < '{$end_string}')
-                OR (si1.ends > '{$start_string}' AND si1.ends <= '{$end_string}')
-                OR (si1.starts <= '{$start_string}' AND si1.ends >= '{$end_string}'))";
+            $sql .= " AND ((si1.starts >= :start1::TIMESTAMPAND si1.starts < :end1::TIMESTAMP)
+                OR (si1.ends > :start2::TIMESTAMP si1.ends <= :end2::TIMESTAMP)
+                OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))";
+            return Application_Common_Database::prepareAndExecute( $sql,
+                array(
+                    'start1' => $start_string,
+                    'start2' => $start_string,
+                    'start3' => $start_string,
+                    'end1'   => $end_string,
+                    'end2'   => $end_string,
+                    'end3'   => $end_string
+                ), 'all');
         }
-        $result = $con->query($sql)->fetchAll();
-        return $result;
     }
 
     private static function setNextPop($next_date, $show_id, $day)
