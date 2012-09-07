@@ -468,14 +468,15 @@ SQL;
      */
     public function getRebroadcastsRelative()
     {
-        $con = Propel::getConnection();
-
-        $showId = $this->getId();
-        $sql = "SELECT day_offset, start_time FROM cc_show_rebroadcast "
-            ."WHERE show_id = $showId "
-            ."ORDER BY day_offset";
-
-        return $con->query($sql)->fetchAll();
+        $sql = <<<SQL
+SELECT day_offset,
+       start_time
+FROM cc_show_rebroadcast
+WHERE show_id = :showId
+ORDER BY day_offset
+SQL;
+        return Application_Common_Database::prepareAndExecute( $sql,
+            array( ':showId' => $this->getId() ), 'all' );
     }
 
     /**
