@@ -371,9 +371,9 @@ class ApiController extends Zend_Controller_Action
     public function recordedShowsAction()
     {
         $today_timestamp = date("Y-m-d H:i:s");
-        $now = new DateTime($today_timestamp);
-        $end_timestamp = $now->add(new DateInterval("PT2H"));
-        $end_timestamp = $end_timestamp->format("Y-m-d H:i:s");
+        $now             = new DateTime($today_timestamp);
+        $end_timestamp   = $now->add(new DateInterval("PT2H"));
+        $end_timestamp   = $end_timestamp->format("Y-m-d H:i:s");
 
         $this->view->shows =
             Application_Model_Show::getShows(
