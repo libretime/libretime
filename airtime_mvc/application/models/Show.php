@@ -555,16 +555,15 @@ SQL;
      */
     public function deleteAllInstances()
     {
-        $con = Propel::getConnection();
-
-        $timestamp = gmdate("Y-m-d H:i:s");
-
-        $showId = $this->getId();
-        $sql = "DELETE FROM cc_show_instances"
-                ." WHERE starts > TIMESTAMP '$timestamp'"
-                ." AND show_id = $showId";
-
-        $con->exec($sql);
+        $sql = <<<SQL
+DELETE
+FROM cc_show_instances
+WHERE starts > :timestamp::TIMESTAMP
+  AND show_id = :showId
+SQL;
+        Application_Common_Database::prepareAndExecute( $sql,
+            array( ':timestamp' => gmdate("Y-m-d H:i:s"), 
+                   ':showId'    => $this->getId()), 'execute');
     }
 
     /**
