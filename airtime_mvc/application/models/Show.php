@@ -911,7 +911,7 @@ SQL;
     public function getLiveStreamInfo()
     {
         $info = array();
-        if ($this->_showId == null) {
+        if ($this->getId() == null) {
             return $info;
         } else {
             $ccShow = CcShowQuery::create()->findPK($this->_showId);
@@ -920,7 +920,6 @@ SQL;
             $info['cb_custom_auth']  = $ccShow->getDbLiveStreamUsingCustomAuth();
             $info['custom_username'] = $ccShow->getDbLiveStreamUser();
             $info['custom_password'] = $ccShow->getDbLiveStreamPass();
-
             return $info;
         }
     }
