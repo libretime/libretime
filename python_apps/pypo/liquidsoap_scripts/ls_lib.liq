@@ -393,7 +393,7 @@ end
 dyn_out = output.icecast(%wav,
                      host="localhost",
                      port=8999,
-                     password="hackme",
+                     password=stream_harbor_pass,
                      mount="test-harbor",
                      fallible=true)
 
