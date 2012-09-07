@@ -1176,6 +1176,8 @@ SQL;
                 ->delete();
         }
         //adding rows to cc_show_rebroadcast
+        /* TODO: Document magic constant 10 and define it properly somewhere
+            --RG */
         if (($isRecorded && $data['add_show_rebroadcast']) && ($repeatType != -1)) {
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_'.$i]) {
@@ -1189,10 +1191,21 @@ SQL;
         } elseif ($isRecorded && $data['add_show_rebroadcast'] && ($repeatType == -1)) {
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_absolute_'.$i]) {
-                    $con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
-                    $sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
-                    $r = $con->query($sql);
-                    $offset_days = $r->fetchColumn(0);
+                    //$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
+                    //$sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
+                    $sql = <<<SQL
+SELECT date :rebroadcast - date :start
+SQL;
+                    $offset_days = 
+                        Application_Common_Database::prepareAndExecute($sql,
+                            array(
+                                'rebroadcast' => 
+                                $date["add_show_rebroadcast_date_absolute_$i"],
+                                'start' => 
+                                $date['add_show_start_date']), "column" );
+
+                    //$r = $con->query($sql);
+                    //$offset_days = $r->fetchColumn(0);
 
                     $showRebroad = new CcShowRebroadcast();
                     $showRebroad->setDbDayOffset($offset_days." days");
