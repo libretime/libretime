@@ -84,6 +84,10 @@ class Application_Model_Show
         return $show->getDbUrl();
     }
 
+    /*TODO : This method is not actually used anywhere as far as I can tell. We
+        can safely remove it and probably many other superfluous methods.
+        --RG*/
+
     public function setUrl($p_url)
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
