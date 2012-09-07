@@ -2100,20 +2100,17 @@ SQL;
 
     public static function getMaxLengths()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-
-        //Not using prepared statement here since not using an variable input.
-        $sql = "SELECT column_name, character_maximum_length FROM information_schema.columns"
-        ." WHERE table_name = 'cc_show' AND character_maximum_length > 0";
+        $sql = <<<SQL
+SELECT column_name, character_maximum_length FROM information_schema.columns
+WHERE table_name = 'cc_show' AND character_maximum_length > 0
+SQL;
         $result = $con->query($sql)->fetchAll();
-
-        // store result into assoc array
         $assocArray = array();
+
         foreach ($result as $row) {
             $assocArray[$row['column_name']] = $row['character_maximum_length'];
         }
-
         return $assocArray;
     }
 }
