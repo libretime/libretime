@@ -1711,10 +1711,10 @@ SQL;
      */
     public static function &getFullCalendarEvents($p_start, $p_end, $p_editable=false)
     {
-        $events = array();
+        $events   = array();
         $interval = $p_start->diff($p_end);
-        $days =  $interval->format('%a');
-        $shows = Application_Model_Show::getShows($p_start, $p_end);
+        $days     = $interval->format('%a');
+        $shows    = Application_Model_Show::getShows($p_start, $p_end);
         $nowEpoch = time();
 
         $timezone = date_default_timezone_get();
