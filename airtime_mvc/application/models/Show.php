@@ -180,9 +180,11 @@ class Application_Model_Show
 
         /* Check if the show being resized and any of its repeats * overlap
             with other scheduled shows */
+        $utc = new DateTimeZone("UTC");
+
         foreach ($showInstances as $si) {
-            $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
-            $endsDateTime   = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
+            $startsDateTime = new DateTime($si->getDbStarts(), $utc);
+            $endsDateTime   = new DateTime($si->getDbEnds(), $utc);
 
             /* The user is moving the show on the calendar from the perspective
                 of local time.  * incase a show is moved across a time change
@@ -195,11 +197,12 @@ class Application_Model_Show
             $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
 
             //convert our new starts/ends to UTC.
-            $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
-            $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
+            $newStartsDateTime->setTimezone($utc);
+            $newEndsDateTime->setTimezone($utc);
 
-            $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime,
-                $newEndsDateTime, true, $si->getDbId());
+            $overlapping = Application_Model_Schedule::checkOverlappingShows(
+                $newStartsDateTime, $newEndsDateTime, true, $si->getDbId());
+
             if ($overlapping) {
                 return "Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
                        "affects all of its repeats.";
