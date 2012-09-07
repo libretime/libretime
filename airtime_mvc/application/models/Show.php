@@ -184,11 +184,10 @@ class Application_Model_Show
 
         /* Check if the show being resized and any of its repeats * overlap
             with other scheduled shows */
-        $utc = new DateTimeZone("UTC");
 
         foreach ($showInstances as $si) {
-            $startsDateTime = new DateTime($si->getDbStarts(), $utc);
-            $endsDateTime   = new DateTime($si->getDbEnds(), $utc);
+            $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
+            $endsDateTime   = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
 
             /* The user is moving the show on the calendar from the perspective
                 of local time.  * incase a show is moved across a time change
@@ -822,7 +821,6 @@ SET ends = starts + :add_show_duration::INTERVAL
 WHERE show_id = :show_id
   AND ends > :timestamp::TIMESTAMP
 SQL;
-
         
         Application_Common_Database::prepareAndExecute( $sql, array( 
             ':add_show_duration' => $p_data['add_show_duration'],
