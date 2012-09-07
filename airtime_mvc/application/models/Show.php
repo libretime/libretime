@@ -1638,9 +1638,11 @@ SQL;
                        ':end'   => $end_string ), 'all');
 
         } else {
-            $sql .= " AND ((si1.starts >= :start1::TIMESTAMP AND si1.starts < :end1::TIMESTAMP)
-                OR (si1.ends > :start2::TIMESTAMP si1.ends <= :end2::TIMESTAMP)
-                OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))";
+            $sql .= " ". <<<SQL
+AND ((si1.starts >= :start1::TIMESTAMP AND si1.starts < :end1::TIMESTAMP)
+     OR (si1.ends > :start2::TIMESTAMP AND si1.ends <= :end2::TIMESTAMP)
+     OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))
+SQL;
             return Application_Common_Database::prepareAndExecute( $sql,
                 array(
                     'start1' => $start_string,
