@@ -436,13 +436,21 @@ SQL;
 
         $rebroadcastsLocal = array();
         //get each rebroadcast show in cc_show_instances, convert to current timezone to get start date/time.
+        /*TODO: refactor the following code to get rid of the $i temporary
+            variable. -- RG*/
         $i = 0;
-        foreach ($rebroadcasts as $show) {
-            $startDateTime = new DateTime($show["starts"], new DateTimeZone("UTC"));
-            $startDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-            $rebroadcastsLocal[$i]["start_date"] = $startDateTime->format("Y-m-d");
-            $rebroadcastsLocal[$i]["start_time"] = $startDateTime->format("H:i");
+        $utc = new DateTimeZone("UTC");
+        $dtz = new DateTimeZone( date_default_timezone_get() );
+
+        foreach ($rebroadcasts as $show) {
+            $startDateTime = new DateTime($show["starts"], $utc);
+            $startDateTime->setTimezone($dtz);
+
+            $rebroadcastsLocal[$i]["start_date"] = 
+                $startDateTime->format("Y-m-d");
+            $rebroadcastsLocal[$i]["start_time"] =
+                $startDateTime->format("H:i");
 
             $i = $i + 1;
         }
