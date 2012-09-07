@@ -570,7 +570,7 @@ SQL;
         return $rows;
     }
 
-    public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null)
+    public static function getScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null)
     {
         global $CC_CONFIG;
 

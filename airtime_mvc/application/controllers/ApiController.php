@@ -336,7 +336,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $data = Application_Model_Schedule::GetScheduledPlaylists();
+        $data = Application_Model_Schedule::getScheduledPlaylists();
         echo json_encode($data, JSON_FORCE_OBJECT);
     }
 
