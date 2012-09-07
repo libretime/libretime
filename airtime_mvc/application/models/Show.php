@@ -419,17 +419,20 @@ SQL;
      */
     public function getRebroadcastsAbsolute()
     {
-        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT starts
+FROM cc_show_instances
+WHERE instance_id =
+    (SELECT id
+     FROM cc_show_instances
+     WHERE show_id = :showId
+     ORDER BY starts LIMIT 1)
+  AND rebroadcast = 1
+ORDER BY starts
+SQL;
 
-        $showId = $this->getId();
-
-        $sql = "SELECT starts FROM cc_show_instances "
-            ."WHERE instance_id = (SELECT id FROM cc_show_instances WHERE show_id = $showId ORDER BY starts LIMIT 1) AND rebroadcast = 1 "
-            ."ORDER BY starts";
-
-        //Logging::info($sql);
-
-        $rebroadcasts = $con->query($sql)->fetchAll();
+        $rebroadcasts = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'showId' => $this->getId() ), 'all' );
 
         $rebroadcastsLocal = array();
         //get each rebroadcast show in cc_show_instances, convert to current timezone to get start date/time.
