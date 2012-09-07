@@ -949,20 +949,24 @@ SQL;
      *      row in the cc_show_instances table. */
     public function getInstanceOnDate($p_dateTime)
     {
-        $con = Propel::getConnection();
-
         $timestamp = $p_dateTime->format("Y-m-d H:i:s");
-
-        $showId = $this->getId();
-        $sql = "SELECT id FROM cc_show_instances"
-            ." WHERE date(starts) = date(TIMESTAMP '$timestamp') "
-            ." AND show_id = $showId AND rebroadcast = 0";
-
-        $query = $con->query($sql);
-        $row = ($query !== false) ? $query->fetchColumn(0) : null;
-
-        return CcShowInstancesQuery::create()
-            ->findPk($row);
+        $sql = <<<SQL
+SELECT id
+FROM cc_show_instances
+WHERE date(starts) = date(TIMESTAMP :timestamp)
+  AND show_id = :showId
+  AND rebroadcast = 0;
+SQL;
+        try {
+            $row = Application_Common_Database::prepareAndExecute( $sql,
+                array( 'showId' => $this->getId(),
+                    ':timestamp' => $timestamp ), 'column');
+            return CcShowInstancesQuery::create()
+                ->findPk($row);
+        } catch (Exception $e) {
+            return null;
+        }
+        
     }
 
     public function deletePossiblyInvalidInstances($p_data, $p_endDate, $isRecorded, $repeatType)
@@ -2105,9 +2109,8 @@ SQL;
 SELECT column_name, character_maximum_length FROM information_schema.columns
 WHERE table_name = 'cc_show' AND character_maximum_length > 0
 SQL;
-        $result = $con->query($sql)->fetchAll();
+        $result     = $con->query($sql)->fetchAll();
         $assocArray = array();
-
         foreach ($result as $row) {
             $assocArray[$row['column_name']] = $row['character_maximum_length'];
         }
