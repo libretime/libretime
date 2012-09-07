@@ -1591,7 +1591,7 @@ SQL;
      * @param  boolean      $onlyRecord
      * @return array
      */
-    public static function getShows($start_timestamp, $end_timestamp, $excludeInstance=NULL, $onlyRecord=FALSE)
+    public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE)
     {
         $con = Propel::getConnection();
 
@@ -1603,15 +1603,29 @@ SQL;
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
-        $sql = "SELECT si1.starts AS starts, si1.ends AS ends, si1.record AS record, si1.rebroadcast AS rebroadcast, si2.starts AS parent_starts,
-                si1.instance_id AS record_id, si1.show_id AS show_id, show.name AS name,
-                show.color AS color, show.background_color AS background_color, si1.file_id AS file_id, si1.id AS instance_id,
-                si1.created AS created, si1.last_scheduled AS last_scheduled, si1.time_filled AS time_filled, f.soundcloud_id
-            FROM cc_show_instances AS si1
-            LEFT JOIN cc_show_instances AS si2 ON si1.instance_id = si2.id
-            LEFT JOIN cc_show AS show ON show.id = si1.show_id
-            LEFT JOIN cc_files AS f ON f.id = si1.file_id
-            WHERE si1.modified_instance = FALSE";
+        $sql = <<<SQL
+SELECT si1.starts            AS starts,
+       si1.ends              AS ends,
+       si1.record            AS record,
+       si1.rebroadcast       AS rebroadcast,
+       si2.starts            AS parent_starts,
+       si1.instance_id       AS record_id,
+       si1.show_id           AS show_id,
+       show.name             AS name,
+       show.color            AS color,
+       show.background_color AS background_color,
+       si1.file_id           AS file_id,
+       si1.id                AS instance_id,
+       si1.created           AS created,
+       si1.last_scheduled    AS last_scheduled,
+       si1.time_filled       AS time_filled,
+       f.soundcloud_id
+FROM cc_show_instances AS si1
+LEFT JOIN cc_show_instances AS si2 ON si1.instance_id = si2.id
+LEFT JOIN cc_show AS SHOW          ON SHOW.id = si1.show_id
+LEFT JOIN cc_files AS f            ON f.id = si1.file_id
+WHERE si1.modified_instance = FALSE
+SQL;
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
@@ -1619,25 +1633,14 @@ SQL;
 
             $sql = $sql." AND (si1.starts >= '{$start_string}' AND si1.starts < timestamp '{$end_string}')";
             $sql = $sql." AND (si1.record = 1)";
+
         } else {
 
             $sql = $sql." AND ((si1.starts >= '{$start_string}' AND si1.starts < '{$end_string}')
                 OR (si1.ends > '{$start_string}' AND si1.ends <= '{$end_string}')
                 OR (si1.starts <= '{$start_string}' AND si1.ends >= '{$end_string}'))";
         }
-
-        if (isset($excludeInstance)) {
-            foreach ($excludeInstance as $instance) {
-                $sql_exclude[] = "si1.id != {$instance}";
-            }
-
-            $exclude = join(" OR ", $sql_exclude);
-
-            $sql = $sql." AND ({$exclude})";
-        }
-
         $result = $con->query($sql)->fetchAll();
-
         return $result;
     }
 

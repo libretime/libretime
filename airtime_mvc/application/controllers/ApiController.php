@@ -379,7 +379,7 @@ class ApiController extends Zend_Controller_Action
             Application_Model_Show::getShows(
                 Application_Common_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
                 Application_Common_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
-                $excludeInstance = null, $onlyRecord = true);
+                $onlyRecord = true);
 
         $this->view->is_recording = false;
         $this->view->server_timezone = Application_Model_Preference::GetTimezone();
