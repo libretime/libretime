@@ -178,22 +178,21 @@ class Application_Model_Show
             ->filterByDbShowId($this->_showId)
             ->find($con);
 
-        /* Check if the show being resized and any of its repeats
-         * overlap with other scheduled shows
-         */
+        /* Check if the show being resized and any of its repeats * overlap
+            with other scheduled shows */
         foreach ($showInstances as $si) {
             $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
-            $endsDateTime = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
+            $endsDateTime   = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
 
-            /* The user is moving the show on the calendar from the perspective of local time.
-             * incase a show is moved across a time change border offsets should be added to the local
-             * timestamp and then converted back to UTC to avoid show time changes
-             */
+            /* The user is moving the show on the calendar from the perspective
+                of local time.  * incase a show is moved across a time change
+                border offsets should be added to the local * timestamp and
+                then converted back to UTC to avoid show time changes */
             $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
             $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
             $newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
-            $newEndsDateTime = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
+            $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
 
             //convert our new starts/ends to UTC.
             $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
@@ -208,29 +207,11 @@ class Application_Model_Show
         }
 
         $hours = $deltaMin/60;
-        if ($hours > 0) {
-            $hours = floor($hours);
-        } else {
-            $hours = ceil($hours);
-        }
-
-        $mins = abs($deltaMin%60);
+        $hours = ($hours > 0) ? floor($hours) : ceil($hours);
+        $mins  = abs($deltaMin % 60);
 
         //current timesamp in UTC.
         $current_timestamp = gmdate("Y-m-d H:i:s");
-
-        //update all cc_show_instances that are in the future.
-        $sql = "UPDATE cc_show_instances 
-            SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-            WHERE (show_id = {$this->_showId} AND ends > '$current_timestamp')
-            AND ((ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}' - starts) <= interval '24:00');";
-
-        //update cc_show_days so future shows can be created with the new duration.
-        //only setting new duration if it is less than or equal to 24 hours.
-        $sql = $sql . " 
-            UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-            WHERE show_id = {$this->_showId}
-            AND ((CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}') <= interval '24:00')";
 
         $sql_gen = <<<SQL
 UPDATE cc_show_instances
@@ -259,9 +240,6 @@ SQL;
                 ':deltaDay4'          => "$deltaDay days",
                 ':interval4'          => "$hours:$mins"
             ), "execute");
-
-        //do both the queries at once.
-        //$con->exec($sql);
 
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
         $con->beginTransaction();
