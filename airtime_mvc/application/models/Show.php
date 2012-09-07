@@ -1620,10 +1620,10 @@ SELECT si1.starts            AS starts,
        si1.last_scheduled    AS last_scheduled,
        si1.time_filled       AS time_filled,
        f.soundcloud_id
-FROM cc_show_instances AS si1
-LEFT JOIN cc_show_instances AS si2 ON si1.instance_id = si2.id
-LEFT JOIN cc_show AS SHOW          ON SHOW.id = si1.show_id
-LEFT JOIN cc_files AS f            ON f.id = si1.file_id
+FROM cc_show_instances      AS si1
+LEFT JOIN cc_show_instances AS si2  ON si1.instance_id = si2.id
+LEFT JOIN cc_show           AS show ON show.id         = si1.show_id
+LEFT JOIN cc_files          AS f    ON f.id            = si1.file_id
 WHERE si1.modified_instance = FALSE
 SQL;
         //only want shows that are starting at the time or later.
@@ -1638,7 +1638,7 @@ SQL;
                        ':end'   => $end_string ), 'all');
 
         } else {
-            $sql .= " AND ((si1.starts >= :start1::TIMESTAMPAND si1.starts < :end1::TIMESTAMP)
+            $sql .= " AND ((si1.starts >= :start1::TIMESTAMP AND si1.starts < :end1::TIMESTAMP)
                 OR (si1.ends > :start2::TIMESTAMP si1.ends <= :end2::TIMESTAMP)
                 OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))";
             return Application_Common_Database::prepareAndExecute( $sql,
