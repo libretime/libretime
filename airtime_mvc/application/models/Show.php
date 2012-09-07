@@ -572,15 +572,16 @@ SQL;
      */
     public function deleteAllRebroadcasts()
     {
-        $con = Propel::getConnection();
-
-        $timestamp = gmdate("Y-m-d H:i:s");
-
-        $showId = $this->getId();
-        $sql = "DELETE FROM cc_show_instances"
-                ." WHERE starts > TIMESTAMP '$timestamp'"
-                ." AND show_id = $showId"
-                ." AND rebroadcast = 1";
+        $sql = <<<SQL
+DELETE
+FROM cc_show_instances
+WHERE starts > :timestamp::TIMESTAMP
+  AND show_id :showId
+  AND rebroadcast 1
+SQL;
+        Application_Common_Database::prepareAndExecute( $sql,
+            array( ':showId' => $this->getId(),
+                   ':timestamp' => gmdate("Y-m-d H:i:s")), 'execute');
 
         $con->exec($sql);
     }
