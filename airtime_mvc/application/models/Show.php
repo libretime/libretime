@@ -355,14 +355,22 @@ SQL;
         $uncheckedDaysImploded = implode(",", $daysRemovedUTC);
         $showId = $this->getId();
 
+        $esc_uncheckedDays = pg_escape_string($uncheckedDaysImploded);
         $timestamp = gmdate("Y-m-d H:i:s");
 
-        $sql = "DELETE FROM cc_show_instances"
-            ." WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDaysImploded)"
-            ." AND starts > TIMESTAMP '$timestamp'"
-            ." AND show_id = $showId";
+        $sql = <<<SQL
+DELETE
+FROM cc_show_instances
+WHERE EXTRACT(DOW FROM starts) IN ($esc_uncheckedDays)
+  AND starts > :timestamp::TIMESTAMP
+  AND show_id = :showId
+SQL;
 
-        $con->exec($sql);
+        Application_Common_Database::prepareAndExecute( $sql,
+            array(
+                ":timestamp" => $timestamp,
+                ":showId"    => $showId,
+            ), "execute");
     }
 
     /**
