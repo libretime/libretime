@@ -104,7 +104,7 @@ class SchedulerTests extends PHPUnit_TestCase {
         $groupId1 = $i1->add('2008-01-01 12:00:00.000', $this->storedFile->getId());
         $i2 = new Application_Model_ScheduleGroup();
         $i2->addAfter($groupId1, $this->storedFile->getId());
-        $items = Application_Model_Schedule::GetItems("2008-01-01", "2008-01-02");
+        $items = Application_Model_Schedule::getItems("2008-01-01", "2008-01-02");
         if (count($items) != 2) {
             $this->fail("Wrong number of items returned.");
             return;

@@ -511,7 +511,7 @@ SQL;
      *    Returns null if nothing found, else an array of associative
      *    arrays representing each row.
      */
-    public static function GetItems($p_startTime, $p_endTime)
+    public static function getItems($p_startTime, $p_endTime)
     {
         global $CC_CONFIG;
 
