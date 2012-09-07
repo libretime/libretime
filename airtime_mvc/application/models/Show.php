@@ -877,14 +877,11 @@ SQL;
 
     public function getShowDays()
     {
-        $showDays = CcShowDaysQuery::create()->filterByDbShowId($this->getId())->find();
-
-        $days = array();
-        foreach ($showDays as $showDay) {
-            array_push($days, $showDay->getDbDay());
-        }
-
-        return $days;
+        $showDays = CcShowDaysQuery::create()->filterByDbShowId(
+            $this->getId())->find();
+        return array_map( function($showDay) {
+            return $showDay->getDbDay();
+        }, $showDays);
     }
 
     /* Only used for shows that aren't repeating.
