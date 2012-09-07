@@ -5,7 +5,7 @@
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-if(posix_geteuid() != 0) {
+if (posix_geteuid() != 0) {
     echo "Must be root user.\n";
     exit(1);
 }
@@ -23,7 +23,7 @@ function pause()
     /* Type "sudo -s" to change to root user then type "export AIRTIME_INSTALL_DEBUG=1" and then
      * start airtime-install to enable this feature. Is used to pause between upgrade scripts
      * to examine the state of the system and see if everything is as expected. */
-    if (getenv("AIRTIME_INSTALL_DEBUG") === "1"){
+    if (getenv("AIRTIME_INSTALL_DEBUG") === "1") {
         echo "Press Enter to Continue".PHP_EOL;
         fgets(STDIN);
     }
@@ -44,7 +44,7 @@ $database = $CC_CONFIG['dsn']['database'];
 $airtime_version = AIRTIME_VERSION;
 
 $target_dir = trim(getenv("HOME"));
-if (strlen($target_dir) == 0){
+if (strlen($target_dir) == 0) {
     $target_dir = "/tmp";
 }
 
@@ -52,7 +52,7 @@ $target_file = "/airtime_$airtime_version.sql";
 $target_path = $target_dir.$target_file;
 echo "* Backing up current database to $target_path".PHP_EOL;
 exec("export PGPASSWORD=$password && pg_dump -h $host -U $user -f $target_path $database", $arr, $return_code);
-if ($return_code == 0){
+if ($return_code == 0) {
     echo " * Success".PHP_EOL;
 } else {
     echo " * Failed".PHP_EOL;
@@ -64,59 +64,39 @@ $version = substr($version, 0, 5);
 
 $SCRIPTPATH = __DIR__;
 
-if (strcmp($version, "1.9.0") < 0){
-    echo "Unsupported Airtime version. You must upgrade from at least Airtime 1.9.0.".PHP_EOL;
+if (strcmp($version, "2.0.0") < 0) {
+    echo "Unsupported Airtime version. You must upgrade from at least Airtime 2.0.0.".PHP_EOL;
     exit(1);
 }
-if (strcmp($version, "1.9.2") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.2/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "1.9.3") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.3/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "1.9.4") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.4/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "1.9.5") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-1.9.5/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.0.0") < 0){
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.0/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.0.1") < 0){
+if (strcmp($version, "2.0.1") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.1/airtime-upgrade.php");
     pause();
 }
-if (strcmp($version, "2.0.2") < 0){
+if (strcmp($version, "2.0.2") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.2/airtime-upgrade.php");
     pause();
 }
-if (strcmp($version, "2.0.3") < 0){
+if (strcmp($version, "2.0.3") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.3/airtime-upgrade.php");
     pause();
 }
-if (strcmp($version, "2.1.0") < 0){
+if (strcmp($version, "2.1.0") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.0/airtime-upgrade.php");
     pause();
 } 
-if (strcmp($version, "2.1.1") < 0){
+if (strcmp($version, "2.1.1") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.1/airtime-upgrade.php");
     pause();
 } 
-if (strcmp($version, "2.1.2") < 0){
+if (strcmp($version, "2.1.2") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.2/airtime-upgrade.php");
     pause();
 }
-if (strcmp($version, "2.1.3") < 0){
+if (strcmp($version, "2.1.3") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.3/airtime-upgrade.php");
     pause();
 }  
-if (strcmp($version, "2.2.0") < 0){
+if (strcmp($version, "2.2.0") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.2.0/airtime-upgrade.php");
     pause();
 }  
