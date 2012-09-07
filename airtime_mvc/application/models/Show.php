@@ -528,15 +528,18 @@ SQL;
      */
     public function getRepeatingEndDate()
     {
-        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT last_show
+FROM cc_show_days
+WHERE show_id = :showId
+ORDER BY last_show DESC
+SQL;
 
-        $showId = $this->getId();
-        $sql = "SELECT last_show FROM cc_show_days"
-            ." WHERE show_id = $showId"
-            ." ORDER BY last_show DESC";
+        $query = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'showId' => $this->getId() ), 'column' );
 
-        $query = $con->query($sql)->fetchColumn(0);
-
+        /* TODO: Why return empty string instead of false? very confusing --RG
+         */
         return ($query !== false) ? $query : "";
     }
 
