@@ -35,7 +35,8 @@ var AIRTIME = (function(AIRTIME) {
         "sample_rate" : "n",
         "track_title" : "s",
         "track_num"   : "n",
-        "year"        : "n"
+        "year"        : "n",
+        "owner"    : "s"
     };
     
     if (AIRTIME.library === undefined) {

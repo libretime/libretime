@@ -10,10 +10,9 @@ class Application_Model_Schedule
     public function IsFileScheduledInTheFuture($p_fileId)
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
         $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE file_id = {$p_fileId} AND ends > NOW() AT TIME ZONE 'UTC'";
-        $count = $con->query($sql)->fetchColumn(0);
+        ." WHERE file_id = :file_id AND ends > NOW() AT TIME ZONE 'UTC'";
+        $count = Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$p_fileId), 'column');
 
         return (is_numeric($count) && ($count != '0'));
     }
@@ -88,14 +87,18 @@ class Application_Model_Schedule
             LEFT JOIN (SELECT * FROM cc_webstream_metadata ORDER BY start_time DESC LIMIT 1) AS wm on st.id = wm.instance_id";
 
         $predicateArr = array();
+        $paramMap = array();
         if (isset($p_previousShowID)) {
-            $predicateArr[] = 'st.instance_id = '.$p_previousShowID;
+            $predicateArr[] = 'st.instance_id = :previousShowId';
+            $paramMap[':previousShowId'] = $p_previousShowID;
         }
         if (isset($p_currentShowID)) {
-            $predicateArr[] = 'st.instance_id = '.$p_currentShowID;
+            $predicateArr[] = 'st.instance_id = :currentShowId';
+            $paramMap[':currentShowId'] = $p_currentShowID;
         }
         if (isset($p_nextShowID)) {
-            $predicateArr[] = 'st.instance_id = '.$p_nextShowID;
+            $predicateArr[] = 'st.instance_id = :nextShowId';
+            $paramMap[':nextShowId'] = $p_nextShowID;
         }
 
         $sql .= " (".implode(" OR ", $predicateArr).") ";
@@ -109,7 +112,7 @@ class Application_Model_Schedule
 
         $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) AS unioned ORDER BY starts";
 
-        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        $rows = Application_Common_Database::prepareAndExecute($sql, $paramMap);
         $numberOfRows = count($rows);
 
         $results['previous'] = null;
@@ -169,7 +172,6 @@ class Application_Model_Schedule
     public static function GetLastScheduleItem($p_timeNow)
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
         $sql = "SELECT"
         ." ft.artist_name, ft.track_title,"
         ." st.starts as starts, st.ends as ends"
@@ -178,13 +180,13 @@ class Application_Model_Schedule
         ." ON st.file_id = ft.id"
         ." LEFT JOIN $CC_CONFIG[showInstances] sit"
         ." ON st.instance_id = sit.id"
-        ." WHERE st.ends < TIMESTAMP '$p_timeNow'"
+        ." WHERE st.ends < TIMESTAMP :timeNow"
         ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
         ." AND st.starts < sit.ends"
         ." ORDER BY st.ends DESC"
         ." LIMIT 1";
 
-        $row = $con->query($sql)->fetchAll();
+        $row = Application_Common_Database::prepareAndExecute($sql, array(':timeNow'=>$p_timeNow));
 
         return $row;
     }
@@ -192,7 +194,6 @@ class Application_Model_Schedule
     public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId)
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
         /* Note that usually there will be one result returned. In some
          * rare cases two songs are returned. This happens when a track
          * that was overbooked from a previous show appears as if it
@@ -204,13 +205,13 @@ class Application_Model_Schedule
         ." FROM $CC_CONFIG[scheduleTable] st"
         ." LEFT JOIN $CC_CONFIG[filesTable] ft"
         ." ON st.file_id = ft.id"
-        ." WHERE st.starts <= TIMESTAMP '$p_timeNow'"
-        ." AND st.instance_id = $p_instanceId"
-        ." AND st.ends > TIMESTAMP '$p_timeNow'"
+        ." WHERE st.starts <= TIMESTAMP :timeNow1"
+        ." AND st.instance_id = :instanceId"
+        ." AND st.ends > TIMESTAMP :timeNow2"
         ." ORDER BY st.starts DESC"
         ." LIMIT 1";
 
-        $row = $con->query($sql)->fetchAll();
+        $row = Application_Common_Database::prepareAndExecute($sql, array(':timeNow1'=>$p_timeNow, ':instanceId'=>$p_instanceId, ':timeNow2'=>$p_timeNow,));
 
         return $row;
     }
@@ -218,7 +219,6 @@ class Application_Model_Schedule
     public static function GetNextScheduleItem($p_timeNow)
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
         $sql = "SELECT"
         ." ft.artist_name, ft.track_title,"
         ." st.starts as starts, st.ends as ends"
@@ -227,13 +227,13 @@ class Application_Model_Schedule
         ." ON st.file_id = ft.id"
         ." LEFT JOIN $CC_CONFIG[showInstances] sit"
         ." ON st.instance_id = sit.id"
-        ." WHERE st.starts > TIMESTAMP '$p_timeNow'"
+        ." WHERE st.starts > TIMESTAMP :timeNow"
         ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
         ." AND st.starts < sit.ends"
         ." ORDER BY st.starts"
         ." LIMIT 1";
 
-        $row = $con->query($sql)->fetchAll();
+        $row = Application_Common_Database::prepareAndExecute($sql, array(':timeNow'=>$p_timeNow));
 
         return $row;
     }
@@ -514,7 +514,6 @@ SQL;
     public static function GetItems($p_startTime, $p_endTime)
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
 
         $baseQuery = "SELECT st.file_id AS file_id,"
             ." st.id AS id,"
@@ -540,15 +539,15 @@ SQL;
             ." LEFT JOIN cc_webstream AS ws"
             ." ON st.stream_id = ws.id";
 
-        $predicates = " WHERE st.ends > '$p_startTime'"
-        ." AND st.starts < '$p_endTime'"
+        $predicates = " WHERE st.ends > :startTime1"
+        ." AND st.starts < :endTime"
         ." AND st.playout_status > 0"
-        ." AND si.ends > '$p_startTime'"
+        ." AND si.ends > :startTime2"
         ." ORDER BY st.starts";
 
         $sql = $baseQuery.$predicates;
 
-        $rows = $con->query($sql)->fetchAll();
+        $rows = Application_Common_Database::prepareAndExecute($sql, array(':startTime1'=>$p_startTime, ':endTime'=>$p_endTime, ':startTime2'=>$p_startTime));
 
         if (count($rows) < 3) {
             Logging::debug("Get Schedule: Less than 3 results returned. Doing another query since we need a minimum of 3 results.");
@@ -557,15 +556,15 @@ SQL;
             $dt->add(new DateInterval("PT24H"));
             $range_end = $dt->format("Y-m-d H:i:s");
 
-            $predicates = " WHERE st.ends > '$p_startTime'"
-            ." AND st.starts < '$range_end'"
+            $predicates = " WHERE st.ends > :startTime1"
+            ." AND st.starts < :rangeEnd"
             ." AND st.playout_status > 0"
-            ." AND si.ends > '$p_startTime'"
+            ." AND si.ends > :startTime2"
             ." ORDER BY st.starts"
             ." LIMIT 3";
 
             $sql = $baseQuery.$predicates;
-            $rows = $con->query($sql)->fetchAll();
+            $rows = Application_Common_Database::prepareAndExecute($sql, array(':startTime1'=>$p_startTime, ':rangeEnd'=>$range_end, ':startTime2'=>$p_startTime));
         }
 
         return $rows;
@@ -748,9 +747,8 @@ SQL;
     public static function deleteWithFileId($fileId)
     {
         global $CC_CONFIG;
-        $con = Propel::getConnection();
-        $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=$fileId";
-        $res = $con->query($sql);
+        $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=:file_id";
+        $res = Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
     public static function createNewFormSections($p_view)
@@ -861,12 +859,12 @@ SQL;
             $formStyle->disable();
             //$formLive->disable();
 
-            $controller->view->what = $formWhat;
-            $controller->view->when = $formWhen;
+            $controller->view->what    = $formWhat;
+            $controller->view->when    = $formWhen;
             $controller->view->repeats = $formRepeats;
-            $controller->view->who = $formWho;
-            $controller->view->style = $formStyle;
-            $controller->view->live = $formLive;
+            $controller->view->who     = $formWho;
+            $controller->view->style   = $formStyle;
+            $controller->view->live    = $formLive;
             if (!$isSaas) {
                 $controller->view->rr = $formRecord;
                 $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
@@ -1091,7 +1089,7 @@ SQL;
                     and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
                     and modified_instance = false order by ends";
 
-            $stmt = $con->prepare("SELECT id, starts, ends FROM 
+            $stmt = $con->prepare("SELECT id, starts, ends FROM
                     {$CC_CONFIG['showInstances']}
                     where (ends <= :show_end1 or starts <= :show_end2)
                     and date(starts) >= (date(:show_end3) - INTERVAL '2 days')

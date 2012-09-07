@@ -18,48 +18,57 @@ class Application_Model_Preference
 
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
-            ." WHERE keystr = '$key'";
-
+            ." WHERE keystr = :key";
+            
+            $paramMap = array();
+            $paramMap[':key'] = $key;
+            
             //For user specific preference, check if id matches as well
             if ($isUserValue) {
-                $sql .= " AND subjid = '$id'";
+                $sql .= " AND subjid = :id";
+                $paramMap[':id'] = $id;
             }
 
-            $result = $con->query($sql)->fetchColumn(0);
+            $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
 
             if ($value == "") {
                 $value = "NULL";
             } else {
-                $value = "'$value'";
+                $value = "$value";
             }
 
+            $paramMap = array();
             if ($result == 1) {
                 // result found
                 if (is_null($id) || !$isUserValue) {
                     // system pref
                     $sql = "UPDATE cc_pref"
-                    ." SET subjid = NULL, valstr = $value"
-                    ." WHERE keystr = '$key'";
+                    ." SET subjid = NULL, valstr = :value"
+                    ." WHERE keystr = :key";
                 } else {
                     // user pref
                     $sql = "UPDATE cc_pref"
-                    . " SET valstr = $value"
-                    . " WHERE keystr = '$key' AND subjid = $id";
+                    . " SET valstr = :value"
+                    . " WHERE keystr = :key AND subjid = :id";
+                    $paramMap[':id'] = $id;
                 }
             } else {
                 // result not found
                 if (is_null($id) || !$isUserValue) {
                     // system pref
                     $sql = "INSERT INTO cc_pref (keystr, valstr)"
-                    ." VALUES ('$key', $value)";
+                    ." VALUES (:key, :value)";
                 } else {
                     // user pref
                     $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
-                    ." VALUES ($id, '$key', $value)";
+                    ." VALUES (:id, :key, :value)";
+                    $paramMap[':id'] = $id;
                 }
             }
+            $paramMap[':key'] = $key;
+            $paramMap[':value'] = $value;
 
-            $con->exec($sql);
+            Application_Common_Database::prepareAndExecute($sql, $paramMap, 'execute');
 
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
@@ -77,28 +86,39 @@ class Application_Model_Preference
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
             ." WHERE keystr = '$key'";
+            /*." WHERE keystr = :key";
+            $paramMap = array();
+            $paramMap[':key'] = $key;*/
             //For user specific preference, check if id matches as well
             if ($isUserValue) {
                 $auth = Zend_Auth::getInstance();
                 if ($auth->hasIdentity()) {
                     $id = $auth->getIdentity()->id;
                     $sql .= " AND subjid = '$id'";
+                    /*$sql .= " AND subjid = :id";
+                    $paramMap[':id'] = $id;*/
                 }
             }
             $result = $con->query($sql)->fetchColumn(0);
+            //$result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
             if ($result == 0)
 
                 return "";
             else {
                 $sql = "SELECT valstr FROM cc_pref"
                 ." WHERE keystr = '$key'";
+                /*." WHERE keystr = :key";
+                $paramMap = array();
+                $paramMap[':key'] = $key;*/
 
                 //For user specific preference, check if id matches as well
                 if ($isUserValue && $auth->hasIdentity()) {
                     $sql .= " AND subjid = '$id'";
+                    /*$sql .= " AND subjid = :id";
+                    $paramMap[':id'] = $id;*/
                 }
-
                 $result = $con->query($sql)->fetchColumn(0);
+                //$result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
 
                 return ($result !== false) ? $result : "";
             }
