@@ -233,14 +233,16 @@ class Application_Model_Show
             AND ((CAST(duration AS interval) + interval '{$deltaDay} days' + interval '{$hours}:{$mins}') <= interval '24:00')";
 
         $sql_gen = <<<SQL
-UPDATE cc_show_instances 
+UPDATE cc_show_instances
 SET ends = (ends + interval :deltaDay1 + interval :interval1)
-WHERE (show_id = :show_id1 AND ends > :current_timestamp1)
-AND ((ends + interval :deltaDay2 + interval :interval2 - starts) <= interval '24:00')
+WHERE (show_id = :show_id1
+       AND ends > :current_timestamp1)
+  AND ((ends + interval :deltaDay2 + interval :interval2 - starts) <= interval '24:00')
  
-UPDATE cc_show_days SET duration = (CAST(duration AS interval) + interval :deltaDay3 + interval :interval3)
+UPDATE cc_show_days
+SET duration = (CAST(duration AS interval) + interval :deltaDay3 + interval :interval3)
 WHERE show_id = :show_id2
-AND ((CAST(duration AS interval) + interval :deltaDay4 + interval :interval4) <= interval '24:00')
+  AND ((CAST(duration AS interval) + interval :deltaDay4 + interval :interval4) <= interval '24:00')
 SQL;
 
         Application_Common_Database::prepareAndExecute($sql_gen,
@@ -308,7 +310,9 @@ SQL;
             ->findOne();
 
         if (is_null($showInstancesRow)) {
-            $sql = "DELETE FROM cc_show WHERE id = {$this->_showId}";
+            $sql = "DELETE FROM cc_show WHERE id = :show_id";
+            Application_Common_Database::prepareAndExecute(
+                $sql, array( 'show_id' => $this->_showId ), "execute");
             $con->exec($sql);
         }
 
@@ -805,10 +809,10 @@ SQL;
 
 
         $sql = <<<SQL
-UPDATE cc_show_instances 
+UPDATE cc_show_instances
 SET ends = starts + :add_show_duration::INTERVAL
 WHERE show_id = :show_id
-AND ends > :timestamp::TIMESTAMP
+  AND ends > :timestamp::TIMESTAMP
 SQL;
 
         
