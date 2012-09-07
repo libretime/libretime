@@ -132,7 +132,6 @@ class Application_Model_Preference
     public static function GetHeadTitle()
     {
         $title = self::getValue("station_name");
-        $defaultNamespace->title = $title;
         if (strlen($title) > 0)
             $title .= " - ";
 
