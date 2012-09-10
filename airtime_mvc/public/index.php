@@ -57,6 +57,7 @@ try {
         $application->bootstrap()->run();
     }
 } catch (Exception $e) {
+    echo $e->getMessage();
     Logging::info($e->getMessage());
 }
 
