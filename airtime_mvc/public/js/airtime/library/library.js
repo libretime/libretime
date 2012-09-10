@@ -479,14 +479,13 @@ var AIRTIME = (function(AIRTIME) {
             
             "fnServerData": function ( sSource, aoData, fnCallback ) {
                 var type;
-                
                 aoData.push( { name: "format", value: "json"} );
                 
                 //push whether to search files/playlists or all.
                 type = $("#library_display_type").find("select").val();
                 type = (type === undefined) ? 0 : type;
                 aoData.push( { name: "type", value: type} );
-                
+            
                 $.ajax( {
                     "dataType": 'json',
                     "type": "POST",
@@ -970,3 +969,145 @@ function addQtipToSCIcons(){
         }
     });
 }
+
+/*
+ * This function is called from dataTables.columnFilter.js
+ */
+function validateAdvancedSearch(divs) {
+    var valid = true,
+        fieldName,
+        fields,
+        searchTerm = Array(),
+        searchTermType,
+        regExpr,
+        timeRegEx = "\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1,6})?",
+        dateRegEx = "\\d{4}[-]\\d{2}[-]\\d{2}?",
+        integerRegEx = "^\\d+$",
+        numericRegEx = "^\\d+[.]?\\d*$";
+
+    searchTerm[0] = "";
+    searchTerm[1] = "";
+    
+    $.each(divs, function(i, div){
+        fieldName = $(div).children(':nth-child(2)').attr('id');
+        fields = $(div).children().find('input');
+        searchTermType = validationTypes[fieldName];
+        
+        $.each(fields, function(i, field){
+            searchTerm[i] = $(field).val();
+
+            if (searchTerm[i] !== "") {
+                
+                if (searchTermType === "l") {
+                    regExpr = new RegExp("^" +timeRegEx+ "$");
+                } else if (searchTermType === "t") {
+                    var pieces = searchTerm[i].split(" ");
+                    if (pieces.length === 2) {
+                        regExpr = new RegExp("^" +dateRegEx+ " " +timeRegEx+ "$");
+                    } else if (pieces.length === 1) {
+                        regExpr = new RegExp("^" +dateRegEx+ "$");
+                    }
+                } else if (searchTermType === "i") {
+                    regExpr = new RegExp(integerRegEx);
+                } else if (searchTermType === "n") {
+                    regExpr = new RegExp(numericRegEx);
+                    if (searchTerm[i].charAt(0) === "-") {
+                        searchTerm[i] = searchTerm[i].substr(1);
+                    }
+                }
+                
+                //string fields do not need validation
+                if (searchTermType !== "s") {
+                    valid = regExpr.test(searchTerm[i]);
+                }
+                
+                addRemoveValidationIcons(valid, $(field));
+                
+            /* Empty fields should not have valid/invalid indicator
+             * Range values are considered valid even if only the
+             * 'From' value is provided. Therefore, if the 'To' value
+             * is empty but the 'From' value is not empty we need to
+             * keep the validation icon on screen.
+             */
+            } else if (searchTerm[0] === "" && searchTerm[1] !== "" ||
+                    searchTerm[0] === "" && searchTerm[1] === ""){
+                if ($(field).closest('div').children(':last-child').hasClass('checked-icon') ||
+                        $(field).closest('div').children(':last-child').hasClass('not-available-icon')) {
+                    $(field).closest('div').children(':last-child').remove();
+                }
+            }
+            
+            if (!valid) {
+                return false;
+            }
+        });
+        
+        if (!valid) {
+            return false;
+        }
+    });
+    
+    return valid;
+}
+
+function addRemoveValidationIcons(valid, field) {
+    var validIndicator = "<span class='checked-icon'></span>",
+        invalidIndicator = "<span class='not-available-icon'></span>";
+    
+    if (valid) {
+        if (!field.closest('div').children(':last-child').hasClass('checked-icon')) {
+            //remove invalid icon before adding valid icon
+            if (field.closest('div').children(':last-child').hasClass('not-available-icon')) {
+                field.closest('div').children(':last-child').remove();
+            }
+            field.closest('div').append(validIndicator);
+        }
+    } else {
+        if (!field.closest('div').children(':last-child').hasClass('not-available-icon')) {
+            //remove valid icon before adding invalid icon
+            if (field.closest('div').children(':last-child').hasClass('checked-icon')) {
+                field.closest('div').children(':last-child').remove();
+            }
+            field.closest('div').append(invalidIndicator);
+        }
+    }
+}
+
+/* Validation types:
+ * s => string
+ * i => integer
+ * n => numeric (positive/negative, whole/decimals)
+ * t => timestamp
+ * l => length
+ */
+var validationTypes = {
+    "album_title" : "s",
+    "artist_name" : "s",
+    "bit_rate" : "i",
+    "bpm" : "i",
+    "comments" : "s",
+    "composer" : "s",
+    "conductor" : "s",
+    "copyright" : "s",
+    "utime" : "t",
+    "mtime" : "t",
+    "lptime" : "t",
+    "disc_number" : "i",
+    "genre" : "s",
+    "isrc_number" : "s",
+    "label" : "s",
+    "language" : "s",
+    "length" : "l",
+    "lyricist" : "s",
+    "mood" : "s",
+    "name" : "s",
+    "orchestra" : "s",
+    "owner_id" : "i",
+    "rating" : "i",
+    "replay_gain" : "n",
+    "sample_rate" : "i",
+    "track_title" : "s",
+    "track_number" : "i",
+    "info_url" : "s",
+    "year" : "i"               
+};
