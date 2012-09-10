@@ -337,6 +337,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $data = Application_Model_Schedule::getSchedule();
+        header("Content-Type: application/json");
         echo json_encode($data, JSON_FORCE_OBJECT);
     }
 

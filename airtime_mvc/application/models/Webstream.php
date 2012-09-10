@@ -262,7 +262,6 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     private static function getPlsUrl($url)
     {
         $content = self::getUrlData($url); 
-
         $ini = parse_ini_string($content, true); 
 
         if ($ini !== false && isset($ini["playlist"]) && isset($ini["playlist"]["File1"])) {
