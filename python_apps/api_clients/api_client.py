@@ -474,11 +474,12 @@ class AirtimeApiClient():
     #{"files":["path/to/file1", "path/to/file2"]}
     #Note that these are relative paths to the given directory. The full
     #path is not returned.
-    def list_all_db_files(self, dir_id):
+    def list_all_db_files(self, dir_id, all_files=True):
         logger = self.logger
         try:
             url = self.construct_url("list_all_db_files")
             url = url.replace("%%dir_id%%", dir_id)
+            url = url.replace("%%all%%", all_files)
             response = self.get_response_from_server(url)
             response = json.loads(response)
         except Exception, e:
@@ -488,7 +489,8 @@ class AirtimeApiClient():
         try:
             return response["files"]
         except KeyError:
-            self.logger.error("Could not find index 'files' in dictionary: %s", str(response))
+            self.logger.error("Could not find index 'files' in dictionary: %s",
+                    str(response))
             return []
 
     def list_all_watched_dirs(self):
