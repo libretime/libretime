@@ -809,11 +809,13 @@ SQL;
     // returns number of show instances that ends later than $day
     public static function GetShowInstanceCount($day)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-        $sql = "SELECT count(*) as cnt FROM $CC_CONFIG[showInstances] WHERE ends < '$day'";
-
-        return $con->query($sql)->fetchColumn(0);
+        $sql = <<<SQL
+SELECT count(*) AS cnt
+FROM cc_show_instances
+WHERE ends < '$day'
+SQL;
+        return Application_Common_Database::prepareAndExecute( $sql, 
+            array( ':day' => $day ), 'column' );
     }
 
     // this returns end timestamp of all shows that are in the range and has live DJ set up
