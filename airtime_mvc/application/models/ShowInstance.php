@@ -324,11 +324,6 @@ SQL;
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    /*
-     * FUNCTION SHOULD NOT BE CALLED
-     * - we are removing ability to resize just a single show instance
-     * -please use the resize method on the Show.php class.
-     */
     public function resizeShow($deltaDay, $deltaMin)
     {
         $con = Propel::getConnection();
@@ -372,9 +367,17 @@ SQL;
 
         //must update length of all rebroadcast instances.
         if ($this->isRecorded()) {
-            $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                    WHERE rebroadcast = 1 AND instance_id = {$this->_instanceId}";
-            $con->exec($sql);
+            $sql = <<<SQL
+UPDATE cc_show_instances
+SET ends = (ends + interval :deltaDays + interval :interval)
+WHERE rebroadcast = 1
+  AND instance_id = :instanceId;
+SQL;
+            Application_Common_Database::prepareAndExecute( $sql, array(
+                ':deltaDays' => "$deltaDay days",
+                ':interval' => "$hours:$mins",
+                ':instanceId' => $this->_instanceId ), 'execute');
+
         }
 
         $this->setShowEnd($new_ends);
