@@ -78,7 +78,7 @@ echo "Removing everything from the scheduler between $startTime and $endTime..."
 $scheduleClear = Schedule::isScheduleEmptyInRange($startTime, "01:00:00");
 if (!$scheduleClear) {
     echo "\nERROR: Schedule could not be cleared.\n\n";
-    var_dump(Schedule::GetItems($startTime, $endTime));
+    var_dump(Schedule::getItems($startTime, $endTime));
     exit;
 }
 echo "done.\n";

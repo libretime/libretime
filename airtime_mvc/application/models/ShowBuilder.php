@@ -386,7 +386,7 @@ class Application_Model_ShowBuilder
         return $outdated;
     }
 
-    public function GetItems()
+    public function getItems()
     {
         $current_id = -1;
         $display_items = array();

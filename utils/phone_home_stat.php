@@ -35,6 +35,14 @@ get_include_path(),
 realpath($CC_CONFIG['phpDir'] . '/library')
 )));
 
+function __autoload($classname){
+    global $CC_CONFIG;
+    $info = explode('_', $classname);
+    if (isset($info[2])) {
+        $filename = $info[2].".php";
+        require_once($CC_CONFIG['phpDir'].'/application/models/'.$filename);
+    }
+}
 require_once($CC_CONFIG['phpDir'].'/application/models/User.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Playlist.php');

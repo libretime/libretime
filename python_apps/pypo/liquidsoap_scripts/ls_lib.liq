@@ -393,7 +393,7 @@ end
 dyn_out = output.icecast(%wav,
                      host="localhost",
                      port=8999,
-                     password="hackme",
+                     password=stream_harbor_pass,
                      mount="test-harbor",
                      fallible=true)
 
@@ -406,7 +406,7 @@ end
 # Function to create a playlist source and output it.
 def create_dynamic_source(uri) =
     # The playlist source 
-    s = input.http(buffer=2., max=12., uri)
+    s = audio_to_stereo(input.http(buffer=2., max=12., uri))
 
     # The output
     active_dyn_out = dyn_out(s)

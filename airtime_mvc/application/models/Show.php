@@ -1643,7 +1643,7 @@ SQL;
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
         if ($onlyRecord) {
-            $sql .= " AND (si1.starts >= :start::TIMESTAMP AND si1.starts < timestamp :end::TIMESTAMP)";
+            $sql .= " AND (si1.starts >= :start::TIMESTAMP AND si1.starts < :end::TIMESTAMP)";
             $sql .= " AND (si1.record = 1)";
 
             return Application_Common_Database::prepareAndExecute( $sql,

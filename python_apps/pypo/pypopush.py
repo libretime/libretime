@@ -40,7 +40,7 @@ except Exception, e:
     sys.exit()
 
 def is_stream(media_item):
-    return media_item['type'] == 'stream'
+    return media_item['type'] == 'stream_output_start'
 
 def is_file(media_item):
     return media_item['type'] == 'file'
@@ -211,7 +211,7 @@ class PypoPush(Thread):
         queue.
         """
         file_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
-        stream_chain = filter(lambda item: (item["type"] == "stream"), current_event_chain)
+        stream_chain = filter(lambda item: (item["type"] == "stream_output_start"), current_event_chain)
 
         self.logger.debug(self.current_stream_info)
         self.logger.debug(current_event_chain)
@@ -427,13 +427,13 @@ class PypoPush(Thread):
                         PypoFetch.switch_source(self.logger, self.telnet_lock, "live_dj", "off")
                 elif media_item['type'] == 'stream_buffer_start':
                     self.start_web_stream_buffer(media_item)
-                elif media_item['type'] == "stream":
+                elif media_item['type'] == "stream_output_start":
                     if media_item['row_id'] != self.current_prebuffering_stream_id:
                         #this is called if the stream wasn't scheduled sufficiently ahead of time
                         #so that the prebuffering stage could take effect. Let's do the prebuffering now.
                         self.start_web_stream_buffer(media_item)
                     self.start_web_stream(media_item)
-                elif media_item['type'] == "stream_end":
+                elif media_item['type'] == "stream_buffer_end":
                     self.stop_web_stream(media_item)
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)

@@ -178,10 +178,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 if (is_null($mime)) {
                     throw new Exception("No MIME type found for webstream.");
                 }
-                //TODO: return url
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
-                if (preg_match("/(x-mpegurl)|(xspf\+xml)/", $mime)) {
+                if (preg_match("/(x-mpegurl)|(xspf\+xml)|(pls\+xml)/", $mime)) {
                      list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
                 }
             } catch (Exception $e) {
@@ -222,7 +221,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     }
 
-    private static function getXspfUrl($url)
+    private static function getUrlData($url)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -233,10 +232,17 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         //TODO: What if invalid url?
         $content = curl_exec($ch);
 
-        Logging::info($content);
+        Logging::debug($content);
 
         // close cURL resource, and free up system resources
         curl_close($ch);
+        
+        return $content;
+    }
+
+    private static function getXspfUrl($url)
+    {
+        $content = self::getUrlData($url); 
 
         $dom = new DOMDocument;
         //TODO: What if invalid xml?
@@ -252,19 +258,23 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         throw new Exception("Could not parse XSPF playlist");
     }
+    
+    private static function getPlsUrl($url)
+    {
+        $content = self::getUrlData($url); 
+
+        $ini = parse_ini_string($content, true); 
+
+        if ($ini !== false && isset($ini["playlist"]) && isset($ini["playlist"]["File1"])) {
+            return $ini["playlist"]["File1"];
+        }
+
+        throw new Exception("Could not parse PLS playlist");
+    }
 
     private static function getM3uUrl($url)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        // grab URL and pass it to the browser
-        //TODO: What if invalid url?
-        $content = curl_exec($ch);
-        Logging::info($content);
-        curl_close($ch);
+        $content = self::getUrlData($url); 
 
         //split into lines:
         $delim = "\n";
@@ -288,6 +298,8 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $media_url = self::getM3uUrl($url);
         } elseif (preg_match("/xspf\+xml/", $mime)) {
             $media_url = self::getXspfUrl($url);
+        } elseif (preg_match("/pls\+xml/", $mime)) {
+            $media_url = self::getPlsUrl($url);
         } elseif (preg_match("/(mpeg|ogg)/", $mime)) {
             if ($content_length_found) {
                 throw new Exception("Invalid webstream - This appears to be a file download.");
@@ -314,8 +326,6 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             }
             if (preg_match("/^content-length:/i", $h)) {
                 $content_length_found = true;
-                //if content-length appears, this is not a web stream!!!!
-                //Aborting the save process.
             }
         }
 

@@ -511,7 +511,7 @@ SQL;
      *    Returns null if nothing found, else an array of associative
      *    arrays representing each row.
      */
-    public static function GetItems($p_startTime, $p_endTime)
+    public static function getItems($p_startTime, $p_endTime)
     {
         global $CC_CONFIG;
 
@@ -570,7 +570,127 @@ SQL;
         return $rows;
     }
 
-    public static function GetScheduledPlaylists($p_fromDateTime = null, $p_toDateTime = null)
+    private static function createInputHarborKickTimes(&$data, $range_start, $range_end)
+    {
+        $utcTimeZone = new DateTimeZone("UTC");
+        $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
+        foreach ($kick_times as $kick_time_info) {
+            $kick_time = $kick_time_info['ends'];
+            $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
+            // we round down transition time since PHP cannot handle millisecond. We need to
+            // handle this better in the future
+            $transition_time   = intval($temp[0]);
+            $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
+            $switch_off_time   = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
+            $switch_off_time   = $switch_off_time->format("Y-m-d H:i:s");
+
+            $kick_start = self::AirtimeTimeToPypoTime($kick_time);
+            $data["media"][$kick_start]['start']             = $kick_start;
+            $data["media"][$kick_start]['end']               = $kick_start;
+            $data["media"][$kick_start]['event_type']        = "kick_out";
+            $data["media"][$kick_start]['type']              = "event";
+            $data["media"][$kick_start]['independent_event'] = true;
+
+            if ($kick_time !== $switch_off_time) {
+                $switch_start = self::AirtimeTimeToPypoTime($switch_off_time);
+                $data["media"][$switch_start]['start']             = $switch_start;
+                $data["media"][$switch_start]['end']               = $switch_start;
+                $data["media"][$switch_start]['event_type']        = "switch_off";
+                $data["media"][$switch_start]['independent_event'] = true;
+            }
+        }
+    }
+
+    private static function createFileScheduleEvent(&$data, $item, $media_id)
+    {
+        $start = self::AirtimeTimeToPypoTime($item["start"]);
+        $end = self::AirtimeTimeToPypoTime($item["end"]);
+
+        $schedule_item = array(
+            'id' => $media_id,
+            'type' => 'file',
+            'row_id' => $item["id"],
+            'uri' => $uri,
+            'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
+            'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
+            'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+            'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+            'start' => $start,
+            'end' => $end,
+            'show_name' => $showName,
+            'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
+            'independent_event' => true
+        );
+        $data["media"][$start] = $schedule_item;
+    }
+
+    private static function createStreamScheduleEvent(&$data, $item, $media_id)
+    {
+        $start = self::AirtimeTimeToPypoTime($item["start"]);
+        $end = self::AirtimeTimeToPypoTime($item["end"]);
+
+        //create an event to start stream buffering 5 seconds ahead of the streams actual time.
+        $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
+        $buffer_start->sub(new DateInterval("PT5S"));
+
+        $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
+
+        $schedule_item = array(
+            'start' => $stream_buffer_start,
+            'end' => $stream_buffer_start,
+            'uri' => $uri,
+            'row_id' => $item["id"],
+            'type' => 'stream_buffer_start',
+            'independent_event' => true
+        );
+
+        //TODO: Make sure no other media is being overwritten!
+        $data["media"][$stream_buffer_start] = $schedule_item;  
+        $schedule_item = array(
+            'id' => $media_id,
+            'type' => 'stream_output_start',
+            'row_id' => $item["id"],
+            'uri' => $uri,
+            'start' => $start,
+            'end' => $end,
+            'show_name' => $showName,
+            'independent_event' => true
+        );
+        $data["media"][$start] = $schedule_item;
+
+        //since a stream never ends we have to insert an additional "kick stream" event. The "start"
+        //time of this event is the "end" time of the stream minus 1 second.
+        $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
+        $dt->sub(new DateInterval("PT1S"));
+
+        //make sure the webstream doesn't play past the end time of the show
+        if ($dt->getTimestamp() > $showEndDateTime->getTimestamp()) {
+            $dt = $showEndDateTime;
+        }
+
+        $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
+
+        $schedule_item = array(
+            'start' => $stream_end,
+            'end' => $stream_end,
+            'uri' => $uri,
+            'type' => 'stream_buffer_end',
+            'independent_event' => true
+        );
+        $data["media"][$stream_end] = $schedule_item;
+
+
+        $schedule_item = array(
+            'start' => $stream_end,
+            'end' => $stream_end,
+            'uri' => $uri,
+            'type' => 'stream_output_end',
+            'independent_event' => true
+        );
+        $data["media"][$stream_end] = $schedule_item;
+    }
+
+    private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
     {
         global $CC_CONFIG;
 
@@ -600,8 +720,13 @@ SQL;
             $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
         }
 
-        // Scheduler wants everything in a playlist
-        $items = self::GetItems($range_start, $range_end);
+        return array($range_start, $range_end);
+    }
+
+    public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
+    {
+
+        list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
         $data = array();
         $utcTimeZone = new DateTimeZone("UTC");
@@ -609,33 +734,9 @@ SQL;
         $data["status"] = array();
         $data["media"] = array();
 
-        $kick_times = Application_Model_ShowInstance::GetEndTimeOfNextShowWithLiveDJ($range_start, $range_end);
-        foreach ($kick_times as $kick_time_info) {
-            $kick_time = $kick_time_info['ends'];
-            $temp = explode('.', Application_Model_Preference::GetDefaultTransitionFade());
-            // we round down transition time since PHP cannot handle millisecond. We need to
-            // handle this better in the future
-            $transition_time   = intval($temp[0]);
-            $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
-            $switch_off_time   = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
-            $switch_off_time   = $switch_off_time->format("Y-m-d H:i:s");
+        self::createInputHarborKickTimes($data, $range_start, $range_end);
 
-            $kick_start = Application_Model_Schedule::AirtimeTimeToPypoTime($kick_time);
-            $data["media"][$kick_start]['start']             = $kick_start;
-            $data["media"][$kick_start]['end']               = $kick_start;
-            $data["media"][$kick_start]['event_type']        = "kick_out";
-            $data["media"][$kick_start]['type']              = "event";
-            $data["media"][$kick_start]['independent_event'] = true;
-
-            if ($kick_time !== $switch_off_time) {
-                $switch_start = Application_Model_Schedule::AirtimeTimeToPypoTime($switch_off_time);
-                $data["media"][$switch_start]['start']             = $switch_start;
-                $data["media"][$switch_start]['end']               = $switch_start;
-                $data["media"][$switch_start]['event_type']        = "switch_off";
-                $data["media"][$switch_start]['independent_event'] = true;
-            }
-        }
-
+        $items = self::getItems($range_start, $range_end);
         foreach ($items as $item) {
 
             $showInstance = CcShowInstancesQuery::create()->findPK($item["instance_id"]);
@@ -648,11 +749,10 @@ SQL;
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
 
             if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
+                //do not send any tracks that start past their show's end time
                 continue;
             }
 
-            /* Note: cue_out and end are always the same. */
-            /* TODO: Not all tracks will have "show_end" */
             if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
                 $di = $trackStartDateTime->diff($showEndDateTime);
 
@@ -665,77 +765,36 @@ SQL;
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::Recall($media_id);
                 $uri = $storedFile->getFilePath();
-                $type = "file";
-                $independent_event = false;
+                self::createFileScheduleEvent($data, $item, $media_id, $uri);
             } elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
-                $type = "stream";
-                $independent_event = true;
-            }
-
-            $start = Application_Model_Schedule::AirtimeTimeToPypoTime($item["start"]);
-            $end = Application_Model_Schedule::AirtimeTimeToPypoTime($item["end"]);
-
-            $data["media"][$start] = array(
-                'id' => $media_id,
-                'type' => $type,
-                'row_id' => $item["id"],
-                'uri' => $uri,
-                'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
-                'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
-                'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-                'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-                'start' => $start,
-                'end' => $end,
-                'show_name' => $showName,
-                'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
-                'independent_event' => $independent_event
-            );
-
-            if ($type == "stream") {
-                //create an event to start stream buffering 5 seconds ahead of the streams actual time.
-                $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
-                $buffer_start->sub(new DateInterval("PT5S"));
-
-                $stream_buffer_start = Application_Model_Schedule::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
-
-                //TODO: Make sure no other media is being overwritten!
-                $data["media"][$stream_buffer_start] = array(
-                    'start' => $stream_buffer_start,
-                    'end' => $stream_buffer_start,
-                    'uri' => $uri,
-                    'row_id' => $item["id"],
-                    'type' => 'stream_buffer_start',
-                    'independent_event' => true
-                );
-
-
-                //since a stream never ends we have to insert an additional "kick stream" event. The "start"
-                //time of this event is the "end" time of the stream minus 1 second.
-                $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
-                $dt->sub(new DateInterval("PT1S"));
-
-                //make sure the webstream doesn't play past the end time of the show
-                if ($dt->getTimestamp() > $showEndDateTime->getTimestamp()) {
-                    $dt = $showEndDateTime;
-                }
-
-                $stream_end = Application_Model_Schedule::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
-
-                $data["media"][$stream_end] = array(
-                    'start' => $stream_end,
-                    'end' => $stream_end,
-                    'uri' => $uri,
-                    'type' => 'stream_end',
-                    'independent_event' => true
-                );
+                self::createStreamScheduleEvent($data, $item, $media_id, $uri);
             }
         }
-
         return $data;
     }
+
+    /*
+    private static function collapseEvents($data)
+    {
+        $keys = array_keys($data);
+
+        for ($i = 0, $len = count($keys); $i < $len; $i++) {
+            $cur = $data[$keys[$i]];
+            $next = null;
+            if ($i+1 < $len) {
+                $next = $data[$keys[$i+1]];
+            }
+
+            if ($cur['type'] == 'stream_buffer_end' && !is_null($next) && $next['type'] == 'stream_buffer_start') {
+                unset($data[$keys[$i]]); 
+            }
+            
+        }
+    }
+     */
 
     public static function deleteAll()
     {
