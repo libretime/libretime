@@ -769,29 +769,26 @@ SQL;
 
     public static function GetCurrentShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
          * this case, the show that started later is the one that
          * is actually playing, and so this is the one we want.
          */
 
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
-            ." AND si.ends > TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.starts DESC"
-            ." LIMIT 1";
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.starts <= :timeNow1::TIMESTAMP
+  AND si.ends > :timeNow2::TIMESTAMP
+  AND si.modified_instance = 'f'
+ORDER BY si.starts DESC LIMIT 1
+SQL;
 
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        $id = Application_Common_Database( $sql, array(
+            ':timeNow1' => $p_timeNow,
+            ':timeNow2' => $p_timeNow ), 'column');
+
+        return ( $id ? new Application_Model_ShowInstance($id) : null );
     }
 
     public static function GetNextShowInstance($p_timeNow)
