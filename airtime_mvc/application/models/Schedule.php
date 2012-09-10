@@ -1122,12 +1122,6 @@ SQL;
          */
         //$se = $show_end->format('Y-m-d H:i:s');
         if ($update) {
-            $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where (ends <= '{$show_end->format('Y-m-d H:i:s')}'
-                    or starts <= '{$show_end->format('Y-m-d H:i:s')}')
-                    and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
-                    and modified_instance = false and id != ".$instanceId. " order by ends";
-
             $stmt = $con->prepare("SELECT id, starts, ends FROM {$CC_CONFIG['showInstances']}
                     where (ends <= :show_end1
                     or starts <= :show_end2)
@@ -1141,13 +1135,6 @@ SQL;
                 ':instanceId'    => $instanceId
             ));
         } else {
-            // TODO : Remove raw sql later
-            $sql = "SELECT id, starts, ends FROM ".$CC_CONFIG["showInstances"]."
-                    where (ends <= '{$show_end->format('Y-m-d H:i:s')}'
-                    or starts <= '{$show_end->format('Y-m-d H:i:s')}')
-                    and date(starts) >= (date('{$show_end->format('Y-m-d H:i:s')}') - INTERVAL '2 days')
-                    and modified_instance = false order by ends";
-
             $stmt = $con->prepare("SELECT id, starts, ends FROM
                     {$CC_CONFIG['showInstances']}
                     where (ends <= :show_end1 or starts <= :show_end2)
