@@ -793,22 +793,17 @@ SQL;
 
     public static function GetNextShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.starts"
-            ." LIMIT 1";
-
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.starts > :timeNow::TIMESTAMP
+AND si.modified_instance = 'f'
+ORDER BY si.starts
+LIMIT 1
+SQL;
+        $id = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'timeNow' => $p_timeNow ), 'column' );
+        return ( $id ? new Application_Model_ShowInstance($id) : null );
     }
 
     // returns number of show instances that ends later than $day
