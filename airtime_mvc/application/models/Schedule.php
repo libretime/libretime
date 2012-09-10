@@ -172,20 +172,21 @@ class Application_Model_Schedule
     public static function GetLastScheduleItem($p_timeNow)
     {
         global $CC_CONFIG;
-        $sql = "SELECT"
-        ." ft.artist_name, ft.track_title,"
-        ." st.starts as starts, st.ends as ends"
-        ." FROM $CC_CONFIG[scheduleTable] st"
-        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
-        ." ON st.file_id = ft.id"
-        ." LEFT JOIN $CC_CONFIG[showInstances] sit"
-        ." ON st.instance_id = sit.id"
-        ." WHERE st.ends < TIMESTAMP :timeNow"
-        ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
-        ." AND st.starts < sit.ends"
-        ." ORDER BY st.ends DESC"
-        ." LIMIT 1";
+        $sql = <<<SQL
+SELECT ft.artist_name,
+       ft.track_title,
+       st.starts AS starts,
+       st.ends AS ends
+FROM $CC_CONFIG[scheduleTable] st
+LEFT JOIN $CC_CONFIG[filesTable] ft ON st.file_id = ft.id
+LEFT JOIN $CC_CONFIG[showInstances] sit ON st.instance_id = sit.id
+-- this and the next line are necessary since we can overbook shows.
+WHERE st.ends < TIMESTAMP :timeNow
 
+  AND st.starts >= sit.starts
+  AND st.starts < sit.ends
+ORDER BY st.ends DESC LIMIT 1;
+SQL;
         $row = Application_Common_Database::prepareAndExecute($sql, array(':timeNow'=>$p_timeNow));
 
         return $row;
