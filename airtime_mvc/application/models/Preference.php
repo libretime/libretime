@@ -31,12 +31,6 @@ class Application_Model_Preference
 
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
 
-            if ($value == "") {
-                $value = "NULL";
-            } else {
-                $value = "$value";
-            }
-
             $paramMap = array();
             if ($result == 1) {
                 // result found
