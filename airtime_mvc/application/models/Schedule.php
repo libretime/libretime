@@ -1147,7 +1147,6 @@ SQL;
                 ':show_end3'     => $show_end->format('Y-m-d H:i:s')
             ));
         }
-        //$rows = $con->query($sql);
         $rows = $stmt->fetchAll();
 
         foreach ($rows as $row) {
