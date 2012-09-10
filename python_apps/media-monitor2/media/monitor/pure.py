@@ -239,7 +239,7 @@ def normalized_metadata(md, original_path):
     """
     new_md = copy.deepcopy(md)
     # replace all slashes with dashes
-    for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
+    #for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
         'MDATA_KEY_TRACKNUMBER' : parse_int,
