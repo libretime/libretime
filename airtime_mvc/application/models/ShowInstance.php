@@ -833,7 +833,7 @@ WHERE si.ends > :startTime::TIMESTAMP
   AND si.ends < :endTime::TIMESTAMP
   AND (sh.live_stream_using_airtime_auth
        OR live_stream_using_custom_auth)
-ORDER BY si.ends";
+ORDER BY si.ends
 SQL;
         return Application_Common_Database::prepareAndExecute( $sql, array(
             ':startTime' => $p_startTime,
