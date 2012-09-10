@@ -51,11 +51,6 @@ class Application_Model_StoredFile
         "owner_id"     => "DbOwnerId"
     );
 
-    public function __construct()
-    {
-
-    }
-
     public function getId()
     {
         return $this->_file->getDbId();

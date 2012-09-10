@@ -54,6 +54,7 @@ class AirtimeNotifier(Loggable):
         message.ack()
         self.logger.info("Received md from RabbitMQ: %s" % str(body))
         m = json.loads(message.body)
+        if 'directory' in m: m['directory'] = normpath(m['directory'])
         self.handler.message(m)
 
 class AirtimeMessageReceiver(Loggable):
@@ -119,6 +120,7 @@ class AirtimeMessageReceiver(Loggable):
                     % md_path, e)
 
     def new_watch(self, msg):
+        msg['directory'] = normpath(msg['directory'])
         self.logger.info("Creating watch for directory: '%s'" %
                 msg['directory'])
         if not os.path.exists(msg['directory']):
@@ -126,7 +128,10 @@ class AirtimeMessageReceiver(Loggable):
             except Exception as e:
                 self.fatal_exception("Failed to create watched dir '%s'" %
                         msg['directory'],e)
-            else: self.new_watch(msg)
+            else:
+                self.logger.info("Created new watch directory: '%s'" %
+                        msg['directory'])
+                self.new_watch(msg)
         else:
             self.__request_now_bootstrap( directory=msg['directory'] )
             self.manager.add_watch_directory(msg['directory'])

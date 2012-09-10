@@ -239,7 +239,7 @@ def normalized_metadata(md, original_path):
     """
     new_md = copy.deepcopy(md)
     # replace all slashes with dashes
-    for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
+    #for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
     # Specific rules that are applied in a per attribute basis
     format_rules = {
         'MDATA_KEY_TRACKNUMBER' : parse_int,
@@ -296,7 +296,7 @@ def organized_path(old_path, root_path, orig_md):
     filepath = None
     ext = extension(old_path)
     def default_f(dictionary, key):
-        if key in dictionary: return len(dictionary[key]) == 0
+        if key in dictionary: return len(str(dictionary[key])) == 0
         else: return True
     # We set some metadata elements to a default "unknown" value because we use
     # these fields to create a path hence they cannot be empty Here "normal"

@@ -103,8 +103,7 @@
             label = label.replace(/(^\s*)|(\s*$)/g, "");
             var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
             var search_init = 'search_init ';
-            //var inputvalue = label;
-            var inputvalue = '';
+            var inputvalue = label;
             if (currentFilter != '' && currentFilter != '^') {
                 if (bIsNumber && currentFilter.charAt(0) == '^')
                     inputvalue = currentFilter.substr(1); //ignore trailing ^
@@ -134,32 +133,29 @@
                 });
             } else {
                 input.keyup(function () {
-                    var advSearchFields = $("div#advanced_search").children(':visible');
-                    if(validateAdvancedSearch(advSearchFields)){
-                        if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
-                            //If filter length is set in the server-side processing mode
-                            //Check has the user entered at least iFilterLength new characters
-    
-                            var currentFilter = oTable.fnSettings().aoPreSearchCols[index].sSearch;
-                            var iLastFilterLength = $(this).data("dt-iLastFilterLength");
-                            if (typeof iLastFilterLength == "undefined")
-                                iLastFilterLength = 0;
-                            var iCurrentFilterLength = this.value.length;
-                            if (Math.abs(iCurrentFilterLength - iLastFilterLength) < iFilterLength
-                            //&& currentFilter.length == 0 //Why this?
-                                ) {
-                                //Cancel the filtering
-                                return;
-                            }
-                            else {
-                                //Remember the current filter length
-                                $(this).data("dt-iLastFilterLength", iCurrentFilterLength);
-                            }
+                    if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
+                        //If filter length is set in the server-side processing mode
+                        //Check has the user entered at least iFilterLength new characters
+
+                        var currentFilter = oTable.fnSettings().aoPreSearchCols[index].sSearch;
+                        var iLastFilterLength = $(this).data("dt-iLastFilterLength");
+                        if (typeof iLastFilterLength == "undefined")
+                            iLastFilterLength = 0;
+                        var iCurrentFilterLength = this.value.length;
+                        if (Math.abs(iCurrentFilterLength - iLastFilterLength) < iFilterLength
+                        //&& currentFilter.length == 0 //Why this?
+                            ) {
+                            //Cancel the filtering
+                            return;
                         }
-                        /* Filter on the column (the index) of this element */
-                        oTable.fnFilter(this.value, _fnColumnIndex(index), regex, smart); //Issue 37
-                        fnOnFiltered();
+                        else {
+                            //Remember the current filter length
+                            $(this).data("dt-iLastFilterLength", iCurrentFilterLength);
+                        }
                     }
+                    /* Filter on the column (the index) of this element */
+                    oTable.fnFilter(this.value, _fnColumnIndex(index), regex, smart); //Issue 37
+                    fnOnFiltered();
                 });
             }
 
@@ -172,8 +168,7 @@
             input.blur(function () {
                 if (this.value == "") {
                     $(this).addClass("search_init");
-                    //this.value = asInitVals[index];
-                    this.value = "";
+                    this.value = asInitVals[index];
                 }
             });
         }
@@ -233,16 +228,14 @@
 
 
             $('#' + sFromId + ',#' + sToId, th).keyup(function () {
-                var advSearchFields = $("div#advanced_search").children(':visible');
-                if(validateAdvancedSearch(advSearchFields)){
-                    var iMin = document.getElementById(sFromId).value * 1;
-                    var iMax = document.getElementById(sToId).value * 1;
-                    if (iMin != 0 && iMax != 0 && iMin > iMax)
-                        return;
-    
-                    oTable.fnDraw();
-                    fnOnFiltered();
-                }
+
+                var iMin = document.getElementById(sFromId).value * 1;
+                var iMax = document.getElementById(sToId).value * 1;
+                if (iMin != 0 && iMax != 0 && iMin > iMax)
+                    return;
+
+                oTable.fnDraw();
+                fnOnFiltered();
             });
 
 

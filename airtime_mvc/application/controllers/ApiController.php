@@ -337,6 +337,7 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $data = Application_Model_Schedule::getSchedule();
+        header("Content-Type: application/json");
         echo json_encode($data, JSON_FORCE_OBJECT);
     }
 
@@ -701,9 +702,12 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
+        $all    = $request->getParam('all');
+
+        Logging::info("All param is: $all");
 
         $this->view->files =
-            Application_Model_StoredFile::listAllFiles($dir_id,$all=true);
+            Application_Model_StoredFile::listAllFiles($dir_id,$all);
     }
 
     public function listAllWatchedDirsAction()
