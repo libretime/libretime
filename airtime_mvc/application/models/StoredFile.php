@@ -652,7 +652,7 @@ class Application_Model_StoredFile
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
             "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "filepath","owner","conductor"
+            "language", "filepath", "owner", "conductor", "replay_gain"
         );
 
         //Logging::info($datatables);

@@ -92,7 +92,7 @@ CREATE TABLE "cc_files"
 	"soundcloud_error_msg" VARCHAR(512),
 	"soundcloud_link_to_file" VARCHAR(4096),
 	"soundcloud_upload_time" TIMESTAMP(6),
-	"replay_gain" VARCHAR(16),
+	"replay_gain" NUMERIC,
 	"owner_id" INTEGER,
 	PRIMARY KEY ("id")
 );
@@ -633,7 +633,7 @@ CREATE TABLE "cc_webstream"
 	"id" serial  NOT NULL,
 	"name" VARCHAR(255)  NOT NULL,
 	"description" VARCHAR(255)  NOT NULL,
-	"url" VARCHAR(255)  NOT NULL,
+	"url" VARCHAR(512)  NOT NULL,
 	"length" interval default '00:00:00' NOT NULL,
 	"creator_id" INTEGER  NOT NULL,
 	"mtime" TIMESTAMP(6)  NOT NULL,
