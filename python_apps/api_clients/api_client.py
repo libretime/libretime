@@ -477,6 +477,7 @@ class AirtimeApiClient():
     def list_all_db_files(self, dir_id, all_files=True):
         logger = self.logger
         try:
+            all_files = u"1" if all_files else u"0"
             url = self.construct_url("list_all_db_files")
             url = url.replace("%%dir_id%%", dir_id)
             url = url.replace("%%all%%", all_files)
