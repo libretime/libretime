@@ -816,7 +816,7 @@ SQL;
         $sql = <<<SQL
 SELECT count(*) AS cnt
 FROM cc_show_instances
-WHERE ends < '$day'
+WHERE ends < :day
 SQL;
         return Application_Common_Database::prepareAndExecute( $sql, 
             array( ':day' => $day ), 'column' );
