@@ -126,7 +126,10 @@ class AirtimeMessageReceiver(Loggable):
             except Exception as e:
                 self.fatal_exception("Failed to create watched dir '%s'" %
                         msg['directory'],e)
-            else: self.new_watch(msg)
+            else:
+                self.logger.info("Created new watch directory: '%s'" %
+                        msg['directory'])
+                self.new_watch(msg)
         else:
             self.__request_now_bootstrap( directory=msg['directory'] )
             self.manager.add_watch_directory(msg['directory'])
