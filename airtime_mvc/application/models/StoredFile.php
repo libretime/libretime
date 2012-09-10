@@ -688,6 +688,11 @@ class Application_Model_StoredFile
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = "sub.login AS $key";
                 $streamSelect[] = "login AS ".$key;
+            } elseif ($key === "replay_gain") {
+                $plSelect[]     = "NULL::NUMERIC AS ".$key;
+                $blSelect[]     = "NULL::NUMERIC AS ".$key;
+                $fileSelect[]   = "replay_gain AS $key";
+                $streamSelect[] = "NULL::NUMERIC AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {

@@ -118,7 +118,7 @@ class Application_Model_Datatables
 
                 foreach ($searchCols as $col) {
                     $simpleWhere['clause']["simple_".$col] = "{$col}::text ILIKE :simple_".$col;
-                    $simpleWhere['params']["simple_".$col] = "%".$term."%"; 
+                    $simpleWhere['params']["simple_".$col] = "%".$term."%";
                 }
                 $outerCond[] = "(".implode(" OR ", $simpleWhere['clause']).")";
             }
