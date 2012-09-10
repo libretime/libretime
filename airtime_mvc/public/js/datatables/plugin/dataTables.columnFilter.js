@@ -1,4 +1,4 @@
-﻿/*
+/*
 * File:        jquery.dataTables.columnFilter.js
 * Version:     1.4.8.
 * Author:      Jovan Popovic 
@@ -65,7 +65,7 @@
             // use all rows
             else aiRows = oSettings.aiDisplayMaster; // all row numbers
 
-            // set up data array	
+            // set up data array    
             var asResultData = new Array();
 
             for (var i = 0, c = aiRows.length; i < c; i++) {
@@ -103,7 +103,8 @@
             label = label.replace(/(^\s*)|(\s*$)/g, "");
             var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
             var search_init = 'search_init ';
-            var inputvalue = label;
+            //var inputvalue = label;
+            var inputvalue = '';
             if (currentFilter != '' && currentFilter != '^') {
                 if (bIsNumber && currentFilter.charAt(0) == '^')
                     inputvalue = currentFilter.substr(1); //ignore trailing ^
@@ -133,29 +134,32 @@
                 });
             } else {
                 input.keyup(function () {
-                    if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
-                        //If filter length is set in the server-side processing mode
-                        //Check has the user entered at least iFilterLength new characters
-
-                        var currentFilter = oTable.fnSettings().aoPreSearchCols[index].sSearch;
-                        var iLastFilterLength = $(this).data("dt-iLastFilterLength");
-                        if (typeof iLastFilterLength == "undefined")
-                            iLastFilterLength = 0;
-                        var iCurrentFilterLength = this.value.length;
-                        if (Math.abs(iCurrentFilterLength - iLastFilterLength) < iFilterLength
-                        //&& currentFilter.length == 0 //Why this?
-					        ) {
-                            //Cancel the filtering
-                            return;
+                    var advSearchFields = $("div#advanced_search").children(':visible');
+                    if(validateAdvancedSearch(advSearchFields)){
+                        if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
+                            //If filter length is set in the server-side processing mode
+                            //Check has the user entered at least iFilterLength new characters
+    
+                            var currentFilter = oTable.fnSettings().aoPreSearchCols[index].sSearch;
+                            var iLastFilterLength = $(this).data("dt-iLastFilterLength");
+                            if (typeof iLastFilterLength == "undefined")
+                                iLastFilterLength = 0;
+                            var iCurrentFilterLength = this.value.length;
+                            if (Math.abs(iCurrentFilterLength - iLastFilterLength) < iFilterLength
+                            //&& currentFilter.length == 0 //Why this?
+                                ) {
+                                //Cancel the filtering
+                                return;
+                            }
+                            else {
+                                //Remember the current filter length
+                                $(this).data("dt-iLastFilterLength", iCurrentFilterLength);
+                            }
                         }
-                        else {
-                            //Remember the current filter length
-                            $(this).data("dt-iLastFilterLength", iCurrentFilterLength);
-                        }
+                        /* Filter on the column (the index) of this element */
+                        oTable.fnFilter(this.value, _fnColumnIndex(index), regex, smart); //Issue 37
+                        fnOnFiltered();
                     }
-                    /* Filter on the column (the index) of this element */
-                    oTable.fnFilter(this.value, _fnColumnIndex(index), regex, smart); //Issue 37
-                    fnOnFiltered();
                 });
             }
 
@@ -168,14 +172,15 @@
             input.blur(function () {
                 if (this.value == "") {
                     $(this).addClass("search_init");
-                    this.value = asInitVals[index];
+                    //this.value = asInitVals[index];
+                    this.value = "";
                 }
             });
         }
 
         function fnCreateRangeInput(oTable) {
 
-			//var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
+            //var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
             th.html(_fnRangeLabelPart(0));
             var sFromId = oTable.attr("id") + '_range_from_' + i;
             var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
@@ -194,48 +199,50 @@
             //------------start range filtering function
 
 
-            /* 	Custom filtering function which will filter data in column four between two values
-            *	Author: 	Allan Jardine, Modified by Jovan Popovic
+            /*  Custom filtering function which will filter data in column four between two values
+            *   Author:     Allan Jardine, Modified by Jovan Popovic
             */
             //$.fn.dataTableExt.afnFiltering.push(
             oTable.dataTableExt.afnFiltering.push(
-	        function (oSettings, aData, iDataIndex) {
-	            if (oTable.attr("id") != oSettings.sTableId)
-	                return true;
-	            // Try to handle missing nodes more gracefully
-	            if (document.getElementById(sFromId) == null)
-	                return true;
-	            var iMin = document.getElementById(sFromId).value * 1;
-	            var iMax = document.getElementById(sToId).value * 1;
-	            var iValue = aData[_fnColumnIndex(index)] == "-" ? 0 : aData[_fnColumnIndex(index)] * 1;
-	            if (iMin == "" && iMax == "") {
-	                return true;
-	            }
-	            else if (iMin == "" && iValue <= iMax) {
-	                return true;
-	            }
-	            else if (iMin <= iValue && "" == iMax) {
-	                return true;
-	            }
-	            else if (iMin <= iValue && iValue <= iMax) {
-	                return true;
-	            }
-	            return false;
-	        }
+            function (oSettings, aData, iDataIndex) {
+                if (oTable.attr("id") != oSettings.sTableId)
+                    return true;
+                // Try to handle missing nodes more gracefully
+                if (document.getElementById(sFromId) == null)
+                    return true;
+                var iMin = document.getElementById(sFromId).value * 1;
+                var iMax = document.getElementById(sToId).value * 1;
+                var iValue = aData[_fnColumnIndex(index)] == "-" ? 0 : aData[_fnColumnIndex(index)] * 1;
+                if (iMin == "" && iMax == "") {
+                    return true;
+                }
+                else if (iMin == "" && iValue <= iMax) {
+                    return true;
+                }
+                else if (iMin <= iValue && "" == iMax) {
+                    return true;
+                }
+                else if (iMin <= iValue && iValue <= iMax) {
+                    return true;
+                }
+                return false;
+            }
         );
             //------------end range filtering function
 
 
 
             $('#' + sFromId + ',#' + sToId, th).keyup(function () {
-
-                var iMin = document.getElementById(sFromId).value * 1;
-                var iMax = document.getElementById(sToId).value * 1;
-                if (iMin != 0 && iMax != 0 && iMin > iMax)
-                    return;
-
-                oTable.fnDraw();
-                fnOnFiltered();
+                var advSearchFields = $("div#advanced_search").children(':visible');
+                if(validateAdvancedSearch(advSearchFields)){
+                    var iMin = document.getElementById(sFromId).value * 1;
+                    var iMax = document.getElementById(sToId).value * 1;
+                    if (iMin != 0 && iMax != 0 && iMin > iMax)
+                        return;
+    
+                    oTable.fnDraw();
+                    fnOnFiltered();
+                }
             });
 
 
@@ -263,41 +270,41 @@
 
             //$.fn.dataTableExt.afnFiltering.push(
             oTable.dataTableExt.afnFiltering.push(
-	        function (oSettings, aData, iDataIndex) {
-	            if (oTable.attr("id") != oSettings.sTableId)
-	                return true;
+            function (oSettings, aData, iDataIndex) {
+                if (oTable.attr("id") != oSettings.sTableId)
+                    return true;
 
-	            var dStartDate = from.datepicker("getDate");
+                var dStartDate = from.datepicker("getDate");
 
-	            var dEndDate = to.datepicker("getDate");
+                var dEndDate = to.datepicker("getDate");
 
-	            if (dStartDate == null && dEndDate == null) {
-	                return true;
-	            }
+                if (dStartDate == null && dEndDate == null) {
+                    return true;
+                }
 
-	            var dCellDate = null;
-	            try {
-	                if (aData[_fnColumnIndex(index)] == null || aData[_fnColumnIndex(index)] == "")
-	                    return false;
-	                dCellDate = $.datepicker.parseDate($.datepicker.regional[""].dateFormat, aData[_fnColumnIndex(index)]);
-	            } catch (ex) {
-	                return false;
-	            }
-	            if (dCellDate == null)
-	                return false;
+                var dCellDate = null;
+                try {
+                    if (aData[_fnColumnIndex(index)] == null || aData[_fnColumnIndex(index)] == "")
+                        return false;
+                    dCellDate = $.datepicker.parseDate($.datepicker.regional[""].dateFormat, aData[_fnColumnIndex(index)]);
+                } catch (ex) {
+                    return false;
+                }
+                if (dCellDate == null)
+                    return false;
 
 
-	            if (dStartDate == null && dCellDate <= dEndDate) {
-	                return true;
-	            }
-	            else if (dStartDate <= dCellDate && dEndDate == null) {
-	                return true;
-	            }
-	            else if (dStartDate <= dCellDate && dCellDate <= dEndDate) {
-	                return true;
-	            }
-	            return false;
-	        }
+                if (dStartDate == null && dCellDate <= dEndDate) {
+                    return true;
+                }
+                else if (dStartDate <= dCellDate && dEndDate == null) {
+                    return true;
+                }
+                else if (dStartDate <= dCellDate && dCellDate <= dEndDate) {
+                    return true;
+                }
+                return false;
+            }
         );
             //------------end date range filtering function
 
@@ -423,8 +430,8 @@
             var checkToggleDiv = uniqueId + "-flt-toggle";
             r += '<button id="' + buttonId + '" class="checkbox_filter" > ' + labelBtn + '</button>'; //filter button witch open dialog
             r += '<div id="' + checkToggleDiv + '" '
-            	+ 'title="' + label + '" '
-            	+ 'class="toggle-check ui-widget-content ui-corner-all"  style="width: ' + (divWidthToggle) + '%; " >'; //dialog div
+                + 'title="' + label + '" '
+                + 'class="toggle-check ui-widget-content ui-corner-all"  style="width: ' + (divWidthToggle) + '%; " >'; //dialog div
             //r+= '<div align="center" style="margin-top: 5px; "> <button id="'+buttonId+'Reset" class="checkbox_filter" > reset </button> </div>'; //reset button and its div
             r += divRowDef;
 
@@ -452,7 +459,7 @@
                         //search = search + ' ' + $(this).val();
                         //concatenation for selected checks in or
                         if ((index == 0 && resSize == 1)
-                				|| (index != 0 && index == resSize - 1)) {
+                                || (index != 0 && index == resSize - 1)) {
                             or = '';
                         }
                         //trim
@@ -497,11 +504,11 @@
                         return false;
                     }
                 },
-							{
-							    text: "Close",
-							    click: function () { $(this).dialog("close"); }
-							}
-						]
+                            {
+                                text: "Close",
+                                click: function () { $(this).dialog("close"); }
+                            }
+                        ]
             });
 
 
