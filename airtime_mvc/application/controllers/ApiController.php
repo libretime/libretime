@@ -346,7 +346,6 @@ class ApiController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $schedule_group_id = $this->_getParam("schedule_id");
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
         $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
@@ -354,12 +353,26 @@ class ApiController extends Zend_Controller_Action
         //set a 'last played' timestamp for media item
         //needed for smart blocks
         try {
-            $file_id = Application_Model_Schedule::GetFileId($media_id);
-            if (!is_null($file_id)) {
-                //we are dealing with a file not a stream
-                $file = Application_Model_StoredFile::Recall($file_id);
-                $now = new DateTime("now", new DateTimeZone("UTC"));
-                $file->setLastPlayedTime($now);
+            $mediaType = Application_Model_Schedule::GetType($media_id);
+            var_dump($mediaType);
+            if ($mediaType == 'file') {
+                $file_id = Application_Model_Schedule::GetFileId($media_id);
+                if (!is_null($file_id)) {
+                    //we are dealing with a file not a stream
+                    $file = Application_Model_StoredFile::Recall($file_id);
+                    $now = new DateTime("now", new DateTimeZone("UTC"));
+                    $file->setLastPlayedTime($now);
+                }
+            } else {
+                // webstream
+                $stream_id = Application_Model_Schedule::GetStreamId($media_id);
+                var_dump($stream_id);
+                if (!is_null($stream_id)) {
+                    $webStream = new Application_Model_Webstream($stream_id);
+                    var_dump($webStream);
+                    $now = new DateTime("now", new DateTimeZone("UTC"));
+                    $webStream->setLastPlayed($now);
+                }
             }
         } catch (Exception $e) {
             Logging::info($e);
@@ -689,7 +702,7 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
 
-        $this->view->files = 
+        $this->view->files =
             Application_Model_StoredFile::listAllFiles($dir_id,$all=true);
     }
 

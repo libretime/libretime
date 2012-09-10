@@ -170,7 +170,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $valid['url'][1] = 'URL should be of form "http://domain"';
         } elseif (strlen($url) > 512) {
             $valid['url'][0] = false;
-            $valid['url'][1] = 'URL should be 512 characters or less';      
+            $valid['url'][1] = 'URL should be 512 characters or less';
         } else {
 
             try {
@@ -220,6 +220,12 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     {
 
     }
+    
+    public function setLastPlayed($timestamp)
+    {
+        $this->webstream->setDbLPtime($timestamp);
+        $this->webstream->save();
+    }
 
     private static function getUrlData($url)
     {
@@ -242,7 +248,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     private static function getXspfUrl($url)
     {
-        $content = self::getUrlData($url); 
+        $content = self::getUrlData($url);
 
         $dom = new DOMDocument;
         //TODO: What if invalid xml?
@@ -261,9 +267,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     
     private static function getPlsUrl($url)
     {
-        $content = self::getUrlData($url); 
+        $content = self::getUrlData($url);
 
-        $ini = parse_ini_string($content, true); 
+        $ini = parse_ini_string($content, true);
 
         if ($ini !== false && isset($ini["playlist"]) && isset($ini["playlist"]["File1"])) {
             return $ini["playlist"]["File1"];
@@ -274,7 +280,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     private static function getM3uUrl($url)
     {
-        $content = self::getUrlData($url); 
+        $content = self::getUrlData($url);
 
         //split into lines:
         $delim = "\n";
