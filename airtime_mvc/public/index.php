@@ -1,8 +1,12 @@
 <?php
 
-//error_reporting(E_ALL|E_STRICT);
-//error_reporting(E_ALL);
-//ini_set('display_errors', 'on');
+error_reporting(E_ALL|E_STRICT);
+
+function exception_error_handler($errno, $errstr, $errfile, $errline)
+{
+    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -53,6 +57,7 @@ try {
         $application->bootstrap()->run();
     }
 } catch (Exception $e) {
+    echo $e->getMessage();
     Logging::info($e->getMessage());
 }
 

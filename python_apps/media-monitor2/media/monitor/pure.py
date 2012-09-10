@@ -296,7 +296,7 @@ def organized_path(old_path, root_path, orig_md):
     filepath = None
     ext = extension(old_path)
     def default_f(dictionary, key):
-        if key in dictionary: return len(dictionary[key]) == 0
+        if key in dictionary: return len(str(dictionary[key])) == 0
         else: return True
     # We set some metadata elements to a default "unknown" value because we use
     # these fields to create a path hence they cannot be empty Here "normal"
