@@ -1051,8 +1051,8 @@ function validateAdvancedSearch(divs) {
 }
 
 function addRemoveValidationIcons(valid, field) {
-    var validIndicator = "<span class='checked-icon'></span>",
-        invalidIndicator = "<span class='not-available-icon'></span>";
+    var validIndicator = "<span class='checked-icon sp-checked-icon'></span>",
+        invalidIndicator = "<span class='not-available-icon sp-checked-icon'></span>";
     
     if (valid) {
         if (!field.closest('div').children(':last-child').hasClass('checked-icon')) {
