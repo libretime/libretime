@@ -527,14 +527,17 @@ SQL;
             //." st.type AS type,"
             ." si.starts AS show_start,"
             ." si.ends AS show_end,"
+            ." s.name AS show_name,"
             ." f.id AS file_id,"
             ." f.replay_gain AS replay_gain,"
             ." ws.id as stream_id,"
             ." ws.url as url"
-            ." FROM $CC_CONFIG[scheduleTable] AS st"
-            ." LEFT JOIN $CC_CONFIG[showInstances] AS si"
+            ." FROM cc_schedule AS st"
+            ." LEFT JOIN cc_show_instances AS si"
             ." ON st.instance_id = si.id"
-            ." LEFT JOIN $CC_CONFIG[filesTable] AS f"
+            ." LEFT JOIN cc_show as s"
+            ." ON s.id = si.show_id"
+            ." LEFT JOIN cc_files AS f"
             ." ON st.file_id = f.id"
             ." LEFT JOIN cc_webstream AS ws"
             ." ON st.stream_id = ws.id";
@@ -547,11 +550,10 @@ SQL;
 
         $sql = $baseQuery.$predicates;
 
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(':startTime1'=>$p_startTime, ':endTime'=>$p_endTime, ':startTime2'=>$p_startTime));
+        $rows = Application_Common_Database::prepareAndExecute($sql,
+            array(':startTime1'=>$p_startTime, ':endTime'=>$p_endTime, ':startTime2'=>$p_startTime));
 
         if (count($rows) < 3) {
-            Logging::debug("Get Schedule: Less than 3 results returned. Doing another query since we need a minimum of 3 results.");
-
             $dt = new DateTime("@".time());
             $dt->add(new DateInterval("PT24H"));
             $range_end = $dt->format("Y-m-d H:i:s");
@@ -564,10 +566,29 @@ SQL;
             ." LIMIT 3";
 
             $sql = $baseQuery.$predicates;
-            $rows = Application_Common_Database::prepareAndExecute($sql, array(':startTime1'=>$p_startTime, ':rangeEnd'=>$range_end, ':startTime2'=>$p_startTime));
+            $rows = Application_Common_Database::prepareAndExecute($sql,
+                array(':startTime1'=>$p_startTime, ':rangeEnd'=>$range_end, ':startTime2'=>$p_startTime));
         }
 
         return $rows;
+    }
+
+    /**
+     * This function will ensure that an existing index in the
+     * associative array is never overwritten, instead appending
+     * _0, _1, _2, ... to the end of the key to make sure it is unique
+     */
+    private static function appendScheduleItem(&$data, $time, $item)
+    {
+        $key = $time;
+        $i = 0;
+
+        while (array_key_exists($key, $data["media"])) {
+            $key = "{$time}_{$i}";
+            $i++;
+        }
+        
+        $data["media"][$key] = $item;
     }
 
     private static function createInputHarborKickTimes(&$data, $range_start, $range_end)
@@ -601,7 +622,7 @@ SQL;
         }
     }
 
-    private static function createFileScheduleEvent(&$data, $item, $media_id)
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end = self::AirtimeTimeToPypoTime($item["end"]);
@@ -617,14 +638,14 @@ SQL;
             'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
             'start' => $start,
             'end' => $end,
-            'show_name' => $showName,
+            'show_name' => $item["show_name"],
             'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
             'independent_event' => true
         );
-        $data["media"][$start] = $schedule_item;
+        self::appendScheduleItem($data, $start, $schedule_item);
     }
 
-    private static function createStreamScheduleEvent(&$data, $item, $media_id)
+    private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end = self::AirtimeTimeToPypoTime($item["end"]);
@@ -644,8 +665,8 @@ SQL;
             'independent_event' => true
         );
 
-        //TODO: Make sure no other media is being overwritten!
-        $data["media"][$stream_buffer_start] = $schedule_item;  
+        self::appendScheduleItem($data, $start, $schedule_item);
+
         $schedule_item = array(
             'id' => $media_id,
             'type' => 'stream_output_start',
@@ -653,20 +674,15 @@ SQL;
             'uri' => $uri,
             'start' => $start,
             'end' => $end,
-            'show_name' => $showName,
+            'show_name' => $item["show_name"],
             'independent_event' => true
         );
-        $data["media"][$start] = $schedule_item;
+        self::appendScheduleItem($data, $start, $schedule_item);
 
         //since a stream never ends we have to insert an additional "kick stream" event. The "start"
         //time of this event is the "end" time of the stream minus 1 second.
         $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
         $dt->sub(new DateInterval("PT1S"));
-
-        //make sure the webstream doesn't play past the end time of the show
-        if ($dt->getTimestamp() > $showEndDateTime->getTimestamp()) {
-            $dt = $showEndDateTime;
-        }
 
         $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
 
@@ -677,8 +693,7 @@ SQL;
             'type' => 'stream_buffer_end',
             'independent_event' => true
         );
-        $data["media"][$stream_end] = $schedule_item;
-
+        self::appendScheduleItem($data, $stream_end, $schedule_item);
 
         $schedule_item = array(
             'start' => $stream_end,
@@ -687,7 +702,7 @@ SQL;
             'type' => 'stream_output_end',
             'independent_event' => true
         );
-        $data["media"][$stream_end] = $schedule_item;
+        self::appendScheduleItem($data, $stream_end, $schedule_item);
     }
 
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
@@ -723,28 +738,14 @@ SQL;
         return array($range_start, $range_end);
     }
 
-    public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
+
+    private static function createScheduledEvents(&$data, $range_start, $range_end)
     {
-
-        list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
-
-        $data = array();
         $utcTimeZone = new DateTimeZone("UTC");
-
-        $data["status"] = array();
-        $data["media"] = array();
-
-        self::createInputHarborKickTimes($data, $range_start, $range_end);
-
         $items = self::getItems($range_start, $range_end);
         foreach ($items as $item) {
-
-            $showInstance = CcShowInstancesQuery::create()->findPK($item["instance_id"]);
-            $showId = $showInstance->getDbShowId();
-            $show = CcShowQuery::create()->findPK($showId);
-            $showName = $show->getDbName();
-
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
+
             $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
             $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
 
@@ -773,28 +774,20 @@ SQL;
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
             }
         }
+    }
+
+    public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
+    {
+        list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
+
+        $data = array();
+        $data["media"] = array();
+
+        self::createInputHarborKickTimes($data, $range_start, $range_end);
+        self::createScheduledEvents($data, $range_start, $range_end);
+
         return $data;
     }
-
-    /*
-    private static function collapseEvents($data)
-    {
-        $keys = array_keys($data);
-
-        for ($i = 0, $len = count($keys); $i < $len; $i++) {
-            $cur = $data[$keys[$i]];
-            $next = null;
-            if ($i+1 < $len) {
-                $next = $data[$keys[$i+1]];
-            }
-
-            if ($cur['type'] == 'stream_buffer_end' && !is_null($next) && $next['type'] == 'stream_buffer_start') {
-                unset($data[$keys[$i]]); 
-            }
-            
-        }
-    }
-     */
 
     public static function deleteAll()
     {
@@ -896,10 +889,12 @@ SQL;
         $when = $formWhen->isValid($data);
 
         if ($when && $formWhen->checkReliantFields($data, true, null, true)) {
-            $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
+            $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'],
+                    new DateTimeZone(date_default_timezone_get()));
             $start_dt->setTimezone(new DateTimeZone('UTC'));
 
-            $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'], new DateTimeZone(date_default_timezone_get()));
+            $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'], 
+                    new DateTimeZone(date_default_timezone_get()));
             $end_dt->setTimezone(new DateTimeZone('UTC'));
 
             $ccShowInstance = CcShowInstancesQuery::create()->findPK($data["add_show_instance_id"]);

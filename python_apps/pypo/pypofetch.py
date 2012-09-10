@@ -456,11 +456,6 @@ class PypoFetch(Thread):
 
             for key in media:
                 media_item = media[key]
-                """
-                {u'end': u'2012-07-26-04-05-00', u'fade_out': 500, u'show_name': u'Untitled Show', u'uri': u'http://',
- u'cue_in': 0, u'start': u'2012-07-26-04-00-00', u'replay_gain': u'0', u'row_id': 16, u'cue_out': 300, u'type':
- u'stream', u'id': 1, u'fade_in': 500}
-                """
                 if (media_item['type'] == 'file'):
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, unicode(media_item['id']) + fileExt)
