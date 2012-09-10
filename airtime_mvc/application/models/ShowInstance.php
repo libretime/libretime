@@ -22,6 +22,8 @@ class Application_Model_ShowInstance
         return $this->_showInstance->getDbShowId();
     }
 
+    /* TODO: A little inconsistent because other models have a getId() method
+        to get PK --RG */
     public function getShowInstanceId()
     {
         return $this->_instanceId;
