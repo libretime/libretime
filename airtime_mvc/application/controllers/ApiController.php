@@ -690,7 +690,7 @@ class ApiController extends Zend_Controller_Action
         $dir_id = $request->getParam('dir_id');
 
         $this->view->files = 
-            Application_Model_StoredFile::listAllFiles($dir_id,$all=true);
+            Application_Model_StoredFile::listAllFiles($dir_id,$all=false);
     }
 
     public function listAllWatchedDirsAction()
