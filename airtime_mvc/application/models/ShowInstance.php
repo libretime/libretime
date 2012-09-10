@@ -36,17 +36,17 @@ class Application_Model_ShowInstance
 
     public function deleteRebroadcasts()
     {
-        $con = Propel::getConnection();
-
         $timestamp = gmdate("Y-m-d H:i:s");
         $instance_id = $this->getShowInstanceId();
-
-        $sql = "DELETE FROM cc_show_instances"
-                ." WHERE starts > TIMESTAMP '$timestamp'"
-                ." AND instance_id = $instance_id"
-                ." AND rebroadcast = 1";
-
-        $con->exec($sql);
+        $sql = <<<SQL
+DELETE FROM cc_show_instances
+WHERE starts > :timestamp::TIMESTAMP
+AND instance_id = :instanceId
+AND rebroadcast = 1;
+SQL;
+        Application_Common_Database::prepareAndExecute( $sql, array(
+            ':instanceId' => $instance_id,
+            ':timestamp'  => $timestamp), 'execute');
     }
 
     /* This function is weird. It should return a boolean, but instead returns
@@ -821,16 +821,19 @@ SQL;
     // this returns end timestamp of all shows that are in the range and has live DJ set up
     public static function GetEndTimeOfNextShowWithLiveDJ($p_startTime, $p_endTime)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
-        $sql = "SELECT ends
-                FROM cc_show_instances as si
-                JOIN cc_show as sh ON si.show_id = sh.id
-                WHERE si.ends > '$p_startTime' and si.ends < '$p_endTime' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
-                ORDER BY si.ends";
-
-        return $con->query($sql)->fetchAll();
+        $sql = <<<SQL
+SELECT ends
+FROM cc_show_instances AS si
+JOIN cc_show AS sh ON si.show_id = sh.id
+WHERE si.ends > :startTime::TIMESTAMP
+  AND si.ends < :endTime::TIMESTAMP
+  AND (sh.live_stream_using_airtime_auth
+       OR live_stream_using_custom_auth)
+ORDER BY si.ends";
+SQL;
+        return Application_Common_Database::prepareAndExecute( $sql, array(
+            ':startTime' => $p_startTime,
+            ':endTime'   => $p_endTime), 'all');
     }
 
     public function isRepeating()
