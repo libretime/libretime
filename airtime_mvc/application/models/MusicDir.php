@@ -79,16 +79,29 @@ class Application_Model_MusicDir
 
         $music_dir_id = $this->getId();
 
-        $sql = "SELECT DISTINCT s.instance_id from cc_music_dirs as md "
-             ." LEFT JOIN cc_files as f on f.directory = md.id"
-             ." RIGHT JOIN cc_schedule as s on s.file_id = f.id WHERE md.id = $music_dir_id";
-
-        $show_instances = $con->query($sql)->fetchAll();
+        $sql = <<<SQL
+SELECT DISTINCT s.instance_id
+FROM cc_music_dirs            AS md
+LEFT JOIN cc_files            AS f ON f.directory = md.id
+RIGHT JOIN cc_schedule        AS s ON s.file_id = f.id
+WHERE md.id = :musicDirId;
+SQL;
+        $show_instances = Application_Common_Database::prepareAndExecute($sql,
+            array( ':musicDirId' => $music_dir_id ), 'all' );
 
         // get all the files on this dir
-        $sql = "UPDATE cc_files SET file_exists = 'f' WHERE id IN (SELECT f.id FROM cc_music_dirs as md "
-            ." LEFT JOIN cc_files as f on f.directory = md.id WHERE md.id = $music_dir_id)";
-        $affected = $con->exec($sql);
+        $sql = <<<SQL
+UPDATE cc_files
+SET file_exists = 'f'
+WHERE id IN
+    (SELECT f.id
+     FROM cc_music_dirs AS md
+     LEFT JOIN cc_files AS f ON f.directory = md.id
+     WHERE md.id = :musicDirId);
+SQL;
+
+        $affected = Application_Common_Database::prepareAndExecute($sql,
+            array( ':musicDirId' => $music_dir_id ), 'all');
 
         // set RemovedFlag to true
         if ($userAddedWatchedDir) {
