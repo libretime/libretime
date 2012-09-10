@@ -971,7 +971,7 @@ function addQtipToSCIcons(){
 }
 
 /*
- * Called from dataTables.columnFilter.js
+ * This function is called from dataTables.columnFilter.js
  */
 function validateAdvancedSearch(divs) {
     var valid = true,
