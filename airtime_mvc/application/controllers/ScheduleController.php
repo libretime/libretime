@@ -339,7 +339,7 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER) && $user->isHostOfShow($show->getShowId())))
+        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)) || $user->isHostOfShow($show->getShowId()))
             $show->clearShow();
     }
 
@@ -404,7 +404,7 @@ class ScheduleController extends Zend_Controller_Action
             return false;
         }
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER) && $user->isHostOfShow($show->getShowId()))) {
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)) || $user->isHostOfShow($show->getShowId())) {
             $show->removeGroupFromShow($group_id);
         }
 
