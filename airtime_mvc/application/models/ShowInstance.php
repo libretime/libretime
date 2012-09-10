@@ -833,10 +833,6 @@ SQL;
 
     public function isRepeating()
     {
-        if ($this->getShow()->isRepeating()) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->getShow()->isRepeating();
     }
 }
