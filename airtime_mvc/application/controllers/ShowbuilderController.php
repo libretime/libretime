@@ -274,7 +274,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
-        $data = $showBuilder->GetItems();
+        $data = $showBuilder->getItems();
         $this->view->schedule = $data["schedule"];
         $this->view->instances = $data["showInstances"];
         $this->view->timestamp = $current_time;

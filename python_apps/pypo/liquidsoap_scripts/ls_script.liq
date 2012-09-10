@@ -36,9 +36,11 @@ s2_namespace = ref ''
 s3_namespace = ref ''
 just_switched = ref false
 
+stream_harbor_pass = list.hd(get_process_lines('pwgen -s -N 1 -n 20'))
+
 %include "ls_lib.liq"
 
-web_stream = input.harbor("test-harbor", port=8999, password="hackme")
+web_stream = input.harbor("test-harbor", port=8999, password=stream_harbor_pass)
 web_stream = on_metadata(notify_stream, web_stream)
 
 queue = on_metadata(notify, queue)
