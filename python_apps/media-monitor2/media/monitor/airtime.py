@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from kombu.messaging  import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
+from os.path          import normpath
 
 import json
 import os
@@ -125,7 +126,10 @@ class AirtimeMessageReceiver(Loggable):
             except Exception as e:
                 self.fatal_exception("Failed to create watched dir '%s'" %
                         msg['directory'],e)
-            else: self.new_watch(msg)
+            else:
+                self.logger.info("Created new watch directory: '%s'" %
+                        msg['directory'])
+                self.new_watch(msg)
         else:
             self.__request_now_bootstrap( directory=msg['directory'] )
             self.manager.add_watch_directory(msg['directory'])
@@ -133,7 +137,7 @@ class AirtimeMessageReceiver(Loggable):
     def remove_watch(self, msg):
         self.logger.info("Removing watch from directory: '%s'" %
                 msg['directory'])
-        self.manager.remove_watch_directory(msg['directory'])
+        self.manager.remove_watch_directory(normpath(msg['directory']))
 
     def rescan_watch(self, msg):
         self.logger.info("Trying to rescan watched directory: '%s'" %

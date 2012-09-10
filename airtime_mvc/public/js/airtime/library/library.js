@@ -416,7 +416,7 @@ var AIRTIME = (function(AIRTIME) {
               /* Language      */  { "sTitle" : "Language"      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             , 
               /* Owner         */  { "sTitle" : "Owner"         , "mDataProp" : "owner"        , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             ,
               /* Conductor     */  { "sTitle" : "Conductor"     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
-              /* Replay Gain   */  { "sTitle" : "Replay Gain"   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }
+              /* Replay Gain   */  { "sTitle" : "Replay Gain"   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "80px"        }
               ],
                           
             "bProcessing": true,

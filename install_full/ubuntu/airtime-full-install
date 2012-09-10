@@ -64,15 +64,15 @@ apt-get -y --force-yes install libmp3lame-dev lame icecast2
 #Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
 #1.10 and zend-framework is 1.11 
 if [ "$dist" = "Debian" ]; then
-    apt-get -y install zendframework
+    apt-get -y --force-yes install zendframework
 else
-    apt-get -y install libzend-framework-php
+    apt-get -y --force-yes install libzend-framework-php
 fi
 
 if [ "$code" = "lucid" ]; then
-    apt-get -y install timeout 
+    apt-get -y --force-yes install timeout 
 else
-    apt-get -y install coreutils
+    apt-get -y --force-yes install coreutils
 fi
 
 
