@@ -28,8 +28,6 @@ class Manager(Loggable):
     include adding watched,store, organize directories, etc. Basically
     composes over WatchManager from pyinotify
     """
-    global_inst = None
-    all_signals = set(['add_watch', 'remove_watch'])
     def __init__(self):
         self.wm = pyinotify.WatchManager()
         # These two instance variables are assumed to be constant
@@ -66,7 +64,6 @@ class Manager(Loggable):
         # The following set isn't really necessary anymore. Should be
         # removed...
         self.watched_directories = set([])
-        Manager.global_inst = self
 
     # This is the only event that we are unable to process "normally". I.e.
     # through dedicated handler objects. Because we must have access to a
