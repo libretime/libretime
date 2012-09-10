@@ -13,6 +13,9 @@ class Application_Model_Datatables
                 if ($dbname == 'utime' || $dbname == 'mtime') {
                     $input1 = isset($info[0])?Application_Common_DateHelper::ConvertToUtcDateTimeString($info[0]):null;
                     $input2 = isset($info[1])?Application_Common_DateHelper::ConvertToUtcDateTimeString($info[1]):null;
+                } else if($dbname == 'bit_rate') {
+                    $input1 = isset($info[0])?intval($info[0]) * 1000:null;
+                    $input2 = isset($info[1])?intval($info[1]) * 1000:null;
                 } else {
                     $input1 = isset($info[0])?$info[0]:null;
                     $input2 = isset($info[1])?$info[1]:null;
