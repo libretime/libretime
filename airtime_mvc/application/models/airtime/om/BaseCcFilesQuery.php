@@ -1892,20 +1892,29 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	/**
 	 * Filter the query on the replay_gain column
 	 * 
-	 * @param     string $dbReplayGain The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string|array $dbReplayGain The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
 	public function filterByDbReplayGain($dbReplayGain = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbReplayGain)) {
+		if (is_array($dbReplayGain)) {
+			$useMinMax = false;
+			if (isset($dbReplayGain['min'])) {
+				$this->addUsingAlias(CcFilesPeer::REPLAY_GAIN, $dbReplayGain['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbReplayGain['max'])) {
+				$this->addUsingAlias(CcFilesPeer::REPLAY_GAIN, $dbReplayGain['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbReplayGain)) {
-				$dbReplayGain = str_replace('*', '%', $dbReplayGain);
-				$comparison = Criteria::LIKE;
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::REPLAY_GAIN, $dbReplayGain, $comparison);

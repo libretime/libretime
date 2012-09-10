@@ -652,7 +652,7 @@ class Application_Model_StoredFile
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
             "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "filepath","owner","conductor"
+            "language", "filepath", "owner", "conductor", "replay_gain"
         );
 
         //Logging::info($datatables);
@@ -688,6 +688,11 @@ class Application_Model_StoredFile
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = "sub.login AS $key";
                 $streamSelect[] = "login AS ".$key;
+            } elseif ($key === "replay_gain") {
+                $plSelect[]     = "NULL::NUMERIC AS ".$key;
+                $blSelect[]     = "NULL::NUMERIC AS ".$key;
+                $fileSelect[]   = "replay_gain AS $key";
+                $streamSelect[] = "NULL::NUMERIC AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {

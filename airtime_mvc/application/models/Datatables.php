@@ -32,7 +32,9 @@ class Application_Model_Datatables
                 }
                 if (!empty($sub)) {
                     $where['clause'][$dbname] = "(".implode(' AND ', $sub).")";
-                    $where['params'][$dbname."1"] = $input1;
+                    if ($input1 != null) {
+                        $where['params'][$dbname."1"] = $input1;
+                    }
                     if ($input2 != null) {
                         $where['params'][$dbname."2"] = $input2;
                     }
@@ -44,7 +46,6 @@ class Application_Model_Datatables
                 }
             }
         }
-
         return $where;
     }
     /*
@@ -117,7 +118,7 @@ class Application_Model_Datatables
 
                 foreach ($searchCols as $col) {
                     $simpleWhere['clause']["simple_".$col] = "{$col}::text ILIKE :simple_".$col;
-                    $simpleWhere['params']["simple_".$col] = "%".$term."%"; 
+                    $simpleWhere['params']["simple_".$col] = "%".$term."%";
                 }
                 $outerCond[] = "(".implode(" OR ", $simpleWhere['clause']).")";
             }
