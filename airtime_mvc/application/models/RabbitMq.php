@@ -88,7 +88,7 @@ class Application_Model_RabbitMq
         $temp['server_timezone'] = Application_Model_Preference::GetTimezone();
         if ($event_type == "update_recorder_schedule") {
             $temp['shows'] = Application_Model_Show::getShows($now,
-                $end_timestamp, $excludeInstance=NULL, $onlyRecord=TRUE);
+                $end_timestamp, $onlyRecord=TRUE);
         }
         $data = json_encode($temp);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));

@@ -37,10 +37,12 @@ Depends: apache2,
  php-pear,
  php5-pgsql,
  python,
+ pwgen,
  rabbitmq-server,
  sudo,
  sysv-rc, 
  tar (>= 1.22),
+ coreutils (>= 7.5) | timeout,
  unzip,
  vorbis-tools,
  zendframework | libzend-framework-php,
@@ -48,7 +50,7 @@ Depends: apache2,
 Recommends: icecast2
 Suggests: airtime-audio-samples,
  alsa-utils
-Description: The open radio software for scheduling and remote station management.
+Description: open radio software for scheduling and remote station management.
  Airtime is an open source application that provides remote automation 
  of a radio station.
  .

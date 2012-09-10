@@ -413,8 +413,10 @@ class Application_Model_StoredFile
             return "ogg";
         } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg") {
             return "mp3";
-        } elseif ($mime == "audio/x/flac") {
+        } elseif ($mime == "audio/x-flac") {
             return "flac";
+        } else {
+            throw new Exception("Unknown $mime");
         }
     }
 

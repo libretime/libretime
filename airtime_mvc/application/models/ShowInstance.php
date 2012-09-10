@@ -22,6 +22,8 @@ class Application_Model_ShowInstance
         return $this->_showInstance->getDbShowId();
     }
 
+    /* TODO: A little inconsistent because other models have a getId() method
+        to get PK --RG */
     public function getShowInstanceId()
     {
         return $this->_instanceId;
@@ -167,26 +169,33 @@ class Application_Model_ShowInstance
         $con = Propel::getConnection();
 
         $instance_id = $this->getShowInstanceId();
-        $sql = "SELECT starts from cc_schedule"
-            ." WHERE instance_id = $instance_id"
-            ." ORDER BY starts"
-            ." LIMIT 1";
-
-        $scheduleStarts = $con->query($sql)->fetchColumn(0);
+        $sql = <<<SQL
+SELECT starts
+FROM cc_schedule
+WHERE instance_id = :instanceId
+ORDER BY starts LIMIT 1;
+SQL;
+        $scheduleStarts = Application_Common_Database::prepareAndExecute( $sql,
+            array( ':instanceId' => $instance_id ), 'column' );
 
         if ($scheduleStarts) {
             $scheduleStartsEpoch = strtotime($scheduleStarts);
-            $showStartsEpoch = strtotime($this->getShowInstanceStart());
+            $showStartsEpoch     = strtotime($this->getShowInstanceStart());
 
             $diff = $showStartsEpoch - $scheduleStartsEpoch;
 
             if ($diff != 0) {
-                $sql = "UPDATE cc_schedule"
-                ." SET starts = starts + INTERVAL '$diff' second,"
-                ." ends = ends + INTERVAL '$diff' second"
-                ." WHERE instance_id = $instance_id";
-
-                $con->exec($sql);
+                $sql = <<<SQL
+UPDATE cc_schedule
+SET starts = starts + INTERVAL :diff1 SECOND,
+    ends = ends + INTERVAL :diff2 SECOND
+WHERE instance_id = :instanceId
+SQL;
+                Application_Common_Database::prepareAndExecute($sql,
+                    array( 
+                        ':diff1'      => $diff,
+                        ':diff2'      => $diff,
+                        ':instanceId' => $instance_id ), 'execute');
             }
         }
         Application_Model_RabbitMq::PushSchedule();
@@ -745,69 +754,56 @@ SQL;
 
     public static function GetLastShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.ends < :timeNow::TIMESTAMP
+  AND si.modified_instance = 'f'
+ORDER BY si.ends DESC LIMIT 1;
+SQL;
+        $id = Application_Common_Database( $sql, array( 
+            ':timeNow' => $p_timeNow ), 'column' );
 
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.ends DESC"
-            ." LIMIT 1";
-
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        return ($id ? new Application_Model_ShowInstance($id) : null );
     }
 
     public static function GetCurrentShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
          * this case, the show that started later is the one that
          * is actually playing, and so this is the one we want.
          */
 
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
-            ." AND si.ends > TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.starts DESC"
-            ." LIMIT 1";
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.starts <= :timeNow1::TIMESTAMP
+  AND si.ends > :timeNow2::TIMESTAMP
+  AND si.modified_instance = 'f'
+ORDER BY si.starts DESC LIMIT 1
+SQL;
 
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        $id = Application_Common_Database( $sql, array(
+            ':timeNow1' => $p_timeNow,
+            ':timeNow2' => $p_timeNow ), 'column');
+
+        return ( $id ? new Application_Model_ShowInstance($id) : null );
     }
 
     public static function GetNextShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.starts"
-            ." LIMIT 1";
-
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.starts > :timeNow::TIMESTAMP
+AND si.modified_instance = 'f'
+ORDER BY si.starts
+LIMIT 1
+SQL;
+        $id = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'timeNow' => $p_timeNow ), 'column' );
+        return ( $id ? new Application_Model_ShowInstance($id) : null );
     }
 
     // returns number of show instances that ends later than $day
