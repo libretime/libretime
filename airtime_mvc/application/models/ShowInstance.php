@@ -360,6 +360,7 @@ SQL;
             $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
 
             if (count($overlap) > 0) {
+                // TODO : fix ghetto error handling -- RG
                 return "Should not overlap shows";
             }
         }
