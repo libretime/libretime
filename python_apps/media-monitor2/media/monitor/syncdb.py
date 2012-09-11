@@ -75,15 +75,15 @@ class AirtimeDB(Loggable):
         l.append(self.recorded_path())
         return l
 
-    def dir_id_get_files(self, dir_id):
+    def dir_id_get_files(self, dir_id, all_files=True):
         """
         Get all files in a directory with id dir_id
         """
         base_dir = self.id_to_dir[ dir_id ]
         return set(( os.path.join(base_dir,p) for p in
-            self.apc.list_all_db_files( dir_id ) ))
+            self.apc.list_all_db_files( dir_id, all_files ) ))
 
-    def directory_get_files(self, directory):
+    def directory_get_files(self, directory, all_files=True):
         """
         returns all the files(recursively) in a directory. a directory is an
         "actual" directory path instead of its id. This is super hacky because
@@ -94,7 +94,8 @@ class AirtimeDB(Loggable):
         normal_dir = os.path.normpath(unicode(directory))
         if normal_dir not in self.dir_to_id:
             raise NoDirectoryInAirtime( normal_dir, self.dir_to_id )
-        all_files = self.dir_id_get_files( self.dir_to_id[normal_dir] )
+        all_files = self.dir_id_get_files( self.dir_to_id[normal_dir],
+                all_files )
         if normal_dir == self.recorded_path():
             all_files = [ p for p in all_files if
                     mmp.sub_path( self.recorded_path(), p ) ]

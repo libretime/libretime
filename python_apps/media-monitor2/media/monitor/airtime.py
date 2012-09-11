@@ -91,7 +91,8 @@ class AirtimeMessageReceiver(Loggable):
     def _execute_message(self,evt,message):
         self.dispatch_table[evt](message)
 
-    def __request_now_bootstrap(self, directory_id=None, directory=None):
+    def __request_now_bootstrap(self, directory_id=None, directory=None,
+            all_files=True):
         if (not directory_id) and (not directory):
             raise ValueError("You must provide either directory_id or \
                     directory")
@@ -119,7 +120,7 @@ class AirtimeMessageReceiver(Loggable):
             self.fatal_exception("Unknown error when writing metadata to: '%s'"
                     % md_path, e)
 
-    def new_watch(self, msg):
+    def new_watch(self, msg, restart=False):
         msg['directory'] = normpath(msg['directory'])
         self.logger.info("Creating watch for directory: '%s'" %
                 msg['directory'])
@@ -133,7 +134,8 @@ class AirtimeMessageReceiver(Loggable):
                         msg['directory'])
                 self.new_watch(msg)
         else:
-            self.__request_now_bootstrap( directory=msg['directory'] )
+            self.__request_now_bootstrap( directory=msg['directory'],
+                    all_files=restart)
             self.manager.add_watch_directory(msg['directory'])
 
     def remove_watch(self, msg):

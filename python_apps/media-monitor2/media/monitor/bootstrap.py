@@ -26,7 +26,7 @@ class Bootstrapper(Loggable):
         """
         for d in self.db.list_storable_paths(): self.flush_watch(d, last_ran)
 
-    def flush_watch(self, directory, last_ran):
+    def flush_watch(self, directory, last_ran, all_files=False):
         """
         flush a single watch/imported directory. useful when wanting to to
         rescan, or add a watched/imported directory
@@ -44,7 +44,8 @@ class Bootstrapper(Loggable):
                 modded += 1
                 dispatcher.send(signal=self.watch_signal, sender=self,
                         event=ModifyFile(f))
-        db_songs = set(( song for song in self.db.directory_get_files(directory)
+        db_songs = set(( song for song in self.db.directory_get_files(directory,
+            all_files)
             if mmp.sub_path(directory,song) ))
         # Get all the files that are in the database but in the file
         # system. These are the files marked for deletions
