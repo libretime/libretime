@@ -26,12 +26,11 @@ class Application_Model_RabbitMq
         $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
             true, true);
 
-        $EXCHANGE = 'airtime-pypo';
-        $channel->exchange_declare($EXCHANGE, 'direct', false, true);
+        $channel->exchange_declare($exchange, 'direct', false, true);
 
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
-        $channel->basic_publish($msg, $EXCHANGE);
+        $channel->basic_publish($msg, $exchange);
         $channel->close();
         $conn->close();
     }
