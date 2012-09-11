@@ -5,6 +5,7 @@ error_reporting(E_ALL|E_STRICT);
 function exception_error_handler($errno, $errstr, $errfile, $errline)
 {
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+    return false;
 }
 set_error_handler("exception_error_handler");
 
