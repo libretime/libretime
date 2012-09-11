@@ -73,13 +73,12 @@ class Application_Model_Datatables
                 $orig2searchTerm[$index] = $d;
             }
         }
-        // map that maps current column position to original position
-        $current2orig = $librarySetting['ColReorder'];
 
         // map that maps dbname to searchTerm
         $dbname2searchTerm = array();
         foreach ($current2dbname as $currentPos=>$dbname) {
-            $dbname2searchTerm[$dbname] = $orig2searchTerm[$current2orig[$currentPos]];
+            $dbname2searchTerm[$dbname] = 
+                $orig2searchTerm[$librarySetting($currentPos)];
         }
 
         $where = array();
