@@ -113,7 +113,7 @@ def main(global_config, api_client_config, log_config,
                 log.error("Could not create watch directory: '%s' \
                         (given from the database)." % watch_dir)
         if os.path.exists(watch_dir):
-            airtime_receiver.new_watch({ 'directory':watch_dir })
+            airtime_receiver.new_watch({ 'directory':watch_dir }, restart=True)
 
     bs = Bootstrapper( db=sdb, watch_signal='watch' )
 
