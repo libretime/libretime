@@ -1101,10 +1101,14 @@ class Application_Model_StoredFile
         try {
             $con = Propel::getConnection();
 
-            $sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
-                    ." FROM CC_FILES"
-                    ." WHERE (id != -2 and id != -3) and"
-                    ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
+            $sql = <<<SQL
+SELECT soundcloud_id AS id,
+       soundcloud_upload_time
+FROM CC_FILES
+WHERE (id != -2
+       AND id != -3)
+  AND (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))
+SQL;
 
             $rows = $con->query($sql)->fetchAll();
 
