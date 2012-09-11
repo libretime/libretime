@@ -37,6 +37,10 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
+$application = new Zend_Application(
+    APPLICATION_ENV,
+    APPLICATION_PATH . '/configs/application.ini'
+);
 
 date_default_timezone_set('UTC');
 require_once (APPLICATION_PATH."/logging/Logging.php");
