@@ -554,8 +554,8 @@ class ApiController extends Zend_Controller_Action
 
         if( !$file ) {
             Logging::info("action: $mode");
-            Logging::info("md: $md");
-            Logging::info("return: $return_hash");
+            Logging::info("md: " . print_r($md, true));
+            Logging::info('return: ' . print_r($return_hash, true));
         } 
 
         $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
