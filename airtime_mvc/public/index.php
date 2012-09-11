@@ -4,7 +4,13 @@ error_reporting(E_ALL|E_STRICT);
 
 function exception_error_handler($errno, $errstr, $errfile, $errline)
 {
+    //Check if the statement that threw this error wanted its errors to be 
+    //suppressed. If so then return without with throwing exception.
+    if (0 === error_reporting()) {
+        return;
+    }
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+    return false;
 }
 set_error_handler("exception_error_handler");
 
@@ -48,11 +54,6 @@ Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 // Create application, bootstrap, and run
 try {
-    $application = new Zend_Application(
-        APPLICATION_ENV,
-        APPLICATION_PATH . '/configs/application.ini'
-    );
-
     $sapi_type = php_sapi_name();
     if (substr($sapi_type, 0, 3) == 'cli') {
         set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());

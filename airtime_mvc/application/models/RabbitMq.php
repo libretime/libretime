@@ -13,11 +13,9 @@ class Application_Model_RabbitMq
         Application_Model_RabbitMq::$doPush = TRUE;
     }
 
-    public static function SendMessageToPypo($event_type, $md)
+    private static function sendMessage($exchange, $data)
     {
         global $CC_CONFIG;
-
-        $md["event_type"] = $event_type;
 
         $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
                                          $CC_CONFIG["rabbitmq"]["port"],
@@ -39,62 +37,40 @@ class Application_Model_RabbitMq
         $conn->close();
     }
 
-    public static function SendMessageToMediaMonitor($event_type, $md)
+    public static function SendMessageToPypo($event_type, $md)
     {
-        global $CC_CONFIG;
-
         $md["event_type"] = $event_type;
 
-        $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
-                                         $CC_CONFIG["rabbitmq"]["port"],
-                                         $CC_CONFIG["rabbitmq"]["user"],
-                                         $CC_CONFIG["rabbitmq"]["password"],
-                                         $CC_CONFIG["rabbitmq"]["vhost"]);
-        $channel = $conn->channel();
-        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
-            true, true);
+        $exchange = 'airtime-pypo';
+        $data = json_encode($md, JSON_FORCE_OBJECT);
+        self::sendMessage($exchange, $data);
+    }
 
-        $EXCHANGE = 'airtime-media-monitor';
-        $channel->exchange_declare($EXCHANGE, 'direct', false, true);
+    public static function SendMessageToMediaMonitor($event_type, $md)
+    {
+        $md["event_type"] = $event_type;
 
+        $exchange = 'airtime-media-monitor';
         $data = json_encode($md);
-        $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
-
-        $channel->basic_publish($msg, $EXCHANGE);
-        $channel->close();
-        $conn->close();
+        self::sendMessage($exchange, $data);
     }
 
     public static function SendMessageToShowRecorder($event_type)
     {
-        global $CC_CONFIG;
-
-        $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
-                                        $CC_CONFIG["rabbitmq"]["port"],
-                                        $CC_CONFIG["rabbitmq"]["user"],
-                                        $CC_CONFIG["rabbitmq"]["password"],
-                                         $CC_CONFIG["rabbitmq"]["vhost"]);
-        $channel = $conn->channel();
-        $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
-            true, true);
-
-        $EXCHANGE = 'airtime-pypo';
-        $channel->exchange_declare($EXCHANGE, 'direct', false, true);
+        $exchange = 'airtime-pypo';
 
         $now = new DateTime("@".time()); //in UTC timezone
         $end_timestamp = new DateTime("@".(time() + 3600*2)); //in UTC timezone
 
+        $temp = array();
         $temp['event_type'] = $event_type;
         $temp['server_timezone'] = Application_Model_Preference::GetTimezone();
         if ($event_type == "update_recorder_schedule") {
             $temp['shows'] = Application_Model_Show::getShows($now,
-                $end_timestamp, $onlyRecord=TRUE);
+                $end_timestamp, $onlyRecord=true);
         }
         $data = json_encode($temp);
-        $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
-        $channel->basic_publish($msg, $EXCHANGE);
-        $channel->close();
-        $conn->close();
+        self::sendMessage($exchange, $data);
     }
 }
