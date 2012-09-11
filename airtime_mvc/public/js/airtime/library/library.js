@@ -351,7 +351,6 @@ var AIRTIME = (function(AIRTIME) {
                 if (ele.bSearchable) {
                     var currentColId = ele._ColReorder_iOrigCol;
                     var label = "";
-                    console.log(ele);
                     if (ele.mDataProp == "bit_rate") {
                         label = " (bps)";
                     } else if (ele.mDataProp == "utime" || ele.mDataPro == "mtime" || ele.mDataPro == "lptime") {
