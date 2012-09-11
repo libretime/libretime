@@ -454,6 +454,8 @@ class ApiController extends Zend_Controller_Action
             $showCanceled = true;
         }
 
+        // TODO : the following is inefficient because it calls save on both
+        // fields
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
