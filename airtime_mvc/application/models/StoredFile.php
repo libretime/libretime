@@ -226,6 +226,7 @@ class Application_Model_StoredFile
             return;
         }
         if (isset($this->_dbMD[$p_category])) {
+            // TODO : fix this crust -- RG
             $propelColumn = $this->_dbMD[$p_category];
             $method = "set$propelColumn";
             $this->_file->$method($p_value);
