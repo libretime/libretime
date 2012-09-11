@@ -50,7 +50,7 @@ class WebstreamController extends Zend_Controller_Action
         //clear the session in case an old playlist was open: CC-4196
         Application_Model_Library::changePlaylist(null, null);
 
-        $this->view->obj = new Application_Model_Webstream($webstream);
+        $this->view->obj = new Application_Model_Webstream($webstream->getDbId());
         $this->view->action = "new";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
