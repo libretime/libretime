@@ -67,6 +67,6 @@ try {
     echo $e->getTraceAsString();
     echo "</pre>";
     Logging::info($e->getMessage());
-    Logging::info($e->getTraceAsString());
+    Logging::info($e->getTrace());
 }
 
