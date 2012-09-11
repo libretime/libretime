@@ -84,6 +84,12 @@ class Application_Model_StoredFile
         $this->_file->save();
     }
 
+    public static function createWithFile($f) {
+        $storedFile        = new Application_Model_StoredFile();
+        $storedFile->_file = $f;
+        return $storedFile;
+    }
+
     /**
      * Set multiple metadata values using defined metadata constants.
      *
@@ -534,60 +540,61 @@ SQL;
         return $storedFile;
     }
 
-    /**
-     * Fetch instance of StoreFile object.<br>
-     * Should be supplied with only ONE parameter, all the rest should
-     * be NULL.
-     *
-     * @param int $p_id
-     *         local id
-     * @param string $p_gunid - TODO: Remove this!
-     *         global unique id of file
-     * @param string $p_md5sum
-     *    MD5 sum of the file
-     * @param boolean $exist
-     *    When this is true, it check against only files with file_exist is 'true'
-     * @return Application_Model_StoredFile|NULL
-     *    Return NULL if the object doesnt exist in the DB.
-     */
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null, $exist=false)
-    {
-        if (isset($p_id)) {
-            $file = CcFilesQuery::create()->findPK(intval($p_id));
-        } elseif (isset($p_md5sum)) {
-            if ($exist) {
-                $file = CcFilesQuery::create()
-                            ->filterByDbMd5($p_md5sum)
-                            ->filterByDbFileExists(true)
-                            ->findOne();
-            } else {
-                $file = CcFilesQuery::create()
-                            ->filterByDbMd5($p_md5sum)
-                            ->findOne();
-            }
-        } elseif (isset($p_filepath)) {
-            $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+    //public static function Recall2($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null, $exist=false)
+    //{
+        //if (isset($p_id)) {
+            //$file = CcFilesQuery::create()->findPK(intval($p_id));
+        //} elseif (isset($p_md5sum)) {
+            //if ($exist) {
+                //$file = CcFilesQuery::create()
+                            //->filterByDbMd5($p_md5sum)
+                            //->filterByDbFileExists(true)
+                            //->findOne();
+            //} else {
+                //$file = CcFilesQuery::create()
+                            //->filterByDbMd5($p_md5sum)
+                            //->findOne();
+            //}
+        //} elseif (isset($p_filepath)) {
+            //$path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
 
-            if (is_null($path_info)) {
-                return null;
-            }
-            $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
+            //if (is_null($path_info)) {
+                //return null;
+            //}
+            //$music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
 
-            $file = CcFilesQuery::create()
-                            ->filterByDbDirectory($music_dir->getId())
-                            ->filterByDbFilepath($path_info[1])
-                            ->findOne();
+            //$file = CcFilesQuery::create()
+                            //->filterByDbDirectory($music_dir->getId())
+                            //->filterByDbFilepath($path_info[1])
+                            //->findOne();
+        //} else {
+            //return null;
+        //}
+
+        //if (isset($file)) {
+            //$storedFile = new Application_Model_StoredFile();
+            //$storedFile->_file = $file;
+
+            //return $storedFile;
+        //} else {
+            //return null;
+        //}
+    //}
+
+    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null,
+        $p_filepath=null) {
+        if( isset($p_id ) ) { 
+           $f =  CcFilesQuery::create()->findPK(intval($p_id));
+           return is_null($f) ? null : self::createWithFile($f);
+        } elseif ( isset($p_gunid) ) { 
+            throw new Exception("You should never use gunid ($gunid) anymore");
+        } elseif ( isset($p_md5sum) ) {
+            throw new Exception("Searching by md5($p_md5sum) is disabled");
+        } elseif ( isset($p_filepath) ) {
+            return is_null($f) ? null : self::createWithFile(
+                Application_Model_StoredFile::RecallByFilepath($p_filepath));
         } else {
-            return null;
-        }
-
-        if (isset($file)) {
-            $storedFile = new Application_Model_StoredFile();
-            $storedFile->_file = $file;
-
-            return $storedFile;
-        } else {
-            return null;
+            throw new Exception("No arguments passsed to Recall");
         }
     }
 
@@ -616,7 +623,18 @@ SQL;
      */
     public static function RecallByFilepath($p_filepath)
     {
-        return Application_Model_StoredFile::Recall(null, null, null, $p_filepath);
+        $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+
+        if (is_null($path_info)) {
+            return null;
+        }
+
+        $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
+        $file = CcFilesQuery::create()
+                        ->filterByDbDirectory($music_dir->getId())
+                        ->filterByDbFilepath($path_info[1])
+                        ->findOne();
+        return is_null($file) ? null : self::createWithFile($file);
     }
 
     public static function RecallByPartialFilepath($partial_path)
