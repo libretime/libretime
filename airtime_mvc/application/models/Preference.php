@@ -909,11 +909,7 @@ class Application_Model_Preference
     public static function GetDiskQuota()
     {
         $val = self::getValue("disk_quota");
-        if (strlen($val) == 0) {
-            $val = "0";
-        }
-
-        return $val;
+        return (strlen($val) == 0) ? 0 : $val;
     }
 
     public static function SetLiveSteamMasterUsername($value)
