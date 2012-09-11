@@ -1024,11 +1024,8 @@ class Application_Model_StoredFile
 
     public static function getFileCount()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-
         $sql = "SELECT count(*) as cnt FROM cc_files WHERE file_exists";
-
         return $con->query($sql)->fetchColumn(0);
     }
 
