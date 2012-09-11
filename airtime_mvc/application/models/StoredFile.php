@@ -410,7 +410,9 @@ class Application_Model_StoredFile
             return "mp3";
         } elseif ($mime == "audio/x-flac") {
             return "flac";
-        } else {
+        } elseif ($mime == "audio/mp4") {
+            return "mp4";
+        } else {    
             throw new Exception("Unknown $mime");
         }
     }

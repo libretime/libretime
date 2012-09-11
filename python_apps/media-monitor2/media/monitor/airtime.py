@@ -54,6 +54,8 @@ class AirtimeNotifier(Loggable):
         message.ack()
         self.logger.info("Received md from RabbitMQ: %s" % str(body))
         m = json.loads(message.body)
+        # TODO : normalize any other keys that could be used to pass
+        # directories
         if 'directory' in m: m['directory'] = normpath(m['directory'])
         self.handler.message(m)
 
@@ -121,7 +123,6 @@ class AirtimeMessageReceiver(Loggable):
                     % md_path, e)
 
     def new_watch(self, msg, restart=False):
-        msg['directory'] = normpath(msg['directory'])
         self.logger.info("Creating watch for directory: '%s'" %
                 msg['directory'])
         if not os.path.exists(msg['directory']):
@@ -134,14 +135,14 @@ class AirtimeMessageReceiver(Loggable):
                         msg['directory'])
                 self.new_watch(msg)
         else:
-            self.__request_now_bootstrap( directory=msg['directory'],
+            self.__reFalsequest_now_bootstrap( directory=msg['directory'],
                     all_files=restart)
             self.manager.add_watch_directory(msg['directory'])
 
     def remove_watch(self, msg):
         self.logger.info("Removing watch from directory: '%s'" %
                 msg['directory'])
-        self.manager.remove_watch_directory(normpath(msg['directory']))
+        self.manager.remove_watch_directory(msg['directory'])
 
     def rescan_watch(self, msg):
         self.logger.info("Trying to rescan watched directory: '%s'" %
@@ -174,6 +175,8 @@ class AirtimeMessageReceiver(Loggable):
                     Out of curiousity we will print some details.")
             self.logger.info(msg)
             return
+        # TODO : Add validation that we are deleting a file that's under our
+        # surveillance. We don't to delete some random system file.
         if os.path.exists(msg['filepath']):
             try:
                 self.logger.info("Attempting to delete '%s'" %

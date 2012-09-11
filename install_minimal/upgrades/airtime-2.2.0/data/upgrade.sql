@@ -113,7 +113,7 @@ CREATE TABLE cc_webstream_metadata (
 ALTER TABLE cc_files
 	DROP COLUMN gunid,
 	ADD COLUMN replay_gain character varying(16),
-    ADD COLUMN owner_id integer;
+        ADD COLUMN owner_id integer,
 	ALTER COLUMN bpm TYPE integer using airtime_to_int(bpm) /* TYPE change - table: cc_files original: character varying(8) new: integer */;
 
 ALTER TABLE cc_playlistcontents

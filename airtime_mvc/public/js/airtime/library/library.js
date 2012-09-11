@@ -1115,12 +1115,13 @@ var validationTypes = {
     "mood" : "s",
     "name" : "s",
     "orchestra" : "s",
-    "owner_id" : "i",
+    "owner" : "s",
     "rating" : "i",
     "replay_gain" : "n",
     "sample_rate" : "i",
     "track_title" : "s",
     "track_number" : "i",
     "info_url" : "s",
-    "year" : "i"               
+    "year" : "i",
+    "lptime" : "t"
 };
