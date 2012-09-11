@@ -64,7 +64,8 @@ class Logging {
         $function = $caller['function'];
        
         $logger = self::getLogger();
-        $logger->info("[$file : $function() : line $line] [WARN] - ".self::toString($p_msg));
+        $logger->warn("[$file : $function() : line $line] - "
+            . self::toString($p_msg));
     }
     
     public static function debug($p_msg)
