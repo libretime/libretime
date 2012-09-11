@@ -1130,6 +1130,13 @@ class Application_Model_Preference
 
     public static function getCurrentLibraryTableSetting()
     {
-        return unserialize(self::getValue("library_datatable"));
+        $v = self::getValue("library_datatable");
+        if( $v === '' ) {
+            return function ($x) { return $x; };
+        } else {
+            $ds = unserialize($v);
+            return function ($x) use ($ds) { return $ds['ColReorder'][$x]; } ;
+        }
+        //return unserialize(self::getValue("library_datatable"));
     }
 }
