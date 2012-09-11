@@ -315,12 +315,13 @@ class Application_Model_StoredFile
      */
     public function getPlaylists()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
 
-        $sql = "SELECT playlist_id "
-            ." FROM cc_playlist"
-            ." WHERE file_id = :file_id";
+        $sql = <<<SQL
+SELECT playlist_id
+FROM cc_playlist
+WHERE file_id = :file_id
+SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':file_id', $this->id, PDO::PARAM_INT);
@@ -332,14 +333,13 @@ class Application_Model_StoredFile
             throw new Exception("Error: $msg");
         }
 
-        $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
-            foreach ($ids as $id) {
-                $playlists[] = Application_Model_Playlist::Recall($id);
-            }
+            return array_map( function ($id) {
+                return Application_Model_Playlist::Recall($id);
+            }, $ids);
+        } else {
+            return array();
         }
-
-        return $playlists;
     }
 
     /**
@@ -593,7 +593,6 @@ class Application_Model_StoredFile
     public function getName()
     {
         $info = pathinfo($this->getFilePath());
-
         return $info['filename'];
     }
 
