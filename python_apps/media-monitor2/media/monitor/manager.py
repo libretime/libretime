@@ -231,6 +231,8 @@ class Manager(Loggable):
         else:
             self.logger.info("'%s' is not being watched, hence cannot be \
                     removed" % watch_dir)
+            self.logger.info("The directories we are watching now are:")
+            self.logger.info( self.__wd_path )
 
     def loop(self):
         """
