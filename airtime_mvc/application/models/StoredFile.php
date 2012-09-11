@@ -226,6 +226,7 @@ class Application_Model_StoredFile
             return;
         }
         if (isset($this->_dbMD[$p_category])) {
+            // TODO : fix this crust -- RG
             $propelColumn = $this->_dbMD[$p_category];
             $method = "set$propelColumn";
             $this->_file->$method($p_value);
@@ -315,12 +316,13 @@ class Application_Model_StoredFile
      */
     public function getPlaylists()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
 
-        $sql = "SELECT playlist_id "
-            ." FROM cc_playlist"
-            ." WHERE file_id = :file_id";
+        $sql = <<<SQL
+SELECT playlist_id
+FROM cc_playlist
+WHERE file_id = :file_id
+SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':file_id', $this->id, PDO::PARAM_INT);
@@ -332,14 +334,13 @@ class Application_Model_StoredFile
             throw new Exception("Error: $msg");
         }
 
-        $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
-            foreach ($ids as $id) {
-                $playlists[] = Application_Model_Playlist::Recall($id);
-            }
+            return array_map( function ($id) {
+                return Application_Model_Playlist::Recall($id);
+            }, $ids);
+        } else {
+            return array();
         }
-
-        return $playlists;
     }
 
     /**
@@ -593,7 +594,6 @@ class Application_Model_StoredFile
     public function getName()
     {
         $info = pathinfo($this->getFilePath());
-
         return $info['filename'];
     }
 
@@ -1024,11 +1024,8 @@ class Application_Model_StoredFile
 
     public static function getFileCount()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-
         $sql = "SELECT count(*) as cnt FROM cc_files WHERE file_exists";
-
         return $con->query($sql)->fetchColumn(0);
     }
 
@@ -1101,10 +1098,14 @@ class Application_Model_StoredFile
         try {
             $con = Propel::getConnection();
 
-            $sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
-                    ." FROM CC_FILES"
-                    ." WHERE (id != -2 and id != -3) and"
-                    ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
+            $sql = <<<SQL
+SELECT soundcloud_id AS id,
+       soundcloud_upload_time
+FROM CC_FILES
+WHERE (id != -2
+       AND id != -3)
+  AND (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))
+SQL;
 
             $rows = $con->query($sql)->fetchAll();
 

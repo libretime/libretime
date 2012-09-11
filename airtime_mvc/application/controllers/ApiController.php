@@ -454,6 +454,8 @@ class ApiController extends Zend_Controller_Action
             $showCanceled = true;
         }
 
+        // TODO : the following is inefficient because it calls save on both
+        // fields
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
@@ -513,11 +515,11 @@ class ApiController extends Zend_Controller_Action
                 $file->setMetadata($md);
             }
         } elseif ($mode == "moved") {
-            $md5 = $md['MDATA_KEY_MD5'];
-            $file = Application_Model_StoredFile::RecallByMd5($md5);
+            $file = Application_Model_StoredFile::RecallByFilepath(
+                $md['MDATA_KEY_ORIGINAL_PATH']);
 
             if (is_null($file)) {
-                return "File doesn't exist in Airtime.";
+                $return_hash['error'] = 'File does not exist in Airtime';
             } else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
@@ -661,6 +663,7 @@ class ApiController extends Zend_Controller_Action
             }
         } elseif ($mode == "moved") {
             $md5 = $md['MDATA_KEY_MD5'];
+            Logging::info("Original path: {$md['MDATA_KEY_ORIGINAL_PATH']}");
             $file = Application_Model_StoredFile::RecallByMd5($md5);
 
             if (is_null($file)) {

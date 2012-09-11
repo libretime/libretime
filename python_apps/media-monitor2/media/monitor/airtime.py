@@ -135,7 +135,7 @@ class AirtimeMessageReceiver(Loggable):
                         msg['directory'])
                 self.new_watch(msg)
         else:
-            self.__reFalsequest_now_bootstrap( directory=msg['directory'],
+            self.__request_now_bootstrap( directory=msg['directory'],
                     all_files=restart)
             self.manager.add_watch_directory(msg['directory'])
 

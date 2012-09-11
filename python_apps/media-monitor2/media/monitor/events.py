@@ -110,7 +110,7 @@ class BaseEvent(Loggable):
     # nothing to see here, please move along
     def morph_into(self, evt):
         self.logger.info("Morphing %s into %s" % ( str(self), str(evt) ) )
-        self._raw_event   = evt
+        self._raw_event   = evt._raw_event
         self.path         = evt.path
         self.__class__    = evt.__class__
         # Clean up old hook and transfer the new events hook
@@ -181,11 +181,14 @@ class MoveFile(BaseEvent, HasMetaData):
     """
     def __init__(self, *args, **kwargs):
         super(MoveFile, self).__init__(*args, **kwargs)
+    def old_path(self):
+        return self._raw_event.src_pathname
     def pack(self):
-        req_dict = {}
-        req_dict['mode'] = u'moved'
+        req_dict                            = {}
+        req_dict['mode']                    = u'moved'
+        req_dict['MDATA_KEY_ORIGINAL_PATH'] = self.old_path()
+        req_dict['MDATA_KEY_FILEPATH']      = unicode( self.path )
         req_dict['MDATA_KEY_MD5'] = self.metadata.extract()['MDATA_KEY_MD5']
-        req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return [req_dict]
 
 class ModifyFile(BaseEvent, HasMetaData):
