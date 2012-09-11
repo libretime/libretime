@@ -400,7 +400,8 @@ var AIRTIME = (function(AIRTIME) {
               /* Year          */  { "sTitle" : "Year"          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }             , 
               /* Length        */  { "sTitle" : "Length"        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          , 
               /* Upload Time   */  { "sTitle" : "Uploaded"      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          , 
-              /* Last Modified */  { "sTitle" : "Last Modified" , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             , 
+              /* Last Modified */  { "sTitle" : "Last Modified" , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             ,
+              /* Last Played   */  { "sTitle" : "Last Played  " , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             ,
               /* Track Number  */  { "sTitle" : "Track"         , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         }             , 
               /* Mood          */  { "sTitle" : "Mood"          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         }             , 
               /* BPM           */  { "sTitle" : "BPM"           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         }             , 
@@ -1051,8 +1052,8 @@ function validateAdvancedSearch(divs) {
 }
 
 function addRemoveValidationIcons(valid, field) {
-    var validIndicator = "<span class='checked-icon'></span>",
-        invalidIndicator = "<span class='not-available-icon'></span>";
+    var validIndicator = "<span class='checked-icon sp-checked-icon'></span>",
+        invalidIndicator = "<span class='not-available-icon sp-checked-icon'></span>";
     
     if (valid) {
         if (!field.closest('div').children(':last-child').hasClass('checked-icon')) {

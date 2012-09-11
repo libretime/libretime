@@ -14,6 +14,7 @@
  * @method     CcWebstreamQuery orderByDbCreatorId($order = Criteria::ASC) Order by the creator_id column
  * @method     CcWebstreamQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
  * @method     CcWebstreamQuery orderByDbUtime($order = Criteria::ASC) Order by the utime column
+ * @method     CcWebstreamQuery orderByDbLPtime($order = Criteria::ASC) Order by the lptime column
  * @method     CcWebstreamQuery orderByDbMime($order = Criteria::ASC) Order by the mime column
  *
  * @method     CcWebstreamQuery groupByDbId() Group by the id column
@@ -24,6 +25,7 @@
  * @method     CcWebstreamQuery groupByDbCreatorId() Group by the creator_id column
  * @method     CcWebstreamQuery groupByDbMtime() Group by the mtime column
  * @method     CcWebstreamQuery groupByDbUtime() Group by the utime column
+ * @method     CcWebstreamQuery groupByDbLPtime() Group by the lptime column
  * @method     CcWebstreamQuery groupByDbMime() Group by the mime column
  *
  * @method     CcWebstreamQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -45,6 +47,7 @@
  * @method     CcWebstream findOneByDbCreatorId(int $creator_id) Return the first CcWebstream filtered by the creator_id column
  * @method     CcWebstream findOneByDbMtime(string $mtime) Return the first CcWebstream filtered by the mtime column
  * @method     CcWebstream findOneByDbUtime(string $utime) Return the first CcWebstream filtered by the utime column
+ * @method     CcWebstream findOneByDbLPtime(string $lptime) Return the first CcWebstream filtered by the lptime column
  * @method     CcWebstream findOneByDbMime(string $mime) Return the first CcWebstream filtered by the mime column
  *
  * @method     array findByDbId(int $id) Return CcWebstream objects filtered by the id column
@@ -55,6 +58,7 @@
  * @method     array findByDbCreatorId(int $creator_id) Return CcWebstream objects filtered by the creator_id column
  * @method     array findByDbMtime(string $mtime) Return CcWebstream objects filtered by the mtime column
  * @method     array findByDbUtime(string $utime) Return CcWebstream objects filtered by the utime column
+ * @method     array findByDbLPtime(string $lptime) Return CcWebstream objects filtered by the lptime column
  * @method     array findByDbMime(string $mime) Return CcWebstream objects filtered by the mime column
  *
  * @package    propel.generator.airtime.om
@@ -361,6 +365,37 @@ abstract class BaseCcWebstreamQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcWebstreamPeer::UTIME, $dbUtime, $comparison);
+	}
+
+	/**
+	 * Filter the query on the lptime column
+	 * 
+	 * @param     string|array $dbLPtime The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcWebstreamQuery The current query, for fluid interface
+	 */
+	public function filterByDbLPtime($dbLPtime = null, $comparison = null)
+	{
+		if (is_array($dbLPtime)) {
+			$useMinMax = false;
+			if (isset($dbLPtime['min'])) {
+				$this->addUsingAlias(CcWebstreamPeer::LPTIME, $dbLPtime['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbLPtime['max'])) {
+				$this->addUsingAlias(CcWebstreamPeer::LPTIME, $dbLPtime['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcWebstreamPeer::LPTIME, $dbLPtime, $comparison);
 	}
 
 	/**

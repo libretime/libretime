@@ -635,7 +635,9 @@ var AIRTIME = (function(AIRTIME){
                         if (json.error !== undefined) {
                             alert(json.error);
                         }
-                        AIRTIME.playlist.fnOpenPlaylist(json);
+                        if (json.html !== undefined) {
+                            AIRTIME.playlist.fnOpenPlaylist(json);
+                        }
                         setModified(json.modified);
                         if (obj_type == "block") {
         	                callback(data, "save");
