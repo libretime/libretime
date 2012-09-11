@@ -63,6 +63,10 @@ try {
     }
 } catch (Exception $e) {
     echo $e->getMessage();
+    echo "<pre>";
+    echo $e->getTraceAsString();
+    echo "</pre>";
     Logging::info($e->getMessage());
+    Logging::info($e->getTraceAsString());
 }
 
