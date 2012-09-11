@@ -350,10 +350,22 @@ var AIRTIME = (function(AIRTIME) {
             $.each(aoCols, function(i,ele){
                 if (ele.bSearchable) {
                     var currentColId = ele._ColReorder_iOrigCol;
+                    var label = "";
+                    console.log(ele);
+                    if (ele.mDataProp == "bit_rate") {
+                        label = " (bps)";
+                    } else if (ele.mDataProp == "utime" || ele.mDataPro == "mtime" || ele.mDataPro == "lptime") {
+                        label = " (yyyy-mm-dd)";
+                    } else if (ele.mDataProp == "length") {
+                        label = " (hh:mm:ss.t)";
+                    } else if (ele.mDataProp == "sample_rate") {
+                        label = " (Hz)";
+                    }
+                    
                     if (ele.bVisible) {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"'><span>"+ele.sTitle+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"'><span>"+ele.sTitle+label+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
                     } else {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' style='display:none;'><span>"+ele.sTitle+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' style='display:none;'><span>"+ele.sTitle+label+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
                     }
                     if (criteriaTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
