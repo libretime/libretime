@@ -551,7 +551,8 @@ class ApiController extends Zend_Controller_Action
 
             return $return_hash;
         }
-        $return_hash['fileid'] = $file->getId();
+
+        $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
 
         return $return_hash;
     }
