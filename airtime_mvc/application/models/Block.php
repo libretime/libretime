@@ -60,23 +60,23 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "artist_name" => "DbArtistName",
             "bit_rate" => "DbBitRate",
             "bpm" => "DbBpm",
-            "comments" => "DbComments",
             "composer" => "DbComposer",
             "conductor" => "DbConductor",
+            "copyright" => "DbCopyright",
+            "encoded_by" => "DbEncodedBy",
             "utime" => "DbUtime",
             "mtime" => "DbMtime",
             "lptime" => "DbLPtime",
-            "disc_number" => "DbDiscNumber",
             "genre" => "DbGenre",
+            "info_url" => "DbInfoUrl",
             "isrc_number" => "DbIsrcNumber",
             "label" => "DbLabel",
             "language" => "DbLanguage",
             "length" => "DbLength",
-            "lyricist" => "DbLyricist",
+            "mime" => "DbMime",
             "mood" => "DbMood",
-            "name" => "DbName",
-            "orchestra" => "DbOrchestra",
-            "rating" => "DbRating",
+            "owner_id" => "DbOwnerId",
+            "replay_gain" => "DbReplayGain",
             "sample_rate" => "DbSampleRate",
             "track_title" => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
@@ -325,7 +325,7 @@ EOT;
     {
         $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id = :block_id";
         $result = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id), 'all', PDO::FETCH_NUM);
-        Logging::info($result);
+        //Logging::info($result);
         
         return $result[0][0];
     }
@@ -1049,7 +1049,7 @@ EOT;
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        Logging::info($p_criteriaData);
+        //Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
@@ -1145,32 +1145,32 @@ EOT;
     public function getCriteria()
     {
         $criteriaOptions = array(
-                0 => "Select criteria",
-                "album_title" => "Album",
-                "bit_rate" => "Bit Rate",
-                "bpm" => "Bpm",
-                "comments" => "Comments",
-                "composer" => "Composer",
-                "conductor" => "Conductor",
-                "artist_name" => "Creator",
-                "disc_number" => "Disc Number",
-                "genre" => "Genre",
-                "isrc_number" => "ISRC",
-                "label" => "Label",
-                "language" => "Language",
-                "mtime" => "Last Modified",
-                "lptime" => "Last Played",
-                "length" => "Length",
-                "lyricist" => "Lyricist",
-                "mood" => "Mood",
-                "name" => "Name",
-                "orchestra" => "Orchestra",
-                "rating" => "Rating",
-                "sample_rate" => "Sample Rate",
-                "track_title" => "Title",
+                0              => "Select criteria",
+                "album_title"  => "Album",
+                "bit_rate"     => "Bit Rate (Kbps)",
+                "bpm"          => "BPM",
+                "composer"     => "Composer",
+                "conductor"    => "Conductor",
+                "copyright"    => "Copyright",
+                "artist_name"  => "Creator",
+                "encoded_by"   => "Encoded By",
+                "genre"        => "Genre",
+                "isrc_number"  => "ISRC",
+                "label"        => "Label",
+                "language"     => "Language",
+                "mtime"        => "Last Modified",
+                "lptime"       => "Last Played",
+                "length"       => "Length",
+                "mime"         => "Mime",
+                "mood"         => "Mood",
+                "owner_id"     => "Owner",
+                "replay_gain"  => "Replay Gain",
+                "sample_rate"  => "Sample Rate (kHz)",
+                "track_title"  => "Title",
                 "track_number" => "Track Number",
-                "utime" => "Uploaded",
-                "year" => "Year"
+                "utime"        => "Uploaded",
+                "info_url"     => "Website",
+                "year"         => "Year"
         );
 
         // Load criteria from db
@@ -1200,12 +1200,13 @@ EOT;
         $storedCrit = $this->getCriteria();
 
         $qry = CcFilesQuery::create();
+        $qry->useFkOwnerQuery("subj", "left join");
 
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
                 foreach ($crit as $criteria) {
-                    $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
+                    //$spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
@@ -1274,6 +1275,9 @@ EOT;
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
 
                     try {
+                        if ($spCriteria == "owner_id") {
+                            $spCriteria = "subj.login";
+                        }
                         if ($i > 0) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {

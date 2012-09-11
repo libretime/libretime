@@ -649,7 +649,7 @@ class Application_Model_StoredFile
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
             "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "filepath", "owner", "conductor", "replay_gain", "lptime"
+            "language", "filepath", "owner_id", "conductor", "replay_gain", "lptime"
         );
 
         //Logging::info($datatables);
@@ -680,7 +680,7 @@ class Application_Model_StoredFile
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "login AS ".$key;
-            } elseif ($key === "owner") {
+            } elseif ($key === "owner_id") {
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = "sub.login AS $key";
