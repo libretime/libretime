@@ -15,7 +15,6 @@ require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
-
 global $CC_CONFIG;
 $airtime_version = Application_Model_Preference::GetAirtimeVersion();
 $uniqueid = Application_Model_Preference::GetUniqueId();
@@ -105,6 +104,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initZFDebug()
     {
+
+        Zend_Controller_Front::getInstance()->throwExceptions(true); 
+
+        /*
         if (APPLICATION_ENV == "development") {
             $autoloader = Zend_Loader_Autoloader::getInstance();
             $autoloader->registerNamespace('ZFDebug');
@@ -121,6 +124,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $frontController = $this->getResource('frontController');
             $frontController->registerPlugin($debug);
         }
+        */
     }
 
     protected function _initRouter()

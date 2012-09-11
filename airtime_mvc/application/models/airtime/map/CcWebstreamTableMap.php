@@ -41,11 +41,12 @@ class CcWebstreamTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, null);
 		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', true, 255, null);
-		$this->addColumn('URL', 'DbUrl', 'VARCHAR', true, 255, null);
+		$this->addColumn('URL', 'DbUrl', 'VARCHAR', true, 512, null);
 		$this->addColumn('LENGTH', 'DbLength', 'VARCHAR', true, null, '00:00:00');
 		$this->addColumn('CREATOR_ID', 'DbCreatorId', 'INTEGER', true, null, null);
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', true, 6, null);
 		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', true, 6, null);
+		$this->addColumn('LPTIME', 'DbLPtime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('MIME', 'DbMime', 'VARCHAR', false, 255, null);
 		// validators
 	} // initialize()

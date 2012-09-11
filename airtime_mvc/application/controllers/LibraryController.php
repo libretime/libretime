@@ -19,7 +19,6 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('get-upload-to-soundcloud-status', 'json')
                     ->addActionContext('set-num-entries', 'json')
                     ->initContext();
-
     }
 
     public function indexAction()

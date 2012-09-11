@@ -425,6 +425,7 @@
     <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="true" />
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="true" />
     <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="true" />
+    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
     <column name="mime" phpName="DbMime" type="VARCHAR" />
   </table>
   <table name="cc_webstream_metadata" phpName="CcWebstreamMetadata">

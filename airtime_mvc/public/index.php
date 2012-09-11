@@ -1,8 +1,12 @@
 <?php
 
-//error_reporting(E_ALL|E_STRICT);
-//error_reporting(E_ALL);
-//ini_set('display_errors', 'on');
+error_reporting(E_ALL|E_STRICT);
+
+function exception_error_handler($errno, $errstr, $errfile, $errline)
+{
+    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -33,6 +37,10 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
+$application = new Zend_Application(
+    APPLICATION_ENV,
+    APPLICATION_PATH . '/configs/application.ini'
+);
 
 date_default_timezone_set('UTC');
 require_once (APPLICATION_PATH."/logging/Logging.php");
@@ -53,6 +61,7 @@ try {
         $application->bootstrap()->run();
     }
 } catch (Exception $e) {
+    echo $e->getMessage();
     Logging::info($e->getMessage());
 }
 

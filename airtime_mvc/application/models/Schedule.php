@@ -894,7 +894,7 @@ SQL;
                     new DateTimeZone(date_default_timezone_get()));
             $start_dt->setTimezone(new DateTimeZone('UTC'));
 
-            $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'], 
+            $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'],
                     new DateTimeZone(date_default_timezone_get()));
             $end_dt->setTimezone(new DateTimeZone('UTC'));
 
@@ -1159,10 +1159,26 @@ SQL;
         return $overlapping;
     }
 
+    public static function GetType($p_scheduleId){
+        $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
+        if ($scheduledItem->getDbFileId() == null) {
+            return 'webstream';
+        } else {
+            return 'file';
+        }
+    }
+    
     public static function GetFileId($p_scheduleId)
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
 
         return $scheduledItem->getDbFileId();
+    }
+    
+    public static function GetStreamId($p_scheduleId)
+    {
+        $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
+    
+        return $scheduledItem->getDbStreamId();
     }
 }
