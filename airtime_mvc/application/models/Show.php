@@ -970,7 +970,7 @@ SQL;
         $sql = <<<SQL
 SELECT id
 FROM cc_show_instances
-WHERE date(starts) = date(TIMESTAMP :timestamp)
+WHERE date(starts) = date(:timestamp::TIMESTAMP)
   AND show_id = :showId
   AND rebroadcast = 0;
 SQL;
