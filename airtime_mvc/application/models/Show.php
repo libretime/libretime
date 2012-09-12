@@ -976,8 +976,8 @@ WHERE date(starts) = date(:timestamp::TIMESTAMP)
 SQL;
         try {
             $row = Application_Common_Database::prepareAndExecute( $sql,
-                array( 'showId' => $this->getId(),
-                    ':timestamp' => $timestamp ), 'column');
+                array( ':showId' => $this->getId(),
+                       ':timestamp' => $timestamp ), 'column');
             return CcShowInstancesQuery::create()
                 ->findPk($row);
         } catch (Exception $e) {
