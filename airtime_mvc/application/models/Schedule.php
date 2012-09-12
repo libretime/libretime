@@ -181,7 +181,7 @@ SELECT ft.artist_name,
        ft.track_title,
        st.starts AS starts,
        st.ends AS ends
-FROM $CC_CONFIG[scheduleTable] st
+FROM cc_schedule st
 LEFT JOIN $CC_CONFIG[filesTable] ft ON st.file_id = ft.id
 LEFT JOIN $CC_CONFIG[showInstances] sit ON st.instance_id = sit.id
 -- this and the next line are necessary since we can overbook shows.
