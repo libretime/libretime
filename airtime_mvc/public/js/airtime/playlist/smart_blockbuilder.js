@@ -204,6 +204,20 @@ function setSmartBlockEvents() {
     /********** CRITERIA CHANGE **********/
     form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
         var index = getRowIndex($(this).parent());
+        //need to change the criteria value for any modifier rows
+        var critVal = $(this).val();
+        var divs = $(this).parent().nextAll(':visible');
+        $.each(divs, function(i, div){
+            var critSelect = $(div).children('select[id^="sp_criteria_field"]');
+            if (critSelect.hasClass('sp-invisible')) {
+                critSelect.val(critVal);
+            /* If the select box is visible we know the modifier rows
+             * have ended
+             */
+            } else {
+                return false;
+            }
+        });
         
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index);

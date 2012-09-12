@@ -20,7 +20,7 @@ class Application_Model_Email
             $mailServer = Application_Model_Preference::GetMailServer();
             $mailServerPort = Application_Model_Preference::GetMailServerPort();
             if (!empty($mailServerPort)) {
-                $port = Application_Model_Preference::GetMailServerPort();
+                $port = $mailServerPort;
             }
 
             if ($mailServerRequiresAuth) {

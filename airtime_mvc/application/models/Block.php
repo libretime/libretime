@@ -189,8 +189,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
     public function getContents($filterFiles=false)
     {
         Logging::info("Getting contents for block {$this->id}");
-
-        $files = array();
+        
         $sql = <<<SQL
 SELECT pc.id AS id,
        pc.position,
@@ -640,8 +639,6 @@ SQL;
 
         $this->con->beginTransaction();
 
-        $errArray= array();
-
         try {
             $row = CcBlockcontentsQuery::create()->findPK($id);
 
@@ -1030,8 +1027,7 @@ SQL;
         $blockType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
         $this->saveType($blockType);
         $this->storeCriteriaIntoDb($data);
-        //get number of files that meet the criteria
-        $files = $this->getListofFilesMeetCriteria();
+        
         // if the block is dynamic, put null to the length
         // as it cannot be calculated
         if ($blockType == 'dynamic') {
@@ -1360,7 +1356,6 @@ SQL;
             }
 
             if (in_array($fieldName, $fieldNames)) {
-                $rowNum = intval(substr($ele['name'], $index+1));
                 $output['criteria'][$critIndex][$lastChar][$fieldName] = trim($ele['value']);
             } else {
                 $output['etc'][$ele['name']] = $ele['value'];

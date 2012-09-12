@@ -6,8 +6,6 @@ class Application_Model_Preference
     public static function setValue($key, $value, $isUserValue = false)
     {
         try {
-            $con = Propel::getConnection();
-
             //called from a daemon process
             if (!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
                 $id = NULL;
@@ -425,7 +423,6 @@ class Application_Model_Preference
     {
         self::setValue("timezone", $timezone);
         date_default_timezone_set($timezone);
-        $md = array("timezone" => $timezone);
     }
 
     public static function GetTimezone()
