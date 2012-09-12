@@ -784,7 +784,7 @@ SQL;
         $sql = <<<SQL
 SELECT id
 FROM cc_show_instances
-WHERE show_id :showId
+WHERE show_id = :showId
   AND starts > :timestamp::TIMESTAMP
   AND modified_instance != TRUE
 SQL;
