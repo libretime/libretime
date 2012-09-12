@@ -136,10 +136,10 @@ class Application_Model_Show
         $hosts = Application_Common_Database::prepareAndExecute( $sql,
             array( ':show_id' => $this->getId() ), 'all');
 
-        $res = array_map( function($host) {
-            return $host['first_name']." ".$host['last_name'];
-        }, $hosts);
-
+        $res = array();
+        foreach ($hosts as $host) {
+            $res[] = $host['first_name']." ".$host['last_name'];
+        }
         return $res;
     }
 
