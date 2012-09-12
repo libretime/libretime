@@ -381,11 +381,18 @@ SQL;
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $now = $dateTime->format("Y-m-d H:i:s");
-        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
-                ." SET broadcasted=$value"
-                ." WHERE starts <= '$now' AND ends >= '$now'";
-        $retVal = $con->exec($sql);
 
+        $sql = <<<SQL
+UPDATE cc_schedule
+SET broadcasted=:broadcastedValue
+WHERE starts <= :starts::TIMESTAMP
+  AND ends >= :ends::TIMESTAMP
+SQL;
+
+        $retVal = Application_Common_Database::prepareAndExecute($sql, array(
+            ':broadcastedValue' => $value,
+            ':starts' => $now,
+            ':ends' => $now), 'execute');
         return $retVal;
     }
 
