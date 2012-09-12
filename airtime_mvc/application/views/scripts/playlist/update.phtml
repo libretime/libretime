@@ -13,7 +13,7 @@ if ($item['type'] == 2) {
         <div class="list-item-container">
         
             <?php if ($item['type'] == 0 && $item['exists']):?>
-            <div class="big_play" audioFile="<?php echo $item["id"]; ?>">
+            <div class="big_play" audioFile="<?php echo $item["id"]; ?>" data-mime-type="<?php echo $item["mime"]; ?>">
                 <span class="ui-icon ui-icon-play"></span>
             </div>
             <?php elseif ($item['type'] == 1 && $item['exists']): ?>

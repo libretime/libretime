@@ -76,6 +76,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/airtime/common/audioplaytest.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $user = Application_Model_User::getCurrentUser();
         if (!is_null($user)){
@@ -84,6 +85,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
+
+
 
         if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {
             $view->headScript()->appendFile($baseUrl.'/js/libs/google-analytics.js?'.$CC_CONFIG['airtime_version'],'text/javascript');

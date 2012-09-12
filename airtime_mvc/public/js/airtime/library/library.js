@@ -917,7 +917,7 @@ function addQtipToSCIcons(){
         else if($(this).hasClass("soundcloud")){
             $(this).qtip({
                 content: {
-                    text: "Retreiving data from the server...",
+                    text: "Retrieving data from the server...",
                     ajax: {
                         url: "/Library/get-upload-to-soundcloud-status",
                         type: "post",
