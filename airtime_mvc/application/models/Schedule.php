@@ -378,14 +378,19 @@ SQL;
 
     public static function UpdateBrodcastedStatus($dateTime, $value)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
         $now = $dateTime->format("Y-m-d H:i:s");
-        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
-                ." SET broadcasted=$value"
-                ." WHERE starts <= '$now' AND ends >= '$now'";
-        $retVal = $con->exec($sql);
 
+        $sql = <<<SQL
+UPDATE cc_schedule
+SET broadcasted=:broadcastedValue
+WHERE starts <= :starts::TIMESTAMP
+  AND ends >= :ends::TIMESTAMP
+SQL;
+
+        $retVal = Application_Common_Database::prepareAndExecute($sql, array(
+            ':broadcastedValue' => $value,
+            ':starts' => $now,
+            ':ends' => $now), 'execute');
         return $retVal;
     }
 
@@ -519,41 +524,38 @@ SQL;
     public static function getItems($p_startTime, $p_endTime)
     {
         global $CC_CONFIG;
+        $baseQuery = <<<SQL
+SELECT st.file_id     AS file_id,
+       st.id          AS id,
+       st.instance_id AS instance_id,
+       st.starts      AS start,
+       st.ends        AS end,
+       st.cue_in      AS cue_in,
+       st.cue_out     AS cue_out,
+       st.fade_in     AS fade_in,
+       st.fade_out    AS fade_out,
+       si.starts      AS show_start,
+       si.ends        AS show_end,
+       s.name         AS show_name,
+       f.id           AS file_id,
+       f.replay_gain  AS replay_gain,
+       ws.id          AS stream_id,
+       ws.url         AS url
+FROM cc_schedule AS st
+LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
+LEFT JOIN cc_show           AS s  ON s.id = si.show_id
+LEFT JOIN cc_files          AS f  ON st.file_id = f.id
+LEFT JOIN cc_webstream      AS ws ON st.stream_id = ws.id
+SQL;
+        $predicates = <<<SQL
+WHERE st.ends > :startTime1
+  AND st.starts < :endTime
+  AND st.playout_status > 0
+  AND si.ends > :startTime2
+ORDER BY st.starts
+SQL;
 
-        $baseQuery = "SELECT st.file_id AS file_id,"
-            ." st.id AS id,"
-            ." st.instance_id AS instance_id,"
-            ." st.starts AS start,"
-            ." st.ends AS end,"
-            ." st.cue_in AS cue_in,"
-            ." st.cue_out AS cue_out,"
-            ." st.fade_in AS fade_in,"
-            ." st.fade_out AS fade_out,"
-            //." st.type AS type,"
-            ." si.starts AS show_start,"
-            ." si.ends AS show_end,"
-            ." s.name AS show_name,"
-            ." f.id AS file_id,"
-            ." f.replay_gain AS replay_gain,"
-            ." ws.id as stream_id,"
-            ." ws.url as url"
-            ." FROM cc_schedule AS st"
-            ." LEFT JOIN cc_show_instances AS si"
-            ." ON st.instance_id = si.id"
-            ." LEFT JOIN cc_show as s"
-            ." ON s.id = si.show_id"
-            ." LEFT JOIN cc_files AS f"
-            ." ON st.file_id = f.id"
-            ." LEFT JOIN cc_webstream AS ws"
-            ." ON st.stream_id = ws.id";
-
-        $predicates = " WHERE st.ends > :startTime1"
-        ." AND st.starts < :endTime"
-        ." AND st.playout_status > 0"
-        ." AND si.ends > :startTime2"
-        ." ORDER BY st.starts";
-
-        $sql = $baseQuery.$predicates;
+        $sql = $baseQuery." ".$predicates;
 
         $rows = Application_Common_Database::prepareAndExecute($sql,
             array(':startTime1'=>$p_startTime, ':endTime'=>$p_endTime, ':startTime2'=>$p_startTime));
@@ -571,7 +573,7 @@ WHERE st.ends > :startTime1
 ORDER BY st.starts LIMIT 3
 SQL;
 
-            $sql = " ".$baseQuery.$predicates;
+            $sql = " ".$baseQuery." ".$predicates." ";
             $rows = Application_Common_Database::prepareAndExecute($sql,
                 array(
                     ':startTime1' => $p_startTime,
@@ -718,8 +720,8 @@ SQL;
     {
         global $CC_CONFIG;
 
-        /* if $p_fromDateTime and $p_toDateTime function parameters are null, then set range
-         * from "now" to "now + 24 hours". */
+        /* if $p_fromDateTime and $p_toDateTime function parameters are null,
+            then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
             $t1 = new DateTime("@".time());
             $range_start = $t1->format("Y-m-d H:i:s");
@@ -809,7 +811,7 @@ SQL;
     {
         global $CC_CONFIG;
         $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=:file_id";
-        $res = Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
+        Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
     public static function createNewFormSections($p_view)

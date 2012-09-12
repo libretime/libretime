@@ -2908,3 +2908,18 @@ dd .stream-status {
 	outline: 0;
 	border-top-color:#333333
 }
+.dark_class
+{
+    background-color: black;
+    filter:alpha(opacity=20); /* IE */
+    opacity: 0.2; /* Safari, Opera */
+    -moz-opacity:0.20; /* FireFox */
+    z-index: 20;
+    height: 100%;
+    width: 100%;
+    background-repeat:no-repeat;
+    background-position:center;
+    /* position:absolute; */
+    top: 0px;
+    left: 0px;
+}
