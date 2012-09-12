@@ -559,16 +559,20 @@ SQL;
             $dt->add(new DateInterval("PT24H"));
             $range_end = $dt->format("Y-m-d H:i:s");
 
-            $predicates = " WHERE st.ends > :startTime1"
-            ." AND st.starts < :rangeEnd"
-            ." AND st.playout_status > 0"
-            ." AND si.ends > :startTime2"
-            ." ORDER BY st.starts"
-            ." LIMIT 3";
+            $predicates = <<<SQL
+WHERE st.ends > :startTime1
+  AND st.starts < :rangeEnd
+  AND st.playout_status > 0
+  AND si.ends > :startTime2
+ORDER BY st.starts LIMIT 3
+SQL;
 
             $sql = $baseQuery.$predicates;
             $rows = Application_Common_Database::prepareAndExecute($sql,
-                array(':startTime1'=>$p_startTime, ':rangeEnd'=>$range_end, ':startTime2'=>$p_startTime));
+                array(
+                    ':startTime1' => $p_startTime,
+                    ':rangeEnd'   => $range_end,
+                    ':startTime2' => $p_startTime));
         }
 
         return $rows;
