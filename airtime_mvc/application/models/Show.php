@@ -792,9 +792,11 @@ SQL;
             array( ':showId'    => $this->getId(),
                    ':timestamp' => gmdate("Y-m-d H:i:s")), "all");
 
-        return array_map( function($i) {
-            return $i['id'];
-        }, $rows);
+        $res = array();
+        foreach ($rows as $r) {
+            $res[] = $r['id'];
+        }
+        return $res;
     }
 
     /* Called when a show's duration is changed (edited).
@@ -892,9 +894,11 @@ SQL;
     {
         $showDays = CcShowDaysQuery::create()->filterByDbShowId(
             $this->getId())->find();
-        return array_map( function($showDay) {
-            return $showDay->getDbDay();
-        }, $showDays);
+        $res = array();
+        foreach ($showDays as $showDay) {
+            $res[] = $showDay->getDbDay();
+        }
+        return $res;
     }
 
     /* Only used for shows that aren't repeating.
