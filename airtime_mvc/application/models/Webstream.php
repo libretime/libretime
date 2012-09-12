@@ -211,14 +211,15 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return true;
     }
 
+    // TODO : properly implement this interface
     public function setMetadata($key, $val)
     {
-
+        throw new Exception("setMetadata is not imeplemented by WebStream yet");
     }
 
     public function setName($name)
     {
-
+        throw new Exception("setName is not imeplemented by WebStream yet");
     }
     
     public function setLastPlayed($timestamp)
