@@ -1612,8 +1612,6 @@ SQL;
      */
     public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE)
     {
-        $con = Propel::getConnection();
-
         //UTC DateTime object
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
         //if application is requesting shows past our previous populated until date, generate shows up until this point.
@@ -2067,9 +2065,6 @@ SQL;
      */
     public static function getNextShows($timeStart, $limit = "ALL", $timeEnd = "")
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
         // defaults to retrieving shows from next 2 days if no end time has
         // been specified
         if ($timeEnd == "") {
@@ -2099,19 +2094,10 @@ WHERE si.show_id = s.id
 ORDER BY si.starts
 LIMIT :lim
 SQL;
-
-        $stmt = $con->prepare($sql);
-        $stmt->bindParam(':timeStart', $timeStart);
-        $stmt->bindParam(':timeEnd', $timeEnd);
-        $stmt->bindParam(':lim', $limit);
-
-        if ($stmt->execute()) {
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } else {
-            $msg = implode(',', $stmt->errorInfo());
-            throw new Exception("Error: $msg");
-        }
-
+        return Application_Common_Database::prepareAndExecute( $sql, array(
+            ':timeStart' => $timeStart,
+            ':timeEnd'   => $timeEnd,
+            ':lim'       => $limit), 'all');
     }
 
     /**
@@ -2123,8 +2109,6 @@ SQL;
      */
     public static function convertToLocalTimeZone(&$rows, $columnsToConvert)
     {
-        $timezone = date_default_timezone_get();
-
         if (!is_array($rows)) {
             return;
         }

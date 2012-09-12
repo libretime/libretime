@@ -350,7 +350,7 @@ class ApiController extends Zend_Controller_Action
 
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
-        $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
+        Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
 
         //set a 'last played' timestamp for media item
         //needed for smart blocks
@@ -438,13 +438,9 @@ class ApiController extends Zend_Controller_Action
         $file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
-        $show_name = null;
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance_id);
             $show_inst->setRecordedFile($file_id);
-            $show_name = $show_inst->getName();
-            $show_genre = $show_inst->getGenre();
-            $show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
         } catch (Exception $e) {
             //we've reached here probably because the show was
@@ -567,16 +563,13 @@ class ApiController extends Zend_Controller_Action
         // to some unique id.
         $request     = $this->getRequest();
         $responses   = array();
-        $dry         = $request->getParam('dry') || false;
         $params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
-        foreach ($request->getParams() as $k => $raw_json) {
+        foreach ($params as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
-            $recorded  = $info_json["is_record"];
-            unset( $info_json["is_record"] );
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
@@ -623,8 +616,6 @@ class ApiController extends Zend_Controller_Action
 
     public function listAllWatchedDirsAction()
     {
-        $request = $this->getRequest();
-
         $result = array();
 
         $arrWatchedDirs = Application_Model_MusicDir::getWatchedDirs();
@@ -665,8 +656,6 @@ class ApiController extends Zend_Controller_Action
 
     public function getStreamSettingAction()
     {
-        $request = $this->getRequest();
-
         $info = Application_Model_StreamSetting::getStreamSetting();
         $this->view->msg = $info;
     }
@@ -720,7 +709,6 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 
-        $msg = $request->getParam('msg');
         $sourcename = $request->getParam('sourcename');
         $status = $request->getParam('status');
 
