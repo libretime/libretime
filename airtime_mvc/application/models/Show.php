@@ -147,9 +147,11 @@ class Application_Model_Show
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT subjs_id
-                FROM cc_show_hosts
-                WHERE show_id = :show_id";
+        $sql = <<<SQL
+SELECT subjs_id
+FROM cc_show_hosts
+WHERE show_id = :show_id
+SQL;
 
         $hosts = Application_Common_Database::prepareAndExecute(
             $sql, array( ':show_id' => $this->getId() ), 'all');
