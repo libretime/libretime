@@ -116,7 +116,6 @@ class Application_Model_Datatables
             $simpleWhere = array();
 
             foreach ($searchTerms as $term) {
-                $innerCond = array();
 
                 foreach ($searchCols as $col) {
                     $simpleWhere['clause']["simple_".$col] = "{$col}::text ILIKE :simple_".$col;

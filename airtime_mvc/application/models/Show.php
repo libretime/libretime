@@ -127,8 +127,6 @@ class Application_Model_Show
 
     public function getHosts()
     {
-        $con = Propel::getConnection();
-
         $sql = <<<SQL
 SELECT first_name,
        last_name
@@ -149,8 +147,6 @@ SQL;
 
     public function getHostsIds()
     {
-        $con = Propel::getConnection();
-
         $sql = <<<SQL
 SELECT subjs_id
 FROM cc_show_hosts
@@ -331,8 +327,6 @@ SQL;
      */
     public function removeUncheckedDaysInstances($p_uncheckedDays)
     {
-        $con = Propel::getConnection();
-
         //need to convert local doftw to UTC doftw (change made for 2.0 since shows are stored in UTC)
         $daysRemovedUTC = array();
 
@@ -1348,13 +1342,10 @@ SQL;
      */
     private static function populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime)
     {
-        $con = Propel::getConnection();
-
         $show_id    = $p_showRow["show_id"];
         $first_show = $p_showRow["first_show"]; //non-UTC
         $start_time = $p_showRow["start_time"]; //non-UTC
         $duration   = $p_showRow["duration"];
-        $day        = $p_showRow["day"];
         $record     = $p_showRow["record"];
         $timezone   = $p_showRow["timezone"];
         $start      = $first_show." ".$start_time;
@@ -1413,8 +1404,6 @@ SQL;
      */
     private static function populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, $p_interval)
     {
-        $con = Propel::getConnection();
-
         $show_id       = $p_showDaysRow["show_id"];
         $next_pop_date = $p_showDaysRow["next_pop_date"];
         $first_show    = $p_showDaysRow["first_show"]; //non-UTC

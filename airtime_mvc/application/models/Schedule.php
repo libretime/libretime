@@ -75,7 +75,6 @@ SQL;
             return;
         }
 
-        $con = Propel::getConnection();
         $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends,
             st.media_item_played as media_item_played, si.ends as show_ends
             %%tables%% WHERE ";
