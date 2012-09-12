@@ -129,9 +129,13 @@ class Application_Model_Show
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT first_name, last_name
-                FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
-                    WHERE show_id = :show_id";
+        $sql = <<<SQL
+SELECT first_name,
+       last_name
+FROM cc_show_hosts
+LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
+WHERE show_id = :show_id
+SQL;
 
         $hosts = Application_Common_Database::prepareAndExecute( $sql,
             array( ':show_id' => $this->getId() ), 'all');
