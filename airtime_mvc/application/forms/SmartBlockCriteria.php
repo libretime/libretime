@@ -411,8 +411,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         // 3. validate formate according to DB column type
         $multiplier = 1;
         $result = 0;
-        $errors = array();
-        $error = array();
 
         // validation start
         if ($data['etc']['sp_limit_options'] == 'hours') {
@@ -443,8 +441,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $isValid = false;
             }
         }
-
-        $criteriaFieldsUsed = array();
 
         if (isset($data['criteria'])) {
             foreach ($data['criteria'] as $rowKey=>$row) {

@@ -87,9 +87,6 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
     {
         $valid = true;
 
-        $hours;
-        $minutes;
-
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
         $end_time = $formData['add_show_end_date_no_repeat']." ".$formData['add_show_end_time'];
 
