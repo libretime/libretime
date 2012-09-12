@@ -71,9 +71,9 @@ try {
     echo "</pre>";
     Logging::info($e->getMessage());
     if (VERBOSE_STACK_TRACE) {
-        Logging::info($e->getTrace());
-    } else {
         Logging::info($e->getTraceAsString());
+    } else {
+        Logging::info($e->getTrace());
     }
 }
 
