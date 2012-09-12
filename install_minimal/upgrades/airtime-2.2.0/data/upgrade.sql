@@ -15,8 +15,6 @@ ALTER TABLE cc_files
 
 DROP TABLE cc_access;
 
-DROP SEQUENCE cc_access_id_seq;
-
 CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
     AS 
     'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
