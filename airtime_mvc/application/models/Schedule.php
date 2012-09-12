@@ -942,7 +942,8 @@ SQL;
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null)
+    public static function addUpdateShow($data, $controller, $validateStartDate,
+        $originalStartDate=null, $update=false, $instanceId=null)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -1076,6 +1077,7 @@ SQL;
                 }
             } else {
                 if ($isAdminOrPM) {
+                    Logging::info( $data );
                     Application_Model_Show::create($data);
                 }
 
@@ -1086,12 +1088,12 @@ SQL;
                 return true;
             }
         } else {
-            $controller->view->what = $formWhat;
-            $controller->view->when = $formWhen;
+            $controller->view->what    = $formWhat;
+            $controller->view->when    = $formWhen;
             $controller->view->repeats = $formRepeats;
-            $controller->view->who = $formWho;
-            $controller->view->style = $formStyle;
-            $controller->view->live = $formLive;
+            $controller->view->who     = $formWho;
+            $controller->view->style   = $formStyle;
+            $controller->view->live    = $formLive;
 
             if (!$isSaas) {
                 $controller->view->rr = $formRecord;
@@ -1104,7 +1106,8 @@ SQL;
         }
     }
 
-    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null)
+    public static function checkOverlappingShows($show_start, $show_end,
+        $update=false, $instanceId=null)
     {
         $overlapping = false;
         /* If a show is being edited, exclude it from the query
