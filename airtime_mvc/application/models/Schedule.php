@@ -519,41 +519,37 @@ SQL;
     public static function getItems($p_startTime, $p_endTime)
     {
         global $CC_CONFIG;
+        $baseQuery = <<<SQL
+SELECT st.file_id     AS file_id st.id AS id,
+       st.instance_id AS instance_id,
+       st.starts      AS start,
+       st.ends        AS end,
+       st.cue_in      AS cue_in,
+       st.cue_out     AS cue_out,
+       st.fade_in     AS fade_in,
+       st.fade_out    AS fade_out,
+       si.starts      AS show_start,
+       si.ends        AS show_end,
+       s.name         AS show_name,
+       f.id           AS file_id,
+       f.replay_gain  AS replay_gain,
+       ws.id          AS stream_id,
+       ws.url         AS url
+FROM cc_schedule AS st
+LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
+LEFT JOIN cc_show           AS s  ON s.id = si.show_id
+LEFT JOIN cc_files          AS f  ON st.file_id = f.id
+LEFT JOIN cc_webstream      AS ws ON st.stream_id = ws.id
+SQL;
+        $predicates = <<<SQL
+WHERE st.ends > :startTime1
+  AND st.starts < :endTime
+  AND st.playout_status > 0
+  AND si.ends > :startTime2
+ORDER BY st.starts
+SQL;
 
-        $baseQuery = "SELECT st.file_id AS file_id,"
-            ." st.id AS id,"
-            ." st.instance_id AS instance_id,"
-            ." st.starts AS start,"
-            ." st.ends AS end,"
-            ." st.cue_in AS cue_in,"
-            ." st.cue_out AS cue_out,"
-            ." st.fade_in AS fade_in,"
-            ." st.fade_out AS fade_out,"
-            //." st.type AS type,"
-            ." si.starts AS show_start,"
-            ." si.ends AS show_end,"
-            ." s.name AS show_name,"
-            ." f.id AS file_id,"
-            ." f.replay_gain AS replay_gain,"
-            ." ws.id as stream_id,"
-            ." ws.url as url"
-            ." FROM cc_schedule AS st"
-            ." LEFT JOIN cc_show_instances AS si"
-            ." ON st.instance_id = si.id"
-            ." LEFT JOIN cc_show as s"
-            ." ON s.id = si.show_id"
-            ." LEFT JOIN cc_files AS f"
-            ." ON st.file_id = f.id"
-            ." LEFT JOIN cc_webstream AS ws"
-            ." ON st.stream_id = ws.id";
-
-        $predicates = " WHERE st.ends > :startTime1"
-        ." AND st.starts < :endTime"
-        ." AND st.playout_status > 0"
-        ." AND si.ends > :startTime2"
-        ." ORDER BY st.starts";
-
-        $sql = $baseQuery.$predicates;
+        $sql = $baseQuery." ".$predicates;
 
         $rows = Application_Common_Database::prepareAndExecute($sql,
             array(':startTime1'=>$p_startTime, ':endTime'=>$p_endTime, ':startTime2'=>$p_startTime));
@@ -571,7 +567,7 @@ WHERE st.ends > :startTime1
 ORDER BY st.starts LIMIT 3
 SQL;
 
-            $sql = " ".$baseQuery.$predicates;
+            $sql = " ".$baseQuery." ".$predicates." ";
             $rows = Application_Common_Database::prepareAndExecute($sql,
                 array(
                     ':startTime1' => $p_startTime,
