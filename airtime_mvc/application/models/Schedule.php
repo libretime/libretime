@@ -626,21 +626,21 @@ SQL;
     private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end = self::AirtimeTimeToPypoTime($item["end"]);
+        $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
         $schedule_item = array(
-            'id' => $media_id,
-            'type' => 'file',
-            'row_id' => $item["id"],
-            'uri' => $uri,
-            'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
-            'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
-            'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-            'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-            'start' => $start,
-            'end' => $end,
-            'show_name' => $item["show_name"],
-            'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
+            'id'                => $media_id,
+            'type'              => 'file',
+            'row_id'            => $item["id"],
+            'uri'               => $uri,
+            'fade_in'           => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
+            'fade_out'          => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
+            'cue_in'            => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+            'cue_out'           => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+            'start'             => $start,
+            'end'               => $end,
+            'show_name'         => $item["show_name"],
+            'replay_gain'       => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -649,7 +649,7 @@ SQL;
     private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end = self::AirtimeTimeToPypoTime($item["end"]);
+        $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
         //create an event to start stream buffering 5 seconds ahead of the streams actual time.
         $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
@@ -658,24 +658,24 @@ SQL;
         $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
 
         $schedule_item = array(
-            'start' => $stream_buffer_start,
-            'end' => $stream_buffer_start,
-            'uri' => $uri,
-            'row_id' => $item["id"],
-            'type' => 'stream_buffer_start',
+            'start'             => $stream_buffer_start,
+            'end'               => $stream_buffer_start,
+            'uri'               => $uri,
+            'row_id'            => $item["id"],
+            'type'              => 'stream_buffer_start',
             'independent_event' => true
         );
 
         self::appendScheduleItem($data, $start, $schedule_item);
 
         $schedule_item = array(
-            'id' => $media_id,
-            'type' => 'stream_output_start',
-            'row_id' => $item["id"],
-            'uri' => $uri,
-            'start' => $start,
-            'end' => $end,
-            'show_name' => $item["show_name"],
+            'id'                => $media_id,
+            'type'              => 'stream_output_start',
+            'row_id'            => $item["id"],
+            'uri'               => $uri,
+            'start'             => $start,
+            'end'               => $end,
+            'show_name'         => $item["show_name"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -688,19 +688,19 @@ SQL;
         $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
 
         $schedule_item = array(
-            'start' => $stream_end,
-            'end' => $stream_end,
-            'uri' => $uri,
-            'type' => 'stream_buffer_end',
+            'start'             => $stream_end,
+            'end'               => $stream_end,
+            'uri'               => $uri,
+            'type'              => 'stream_buffer_end',
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
 
         $schedule_item = array(
-            'start' => $stream_end,
-            'end' => $stream_end,
-            'uri' => $uri,
-            'type' => 'stream_output_end',
+            'start'             => $stream_end,
+            'end'               => $stream_end,
+            'uri'               => $uri,
+            'type'              => 'stream_output_end',
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
