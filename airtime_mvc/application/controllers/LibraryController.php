@@ -156,7 +156,7 @@ class LibraryController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
 
         //Open a jPlayer window and play the audio clip.
-        $menu["play"] = array("name"=> "Preview", "icon" => "play");
+        $menu["play"] = array("name"=> "Preview", "icon" => "play", "disabled" => false);
 
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
@@ -165,6 +165,8 @@ class LibraryController extends Zend_Controller_Action
         if ($type === "audioclip") {
 
             $file = Application_Model_StoredFile::Recall($id);
+
+            $menu["play"]["mime"] = $file->getPropelOrm()->getDbMime();
 
             if (isset($obj_sess->id) && $screen == "playlist") {
                 // if the user is not admin or pm, check the creator and see if this person owns the playlist or Block

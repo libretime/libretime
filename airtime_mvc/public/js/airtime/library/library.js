@@ -717,6 +717,7 @@ var AIRTIME = (function(AIRTIME) {
                             callback = function() {
 		                        var url = '/Playlist/edit';
                                 AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                                AIRTIME.playlist.validatePlaylistElements();
                             };
                         } else if (data.ftype === "stream") {
                             callback = function() {
@@ -731,6 +732,13 @@ var AIRTIME = (function(AIRTIME) {
 
                     //define a play callback.
                     if (oItems.play !== undefined) {
+
+                        if (oItems.play.mime !== undefined) {
+                            if (!isAudioSupported(oItems.play.mime)) {
+                                oItems.play.disabled = true;
+                            }
+                        }
+
                         callback = function() {
                            if (data.ftype === 'playlist' && data.length !== '0.0'){
                                 playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_

@@ -346,7 +346,6 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function openPlaylist(json) {
-		
 		$("#side_playlist")
 			.empty()
 			.append(json.html);
@@ -361,23 +360,11 @@ var AIRTIME = (function(AIRTIME){
         appendModAddButton();
         removeButtonCheck();
 	}
-	
-	//sets events dynamically for playlist entries (each row in the playlist)
-	function setPlaylistEntryEvents() {
-		
-		$pl.delegate("#spl_sortable .ui-icon-closethick", 
-				{"click": function(ev){
-					var id;
-					id = parseInt($(this).attr("id").split("_").pop(), 10);
-					AIRTIME.playlist.fnDeleteItems([id]);
-				}});
-
-		$pl.delegate(".spl_fade_control", 
-	    		{"click": openFadeEditor});
-		
-		$pl.delegate(".spl_cue", 
-				{"click": openCueEditor});
-
+    
+    //Purpose of this function is to iterate over all playlist elements
+    //and verify whether they can be previewed by the browser or not. If not
+    //then the playlist element is greyed out
+    mod.validatePlaylistElements = function(){
         $.each($(".big_play"), function(index, value){
             var mime = $(value).attr("data-mime-type");      
             if (isAudioSupported(mime)) {
@@ -405,6 +392,25 @@ var AIRTIME = (function(AIRTIME){
                 }) 
             }
         });
+    }
+	
+	//sets events dynamically for playlist entries (each row in the playlist)
+	function setPlaylistEntryEvents() {
+		
+		$pl.delegate("#spl_sortable .ui-icon-closethick", 
+				{"click": function(ev){
+					var id;
+					id = parseInt($(this).attr("id").split("_").pop(), 10);
+					AIRTIME.playlist.fnDeleteItems([id]);
+				}});
+
+		$pl.delegate(".spl_fade_control", 
+	    		{"click": openFadeEditor});
+		
+		$pl.delegate(".spl_cue", 
+				{"click": openCueEditor});
+
+        mod.validatePlaylistElements();
     		
 		$pl.delegate(".spl_block_expand",
 		        {"click": function(ev){
