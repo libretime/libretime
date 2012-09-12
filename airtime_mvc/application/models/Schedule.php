@@ -811,7 +811,7 @@ SQL;
     {
         global $CC_CONFIG;
         $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=:file_id";
-        $res = Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
+        Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
     public static function createNewFormSections($p_view)
