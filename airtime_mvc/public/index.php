@@ -22,6 +22,9 @@ defined('APPLICATION_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
+defined('VERBOSE_STACK_TRACE')
+    || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
@@ -67,6 +70,10 @@ try {
     echo $e->getTraceAsString();
     echo "</pre>";
     Logging::info($e->getMessage());
-    Logging::info($e->getTrace());
+    if (VERBOSE_STACK_TRACE) {
+        Logging::info($e->getTrace());
+    } else {
+        Logging::info($e->getTraceAsString());
+    }
 }
 
