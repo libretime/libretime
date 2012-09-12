@@ -720,8 +720,8 @@ SQL;
     {
         global $CC_CONFIG;
 
-        /* if $p_fromDateTime and $p_toDateTime function parameters are null, then set range
-         * from "now" to "now + 24 hours". */
+        /* if $p_fromDateTime and $p_toDateTime function parameters are null,
+            then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
             $t1 = new DateTime("@".time());
             $range_start = $t1->format("Y-m-d H:i:s");
