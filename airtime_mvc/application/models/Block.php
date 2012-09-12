@@ -205,7 +205,8 @@ SELECT pc.id AS id,
        f.track_title,
        f.artist_name AS creator,
        f.file_exists AS EXISTS,
-       f.filepath AS path
+       f.filepath AS path,
+       f.mime as mime
 FROM cc_blockcontents AS pc
 LEFT JOIN cc_files AS f ON pc.file_id=f.id
 LEFT JOIN cc_block AS bl ON pc.block_id = bl.id

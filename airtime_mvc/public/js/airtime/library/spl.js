@@ -378,10 +378,34 @@ var AIRTIME = (function(AIRTIME){
 		$pl.delegate(".spl_cue", 
 				{"click": openCueEditor});
 
-        //add the play function to the play icon
-		$pl.delegate(".big_play",
-            {"click": openAudioPreview});
-		
+        $.each($(".big_play"), function(index, value){
+            var mime = $(value).attr("data-mime-type");      
+            if (isAudioSupported(mime)) {
+                $(value).bind("click", openAudioPreview);
+            } else {
+                $(value).attr("class", "big_play_disabled dark_class"); 
+                $(value).qtip({
+                   content: 'Your browser does not support playing this file type: "'+ mime +'"',
+                   show: 'mouseover',
+                    hide: {
+                        delay: 500,
+                        fixed: true
+                    },
+                    style: {
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
+                    },
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
+                }) 
+            }
+        });
+    		
 		$pl.delegate(".spl_block_expand",
 		        {"click": function(ev){
 		            var id = parseInt($(this).attr("id").split("_").pop(), 10);
