@@ -304,20 +304,20 @@ EOT;
             $hour = "00";
             if ($modifier == "minutes") {
                 if ($value >59) {
-                    $hour = intval($value/60);
+                    $hour  = intval($value/60);
                     $value = $value%60;
 
                 }
             } elseif ($modifier == "hours") {
                 $mins = $value * 60;
                 if ($mins >59) {
-                    $hour = intval($mins/60);
-                    $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
+                    $hour  = intval($mins/60);
+                    $hour  = str_pad($hour, 2, "0", STR_PAD_LEFT);
                     $value = $mins%60;
                 }
             }
-            $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
-            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            $hour   = str_pad($hour, 2, "0", STR_PAD_LEFT);
+            $value  = str_pad($value, 2, "0", STR_PAD_LEFT);
             $length = $hour.":".$value.":00";
         }
 
@@ -329,7 +329,7 @@ EOT;
         $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
                 ->filterByDbCriteria('limit')->findOne();
         $modifier = $result->getDbModifier();
-        $value = $result->getDbValue();
+        $value    = $result->getDbValue();
 
         return array($value, $modifier);
     }
@@ -337,10 +337,12 @@ EOT;
     // this function returns sum of all track length under this block.
     public function getStaticLength()
     {
-        $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id = :block_id";
+        $sql = <<<SQL
+SELECT SUM(cliplength) AS LENGTH
+FROM cc_blockcontents
+WHERE block_id = :block_id
+SQL;
         $result = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id), 'all', PDO::FETCH_NUM);
-        //Logging::info($result);
-        
         return $result[0][0];
     }
 
@@ -371,11 +373,11 @@ EOT;
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
         if (isset($file) && $file->getDbFileExists()) {
-            $entry = $this->blockItem;
-            $entry["id"] = $file->getDbId();
-            $entry["pos"] = $pos;
+            $entry               = $this->blockItem;
+            $entry["id"]         = $file->getDbId();
+            $entry["pos"]        = $pos;
             $entry["cliplength"] = $file->getDbLength();
-            $entry["cueout"] = $file->getDbLength();
+            $entry["cueout"]     = $file->getDbLength();
 
             return $entry;
         } else {
@@ -750,10 +752,10 @@ EOT;
                 throw new Exception("Block item does not exist.");
             }
 
-            $oldCueIn = $row->getDBCuein();
+            $oldCueIn  = $row->getDBCuein();
             $oldCueOut = $row->getDbCueout();
-            $fadeIn = $row->getDbFadein();
-            $fadeOut = $row->getDbFadeout();
+            $fadeIn    = $row->getDbFadein();
+            $fadeOut   = $row->getDbFadeout();
 
             $file = $row->getCcFiles($this->con);
             $origLength = $file->getDbLength();
@@ -1052,11 +1054,7 @@ EOT;
     public function hasItemLimit()
     {
         list($value, $modifier) = $this->getLimitValueAndModifier();
-        if ($modifier == 'items') {
-            return true;
-        } else {
-            return false;
-        }
+        return ($modifier == 'items');
     }
 
     public function storeCriteriaIntoDb($p_criteriaData)
@@ -1128,12 +1126,12 @@ EOT;
 
     public function getListOfFilesUnderLimit()
     {
-        $info = $this->getListofFilesMeetCriteria();
-        $files = $info['files'];
-        $limit = $info['limit'];
+        $info       = $this->getListofFilesMeetCriteria();
+        $files      = $info['files'];
+        $limit      = $info['limit'];
 
         $insertList = array();
-        $totalTime = 0;
+        $totalTime  = 0;
         $totalItems = 0;
 
         // this moves the pointer to the first element in the collection
