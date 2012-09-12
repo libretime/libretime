@@ -378,8 +378,6 @@ SQL;
 
     public static function UpdateBrodcastedStatus($dateTime, $value)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
         $now = $dateTime->format("Y-m-d H:i:s");
 
         $sql = <<<SQL
