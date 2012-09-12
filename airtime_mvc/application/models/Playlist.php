@@ -154,7 +154,6 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
     public function getContents($filterFiles=false)
     {
         Logging::info("Getting contents for playlist {$this->id}");
-        $files = array();
 
         $sql = <<<SQL
   SELECT *
@@ -613,8 +612,6 @@ SQL;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
 
         $this->con->beginTransaction();
-
-        $errArray= array();
 
         try {
             $row = CcPlaylistcontentsQuery::create()->findPK($id);

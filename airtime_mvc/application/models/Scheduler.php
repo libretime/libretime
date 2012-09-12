@@ -613,7 +613,6 @@ class Application_Model_Scheduler
             Logging::debug("inserting after removing gaps.");
             Logging::debug(floatval($endProfile) - floatval($startProfile));
 
-            $afterInstanceId = $afterInstance->getDbId();
             $modified = array_keys($modifiedMap);
             //need to adjust shows we have moved items from.
             foreach ($modified as $instanceId) {
