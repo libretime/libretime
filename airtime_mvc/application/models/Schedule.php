@@ -10,10 +10,14 @@ class Application_Model_Schedule
     public function IsFileScheduledInTheFuture($p_fileId)
     {
         global $CC_CONFIG;
-        $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE file_id = :file_id AND ends > NOW() AT TIME ZONE 'UTC'";
-        $count = Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$p_fileId), 'column');
-
+        $sql = <<<SQL
+SELECT COUNT(*)
+FROM cc_schedule
+WHERE file_id = :file_id
+  AND ends > NOW() AT TIME ZONE 'UTC'
+SQL;
+        $count = Application_Common_Database::prepareAndExecute( $sql, array(
+            ':file_id'=>$p_fileId), 'column');
         return (is_numeric($count) && ($count != '0'));
     }
 
