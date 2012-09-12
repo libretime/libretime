@@ -1106,45 +1106,49 @@ SQL;
 
     public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null)
     {
-        global $CC_CONFIG;
-
         $overlapping = false;
-
-        $con = Propel::getConnection();
-
         /* If a show is being edited, exclude it from the query
          * In both cases (new and edit) we only grab shows that
          * are scheduled 2 days prior
          */
         //$se = $show_end->format('Y-m-d H:i:s');
         if ($update) {
-            $stmt = $con->prepare("SELECT id, starts, ends FROM {$CC_CONFIG['showInstances']}
-                    where (ends <= :show_end1
-                    or starts <= :show_end2)
-                    and date(starts) >= (date(:show_end3) - INTERVAL '2 days')
-                    and modified_instance = false and id != :instanceId order by ends");
-            
-            $stmt->execute(array(
-                ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end3'     => $show_end->format('Y-m-d H:i:s'),
-                ':instanceId'    => $instanceId
-            ));
+            $sql = <<<SQL
+SELECT id,
+       starts,
+       ends
+FROM cc_show_instances
+WHERE (ends <= :show_end1
+       OR starts <= :show_end2)
+  AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
+  AND modified_instance = FALSE
+  AND id != :instanceId
+ORDER BY ends
+SQL;
+            $rows = Application_Common_Database::prepareAndExecute($sql, array(
+                ':show_end1'  => $show_end->format('Y-m-d H:i:s'),
+                ':show_end2'  => $show_end->format('Y-m-d H:i:s'),
+                ':show_end3'  => $show_end->format('Y-m-d H:i:s'),
+                ':instanceId' => $instanceId
+            ), 'all');
         } else {
-            $stmt = $con->prepare("SELECT id, starts, ends FROM
-                    {$CC_CONFIG['showInstances']}
-                    where (ends <= :show_end1 or starts <= :show_end2)
-                    and date(starts) >= (date(:show_end3) - INTERVAL '2 days')
-                    and modified_instance = false order by ends");
+            $sql = <<<SQL
+SELECT id,
+       starts,
+       ends
+FROM cc_show_instances
+WHERE (ends <= :show_end1
+       OR starts <= :show_end2)
+  AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
+  AND modified_instance = FALSE
+ORDER BY ends
+SQL;
 
-            $stmt->execute(array(
-                ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end3'     => $show_end->format('Y-m-d H:i:s')
-            ));
+            $rows = Application_Common_Database::prepareAndExecute($sql, array(
+                ':show_end1' => $show_end->format('Y-m-d H:i:s'),
+                ':show_end2' => $show_end->format('Y-m-d H:i:s'),
+                ':show_end3' => $show_end->format('Y-m-d H:i:s')), 'all');
         }
-        $rows = $stmt->fetchAll();
-
         foreach ($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
             $end   = new DateTime($row["ends"], new DateTimeZone('UTC'));
