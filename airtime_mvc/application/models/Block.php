@@ -191,7 +191,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         Logging::info("Getting contents for block {$this->id}");
 
         $files = array();
-        $sql = <<<"EOT"
+        $sql = <<<SQL
 SELECT pc.id AS id,
        pc.position,
        pc.cliplength AS LENGTH,
@@ -211,8 +211,7 @@ LEFT JOIN cc_files AS f ON pc.file_id=f.id
 LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
 WHERE pc.block_id = :block_id
 ORDER BY pc.position;
-
-EOT;
+SQL;
 
         $rows = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id));
 

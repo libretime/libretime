@@ -567,7 +567,7 @@ WHERE st.ends > :startTime1
 ORDER BY st.starts LIMIT 3
 SQL;
 
-            $sql = $baseQuery.$predicates;
+            $sql = " ".$baseQuery.$predicates;
             $rows = Application_Common_Database::prepareAndExecute($sql,
                 array(
                     ':startTime1' => $p_startTime,
