@@ -525,7 +525,8 @@ SQL;
     {
         global $CC_CONFIG;
         $baseQuery = <<<SQL
-SELECT st.file_id     AS file_id st.id AS id,
+SELECT st.file_id     AS file_id,
+       st.id          AS id,
        st.instance_id AS instance_id,
        st.starts      AS start,
        st.ends        AS end,
