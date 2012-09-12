@@ -287,11 +287,16 @@ SQL;
             ->filterByDbShowId($this->_showId)
             ->update(array('DbLastShow' => $timeinfo[0]));
 
-        $sql = "UPDATE cc_show_instances
-                SET modified_instance = TRUE
-                    WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
+        $sql = <<<SQL
+UPDATE cc_show_instances
+SET modified_instance = TRUE
+WHERE starts >= :dayTimestamp::TIMESTAMP
+  AND show_id = :showId
+SQL;
 
-        $con->exec($sql);
+        Application_Common_Database::prepareAndExecute( $sql, array(
+            ':dayTimestamp' => $day_timestamp,
+            ':showId'       => $this->getId()), 'execute');
 
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
@@ -300,7 +305,9 @@ SQL;
             ->findOne();
 
         if (is_null($showInstancesRow)) {
-            $sql = "DELETE FROM cc_show WHERE id = :show_id";
+            $sql = <<<SQL
+DELETE FROM cc_show WHERE id = :show_id
+SQL;
             Application_Common_Database::prepareAndExecute(
                 $sql, array( 'show_id' => $this->_showId ), "execute");
             $con->exec($sql);
