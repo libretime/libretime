@@ -26,61 +26,61 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      * info needed to insert a new block element.
      */
     private $blockItem = array(
-            "id" => "",
-            "pos" => "",
+            "id"         => "",
+            "pos"        => "",
             "cliplength" => "",
-            "cuein" => "00:00:00",
-            "cueout" => "00:00:00",
-            "fadein" => "0.0",
-            "fadeout" => "0.0",
+            "cuein"      => "00:00:00",
+            "cueout"     => "00:00:00",
+            "fadein"     => "0.0",
+            "fadeout"    => "0.0",
     );
 
     //using propel's phpNames.
     private $categories = array(
-            "dc:title" => "Name",
-            "dc:creator" => "Creator",
+            "dc:title"       => "Name",
+            "dc:creator"     => "Creator",
             "dc:description" => "Description",
             "dcterms:extent" => "Length"
     );
 
     private static $modifier2CriteriaMap = array(
-            "contains" => Criteria::ILIKE,
+            "contains"         => Criteria::ILIKE,
             "does not contain" => Criteria::NOT_ILIKE,
-            "is" => Criteria::EQUAL,
-            "is not" => Criteria::NOT_EQUAL,
-            "starts with" => Criteria::ILIKE,
-            "ends with" => Criteria::ILIKE,
-            "is greater than" => Criteria::GREATER_THAN,
-            "is less than" => Criteria::LESS_THAN,
-            "is in the range" => Criteria::CUSTOM);
+            "is"               => Criteria::EQUAL,
+            "is not"           => Criteria::NOT_EQUAL,
+            "starts with"      => Criteria::ILIKE,
+            "ends with"        => Criteria::ILIKE,
+            "is greater than"  => Criteria::GREATER_THAN,
+            "is less than"     => Criteria::LESS_THAN,
+            "is in the range"  => Criteria::CUSTOM);
 
     private static $criteria2PeerMap = array(
-            0 => "Select criteria",
-            "album_title" => "DbAlbumTitle",
-            "artist_name" => "DbArtistName",
-            "bit_rate" => "DbBitRate",
-            "bpm" => "DbBpm",
-            "composer" => "DbComposer",
-            "conductor" => "DbConductor",
-            "copyright" => "DbCopyright",
-            "encoded_by" => "DbEncodedBy",
-            "utime" => "DbUtime",
-            "mtime" => "DbMtime",
-            "lptime" => "DbLPtime",
-            "genre" => "DbGenre",
-            "info_url" => "DbInfoUrl",
-            "isrc_number" => "DbIsrcNumber",
-            "label" => "DbLabel",
-            "language" => "DbLanguage",
-            "length" => "DbLength",
-            "mime" => "DbMime",
-            "mood" => "DbMood",
-            "owner_id" => "DbOwnerId",
-            "replay_gain" => "DbReplayGain",
-            "sample_rate" => "DbSampleRate",
-            "track_title" => "DbTrackTitle",
+            0              => "Select criteria",
+            "album_title"  => "DbAlbumTitle",
+            "artist_name"  => "DbArtistName",
+            "bit_rate"     => "DbBitRate",
+            "bpm"          => "DbBpm",
+            "composer"     => "DbComposer",
+            "conductor"    => "DbConductor",
+            "copyright"    => "DbCopyright",
+            "encoded_by"   => "DbEncodedBy",
+            "utime"        => "DbUtime",
+            "mtime"        => "DbMtime",
+            "lptime"       => "DbLPtime",
+            "genre"        => "DbGenre",
+            "info_url"     => "DbInfoUrl",
+            "isrc_number"  => "DbIsrcNumber",
+            "label"        => "DbLabel",
+            "language"     => "DbLanguage",
+            "length"       => "DbLength",
+            "mime"         => "DbMime",
+            "mood"         => "DbMood",
+            "owner_id"     => "DbOwnerId",
+            "replay_gain"  => "DbReplayGain",
+            "sample_rate"  => "DbSampleRate",
+            "track_title"  => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
-            "year" => "DbYear"
+            "year"         => "DbYear"
     );
 
     public function __construct($id=null, $con=null)
@@ -192,12 +192,26 @@ class Application_Model_Block implements Application_Model_LibraryEditable
 
         $files = array();
         $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, f.length as orig_length,
-    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path FROM cc_blockcontents AS pc
-    LEFT JOIN cc_files AS f ON pc.file_id=f.id
-    LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
-    WHERE pc.block_id = :block_id
-    ORDER BY pc.position;
+SELECT pc.id AS id,
+       pc.position,
+       pc.cliplength AS LENGTH,
+       pc.cuein,
+       pc.cueout,
+       pc.fadein,
+       pc.fadeout,
+       bl.type,
+       f.LENGTH AS orig_length,
+       f.id AS item_id,
+       f.track_title,
+       f.artist_name AS creator,
+       f.file_exists AS EXISTS,
+       f.filepath AS path
+FROM cc_blockcontents AS pc
+LEFT JOIN cc_files AS f ON pc.file_id=f.id
+LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
+WHERE pc.block_id = :block_id
+ORDER BY pc.position;
+
 EOT;
 
         $rows = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id));
