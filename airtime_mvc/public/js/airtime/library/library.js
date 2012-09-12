@@ -36,7 +36,7 @@ var AIRTIME = (function(AIRTIME) {
         "track_title" : "s",
         "track_num"   : "n",
         "year"        : "n",
-        "owner"       : "s",
+        "owner_id"    : "s",
         "replay_gain" : "n"
     };
     
@@ -350,10 +350,21 @@ var AIRTIME = (function(AIRTIME) {
             $.each(aoCols, function(i,ele){
                 if (ele.bSearchable) {
                     var currentColId = ele._ColReorder_iOrigCol;
+                    var label = "";
+                    if (ele.mDataProp == "bit_rate") {
+                        label = " (bps)";
+                    } else if (ele.mDataProp == "utime" || ele.mDataPro == "mtime" || ele.mDataPro == "lptime") {
+                        label = " (yyyy-mm-dd)";
+                    } else if (ele.mDataProp == "length") {
+                        label = " (hh:mm:ss.t)";
+                    } else if (ele.mDataProp == "sample_rate") {
+                        label = " (Hz)";
+                    }
+                    
                     if (ele.bVisible) {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"'><span>"+ele.sTitle+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"'><span>"+ele.sTitle+label+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
                     } else {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' style='display:none;'><span>"+ele.sTitle+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' style='display:none;'><span>"+ele.sTitle+label+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
                     }
                     if (criteriaTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
@@ -392,32 +403,32 @@ var AIRTIME = (function(AIRTIME) {
             "aoColumns": [
               /* ftype         */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
               /* Checkbox      */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
-              /* Type          */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  , 
+              /* Type          */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
               /* Title         */  { "sTitle" : "Title"         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
-              /* Creator       */  { "sTitle" : "Creator"       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          , 
+              /* Creator       */  { "sTitle" : "Creator"       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
               /* Album         */  { "sTitle" : "Album"         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
-              /* Genre         */  { "sTitle" : "Genre"         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        }             , 
-              /* Year          */  { "sTitle" : "Year"          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }             , 
-              /* Length        */  { "sTitle" : "Length"        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          , 
-              /* Upload Time   */  { "sTitle" : "Uploaded"      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          , 
-              /* Last Modified */  { "sTitle" : "Last Modified" , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             ,
-              /* Last Played   */  { "sTitle" : "Last Played  " , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             ,
-              /* Track Number  */  { "sTitle" : "Track"         , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         }             , 
-              /* Mood          */  { "sTitle" : "Mood"          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         }             , 
-              /* BPM           */  { "sTitle" : "BPM"           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         }             , 
-              /* Composer      */  { "sTitle" : "Composer"      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        }             , 
-              /* Website       */  { "sTitle" : "Website"       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        }             , 
               /* Bit Rate      */  { "sTitle" : "Bit Rate"      , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         }             , 
-              /* Sample Rate   */  { "sTitle" : "Sample"        , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         }             , 
-              /* ISRC Number   */  { "sTitle" : "ISRC"          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        }             , 
+              /* BPM           */  { "sTitle" : "BPM"           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         }             ,
+              /* Composer      */  { "sTitle" : "Composer"      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        }             , 
+              /* Conductor     */  { "sTitle" : "Conductor"     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        }, 
+              /* Copyright     */  { "sTitle" : "Copyright"     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        }             ,
               /* Encoded       */  { "sTitle" : "Encoded By"    , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        }             , 
+              /* Genre         */  { "sTitle" : "Genre"         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        }             , 
+              /* ISRC Number   */  { "sTitle" : "ISRC"          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        }             , 
               /* Label         */  { "sTitle" : "Label"         , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        }             , 
-              /* Copyright     */  { "sTitle" : "Copyright"     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        }             , 
-              /* Mime          */  { "sTitle" : "Mime"          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         }             , 
               /* Language      */  { "sTitle" : "Language"      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             , 
-              /* Owner         */  { "sTitle" : "Owner"         , "mDataProp" : "owner"        , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             ,
-              /* Conductor     */  { "sTitle" : "Conductor"     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
-              /* Replay Gain   */  { "sTitle" : "Replay Gain"   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "80px"        }
+              /* Last Modified */  { "sTitle" : "Last Modified" , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             ,
+              /* Last Played   */  { "sTitle" : "Last Played  " , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        }             ,  
+              /* Length        */  { "sTitle" : "Length"        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          , 
+              /* Mime          */  { "sTitle" : "Mime"          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         }             , 
+              /* Mood          */  { "sTitle" : "Mood"          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         }             ,
+              /* Owner         */  { "sTitle" : "Owner"         , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }             , 
+              /* Replay Gain   */  { "sTitle" : "Replay Gain"   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"      , "sWidth" : "80px"        }, 
+              /* Sample Rate   */  { "sTitle" : "Sample Rate"   , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         }             , 
+              /* Track Number  */  { "sTitle" : "Track Number"  , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         }             , 
+              /* Upload Time   */  { "sTitle" : "Uploaded"      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          ,
+              /* Website       */  { "sTitle" : "Website"       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        }             ,
+              /* Year          */  { "sTitle" : "Year"          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
               ],
                           
             "bProcessing": true,
@@ -1103,13 +1114,12 @@ var validationTypes = {
     "mood" : "s",
     "name" : "s",
     "orchestra" : "s",
-    "owner" : "s",
+    "owner_id" : "s",
     "rating" : "i",
     "replay_gain" : "n",
     "sample_rate" : "i",
     "track_title" : "s",
     "track_number" : "i",
     "info_url" : "s",
-    "year" : "i",
-    "lptime" : "t"
+    "year" : "i"
 };

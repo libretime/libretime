@@ -129,17 +129,21 @@ class Application_Model_Show
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT first_name, last_name
-                FROM cc_show_hosts LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
-                    WHERE show_id = :show_id";
+        $sql = <<<SQL
+SELECT first_name,
+       last_name
+FROM cc_show_hosts
+LEFT JOIN cc_subjs ON cc_show_hosts.subjs_id = cc_subjs.id
+WHERE show_id = :show_id
+SQL;
 
         $hosts = Application_Common_Database::prepareAndExecute( $sql,
             array( ':show_id' => $this->getId() ), 'all');
 
-        $res = array_map( function($host) {
-            return $host['first_name']." ".$host['last_name'];
-        }, $hosts);
-
+        $res = array();
+        foreach ($hosts as $host) {
+            $res[] = $host['first_name']." ".$host['last_name'];
+        }
         return $res;
     }
 
@@ -147,9 +151,11 @@ class Application_Model_Show
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT subjs_id
-                FROM cc_show_hosts
-                WHERE show_id = :show_id";
+        $sql = <<<SQL
+SELECT subjs_id
+FROM cc_show_hosts
+WHERE show_id = :show_id
+SQL;
 
         $hosts = Application_Common_Database::prepareAndExecute(
             $sql, array( ':show_id' => $this->getId() ), 'all');
@@ -281,11 +287,16 @@ SQL;
             ->filterByDbShowId($this->_showId)
             ->update(array('DbLastShow' => $timeinfo[0]));
 
-        $sql = "UPDATE cc_show_instances
-                SET modified_instance = TRUE
-                    WHERE starts >= '{$day_timestamp}' AND show_id = {$this->_showId}";
+        $sql = <<<SQL
+UPDATE cc_show_instances
+SET modified_instance = TRUE
+WHERE starts >= :dayTimestamp::TIMESTAMP
+  AND show_id = :showId
+SQL;
 
-        $con->exec($sql);
+        Application_Common_Database::prepareAndExecute( $sql, array(
+            ':dayTimestamp' => $day_timestamp,
+            ':showId'       => $this->getId()), 'execute');
 
         // check if we can safely delete the show
         $showInstancesRow = CcShowInstancesQuery::create()
@@ -294,7 +305,9 @@ SQL;
             ->findOne();
 
         if (is_null($showInstancesRow)) {
-            $sql = "DELETE FROM cc_show WHERE id = :show_id";
+            $sql = <<<SQL
+DELETE FROM cc_show WHERE id = :show_id
+SQL;
             Application_Common_Database::prepareAndExecute(
                 $sql, array( 'show_id' => $this->_showId ), "execute");
             $con->exec($sql);
@@ -771,7 +784,7 @@ SQL;
         $sql = <<<SQL
 SELECT id
 FROM cc_show_instances
-WHERE show_id :showId
+WHERE show_id = :showId
   AND starts > :timestamp::TIMESTAMP
   AND modified_instance != TRUE
 SQL;
@@ -779,9 +792,11 @@ SQL;
             array( ':showId'    => $this->getId(),
                    ':timestamp' => gmdate("Y-m-d H:i:s")), "all");
 
-        return array_map( function($i) {
-            return $i['id'];
-        }, $rows);
+        $res = array();
+        foreach ($rows as $r) {
+            $res[] = $r['id'];
+        }
+        return $res;
     }
 
     /* Called when a show's duration is changed (edited).
@@ -879,9 +894,11 @@ SQL;
     {
         $showDays = CcShowDaysQuery::create()->filterByDbShowId(
             $this->getId())->find();
-        return array_map( function($showDay) {
-            return $showDay->getDbDay();
-        }, $showDays);
+        $res = array();
+        foreach ($showDays as $showDay) {
+            $res[] = $showDay->getDbDay();
+        }
+        return $res;
     }
 
     /* Only used for shows that aren't repeating.
@@ -953,14 +970,14 @@ SQL;
         $sql = <<<SQL
 SELECT id
 FROM cc_show_instances
-WHERE date(starts) = date(TIMESTAMP :timestamp)
+WHERE date(starts) = date(:timestamp::TIMESTAMP)
   AND show_id = :showId
   AND rebroadcast = 0;
 SQL;
         try {
             $row = Application_Common_Database::prepareAndExecute( $sql,
-                array( 'showId' => $this->getId(),
-                    ':timestamp' => $timestamp ), 'column');
+                array( ':showId' => $this->getId(),
+                       ':timestamp' => $timestamp ), 'column');
             return CcShowInstancesQuery::create()
                 ->findPk($row);
         } catch (Exception $e) {

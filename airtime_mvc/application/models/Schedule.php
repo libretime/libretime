@@ -10,10 +10,14 @@ class Application_Model_Schedule
     public function IsFileScheduledInTheFuture($p_fileId)
     {
         global $CC_CONFIG;
-        $sql = "SELECT COUNT(*) FROM ".$CC_CONFIG["scheduleTable"]
-        ." WHERE file_id = :file_id AND ends > NOW() AT TIME ZONE 'UTC'";
-        $count = Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$p_fileId), 'column');
-
+        $sql = <<<SQL
+SELECT COUNT(*)
+FROM cc_schedule
+WHERE file_id = :file_id
+  AND ends > NOW() AT TIME ZONE 'UTC'
+SQL;
+        $count = Application_Common_Database::prepareAndExecute( $sql, array(
+            ':file_id'=>$p_fileId), 'column');
         return (is_numeric($count) && ($count != '0'));
     }
 
@@ -177,7 +181,7 @@ SELECT ft.artist_name,
        ft.track_title,
        st.starts AS starts,
        st.ends AS ends
-FROM $CC_CONFIG[scheduleTable] st
+FROM cc_schedule st
 LEFT JOIN $CC_CONFIG[filesTable] ft ON st.file_id = ft.id
 LEFT JOIN $CC_CONFIG[showInstances] sit ON st.instance_id = sit.id
 -- this and the next line are necessary since we can overbook shows.
@@ -559,16 +563,20 @@ SQL;
             $dt->add(new DateInterval("PT24H"));
             $range_end = $dt->format("Y-m-d H:i:s");
 
-            $predicates = " WHERE st.ends > :startTime1"
-            ." AND st.starts < :rangeEnd"
-            ." AND st.playout_status > 0"
-            ." AND si.ends > :startTime2"
-            ." ORDER BY st.starts"
-            ." LIMIT 3";
+            $predicates = <<<SQL
+WHERE st.ends > :startTime1
+  AND st.starts < :rangeEnd
+  AND st.playout_status > 0
+  AND si.ends > :startTime2
+ORDER BY st.starts LIMIT 3
+SQL;
 
-            $sql = $baseQuery.$predicates;
+            $sql = " ".$baseQuery.$predicates;
             $rows = Application_Common_Database::prepareAndExecute($sql,
-                array(':startTime1'=>$p_startTime, ':rangeEnd'=>$range_end, ':startTime2'=>$p_startTime));
+                array(
+                    ':startTime1' => $p_startTime,
+                    ':rangeEnd'   => $range_end,
+                    ':startTime2' => $p_startTime));
         }
 
         return $rows;
@@ -626,21 +634,21 @@ SQL;
     private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end = self::AirtimeTimeToPypoTime($item["end"]);
+        $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
         $schedule_item = array(
-            'id' => $media_id,
-            'type' => 'file',
-            'row_id' => $item["id"],
-            'uri' => $uri,
-            'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
-            'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
-            'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-            'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-            'start' => $start,
-            'end' => $end,
-            'show_name' => $item["show_name"],
-            'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
+            'id'                => $media_id,
+            'type'              => 'file',
+            'row_id'            => $item["id"],
+            'uri'               => $uri,
+            'fade_in'           => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
+            'fade_out'          => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
+            'cue_in'            => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+            'cue_out'           => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+            'start'             => $start,
+            'end'               => $end,
+            'show_name'         => $item["show_name"],
+            'replay_gain'       => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -649,7 +657,7 @@ SQL;
     private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end = self::AirtimeTimeToPypoTime($item["end"]);
+        $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
         //create an event to start stream buffering 5 seconds ahead of the streams actual time.
         $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
@@ -658,24 +666,24 @@ SQL;
         $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
 
         $schedule_item = array(
-            'start' => $stream_buffer_start,
-            'end' => $stream_buffer_start,
-            'uri' => $uri,
-            'row_id' => $item["id"],
-            'type' => 'stream_buffer_start',
+            'start'             => $stream_buffer_start,
+            'end'               => $stream_buffer_start,
+            'uri'               => $uri,
+            'row_id'            => $item["id"],
+            'type'              => 'stream_buffer_start',
             'independent_event' => true
         );
 
         self::appendScheduleItem($data, $start, $schedule_item);
 
         $schedule_item = array(
-            'id' => $media_id,
-            'type' => 'stream_output_start',
-            'row_id' => $item["id"],
-            'uri' => $uri,
-            'start' => $start,
-            'end' => $end,
-            'show_name' => $item["show_name"],
+            'id'                => $media_id,
+            'type'              => 'stream_output_start',
+            'row_id'            => $item["id"],
+            'uri'               => $uri,
+            'start'             => $start,
+            'end'               => $end,
+            'show_name'         => $item["show_name"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -688,19 +696,19 @@ SQL;
         $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
 
         $schedule_item = array(
-            'start' => $stream_end,
-            'end' => $stream_end,
-            'uri' => $uri,
-            'type' => 'stream_buffer_end',
+            'start'             => $stream_end,
+            'end'               => $stream_end,
+            'uri'               => $uri,
+            'type'              => 'stream_buffer_end',
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
 
         $schedule_item = array(
-            'start' => $stream_end,
-            'end' => $stream_end,
-            'uri' => $uri,
-            'type' => 'stream_output_end',
+            'start'             => $stream_end,
+            'end'               => $stream_end,
+            'uri'               => $uri,
+            'type'              => 'stream_output_end',
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
@@ -942,7 +950,8 @@ SQL;
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null)
+    public static function addUpdateShow($data, $controller, $validateStartDate,
+        $originalStartDate=null, $update=false, $instanceId=null)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -1076,6 +1085,7 @@ SQL;
                 }
             } else {
                 if ($isAdminOrPM) {
+                    Logging::info( $data );
                     Application_Model_Show::create($data);
                 }
 
@@ -1086,12 +1096,12 @@ SQL;
                 return true;
             }
         } else {
-            $controller->view->what = $formWhat;
-            $controller->view->when = $formWhen;
+            $controller->view->what    = $formWhat;
+            $controller->view->when    = $formWhen;
             $controller->view->repeats = $formRepeats;
-            $controller->view->who = $formWho;
-            $controller->view->style = $formStyle;
-            $controller->view->live = $formLive;
+            $controller->view->who     = $formWho;
+            $controller->view->style   = $formStyle;
+            $controller->view->live    = $formLive;
 
             if (!$isSaas) {
                 $controller->view->rr = $formRecord;
@@ -1104,47 +1114,52 @@ SQL;
         }
     }
 
-    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null)
+    public static function checkOverlappingShows($show_start, $show_end,
+        $update=false, $instanceId=null)
     {
-        global $CC_CONFIG;
-
         $overlapping = false;
-
-        $con = Propel::getConnection();
-
         /* If a show is being edited, exclude it from the query
          * In both cases (new and edit) we only grab shows that
          * are scheduled 2 days prior
          */
         //$se = $show_end->format('Y-m-d H:i:s');
         if ($update) {
-            $stmt = $con->prepare("SELECT id, starts, ends FROM {$CC_CONFIG['showInstances']}
-                    where (ends <= :show_end1
-                    or starts <= :show_end2)
-                    and date(starts) >= (date(:show_end3) - INTERVAL '2 days')
-                    and modified_instance = false and id != :instanceId order by ends");
-            
-            $stmt->execute(array(
-                ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end3'     => $show_end->format('Y-m-d H:i:s'),
-                ':instanceId'    => $instanceId
-            ));
+            $sql = <<<SQL
+SELECT id,
+       starts,
+       ends
+FROM cc_show_instances
+WHERE (ends <= :show_end1
+       OR starts <= :show_end2)
+  AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
+  AND modified_instance = FALSE
+  AND id != :instanceId
+ORDER BY ends
+SQL;
+            $rows = Application_Common_Database::prepareAndExecute($sql, array(
+                ':show_end1'  => $show_end->format('Y-m-d H:i:s'),
+                ':show_end2'  => $show_end->format('Y-m-d H:i:s'),
+                ':show_end3'  => $show_end->format('Y-m-d H:i:s'),
+                ':instanceId' => $instanceId
+            ), 'all');
         } else {
-            $stmt = $con->prepare("SELECT id, starts, ends FROM
-                    {$CC_CONFIG['showInstances']}
-                    where (ends <= :show_end1 or starts <= :show_end2)
-                    and date(starts) >= (date(:show_end3) - INTERVAL '2 days')
-                    and modified_instance = false order by ends");
+            $sql = <<<SQL
+SELECT id,
+       starts,
+       ends
+FROM cc_show_instances
+WHERE (ends <= :show_end1
+       OR starts <= :show_end2)
+  AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
+  AND modified_instance = FALSE
+ORDER BY ends
+SQL;
 
-            $stmt->execute(array(
-                ':show_end1'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end2'     => $show_end->format('Y-m-d H:i:s'),
-                ':show_end3'     => $show_end->format('Y-m-d H:i:s')
-            ));
+            $rows = Application_Common_Database::prepareAndExecute($sql, array(
+                ':show_end1' => $show_end->format('Y-m-d H:i:s'),
+                ':show_end2' => $show_end->format('Y-m-d H:i:s'),
+                ':show_end3' => $show_end->format('Y-m-d H:i:s')), 'all');
         }
-        $rows = $stmt->fetchAll();
-
         foreach ($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
             $end   = new DateTime($row["ends"], new DateTimeZone('UTC'));

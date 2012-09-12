@@ -192,12 +192,8 @@ class Application_Model_Datatables
                         $r['length'] = $pl->getLength();
                     } elseif ($r['ftype'] == "block") {
                         $bl = new Application_Model_Block($r['id']);
-                        if ($bl->isStatic()) {
-                            $r['bl_type'] = 'static';
-                        } else {
-                            $r['bl_type'] = 'dynamic';
-                        }
-                        $r['length'] = $bl->getLength();
+                        $r['bl_type'] = $bl->isStatic() ? 'static' : 'dynamic';
+                        $r['length']  = $bl->getLength();
                     }
                 }
             }

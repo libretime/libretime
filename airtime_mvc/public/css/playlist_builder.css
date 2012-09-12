@@ -22,12 +22,12 @@
 	clear: left;
 }
 
-#side_playlist button {
+/*#side_playlist button {
     float: left;
     font-size: 12px;
     height: 28px;
     margin: 0 7px 20px 0;
-}
+}*/	
 
 #side_playlist input, 
 #side_playlist textarea {
@@ -48,11 +48,11 @@
 	margin-bottom:0;
 }
 
-#side_playlist li {
+/*#side_playlist li {
 	width: 99.5%;
 	margin-bottom:-1px;
 	position:relative;
-}
+}*/
 
 #side_playlist li div.list-item-container, #side_playlist li div.list-item-container.ui-state-active {
 	height:56px;
@@ -479,3 +479,4 @@ div.helper li {
 li.spl_empty {
     height: 56px;
 }
+

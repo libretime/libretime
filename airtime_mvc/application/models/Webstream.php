@@ -46,7 +46,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
 
             return $di->format("%Hh %Im");
-        }
+        } 
 
         return "";
     }

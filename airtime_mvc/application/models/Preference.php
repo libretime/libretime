@@ -226,11 +226,7 @@ class Application_Model_Preference
     public static function GetDefaultTransitionFade()
     {
         $transition_fade = self::getValue("default_transition_fade");
-        if ($transition_fade == "") {
-            $transition_fade = "00.000000";
-        }
-
-        return $transition_fade;
+        return ($transition_fade == "") ? "00.000000" : $transition_fade;
     }
 
     public static function SetStreamLabelFormat($type)
@@ -332,11 +328,7 @@ class Application_Model_Preference
     public static function GetAllow3rdPartyApi()
     {
         $val = self::getValue("third_party_api");
-        if (strlen($val) == 0) {
-            return "0";
-        } else {
-            return $val;
-        }
+        return (strlen($val) == 0 ) ? "0" : $val;
     }
 
     public static function SetPhone($phone)
@@ -447,6 +439,8 @@ class Application_Model_Preference
             $image = @file_get_contents($imagePath);
             $image = base64_encode($image);
             self::setValue("logoImage", $image);
+        } else {
+            Logging::warn("Attempting to set imagePath to empty string");
         }
     }
 
@@ -786,11 +780,7 @@ class Application_Model_Preference
     public static function GetWeekStartDay()
     {
         $val = self::getValue("week_start_day");
-        if (strlen($val) == 0) {
-            return "0";
-        } else {
-            return $val;
-        }
+        return (strlen($val) == 0) ? "0" : $val;
     }
 
     /**
@@ -808,11 +798,7 @@ class Application_Model_Preference
     public static function GetStreamUpdateTimestemp()
     {
         $update_time = self::getValue("stream_update_timestamp");
-        if ($update_time == null) {
-            $update_time = 0;
-        }
-
-        return $update_time;
+        return ($update_time == null) ? 0 : $update_time;
     }
 
     public static function GetClientId()
@@ -824,6 +810,8 @@ class Application_Model_Preference
     {
         if (is_numeric($id)) {
             self::setValue("client_id", $id);
+        } else {
+            Logging::warn("Attempting to set client_id to invalid value: $id");
         }
     }
 
@@ -894,11 +882,7 @@ class Application_Model_Preference
     public static function GetCalendarTimeInterval()
     {
         $val = self::getValue("calendar_time_interval", true /* user specific */);
-        if (strlen($val) == 0) {
-            $val = "30";
-        }
-
-        return $val;
+        return (strlen($val) == 0) ? "30" : $val;
     }
 
     public static function SetDiskQuota($value)
@@ -909,11 +893,7 @@ class Application_Model_Preference
     public static function GetDiskQuota()
     {
         $val = self::getValue("disk_quota");
-        if (strlen($val) == 0) {
-            $val = "0";
-        }
-
-        return $val;
+        return (strlen($val) == 0) ? 0 : $val;
     }
 
     public static function SetLiveSteamMasterUsername($value)
@@ -944,11 +924,7 @@ class Application_Model_Preference
     public static function GetSourceStatus($sourcename)
     {
         $value = self::getValue($sourcename);
-        if ($value == null || $value == "false") {
-            return false;
-        } else {
-            return true;
-        }
+        return !($value == null || $value == "false");
     }
 
     public static function SetSourceSwitchStatus($sourcename, $status)
@@ -959,11 +935,7 @@ class Application_Model_Preference
     public static function GetSourceSwitchStatus($sourcename)
     {
         $value = self::getValue($sourcename."_switch");
-        if ($value == null || $value == "off") {
-            return "off";
-        } else {
-            return "on";
-        }
+        return ($value == null || $value == "off") ? 'off' : 'on';
     }
 
     public static function SetMasterDJSourceConnectionURL($value)
@@ -1036,12 +1008,7 @@ class Application_Model_Preference
     public static function GetEnableSystemEmail()
     {
         $v =  self::getValue("enable_system_email");
-
-        if ($v === "") {
-            return 0;
-        }
-
-        return $v;
+        return ($v === "") ?  0 : $v;
     }
 
     public static function SetSystemEmail($value)

@@ -43,7 +43,7 @@ class Application_Model_StoredFile
         "bit_rate"     => "DbBitRate",
         "sample_rate"  => "DbSampleRate",
         "mime"         => "DbMime",
-        "md5"          => "DbMd5",
+        //"md5"          => "DbMd5",
         "ftype"        => "DbFtype",
         "language"     => "DbLanguage",
         "replay_gain"  => "DbReplayGain",
@@ -82,6 +82,12 @@ class Application_Model_StoredFile
          * column in this case it is OK.
          */
         $this->_file->save();
+    }
+
+    public static function createWithFile($f) {
+        $storedFile        = new Application_Model_StoredFile();
+        $storedFile->_file = $f;
+        return $storedFile;
     }
 
     /**
@@ -226,6 +232,7 @@ class Application_Model_StoredFile
             return;
         }
         if (isset($this->_dbMD[$p_category])) {
+            // TODO : fix this crust -- RG
             $propelColumn = $this->_dbMD[$p_category];
             $method = "set$propelColumn";
             $this->_file->$method($p_value);
@@ -315,12 +322,13 @@ class Application_Model_StoredFile
      */
     public function getPlaylists()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
 
-        $sql = "SELECT playlist_id "
-            ." FROM cc_playlist"
-            ." WHERE file_id = :file_id";
+        $sql = <<<SQL
+SELECT playlist_id
+FROM cc_playlist
+WHERE file_id = :file_id
+SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':file_id', $this->id, PDO::PARAM_INT);
@@ -332,14 +340,13 @@ class Application_Model_StoredFile
             throw new Exception("Error: $msg");
         }
 
-        $playlists = array();
         if (is_array($ids) && count($ids) > 0) {
-            foreach ($ids as $id) {
-                $playlists[] = Application_Model_Playlist::Recall($id);
-            }
+            return array_map( function ($id) {
+                return Application_Model_Playlist::Recall($id);
+            }, $ids);
+        } else {
+            return array();
         }
-
-        return $playlists;
     }
 
     /**
@@ -533,79 +540,27 @@ class Application_Model_StoredFile
         return $storedFile;
     }
 
-    /**
-     * Fetch instance of StoreFile object.<br>
-     * Should be supplied with only ONE parameter, all the rest should
-     * be NULL.
-     *
-     * @param int $p_id
-     *         local id
-     * @param string $p_gunid - TODO: Remove this!
-     *         global unique id of file
-     * @param string $p_md5sum
-     *    MD5 sum of the file
-     * @param boolean $exist
-     *    When this is true, it check against only files with file_exist is 'true'
-     * @return Application_Model_StoredFile|NULL
-     *    Return NULL if the object doesnt exist in the DB.
-     */
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null, $exist=false)
-    {
-        if (isset($p_id)) {
-            $file = CcFilesQuery::create()->findPK(intval($p_id));
-        } elseif (isset($p_md5sum)) {
-            if ($exist) {
-                $file = CcFilesQuery::create()
-                            ->filterByDbMd5($p_md5sum)
-                            ->filterByDbFileExists(true)
-                            ->findOne();
-            } else {
-                $file = CcFilesQuery::create()
-                            ->filterByDbMd5($p_md5sum)
-                            ->findOne();
-            }
-        } elseif (isset($p_filepath)) {
-            $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
-
-            if (is_null($path_info)) {
-                return null;
-            }
-            $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
-
-            $file = CcFilesQuery::create()
-                            ->filterByDbDirectory($music_dir->getId())
-                            ->filterByDbFilepath($path_info[1])
-                            ->findOne();
+    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null,
+        $p_filepath=null) {
+        if( isset($p_id ) ) { 
+           $f =  CcFilesQuery::create()->findPK(intval($p_id));
+           return is_null($f) ? null : self::createWithFile($f);
+        } elseif ( isset($p_gunid) ) { 
+            throw new Exception("You should never use gunid ($gunid) anymore");
+        } elseif ( isset($p_md5sum) ) {
+            throw new Exception("Searching by md5($p_md5sum) is disabled");
+        } elseif ( isset($p_filepath) ) {
+            return is_null($f) ? null : self::createWithFile(
+                Application_Model_StoredFile::RecallByFilepath($p_filepath));
         } else {
-            return null;
-        }
-
-        if (isset($file)) {
-            $storedFile = new Application_Model_StoredFile();
-            $storedFile->_file = $file;
-
-            return $storedFile;
-        } else {
-            return null;
+            throw new Exception("No arguments passsed to Recall");
         }
     }
 
     public function getName()
     {
         $info = pathinfo($this->getFilePath());
-
         return $info['filename'];
-    }
-
-    /**
-     * Fetch the Application_Model_StoredFile by looking up the MD5 value.
-     *
-     * @param  string                            $p_md5sum
-     * @return Application_Model_StoredFile|NULL
-     */
-    public static function RecallByMd5($p_md5sum, $exist=false)
-    {
-        return Application_Model_StoredFile::Recall(null, null, $p_md5sum, null, $exist);
     }
 
     /**
@@ -616,7 +571,18 @@ class Application_Model_StoredFile
      */
     public static function RecallByFilepath($p_filepath)
     {
-        return Application_Model_StoredFile::Recall(null, null, null, $p_filepath);
+        $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
+
+        if (is_null($path_info)) {
+            return null;
+        }
+
+        $music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
+        $file = CcFilesQuery::create()
+                        ->filterByDbDirectory($music_dir->getId())
+                        ->filterByDbFilepath($path_info[1])
+                        ->findOne();
+        return is_null($file) ? null : self::createWithFile($file);
     }
 
     public static function RecallByPartialFilepath($partial_path)
@@ -649,7 +615,7 @@ class Application_Model_StoredFile
         $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
             "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
             "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "filepath", "owner", "conductor", "replay_gain", "lptime"
+            "language", "filepath", "owner_id", "conductor", "replay_gain", "lptime"
         );
 
         //Logging::info($datatables);
@@ -680,7 +646,7 @@ class Application_Model_StoredFile
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "login AS ".$key;
-            } elseif ($key === "owner") {
+            } elseif ($key === "owner_id") {
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = "sub.login AS $key";
@@ -1024,11 +990,8 @@ class Application_Model_StoredFile
 
     public static function getFileCount()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-
         $sql = "SELECT count(*) as cnt FROM cc_files WHERE file_exists";
-
         return $con->query($sql)->fetchColumn(0);
     }
 
@@ -1101,10 +1064,14 @@ class Application_Model_StoredFile
         try {
             $con = Propel::getConnection();
 
-            $sql = "SELECT soundcloud_id as id, soundcloud_upload_time"
-                    ." FROM CC_FILES"
-                    ." WHERE (id != -2 and id != -3) and"
-                    ." (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))";
+            $sql = <<<SQL
+SELECT soundcloud_id AS id,
+       soundcloud_upload_time
+FROM CC_FILES
+WHERE (id != -2
+       AND id != -3)
+  AND (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))
+SQL;
 
             $rows = $con->query($sql)->fetchAll();
 

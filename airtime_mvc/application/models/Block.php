@@ -26,61 +26,61 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      * info needed to insert a new block element.
      */
     private $blockItem = array(
-            "id" => "",
-            "pos" => "",
+            "id"         => "",
+            "pos"        => "",
             "cliplength" => "",
-            "cuein" => "00:00:00",
-            "cueout" => "00:00:00",
-            "fadein" => "0.0",
-            "fadeout" => "0.0",
+            "cuein"      => "00:00:00",
+            "cueout"     => "00:00:00",
+            "fadein"     => "0.0",
+            "fadeout"    => "0.0",
     );
 
     //using propel's phpNames.
     private $categories = array(
-            "dc:title" => "Name",
-            "dc:creator" => "Creator",
+            "dc:title"       => "Name",
+            "dc:creator"     => "Creator",
             "dc:description" => "Description",
             "dcterms:extent" => "Length"
     );
 
     private static $modifier2CriteriaMap = array(
-            "contains" => Criteria::ILIKE,
+            "contains"         => Criteria::ILIKE,
             "does not contain" => Criteria::NOT_ILIKE,
-            "is" => Criteria::EQUAL,
-            "is not" => Criteria::NOT_EQUAL,
-            "starts with" => Criteria::ILIKE,
-            "ends with" => Criteria::ILIKE,
-            "is greater than" => Criteria::GREATER_THAN,
-            "is less than" => Criteria::LESS_THAN,
-            "is in the range" => Criteria::CUSTOM);
+            "is"               => Criteria::EQUAL,
+            "is not"           => Criteria::NOT_EQUAL,
+            "starts with"      => Criteria::ILIKE,
+            "ends with"        => Criteria::ILIKE,
+            "is greater than"  => Criteria::GREATER_THAN,
+            "is less than"     => Criteria::LESS_THAN,
+            "is in the range"  => Criteria::CUSTOM);
 
     private static $criteria2PeerMap = array(
-            0 => "Select criteria",
-            "album_title" => "DbAlbumTitle",
-            "artist_name" => "DbArtistName",
-            "bit_rate" => "DbBitRate",
-            "bpm" => "DbBpm",
-            "comments" => "DbComments",
-            "composer" => "DbComposer",
-            "conductor" => "DbConductor",
-            "utime" => "DbUtime",
-            "mtime" => "DbMtime",
-            "lptime" => "DbLPtime",
-            "disc_number" => "DbDiscNumber",
-            "genre" => "DbGenre",
-            "isrc_number" => "DbIsrcNumber",
-            "label" => "DbLabel",
-            "language" => "DbLanguage",
-            "length" => "DbLength",
-            "lyricist" => "DbLyricist",
-            "mood" => "DbMood",
-            "name" => "DbName",
-            "orchestra" => "DbOrchestra",
-            "rating" => "DbRating",
-            "sample_rate" => "DbSampleRate",
-            "track_title" => "DbTrackTitle",
+            0              => "Select criteria",
+            "album_title"  => "DbAlbumTitle",
+            "artist_name"  => "DbArtistName",
+            "bit_rate"     => "DbBitRate",
+            "bpm"          => "DbBpm",
+            "composer"     => "DbComposer",
+            "conductor"    => "DbConductor",
+            "copyright"    => "DbCopyright",
+            "encoded_by"   => "DbEncodedBy",
+            "utime"        => "DbUtime",
+            "mtime"        => "DbMtime",
+            "lptime"       => "DbLPtime",
+            "genre"        => "DbGenre",
+            "info_url"     => "DbInfoUrl",
+            "isrc_number"  => "DbIsrcNumber",
+            "label"        => "DbLabel",
+            "language"     => "DbLanguage",
+            "length"       => "DbLength",
+            "mime"         => "DbMime",
+            "mood"         => "DbMood",
+            "owner_id"     => "DbOwnerId",
+            "replay_gain"  => "DbReplayGain",
+            "sample_rate"  => "DbSampleRate",
+            "track_title"  => "DbTrackTitle",
             "track_number" => "DbTrackNumber",
-            "year" => "DbYear"
+            "year"         => "DbYear"
     );
 
     public function __construct($id=null, $con=null)
@@ -191,14 +191,28 @@ class Application_Model_Block implements Application_Model_LibraryEditable
         Logging::info("Getting contents for block {$this->id}");
 
         $files = array();
-        $sql = <<<"EOT"
-    SELECT pc.id as id, pc.position, pc.cliplength as length, pc.cuein, pc.cueout, pc.fadein, pc.fadeout, bl.type, f.length as orig_length,
-    f.id as item_id, f.track_title, f.artist_name as creator, f.file_exists as exists, f.filepath as path, f.mime as mime FROM cc_blockcontents AS pc
-    LEFT JOIN cc_files AS f ON pc.file_id=f.id
-    LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
-    WHERE pc.block_id = :block_id
-    ORDER BY pc.position;
-EOT;
+        $sql = <<<SQL
+SELECT pc.id AS id,
+       pc.position,
+       pc.cliplength AS LENGTH,
+       pc.cuein,
+       pc.cueout,
+       pc.fadein,
+       pc.fadeout,
+       bl.type,
+       f.LENGTH AS orig_length,
+       f.id AS item_id,
+       f.track_title,
+       f.artist_name AS creator,
+       f.file_exists AS EXISTS,
+       f.filepath AS path,
+       f.mime as mime
+FROM cc_blockcontents AS pc
+LEFT JOIN cc_files AS f ON pc.file_id=f.id
+LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
+WHERE pc.block_id = :block_id
+ORDER BY pc.position;
+SQL;
 
         $rows = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id));
 
@@ -290,20 +304,20 @@ EOT;
             $hour = "00";
             if ($modifier == "minutes") {
                 if ($value >59) {
-                    $hour = intval($value/60);
+                    $hour  = intval($value/60);
                     $value = $value%60;
 
                 }
             } elseif ($modifier == "hours") {
                 $mins = $value * 60;
                 if ($mins >59) {
-                    $hour = intval($mins/60);
-                    $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
+                    $hour  = intval($mins/60);
+                    $hour  = str_pad($hour, 2, "0", STR_PAD_LEFT);
                     $value = $mins%60;
                 }
             }
-            $hour = str_pad($hour, 2, "0", STR_PAD_LEFT);
-            $value = str_pad($value, 2, "0", STR_PAD_LEFT);
+            $hour   = str_pad($hour, 2, "0", STR_PAD_LEFT);
+            $value  = str_pad($value, 2, "0", STR_PAD_LEFT);
             $length = $hour.":".$value.":00";
         }
 
@@ -315,7 +329,7 @@ EOT;
         $result = CcBlockcriteriaQuery::create()->filterByDbBlockId($this->id)
                 ->filterByDbCriteria('limit')->findOne();
         $modifier = $result->getDbModifier();
-        $value = $result->getDbValue();
+        $value    = $result->getDbValue();
 
         return array($value, $modifier);
     }
@@ -323,10 +337,12 @@ EOT;
     // this function returns sum of all track length under this block.
     public function getStaticLength()
     {
-        $sql = "SELECT SUM(cliplength) as length FROM cc_blockcontents WHERE block_id = :block_id";
+        $sql = <<<SQL
+SELECT SUM(cliplength) AS LENGTH
+FROM cc_blockcontents
+WHERE block_id = :block_id
+SQL;
         $result = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id), 'all', PDO::FETCH_NUM);
-        Logging::info($result);
-        
         return $result[0][0];
     }
 
@@ -357,11 +373,11 @@ EOT;
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
         if (isset($file) && $file->getDbFileExists()) {
-            $entry = $this->blockItem;
-            $entry["id"] = $file->getDbId();
-            $entry["pos"] = $pos;
+            $entry               = $this->blockItem;
+            $entry["id"]         = $file->getDbId();
+            $entry["pos"]        = $pos;
             $entry["cliplength"] = $file->getDbLength();
-            $entry["cueout"] = $file->getDbLength();
+            $entry["cueout"]     = $file->getDbLength();
 
             return $entry;
         } else {
@@ -736,10 +752,10 @@ EOT;
                 throw new Exception("Block item does not exist.");
             }
 
-            $oldCueIn = $row->getDBCuein();
+            $oldCueIn  = $row->getDBCuein();
             $oldCueOut = $row->getDbCueout();
-            $fadeIn = $row->getDbFadein();
-            $fadeOut = $row->getDbFadeout();
+            $fadeIn    = $row->getDbFadein();
+            $fadeOut   = $row->getDbFadeout();
 
             $file = $row->getCcFiles($this->con);
             $origLength = $file->getDbLength();
@@ -1038,18 +1054,14 @@ EOT;
     public function hasItemLimit()
     {
         list($value, $modifier) = $this->getLimitValueAndModifier();
-        if ($modifier == 'items') {
-            return true;
-        } else {
-            return false;
-        }
+        return ($modifier == 'items');
     }
 
     public function storeCriteriaIntoDb($p_criteriaData)
     {
         // delete criteria under $p_blockId
         CcBlockcriteriaQuery::create()->findByDbBlockId($this->id)->delete();
-        Logging::info($p_criteriaData);
+        //Logging::info($p_criteriaData);
         //insert modifier rows
         if (isset($p_criteriaData['criteria'])) {
             $critKeys = array_keys($p_criteriaData['criteria']);
@@ -1114,12 +1126,12 @@ EOT;
 
     public function getListOfFilesUnderLimit()
     {
-        $info = $this->getListofFilesMeetCriteria();
-        $files = $info['files'];
-        $limit = $info['limit'];
+        $info       = $this->getListofFilesMeetCriteria();
+        $files      = $info['files'];
+        $limit      = $info['limit'];
 
         $insertList = array();
-        $totalTime = 0;
+        $totalTime  = 0;
         $totalItems = 0;
 
         // this moves the pointer to the first element in the collection
@@ -1145,32 +1157,32 @@ EOT;
     public function getCriteria()
     {
         $criteriaOptions = array(
-                0 => "Select criteria",
-                "album_title" => "Album",
-                "bit_rate" => "Bit Rate",
-                "bpm" => "Bpm",
-                "comments" => "Comments",
-                "composer" => "Composer",
-                "conductor" => "Conductor",
-                "artist_name" => "Creator",
-                "disc_number" => "Disc Number",
-                "genre" => "Genre",
-                "isrc_number" => "ISRC",
-                "label" => "Label",
-                "language" => "Language",
-                "mtime" => "Last Modified",
-                "lptime" => "Last Played",
-                "length" => "Length",
-                "lyricist" => "Lyricist",
-                "mood" => "Mood",
-                "name" => "Name",
-                "orchestra" => "Orchestra",
-                "rating" => "Rating",
-                "sample_rate" => "Sample Rate",
-                "track_title" => "Title",
+                0              => "Select criteria",
+                "album_title"  => "Album",
+                "bit_rate"     => "Bit Rate (Kbps)",
+                "bpm"          => "BPM",
+                "composer"     => "Composer",
+                "conductor"    => "Conductor",
+                "copyright"    => "Copyright",
+                "artist_name"  => "Creator",
+                "encoded_by"   => "Encoded By",
+                "genre"        => "Genre",
+                "isrc_number"  => "ISRC",
+                "label"        => "Label",
+                "language"     => "Language",
+                "mtime"        => "Last Modified",
+                "lptime"       => "Last Played",
+                "length"       => "Length",
+                "mime"         => "Mime",
+                "mood"         => "Mood",
+                "owner_id"     => "Owner",
+                "replay_gain"  => "Replay Gain",
+                "sample_rate"  => "Sample Rate (kHz)",
+                "track_title"  => "Title",
                 "track_number" => "Track Number",
-                "utime" => "Uploaded",
-                "year" => "Year"
+                "utime"        => "Uploaded",
+                "info_url"     => "Website",
+                "year"         => "Year"
         );
 
         // Load criteria from db
@@ -1200,12 +1212,13 @@ EOT;
         $storedCrit = $this->getCriteria();
 
         $qry = CcFilesQuery::create();
+        $qry->useFkOwnerQuery("subj", "left join");
 
         if (isset($storedCrit["crit"])) {
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
                 foreach ($crit as $criteria) {
-                    $spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
+                    //$spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
@@ -1274,6 +1287,9 @@ EOT;
                     $spCriteriaModifier = self::$modifier2CriteriaMap[$spCriteriaModifier];
 
                     try {
+                        if ($spCriteria == "owner_id") {
+                            $spCriteria = "subj.login";
+                        }
                         if ($i > 0) {
                             $qry->addOr($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         } else {
