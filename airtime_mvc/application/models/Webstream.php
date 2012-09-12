@@ -207,7 +207,6 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 return false;
             }
         }
-
         return true;
     }
 
