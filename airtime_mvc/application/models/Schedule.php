@@ -626,21 +626,21 @@ SQL;
     private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end = self::AirtimeTimeToPypoTime($item["end"]);
+        $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
         $schedule_item = array(
-            'id' => $media_id,
-            'type' => 'file',
-            'row_id' => $item["id"],
-            'uri' => $uri,
-            'fade_in' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
-            'fade_out' => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
-            'cue_in' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-            'cue_out' => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-            'start' => $start,
-            'end' => $end,
-            'show_name' => $item["show_name"],
-            'replay_gain' => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
+            'id'                => $media_id,
+            'type'              => 'file',
+            'row_id'            => $item["id"],
+            'uri'               => $uri,
+            'fade_in'           => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
+            'fade_out'          => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
+            'cue_in'            => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
+            'cue_out'           => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
+            'start'             => $start,
+            'end'               => $end,
+            'show_name'         => $item["show_name"],
+            'replay_gain'       => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -649,7 +649,7 @@ SQL;
     private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end = self::AirtimeTimeToPypoTime($item["end"]);
+        $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
         //create an event to start stream buffering 5 seconds ahead of the streams actual time.
         $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
@@ -658,24 +658,24 @@ SQL;
         $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
 
         $schedule_item = array(
-            'start' => $stream_buffer_start,
-            'end' => $stream_buffer_start,
-            'uri' => $uri,
-            'row_id' => $item["id"],
-            'type' => 'stream_buffer_start',
+            'start'             => $stream_buffer_start,
+            'end'               => $stream_buffer_start,
+            'uri'               => $uri,
+            'row_id'            => $item["id"],
+            'type'              => 'stream_buffer_start',
             'independent_event' => true
         );
 
         self::appendScheduleItem($data, $start, $schedule_item);
 
         $schedule_item = array(
-            'id' => $media_id,
-            'type' => 'stream_output_start',
-            'row_id' => $item["id"],
-            'uri' => $uri,
-            'start' => $start,
-            'end' => $end,
-            'show_name' => $item["show_name"],
+            'id'                => $media_id,
+            'type'              => 'stream_output_start',
+            'row_id'            => $item["id"],
+            'uri'               => $uri,
+            'start'             => $start,
+            'end'               => $end,
+            'show_name'         => $item["show_name"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -688,19 +688,19 @@ SQL;
         $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
 
         $schedule_item = array(
-            'start' => $stream_end,
-            'end' => $stream_end,
-            'uri' => $uri,
-            'type' => 'stream_buffer_end',
+            'start'             => $stream_end,
+            'end'               => $stream_end,
+            'uri'               => $uri,
+            'type'              => 'stream_buffer_end',
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
 
         $schedule_item = array(
-            'start' => $stream_end,
-            'end' => $stream_end,
-            'uri' => $uri,
-            'type' => 'stream_output_end',
+            'start'             => $stream_end,
+            'end'               => $stream_end,
+            'uri'               => $uri,
+            'type'              => 'stream_output_end',
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
@@ -942,7 +942,8 @@ SQL;
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null)
+    public static function addUpdateShow($data, $controller, $validateStartDate,
+        $originalStartDate=null, $update=false, $instanceId=null)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -1076,6 +1077,7 @@ SQL;
                 }
             } else {
                 if ($isAdminOrPM) {
+                    Logging::info( $data );
                     Application_Model_Show::create($data);
                 }
 
@@ -1086,12 +1088,12 @@ SQL;
                 return true;
             }
         } else {
-            $controller->view->what = $formWhat;
-            $controller->view->when = $formWhen;
+            $controller->view->what    = $formWhat;
+            $controller->view->when    = $formWhen;
             $controller->view->repeats = $formRepeats;
-            $controller->view->who = $formWho;
-            $controller->view->style = $formStyle;
-            $controller->view->live = $formLive;
+            $controller->view->who     = $formWho;
+            $controller->view->style   = $formStyle;
+            $controller->view->live    = $formLive;
 
             if (!$isSaas) {
                 $controller->view->rr = $formRecord;
@@ -1104,7 +1106,8 @@ SQL;
         }
     }
 
-    public static function checkOverlappingShows($show_start, $show_end, $update=false, $instanceId=null)
+    public static function checkOverlappingShows($show_start, $show_end,
+        $update=false, $instanceId=null)
     {
         $overlapping = false;
         /* If a show is being edited, exclude it from the query
