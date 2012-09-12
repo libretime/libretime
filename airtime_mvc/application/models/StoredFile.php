@@ -43,7 +43,7 @@ class Application_Model_StoredFile
         "bit_rate"     => "DbBitRate",
         "sample_rate"  => "DbSampleRate",
         "mime"         => "DbMime",
-        "md5"          => "DbMd5",
+        //"md5"          => "DbMd5",
         "ftype"        => "DbFtype",
         "language"     => "DbLanguage",
         "replay_gain"  => "DbReplayGain",
@@ -540,47 +540,6 @@ SQL;
         return $storedFile;
     }
 
-    //public static function Recall2($p_id=null, $p_gunid=null, $p_md5sum=null, $p_filepath=null, $exist=false)
-    //{
-        //if (isset($p_id)) {
-            //$file = CcFilesQuery::create()->findPK(intval($p_id));
-        //} elseif (isset($p_md5sum)) {
-            //if ($exist) {
-                //$file = CcFilesQuery::create()
-                            //->filterByDbMd5($p_md5sum)
-                            //->filterByDbFileExists(true)
-                            //->findOne();
-            //} else {
-                //$file = CcFilesQuery::create()
-                            //->filterByDbMd5($p_md5sum)
-                            //->findOne();
-            //}
-        //} elseif (isset($p_filepath)) {
-            //$path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
-
-            //if (is_null($path_info)) {
-                //return null;
-            //}
-            //$music_dir = Application_Model_MusicDir::getDirByPath($path_info[0]);
-
-            //$file = CcFilesQuery::create()
-                            //->filterByDbDirectory($music_dir->getId())
-                            //->filterByDbFilepath($path_info[1])
-                            //->findOne();
-        //} else {
-            //return null;
-        //}
-
-        //if (isset($file)) {
-            //$storedFile = new Application_Model_StoredFile();
-            //$storedFile->_file = $file;
-
-            //return $storedFile;
-        //} else {
-            //return null;
-        //}
-    //}
-
     public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null,
         $p_filepath=null) {
         if( isset($p_id ) ) { 
@@ -602,17 +561,6 @@ SQL;
     {
         $info = pathinfo($this->getFilePath());
         return $info['filename'];
-    }
-
-    /**
-     * Fetch the Application_Model_StoredFile by looking up the MD5 value.
-     *
-     * @param  string                            $p_md5sum
-     * @return Application_Model_StoredFile|NULL
-     */
-    public static function RecallByMd5($p_md5sum, $exist=false)
-    {
-        return Application_Model_StoredFile::Recall(null, null, $p_md5sum, null, $exist);
     }
 
     /**
