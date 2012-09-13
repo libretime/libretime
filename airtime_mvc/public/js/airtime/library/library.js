@@ -353,7 +353,7 @@ var AIRTIME = (function(AIRTIME) {
                     var label = "";
                     if (ele.mDataProp == "bit_rate") {
                         label = " (bps)";
-                    } else if (ele.mDataProp == "utime" || ele.mDataPro == "mtime" || ele.mDataPro == "lptime") {
+                    } else if (ele.mDataProp == "utime" || ele.mDataProp == "mtime" || ele.mDataProp == "lptime") {
                         label = " (yyyy-mm-dd)";
                     } else if (ele.mDataProp == "length") {
                         label = " (hh:mm:ss.t)";

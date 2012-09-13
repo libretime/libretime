@@ -58,7 +58,7 @@ def get_file_type(file_path):
     elif re.search(r'flac$', file_path, re.IGNORECASE):
         file_type = 'flac'
     else:
-        mime_type = get_mime_type(file_path) == "audio/mpeg"
+        mime_type = get_mime_type(file_path)
         if 'mpeg' in mime_type:
             file_type = 'mp3'
         elif 'ogg' in mime_type:

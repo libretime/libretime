@@ -298,7 +298,6 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
-        $modified = $this->_getParam('modified');
         $type = $this->_getParam('obj_type');
 
         try {
