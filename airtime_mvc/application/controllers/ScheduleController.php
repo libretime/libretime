@@ -392,7 +392,6 @@ class ScheduleController extends Zend_Controller_Action
     {
         $showInstanceId = $this->sched_sess->showInstanceId;
         $group_id = $this->_getParam('groupId');
-        $search = $this->_getParam('search', null);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
