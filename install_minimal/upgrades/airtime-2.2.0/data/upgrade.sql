@@ -1,6 +1,9 @@
 DELETE FROM cc_pref WHERE keystr = 'system_version';
 INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.2.0');
 
+--DELETE user column order prefs, since the number of columns has increased in 2.2
+DELETE FROM cc_pref where keystr = 'library_datatable';
+DELETE FROM cc_pref where keystr = 'timeline_datatable';
 
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_name', 'Airtime!', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_name', '', 'string');
