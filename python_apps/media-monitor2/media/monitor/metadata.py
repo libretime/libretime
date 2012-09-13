@@ -201,7 +201,7 @@ class Metadata(Loggable):
                 if new_val is not None:
                     self.__metadata[special_key] = new_val
             except Exception as e:
-                self.logger.info("Could not get special key %s for %d" %
+                self.logger.info("Could not get special key %s for %s" %
                         special_key, fpath)
                 self.logger.info(str(e))
         # Finally, we "normalize" all the metadata here:
