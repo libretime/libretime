@@ -255,8 +255,8 @@ def normalized_metadata(md, original_path):
     format_rules = {
         'MDATA_KEY_TRACKNUMBER' : parse_int,
         'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
-        #'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
+        'MDATA_KEY_MIME' : lambda x: x.replace('audio/vorbis','audio/ogg'),
     }
 
     new_md = remove_whitespace(new_md) # remove whitespace fields
