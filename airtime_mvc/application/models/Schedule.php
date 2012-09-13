@@ -789,6 +789,30 @@ SQL;
         }
     }
 
+    /**
+     * Purpose of this function is to iterate through the entire
+     * schedule array that was just built and fix the data up a bit. For
+     * example, if we have two consecutive webstreams, we don't need the
+     * first webstream to shutdown the output, when the second one will
+     * just switch it back on. Preventing this behaviour stops hiccups
+     * in output sound.
+     */
+    private static function filterData(&$data)
+    {
+        $previous_key = null;
+        $previous_val = null;
+        foreach ($data as $k => $v) {
+            if ($v["type"] == "stream_buffer_start"
+                && !is_null($previous_val)
+                && $previous_val["type"] == "stream_output_end") {
+
+                unset($data[$previous_key]);
+            }
+            $previous_key = $k;
+            $previous_val = $v;
+        }
+    }
+
     public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
     {
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
@@ -798,6 +822,8 @@ SQL;
 
         self::createInputHarborKickTimes($data, $range_start, $range_end);
         self::createScheduledEvents($data, $range_start, $range_end);
+
+        self::filterData($data["media"]);
 
         return $data;
     }
