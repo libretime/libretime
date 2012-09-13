@@ -564,7 +564,7 @@ class ApiController extends Zend_Controller_Action
         // to some unique id.
         $request     = $this->getRequest();
         $responses   = array();
-        //$params      = $request->getParams();
+        $params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
         foreach ($params as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at

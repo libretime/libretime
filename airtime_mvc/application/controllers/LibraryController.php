@@ -99,10 +99,7 @@ class LibraryController extends Zend_Controller_Action
     protected function playlistUnknownError($e)
     {
         $this->view->error = "Something went wrong.";
-
-        Logging::info("{$e->getFile()}");
-        Logging::info("{$e->getLine()}");
-        Logging::info("{$e->getMessage()}");
+        Logging::info($e->getMessage());
     }
 
     protected function createFullResponse($obj = null, $isJson = false)

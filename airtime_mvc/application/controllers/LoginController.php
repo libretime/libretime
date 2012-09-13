@@ -178,7 +178,7 @@ class LoginController extends Zend_Controller_Action
             $authAdapter->setIdentity($user->getDbLogin())
             ->setCredential($form->password->getValue());
 
-            $result = $zend_auth->authenticate($authAdapter);
+            $zend_auth->authenticate($authAdapter);
 
             //all info about this user from the login table omit only the password
             $userInfo = $authAdapter->getResultRowObject(null, 'password');

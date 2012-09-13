@@ -392,7 +392,6 @@ class ScheduleController extends Zend_Controller_Action
     {
         $showInstanceId = $this->sched_sess->showInstanceId;
         $group_id = $this->_getParam('groupId');
-        $search = $this->_getParam('search', null);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -530,9 +529,6 @@ class ScheduleController extends Zend_Controller_Action
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $showInstanceId = $this->_getParam('id');
-        // $type is used to determine if this edit is for the specific instance or for all
-        // repeating shows. It's value is either "instance","rebroadcast", or "all"
-        $type = $this->_getParam('type');
 
         $this->view->action = "edit-show";
         try {

@@ -446,7 +446,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             foreach ($data['criteria'] as $rowKey=>$row) {
                 foreach ($row as $key=>$d) {
                     $element = $this->getElement("sp_criteria_field_".$rowKey."_".$key);
-                    $error = array();
                     // check for not selected select box
                     if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0") {
                         $element->addError("You must select Criteria and Modifier");

@@ -34,7 +34,7 @@ class PlaylistController extends Zend_Controller_Action
         $obj = null;
         $objInfo = Application_Model_Library::getObjInfo($p_type);
 
-        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+        $obj_sess = new Zend_Session_Namespace( UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
         if (isset($obj_sess->id)) {
             $obj = new $objInfo['className']($obj_sess->id);
 
@@ -63,7 +63,8 @@ class PlaylistController extends Zend_Controller_Action
         unset($this->view->obj);
     }
 
-    private function createFullResponse($obj = null, $isJson = false, $formIsValid = false)
+    private function createFullResponse($obj = null, $isJson = false,
+        $formIsValid = false)
     {
         $isBlock = false;
         $viewPath = 'playlist/playlist.phtml';
@@ -141,10 +142,7 @@ class PlaylistController extends Zend_Controller_Action
     private function playlistUnknownError($e)
     {
         $this->view->error = "Something went wrong.";
-
-        Logging::info("{$e->getFile()}");
-        Logging::info("{$e->getLine()}");
-        Logging::info("{$e->getMessage()}");
+        Logging::info($e->getMessage());
     }
 
     private function wrongTypeToBlock($obj)
@@ -203,17 +201,18 @@ class PlaylistController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-        $ids = $this->_getParam('ids');
-        $ids = (!is_array($ids)) ? array($ids) : $ids;
+        $ids  = $this->_getParam('ids');
+        $ids  = (!is_array($ids)) ? array($ids) : $ids;
         $type = $this->_getParam('type');
 
-        $obj = null;
+        $obj      = null;
 
-        $objInfo = Application_Model_Library::getObjInfo($type);
+        $objInfo  = Application_Model_Library::getObjInfo($type);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
 
-        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+        $obj_sess = new Zend_Session_Namespace(
+            UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 
         try {
             Logging::info("Currently active {$type} {$obj_sess->id}");
