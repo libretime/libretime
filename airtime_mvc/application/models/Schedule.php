@@ -7,9 +7,8 @@ class Application_Model_Schedule
      *
      * @param string $p_fileId
      */
-    public function IsFileScheduledInTheFuture($p_fileId)
+    public static function IsFileScheduledInTheFuture($p_fileId)
     {
-        global $CC_CONFIG;
         $sql = <<<SQL
 SELECT COUNT(*)
 FROM cc_schedule
