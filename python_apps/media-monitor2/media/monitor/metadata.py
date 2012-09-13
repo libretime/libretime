@@ -41,7 +41,7 @@ airtime2mutagen = {
     "MDATA_KEY_COPYRIGHT"   : "copyright",
 }
 
-class FakeMutagen(object):
+class FakeMutagen(dict):
     """
     Need this fake mutagen object so that airtime_special functions return a
     proper default value instead of throwing an exceptions for files that
@@ -51,6 +51,7 @@ class FakeMutagen(object):
         self.path = path
         self.mime = True
         self.info = True
+        dict.__init__(self)
 
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
