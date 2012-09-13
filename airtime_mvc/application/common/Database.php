@@ -46,7 +46,7 @@ class Application_Common_Database
                 $new_params[$k] = $new_params[$v];
             } else {
                 foreach ( range(1,$matches_count) as $i ) {
-                    preg_replace( "/$k(\D)/", "$k.$i${1}", $sql, 1);
+                    preg_replace( "/$k(\D)/", "$k$i${1}", $sql, 1);
                     $new_params[ $k.$i ] = $v;
                 }
             }
