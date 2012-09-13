@@ -29,8 +29,6 @@ class AudiopreviewController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
-
         $this->view->headScript()->appendFile(
             $baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],
             'text/javascript');
@@ -84,8 +82,6 @@ class AudiopreviewController extends Zend_Controller_Action
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
 
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
-
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
@@ -112,8 +108,6 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -235,8 +229,6 @@ class AudiopreviewController extends Zend_Controller_Action
 
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-
-        $baseDir = dirname($_SERVER['SCRIPT_FILENAME']);
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');

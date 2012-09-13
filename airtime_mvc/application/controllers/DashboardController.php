@@ -44,7 +44,6 @@ class DashboardController extends Zend_Controller_Action
 
     public function switchSourceAction()
     {
-        $request = $this->getRequest();
         $sourcename = $this->_getParam('sourcename');
         $current_status = $this->_getParam('status');
 

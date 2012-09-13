@@ -177,7 +177,6 @@ class ShowbuilderController extends Zend_Controller_Action
         $now = floatval(microtime(true));
 
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
         $menu = array();
 
         $user = Application_Model_User::getCurrentUser();
@@ -266,7 +265,6 @@ class ShowbuilderController extends Zend_Controller_Action
         $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
         $show_filter = intval($request->getParam("showFilter", 0));
         $my_shows = intval($request->getParam("myShows", 0));
-        $timestamp = intval($request->getParam("timestamp", -1));
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
@@ -347,8 +345,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function scheduleReorderAction()
     {
-        $request = $this->getRequest();
-
-        $showInstance = $request->getParam("instanceId");
+        throw new Exception("this controller is/was a no-op please fix your
+           code");
     }
 }
