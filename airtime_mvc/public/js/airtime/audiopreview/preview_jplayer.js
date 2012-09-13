@@ -144,7 +144,7 @@ function buildplaylist(p_url, p_playIndex) {
                         mp3:data[index]['uri']
                 };
             }
-            if (media) {
+            if (media && isAudioSupported(data[index]['mime'])) {
                 myPlaylist[index] = media;
             }
             // we should create a map according to the new position in the
