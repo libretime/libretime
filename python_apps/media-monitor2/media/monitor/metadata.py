@@ -3,6 +3,9 @@ import mutagen
 import math
 import os
 import copy
+import wave
+import contextlib
+from collections import namedtuple
 from mutagen.easymp4  import EasyMP4KeyError
 
 from media.monitor.exceptions import BadSongFile
@@ -43,15 +46,19 @@ airtime2mutagen = {
 
 class FakeMutagen(dict):
     """
-    Need this fake mutagen object so that airtime_special functions return a
-    proper default value instead of throwing an exceptions for files that
-    mutagen doesn't recognize
+    Need this fake mutagen object so that airtime_special functions
+    return a proper default value instead of throwing an exceptions for
+    files that mutagen doesn't recognize
     """
+    FakeInfo = namedtuple('FakeInfo','length bitrate')
     def __init__(self,path):
         self.path = path
-        self.mime = True
-        self.info = True
+        self.mime = []
+        self.info = FakeMutagen.FakeInfo(0.0, '')
         dict.__init__(self)
+    def set_length(self,l):
+        old_bitrate = self.info.bitrate
+        self.info = FakeMutagen.FakeInfo(l, old_bitrate)
 
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
@@ -204,6 +211,15 @@ class Metadata(Loggable):
                 self.logger.info("Could not get special key %s for %s" %
                         (special_key, fpath))
                 self.logger.info(str(e))
+
+        # Hickity Hackity for .wav files. Properly do this later
+        if mmp.extension(fpath) == 'wav':
+            with contextlib.closing(wave.open(fpath,'r')) as f:
+                frames   = f.getnframes()
+                rate     = f.getframerate()
+                duration = frames/float(rate)
+                full_mutagen.set_length(duration)
+
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:

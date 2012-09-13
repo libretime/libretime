@@ -307,6 +307,7 @@ var AIRTIME = (function(AIRTIME){
 	    setCueEvents();
 	    setFadeEvents();
 		setModified(json.modified);
+		AIRTIME.playlist.validatePlaylistElements();
 		redrawLib();
 	}
 	
@@ -409,8 +410,6 @@ var AIRTIME = (function(AIRTIME){
 		
 		$pl.delegate(".spl_cue", 
 				{"click": openCueEditor});
-
-        mod.validatePlaylistElements();
     		
 		$pl.delegate(".spl_block_expand",
 		        {"click": function(ev){
@@ -773,6 +772,7 @@ var AIRTIME = (function(AIRTIME){
 		}());
 
 		$pl.find("#spl_sortable").sortable(sortableConf);
+		AIRTIME.playlist.validatePlaylistElements();
 	}
 	
 	mod.fnNew = function() {
