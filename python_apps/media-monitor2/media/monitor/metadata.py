@@ -215,9 +215,9 @@ class Metadata(Loggable):
         # Hickity Hackity for .wav files. Properly do this later
         if mmp.extension(fpath) == 'wav':
             with contextlib.closing(wave.open(fpath,'r')) as f:
-                frames=f.getnframes()
-                rate=f.getframerate()
-                duration=frames/float(rate)
+                frames   = f.getnframes()
+                rate     = f.getframerate()
+                duration = frames/float(rate)
                 full_mutagen.set_length(duration)
 
         # Finally, we "normalize" all the metadata here:
