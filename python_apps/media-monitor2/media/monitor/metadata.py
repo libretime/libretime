@@ -202,7 +202,7 @@ class Metadata(Loggable):
                     self.__metadata[special_key] = new_val
             except Exception as e:
                 self.logger.info("Could not get special key %s for %s" %
-                        special_key, fpath)
+                        (special_key, fpath))
                 self.logger.info(str(e))
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
