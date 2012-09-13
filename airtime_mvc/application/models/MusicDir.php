@@ -75,7 +75,6 @@ class Application_Model_MusicDir
      */
     public function remove($userAddedWatchedDir=true)
     {
-        $con = Propel::getConnection();
 
         $music_dir_id = $this->getId();
 

@@ -204,6 +204,20 @@ function setSmartBlockEvents() {
     /********** CRITERIA CHANGE **********/
     form.find('select[id^="sp_criteria"]:not([id^="sp_criteria_modifier"])').live("change", function(){
         var index = getRowIndex($(this).parent());
+        //need to change the criteria value for any modifier rows
+        var critVal = $(this).val();
+        var divs = $(this).parent().nextAll(':visible');
+        $.each(divs, function(i, div){
+            var critSelect = $(div).children('select[id^="sp_criteria_field"]');
+            if (critSelect.hasClass('sp-invisible')) {
+                critSelect.val(critVal);
+            /* If the select box is visible we know the modifier rows
+             * have ended
+             */
+            } else {
+                return false;
+            }
+        });
         
         // disable extra field and hide the span
         disableAndHideExtraField($(this), index);
@@ -520,32 +534,32 @@ function disableLoadingIcon() {
 }
 
 var criteriaTypes = {
-    0 : "",
-    "album_title" : "s",
-    "artist_name" : "s",
-    "bit_rate" : "n",
-    "bpm" : "n",
-    "comments" : "s",
-    "composer" : "s",
-    "conductor" : "s",
-    "utime" : "n",
-    "mtime" : "n",
-    "lptime" : "n",
-    "disc_number" : "n",
-    "genre" : "s",
-    "isrc_number" : "s",
-    "label" : "s",
-    "language" : "s",
-    "length" : "n",
-    "lyricist" : "s",
-    "mood" : "s",
-    "name" : "s",
-    "orchestra" : "s",
-    "rating" : "n",
-    "sample_rate" : "n",
-    "track_title" : "s",
-    "track_num" : "n",
-    "year" : "n"               
+    0              : "",
+    "album_title"  : "s",
+    "bit_rate"     : "n",
+    "bpm"          : "n",
+    "composer"     : "s",
+    "conductor"    : "s",
+    "copyright"    : "s",
+    "artist_name"  : "s",
+    "encoded_by"   : "s",
+    "utime"        : "n",
+    "mtime"        : "n",
+    "lptime"       : "n",
+    "genre"        : "s",
+    "isrc_number"  : "s",
+    "label"        : "s",
+    "language"     : "s",
+    "length"       : "n",
+    "mime"         : "s",
+    "mood"         : "s",
+    "owner_id"     : "s",
+    "replay_gain"  : "n",
+    "sample_rate"  : "n",
+    "track_title"  : "s",
+    "track_number" : "n",
+    "info_url"     : "s",
+    "year"         : "n"
 };
 
 var stringCriteriaOptions = {

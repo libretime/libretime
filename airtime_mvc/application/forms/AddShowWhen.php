@@ -87,9 +87,6 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
     {
         $valid = true;
 
-        $hours;
-        $minutes;
-
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
         $end_time = $formData['add_show_end_date_no_repeat']." ".$formData['add_show_end_time'];
 
@@ -202,7 +199,20 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                             $repeatShowEnd->add(new DateInterval("P".$daysAdd."D"));
                         }
                         while ($repeatShowStart->getTimestamp() < $populateUntilDateTime->getTimestamp()) {
-                            $overlapping = Application_Model_Schedule::checkOverlappingShows($repeatShowStart, $repeatShowEnd, $update, $instanceId);
+                            //need to get each repeating show's instance id
+                            $qry = CcShowInstancesQuery::create()
+                                   ->filterByDbStarts($repeatShowStart->format('Y-m-d H:i:s'))
+                                   ->filterByDbEnds($repeatShowEnd->format('Y-m-d H:i:s'))
+                                   ->find();
+                            $count = $qry->count();
+                            if ($count > 1) {
+                                $overlapping = true;
+                            } elseif ($count == 1) {
+                                $instanceId = $qry->getFirst()->getDbId();
+                                $overlapping = Application_Model_Schedule::checkOverlappingShows($repeatShowStart, $repeatShowEnd, $update, $instanceId);
+                            } else {
+                                $overlapping = false;
+                            }
                             if ($overlapping) {
                                 $valid = false;
                                 $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));

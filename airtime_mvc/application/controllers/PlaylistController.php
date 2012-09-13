@@ -212,7 +212,6 @@ class PlaylistController extends Zend_Controller_Action
         $objInfo = Application_Model_Library::getObjInfo($type);
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
 
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 
@@ -300,7 +299,6 @@ class PlaylistController extends Zend_Controller_Action
         $ids = $this->_getParam('ids');
         $ids = (!is_array($ids)) ? array($ids) : $ids;
         $afterItem = $this->_getParam('afterItem', null);
-        $modified = $this->_getParam('modified');
         $type = $this->_getParam('obj_type');
 
         try {

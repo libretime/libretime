@@ -2,6 +2,7 @@
 from kombu.messaging  import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
 from os.path          import normpath
+from mutagen.easymp4  import EasyMP4KeyError
 
 import json
 import os
@@ -117,6 +118,10 @@ class AirtimeMessageReceiver(Loggable):
         try: Metadata.write_unsafe(path=md_path, md=msg)
         except BadSongFile as e:
             self.logger.info("Cannot find metadata file: '%s'" % e.path)
+        except EasyMP4KeyError as e:
+            self.logger.info("Metadata instance not supported for this file '%s'" \
+                    % e.path)
+            self.logger.info(str(e))
         except Exception as e:
             # TODO : add md_path to problem path or something?
             self.fatal_exception("Unknown error when writing metadata to: '%s'"
@@ -135,7 +140,7 @@ class AirtimeMessageReceiver(Loggable):
                         msg['directory'])
                 self.new_watch(msg)
         else:
-            self.__reFalsequest_now_bootstrap( directory=msg['directory'],
+            self.__request_now_bootstrap( directory=msg['directory'],
                     all_files=restart)
             self.manager.add_watch_directory(msg['directory'])
 

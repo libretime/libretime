@@ -22,12 +22,12 @@
 	clear: left;
 }
 
-#side_playlist button {
+/*#side_playlist button {
     float: left;
     font-size: 12px;
     height: 28px;
     margin: 0 7px 20px 0;
-}
+}*/	
 
 #side_playlist input, 
 #side_playlist textarea {
@@ -48,11 +48,11 @@
 	margin-bottom:0;
 }
 
-#side_playlist li {
+/*#side_playlist li {
 	width: 99.5%;
 	margin-bottom:-1px;
 	position:relative;
-}
+}*/
 
 #side_playlist li div.list-item-container, #side_playlist li div.list-item-container.ui-state-active {
 	height:56px;
@@ -114,7 +114,6 @@
 }
 
 .ui-icon-closethick,
-.ui-icon-play,
 .spl_fade_control,
 .spl_text_input {
 	cursor: pointer;
@@ -164,13 +163,29 @@
     background: -moz-linear-gradient(top, #707070 0, #666666 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #707070), color-stop(100%, #666666));
 }
+#spl_sortable div.big_play_disabled {
+	display:block;
+	width:20px;
+	height:50px;
+	margin:2px 0 0 2px;
+	text-align:center;
+	border:1px solid #5b5b5b;
+	float:left;
+	background-color: #707070;
+    background: -moz-linear-gradient(top, #707070 0, #666666 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #707070), color-stop(100%, #666666));
+}
 #spl_sortable div.big_play:hover {
 	border:1px solid #282828;
 	background-color: #3b3b3b;
     background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+    cursor: pointer;
 }
 #spl_sortable div.big_play .ui-icon {
+	margin: 17px 0 0 1px;
+}
+#spl_sortable div.big_play_disabled .ui-icon {
 	margin: 17px 0 0 1px;
 }
 
@@ -464,3 +479,4 @@ div.helper li {
 li.spl_empty {
     height: 56px;
 }
+

@@ -154,7 +154,6 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
     public function getContents($filterFiles=false)
     {
         Logging::info("Getting contents for playlist {$this->id}");
-        $files = array();
 
         $sql = <<<SQL
   SELECT *
@@ -172,7 +171,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                    f.artist_name AS creator,
                    f.file_exists AS EXISTS,
                    f.filepath AS path,
-                   f.length AS orig_length
+                   f.length AS orig_length,
+                   f.mime AS mime
             FROM cc_playlistcontents AS pc
             JOIN cc_files AS f ON pc.file_id=f.id
             WHERE pc.playlist_id = :playlist_id1
@@ -190,7 +190,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                             sub.login AS creator,
                             't'::boolean AS EXISTS,
                             ws.url AS path,
-                            ws.length AS orig_length
+                            ws.length AS orig_length,
+                            ws.mime as mime
             FROM cc_playlistcontents AS pc
             JOIN cc_webstream AS ws ON pc.stream_id=ws.id
             LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
@@ -209,7 +210,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                             sbj.login AS creator,
                             't'::boolean AS EXISTS,
                             NULL::text AS path,
-                            bl.length AS orig_length
+                            bl.length AS orig_length,
+                            NULL::text as mime
             FROM cc_playlistcontents AS pc
             JOIN cc_block AS bl ON pc.block_id=bl.id
             JOIN cc_subjs AS sbj ON bl.creator_id=sbj.id
@@ -610,8 +612,6 @@ SQL;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
 
         $this->con->beginTransaction();
-
-        $errArray= array();
 
         try {
             $row = CcPlaylistcontentsQuery::create()->findPK($id);

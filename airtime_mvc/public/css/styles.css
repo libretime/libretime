@@ -392,6 +392,7 @@ input[readonly]{
 
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_text_area:focus {
 	border: 1px solid #0088f1;
+	outline: none;
 }
 .auto-search {
 	background:#dddddd url(images/search_auto_bg.png) no-repeat 0 0;
@@ -722,14 +723,14 @@ dl.inline-list dd {
 
 .dataTables_length {
 	float:right;
-	margin:0 8px 0 0;
+	margin:0;
 	
 }
 .dataTables_length label {
-	padding:10px 6px 0 0;
+	padding:0;
 	font-size:12px;
 	color:#404040;
-	line-height:22px;
+	line-height:24px;
 }
 .dataTables_filter {
 	margin:0 0 8px 8px;
@@ -1414,6 +1415,25 @@ h2#scheduled_playlist_name span {
 .ui-state-default .ui-icon.crossfade-main-icon	 {
 	background:url(images/crossfade_main.png) no-repeat 0 2px;
 	width:25px;	
+}
+
+.btn.crossfade-main-button span {
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	display:inline-block;
+	width: 0;
+	height:0;
+}
+.btn i.crossfade-main-icon {
+	display: inline-block;
+	background:url(images/crossfade_main.png) no-repeat 0 2px;
+	width:22px;
+	height: 14px;
+	line-height: 14px;
+	vertical-align: text-top;
+	margin-top: 1px;
+	margin-right: -5px;	
 }
 
 .ui-button-icon-only.crossfade-main-button .ui-icon {
@@ -2820,11 +2840,11 @@ dd .stream-status {
 }
 
 
-/*---////////////////////    NEW BUTTONS    ////////////////////---*/		
+/*---////////////////////    NEW BUTTONS    ////////////////////		
 .btn {
 	display: inline-block;
 	*display: inline;
-	/* IE7 inline-block hack */
+
 	
 	*zoom: 1;
 	padding: 4px 10px 4px;
@@ -2876,7 +2896,7 @@ dd .stream-status {
 	background-image: linear-gradient(top, #868686, #535353);
 	background-repeat: repeat-x;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#868686', endColorstr='#535353', GradientType=0);
-}
+}---*/
 
 .btn.active,
 .btn:active {
@@ -2887,4 +2907,19 @@ dd .stream-status {
 	background-color: #727272;
 	outline: 0;
 	border-top-color:#333333
+}
+.dark_class
+{
+    background-color: black;
+    filter:alpha(opacity=20); /* IE */
+    opacity: 0.2; /* Safari, Opera */
+    -moz-opacity:0.20; /* FireFox */
+    z-index: 20;
+    height: 100%;
+    width: 100%;
+    background-repeat:no-repeat;
+    background-position:center;
+    /* position:absolute; */
+    top: 0px;
+    left: 0px;
 }

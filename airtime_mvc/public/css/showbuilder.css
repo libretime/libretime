@@ -100,9 +100,6 @@ div.sb-timerange div#sb_submit {
 	margin-left: 5px;
 }
 
-div.sb-timerange input {
-    vertical-align: top;
-}
 
 div.sb-timerange input#sb_date_start {
     margin-left: 30px;

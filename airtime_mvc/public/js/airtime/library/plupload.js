@@ -3,13 +3,13 @@ $(document).ready(function() {
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
-		runtimes : 'gears, html5, html4',
-		url : '/Plupload/upload/format/json',
-		chunk_size: '5mb',
-		unique_names: 'true',
+		runtimes        : 'gears, html5, html4',
+		url             : '/Plupload/upload/format/json',
+		chunk_size      : '5mb',
+		unique_names    : 'true',
 		multiple_queues : 'true',
 		filters : [
-			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,aac,wav"}
+			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,aac,wav,m4a"}
 		]
 	});
 

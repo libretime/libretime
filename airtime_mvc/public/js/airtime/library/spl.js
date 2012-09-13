@@ -346,7 +346,6 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function openPlaylist(json) {
-		
 		$("#side_playlist")
 			.empty()
 			.append(json.html);
@@ -361,6 +360,39 @@ var AIRTIME = (function(AIRTIME){
         appendModAddButton();
         removeButtonCheck();
 	}
+    
+    //Purpose of this function is to iterate over all playlist elements
+    //and verify whether they can be previewed by the browser or not. If not
+    //then the playlist element is greyed out
+    mod.validatePlaylistElements = function(){
+        $.each($(".big_play"), function(index, value){
+            var mime = $(value).attr("data-mime-type");      
+            if (isAudioSupported(mime)) {
+                $(value).bind("click", openAudioPreview);
+            } else {
+                $(value).attr("class", "big_play_disabled dark_class"); 
+                $(value).qtip({
+                   content: 'Your browser does not support playing this file type: "'+ mime +'"',
+                   show: 'mouseover',
+                    hide: {
+                        delay: 500,
+                        fixed: true
+                    },
+                    style: {
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
+                    },
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
+                }) 
+            }
+        });
+    }
 	
 	//sets events dynamically for playlist entries (each row in the playlist)
 	function setPlaylistEntryEvents() {
@@ -378,10 +410,8 @@ var AIRTIME = (function(AIRTIME){
 		$pl.delegate(".spl_cue", 
 				{"click": openCueEditor});
 
-        //add the play function to the play icon
-		$pl.delegate(".big_play",
-            {"click": openAudioPreview});
-		
+        mod.validatePlaylistElements();
+    		
 		$pl.delegate(".spl_block_expand",
 		        {"click": function(ev){
 		            var id = parseInt($(this).attr("id").split("_").pop(), 10);

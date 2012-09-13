@@ -8,33 +8,33 @@ class ApiController extends Zend_Controller_Action
         $this->checkAuth();
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
-        $context->addActionContext('version', 'json')
-                ->addActionContext('recorded-shows', 'json')
-                ->addActionContext('calendar-init', 'json')
-                ->addActionContext('upload-file', 'json')
-                ->addActionContext('upload-recorded', 'json')
-                ->addActionContext('media-monitor-setup', 'json')
-                ->addActionContext('media-item-status', 'json')
-                ->addActionContext('reload-metadata', 'json')
-                ->addActionContext('list-all-files', 'json')
-                ->addActionContext('list-all-watched-dirs', 'json')
-                ->addActionContext('add-watched-dir', 'json')
-                ->addActionContext('remove-watched-dir', 'json')
-                ->addActionContext('set-storage-dir', 'json')
-                ->addActionContext('get-stream-setting', 'json')
-                ->addActionContext('status', 'json')
-                ->addActionContext('register-component', 'json')
-                ->addActionContext('update-liquidsoap-status', 'json')
-                ->addActionContext('live-chat', 'json')
-                ->addActionContext('update-file-system-mount', 'json')
-                ->addActionContext('handle-watched-dir-missing', 'json')
-                ->addActionContext('rabbitmq-do-push', 'json')
-                ->addActionContext('check-live-stream-auth', 'json')
-                ->addActionContext('update-source-status', 'json')
-                ->addActionContext('get-bootstrap-info', 'json')
-                ->addActionContext('get-files-without-replay-gain', 'json')
-                ->addActionContext('reload-metadata-group', 'json')
-                ->addActionContext('notify-webstream-data', 'json')
+        $context->addActionContext('version'                       , 'json')
+                ->addActionContext('recorded-shows'                , 'json')
+                ->addActionContext('calendar-init'                 , 'json')
+                ->addActionContext('upload-file'                   , 'json')
+                ->addActionContext('upload-recorded'               , 'json')
+                ->addActionContext('media-monitor-setup'           , 'json')
+                ->addActionContext('media-item-status'             , 'json')
+                ->addActionContext('reload-metadata'               , 'json')
+                ->addActionContext('list-all-files'                , 'json')
+                ->addActionContext('list-all-watched-dirs'         , 'json')
+                ->addActionContext('add-watched-dir'               , 'json')
+                ->addActionContext('remove-watched-dir'            , 'json')
+                ->addActionContext('set-storage-dir'               , 'json')
+                ->addActionContext('get-stream-setting'            , 'json')
+                ->addActionContext('status'                        , 'json')
+                ->addActionContext('register-component'            , 'json')
+                ->addActionContext('update-liquidsoap-status'      , 'json')
+                ->addActionContext('live-chat'                     , 'json')
+                ->addActionContext('update-file-system-mount'      , 'json')
+                ->addActionContext('handle-watched-dir-missing'    , 'json')
+                ->addActionContext('rabbitmq-do-push'              , 'json')
+                ->addActionContext('check-live-stream-auth'        , 'json')
+                ->addActionContext('update-source-status'          , 'json')
+                ->addActionContext('get-bootstrap-info'            , 'json')
+                ->addActionContext('get-files-without-replay-gain' , 'json')
+                ->addActionContext('reload-metadata-group'         , 'json')
+                ->addActionContext('notify-webstream-data'         , 'json')
                 ->initContext();
     }
 
@@ -73,7 +73,8 @@ class ApiController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        $jsonStr = json_encode(array("version"=>Application_Model_Preference::GetAirtimeVersion()));
+        $jsonStr = json_encode( array(
+            "version" => Application_Model_Preference::GetAirtimeVersion()));
         echo $jsonStr;
     }
 
@@ -94,11 +95,11 @@ class ApiController extends Zend_Controller_Action
         }
 
         $this->view->calendarInit = array(
-            "timestamp" => time(),
+            "timestamp"      => time(),
             "timezoneOffset" => date("Z"),
-            "timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
-            "timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
-            "weekStartDay" => Application_Model_Preference::GetWeekStartDay()
+            "timeScale"      => Application_Model_Preference::GetCalendarTimeScale(),
+            "timeInterval"   => Application_Model_Preference::GetCalendarTimeInterval(),
+            "weekStartDay"   => Application_Model_Preference::GetWeekStartDay()
         );
     }
 
@@ -349,7 +350,7 @@ class ApiController extends Zend_Controller_Action
 
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
-        $result = Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
+        Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
 
         //set a 'last played' timestamp for media item
         //needed for smart blocks
@@ -437,13 +438,10 @@ class ApiController extends Zend_Controller_Action
         $file = Application_Model_StoredFile::Recall($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
-        $show_name = null;
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance_id);
             $show_inst->setRecordedFile($file_id);
-            $show_name = $show_inst->getName();
-            $show_genre = $show_inst->getGenre();
-            $show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
+            //$show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
         } catch (Exception $e) {
             //we've reached here probably because the show was
@@ -454,6 +452,8 @@ class ApiController extends Zend_Controller_Action
             $showCanceled = true;
         }
 
+        // TODO : the following is inefficient because it calls save on both
+        // fields
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
 
@@ -481,11 +481,12 @@ class ApiController extends Zend_Controller_Action
 
     public function dispatchMetadata($md, $mode)
     {
-        // Replace this compound result in a hash with proper error handling later on
         $return_hash = array();
         Application_Model_Preference::SetImportTimestamp();
         //Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
         //Logging::info( $md );
+
+        // create also modifies the file if it exists
         if ($mode == "create") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $filepath = Application_Common_OsPath::normpath($filepath);
@@ -513,11 +514,11 @@ class ApiController extends Zend_Controller_Action
                 $file->setMetadata($md);
             }
         } elseif ($mode == "moved") {
-            $md5 = $md['MDATA_KEY_MD5'];
-            $file = Application_Model_StoredFile::RecallByMd5($md5);
+            $file = Application_Model_StoredFile::RecallByFilepath(
+                $md['MDATA_KEY_ORIGINAL_PATH']);
 
             if (is_null($file)) {
-                return "File doesn't exist in Airtime.";
+                $return_hash['error'] = 'File does not exist in Airtime';
             } else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
@@ -549,7 +550,8 @@ class ApiController extends Zend_Controller_Action
 
             return $return_hash;
         }
-        $return_hash['fileid'] = $file->getId();
+
+        $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
 
         return $return_hash;
     }
@@ -562,15 +564,13 @@ class ApiController extends Zend_Controller_Action
         // to some unique id.
         $request     = $this->getRequest();
         $responses   = array();
-        $dry         = $request->getParam('dry') || false;
-        $params      = $request->getParams();
+        //$params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
-        foreach ($request->getParams() as $k => $raw_json) {
+        foreach ($params as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
-            $recorded  = $info_json["is_record"];
             unset( $info_json["is_record"] );
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
@@ -604,100 +604,6 @@ class ApiController extends Zend_Controller_Action
         die( json_encode($responses) );
     }
 
-    public function reloadMetadataAction()
-    {
-        $request = $this->getRequest();
-
-        $mode = $request->getParam('mode');
-        $params = $request->getParams();
-
-        $md = array();
-        //extract all file metadata params from the request.
-        foreach ($params as $key => $value) {
-            if (preg_match('/^MDATA_KEY/', $key)) {
-                $md[$key] = $value;
-            }
-        }
-
-        Logging::info( $md );
-
-        // update import timestamp
-        Application_Model_Preference::SetImportTimestamp();
-        if ($mode == "create") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            //$filepath = str_replace("\\", "", $filepath);
-            //$filepath = str_replace("//", "/", $filepath);
-            $filepath = Application_Common_OsPath::normpath($filepath);
-
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-            if (is_null($file)) {
-                $file = Application_Model_StoredFile::Insert($md);
-            } else {
-                // path already exist
-                if ($file->getFileExistsFlag()) {
-                    // file marked as exists
-                    $this->view->error = "File already exists in Airtime.";
-
-                    return;
-                } else {
-                    // file marked as not exists
-                    $file->setFileExistsFlag(true);
-                    $file->setMetadata($md);
-                }
-            }
-        } elseif ($mode == "modify") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            //$filepath = str_replace("\\", "", $filepath);
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-
-            //File is not in database anymore.
-            if (is_null($file)) {
-                $this->view->error = "File does not exist in Airtime.";
-
-                return;
-            } else {
-                //Updating a metadata change.
-                $file->setMetadata($md);
-            }
-        } elseif ($mode == "moved") {
-            $md5 = $md['MDATA_KEY_MD5'];
-            $file = Application_Model_StoredFile::RecallByMd5($md5);
-
-            if (is_null($file)) {
-                $this->view->error = "File doesn't exist in Airtime.";
-
-                return;
-            } else {
-                $filepath = $md['MDATA_KEY_FILEPATH'];
-                //$filepath = str_replace("\\", "", $filepath);
-                $file->setFilePath($filepath);
-            }
-        } elseif ($mode == "delete") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            //$filepath = str_replace("\\", "", $filepath);
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-
-            if (is_null($file)) {
-                $this->view->error = "File doesn't exist in Airtime.";
-
-                return;
-            } else {
-                $file->deleteByMediaMonitor();
-            }
-        } elseif ($mode == "delete_dir") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            //$filepath = str_replace("\\", "", $filepath);
-            $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
-
-            foreach ($files as $file) {
-                $file->deleteByMediaMonitor();
-            }
-
-            return;
-        }
-        $this->view->id = $file->getId();
-    }
-
     public function listAllFilesAction()
     {
         $request = $this->getRequest();
@@ -712,8 +618,6 @@ class ApiController extends Zend_Controller_Action
 
     public function listAllWatchedDirsAction()
     {
-        $request = $this->getRequest();
-
         $result = array();
 
         $arrWatchedDirs = Application_Model_MusicDir::getWatchedDirs();
@@ -754,8 +658,6 @@ class ApiController extends Zend_Controller_Action
 
     public function getStreamSettingAction()
     {
-        $request = $this->getRequest();
-
         $info = Application_Model_StreamSetting::getStreamSetting();
         $this->view->msg = $info;
     }
@@ -809,7 +711,6 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 
-        $msg = $request->getParam('msg');
         $sourcename = $request->getParam('sourcename');
         $status = $request->getParam('status');
 

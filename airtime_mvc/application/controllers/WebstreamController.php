@@ -68,7 +68,7 @@ class WebstreamController extends Zend_Controller_Action
         if ($webstream) {
             Application_Model_Library::changePlaylist($id, "stream");
         }
-        $this->view->obj = new Application_Model_Webstream($webstream);
+        $this->view->obj = new Application_Model_Webstream($webstream->getDbId());
         $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }

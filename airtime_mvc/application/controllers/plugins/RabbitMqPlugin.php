@@ -12,7 +12,7 @@ class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
             }
         }
 
-        if (memory_get_peak_usage() > 25*pow(2, 20)) {
+        if (memory_get_peak_usage() > 30*pow(2, 20)) {
 
             Logging::debug("Peak memory usage: "
                 .(memory_get_peak_usage()/1000000)

@@ -5,12 +5,12 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             0              => "Select criteria",
             "album_title"  => "Album",
             "bit_rate"     => "Bit Rate (Kbps)",
-            "bpm"          => "Bpm",
-            "comments"     => "Comments",
+            "bpm"          => "BPM",
             "composer"     => "Composer",
             "conductor"    => "Conductor",
+            "copyright"    => "Copyright",
             "artist_name"  => "Creator",
-            "disc_number"  => "Disc Number",
+            "encoded_by"   => "Encoded By",
             "genre"        => "Genre",
             "isrc_number"  => "ISRC",
             "label"        => "Label",
@@ -18,44 +18,44 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             "mtime"        => "Last Modified",
             "lptime"       => "Last Played",
             "length"       => "Length",
-            "lyricist"     => "Lyricist",
+            "mime"         => "Mime",
             "mood"         => "Mood",
-            "name"         => "Name",
-            "orchestra"    => "Orchestra",
-            "rating"       => "Rating",
+            "owner_id"     => "Owner",
+            "replay_gain"  => "Replay Gain",
             "sample_rate"  => "Sample Rate (kHz)",
             "track_title"  => "Title",
             "track_number" => "Track Number",
             "utime"        => "Uploaded",
+            "info_url"     => "Website",
             "year"         => "Year"
     );
 
     private $criteriaTypes = array(
             0              => "",
             "album_title"  => "s",
-            "artist_name"  => "s",
             "bit_rate"     => "n",
             "bpm"          => "n",
-            "comments"     => "s",
             "composer"     => "s",
             "conductor"    => "s",
+            "copyright"    => "s",
+            "artist_name"  => "s",
+            "encoded_by"   => "s",
             "utime"        => "n",
             "mtime"        => "n",
             "lptime"       => "n",
-            "disc_number"  => "n",
             "genre"        => "s",
             "isrc_number"  => "s",
             "label"        => "s",
             "language"     => "s",
             "length"       => "n",
-            "lyricist"     => "s",
+            "mime"         => "s",
             "mood"         => "s",
-            "name"         => "s",
-            "orchestra"    => "s",
-            "rating"       => "n",
+            "owner_id"     => "s",
+            "replay_gain"  => "n",
             "sample_rate"  => "n",
             "track_title"  => "s",
             "track_number" => "n",
+            "info_url"     => "s",
             "year"         => "n"
     );
 
@@ -382,23 +382,23 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "artist_name" => "DbArtistName",
                 "bit_rate" => "DbBitRate",
                 "bpm" => "DbBpm",
-                "comments" => "DbComments",
                 "composer" => "DbComposer",
                 "conductor" => "DbConductor",
+                "copyright" => "DbCopyright",
+                "encoded_by" => "DbEncodedBy",
                 "utime" => "DbUtime",
                 "mtime" => "DbMtime",
                 "lptime" => "DbLPtime",
-                "disc_number" => "DbDiscNumber",
                 "genre" => "DbGenre",
+                "info_url" => "DbInfoUrl",
                 "isrc_number" => "DbIsrcNumber",
                 "label" => "DbLabel",
                 "language" => "DbLanguage",
                 "length" => "DbLength",
-                "lyricist" => "DbLyricist",
+                "mime" => "DbMime",
                 "mood" => "DbMood",
-                "name" => "DbName",
-                "orchestra" => "DbOrchestra",
-                "rating" => "DbRating",
+                "owner_id" => "DbOwnerId",
+                "replay_gain" => "DbReplayGain",
                 "sample_rate" => "DbSampleRate",
                 "track_title" => "DbTrackTitle",
                 "track_number" => "DbTrackNumber",
@@ -411,8 +411,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         // 3. validate formate according to DB column type
         $multiplier = 1;
         $result = 0;
-        $errors = array();
-        $error = array();
 
         // validation start
         if ($data['etc']['sp_limit_options'] == 'hours') {
@@ -443,8 +441,6 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $isValid = false;
             }
         }
-
-        $criteriaFieldsUsed = array();
 
         if (isset($data['criteria'])) {
             foreach ($data['criteria'] as $rowKey=>$row) {
@@ -489,7 +485,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                     }
                                 }
                             }
-                        } elseif ($column->getType() == PropelColumnTypes::INTEGER) {
+                        } elseif ($column->getType() == PropelColumnTypes::INTEGER &&
+                            $d['sp_criteria_field'] != 'owner_id') {
                             if (!is_numeric($d['sp_criteria_value'])) {
                                 $element->addError("The value has to be numeric");
                                 $isValid = false;
