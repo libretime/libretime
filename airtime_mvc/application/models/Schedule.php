@@ -782,7 +782,10 @@ SQL;
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
+            } else {
+                throw new Exception("Unknown schedule type: ".print_r($item, true));
             }
+             
         }
     }
 

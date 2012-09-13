@@ -184,6 +184,7 @@ class AudiopreviewController extends Zend_Controller_Action
                 'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
                 'element_id' => isset($track['id'])?$track['id']:"",
                 'element_position' => isset($track['position'])?$track['position']:"",
+                'mime' => isset($track['mime'])?$track['mime']:""
             );
 
         /* If the track type is static we know it must be
