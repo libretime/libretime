@@ -41,6 +41,17 @@ airtime2mutagen = {
     "MDATA_KEY_COPYRIGHT"   : "copyright",
 }
 
+class FakeMutagen(object):
+    """
+    Need this fake mutagen object so that airtime_special functions return a
+    proper default value instead of throwing an exceptions for files that
+    mutagen doesn't recognize
+    """
+    def __init__(self,path):
+        self.path = path
+        self.mime = True
+        self.info = True
+
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
 # key should attempt to extract the corresponding value from the mutagen object
@@ -179,7 +190,7 @@ class Metadata(Loggable):
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
         #if full_mutagen is None: raise BadSongFile(fpath)
-        if full_mutagen is None: full_mutagen = {}
+        if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
@@ -188,9 +199,10 @@ class Metadata(Loggable):
                 new_val = f(full_mutagen)
                 if new_val is not None:
                     self.__metadata[special_key] = new_val
-            except Exception:
+            except Exception as e:
                 self.logger.info("Could not get special key %s for %d" %
                         special_key, fpath)
+                self.logger.info(str(e))
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
