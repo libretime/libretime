@@ -3,6 +3,8 @@ import copy
 import subprocess
 import os
 import math
+import wave
+import contextlib
 import shutil
 import re
 import sys
@@ -96,6 +98,13 @@ def is_airtime_recorded(md):
     """
     if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
+
+def read_wave_duration(path):
+    with contextlib.closing(wave.open(path,'r')) as f:
+        frames   = f.getnframes()
+        rate     = f.getframerate()
+        duration = frames/float(rate)
+        return duration
 
 def clean_empty_dirs(path):
     """

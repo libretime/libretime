@@ -3,8 +3,6 @@ import mutagen
 import math
 import os
 import copy
-import wave
-import contextlib
 from collections import namedtuple
 from mutagen.easymp4  import EasyMP4KeyError
 
@@ -214,11 +212,7 @@ class Metadata(Loggable):
 
         # Hickity Hackity for .wav files. Properly do this later
         if mmp.extension(fpath) == 'wav':
-            with contextlib.closing(wave.open(fpath,'r')) as f:
-                frames   = f.getnframes()
-                rate     = f.getframerate()
-                duration = frames/float(rate)
-                full_mutagen.set_length(duration)
+            full_mutagen.set_length(mmp.read_wave_duration(fpath))
 
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
