@@ -270,7 +270,7 @@ class LibraryController extends Zend_Controller_Action
         $mediaItems = $this->_getParam('media', null);
 
         $user = Application_Model_User::getCurrentUser();
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        //$isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $files     = array();
         $playlists = array();
