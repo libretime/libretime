@@ -1297,6 +1297,9 @@ SQL;
                     $i++;
                 }
             }
+            
+            // check if file exists
+            $qry->add("file_exists", "true", Criteria::EQUAL);
             $qry->addAscendingOrderByColumn('random()');
         }
         // construct limit restriction
