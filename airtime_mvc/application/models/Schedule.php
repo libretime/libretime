@@ -522,7 +522,6 @@ SQL;
      */
     public static function getItems($p_startTime, $p_endTime)
     {
-        global $CC_CONFIG;
         $baseQuery = <<<SQL
 SELECT st.file_id     AS file_id,
        st.id          AS id,
@@ -556,8 +555,10 @@ SQL;
 
         $sql = $baseQuery." ".$predicates;
 
-        $rows = Application_Common_Database::prepareAndExecute($sql,
-            array(':startTime1'=>$p_startTime, ':endTime'=>$p_endTime, ':startTime2'=>$p_startTime));
+        $rows = Application_Common_Database::prepareAndExecute($sql, array(
+            ':startTime1' => $p_startTime,
+            ':endTime'    => $p_endTime,
+            ':startTime2' => $p_startTime));
 
         if (count($rows) < 3) {
             $dt = new DateTime("@".time());
@@ -572,7 +573,7 @@ WHERE st.ends > :startTime1
 ORDER BY st.starts LIMIT 3
 SQL;
 
-            $sql = " ".$baseQuery." ".$predicates." ";
+            $sql = $baseQuery." ".$predicates." ";
             $rows = Application_Common_Database::prepareAndExecute($sql,
                 array(
                     ':startTime1' => $p_startTime,

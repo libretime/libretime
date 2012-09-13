@@ -441,6 +441,7 @@ class ApiController extends Zend_Controller_Action
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance_id);
             $show_inst->setRecordedFile($file_id);
+            //$show_start_time = Application_Common_DateHelper::ConvertToLocalDateTimeString($show_inst->getShowInstanceStart());
 
         } catch (Exception $e) {
             //we've reached here probably because the show was
@@ -563,13 +564,14 @@ class ApiController extends Zend_Controller_Action
         // to some unique id.
         $request     = $this->getRequest();
         $responses   = array();
-        $params      = $request->getParams();
+        //$params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
         foreach ($params as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
+            unset( $info_json["is_record"] );
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
