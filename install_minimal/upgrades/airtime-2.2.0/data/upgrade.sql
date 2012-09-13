@@ -168,6 +168,10 @@ DROP FUNCTION airtime_to_int(chartoconvert character varying);
 
 UPDATE cc_files
 SET owner_id=(SELECT id FROM cc_subjs WHERE type='A' LIMIT 1)
-WHERE owner_id is NULL
+WHERE owner_id is NULL;
+
+UPDATE cc_files
+SET mime='audio/ogg'
+WHERE mime='audio/vorbis';
 
 
