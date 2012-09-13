@@ -128,6 +128,7 @@ class AirtimeMessageReceiver(Loggable):
                     % md_path, e)
 
     def new_watch(self, msg, restart=False):
+        msg['directory'] = normpath(msg['directory'])
         self.logger.info("Creating watch for directory: '%s'" %
                 msg['directory'])
         if not os.path.exists(msg['directory']):
@@ -145,6 +146,7 @@ class AirtimeMessageReceiver(Loggable):
             self.manager.add_watch_directory(msg['directory'])
 
     def remove_watch(self, msg):
+        msg['directory'] = normpath(msg['directory'])
         self.logger.info("Removing watch from directory: '%s'" %
                 msg['directory'])
         self.manager.remove_watch_directory(msg['directory'])
