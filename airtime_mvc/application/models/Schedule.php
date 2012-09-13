@@ -486,8 +486,9 @@ SQL;
     }
 
     /**
-     * Compute the difference between two times in the format "HH:MM:SS.mmmmmm".
-     * Note: currently only supports calculating millisec differences.
+     * Compute the difference between two times in the format          .
+     * "HH:MM:SS.mmmmmm" Note: currently only supports calculating     .
+     * millisec differences                                            .
      *
      * @param  string $p_time1
      * @param  string $p_time2
