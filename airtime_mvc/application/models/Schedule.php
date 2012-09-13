@@ -61,11 +61,13 @@ SQL;
     }
 
     /**
-     * Queries the database for the set of schedules one hour before and after the given time.
-     * If a show starts and ends within that time that is considered the current show. Then the
-     * scheduled item before it is the previous show, and the scheduled item after it is the next
-     * show. This way the dashboard getCurrentPlaylist is very fast. But if any one of the three
-     * show types are not found through this mechanism a call is made to the old way of querying
+     * Queries the database for the set of schedules one hour before
+     * and after the given time. If a show starts and ends within that
+     * time that is considered the current show. Then the scheduled item
+     * before it is the previous show, and the scheduled item after it
+     * is the next show. This way the dashboard getCurrentPlaylist is
+     * very fast. But if any one of the three show types are not found
+     * through this mechanism a call is made to the old way of querying
      * the database to find the track info.
     **/
     public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
@@ -118,8 +120,8 @@ SQL;
         $numberOfRows = count($rows);
 
         $results['previous'] = null;
-        $results['current'] = null;
-        $results['next'] = null;
+        $results['current']  = null;
+        $results['next']     = null;
 
         $timeNowAsMillis = strtotime($p_timeNow);
         for ($i = 0; $i < $numberOfRows; ++$i) {
