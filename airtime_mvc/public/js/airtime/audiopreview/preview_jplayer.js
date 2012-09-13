@@ -14,7 +14,7 @@ $(document).ready(function(){
     },[], //array of songs will be filled with below's json call
     {
         swfPath: "/js/jplayer",
-        supplied:"oga, mp3, m4v",
+        supplied:"oga, mp3, m4v, m4a, wav",
         size: {
             width: "0px",
             height: "0px",
@@ -37,7 +37,6 @@ $(document).ready(function(){
     
     var audioUri = $('.audioUri').text();
     var audioMime = $('.audioMime').text();
-    //var audioFileID = $('.audioFileID').text();
     var playlistID = $('.playlistID').text();
     var playlistIndex = $('.playlistIndex').text();
     var showID = $('.showID').text();
@@ -191,23 +190,32 @@ function play(p_playlistIndex){
  */
 function playOne(uri, mime) {
     var playlist = new Array();
-    
+   
+    var media = null; 
+    var key = null;
     if (mime.search(/mp3/i) > 0 || mime.search(/mpeg/i) > 0) {
-        media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
-            artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
-            mp3:uri
-        };
+        key = "mp3";
     } else if (mime.search(/og(g|a)/i) > 0 || mime.search(/vorbis/i) > 0) {
+        key = "oga";
+    } else if (mime.search(/mp4/i) > 0) {
+        key = "m4a";
+    } else if (mime.search(/wav/i) > 0) {
+        key = "wav";
+    } 
+
+    if (key) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
-            artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
-            oga:uri
-        };
+            artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():""
+        };       
+        media[key] = uri;
     }
 
-    _playlist_jplayer.option("autoPlay", true);
-    playlist[0] = media;
-    _playlist_jplayer._initPlaylist(playlist);
-    _playlist_jplayer.play(0);
+    if (media) {
+        _playlist_jplayer.option("autoPlay", true);
+        playlist[0] = media;
+        _playlist_jplayer._initPlaylist(playlist);
+        _playlist_jplayer.play(0);
+    }
     
     window.resizeTo(490, 167);
 }

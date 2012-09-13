@@ -52,21 +52,6 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function indexAction()
-    {
-        // action body
-    }
-
-    /**
-     * Returns Airtime version. i.e "1.7.0-beta"
-     *
-     * First checks to ensure the correct API key was
-     * supplied, then returns AIRTIME_VERSION as defined
-     * in the database
-     *
-     * @return void
-     *
-     */
     public function versionAction()
     {
         // disable the view and the layout
@@ -182,8 +167,8 @@ class ApiController extends Zend_Controller_Action
             return;
         }
 
-        $begin= 0;
-        $end= $size - 1;
+        $begin = 0;
+        $end   = $size - 1;
 
         if (isset($_SERVER['HTTP_RANGE'])) {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
@@ -254,7 +239,7 @@ class ApiController extends Zend_Controller_Action
             $type = $request->getParam('type');
             /* This is some *extremely* lazy programming that needs to bi fixed. For some reason
              * we are using two entirely different codepaths for very similar functionality (type = endofday
-             * vs type = interval). Needs to be fixed for 2.2 - MK */
+             * vs type = interval). Needs to be fixed for 2.3 - MK */
             if ($type == "endofday") {
                 $limit = $request->getParam('limit');
                 if ($limit == "" || !is_numeric($limit)) {
@@ -307,7 +292,8 @@ class ApiController extends Zend_Controller_Action
             $dayStart = $date->getWeekStartDate();
             $utcDayStart = Application_Common_DateHelper::ConvertToUtcDateTimeString($dayStart);
 
-            $dow = array("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday");
+            $dow = array("monday", "tuesday", "wednesday", "thursday", "friday",
+                "saturday", "sunday");
 
             $result = array();
             for ($i=0; $i<7; $i++) {
@@ -315,7 +301,9 @@ class ApiController extends Zend_Controller_Action
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "0", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 
-                Application_Model_Show::convertToLocalTimeZone($shows, array("starts", "ends", "start_timestamp", "end_timestamp"));
+                Application_Model_Show::convertToLocalTimeZone($shows,
+                    array("starts", "ends", "start_timestamp",
+                    "end_timestamp"));
 
                 $result[$dow[$i]] = $shows;
             }
@@ -356,7 +344,6 @@ class ApiController extends Zend_Controller_Action
         //needed for smart blocks
         try {
             $mediaType = Application_Model_Schedule::GetType($media_id);
-            var_dump($mediaType);
             if ($mediaType == 'file') {
                 $file_id = Application_Model_Schedule::GetFileId($media_id);
                 if (!is_null($file_id)) {
@@ -368,10 +355,8 @@ class ApiController extends Zend_Controller_Action
             } else {
                 // webstream
                 $stream_id = Application_Model_Schedule::GetStreamId($media_id);
-                var_dump($stream_id);
                 if (!is_null($stream_id)) {
                     $webStream = new Application_Model_Webstream($stream_id);
-                    var_dump($webStream);
                     $now = new DateTime("now", new DateTimeZone("UTC"));
                     $webStream->setLastPlayed($now);
                 }
@@ -609,8 +594,6 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
         $all    = $request->getParam('all');
-
-        Logging::info("All param is: $all");
 
         $this->view->files =
             Application_Model_StoredFile::listAllFiles($dir_id,$all);
