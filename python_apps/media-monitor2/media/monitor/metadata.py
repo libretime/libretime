@@ -178,14 +178,19 @@ class Metadata(Loggable):
             return
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
-        if full_mutagen is None: raise BadSongFile(fpath)
+        #if full_mutagen is None: raise BadSongFile(fpath)
+        if full_mutagen is None: full_mutagen = {}
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
         for special_key,f in airtime_special.iteritems():
-            new_val = f(full_mutagen)
-            if new_val is not None:
-                self.__metadata[special_key] = new_val
+            try:
+                new_val = f(full_mutagen)
+                if new_val is not None:
+                    self.__metadata[special_key] = new_val
+            except Exception:
+                self.logger.info("Could not get special key %s for %d" %
+                        special_key, fpath)
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
