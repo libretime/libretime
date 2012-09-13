@@ -362,7 +362,7 @@ def file_md5(path,max_length=100):
             # whatever it was able to read which is acceptable behaviour
             m.update(f.read(max_length))
             return m.hexdigest()
-    else: raise ValueError("'%s' must exist to find its md5")
+    else: raise ValueError("'%s' must exist to find its md5" % path)
 
 def encode_to(obj, encoding='utf-8'):
     # TODO : add documentation + unit tests for this function

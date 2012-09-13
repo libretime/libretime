@@ -200,6 +200,11 @@ class Metadata(Loggable):
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
+
+        # Hickity Hackity for .wav files. Properly do this later
+        if mmp.extension(fpath) == 'wav':
+            full_mutagen.set_length(mmp.read_wave_duration(fpath))
+
         for special_key,f in airtime_special.iteritems():
             try:
                 new_val = f(full_mutagen)
@@ -209,11 +214,6 @@ class Metadata(Loggable):
                 self.logger.info("Could not get special key %s for %s" %
                         (special_key, fpath))
                 self.logger.info(str(e))
-
-        # Hickity Hackity for .wav files. Properly do this later
-        if mmp.extension(fpath) == 'wav':
-            full_mutagen.set_length(mmp.read_wave_duration(fpath))
-
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:
