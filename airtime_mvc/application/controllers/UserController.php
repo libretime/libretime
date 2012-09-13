@@ -103,9 +103,7 @@ class UserController extends Zend_Controller_Action
     {
         // action body
         $delId = $this->_getParam('id');
-
         $valid_actions = array("delete_cascade", "reassign_to");
-
         $files_action = $this->_getParam('deleted_files');
 
         # TODO : remove this. we only use default for now not to break the UI.
