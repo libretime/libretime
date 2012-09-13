@@ -1095,7 +1095,8 @@ class Application_Model_Preference
     public static function getCurrentLibraryTableSetting()
     {
         $v = self::getValue("library_datatable");
-        if( $v === '' ) {
+
+        if ( $v === '' ) {
             return function ($x) { return $x; };
         } else {
             $ds = unserialize($v);
