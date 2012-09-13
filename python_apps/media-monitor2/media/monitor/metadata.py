@@ -3,6 +3,9 @@ import mutagen
 import math
 import os
 import copy
+import wave
+import contextlib
+from collections import namedtuple
 from mutagen.easymp4  import EasyMP4KeyError
 
 from media.monitor.exceptions import BadSongFile
@@ -40,6 +43,22 @@ airtime2mutagen = {
     "MDATA_KEY_ISRC"        : "isrc",
     "MDATA_KEY_COPYRIGHT"   : "copyright",
 }
+
+class FakeMutagen(dict):
+    """
+    Need this fake mutagen object so that airtime_special functions
+    return a proper default value instead of throwing an exceptions for
+    files that mutagen doesn't recognize
+    """
+    FakeInfo = namedtuple('FakeInfo','length bitrate')
+    def __init__(self,path):
+        self.path = path
+        self.mime = []
+        self.info = FakeMutagen.FakeInfo(0.0, '')
+        dict.__init__(self)
+    def set_length(self,l):
+        old_bitrate = self.info.bitrate
+        self.info = FakeMutagen.FakeInfo(l, old_bitrate)
 
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
@@ -178,14 +197,29 @@ class Metadata(Loggable):
             return
         # TODO : Simplify the way all of these rules are handled right not it's
         # extremely unclear and needs to be refactored.
-        if full_mutagen is None: raise BadSongFile(fpath)
+        #if full_mutagen is None: raise BadSongFile(fpath)
+        if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
         for special_key,f in airtime_special.iteritems():
-            new_val = f(full_mutagen)
-            if new_val is not None:
-                self.__metadata[special_key] = new_val
+            try:
+                new_val = f(full_mutagen)
+                if new_val is not None:
+                    self.__metadata[special_key] = new_val
+            except Exception as e:
+                self.logger.info("Could not get special key %s for %s" %
+                        (special_key, fpath))
+                self.logger.info(str(e))
+
+        # Hickity Hackity for .wav files. Properly do this later
+        if mmp.extension(fpath) == 'wav':
+            with contextlib.closing(wave.open(fpath,'r')) as f:
+                frames   = f.getnframes()
+                rate     = f.getframerate()
+                duration = frames/float(rate)
+                full_mutagen.set_length(duration)
+
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:

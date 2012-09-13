@@ -901,7 +901,7 @@ class ApiController extends Zend_Controller_Action
 
         foreach ($data as $pair) {
             list($id, $gain) = $pair;
-
+            // TODO : move this code into model -- RG
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
             $file->setDbReplayGain($gain);
             $file->save();

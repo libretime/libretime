@@ -434,7 +434,9 @@ class PypoPush(Thread):
                         self.start_web_stream_buffer(media_item)
                     self.start_web_stream(media_item)
                 elif media_item['type'] == "stream_buffer_end":
-                    self.stop_web_stream(media_item)
+                    self.stop_web_stream_buffer(media_item)
+                elif media_item['type'] == "stream_output_end":
+                    self.stop_web_stream_output(media_item)
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)
 
@@ -509,7 +511,7 @@ class PypoPush(Thread):
         finally:
             self.telnet_lock.release()
 
-    def stop_web_stream(self, media_item):
+    def stop_web_stream_buffer(self, media_item):
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
@@ -518,6 +520,21 @@ class PypoPush(Thread):
             msg = 'dynamic_source.read_stop %s\n' % media_item['uri'].encode('latin-1')
             self.logger.debug(msg)
             tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+
+            self.current_stream_info = None
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+    def stop_web_stream_output(self, media_item):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
             msg = 'dynamic_source.output_stop\n'
             self.logger.debug(msg)

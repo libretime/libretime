@@ -24,7 +24,7 @@ class WebstreamController extends Zend_Controller_Action
 
         $webstream = new CcWebstream();
 
-        //we're not saving this primary key in the DB so it's OK
+        //we're not saving this primary key in the DB so it's OK to be -1
         $webstream->setDbId(-1);
         $webstream->setDbName("Untitled Webstream");
         $webstream->setDbDescription("");
@@ -34,7 +34,6 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
-        //$webstream->save();
 
         /*
         $type = "stream";
@@ -50,7 +49,7 @@ class WebstreamController extends Zend_Controller_Action
         //clear the session in case an old playlist was open: CC-4196
         Application_Model_Library::changePlaylist(null, null);
 
-        $this->view->obj = new Application_Model_Webstream($webstream->getDbId());
+        $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "new";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }
@@ -68,7 +67,7 @@ class WebstreamController extends Zend_Controller_Action
         if ($webstream) {
             Application_Model_Library::changePlaylist($id, "stream");
         }
-        $this->view->obj = new Application_Model_Webstream($webstream->getDbId());
+        $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }

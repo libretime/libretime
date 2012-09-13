@@ -61,11 +61,13 @@ SQL;
     }
 
     /**
-     * Queries the database for the set of schedules one hour before and after the given time.
-     * If a show starts and ends within that time that is considered the current show. Then the
-     * scheduled item before it is the previous show, and the scheduled item after it is the next
-     * show. This way the dashboard getCurrentPlaylist is very fast. But if any one of the three
-     * show types are not found through this mechanism a call is made to the old way of querying
+     * Queries the database for the set of schedules one hour before
+     * and after the given time. If a show starts and ends within that
+     * time that is considered the current show. Then the scheduled item
+     * before it is the previous show, and the scheduled item after it
+     * is the next show. This way the dashboard getCurrentPlaylist is
+     * very fast. But if any one of the three show types are not found
+     * through this mechanism a call is made to the old way of querying
      * the database to find the track info.
     **/
     public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
@@ -83,10 +85,16 @@ SQL;
             LEFT JOIN cc_show_instances si ON st.instance_id = si.id";
 
         $streamColumns = "ws.name AS artist_name, wm.liquidsoap_data AS track_title, ";
-        $streamJoin = "FROM cc_schedule AS st JOIN cc_webstream ws ON st.stream_id = ws.id
-            LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
-            LEFT JOIN cc_subjs AS sub on sub.id = ws.creator_id
-            LEFT JOIN (SELECT * FROM cc_webstream_metadata ORDER BY start_time DESC LIMIT 1) AS wm on st.id = wm.instance_id";
+        $streamJoin = <<<SQL
+FROM cc_schedule AS st
+JOIN cc_webstream ws ON st.stream_id = ws.id
+LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
+LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
+LEFT JOIN
+  (SELECT *
+   FROM cc_webstream_metadata
+   ORDER BY start_time DESC LIMIT 1) AS wm ON st.id = wm.instance_id
+SQL;
 
         $predicateArr = array();
         $paramMap = array();
@@ -118,8 +126,8 @@ SQL;
         $numberOfRows = count($rows);
 
         $results['previous'] = null;
-        $results['current'] = null;
-        $results['next'] = null;
+        $results['current']  = null;
+        $results['next']     = null;
 
         $timeNowAsMillis = strtotime($p_timeNow);
         for ($i = 0; $i < $numberOfRows; ++$i) {
@@ -478,8 +486,9 @@ SQL;
     }
 
     /**
-     * Compute the difference between two times in the format "HH:MM:SS.mmmmmm".
-     * Note: currently only supports calculating millisec differences.
+     * Compute the difference between two times in the format          .
+     * "HH:MM:SS.mmmmmm" Note: currently only supports calculating     .
+     * millisec differences                                            .
      *
      * @param  string $p_time1
      * @param  string $p_time2
@@ -789,6 +798,30 @@ SQL;
         }
     }
 
+    /**
+     * Purpose of this function is to iterate through the entire
+     * schedule array that was just built and fix the data up a bit. For
+     * example, if we have two consecutive webstreams, we don't need the
+     * first webstream to shutdown the output, when the second one will
+     * just switch it back on. Preventing this behaviour stops hiccups
+     * in output sound.
+     */
+    private static function filterData(&$data)
+    {
+        $previous_key = null;
+        $previous_val = null;
+        foreach ($data as $k => $v) {
+            if ($v["type"] == "stream_buffer_start"
+                && !is_null($previous_val)
+                && $previous_val["type"] == "stream_output_end") {
+
+                unset($data[$previous_key]);
+            }
+            $previous_key = $k;
+            $previous_val = $v;
+        }
+    }
+
     public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
     {
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
@@ -798,6 +831,8 @@ SQL;
 
         self::createInputHarborKickTimes($data, $range_start, $range_end);
         self::createScheduledEvents($data, $range_start, $range_end);
+
+        self::filterData($data["media"]);
 
         return $data;
     }
