@@ -320,6 +320,7 @@ class LibraryController extends Zend_Controller_Action
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
                     $message = "Could not delete some scheduled files.";
+                    Logging::info($e);
                 }
             }
         }
