@@ -19,7 +19,6 @@ class WebstreamController extends Zend_Controller_Action
         if (!$this->isAuthorized(-1)) {
             // TODO: this header call does not actually print any error message
             header("Status: 401 Not Authorized");
-            Logging::info("Ain't not Authorized");
             return;
         }
 
@@ -112,8 +111,6 @@ class WebstreamController extends Zend_Controller_Action
                     host/dj, that he has the correct permission.*/
                 $user = Application_Model_User::getCurrentUser();
                 //only allow when webstream belongs to the DJ
-                Logging::info("Webstream id:".$webstream->getDbCreatorId());
-                Logging::info("User id:".$user->getId());
                 return $webstream->getDbCreatorId() == $user->getId();
             }
             /*we are creating a new stream. Don't need to check whether the
@@ -122,7 +119,6 @@ class WebstreamController extends Zend_Controller_Action
         } else {
             Logging::info( $user );
         }
-        Logging::info("what the fuck");
         return false;
     }
 
@@ -133,15 +129,12 @@ class WebstreamController extends Zend_Controller_Action
         $id = $request->getParam("id");
 
         $parameters = array();
-        $parameters['id'] = trim($request->getParam("id"));
-        $parameters['length'] = trim($request->getParam("length"));
-        $parameters['name'] = trim($request->getParam("name"));
-        $parameters['description'] = trim($request->getParam("description"));
-        $parameters['url'] = trim($request->getParam("url"));
+        foreach (array('id','length','name','description','url') as $p) {
+            $parameters[$p] = trim($request->getParam($p));
+        }
 
         if (!$this->isAuthorized($id)) {
             header("Status: 401 Not Authorized");
-
             return;
         }
 
