@@ -272,14 +272,7 @@ def normalized_metadata(md, original_path):
         if new_md['MDATA_KEY_BPM'] is None:
             del new_md['MDATA_KEY_BPM']
 
-    if is_airtime_recorded(new_md):
-        #hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
-        #new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
-            #(name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
-        # We changed show recorder to output correct metadata for recorded
-        # shows
-        pass
-    else:
+    if not is_airtime_recorded(new_md):
         # Read title from filename if it does not exist
         default_title = no_extension_basename(original_path)
         if re.match(".+-%s-.+$" % unicode_unknown, default_title):
@@ -315,6 +308,7 @@ def organized_path(old_path, root_path, orig_md):
 
     # MDATA_KEY_BITRATE is in bytes/second i.e. (256000) we want to turn this
     # into 254kbps
+
     # Some metadata elements cannot be empty, hence we default them to some
     # value just so that we can create a correct path
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
@@ -350,6 +344,8 @@ def organized_path(old_path, root_path, orig_md):
         filepath = os.path.join(path, fname)
     return filepath
 
+# TODO : Get rid of this function and every one of its uses. We no longer use
+# the md5 signature of a song for anything
 def file_md5(path,max_length=100):
     """
     Get md5 of file path (if it exists). Use only max_length characters to save
@@ -482,12 +478,12 @@ def file_playable(pathname):
     """
     Returns True if 'pathname' is playable by liquidsoap. False otherwise.
     """
-    #when there is an single apostrophe inside of a string quoted by
-    #apostrophes, we can only escape it by replace that apostrophe with '\''.
-    #This breaks the string into two, and inserts an escaped single quote in
-    #between them.  We run the command as pypo because otherwise the target file
-    #is opened with write permissions, and this causes an inotify ON_CLOSE_WRITE
-    #event to be fired :/
+    # when there is an single apostrophe inside of a string quoted by
+    # apostrophes, we can only escape it by replace that apostrophe with
+    # '\''. This breaks the string into two, and inserts an escaped
+    # single quote in between them. We run the command as pypo because
+    # otherwise the target file is opened with write permissions, and
+    # this causes an inotify ON_CLOSE_WRITE event to be fired :/
     command = ("airtime-liquidsoap -c 'output.dummy" + \
         "(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1") % \
         pathname.replace("'", "'\\''")

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import mutagen
-import math
 import os
 import copy
 from collections import namedtuple
@@ -8,6 +7,7 @@ from mutagen.easymp4  import EasyMP4KeyError
 
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log        import Loggable
+from media.monitor.pure       import format_length
 import media.monitor.pure as mmp
 
 """
@@ -93,24 +93,6 @@ truncate_table = {
         'MDATA_KEY_ISRC'      : 512,
         'MDATA_KEY_COPYRIGHT' : 512,
 }
-
-def format_length(mutagen_length):
-    """
-    Convert mutagen length to airtime length
-    """
-    t = float(mutagen_length)
-    h = int(math.floor(t / 3600))
-    t = t % 3600
-    m = int(math.floor(t / 60))
-    s = t % 60
-    # will be ss.uuu
-    s = str(s)
-    seconds = s.split(".")
-    s = seconds[0]
-    # have a maximum of 6 subseconds.
-    if len(seconds[1]) >= 6: ss = seconds[1][0:6]
-    else: ss = seconds[1][0:]
-    return "%s:%s:%s.%s" % (h, m, s, ss)
 
 def truncate_to_length(item, length):
     if isinstance(item, int): item = str(item)
