@@ -19,7 +19,6 @@ class WebstreamController extends Zend_Controller_Action
         if (!$this->isAuthorized(-1)) {
             // TODO: this header call does not actually print any error message
             header("Status: 401 Not Authorized");
-            Logging::info("Ain't not Authorized");
             return;
         }
 
@@ -112,8 +111,6 @@ class WebstreamController extends Zend_Controller_Action
                     host/dj, that he has the correct permission.*/
                 $user = Application_Model_User::getCurrentUser();
                 //only allow when webstream belongs to the DJ
-                Logging::info("Webstream id:".$webstream->getDbCreatorId());
-                Logging::info("User id:".$user->getId());
                 return $webstream->getDbCreatorId() == $user->getId();
             }
             /*we are creating a new stream. Don't need to check whether the
