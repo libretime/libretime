@@ -1642,8 +1642,8 @@ span.errors.sp-errors{
 	top:8px;
     
 }
-.collapsible-header.close .arrow-icon, collapsible-header-disabled.close  .arrow-icon {
-	background-position: 0 -11px;
+.collapsible-header.closed .arrow-icon, collapsible-header-disabled.close  .arrow-icon {
+	background-position: 0 -11px !important;
     
 }
 #schedule-add-show .button-bar {

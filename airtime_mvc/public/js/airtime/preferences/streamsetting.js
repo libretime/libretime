@@ -238,7 +238,7 @@ $(document).ready(function() {
     
     $('.collapsible-header').click(function() {
         $(this).next().toggle('fast');
-        $(this).toggleClass("close");
+        $(this).toggleClass("closed");
         return false;
     })
     
