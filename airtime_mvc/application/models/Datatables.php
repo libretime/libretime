@@ -57,7 +57,7 @@ class Application_Model_Datatables
     public static function findEntries($con, $displayColumns, $fromTable,
         $data, $dataProp = "aaData")
     {
-        $librarySetting = Application_Model_Preference::getCurrentLibraryTableSetting();
+        $librarySetting = Application_Model_Preference::getCurrentLibraryTableColumnMap();
         //$displayColumns[] = 'owner';
 
         // map that maps original column position to db name
@@ -76,7 +76,7 @@ class Application_Model_Datatables
 
         // map that maps dbname to searchTerm
         $dbname2searchTerm = array();
-        foreach ($current2dbname as $currentPos=>$dbname) {
+        foreach ($current2dbname as $currentPos => $dbname) {
             $dbname2searchTerm[$dbname] = 
                 $orig2searchTerm[$librarySetting($currentPos)];
         }

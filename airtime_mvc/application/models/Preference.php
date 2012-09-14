@@ -3,7 +3,7 @@
 class Application_Model_Preference
 {
 
-    public static function setValue($key, $value, $isUserValue = false)
+    private static function setValue($key, $value, $isUserValue = false)
     {
         try {
             //called from a daemon process
@@ -70,7 +70,7 @@ class Application_Model_Preference
 
     }
 
-    public static function getValue($key, $isUserValue = false)
+    private static function getValue($key, $isUserValue = false)
     {
         try {
             $con = Propel::getConnection();
@@ -1093,7 +1093,7 @@ class Application_Model_Preference
     }
 
 
-    public static function getCurrentLibraryTableSetting()
+    public static function getCurrentLibraryTableColumnMap()
     {
         $v = self::getValue("library_datatable", true);
 
@@ -1116,6 +1116,12 @@ class Application_Model_Preference
 
         $data = serialize($settings);
         $v = self::setValue("library_datatable", $data, true);
+    }
+
+    public static function getCurrentLibraryTableSetting()
+    {
+        $data = self::getValue("library_datatable", true);
+        return ($data != "") ? unserialize($data) : null;
     }
 
 
