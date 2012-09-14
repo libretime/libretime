@@ -51,7 +51,7 @@ class FakeMutagen(dict):
     FakeInfo = namedtuple('FakeInfo','length bitrate')
     def __init__(self,path):
         self.path = path
-        self.mime = []
+        self.mime = ['audio/wav']
         self.info = FakeMutagen.FakeInfo(0.0, '')
         dict.__init__(self)
     def set_length(self,l):

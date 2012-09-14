@@ -70,36 +70,15 @@ class Application_Model_User
         return $result;
     }
 
+    // TODO : refactor code to only accept arrays for isUserType and
+    // simplify code even further
     public function isUserType($type)
     {
-        if (is_array($type)) {
-            $result = false;
-            foreach ($type as $t) {
-                switch ($t) {
-                    case UTYPE_ADMIN:
-                        $result = $this->_userInstance->getDbType() === 'A';
-                        break;
-                    case UTYPE_HOST:
-                        $result = $this->_userInstance->getDbType() === 'H';
-                        break;
-                    case UTYPE_PROGRAM_MANAGER:
-                        $result = $this->_userInstance->getDbType() === 'P';
-                        break;
-                }
-                if ($result) {
-                    return $result;
-                }
-            }
-        } else {
-            switch ($type) {
-                case UTYPE_ADMIN:
-                    return $this->_userInstance->getDbType() === 'A';
-                case UTYPE_HOST:
-                    return $this->_userInstance->getDbId() === 'H';
-                case UTYPE_PROGRAM_MANAGER:
-                    return $this->_userInstance->getDbType() === 'P';
-            }
+        if (!is_array($type)) {
+            $type = array($type);
         }
+        $real_type = $this->_userInstance->getDbType();
+        return in_array($real_type, $type);
     }
 
     public function setLogin($login)
