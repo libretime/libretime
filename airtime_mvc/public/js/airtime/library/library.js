@@ -110,7 +110,7 @@ var AIRTIME = (function(AIRTIME) {
                         "</ul>" +
                     "</div>")
             .append("<div class='btn-group'>" +
-                        "<button class='btn btn-small'>" +
+                        "<button class='btn btn-small' id='library-plus'>" +
                             "<i class='icon-white icon-plus'></i> Add to current playlist" +
                         "</button>" +
                     "</div>")

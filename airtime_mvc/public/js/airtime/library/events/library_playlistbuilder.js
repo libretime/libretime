@@ -16,9 +16,9 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (check === true) {
-            AIRTIME.button.enableButton("icon-plus", true);
+            AIRTIME.button.enableButton("btn-group #library-plus", true);
         } else {
-            AIRTIME.button.disableButton("icon-plus", true);
+            AIRTIME.button.disableButton("btn-group #library-plus", true);
         }
     };
 
@@ -109,7 +109,7 @@ var AIRTIME = (function(AIRTIME) {
             .find('.icon-plus').parent()
             .click(function() {
 
-                if (AIRTIME.button.isDisabled('icon-plus') === true) {
+                if (AIRTIME.button.isDisabled('btn-group #library-plus') === true) {
                     return;
                 }
 

@@ -4,16 +4,33 @@ if (isset($this->obj)) {
     $count = count($contents);
 }
 ?>
-<button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
+<div class="btn-toolbar clearfix">
+    <div class="btn-group pull-left">
+        <button id="spl_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id='lib-new-pl'><a href="#">New Playlist</a></li>
+            <li id='lib-new-bl'><a href="#">New Smart Block</a></li>
+            <li id='lib-new-ws'><a href="#">New Webstream</a></li>
+        </ul>
+    </div>
 <?php if (isset($this->obj)) : ?>
-    <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
-    <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button" style="display:<?php echo $count > 0 ?"block;":"none;"?>">
-        <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
-    </a>
+    <div class='btn-group pull-right'>
+        <button class="btn btn-inverse" title='Save playlist' type="button" id="save_button">Save</button>
+    </div>
+    <div class='btn-group pull-right'>
+        <button id="spl_delete" class="btn" role="button" aria-disabled="false">Delete</button>
+    </div>
+    <div class='btn-group pull-right'>
+        <a href="#" id="spl_crossfade" class="btn crossfade-main-button" style="display:<?php echo $count > 0 ?"block;":"none;"?>">
+            <i class='crossfade-main-icon'></i><span class="ui-button-text">Playlist crossfade</span>
+        </a>
+    </div>
 <?php endif; ?>
+</div>
 
 <?php if (isset($this->obj)) : ?>
-    <button class="ui-button ui-state-default sp-save" title='Save playlist' type="button" id="save_button">Save</button>
     <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
     <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
     <input id='obj_type' type='hidden' value='playlist'></input>

@@ -1,7 +1,15 @@
 <form id="smart-block-form" method="post" action="">
 <fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='smart_block_options'>
 <legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Block Options</legend>
-    <dl class='zend_form'>
+    <dl class='zend_form search-criteria'>
+        <div class='btn-toolbar clearfix'>
+            <div class='btn-group pull-right'>
+                <?php echo $this->element->getElement('generate_button') ?>
+            </div>
+            <div class='btn-group pull-right'>
+                <?php echo $this->element->getElement('shuffle_button') ?>
+            </div>
+        </div>
         <div id='sp-success' class='success' style='display:none'></div>
         <dd id='sp_type-element'>
             <label class='sp-label'>
@@ -17,28 +25,25 @@
                   </label>
             <?php $i = $i + 1; ?>
             <?php endforeach; ?>
-            
-            <?php echo $this->element->getElement('generate_button') ?>
-            <?php echo $this->element->getElement('shuffle_button') ?>
         </dd>
         
-        <dd id='sp_criteria-element'>
+        <dd id='sp_criteria-element' class='criteria-element'>
         <?php for ($i = 0; $i < $this->criteriasLength; $i++) {?>
         <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {?>
             <div <?php if (($i > 0) && ($this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled')) {
                            echo 'style=display:none';
                        } ?>>
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
-                <a class='ui-button sp-ui-button-icon-only sp_no_margins' id='modifier_add_<?php echo $i ?>'>
-                    <span class='ui-icon ui-icon-plusthick'></span>
+                <a class='btn btn-small' id='modifier_add_<?php echo $i ?>'>
+                    <i class='icon-white icon-plus'></i>
                 </a>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
                 <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
-                <a class='ui-button sp-ui-button-icon-only' id='criteria_remove_<?php echo $i ?>'>
-                    <span class='ui-icon ui-icon-closethick'></span>
+                
+                <a class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
+                    <i class='icon-white icon-remove'></i>
                 </a>
-                <br />
                 <?php if($this->element->getElement("sp_criteria_field_".$i."_".$j)->hasErrors()) : ?>
                     <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>
                     <span class='errors sp-errors'>
