@@ -59,10 +59,11 @@ class LibraryController extends Zend_Controller_Action
                 $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
                 Logging::info($obj_sess->id);
                 Logging::info($obj_sess->type);
-                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
-                $obj = new $objInfo['className']($obj_sess->id);
-                $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-                $user = new Application_Model_User($userInfo->id);
+
+                $objInfo     = Application_Model_Library::getObjInfo($obj_sess->type);
+                $obj         = new $objInfo['className']($obj_sess->id);
+                $userInfo    = Zend_Auth::getInstance()->getStorage()->read();
+                $user        = new Application_Model_User($userInfo->id);
                 $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
                 if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
