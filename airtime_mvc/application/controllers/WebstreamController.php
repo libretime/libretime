@@ -17,8 +17,9 @@ class WebstreamController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         if (!$this->isAuthorized(-1)) {
+            // TODO: this header call does not actually print any error message
             header("Status: 401 Not Authorized");
-
+            Logging::info("Ain't not Authorized");
             return;
         }
 
@@ -94,30 +95,35 @@ class WebstreamController extends Zend_Controller_Action
 
     }
 
+    /*TODO : make a user object be passed a parameter into this function so
+        that it does not have to be fetched multiple times.*/
     public function isAuthorized($webstream_id)
     {
-        $hasPermission = false;
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $hasPermission = true;
+            return true;
         }
 
-        if (!$hasPermission && $user->isHost()) {
+        if ($user->isHost()) {
+            // not creating a webstream
             if ($webstream_id != -1) {
                 $webstream = CcWebstreamQuery::create()->findPK($webstream_id);
-                //we are updating a playlist. Ensure that if the user is a host/dj, that he has the correct permission.
+                /*we are updating a playlist. Ensure that if the user is a
+                    host/dj, that he has the correct permission.*/
                 $user = Application_Model_User::getCurrentUser();
-
-                if ($webstream->getDbCreatorId() == $user->getId()) {
-                    $hasPermission = true;
-                }
-            } else {
-                //we are creating a new stream. Don't need to check whether the DJ/Host owns the stream
-                $hasPermission = true;
+                //only allow when webstream belongs to the DJ
+                Logging::info("Webstream id:".$webstream->getDbCreatorId());
+                Logging::info("User id:".$user->getId());
+                return $webstream->getDbCreatorId() == $user->getId();
             }
+            /*we are creating a new stream. Don't need to check whether the
+                DJ/Host owns the stream*/
+            return true;
+        } else {
+            Logging::info( $user );
         }
-
-        return $hasPermission;
+        Logging::info("what the fuck");
+        return false;
     }
 
     public function saveAction()
