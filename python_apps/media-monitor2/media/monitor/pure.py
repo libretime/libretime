@@ -3,6 +3,8 @@ import copy
 import subprocess
 import os
 import math
+import wave
+import contextlib
 import shutil
 import re
 import sys
@@ -96,6 +98,13 @@ def is_airtime_recorded(md):
     """
     if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
+
+def read_wave_duration(path):
+    with contextlib.closing(wave.open(path,'r')) as f:
+        frames   = f.getnframes()
+        rate     = f.getframerate()
+        duration = frames/float(rate)
+        return duration
 
 def clean_empty_dirs(path):
     """
@@ -246,8 +255,8 @@ def normalized_metadata(md, original_path):
     format_rules = {
         'MDATA_KEY_TRACKNUMBER' : parse_int,
         'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
-        #'MDATA_KEY_MIME'        : lambda x: x.replace('-','/'),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
+        'MDATA_KEY_MIME' : lambda x: x.replace('audio/vorbis','audio/ogg'),
     }
 
     new_md = remove_whitespace(new_md) # remove whitespace fields
@@ -263,16 +272,10 @@ def normalized_metadata(md, original_path):
         if new_md['MDATA_KEY_BPM'] is None:
             del new_md['MDATA_KEY_BPM']
 
-    if is_airtime_recorded(new_md):
-        #hour,minute,second,name = new_md['MDATA_KEY_TITLE'].split("-",3)
-        #new_md['MDATA_KEY_TITLE'] = u'%s-%s-%s:%s:%s' % \
-            #(name, new_md['MDATA_KEY_YEAR'], hour, minute, second)
-        # We changed show recorder to output correct metadata for recorded
-        # shows
-        pass
-    else:
+    if not is_airtime_recorded(new_md):
         # Read title from filename if it does not exist
         default_title = no_extension_basename(original_path)
+        default_title = re.sub(r'__\d+\.',u'.', default_title)
         if re.match(".+-%s-.+$" % unicode_unknown, default_title):
             default_title = u''
         new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
@@ -306,6 +309,7 @@ def organized_path(old_path, root_path, orig_md):
 
     # MDATA_KEY_BITRATE is in bytes/second i.e. (256000) we want to turn this
     # into 254kbps
+
     # Some metadata elements cannot be empty, hence we default them to some
     # value just so that we can create a correct path
     normal_md = default_to_f(orig_md, path_md, unicode_unknown, default_f)
@@ -341,6 +345,8 @@ def organized_path(old_path, root_path, orig_md):
         filepath = os.path.join(path, fname)
     return filepath
 
+# TODO : Get rid of this function and every one of its uses. We no longer use
+# the md5 signature of a song for anything
 def file_md5(path,max_length=100):
     """
     Get md5 of file path (if it exists). Use only max_length characters to save
@@ -353,7 +359,7 @@ def file_md5(path,max_length=100):
             # whatever it was able to read which is acceptable behaviour
             m.update(f.read(max_length))
             return m.hexdigest()
-    else: raise ValueError("'%s' must exist to find its md5")
+    else: raise ValueError("'%s' must exist to find its md5" % path)
 
 def encode_to(obj, encoding='utf-8'):
     # TODO : add documentation + unit tests for this function
@@ -473,12 +479,12 @@ def file_playable(pathname):
     """
     Returns True if 'pathname' is playable by liquidsoap. False otherwise.
     """
-    #when there is an single apostrophe inside of a string quoted by
-    #apostrophes, we can only escape it by replace that apostrophe with '\''.
-    #This breaks the string into two, and inserts an escaped single quote in
-    #between them.  We run the command as pypo because otherwise the target file
-    #is opened with write permissions, and this causes an inotify ON_CLOSE_WRITE
-    #event to be fired :/
+    # when there is an single apostrophe inside of a string quoted by
+    # apostrophes, we can only escape it by replace that apostrophe with
+    # '\''. This breaks the string into two, and inserts an escaped
+    # single quote in between them. We run the command as pypo because
+    # otherwise the target file is opened with write permissions, and
+    # this causes an inotify ON_CLOSE_WRITE event to be fired :/
     command = ("airtime-liquidsoap -c 'output.dummy" + \
         "(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1") % \
         pathname.replace("'", "'\\''")

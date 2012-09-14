@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 import mutagen
-import math
 import os
 import copy
-import wave
-import contextlib
 from collections import namedtuple
 from mutagen.easymp4  import EasyMP4KeyError
 
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log        import Loggable
+from media.monitor.pure       import format_length
 import media.monitor.pure as mmp
 
 """
@@ -95,24 +93,6 @@ truncate_table = {
         'MDATA_KEY_ISRC'      : 512,
         'MDATA_KEY_COPYRIGHT' : 512,
 }
-
-def format_length(mutagen_length):
-    """
-    Convert mutagen length to airtime length
-    """
-    t = float(mutagen_length)
-    h = int(math.floor(t / 3600))
-    t = t % 3600
-    m = int(math.floor(t / 60))
-    s = t % 60
-    # will be ss.uuu
-    s = str(s)
-    seconds = s.split(".")
-    s = seconds[0]
-    # have a maximum of 6 subseconds.
-    if len(seconds[1]) >= 6: ss = seconds[1][0:6]
-    else: ss = seconds[1][0:]
-    return "%s:%s:%s.%s" % (h, m, s, ss)
 
 def truncate_to_length(item, length):
     if isinstance(item, int): item = str(item)
@@ -202,6 +182,11 @@ class Metadata(Loggable):
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
+
+        # Hickity Hackity for .wav files. Properly do this later
+        if mmp.extension(fpath) == 'wav':
+            full_mutagen.set_length(mmp.read_wave_duration(fpath))
+
         for special_key,f in airtime_special.iteritems():
             try:
                 new_val = f(full_mutagen)
@@ -211,15 +196,6 @@ class Metadata(Loggable):
                 self.logger.info("Could not get special key %s for %s" %
                         (special_key, fpath))
                 self.logger.info(str(e))
-
-        # Hickity Hackity for .wav files. Properly do this later
-        if mmp.extension(fpath) == 'wav':
-            with contextlib.closing(wave.open(fpath,'r')) as f:
-                frames   = f.getnframes()
-                rate     = f.getframerate()
-                duration = frames/float(rate)
-                full_mutagen.set_length(duration)
-
         # Finally, we "normalize" all the metadata here:
         self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
         # Now we must load the md5:

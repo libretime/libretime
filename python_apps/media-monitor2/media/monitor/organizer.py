@@ -8,6 +8,7 @@ from media.monitor.exceptions import BadSongFile
 from media.monitor.events     import OrganizeFile
 from pydispatch               import dispatcher
 from os.path                  import dirname
+import os.path
 
 class Organizer(ReportHandler,Loggable):
     """
@@ -55,8 +56,13 @@ class Organizer(ReportHandler,Loggable):
             # Do we need to "massage" the path using mmp.organized_path?
             target_path = self.recorded_path if event.metadata.is_recorded() \
                                              else self.target_path
-            new_path = mmp.organized_path(event.path, target_path,
-                    event.metadata.extract())
+            # nasty hack do this properly
+            owner_id = mmp.owner_id(event.path)
+            if owner_id != -1:
+                target_path = os.path.join(target_path, unicode(owner_id))
+
+            mdata = event.metadata.extract()
+            new_path = mmp.organized_path(event.path, target_path, mdata)
 
             # See hack in mmp.magic_move
             def new_dir_watch(d):
@@ -68,7 +74,12 @@ class Organizer(ReportHandler,Loggable):
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
 
-            owners.add_file_owner(new_path, mmp.owner_id(event.path) )
+            # The reason we need to go around saving the owner in this ass
+            # backwards way is bewcause we are unable to encode the owner id
+            # into the file itself so that the StoreWatchListener listener can
+            # detect it from the file
+            owners.add_file_owner(new_path, owner_id )
+
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))
         except BadSongFile as e:
