@@ -16,9 +16,9 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (check === true) {
-            AIRTIME.button.enableButton("lib-button-add");
+            AIRTIME.button.enableButton("icon-plus", true);
         } else {
-            AIRTIME.button.disableButton("lib-button-add");
+            AIRTIME.button.disableButton("icon-plus", true);
         }
     };
 
@@ -112,23 +112,16 @@ var AIRTIME = (function(AIRTIME) {
     mod.setupLibraryToolbar = function() {
         var $toolbar = $(".lib-content .fg-toolbar:first");
 
-        $toolbar
-                .append("<ul />")
-                .find('ul')
-                .append(
-                        '<li class="ui-state-default lib-button-select" title="Select"><span class="ui-icon ui-icon-document-b"></span></li>')
-                .append(
-                        '<li class="ui-state-default ui-state-disabled lib-button-add" title="Add library items after selected cursors in the timeline"><span class="ui-icon ui-icon-plusthick"></span></li>')
-                .append(
-                        '<li class="ui-state-default ui-state-disabled lib-button-delete" title="Delete selected library items"><span class="ui-icon ui-icon-trash"></span></li>');
-
+        mod.createToolbarButtons();
+        
+        $toolbar.append($menu);
         // add to timeline button
         $toolbar
-            .find('.lib-button-add')
+            .find('.icon-plus').parent()
             .click(
                     function() {
 
-                        if (AIRTIME.button.isDisabled('lib-button-add') === true) {
+                        if (AIRTIME.button.isDisabled('icon-plus') === true) {
                             return;
                         }
     
@@ -163,9 +156,9 @@ var AIRTIME = (function(AIRTIME) {
                     });
 
         // delete from library.
-        $toolbar.find('.lib-button-delete').click(function() {
+        $toolbar.find('.icon-trash').parent().click(function() {
 
-            if (AIRTIME.button.isDisabled('lib-button-delete') === true) {
+            if (AIRTIME.button.isDisabled('icon-trash') === true) {
                 return;
             }
 

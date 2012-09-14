@@ -96,18 +96,35 @@ var AIRTIME = (function(AIRTIME) {
         return count;
     };
     
+    mod.createToolbarButtons = function() {
+        $menu = $("<div class='btn-toolbar' />");
+        $menu
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                            "Select <span class='caret'></span>" +
+                        "</button>" +
+                        "<ul class='dropdown-menu'>" +
+                            "<li id='sb-select-page'><a href='#'>Select this page</a></li>" +
+                            "<li id='sb-dselect-page'><a href='#'>Deselect this page</a></li>" +
+                            "<li id='sb-dselect-all'><a href='#'>Deselect all</a></li>" +
+                        "</ul>" +
+                    "</div>")
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small'>" +
+                            "<i class='icon-white icon-plus'></i> Add to current playlist" +
+                        "</button>" +
+                    "</div>")
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small' id='sb-trash'>" +
+                            "<i class='icon-white icon-trash'></i>" +
+                        "</button>" +
+                    "</div>");
+    }
+    
     mod.createToolbarDropDown = function() {
-        
-        $.contextMenu({
-            selector: '#library_content .ui-icon-document-b',
-            trigger: "left",
-            ignoreRightClick: true,
-            items: {
-                "sp": {name: "Select This Page", callback: mod.selectCurrentPage},
-                "dp": {name: "Deselect This Page", callback: mod.deselectCurrentPage},
-                "sn": {name: "Deselect All", callback: mod.selectNone}
-            }
-        });     
+        $('#sb-select-page').click(function(){mod.selectCurrentPage();});
+        $('#sb-dselect-page').click(function(){mod.deselectCurrentPage();});
+        $('#sb-dselect-all').click(function(){mod.selectNone();});
     };
     
     mod.checkDeleteButton = function() {
@@ -119,10 +136,10 @@ var AIRTIME = (function(AIRTIME) {
         }
         
         if (check === true) {
-            AIRTIME.button.enableButton("lib-button-delete");
+            AIRTIME.button.enableButton("btn-group #sb-trash", true);
         }
         else {
-            AIRTIME.button.disableButton("lib-button-delete");
+            AIRTIME.button.disableButton("btn-group #sb-trash", true);
         }
     };
     

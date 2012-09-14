@@ -771,9 +771,9 @@ SQL;
                 $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
             } elseif ($type == "st") {
                 $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="Webstream preview" src="/css/images/record_icon.png">';
+                $row['image'] = '<img title="Webstream preview" src="/css/images/icon_webstream.png">';
             } elseif ($type == "bl") {
-                $row['image'] = '<img title="Smart Block" src="/css/images/delete.png">';
+                $row['image'] = '<img title="Smart Block" src="/css/images/icon_smart-block.png">';
             }
         }
 
