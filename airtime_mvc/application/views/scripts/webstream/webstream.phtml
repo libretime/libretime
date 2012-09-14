@@ -1,7 +1,20 @@
-<button id="ws_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
+<div class="btn-toolbar clearfix">
+    <div class="btn-group pull-left">
+        <button id="ws_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id='lib-new-pl'><a href="#">New Playlist</a></li>
+            <li id='lib-new-bl'><a href="#">New Smart Block</a></li>
+            <li id='lib-new-ws'><a href="#">New Webstream</a></li>
+        </ul>
+    </div>
 <?php if (isset($this->obj)) : ?>
-<button id="ws_delete" class="ui-button ui-widget ui-state-default" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?> role="button" aria-disabled="false">Delete</button>
+<div class="btn-group pull-right">
+    <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false">Delete</button>
+</div>
 <?php endif; ?>
+</div>
 
 <?php if (isset($this->obj)) : ?>
     <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
@@ -36,7 +49,7 @@
          <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>"/>
          </dd>        
          <dd id="submit-element" class="buttons">
-            <input class="ui-button ui-state-default" type="submit" value="Save" id="webstream_save" name="submit">
+            <input class="btn btn-inverse" type="submit" value="Save" id="webstream_save" name="submit">
         </dd>
        </dl>
     </fieldset>

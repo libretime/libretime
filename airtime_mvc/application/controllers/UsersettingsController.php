@@ -44,9 +44,9 @@ class UsersettingsController extends Zend_Controller_Action
 
     public function getLibraryDatatableAction()
     {
-        $data = Application_Model_Preference::getValue("library_datatable", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
+        $data = Application_Model_Preference::getCurrentLibraryTableSetting();
+        if (!is_null($data)) {
+            $this->view->settings = $data;
         }
     }
 

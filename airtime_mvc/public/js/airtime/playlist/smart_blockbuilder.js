@@ -6,7 +6,7 @@ function setSmartBlockEvents() {
     var form = $('#smart-block-form');
     
     /********** ADD CRITERIA ROW **********/
-    form.find('.criteria_add').live('click', function(){
+    form.find('#criteria_add').live('click', function(){
         
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
         
@@ -52,7 +52,7 @@ function setSmartBlockEvents() {
         sizeTextBoxes(newRowVal, 'sp_extra_input_text', 'sp_input_text');
         
         //remove the 'criteria add' button from new modifier row
-        newRow.find('.criteria_add').remove();
+        newRow.find('#criteria_add').remove();
         
         $(this).parent().after(newRow);
         reindexElements();
@@ -490,12 +490,12 @@ function removeSuccessMsg() {
 }
 
 function appendAddButton() {
-    var add_button = "<a class='ui-button sp-ui-button-icon-only criteria_add'>" +
-                     "<span class='ui-icon ui-icon-plusthick'></span></a>";
+    var add_button = "<a class='btn btn-small' id='criteria_add'>" +
+                     "<i class='icon-white icon-plus'></i></a>";
     var rows = $('#smart_block_options'),
         enabled = rows.find('select[name^="sp_criteria_field"]:enabled');
 
-    rows.find('.criteria_add').remove();
+    rows.find('#criteria_add').remove();
     
     if (enabled.length > 1) {
         rows.find('select[name^="sp_criteria_field"]:enabled:last')

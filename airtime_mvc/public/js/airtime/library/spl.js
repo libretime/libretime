@@ -943,6 +943,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	mod.init = function() {
+	    /*
 	    $.contextMenu({
             selector: '#spl_new, #ws_new',
             trigger: "left",
@@ -953,6 +954,10 @@ var AIRTIME = (function(AIRTIME){
                 "ws": {name: "New Webstream", callback: AIRTIME.playlist.fnWsNew}
             }
         });
+        */
+	    $('#lib-new-pl').live('click', function(){AIRTIME.playlist.fnNew();});
+        $('#lib-new-bl').live('click', function(){AIRTIME.playlist.fnNewBlock();});
+        $('#lib-new-ws').live('click', function(){AIRTIME.playlist.fnWsNew();});
 	    /*
 		$pl.delegate("#spl_new", 
 	    		{"click": AIRTIME.playlist.fnNew});*/

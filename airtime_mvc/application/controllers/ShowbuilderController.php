@@ -27,9 +27,9 @@ class ShowbuilderController extends Zend_Controller_Action
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
 
-        $data = Application_Model_Preference::getValue("library_datatable", true);
-        if ($data != "") {
-            $libraryTable = json_encode(unserialize($data));
+        $data = Application_Model_Preference::getCurrentLibraryTableSetting();
+        if (!is_null($data)) {
+            $libraryTable = json_encode($data);
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
         } else {
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
