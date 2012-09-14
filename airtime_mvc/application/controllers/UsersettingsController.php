@@ -23,15 +23,14 @@ class UsersettingsController extends Zend_Controller_Action
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
-        $data = serialize($settings);
-        Application_Model_Preference::setValue("nowplaying_screen", $data, true);
+        Application_Model_Preference::setNowPlayingScreenSettings($data);
     }
 
     public function getNowPlayingScreenSettingsAction()
     {
-        $data = Application_Model_Preference::getValue("nowplaying_screen", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
+        $data = Application_Model_Preference::getNowPlayingScreenSettings();
+        if (!is_null($data)) {
+            $this->view->settings = $data;
         }
     }
 
@@ -40,8 +39,7 @@ class UsersettingsController extends Zend_Controller_Action
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
-        $data = serialize($settings);
-        Application_Model_Preference::setValue("library_datatable", $data, true);
+        Application_Model_Preference::setCurrentLibraryTableSetting($settings);
     }
 
     public function getLibraryDatatableAction()
@@ -59,9 +57,7 @@ class UsersettingsController extends Zend_Controller_Action
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
-        $data = serialize($settings);
-        Application_Model_Preference::setValue("timeline_datatable", $data, true);
-
+        Application_Model_Preference::setTimelineDatatableSetting($settings);
         $end = microtime(true);
 
         Logging::debug("saving timeline datatables info took:");
@@ -72,9 +68,9 @@ class UsersettingsController extends Zend_Controller_Action
     {
         $start = microtime(true);
 
-        $data = Application_Model_Preference::getValue("timeline_datatable", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
+        $data = Application_Model_Preference::getTimelineDatatableSetting();
+        if (!is_null($data)) {
+            $this->view->settings = $data;
         }
 
         $end = microtime(true);

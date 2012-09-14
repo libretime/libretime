@@ -1085,16 +1085,17 @@ class Application_Model_Preference
         $remindDate = Application_Model_Preference::GetRemindMeDate();
         $retVal = false;
         
-        if ($remindDate == NULL || ($remindDate != -1 && $today >= $remindDate)) {
+        if (is_null($remindDate) || ($remindDate != -1 && $today >= $remindDate)) {
             $retVal = true;
         }
         
         return $retVal;
     }
 
+
     public static function getCurrentLibraryTableSetting()
     {
-        $v = self::getValue("library_datatable");
+        $v = self::getValue("library_datatable", true);
 
         if ( $v === '' ) {
             return function ($x) { return $x; };
@@ -1102,6 +1103,44 @@ class Application_Model_Preference
             $ds = unserialize($v);
             return function ($x) use ($ds) { return $ds['ColReorder'][$x]; } ;
         }
-        //return unserialize(self::getValue("library_datatable"));
+    }
+
+    public static function setCurrentLibraryTableSetting($settings)
+    {
+        $num_columns = count(Application_Model_StoredFile::getLibraryColumns());
+        $new_columns_num = count($settings['abVisCols']);
+
+        if ($num_columns != $new_columns_num) {
+            throw new Exception("Trying to write a user column preference with incorrect number of columns!");
+        }
+
+        $data = serialize($settings);
+        $v = self::setValue("library_datatable", $data, true);
+    }
+
+
+    public static function setTimelineDatatableSetting($settings)
+    {
+        $data = serialize($settings);
+        self::setValue("timeline_datatable", $data, true);
+    }
+
+    public static function getTimelineDatatableSetting()
+    {
+        $data = self::getValue("timeline_datatable", true);
+        return ($data != "") ? unserialize($data) : null;
+    }
+
+
+    public static function setNowPlayingScreenSettings($settings)
+    {
+        $data = serialize($settings);
+        self::setValue("nowplaying_screen", $data, true);
+    }
+
+    public static function getNowPlayingScreenSettings()
+    {
+        $data = self::getValue("nowplaying_screen", true);
+        return ($data != "") ? unserialize($data) : null;
     }
 }

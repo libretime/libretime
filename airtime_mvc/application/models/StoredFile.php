@@ -608,17 +608,22 @@ SQL;
         return $res;
     }
 
+    public static function getLibraryColumns()
+    {
+        return array("id", "track_title", "artist_name", "album_title",
+        "genre", "length", "year", "utime", "mtime", "ftype",
+        "track_number", "mood", "bpm", "composer", "info_url",
+        "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label",
+        "copyright", "mime", "language", "filepath", "owner_id",
+        "conductor", "replay_gain", "lptime" );
+    }
+
+
     public static function searchLibraryFiles($datatables)
     {
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
-        $displayColumns = array("id", "track_title", "artist_name", "album_title", "genre", "length",
-            "year", "utime", "mtime", "ftype", "track_number", "mood", "bpm", "composer", "info_url",
-            "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label", "copyright", "mime",
-            "language", "filepath", "owner_id", "conductor", "replay_gain", "lptime"
-        );
-
-        //Logging::info($datatables);
+        $displayColumns = self::getLibraryColumns();
 
         $plSelect     = array();
         $blSelect     = array();

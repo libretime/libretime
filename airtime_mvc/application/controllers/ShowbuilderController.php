@@ -35,14 +35,14 @@ class ShowbuilderController extends Zend_Controller_Action
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
         }
 
-        $data = Application_Model_Preference::getValue("timeline_datatable", true);
-        if ($data != "") {
+        $data = Application_Model_Preference::getTimelineDatatableSetting();
+        if (!is_null($data)) {
             $timelineTable = json_encode(unserialize($data));
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
         } else {
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
         }
-
+        
         $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -127,11 +127,10 @@ class ShowbuilderController extends Zend_Controller_Action
         $showLib = false;
         if (!$user->isGuest()) {
             $disableLib = false;
-            $data = Application_Model_Preference::getValue("nowplaying_screen", true);
-            if ($data != "") {
-                $settings = unserialize($data);
 
-                if ($settings["library"] == "true") {
+            $data = Application_Model_Preference::getNowPlayingScreenSettings();
+            if (!is_null($data)) {
+                if ($data["library"] == "true") {
                     $showLib = true;
                 }
             }

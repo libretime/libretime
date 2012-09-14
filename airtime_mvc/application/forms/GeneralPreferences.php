@@ -24,7 +24,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'label'      => 'Station Name',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::getValue("station_name"),
+            'value' => Application_Model_Preference::GetStationName(),
             'decorators' => array(
                 'ViewHelper'
             )
