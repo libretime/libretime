@@ -129,16 +129,15 @@ class WebstreamController extends Zend_Controller_Action
 
         $id = $request->getParam("id");
 
-        $parameters = array();
-        $parameters['id'] = trim($request->getParam("id"));
-        $parameters['length'] = trim($request->getParam("length"));
-        $parameters['name'] = trim($request->getParam("name"));
+        $parameters                = array();
+        $parameters['id']          = trim($request->getParam("id"));
+        $parameters['length']      = trim($request->getParam("length"));
+        $parameters['name']        = trim($request->getParam("name"));
         $parameters['description'] = trim($request->getParam("description"));
-        $parameters['url'] = trim($request->getParam("url"));
+        $parameters['url']         = trim($request->getParam("url"));
 
         if (!$this->isAuthorized($id)) {
             header("Status: 401 Not Authorized");
-
             return;
         }
 
