@@ -90,9 +90,9 @@ class LibraryController extends Zend_Controller_Action
 
     protected function playlistNotFound($p_type)
     {
-        $this->view->error = "{$p_type} not found";
+        $this->view->error = "$p_type not found";
 
-        Logging::info("{$p_type} not found");
+        Logging::info("$p_type not found");
         Application_Model_Library::changePlaylist(null, $p_type);
         $this->createFullResponse(null);
     }
