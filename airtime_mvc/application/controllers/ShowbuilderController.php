@@ -37,7 +37,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $data = Application_Model_Preference::getTimelineDatatableSetting();
         if (!is_null($data)) {
-            $timelineTable = json_encode(unserialize($data));
+            $timelineTable = json_encode($data);
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
         } else {
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
