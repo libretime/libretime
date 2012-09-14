@@ -32,6 +32,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return $this->webstream->getDbId();
     }
 
+    public function getCreatorId()
+    {
+        return $this->Webstream->getCcSubjs()->getDbId();
+    }
+
     public function getLastModified($p_type)
     {
         return "modified";
