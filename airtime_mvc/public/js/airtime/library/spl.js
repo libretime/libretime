@@ -367,30 +367,33 @@ var AIRTIME = (function(AIRTIME){
     //then the playlist element is greyed out
     mod.validatePlaylistElements = function(){
         $.each($(".big_play"), function(index, value){
-            var mime = $(value).attr("data-mime-type");      
-            if (isAudioSupported(mime)) {
-                $(value).bind("click", openAudioPreview);
-            } else {
-                $(value).attr("class", "big_play_disabled dark_class"); 
-                $(value).qtip({
-                   content: 'Your browser does not support playing this file type: "'+ mime +'"',
-                   show: 'mouseover',
-                    hide: {
-                        delay: 500,
-                        fixed: true
-                    },
-                    style: {
-                        border: {
-                            width: 0,
-                            radius: 4
+            if ($(value).attr('blockId') === undefined) {
+                var mime = $(value).attr("data-mime-type");
+                console.log($(value));
+                if (isAudioSupported(mime)) {
+                    $(value).bind("click", openAudioPreview);
+                } else {
+                    $(value).attr("class", "big_play_disabled dark_class"); 
+                    $(value).qtip({
+                       content: 'Your browser does not support playing this file type: "'+ mime +'"',
+                       show: 'mouseover',
+                        hide: {
+                            delay: 500,
+                            fixed: true
                         },
-                        classes: "ui-tooltip-dark ui-tooltip-rounded"
-                    },
-                    position: {
-                        my: "left bottom",
-                        at: "right center"
-                    },
-                }) 
+                        style: {
+                            border: {
+                                width: 0,
+                                radius: 4
+                            },
+                            classes: "ui-tooltip-dark ui-tooltip-rounded"
+                        },
+                        position: {
+                            my: "left bottom",
+                            at: "right center"
+                        },
+                    }) 
+                }
             }
         });
     }
