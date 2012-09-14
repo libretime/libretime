@@ -70,6 +70,8 @@ class Application_Model_User
         return $result;
     }
 
+    // TODO : refactor code to only accept arrays for isUserType and
+    // simplify code even further
     public function isUserType($type)
     {
         if (!is_array($type)) {
