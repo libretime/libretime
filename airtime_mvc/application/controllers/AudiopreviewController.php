@@ -197,16 +197,20 @@ class AudiopreviewController extends Zend_Controller_Action
         $elementMap['type'] = $track['type'];
 
         if ($track['type'] == 0) {
-            $fileExtension = pathinfo($track['path'], PATHINFO_EXTENSION);
+            $mime = $track['mime'];
             //type is file
-            //TODO: use MIME type for this
-            if (strtolower($fileExtension) === 'mp3') {
+            if (strtolower($mime) === 'audio/mp3') {
                 $elementMap['element_mp3'] = $track['item_id'];
-            } elseif (strtolower($fileExtension) === 'ogg') {
+            } elseif (strtolower($mime) === 'audio/ogg') {
                 $elementMap['element_oga'] = $track['item_id'];
+            } elseif (strtolower($mime) === 'audio/mp4') {
+                $elementMap['element_m4a'] = $track['item_id'];
+            } elseif (strtolower($mime) === 'audio/wav') {
+                $elementMap['element_wav'] = $track['item_id'];
+            } elseif (strtolower($mime) === 'audio/x-flac') {
+                $elementMap['element_flac'] = $track['item_id'];
             } else {
-                //the media was neither mp3 or ogg
-                throw new Exception("Unknown file type");
+                throw new Exception("Unknown file type: $mime");
             }
 
             $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];
@@ -278,14 +282,19 @@ class AudiopreviewController extends Zend_Controller_Action
 
             $elementMap['type'] = $track['type'];
             if ($track['type'] == 0) {
-                $fileExtension = pathinfo($track['filepath'], PATHINFO_EXTENSION);
-                if (strtolower($fileExtension) === 'mp3') {
+                $mime = $track['mime'];
+                if (strtolower($mime) === 'audio/mp3') {
                     $elementMap['element_mp3'] = $track['item_id'];
-                } elseif (strtolower($fileExtension) === 'ogg') {
+                } elseif (strtolower($mime) === 'audio/ogg') {
                     $elementMap['element_oga'] = $track['item_id'];
+                } elseif (strtolower($mime) === 'audio/mp4') {
+                    $elementMap['element_m4a'] = $track['item_id'];
+                } elseif (strtolower($mime) === 'audio/wav') {
+                    $elementMap['element_wav'] = $track['item_id'];
+                } elseif (strtolower($mime) === 'audio/x-flac') {
+                    $elementMap['element_flac'] = $track['item_id'];
                 } else {
-                    //the media was neither mp3 or ogg
-                    throw new Exception("Unknown file type");
+                    throw new Exception("Unknown file type: $mime");
                 }
 
                 $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];

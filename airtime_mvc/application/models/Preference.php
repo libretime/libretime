@@ -93,10 +93,9 @@ class Application_Model_Preference
             }
             $result = $con->query($sql)->fetchColumn(0);
             //$result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
-            if ($result == 0)
-
+            if ($result == 0) {
                 return "";
-            else {
+            } else {
                 $sql = "SELECT valstr FROM cc_pref"
                 ." WHERE keystr = '$key'";
                 /*." WHERE keystr = :key";
