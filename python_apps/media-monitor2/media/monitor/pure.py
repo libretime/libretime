@@ -275,6 +275,7 @@ def normalized_metadata(md, original_path):
     if not is_airtime_recorded(new_md):
         # Read title from filename if it does not exist
         default_title = no_extension_basename(original_path)
+        default_title = re.sub(r'__\d+\.',u'.', default_title)
         if re.match(".+-%s-.+$" % unicode_unknown, default_title):
             default_title = u''
         new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
@@ -346,9 +347,8 @@ def organized_path(old_path, root_path, orig_md):
     # nasty hack do this properly
     if normal_md['MDATA_KEY_OWNER_ID'] != -1:
         p, e = no_extension_basename(filepath), extension(filepath)
-        filepath = os.path.join(
-                os.path.dirname(filepath),
-                "%s__%s.%s" % (p, unicode(normal_md['MDATA_KEY_OWNER_ID']), e))
+        filepath = os.path.join( unicode(normal_md['MDATA_KEY_OWNER_ID']),
+                filepath)
 
     return filepath
 
