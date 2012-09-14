@@ -8,6 +8,7 @@ from media.monitor.exceptions import BadSongFile
 from media.monitor.events     import OrganizeFile
 from pydispatch               import dispatcher
 from os.path                  import dirname
+import os.path
 
 class Organizer(ReportHandler,Loggable):
     """
@@ -55,11 +56,12 @@ class Organizer(ReportHandler,Loggable):
             # Do we need to "massage" the path using mmp.organized_path?
             target_path = self.recorded_path if event.metadata.is_recorded() \
                                              else self.target_path
-
+            # nasty hack do this properly
             owner_id = mmp.owner_id(event.path)
-            mdata = event.metadata.extract()
-            mdata['MDATA_KEY_OWNER_ID'] = owner_id # grooooooss
+            if owner_id != -1:
+                target_path = os.path.join(target_path, unicode(owner_id))
 
+            mdata = event.metadata.extract()
             new_path = mmp.organized_path(event.path, target_path, mdata)
 
             # See hack in mmp.magic_move
