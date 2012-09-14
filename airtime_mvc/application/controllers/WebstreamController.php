@@ -119,7 +119,6 @@ class WebstreamController extends Zend_Controller_Action
         } else {
             Logging::info( $user );
         }
-        Logging::info("what the fuck");
         return false;
     }
 
