@@ -136,7 +136,17 @@ function buildplaylist(p_url, p_playIndex) {
                             artist: data[index]['element_artist'],
                             oga:data[index]['uri']
                     };
-                }
+                } else if (data[index]['element_m4a'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            m4a:data[index]['uri']
+                    };
+                } else if (data[index]['element_wav'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            wav:data[index]['uri']
+                    };
+                }  
             } else if (data[index]['type'] == 1) {
                  media = {title: data[index]['element_title'],
                         artist: data[index]['element_artist'],
