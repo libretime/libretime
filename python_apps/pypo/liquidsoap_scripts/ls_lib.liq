@@ -399,7 +399,6 @@ dyn_out = output.icecast(%wav,
 
 def set_dynamic_source_id(id) =
     current_dyn_id := id 
-    #"Done!"
     string_of(!current_dyn_id)
 end
 

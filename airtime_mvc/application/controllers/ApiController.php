@@ -796,6 +796,7 @@ class ApiController extends Zend_Controller_Action
     {
         Logging::info("Notifying RabbitMQ to send message to pypo");
 
+        Application_Model_RabbitMq::SendMessageToPypo("reset_liquidsoap_bootstrap", array());
         Application_Model_RabbitMq::PushSchedule();
     }
 

@@ -473,8 +473,6 @@ class PypoPush(Thread):
             msg = 'streams.scheduled_play_start\n'
             tn.write(msg)
 
-
-
             msg = 'dynamic_source.output_start\n'
             self.logger.debug(msg)
             tn.write(msg)
