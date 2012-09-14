@@ -350,6 +350,8 @@ def organized_path(old_path, root_path, orig_md):
         filepath = os.path.join(path, fname)
     return filepath
 
+# TODO : Get rid of this function and every one of its uses. We no longer use
+# the md5 signature of a song for anything
 def file_md5(path,max_length=100):
     """
     Get md5 of file path (if it exists). Use only max_length characters to save
