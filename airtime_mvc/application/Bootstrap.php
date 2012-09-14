@@ -18,7 +18,6 @@ date_default_timezone_set('UTC');
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
-Logging::info(Application_Model_Preference::GetTimezone());
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 global $CC_CONFIG;
