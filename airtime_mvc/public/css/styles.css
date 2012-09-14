@@ -2278,6 +2278,10 @@ fieldset.closed, fieldset.display_field.closed {
     margin-bottom: -6px;
     margin-left: 1px;
 }
+fieldset.sb-criteria-fieldset{
+    min-width:670px;
+    overflow-x:auto;
+}
 
 fieldset.closed dl, fieldset.closed textarea, fieldset.closed div, fieldset.closed h2 {
 	display:none;
