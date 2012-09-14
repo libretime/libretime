@@ -2,7 +2,7 @@
     <?php echo $this->render('library/library.phtml') ?>
 </div>
 
-<div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px !important;">
+<div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px;">
     <?php if ($this->type == 'block') {
             echo $this->render('playlist/smart-block.phtml');
         } else if ($this->type == 'playlist') {
