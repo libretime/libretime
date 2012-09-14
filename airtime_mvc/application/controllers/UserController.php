@@ -109,7 +109,7 @@ class UserController extends Zend_Controller_Action
         # TODO : remove this. we only use default for now not to break the UI.
         if (!$files_action) { # set default action
             $files_action = "reassign_to";
-            $valid_actions =
+            $delId = 1;
         }
 
         # only delete when valid action is selected for the owned files

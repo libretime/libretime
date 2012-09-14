@@ -78,11 +78,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $username = $subjs->getDbLogin();
 
         return array(
-            "name" => $this->webstream->getDbName(),
-            "length" => $this->webstream->getDbLength(),
+            "name"        => $this->webstream->getDbName(),
+            "length"      => $this->webstream->getDbLength(),
             "description" => $this->webstream->getDbDescription(),
-            "login"=> $username,
-            "url" => $this->webstream->getDbUrl(),
+            "login"       => $username,
+            "url"         => $this->webstream->getDbUrl(),
         );
     }
 
