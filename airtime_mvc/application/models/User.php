@@ -335,11 +335,14 @@ class Application_Model_User
 
     public static function getUserData($id)
     {
-        $sql = "SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact, jabber_contact"
-        ." FROM cc_subjs"
-        ." WHERE id = :id";
-
-        return Application_Common_Database::prepareAndExecute($sql, array(":id" => $id), 'single');
+        $sql = <<<SQL
+SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact,
+       jabber_contact
+FROM cc_subjs
+WHERE id = :id
+SQL;
+        return Application_Common_Database::prepareAndExecute($sql, array(
+            ":id" => $id), 'single');
     }
 
     public static function getCurrentUser()
