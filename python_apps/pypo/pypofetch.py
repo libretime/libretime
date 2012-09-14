@@ -105,6 +105,8 @@ class PypoFetch(Thread):
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
                 self.disconnect_source(self.logger, self.telnet_lock, m['sourcename'])
+            else:
+                self.logger.info("Unknown command: %s" % command)
 
             # update timeout value
             if command == 'update_schedule':

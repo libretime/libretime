@@ -68,6 +68,9 @@ class PypoMessageHandler(Thread):
             if command == 'update_schedule':
                 self.logger.info("Updating schdule...")
                 self.pypo_queue.put(message)
+            elif command == 'reset_liquidsoap_bootstrap':
+                self.logger.info("Resetting bootstrap vars...")
+                self.pypo_queue.put(message)
             elif command == 'update_stream_setting':
                 self.logger.info("Updating stream setting...")
                 self.pypo_queue.put(message)
@@ -90,6 +93,8 @@ class PypoMessageHandler(Thread):
                 self.recorder_queue.put(message)
             elif command == 'cancel_recording':
                 self.recorder_queue.put(message)
+            else:
+                self.logger.info("Unknown command: %s" % command)
         except Exception, e:
             self.logger.error("Exception in handling RabbitMQ message: %s", e)
 
