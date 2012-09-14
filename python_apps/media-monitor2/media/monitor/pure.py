@@ -347,8 +347,8 @@ def organized_path(old_path, root_path, orig_md):
     if normal_md['MDATA_KEY_OWNER_ID'] != -1:
         p, e = no_extension_basename(filepath), extension(filepath)
         filepath = os.path.join(
-                os.path.dirname(p),
-                p + normal_md['MDATA_KEY_OWNER_ID'] + e )
+                os.path.dirname(filepath),
+                "%s__%s.%s" % (p, unicode(normal_md['MDATA_KEY_OWNER_ID']), e))
 
     return filepath
 
