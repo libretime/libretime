@@ -342,6 +342,14 @@ def organized_path(old_path, root_path, orig_md):
         path = os.path.join(root_path, normal_md['MDATA_KEY_CREATOR'],
                             normal_md['MDATA_KEY_SOURCE'])
         filepath = os.path.join(path, fname)
+
+    # nasty hack do this properly
+    if normal_md['MDATA_KEY_OWNER_ID'] != -1:
+        p, e = no_extension_basename(filepath), extension(filepath)
+        filepath = os.path.join(
+                os.path.dirname(p),
+                p + normal_md['MDATA_KEY_OWNER_ID'] + e )
+
     return filepath
 
 # TODO : Get rid of this function and every one of its uses. We no longer use

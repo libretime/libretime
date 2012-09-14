@@ -55,8 +55,12 @@ class Organizer(ReportHandler,Loggable):
             # Do we need to "massage" the path using mmp.organized_path?
             target_path = self.recorded_path if event.metadata.is_recorded() \
                                              else self.target_path
-            new_path = mmp.organized_path(event.path, target_path,
-                    event.metadata.extract())
+
+            owner_id = mmp.owner_id(event.path)
+            mdata = event.metadata.extract()
+            mdata['MDATA_KEY_OWNER_ID'] = owner_id # grooooooss
+
+            new_path = mmp.organized_path(event.path, target_path, mdata)
 
             # See hack in mmp.magic_move
             def new_dir_watch(d):
@@ -68,7 +72,12 @@ class Organizer(ReportHandler,Loggable):
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
 
-            owners.add_file_owner(new_path, mmp.owner_id(event.path) )
+            # The reason we need to go around saving the owner in this ass
+            # backwards way is bewcause we are unable to encode the owner id
+            # into the file itself so that the StoreWatchListener listener can
+            # detect it from the file
+            owners.add_file_owner(new_path, owner_id )
+
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))
         except BadSongFile as e:
