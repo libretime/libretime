@@ -138,15 +138,16 @@ class ShowbuilderController extends Zend_Controller_Action
             $disableLib = true;
         }
         $this->view->disableLib = $disableLib;
-        $this->view->showLib = $showLib;
+        $this->view->showLib    = $showLib;
 
         //populate date range form for show builder.
-        $now = time();
+        $now  = time();
         $from = $request->getParam("from", $now);
-        $to = $request->getParam("to", $now + (24*60*60));
+        $to   = $request->getParam("to", $now + (24*60*60));
 
         $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
         $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+
         $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
         $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
@@ -154,8 +155,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $form->populate(array(
             'sb_date_start' => $start->format("Y-m-d"),
             'sb_time_start' => $start->format("H:i"),
-            'sb_date_end' => $end->format("Y-m-d"),
-            'sb_time_end' => $end->format("H:i")
+            'sb_date_end'   => $end->format("Y-m-d"),
+            'sb_time_end'   => $end->format("H:i")
         ));
 
         $this->view->sb_form = $form;
