@@ -647,6 +647,8 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
+
+        setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
        
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
