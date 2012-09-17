@@ -558,6 +558,7 @@ WHERE st.ends > :startTime1
   AND st.starts < :endTime
   AND st.playout_status > 0
   AND si.ends > :startTime2
+  AND si.modified_instance = 'f'
 ORDER BY st.starts
 SQL;
 
@@ -578,6 +579,7 @@ WHERE st.ends > :startTime1
   AND st.starts < :rangeEnd
   AND st.playout_status > 0
   AND si.ends > :startTime2
+  AND si.modified_instance = 'f'
 ORDER BY st.starts LIMIT 3
 SQL;
 

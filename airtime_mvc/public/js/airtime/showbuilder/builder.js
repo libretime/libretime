@@ -71,6 +71,11 @@ var AIRTIME = (function(AIRTIME){
         else {
             AIRTIME.button.disableButton("btn-group #timeline-select", true);
         }
+        
+        //need to check if the 'Select' button is disabled
+        if ($(".btn-group #timeline-select").is(":disabled")) {
+            $(".btn-group #timeline-select").removeAttr("disabled");
+        }
     };
     
     mod.checkTrimButton = function() {
@@ -967,7 +972,7 @@ var AIRTIME = (function(AIRTIME){
         $('#timeline-sn').click(function(){mod.selectNone();});
         
         //cancel current show
-        $toolbar.find('.icon-ban-circle')
+        $toolbar.find('.icon-ban-circle').parent()
             .click(function() {
                 var $tr,
                     data,
@@ -1001,7 +1006,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //jump to current
-        $toolbar.find('.icon-step-forward')
+        $toolbar.find('.icon-step-forward').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-step-forward') === true) {
@@ -1018,7 +1023,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete overbooked tracks.
-        $toolbar.find('.icon-cut')
+        $toolbar.find('.icon-cut').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-cut') === true) {
@@ -1038,7 +1043,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete selected tracks
-        $toolbar.find('.icon-trash')
+        $toolbar.find('.icon-trash').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-trash') === true) {
@@ -1081,13 +1086,6 @@ var AIRTIME = (function(AIRTIME){
             else {
                 $ch.removeAttr("disabled");
             }       
-        });
-        $sbContent.on("mouseleave", ".btn-group #timeline-select", function(ev) {
-            $el = $(this).parent();
-            
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.removeClass("ui-state-hover");
-            } 
         });
         
         

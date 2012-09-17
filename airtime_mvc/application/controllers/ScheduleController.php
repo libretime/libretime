@@ -190,8 +190,9 @@ class ScheduleController extends Zend_Controller_Action
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
 
             try {
-              $showInstance = new Application_Model_ShowInstance($showInstanceId);
+                $showInstance = new Application_Model_ShowInstance($showInstanceId);
             } catch (Exception $e) {
+                Logging::info($e->getMessage());
                 $this->view->show_error = true;
 
                 return false;

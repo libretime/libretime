@@ -19,7 +19,6 @@ queue = amplify(1., override="replay_gain", queue)
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
 
-#TODO: Need to create a randomized password for every instance
 current_dyn_id = ref ''
 
 pypo_data = ref '0'
@@ -49,7 +48,10 @@ queue = map_metadata(update=false, append_title, queue)
 queue = crossfade(queue)
 
 
-stream_queue = switch(id="stream_queue_switch", track_sensitive=false, transitions=[transition, transition], [({!webstream_enabled},web_stream), ({true}, queue)])
+stream_queue = switch(id="stream_queue_switch", track_sensitive=false, 
+    transitions=[transition, transition], 
+    [({!webstream_enabled},web_stream), 
+    ({true}, queue)])
 
 ignore(output.dummy(stream_queue, fallible=true))
 
@@ -113,31 +115,31 @@ ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false
 live_dj_enabled = ref false
-scheduled_play_enabled = ref false
+scheduled_play_enabled = ref false 
 
 def make_master_dj_available()
-        master_dj_enabled := true
+    master_dj_enabled := true
 end
 
 def make_master_dj_unavailable()
-        master_dj_enabled := false
+    master_dj_enabled := false
 end
 
 def make_live_dj_available()
-        live_dj_enabled := true
+    live_dj_enabled := true
 end
 
 def make_live_dj_unavailable()
-        live_dj_enabled := false
+    live_dj_enabled := false
 end
 
 def make_scheduled_play_available()
-        scheduled_play_enabled := true
-        just_switched := true
+    scheduled_play_enabled := true
+    just_switched := true
 end
 
 def make_scheduled_play_unavailable()
-        scheduled_play_enabled := false
+    scheduled_play_enabled := false
 end
 
 def update_source_status(sourcename, status) =
@@ -163,23 +165,23 @@ end
 
 #auth function for live stream
 def check_master_dj_client(user,password) =
-        log("master connected")
-        #get the output of the php script
-        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
-        #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
-        ret = list.hd(ret)
-        
-        #return true to let the client transmit data, or false to tell harbor to decline
-        ret == "True"
+    log("master connected")
+    #get the output of the php script
+    ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
+    #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+    ret = list.hd(ret)
+    
+    #return true to let the client transmit data, or false to tell harbor to decline
+    ret == "True"
 end
 
 def check_dj_client(user,password) =
-        log("live dj connected")
-        #get the output of the php script
-        ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
-        #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
-        hd = list.hd(ret)
-        hd == "True"
+    log("live dj connected")
+    #get the output of the php script
+    ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
+    #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
+    hd = list.hd(ret)
+    hd == "True"
 end
 
 def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
@@ -214,46 +216,48 @@ def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, 
     end
 end
 
-s = switch(id="default_switch", track_sensitive=false, transitions=[transition_default, transition], [({!scheduled_play_enabled},stream_queue),({true},default)])
-s = append_dj_inputs(master_live_stream_port, master_live_stream_mp, dj_live_stream_port, dj_live_stream_mp, s)
+s = switch(id="default_switch", track_sensitive=false, 
+    transitions=[transition_default, transition], 
+    [({!scheduled_play_enabled}, stream_queue),({true},default)])
+s = append_dj_inputs(master_live_stream_port, master_live_stream_mp,
+    dj_live_stream_port, dj_live_stream_mp, s)
 
 # Attach a skip command to the source s:
 
 add_skip_command(s)
 
 server.register(namespace="streams",
-                description="Stop Master DJ source.",
-                usage="master_dj_stop",
-                "master_dj_stop",
-                fun (s) -> begin log("streams.master_dj_stop") make_master_dj_unavailable() "Done." end)
+    description="Stop Master DJ source.",
+    usage="master_dj_stop",
+    "master_dj_stop",
+    fun (s) -> begin log("streams.master_dj_stop") make_master_dj_unavailable() "Done." end)
 server.register(namespace="streams",
-                description="Start Master DJ source.",
-                usage="master_dj_start",
-                "master_dj_start",
-                fun (s) -> begin log("streams.master_dj_start") make_master_dj_available() "Done." end)
+    description="Start Master DJ source.",
+    usage="master_dj_start",
+    "master_dj_start",
+    fun (s) -> begin log("streams.master_dj_start") make_master_dj_available() "Done." end)
 server.register(namespace="streams",
-                description="Stop Live DJ source.",
-                usage="live_dj_stop",
-                "live_dj_stop",
-                fun (s) -> begin log("streams.live_dj_stop") make_live_dj_unavailable() "Done." end)
+    description="Stop Live DJ source.",
+    usage="live_dj_stop",
+    "live_dj_stop",
+    fun (s) -> begin log("streams.live_dj_stop") make_live_dj_unavailable() "Done." end)
 server.register(namespace="streams",
-                description="Start Live DJ source.",
-                usage="live_dj_start",
-                "live_dj_start",
-                fun (s) -> begin log("streams.live_dj_start") make_live_dj_available() "Done." end)
+    description="Start Live DJ source.",
+    usage="live_dj_start",
+    "live_dj_start",
+    fun (s) -> begin log("streams.live_dj_start") make_live_dj_available() "Done." end)
 server.register(namespace="streams",
-                description="Stop Scheduled Play source.",
-                usage="scheduled_play_stop",
-                "scheduled_play_stop",
-                fun (s) -> begin log("streams.scheduled_play_stop") make_scheduled_play_unavailable() "Done." end)
+    description="Stop Scheduled Play source.",
+    usage="scheduled_play_stop",
+    "scheduled_play_stop",
+    fun (s) -> begin log("streams.scheduled_play_stop") make_scheduled_play_unavailable() "Done." end)
 server.register(namespace="streams",
-                description="Start Scheduled Play source.",
-                usage="scheduled_play_start",
-                "scheduled_play_start",
-                fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
+    description="Start Scheduled Play source.",
+    usage="scheduled_play_start",
+    "scheduled_play_start",
+    fun (s) -> begin log("streams.scheduled_play_start") make_scheduled_play_available() "Done." end)
 
 if output_sound_device then
-	
     success = ref false
     
     log(output_sound_device_type)
