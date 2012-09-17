@@ -101,6 +101,7 @@ CREATE TABLE cc_webstream (
 	creator_id integer NOT NULL,
 	mtime timestamp(6) without time zone NOT NULL,
 	utime timestamp(6) without time zone NOT NULL,
+	lptime timestamp(6) without time zone,
 	mime character varying(255)
 );
 
@@ -113,9 +114,12 @@ CREATE TABLE cc_webstream_metadata (
 
 ALTER TABLE cc_files
 	DROP COLUMN gunid,
-	ADD COLUMN replay_gain character varying(16),
+	ADD COLUMN replay_gain numeric,
         ADD COLUMN owner_id integer,
 	ALTER COLUMN bpm TYPE integer using airtime_to_int(bpm) /* TYPE change - table: cc_files original: character varying(8) new: integer */;
+
+ALTER TABLE cc_files
+	ADD CONSTRAINT cc_files_owner_fkey FOREIGN KEY (owner_id) REFERENCES cc_subjs(id); 
 
 ALTER TABLE cc_playlistcontents
 	ADD COLUMN block_id integer,
