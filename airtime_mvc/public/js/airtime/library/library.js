@@ -49,7 +49,10 @@ var AIRTIME = (function(AIRTIME) {
         var cItem,
             selected,
             $trs;
-            
+
+
+        // TODO : hack, get rid of this crap library
+        if (!$libTable) { return ; }
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
         $trs.each(function(i){
