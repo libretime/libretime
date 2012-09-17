@@ -1043,7 +1043,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete selected tracks
-        $toolbar.find('.icon-trash')
+        $toolbar.find('.icon-trash').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-trash') === true) {
