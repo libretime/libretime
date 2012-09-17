@@ -972,7 +972,7 @@ var AIRTIME = (function(AIRTIME){
         $('#timeline-sn').click(function(){mod.selectNone();});
         
         //cancel current show
-        $toolbar.find('.icon-ban-circle')
+        $toolbar.find('.icon-ban-circle').parent()
             .click(function() {
                 var $tr,
                     data,
@@ -1006,7 +1006,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //jump to current
-        $toolbar.find('.icon-step-forward')
+        $toolbar.find('.icon-step-forward').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-step-forward') === true) {
