@@ -23,26 +23,26 @@ class Application_Model_ShowBuilder
     private $showInstances = array();
 
     private $defaultRowArray = array(
-        "header" => false,
-        "footer" => false,
-        "empty" => false,
-        "allowed" => false,
-        "id" => 0,
-        "instance" => "",
-        "starts" => "",
-        "ends" => "",
-        "runtime" => "",
-        "title" => "",
-        "creator" => "",
-        "album" => "",
-        "timestamp" => null,
-        "cuein" => "",
-        "cueout" => "",
-        "fadein" => "",
-        "fadeout" => "",
-        "image" => false,
-        "color" => "", //in hex without the '#' sign.
-        "backgroundColor"=> "", //in hex without the '#' sign.
+        "header"          => false,
+        "footer"          => false,
+        "empty"           => false,
+        "allowed"         => false,
+        "id"              => 0,
+        "instance"        => "",
+        "starts"          => "",
+        "ends"            => "",
+        "runtime"         => "",
+        "title"           => "",
+        "creator"         => "",
+        "album"           => "",
+        "timestamp"       => null,
+        "cuein"           => "",
+        "cueout"          => "",
+        "fadein"          => "",
+        "fadeout"         => "",
+        "image"           => false,
+        "color"           => "", //in hex without the '#' sign.
+        "backgroundColor" => "", //in hex without the '#' sign.
     );
 
     /*
