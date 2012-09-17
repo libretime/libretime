@@ -217,7 +217,6 @@ class ScheduleController extends Zend_Controller_Action
 
         $file = $show_inst->getRecordedFile();
         $id = $file->getId();
-        //$res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
         Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
         die();

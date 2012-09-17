@@ -106,12 +106,12 @@ class Application_Model_StreamSetting
     public static function getStreamData($p_streamId)
     {
         $con = Propel::getConnection();
+        $streamId = pg_escape_string($p_streamId);
         $sql = "SELECT * "
                 ."FROM cc_stream_setting "
-                ."WHERE keyname LIKE :stream_id";
+                ."WHERE keyname LIKE '{$streamId}_%'";
 
         $stmt = $con->prepare($sql);
-        $stmt->bindParam(':stream_id', "${p_streamId}_%");
         
         if ($stmt->execute()) {
             $rows = $stmt->fetchAll();
