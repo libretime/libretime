@@ -250,32 +250,32 @@ class Application_Model_ShowBuilder
 
             $this->getItemStatus($p_item, $row);
 
-            $startsEpoch = floatval($schedStartDT->format("U.u"));
-            $endsEpoch = floatval($schedEndDT->format("U.u"));
+            $startsEpoch  = floatval($schedStartDT->format("U.u"));
+            $endsEpoch    = floatval($schedEndDT->format("U.u"));
             $showEndEpoch = floatval($showEndDT->format("U.u"));
 
             //don't want an overbooked item to stay marked as current.
             $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
-            $row["id"] = intval($p_item["sched_id"]);
-            $row["image"] = $p_item["file_exists"];
+            $row["id"]       = intval($p_item["sched_id"]);
+            $row["image"]    = $p_item["file_exists"];
             $row["instance"] = intval($p_item["si_id"]);
-            $row["starts"] = $schedStartDT->format("H:i:s");
-            $row["ends"] = $schedEndDT->format("H:i:s");
+            $row["starts"]   = $schedStartDT->format("H:i:s");
+            $row["ends"]     = $schedEndDT->format("H:i:s");
 
-            $formatter = new LengthFormatter($p_item['file_length']);
-            $row['runtime'] = $formatter->format();
+            $formatter       = new LengthFormatter($p_item['file_length']);
+            $row['runtime']  = $formatter->format();
 
-            $row["title"] = $p_item["file_track_title"];
-            $row["creator"] = $p_item["file_artist_name"];
-            $row["album"] = $p_item["file_album_title"];
+            $row["title"]    = $p_item["file_track_title"];
+            $row["creator"]  = $p_item["file_artist_name"];
+            $row["album"]    = $p_item["file_album_title"];
 
-            $row["cuein"] = $p_item["cue_in"];
-            $row["cueout"] = $p_item["cue_out"];
-            $row["fadein"] = round(substr($p_item["fade_in"], 6), 6);
-            $row["fadeout"] = round(substr($p_item["fade_out"], 6), 6);
+            $row["cuein"]    = $p_item["cue_in"];
+            $row["cueout"]   = $p_item["cue_out"];
+            $row["fadein"]   = round(substr($p_item["fade_in"], 6), 6);
+            $row["fadeout"]  = round(substr($p_item["fade_out"], 6), 6);
 
-            $row["pos"] = $this->pos++;
+            $row["pos"]      = $this->pos++;
 
             $this->contentDT = $schedEndDT;
         }
