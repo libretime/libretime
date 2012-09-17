@@ -1,6 +1,7 @@
 <form id="smart-block-form" method="post" action="">
-<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?>' id='smart_block_options'>
+<fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?> sb-criteria-fieldset' id='smart_block_options'>
 <legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Block Options</legend>
+
     <dl class='zend_form search-criteria'>
         <div class='btn-toolbar clearfix'>
             <div class='btn-group pull-right'>
@@ -100,8 +101,8 @@
                 ?>
             </div>
         <?php } ?>
-        
-        
+
     </dl>
+
 </fieldset>
 </form>

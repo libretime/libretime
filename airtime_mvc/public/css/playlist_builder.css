@@ -21,7 +21,14 @@
 .spl_fade_out {
 	clear: left;
 }
-
+#spl_sortable > li {
+	width: 100%;
+	margin-bottom:-1px;
+	position:relative;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; 
+}
 /*#side_playlist button {
     float: left;
     font-size: 12px;
@@ -47,12 +54,6 @@
 	margin-top:0;
 	margin-bottom:0;
 }
-
-/*#side_playlist li {
-	width: 99.5%;
-	margin-bottom:-1px;
-	position:relative;
-}*/
 
 #side_playlist li div.list-item-container, #side_playlist li div.list-item-container.ui-state-active {
 	height:56px;
@@ -479,4 +480,26 @@ div.helper li {
 li.spl_empty {
     height: 56px;
 }
+
+/*---////// SMART BLOCK /////---*/
+
+.smart-block-info {
+	padding: 5px 35px 10px 36px;
+	width: 100%;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; 
+	}
+	.smart-block-info > li {
+		display: block;
+		float: none;
+		margin-bottom: 4px;
+		width: 100%;
+		}
+		.smart-block-info > li span {
+			text-align: right;
+			float: right;
+			color: #D5D5D5;
+			font-size: 12px;
+			}
 
