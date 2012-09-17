@@ -35,7 +35,6 @@ class Application_Model_User
     public function isHostOfShow($showId)
     {
         $userId = $this->_userInstance->getDbId();
-
         return CcShowHostsQuery::create()
             ->filterByDbShow($showId)
             ->filterByDbHost($userId)->count() > 0;
@@ -63,10 +62,9 @@ class Application_Model_User
 
         if ($type === UTYPE_ADMIN ||
             $type === UTYPE_PROGRAM_MANAGER ||
-            CcShowHostsQuery::create()->filterByDbShow($p_showId)->filterByDbHost($this->getId())->count() > 0) {
+            self::isHostOfShow($p_showId)) {
             $result = true;
         }
-
         return $result;
     }
 
@@ -210,7 +208,7 @@ class Application_Model_User
             $this->_userInstance->delete();
         }
     }
-    public function getOwnedFiles() 
+    public function getOwnedFiles()
     {
         $user = $this->_userInstance;
         // do we need a find call at the end here?

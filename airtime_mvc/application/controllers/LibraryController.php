@@ -469,7 +469,7 @@ class LibraryController extends Zend_Controller_Action
     public function uploadFileSoundcloudAction()
     {
         $id = $this->_getParam('id');
-        $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+        Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
         die();
     }

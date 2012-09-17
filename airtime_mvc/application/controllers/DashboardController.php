@@ -25,9 +25,7 @@ class DashboardController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
 
         $show = Application_Model_Show::getCurrentShow();
-
-        $show_id = isset($show['id'])?$show['id']:0;
-
+        $show_id = isset($show[0]['id'])?$show[0]['id']:0;
         $source_connected = Application_Model_Preference::GetSourceStatus($sourcename);
 
         if ($user->canSchedule($show_id) && $source_connected) {
