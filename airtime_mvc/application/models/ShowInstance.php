@@ -518,7 +518,7 @@ SQL;
         return false;
     }
 
-    public function delete()
+    public function delete($rabbitmqPush = true)
     {
         // see if it was recording show
         $recording = $this->isRecorded();
@@ -568,7 +568,9 @@ SQL;
             }
         }
 
-        Application_Model_RabbitMq::PushSchedule();
+        if ($rabbitmqPush) {
+            Application_Model_RabbitMq::PushSchedule();
+        }
     }
 
     public function setRecordedFile($file_id)

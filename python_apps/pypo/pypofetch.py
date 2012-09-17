@@ -85,6 +85,8 @@ class PypoFetch(Thread):
             if command == 'update_schedule':
                 self.schedule_data = m['schedule']
                 self.process_schedule(self.schedule_data)
+            elif command == 'reset_liquidsoap_bootstrap':
+                self.set_bootstrap_variables()
             elif command == 'update_stream_setting':
                 self.logger.info("Updating stream setting...")
                 self.regenerate_liquidsoap_conf(m['setting'])
@@ -103,6 +105,8 @@ class PypoFetch(Thread):
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
                 self.disconnect_source(self.logger, self.telnet_lock, m['sourcename'])
+            else:
+                self.logger.info("Unknown command: %s" % command)
 
             # update timeout value
             if command == 'update_schedule':
@@ -173,7 +177,7 @@ class PypoFetch(Thread):
     def set_bootstrap_variables(self):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
         info = self.api_client.get_bootstrap_info()
-        if info == None:
+        if info is None:
             self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
             sys.exit(1)
         else:

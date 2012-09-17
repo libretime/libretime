@@ -3,14 +3,14 @@ require_once 'php-amqplib/amqp.inc';
 
 class Application_Model_RabbitMq
 {
-    public static $doPush = FALSE;
+    public static $doPush = false;
 
     /**
      * Sets a flag to push the schedule at the end of the request.
      */
     public static function PushSchedule()
     {
-        Application_Model_RabbitMq::$doPush = TRUE;
+        self::$doPush = true;
     }
 
     private static function sendMessage($exchange, $data)

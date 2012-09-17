@@ -33,7 +33,7 @@ class Application_Model_Soundcloud
                 $tags = Application_Model_Preference::GetSoundCloudTags();
             }
 
-            $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1'?true:false;
+            $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1';
 
             $track_data = array(
                 'track[sharing]' => 'private',
