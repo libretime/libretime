@@ -1373,7 +1373,11 @@ h2#scheduled_playlist_name span {
 }
 
 .simple-formblock .liquidsoap_status{
-    width: 95%;
+    width: 100%;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; 
+	padding: 4px 0 8px;
 }
 
 .simple-formblock dd.block-display {
