@@ -1023,7 +1023,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete overbooked tracks.
-        $toolbar.find('.icon-cut')
+        $toolbar.find('.icon-cut').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-cut') === true) {
@@ -1043,7 +1043,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete selected tracks
-        $toolbar.find('.icon-trash')
+        $toolbar.find('.icon-trash').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-trash') === true) {
@@ -1086,13 +1086,6 @@ var AIRTIME = (function(AIRTIME){
             else {
                 $ch.removeAttr("disabled");
             }       
-        });
-        $sbContent.on("mouseleave", ".btn-group #timeline-select", function(ev) {
-            $el = $(this).parent();
-            
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.removeClass("ui-state-hover");
-            } 
         });
         
         
