@@ -17,6 +17,7 @@ var AIRTIME = (function(AIRTIME) {
         "comments"    : "s",
         "composer"    : "s",
         "conductor"   : "s",
+        "copyright"   : "s",
         "utime"       : "n",
         "mtime"       : "n",
         "lptime"      : "n",
@@ -382,14 +383,16 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     
                     var inputClass = 'filter_column filter_number_text'; 
+                    var labelStyle = "style='margin-right:35px;'";
                     if (criteriaTypes[ele.mDataProp] != "s") {
                         inputClass = 'filterColumn filter_number_range';
+                        labelStyle = "";
                     }
                     
                     if (ele.bVisible) {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+" class='control-group'><label class='control-label'>"+ele.sTitle+label+" : </label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+" class='control-group'><label class='control-label'"+labelStyle+">"+ele.sTitle+label+" : </label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
                     } else {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'><label class='control-label'>"+ele.sTitle+label+"</label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'><label class='control-label'"+labelStyle+">"+ele.sTitle+label+"</label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
                     }
                     
                     if (criteriaTypes[ele.mDataProp] == "s") {
