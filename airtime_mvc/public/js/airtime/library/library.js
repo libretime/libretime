@@ -51,8 +51,6 @@ var AIRTIME = (function(AIRTIME) {
             $trs;
 
 
-        // TODO : hack, get rid of this crap library
-        if (!$libTable) { return ; }
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
         $trs.each(function(i){
@@ -363,6 +361,8 @@ var AIRTIME = (function(AIRTIME) {
         var tableHeight = $libContent.height() - 130;
         
         function setColumnFilter(oTable){
+            // TODO : remove this dirty hack once js is refactored
+            if (!oTable.fnSettings()) { return ; }
             var aoCols = oTable.fnSettings().aoColumns;
             var colsForAdvancedSearch = new Array();
             var advanceSearchDiv = $("div#advanced_search");
@@ -653,7 +653,6 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
-        setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
         
         $libContent.on("click", "legend", function(){
