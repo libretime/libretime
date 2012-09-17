@@ -206,7 +206,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function uploadToSoundCloudAction()
     {
-        global $CC_CONFIG;
         $show_instance = $this->_getParam('id');
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance);
@@ -218,7 +217,8 @@ class ScheduleController extends Zend_Controller_Action
 
         $file = $show_inst->getRecordedFile();
         $id = $file->getId();
-        $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+        //$res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+        Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
         die();
     }

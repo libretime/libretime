@@ -420,8 +420,9 @@ class ApiController extends Zend_Controller_Action
         $this->uploadRecordedActionParam($show_instance_id, $file_id);
     }
 
-    // The paramterized version of the uploadRecordedAction controller. We want this controller's action
-    // to be invokable from other controllers instead being of only through http
+    // The paramterized version of the uploadRecordedAction controller.
+    // We want this controller's action to be invokable from other
+    // controllers instead being of only through http
     public function uploadRecordedActionParam($show_instance_id, $file_id)
     {
         $showCanceled = false;
@@ -435,10 +436,10 @@ class ApiController extends Zend_Controller_Action
 
         } catch (Exception $e) {
             //we've reached here probably because the show was
-            //cancelled, and therefore the show instance does not
-            //exist anymore (ShowInstance constructor threw this error).
-            //We've done all we can do (upload the file and put it in
-            //the library), now lets just return.
+            //cancelled, and therefore the show instance does not exist
+            //anymore (ShowInstance constructor threw this error). We've
+            //done all we can do (upload the file and put it in the
+            //library), now lets just return.
             $showCanceled = true;
         }
 
@@ -449,7 +450,7 @@ class ApiController extends Zend_Controller_Action
 
         if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud()) {
             $id = $file->getId();
-            $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+            Application_Model_Soundcloud::uploadSoundcloud($id);
         }
     }
 

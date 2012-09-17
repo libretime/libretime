@@ -369,7 +369,6 @@ var AIRTIME = (function(AIRTIME){
         $.each($(".big_play"), function(index, value){
             if ($(value).attr('blockId') === undefined) {
                 var mime = $(value).attr("data-mime-type");
-                console.log($(value));
                 if (isAudioSupported(mime)) {
                     $(value).bind("click", openAudioPreview);
                 } else {
@@ -429,24 +428,33 @@ var AIRTIME = (function(AIRTIME){
                             if (isStatic) {
                                 $.each(data, function(index, ele){
                                     if (ele.track_title !== undefined) {
-                                        $html += "<div>"+ele.track_title+"   "+ele.creator+"   "+ele.length+"</div>";
+                                        $html += "<li>" +
+                                            "<span class='block-item-title'>"+ele.track_title+"</span>" +
+                                            "<span class='block-item-author'>"+ele.creator+"</span>" +
+                                            "<span class='block-item-time'>"+ele.length+"</span>" + 
+                                            "</li>";
                                     }
                                 })
                             } else {
                                 for (var key in data.crit){
                                     $.each(data.crit[key], function(index, ele){
-                                        var extra = (ele['extra']==null)?"":ele['extra'];
-                                        $html += "<div>"+ele['display_name']+"   "+ele['modifier']+"   "+ele['value']+"   "+extra+"</div>";
+                                        var extra = (ele['extra']==null)?"":"- "+ele['extra'];
+                                        $html += "<li>" +
+                                            "<span class='block-item-title'>"+ele['display_name']+"</span>" +
+                                            "<span class='block-item-criteria'>"+ele['modifier']+"</span>" +
+                                            "<span class='block-item-criteria'>"+ele['value']+"</span>" +
+                                            "<span class='block-item-criteria'>"+extra+"</span>" + 
+                                            "</li>";
                                     });
                                 }
-                                $html += "<div>"+data.limit.value+"  "+data.limit.modifier;
+                                $html += "<li><br /><span class='block-item-title'>Limit to: "+data.limit.value+"  "+data.limit.modifier+"</span></li>";
                             }
-                            $pl.find("#block_"+id+"_info").html($html);
+                            $pl.find("#block_"+id+"_info").html($html).show();
                             mod.enableUI();
                         });
                         $(this).removeClass('close');
 		            } else {
-		                $pl.find("#block_"+id+"_info").html("");
+		                $pl.find("#block_"+id+"_info").html("").hide();
 		                $(this).addClass('close');
 		            }
                 }});

@@ -35,9 +35,15 @@ if ($item['type'] == 2) {
                 <span class="spl_cue ui-state-default"></span>
                 <?php } else if ($item['type'] == 2) {
                         if ($staticBlock) {?>
-                <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">Static Block Expand</span>
+                <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">
+                    <span class="ui-icon ui-icon-triangle-2-n-s"></span>
+                    Expand Static Block
+                </span>
                 <?php   } else { ?>
-                <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">Dynamic Block</span>
+                <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">
+                    <span class="ui-icon ui-icon-triangle-2-n-s"></span>
+                    Expand Dynamic Block
+                </span>
                 <?php   }
                       } ?>
                 <span class="spl_title"><?php echo $item['track_title'] ?></span>
@@ -79,7 +85,7 @@ if ($item['type'] == 2) {
         </div>
         <?php endif; ?>
         <?php if ($item['type'] == 2) {?>
-        <div id="block_<?php echo $item["id"]?>_info"></div>
+        <ul style='display:none' id="block_<?php echo $item["id"]?>_info" class="smart-block-info"></ul>
         <?php } ?>
     </li>
     <?php $i = $i+1; ?>
