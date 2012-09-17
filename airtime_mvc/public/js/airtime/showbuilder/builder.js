@@ -330,28 +330,6 @@ var AIRTIME = (function(AIRTIME){
         $lib = $("#library_content"),
         $sbTable = $sbContent.find('table');
         
-        /*
-         * Icon hover states in the toolbar.
-         */
-        $sbContent.on("mouseenter", "#timeline-select .dropdown-toggle", function(ev) {
-            $el = $(this);
-            
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.addClass("ui-state-hover");
-                $("#timeline-select .caret").contextMenu(true);
-            }
-            else {
-                $("#timeline-select .caret").contextMenu(false);
-            }       
-        });
-        $sbContent.on("mouseleave", ".fg-toolbar ul li", function(ev) {
-            $el = $(this);
-            
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.removeClass("ui-state-hover");
-            } 
-        });
-        
         oSchedTable = $sbTable.dataTable( {
             "aoColumns": [
             /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "15px", "sClass": "sb-checkbox"},
@@ -1089,6 +1067,29 @@ var AIRTIME = (function(AIRTIME){
             
             return false;
         });
+        
+        /*
+         * Icon hover states in the toolbar.
+         */
+        $sbContent.on("mouseenter", ".btn-group #timeline-select", function(ev) {
+            $el = $(this).parent(),
+            $ch = $el.children('#timeline-select');
+            
+            if ($el.hasClass("ui-state-disabled")) {
+                $ch.attr("disabled", "disabled");
+            }
+            else {
+                $ch.removeAttr("disabled");
+            }       
+        });
+        $sbContent.on("mouseleave", ".btn-group #timeline-select", function(ev) {
+            $el = $(this).parent();
+            
+            if (!$el.hasClass("ui-state-disabled")) {
+                $el.removeClass("ui-state-hover");
+            } 
+        });
+        
         
         //begin context menu initialization.
         $.contextMenu({
