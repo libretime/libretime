@@ -320,7 +320,8 @@ class AirtimeInstall
     {
         $con = Propel::getConnection();
         // we need to run php as commandline because we want to get the timezone in cli php.ini file
-        $defaultTimezone = exec("php -r 'echo date_default_timezone_get().PHP_EOL;'");
+        //$defaultTimezone = exec("php -r 'echo date_default_timezone_get().PHP_EOL;'");
+        $defaultTimezone = exec("cat /etc/timezone");
         $defaultTimezone = trim($defaultTimezone);
         if((!in_array($defaultTimezone, DateTimeZone::listIdentifiers()))){
         	$defaultTimezone = "UTC";
