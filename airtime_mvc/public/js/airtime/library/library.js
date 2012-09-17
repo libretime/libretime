@@ -51,8 +51,6 @@ var AIRTIME = (function(AIRTIME) {
             $trs;
 
 
-        // TODO : hack, get rid of this crap library
-        if (!$libTable) { return ; }
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
         $trs.each(function(i){
@@ -363,6 +361,8 @@ var AIRTIME = (function(AIRTIME) {
         var tableHeight = $libContent.height() - 130;
         
         function setColumnFilter(oTable){
+            // TODO : remove this dirty hack once js is refactored
+            if (!oTable.fnSettings()) { return ; }
             var aoCols = oTable.fnSettings().aoColumns;
             var colsForAdvancedSearch = new Array();
             var advanceSearchDiv = $("div#advanced_search");
@@ -381,11 +381,17 @@ var AIRTIME = (function(AIRTIME) {
                         label = " (Hz)";
                     }
                     
-                    if (ele.bVisible) {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"'><span>"+ele.sTitle+label+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
-                    } else {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' style='display:none;'><span>"+ele.sTitle+label+"</span> : <span id='"+ele.mDataProp+"'></span></div>");
+                    var inputClass = 'filter_column filter_number_text'; 
+                    if (criteriaTypes[ele.mDataProp] != "s") {
+                        inputClass = 'filterColumn filter_number_range';
                     }
+                    
+                    if (ele.bVisible) {
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+" class='control-group'><label class='control-label'>"+ele.sTitle+label+" : </label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
+                    } else {
+                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'><label class='control-label'>"+ele.sTitle+label+"</label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
+                    }
+                    
                     if (criteriaTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
                     } else {
@@ -647,8 +653,20 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
+
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
+        
+        $libContent.on("click", "legend", function(){
+            var $fs = $(this).parents("fieldset");
+
+            if ($fs.hasClass("closed")) {
+                $fs.removeClass("closed");
+            }
+            else {
+                $fs.addClass("closed");
+            }
+        });
        
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
         

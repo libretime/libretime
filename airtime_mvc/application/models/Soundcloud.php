@@ -8,8 +8,9 @@ class Application_Model_Soundcloud
     public function __construct()
     {
         global $CC_CONFIG;
-
-        $this->_soundcloud = new Services_Soundcloud($CC_CONFIG['soundcloud-client-id'], $CC_CONFIG['soundcloud-client-secret']);
+        $this->_soundcloud = new Services_Soundcloud(
+            $CC_CONFIG['soundcloud-client-id'],
+            $CC_CONFIG['soundcloud-client-secret']);
     }
 
     private function getToken()
@@ -51,9 +52,9 @@ class Application_Model_Soundcloud
                 //YYYY-MM-DD-HH-mm-SS
                 $release = explode("-", $release);
 
-                $track_data['track[release_year]'] = $release[0];
+                $track_data['track[release_year]']  = $release[0];
                 $track_data['track[release_month]'] = $release[1];
-                $track_data['track[release_day]'] = $release[2];
+                $track_data['track[release_day]']   = $release[2];
             }
 
             if (isset($genre) && $genre != "") {
@@ -81,7 +82,10 @@ class Application_Model_Soundcloud
             );
 
             return $response;
+        } else {
+            throw new NoSoundCloundToken();
         }
     }
-
 }
+
+class NoSoundCloundToken extends Exception {}

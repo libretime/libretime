@@ -38,7 +38,7 @@
 #library_content {
 	float: left;
 	width: 50%;
-	overflow: hidden;
+	overflow: auto;
 }
 
 #library_display {
