@@ -5,7 +5,12 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->checkAuth();
+        $ignoreAuth = array("live-info", "week-info");
+
+        $params = $this->getRequest()->getParams();
+        if (!in_array($params['action'], $ignoreAuth)) {
+            $this->checkAuth();
+        }
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version'                       , 'json')
@@ -41,7 +46,6 @@ class ApiController extends Zend_Controller_Action
     public function checkAuth()
     {
         global $CC_CONFIG;
-
         $api_key = $this->_getParam('api_key');
 
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
@@ -298,7 +302,7 @@ class ApiController extends Zend_Controller_Action
             $result = array();
             for ($i=0; $i<7; $i++) {
                 $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
-                $shows = Application_Model_Show::getNextShows($utcDayStart, "0", $utcDayEnd);
+                $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 
                 Application_Model_Show::convertToLocalTimeZone($shows,
@@ -307,9 +311,10 @@ class ApiController extends Zend_Controller_Action
 
                 $result[$dow[$i]] = $shows;
             }
-        $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            
+            //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;             
             header("Content-type: text/javascript");
-            Logging::info($result);
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
