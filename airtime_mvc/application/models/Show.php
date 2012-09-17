@@ -2060,8 +2060,6 @@ SQL;
         // been specified
         if ($timeEnd == "") {
             $timeEnd = "'$timeStart' + INTERVAL '2 days'";
-        } else {
-            $timeEnd = "'$timeEnd'";
         }
 
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
@@ -2083,12 +2081,24 @@ WHERE si.show_id = s.id
   AND si.starts < :timeEnd::timestamp
   AND modified_instance != TRUE
 ORDER BY si.starts
-LIMIT :lim
 SQL;
-        return Application_Common_Database::prepareAndExecute( $sql, array(
+
+        //PDO won't accept "ALL" as a limit value (complains it is not an
+        //integer, and so we must completely remove the limit clause if we
+        //want to show all results - MK
+        if ($limit != "ALL") {
+            $sql .= PHP_EOL."LIMIT :lim";
+            $params =  array(
             ':timeStart' => $timeStart,
             ':timeEnd'   => $timeEnd,
-            ':lim'       => $limit), 'all');
+            ':lim'       => $limit);
+        } else {
+            $params = array(
+            ':timeStart' => $timeStart,
+            ':timeEnd'   => $timeEnd);
+        }
+
+        return Application_Common_Database::prepareAndExecute( $sql, $params, 'all');
     }
 
     /**
