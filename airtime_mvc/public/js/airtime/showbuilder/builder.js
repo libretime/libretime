@@ -1087,13 +1087,6 @@ var AIRTIME = (function(AIRTIME){
                 $ch.removeAttr("disabled");
             }       
         });
-        $sbContent.on("mouseleave", ".btn-group #timeline-select", function(ev) {
-            $el = $(this).parent();
-            
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.removeClass("ui-state-hover");
-            } 
-        });
         
         
         //begin context menu initialization.
