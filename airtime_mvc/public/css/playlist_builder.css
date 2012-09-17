@@ -84,15 +84,27 @@
 	text-align:right;
 }
 
-.spl_block_expand {
+.spl_block_expand, .spl_block_expand.close {
 	float:right;
     font-size: 9px;
     height: 15px;
-    right: 35px;
-    width: 100px;
+    /*right: 35px;*/
+    width: 120px;
     margin-top:2px;
     cursor:pointer;
-}
+    color:#fff;
+    font-weight: normal;
+    text-shadow:none;
+    opacity:1;
+	}
+	.spl_block_expand:hover, .spl_block_expand.close:hover {
+	    color:#FF611F;
+	    text-shadow:none;
+	    opacity:1;
+		}
+	.spl_block_expand .ui-icon {
+		float:left;
+	}	
 
 .spl_artist {
 	font-size:12px;
@@ -495,11 +507,21 @@ li.spl_empty {
 		float: none;
 		margin-bottom: 4px;
 		width: 100%;
+		font-size: 13px;
 		}
-		.smart-block-info > li span {
+		.smart-block-info > li span.block-item-time {
 			text-align: right;
 			float: right;
 			color: #D5D5D5;
 			font-size: 12px;
+			}
+		.smart-block-info > li span.block-item-title {
+			font-weight: bold;
+			display: inline-block;
+			padding-right: 6px;
+			}
+		.smart-block-info > li span.block-item-author {
+			font-weight: normal;
+			display: inline-block;
 			}
 
