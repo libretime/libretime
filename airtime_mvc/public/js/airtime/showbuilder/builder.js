@@ -1023,7 +1023,7 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete overbooked tracks.
-        $toolbar.find('.icon-cut')
+        $toolbar.find('.icon-cut').parent()
             .click(function() {
                 
                 if (AIRTIME.button.isDisabled('icon-cut') === true) {
