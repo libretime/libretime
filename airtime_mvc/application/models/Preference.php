@@ -1100,7 +1100,17 @@ class Application_Model_Preference
             return function ($x) { return $x; };
         } else {
             $ds = unserialize($v);
-            return function ($x) use ($ds) { return $ds['ColReorder'][$x]; } ;
+            return function ($x) use ($ds) { 
+                if ( in_array($x, $ds['ColReorder'] ) ) {
+                    return $ds['ColReorder'][$x]; 
+                } else {
+                    Logging::warn("Index $x does not exist preferences");
+                    Logging::warn("Defaulting to identity and printing 
+                        preferences");
+                    Logging::warn($ds);
+                    return $x;
+                }
+            } ;
         }
     }
 

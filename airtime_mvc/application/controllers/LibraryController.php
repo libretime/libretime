@@ -486,10 +486,12 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         } elseif ($type == "file") {
-            $file = Application_Model_StoredFile::Recall($id);
-            $this->view->sc_id = $file->getSoundCloudId();
+            $file                   = Application_Model_StoredFile::Recall($id);
+            $this->view->sc_id      = $file->getSoundCloudId();
             $this->view->error_code = $file->getSoundCloudErrorCode();
-            $this->view->error_msg = $file->getSoundCloudErrorMsg();
+            $this->view->error_msg  = $file->getSoundCloudErrorMsg();
+        } else {
+            Logging::warn("Trying to upload unknown type: $type with id: $id");
         }
     }
 }

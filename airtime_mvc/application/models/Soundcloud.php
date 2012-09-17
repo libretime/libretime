@@ -23,7 +23,8 @@ class Application_Model_Soundcloud
         return $token;
     }
 
-    public function uploadTrack($filepath, $filename, $description, $tags=array(), $release=null, $genre=null)
+    public function uploadTrack($filepath, $filename, $description,
+        $tags=array(), $release=null, $genre=null)
     {
         if ($this->getToken()) {
             if (count($tags)) {
