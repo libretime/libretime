@@ -37,11 +37,11 @@ class Application_Model_Soundcloud
             $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1';
 
             $track_data = array(
-                'track[sharing]' => 'private',
-                'track[title]' => $filename,
-                'track[asset_data]' => '@' . $filepath,
-                'track[tag_list]' => $tags,
-                'track[description]' => $description,
+                'track[sharing]'      => 'private',
+                'track[title]'        => $filename,
+                'track[asset_data]'   => '@' . $filepath,
+                'track[tag_list]'     => $tags,
+                'track[description]'  => $description,
                 'track[downloadable]' => $downloadable,
 
             );
@@ -52,7 +52,6 @@ class Application_Model_Soundcloud
 
                 //YYYY-MM-DD-HH-mm-SS
                 $release = explode("-", $release);
-
                 $track_data['track[release_year]']  = $release[0];
                 $track_data['track[release_month]'] = $release[1];
                 $track_data['track[release_day]']   = $release[2];
@@ -86,6 +85,13 @@ class Application_Model_Soundcloud
         } else {
             throw new NoSoundCloundToken();
         }
+    }
+
+    public static function uploadSoundcloud($id) 
+    {
+        $cmd = "/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &";
+        Logging::info("Uploading soundcloud with command: $cmd");
+        exec($cmd);
     }
 }
 

@@ -5,7 +5,12 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->checkAuth();
+        $ignoreAuth = array("live-info", "week-info");
+
+        $params = $this->getRequest()->getParams();
+        if (!in_array($params['action'], $ignoreAuth)) {
+            $this->checkAuth();
+        }
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
         $context->addActionContext('version'                       , 'json')
@@ -41,7 +46,6 @@ class ApiController extends Zend_Controller_Action
     public function checkAuth()
     {
         global $CC_CONFIG;
-
         $api_key = $this->_getParam('api_key');
 
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
@@ -298,7 +302,7 @@ class ApiController extends Zend_Controller_Action
             $result = array();
             for ($i=0; $i<7; $i++) {
                 $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
-                $shows = Application_Model_Show::getNextShows($utcDayStart, "0", $utcDayEnd);
+                $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 
                 Application_Model_Show::convertToLocalTimeZone($shows,
@@ -307,9 +311,10 @@ class ApiController extends Zend_Controller_Action
 
                 $result[$dow[$i]] = $shows;
             }
-        $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION; //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            
+            //used by caller to determine if the airtime they are running or widgets in use is out of date.
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;             
             header("Content-type: text/javascript");
-            Logging::info($result);
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
@@ -415,8 +420,9 @@ class ApiController extends Zend_Controller_Action
         $this->uploadRecordedActionParam($show_instance_id, $file_id);
     }
 
-    // The paramterized version of the uploadRecordedAction controller. We want this controller's action
-    // to be invokable from other controllers instead being of only through http
+    // The paramterized version of the uploadRecordedAction controller.
+    // We want this controller's action to be invokable from other
+    // controllers instead being of only through http
     public function uploadRecordedActionParam($show_instance_id, $file_id)
     {
         $showCanceled = false;
@@ -430,10 +436,10 @@ class ApiController extends Zend_Controller_Action
 
         } catch (Exception $e) {
             //we've reached here probably because the show was
-            //cancelled, and therefore the show instance does not
-            //exist anymore (ShowInstance constructor threw this error).
-            //We've done all we can do (upload the file and put it in
-            //the library), now lets just return.
+            //cancelled, and therefore the show instance does not exist
+            //anymore (ShowInstance constructor threw this error). We've
+            //done all we can do (upload the file and put it in the
+            //library), now lets just return.
             $showCanceled = true;
         }
 
@@ -444,7 +450,7 @@ class ApiController extends Zend_Controller_Action
 
         if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud()) {
             $id = $file->getId();
-            $res = exec("/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &");
+            Application_Model_Soundcloud::uploadSoundcloud($id);
         }
     }
 

@@ -573,3 +573,6 @@ li.spl_empty {
     display: inline-block;
     padding-right: 6px;
 }
+.expand-block-separate {
+    border-top: 1px solid #5B5B5B;
+}

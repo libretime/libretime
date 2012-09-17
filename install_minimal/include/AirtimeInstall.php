@@ -215,6 +215,15 @@ class AirtimeInstall
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
         #$command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
+
+        $command = "su postgres -c \"psql -l | cut -f2 -d' ' | grep -w 'airtime'\";";
+        exec($command, $output, $rv);
+
+        if ($rv == 0) {
+            //database already exists
+            return true;
+        }
+
         $command = "su postgres -c \"createdb $database --encoding UTF8 --owner $username\"";
 
         @exec($command, $output, $results);
@@ -320,7 +329,8 @@ class AirtimeInstall
     {
         $con = Propel::getConnection();
         // we need to run php as commandline because we want to get the timezone in cli php.ini file
-        $defaultTimezone = exec("php -r 'echo date_default_timezone_get().PHP_EOL;'");
+        //$defaultTimezone = exec("php -r 'echo date_default_timezone_get().PHP_EOL;'");
+        $defaultTimezone = exec("cat /etc/timezone");
         $defaultTimezone = trim($defaultTimezone);
         if((!in_array($defaultTimezone, DateTimeZone::listIdentifiers()))){
         	$defaultTimezone = "UTC";
