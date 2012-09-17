@@ -1101,7 +1101,7 @@ class Application_Model_Preference
         } else {
             $ds = unserialize($v);
             return function ($x) use ($ds) { 
-                if ( in_array($ds['ColReorder'], $x) ) {
+                if ( in_array($x, $ds['ColReorder'] ) ) {
                     return $ds['ColReorder'][$x]; 
                 } else {
                     Logging::warn("Index $x does not exist preferences");
