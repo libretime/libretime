@@ -335,7 +335,6 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     libraryInit = function() {
-        return;
         
         $libContent = $("#library_content");
         
