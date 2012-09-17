@@ -37,11 +37,11 @@ class Application_Model_Soundcloud
             $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1';
 
             $track_data = array(
-                'track[sharing]' => 'private',
-                'track[title]' => $filename,
-                'track[asset_data]' => '@' . $filepath,
-                'track[tag_list]' => $tags,
-                'track[description]' => $description,
+                'track[sharing]'      => 'private',
+                'track[title]'        => $filename,
+                'track[asset_data]'   => '@' . $filepath,
+                'track[tag_list]'     => $tags,
+                'track[description]'  => $description,
                 'track[downloadable]' => $downloadable,
 
             );
