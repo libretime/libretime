@@ -129,6 +129,7 @@ class Application_Model_ShowBuilder
      * 0 = past
      * 1 = current
      * 2 = future
+     * TODO : change all of the above to real constants -- RG
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
     {
@@ -157,6 +158,14 @@ class Application_Model_ShowBuilder
         //item is in the future.
         else if ($this->epoch_now < $p_epochItemStart) {
             $row["scheduled"] = 2;
+        } else {
+            Logging::warn("No-op? is this what should happen...printing
+                debug just in case");
+            $d = array(
+                '$p_epochItemStart' => $p_epochItemStart,
+                '$p_epochItemEnd'   => $p_epochItemEnd,
+                '$row'              => $row);
+            Logging::warn($d);
         }
     }
 
