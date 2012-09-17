@@ -215,6 +215,15 @@ class AirtimeInstall
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
         #$command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
+
+        $command = "su postgres -c \"psql -l | cut -f2 -d' ' | grep -w 'airtime'\";";
+        exec($command, $output, $rv);
+
+        if ($rv == 0) {
+            //database already exists
+            return true;
+        }
+
         $command = "su postgres -c \"createdb $database --encoding UTF8 --owner $username\"";
 
         @exec($command, $output, $results);
