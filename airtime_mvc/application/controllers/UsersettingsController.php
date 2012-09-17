@@ -23,7 +23,7 @@ class UsersettingsController extends Zend_Controller_Action
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
-        Application_Model_Preference::setNowPlayingScreenSettings($data);
+        Application_Model_Preference::setNowPlayingScreenSettings($settings);
     }
 
     public function getNowPlayingScreenSettingsAction()
