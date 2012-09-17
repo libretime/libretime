@@ -440,9 +440,12 @@ class Application_Model_ShowBuilder
 
         //make the last footer if there were any scheduled items.
         if (count($scheduled_items) > 0) {
-            $display_items[] = $this->makeFooterRow($scheduled_items[count($scheduled_items)-1]);
+            $display_items[] = $this->makeFooterRow($scheduled_items[
+                count($scheduled_items)-1]);
         }
 
-        return array("schedule" => $display_items, "showInstances" => $this->showInstances);
+        return array(
+            "schedule"      => $display_items,
+            "showInstances" => $this->showInstances);
     }
 }
