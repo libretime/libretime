@@ -80,7 +80,7 @@ class Application_Model_Datatables
             $new_index = $librarySetting($currentPos);
             // TODO : Fix this retarded hack later. Just a band aid for
             // now at least we print some warnings so that we don't
-            // forget about this
+            // forget about this -- cc-4462
             if ( array_key_exists($new_index, $orig2searchTerm) ) {
                 $dbname2searchTerm[$dbname] = $orig2searchTerm[$new_index];
             } else {
