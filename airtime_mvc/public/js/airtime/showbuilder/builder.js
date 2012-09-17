@@ -71,6 +71,11 @@ var AIRTIME = (function(AIRTIME){
         else {
             AIRTIME.button.disableButton("btn-group #timeline-select", true);
         }
+        
+        //need to check if the 'Select' button is disabled
+        if ($(".btn-group #timeline-select").is(":disabled")) {
+            $(".btn-group #timeline-select").removeAttr("disabled");
+        }
     };
     
     mod.checkTrimButton = function() {
