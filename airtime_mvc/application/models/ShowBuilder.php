@@ -23,26 +23,26 @@ class Application_Model_ShowBuilder
     private $showInstances = array();
 
     private $defaultRowArray = array(
-        "header" => false,
-        "footer" => false,
-        "empty" => false,
-        "allowed" => false,
-        "id" => 0,
-        "instance" => "",
-        "starts" => "",
-        "ends" => "",
-        "runtime" => "",
-        "title" => "",
-        "creator" => "",
-        "album" => "",
-        "timestamp" => null,
-        "cuein" => "",
-        "cueout" => "",
-        "fadein" => "",
-        "fadeout" => "",
-        "image" => false,
-        "color" => "", //in hex without the '#' sign.
-        "backgroundColor"=> "", //in hex without the '#' sign.
+        "header"          => false,
+        "footer"          => false,
+        "empty"           => false,
+        "allowed"         => false,
+        "id"              => 0,
+        "instance"        => "",
+        "starts"          => "",
+        "ends"            => "",
+        "runtime"         => "",
+        "title"           => "",
+        "creator"         => "",
+        "album"           => "",
+        "timestamp"       => null,
+        "cuein"           => "",
+        "cueout"          => "",
+        "fadein"          => "",
+        "fadeout"         => "",
+        "image"           => false,
+        "color"           => "", //in hex without the '#' sign.
+        "backgroundColor" => "", //in hex without the '#' sign.
     );
 
     /*
@@ -51,12 +51,12 @@ class Application_Model_ShowBuilder
      */
     public function __construct($p_startDT, $p_endDT, $p_opts)
     {
-        $this->startDT = $p_startDT;
-        $this->endDT = $p_endDT;
-        $this->timezone = date_default_timezone_get();
-        $this->user = Application_Model_User::getCurrentUser();
-        $this->opts = $p_opts;
-        $this->epoch_now = floatval(microtime(true));
+        $this->startDT     = $p_startDT;
+        $this->endDT       = $p_endDT;
+        $this->timezone    = date_default_timezone_get();
+        $this->user        = Application_Model_User::getCurrentUser();
+        $this->opts        = $p_opts;
+        $this->epoch_now   = floatval(microtime(true));
         $this->currentShow = false;
     }
 
@@ -129,6 +129,7 @@ class Application_Model_ShowBuilder
      * 0 = past
      * 1 = current
      * 2 = future
+     * TODO : change all of the above to real constants -- RG
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
     {
@@ -157,6 +158,14 @@ class Application_Model_ShowBuilder
         //item is in the future.
         else if ($this->epoch_now < $p_epochItemStart) {
             $row["scheduled"] = 2;
+        } else {
+            Logging::warn("No-op? is this what should happen...printing
+                debug just in case");
+            $d = array(
+                '$p_epochItemStart' => $p_epochItemStart,
+                '$p_epochItemEnd'   => $p_epochItemEnd,
+                '$row'              => $row);
+            Logging::warn($d);
         }
     }
 
