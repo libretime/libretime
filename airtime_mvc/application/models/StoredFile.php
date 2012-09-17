@@ -1170,7 +1170,9 @@ SQL;
                 $release = $file->getDbYear();
                 try {
                     $soundcloud = new Application_Model_Soundcloud();
-                    $soundcloud_res = $soundcloud->uploadTrack($this->getFilePath(), $this->getName(), $description, $tag, $release, $genre);
+                    $soundcloud_res = $soundcloud->uploadTrack(
+                        $this->getFilePath(), $this->getName(), $description,
+                        $tag, $release, $genre);
                     $this->setSoundCloudFileId($soundcloud_res['id']);
                     $this->setSoundCloudLinkToFile($soundcloud_res['permalink_url']);
                     $this->setSoundCloudUploadTime(new DateTime("now"), new DateTimeZone("UTC"));

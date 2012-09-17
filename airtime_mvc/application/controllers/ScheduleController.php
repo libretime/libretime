@@ -205,7 +205,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function uploadToSoundCloudAction()
     {
-        global $CC_CONFIG;
         $show_instance = $this->_getParam('id');
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance);
