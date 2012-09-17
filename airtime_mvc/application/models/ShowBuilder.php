@@ -91,7 +91,7 @@ class Application_Model_ShowBuilder
 
     private function getItemColor($p_item, &$row)
     {
-        $defaultColor = "ffffff";
+        $defaultColor      = "ffffff";
         $defaultBackground = "3366cc";
 
         $color = $p_item["show_color"];
@@ -103,7 +103,7 @@ class Application_Model_ShowBuilder
             $backgroundColor = $defaultBackground;
         }
 
-        $row["color"] = $color;
+        $row["color"]           = $color;
         $row["backgroundColor"] = $backgroundColor;
     }
 
@@ -281,19 +281,19 @@ class Application_Model_ShowBuilder
         }
         //show is empty or is a special kind of show (recording etc)
         else if (intval($p_item["si_record"]) === 1) {
-            $row["record"] = true;
+            $row["record"]   = true;
             $row["instance"] = intval($p_item["si_id"]);
 
-            $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
-            $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+            $showStartDT     = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+            $showEndDT       = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
 
-            $startsEpoch = floatval($showStartDT->format("U.u"));
-            $endsEpoch = floatval($showEndDT->format("U.u"));
+            $startsEpoch     = floatval($showStartDT->format("U.u"));
+            $endsEpoch       = floatval($showEndDT->format("U.u"));
 
             $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         } else {
-            $row["empty"] = true;
-            $row["id"] = 0 ;
+            $row["empty"]    = true;
+            $row["id"]       = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
         }
 
