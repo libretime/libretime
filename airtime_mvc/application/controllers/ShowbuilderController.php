@@ -126,7 +126,6 @@ class ShowbuilderController extends Zend_Controller_Action
         //determine whether to remove/hide/display the library.
         $showLib = false;
         if (!$user->isGuest()) {
-        //if(true) {
             $disableLib = false;
 
             $data = Application_Model_Preference::getNowPlayingScreenSettings();
@@ -312,13 +311,9 @@ class ShowbuilderController extends Zend_Controller_Action
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::info($e->getMessage());
-            Logging::info("{$e->getFile()}");
-            Logging::info("{$e->getLine()}");
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::info($e->getMessage());
-            Logging::info("{$e->getFile()}");
-            Logging::info("{$e->getLine()}");
         }
     }
 
@@ -334,13 +329,9 @@ class ShowbuilderController extends Zend_Controller_Action
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::info($e->getMessage());
-            Logging::info("{$e->getFile()}");
-            Logging::info("{$e->getLine()}");
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::info($e->getMessage());
-            Logging::info("{$e->getFile()}");
-            Logging::info("{$e->getLine()}");
         }
     }
 
