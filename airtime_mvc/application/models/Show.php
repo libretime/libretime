@@ -275,8 +275,6 @@ SQL;
 
     public function cancelShow($day_timestamp)
     {
-        $con = Propel::getConnection();
-
         $timeinfo = explode(" ", $day_timestamp);
 
         CcShowDaysQuery::create()
@@ -284,30 +282,23 @@ SQL;
             ->update(array('DbLastShow' => $timeinfo[0]));
 
         $sql = <<<SQL
-UPDATE cc_show_instances
-SET modified_instance = TRUE
+SELECT id from cc_show_instances
 WHERE starts >= :dayTimestamp::TIMESTAMP
   AND show_id = :showId
 SQL;
-
-        Application_Common_Database::prepareAndExecute( $sql, array(
+    
+        $rows = Application_Common_Database::prepareAndExecute( $sql, array(
             ':dayTimestamp' => $day_timestamp,
-            ':showId'       => $this->getId()), 'execute');
+            ':showId'       => $this->getId()), 'all');
 
-        // check if we can safely delete the show
-        $showInstancesRow = CcShowInstancesQuery::create()
-            ->filterByDbShowId($this->_showId)
-            ->filterByDbModifiedInstance(false)
-            ->findOne();
-
-        if (is_null($showInstancesRow)) {
-            $sql = <<<SQL
-DELETE FROM cc_show WHERE id = :show_id
-SQL;
-            Application_Common_Database::prepareAndExecute(
-                $sql, array( 'show_id' => $this->_showId ), "execute");
-            $con->exec($sql);
-        }
+        foreach ($rows as $row) {
+            try {
+                $showInstance = new Application_Model_ShowInstance($row["id"]);
+                $showInstance->delete($rabbitmqPush = false);
+            } catch (Exception $e) {
+                Logging::info($e->getMessage());
+            }
+        } 
 
         Application_Model_RabbitMq::PushSchedule();
     }
