@@ -369,7 +369,6 @@ var AIRTIME = (function(AIRTIME){
         $.each($(".big_play"), function(index, value){
             if ($(value).attr('blockId') === undefined) {
                 var mime = $(value).attr("data-mime-type");
-                console.log($(value));
                 if (isAudioSupported(mime)) {
                     $(value).bind("click", openAudioPreview);
                 } else {
