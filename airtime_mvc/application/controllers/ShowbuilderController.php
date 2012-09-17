@@ -126,6 +126,7 @@ class ShowbuilderController extends Zend_Controller_Action
         //determine whether to remove/hide/display the library.
         $showLib = false;
         if (!$user->isGuest()) {
+        //if(true) {
             $disableLib = false;
 
             $data = Application_Model_Preference::getNowPlayingScreenSettings();
