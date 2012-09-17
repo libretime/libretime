@@ -344,12 +344,12 @@ SELECT showt.name AS show_name,
 JOIN cc_show AS showt ON (showt.id = si.show_id)
 WHERE si.modified_instance = FALSE
   $showPredicate
-  AND (si.starts >= '{$p_start}'
+  AND ((si.starts >= '{$p_start}'
        AND si.starts < '{$p_end}')
   OR (si.ends > '{$p_start}'
       AND si.ends <= '{$p_end}')
   OR (si.starts <= '{$p_start}'
-      AND si.ends >= '{$p_end}')
+      AND si.ends >= '{$p_end}'))
 ORDER BY si_starts,
          sched_starts;
 SQL;
