@@ -51,12 +51,12 @@ class Application_Model_ShowBuilder
      */
     public function __construct($p_startDT, $p_endDT, $p_opts)
     {
-        $this->startDT = $p_startDT;
-        $this->endDT = $p_endDT;
-        $this->timezone = date_default_timezone_get();
-        $this->user = Application_Model_User::getCurrentUser();
-        $this->opts = $p_opts;
-        $this->epoch_now = floatval(microtime(true));
+        $this->startDT     = $p_startDT;
+        $this->endDT       = $p_endDT;
+        $this->timezone    = date_default_timezone_get();
+        $this->user        = Application_Model_User::getCurrentUser();
+        $this->opts        = $p_opts;
+        $this->epoch_now   = floatval(microtime(true));
         $this->currentShow = false;
     }
 
