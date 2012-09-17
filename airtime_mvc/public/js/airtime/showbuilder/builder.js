@@ -112,16 +112,25 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkCancelButton = function() {
-        var $current = $sbTable.find(".sb-current-show.sb-allowed"),
+    	
+        var $current = $sbTable.find(".sb-current-show"),
             //this user type should be refactored into a separate users module later
             //when there's more time and more JS will need to know user data.
-            userType = localStorage.getItem('user-type');
+            userType = localStorage.getItem('user-type'),
+            canCancel = false;
         
-        if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
-            AIRTIME.button.enableButton("icon-ban-circle", true);
+        if ($current.length !== 0 && $current.hasClass("sb-allowed")) {
+        	canCancel = true;
+        }
+        else if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
+            canCancel = true;
+        }
+       
+        if (canCancel === true) {
+        	AIRTIME.button.enableButton("icon-ban-circle", true);
         }
         else {
-            AIRTIME.button.disableButton("icon-ban-circle", true);
+        	AIRTIME.button.disableButton("icon-ban-circle", true);
         }
     };
     

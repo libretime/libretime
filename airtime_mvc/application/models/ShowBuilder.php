@@ -332,6 +332,10 @@ class Application_Model_ShowBuilder
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         $this->isAllowed($p_item, $row);
 
+        if (intval($p_item["si_record"]) === 1) {
+            $row["record"] = true;
+        }
+
         return $row;
     }
 
