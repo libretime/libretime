@@ -1,4 +1,4 @@
-﻿/*
+/*
     author: ApmeM (artem.votincev@gmail.com)
     date: 9-June-2010
     version: 1.4
