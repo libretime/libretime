@@ -363,10 +363,10 @@ function setupUI() {
     
     $(".playlist_type_help_icon").qtip({
         content: {
-            text: "A static playlist will save the criteria and generate the playlist content immediately." +
-                  "This allows you to edit and view it in the Playlist Builder before adding it to a show.<br /><br />" +
-                  "A dynamic playlist will only save the criteria. The playlist content will get generated upon " +
-                  "adding it to a show. You will not be able to view and edit it in the Playlist Builder."
+            text: "A static smart block will save the criteria and generate the block content immediately." +
+                  "This allows you to edit and view it in the Library before adding it to a show.<br /><br />" +
+                  "A dynamic smart block will only save the criteria. The block content will get generated upon " +
+                  "adding it to a show. You will not be able to view and edit the content in the Library."
         },
         hide: {
             delay: 500,
