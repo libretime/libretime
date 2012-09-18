@@ -55,7 +55,7 @@ class AudiopreviewController extends Zend_Controller_Action
             $uri = $webstream->getDbUrl();
             $mime = $webstream->getDbMime();
         } else {
-            throw new Exception("Unknown type for audio preview!");
+            throw new Exception("Unknown type for audio preview!.Type=$type");
         }
 
         $this->view->uri = $uri;
