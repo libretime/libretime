@@ -331,7 +331,7 @@ class Application_Model_Scheduler
     *   This function squeezes all items of a show together so that
     *   there are no gaps between them.
     */
-    private function removeGaps($showInstance, $exclude=null)
+    public function removeGaps($showInstance, $exclude=null)
     {
         Logging::info("removing gaps from show instance #".$showInstance);
 

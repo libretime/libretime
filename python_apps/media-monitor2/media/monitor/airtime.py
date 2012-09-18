@@ -2,13 +2,12 @@
 from kombu.messaging  import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
 from os.path          import normpath
-from mutagen.easymp4  import EasyMP4KeyError
 
 import json
 import os
 import copy
 
-from media.monitor.exceptions import BadSongFile
+from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.metadata   import Metadata
 from media.monitor.log        import Loggable
 from media.monitor.syncdb     import AirtimeDB
@@ -118,7 +117,7 @@ class AirtimeMessageReceiver(Loggable):
         try: Metadata.write_unsafe(path=md_path, md=msg)
         except BadSongFile as e:
             self.logger.info("Cannot find metadata file: '%s'" % e.path)
-        except EasyMP4KeyError as e:
+        except InvalidMetadataElement as e:
             self.logger.info("Metadata instance not supported for this file '%s'" \
                     % e.path)
             self.logger.info(str(e))

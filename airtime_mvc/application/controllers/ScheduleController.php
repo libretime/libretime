@@ -783,6 +783,8 @@ class ScheduleController extends Zend_Controller_Action
             $data['add_show_instance_id']);
 
         if ($success) {
+            $scheduler = new Application_Model_Scheduler();
+            $scheduler->removeGaps($data['add_show_instance_id']);
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         } else {

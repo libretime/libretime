@@ -2,10 +2,11 @@
 import mutagen
 import os
 import copy
-from collections import namedtuple
-from mutagen.easymp4  import EasyMP4KeyError
+from collections     import namedtuple
+from mutagen.easymp4 import EasyMP4KeyError
+from mutagen.easyid3 import EasyID3KeyError
 
-from media.monitor.exceptions import BadSongFile
+from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.log        import Loggable
 from media.monitor.pure       import format_length
 import media.monitor.pure as mmp
@@ -150,17 +151,18 @@ class Metadata(Loggable):
         """
         if not os.path.exists(path): raise BadSongFile(path)
         song_file = mutagen.File(path, easy=True)
-        ex = None
+        exceptions = [] # for bad keys
         for airtime_k, airtime_v in md.iteritems():
             if airtime_k in airtime2mutagen:
                 # The unicode cast here is mostly for integers that need to be
                 # strings
                 try:
                     song_file[ airtime2mutagen[airtime_k] ] = unicode(airtime_v)
-                except EasyMP4KeyError as e:
-                    ex = e
+                except (EasyMP4KeyError, EasyID3KeyError) as e:
+                    exceptions.append(InvalidMetadataElement(e, airtime_k,
+                        path))
+        for e in exceptions: raise e
         song_file.save()
-        if ex: raise ex
 
     def __init__(self, fpath):
         # Forcing the unicode through
