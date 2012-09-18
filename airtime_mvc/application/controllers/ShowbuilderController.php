@@ -259,12 +259,12 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $starts_epoch = $request->getParam("start", $current_time);
         //default ends is 24 hours after starts.
-        $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
+        $ends_epoch  = $request->getParam("end", $current_time + (60*60*24));
         $show_filter = intval($request->getParam("showFilter", 0));
-        $my_shows = intval($request->getParam("myShows", 0));
+        $my_shows    = intval($request->getParam("myShows", 0));
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
-        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+        $endsDT   = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
@@ -287,13 +287,9 @@ class ShowbuilderController extends Zend_Controller_Action
         } catch (OutDatedScheduleException $e) {
             $this->view->error = $e->getMessage();
             Logging::info($e->getMessage());
-            Logging::info("{$e->getFile()}");
-            Logging::info("{$e->getLine()}");
         } catch (Exception $e) {
             $this->view->error = $e->getMessage();
             Logging::info($e->getMessage());
-            Logging::info("{$e->getFile()}");
-            Logging::info("{$e->getLine()}");
         }
     }
 
