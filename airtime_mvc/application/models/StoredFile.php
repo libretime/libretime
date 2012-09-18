@@ -407,7 +407,7 @@ SQL;
      */
     public function getFileExtension()
     {
-        return "";
+        //return "";
         // TODO : what's the point of having this function? Can we not just use
         // the extension from the file_path column from cc_files?
         $mime = $this->_file->getDbMime();
