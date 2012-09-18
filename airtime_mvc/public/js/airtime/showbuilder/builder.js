@@ -112,16 +112,25 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkCancelButton = function() {
-        var $current = $sbTable.find(".sb-current-show.sb-allowed"),
+    	
+        var $current = $sbTable.find(".sb-current-show"),
             //this user type should be refactored into a separate users module later
             //when there's more time and more JS will need to know user data.
-            userType = localStorage.getItem('user-type');
+            userType = localStorage.getItem('user-type'),
+            canCancel = false;
         
-        if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
-            AIRTIME.button.enableButton("icon-ban-circle", true);
+        if ($current.length !== 0 && $current.hasClass("sb-allowed")) {
+        	canCancel = true;
+        }
+        else if ($current.length !== 0 && (userType === 'A' || userType === 'P')) {
+            canCancel = true;
+        }
+       
+        if (canCancel === true) {
+        	AIRTIME.button.enableButton("icon-ban-circle", true);
         }
         else {
-            AIRTIME.button.disableButton("icon-ban-circle", true);
+        	AIRTIME.button.disableButton("icon-ban-circle", true);
         }
     };
     
@@ -953,16 +962,16 @@ var AIRTIME = (function(AIRTIME){
                      "</ul>" +
                      "</div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Remove overbooked tracks' class='ui-state-disabled btn btn-small'>" +
+                    "<button title='Remove overbooked tracks' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-cut'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small'>" +
+                    "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-trash'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small'>" +
+                    "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger'>" +
+                    "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
 
         $toolbar.append($menu);
@@ -978,7 +987,7 @@ var AIRTIME = (function(AIRTIME){
                     data,
                     msg = 'Cancel Current Show?';
                 
-                if (AIRTIME.button.isDisabled('icon-ban-circle') === true) {
+                if (AIRTIME.button.isDisabled('icon-ban-circle', true) === true) {
                     return;
                 }
                 
@@ -1009,7 +1018,7 @@ var AIRTIME = (function(AIRTIME){
         $toolbar.find('.icon-step-forward').parent()
             .click(function() {
                 
-                if (AIRTIME.button.isDisabled('icon-step-forward') === true) {
+                if (AIRTIME.button.isDisabled('icon-step-forward', true) === true) {
                     return;
                 }
                 
@@ -1023,10 +1032,10 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete overbooked tracks.
-        $toolbar.find('.icon-cut').parent()
+        $toolbar.find('.icon-cut', true).parent()
             .click(function() {
                 
-                if (AIRTIME.button.isDisabled('icon-cut') === true) {
+                if (AIRTIME.button.isDisabled('icon-cut', true) === true) {
                     return;
                 }
                 
@@ -1046,7 +1055,7 @@ var AIRTIME = (function(AIRTIME){
         $toolbar.find('.icon-trash').parent()
             .click(function() {
                 
-                if (AIRTIME.button.isDisabled('icon-trash') === true) {
+                if (AIRTIME.button.isDisabled('icon-trash', true) === true) {
                     return;
                 }
                 

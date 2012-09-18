@@ -13,6 +13,17 @@ INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_channels', 'ste
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'stereo', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
 
+
+--clean up database of scheduled items that weren't properly deleted in 2.1.x
+--due to a bug
+DELETE
+FROM cc_schedule
+WHERE id IN
+    (SELECT s.id
+     FROM cc_schedule s
+     LEFT JOIN cc_show_instances si ON s.instance_id = si.id
+     AND si.modified_instance = 't')
+
 ALTER TABLE cc_files
 	DROP CONSTRAINT cc_files_gunid_idx;
 
