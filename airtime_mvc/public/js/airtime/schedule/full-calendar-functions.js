@@ -554,7 +554,7 @@ function alertShowErrorAndReload(){
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
     setInterval( "getCurrentShow()", 5000 );
-    setInterval( "checkEmptyShowStatus()", 5000 );
+    //setInterval( "checkEmptyShowStatus()", 5000 );
 });
 
 var view_name;
