@@ -50,33 +50,33 @@ queue = crossfade(queue)
 output.dummy(fallible=true, queue)
 
 
-stream_queue = switch(id="stream_queue_switch", track_sensitive=false, 
-    transitions=[transition, transition], 
-    [({!webstream_enabled},web_stream), 
+stream_queue = switch(id="stream_queue_switch", track_sensitive=false,
+    transitions=[transition, transition],
+    [({!webstream_enabled},web_stream),
     ({true}, queue)])
 
 ignore(output.dummy(stream_queue, fallible=true))
 
-server.register(namespace="vars", 
-                "pypo_data", 
+server.register(namespace="vars",
+                "pypo_data",
                 fun (s) -> begin log("vars.pypo_data") pypo_data := s "Done" end)
-server.register(namespace="vars", 
-                "stream_metadata_type", 
+server.register(namespace="vars",
+                "stream_metadata_type",
                 fun (s) -> begin log("vars.stream_metadata_type") stream_metadata_type := int_of_string(s) s end)
-server.register(namespace="vars", 
-                "show_name", 
+server.register(namespace="vars",
+                "show_name",
                 fun (s) -> begin log("vars.show_name") show_name := s s end)
-server.register(namespace="vars", 
-                "station_name", 
+server.register(namespace="vars",
+                "station_name",
                 fun (s) -> begin log("vars.station_name") station_name := s s end)
-server.register(namespace="vars", 
-                "bootup_time", 
+server.register(namespace="vars",
+                "bootup_time",
                 fun (s) -> begin log("vars.bootup_time") time := s s end)
-server.register(namespace="streams", 
-                "connection_status", 
+server.register(namespace="streams",
+                "connection_status",
                 fun (s) -> begin log("streams.connection_status") "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
-server.register(namespace="vars", 
-                "default_dj_fade", 
+server.register(namespace="vars",
+                "default_dj_fade",
                 fun (s) -> begin log("vars.default_dj_fade") default_dj_fade := float_of_string(s) s end)
 
 server.register(namespace="dynamic_source",
@@ -117,7 +117,7 @@ ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false
 live_dj_enabled = ref false
-scheduled_play_enabled = ref false 
+scheduled_play_enabled = ref false
 
 def make_master_dj_available()
     master_dj_enabled := true
@@ -153,7 +153,7 @@ def live_dj_connect(header) =
     update_source_status("live_dj", true)
 end
 
-def live_dj_disconnect() = 
+def live_dj_disconnect() =
     update_source_status("live_dj", false)
 end
 
@@ -161,7 +161,7 @@ def master_dj_connect(header) =
     update_source_status("master_dj", true)
 end
 
-def master_dj_disconnect() = 
+def master_dj_disconnect() =
     update_source_status("master_dj", false)
 end
 
@@ -172,7 +172,7 @@ def check_master_dj_client(user,password) =
     ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --master #{user} #{password}")
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     ret = list.hd(ret)
-    
+
     #return true to let the client transmit data, or false to tell harbor to decline
     ret == "True"
 end
@@ -188,10 +188,10 @@ end
 
 def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
     if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" and dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        master_dj = mksafe(audio_to_stereo(input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client, 
+        master_dj = mksafe(audio_to_stereo(input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)))
         dj_live = mksafe(audio_to_stereo(input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)))                    
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)))
 
         master_dj = rewrite_metadata([("artist","Airtime"), ("title", "Master Dj")],master_dj)
         dj_live = rewrite_metadata([("artist","Airtime"), ("title", "Live Dj")],dj_live)
@@ -207,9 +207,9 @@ def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, 
         switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!master_dj_enabled},master_dj), ({true}, s)])
     elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         dj_live = mksafe(audio_to_stereo(input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)))    
-        
-        dj_live = rewrite_metadata([("artist","Airtime"), ("title", "Live Dj")],dj_live)  
+                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)))
+
+        dj_live = rewrite_metadata([("artist","Airtime"), ("title", "Live Dj")],dj_live)
 
         ignore(output.dummy(dj_live, fallible=true))
         switch(id="live_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!live_dj_enabled},dj_live), ({true}, s)])
@@ -218,8 +218,8 @@ def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, 
     end
 end
 
-s = switch(id="default_switch", track_sensitive=false, 
-    transitions=[transition_default, transition], 
+s = switch(id="default_switch", track_sensitive=false,
+    transitions=[transition_default, transition],
     [({!scheduled_play_enabled}, stream_queue),({true},default)])
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp,
     dj_live_stream_port, dj_live_stream_mp, s)
@@ -261,48 +261,48 @@ server.register(namespace="streams",
 
 if output_sound_device then
     success = ref false
-    
+
     log(output_sound_device_type)
-	
+
     %ifdef output.alsa
 	if output_sound_device_type == "ALSA" then
 		ignore(output.alsa(s))
         success := true
 	end
 	%endif
-    
+
 	%ifdef output.ao
 	if output_sound_device_type == "AO" then
 		ignore(output.ao(s))
         success := true
 	end
 	%endif
-    
+
 	%ifdef output.oss
 	if output_sound_device_type == "OSS" then
         ignore(output.oss(s))
         success := true
 	end
 	%endif
-    
+
 	%ifdef output.portaudio
 	if output_sound_device_type == "Portaudio" then
         ignore(output.portaudio(s))
         success := true
 	end
 	%endif
-    
+
 	%ifdef output.pulseaudio
 	if output_sound_device_type == "Pulseaudio" then
         ignore(output.pulseaudio(s))
         success := true
 	end
 	%endif
-    
+
     if (!success == false) then
         ignore(output.prefered(s))
 	end
-    
+
 end
 
 if s1_enable == true then
@@ -312,8 +312,8 @@ if s1_enable == true then
         s1_namespace := s1_mount
     end
     server.register(namespace=!s1_namespace, "connected", fun (s) -> begin log("#{!s1_namespace}.connected") !s1_connected end)
-    output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass, 
-                s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1", 
+    output_to(s1_output, s1_type, s1_bitrate, s1_host, s1_port, s1_pass,
+                s1_mount, s1_url, s1_description, s1_genre, s1_user, s, "1",
                 s1_connected, s1_name, s1_channels)
 end
 
@@ -324,10 +324,10 @@ if s2_enable == true then
         s2_namespace := s2_mount
     end
     server.register(namespace=!s2_namespace, "connected", fun (s) -> begin log("#{!s2_namespace}.connected") !s2_connected end)
-    output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass, 
-                s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2", 
+    output_to(s2_output, s2_type, s2_bitrate, s2_host, s2_port, s2_pass,
+                s2_mount, s2_url, s2_description, s2_genre, s2_user, s, "2",
                 s2_connected, s2_name, s2_channels)
-    
+
 end
 
 if s3_enable == true then
@@ -337,8 +337,8 @@ if s3_enable == true then
         s3_namespace := s3_mount
     end
     server.register(namespace=!s3_namespace, "connected", fun (s) -> begin log("#{!s3_namespace}.connected") !s3_connected end)
-    output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass, 
-                s3_mount, s3_url, s3_name, s3_genre, s3_user, s, "3", 
+    output_to(s3_output, s3_type, s3_bitrate, s3_host, s3_port, s3_pass,
+                s3_mount, s3_url, s3_name, s3_genre, s3_user, s, "3",
                 s3_connected, s3_description, s3_channels)
 end
 
