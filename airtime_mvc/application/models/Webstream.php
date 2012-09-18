@@ -39,7 +39,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     public function getLastModified($p_type)
     {
-        return "modified";
+        return $this->webstream->getDbMtime();
     }
 
     public function getDefaultLength()
@@ -215,15 +215,16 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return true;
     }
 
-    // TODO : properly implement this interface
+    // TODO : Fix this interface
     public function setMetadata($key, $val)
     {
-        throw new Exception("setMetadata is not imeplemented by WebStream yet");
+        //This function should not be defined in the interface.
+        throw new Exception("Not implemented.");
     }
 
     public function setName($name)
     {
-        throw new Exception("setName is not imeplemented by WebStream yet");
+        $this->webstream->setDbName($name);
     }
     
     public function setLastPlayed($timestamp)
@@ -242,8 +243,6 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         // grab URL and pass it to the browser
         //TODO: What if invalid url?
         $content = curl_exec($ch);
-
-        Logging::debug($content);
 
         // close cURL resource, and free up system resources
         curl_close($ch);

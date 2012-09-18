@@ -82,36 +82,6 @@ SCRIPT=`readlink -f $0`
 SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
 
-#Check if required zend mvc library is present. This is a temporary workaround for 2.0.1, 
-#and we should probably create a separate file that checks whether ALL dependencies are satisfied before 
-#allowing the install to continue. However in that case, we wouldn't check for Debian packages so that we 
-#can become less Debian platform dependent in the future...
-
-set +e
-dpkg -l | grep zendframework > /dev/null 2>&1
-ZENDFRAMEWORK=$?
-
-dpkg -l | grep libzend-framework-php > /dev/null 2>&1
-LIBZEND=$?
-
-dpkg -l | grep lsof > /dev/null 2>&1
-LSOF_EXIST=$?
-
-dpkg -l | grep sudo > /dev/null 2>&1
-SUDO_EXIST=$?
-
-set -e
-
-if [ "$ZENDFRAMEWORK" != "0" -a "$LIBZEND" != "0" ]; then
-    echo "zendframework/libzend-framework-php package missing. Please run airtime-full-install"
-    exit 1
-fi
-
-if [ "$LSOF_EXIST" != "0" -o "$SUDO_EXIST" != "0" ]; then
-    echo "Packages missing. Please run airtime-full-install"
-    exit 1
-fi
-
 echo "* Making sure /etc/default/locale is set properly"
 set +e
 update-locale
