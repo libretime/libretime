@@ -21,9 +21,9 @@ class AudiopreviewController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        $audioFileID = $this->_getParam('audioFileID');
+        $audioFileID     = $this->_getParam('audioFileID');
         $audioFileArtist = $this->_getParam('audioFileArtist');
-        $audioFileTitle = $this->_getParam('audioFileTitle');
+        $audioFileTitle  = $this->_getParam('audioFileTitle');
         $type = $this->_getParam('type');
 
         $request = $this->getRequest();
@@ -47,23 +47,23 @@ class AudiopreviewController extends Zend_Controller_Action
         }
 
         if ($type == "audioclip") {
-            $uri = "/api/get-media/file/".$audioFileID;
+            $uri   = "/api/get-media/file/".$audioFileID;
             $media = Application_Model_StoredFile::Recall($audioFileID);
-            $mime = $media->getPropelOrm()->getDbMime();
+            $mime  = $media->getPropelOrm()->getDbMime();
         } elseif ($type == "stream") {
             $webstream = CcWebstreamQuery::create()->findPk($audioFileID);
-            $uri = $webstream->getDbUrl();
-            $mime = $webstream->getDbMime();
+            $uri       = $webstream->getDbUrl();
+            $mime      = $webstream->getDbMime();
         } else {
-            throw new Exception("Unknown type for audio preview!");
+            throw new Exception("Unknown type for audio preview!.Type=$type");
         }
 
-        $this->view->uri = $uri;
-        $this->view->mime = $mime;
-        $this->view->audioFileID = $audioFileID;
+        $this->view->uri             = $uri;
+        $this->view->mime            = $mime;
+        $this->view->audioFileID     = $audioFileID;
         $this->view->audioFileArtist = $audioFileArtist;
-        $this->view->audioFileTitle = $audioFileTitle;
-        $this->view->type = $type;
+        $this->view->audioFileTitle  = $audioFileTitle;
+        $this->view->type            = $type;
 
         $this->_helper->viewRenderer->setRender('audio-preview');
     }
