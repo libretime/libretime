@@ -582,7 +582,7 @@ SQL;
     /**
      * Fetch the Application_Model_StoredFile by looking up its filepath.
      *
-     * @param  string                            $p_filepath path of file stored in Airtime.
+     * @param  string  $p_filepath path of file stored in Airtime.
      * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByFilepath($p_filepath)
