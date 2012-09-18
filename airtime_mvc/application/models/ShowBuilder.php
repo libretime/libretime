@@ -133,7 +133,8 @@ class Application_Model_ShowBuilder
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
     {
-        if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart && $this->epoch_now > $p_epochItemEnd) {
+        if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart &&
+            $this->epoch_now > $p_epochItemEnd) {
             $row["scheduled"] = 0;
         } elseif ($row["footer"] === true && $this->epoch_now < $p_epochItemEnd) {
             $row["scheduled"] = 2;
@@ -179,7 +180,7 @@ class Application_Model_ShowBuilder
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
         $showStartDT->setTimezone(new DateTimeZone($this->timezone));
         $startsEpoch = floatval($showStartDT->format("U.u"));
-        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+        $showEndDT   = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
         $showEndDT->setTimezone(new DateTimeZone($this->timezone));
         $endsEpoch = floatval($showEndDT->format("U.u"));
 
@@ -188,8 +189,8 @@ class Application_Model_ShowBuilder
             $row["rebroadcast"] = true;
 
             $parentInstance = CcShowInstancesQuery::create()->findPk($p_item["parent_show"]);
-            $name = $parentInstance->getCcShow()->getDbName();
-            $dt = $parentInstance->getDbStarts(null);
+            $name           = $parentInstance->getCcShow()->getDbName();
+            $dt             = $parentInstance->getDbStarts(null);
             $dt->setTimezone(new DateTimeZone($this->timezone));
             $time = $dt->format("Y-m-d H:i");
 
@@ -198,8 +199,6 @@ class Application_Model_ShowBuilder
             $row["record"] = true;
 
             if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                Logging::info('$p_item contains:');
-                Logging::info($p_item);
                 $file = Application_Model_StoredFile::Recall(
                     $p_item['si_file_id']);
                 if (isset($file)) {
@@ -242,9 +241,11 @@ class Application_Model_ShowBuilder
 
         if (isset($p_item["sched_starts"])) {
 
-            $schedStartDT = new DateTime($p_item["sched_starts"], new DateTimeZone("UTC"));
+            $schedStartDT = new DateTime($p_item["sched_starts"],
+                new DateTimeZone("UTC"));
             $schedStartDT->setTimezone(new DateTimeZone($this->timezone));
-            $schedEndDT = new DateTime($p_item["sched_ends"], new DateTimeZone("UTC"));
+            $schedEndDT = new DateTime($p_item["sched_ends"],
+                new DateTimeZone("UTC"));
             $schedEndDT->setTimezone(new DateTimeZone($this->timezone));
             $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
 
@@ -314,18 +315,18 @@ class Application_Model_ShowBuilder
 
     private function makeFooterRow($p_item)
     {
-        $row = $this->defaultRowArray;
-        $row["footer"] = true;
+        $row             = $this->defaultRowArray;
+        $row["footer"]   = true;
         $row["instance"] = intval($p_item["si_id"]);
         $this->getRowTimestamp($p_item, $row);
 
-        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
-        $contentDT = $this->contentDT;
+        $showEndDT       = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+        $contentDT       = $this->contentDT;
 
-        $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
-        $row["runtime"] = $runtime;
+        $runtime         = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
+        $row["runtime"]  = $runtime;
 
-        $timeFilled = new TimeFilledFormatter($runtime);
+        $timeFilled      = new TimeFilledFormatter($runtime);
         $row["fRuntime"] = $timeFilled->format();
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
@@ -354,7 +355,8 @@ class Application_Model_ShowBuilder
     /*
      * @param int $timestamp Unix timestamp in seconds.
      *
-     * @return boolean whether the schedule in the show builder's range has been updated.
+     * @return boolean whether the schedule in the show builder's range has
+     * been updated.
      *
      */
     public function hasBeenUpdatedSince($timestamp, $instances)
@@ -378,23 +380,26 @@ class Application_Model_ShowBuilder
                 $currentInstances[] = $show["instance_id"];
 
                 if (isset($show["last_scheduled"])) {
-                    $dt = new DateTime($show["last_scheduled"], new DateTimeZone("UTC"));
+                    $dt = new DateTime($show["last_scheduled"],
+                        new DateTimeZone("UTC"));
                 } else {
-                    $dt = new DateTime($show["created"], new DateTimeZone("UTC"));
+                    $dt = new DateTime($show["created"],
+                        new DateTimeZone("UTC"));
                 }
 
                 //check if any of the shows have a more recent timestamp.
                 $showTimeStamp = intval($dt->format("U"));
                 if ($timestamp < $showTimeStamp) {
-                    Logging::debug("timestamp is {$timestamp} show timestamp is {$showTimeStamp}");
                     $outdated = true;
                     break;
                 }
             }
         }
 
-        //see if the displayed show instances have changed. (deleted, empty schedule etc)
-        if ($outdated === false && count($instances) !== count($currentInstances)) {
+        //see if the displayed show instances have changed. (deleted,
+        //empty schedule etc)
+        if ($outdated === false && count($instances) 
+            !== count($currentInstances)) {
             Logging::debug("show instances have changed.");
             $outdated = true;
         }
@@ -415,14 +420,17 @@ class Application_Model_ShowBuilder
             $shows[] = $this->opts["showFilter"];
         }
 
-        $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems($this->startDT->format("Y-m-d H:i:s"), $this->endDT->format("Y-m-d H:i:s"), $shows);
+        $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems(
+            $this->startDT->format("Y-m-d H:i:s"), $this->endDT->format(
+                "Y-m-d H:i:s"), $shows);
 
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 
             $item = $scheduled_items[$i];
 
             //don't send back data for filler rows.
-            if (isset($item["playout_status"]) && $item["playout_status"] < 0) {
+            if (isset($item["playout_status"]) &&
+                $item["playout_status"] < 0) {
                 continue;
             }
 
@@ -431,8 +439,10 @@ class Application_Model_ShowBuilder
 
                 //make a footer row.
                 if ($current_id !== -1) {
-                    //pass in the previous row as it's the last row for the previous show.
-                    $display_items[] = $this->makeFooterRow($scheduled_items[$i-1]);
+                    // pass in the previous row as it's the last row for
+                    // the previous show.
+                    $display_items[] = $this->makeFooterRow(
+                        $scheduled_items[$i-1]);
                 }
 
                 $display_items[] = $this->makeHeaderRow($item);
@@ -449,7 +459,8 @@ class Application_Model_ShowBuilder
                 $display_items[] = $row;
             }
 
-            if ($current_id !== -1 && !in_array($current_id, $this->showInstances)) {
+            if ($current_id !== -1 && 
+                !in_array($current_id, $this->showInstances)) {
                 $this->showInstances[] = $current_id;
             }
         }

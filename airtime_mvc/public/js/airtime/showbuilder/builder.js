@@ -66,10 +66,10 @@ var AIRTIME = (function(AIRTIME){
         var $selectable = $sbTable.find("tbody").find("input:checkbox");
         
         if ($selectable.length !== 0) {
-            AIRTIME.button.enableButton("btn-group #timeline-select", true);
+            AIRTIME.button.enableButton("btn-group #timeline-select", false);
         }
         else {
-            AIRTIME.button.disableButton("btn-group #timeline-select", true);
+            AIRTIME.button.disableButton("btn-group #timeline-select", false);
         }
         
         //need to check if the 'Select' button is disabled
@@ -962,16 +962,16 @@ var AIRTIME = (function(AIRTIME){
                      "</ul>" +
                      "</div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Remove overbooked tracks' class='ui-state-disabled btn btn-small'>" +
+                    "<button title='Remove overbooked tracks' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-cut'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small'>" +
+                    "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-trash'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small'>" +
+                    "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger'>" +
+                    "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
 
         $toolbar.append($menu);
@@ -987,7 +987,7 @@ var AIRTIME = (function(AIRTIME){
                     data,
                     msg = 'Cancel Current Show?';
                 
-                if (AIRTIME.button.isDisabled('icon-ban-circle') === true) {
+                if (AIRTIME.button.isDisabled('icon-ban-circle', true) === true) {
                     return;
                 }
                 
@@ -1018,7 +1018,7 @@ var AIRTIME = (function(AIRTIME){
         $toolbar.find('.icon-step-forward').parent()
             .click(function() {
                 
-                if (AIRTIME.button.isDisabled('icon-step-forward') === true) {
+                if (AIRTIME.button.isDisabled('icon-step-forward', true) === true) {
                     return;
                 }
                 
@@ -1032,10 +1032,10 @@ var AIRTIME = (function(AIRTIME){
             });
         
         //delete overbooked tracks.
-        $toolbar.find('.icon-cut').parent()
+        $toolbar.find('.icon-cut', true).parent()
             .click(function() {
                 
-                if (AIRTIME.button.isDisabled('icon-cut') === true) {
+                if (AIRTIME.button.isDisabled('icon-cut', true) === true) {
                     return;
                 }
                 
@@ -1055,7 +1055,7 @@ var AIRTIME = (function(AIRTIME){
         $toolbar.find('.icon-trash').parent()
             .click(function() {
                 
-                if (AIRTIME.button.isDisabled('icon-trash') === true) {
+                if (AIRTIME.button.isDisabled('icon-trash', true) === true) {
                     return;
                 }
                 
@@ -1083,17 +1083,18 @@ var AIRTIME = (function(AIRTIME){
         });
         
         /*
-         * Icon hover states in the toolbar.
+         * Select button dropdown state in the toolbar.
+         * The button has to be disabled to prevent the dropdown
+         * from opening
          */
         $sbContent.on("mouseenter", ".btn-group #timeline-select", function(ev) {
-            $el = $(this).parent(),
-            $ch = $el.children('#timeline-select');
+            $el = $(this);
             
             if ($el.hasClass("ui-state-disabled")) {
-                $ch.attr("disabled", "disabled");
+                $el.attr("disabled", "disabled");
             }
             else {
-                $ch.removeAttr("disabled");
+                $el.removeAttr("disabled");
             }       
         });
         

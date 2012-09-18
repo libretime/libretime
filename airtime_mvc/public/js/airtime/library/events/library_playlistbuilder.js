@@ -16,10 +16,21 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (check === true) {
-            AIRTIME.button.enableButton("btn-group #library-plus", true);
+            AIRTIME.button.enableButton("btn-group #library-plus", false);
         } else {
-            AIRTIME.button.disableButton("btn-group #library-plus", true);
+            AIRTIME.button.disableButton("btn-group #library-plus", false);
         }
+
+        var objType = $('#obj_type').val(),
+            btnText;
+        if (objType === 'playlist') {
+            btnText = ' Add to current playlist';
+        } else if (objType === 'block') {
+            btnText = ' Add to current smart block';
+        } else {
+            btnText = ' Add to current playlist';
+        }
+        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), btnText);
     };
 
     mod.fnRowCallback = function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {

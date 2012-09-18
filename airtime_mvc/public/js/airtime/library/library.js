@@ -98,6 +98,10 @@ var AIRTIME = (function(AIRTIME) {
         return count;
     };
     
+    mod.changeAddButtonText = function($button, btnText) {
+        $button.text(btnText);
+    }
+    
     mod.createToolbarButtons = function() {
         $menu = $("<div class='btn-toolbar' />");
         $menu
@@ -113,7 +117,8 @@ var AIRTIME = (function(AIRTIME) {
                     "</div>")
             .append("<div class='btn-group'>" +
                         "<button class='btn btn-small' id='library-plus'>" +
-                            "<i class='icon-white icon-plus'></i> Add to current playlist" +
+                            "<i class='icon-white icon-plus'></i>" +
+                            "<span id='lib-plus-text'></span>" +
                         "</button>" +
                     "</div>")
             .append("<div class='btn-group'>" +
@@ -138,10 +143,10 @@ var AIRTIME = (function(AIRTIME) {
         }
         
         if (check === true) {
-            AIRTIME.button.enableButton("btn-group #sb-trash", true);
+            AIRTIME.button.enableButton("btn-group #sb-trash", false);
         }
         else {
-            AIRTIME.button.disableButton("btn-group #sb-trash", true);
+            AIRTIME.button.disableButton("btn-group #sb-trash", false);
         }
     };
     
