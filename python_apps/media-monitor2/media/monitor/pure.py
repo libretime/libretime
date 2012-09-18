@@ -257,6 +257,8 @@ def normalized_metadata(md, original_path):
         'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
         'MDATA_KEY_BPM'         : lambda x: x[0:8],
         'MDATA_KEY_MIME' : lambda x: x.replace('audio/vorbis','audio/ogg'),
+        # Whenever 0 is reported we change it to empty
+        #'MDATA_KEY_BITRATE' : lambda x: '' if str(x) == '0' else x
     }
 
     new_md = remove_whitespace(new_md) # remove whitespace fields

@@ -255,8 +255,8 @@ function eventRender(event, element, view) {
     }
     
     //add scheduled show content empty icon
-    addIcon = checkEmptyShowStatus(event);
-    if (!addIcon) {
+    //addIcon = checkEmptyShowStatus(event);
+    //if (!addIcon) {
         if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
             if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
                 if (event.soundcloud_id === -1) {
@@ -282,7 +282,7 @@ function eventRender(event, element, view) {
                 }
             }
         }
-    }
+    //}
 
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
@@ -518,6 +518,7 @@ function addQtipToSCIcons(ele){
  *    This gets checked when we are deciding if the show-empty icon should be added
  *    at the beginning of an event render callback.
  */
+/*
 function checkEmptyShowStatus(e) {
     var currDate = new Date();
     var endTime;
@@ -541,6 +542,7 @@ function checkEmptyShowStatus(e) {
         return showOver;
     }
 }
+*/
 
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
