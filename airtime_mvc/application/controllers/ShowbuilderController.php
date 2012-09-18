@@ -229,35 +229,32 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function checkBuilderFeedAction()
     {
-        $request = $this->getRequest();
+        $request      = $this->getRequest();
         $current_time = time();
 
         $starts_epoch = $request->getParam("start", $current_time);
         //default ends is 24 hours after starts.
-        $ends_epoch = $request->getParam("end", $current_time + (60*60*24));
+        $ends_epoch  = $request->getParam("end", $current_time + (60*60*24));
         $show_filter = intval($request->getParam("showFilter", 0));
-        $my_shows = intval($request->getParam("myShows", 0));
-        $timestamp = intval($request->getParam("timestamp", -1));
-        $instances = $request->getParam("instances", array());
+        $my_shows    = intval($request->getParam("myShows", 0));
+        $timestamp   = intval($request->getParam("timestamp", -1));
+        $instances   = $request->getParam("instances", array());
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
-        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+        $endsDT   = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
-        $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
+        $opts        = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         //only send the schedule back if updates have been made.
         // -1 default will always call the schedule to be sent back if no timestamp is defined.
-        if ($showBuilder->hasBeenUpdatedSince($timestamp, $instances)) {
-            $this->view->update = true;
-        } else {
-            $this->view->update = false;
-        }
+        $this->view->update = $showBuilder->hasBeenUpdatedSince(
+            $timestamp, $instances);
     }
 
     public function builderFeedAction()
     {
-        $request = $this->getRequest();
+        $request      = $this->getRequest();
         $current_time = time();
 
         $starts_epoch = $request->getParam("start", $current_time);
