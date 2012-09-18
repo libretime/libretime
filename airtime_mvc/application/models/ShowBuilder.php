@@ -133,7 +133,8 @@ class Application_Model_ShowBuilder
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
     {
-        if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart && $this->epoch_now > $p_epochItemEnd) {
+        if ($row["footer"] === true && $this->epoch_now > $p_epochItemStart &&
+            $this->epoch_now > $p_epochItemEnd) {
             $row["scheduled"] = 0;
         } elseif ($row["footer"] === true && $this->epoch_now < $p_epochItemEnd) {
             $row["scheduled"] = 2;

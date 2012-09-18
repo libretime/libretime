@@ -825,13 +825,11 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->newForm = $this->view->render(
                 'schedule/add-show-form.phtml');
             Logging::debug("Show creation succeeded");
-            Logging::debug_sparse( $data );
         } else {
             $this->view->addNewShow = true;
             $this->view->form = $this->view->render(
                 'schedule/add-show-form.phtml');
             Logging::debug("Show creation failed");
-            Logging::debug_sparse( $data );
         }
     }
 
