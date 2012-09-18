@@ -419,7 +419,7 @@ function getCurrentShow(){
 
 function addQtipToSCIcons(ele){
     var id = $(ele).attr("id");
-    console.log(ele);
+
     if($(ele).hasClass("progress")){
         $(ele).qtip({
             content: {
