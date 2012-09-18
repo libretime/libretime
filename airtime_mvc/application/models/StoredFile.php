@@ -1182,11 +1182,11 @@ SQL;
         if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
             for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
                 $description = $file->getDbTrackTitle();
-                $tag = array();
-                $genre = $file->getDbGenre();
-                $release = $file->getDbYear();
+                $tag         = array();
+                $genre       = $file->getDbGenre();
+                $release     = $file->getDbYear();
                 try {
-                    $soundcloud = new Application_Model_Soundcloud();
+                    $soundcloud     = new Application_Model_Soundcloud();
                     $soundcloud_res = $soundcloud->uploadTrack(
                         $this->getFilePath(), $this->getName(), $description,
                         $tag, $release, $genre);
@@ -1196,9 +1196,9 @@ SQL;
                     break;
                 } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                     $code = $e->getHttpCode();
-                    $msg = $e->getHttpBody();
+                    $msg  = $e->getHttpBody();
                     $temp = explode('"error":',$msg);
-                    $msg = trim($temp[1], '"}');
+                    $msg  = trim($temp[1], '"}');
                     $this->setSoundCloudErrorCode($code);
                     $this->setSoundCloudErrorMsg($msg);
                     // setting sc id to -3 which indicates error
