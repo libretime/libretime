@@ -109,7 +109,7 @@ class UserController extends Zend_Controller_Action
         # TODO : remove this. we only use default for now not to break the UI.
         if (!$files_action) { # set default action
             $files_action = "reassign_to";
-            $delId = 1;
+            $new_owner    = Application_Model_User::getFirstAdmin();
         }
 
         # only delete when valid action is selected for the owned files
@@ -132,8 +132,11 @@ class UserController extends Zend_Controller_Action
         if ($files_action == "delete_cascade") {
             $user->deleteAllFiles();
         } elseif ($files_action == "reassign_to") {
-            $new_owner = $this->_getParam("new_owner");
-            $user->reassignTo( $new_owner );
+            // TODO : fix code to actually use the line below and pick a
+            // real owner instead of defaulting to the first found admin
+            //$new_owner_id = $this->_getParam("new_owner");
+            //$new_owner    = new Application_Model_User($new_owner_id);
+            $user->donateFilesTo( $new_owner );
         }
         # Finally delete the user
         $this->view->entries = $user->delete();

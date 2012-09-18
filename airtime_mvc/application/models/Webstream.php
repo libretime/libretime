@@ -216,9 +216,9 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     }
 
     // TODO : Fix this interface
+    //This function should not be defined in the interface.
     public function setMetadata($key, $val)
     {
-        //This function should not be defined in the interface.
         throw new Exception("Not implemented.");
     }
 

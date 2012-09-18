@@ -41,11 +41,13 @@ stream_harbor_pass = list.hd(get_process_lines('pwgen -s -N 1 -n 20'))
 
 web_stream = input.harbor("test-harbor", port=8999, password=stream_harbor_pass)
 web_stream = on_metadata(notify_stream, web_stream)
+output.dummy(fallible=true, web_stream)
 
 queue = on_metadata(notify, queue)
 queue = map_metadata(update=false, append_title, queue)
 # the crossfade function controls fade in/out
 queue = crossfade(queue)
+output.dummy(fallible=true, queue)
 
 
 stream_queue = switch(id="stream_queue_switch", track_sensitive=false, 

@@ -215,7 +215,7 @@ class Application_Model_User
         return $user->getCcFilessRelatedByDbOwnerId();
     }
 
-    public function donateFilesTo($user)
+    public function donateFilesTo($user) // $user is object not user id
     {
         $my_files = $this->getOwnedFiles();
         foreach ($my_files as $file) {
@@ -242,18 +242,27 @@ class Application_Model_User
     {
         return CcSubjsQuery::create()->filterByDbType($type)->find();
     }
-    public static function getFirstAdminId()
-    {
+
+    public static function getFirstAdmin() {
         $admins = Application_Model_User::getUsersOfType('A');
         if (count($admins) > 0) { // found admin => pick first one
-
-            return $admins[0]->getDbId();
+            return $admins[0];
         } else {
             Logging::warn("Warning. no admins found in database");
-
             return null;
         }
     }
+
+    public static function getFirstAdminId()
+    {
+        $admin = self::getFirstAdmin();
+        if ($admin) { 
+            return $admin->getDbId();
+        } else {
+            return null;
+        }
+    }
+
     public static function getUsers(array $type, $search=null)
     {
         $con     = Propel::getConnection();
