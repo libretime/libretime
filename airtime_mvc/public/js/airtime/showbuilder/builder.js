@@ -66,10 +66,10 @@ var AIRTIME = (function(AIRTIME){
         var $selectable = $sbTable.find("tbody").find("input:checkbox");
         
         if ($selectable.length !== 0) {
-            AIRTIME.button.enableButton("btn-group #timeline-select", true);
+            AIRTIME.button.enableButton("btn-group #timeline-select", false);
         }
         else {
-            AIRTIME.button.disableButton("btn-group #timeline-select", true);
+            AIRTIME.button.disableButton("btn-group #timeline-select", false);
         }
         
         //need to check if the 'Select' button is disabled
@@ -1083,17 +1083,18 @@ var AIRTIME = (function(AIRTIME){
         });
         
         /*
-         * Icon hover states in the toolbar.
+         * Select button dropdown state in the toolbar.
+         * The button has to be disabled to prevent the dropdown
+         * from opening
          */
         $sbContent.on("mouseenter", ".btn-group #timeline-select", function(ev) {
-            $el = $(this).parent(),
-            $ch = $el.children('#timeline-select');
+            $el = $(this);
             
             if ($el.hasClass("ui-state-disabled")) {
-                $ch.attr("disabled", "disabled");
+                $el.attr("disabled", "disabled");
             }
             else {
-                $ch.removeAttr("disabled");
+                $el.removeAttr("disabled");
             }       
         });
         
