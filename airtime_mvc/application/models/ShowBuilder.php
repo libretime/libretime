@@ -314,18 +314,18 @@ class Application_Model_ShowBuilder
 
     private function makeFooterRow($p_item)
     {
-        $row = $this->defaultRowArray;
-        $row["footer"] = true;
+        $row             = $this->defaultRowArray;
+        $row["footer"]   = true;
         $row["instance"] = intval($p_item["si_id"]);
         $this->getRowTimestamp($p_item, $row);
 
-        $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
-        $contentDT = $this->contentDT;
+        $showEndDT       = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+        $contentDT       = $this->contentDT;
 
-        $runtime = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
-        $row["runtime"] = $runtime;
+        $runtime         = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
+        $row["runtime"]  = $runtime;
 
-        $timeFilled = new TimeFilledFormatter($runtime);
+        $timeFilled      = new TimeFilledFormatter($runtime);
         $row["fRuntime"] = $timeFilled->format();
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
