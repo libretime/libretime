@@ -35,17 +35,6 @@ class WebstreamController extends Zend_Controller_Action
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
 
-        /*
-        $type = "stream";
-        $objInfo = Application_Model_Library::getObjInfo($type);
-
-        $obj = new $objInfo['className']($webstream);
-        $obj->setName($webstream->getDbName());
-        $obj->setMetadata('dc:creator', $userInfo->id);
-
-        $type = "stream";
-        Application_Model_Library::changePlaylist($obj->getId(), $type);
-        */
         //clear the session in case an old playlist was open: CC-4196
         Application_Model_Library::changePlaylist(null, null);
 

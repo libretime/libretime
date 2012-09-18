@@ -66,6 +66,7 @@ class Organizer(ReportHandler,Loggable):
 
             # See hack in mmp.magic_move
             def new_dir_watch(d):
+                # TODO : rewrite as return lambda : dispatcher.send(...
                 def cb():
                     dispatcher.send(signal="add_subwatch", sender=self,
                             directory=d)
