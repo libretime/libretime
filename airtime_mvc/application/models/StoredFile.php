@@ -678,21 +678,21 @@ SQL;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::NUMERIC AS ".$key;
             } elseif ($key === "lptime") {
-                $plSelect[] = "NULL::TIMESTAMP AS ".$key;
-                $blSelect[] = "NULL::TIMESTAMP AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::TIMESTAMP AS ".$key;
+                $blSelect[]     = "NULL::TIMESTAMP AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = $key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
-                $plSelect[] = $key;
-                $blSelect[] = $key;
-                $fileSelect[] = $key;
+                $plSelect[]     = $key;
+                $blSelect[]     = $key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = $key;
             } elseif ($key === "year") {
-                $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
-                $blSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
-                $fileSelect[] = "year AS ".$key;
+                $plSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
+                $blSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
+                $fileSelect[]   = "year AS ".$key;
                 $streamSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
             }
             //need to cast certain data as ints for the union to search on.
