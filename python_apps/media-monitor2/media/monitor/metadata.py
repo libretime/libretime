@@ -32,7 +32,7 @@ airtime2mutagen = {
     "MDATA_KEY_MOOD"        : "mood",
     "MDATA_KEY_TRACKNUMBER" : "tracknumber",
     "MDATA_KEY_BPM"         : "bpm",
-    "MDATA_KEY_LABEL"       : "organization",
+    "MDATA_KEY_LABEL"       : "label",
     "MDATA_KEY_COMPOSER"    : "composer",
     "MDATA_KEY_ENCODER"     : "encodedby",
     "MDATA_KEY_CONDUCTOR"   : "conductor",
