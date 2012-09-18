@@ -19,7 +19,7 @@ end
 def append_title(m) =  
   log("Using stream_format #{!stream_metadata_type}")
   if !stream_metadata_type == 1 then
-    [("title", "#{!show_name} - #{m['artist']}")]
+    [("title", "#{!show_name} - #{m['artist']} - #{m['title']}")]
   elsif !stream_metadata_type == 2 then
     [("title", "#{!station_name} - #{!show_name}")]
   else
