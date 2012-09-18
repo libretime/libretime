@@ -138,10 +138,10 @@ var AIRTIME = (function(AIRTIME) {
         }
         
         if (check === true) {
-            AIRTIME.button.enableButton("btn-group #sb-trash", true);
+            AIRTIME.button.enableButton("btn-group #sb-trash", false);
         }
         else {
-            AIRTIME.button.disableButton("btn-group #sb-trash", true);
+            AIRTIME.button.disableButton("btn-group #sb-trash", false);
         }
     };
     

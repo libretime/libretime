@@ -16,9 +16,9 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (check === true) {
-            AIRTIME.button.enableButton("btn-group #library-plus", true);
+            AIRTIME.button.enableButton("btn-group #library-plus", false);
         } else {
-            AIRTIME.button.disableButton("btn-group #library-plus", true);
+            AIRTIME.button.disableButton("btn-group #library-plus", false);
         }
     };
 
