@@ -729,6 +729,7 @@ SQL;
         $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 
         //choose which table we need to select data from.
+        // TODO : use constants instead of numbers -- RG
         switch ($type) {
             case 0:
                 $fromTable = $unionTable;
