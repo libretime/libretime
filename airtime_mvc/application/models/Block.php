@@ -1291,6 +1291,10 @@ SQL;
                         } else {
                             $qry->add($spCriteria, $spCriteriaValue, $spCriteriaModifier);
                         }
+                        
+                        if ($spCriteriaModifier == Criteria::NOT_ILIKE || $spCriteriaModifier == Criteria::NOT_EQUAL) {
+                            $qry->addOr($spCriteria, null, Criteria::ISNULL);
+                        }
                     } catch (Exception $e) {
                         Logging::info($e);
                     }
