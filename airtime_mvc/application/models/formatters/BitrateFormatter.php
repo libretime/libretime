@@ -17,12 +17,12 @@ class BitrateFormatter
 
     public function format()
     {
-        $Kbps = bcdiv($this->_bitrate, 1000, 0);
+        $kbps = bcdiv($this->_bitrate, 1000, 0);
 
-        if ($Kbps == 0) {
+        if ($kbps == 0) {
             return "";
         } else {
-            return "{$Kbps} Kbps";
+            return "$kbps Kbps";
         }
     }
 }
