@@ -872,8 +872,6 @@ class ScheduleController extends Zend_Controller_Action
             } catch (Exception $e) {
                 $this->view->error = $e->getMessage();
                 Logging::info($e->getMessage());
-                Logging::info("{$e->getFile()}");
-                Logging::info("{$e->getLine()}");
             }
         }
     }

@@ -590,9 +590,7 @@ SQL;
                 $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
                 $rebroad->addFileToShow($file_id, false);
             } catch (Exception $e) {
-                Logging::info("{$e->getFile()}");
-                Logging::info("{$e->getLine()}");
-                Logging::info("{$e->getMessage()}");
+                Logging::info($e->getMessage());
             }
         }
     }
