@@ -15,9 +15,10 @@ $(document).ready(function(){
         close: doNotShowPopup,
         buttons: [
             {
-            	id: "remind_me",
-            	text: "Remind me in 1 week",
-            	click: function() {
+                id: "remind_me",
+                text: "Remind me in 1 week",
+                "class": "btn",
+                click: function() {
                     var url = '/Usersettings/remindme';
                     $.ajax({
                         url: url,
@@ -29,6 +30,7 @@ $(document).ready(function(){
             {
                 id: "remind_never",
                 text: "Remind me never",
+                "class": "btn", 
                 click: function() {
                     var url ='/Usersettings/remindme-never';
                     $.ajax({
@@ -41,6 +43,7 @@ $(document).ready(function(){
             {
             	id: "help_airtime",
             	text: "Yes, help Airtime",
+            	"class": "btn",
             	click: function() {
             	    $("#register-form").submit();
             	}

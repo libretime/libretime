@@ -187,12 +187,12 @@ SQL;
             if ($diff != 0) {
                 $sql = <<<SQL
 UPDATE cc_schedule
-SET starts = starts + INTERVAL :diff1 SECOND,
-    ends = ends + INTERVAL :diff2 SECOND
+SET starts = starts + :diff1::INTERVAL SECOND,
+    ends = ends + :diff2::INTERVAL SECOND
 WHERE instance_id = :instanceId
 SQL;
                 Application_Common_Database::prepareAndExecute($sql,
-                    array( 
+                    array(
                         ':diff1'      => $diff,
                         ':diff2'      => $diff,
                         ':instanceId' => $instance_id ), 'execute');
@@ -345,7 +345,7 @@ SQL;
         //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
         $sql = "SELECT timestamp :ends + interval :deltaDays + interval :deltaTime";
 
-        $now_ends = Application_Common_Database::prepareAndExecute($sql, 
+        $now_ends = Application_Common_Database::prepareAndExecute($sql,
             array(':ends'      => $ends,
                   ':deltaDays' => "$deltaDay days",
                   ':deltaTime' => "{$hours}:{$mins}"), 'column'
@@ -765,7 +765,7 @@ WHERE si.ends < :timeNow::TIMESTAMP
   AND si.modified_instance = 'f'
 ORDER BY si.ends DESC LIMIT 1;
 SQL;
-        $id = Application_Common_Database( $sql, array( 
+        $id = Application_Common_Database( $sql, array(
             ':timeNow' => $p_timeNow ), 'column' );
 
         return ($id ? new Application_Model_ShowInstance($id) : null );
@@ -818,7 +818,7 @@ SELECT count(*) AS cnt
 FROM cc_show_instances
 WHERE ends < :day
 SQL;
-        return Application_Common_Database::prepareAndExecute( $sql, 
+        return Application_Common_Database::prepareAndExecute( $sql,
             array( ':day' => $day ), 'column' );
     }
 
