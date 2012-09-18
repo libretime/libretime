@@ -2,8 +2,9 @@
 import mutagen
 import os
 import copy
-from collections import namedtuple
-from mutagen.easymp4  import EasyMP4KeyError, EasyID3KeyError
+from collections     import namedtuple
+from mutagen.easymp4 import EasyMP4KeyError
+from mutagen.easyid3 import EasyID3KeyError
 
 from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.log        import Loggable
