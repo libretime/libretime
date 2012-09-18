@@ -63,14 +63,22 @@
             $.extend(config, {
                 autoOpen: false,
                 modal: true,
-                buttons: {
-                    "Cancel": function() {
-                        browserDlg.dialog("close");
+                buttons: [
+                    {
+                        text: "Cancel",
+                        "class": "btn",
+                        click: function() {
+                            browserDlg.dialog("close");
+                        }
                     },
-                    "Open": function() {
-                        doneOk();
-                    },
-                },
+                    {
+                        text: "Open",
+                        "class": "btn",
+                        click: function() {
+                            doneOk();
+                        }
+                    }
+                ],
                 resize: function(event, ui) {
                     recalculateSize(event, ui);
                 },
