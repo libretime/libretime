@@ -1057,12 +1057,14 @@ SQL;
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT id, filepath as fp"
-                ." FROM CC_FILES"
-                ." WHERE directory = :dir_id"
-                ." AND file_exists = 'TRUE'"
-                ." AND replay_gain is NULL"
-                ." LIMIT :lim";
+        $sql = <<<SQL
+SELECT id,
+       filepath AS fp
+FROM cc_files
+WHERE directory = :dir_id
+  AND file_exists = 'TRUE'
+  AND replay_gain IS NULL LIMIT :lim
+SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':dir_id', $dir_id);
@@ -1171,6 +1173,8 @@ SQL;
         return $this->_file->getDbFileExists();
     }
 
+
+    // note: never call this method from controllers because it does a sleep
     public function uploadToSoundCloud()
     {
         global $CC_CONFIG;
