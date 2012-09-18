@@ -1197,6 +1197,7 @@ SQL;
                 } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                     $code = $e->getHttpCode();
                     $msg  = $e->getHttpBody();
+                    // TODO : Do not parse JSON by hand
                     $temp = explode('"error":',$msg);
                     $msg  = trim($temp[1], '"}');
                     $this->setSoundCloudErrorCode($code);
