@@ -23,26 +23,26 @@ class Application_Model_ShowBuilder
     private $showInstances = array();
 
     private $defaultRowArray = array(
-        "header" => false,
-        "footer" => false,
-        "empty" => false,
-        "allowed" => false,
-        "id" => 0,
-        "instance" => "",
-        "starts" => "",
-        "ends" => "",
-        "runtime" => "",
-        "title" => "",
-        "creator" => "",
-        "album" => "",
-        "timestamp" => null,
-        "cuein" => "",
-        "cueout" => "",
-        "fadein" => "",
-        "fadeout" => "",
-        "image" => false,
-        "color" => "", //in hex without the '#' sign.
-        "backgroundColor"=> "", //in hex without the '#' sign.
+        "header"          => false,
+        "footer"          => false,
+        "empty"           => false,
+        "allowed"         => false,
+        "id"              => 0,
+        "instance"        => "",
+        "starts"          => "",
+        "ends"            => "",
+        "runtime"         => "",
+        "title"           => "",
+        "creator"         => "",
+        "album"           => "",
+        "timestamp"       => null,
+        "cuein"           => "",
+        "cueout"          => "",
+        "fadein"          => "",
+        "fadeout"         => "",
+        "image"           => false,
+        "color"           => "", //in hex without the '#' sign.
+        "backgroundColor" => "", //in hex without the '#' sign.
     );
 
     /*
@@ -51,12 +51,12 @@ class Application_Model_ShowBuilder
      */
     public function __construct($p_startDT, $p_endDT, $p_opts)
     {
-        $this->startDT = $p_startDT;
-        $this->endDT = $p_endDT;
-        $this->timezone = date_default_timezone_get();
-        $this->user = Application_Model_User::getCurrentUser();
-        $this->opts = $p_opts;
-        $this->epoch_now = floatval(microtime(true));
+        $this->startDT     = $p_startDT;
+        $this->endDT       = $p_endDT;
+        $this->timezone    = date_default_timezone_get();
+        $this->user        = Application_Model_User::getCurrentUser();
+        $this->opts        = $p_opts;
+        $this->epoch_now   = floatval(microtime(true));
         $this->currentShow = false;
     }
 
@@ -91,7 +91,7 @@ class Application_Model_ShowBuilder
 
     private function getItemColor($p_item, &$row)
     {
-        $defaultColor = "ffffff";
+        $defaultColor      = "ffffff";
         $defaultBackground = "3366cc";
 
         $color = $p_item["show_color"];
@@ -103,7 +103,7 @@ class Application_Model_ShowBuilder
             $backgroundColor = $defaultBackground;
         }
 
-        $row["color"] = $color;
+        $row["color"]           = $color;
         $row["backgroundColor"] = $backgroundColor;
     }
 
@@ -129,6 +129,7 @@ class Application_Model_ShowBuilder
      * 0 = past
      * 1 = current
      * 2 = future
+     * TODO : change all of the above to real constants -- RG
      */
     private function getScheduledStatus($p_epochItemStart, $p_epochItemEnd, &$row)
     {
@@ -157,6 +158,14 @@ class Application_Model_ShowBuilder
         //item is in the future.
         else if ($this->epoch_now < $p_epochItemStart) {
             $row["scheduled"] = 2;
+        } else {
+            Logging::warn("No-op? is this what should happen...printing
+                debug just in case");
+            $d = array(
+                '$p_epochItemStart' => $p_epochItemStart,
+                '$p_epochItemEnd'   => $p_epochItemEnd,
+                '$row'              => $row);
+            Logging::warn($d);
         }
     }
 
@@ -241,50 +250,50 @@ class Application_Model_ShowBuilder
 
             $this->getItemStatus($p_item, $row);
 
-            $startsEpoch = floatval($schedStartDT->format("U.u"));
-            $endsEpoch = floatval($schedEndDT->format("U.u"));
+            $startsEpoch  = floatval($schedStartDT->format("U.u"));
+            $endsEpoch    = floatval($schedEndDT->format("U.u"));
             $showEndEpoch = floatval($showEndDT->format("U.u"));
 
             //don't want an overbooked item to stay marked as current.
             $this->getScheduledStatus($startsEpoch, min($endsEpoch, $showEndEpoch), $row);
 
-            $row["id"] = intval($p_item["sched_id"]);
-            $row["image"] = $p_item["file_exists"];
+            $row["id"]       = intval($p_item["sched_id"]);
+            $row["image"]    = $p_item["file_exists"];
             $row["instance"] = intval($p_item["si_id"]);
-            $row["starts"] = $schedStartDT->format("H:i:s");
-            $row["ends"] = $schedEndDT->format("H:i:s");
+            $row["starts"]   = $schedStartDT->format("H:i:s");
+            $row["ends"]     = $schedEndDT->format("H:i:s");
 
-            $formatter = new LengthFormatter($p_item['file_length']);
-            $row['runtime'] = $formatter->format();
+            $formatter       = new LengthFormatter($p_item['file_length']);
+            $row['runtime']  = $formatter->format();
 
-            $row["title"] = $p_item["file_track_title"];
-            $row["creator"] = $p_item["file_artist_name"];
-            $row["album"] = $p_item["file_album_title"];
+            $row["title"]    = $p_item["file_track_title"];
+            $row["creator"]  = $p_item["file_artist_name"];
+            $row["album"]    = $p_item["file_album_title"];
 
-            $row["cuein"] = $p_item["cue_in"];
-            $row["cueout"] = $p_item["cue_out"];
-            $row["fadein"] = round(substr($p_item["fade_in"], 6), 6);
-            $row["fadeout"] = round(substr($p_item["fade_out"], 6), 6);
+            $row["cuein"]    = $p_item["cue_in"];
+            $row["cueout"]   = $p_item["cue_out"];
+            $row["fadein"]   = round(substr($p_item["fade_in"], 6), 6);
+            $row["fadeout"]  = round(substr($p_item["fade_out"], 6), 6);
 
-            $row["pos"] = $this->pos++;
+            $row["pos"]      = $this->pos++;
 
             $this->contentDT = $schedEndDT;
         }
         //show is empty or is a special kind of show (recording etc)
         else if (intval($p_item["si_record"]) === 1) {
-            $row["record"] = true;
+            $row["record"]   = true;
             $row["instance"] = intval($p_item["si_id"]);
 
-            $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
-            $showEndDT = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
+            $showStartDT     = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
+            $showEndDT       = new DateTime($p_item["si_ends"], new DateTimeZone("UTC"));
 
-            $startsEpoch = floatval($showStartDT->format("U.u"));
-            $endsEpoch = floatval($showEndDT->format("U.u"));
+            $startsEpoch     = floatval($showStartDT->format("U.u"));
+            $endsEpoch       = floatval($showEndDT->format("U.u"));
 
             $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         } else {
-            $row["empty"] = true;
-            $row["id"] = 0 ;
+            $row["empty"]    = true;
+            $row["id"]       = 0 ;
             $row["instance"] = intval($p_item["si_id"]);
         }
 
@@ -334,6 +343,10 @@ class Application_Model_ShowBuilder
 
         $this->getScheduledStatus($startsEpoch, $endsEpoch, $row);
         $this->isAllowed($p_item, $row);
+
+        if (intval($p_item["si_record"]) === 1) {
+            $row["record"] = true;
+        }
 
         return $row;
     }
