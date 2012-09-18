@@ -418,12 +418,14 @@ SQL;
      */
     public function getFileExtension()
     {
-        // TODO : what's the point of having this function? Can we not just use
-        // the extension from the file_path column from cc_files?
         $possible_ext = $this->getRealFileExtension();
         if ($possible_ext !== "") {
             return $possible_ext;
         }
+
+
+        // We fallback to guessing the extension from the mimetype if we
+        // cannot extract it from the file name
 
         $mime = $this->_file->getDbMime();
 
