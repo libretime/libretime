@@ -164,9 +164,15 @@ function buildScheduleDialog (json) {
         draggable: true,
         modal: true,
         close: closeDialog,
-        buttons: {"Ok": function() {
-            $(this).dialog("close");
-        }} 
+        buttons: [
+            {
+                text: "Ok",
+                "class": "btn",
+                click: function() {
+                    $(this).dialog("close");
+                }
+            }
+        ]
     });
         
     //set the start end times so the builder datatables knows its time range.
@@ -207,9 +213,15 @@ function buildContentDialog (json){
         height: height,
         modal: true,
         close: closeDialog,
-        buttons: {"Ok": function() {
-            dialog.remove();
-        }}
+        buttons: [
+            {
+                text: "Ok",
+                "class": "btn",
+                click: function() {
+                    dialog.remove();
+                }
+            }
+        ]
     });
 
     dialog.dialog('open');
