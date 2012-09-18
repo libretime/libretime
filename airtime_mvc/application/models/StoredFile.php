@@ -582,7 +582,7 @@ SQL;
     /**
      * Fetch the Application_Model_StoredFile by looking up its filepath.
      *
-     * @param  string                            $p_filepath path of file stored in Airtime.
+     * @param  string  $p_filepath path of file stored in Airtime.
      * @return Application_Model_StoredFile|NULL
      */
     public static function RecallByFilepath($p_filepath)
@@ -678,21 +678,21 @@ SQL;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::NUMERIC AS ".$key;
             } elseif ($key === "lptime") {
-                $plSelect[] = "NULL::TIMESTAMP AS ".$key;
-                $blSelect[] = "NULL::TIMESTAMP AS ".$key;
-                $fileSelect[] = $key;
+                $plSelect[]     = "NULL::TIMESTAMP AS ".$key;
+                $blSelect[]     = "NULL::TIMESTAMP AS ".$key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = $key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
-                $plSelect[] = $key;
-                $blSelect[] = $key;
-                $fileSelect[] = $key;
+                $plSelect[]     = $key;
+                $blSelect[]     = $key;
+                $fileSelect[]   = $key;
                 $streamSelect[] = $key;
             } elseif ($key === "year") {
-                $plSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
-                $blSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
-                $fileSelect[] = "year AS ".$key;
+                $plSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
+                $blSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
+                $fileSelect[]   = "year AS ".$key;
                 $streamSelect[] = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
             }
             //need to cast certain data as ints for the union to search on.
@@ -729,6 +729,7 @@ SQL;
         $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 
         //choose which table we need to select data from.
+        // TODO : use constants instead of numbers -- RG
         switch ($type) {
             case 0:
                 $fromTable = $unionTable;
@@ -1056,12 +1057,14 @@ SQL;
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT id, filepath as fp"
-                ." FROM CC_FILES"
-                ." WHERE directory = :dir_id"
-                ." AND file_exists = 'TRUE'"
-                ." AND replay_gain is NULL"
-                ." LIMIT :lim";
+        $sql = <<<SQL
+SELECT id,
+       filepath AS fp
+FROM cc_files
+WHERE directory = :dir_id
+  AND file_exists = 'TRUE'
+  AND replay_gain IS NULL LIMIT :lim
+SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':dir_id', $dir_id);
@@ -1170,6 +1173,8 @@ SQL;
         return $this->_file->getDbFileExists();
     }
 
+
+    // note: never call this method from controllers because it does a sleep
     public function uploadToSoundCloud()
     {
         global $CC_CONFIG;
@@ -1181,11 +1186,11 @@ SQL;
         if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
             for ($i=0; $i<$CC_CONFIG['soundcloud-connection-retries']; $i++) {
                 $description = $file->getDbTrackTitle();
-                $tag = array();
-                $genre = $file->getDbGenre();
-                $release = $file->getDbYear();
+                $tag         = array();
+                $genre       = $file->getDbGenre();
+                $release     = $file->getDbYear();
                 try {
-                    $soundcloud = new Application_Model_Soundcloud();
+                    $soundcloud     = new Application_Model_Soundcloud();
                     $soundcloud_res = $soundcloud->uploadTrack(
                         $this->getFilePath(), $this->getName(), $description,
                         $tag, $release, $genre);
@@ -1195,9 +1200,10 @@ SQL;
                     break;
                 } catch (Services_Soundcloud_Invalid_Http_Response_Code_Exception $e) {
                     $code = $e->getHttpCode();
-                    $msg = $e->getHttpBody();
+                    $msg  = $e->getHttpBody();
+                    // TODO : Do not parse JSON by hand
                     $temp = explode('"error":',$msg);
-                    $msg = trim($temp[1], '"}');
+                    $msg  = trim($temp[1], '"}');
                     $this->setSoundCloudErrorCode($code);
                     $this->setSoundCloudErrorMsg($msg);
                     // setting sc id to -3 which indicates error

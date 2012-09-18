@@ -64,7 +64,7 @@ var AIRTIME = (function(AIRTIME) {
                     helper : function() {
 
                         var $el = $(this), selected = mod
-                                .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul li:first"), width = li
+                                .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul[id='spl_sortable'] li:first"), width = li
                                 .width(), height = li.height();
 
                         // dragging an element that has an unselected
