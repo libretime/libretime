@@ -48,3 +48,13 @@ class NoDirectoryInAirtime(Exception):
     def __str__(self):
         return "Directory '%s' does not exist in Airtime.\n \
                 However: %s do exist." % (self.path, self.does_exist)
+
+class InvalidMetadataElement(Exception):
+    def __init__(self, parent, key, path):
+        self.parent = parent
+        self.key    = key
+        self.path   = path
+    def __str__(self):
+        return "InvalidMetadataElement: (key,path) = (%s,%s)" \
+                % (self.key, self.path)
+
