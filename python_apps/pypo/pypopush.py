@@ -191,7 +191,7 @@ class PypoPush(Thread):
                 if self.current_stream_info is None:
                     correct = False
                 else:
-                    correct = self.current_stream_info['uri'] == media_item['uri']
+                    correct = self.current_stream_info['row_id'] == media_item['row_id']
 
         self.logger.debug("Is current item correct?: %s", str(correct))
         return correct
