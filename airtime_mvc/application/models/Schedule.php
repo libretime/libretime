@@ -696,6 +696,7 @@ SQL;
             'start'             => $start,
             'end'               => $end,
             'show_name'         => $item["show_name"],
+            'row_id'            => $item["id"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
