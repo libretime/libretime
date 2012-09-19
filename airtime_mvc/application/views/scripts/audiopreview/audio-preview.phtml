@@ -7,8 +7,8 @@
     <span class='blockId'><?php echo "$this->blockId" ?></span>
     <span class='blockIndex'><?php echo "$this->blockIndex" ?></span>
 <?php elseif (isset($this->uri)): ?>
-    <span class='audioUri'><?php echo "$this->uri" ?></span>
-    <span class='audioMime'><?php echo "$this->mime" ?></span>
+    <span class='audioUri' style="display: none;"><?php echo "$this->uri" ?></span>
+    <span class='audioMime' style="display: none;"><?php echo "$this->mime" ?></span>
     <span class='audioFileTitle'><?php echo "$this->audioFileTitle" ?></span>
     <span class='audioFileArtist'><?php echo "$this->audioFileArtist" ?></span>
 <?php elseif (isset($this->showID)): ?>
