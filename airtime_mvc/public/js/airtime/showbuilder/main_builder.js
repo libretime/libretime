@@ -69,9 +69,9 @@ AIRTIME = (function(AIRTIME) {
 		
 		if ($lib.filter(':visible').length > 0) {
 	    	
-	    	$lib.width(Math.floor(screenWidth * 0.49));
+	    	$lib.width(Math.floor(screenWidth * 0.48));
 	    	    
-	    	$builder.width(Math.floor(screenWidth * 0.49))
+	    	$builder.width(Math.floor(screenWidth * 0.48))
 				.find("#sb_edit")
 					.remove()
 					.end()
@@ -155,9 +155,9 @@ AIRTIME = (function(AIRTIME) {
 			AIRTIME.showbuilder.resetTimestamp();
 			
 			$lib.show()
-				.width(Math.floor(screenWidth * 0.49));
+				.width(Math.floor(screenWidth * 0.48));
 			
-			$builder.width(Math.floor(screenWidth * 0.49))
+			$builder.width(Math.floor(screenWidth * 0.48))
 				.find("#sb_edit")
 					.remove()
 					.end()
