@@ -94,6 +94,12 @@ with md.metadata("MDATA_KEY_MD5") as t:
     t.optional(False)
     t.translate(lambda k: file_md5(k['path'], max_length=100))
 
+with md.metadata("MDATA_KEY_OWNER_ID") as t:
+    t.depends('owner_id')
+
+with md.metadata('MDATA_KEY_ORIGINAL_PATH') as t:
+    t.depends('original_path')
+
 # MDATA_KEY_TITLE is the annoying special case
 with md.metadata('MDATA_KEY_TITLE') as t:
     # Need to know MDATA_KEY_CREATOR to know if show was recorded. Value is
@@ -101,3 +107,6 @@ with md.metadata('MDATA_KEY_TITLE') as t:
     t.depends('title','MDATA_KEY_CREATOR')
     t.max_length(512)
 
+with md.metadata('MDATA_KEY_LABEL') as t:
+    t.depends('label')
+    t.max_length(512)
