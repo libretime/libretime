@@ -60,7 +60,7 @@ class Application_Model_PlayoutHistory
         );
 
         $start = $this->startDT->format("Y-m-d H:i:s");
-        $end = $this->endDT->format("Y-m-d H:i:s");
+        $end   = $this->endDT->format("Y-m-d H:i:s");
 
         $historyTable = "(
             select count(schedule.file_id) as played, schedule.file_id as file_id

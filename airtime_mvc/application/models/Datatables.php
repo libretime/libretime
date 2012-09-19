@@ -57,7 +57,9 @@ class Application_Model_Datatables
     public static function findEntries($con, $displayColumns, $fromTable,
         $data, $dataProp = "aaData")
     {
-        $librarySetting = Application_Model_Preference::getCurrentLibraryTableColumnMap();
+        //$librarySetting = Application_Model_Preference::getCurrentLibraryTableColumnMap();
+        $librarySetting = 
+            Application_Model_Preference::getCurrentLibraryTableColumnMap();
         //$displayColumns[] = 'owner';
 
         // map that maps original column position to db name
@@ -95,9 +97,8 @@ class Application_Model_Datatables
         }
 
         $where = array();
-        /* Holds the parameters for binding after the
-         * statement has been prepared
-         */
+        /* Holds the parameters for binding after the statement has been
+            prepared */
         $params = array();
 
         $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);

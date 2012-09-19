@@ -1092,26 +1092,41 @@ class Application_Model_Preference
     }
 
 
+
+    public static function getOrderingMap($pref_param) 
+    {
+        $v = self::getValue($pref_param, true);
+
+        $id = function ($x) { return $x; };
+
+        if ($v === '') {
+            return $id;
+        }
+
+        $ds = unserialize($v);
+
+        if (!array_key_exists('ColReorder', $ds)) {
+            return $id;
+        }
+
+        return function ($x) use ($ds) {
+            if (array_key_exists($x, $ds['ColReorder'])) {
+                return $ds['ColReorder'][$x];
+            } else {
+                /*For now we just have this hack for debugging. We should not
+                    rely on this crappy behaviour in case of failure*/
+                Logging::info("Pref: $pref_param");
+                Logging::warn("Index $x does not exist preferences");
+                Logging::warn("Defaulting to identity and printing preferences");
+                Logging::warn($ds);
+                return $x;
+            }
+        };
+    }
+
     public static function getCurrentLibraryTableColumnMap()
     {
-        $v = self::getValue("library_datatable", true);
-
-        if ( $v === '' ) {
-            return function ($x) { return $x; };
-        } else {
-            $ds = unserialize($v);
-            return function ($x) use ($ds) { 
-                if ( array_key_exists($x, $ds['ColReorder'] ) ) {
-                    return $ds['ColReorder'][$x]; 
-                } else {
-                    Logging::warn("Index $x does not exist preferences");
-                    Logging::warn("Defaulting to identity and printing 
-                        preferences");
-                    Logging::warn($ds);
-                    return $x;
-                }
-            } ;
-        }
+        return self::getOrderingMap("library_datatable");
     }
 
     public static function setCurrentLibraryTableSetting($settings)
