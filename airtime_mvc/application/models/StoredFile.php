@@ -396,7 +396,6 @@ SQL;
             return $possible_ext;
         }
 
-
         // We fallback to guessing the extension from the mimetype if we
         // cannot extract it from the file name
 
@@ -993,15 +992,18 @@ SQL;
     /**
      *
      * Enter description here ...
-     * @param $dir_id - if this is not provided, it returns all files with full path constructed.
+     * @param $dir_id - if this is not provided, it returns all files with full
+     * path constructed.
      */
     public static function listAllFiles($dir_id=null, $all)
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT filepath as fp"
-                ." FROM CC_FILES as f"
-                ." WHERE f.directory = :dir_id";
+        $sql = <<<SQL
+SELECT filepath AS fp
+FROM CC_FILES AS f
+WHERE f.directory = :dir_id 
+SQL;
                 
         if (!$all) {
             $sql .= " AND f.file_exists = 'TRUE'";

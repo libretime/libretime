@@ -42,6 +42,43 @@ class EventRegistry(object):
         raise Exception("You can instantiate this class. Must only use class \
                          methods")
 
+
+class EventProxy(object):
+    """
+    A container object for instances of BaseEvent (or it's subclasses) used for
+    event contractor
+    """
+    def __init__(self, orig_evt):
+        self.orig_evt   = orig_evt
+        self.evt        = orig_evt
+        self.reset_hook()
+        if hasattr(orig_evt, 'path'): self.path = orig_evt.path
+
+    def set_pack_hook(self, l):
+        self._pack_hook = l
+
+    def reset_hook(self):
+        self._pack_hook = lambda : None
+
+    def run_hook(self):
+        self._pack_hook()
+
+    def safe_pack(self):
+        self.run_hook()
+        # make sure that cleanup hook is never called twice for the same event
+        self.reset_hook()
+        return self.evt.safe_pack()
+
+    def merge_proxy(self, proxy):
+        self.evt = proxy.evt
+
+    def is_event(self, real_event):
+        return isinstance(self.evt, real_event)
+
+    def same_event(self, proxy):
+        return self.evt.__class__ == proxy.evt.__class__
+
+
 class HasMetaData(object):
     """
     Any class that inherits from this class gains the metadata attribute that
@@ -90,6 +127,9 @@ class BaseEvent(Loggable):
         has been "safe_packed"
         """
         self._pack_hook = k
+
+    def proxify(self):
+        return EventProxy(self)
 
     # As opposed to unsafe_pack...
     def safe_pack(self):
