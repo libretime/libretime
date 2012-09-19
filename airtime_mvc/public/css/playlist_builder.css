@@ -56,6 +56,10 @@
     
 }
 
+.spl-no-top-margin {
+    margin-top: 0px !important;
+}
+
 .ui-icon-closethick {
     margin-top: 7px;
 }
