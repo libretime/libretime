@@ -5,6 +5,10 @@ $(document).ready(function() {
 	    afterDetachCSSClass: "floated-panel",
 	    savePanelSpace: true
     });
+
+
+    //this statement tells the browser to fade out any success message after 5 seconds
+    setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
 });
 
 function adjustDateToServerDate(date, serverTimezoneOffset){

@@ -30,7 +30,8 @@ class CcFiles extends BaseCcFiles {
                 $dt = new DateTime($v);
 
             } catch (Exception $x) {
-                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+                throw new PropelException('Error parsing date/time value: ' .
+                    var_export($v, true), $x);
             }
         }
 
@@ -40,8 +41,10 @@ class CcFiles extends BaseCcFiles {
         return $this;
     }
 
-    public function reassignTo($user) {
+    public function reassignTo($user) 
+    {
         $this->setDbOwnerId( $user->getDbId() );
+        $this->save();
     }
 
 } // CcFiles

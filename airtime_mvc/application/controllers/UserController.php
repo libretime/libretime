@@ -13,10 +13,6 @@ class UserController extends Zend_Controller_Action
                     ->initContext();
     }
 
-    public function indexAction()
-    {
-    }
-
     public function addUserAction()
     {
         global $CC_CONFIG;
@@ -140,6 +136,7 @@ class UserController extends Zend_Controller_Action
             //$new_owner_id = $this->_getParam("new_owner");
             //$new_owner    = new Application_Model_User($new_owner_id);
             $user->donateFilesTo( $new_owner );
+            Logging::info("Reassign to user {$new_owner->getDbId()}");
         }
         # Finally delete the user
         $this->view->entries = $user->delete();
