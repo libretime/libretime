@@ -104,13 +104,15 @@ class Application_Model_StoredFile
             $dbMd = array();
 
             if (isset($p_md["MDATA_KEY_YEAR"])) {
-                // We need to make sure to clean this value before inserting into database.
-                // If value is outside of range [-2^31, 2^31-1] then postgresl will throw error
-                // when trying to retrieve this value. We could make sure number is within these bounds,
-                // but simplest is to do substring to 4 digits (both values are garbage, but at least our
-                // new garbage value won't cause errors). If the value is 2012-01-01, then substring to
-                // first 4 digits is an OK result.
-                // CC-3771
+                // We need to make sure to clean this value before
+                // inserting into database. If value is outside of range
+                // [-2^31, 2^31-1] then postgresl will throw error when
+                // trying to retrieve this value. We could make sure
+                // number is within these bounds, but simplest is to do
+                // substring to 4 digits (both values are garbage, but
+                // at least our new garbage value won't cause errors).
+                // If the value is 2012-01-01, then substring to first 4
+                // digits is an OK result. CC-3771
 
                 $year = $p_md["MDATA_KEY_YEAR"];
 
