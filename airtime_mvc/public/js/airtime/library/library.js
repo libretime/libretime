@@ -38,6 +38,7 @@ var AIRTIME = (function(AIRTIME) {
         "track_num"   : "n",
         "year"        : "n",
         "owner_id"    : "s",
+        "info_url"    : "s",
         "replay_gain" : "n"
     };
     
@@ -1041,6 +1042,7 @@ function addQtipToSCIcons(){
  */
 function validateAdvancedSearch(divs) {
     var valid = true,
+        allValid = true,
         fieldName,
         fields,
         searchTerm = Array(),
@@ -1053,7 +1055,6 @@ function validateAdvancedSearch(divs) {
 
     searchTerm[0] = "";
     searchTerm[1] = "";
-    
     $.each(divs, function(i, div){
         fieldName = $(div).children(':nth-child(2)').attr('id');
         fields = $(div).children().find('input');
@@ -1085,6 +1086,7 @@ function validateAdvancedSearch(divs) {
                 //string fields do not need validation
                 if (searchTermType !== "s") {
                     valid = regExpr.test(searchTerm[i]);
+                    if (!valid) allValid = false;
                 }
                 
                 addRemoveValidationIcons(valid, $(field));
@@ -1107,13 +1109,9 @@ function validateAdvancedSearch(divs) {
                 return false;
             }
         });
-        
-        if (!valid) {
-            return false;
-        }
     });
-    
-    return valid;
+
+    return allValid;
 }
 
 function addRemoveValidationIcons(valid, field) {
