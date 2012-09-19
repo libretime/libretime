@@ -52,16 +52,9 @@ class UsersettingsController extends Zend_Controller_Action
 
     public function setTimelineDatatableAction()
     {
-        $start = microtime(true);
-
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
-
         Application_Model_Preference::setTimelineDatatableSetting($settings);
-        $end = microtime(true);
-
-        Logging::debug("saving timeline datatables info took:");
-        Logging::debug(floatval($end) - floatval($start));
     }
 
     public function getTimelineDatatableAction()
