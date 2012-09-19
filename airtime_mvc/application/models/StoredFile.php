@@ -241,6 +241,33 @@ class Application_Model_StoredFile
     }
 
     /**
+     * Get one metadata value.
+     *
+     * @param  string $p_category (MDATA_KEY_URL)
+     * @return string
+     */
+    public function getMetadataValue($p_category)
+    {
+        // constant() was used because it gets quoted constant name value from
+        // api_client.py. This is the wrapper funtion
+        return $this->getDbColMetadataValue(constant($p_category));
+    }
+
+     /**
+     * Get one metadata value.
+     *
+     * @param  string $p_category (url)
+     * @return string
+     */
+    public function getDbColMetadataValue($p_category)
+    {
+        $propelColumn = $this->_dbMD[$p_category];
+        $method = "get$propelColumn";
+
+        return $this->_file->$method();
+    }
+
+    /**
      * Get metadata as array, indexed by the column names in the database.
      *
      * @return array
