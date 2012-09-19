@@ -833,6 +833,7 @@ SQL;
         // plupload support unique_name feature.
         $tempFilePath= $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
 
+        // Old IBM code...
         if (strpos($contentType, "multipart") !== false) {
             if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
                 // Open temp file
@@ -948,8 +949,10 @@ SQL;
         // Martin K.: changed to rename: Much less load + quicker since this is
         // an atomic operation
         if (@rename($audio_file, $audio_stor) === false) {
-            //something went wrong likely there wasn't enough space in the audio_stor to move the file too.
-            //warn the user that the file wasn't uploaded and they should check if there is enough disk space.
+            //something went wrong likely there wasn't enough space in .
+            //the audio_stor to move the file too warn the user that   .
+            //the file wasn't uploaded and they should check if there  .
+            //is enough disk space                                     .
             unlink($audio_file); //remove the file after failed rename
             unlink($id_file); // Also remove the identifier file
 
