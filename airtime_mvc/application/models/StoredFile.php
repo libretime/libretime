@@ -396,7 +396,6 @@ SQL;
             return $possible_ext;
         }
 
-
         // We fallback to guessing the extension from the mimetype if we
         // cannot extract it from the file name
 
