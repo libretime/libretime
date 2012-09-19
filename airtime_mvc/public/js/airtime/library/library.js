@@ -525,8 +525,17 @@ var AIRTIME = (function(AIRTIME) {
             "sAjaxDataProp": "files",
             
             "fnServerData": function ( sSource, aoData, fnCallback ) {
+                /* The real validation check is done in dataTables.columnFilter.js
+                 * We also need to check it here because datatable is redrawn everytime
+                 * an action is performed in the Library page.
+                 * In order for datatable to redraw the advanced search fields
+                 * MUST all be valid.
+                 */
+                var advSearchFields = $("div#advanced_search").children(':visible');
+                var advSearchValid = validateAdvancedSearch(advSearchFields);
                 var type;
                 aoData.push( { name: "format", value: "json"} );
+                aoData.push( { name: "advSearch", value: advSearchValid} );
                 
                 //push whether to search files/playlists or all.
                 type = $("#library_display_type").find("select").val();
