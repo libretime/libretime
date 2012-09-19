@@ -186,6 +186,7 @@ SQL;
 
         /* Check if the show being resized and any of its repeats * overlap
             with other scheduled shows */
+        $utc = new DateTimeZone("UTC");
 
         foreach ($showInstances as $si) {
             $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
@@ -223,15 +224,10 @@ SQL;
 
         $sql_gen = <<<SQL
 UPDATE cc_show_instances
-SET ends = (ends + interval :deltaDay1 + interval :interval1)
+SET ends = (ends + :deltaDay1::INTERVAL + :interval1::INTERVAL)
 WHERE (show_id = :show_id1
        AND ends > :current_timestamp1)
-  AND ((ends + interval :deltaDay2 + interval :interval2 - starts) <= interval '24:00')
- 
-UPDATE cc_show_days
-SET duration = (CAST(duration AS interval) + interval :deltaDay3 + interval :interval3)
-WHERE show_id = :show_id2
-  AND ((CAST(duration AS interval) + interval :deltaDay4 + interval :interval4) <= interval '24:00')
+  AND ((ends + :deltaDay2::INTERVAL + :interval2::INTERVAL - starts) <= interval '24:00')
 SQL;
 
         Application_Common_Database::prepareAndExecute($sql_gen,
@@ -241,7 +237,18 @@ SQL;
                 ':show_id1'           =>  $this->_showId,
                 ':current_timestamp1' =>  $current_timestamp,
                 ':deltaDay2'          => "$deltaDay days",
-                ':interval2'          => "$hours:$mins",
+                ':interval2'          => "$hours:$mins"
+            ), "execute");
+
+        $sql_gen = <<<SQL
+UPDATE cc_show_days
+SET duration = (CAST(duration AS interval) + :deltaDay3::INTERVAL + :interval3::INTERVAL)
+WHERE show_id = :show_id2
+  AND ((CAST(duration AS interval) + :deltaDay4::INTERVAL + :interval4::INTERVAL) <= interval '24:00')
+SQL;
+
+        Application_Common_Database::prepareAndExecute($sql_gen,
+            array(
                 ':deltaDay3'          => "$deltaDay days",
                 ':interval3'          => "$hours:$mins",
                 ':show_id2'           =>  $this->_showId,
