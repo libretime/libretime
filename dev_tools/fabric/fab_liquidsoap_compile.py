@@ -206,6 +206,7 @@ libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev c
     sed('%s/savonet/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
     sed('%s/savonet/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
     sed('%s/savonet/PACKAGES' % root, '#ocaml-faad', 'ocaml-faad')
+    do_run('cd %s/savonet && make clean' % root)
     do_run('cd %s/savonet && ./bootstrap' % root)
     do_run('cd %s/savonet && ./configure' % root)
     do_run('cd %s/savonet && make' % root)

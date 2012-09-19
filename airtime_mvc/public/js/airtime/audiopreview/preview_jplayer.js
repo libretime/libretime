@@ -8,6 +8,17 @@ var _idToPostionLookUp;
  */
 $(document).ready(function(){
         
+    $.jPlayer.timeFormat.showHour = true;
+
+    var audioUri = $('.audioUri').text();
+    var audioMime = $('.audioMime').text();
+    var playlistID = $('.playlistID').text();
+    var playlistIndex = $('.playlistIndex').text();
+    var showID = $('.showID').text();
+    var showIndex = $('.showIndex').text();
+    var blockId = $('.blockId').text();
+    var blockIndex = $('.blockIndex').text();
+
     _playlist_jplayer = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
         cssSelectorAncestor: "#jp_container_1"
@@ -29,33 +40,20 @@ $(document).ready(function(){
             addTime: 0,
             removeTime: 0,
             shuffleTime: 0
+        },
+        ready: function(){
+            if (playlistID != "" && playlistID !== ""){
+                playAllPlaylist(playlistID, playlistIndex);
+            }else if (audioUri != "") {
+                playOne(audioUri, audioMime);
+            }else if (showID != "") {
+                playAllShow(showID, showIndex);
+            }else if(blockId != "" && blockIndex != ""){
+                playBlock(blockId, blockIndex);
+            }
         }
     });
-    
-    
-    $.jPlayer.timeFormat.showHour = true;
-    
-    var audioUri = $('.audioUri').text();
-    var audioMime = $('.audioMime').text();
-    var playlistID = $('.playlistID').text();
-    var playlistIndex = $('.playlistIndex').text();
-    var showID = $('.showID').text();
-    var showIndex = $('.showIndex').text();
-    var blockId = $('.blockId').text();
-    var blockIndex = $('.blockIndex').text();
 
-    var numOfItems = 0;
-    
-    if (playlistID != "" && playlistID !== ""){
-        playAllPlaylist(playlistID, playlistIndex);
-    }else if (audioUri != "") {
-        playOne(audioUri, audioMime);
-    }else if (showID != "") {
-        playAllShow(showID, showIndex);
-    }else if(blockId != "" && blockIndex != ""){
-        playBlock(blockId, blockIndex);
-    }
-    
     $("#jp_container_1").on("mouseenter", "ul.jp-controls li", function(ev) {
     	$(this).addClass("ui-state-hover");
     });
@@ -63,6 +61,7 @@ $(document).ready(function(){
     $("#jp_container_1").on("mouseleave", "ul.jp-controls li", function(ev) {
     	$(this).removeClass("ui-state-hover");
     });
+
 });
 
 /**
@@ -223,7 +222,7 @@ function playOne(uri, mime) {
     if (media) {
         _playlist_jplayer.option("autoPlay", true);
         playlist[0] = media;
-        _playlist_jplayer._initPlaylist(playlist);
+        _playlist_jplayer.setPlaylist(playlist);
         _playlist_jplayer.play(0);
     }
     
