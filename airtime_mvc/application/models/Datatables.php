@@ -57,7 +57,6 @@ class Application_Model_Datatables
     public static function findEntries($con, $displayColumns, $fromTable,
         $data, $dataProp = "aaData")
     {
-        //$librarySetting = Application_Model_Preference::getCurrentLibraryTableColumnMap();
         $librarySetting = 
             Application_Model_Preference::getCurrentLibraryTableColumnMap();
         //$displayColumns[] = 'owner';
