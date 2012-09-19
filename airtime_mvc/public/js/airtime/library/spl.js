@@ -429,7 +429,7 @@ var AIRTIME = (function(AIRTIME){
                                 $.each(data, function(index, ele){
                                     if (ele.track_title !== undefined) {
                                         $html += "<li>" +
-                                            "<span class='block-item-title'>"+ele.track_title+"</span>" +
+                                            "<span class='block-item-title'>"+ele.track_title+" - </span>" +
                                             "<span class='block-item-author'>"+ele.creator+"</span>" +
                                             "<span class='block-item-time'>"+ele.length+"</span>" + 
                                             "</li>";
