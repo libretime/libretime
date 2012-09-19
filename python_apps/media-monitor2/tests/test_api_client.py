@@ -9,7 +9,8 @@ import prepare_tests
 
 class TestApiClient(unittest.TestCase):
     def setUp(self):
-        test_path = prepare_tests.real_config
+        test_path = prepare_tests.api_client_path
+        print("Running from api_config: %s" % test_path)
         if not os.path.exists(test_path):
             print("path for config does not exist: '%s' % test_path")
             # TODO : is there a cleaner way to exit the unit testing?

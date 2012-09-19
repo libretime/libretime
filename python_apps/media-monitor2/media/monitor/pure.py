@@ -490,7 +490,6 @@ def file_playable(pathname):
     command = ("airtime-liquidsoap -c 'output.dummy" + \
         "(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1") % \
         pathname.replace("'", "'\\''")
-    print(command)
     return True
     return_code = subprocess.call(command, shell=True)
     return (return_code == 0)

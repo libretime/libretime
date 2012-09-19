@@ -241,33 +241,6 @@ class Application_Model_StoredFile
     }
 
     /**
-     * Get one metadata value.
-     *
-     * @param  string $p_category (MDATA_KEY_URL)
-     * @return string
-     */
-    public function getMetadataValue($p_category)
-    {
-        // constant() was used because it gets quoted constant name value from
-        // api_client.py. This is the wrapper funtion
-        return $this->getDbColMetadataValue(constant($p_category));
-    }
-
-     /**
-     * Get one metadata value.
-     *
-     * @param  string $p_category (url)
-     * @return string
-     */
-    public function getDbColMetadataValue($p_category)
-    {
-        $propelColumn = $this->_dbMD[$p_category];
-        $method = "get$propelColumn";
-
-        return $this->_file->$method();
-    }
-
-    /**
      * Get metadata as array, indexed by the column names in the database.
      *
      * @return array
@@ -422,7 +395,6 @@ SQL;
         if ($possible_ext !== "") {
             return $possible_ext;
         }
-
 
         // We fallback to guessing the extension from the mimetype if we
         // cannot extract it from the file name
@@ -1020,15 +992,18 @@ SQL;
     /**
      *
      * Enter description here ...
-     * @param $dir_id - if this is not provided, it returns all files with full path constructed.
+     * @param $dir_id - if this is not provided, it returns all files with full
+     * path constructed.
      */
     public static function listAllFiles($dir_id=null, $all)
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT filepath as fp"
-                ." FROM CC_FILES as f"
-                ." WHERE f.directory = :dir_id";
+        $sql = <<<SQL
+SELECT filepath AS fp
+FROM CC_FILES AS f
+WHERE f.directory = :dir_id 
+SQL;
                 
         if (!$all) {
             $sql .= " AND f.file_exists = 'TRUE'";

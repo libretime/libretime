@@ -8,6 +8,7 @@ from media.monitor.log             import Loggable
 from media.monitor.exceptions      import BadSongFile
 from media.monitor.pure            import LazyProperty
 from media.monitor.eventcontractor import EventContractor
+from media.monitor.events          import EventProxy
 
 import api_clients.api_client as ac
 
@@ -125,7 +126,7 @@ class WatchSyncer(ReportHandler,Loggable):
             try:
                 # If there is a strange bug anywhere in the code the next line
                 # should be a suspect
-                if self.contractor.register(event): self.push_queue( event )
+                if self.contractor.register(EventProxy(event)): self.push_queue( event )
                 #self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
