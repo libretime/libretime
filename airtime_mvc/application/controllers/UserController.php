@@ -13,10 +13,6 @@ class UserController extends Zend_Controller_Action
                     ->initContext();
     }
 
-    public function indexAction()
-    {
-    }
-
     public function addUserAction()
     {
         global $CC_CONFIG;
