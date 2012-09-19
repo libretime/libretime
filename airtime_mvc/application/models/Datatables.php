@@ -100,10 +100,12 @@ class Application_Model_Datatables
          */
         $params = array();
 
-        $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
-        if (!empty($advancedWhere['clause'])) {
-            $where[] = join(" AND ", $advancedWhere['clause']);
-            $params = $advancedWhere['params'];
+        if ($data['advSearch'] === 'true') {
+            $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
+            if (!empty($advancedWhere['clause'])) {
+                $where[] = join(" AND ", $advancedWhere['clause']);
+                $params = $advancedWhere['params'];
+            }
         }
 
         if ($data["sSearch"] !== "") {
