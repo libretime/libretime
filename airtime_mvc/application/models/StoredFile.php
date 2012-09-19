@@ -928,7 +928,7 @@ SQL;
                 be added to media library.");
         }
 
-        // Did all the checks for realz, now trying to copy
+        // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
             $fileName);
         $user = Application_Model_User::getCurrentUser();
