@@ -428,8 +428,14 @@ var AIRTIME = (function(AIRTIME){
                             if (isStatic) {
                                 $.each(data, function(index, ele){
                                     if (ele.track_title !== undefined) {
+                                        if (ele.creator === null) {
+                                            ele.creator = "";
+                                        }
+                                        if (ele.track_title === null) {
+                                            ele.track_title = "";
+                                        }
                                         $html += "<li>" +
-                                            "<span class='block-item-title'>"+ele.track_title+"</span>" +
+                                            "<span class='block-item-title'>"+ele.track_title+" - </span>" +
                                             "<span class='block-item-author'>"+ele.creator+"</span>" +
                                             "<span class='block-item-time'>"+ele.length+"</span>" + 
                                             "</li>";
