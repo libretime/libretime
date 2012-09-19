@@ -1041,7 +1041,7 @@ function addQtipToSCIcons(){
  * This function is called from dataTables.columnFilter.js
  */
 function validateAdvancedSearch(divs) {
-    var valid = true,
+    var valid,
         allValid = true,
         fieldName,
         fields,
@@ -1059,6 +1059,7 @@ function validateAdvancedSearch(divs) {
         fieldName = $(div).children(':nth-child(2)').attr('id');
         fields = $(div).children().find('input');
         searchTermType = validationTypes[fieldName];
+        valid = true;
         
         $.each(fields, function(i, field){
             searchTerm[i] = $(field).val();
