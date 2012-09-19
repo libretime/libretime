@@ -30,7 +30,8 @@ class CcFiles extends BaseCcFiles {
                 $dt = new DateTime($v);
 
             } catch (Exception $x) {
-                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
+                throw new PropelException('Error parsing date/time value: ' .
+                    var_export($v, true), $x);
             }
         }
 
