@@ -101,7 +101,7 @@ class Application_Model_Datatables
             prepared */
         $params = array();
 
-        if ($data['advSearch'] === 'true') {
+        if (isset($data['advSearch']) && $data['advSearch'] === 'true') {
             $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
             if (!empty($advancedWhere['clause'])) {
                 $where[] = join(" AND ", $advancedWhere['clause']);
