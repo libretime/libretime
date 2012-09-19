@@ -1089,7 +1089,7 @@ function validateAdvancedSearch(divs) {
                     if (!valid) allValid = false;
                 }
                 
-                addRemoveValidationIcons(valid, $(field));
+                addRemoveValidationIcons(valid, $(field), searchTermType);
                 
             /* Empty fields should not have valid/invalid indicator
              * Range values are considered valid even if only the
@@ -1114,9 +1114,20 @@ function validateAdvancedSearch(divs) {
     return allValid;
 }
 
-function addRemoveValidationIcons(valid, field) {
-    var validIndicator = "<span class='checked-icon sp-checked-icon'></span>",
-        invalidIndicator = "<span class='not-available-icon sp-checked-icon'></span>";
+function addRemoveValidationIcons(valid, field, searchTermType) {
+    var title = '';
+    if (searchTermType === 'i') {
+        title = 'Input must be a positive number';
+    } else if (searchTermType === 'n') {
+        title = 'Input must be a number';
+    } else if (searchTermType === 't') {
+        title = 'Input must be in the format: yyyy-mm-dd';
+    } else if (searchTermType === 'l') {
+        title = 'Input must be in the format: hh:mm:ss.t';
+    }
+    
+    var validIndicator = " <span class='checked-icon sp-checked-icon'></span>",
+        invalidIndicator = " <span title='"+title+"' class='not-available-icon sp-checked-icon'></span>";
     
     if (valid) {
         if (!field.closest('div').children(':last-child').hasClass('checked-icon')) {
