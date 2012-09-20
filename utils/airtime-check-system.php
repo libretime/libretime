@@ -159,7 +159,7 @@ class AirtimeCheck {
                 $services = array();
             }
             
-            if (isset($services->pypo)) {
+            if (isset($services->pypo) && $services->pypo->process_id != "FAILED") {
                 self::output_status("PLAYOUT_ENGINE_PROCESS_ID", $data->services->pypo->process_id);
                 self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", $data->services->pypo->uptime_seconds);
                 self::output_status("PLAYOUT_ENGINE_MEM_PERC", $data->services->pypo->memory_perc);
@@ -169,8 +169,11 @@ class AirtimeCheck {
                 self::output_status("PLAYOUT_ENGINE_RUNNING_SECONDS", "0");
                 self::output_status("PLAYOUT_ENGINE_MEM_PERC", "0%");
                 self::output_status("PLAYOUT_ENGINE_CPU_PERC", "0%");
+                $log = "/var/log/airtime/pypo/pypo.log";
+                self::show_log_file($log);
+
             }
-            if (isset($services->liquidsoap)) {
+            if (isset($services->liquidsoap) && $services->liquidsoap->process_id != "FAILED") {
                 self::output_status("LIQUIDSOAP_PROCESS_ID", $data->services->liquidsoap->process_id);
                 self::output_status("LIQUIDSOAP_RUNNING_SECONDS", $data->services->liquidsoap->uptime_seconds);
                 self::output_status("LIQUIDSOAP_MEM_PERC", $data->services->liquidsoap->memory_perc);
@@ -180,8 +183,10 @@ class AirtimeCheck {
                 self::output_status("LIQUIDSOAP_RUNNING_SECONDS", "0");
                 self::output_status("LIQUIDSOAP_MEM_PERC", "0%");
                 self::output_status("LIQUIDSOAP_CPU_PERC", "0%");
+                $log = "/var/log/airtime/pypo-liquidsoap/ls_script.log";
+                self::show_log_file($log);
             }
-            if (isset($services->media_monitor)) {
+            if (isset($services->media_monitor) && $services->media_monitor->process_id != "FAILED") {
                 self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
                 self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
                 self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
@@ -191,6 +196,8 @@ class AirtimeCheck {
                 self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", "0");
                 self::output_status("MEDIA_MONITOR_MEM_PERC", "0%");
                 self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
+                $log = "/var/log/airtime/media-monitor/media-monitor.log";
+                self::show_log_file($log);
             }
             if (isset($services->rabbitmq)) {
                 self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
@@ -215,8 +222,21 @@ class AirtimeCheck {
         }
     }
     
+    public static function show_log_file($log) {
+        exec("tail -5 $log", $output);
+        self::output_comment("Displaying log file $log");
+        self::output_comment($output);
+    }
+
     public static function output_comment($comment){
-        echo PHP_EOL."-- $comment".PHP_EOL;
+        if (!is_array($comment)) {
+            $comment = array($comment);
+        }
+
+        foreach ($comment as $c) {
+            echo "-- $c".PHP_EOL;
+        }
+
     }
 
     public static function output_status($key, $value){
