@@ -226,6 +226,8 @@ class AirtimeCheck {
         exec("tail -5 $log", $output);
         self::output_comment("Displaying log file $log");
         self::output_comment($output);
+        self::output_comment("");
+        self::output_comment("");
     }
 
     public static function output_comment($comment){
