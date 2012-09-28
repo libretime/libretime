@@ -2,8 +2,8 @@
 # Script for generating nightly Airtime snapshot packages
 # Run from the directory containg the files checked out from git
 
-#VERSION=2.2.0~$(date "+%Y%m%d")
-VERSION=2.2.0-rc1
+VERSION=2.2.0~$(date "+%Y%m%d")
+#VERSION=2.2.0-rc1
 BUILDDEST=/tmp/airtime-${VERSION}/
 DEBDIR=`pwd`/debian
 
