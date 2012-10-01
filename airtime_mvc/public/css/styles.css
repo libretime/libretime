@@ -180,11 +180,11 @@ select {
 	color:#ff5d1a;
 }
 .now-playing-block {
-	width:30%;
-	padding-left:20px;
+	width:35%;
+	padding-left:10px;
 }
 .show-block {
-	width:18%;
+	width:30%;
 }
 .text-row {
 	height:30px;
@@ -259,7 +259,6 @@ select {
 }
 .time-info-block  {
 	padding:0 14px 0 2px;
-	background:url(images/masterpanel_spacer.png) no-repeat right 0;
 	min-width:105px;
 }
 .time-info-block ul {
