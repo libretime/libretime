@@ -18,14 +18,16 @@ class ManagerTimeout(threading.Thread,Loggable):
     secnods. This used to be just a work around for cc-4235 but recently
     became a permanent solution because it's "cheap" and reliable
     """
-    def __init__(self, manager):
+    def __init__(self, manager, interval=3):
+        # TODO : interval should be read from config and passed here instead
+        # of just using the hard coded value
         threading.Thread.__init__(self)
-        self.manager = manager
+        self.manager  = manager
+        self.interval = interval
     def run(self):
         while True:
-            time.sleep(3)
+            time.sleep(self.interval) # every 3 seconds
             self.manager.flush_organize()
-            #self.logger.info("Force flushed organize...")
 
 class Manager(Loggable):
     """
