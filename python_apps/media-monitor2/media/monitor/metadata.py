@@ -8,7 +8,7 @@ from mutagen.easyid3 import EasyID3KeyError
 
 from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.log        import Loggable
-from media.monitor.pure       import format_length
+from media.monitor.pure       import format_length, truncate_to_length
 import media.monitor.pure as mmp
 
 """
@@ -94,12 +94,6 @@ truncate_table = {
         'MDATA_KEY_ISRC'      : 512,
         'MDATA_KEY_COPYRIGHT' : 512,
 }
-
-def truncate_to_length(item, length):
-    if isinstance(item, int): item = str(item)
-    if isinstance(item, basestring):
-        if len(item) > length: return item[0:length]
-        else: return item
 
 class Metadata(Loggable):
     # TODO : refactor the way metadata is being handled. Right now things are a
