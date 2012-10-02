@@ -724,21 +724,21 @@ SQL;
                     $cueOut = $origLength;
                 }
 
-                $sql = "SELECT INTERVAL :cueIn > INTERVAL :cueOut";
+                $sql = "SELECT :cueIn::INTERVAL > :cueOut::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':cueOut'=>$cueOut), 'column')) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
 
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL :cueOut > INTERVAL :origLength";
+                $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
 
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL :cueOut - INTERVAL :cueIn";
+                $sql = "SELECT :cueOut::INTERVAL - :cueIn::INTERVAL";
                 $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':cueIn'=>$cueIn), 'column');
 
                 $row->setDbCuein($cueIn);
@@ -747,15 +747,15 @@ SQL;
 
             } elseif (!is_null($cueIn)) {
 
-                $sql = "SELECT INTERVAL :cueIn > INTERVAL :oldCueOut";
+                $sql = "SELECT :cueIn::INTERVAL > :oldCueOut::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut), 'column')) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
 
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL :oldCueOut - INTERVAL :cueIn";
-                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut, 'column'));
+                $sql = "SELECT :oldCueOut::INTERVAL - :cueIn::INTERVAL";
+                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut), 'column');
 
                 $row->setDbCuein($cueIn);
                 $row->setDBCliplength($cliplength);
@@ -765,22 +765,22 @@ SQL;
                     $cueOut = $origLength;
                 }
 
-                $sql = "SELECT INTERVAL :cueOut < INTERVAL :oldCueIn";
-                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn, 'column'))) {
+                $sql = "SELECT :cueOut::INTERVAL < :oldCueIn::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn), 'column')) {
                     $errArray["error"] = "Can't set cue out to be smaller than cue in.";
 
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL :cueOut > INTERVAL :origLength";
-                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength, 'column'))) {
+                $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
 
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL :cueOut - INTERVAL :oldCueIn";
-                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn, 'column'));
+                $sql = "SELECT :cueOut::INTERVAL - :oldCueIn::INTERVAL";
+                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn), 'column');
 
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
@@ -788,14 +788,14 @@ SQL;
 
             $cliplength = $row->getDbCliplength();
 
-            $sql = "SELECT INTERVAL :fadeIn > INTERVAL :cliplength";
-            if (Application_Common_Database::prepareAndExecute($sql, array(':fadeIn'=>$fadeIn, ':cliplength'=>$cliplength, 'column'))) {
+            $sql = "SELECT :fadeIn::INTERVAL > :cliplength::INTERVAL";
+            if (Application_Common_Database::prepareAndExecute($sql, array(':fadeIn'=>$fadeIn, ':cliplength'=>$cliplength), 'column')) {
                 $fadeIn = $cliplength;
                 $row->setDbFadein($fadeIn);
             }
 
-            $sql = "SELECT INTERVAL :fadeOut > INTERVAL :cliplength";
-            if (Application_Common_Database::prepareAndExecute($sql, array(':fadeOut'=>$fadeOut, ':cliplength'=>$cliplength, 'column'))) {
+            $sql = "SELECT :fadeOut::INTERVAL > :cliplength::INTERVAL";
+            if (Application_Common_Database::prepareAndExecute($sql, array(':fadeOut'=>$fadeOut, ':cliplength'=>$cliplength), 'column')) {
                 $fadeOut = $cliplength;
                 $row->setDbFadein($fadeOut);
             }
