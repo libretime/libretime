@@ -561,11 +561,7 @@ input.input_text.sp_extra_input_text{
 }
 
 .sp-button{
-    float: right !important;
-    width: 60px;
-    height: 24px !important;
-    margin-right: 0px !important;
-    margin-left: 10px !important;
+    margin-left: 399px;
 }
 
 .sp-save{
