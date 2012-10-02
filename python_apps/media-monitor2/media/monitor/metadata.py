@@ -120,7 +120,14 @@ class Metadata(Loggable):
             # TODO : some files have multiple fields for the same metadata.
             # genre is one example. In that case mutagen will return a list
             # of values
-            assign_val = m_val[0] if isinstance(m_val, list) else m_val
+
+            if isinstance(m_val, list):
+                # TODO : does it make more sense to just skip the element in
+                # this case?
+                if len(m_val) == 0: assign_val = ''
+                else: assign_val = m_val[0]
+            else: assign_val = m_val
+
             temp_dict[ m_key ] = assign_val
         airtime_dictionary = {}
         for muta_k, muta_v in temp_dict.iteritems():
