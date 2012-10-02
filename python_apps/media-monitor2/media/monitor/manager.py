@@ -241,8 +241,3 @@ class Manager(Loggable):
         notifier = pyinotify.Notifier(self.wm)
         notifier.coalesce_events()
         notifier.loop()
-        # Experiments with running notifier in different modes
-        # There are 3 options: normal, async, threaded.
-        #import asyncore
-        #pyinotify.AsyncNotifier(self.wm).loop()
-        #asyncore.loop()
