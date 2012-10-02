@@ -624,7 +624,7 @@ SQL;
 
             if (!is_null($fadeIn)) {
 
-                $sql = "SELECT INTERVAL :fadein > INTERVAL '{$clipLength}'";
+                $sql = "SELECT :fadein::INTERVAL > INTERVAL '{$clipLength}'";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':fadein'=>$fadeIn), 'column')) {
                     //"Fade In can't be larger than overall playlength.";
                     $fadeIn = $clipLength;
@@ -633,7 +633,7 @@ SQL;
             }
             if (!is_null($fadeOut)) {
 
-                $sql = "SELECT INTERVAL :fadeout > INTERVAL '{$clipLength}'";
+                $sql = "SELECT :fadeout::INTERVAL > INTERVAL '{$clipLength}'";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':fadeout'=>$fadeOut), 'column')) {
                     //Fade Out can't be larger than overall playlength.";
                     $fadeOut = $clipLength;
