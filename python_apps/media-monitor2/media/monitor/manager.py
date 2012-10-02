@@ -97,8 +97,10 @@ class Manager(Loggable):
         Start watching 'path' using 'listener'. First will check if directory
         is being watched before adding another watch
         """
-        self.logger.info("Adding listener '%s' to '%s'" %
-                         ( listener.__class__.__name__, path) )
+
+        self.logger.info("Attempting to add listener to path '%s'" % path)
+        self.logger.info( 'Listener: %s' % str(listener) )
+
         if not self.has_watch(path):
             wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
                     auto_add=True, proc_fun=listener)
