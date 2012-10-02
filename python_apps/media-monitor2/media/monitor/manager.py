@@ -13,6 +13,11 @@ import media.monitor.pure as mmp
 
 
 class ManagerTimeout(threading.Thread,Loggable):
+    """
+    The purpose of this class is to flush the organize directory every 3
+    secnods. This used to be just a work around for cc-4235 but recently
+    became a permanent solution because it's "cheap" and reliable
+    """
     def __init__(self, manager):
         threading.Thread.__init__(self)
         self.manager = manager
