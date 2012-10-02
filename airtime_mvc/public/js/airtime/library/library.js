@@ -1174,6 +1174,7 @@ var validationTypes = {
     "composer" : "s",
     "conductor" : "s",
     "copyright" : "s",
+    "encoded_by" : "s",
     "utime" : "t",
     "mtime" : "t",
     "lptime" : "t",
