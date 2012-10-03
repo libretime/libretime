@@ -1203,15 +1203,16 @@ SQL;
                     //$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
                     //$sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
                     $sql = <<<SQL
-SELECT date :rebroadcast - date :start
+SELECT :rebroadcast::date - :start::date
 SQL;
+
                     $offset_days = 
                         Application_Common_Database::prepareAndExecute($sql,
                             array(
                                 'rebroadcast' => 
-                                $date["add_show_rebroadcast_date_absolute_$i"],
+                                $data["add_show_rebroadcast_date_absolute_$i"],
                                 'start' => 
-                                $date['add_show_start_date']), "column" );
+                                $data['add_show_start_date']), "column" );
 
                     //$r = $con->query($sql);
                     //$offset_days = $r->fetchColumn(0);
