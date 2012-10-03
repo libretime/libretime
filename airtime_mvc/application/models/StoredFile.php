@@ -192,6 +192,7 @@ class Application_Model_StoredFile
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
+                # TODO : refactor string evals
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
