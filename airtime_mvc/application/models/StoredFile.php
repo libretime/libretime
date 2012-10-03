@@ -761,6 +761,8 @@ SQL;
             //generalized within the project access to zend view methods
             //to access url helpers is needed.
 
+            // TODO : why is there inline html here? breaks abstraction and is 
+            // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
