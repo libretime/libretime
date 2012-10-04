@@ -181,13 +181,25 @@
         function fnCreateRangeInput(oTable) {
 
             //var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
+            
+            var label = "";
+            if (th.attr('id') == "bit_rate") {
+                label = " bps";
+            } else if (th.attr('id') == "utime" || th.attr('id') == "mtime" || th.attr('id') == "lptime") {
+                label = " yyyy-mm-dd";
+            } else if (th.attr('id') == "length") {
+                label = " hh:mm:ss.t";
+            } else if (th.attr('id') == "sample_rate") {
+                label = " Hz";
+            }
+            
             th.html(_fnRangeLabelPart(0));
             var sFromId = oTable.attr("id") + '_range_from_' + i;
-            var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
+            var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '" placeholder="' + label + '"/>');
             th.append(from);
             th.append(_fnRangeLabelPart(1));
             var sToId = oTable.attr("id") + '_range_to_' + i;
-            var to = $('<input type="text" class="number_range_filter" id="' + sToId + '" rel="' + i + '"/>');
+            var to = $('<input type="text" class="number_range_filter" id="' + sToId + '" rel="' + i + '" placeholder="' + label + '"/>');
             th.append(to);
             th.append(_fnRangeLabelPart(2));
             th.wrapInner('<span class="filterColumn filter_number_range" />');

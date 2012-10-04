@@ -378,16 +378,6 @@ var AIRTIME = (function(AIRTIME) {
             $.each(aoCols, function(i,ele){
                 if (ele.bSearchable) {
                     var currentColId = ele._ColReorder_iOrigCol;
-                    var label = "";
-                    if (ele.mDataProp == "bit_rate") {
-                        label = " (bps)";
-                    } else if (ele.mDataProp == "utime" || ele.mDataProp == "mtime" || ele.mDataProp == "lptime") {
-                        label = " (yyyy-mm-dd)";
-                    } else if (ele.mDataProp == "length") {
-                        label = " (hh:mm:ss.t)";
-                    } else if (ele.mDataProp == "sample_rate") {
-                        label = " (Hz)";
-                    }
                     
                     var inputClass = 'filter_column filter_number_text'; 
                     var labelStyle = "style='margin-right:35px;'";
@@ -397,9 +387,17 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     
                     if (ele.bVisible) {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+" class='control-group'><label class='control-label'"+labelStyle+">"+ele.sTitle+label+" : </label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
+                        advanceSearchDiv.append(
+                            "<div id='advanced_search_col_"+currentColId+" class='control-group'>" +
+                                "<label class='control-label'"+labelStyle+">"+ele.sTitle+" : </label>" +
+                                "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
+                            "</div>");
                     } else {
-                        advanceSearchDiv.append("<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'><label class='control-label'"+labelStyle+">"+ele.sTitle+label+"</label><div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div></div>");
+                        advanceSearchDiv.append(
+                            "<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'>" +
+                                "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
+                                "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
+                            "</div>");
                     }
                     
                     if (criteriaTypes[ele.mDataProp] == "s") {
