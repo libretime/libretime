@@ -531,7 +531,7 @@ table.library-get-file-md.table-small{
 }
 
 input.input_text.sp_input_text{
-    width: 200px !important;
+    width: 140px !important;
 }
 
 input.input_text.sp_extra_input_text{
@@ -560,7 +560,7 @@ input.input_text.sp_extra_input_text{
 }
 
 .sp-button{
-    margin-left: 399px;
+    margin-left: 368px;
 }
 
 .sp-save{
@@ -2283,7 +2283,7 @@ fieldset.closed, fieldset.display_field.closed {
     margin-left: 1px;
 }
 fieldset.sb-criteria-fieldset{
-    min-width:670px;
+    min-width:503px;
     overflow-x:auto;
 }
 
