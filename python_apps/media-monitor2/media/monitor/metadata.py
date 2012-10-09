@@ -11,6 +11,12 @@ from media.monitor.log        import Loggable
 from media.monitor.pure       import format_length, truncate_to_length
 import media.monitor.pure as mmp
 
+# emf related stuff
+from media.metadata.process import global_reader
+import media.metadata.definitions as defs
+from pprint import pformat
+defs.load_definitions()
+
 """
 list of supported easy tags in mutagen version 1.20
 ['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry',
@@ -186,11 +192,9 @@ class Metadata(Loggable):
         # extremely unclear and needs to be refactored.
         #if full_mutagen is None: raise BadSongFile(fpath)
         try: # emf stuff for testing:
-            import media.metadata.process as md
-            import pprint.pformat as pf
             if full_mutagen:
-                normalized = md.global_reader.read('fpath', full_mutagen)
-                self.logger.info(pf(normalized))
+                normalized = global_reader.read('fpath', full_mutagen)
+                self.logger.info(pformat(normalized))
         except Exception as e:
             self.logger.unexpected_exception(e)
 
