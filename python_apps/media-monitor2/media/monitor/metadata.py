@@ -182,7 +182,7 @@ class Metadata(Loggable):
                     that does not exist. Setting metadata to {}")
             self.__metadata = {}
             return
-        # TODO : Simplify the way all of these rules are handled right not it's
+        # TODO : Simplify the way all of these rules are handled right now it's
         # extremely unclear and needs to be refactored.
         #if full_mutagen is None: raise BadSongFile(fpath)
         if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
