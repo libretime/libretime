@@ -39,7 +39,7 @@ class TestMMP(unittest.TestCase):
         orig = Metadata.airtime_dict({
                 'date'        : [u'2012-08-21'],
                 'tracknumber' : [u'2'],
-                'title'       : [u'11-29-00-record'],
+                'title'       : [u'record-2012-08-21-11:29:00'],
                 'artist'      : [u'Airtime Show Recorder']
         })
         orga = Metadata.airtime_dict({
@@ -57,7 +57,7 @@ class TestMMP(unittest.TestCase):
 
         self.assertEqual( orga, normalized )
 
-        organized_base_name = "2012-08-21-11-29-00-record-256kbps.ogg"
+        organized_base_name = "11:29:00-record-256kbps.ogg"
         base                = "/srv/airtime/stor/"
         organized_path      = mmp.organized_path(old_path,base, normalized)
         self.assertEqual(os.path.basename(organized_path), organized_base_name)
