@@ -184,7 +184,7 @@
             
             var label = "";
             if (th.attr('id') == "bit_rate") {
-                label = " bps";
+                label = " kbps";
             } else if (th.attr('id') == "utime" || th.attr('id') == "mtime" || th.attr('id') == "lptime") {
                 label = " yyyy-mm-dd";
             } else if (th.attr('id') == "length") {
