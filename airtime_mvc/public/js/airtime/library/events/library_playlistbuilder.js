@@ -65,7 +65,7 @@ var AIRTIME = (function(AIRTIME) {
 
                         var $el = $(this), selected = mod
                                 .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul[id='spl_sortable'] li:first"), width = li
-                                .width(), height = li.height();
+                                .width(), height = 55;
 
                         // dragging an element that has an unselected
                         // checkbox.
