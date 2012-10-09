@@ -531,11 +531,11 @@ table.library-get-file-md.table-small{
 }
 
 input.input_text.sp_input_text{
-    width: 140px !important;
+    width: 139px !important;
 }
 
 input.input_text.sp_extra_input_text{
-    width: 90px !important;
+    width: 60px !important;
 }
 
 .sp_text_font{
