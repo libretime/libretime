@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import media.monitor.process as md
+import media.metadata.process as md
 from os.path import normpath
 from media.monitor.pure import format_length, file_md5
 

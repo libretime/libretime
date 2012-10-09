@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from contextlib import contextmanager
 from media.monitor.pure import truncate_to_length, toposort
+from media.monitor.log import Loggable
 import mutagen
 
 
@@ -8,7 +9,12 @@ class MetadataAbsent(Exception):
     def __init__(self, name): self.name = name
     def __str__(self): return "Could not obtain element '%s'" % self.name
 
-class MetadataElement(object):
+class MetadataElement(Loggable):
+
+    def __default_translator(k):
+        e = [ x for x in self.dependencies() ][0]
+        return k[e]
+
     def __init__(self,name):
         self.name = name
         # "Sane" defaults
@@ -18,6 +24,8 @@ class MetadataElement(object):
         self.__default       = None
         self.__is_normalized = lambda _ : True
         self.__max_length    = -1
+
+
 
     def max_length(self,l):
         self.__max_length = l
@@ -82,6 +90,15 @@ class MetadataElement(object):
             if self.has_default(): return self.get_default()
             else: raise MetadataAbsent(self.name)
         # We have all dependencies. Now for actual for parsing
+
+        # Only case where we can select a default translator
+        if not self.__translator:
+            if len(self.dependencies()) == 1:
+                self.translate(MetadataElement.__default_translator)
+            else:
+                self.logger.info("Could not set more than 1 translator with \
+                                 more than 1 dependancies")
+
         r = self.__normalizer( self.__translator(full_deps) )
         if self.__max_length != -1:
             r = truncate_to_length(r, self.__max_length)

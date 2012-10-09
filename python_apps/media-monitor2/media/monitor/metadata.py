@@ -196,7 +196,7 @@ class Metadata(Loggable):
                 normalized = global_reader.read('fpath', full_mutagen)
                 self.logger.info(pformat(normalized))
         except Exception as e:
-            self.logger.unexpected_exception(e)
+            self.unexpected_exception(e)
 
         if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
         self.__metadata = Metadata.airtime_dict(full_mutagen)
