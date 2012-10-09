@@ -190,7 +190,6 @@ class Metadata(Loggable):
         # Now we extra the special values that are calculated from the mutagen
         # object itself:
 
-        # Hickity Hackity for .wav files. Properly do this later
         if mmp.extension(fpath) == 'wav':
             full_mutagen.set_length(mmp.read_wave_duration(fpath))
 
