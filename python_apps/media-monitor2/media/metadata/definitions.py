@@ -96,17 +96,18 @@ def load_definitions():
         t.depends('path')
         t.translate(lambda k: normpath(k['path']))
 
-    with md.metadata("MDATA_KEY_MD5") as t:
-        t.depends('path')
-        t.optional(False)
-        t.translate(lambda k: file_md5(k['path'], max_length=100))
+    #with md.metadata("MDATA_KEY_MD5") as t:
+        #t.depends('path')
+        #t.optional(False)
+        #t.translate(lambda k: file_md5(k['path'], max_length=100))
 
     # owner is handled differently by (by events.py)
 
     with md.metadata('MDATA_KEY_ORIGINAL_PATH') as t:
         t.depends('original_path')
 
-    # MDATA_KEY_TITLE is the annoying special case
+    # MDATA_KEY_TITLE is the annoying special case b/c we sometimes read it
+    # from file name
     with md.metadata('MDATA_KEY_TITLE') as t:
         # Need to know MDATA_KEY_CREATOR to know if show was recorded. Value is
         # defaulted to "" from definitions above

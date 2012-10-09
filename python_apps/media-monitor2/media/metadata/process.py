@@ -11,10 +11,6 @@ class MetadataAbsent(Exception):
 
 class MetadataElement(Loggable):
 
-    def __default_translator(k):
-        e = [ x for x in self.dependencies() ][0]
-        return k[e]
-
     def __init__(self,name):
         self.name = name
         # "Sane" defaults
@@ -24,8 +20,7 @@ class MetadataElement(Loggable):
         self.__default       = None
         self.__is_normalized = lambda _ : True
         self.__max_length    = -1
-
-
+        self.__translator    = None
 
     def max_length(self,l):
         self.__max_length = l
@@ -71,6 +66,7 @@ class MetadataElement(Loggable):
         return "%s(%s)" % (self.name, ' '.join(list(self.__deps)))
 
     def read_value(self, path, original, running={}):
+        self.logger.info("Trying to read: %s" % str(original))
         # If value is present and normalized then we don't touch it
         if self.name in original:
             v = original[self.name]
@@ -83,21 +79,29 @@ class MetadataElement(Loggable):
         full_deps         = dict( dep_slice_orig.items()
                                 + dep_slice_running.items() )
 
+        full_deps['path'] = path
+
         # check if any dependencies are absent
-        if len(full_deps) != len(self.__deps) or len(self.__deps) == 0:
+        if len(full_deps) < len(self.__deps) or len(self.__deps) == 0:
             # If we have a default value then use that. Otherwise throw an
             # exception
             if self.has_default(): return self.get_default()
             else: raise MetadataAbsent(self.name)
         # We have all dependencies. Now for actual for parsing
 
+        def def_translate(dep):
+            def wrap(k):
+                e = [ x for x in dep ][0]
+                return k[e]
+            return wrap
+
         # Only case where we can select a default translator
-        if not self.__translator:
-            if len(self.dependencies()) == 1:
-                self.translate(MetadataElement.__default_translator)
-            else:
-                self.logger.info("Could not set more than 1 translator with \
-                                 more than 1 dependancies")
+        if self.__translator is None:
+            self.translate(def_translate(self.dependencies()))
+            if len(self.dependencies()) > 2: # dependencies include themselves
+                self.logger.info("Ignoring some dependencies in translate %s"
+                                 % self.name)
+                self.logger.info(self.dependencies())
 
         r = self.__normalizer( self.__translator(full_deps) )
         if self.__max_length != -1:
