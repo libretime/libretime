@@ -185,6 +185,15 @@ class Metadata(Loggable):
         # TODO : Simplify the way all of these rules are handled right now it's
         # extremely unclear and needs to be refactored.
         #if full_mutagen is None: raise BadSongFile(fpath)
+        try: # emf stuff for testing:
+            import media.metadata.process as md
+            import pprint.pformat as pf
+            if full_mutagen:
+                normalized = md.global_reader.read('fpath', full_mutagen)
+                self.logger.info(pf(normalized))
+        except Exception as e:
+            self.logger.unexpected_exception(e)
+
         if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
         self.__metadata = Metadata.airtime_dict(full_mutagen)
         # Now we extra the special values that are calculated from the mutagen
@@ -208,6 +217,7 @@ class Metadata(Loggable):
         # TODO : perhaps we shouldn't hard code how many bytes we're reading
         # from the file?
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
+
 
     def is_recorded(self):
         """
