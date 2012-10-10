@@ -167,6 +167,9 @@ class MetadataReader(object):
                 if not mdata.is_optional(): raise
         return normalized_metadata
 
+    def read_mutagen(self, path):
+        return self.read(path, normalize_mutagen(path))
+
 global_reader = MetadataReader()
 
 @contextmanager
