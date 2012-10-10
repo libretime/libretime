@@ -68,6 +68,23 @@ class IncludeOnly(object):
         return _wrap
 
 
+
+def diff_dict(d1, d2, width=30):
+    """
+    returns a formatted diff of 2 dictionaries
+    """
+    out = ""
+    all_keys = d1.keys() + d2.keys()
+    for k in all_keys:
+        v1, v2 = d1.get(k), d2.get(k)
+
+        # default values
+        if v1 is None: v1 = "N/A"
+        if v2 is None: v2 = "N/A"
+
+        if d1[k] != d2[k]:
+            out += "%s%s%s" % (k, d1[k], d2[k])
+
 def partition(f, alist):
     """
     Partition is very similar to filter except that it also returns the
