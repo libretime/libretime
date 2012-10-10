@@ -130,10 +130,11 @@ def normalize_mutagen(path):
     m = mutagen.File(path, easy=True)
     md = {}
     for k,v in m.iteritems():
-        if type(v) is list: md[k] = v[0]
+        if type(v) is list:
+            if len(v) > 0: md[k] = v[0]
         else: md[k] = v
     # populate special metadata values
-    md['length']      = getattr(m.info, u'length', 0.0)
+    md['length']      = getattr(m.info, 'length', 0.0)
     md['bitrate']     = getattr(m.info, 'bitrate', u'')
     md['sample_rate'] = getattr(m.info, 'sample_rate', 0)
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
