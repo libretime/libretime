@@ -313,7 +313,7 @@ $(document).ready(function() {
     
     $("#auto_switch_help").qtip({
         content: {
-            text: "Check this box to automatically switch on Master/Show source upon source disconnection."
+            text: "Check this box to automatically switch on Master/Show source upon source connection."
         },
         hide: {
             delay: 500,
