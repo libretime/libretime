@@ -60,35 +60,49 @@ class MetadataElement(Loggable):
         return self.__path
 
     def __slice_deps(self, d):
+        """
+        returns a dictionary of all the key value pairs in d that are also
+        present in self.__deps
+        """
         return dict( (k,v) for k,v in d.iteritems() if k in self.__deps)
 
     def __str__(self):
         return "%s(%s)" % (self.name, ' '.join(list(self.__deps)))
 
     def read_value(self, path, original, running={}):
-        self.logger.info("Trying to read: %s" % str(original))
-        # If value is present and normalized then we don't touch it
+
+        # If value is present and normalized then we only check if it's
+        # normalized or not. We normalize if it's not normalized already
+
         if self.name in original:
             v = original[self.name]
             if self.__is_normalized(v): return v
             else: return self.__normalizer(v)
 
-        # A dictionary slice with all the dependencies and their values
+        # We slice out only the dependencies that are required for the metadata
+        # element.
         dep_slice_orig    = self.__slice_deps(original)
         dep_slice_running = self.__slice_deps(running)
+        # TODO : remove this later
+        dep_slice_special = self.__slice_deps({'path' : path})
+        # We combine all required dependencies into a single dictionary
+        # that we will pass to the translator
         full_deps         = dict( dep_slice_orig.items()
-                                + dep_slice_running.items() )
-
-        full_deps['path'] = path
+                                + dep_slice_running.items()
+                                + dep_slice_special.items())
 
         # check if any dependencies are absent
-        if len(full_deps) < len(self.__deps) or len(self.__deps) == 0:
+        # note: there is no point checking the case that len(full_deps) >
+        # len(self.__deps) because we make sure to "slice out" any supefluous
+        # dependencies above.
+        if len(full_deps) != len(self.dependencies()) or \
+            len(self.dependencies()) == 0:
             # If we have a default value then use that. Otherwise throw an
             # exception
             if self.has_default(): return self.get_default()
             else: raise MetadataAbsent(self.name)
-        # We have all dependencies. Now for actual for parsing
 
+        # We have all dependencies. Now for actual for parsing
         def def_translate(dep):
             def wrap(k):
                 e = [ x for x in dep ][0]
