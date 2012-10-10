@@ -37,8 +37,8 @@
 <?php if ($this->type == "playlist") { ?>
 <div class='file-md-qtip-legend'>
 <span class='webstream'>o</span> <span>Web Stream</span><br />
-<span class='dynamic'>o</span> <span>Dynamic Playlist</span><br />
-<span class='static'>o</span> <span>Static Playlist</span><br />
+<span class='dynamic'>o</span> <span>Dynamic Smart Block</span><br />
+<span class='static'>o</span> <span>Static Smart Block</span><br />
 <span>o</span> <span>Audio Track</span>
 </div>
 <?php } ?>
@@ -47,7 +47,7 @@
         <?php if ($this->type == "playlist") { ?>
             <div class='file-md-qtip-left'><span>Playlist Contents: </span></div>
         <?php } else { ?>
-            <div class='file-md-qtip-left'><span>Static Playlist Contents: </span></div>
+            <div class='file-md-qtip-left'><span>Static Smart Block Contents: </span></div>
         <?php } ?>
         <table class='library-get-file-md'>
         <?php foreach($this->contents as $row) : ?>
@@ -86,7 +86,7 @@
         </table>
         
     <?php } elseif ($this->blType == "Dynamic") { ?>
-        <div class='file-md-qtip-left'><span>Dynamic Playlist Criteria: </span></div>
+        <div class='file-md-qtip-left'><span>Dynamic Smart Block Criteria: </span></div>
         <table class='library-get-file-md table-small'>
         <?php foreach ($this->contents["crit"] as $criterias) : ?>
             <?php foreach ($criterias as $crit ) : ?>
