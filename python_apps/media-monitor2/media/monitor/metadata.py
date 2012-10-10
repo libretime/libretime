@@ -191,12 +191,6 @@ class Metadata(Loggable):
         # TODO : Simplify the way all of these rules are handled right now it's
         # extremely unclear and needs to be refactored.
         #if full_mutagen is None: raise BadSongFile(fpath)
-        try: # emf stuff for testing:
-            if full_mutagen:
-                normalized = global_reader.read('fpath', full_mutagen)
-                self.logger.info(pformat(normalized))
-        except Exception as e:
-            self.unexpected_exception(e)
 
         if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
         self.__metadata = Metadata.airtime_dict(full_mutagen)
@@ -222,6 +216,17 @@ class Metadata(Loggable):
         # from the file?
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
 
+        try: # emf stuff for testing:
+            if full_mutagen:
+                normalized = global_reader.read_mutagen(fpath)
+                self.logger.info("EMF--------------------")
+                self.logger.info(pformat(normalized))
+                self.logger.info("OLD--------------------")
+                self.logger.info(pformat(self.__metadata))
+                self.logger.info("-----------------------")
+
+        except Exception as e:
+            self.unexpected_exception(e)
 
     def is_recorded(self):
         """
