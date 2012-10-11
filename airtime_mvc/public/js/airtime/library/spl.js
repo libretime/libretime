@@ -18,13 +18,13 @@ var AIRTIME = (function(AIRTIME){
 	
 	function isTimeValid(time) {
 		//var regExpr = new RegExp("^\\d{2}[:]\\d{2}[:]\\d{2}([.]\\d{1,6})?$");
-	    var regExpr = new RegExp("^\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1,6})?$");
+	    var regExpr = new RegExp("^\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1})?$");
 		
 		return regExpr.test(time);
 	}
 	
 	function isFadeValid(fade) {
-        var regExpr = new RegExp("^\\d{1}(\\d{1})?([.]\\d{1,6})?$");
+        var regExpr = new RegExp("^\\d{1}(\\d{1})?([.]\\d{1})?$");
 
         return regExpr.test(fade);
 	}
@@ -74,7 +74,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 		
 		if (!isTimeValid(cueIn)){
-	        showError(span, "please put in a time '00:00:00 (.000000)'");
+	        showError(span, "please put in a time '00:00:00 (.0)'");
 	        return;
 		}
 		$.post(url, 
@@ -111,7 +111,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
 		if (!isTimeValid(cueOut)){
-	        showError(span, "please put in a time '00:00:00 (.000000)'");
+	        showError(span, "please put in a time '00:00:00 (.0)'");
 			return;
 		}
 
@@ -150,7 +150,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
 		if (!isFadeValid(fadeIn)){
-	        showError(span, "please put in a time in seconds '00 (.000000)'");
+	        showError(span, "please put in a time in seconds '00 (.0)'");
 			return;
 		}
 
@@ -188,7 +188,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
 		if (!isFadeValid(fadeOut)){
-	        showError(span, "please put in a time in seconds '00 (.000000)'");
+	        showError(span, "please put in a time in seconds '00 (.0)'");
 			return;
 		}
 
@@ -545,7 +545,7 @@ var AIRTIME = (function(AIRTIME){
 	            type = $('#obj_type').val();
 		    
 		    if (!isFadeValid(fadeIn)){
-	            showError(span, "please put in a time in seconds '00 (.000000)'");
+	            showError(span, "please put in a time in seconds '00 (.0)'");
 			    return;
 		    }
 
@@ -569,7 +569,7 @@ var AIRTIME = (function(AIRTIME){
 	            type = $('#obj_type').val();
 
 		    if (!isFadeValid(fadeOut)){
-	            showError(span, "please put in a time in seconds '00 (.000000)'");
+	            showError(span, "please put in a time in seconds '00 (.0)'");
 			    return;
 		    }
 
