@@ -3,9 +3,9 @@
     <dl class="zend_form">
         <dd id="SupportFeedback-element" style="width:90%;">
             <div class="info-text">
-                Help Airtime improve by letting us know how you are using it. This info
-                will be collected regularly in order to enhance your user experience.<br /><br />
-                Click "Yes, help Airtime" and we'll make sure the features you use are
+                Help Airtime improve by letting Sourcefabric know how you are using it. This information
+                will be collected regularly in order to enhance your user experience.<br />
+                Click the "Send support feedback" box and we'll make sure the features you use are
                 constantly improving.
             </div>
             <label class="optional" for="SupportFeedback">
@@ -21,9 +21,9 @@
             <?php endif; ?> 
         </dd>
         <dd id="publicize-element" style="width:90%;">
-            <div class="info-text">Click the box below to advertise your station on 
-            <a id="link_to_whos_using" href="http://sourcefabric.org/en/airtime/whosusing" onclick="window.open(this.href); return false">Sourcefabric.org</a>.
-             In order to promote your station, "Send support feedback" must be enabled. This data will be collected in addition to the support feedback.</div>
+            <div class="info-text">Click the box below to promote your station on 
+            <a id="link_to_whos_using" href="http://www.sourcefabric.org/en/airtime/whosusing/" onclick="window.open(this.href); return false">Sourcefabric.org</a>.
+            </div>
             <label class="optional" for="Publicise">
                 <?php echo $this->element->getElement('Publicise') ?>
                 <strong><?php echo $this->element->getElement('Publicise')->getLabel() ?></strong>
@@ -37,7 +37,7 @@
             <?php endif; ?> 
         </dd>
     </dl>
-    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;"><p> Note: In order to promote your station, "Send support feedback" must be enabled</p></div>
+    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;">(In order to promote your station, "Send support feedback" must be enabled).</div>
     <?php }?>
     <dl id="public-info" style="display:<?php echo !$this->isSaas?"none":"block"?>;">
         <dt id="stationName-label" class="block-display">
@@ -179,7 +179,7 @@
                 </ul>
             <?php endif; ?>
         <?php }else{?>
-            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Terms and Conditions</a>
+            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Sourcefabric Privacy Policy</a>
         <?php }?>
     </div>
 <?php } ?>
