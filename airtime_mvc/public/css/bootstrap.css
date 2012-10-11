@@ -2688,7 +2688,7 @@ fieldset .btn-toolbar {
   box-sizing: border-box;
   }
   .form-horizontal .controls input[type="text"]:only-child {
-    width:90%;
+    width:85%;
     }
 
 
