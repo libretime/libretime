@@ -312,6 +312,7 @@ def normalized_metadata(md, original_path):
     # TODO : wtf is this for again?
     new_md['MDATA_KEY_TITLE'] = re.sub(r'-?%s-?' % unicode_unknown, u'',
             new_md['MDATA_KEY_TITLE'])
+    new_md['MDATA_KEY_ORIGINAL_PATH'] = original_path
     return new_md
 
 def organized_path(old_path, root_path, orig_md):
