@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 import media.metadata.process as md
+import re
 from os.path import normpath
-from media.monitor.pure import format_length, file_md5
+from media.monitor.pure import format_length, file_md5, is_airtime_recorded, \
+    no_extension_basename
 
 defs_loaded = False
 
@@ -105,11 +107,32 @@ def load_definitions():
 
     # MDATA_KEY_TITLE is the annoying special case b/c we sometimes read it
     # from file name
+
+
+    # must handle 3 cases:
+    # 1. regular case (not recorded + title is present)
+    # 2. title is absent (read from file)
+    # 3. recorded file
+    def tr_title(k):
+        unicode_unknown = u"unknown"
+        new_title = u""
+        if is_airtime_recorded(k) or k['title'] != u"":
+            new_title = k['title']
+        else:
+            default_title = no_extension_basename(k['path'])
+            default_title = re.sub(r'__\d+\.',u'.', default_title)
+            if re.match(".+-%s-.+$" % unicode_unknown, default_title):
+                default_title = u''
+            new_title = default_title
+            new_title = re.sub(r'-\d+kbps$', u'', new_title)
+        return new_title
+
     with md.metadata('MDATA_KEY_TITLE') as t:
         # Need to know MDATA_KEY_CREATOR to know if show was recorded. Value is
         # defaulted to "" from definitions above
-        t.depends('title','MDATA_KEY_CREATOR')
-        t.translate(lambda k: k['title'])
+        t.depends('title','MDATA_KEY_CREATOR','path')
+        t.optional(False)
+        t.translate(tr_title)
         t.max_length(512)
 
     with md.metadata('MDATA_KEY_LABEL') as t:

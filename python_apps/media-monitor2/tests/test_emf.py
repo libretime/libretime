@@ -16,4 +16,10 @@ class TestMMP(unittest.TestCase):
         n = Metadata(path)
         self.assertEqual(n.extract(), m)
 
+    def test_recorded(self):
+        recorded_file = "./15:15:00-Untitled Show-256kbps.ogg"
+        m = global_reader.read_mutagen(recorded_file)
+        pp(m)
+
+
 if __name__ == '__main__': unittest.main()

@@ -140,6 +140,7 @@ def normalize_mutagen(path):
     md['sample_rate'] = getattr(m.info, 'sample_rate', 0)
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
     md['path']        = path
+    if 'title' not in md: md['title']  = u''
     return md
 
 
