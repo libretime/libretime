@@ -96,10 +96,10 @@ def load_definitions():
         t.depends('path')
         t.translate(lambda k: unicode(normpath(k['path'])))
 
-    #with md.metadata("MDATA_KEY_MD5") as t:
-        #t.depends('path')
-        #t.optional(False)
-        #t.translate(lambda k: file_md5(k['path'], max_length=100))
+    with md.metadata("MDATA_KEY_MD5") as t:
+        t.depends('path')
+        t.optional(False)
+        t.translate(lambda k: file_md5(k['path'], max_length=100))
 
     # owner is handled differently by (by events.py)
 

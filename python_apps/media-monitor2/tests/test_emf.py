@@ -15,9 +15,6 @@ class TestMMP(unittest.TestCase):
         self.assertTrue( len(m) > 0 )
         n = Metadata(path)
         self.assertEqual(n.extract(), m)
-        pp(n.extract())
-        print("--------------")
-        pp(m)
 
 
 if __name__ == '__main__': unittest.main()
