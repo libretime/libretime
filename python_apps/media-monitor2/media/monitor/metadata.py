@@ -216,17 +216,17 @@ class Metadata(Loggable):
         # from the file?
         self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
 
-        try: # emf stuff for testing:
-            if full_mutagen:
-                normalized = global_reader.read_mutagen(fpath)
-                self.logger.info("EMF--------------------")
-                self.logger.info(pformat(normalized))
-                self.logger.info("OLD--------------------")
-                self.logger.info(pformat(self.__metadata))
-                self.logger.info("-----------------------")
+        #try: # emf stuff for testing:
+            #if full_mutagen:
+                #normalized = global_reader.read_mutagen(fpath)
+                #self.logger.info("EMF--------------------")
+                #self.logger.info(pformat(normalized))
+                #self.logger.info("OLD--------------------")
+                #self.logger.info(pformat(self.__metadata))
+                #self.logger.info("-----------------------")
 
-        except Exception as e:
-            self.unexpected_exception(e)
+        #except Exception as e:
+            #self.unexpected_exception(e)
 
     def is_recorded(self):
         """
