@@ -74,6 +74,7 @@ class MetadataElement(Loggable):
         # If value is present and normalized then we only check if it's
         # normalized or not. We normalize if it's not normalized already
 
+
         if self.name in original:
             v = original[self.name]
             if self.__is_normalized(v): return v
@@ -141,11 +142,18 @@ def normalize_mutagen(path):
     md['path']        = path
     return md
 
+
+class OverwriteMetadataElement(Exception):
+    def __init__(self, m): self.m = m
+    def __str__(self): return "Trying to overwrite: %s" % self.m
+
 class MetadataReader(object):
     def __init__(self):
         self.clear()
 
     def register_metadata(self,m):
+        if m in self.__mdata_name_map:
+            raise OverwriteMetadataElement(m)
         self.__mdata_name_map[m.name] = m
         d = dict( (name,m.dependencies()) for name,m in
                 self.__mdata_name_map.iteritems() )
