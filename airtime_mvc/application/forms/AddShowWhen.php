@@ -201,7 +201,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         }
                         /* Here we are checking each repeating show by
                          * the show day.
-                         * (i.e: every wednesday, then every thursday)
+                         * (i.e: every wednesday, then every thursday, etc.)
                          */
                         while ($repeatShowStart->getTimestamp() < $populateUntilDateTime->getTimestamp()) {
                             if ($formData['add_show_id'] == -1) {
