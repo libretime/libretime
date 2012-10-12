@@ -30,7 +30,7 @@ def load_definitions():
         t.depends('sample_rate')
         t.translate(lambda k: k['sample_rate'])
 
-    with md.metadata('MDATA_KEY_FTYPE'):
+    with md.metadata('MDATA_KEY_FTYPE') as t:
         t.depends('ftype') # i don't think this field even exists
         t.default(u'audioclip')
         t.translate(lambda k: k['ftype']) # but just in case
@@ -92,9 +92,9 @@ def load_definitions():
         t.depends("copyright")
         t.max_length(512)
 
-    with md.metadata("MDATA_KEY_FILEPATH") as t:
+    with md.metadata("MDATA_KEY_ORIGINAL_PATH") as t:
         t.depends('path')
-        t.translate(lambda k: normpath(k['path']))
+        t.translate(lambda k: unicode(normpath(k['path'])))
 
     #with md.metadata("MDATA_KEY_MD5") as t:
         #t.depends('path')
@@ -103,15 +103,13 @@ def load_definitions():
 
     # owner is handled differently by (by events.py)
 
-    with md.metadata('MDATA_KEY_ORIGINAL_PATH') as t:
-        t.depends('original_path')
-
     # MDATA_KEY_TITLE is the annoying special case b/c we sometimes read it
     # from file name
     with md.metadata('MDATA_KEY_TITLE') as t:
         # Need to know MDATA_KEY_CREATOR to know if show was recorded. Value is
         # defaulted to "" from definitions above
         t.depends('title','MDATA_KEY_CREATOR')
+        t.translate(lambda k: k['title'])
         t.max_length(512)
 
     with md.metadata('MDATA_KEY_LABEL') as t:
