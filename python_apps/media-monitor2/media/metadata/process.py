@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from contextlib import contextmanager
 from media.monitor.pure import truncate_to_length, toposort
+from os.path import normpath
 from media.monitor.log import Loggable
 import mutagen
 
@@ -139,7 +140,7 @@ def normalize_mutagen(path):
     md['bitrate']     = getattr(m.info, 'bitrate', u'')
     md['sample_rate'] = getattr(m.info, 'sample_rate', 0)
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
-    md['path']        = path
+    md['path']        = normpath(path)
     if 'title' not in md: md['title']  = u''
     return md
 

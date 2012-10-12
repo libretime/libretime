@@ -20,7 +20,8 @@ def load_definitions():
     with md.metadata('MDATA_KEY_MIME') as t:
         t.default(u'')
         t.depends('mime')
-        t.translate(lambda k: k['mime'].replace('-','/'))
+        # Is this necessary?
+        t.translate(lambda k: k['mime'].replace('audio/vorbis','audio/ogg'))
 
     with md.metadata('MDATA_KEY_BITRATE') as t:
         t.default(u'')
