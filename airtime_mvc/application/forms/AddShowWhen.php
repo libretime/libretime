@@ -163,7 +163,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
                 } elseif (!$formData["add_show_no_end"]) {
                     $popUntil = $formData["add_show_end_date"]." ".$formData["add_show_end_time"];
-                    $populateUntilDateTime = new DateTime($popUntil, new DateTimeZone('UTC'));
+                    $populateUntilDateTime = new DateTime($popUntil);
+                    $populateUntilDateTime->setTimezone(new DateTimeZone('UTC'));
                 }
 
                 //get repeat interval
@@ -198,8 +199,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                             $repeatShowStart->add(new DateInterval("P".$daysAdd."D"));
                             $repeatShowEnd->add(new DateInterval("P".$daysAdd."D"));
                         }
+                        /* Here we are checking each repeating show by
+                         * the show day.
+                         * (i.e: every wednesday, then every thursday)
+                         */
                         while ($repeatShowStart->getTimestamp() < $populateUntilDateTime->getTimestamp()) {
-                            if (!$formData['add_show_id']) {
+                            if ($formData['add_show_id'] == -1) {
                                 //this is a new show
                                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $repeatShowStart, $repeatShowEnd);
