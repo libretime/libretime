@@ -244,6 +244,13 @@ SQL;
             $fades = $this->getFadeInfo($row['position']);
             $row['fadein'] = $fades[0];
             $row['fadeout'] = $fades[1];
+            
+            // format the cues in format 00:00:00(.0)
+            // we need to add the '.0' for cues and not fades
+            // because propel takes care of this for us
+            // (we use propel to fetch the fades)
+            $row['cuein'] = str_pad(substr($row['cuein'], 0, 10), 10, '.0');
+            $row['cueout'] = str_pad(substr($row['cueout'], 0, 10), 10, '.0');
 
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
@@ -585,9 +592,10 @@ SQL;
         if (!$row) {
             return NULL;
         }
-        #Propel returns values in form 00.000000 format which is for only seconds.
-        $fadeIn = $row->getDbFadein();
-        $fadeOut = $row->getDbFadeout();
+        //Propel returns values in form 00.000000 format which is for only seconds.
+        //We only want to display 1 decimal
+        $fadeIn = substr($row->getDbFadein(), 0, 4);
+        $fadeOut = substr($row->getDbFadeout(), 0, 4);
 
         return array($fadeIn, $fadeOut);
     }

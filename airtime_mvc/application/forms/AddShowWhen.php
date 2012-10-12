@@ -243,7 +243,9 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                             $minutes = "0";
                             $durationToAdd = "PT".$hours."H";
                         }
-
+                        
+                        if (empty($formData["add_show_rebroadcast_date_absolute_".$i])) break;
+                        
                         $abs_rebroadcast_start = $formData["add_show_rebroadcast_date_absolute_".$i]." ".
                                                  $formData["add_show_rebroadcast_time_absolute_".$i];
                         $rebroadcastShowStart = new DateTime($abs_rebroadcast_start);
