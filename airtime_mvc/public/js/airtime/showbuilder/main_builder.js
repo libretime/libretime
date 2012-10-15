@@ -15,7 +15,7 @@ AIRTIME = (function(AIRTIME) {
 		timeStartId = "#sb_time_start",
 		dateEndId = "#sb_date_end",
 		timeEndId = "#sb_time_end",
-		$toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='Open library to schedule files'>Schedule files</a>"),
+		$toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='Open library to add or remove content'>Add / Remove Content</a>"),
 		$libClose = $('<a />', {
 			"class": "close-round",
 			"href": "#",
