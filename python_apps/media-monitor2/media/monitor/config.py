@@ -34,6 +34,3 @@ class MMConfig(object):
         """
         return mmp.last_modified(self.cfg['index_path'])
 
-    # Remove this after debugging...
-    def haxxor_set(self, key, value): self.cfg[key] = value
-    def haxxor_get(self, key): return self.cfg[key]

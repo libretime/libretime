@@ -8,7 +8,7 @@ from mutagen.easyid3 import EasyID3KeyError
 
 from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.log        import Loggable
-from media.monitor.pure       import format_length
+from media.monitor.pure       import format_length, truncate_to_length
 import media.monitor.pure as mmp
 
 """
@@ -95,12 +95,6 @@ truncate_table = {
         'MDATA_KEY_COPYRIGHT' : 512,
 }
 
-def truncate_to_length(item, length):
-    if isinstance(item, int): item = str(item)
-    if isinstance(item, basestring):
-        if len(item) > length: return item[0:length]
-        else: return item
-
 class Metadata(Loggable):
     # TODO : refactor the way metadata is being handled. Right now things are a
     # little bit messy. Some of the handling is in m.m.pure while the rest is
@@ -126,7 +120,14 @@ class Metadata(Loggable):
             # TODO : some files have multiple fields for the same metadata.
             # genre is one example. In that case mutagen will return a list
             # of values
-            assign_val = m_val[0] if isinstance(m_val, list) else m_val
+
+            if isinstance(m_val, list):
+                # TODO : does it make more sense to just skip the element in
+                # this case?
+                if len(m_val) == 0: assign_val = ''
+                else: assign_val = m_val[0]
+            else: assign_val = m_val
+
             temp_dict[ m_key ] = assign_val
         airtime_dictionary = {}
         for muta_k, muta_v in temp_dict.iteritems():
@@ -169,9 +170,12 @@ class Metadata(Loggable):
         # Forcing the unicode through
         try    : fpath = fpath.decode("utf-8")
         except : pass
+
         if not mmp.file_playable(fpath): raise BadSongFile(fpath)
+
         try              : full_mutagen  = mutagen.File(fpath, easy=True)
         except Exception : raise BadSongFile(fpath)
+
         self.path = fpath
         if not os.path.exists(self.path):
             self.logger.info("Attempting to read metadata of file \

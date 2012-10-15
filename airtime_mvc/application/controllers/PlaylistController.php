@@ -436,7 +436,7 @@ class PlaylistController extends Zend_Controller_Action
 
         try {
             $obj = $this->getPlaylist($type);
-            $obj->setName($name);
+            $obj->setName(trim($name));
             $obj->setDescription($description);
             $this->view->description = $description;
             $this->view->playlistName = $name;

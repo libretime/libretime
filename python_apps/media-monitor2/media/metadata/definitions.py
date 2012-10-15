@@ -94,8 +94,7 @@ with md.metadata("MDATA_KEY_MD5") as t:
     t.optional(False)
     t.translate(lambda k: file_md5(k['path'], max_length=100))
 
-with md.metadata("MDATA_KEY_OWNER_ID") as t:
-    t.depends('owner_id')
+# owner is handled differently by (by events.py)
 
 with md.metadata('MDATA_KEY_ORIGINAL_PATH') as t:
     t.depends('original_path')

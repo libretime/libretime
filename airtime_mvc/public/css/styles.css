@@ -493,7 +493,7 @@ table.library-get-file-md.table-small{
 
 .file-md-qtip-legend {
     float: right;
-    width: 30%;
+    width: 34%;
     font-size: 9px;
     padding: 0px;
     vertical-align:top;
@@ -531,11 +531,11 @@ table.library-get-file-md.table-small{
 }
 
 input.input_text.sp_input_text{
-    width: 200px !important;
+    width: 139px !important;
 }
 
 input.input_text.sp_extra_input_text{
-    width: 90px !important;
+    width: 60px !important;
 }
 
 .sp_text_font{
@@ -560,11 +560,7 @@ input.input_text.sp_extra_input_text{
 }
 
 .sp-button{
-    float: right !important;
-    width: 60px;
-    height: 24px !important;
-    margin-right: 0px !important;
-    margin-left: 10px !important;
+    margin-left: 368px;
 }
 
 .sp-save{
@@ -1621,7 +1617,7 @@ div.errors, span.errors{
 }
 
 span.errors.sp-errors{
-    width: 486px;
+    width: 429px;
     display: block;	
 }
 
@@ -2287,7 +2283,7 @@ fieldset.closed, fieldset.display_field.closed {
     margin-left: 1px;
 }
 fieldset.sb-criteria-fieldset{
-    min-width:670px;
+    min-width:503px;
     overflow-x:auto;
 }
 

@@ -179,14 +179,19 @@ SQL;
         if ($deltaDay > 0) {
             return "Shows can have a max length of 24 hours.";
         }
+        
+        $utc = new DateTimeZone("UTC");
+        
+        $nowDateTime = new DateTime("now", $utc);
 
         $showInstances = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->_showId)
             ->find($con);
 
-        /* Check if the show being resized and any of its repeats * overlap
-            with other scheduled shows */
-        $utc = new DateTimeZone("UTC");
+        /* Check two things:
+           1. If the show being resized and any of its repeats end in the past 
+           2. If the show being resized and any of its repeats overlap
+              with other scheduled shows */
 
         foreach ($showInstances as $si) {
             $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
@@ -201,6 +206,10 @@ SQL;
 
             $newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
             $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
+            
+            if ($newEndsDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+                return "End date/time cannot be in the past";
+            }
 
             //convert our new starts/ends to UTC.
             $newStartsDateTime->setTimezone($utc);
@@ -1203,15 +1212,16 @@ SQL;
                     //$con = Propel::getConnection(CcShowPeer::DATABASE_NAME);
                     //$sql = "SELECT date '{$data['add_show_rebroadcast_date_absolute_'.$i]}' - date '{$data['add_show_start_date']}' ";
                     $sql = <<<SQL
-SELECT date :rebroadcast - date :start
+SELECT :rebroadcast::date - :start::date
 SQL;
+
                     $offset_days = 
                         Application_Common_Database::prepareAndExecute($sql,
                             array(
                                 'rebroadcast' => 
-                                $date["add_show_rebroadcast_date_absolute_$i"],
+                                $data["add_show_rebroadcast_date_absolute_$i"],
                                 'start' => 
-                                $date['add_show_start_date']), "column" );
+                                $data['add_show_start_date']), "column" );
 
                     //$r = $con->query($sql);
                     //$offset_days = $r->fetchColumn(0);

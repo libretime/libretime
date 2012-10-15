@@ -192,6 +192,7 @@ class Application_Model_StoredFile
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
+                # TODO : refactor string evals
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
@@ -756,10 +757,13 @@ SQL;
 
             $row['tr_id'] = "{$type}_{$row['id']}";
 
-            //TODO url like this to work on both playlist/showbuilder screens.
-            //datatable stuff really needs to be pulled out and generalized within the project
-            //access to zend view methods to access url helpers is needed.
+            //TODO url like this to work on both playlist/showbuilder
+            //screens. datatable stuff really needs to be pulled out and
+            //generalized within the project access to zend view methods
+            //to access url helpers is needed.
 
+            // TODO : why is there inline html here? breaks abstraction and is 
+            // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';

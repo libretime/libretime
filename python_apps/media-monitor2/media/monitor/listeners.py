@@ -40,6 +40,9 @@ def mediate_ignored(fn):
     return wrapped
 
 class BaseListener(object):
+    def __str__(self):
+        return "Listener(%s), Signal(%s)" % \
+                (self.__class__.__name__, self.  signal)
     def my_init(self, signal): self.signal = signal
 
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):

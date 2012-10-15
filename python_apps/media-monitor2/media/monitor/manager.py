@@ -13,14 +13,21 @@ import media.monitor.pure as mmp
 
 
 class ManagerTimeout(threading.Thread,Loggable):
-    def __init__(self, manager):
+    """
+    The purpose of this class is to flush the organize directory every 3
+    secnods. This used to be just a work around for cc-4235 but recently
+    became a permanent solution because it's "cheap" and reliable
+    """
+    def __init__(self, manager, interval=3):
+        # TODO : interval should be read from config and passed here instead
+        # of just using the hard coded value
         threading.Thread.__init__(self)
-        self.manager = manager
+        self.manager  = manager
+        self.interval = interval
     def run(self):
         while True:
-            time.sleep(3)
+            time.sleep(self.interval) # every 3 seconds
             self.manager.flush_organize()
-            #self.logger.info("Force flushed organize...")
 
 class Manager(Loggable):
     """
@@ -97,8 +104,10 @@ class Manager(Loggable):
         Start watching 'path' using 'listener'. First will check if directory
         is being watched before adding another watch
         """
-        self.logger.info("Adding listener '%s' to '%s'" %
-                         ( listener.__class__.__name__, path) )
+
+        self.logger.info("Attempting to add listener to path '%s'" % path)
+        self.logger.info( 'Listener: %s' % str(listener) )
+
         if not self.has_watch(path):
             wd = self.wm.add_watch(path, pyinotify.ALL_EVENTS, rec=True,
                     auto_add=True, proc_fun=listener)
@@ -241,8 +250,3 @@ class Manager(Loggable):
         notifier = pyinotify.Notifier(self.wm)
         notifier.coalesce_events()
         notifier.loop()
-        # Experiments with running notifier in different modes
-        # There are 3 options: normal, async, threaded.
-        #import asyncore
-        #pyinotify.AsyncNotifier(self.wm).loop()
-        #asyncore.loop()

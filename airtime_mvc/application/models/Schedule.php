@@ -1157,14 +1157,21 @@ SQL;
     }
 
     public static function checkOverlappingShows($show_start, $show_end,
-        $update=false, $instanceId=null)
+        $update=false, $instanceId=null, $showId=null)
     {
         $overlapping = false;
+        
+        $params = array(
+            ':show_end1'  => $show_end->format('Y-m-d H:i:s'),
+            ':show_end2'  => $show_end->format('Y-m-d H:i:s'),
+            ':show_end3'  => $show_end->format('Y-m-d H:i:s')
+        );
+        
+        
         /* If a show is being edited, exclude it from the query
          * In both cases (new and edit) we only grab shows that
          * are scheduled 2 days prior
          */
-        //$se = $show_end->format('Y-m-d H:i:s');
         if ($update) {
             $sql = <<<SQL
 SELECT id,
@@ -1175,15 +1182,21 @@ WHERE (ends <= :show_end1
        OR starts <= :show_end2)
   AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
   AND modified_instance = FALSE
+SQL;
+        if (is_null($showId)) {
+            $sql .= <<<SQL
   AND id != :instanceId
 ORDER BY ends
 SQL;
-            $rows = Application_Common_Database::prepareAndExecute($sql, array(
-                ':show_end1'  => $show_end->format('Y-m-d H:i:s'),
-                ':show_end2'  => $show_end->format('Y-m-d H:i:s'),
-                ':show_end3'  => $show_end->format('Y-m-d H:i:s'),
-                ':instanceId' => $instanceId
-            ), 'all');
+            $params[':instanceId'] = $instanceId;
+        } else {
+            $sql .= <<<SQL
+  AND show_id != :showId
+ORDER BY ends
+SQL;
+            $params[':showId'] = $showId;
+        }
+            $rows = Application_Common_Database::prepareAndExecute($sql, $params, 'all');
         } else {
             $sql = <<<SQL
 SELECT id,
@@ -1202,6 +1215,7 @@ SQL;
                 ':show_end2' => $show_end->format('Y-m-d H:i:s'),
                 ':show_end3' => $show_end->format('Y-m-d H:i:s')), 'all');
         }
+
         foreach ($rows as $row) {
             $start = new DateTime($row["starts"], new DateTimeZone('UTC'));
             $end   = new DateTime($row["ends"], new DateTimeZone('UTC'));

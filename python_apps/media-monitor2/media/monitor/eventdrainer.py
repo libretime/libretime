@@ -9,6 +9,7 @@ class EventDrainer(Loggable):
     """
     def __init__(self, connection, interval=1):
         def cb():
+            # TODO : make 0.3 parameter configurable
             try                   : connection.drain_events(timeout=0.3)
             except socket.timeout : pass
             except Exception as e :

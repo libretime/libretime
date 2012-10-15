@@ -104,6 +104,7 @@ class BaseEvent(Loggable):
         self._pack_hook = lambda: None # no op
         # into another event
 
+    # TODO : delete this method later
     def reset_hook(self):
         """
         Resets the hook that is called after an event is packed. Before
@@ -121,6 +122,7 @@ class BaseEvent(Loggable):
     def __str__(self):
         return "Event(%s). Path(%s)" % ( self.path, self.__class__.__name__)
 
+    # TODO : delete this method later
     def add_safe_pack_hook(self,k):
         """
         adds a callable object (function) that will be called after the event

@@ -116,6 +116,11 @@
     color: #D5D5D5;
 }
 
+.spl_cue_hint {
+    font-size: 10px;
+    font-weight: normal;
+}
+
 .ui-state-active .spl_artist,.ui-state-active .spl_offset {
     color: #606060 !important;
 }
