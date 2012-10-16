@@ -16,12 +16,12 @@ class Application_Model_PlayoutHistory
     private $opts;
 
     private $mDataPropMap = array(
-        "artist"    => "file.artist_name",
-        "title"     => "file.track_title",
-        "played"    => "playout.played",
-        "length"    => "file.length",
-        "composer"  => "file.composer",
-        "copyright" => "file.copyright",
+        "artist"    => "artist_name",
+        "title"     => "track_title",
+        "played"    => "played",
+        "length"    => "length",
+        "composer"  => "composer",
+        "copyright" => "copyright",
     );
 
     public function __construct($p_startDT, $p_endDT, $p_opts)
