@@ -49,23 +49,6 @@ airtime2mutagen = {
 }
 
 
-# TODO  :Remove FakeMutagen class. Moved to media.metadata.process
-class FakeMutagen(dict):
-    """
-    Need this fake mutagen object so that airtime_special functions
-    return a proper default value instead of throwing an exceptions for
-    files that mutagen doesn't recognize
-    """
-    FakeInfo = namedtuple('FakeInfo','length bitrate')
-    def __init__(self,path):
-        self.path = path
-        self.mime = ['audio/wav']
-        self.info = FakeMutagen.FakeInfo(0.0, '')
-        dict.__init__(self)
-    def set_length(self,l):
-        old_bitrate = self.info.bitrate
-        self.info = FakeMutagen.FakeInfo(l, old_bitrate)
-
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
 # key should attempt to extract the corresponding value from the mutagen object
