@@ -677,7 +677,8 @@ FROM (
                 f.length AS length,
                 f.artist_name AS creator,
                 f.file_exists AS EXISTS,
-                f.filepath AS filepath
+                f.filepath AS filepath,
+                f.mime AS mime
          FROM cc_schedule AS s
          LEFT JOIN cc_files AS f ON f.id = s.file_id
          WHERE s.instance_id = :instance_id1
@@ -693,7 +694,8 @@ FROM (
                 ws.length AS length,
                 sub.login AS creator,
                 't'::boolean AS EXISTS,
-                ws.url AS filepath
+                ws.url AS filepath,
+                ws.mime as mime
          FROM cc_schedule AS s
          LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
          LEFT JOIN cc_subjs AS sub ON ws.creator_id = sub.id
