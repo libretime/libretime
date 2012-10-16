@@ -126,7 +126,8 @@ class WatchSyncer(ReportHandler,Loggable):
             try:
                 # If there is a strange bug anywhere in the code the next line
                 # should be a suspect
-                if self.contractor.register(EventProxy(event)): self.push_queue( event )
+                ev = EventProxy(event)
+                if self.contractor.register(ev): self.push_queue(ev)
                 #self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
