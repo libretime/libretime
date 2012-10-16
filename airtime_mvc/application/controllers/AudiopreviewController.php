@@ -278,6 +278,7 @@ class AudiopreviewController extends Zend_Controller_Action
                 'element_artist' => isset($track['creator']) ? $track['creator'] : "",
                 'element_position' => $position,
                 'element_id' => ++$position,
+                'mime' => isset($track['mime'])?$track['mime']:""
             );
 
             $elementMap['type'] = $track['type'];
