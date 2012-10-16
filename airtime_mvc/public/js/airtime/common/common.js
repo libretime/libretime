@@ -54,7 +54,7 @@ function open_audio_preview(type, id, audioFileTitle, audioFileArtist) {
         audioFileTitle = audioFileTitle.substring(0,index);
     }
 
-    openPreviewWindow('audiopreview/audio-preview/audioFileID/'+id+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle+'/type/'+type);
+    openPreviewWindow('audiopreview/audio-preview/audioFileID/'+id+'/audioFileArtist/'+encodeURIComponent(audioFileArtist)+'/audioFileTitle/'+encodeURIComponent(audioFileTitle)+'/type/'+type);
 
     _preview_window.focus();
 }
