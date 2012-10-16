@@ -196,6 +196,10 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
+                    
+                    /* We need to set track_number to null if it is an empty string
+                     * because propel defaults empty strings to zeros */
+                    if ($dbColumn == "track_number" && empty($mdValue)) $mdValue = null;
                     $this->_file->$method($mdValue);
                 }
             }
