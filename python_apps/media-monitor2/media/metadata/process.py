@@ -2,8 +2,27 @@
 from contextlib import contextmanager
 from media.monitor.pure import truncate_to_length, toposort
 from os.path import normpath
+from media.monitor.exceptions import BadSongFile
 from media.monitor.log import Loggable
+import media.monitor.pure as mmp
+from collections     import namedtuple
 import mutagen
+
+class FakeMutagen(dict):
+    """
+    Need this fake mutagen object so that airtime_special functions
+    return a proper default value instead of throwing an exceptions for
+    files that mutagen doesn't recognize
+    """
+    FakeInfo = namedtuple('FakeInfo','length bitrate')
+    def __init__(self,path):
+        self.path = path
+        self.mime = ['audio/wav']
+        self.info = FakeMutagen.FakeInfo(0.0, '')
+        dict.__init__(self)
+    def set_length(self,l):
+        old_bitrate = self.info.bitrate
+        self.info = FakeMutagen.FakeInfo(l, old_bitrate)
 
 
 class MetadataAbsent(Exception):
@@ -129,7 +148,14 @@ def normalize_mutagen(path):
     Consumes a path and reads the metadata using mutagen. normalizes some of
     the metadata that isn't read through the mutagen hash
     """
-    m = mutagen.File(path, easy=True)
+    if not mmp.file_playable(path): raise BadSongFile(path)
+    try              : m = mutagen.File(path, easy=True)
+    except Exception : raise BadSongFile(path)
+    if m is None: m = FakeMutagen(path)
+    try:
+        if mmp.extension(path) == 'wav':
+            m.set_length(mmp.read_wave_duration(path))
+    except Exception: raise BadSongFile(path)
     md = {}
     for k,v in m.iteritems():
         if type(v) is list:

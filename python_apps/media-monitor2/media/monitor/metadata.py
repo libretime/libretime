@@ -48,6 +48,8 @@ airtime2mutagen = {
     "MDATA_KEY_COPYRIGHT"   : "copyright",
 }
 
+
+# TODO  :Remove FakeMutagen class. Moved to media.metadata.process
 class FakeMutagen(dict):
     """
     Need this fake mutagen object so that airtime_special functions
@@ -172,6 +174,9 @@ class Metadata(Loggable):
         for e in exceptions: raise e
 
     def __init__(self, fpath):
+        # Forcing the unicode through
+        try    : fpath = fpath.decode("utf-8")
+        except : pass
         self.__metadata = global_reader.read_mutagen(fpath)
 
     def __init__2(self, fpath):
