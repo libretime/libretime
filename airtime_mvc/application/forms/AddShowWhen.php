@@ -208,9 +208,22 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                                 //this is a new show
                                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $repeatShowStart, $repeatShowEnd);
+                                
+                                /* If the repeating show is rebroadcasted we need to check
+                                 * the rebroadcast dates relative to the repeating show
+                                 */
+                                if (!$overlapping && $formData['add_show_rebroadcast']) {
+                                    $overlapping = self::checkRebroadcastDates(
+                                        $repeatShowStart, $formData, $hours, $minutes);
+                                }
                             } else {
                                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $repeatShowStart, $repeatShowEnd, $update, null, $formData["add_show_id"]);
+                                    
+                                if (!$overlapping && $formData['add_show_rebroadcast']) {
+                                    $overlapping = self::checkRebroadcastDates(
+                                        $repeatShowStart, $formData, $hours, $minutes, true);
+                                }
                             }
                             
                             if ($overlapping) {
@@ -275,6 +288,39 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         return $valid;
     }
 
+    public function checkRebroadcastDates($repeatShowStart, $formData, $hours, $minutes, $showEdit=false) {
+        $overlapping = false;
+        for ($i = 1; $i <= 10; $i++) {
+            if (empty($formData["add_show_rebroadcast_date_".$i])) break;
+            $rebroadcastShowStart = clone $repeatShowStart;
+            /* formData is in local time so we need to set the
+             * show start back to local time
+             */
+            $rebroadcastShowStart->setTimezone(new DateTimeZone(
+                Application_Model_Preference::GetTimezone()));
+            $rebroadcastWhenDays = explode(" ", $formData["add_show_rebroadcast_date_".$i]);
+            $rebroadcastWhenTime = explode(":", $formData["add_show_rebroadcast_time_".$i]);
+            $rebroadcastShowStart->add(new DateInterval("P".$rebroadcastWhenDays[0]."D"));
+            $rebroadcastShowStart->setTime($rebroadcastWhenTime[0], $rebroadcastWhenTime[1]);
+            $rebroadcastShowStart->setTimezone(new DateTimeZone('UTC'));
+            
+            $rebroadcastShowEnd = clone $rebroadcastShowStart;
+            $rebroadcastShowEnd->add(new DateInterval("PT".$hours."H".$minutes."M"));
+            
+            if ($showEdit) {
+                $overlapping = Application_Model_Schedule::checkOverlappingShows(
+                    $rebroadcastShowStart, $rebroadcastShowEnd, true, null, $formData['add_show_id']);
+            } else {
+                $overlapping = Application_Model_Schedule::checkOverlappingShows(
+                    $rebroadcastShowStart, $rebroadcastShowEnd);
+            }
+            
+            if ($overlapping) break;
+        }
+        
+        return $overlapping;
+    }
+    
     public function disable()
     {
         $elements = $this->getElements();
