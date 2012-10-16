@@ -21,7 +21,7 @@ if ($item['type'] == 2) {
                 <span class="ui-icon ui-icon-play"></span>
             </div>
             <?php elseif ($item['type'] == 2 && $item['exists']): ?>
-            <div class="big_play" blockId="<?php echo $item["item_id"]; ?>">
+            <div class="big_play" blockId="<?php echo $item["item_id"]; ?>" blocktype="<?php echo $staticBlock?"static":"dynamic"?>">
                 <span class="ui-icon ui-icon-play"></span>
             </div>
             <?php else:?>
