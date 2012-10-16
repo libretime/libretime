@@ -4,8 +4,8 @@
     <span class='playlistID'><?php echo "$this->playlistID" ?></span>
     <span class='playlistIndex'><?php echo "$this->playlistIndex" ?></span>
 <?php elseif (isset($this->blockId)): ?>
-    <span class='blockId'><?php echo "$this->blockId" ?></span>
-    <span class='blockIndex'><?php echo "$this->blockIndex" ?></span>
+    <span class='blockId' style="display: none;"><?php echo "$this->blockId" ?></span>
+    <span class='blockIndex' style="display: none;"><?php echo "$this->blockIndex" ?></span>
 <?php elseif (isset($this->uri)): ?>
     <span class='audioUri' style="display: none;"><?php echo "$this->uri" ?></span>
     <span class='audioMime' style="display: none;"><?php echo "$this->mime" ?></span>
@@ -51,7 +51,7 @@
                 </div>
                 <div class="jp-unmute">
                     <span class="ui-icon" tabindex="1" title="unmute">unmute</span>
-                </div> 
+                </div>
                 <div class="jp-volume-bar">
                     <div class="jp-volume-bar-value"></div>
                 </div>
