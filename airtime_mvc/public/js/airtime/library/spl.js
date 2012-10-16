@@ -366,7 +366,7 @@ var AIRTIME = (function(AIRTIME){
     //and verify whether they can be previewed by the browser or not. If not
     //then the playlist element is greyed out
     mod.validatePlaylistElements = function(){
-        $.each($(".big_play ui-icon-play"), function(index, value){
+        $.each($("div .big_play"), function(index, value){
             if ($(value).attr('blockId') === undefined) {
                 var mime = $(value).attr("data-mime-type");
                 if (isAudioSupported(mime)) {
