@@ -2,7 +2,6 @@
 import mutagen
 import os
 import copy
-from collections     import namedtuple
 from mutagen.easymp4 import EasyMP4KeyError
 from mutagen.easyid3 import EasyID3KeyError
 
@@ -161,50 +160,6 @@ class Metadata(Loggable):
         try    : fpath = fpath.decode("utf-8")
         except : pass
         self.__metadata = global_reader.read_mutagen(fpath)
-
-    def __init__2(self, fpath):
-        # Forcing the unicode through
-        try    : fpath = fpath.decode("utf-8")
-        except : pass
-
-        if not mmp.file_playable(fpath): raise BadSongFile(fpath)
-
-        try              : full_mutagen  = mutagen.File(fpath, easy=True)
-        except Exception : raise BadSongFile(fpath)
-
-        self.path = fpath
-        if not os.path.exists(self.path):
-            self.logger.info("Attempting to read metadata of file \
-                    that does not exist. Setting metadata to {}")
-            self.__metadata = {}
-            return
-        # TODO : Simplify the way all of these rules are handled right now it's
-        # extremely unclear and needs to be refactored.
-        #if full_mutagen is None: raise BadSongFile(fpath)
-
-        if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
-        self.__metadata = Metadata.airtime_dict(full_mutagen)
-        # Now we extra the special values that are calculated from the mutagen
-        # object itself:
-
-        if mmp.extension(fpath) == 'wav':
-            full_mutagen.set_length(mmp.read_wave_duration(fpath))
-
-        for special_key,f in airtime_special.iteritems():
-            try:
-                new_val = f(full_mutagen)
-                if new_val is not None:
-                    self.__metadata[special_key] = new_val
-            except Exception as e:
-                self.logger.info("Could not get special key %s for %s" %
-                        (special_key, fpath))
-                self.logger.info(str(e))
-        # Finally, we "normalize" all the metadata here:
-        self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
-        # Now we must load the md5:
-        # TODO : perhaps we shouldn't hard code how many bytes we're reading
-        # from the file?
-        self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
 
     def is_recorded(self):
         """
