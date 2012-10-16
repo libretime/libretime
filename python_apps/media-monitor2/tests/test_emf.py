@@ -28,5 +28,4 @@ class TestMMP(unittest.TestCase):
         emf, old = self.metadatas(recorded_file)
         self.assertEqual(emf, old)
 
-
 if __name__ == '__main__': unittest.main()

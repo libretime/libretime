@@ -14,7 +14,6 @@ import media.monitor.pure as mmp
 # emf related stuff
 from media.metadata.process import global_reader
 import media.metadata.definitions as defs
-from pprint import pformat
 defs.load_definitions()
 
 """
@@ -173,6 +172,9 @@ class Metadata(Loggable):
         for e in exceptions: raise e
 
     def __init__(self, fpath):
+        self.__metadata = global_reader.read_mutagen(fpath)
+
+    def __init__2(self, fpath):
         # Forcing the unicode through
         try    : fpath = fpath.decode("utf-8")
         except : pass
