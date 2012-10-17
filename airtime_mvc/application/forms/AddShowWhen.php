@@ -247,15 +247,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
 
                 if (!$overlapping) {
+                    $durationToAdd = "PT".$hours."H".$minutes."M";
                     for ($i = 1; $i <= 10; $i++) {
-                        $hours = ltrim($hours, '0');
-                        if ($minutes != "00") {
-                            $minutes = ltrim($minutes, '0');
-                            $durationToAdd = "PT".$hours."H".$minutes."I";
-                        } else {
-                            $minutes = "0";
-                            $durationToAdd = "PT".$hours."H";
-                        }
                         
                         if (empty($formData["add_show_rebroadcast_date_absolute_".$i])) break;
                         

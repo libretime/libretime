@@ -43,7 +43,7 @@ class EventRegistry(object):
                          methods")
 
 
-class EventProxy(object):
+class EventProxy(Loggable):
     """
     A container object for instances of BaseEvent (or it's subclasses) used for
     event contractor

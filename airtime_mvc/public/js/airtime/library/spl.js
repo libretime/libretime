@@ -366,7 +366,7 @@ var AIRTIME = (function(AIRTIME){
     //and verify whether they can be previewed by the browser or not. If not
     //then the playlist element is greyed out
     mod.validatePlaylistElements = function(){
-        $.each($(".big_play ui-icon-play"), function(index, value){
+        $.each($("div .big_play"), function(index, value){
             if ($(value).attr('blockId') === undefined) {
                 var mime = $(value).attr("data-mime-type");
                 if (isAudioSupported(mime)) {
@@ -392,6 +392,31 @@ var AIRTIME = (function(AIRTIME){
                             at: "right center"
                         },
                     }) 
+                }
+            } else {
+                if ($(value).attr('blocktype') === 'dynamic') {
+                    $(value).attr("class", "big_play_disabled dark_class"); 
+                    $(value).qtip({
+                       content: 'Dynamic block is not previewable',
+                       show: 'mouseover',
+                        hide: {
+                            delay: 500,
+                            fixed: true
+                        },
+                        style: {
+                            border: {
+                                width: 0,
+                                radius: 4
+                            },
+                            classes: "ui-tooltip-dark ui-tooltip-rounded"
+                        },
+                        position: {
+                            my: "left bottom",
+                            at: "right center"
+                        },
+                    })
+                } else {
+                    $(value).bind("click", openAudioPreview);
                 }
             }
         });

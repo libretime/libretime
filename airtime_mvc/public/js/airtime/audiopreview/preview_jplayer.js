@@ -123,6 +123,7 @@ function buildplaylist(p_url, p_playIndex) {
         var media;
         var index;
         var total = 0;
+        var skipped = 0;
         for(index in data) {
             if (data[index]['type'] == 0) { 
                 if (data[index]['element_mp3'] != undefined){
@@ -145,22 +146,30 @@ function buildplaylist(p_url, p_playIndex) {
                             artist: data[index]['element_artist'],
                             wav:data[index]['uri']
                     };
-                }  
+                } else {
+                    // skip this track since it's not supported
+                    console.log("continue");
+                    skipped++;
+                    continue;
+                } 
             } else if (data[index]['type'] == 1) {
                  media = {title: data[index]['element_title'],
                         artist: data[index]['element_artist'],
                         mp3:data[index]['uri']
                 };
             }
+            console.log(data[index]);
             if (media && isAudioSupported(data[index]['mime'])) {
-                myPlaylist[index] = media;
+                // javascript doesn't support associative array with numeric key
+                // so we need to remove the gap if we skip any of tracks due to
+                // browser incompatibility.
+                myPlaylist[index-skipped] = media;
             }
             // we should create a map according to the new position in the
             // player itself total is the index on the player
             _idToPostionLookUp[data[index]['element_id']] = total;
             total++;
         }
-        
         _playlist_jplayer.setPlaylist(myPlaylist);
         _playlist_jplayer.option("autoPlay", true);
         play(p_playIndex);

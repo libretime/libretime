@@ -43,11 +43,16 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
      */
     public function setDbFadein($v)
     {
+        $microsecond = 0;
         if ($v instanceof DateTime) {
             $dt = $v;
         }
         else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            $dt = DateTime::createFromFormat("s.u", $v);
+            // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
+            // Hence we need to do parsing.
+            $info = explode('.', $v);
+            $microsecond = $info[1];
+            $dt = DateTime::createFromFormat("s", $info[0]);
         }
         else {
             try {
@@ -57,7 +62,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             }
         }
 
-        $this->fadein = $dt->format('H:i:s.u');
+        $this->fadein = $dt->format('H:i:s').".".$microsecond;
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
 
         return $this;
@@ -71,11 +76,16 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
     */
     public function setDbFadeout($v)
     {
+        $microsecond = 0;
         if ($v instanceof DateTime) {
             $dt = $v;
         }
         else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            $dt = DateTime::createFromFormat("s.u", $v);
+            // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
+            // Hence we need to do parsing.
+            $info = explode('.', $v);
+            $microsecond = $info[1];
+            $dt = DateTime::createFromFormat("s", $info[0]);
         }
         else {
             try {
@@ -85,7 +95,7 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             }
         }
 
-        $this->fadeout = $dt->format('H:i:s.u');
+        $this->fadeout = $dt->format('H:i:s').".".$microsecond;
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
 
         return $this;
