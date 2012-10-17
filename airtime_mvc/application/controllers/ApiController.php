@@ -313,7 +313,7 @@ class ApiController extends Zend_Controller_Action
             }
             
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
-            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;             
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
             header("Content-type: text/javascript");
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
@@ -830,8 +830,8 @@ class ApiController extends Zend_Controller_Action
 
         if ($djtype == 'master') {
             //check against master
-            if ($username == Application_Model_Preference::GetLiveSteamMasterUsername()
-                    && $password == Application_Model_Preference::GetLiveSteamMasterPassword()) {
+            if ($username == Application_Model_Preference::GetLiveStreamMasterUsername()
+                    && $password == Application_Model_Preference::GetLiveStreamMasterPassword()) {
                 $this->view->msg = true;
             } else {
                 $this->view->msg = false;

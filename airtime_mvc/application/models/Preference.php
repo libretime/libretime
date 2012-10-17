@@ -892,22 +892,22 @@ class Application_Model_Preference
         return (strlen($val) == 0) ? 0 : $val;
     }
 
-    public static function SetLiveSteamMasterUsername($value)
+    public static function SetLiveStreamMasterUsername($value)
     {
         self::setValue("live_stream_master_username", $value, false);
     }
 
-    public static function GetLiveSteamMasterUsername()
+    public static function GetLiveStreamMasterUsername()
     {
         return self::getValue("live_stream_master_username");
     }
 
-    public static function SetLiveSteamMasterPassword($value)
+    public static function SetLiveStreamMasterPassword($value)
     {
         self::setValue("live_stream_master_password", $value, false);
     }
 
-    public static function GetLiveSteamMasterPassword()
+    public static function GetLiveStreamMasterPassword()
     {
         return self::getValue("live_stream_master_password");
     }
@@ -1093,7 +1093,7 @@ class Application_Model_Preference
 
 
 
-    public static function getOrderingMap($pref_param) 
+    public static function getOrderingMap($pref_param)
     {
         $v = self::getValue($pref_param, true);
 
