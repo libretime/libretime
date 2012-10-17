@@ -220,6 +220,25 @@ class Application_Model_StreamSetting
     }
 
     /*
+     * Sets indivisual stream setting.
+     *
+     * $data - data array. $data is [].
+     * TODO: Make this SQL a prepared statement!
+     *
+     * Do not remove this function. It is called by airtime-system.php
+     */
+    public static function setIndividualStreamSetting($data)
+    {
+        $con = Propel::getConnection();
+
+        foreach ($data as $keyname => $v) {
+            $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
+            $con->exec($sql);
+        }
+    }
+
+
+    /*
      * Stores liquidsoap status if $boot_time > save time.
      * save time is the time that user clicked save on stream setting page
      */
