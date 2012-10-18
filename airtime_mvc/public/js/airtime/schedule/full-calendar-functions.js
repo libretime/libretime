@@ -206,7 +206,6 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    getCurrentShow();
     
     $(element).data("event", event);
 
