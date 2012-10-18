@@ -22,7 +22,7 @@ WHERE id IN
     (SELECT s.id
      FROM cc_schedule s
      LEFT JOIN cc_show_instances si ON s.instance_id = si.id
-     AND si.modified_instance = 't');
+     WHERE si.modified_instance = 't');
 
 ALTER TABLE cc_files
 	DROP CONSTRAINT cc_files_gunid_idx;
