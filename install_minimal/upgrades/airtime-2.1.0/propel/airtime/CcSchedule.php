@@ -125,7 +125,11 @@ class CcSchedule extends BaseCcSchedule {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
             }
         }
-        $this->fade_in = $dt->format('H:i:s').".".$microsecond;
+        if ($microsecond == 0) {
+            $this->fadein = $dt->format('H:i:s.u');
+        } else {
+            $this->fadein = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
 
         return $this;
@@ -158,7 +162,11 @@ class CcSchedule extends BaseCcSchedule {
             }
         }
 
-        $this->fade_out = $dt->format('H:i:s').".".$microsecond;
+        if ($microsecond == 0) {
+            $this->fadeout = $dt->format('H:i:s.u');
+        } else {
+            $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
 
         return $this;

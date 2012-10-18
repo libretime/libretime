@@ -63,7 +63,11 @@ class CcBlockcontents extends BaseCcBlockcontents {
             }
         }
     
-        $this->fadein = $dt->format('H:i:s').".".$microsecond;
+        if ($microsecond == 0) {
+            $this->fadein = $dt->format('H:i:s.u');
+        } else {
+            $this->fadein = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcBlockcontentsPeer::FADEIN;
     
         return $this;
@@ -95,8 +99,12 @@ class CcBlockcontents extends BaseCcBlockcontents {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
             }
         }
-    
-        $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+
+        if ($microsecond == 0) {
+            $this->fadeout = $dt->format('H:i:s.u');
+        } else {
+            $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcBlockcontentsPeer::FADEOUT;
     
         return $this;

@@ -62,7 +62,11 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             }
         }
 
-        $this->fadein = $dt->format('H:i:s').".".$microsecond;
+        if ($microsecond == 0) {
+            $this->fadein = $dt->format('H:i:s.u');
+        } else {
+            $this->fadein = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
 
         return $this;
@@ -95,7 +99,11 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             }
         }
 
-        $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+        if ($microsecond == 0) {
+            $this->fadeout = $dt->format('H:i:s.u');
+        } else {
+            $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
 
         return $this;
