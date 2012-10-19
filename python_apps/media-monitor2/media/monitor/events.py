@@ -199,6 +199,7 @@ class NewFile(BaseEvent, HasMetaData):
         """
         req_dict = self.metadata.extract()
         req_dict['mode'] = u'create'
+        req_dict['is_record'] = self.metadata.is_recorded()
         self.assign_owner(req_dict)
         req_dict['MDATA_KEY_FILEPATH'] = unicode( self.path )
         return [req_dict]
