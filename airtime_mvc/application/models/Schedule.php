@@ -713,6 +713,7 @@ SQL;
             'end'               => $stream_end,
             'uri'               => $uri,
             'type'              => 'stream_buffer_end',
+            'row_id'            => $item["id"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);

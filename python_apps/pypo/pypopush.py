@@ -455,6 +455,7 @@ class PypoPush(Thread):
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
             msg = 'dynamic_source.id %s\n' % media_item['row_id']
+            self.logger.debug(msg)
             tn.write(msg)
 
             #example: dynamic_source.read_start http://87.230.101.24:80/top100station.mp3
@@ -523,7 +524,7 @@ class PypoPush(Thread):
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
-            msg = 'dynamic_source.read_stop %s\n' % media_item['uri'].encode('latin-1')
+            msg = 'dynamic_source.read_stop %s\n' % media_item['row_id']
             self.logger.debug(msg)
             tn.write(msg)
 
