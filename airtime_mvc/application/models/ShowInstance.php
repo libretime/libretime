@@ -670,15 +670,15 @@ SELECT *
 FROM (
         (SELECT s.starts,
                 0::INTEGER as type ,
-                f.id AS item_id,
+                f.id           AS item_id,
                 f.track_title,
-                f.album_title AS album,
-                f.genre AS genre,
-                f.length AS length,
-                f.artist_name AS creator,
-                f.file_exists AS EXISTS,
-                f.filepath AS filepath,
-                f.mime AS mime
+                f.album_title  AS album,
+                f.genre        AS genre,
+                f.length       AS length,
+                f.artist_name  AS creator,
+                f.file_exists  AS EXISTS,
+                f.filepath     AS filepath,
+                f.mime         AS mime
          FROM cc_schedule AS s
          LEFT JOIN cc_files AS f ON f.id = s.file_id
          WHERE s.instance_id = :instance_id1
@@ -689,12 +689,12 @@ FROM (
                 1::INTEGER as type,
                 ws.id AS item_id,
                 (ws.name || ': ' || ws.url) AS title,
-                null AS album,
-                null AS genre,
-                ws.length AS length,
-                sub.login AS creator,
-                't'::boolean AS EXISTS,
-                ws.url AS filepath,
+                null            AS album,
+                null            AS genre,
+                ws.length       AS length,
+                sub.login       AS creator,
+                't'::boolean    AS EXISTS,
+                ws.url          AS filepath,
                 ws.mime as mime
          FROM cc_schedule AS s
          LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
