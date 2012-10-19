@@ -105,6 +105,12 @@ class UpgradeCommon{
 
         self::CreateIniFiles(UpgradeCommon::CONF_BACKUP_SUFFIX);
         self::MergeConfigFiles($configFiles, $suffix);
+
+        //HACK: This will fix a last minute bug we discovered with our upgrade scripts.
+        //Will be fixed properly in 2.3.0
+        $old = "list_all_db_files = 'list-all-files/format/json/api_key/%%api_key%%/dir_id/%%dir_id%%'";
+        $new = "list_all_db_files = 'list-all-files/format/json/api_key/%%api_key%%/dir_id/%%dir_id%%/all/%%all%%'";
+        exec("sed -i \"s#$old#$new#g\" /etc/airtime/api_client.cfg");
     }
 
     /**
@@ -162,11 +168,13 @@ class UpgradeCommon{
                             foreach($sectionKeys as $sectionKey) {
 
                                 if(isset($oldSettings[$section][$sectionKey])) {
-                                    self::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                    self::UpdateIniValue($conf, $sectionKey,
+                                        $oldSettings[$section][$sectionKey]);
                                 }
                             }
                         } else {
-                            self::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                            self::UpdateIniValue($conf, $section, 
+                                $oldSettings[$section]);
                         }
                     }
                 }

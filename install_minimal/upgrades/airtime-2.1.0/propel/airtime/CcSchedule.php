@@ -107,11 +107,16 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function setDbFadeIn($v)
     {
+        $microsecond = 0;
         if ($v instanceof DateTime) {
             $dt = $v;
         }
         else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            $dt = DateTime::createFromFormat("s.u", $v);
+            // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
+            // Hence we need to do parsing.
+            $info = explode('.', $v);
+            $microsecond = $info[1];
+            $dt = DateTime::createFromFormat("s", $info[0]);
         }
         else {
             try {
@@ -120,7 +125,11 @@ class CcSchedule extends BaseCcSchedule {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
             }
         }
-        $this->fade_in = $dt->format('H:i:s.u');
+        if ($microsecond == 0) {
+            $this->fadein = $dt->format('H:i:s.u');
+        } else {
+            $this->fadein = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
 
         return $this;
@@ -134,11 +143,16 @@ class CcSchedule extends BaseCcSchedule {
     */
     public function setDbFadeOut($v)
     {
+        $microsecond = 0;
         if ($v instanceof DateTime) {
             $dt = $v;
         }
         else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            $dt = DateTime::createFromFormat("s.u", $v);
+            // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
+            // Hence we need to do parsing.
+            $info = explode('.', $v);
+            $microsecond = $info[1];
+            $dt = DateTime::createFromFormat("s", $info[0]);
         }
         else {
             try {
@@ -148,7 +162,11 @@ class CcSchedule extends BaseCcSchedule {
             }
         }
 
-        $this->fade_out = $dt->format('H:i:s.u');
+        if ($microsecond == 0) {
+            $this->fadeout = $dt->format('H:i:s.u');
+        } else {
+            $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+        }
         $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
 
         return $this;

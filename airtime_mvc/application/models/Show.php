@@ -1789,9 +1789,9 @@ SQL;
 
             $showInstance = new Application_Model_ShowInstance(
                 $show["instance_id"]);
-            $showContent = $showInstance->getShowListContent();
+            //$showContent = $showInstance->getShowListContent();
 
-            $options["show_empty"] = empty($showContent) ? 1 : 0;
+            $options["show_empty"] = ($showInstance->showEmpty()) ? 1 : 0;
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);

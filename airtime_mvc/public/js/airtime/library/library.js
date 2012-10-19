@@ -815,9 +815,10 @@ var AIRTIME = (function(AIRTIME) {
                         //playlist screen if this is the currently edited playlist.
                         if ((data.ftype === "playlist" || data.ftype === "block") && screen === "playlist") {
                             callback = function() {
-                                
+                                aMedia = [];
+                                aMedia.push({"id": data.id, "type": data.ftype});
                                 if (confirm('Are you sure you want to delete the selected item?')) {
-                                    AIRTIME.playlist.fnDelete(data.id);
+                                    AIRTIME.library.fnDeleteItems(aMedia);
                                 }
                             };
                         }

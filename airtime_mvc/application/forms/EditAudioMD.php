@@ -33,9 +33,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('text', 'track_number', array(
             'label'      => 'Track:',
             'class'      => 'input_text',
-            'filters'    => array('StringTrim'),
-            'validators' => array('Int'),
-            'required' => true
+            'filters'    => array('StringTrim')
         ));
 
         // Add genre field

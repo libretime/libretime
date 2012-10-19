@@ -661,6 +661,28 @@ SQL;
         return $returnStr;
     }
 
+
+    public function showEmpty()
+    {
+        $sql = <<<SQL
+SELECT s.starts
+FROM cc_schedule AS s
+WHERE s.instance_id = :instance_id
+  AND s.playout_status >= 0
+  AND ((s.stream_id IS NOT NULL)
+       OR (s.file_id IS NOT NULL)) LIMIT 1
+SQL;
+        # TODO : use prepareAndExecute properly
+        $res = Application_Common_Database::prepareAndExecute($sql,
+            array( ':instance_id' => $this->_instanceId ), 'all' );
+        # TODO : A bit retarded. fix this later
+        foreach ($res as $r) {
+            return false;
+        }
+        return true;
+
+    }
+
     public function getShowListContent()
     {
         $con = Propel::getConnection();
@@ -670,14 +692,15 @@ SELECT *
 FROM (
         (SELECT s.starts,
                 0::INTEGER as type ,
-                f.id AS item_id,
+                f.id           AS item_id,
                 f.track_title,
-                f.album_title AS album,
-                f.genre AS genre,
-                f.length AS length,
-                f.artist_name AS creator,
-                f.file_exists AS EXISTS,
-                f.filepath AS filepath
+                f.album_title  AS album,
+                f.genre        AS genre,
+                f.length       AS length,
+                f.artist_name  AS creator,
+                f.file_exists  AS EXISTS,
+                f.filepath     AS filepath,
+                f.mime         AS mime
          FROM cc_schedule AS s
          LEFT JOIN cc_files AS f ON f.id = s.file_id
          WHERE s.instance_id = :instance_id1
@@ -688,12 +711,13 @@ FROM (
                 1::INTEGER as type,
                 ws.id AS item_id,
                 (ws.name || ': ' || ws.url) AS title,
-                null AS album,
-                null AS genre,
-                ws.length AS length,
-                sub.login AS creator,
-                't'::boolean AS EXISTS,
-                ws.url AS filepath
+                null            AS album,
+                null            AS genre,
+                ws.length       AS length,
+                sub.login       AS creator,
+                't'::boolean    AS EXISTS,
+                ws.url          AS filepath,
+                ws.mime as mime
          FROM cc_schedule AS s
          LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
          LEFT JOIN cc_subjs AS sub ON ws.creator_id = sub.id

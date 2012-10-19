@@ -224,8 +224,8 @@ class PreferenceController extends Zend_Controller_Action
 
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
-                Application_Model_Preference::SetLiveSteamMasterUsername($values["master_username"]);
-                Application_Model_Preference::SetLiveSteamMasterPassword($values["master_password"]);
+                Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
+                Application_Model_Preference::SetLiveStreamMasterPassword($values["master_password"]);
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
