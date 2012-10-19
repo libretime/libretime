@@ -413,7 +413,7 @@ def create_dynamic_source(uri) =
     # We register both source and output 
     # in the list of sources
     dyn_sources := 
-      list.append([(current_dyn_id, s),(current_dyn_id, active_dyn_out)], !dyn_sources)
+      list.append([(!current_dyn_id, s),(!current_dyn_id, active_dyn_out)], !dyn_sources)
 
     notify([("schedule_table_id", !current_dyn_id)])
     "Done!"
