@@ -1743,7 +1743,8 @@ SQL;
         $days     = $interval->format('%a');
         $shows    = Application_Model_Show::getShows($p_start, $p_end);
         $nowEpoch = time();
-
+        $content_count = Application_Model_ShowInstance::getContentCount(
+            $p_start, $p_end);
         $timezone = date_default_timezone_get();
 
         foreach ($shows as $show) {
@@ -1789,9 +1790,9 @@ SQL;
 
             $showInstance = new Application_Model_ShowInstance(
                 $show["instance_id"]);
-            $showContent = $showInstance->getShowListContent();
 
-            $options["show_empty"] = empty($showContent) ? 1 : 0;
+            $options["show_empty"] = (array_key_exists($show['instance_id'],
+                $content_count)) ? 1 : 0;
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
