@@ -402,6 +402,11 @@ def set_dynamic_source_id(id) =
     string_of(!current_dyn_id)
 end
 
+def get_dynamic_source_id() =
+    string_of(!current_dyn_id)
+end
+
+
 # Function to create a playlist source and output it.
 def create_dynamic_source(uri) =
     # The playlist source 

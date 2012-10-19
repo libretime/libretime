@@ -78,6 +78,7 @@ class PypoPush(Thread):
 
                 #We get to the following lines only if a schedule was received.
                 liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+                liquidsoap_stream_id = self.get_current_stream_id_from_liquidsoap()
 
                 tnow = datetime.utcnow()
                 current_event_chain, original_chain = self.get_current_chain(chains, tnow)
@@ -92,7 +93,7 @@ class PypoPush(Thread):
                 #is scheduled. We need to verify whether the schedule we just received matches
                 #what Liquidsoap is playing, and if not, correct it.
 
-                self.handle_new_schedule(media_schedule, liquidsoap_queue_approx, current_event_chain)
+                self.handle_new_schedule(media_schedule, liquidsoap_queue_approx, liquidsoap_stream_id, current_event_chain)
 
 
                 #At this point everything in the present has been taken care of and Liquidsoap
@@ -133,6 +134,25 @@ class PypoPush(Thread):
                 self.logger.info("heartbeat")
                 loops = 0
             loops += 1
+
+    def get_current_stream_id_from_liquidsoap(self):
+        response = "-1"
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+            msg = 'dynamic_source.get_id\n'
+            tn.write(msg)
+            response = tn.read_until("\r\n").strip(" \r\n")
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error("Error connecting to Liquidsoap: %s", e)
+            response = []
+        finally:
+            self.telnet_lock.release()
+
+        return response
 
     def get_queue_items_from_liquidsoap(self):
         """
@@ -175,7 +195,7 @@ class PypoPush(Thread):
 
         return liquidsoap_queue_approx
 
-    def is_correct_current_item(self, media_item, liquidsoap_queue_approx):
+    def is_correct_current_item(self, media_item, liquidsoap_queue_approx, liquidsoap_stream_id):
         correct = False
         if media_item is None:
             correct = (len(liquidsoap_queue_approx) == 0 and self.current_stream_info is None)
@@ -188,10 +208,7 @@ class PypoPush(Thread):
                             liquidsoap_queue_approx[0]['row_id'] == media_item['row_id'] and \
                             liquidsoap_queue_approx[0]['end'] == media_item['end']
             elif is_stream(media_item):
-                if self.current_stream_info is None:
-                    correct = False
-                else:
-                    correct = self.current_stream_info['row_id'] == media_item['row_id']
+                correct = liquidsoap_stream_id == str(media_item['row_id'])
 
         self.logger.debug("Is current item correct?: %s", str(correct))
         return correct
@@ -202,7 +219,7 @@ class PypoPush(Thread):
         self.remove_from_liquidsoap_queue(0, None)
         self.stop_web_stream_all()
 
-    def handle_new_schedule(self, media_schedule, liquidsoap_queue_approx, current_event_chain):
+    def handle_new_schedule(self, media_schedule, liquidsoap_queue_approx, liquidsoap_stream_id, current_event_chain):
         """
         This function's purpose is to gracefully handle situations where
         Liquidsoap already has a track in its queue, but the schedule
@@ -220,7 +237,7 @@ class PypoPush(Thread):
         if len(current_event_chain) > 0:
 
             current_item = current_event_chain[0]
-            if not self.is_correct_current_item(current_item, liquidsoap_queue_approx):
+            if not self.is_correct_current_item(current_item, liquidsoap_queue_approx, liquidsoap_stream_id):
                 self.clear_all_liquidsoap_items()
                 if is_stream(current_item):
                     if current_item['row_id'] != self.current_prebuffering_stream_id:
@@ -234,7 +251,7 @@ class PypoPush(Thread):
                     #we've changed the queue, so let's refetch it
                     liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
 
-        elif not self.is_correct_current_item(None, liquidsoap_queue_approx):
+        elif not self.is_correct_current_item(None, liquidsoap_queue_approx, liquidsoap_stream_id):
                 #Liquidsoap is playing something even though it shouldn't be
                 self.clear_all_liquidsoap_items()
 
@@ -509,6 +526,10 @@ class PypoPush(Thread):
             self.logger.debug(msg)
             tn.write(msg)
 
+            msg = 'dynamic_source.id -1\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
@@ -525,6 +546,10 @@ class PypoPush(Thread):
             #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
             msg = 'dynamic_source.read_stop %s\n' % media_item['row_id']
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            msg = 'dynamic_source.id -1\n'
             self.logger.debug(msg)
             tn.write(msg)
 
