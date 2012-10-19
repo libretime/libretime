@@ -283,7 +283,7 @@ var AIRTIME = (function(AIRTIME){
     mod.fnRemove = function(aItems) {
         
         mod.disableUI();
-        if (confirm("Delete selected item(s)?")) {
+        if (confirm("Remove selected scheduled item(s)?")) {
 	        $.post( "/showbuilder/schedule-remove",
 	            {"items": aItems, "format": "json"},
 	            mod.fnItemCallback
