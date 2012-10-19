@@ -54,7 +54,6 @@ var AIRTIME = (function(AIRTIME) {
             aoData.push( { name: "format", value: "json"} );
             
             $.ajax( {
-                "cache": false,
                 "dataType": 'json',
                 "type": "GET",
                 "url": sSource,

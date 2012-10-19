@@ -21,7 +21,6 @@ $(document).ready(function(){
                 click: function() {
                     var url = '/Usersettings/remindme';
                     $.ajax({
-                        cache: false,
                         url: url,
                         data: {format:"json"}
                     });
@@ -35,7 +34,6 @@ $(document).ready(function(){
                 click: function() {
                     var url ='/Usersettings/remindme-never';
                     $.ajax({
-                        cache: false,
                         url: url,
                         data: {format:"json"}
                     });

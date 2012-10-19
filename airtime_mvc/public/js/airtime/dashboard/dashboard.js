@@ -360,7 +360,7 @@ function controlSwitchLight(){
 }
 
 function getScheduleFromServer(){
-    $.ajax({ cache: false, url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+    $.ajax({ url: "/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
                 parseSourceStatus(data.source_status);
                 parseSwitchStatus(data.switch_status);

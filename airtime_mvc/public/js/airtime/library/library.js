@@ -479,7 +479,6 @@ var AIRTIME = (function(AIRTIME) {
             "fnStateSave": function (oSettings, oData) {
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
                 $.ajax({
-                    cache: false,
                     url: "/usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
@@ -543,7 +542,6 @@ var AIRTIME = (function(AIRTIME) {
                 aoData.push( { name: "type", value: type} );
             
                 $.ajax( {
-                    "cache": false,
                     "dataType": 'json',
                     "type": "POST",
                     "url": sSource,
@@ -885,7 +883,6 @@ var AIRTIME = (function(AIRTIME) {
                 }
                 
                 request = $.ajax({
-                  cache: false,
                   url: "/library/context-menu",
                   type: "GET",
                   data: {id : data.id, type: data.ftype, format: "json", "screen": screen},

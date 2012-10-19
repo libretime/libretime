@@ -36,7 +36,6 @@ function confirmCancelShow(show_instance_id){
     if (confirm('Cancel Current Show?')) {
         var url = "/Schedule/cancel-current-show";
         $.ajax({
-            cache: false,
             url: url,
             data: {format: "json", id: show_instance_id},
             success: function(data){
@@ -51,7 +50,6 @@ function confirmCancelRecordedShow(show_instance_id){
         var url = "/Schedule/cancel-current-show";
         $.ajax({
             url: url,
-            cache: false,
             data: {format: "json", id: show_instance_id},
             success: function(data){
                 scheduleRefetchEvents(data);
@@ -291,7 +289,7 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
-    $.ajax({ cache: false, url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
+    $.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
     
     setInterval(checkCalendarSCUploadStatus, 5000);
@@ -461,7 +459,6 @@ $(document).ready(function() {
             }
             
             $.ajax({
-              cache: false,
               url: "/schedule/make-context-menu",
               type: "GET",
               data: {id : data.id, format: "json"},

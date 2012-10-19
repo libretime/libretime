@@ -326,7 +326,6 @@ var AIRTIME = (function(AIRTIME){
         }
         
         $.ajax({
-            "cache": false,
             "dataType": "json",
             "type": "POST",
             "url": sSource,
@@ -380,7 +379,6 @@ var AIRTIME = (function(AIRTIME){
                 localStorage.setItem('datatables-timeline', JSON.stringify(oData));
                 
                 $.ajax({
-                  cache: false,
                   url: "/usersettings/set-timeline-datatable",
                   type: "POST",
                   data: {settings : oData, format: "json"},
@@ -1005,7 +1003,6 @@ var AIRTIME = (function(AIRTIME){
                     if (confirm(msg)) {
                         var url = "/Schedule/cancel-current-show";
                         $.ajax({
-                            cache: false,
                             url: url,
                             data: {format: "json", id: data.instance},
                             success: function(data){
@@ -1184,7 +1181,6 @@ var AIRTIME = (function(AIRTIME){
                 }
                 
                 request = $.ajax({
-                  cache: false,
                   url: "/showbuilder/context-menu",
                   type: "GET",
                   data: {id : data.id, format: "json"},

@@ -168,7 +168,6 @@ AIRTIME = (function(AIRTIME) {
 			schedTable.fnDraw();
 			
 			$.ajax({
-                cache: false,
 	            url: "/usersettings/set-now-playing-screen-settings",
 	            type: "POST",
 	            data: {settings : {library : true}, format: "json"},
@@ -193,7 +192,6 @@ AIRTIME = (function(AIRTIME) {
 			schedTable.fnDraw();
 			
 			$.ajax({
-                cache: false,
 	            url: "/usersettings/set-now-playing-screen-settings",
 	            type: "POST",
 	            data: {settings : {library : false}, format: "json"},
@@ -259,7 +257,6 @@ AIRTIME = (function(AIRTIME) {
 			}
 			
 			$.ajax( {
-                "cache": false,
 				"dataType": "json",
 				"type": "GET",
 				"url": "/showbuilder/check-builder-feed",
