@@ -24,13 +24,19 @@ function populateForm(entries){
 }
 
 function rowClickCallback(row_id){
-      $.ajax({ url: '/User/get-user-data/id/'+ row_id +'/format/json', dataType:"json", success:function(data){
+      $.ajax({ cache: false,
+             url: '/User/get-user-data/id/'+ row_id +'/format/json', 
+             dataType:"json", 
+             success:function(data){
         populateForm(data.entries);
 	  }});    
 }
 
 function removeUserCallback(row_id, nRow){
-      $.ajax({ url: '/User/remove-user/id/'+ row_id +'/format/json', dataType:"text", success:function(data){
+      $.ajax({ cache: false,
+             url: '/User/remove-user/id/'+ row_id +'/format/json', 
+             dataType:"text", 
+             success:function(data){
         var o = $('#users_datatable').dataTable().fnDeleteRow(nRow);
 	  }});
 }
@@ -67,6 +73,7 @@ $(document).ready(function() {
         "sAjaxSource": "/User/get-user-data-table-info/format/json",
         "fnServerData": function ( sSource, aoData, fnCallback ) {
             $.ajax( {
+                "cache": false,
                 "dataType": 'json', 
                 "type": "POST", 
                 "url": sSource, 
