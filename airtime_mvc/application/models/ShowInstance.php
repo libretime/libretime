@@ -662,6 +662,27 @@ SQL;
     }
 
 
+
+    public static function getContentCount($p_start, $p_end) 
+    {                 
+        $sql = <<<SQL
+SELECT instance_id,
+       count(*) AS instance_count
+FROM cc_schedule
+WHERE ends > :p_start::TIMESTAMP
+  AND starts < :p_end::TIMESTAMP
+GROUP BY instance_id;
+SQL;                                                                           
+
+        $counts = Application_Common_Database::prepareAndExecute( $sql, array( 
+            ':p_start' => $p_start->format("Y-m-d G:i:s"),                         
+            ':p_end' => $p_end->format("Y-m-d G:i:s"))
+        , 'all');                    
+                                                                                
+        return $counts;                                                        
+                                                                               
+    }                                                                          
+
     public function showEmpty()
     {
         $sql = <<<SQL
