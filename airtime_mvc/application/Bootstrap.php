@@ -90,6 +90,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         } else {
             $userType = "";
         }
+        
+        $view->headScript()->appendScript("var userType = '$userType';");
 
         if (strpos($_SERVER['REQUEST_URI'], $baseUrl.'/Dashboard/stream-player') === false
             && strpos($_SERVER['REQUEST_URI'], $baseUrl.'/audiopreview/audio-preview') === false) {
