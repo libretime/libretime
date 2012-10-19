@@ -99,17 +99,17 @@ server.register(namespace="dynamic_source",
                 description="Start a new dynamic source.",
                 usage="start <uri>",
                 "read_start",
-                fun (s) -> begin log("dynamic_source.read_start") create_dynamic_source(s) end)
+                fun (uri) -> begin log("dynamic_source.read_start") create_dynamic_source(uri) end)
 server.register(namespace="dynamic_source",
                 description="Stop a dynamic source.",
-                usage="stop <uri>",
+                usage="stop <id>",
                 "read_stop",
                 fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source(s) end)
 server.register(namespace="dynamic_source",
                 description="Stop a dynamic source.",
-                usage="stop <uri>",
+                usage="stop <id>",
                 "read_stop_all",
-                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all(s) end)
+                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)
