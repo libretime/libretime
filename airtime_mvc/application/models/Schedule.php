@@ -1128,7 +1128,6 @@ SQL;
                 }
             } else {
                 if ($isAdminOrPM) {
-                    Logging::info( $data );
                     Application_Model_Show::create($data);
                 }
 
