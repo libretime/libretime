@@ -26,8 +26,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $audioFileTitle  = $this->_getParam('audioFileTitle');
         $type = $this->_getParam('type');
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile(
             $baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],
@@ -79,8 +78,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $playlistIndex = $this->_getParam('playlistIndex');
         $playlistID = $this->_getParam('playlistID');
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -106,8 +104,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $blockIndex = $this->_getParam('blockIndex');
         $blockId = $this->_getParam('blockId');
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -232,8 +229,8 @@ class AudiopreviewController extends Zend_Controller_Action
         $showID = $this->_getParam('showID');
         $showIndex = $this->_getParam('showIndex');
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = dirname($_SERVER['SCRIPT_NAME']);
+        if (strcmp($baseUrl, '/') ==0) $baseUrl = "";
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -258,6 +255,7 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function getShowAction()
     {
+        global $CC_CONFIG;
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -297,7 +295,7 @@ class AudiopreviewController extends Zend_Controller_Action
                     throw new Exception("Unknown file type: $mime");
                 }
 
-                $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];
+                $elementMap['uri'] = $CC_CONFIG["base_dir"]."/api/get-media/file/".$track['item_id'];
             } else {
                 $elementMap['uri'] = $track['filepath'];
             }

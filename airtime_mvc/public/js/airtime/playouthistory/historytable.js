@@ -75,7 +75,7 @@ var AIRTIME = (function(AIRTIME) {
                           
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "/Playouthistory/playout-history-feed",
+            "sAjaxSource": baseUrl+"/Playouthistory/playout-history-feed",
             "sAjaxDataProp": "history",
             
             "fnServerData": fnServerData,
@@ -94,7 +94,7 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
-                "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": baseUrl+"/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
                 "aButtons": [
                              "copy",
                              {

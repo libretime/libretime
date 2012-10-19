@@ -71,16 +71,16 @@ select {
     background-position:center;
 }
 #version-icon.outdated {
-	background-image:url(/css/images/icon_outdated.png);
+	background-image:url(images/icon_outdated.png);
 }
 #version-icon.update2 {
-	background-image:url(/css/images/icon_update2.png);
+	background-image:url(images/icon_update2.png);
 }
 #version-icon.update {
-	background-image:url(/css/images/icon_update.png);
+	background-image:url(images/icon_update.png);
 }
 #version-icon.uptodate {
-	background-image:url(/css/images/icon_uptodate.png);
+	background-image:url(images/icon_uptodate.png);
 }
 
 #ui-tooltip-version a {
@@ -99,7 +99,7 @@ select {
         
         display:inline-block; zoom:1; display:inline;
         width:14px; height:14px;
-        background:url(/css/images/icon_info.png) 0 0 no-repeat;
+        background:url(images/icon_info.png) 0 0 no-repeat;
         float:right; position:relative; top:2px; right:7px;
         line-height:16px !important;
 }
@@ -109,7 +109,7 @@ select {
         position: relative;
         display:inline-block; zoom:1;
         width:14px; height:14px;
-        background:url(/css/images/icon_info.png) 0 0 no-repeat;
+        background:url(images/icon_info.png) 0 0 no-repeat;
         top:2px; right:7px; left: 3px;
         line-height:16px !important;
 }

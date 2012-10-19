@@ -4,6 +4,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 {
     public function init()
     {
+        global $CC_CONFIG;
          // Set the method for the display form to POST
         $this->setMethod('post');
 
@@ -137,7 +138,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'ignore'   => true,
             'class'    => 'btn md-cancel',
             'label'    => 'Cancel',
-            'onclick' => 'javascript:document.location.href = "/Library"',
+            'onclick' => 'javascript:document.location.href="'.$CC_CONFIG['base_dir'].'/Library"',
             'decorators' => array(
                 'ViewHelper'
             )

@@ -98,8 +98,7 @@ class DashboardController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('bare');
@@ -108,7 +107,7 @@ class DashboardController extends Zend_Controller_Action
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
-            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+            $this->view->logo = $baseUrl."/css/images/airtime_logo_jp.png";
         }
     }
 

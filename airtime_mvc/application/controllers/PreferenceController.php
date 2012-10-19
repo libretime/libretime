@@ -21,11 +21,12 @@ class PreferenceController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-
+        
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        
+        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
+        
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
@@ -72,9 +73,11 @@ class PreferenceController extends Zend_Controller_Action
     public function supportSettingAction()
     {
         global $CC_CONFIG;
-
+        
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        Logging::info($baseUrl);
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
@@ -133,9 +136,9 @@ class PreferenceController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        if (Application_Model_Preference::GetPlanLevel() == 'disabled') {
-            $request = $this->getRequest();
-            $baseUrl = $request->getBaseUrl();
+        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
+            
+            $baseUrl = Application_Common_OsPath::getBaseDir();
 
             $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
             $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -151,7 +154,8 @@ class PreferenceController extends Zend_Controller_Action
         global $CC_CONFIG;
 
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 

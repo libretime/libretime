@@ -18,7 +18,7 @@ class UserController extends Zend_Controller_Action
         global $CC_CONFIG;
 
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $js_files = array(
             '/js/datatables/js/jquery.dataTables.js?',

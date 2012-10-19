@@ -66,121 +66,121 @@ var AIRTIME = (function(AIRTIME){
         event.stopPropagation();
         var span = $(this),
             id = span.parent().attr("id").split("_").pop(),
-            url = "/Playlist/set-cue",
+            url = baseUrl+"/Playlist/set-cue",
             cueIn = $.trim(span.text()),
             li = span.parents("li"),
             unqid = li.attr("unqid"),
             lastMod = getModified(),
             type = $('#obj_type').val();
-		
-		if (!isTimeValid(cueIn)){
-	        showError(span, "please put in a time '00:00:00 (.0)'");
-	        return;
-		}
-		$.post(url, 
-			{format: "json", cueIn: cueIn, id: id, modified: lastMod, type: type}, 
-			function(json){
-		   
-				if (json.error !== undefined){
-	            	playlistError(json);
+        
+        if (!isTimeValid(cueIn)){
+            showError(span, "please put in a time '00:00:00 (.0)'");
+            return;
+        }
+        $.post(url, 
+            {format: "json", cueIn: cueIn, id: id, modified: lastMod, type: type}, 
+            function(json){
+
+                if (json.error !== undefined){
+                    playlistError(json);
 	            	return;
                 }
-		        if (json.cue_error !== undefined) {
-		            showError(span, json.cue_error);
-					return;
-				}
-		        
-		        setPlaylistContent(json);
-		        
-		        li = $('#side_playlist li[unqid='+unqid+']');
-		        li.find(".cue-edit").toggle();
-		    	highlightActive(li);
-		    	highlightActive(li.find('.spl_cue'));
-			});
-	}
+                if (json.cue_error !== undefined) {
+                    showError(span, json.cue_error);
+                    return;
+                }
+
+                setPlaylistContent(json);
+
+                li = $('#side_playlist li[unqid='+unqid+']');
+                li.find(".cue-edit").toggle();
+                highlightActive(li);
+                highlightActive(li.find('.spl_cue'));
+            });
+    }
 
     function changeCueOut(event) {
         event.stopPropagation();
         var span = $(this),
             id = span.parent().attr("id").split("_").pop(),
-            url = "/Playlist/set-cue",
+            url = baseUrl+"/Playlist/set-cue",
             cueOut = $.trim(span.text()),
             li = span.parents("li"),
             unqid = li.attr("unqid"),
             lastMod = getModified(),
             type = $('#obj_type').val();
 
-		if (!isTimeValid(cueOut)){
-	        showError(span, "please put in a time '00:00:00 (.0)'");
-			return;
-		}
+        if (!isTimeValid(cueOut)){
+            showError(span, "please put in a time '00:00:00 (.0)'");
+            return;
+        }
+        
+        $.post(url, 
+            {format: "json", cueOut: cueOut, id: id, modified: lastMod, type: type}, 
+            function(json){
 
-		$.post(url, 
-			{format: "json", cueOut: cueOut, id: id, modified: lastMod, type: type}, 
-			function(json){
-		   
-				if (json.error !== undefined){
-	            	playlistError(json);
-	            	return;
+                if (json.error !== undefined){
+                    playlistError(json);
+                    return;
                 }
-				if (json.cue_error !== undefined) {
-		            showError(span, json.cue_error);
-					return;
-				}
-	
-				setPlaylistContent(json);
-		        
-		        li = $('#side_playlist li[unqid='+unqid+']');
-		        li.find(".cue-edit").toggle();
-		    	highlightActive(li);
-		    	highlightActive(li.find('.spl_cue'));
-			});
-	}
+                if (json.cue_error !== undefined) {
+                    showError(span, json.cue_error);
+                    return;
+                }
 
-	function changeFadeIn(event) {
-	    event.preventDefault();
+                setPlaylistContent(json);
 
-		var span = $(this),
-			id = span.parent().attr("id").split("_").pop(),
-			url = "/Playlist/set-fade",
-			fadeIn = $.trim(span.text()),
-			li = span.parents("li"),
-			unqid = li.attr("unqid"),
-			lastMod = getModified(),
+                li = $('#side_playlist li[unqid='+unqid+']');
+                li.find(".cue-edit").toggle();
+                highlightActive(li);
+                highlightActive(li.find('.spl_cue'));
+            });
+        }
+
+    function changeFadeIn(event) {
+        event.preventDefault();
+
+        var span = $(this),
+            id = span.parent().attr("id").split("_").pop(),
+            url = baseUrl+"/Playlist/set-fade",
+            fadeIn = $.trim(span.text()),
+            li = span.parents("li"),
+            unqid = li.attr("unqid"),
+            lastMod = getModified(),
             type = $('#obj_type').val();
 
-		if (!isFadeValid(fadeIn)){
-	        showError(span, "please put in a time in seconds '00 (.0)'");
-			return;
-		}
+        if (!isFadeValid(fadeIn)){
+            showError(span, "please put in a time in seconds '00 (.0)'");
+            return;
+        }
 
-		$.post(url, 
-			{format: "json", fadeIn: fadeIn, id: id, modified: lastMod, type: type}, 
-			function(json){
-			
-				if (json.error !== undefined){
-	            	playlistError(json);
-	            	return;
+        $.post(url, 
+            {format: "json", fadeIn: fadeIn, id: id, modified: lastMod, type: type}, 
+            function(json){
+
+                if (json.error !== undefined){
+                    playlistError(json);
+                    return;
                 }
-				if (json.fade_error !== undefined) {
-					showError(span, json.fade_error);
-					return;
-				}
-	
-				setPlaylistContent(json);
-		        
-		        li = $('#side_playlist li[unqid='+unqid+']');
-		        li.find('.crossfade').toggle();
-		        highlightActive(li.find('.spl_fade_control'));
-			});
-	}
+                if (json.fade_error !== undefined) {
+                    showError(span, json.fade_error);
+                    return;
+                }
+
+                setPlaylistContent(json);
+
+                li = $('#side_playlist li[unqid='+unqid+']');
+                li.find('.crossfade').toggle();
+                highlightActive(li.find('.spl_fade_control'));
+            });
+    }
 
 	function changeFadeOut(event) {
 	    event.stopPropagation();
 
 		var span = $(this),
 			id = span.parent().attr("id").split("_").pop(),
-			url = "/Playlist/set-fade",
+			url = baseUrl+"/Playlist/set-fade",
 			fadeOut = $.trim(span.text()),
 			li = span.parents("li"),
 			unqid = li.attr("unqid"),
@@ -264,7 +264,8 @@ var AIRTIME = (function(AIRTIME){
             nameElement.text(nameElement.text().replace("\n", ""));
 	   
         /* --until we decide whether Playlist name should autosave or not
-    	url = '/Playlist/set-playlist-name';
+
+    	url = baseUrl+'/Playlist/set-playlist-name';
 
 	    $.post(url, 
 	    	{format: "json", name: nameElement.text(), modified: lastMod, type: type}, 
@@ -501,9 +502,9 @@ var AIRTIME = (function(AIRTIME){
 	        else {
 	            $(this).addClass("ui-state-active");
 
-	            var url = '/Playlist/get-playlist-fades';
+	            var url = baseUrl+'/Playlist/get-playlist-fades';
 		        $.post(url, 
-		        	{format: "json", modified: lastMod, type: type}, 
+		        	{format: "json", modified: lastMod, type: type},
 		        	function(json){
 			            if (json.error !== undefined){
 			            	playlistError(json);
@@ -538,7 +539,7 @@ var AIRTIME = (function(AIRTIME){
 		$pl.on("blur", "span.spl_main_fade_in", function(event){
 	        event.stopPropagation();
 
-		    var url = "/Playlist/set-playlist-fades",
+		    var url = baseUrl+"/Playlist/set-playlist-fades",
 			    span = $(this),
 			    fadeIn = $.trim(span.text()), 
 			    lastMod = getModified(),
@@ -562,7 +563,7 @@ var AIRTIME = (function(AIRTIME){
 		$pl.on("blur", "span.spl_main_fade_out", function(event){
 	        event.stopPropagation();
 
-		    var url = "/Playlist/set-playlist-fades",
+		    var url = baseUrl+"/Playlist/set-playlist-fades",
 		    	span = $(this),
 		    	fadeOut = $.trim(span.text()), 
 		    	lastMod = getModified(),
@@ -623,7 +624,7 @@ var AIRTIME = (function(AIRTIME){
             //hide any previous errors (if any)
             $("#side_playlist .errors").empty().hide();
         
-            var url = 'Webstream/save';
+            var url = baseUrl+'/Webstream/save';
             $.post(url, 
                 {format: "json", id:id, description: description, url:streamurl, length: length, name: name}, 
                 function(json){
@@ -668,7 +669,7 @@ var AIRTIME = (function(AIRTIME){
             var criteria = $('form').serializeArray(),
                 block_name = $('#playlist_name_display').text(),
                 block_desc = $('textarea[name="description"]').val(),
-                save_action = 'Playlist/save',
+                save_action = baseUrl+'/Playlist/save',
                 obj_id = $('input[id="obj_id"]').val(),
                 obj_type = $('#obj_type').val(),
                 lastMod = getModified(),
@@ -793,7 +794,7 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	mod.fnNew = function() {
-		var url = '/Playlist/new';
+		var url = baseUrl+'/Playlist/new';
 
 		stopAudioPreview();
 		
@@ -806,7 +807,7 @@ var AIRTIME = (function(AIRTIME){
 	};
     
 	mod.fnWsNew = function() {
-		var url = '/Webstream/new';
+		var url = baseUrl+'/Webstream/new';
 
 		stopAudioPreview();
 		
@@ -818,8 +819,9 @@ var AIRTIME = (function(AIRTIME){
 			});
 	};
 	
+
 	mod.fnNewBlock = function() {
-        var url = '/Playlist/new';
+        var url = baseUrl+'/Playlist/new';
 
         stopAudioPreview();
         
@@ -850,7 +852,7 @@ var AIRTIME = (function(AIRTIME){
 		id = (plid === undefined) ? getId() : plid;
 		lastMod = getModified();
 		type = $('#obj_type').val();
-		url = '/Playlist/delete';
+		url = baseUrl+'/Playlist/delete';
 
 		$.post(url, 
 			{format: "json", ids: id, modified: lastMod, type: type}, 
@@ -867,7 +869,7 @@ var AIRTIME = (function(AIRTIME){
 		id = (wsid === undefined) ? getId() : wsid;
 		lastMod = getModified();
 		type = $('#obj_type').val();
-		url = '/Webstream/delete';
+		url = baseUrl+'/Webstream/delete';
         
 		$.post(url, 
 			{format: "json", ids: id, modified: lastMod, type: type}, 
@@ -940,20 +942,20 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	mod.fnAddItems = function(aItems, iAfter, sAddType) {
-		var sUrl = "/playlist/add-items";
+		var sUrl = baseUrl+"/playlist/add-items";
 			oData = {"aItems": aItems, "afterItem": iAfter, "type": sAddType};
 		playlistRequest(sUrl, oData);
 	};
 	
 	mod.fnMoveItems = function(aIds, iAfter) {
-		var sUrl = "/playlist/move-items",
+		var sUrl = baseUrl+"/playlist/move-items",
 			oData = {"ids": aIds, "afterItem": iAfter};
 		
 		playlistRequest(sUrl, oData);
 	};
 	
 	mod.fnDeleteItems = function(aItems) {
-		var sUrl = "/playlist/delete-items",
+		var sUrl = baseUrl+"/playlist/delete-items",
 			oData = {"ids": aItems};
 		
 		playlistRequest(sUrl, oData);

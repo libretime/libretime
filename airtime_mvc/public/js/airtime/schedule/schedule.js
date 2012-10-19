@@ -34,7 +34,7 @@ function checkShowLength(json) {
 
 function confirmCancelShow(show_instance_id){
     if (confirm('Cancel Current Show?')) {
-        var url = "/Schedule/cancel-current-show";
+        var url = baseUrl+"/Schedule/cancel-current-show";
         $.ajax({
             url: url,
             data: {format: "json", id: show_instance_id},
@@ -47,7 +47,7 @@ function confirmCancelShow(show_instance_id){
 
 function confirmCancelRecordedShow(show_instance_id){
     if (confirm('Stop recording current show?')) {
-        var url = "/Schedule/cancel-current-show";
+        var url = baseUrl+"/Schedule/cancel-current-show";
         $.ajax({
             url: url,
             data: {format: "json", id: show_instance_id},
@@ -60,7 +60,7 @@ function confirmCancelRecordedShow(show_instance_id){
 
 function uploadToSoundCloud(show_instance_id){
     
-    var url = "/Schedule/upload-to-sound-cloud";
+    var url = baseUrl+"/Schedule/upload-to-sound-cloud";
     var span = $(window.triggerElement).find(".recording");
     
     $.post(url,
@@ -80,8 +80,7 @@ function uploadToSoundCloud(show_instance_id){
 }
 
 function checkCalendarSCUploadStatus(){
-    
-    var url = '/Library/get-upload-to-soundcloud-status',
+    var url = baseUrl+'/Library/get-upload-to-soundcloud-status',
         span,
         id;
     
@@ -289,7 +288,7 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
-    $.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
+	$.ajax({ url: baseUrl+"/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
     
     setInterval(checkCalendarSCUploadStatus, 5000);
@@ -459,7 +458,7 @@ $(document).ready(function() {
             }
             
             $.ajax({
-              url: "/schedule/make-context-menu",
+              url: baseUrl+"/schedule/make-context-menu",
               type: "GET",
               data: {id : data.id, format: "json"},
               dataType: "json",

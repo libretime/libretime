@@ -1,7 +1,7 @@
 $(document).ready(function(){
     
     function doNotShowPopup(){
-        $.get("/Usersettings/donotshowregistrationpopup", {format:"json"});
+        $.get(baseUrl+"/Usersettings/donotshowregistrationpopup", {format:"json"});
     }
 
     var dialog = $("#register_popup");
@@ -19,7 +19,7 @@ $(document).ready(function(){
                 text: "Remind me in 1 week",
                 "class": "btn",
                 click: function() {
-                    var url = '/Usersettings/remindme';
+                    var url = baseUrl+'/Usersettings/remindme';
                     $.ajax({
                         url: url,
                         data: {format:"json"}
@@ -32,7 +32,7 @@ $(document).ready(function(){
                 text: "Remind me never",
                 "class": "btn", 
                 click: function() {
-                    var url ='/Usersettings/remindme-never';
+                    var url =baseUrl+'/Usersettings/remindme-never';
                     $.ajax({
                         url: url,
                         data: {format:"json"}

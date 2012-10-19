@@ -6,6 +6,7 @@
 	<?php echo $this->headScript() ?>
 	<?php echo $this->headLink() ?>
 	<?php echo isset($this->google_analytics)?$this->google_analytics:"" ?>
+	<?php global $CC_CONFIG; ?>
 </head>
 <body>
 
@@ -22,7 +23,7 @@
     $this->navigation()->menu()->setPartial($partial); ?>
     <div class="personal-block solo">
         <ul>
-          <li><span class="name"><?php echo $this->loggedInAs()?></span> | <a href="/Login/logout">Logout</a></li>
+          <li><span class="name"><?php echo $this->loggedInAs()?></span> | <a href=<?php echo $CC_CONFIG['base_dir'] . "/Login/logout"?>>Logout</a></li>
         </ul>
     </div>
 

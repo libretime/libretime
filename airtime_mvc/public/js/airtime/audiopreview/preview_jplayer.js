@@ -75,8 +75,8 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
     
     if ( _idToPostionLookUp !== undefined && viewsPlaylistID == p_playlistID ) {
         play(p_playlistIndex);
-    } else {
-        buildplaylist("/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
+    }else {
+        buildplaylist(baseUrl+"/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
     }
 }
 
@@ -87,7 +87,7 @@ function playBlock(p_blockId, p_blockIndex)
     if ( _idToPostionLookUp !== undefined && viewsBlockId == p_blockId ) {
         play(p_blockIndex);
     } else {
-        buildplaylist("/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
+        buildplaylist(baseUrl+"/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
     }
 }
 
@@ -105,7 +105,7 @@ function playAllShow(p_showID, p_index) {
     if ( _idToPostionLookUp !== undefined && viewsShowID == p_showID ) {
         play(p_index);
     }else {
-        buildplaylist("/audiopreview/get-show/showID/"+p_showID, p_index);
+        buildplaylist(baseUrl+"/audiopreview/get-show/showID/"+p_showID, p_index);
     }
 }
 
@@ -123,6 +123,7 @@ function buildplaylist(p_url, p_playIndex) {
         var media;
         var index;
         var total = 0;
+
         for(index in data) {
             if (data[index]['type'] == 0) { 
                 if (data[index]['element_mp3'] != undefined){
@@ -199,7 +200,7 @@ function play(p_playlistIndex){
  */
 function playOne(uri, mime) {
     var playlist = new Array();
-   
+
     var media = null; 
     var key = null;
     if (mime.search(/mp3/i) > 0 || mime.search(/mpeg/i) > 0) {

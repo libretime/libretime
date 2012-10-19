@@ -69,7 +69,7 @@ function success(data, textStatus, jqXHR){
 }
 
 function updateStatus(getDiskInfo){
-    $.getJSON( "api/status/format/json/diskinfo/"+getDiskInfo, null, success);
+    $.getJSON( baseUrl+"/api/status/format/json/diskinfo/"+getDiskInfo, null, success);
     
 }
 

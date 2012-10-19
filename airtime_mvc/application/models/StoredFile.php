@@ -599,6 +599,7 @@ SQL;
         return $res;
     }
 
+
     public static function getLibraryColumns()
     {
         return array("id", "track_title", "artist_name", "album_title",
@@ -609,9 +610,10 @@ SQL;
         "conductor", "replay_gain", "lptime" );
     }
 
-
     public static function searchLibraryFiles($datatables)
     {
+        global $CC_CONFIG;
+        
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
         $displayColumns = self::getLibraryColumns();
@@ -766,14 +768,14 @@ SQL;
             // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img title="Track preview" src="/css/images/icon_audioclip.png">';
+                $row['image'] = '<img title="Track preview" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_audioclip.png">';
             } elseif ($type == "pl") {
-                $row['image'] = '<img title="Playlist preview" src="/css/images/icon_playlist.png">';
+                $row['image'] = '<img title="Playlist preview" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_playlist.png">';
             } elseif ($type == "st") {
                 $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="Webstream preview" src="/css/images/icon_webstream.png">';
+                $row['image'] = '<img title="Webstream preview" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_webstream.png">';
             } elseif ($type == "bl") {
-                $row['image'] = '<img title="Smart Block" src="/css/images/icon_smart-block.png">';
+                $row['image'] = '<img title="Smart Block" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_smart-block.png">';
             }
         }
 

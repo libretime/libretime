@@ -500,6 +500,7 @@ class Application_Model_Preference
         } else {
             $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = NULL;
         }
+
         $outputArray['STATION_NAME'] = self::GetStationName();
         $outputArray['PHONE'] = self::GetPhone();
         $outputArray['EMAIL'] = self::GetEmail();
@@ -513,7 +514,7 @@ class Application_Model_Preference
            $url = $systemInfoArray["AIRTIME_VERSION_URL"];
            $index = strpos($url,'/api/');
            $url = substr($url, 0, $index);
-
+           
            $headerInfo = get_headers(trim($url),1);
            $outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
         }

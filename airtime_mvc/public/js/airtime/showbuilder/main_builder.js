@@ -168,7 +168,7 @@ AIRTIME = (function(AIRTIME) {
 			schedTable.fnDraw();
 			
 			$.ajax({
-	            url: "/usersettings/set-now-playing-screen-settings",
+	            url: baseUrl+"/usersettings/set-now-playing-screen-settings",
 	            type: "POST",
 	            data: {settings : {library : true}, format: "json"},
 	            dataType: "json",
@@ -192,7 +192,7 @@ AIRTIME = (function(AIRTIME) {
 			schedTable.fnDraw();
 			
 			$.ajax({
-	            url: "/usersettings/set-now-playing-screen-settings",
+	            url: baseUrl+"/usersettings/set-now-playing-screen-settings",
 	            type: "POST",
 	            data: {settings : {library : false}, format: "json"},
 	            dataType: "json",
@@ -259,7 +259,7 @@ AIRTIME = (function(AIRTIME) {
 			$.ajax( {
 				"dataType": "json",
 				"type": "GET",
-				"url": "/showbuilder/check-builder-feed",
+				"url": baseUrl+"/showbuilder/check-builder-feed",
 				"data": data,
 				"success": function(json) {
 					if (json.update === true) {

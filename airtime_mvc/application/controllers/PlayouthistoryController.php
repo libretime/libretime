@@ -8,14 +8,15 @@ class PlayouthistoryController extends Zend_Controller_Action
         $ajaxContext
             ->addActionContext('playout-history-feed', 'json')
             ->initContext();
-    }
+        }
 
     public function indexAction()
     {
         global $CC_CONFIG;
 
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         //default time is the last 24 hours.
         $now = time();
@@ -81,4 +82,5 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->iTotalRecords = $r["iTotalRecords"];
         $this->view->history = $r["history"];
     }
+
 }

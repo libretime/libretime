@@ -310,7 +310,7 @@ var AIRTIME = (function(AIRTIME) {
     
     mod.fnDeleteItems = function(aMedia) {
        
-        $.post("/library/delete", 
+        $.post(baseUrl+"/library/delete", 
             {"format": "json", "media": aMedia}, 
             function(json){
                 if (json.message !== undefined) {
@@ -479,7 +479,7 @@ var AIRTIME = (function(AIRTIME) {
             "fnStateSave": function (oSettings, oData) {
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
                 $.ajax({
-                    url: "/usersettings/set-library-datatable",
+                    url: baseUrl+"/usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
@@ -520,7 +520,7 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
             
-            "sAjaxSource": "/Library/contents-feed",
+            "sAjaxSource": baseUrl+"/Library/contents-feed",
             "sAjaxDataProp": "files",
             
             "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -604,7 +604,7 @@ var AIRTIME = (function(AIRTIME) {
                             text: aData.track_title
                         },
                         ajax: {
-                            url: "/Library/get-file-metadata",
+                            url: baseUrl+"/Library/get-file-meta-data",
                             type: "get",
                             data: ({format: "html", id : aData.id, type: aData.ftype}),
                             success: function(data, status) {
@@ -770,13 +770,13 @@ var AIRTIME = (function(AIRTIME) {
                             };
                         } else if (data.ftype === "playlist" || data.ftype === "block") {
                             callback = function() {
-		                        var url = '/Playlist/edit';
+		                        var url = baseUrl+'/Playlist/edit';
                                 AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
                                 AIRTIME.playlist.validatePlaylistElements();
                             };
                         } else if (data.ftype === "stream") {
                             callback = function() {
-		                        var url = '/Webstream/edit';
+		                        var url = baseUrl+'/Webstream/edit';
                                 AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
                             }
                         } else {
@@ -882,7 +882,7 @@ var AIRTIME = (function(AIRTIME) {
                 }
                 
                 request = $.ajax({
-                  url: "/library/context-menu",
+                  url: baseUrl+"/library/context-menu",
                   type: "GET",
                   data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
                   dataType: "json",
@@ -905,7 +905,7 @@ var AIRTIME = (function(AIRTIME) {
 }(AIRTIME || {}));
 
 function checkImportStatus() {
-    $.getJSON('/Preference/is-import-in-progress', function(data){
+    $.getJSON(baseUrl+'/Preference/is-import-in-progress', function(data){
         var div = $('#import_status');
         var table = $('#library_display').dataTable();
         if (data == true){
@@ -938,7 +938,7 @@ function addProgressIcon(id) {
     
 function checkLibrarySCUploadStatus(){
     
-    var url = '/Library/get-upload-to-soundcloud-status',
+    var url = baseUrl+'/Library/get-upload-to-soundcloud-status',
         span,
         id;
     
@@ -993,7 +993,7 @@ function addQtipToSCIcons(){
                 content: {
                     text: "Retrieving data from the server...",
                     ajax: {
-                        url: "/Library/get-upload-to-soundcloud-status",
+                        url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
@@ -1019,7 +1019,7 @@ function addQtipToSCIcons(){
                 content: {
                     text: "Retreiving data from the server...",
                     ajax: {
-                        url: "/Library/get-upload-to-soundcloud-status",
+                        url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){

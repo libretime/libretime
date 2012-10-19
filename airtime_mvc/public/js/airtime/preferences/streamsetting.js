@@ -75,7 +75,7 @@ function showForIcecast(ele){
 }
 
 function checkLiquidsoapStatus(){
-    var url = '/Preference/get-liquidsoap-status/format/json';
+    var url = baseUrl+'/Preference/get-liquidsoap-status/format/json';
     var id = $(this).attr("id");
     $.post(url, function(json){
         var json_obj = jQuery.parseJSON(json);
@@ -127,7 +127,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
+        $.get(baseUrl+"/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
     	event.preventDefault()
     })
     
@@ -142,7 +142,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
+        $.get(baseUrl+"/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
     	event.preventDefault()
     })
     
@@ -151,7 +151,7 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1})
+        $.get(baseUrl+"/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1})
         event.preventDefault()
     })
     
@@ -165,7 +165,7 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0})
+        $.get(baseUrl+"/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0})
         event.preventDefault()
     })
 }
