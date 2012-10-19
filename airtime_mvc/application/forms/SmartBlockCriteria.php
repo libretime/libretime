@@ -454,7 +454,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
                         // validation on type of column
                         if ($d['sp_criteria_field'] == 'length') {
-                            if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                            if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
                                 $element->addError("'Length' should be in '00:00:00' format");
                                 $isValid = false;
                             }
