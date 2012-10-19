@@ -55,7 +55,6 @@ class PypoPush(Thread):
 
         self.pushed_objects = {}
         self.logger = logging.getLogger('push')
-        self.current_stream_info = None
         self.current_prebuffering_stream_id = None
 
     def main(self):
@@ -198,7 +197,7 @@ class PypoPush(Thread):
     def is_correct_current_item(self, media_item, liquidsoap_queue_approx, liquidsoap_stream_id):
         correct = False
         if media_item is None:
-            correct = (len(liquidsoap_queue_approx) == 0 and self.current_stream_info is None)
+            correct = (len(liquidsoap_queue_approx) == 0 and liquidsoap_stream_id == "-1")
         else:
             if is_file(media_item):
                 if len(liquidsoap_queue_approx) == 0:
@@ -230,7 +229,6 @@ class PypoPush(Thread):
         file_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
         stream_chain = filter(lambda item: (item["type"] == "stream_output_start"), current_event_chain)
 
-        self.logger.debug(self.current_stream_info)
         self.logger.debug(current_event_chain)
 
         #Take care of the case where the current playing may be incorrect
@@ -507,7 +505,6 @@ class PypoPush(Thread):
             self.logger.debug(tn.read_all())
 
             self.current_prebuffering_stream_id = None
-            self.current_stream_info = media_item
         except Exception, e:
             self.logger.error(str(e))
         finally:
@@ -533,7 +530,6 @@ class PypoPush(Thread):
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-            self.current_stream_info = None
         except Exception, e:
             self.logger.error(str(e))
         finally:
@@ -556,7 +552,6 @@ class PypoPush(Thread):
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-            self.current_stream_info = None
         except Exception, e:
             self.logger.error(str(e))
         finally:
@@ -575,7 +570,6 @@ class PypoPush(Thread):
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-            self.current_stream_info = None
         except Exception, e:
             self.logger.error(str(e))
         finally:
