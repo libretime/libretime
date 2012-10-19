@@ -127,9 +127,9 @@ class CcSchedule extends BaseCcSchedule {
         }
 
         if ($microsecond == 0) {
-            $this->fadein = $dt->format('H:i:s.u');
+            $this->fade_in = $dt->format('H:i:s.u');
         } else {
-            $this->fadein = $dt->format('H:i:s').".".$microsecond;
+            $this->fade_in = $dt->format('H:i:s').".".$microsecond;
         }
         $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
 
@@ -164,9 +164,9 @@ class CcSchedule extends BaseCcSchedule {
         }
 
         if ($microsecond == 0) {
-            $this->fadeout = $dt->format('H:i:s.u');
+            $this->fade_out = $dt->format('H:i:s.u');
         } else {
-            $this->fadeout = $dt->format('H:i:s').".".$microsecond;
+            $this->fade_out = $dt->format('H:i:s').".".$microsecond;
         }
         $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
 
