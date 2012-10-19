@@ -111,6 +111,10 @@ class UpgradeCommon{
         $old = "list_all_db_files = 'list-all-files/format/json/api_key/%%api_key%%/dir_id/%%dir_id%%'";
         $new = "list_all_db_files = 'list-all-files/format/json/api_key/%%api_key%%/dir_id/%%dir_id%%/all/%%all%%'";
         exec("sed -i \"s#$old#$new#g\" /etc/airtime/api_client.cfg");
+
+        $old = "update_start_playing_url = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/schedule_id/%%schedule_id%%'";
+        $new = "update_start_playing_url = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/'";
+        exec("sed -i \"s#$old#$new#g\" /etc/airtime/api_client.cfg");
     }
 
     /**
