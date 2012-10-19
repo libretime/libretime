@@ -174,7 +174,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-        global $CC_CONFIG;
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $id = $this->_getParam('id');
         $now = floatval(microtime(true));
@@ -195,7 +195,7 @@ class ShowbuilderController extends Zend_Controller_Action
         if ($now < floatval($item->getDbEnds("U.u")) && $user->canSchedule($instance->getDbShowId())) {
 
             //remove/truncate the item from the schedule
-            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $CC_CONFIG['base_dir']."/showbuilder/schedule-remove");
+            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/showbuilder/schedule-remove");
         }
 
         $this->view->items = $menu;

@@ -142,7 +142,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function contextMenuAction()
     {
-        global $CC_CONFIG;
+        $baseUrl = Application_Common_OsPath::getBaseDir();
         $id = $this->_getParam('id');
         $type = $this->_getParam('type');
         //playlist||timeline
@@ -184,8 +184,8 @@ class LibraryController extends Zend_Controller_Action
                 }
             }
             if ($isAdminOrPM) {
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $CC_CONFIG['base_dir']."/library/delete");
-                $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => $CC_CONFIG['base_dir']."/library/edit-file-md/id/{$id}");
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/library/delete");
+                $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
             }
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
@@ -212,7 +212,7 @@ class LibraryController extends Zend_Controller_Action
             }
 
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $CC_CONFIG['base_dir']."/library/delete");
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
         } elseif ($type == "stream") {
 
@@ -227,9 +227,9 @@ class LibraryController extends Zend_Controller_Action
             }
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 if ($screen == "playlist") {
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => $CC_CONFIG['base_dir']."/library/edit-file-md/id/{$id}");
+                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
                 }
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $CC_CONFIG['base_dir']."/library/delete");
+                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
         }
 
@@ -255,7 +255,7 @@ class LibraryController extends Zend_Controller_Action
                 $text = "Upload to SoundCloud";
             }
 
-            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $CC_CONFIG['base_dir']."/library/upload-file-soundcloud/id/{$id}");
+            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."/library/upload-file-soundcloud/id/{$id}");
         }
 
         if (empty($menu)) {

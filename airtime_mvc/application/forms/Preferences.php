@@ -6,9 +6,9 @@ class Application_Form_Preferences extends Zend_Form
 
     public function init()
     {
-        global $CC_CONFIG;
-		
-        $this->setAction($CC_CONFIG['base_dir'] . '/Preference');
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+
+        $this->setAction($baseUrl . '/Preference');
         $this->setMethod('post');
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;

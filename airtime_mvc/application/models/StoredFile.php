@@ -616,7 +616,7 @@ SQL;
 
     public static function searchLibraryFiles($datatables)
     {
-        global $CC_CONFIG;
+        $baseUrl = Application_Common_OsPath::getBaseDir();
         
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
@@ -772,14 +772,14 @@ SQL;
             // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img title="Track preview" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_audioclip.png">';
+                $row['image'] = '<img title="Track preview" src="'.$baseUrl.'/css/images/icon_audioclip.png">';
             } elseif ($type == "pl") {
-                $row['image'] = '<img title="Playlist preview" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_playlist.png">';
+                $row['image'] = '<img title="Playlist preview" src="'.$baseUrl.'/css/images/icon_playlist.png">';
             } elseif ($type == "st") {
                 $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="Webstream preview" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_webstream.png">';
+                $row['image'] = '<img title="Webstream preview" src="'.$baseUrl.'/css/images/icon_webstream.png">';
             } elseif ($type == "bl") {
-                $row['image'] = '<img title="Smart Block" src="'.$CC_CONFIG['base_dir'].'/css/images/icon_smart-block.png">';
+                $row['image'] = '<img title="Smart Block" src="'.$baseUrl.'/css/images/icon_smart-block.png">';
             }
         }
 

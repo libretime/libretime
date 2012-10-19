@@ -1,7 +1,7 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences">
 <h2><?php echo $this->section_title?></h2>
-<?php global $CC_CONFIG; ?>
-    <form method="post" action=<?php echo $CC_CONFIG['base_dir'] . "/Preference/support-setting"?> enctype="multipart/form-data">
+<?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
+    <form method="post" action=<?php echo $baseUrl . "/Preference/support-setting"?> enctype="multipart/form-data">
         <div id="support-settings">
             <?php echo $this->statusMsg ?>
             <?php echo $this->form ?>

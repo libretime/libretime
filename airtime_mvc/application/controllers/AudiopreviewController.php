@@ -255,7 +255,7 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function getShowAction()
     {
-        global $CC_CONFIG;
+        $baseUrl = Application_Common_OsPath::getBaseDir();
         // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
@@ -296,7 +296,7 @@ class AudiopreviewController extends Zend_Controller_Action
                     throw new Exception("Unknown file type: $mime");
                 }
 
-                $elementMap['uri'] = $CC_CONFIG["base_dir"]."/api/get-media/file/".$track['item_id'];
+                $elementMap['uri'] = $baseUrl."/api/get-media/file/".$track['item_id'];
             } else {
                 $elementMap['uri'] = $track['filepath'];
             }

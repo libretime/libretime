@@ -4,7 +4,7 @@ class Application_Form_EditAudioMD extends Zend_Form
 {
     public function init()
     {
-        global $CC_CONFIG;
+        $baseUrl = Application_Common_OsPath::getBaseDir();
          // Set the method for the display form to POST
         $this->setMethod('post');
 
@@ -136,7 +136,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             'ignore'   => true,
             'class'    => 'btn md-cancel',
             'label'    => 'Cancel',
-            'onclick' => 'javascript:document.location.href="'.$CC_CONFIG['base_dir'].'/Library"',
+            'onclick' => 'javascript:document.location.href="'.$baseUrl.'/Library"',
             'decorators' => array(
                 'ViewHelper'
             )
