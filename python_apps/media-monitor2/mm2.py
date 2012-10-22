@@ -23,9 +23,6 @@ from std_err_override               import LogWriter
 import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
-#import gevent.monkey
-
-#gevent.monkey.patch_all(select=False)
 
 
 def main(global_config, api_client_config, log_config,
