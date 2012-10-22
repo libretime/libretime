@@ -250,3 +250,6 @@ class Manager(Loggable):
         notifier = pyinotify.Notifier(self.wm)
         notifier.coalesce_events()
         notifier.loop()
+        #import asyncore
+        #notifier = pyinotify.AsyncNotifier(self.wm)
+        #asyncore.loop()
