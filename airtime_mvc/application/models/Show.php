@@ -1792,7 +1792,7 @@ SQL;
                 $show["instance_id"]);
 
             $options["show_empty"] = (array_key_exists($show['instance_id'],
-                $content_count)) ? 1 : 0;
+                $content_count)) ? 0 : 1;
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);

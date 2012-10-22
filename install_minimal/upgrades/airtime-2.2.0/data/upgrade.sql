@@ -140,6 +140,12 @@ ALTER TABLE cc_playlistcontents
 ALTER TABLE cc_schedule
 	ADD COLUMN stream_id integer;
 
+CREATE INDEX cc_schedule_instance_id_idx
+  ON cc_schedule
+  USING btree
+  (instance_id);
+
+
 ALTER TABLE cc_subjs
 	ADD COLUMN cell_phone character varying(255);
 

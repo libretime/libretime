@@ -27,7 +27,7 @@ def append_title(m) =
   end
 end
 
-def crossfade(s)
+def crossfade_airtime(s)
   #duration is automatically overwritten by metadata fields passed in
   #with audio
   s = fade.in(type="log", duration=0., s)
