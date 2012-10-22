@@ -23,9 +23,9 @@ from std_err_override               import LogWriter
 import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
-import gevent.monkey
+#import gevent.monkey
 
-gevent.monkey.patch_all(select=False)
+#gevent.monkey.patch_all(select=False)
 
 
 def main(global_config, api_client_config, log_config,
@@ -133,7 +133,7 @@ def main(global_config, api_client_config, log_config,
 
     apiclient.register_component('media-monitor')
 
-    manager.loop()
+    return manager.loop()
 
 __doc__ = """
 Usage:
@@ -146,6 +146,9 @@ Options:
     --log=<path>       log config at <path>
 """
 
+def main_loop():
+    while True: pass
+
 if __name__ == '__main__':
     from docopt import docopt
     args = docopt(__doc__,version="mm1.99")
@@ -155,3 +158,5 @@ if __name__ == '__main__':
             sys.exit(0)
     print("Running mm1.99")
     main(args['--config'],args['--apiclient'],args['--log'])
+    #gevent.joinall([ gevent.spawn(main_loop) ])
+
