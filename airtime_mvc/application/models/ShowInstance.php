@@ -679,9 +679,13 @@ SQL;
             ':p_end' => $p_end->format("Y-m-d G:i:s"))
         , 'all');
 
-        return $counts;
+        $real_counts = array();
+        foreach ($counts as $c) {
+            $real_counts[$c['instance_id']] = $c['instance_count'];
+        }
+        return $real_counts;
 
-    }                                                                          
+    }
 
     public function showEmpty()
     {
