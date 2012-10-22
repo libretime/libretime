@@ -429,6 +429,8 @@ COMMENT ON TABLE "cc_schedule" IS '';
 
 
 SET search_path TO public;
+CREATE INDEX "cc_schedule_instance_id_idx" ON "cc_schedule" ("instance_id");
+
 -----------------------------------------------------------------------------
 -- cc_sess
 -----------------------------------------------------------------------------
