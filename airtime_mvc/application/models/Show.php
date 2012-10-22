@@ -1747,8 +1747,6 @@ SQL;
             $p_start, $p_end);
         $timezone = date_default_timezone_get();
 
-        Logging::info( $content_count );
-
         foreach ($shows as $show) {
             $options = array();
 
