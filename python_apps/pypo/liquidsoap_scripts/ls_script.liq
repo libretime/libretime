@@ -44,9 +44,9 @@ web_stream = on_metadata(notify_stream, web_stream)
 output.dummy(fallible=true, web_stream)
 
 queue = on_metadata(notify, queue)
-queue = map_metadata(update=false, append_title, queue)
+queue = map_metadata(update=true, append_title, queue)
 # the crossfade function controls fade in/out
-queue = crossfade(queue)
+queue = crossfade_airtime(queue)
 output.dummy(fallible=true, queue)
 
 
