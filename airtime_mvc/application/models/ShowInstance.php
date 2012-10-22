@@ -681,7 +681,7 @@ SQL;
 
         return $counts;
 
-    }                                                                          
+    }
 
     public function showEmpty()
     {
