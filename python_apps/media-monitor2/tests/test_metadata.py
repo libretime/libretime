@@ -26,7 +26,6 @@ class TestMetadata(unittest.TestCase):
                     i += 1
                     print("Sample metadata: '%s'" % md)
                 self.assertTrue( len( md.keys() ) > 0 )
-                self.assertTrue( 'MDATA_KEY_MD5' in md )
                 utf8 = md_full.utf8()
                 for k,v in md.iteritems():
                     if hasattr(utf8[k], 'decode'):
