@@ -7,7 +7,7 @@ from mutagen.easyid3 import EasyID3KeyError
 
 from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.log        import Loggable
-from media.monitor.pure       import format_length, truncate_to_length
+from media.monitor.pure       import format_length
 import media.monitor.pure as mmp
 
 # emf related stuff
@@ -89,6 +89,7 @@ class Metadata(Loggable):
     # little bit messy. Some of the handling is in m.m.pure while the rest is
     # here. Also interface is not very consistent
 
+    # TODO : what is this shit? maybe get rid of it?
     @staticmethod
     def fix_title(path):
         # If we have no title in path we will format it
@@ -98,39 +99,6 @@ class Metadata(Loggable):
             new_title = unicode( mmp.no_extension_basename(path) )
             m[u'title'] = new_title
             m.save()
-
-    @staticmethod
-    def airtime_dict(d):
-        """
-        Converts mutagen dictionary 'd' into airtime dictionary
-        """
-        temp_dict = {}
-        for m_key, m_val in d.iteritems():
-            # TODO : some files have multiple fields for the same metadata.
-            # genre is one example. In that case mutagen will return a list
-            # of values
-
-            if isinstance(m_val, list):
-                # TODO : does it make more sense to just skip the element in
-                # this case?
-                if len(m_val) == 0: assign_val = ''
-                else: assign_val = m_val[0]
-            else: assign_val = m_val
-
-            temp_dict[ m_key ] = assign_val
-        airtime_dictionary = {}
-        for muta_k, muta_v in temp_dict.iteritems():
-            # We must check if we can actually translate the mutagen key into
-            # an airtime key before doing the conversion
-            if muta_k in mutagen2airtime:
-                airtime_key = mutagen2airtime[muta_k]
-                # Apply truncation in the case where airtime_key is in our
-                # truncation table
-                muta_v =  \
-                        truncate_to_length(muta_v, truncate_table[airtime_key])\
-                        if airtime_key in truncate_table else muta_v
-                airtime_dictionary[ airtime_key ] = muta_v
-        return airtime_dictionary
 
     @staticmethod
     def write_unsafe(path,md):
