@@ -14,6 +14,13 @@ INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'ste
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
 
 
+CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
+    AS 
+    'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
+
 --clean up database of scheduled items that weren't properly deleted in 2.1.x
 --due to a bug
 DELETE
@@ -27,14 +34,9 @@ WHERE id IN
 ALTER TABLE cc_files
 	DROP CONSTRAINT cc_files_gunid_idx;
 
-DROP TABLE cc_access;
+DROP INDEX cc_files_file_exists_idx;
 
-CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
-    AS 
-    'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
-    LANGUAGE SQL
-    IMMUTABLE
-    RETURNS NULL ON NULL INPUT;
+DROP TABLE cc_access;
 
 CREATE SEQUENCE cc_block_id_seq
 	START WITH 1
@@ -140,6 +142,12 @@ ALTER TABLE cc_playlistcontents
 ALTER TABLE cc_schedule
 	ADD COLUMN stream_id integer;
 
+CREATE INDEX cc_schedule_instance_id_idx
+  ON cc_schedule
+  USING btree
+  (instance_id);
+
+
 ALTER TABLE cc_subjs
 	ADD COLUMN cell_phone character varying(255);
 
@@ -178,6 +186,33 @@ ALTER TABLE cc_schedule
 
 ALTER TABLE cc_webstream_metadata
 	ADD CONSTRAINT cc_schedule_inst_fkey FOREIGN KEY (instance_id) REFERENCES cc_schedule(id) ON DELETE CASCADE;
+
+
+
+
+ALTER TABLE cc_playlist
+        DROP CONSTRAINT cc_playlist_createdby_fkey;
+
+ALTER SEQUENCE cc_block_id_seq
+        OWNED BY cc_block.id;
+
+ALTER SEQUENCE cc_blockcontents_id_seq
+        OWNED BY cc_blockcontents.id;
+
+ALTER SEQUENCE cc_blockcriteria_id_seq
+        OWNED BY cc_blockcriteria.id;
+
+ALTER SEQUENCE cc_webstream_id_seq
+        OWNED BY cc_webstream.id;
+
+ALTER SEQUENCE cc_webstream_metadata_id_seq
+        OWNED BY cc_webstream_metadata.id;
+
+ALTER TABLE cc_playlist
+        ADD CONSTRAINT cc_playlist_createdby_fkey FOREIGN KEY (creator_id) REFERENCES cc_subjs(id) ON DELETE CASCADE;
+
+
+
 
 DROP FUNCTION airtime_to_int(chartoconvert character varying);
 

@@ -319,12 +319,12 @@ SQL;
                 if ($mins >59) {
                     $hour  = intval($mins/60);
                     $hour  = str_pad($hour, 2, "0", STR_PAD_LEFT);
-                    $value = $mins%60;
+                    $mins = $mins%60;
                 }
             }
             $hour   = str_pad($hour, 2, "0", STR_PAD_LEFT);
-            $value  = str_pad($value, 2, "0", STR_PAD_LEFT);
-            $length = $hour.":".$value.":00";
+            $mins  = str_pad($mins, 2, "0", STR_PAD_LEFT);
+            $length = $hour.":".$mins.":00";
         }
 
         return $length;
