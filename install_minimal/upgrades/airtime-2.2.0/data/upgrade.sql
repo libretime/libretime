@@ -178,9 +178,6 @@ ALTER TABLE cc_blockcontents
 ALTER TABLE cc_blockcriteria
 	ADD CONSTRAINT cc_blockcontents_block_id_fkey FOREIGN KEY (block_id) REFERENCES cc_block(id) ON DELETE CASCADE;
 
-ALTER TABLE cc_playlist
-        ADD CONSTRAINT cc_playlist_createdby_fkey FOREIGN KEY (creator_id) REFERENCES cc_subjs(id) ON DELETE CASCADE;
-
 ALTER TABLE cc_playlistcontents
 	ADD CONSTRAINT cc_playlistcontents_block_id_fkey FOREIGN KEY (block_id) REFERENCES cc_block(id) ON DELETE CASCADE;
 
@@ -189,6 +186,33 @@ ALTER TABLE cc_schedule
 
 ALTER TABLE cc_webstream_metadata
 	ADD CONSTRAINT cc_schedule_inst_fkey FOREIGN KEY (instance_id) REFERENCES cc_schedule(id) ON DELETE CASCADE;
+
+
+
+
+ALTER TABLE cc_playlist
+        DROP CONSTRAINT cc_playlist_createdby_fkey;
+
+ALTER SEQUENCE cc_block_id_seq
+        OWNED BY cc_block.id;
+
+ALTER SEQUENCE cc_blockcontents_id_seq
+        OWNED BY cc_blockcontents.id;
+
+ALTER SEQUENCE cc_blockcriteria_id_seq
+        OWNED BY cc_blockcriteria.id;
+
+ALTER SEQUENCE cc_webstream_id_seq
+        OWNED BY cc_webstream.id;
+
+ALTER SEQUENCE cc_webstream_metadata_id_seq
+        OWNED BY cc_webstream_metadata.id;
+
+ALTER TABLE cc_playlist
+        ADD CONSTRAINT cc_playlist_createdby_fkey FOREIGN KEY (creator_id) REFERENCES cc_subjs(id) ON DELETE CASCADE;
+
+
+
 
 DROP FUNCTION airtime_to_int(chartoconvert character varying);
 
