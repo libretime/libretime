@@ -287,7 +287,14 @@ SQL;
 SQL;
         $filesJoin = <<<SQL
        cc_schedule AS sched
-       JOIN cc_files AS ft ON (sched.file_id = ft.id)
+       JOIN cc_files AS ft ON (sched.file_id = ft.id
+           AND ((sched.starts >= '{$p_start}'
+               AND sched.starts < '{$p_end}')
+               OR (sched.ends > '{$p_start}'
+               AND sched.ends <= '{$p_end}')
+               OR (sched.starts <= '{$p_start}'
+               AND sched.ends >= '{$p_end}'))
+        )
 SQL;
 
 
@@ -307,7 +314,14 @@ SQL;
 SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched
-      JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
+      JOIN cc_webstream AS ws ON (sched.stream_id = ws.id
+          AND ((sched.starts >= '{$p_start}'
+               AND sched.starts < '{$p_end}')
+               OR (sched.ends > '{$p_start}'
+               AND sched.ends <= '{$p_end}')
+               OR (sched.starts <= '{$p_start}'
+               AND sched.ends >= '{$p_end}'))
+      )
       LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)
 SQL;
 
