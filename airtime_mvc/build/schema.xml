@@ -91,9 +91,6 @@
     <index name="cc_files_name_idx">
       <index-column name="name"/>
     </index>
-    <index name="cc_files_file_exists_idx">
-      <index-column name="file_exists"/>
-    </index>
   </table>
   <table name="cc_perms" phpName="CcPerms">
     <column name="permid" phpName="Permid" type="INTEGER" primaryKey="true" required="true"/>
@@ -206,7 +203,7 @@
       <parameter name="foreign_table" value="cc_playlistcontents" />
       <parameter name="expression" value="SUM(cliplength)" />
     </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey">
+    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey" onDelete="CASCADE">
       <reference local="creator_id" foreign="id"/>
     </foreign-key>
   </table>
@@ -332,6 +329,9 @@
     <foreign-key foreignTable="cc_webstream" name="cc_show_stream_fkey" onDelete="CASCADE">
       <reference local="stream_id" foreign="id"/>
     </foreign-key>
+    <index name="cc_schedule_instance_id_idx">
+      <index-column name="instance_id"/>
+    </index>
  </table>
   <table name="cc_sess" phpName="CcSess">
     <column name="sessid" phpName="Sessid" type="CHAR" size="32" primaryKey="true" required="true"/>

@@ -143,10 +143,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
          * upto this point
          */
         if ($valid) {
+            $utc = new DateTimeZone('UTC');
+            $localTimezone = new DateTimeZone(Application_Model_Preference::GetTimezone());
             $show_start = new DateTime($start_time);
-            $show_start->setTimezone(new DateTimeZone('UTC'));
+            $show_start->setTimezone($utc);
             $show_end = new DateTime($end_time);
-            $show_end->setTimezone(new DateTimeZone('UTC'));
+            $show_end->setTimezone($utc);
 
             if ($formData["add_show_repeats"]) {
 
@@ -155,7 +157,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $date = Application_Model_Preference::GetShowsPopulatedUntil();
 
                     if (is_null($date)) {
-                        $populateUntilDateTime = new DateTime("now", new DateTimeZone('UTC'));
+                        $populateUntilDateTime = new DateTime("now", $utc);
                         Application_Model_Preference::SetShowsPopulatedUntil($populateUntilDateTime);
                     } else {
                         $populateUntilDateTime = clone $date;
@@ -164,7 +166,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 } elseif (!$formData["add_show_no_end"]) {
                     $popUntil = $formData["add_show_end_date"]." ".$formData["add_show_end_time"];
                     $populateUntilDateTime = new DateTime($popUntil);
-                    $populateUntilDateTime->setTimezone(new DateTimeZone('UTC'));
+                    $populateUntilDateTime->setTimezone($utc);
                 }
 
                 //get repeat interval
@@ -203,8 +205,18 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                             else
                                 $daysAdd = $day - $startDow;
 
+                            /* In case we are crossing daylights saving time we need
+                             * to convert show start and show end to local time before
+                             * adding the interval for the next repeating show
+                             */
+                            
+                            $repeatShowStart->setTimezone($localTimezone);
+                            $repeatShowEnd->setTimezone($localTimezone);
                             $repeatShowStart->add(new DateInterval("P".$daysAdd."D"));
                             $repeatShowEnd->add(new DateInterval("P".$daysAdd."D"));
+                            //set back to UTC
+                            $repeatShowStart->setTimezone($utc);
+                            $repeatShowEnd->setTimezone($utc);
                         }
                         /* Here we are checking each repeating show by
                          * the show day.
@@ -238,8 +250,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                                 $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
                                 break 1;
                             } else {
+                                $repeatShowStart->setTimezone($localTimezone);
+                                $repeatShowEnd->setTimezone($localTimezone);
                                 $repeatShowStart->add(new DateInterval($interval));
                                 $repeatShowEnd->add(new DateInterval($interval));
+                                $repeatShowStart->setTimezone($utc);
+                                $repeatShowEnd->setTimezone($utc);
                             }
                         }
                     }

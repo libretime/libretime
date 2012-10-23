@@ -19,7 +19,7 @@ queue = amplify(1., override="replay_gain", queue)
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
 
-current_dyn_id = ref ''
+current_dyn_id = ref '-1'
 
 pypo_data = ref '0'
 stream_metadata_type = ref 0
@@ -43,10 +43,11 @@ web_stream = input.harbor("test-harbor", port=8999, password=stream_harbor_pass)
 web_stream = on_metadata(notify_stream, web_stream)
 output.dummy(fallible=true, web_stream)
 
+
+# the crossfade function controls fade in/out
+queue = crossfade_airtime(queue)
 queue = on_metadata(notify, queue)
 queue = map_metadata(update=false, append_title, queue)
-# the crossfade function controls fade in/out
-queue = crossfade(queue)
 output.dummy(fallible=true, queue)
 
 
@@ -95,21 +96,28 @@ server.register(namespace="dynamic_source",
                 usage="id <id>",
                 "id",
                 fun (s) -> begin log("dynamic_source.id") set_dynamic_source_id(s) end)
+
+server.register(namespace="dynamic_source",
+                description="Get the cc_schedule row id",
+                usage="get_id",
+                "get_id",
+                fun (s) -> begin log("dynamic_source.get_id") get_dynamic_source_id() end)
+
 server.register(namespace="dynamic_source",
                 description="Start a new dynamic source.",
                 usage="start <uri>",
                 "read_start",
-                fun (s) -> begin log("dynamic_source.read_start") create_dynamic_source(s) end)
+                fun (uri) -> begin log("dynamic_source.read_start") create_dynamic_source(uri) end)
 server.register(namespace="dynamic_source",
                 description="Stop a dynamic source.",
-                usage="stop <uri>",
+                usage="stop <id>",
                 "read_stop",
                 fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source(s) end)
 server.register(namespace="dynamic_source",
                 description="Stop a dynamic source.",
-                usage="stop <uri>",
+                usage="stop <id>",
                 "read_stop_all",
-                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all(s) end)
+                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)

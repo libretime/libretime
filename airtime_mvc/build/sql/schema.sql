@@ -105,8 +105,6 @@ CREATE INDEX "cc_files_md5_idx" ON "cc_files" ("md5");
 
 CREATE INDEX "cc_files_name_idx" ON "cc_files" ("name");
 
-CREATE INDEX "cc_files_file_exists_idx" ON "cc_files" ("file_exists");
-
 -----------------------------------------------------------------------------
 -- cc_perms
 -----------------------------------------------------------------------------
@@ -429,6 +427,8 @@ COMMENT ON TABLE "cc_schedule" IS '';
 
 
 SET search_path TO public;
+CREATE INDEX "cc_schedule_instance_id_idx" ON "cc_schedule" ("instance_id");
+
 -----------------------------------------------------------------------------
 -- cc_sess
 -----------------------------------------------------------------------------
@@ -689,7 +689,7 @@ ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("sho
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_host_fkey" FOREIGN KEY ("subjs_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id");
+ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
