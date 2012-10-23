@@ -18,10 +18,18 @@ class RequestSync(threading.Thread,Loggable):
     to airtime. In the process it packs the requests and retries for
     some number of times
     """
-    def __init__(self, watcher, requests):
+
+    @classmethod
+    def create_with_api_client(cls, watcher, requests):
+        apiclient = ac.AirtimeApiClient.create_right_config()
+        self = cls(watcher, requests, apiclient)
+        return self
+
+    def __init__(self, watcher, requests, apiclient):
         threading.Thread.__init__(self)
         self.watcher      = watcher
         self.requests     = requests
+        self.apiclient    = apiclient
         self.retries      = 1
         self.request_wait = 0.3
 
@@ -209,7 +217,8 @@ class WatchSyncer(ReportHandler,Loggable):
         requests = copy.copy(self.__queue)
         def launch_request():
             # Need shallow copy here
-            t = RequestSync(watcher=self, requests=requests)
+            t = RequestSync.create_with_api_client(watcher=self,
+                                                   requests=requests)
             t.start()
             self.__current_thread = t
         self.__requests.append(launch_request)
