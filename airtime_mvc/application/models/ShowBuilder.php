@@ -423,8 +423,7 @@ class Application_Model_ShowBuilder
         }
 
         $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems(
-            $this->startDT->format("Y-m-d H:i:s"), $this->endDT->format(
-                "Y-m-d H:i:s"), $shows);
+            $this->startDT, $this->endDT, $shows);
 
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 
