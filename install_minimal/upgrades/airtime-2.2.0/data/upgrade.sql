@@ -14,6 +14,13 @@ INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'ste
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
 
 
+CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
+    AS 
+    'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
+    LANGUAGE SQL
+    IMMUTABLE
+    RETURNS NULL ON NULL INPUT;
+
 --clean up database of scheduled items that weren't properly deleted in 2.1.x
 --due to a bug
 DELETE
@@ -27,14 +34,9 @@ WHERE id IN
 ALTER TABLE cc_files
 	DROP CONSTRAINT cc_files_gunid_idx;
 
-DROP TABLE cc_access;
+DROP INDEX cc_files_file_exists_idx;
 
-CREATE FUNCTION airtime_to_int(chartoconvert character varying) RETURNS integer
-    AS 
-    'SELECT CASE WHEN trim($1) SIMILAR TO ''[0-9]+'' THEN CAST(trim($1) AS integer) ELSE NULL END;'
-    LANGUAGE SQL
-    IMMUTABLE
-    RETURNS NULL ON NULL INPUT;
+DROP TABLE cc_access;
 
 CREATE SEQUENCE cc_block_id_seq
 	START WITH 1
@@ -175,6 +177,9 @@ ALTER TABLE cc_blockcontents
 
 ALTER TABLE cc_blockcriteria
 	ADD CONSTRAINT cc_blockcontents_block_id_fkey FOREIGN KEY (block_id) REFERENCES cc_block(id) ON DELETE CASCADE;
+
+ALTER TABLE cc_playlist
+        ADD CONSTRAINT cc_playlist_createdby_fkey FOREIGN KEY (creator_id) REFERENCES cc_subjs(id) ON DELETE CASCADE;
 
 ALTER TABLE cc_playlistcontents
 	ADD CONSTRAINT cc_playlistcontents_block_id_fkey FOREIGN KEY (block_id) REFERENCES cc_block(id) ON DELETE CASCADE;
