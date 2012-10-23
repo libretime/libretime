@@ -91,11 +91,6 @@
     <index name="cc_files_name_idx">
       <index-column name="name"/>
     </index>
-    <!-- Doesn't make sense to have an index on a set with Cardinality of 2 {true, false}. Should
-         remove this for 2.3 -MK -->
-    <index name="cc_files_file_exists_idx">
-      <index-column name="file_exists"/>
-    </index>
   </table>
   <table name="cc_perms" phpName="CcPerms">
     <column name="permid" phpName="Permid" type="INTEGER" primaryKey="true" required="true"/>
@@ -208,7 +203,7 @@
       <parameter name="foreign_table" value="cc_playlistcontents" />
       <parameter name="expression" value="SUM(cliplength)" />
     </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey">
+    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey" onDelete="CASCADE">
       <reference local="creator_id" foreign="id"/>
     </foreign-key>
   </table>
