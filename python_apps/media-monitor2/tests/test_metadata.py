@@ -42,10 +42,4 @@ class TestMetadata(unittest.TestCase):
         x1 = 123456
         print("Formatting '%s' to '%s'" % (x1, mmm.format_length(x1)))
 
-    def test_truncate_to_length(self):
-        s1 = "testing with non string literal"
-        s2 = u"testing with unicode literal"
-        self.assertEqual( len(mmm.truncate_to_length(s1, 5)), 5)
-        self.assertEqual( len(mmm.truncate_to_length(s2, 8)), 8)
-
 if __name__ == '__main__': unittest.main()
