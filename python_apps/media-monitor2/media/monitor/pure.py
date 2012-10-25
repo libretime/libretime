@@ -66,24 +66,6 @@ class IncludeOnly(object):
                 return func(moi, event, *args, **kwargs)
         return _wrap
 
-
-
-def diff_dict(d1, d2, width=30):
-    """
-    returns a formatted diff of 2 dictionaries
-    """
-    out = ""
-    all_keys = d1.keys() + d2.keys()
-    for k in all_keys:
-        v1, v2 = d1.get(k), d2.get(k)
-
-        # default values
-        if v1 is None: v1 = "N/A"
-        if v2 is None: v2 = "N/A"
-
-        if d1[k] != d2[k]:
-            out += "%s%s%s" % (k, d1[k], d2[k])
-
 def partition(f, alist):
     """
     Partition is very similar to filter except that it also returns the
@@ -452,9 +434,8 @@ def owner_id(original_path):
     return owner_id
 
 def file_playable(pathname):
-    """
-    Returns True if 'pathname' is playable by liquidsoap. False otherwise.
-    """
+    """ Returns True if 'pathname' is playable by liquidsoap. False
+    otherwise. """
     # when there is an single apostrophe inside of a string quoted by
     # apostrophes, we can only escape it by replace that apostrophe with
     # '\''. This breaks the string into two, and inserts an escaped
@@ -490,18 +471,14 @@ def toposort(data):
     assert not data, "A cyclic dependency exists amongst %r" % data
 
 def truncate_to_length(item, length):
-    """
-    Truncates 'item' to 'length'
-    """
+    """ Truncates 'item' to 'length' """
     if isinstance(item, int): item = str(item)
     if isinstance(item, basestring):
         if len(item) > length: return item[0:length]
         else: return item
 
 def format_length(mutagen_length):
-    """
-    Convert mutagen length to airtime length
-    """
+    """ Convert mutagen length to airtime length """
     t = float(mutagen_length)
     h = int(math.floor(t / 3600))
     t = t % 3600
