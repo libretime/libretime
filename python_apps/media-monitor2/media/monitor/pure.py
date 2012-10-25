@@ -220,6 +220,7 @@ def remove_whitespace(dictionary):
     return nd
 
 def parse_int(s):
+    # TODO : this function isn't used anywhere yet but it may useful for emf
     """
     Tries very hard to get some sort of integer result from s. Defaults to 0
     when it fails
