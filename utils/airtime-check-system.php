@@ -2,6 +2,8 @@
 
 AirtimeCheck::ExitIfNotRoot();
 
+date_default_timezone_set("UTC");
+
 $sapi_type = php_sapi_name();
 
 $showColor = !in_array("--no-color", $argv);

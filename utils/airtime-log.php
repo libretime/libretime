@@ -2,6 +2,8 @@
 
 exitIfNotRoot();
 
+date_default_timezone_set("UTC");
+
 $airtimeIni = getAirtimeConf();
 $airtime_base_dir = $airtimeIni['general']['airtime_dir'];
 
