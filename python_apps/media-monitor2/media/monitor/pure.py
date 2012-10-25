@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+from subprocess import Popen, PIPE
 import subprocess
 import os
 import math
@@ -164,6 +165,12 @@ def walk_supported(directory, clean_empties=False):
                 if is_file_supported(name) )
         for fp in full_paths: yield fp
     if clean_empties: clean_empty_dirs(directory)
+
+
+def file_locked(path):
+    cmd = "lsof %s" % path
+    f = Popen(cmd, shell=True, stdout=PIPE).stdout
+    return bool(f.readlines())
 
 def magic_move(old, new, after_dir_make=lambda : None):
     """

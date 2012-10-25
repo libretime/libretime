@@ -26,7 +26,7 @@ class ManagerTimeout(threading.Thread,Loggable):
         self.interval = interval
     def run(self):
         while True:
-            time.sleep(self.interval) # every 3 seconds
+            time.sleep(self.interval)
             self.manager.flush_organize()
 
 class Manager(Loggable):
@@ -178,7 +178,7 @@ class Manager(Loggable):
         # the OrganizeListener instance will walk path and dispatch an organize
         # event for every file in that directory
         self.organize['organize_listener'].flush_events(new_path)
-        self.__add_watch(new_path, self.organize['organize_listener'])
+        #self.__add_watch(new_path, self.organize['organize_listener'])
 
     def flush_organize(self):
         path = self.organize['organize_path']

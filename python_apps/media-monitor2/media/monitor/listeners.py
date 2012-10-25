@@ -48,17 +48,11 @@ class BaseListener(object):
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     def process_IN_CLOSE_WRITE(self, event):
         #self.logger.info("===> handling: '%s'" % str(event))
-        #self.process_to_organize(event)
-        pass
-    # got cookie
+        self.process_to_organize(event)
+
     def process_IN_MOVED_TO(self, event):
         #self.logger.info("===> handling: '%s'" % str(event))
-        #self.process_to_organize(event)
-        pass
-
-    def process_default(self, event):
-        pass
-        #self.logger.info("===> Not handling: '%s'" % str(event))
+        self.process_to_organize(event)
 
     def flush_events(self, path):
         """
@@ -69,8 +63,9 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
         for f in mmp.walk_supported(path, clean_empties=True):
             self.logger.info("Bootstrapping: File in 'organize' directory: \
                     '%s'" % f)
-            dispatcher.send(signal=self.signal, sender=self,
-                    event=OrganizeFile(f))
+            if not mmp.file_locked(f):
+                dispatcher.send(signal=self.signal, sender=self,
+                        event=OrganizeFile(f))
             flushed += 1
         #self.logger.info("Flushed organized directory with %d files" % flushed)
 
