@@ -157,7 +157,8 @@ class WatchSyncer(ReportHandler,Loggable):
     def __reset_queue(self): self.__queue = []
 
     def __del__(self):
-        # Ideally we would like to do a little more to ensure safe shutdown
+        #this destructor is completely untested and it's unclear whether
+        #it's even doing anything useful. consider removing it
         if self.events_in_queue():
             self.logger.warn("Terminating with events still in the queue...")
         if self.requests_in_queue():
