@@ -349,20 +349,16 @@ def fondle(path,times=None):
     with file(path, 'a'): os.utime(path, times)
 
 def last_modified(path):
-    """
-    return the time of the last time mm2 was ran. path refers to the index file
-    whose date modified attribute contains this information. In the case when
-    the file does not exist we set this time 0 so that any files on the
-    filesystem were modified after it
-    """
+    """ return the time of the last time mm2 was ran. path refers to the
+    index file whose date modified attribute contains this information.
+    In the case when the file does not exist we set this time 0 so that
+    any files on the filesystem were modified after it """
     if os.path.exists(path): return os.path.getmtime(path)
     else: return 0
 
 def expand_storage(store):
-    """
-    A storage directory usually consists of 4 different subdirectories. This
-    function returns their paths
-    """
+    """ A storage directory usually consists of 4 different
+    subdirectories. This function returns their paths """
     store = os.path.normpath(store)
     return {
         'organize'      : os.path.join(store, 'organize'),
@@ -372,10 +368,8 @@ def expand_storage(store):
     }
 
 def create_dir(path):
-    """
-    will try and make sure that path exists at all costs. raises an exception
-    if it fails at this task.
-    """
+    """ will try and make sure that path exists at all costs. raises an
+    exception if it fails at this task. """
     if not os.path.exists(path):
         try                   : os.makedirs(path)
         except Exception as e : raise FailedToCreateDir(path, e)
@@ -393,11 +387,10 @@ def sub_path(directory,f):
     return common == normalized
 
 def owner_id(original_path):
-    """
-    Given 'original_path' return the file name of the of 'identifier' file.
-    return the id that is contained in it. If no file is found or nothing is
-    read then -1 is returned. File is deleted after the number has been read
-    """
+    """ Given 'original_path' return the file name of the of
+    'identifier' file. return the id that is contained in it. If no file
+    is found or nothing is read then -1 is returned. File is deleted
+    after the number has been read """
     fname = "%s.identifier" % original_path
     owner_id = -1
     try:
