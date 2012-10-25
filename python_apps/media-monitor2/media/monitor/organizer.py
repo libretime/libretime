@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import time
 import media.monitor.pure   as mmp
 import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
@@ -71,6 +71,8 @@ class Organizer(ReportHandler,Loggable):
                     dispatcher.send(signal="add_subwatch", sender=self,
                             directory=d)
                 return cb
+
+            time.sleep(0.1)
 
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
