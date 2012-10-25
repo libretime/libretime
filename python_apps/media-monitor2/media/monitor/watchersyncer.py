@@ -71,8 +71,7 @@ class WatchSyncer(ReportHandler,Loggable):
                 #self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
-            except Exception as e:
-                self.unexpected_exception(e)
+            except Exception as e: self.unexpected_exception(e)
         else:
             self.logger.info("Received event that does not implement packing.\
                     Printing its representation:")
