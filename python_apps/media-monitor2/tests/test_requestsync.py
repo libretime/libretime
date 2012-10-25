@@ -1,7 +1,7 @@
 import unittest
 from mock import MagicMock
 
-from media.monitor.watchersyncer import RequestSync
+from media.monitor.request import RequestSync
 
 class TestRequestSync(unittest.TestCase):
 
