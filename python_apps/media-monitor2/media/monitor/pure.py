@@ -150,11 +150,10 @@ def no_extension_basename(path):
     else: return '.'.join(base.split(".")[0:-1])
 
 def walk_supported(directory, clean_empties=False):
-    """
-    A small generator wrapper around os.walk to only give us files that support
-    the extensions we are considering. When clean_empties is True we
-    recursively delete empty directories left over in directory after the walk.
-    """
+    """ A small generator wrapper around os.walk to only give us files
+    that support the extensions we are considering. When clean_empties
+    is True we recursively delete empty directories left over in
+    directory after the walk. """
     for root, dirs, files in os.walk(directory):
         full_paths = ( os.path.join(root, name) for name in files
                 if is_file_supported(name) )
@@ -168,10 +167,8 @@ def file_locked(path):
     return bool(f.readlines())
 
 def magic_move(old, new, after_dir_make=lambda : None):
-    """
-    Moves path old to new and constructs the necessary to directories for new
-    along the way
-    """
+    """ Moves path old to new and constructs the necessary to
+    directories for new along the way """
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
     # We need this crusty hack because anytime a directory is created we must
@@ -181,18 +178,15 @@ def magic_move(old, new, after_dir_make=lambda : None):
     shutil.move(old,new)
 
 def move_to_dir(dir_path,file_path):
-    """
-    moves a file at file_path into dir_path/basename(filename)
-    """
+    """ moves a file at file_path into dir_path/basename(filename) """
     bs = os.path.basename(file_path)
     magic_move(file_path, os.path.join(dir_path, bs))
 
 def apply_rules_dict(d, rules):
-    """
-    Consumes a dictionary of rules that maps some keys to lambdas which it
-    applies to every matching element in d and returns a new dictionary with
-    the rules applied. If a rule returns none then it's not applied
-    """
+    """ Consumes a dictionary of rules that maps some keys to lambdas
+    which it applies to every matching element in d and returns a new
+    dictionary with the rules applied. If a rule returns none then it's
+    not applied """
     new_d = copy.deepcopy(d)
     for k, rule in rules.iteritems():
         if k in d:
@@ -207,17 +201,14 @@ def default_to_f(dictionary, keys, default, condition):
     return new_d
 
 def default_to(dictionary, keys, default):
-    """
-    Checks if the list of keys 'keys' exists in 'dictionary'. If not then it
-    returns a new dictionary with all those missing keys defaults to 'default'
-    """
+    """ Checks if the list of keys 'keys' exists in 'dictionary'. If
+    not then it returns a new dictionary with all those missing keys
+    defaults to 'default' """
     cnd = lambda dictionary, key: key not in dictionary
     return default_to_f(dictionary, keys, default, cnd)
 
 def remove_whitespace(dictionary):
-    """
-    Remove values that empty whitespace in the dictionary
-    """
+    """ Remove values that empty whitespace in the dictionary """
     nd = copy.deepcopy(dictionary)
     bad_keys = []
     for k,v in nd.iteritems():
@@ -303,10 +294,9 @@ def organized_path(old_path, root_path, orig_md):
 # TODO : Get rid of this function and every one of its uses. We no longer use
 # the md5 signature of a song for anything
 def file_md5(path,max_length=100):
-    """
-    Get md5 of file path (if it exists). Use only max_length characters to save
-    time and memory. Pass max_length=-1 to read the whole file (like in mm1)
-    """
+    """ Get md5 of file path (if it exists). Use only max_length
+    characters to save time and memory. Pass max_length=-1 to read the
+    whole file (like in mm1) """
     if os.path.exists(path):
         with open(path, 'rb') as f:
             m = hashlib.md5()
@@ -322,16 +312,12 @@ def encode_to(obj, encoding='utf-8'):
     return obj
 
 def convert_dict_value_to_utf8(md):
-    """
-    formats a dictionary to send as a request to api client
-    """
+    """ formats a dictionary to send as a request to api client """
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 def get_system_locale(locale_path='/etc/default/locale'):
-    """
-    Returns the configuration object for the system's default locale. Normally
-    requires root access.
-    """
+    """ Returns the configuration object for the system's default
+    locale. Normally requires root access. """
     if os.path.exists(locale_path):
         try:
             config = ConfigObj(locale_path)
@@ -341,9 +327,7 @@ def get_system_locale(locale_path='/etc/default/locale'):
             permissions issue?" % locale_path)
 
 def configure_locale(config):
-    """
-    sets the locale according to the system's locale.
-    """
+    """ sets the locale according to the system's locale. """
     current_locale = locale.getlocale()
     if current_locale[1] is None:
         default_locale = locale.getdefaultlocale()
@@ -360,10 +344,8 @@ def configure_locale(config):
 
 def fondle(path,times=None):
     # TODO : write unit tests for this
-    """
-    touch a file to change the last modified date. Beware of calling this
-    function on the same file from multiple threads.
-    """
+    """ touch a file to change the last modified date. Beware of calling
+    this function on the same file from multiple threads. """
     with file(path, 'a'): os.utime(path, times)
 
 def last_modified(path):
