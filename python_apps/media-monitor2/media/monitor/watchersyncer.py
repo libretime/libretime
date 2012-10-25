@@ -28,7 +28,6 @@ class RequestSync(Loggable):
     to airtime. In the process it packs the requests and retries for
     some number of times
     """
-
     @classmethod
     def create_with_api_client(cls, watcher, requests):
         apiclient = ac.AirtimeApiClient.create_right_config()
@@ -39,17 +38,10 @@ class RequestSync(Loggable):
         self.watcher      = watcher
         self.requests     = requests
         self.apiclient    = apiclient
-        self.retries      = 1
-        self.request_wait = 0.3
 
     def run_request(self):
         self.logger.info("Attempting request with %d items." %
                 len(self.requests))
-        # Note that we must attach the appropriate mode to every
-        # response. Also Not forget to attach the 'is_record' to any
-        # requests that are related to recorded shows
-        # TODO : recorded shows aren't flagged right
-        # Is this retry shit even necessary? Consider getting rid of this.
         packed_requests = []
         for request_event in self.requests:
             try:
@@ -62,27 +54,17 @@ class RequestSync(Loggable):
                 if hasattr(request_event, 'path'):
                     self.logger.info("Possibly related to path: '%s'" %
                             request_event.path)
-        def make_req():
-            self.apiclient.send_media_monitor_requests( packed_requests )
-        # TODO : none of the shit below is necessary. get rid of it
-        # eventually
-        for try_index in range(0,self.retries):
-            try: make_req()
-            # most likely we did not get json response as we expected
-            except ValueError:
-                self.logger.info("ApiController.php probably crashed, we \
-                        diagnose this from the fact that it did not return \
-                        valid json")
-                self.logger.info("Trying again after %f seconds" %
-                        self.request_wait)
-                time.sleep( self.request_wait )
-            except Exception as e: self.unexpected_exception(e)
-            else:
-                self.logger.info("Request worked on the '%d' try" %
-                        (try_index + 1))
-                break
-        else: self.logger.info("Failed to send request after '%d' tries..." %
-                self.retries)
+        try: self.apiclient.send_media_monitor_requests( packed_requests )
+        # most likely we did not get json response as we expected
+        except ValueError:
+            self.logger.info("ApiController.php probably crashed, we \
+                    diagnose this from the fact that it did not return \
+                    valid json")
+            self.logger.info("Trying again after %f seconds" %
+                    self.request_wait)
+        except Exception as e: self.unexpected_exception(e)
+        else:
+            self.logger.info("Request was successful")
         self.watcher.flag_done() # poor man's condition variable
 
 class TimeoutWatcher(threading.Thread,Loggable):
