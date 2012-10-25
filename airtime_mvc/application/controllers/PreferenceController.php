@@ -53,7 +53,6 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetMailServerRequiresAuth($values["preferences_email_server"]["msRequiresAuth"]);
                 }
 
-                Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["preferences_soundcloud"]["UseSoundCloud"]);
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["preferences_soundcloud"]["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["preferences_soundcloud"]["SoundCloudDownloadbleOption"]);
                 Application_Model_Preference::SetSoundCloudUser($values["preferences_soundcloud"]["SoundCloudUser"]);
