@@ -63,8 +63,7 @@ class RequestSync(Loggable):
             self.logger.info("Trying again after %f seconds" %
                     self.request_wait)
         except Exception as e: self.unexpected_exception(e)
-        else:
-            self.logger.info("Request was successful")
+        else: self.logger.info("Request was successful")
         self.watcher.flag_done() # poor man's condition variable
 
 class TimeoutWatcher(threading.Thread,Loggable):
