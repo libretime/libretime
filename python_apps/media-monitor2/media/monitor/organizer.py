@@ -72,12 +72,12 @@ class Organizer(ReportHandler,Loggable):
                             directory=d)
                 return cb
 
-            time.sleep(0.1)
+            time.sleep(0.05)
 
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
 
-            time.sleep(0.1)
+            time.sleep(0.05)
 
             # The reason we need to go around saving the owner in this ass
             # backwards way is bewcause we are unable to encode the owner id
