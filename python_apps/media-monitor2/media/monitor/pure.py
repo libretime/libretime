@@ -91,14 +91,13 @@ def is_file_supported(path):
 # TODO : In the future we would like a better way to find out whether a show
 # has been recorded
 def is_airtime_recorded(md):
-    """
-    Takes a metadata dictionary and returns True if it belongs to a file that
-    was recorded by Airtime.
-    """
+    """ Takes a metadata dictionary and returns True if it belongs to a
+    file that was recorded by Airtime. """
     if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
 
 def read_wave_duration(path):
+    """ Read the length of .wav file (mutagen does not handle this) """
     with contextlib.closing(wave.open(path,'r')) as f:
         frames   = f.getnframes()
         rate     = f.getframerate()
@@ -106,9 +105,7 @@ def read_wave_duration(path):
         return duration
 
 def clean_empty_dirs(path):
-    """
-    walks path and deletes every empty directory it finds
-    """
+    """ walks path and deletes every empty directory it finds """
     # TODO : test this function
     if path.endswith('/'): clean_empty_dirs(path[0:-1])
     else:
