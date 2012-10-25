@@ -24,15 +24,12 @@ class Loggable(object):
     def logger(self): return get_logger()
 
     def unexpected_exception(self,e):
-        """
-        Default message for 'unexpected' exceptions
-        """
+        """ Default message for 'unexpected' exceptions """
         self.fatal_exception("'Unexpected' exception has occured:", e)
 
     def fatal_exception(self, message, e):
-        """
-        Prints an exception 'e' with 'message'. Also outputs the traceback.
-        """
+        """ Prints an exception 'e' with 'message'. Also outputs the
+        traceback. """
         self.logger.error( message )
         self.logger.error( str(e) )
         self.logger.error( traceback.format_exc() )

@@ -17,11 +17,9 @@ class ThreadedRequestSync(threading.Thread, Loggable):
         self.rs.run_request()
 
 class RequestSync(Loggable):
-    """
-    This class is responsible for making the api call to send a request
-    to airtime. In the process it packs the requests and retries for
-    some number of times
-    """
+    """ This class is responsible for making the api call to send a
+    request to airtime. In the process it packs the requests and retries
+    for some number of times """
     @classmethod
     def create_with_api_client(cls, watcher, requests):
         apiclient = ac.AirtimeApiClient.create_right_config()
