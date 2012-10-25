@@ -77,6 +77,8 @@ class Organizer(ReportHandler,Loggable):
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
 
+            time.sleep(0.1)
+
             # The reason we need to go around saving the owner in this ass
             # backwards way is bewcause we are unable to encode the owner id
             # into the file itself so that the StoreWatchListener listener can
