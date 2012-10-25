@@ -265,54 +265,6 @@ def parse_int(s):
         try   : return str(reduce(op.add, takewhile(lambda x: x.isdigit(), s)))
         except: return None
 
-def normalized_metadata(md, original_path):
-    """
-    consumes a dictionary of metadata and returns a new dictionary with the
-    formatted meta data. We also consume original_path because we must set
-    MDATA_KEY_CREATOR based on in it sometimes
-    """
-    new_md = copy.deepcopy(md)
-    # replace all slashes with dashes
-    #for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
-    # Specific rules that are applied in a per attribute basis
-    format_rules = {
-        'MDATA_KEY_TRACKNUMBER' : parse_int,
-        'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
-        'MDATA_KEY_BPM'         : lambda x: x[0:8],
-        'MDATA_KEY_MIME' : lambda x: x.replace('audio/vorbis','audio/ogg'),
-        # Whenever 0 is reported we change it to empty
-        #'MDATA_KEY_BITRATE' : lambda x: '' if str(x) == '0' else x
-    }
-
-    new_md = remove_whitespace(new_md) # remove whitespace fields
-    # Format all the fields in format_rules
-    new_md = apply_rules_dict(new_md, format_rules)
-    # set filetype to audioclip by default
-    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
-                        default=u'audioclip')
-
-    # Try to parse bpm but delete the whole key if that fails
-    if 'MDATA_KEY_BPM' in new_md:
-        new_md['MDATA_KEY_BPM'] = parse_int(new_md['MDATA_KEY_BPM'])
-        if new_md['MDATA_KEY_BPM'] is None:
-            del new_md['MDATA_KEY_BPM']
-
-    if not is_airtime_recorded(new_md):
-        # Read title from filename if it does not exist
-        default_title = no_extension_basename(original_path)
-        default_title = re.sub(r'__\d+\.',u'.', default_title)
-        if re.match(".+-%s-.+$" % unicode_unknown, default_title):
-            default_title = u''
-        new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
-                            default=default_title)
-        new_md['MDATA_KEY_TITLE'] = re.sub(r'-\d+kbps$', u'',
-                new_md['MDATA_KEY_TITLE'])
-
-    # TODO : wtf is this for again?
-    new_md['MDATA_KEY_TITLE'] = re.sub(r'-?%s-?' % unicode_unknown, u'',
-            new_md['MDATA_KEY_TITLE'])
-    new_md['MDATA_KEY_ORIGINAL_PATH'] = normpath(original_path)
-    return new_md
 
 def organized_path(old_path, root_path, orig_md):
     """
