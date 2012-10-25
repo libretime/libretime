@@ -6,13 +6,23 @@ import copy
 from media.monitor.handler         import ReportHandler
 from media.monitor.log             import Loggable
 from media.monitor.exceptions      import BadSongFile
-from media.monitor.pure            import LazyProperty
 from media.monitor.eventcontractor import EventContractor
 from media.monitor.events          import EventProxy
 
 import api_clients.api_client as ac
 
-class RequestSync(threading.Thread,Loggable):
+
+class ThreadedRequestSync(threading.Thread, Loggable):
+    def __init__(self, rs):
+        threading.Thread.__init__(self)
+        self.rs = rs
+        self.daemon = True
+        self.start()
+
+    def run(self):
+        self.rs.run_request()
+
+class RequestSync(Loggable):
     """
     This class is responsible for making the api call to send a request
     to airtime. In the process it packs the requests and retries for
@@ -26,18 +36,13 @@ class RequestSync(threading.Thread,Loggable):
         return self
 
     def __init__(self, watcher, requests, apiclient):
-        threading.Thread.__init__(self)
         self.watcher      = watcher
         self.requests     = requests
         self.apiclient    = apiclient
         self.retries      = 1
         self.request_wait = 0.3
 
-    @LazyProperty
-    def apiclient(self):
-        return ac.AirtimeApiClient.create_right_config()
-
-    def run(self):
+    def run_request(self):
         self.logger.info("Attempting request with %d items." %
                 len(self.requests))
         # Note that we must attach the appropriate mode to every
@@ -59,6 +64,8 @@ class RequestSync(threading.Thread,Loggable):
                             request_event.path)
         def make_req():
             self.apiclient.send_media_monitor_requests( packed_requests )
+        # TODO : none of the shit below is necessary. get rid of it
+        # eventually
         for try_index in range(0,self.retries):
             try: make_req()
             # most likely we did not get json response as we expected
@@ -76,7 +83,7 @@ class RequestSync(threading.Thread,Loggable):
                 break
         else: self.logger.info("Failed to send request after '%d' tries..." %
                 self.retries)
-        self.watcher.flag_done()
+        self.watcher.flag_done() # poor man's condition variable
 
 class TimeoutWatcher(threading.Thread,Loggable):
     """
@@ -217,9 +224,8 @@ class WatchSyncer(ReportHandler,Loggable):
         requests = copy.copy(self.__queue)
         def launch_request():
             # Need shallow copy here
-            t = RequestSync.create_with_api_client(watcher=self,
-                                                   requests=requests)
-            t.start()
+            t = ThreadedRequestSync( RequestSync.create_with_api_client(
+                watcher=self, requests=requests) )
             self.__current_thread = t
         self.__requests.append(launch_request)
         self.__reset_queue()
