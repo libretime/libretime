@@ -48,11 +48,13 @@ class BaseListener(object):
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     def process_IN_CLOSE_WRITE(self, event):
         #self.logger.info("===> handling: '%s'" % str(event))
-        self.process_to_organize(event)
+        #self.process_to_organize(event)
+        pass
     # got cookie
     def process_IN_MOVED_TO(self, event):
         #self.logger.info("===> handling: '%s'" % str(event))
-        self.process_to_organize(event)
+        #self.process_to_organize(event)
+        pass
 
     def process_default(self, event):
         pass

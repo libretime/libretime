@@ -18,7 +18,7 @@ class ManagerTimeout(threading.Thread,Loggable):
     secnods. This used to be just a work around for cc-4235 but recently
     became a permanent solution because it's "cheap" and reliable
     """
-    def __init__(self, manager, interval=3):
+    def __init__(self, manager, interval=1.5):
         # TODO : interval should be read from config and passed here instead
         # of just using the hard coded value
         threading.Thread.__init__(self)
