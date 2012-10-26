@@ -54,6 +54,9 @@ function open_audio_preview(type, id, audioFileTitle, audioFileArtist) {
         audioFileTitle = audioFileTitle.substring(0,index);
     }
 
+    // The reason that we need to encode artist and title string is that
+    // sometime they contain '/' or '\' and apache reject %2f or %5f
+    // so the work around is to encode it twice.
     openPreviewWindow('audiopreview/audio-preview/audioFileID/'+id+'/audioFileArtist/'+encodeURIComponent(encodeURIComponent(audioFileArtist))+'/audioFileTitle/'+encodeURIComponent(encodeURIComponent(audioFileTitle))+'/type/'+type);
 
     _preview_window.focus();
