@@ -115,7 +115,7 @@ def load_definitions():
     # 2. title is absent (read from file)
     # 3. recorded file
     def tr_title(k):
-        unicode_unknown = u"unknown"
+        #unicode_unknown = u"unknown"
         new_title = u""
         if is_airtime_recorded(k) or k['title'] != u"":
             new_title = k['title']
@@ -125,9 +125,7 @@ def load_definitions():
 
             # format is: track_number-title-123kbps.mp3
             m = re.match(".+-(?P<title>.+)-\d+kbps$", default_title)
-            if m:
-                if m.group('title') == unicode_unknown: new_title = ''
-                else: new_title = m.group('title')
+            if m: new_title = m.group('title')
             else: new_title = re.sub(r'-\d+kbps$', u'', new_title)
 
         return new_title
