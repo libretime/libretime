@@ -122,8 +122,16 @@ def load_definitions():
         else:
             default_title = no_extension_basename(k['path'])
             default_title = re.sub(r'__\d+\.',u'.', default_title)
+
+            # format is: track_number-title-123kbps.mp3
+            m = re.match(".+-(?P<title>.+)-\d+kbps", default_title)
+            if m:
+                if m.group('title') == unicode_unknown: new_title = ''
+                else: new_title = m.group('title')
+
             if re.match(".+-%s-.+$" % unicode_unknown, default_title):
                 default_title = u''
+
             new_title = default_title
             new_title = re.sub(r'-\d+kbps$', u'', new_title)
         return new_title
