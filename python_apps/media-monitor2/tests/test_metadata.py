@@ -26,7 +26,6 @@ class TestMetadata(unittest.TestCase):
                     i += 1
                     print("Sample metadata: '%s'" % md)
                 self.assertTrue( len( md.keys() ) > 0 )
-                self.assertTrue( 'MDATA_KEY_MD5' in md )
                 utf8 = md_full.utf8()
                 for k,v in md.iteritems():
                     if hasattr(utf8[k], 'decode'):
@@ -41,11 +40,5 @@ class TestMetadata(unittest.TestCase):
         # TODO : add some real tests for this function
         x1 = 123456
         print("Formatting '%s' to '%s'" % (x1, mmm.format_length(x1)))
-
-    def test_truncate_to_length(self):
-        s1 = "testing with non string literal"
-        s2 = u"testing with unicode literal"
-        self.assertEqual( len(mmm.truncate_to_length(s1, 5)), 5)
-        self.assertEqual( len(mmm.truncate_to_length(s2, 8)), 8)
 
 if __name__ == '__main__': unittest.main()

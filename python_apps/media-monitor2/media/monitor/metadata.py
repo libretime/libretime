@@ -2,14 +2,18 @@
 import mutagen
 import os
 import copy
-from collections     import namedtuple
 from mutagen.easymp4 import EasyMP4KeyError
 from mutagen.easyid3 import EasyID3KeyError
 
 from media.monitor.exceptions import BadSongFile, InvalidMetadataElement
 from media.monitor.log        import Loggable
-from media.monitor.pure       import format_length, truncate_to_length
+from media.monitor.pure       import format_length
 import media.monitor.pure as mmp
+
+# emf related stuff
+from media.metadata.process import global_reader
+import media.metadata.definitions as defs
+defs.load_definitions()
 
 """
 list of supported easy tags in mutagen version 1.20
@@ -43,21 +47,6 @@ airtime2mutagen = {
     "MDATA_KEY_COPYRIGHT"   : "copyright",
 }
 
-class FakeMutagen(dict):
-    """
-    Need this fake mutagen object so that airtime_special functions
-    return a proper default value instead of throwing an exceptions for
-    files that mutagen doesn't recognize
-    """
-    FakeInfo = namedtuple('FakeInfo','length bitrate')
-    def __init__(self,path):
-        self.path = path
-        self.mime = ['audio/wav']
-        self.info = FakeMutagen.FakeInfo(0.0, '')
-        dict.__init__(self)
-    def set_length(self,l):
-        old_bitrate = self.info.bitrate
-        self.info = FakeMutagen.FakeInfo(l, old_bitrate)
 
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
@@ -100,6 +89,7 @@ class Metadata(Loggable):
     # little bit messy. Some of the handling is in m.m.pure while the rest is
     # here. Also interface is not very consistent
 
+    # TODO : what is this shit? maybe get rid of it?
     @staticmethod
     def fix_title(path):
         # If we have no title in path we will format it
@@ -109,39 +99,6 @@ class Metadata(Loggable):
             new_title = unicode( mmp.no_extension_basename(path) )
             m[u'title'] = new_title
             m.save()
-
-    @staticmethod
-    def airtime_dict(d):
-        """
-        Converts mutagen dictionary 'd' into airtime dictionary
-        """
-        temp_dict = {}
-        for m_key, m_val in d.iteritems():
-            # TODO : some files have multiple fields for the same metadata.
-            # genre is one example. In that case mutagen will return a list
-            # of values
-
-            if isinstance(m_val, list):
-                # TODO : does it make more sense to just skip the element in
-                # this case?
-                if len(m_val) == 0: assign_val = ''
-                else: assign_val = m_val[0]
-            else: assign_val = m_val
-
-            temp_dict[ m_key ] = assign_val
-        airtime_dictionary = {}
-        for muta_k, muta_v in temp_dict.iteritems():
-            # We must check if we can actually translate the mutagen key into
-            # an airtime key before doing the conversion
-            if muta_k in mutagen2airtime:
-                airtime_key = mutagen2airtime[muta_k]
-                # Apply truncation in the case where airtime_key is in our
-                # truncation table
-                muta_v =  \
-                        truncate_to_length(muta_v, truncate_table[airtime_key])\
-                        if airtime_key in truncate_table else muta_v
-                airtime_dictionary[ airtime_key ] = muta_v
-        return airtime_dictionary
 
     @staticmethod
     def write_unsafe(path,md):
@@ -157,6 +114,7 @@ class Metadata(Loggable):
             if airtime_k in airtime2mutagen:
                 # The unicode cast here is mostly for integers that need to be
                 # strings
+                if airtime_v is None: continue
                 try:
                     song_file[ airtime2mutagen[airtime_k] ] = unicode(airtime_v)
                 except (EasyMP4KeyError, EasyID3KeyError) as e:
@@ -170,44 +128,7 @@ class Metadata(Loggable):
         # Forcing the unicode through
         try    : fpath = fpath.decode("utf-8")
         except : pass
-
-        if not mmp.file_playable(fpath): raise BadSongFile(fpath)
-
-        try              : full_mutagen  = mutagen.File(fpath, easy=True)
-        except Exception : raise BadSongFile(fpath)
-
-        self.path = fpath
-        if not os.path.exists(self.path):
-            self.logger.info("Attempting to read metadata of file \
-                    that does not exist. Setting metadata to {}")
-            self.__metadata = {}
-            return
-        # TODO : Simplify the way all of these rules are handled right now it's
-        # extremely unclear and needs to be refactored.
-        #if full_mutagen is None: raise BadSongFile(fpath)
-        if full_mutagen is None: full_mutagen = FakeMutagen(fpath)
-        self.__metadata = Metadata.airtime_dict(full_mutagen)
-        # Now we extra the special values that are calculated from the mutagen
-        # object itself:
-
-        if mmp.extension(fpath) == 'wav':
-            full_mutagen.set_length(mmp.read_wave_duration(fpath))
-
-        for special_key,f in airtime_special.iteritems():
-            try:
-                new_val = f(full_mutagen)
-                if new_val is not None:
-                    self.__metadata[special_key] = new_val
-            except Exception as e:
-                self.logger.info("Could not get special key %s for %s" %
-                        (special_key, fpath))
-                self.logger.info(str(e))
-        # Finally, we "normalize" all the metadata here:
-        self.__metadata = mmp.normalized_metadata(self.__metadata, fpath)
-        # Now we must load the md5:
-        # TODO : perhaps we shouldn't hard code how many bytes we're reading
-        # from the file?
-        self.__metadata['MDATA_KEY_MD5'] = mmp.file_md5(fpath,max_length=100)
+        self.__metadata = global_reader.read_mutagen(fpath)
 
     def is_recorded(self):
         """

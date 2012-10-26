@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pyinotify
 from pydispatch import dispatcher
+from functools import wraps
 
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
@@ -31,6 +32,7 @@ class FileMediator(object):
     def unignore(path): FileMediator.ignored_set.remove(path)
 
 def mediate_ignored(fn):
+    @wraps(fn)
     def wrapped(self, event, *args,**kwargs):
         event.pathname = unicode(event.pathname, "utf-8")
         if FileMediator.is_ignored(event.pathname):
