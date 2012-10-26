@@ -114,6 +114,7 @@ class Metadata(Loggable):
             if airtime_k in airtime2mutagen:
                 # The unicode cast here is mostly for integers that need to be
                 # strings
+                if airtime_v is None: continue
                 try:
                     song_file[ airtime2mutagen[airtime_k] ] = unicode(airtime_v)
                 except (EasyMP4KeyError, EasyID3KeyError) as e:
