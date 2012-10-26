@@ -126,7 +126,7 @@ def load_definitions():
             # format is: track_number-title-123kbps.mp3
             m = re.match(".+-(?P<title>.+)-\d+kbps$", default_title)
             if m: new_title = m.group('title')
-            else: new_title = re.sub(r'-\d+kbps$', u'', new_title)
+            else: new_title = re.sub(r'-\d+kbps$', u'', default_title)
 
         return new_title
 
