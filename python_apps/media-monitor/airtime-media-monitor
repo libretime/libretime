@@ -8,7 +8,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 media_monitor_path="/usr/lib/airtime/media-monitor/"
 media_monitor_script="media_monitor.py"
 
-api_client_path="/usr/lib/airtime/"
+api_client_path="/usr/lib/airtime/:/usr/lib/airtime/media-monitor/mm2/"
 
 cd ${media_monitor_path}
 
@@ -25,7 +25,6 @@ fi
 export PYTHONPATH=${api_client_path}
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 
-# Note the -u when calling python! we need it to get unbuffered binary stdout and stderr
-exec python -u ${media_monitor_path}${media_monitor_script} > /var/log/airtime/media-monitor/py-interpreter.log 2>&1
+exec python ${media_monitor_path}${media_monitor_script} > /var/log/airtime/media-monitor/py-interpreter.log 2>&1
 
 # EOF

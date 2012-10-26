@@ -2,6 +2,8 @@
 
 exitIfNotRoot();
 
+date_default_timezone_set("UTC");
+
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
 // Name of the web server user
@@ -35,15 +37,21 @@ get_include_path(),
 realpath($CC_CONFIG['phpDir'] . '/library')
 )));
 
-require_once($CC_CONFIG['phpDir'].'/application/models/User.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/Playlist.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/Schedule.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/Show.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/ShowInstance.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/StreamSetting.php');
-require_once($CC_CONFIG['phpDir'].'/application/models/LiveLog.php');
+function my_autoload($classname){
+    global $CC_CONFIG;
+    $info = explode('_', $classname);
+    if (isset($info[1]) && isset($info[2])) {
+        $filename = $info[2].".php";
+        if ($info[1] == "Model") {
+            $folderName = "models";
+        } else if ($info[1] == "Common") {
+            $folderName = "common";
+        }
+        require_once($CC_CONFIG['phpDir'].'/application/'.$folderName.'/'.$filename);
+    }
+}
+
+spl_autoload_register('my_autoload');
 
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init($CC_CONFIG['phpDir']."/application/configs/airtime-conf-production.php");
@@ -56,20 +64,7 @@ if (file_exists('/usr/share/php/libzend-framework-php')){
 require_once('Zend/Loader/Autoloader.php');
 $autoloader = Zend_Loader_Autoloader::getInstance();
 
-try {
-    $opts = new Zend_Console_Getopt(
-    array(
-            'test|t' => "Keep broadcast log data\n"
-            )
-            );
-            $opts->parse();
-}
-catch (Zend_Console_Getopt_Exception $e) {
-    print $e->getMessage() .PHP_EOL;
-    exit(1);
-}
-
-$infoArray = Application_Model_Preference::GetSystemInfo(true, isset($opts->t));
+$infoArray = Application_Model_Preference::GetSystemInfo(true);
 
 if(Application_Model_Preference::GetSupportFeedback() == '1'){
     $url = 'http://stat.sourcefabric.org/index.php?p=airtime';

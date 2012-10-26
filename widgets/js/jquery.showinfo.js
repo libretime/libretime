@@ -1,4 +1,4 @@
- var AIRTIME_API_VERSION = "1.0";
+ var AIRTIME_API_VERSION = "1.1";
 
 (function($){
  $.fn.airtimeShowSchedule = function(options) {
@@ -6,7 +6,8 @@
     var defaults = {
         updatePeriod: 20, //seconds
         sourceDomain: "http://localhost/", //where to get show status from
-        text: {onAirToday:"On air today"}
+        text: {onAirToday:"On air today"},
+        showLimit: 5
     };
     options = $.extend(true, defaults, options);
     options.sourceDomain = addEndingBackslash(options.sourceDomain);
@@ -56,7 +57,7 @@
 
         function getServerData(){
             $.ajax({url: options.sourceDomain + "api/live-info/", 
-                    data: {type:"endofday",limit:"5"}, 
+                    data: {type:"endofday",limit: options.showLimit}, 
                     dataType: "jsonp", 
                     success:function(data) {
                         processData(data);

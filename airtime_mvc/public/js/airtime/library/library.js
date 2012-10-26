@@ -8,6 +8,41 @@ var AIRTIME = (function(AIRTIME) {
         chosenItems = {},
         visibleChosenItems = {};
     
+    var criteriaTypes = {
+        0             : "",
+        "album_title" : "s",
+        "artist_name" : "s",
+        "bit_rate"    : "n",
+        "bpm"         : "n",
+        "comments"    : "s",
+        "composer"    : "s",
+        "conductor"   : "s",
+        "copyright"   : "s",
+        "utime"       : "n",
+        "mtime"       : "n",
+        "lptime"      : "n",
+        "disc_number" : "n",
+        "encoded_by"  : "s",
+        "genre"       : "s",
+        "isrc_number" : "s",
+        "label"       : "s",
+        "language"    : "s",
+        "length"      : "n",
+        "lyricist"    : "s",
+        "mime"        : "s",
+        "mood"        : "s",
+        "name"        : "s",
+        "orchestra"   : "s",
+        "rating"      : "n",
+        "sample_rate" : "n",
+        "track_title" : "s",
+        "track_num"   : "n",
+        "year"        : "n",
+        "owner_id"    : "s",
+        "info_url"    : "s",
+        "replay_gain" : "n"
+    };
+    
     if (AIRTIME.library === undefined) {
         AIRTIME.library = {};
     }
@@ -17,7 +52,8 @@ var AIRTIME = (function(AIRTIME) {
         var cItem,
             selected,
             $trs;
-            
+
+
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
         $trs.each(function(i){
@@ -40,7 +76,7 @@ var AIRTIME = (function(AIRTIME) {
             cItem,
             i, length,
             count = 0,
-            reAudio=/^au/ ;
+            reAudio=/^(au|st|pl|bl)/ ;
             
         // Get visible items and check if any chosenItems are visible
         $trs = $libTable.find("tbody input:checkbox").parents("tr");
@@ -60,22 +96,44 @@ var AIRTIME = (function(AIRTIME) {
                 count++;
             }
         }
-        
+        visibleChosenItems = {};
         return count;
     };
     
+    mod.changeAddButtonText = function($button, btnText) {
+        $button.text(btnText);
+    }
+    
+    mod.createToolbarButtons = function() {
+        $menu = $("<div class='btn-toolbar' />");
+        $menu
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                            "Select <span class='caret'></span>" +
+                        "</button>" +
+                        "<ul class='dropdown-menu'>" +
+                            "<li id='sb-select-page'><a href='#'>Select this page</a></li>" +
+                            "<li id='sb-dselect-page'><a href='#'>Deselect this page</a></li>" +
+                            "<li id='sb-dselect-all'><a href='#'>Deselect all</a></li>" +
+                        "</ul>" +
+                    "</div>")
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small' id='library-plus'>" +
+                            "<i class='icon-white icon-plus'></i>" +
+                            "<span id='lib-plus-text'></span>" +
+                        "</button>" +
+                    "</div>")
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small' id='sb-trash'>" +
+                            "<i class='icon-white icon-trash'></i>" +
+                        "</button>" +
+                    "</div>");
+    }
+    
     mod.createToolbarDropDown = function() {
-        
-        $.contextMenu({
-            selector: '#library_content .ui-icon-document-b',
-            trigger: "left",
-            ignoreRightClick: true,
-            items: {
-                "sp": {name: "Select This Page", callback: mod.selectCurrentPage},
-                "dp": {name: "Deselect This Page", callback: mod.deselectCurrentPage},
-                "sn": {name: "Deselect All", callback: mod.selectNone}
-            }
-        });     
+        $('#sb-select-page').click(function(){mod.selectCurrentPage();});
+        $('#sb-dselect-page').click(function(){mod.deselectCurrentPage();});
+        $('#sb-dselect-all').click(function(){mod.selectNone();});
     };
     
     mod.checkDeleteButton = function() {
@@ -87,10 +145,10 @@ var AIRTIME = (function(AIRTIME) {
         }
         
         if (check === true) {
-            AIRTIME.button.enableButton("lib-button-delete");
+            AIRTIME.button.enableButton("btn-group #sb-trash", false);
         }
         else {
-            AIRTIME.button.disableButton("lib-button-delete");
+            AIRTIME.button.disableButton("btn-group #sb-trash", false);
         }
     };
     
@@ -123,7 +181,7 @@ var AIRTIME = (function(AIRTIME) {
                 data.push(visibleChosenItems[id]);
             }
         }
-        
+        visibleChosenItems = {};
         return data;
     };
     
@@ -303,39 +361,108 @@ var AIRTIME = (function(AIRTIME) {
                 $el.removeClass("ui-state-hover");
             } 
         });
-              
+        
+        var colReorderMap = new Array();
+        
         $libTable = $libContent.find("table");
         
         var tableHeight = $libContent.height() - 130;
+        
+        function setColumnFilter(oTable){
+            // TODO : remove this dirty hack once js is refactored
+            if (!oTable.fnSettings()) { return ; }
+            var aoCols = oTable.fnSettings().aoColumns;
+            var colsForAdvancedSearch = new Array();
+            var advanceSearchDiv = $("div#advanced_search");
+            advanceSearchDiv.empty();
+            $.each(aoCols, function(i,ele){
+                if (ele.bSearchable) {
+                    var currentColId = ele._ColReorder_iOrigCol;
+                    
+                    var inputClass = 'filter_column filter_number_text'; 
+                    var labelStyle = "style='margin-right:35px;'";
+                    if (criteriaTypes[ele.mDataProp] != "s") {
+                        inputClass = 'filterColumn filter_number_range';
+                        labelStyle = "";
+                    }
+                    
+                    if (ele.bVisible) {
+                        advanceSearchDiv.append(
+                            "<div id='advanced_search_col_"+currentColId+" class='control-group'>" +
+                                "<label class='control-label'"+labelStyle+">"+ele.sTitle+" : </label>" +
+                                "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
+                            "</div>");
+                    } else {
+                        advanceSearchDiv.append(
+                            "<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'>" +
+                                "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
+                                "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
+                            "</div>");
+                    }
+                    
+                    if (criteriaTypes[ele.mDataProp] == "s") {
+                        var obj = { sSelector: "#"+ele.mDataProp }
+                    } else {
+                        var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
+                    }
+                    colsForAdvancedSearch.push(obj);
+                } else {
+                    colsForAdvancedSearch.push(null);
+                }
+            });
+            
+            oTable.columnFilter({
+                aoColumns: colsForAdvancedSearch,
+                bUseColVis: true,
+                sPlaceHolder: "head:before"
+                }
+            );
+        }
+        
+        function setFilterElement(iColumn, bVisible){
+            var actualId = colReorderMap[iColumn];
+            var selector = "div#advanced_search_col_"+actualId;
+            if (bVisible) {
+                $(selector).show();
+            } else {
+                $(selector).hide();
+            }
+        }
+        
+        var currentColOrder = new Array();
         
         oTable = $libTable.dataTable( {
             
             //put hidden columns at the top to insure they can never be visible on the table through column reordering.
             "aoColumns": [
-              /* ftype */         {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
-              /* Checkbox */      {"sTitle": "", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "25px", "sClass": "library_checkbox"},
-              /* Type */          {"sTitle": "", "mDataProp": "image", "bSearchable": false, "sWidth": "25px", "sClass": "library_type", "iDataSort": 0},
-              /* Title */         {"sTitle": "Title", "mDataProp": "track_title", "sClass": "library_title", "sWidth": "170px"},
-              /* Creator */       {"sTitle": "Creator", "mDataProp": "artist_name", "sClass": "library_creator", "sWidth": "160px"},
-              /* Album */         {"sTitle": "Album", "mDataProp": "album_title", "sClass": "library_album", "sWidth": "150px"},
-              /* Genre */         {"sTitle": "Genre", "mDataProp": "genre", "bVisible": false, "sClass": "library_genre", "sWidth": "100px"},
-              /* Year */          {"sTitle": "Year", "mDataProp": "year", "bVisible": false, "sClass": "library_year", "sWidth": "60px"},
-              /* Length */        {"sTitle": "Length", "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
-              /* Upload Time */   {"sTitle": "Uploaded", "mDataProp": "utime", "sClass": "library_upload_time", "sWidth": "125px"},
-              /* Last Modified */ {"sTitle": "Last Modified", "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time", "sWidth": "125px"},
-              /* Track Number */  {"sTitle": "Track", "mDataProp": "track_number", "bSearchable": false, "bVisible": false, "sClass": "library_track", "sWidth": "65px"},
-              /* Mood */          {"sTitle": "Mood", "mDataProp": "mood", "bSearchable": false, "bVisible": false, "sClass": "library_mood", "sWidth": "70px"},
-              /* BPM */  {"sTitle": "BPM", "mDataProp": "bpm", "bSearchable": false, "bVisible": false, "sClass": "library_bpm", "sWidth": "50px"},
-              /* Composer */  {"sTitle": "Composer", "mDataProp": "composer", "bSearchable": false, "bVisible": false, "sClass": "library_composer", "sWidth": "150px"},
-              /* Website */  {"sTitle": "Website", "mDataProp": "info_url", "bSearchable": false, "bVisible": false, "sClass": "library_url", "sWidth": "150px"},
-              /* Bit Rate */  {"sTitle": "Bit Rate", "mDataProp": "bit_rate", "bSearchable": false, "bVisible": false, "sClass": "library_bitrate", "sWidth": "80px"},
-              /* Sample Rate */  {"sTitle": "Sample", "mDataProp": "sample_rate", "bSearchable": false, "bVisible": false, "sClass": "library_sr", "sWidth": "80px"},
-              /* ISRC Number */  {"sTitle": "ISRC", "mDataProp": "isrc_number", "bSearchable": false, "bVisible": false, "sClass": "library_isrc", "sWidth": "150px"},
-              /* Encoded */  {"sTitle": "Encoded", "mDataProp": "encoded_by", "bSearchable": false, "bVisible": false, "sClass": "library_encoded", "sWidth": "150px"},
-              /* Label */  {"sTitle": "Label", "mDataProp": "label", "bSearchable": false, "bVisible": false, "sClass": "library_label", "sWidth": "125px"},
-              /* Copyright */  {"sTitle": "Copyright", "mDataProp": "copyright", "bSearchable": false, "bVisible": false, "sClass": "library_copyright", "sWidth": "125px"},
-              /* Mime */  {"sTitle": "Mime", "mDataProp": "mime", "bSearchable": false, "bVisible": false, "sClass": "library_mime", "sWidth": "80px"},
-              /* Language */  {"sTitle": "Language", "mDataProp": "language", "bSearchable": false, "bVisible": false, "sClass": "library_language", "sWidth": "125px"}
+              /* ftype         */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
+              /* Checkbox      */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
+              /* Type          */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
+              /* Title         */  { "sTitle" : "Title"         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
+              /* Creator       */  { "sTitle" : "Creator"       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
+              /* Album         */  { "sTitle" : "Album"         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
+              /* Bit Rate      */  { "sTitle" : "Bit Rate"      , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         }, 
+              /* BPM           */  { "sTitle" : "BPM"           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
+              /* Composer      */  { "sTitle" : "Composer"      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        }, 
+              /* Conductor     */  { "sTitle" : "Conductor"     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
+              /* Copyright     */  { "sTitle" : "Copyright"     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
+              /* Encoded       */  { "sTitle" : "Encoded By"    , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        }, 
+              /* Genre         */  { "sTitle" : "Genre"         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        }, 
+              /* ISRC Number   */  { "sTitle" : "ISRC"          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        }, 
+              /* Label         */  { "sTitle" : "Label"         , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        }, 
+              /* Language      */  { "sTitle" : "Language"      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }, 
+              /* Last Modified */  { "sTitle" : "Last Modified" , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
+              /* Last Played   */  { "sTitle" : "Last Played  " , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },  
+              /* Length        */  { "sTitle" : "Length"        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          , 
+              /* Mime          */  { "sTitle" : "Mime"          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         }, 
+              /* Mood          */  { "sTitle" : "Mood"          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         },
+              /* Owner         */  { "sTitle" : "Owner"         , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }, 
+              /* Replay Gain   */  { "sTitle" : "Replay Gain"   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"      , "sWidth" : "80px"      }, 
+              /* Sample Rate   */  { "sTitle" : "Sample Rate"   , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         }, 
+              /* Track Number  */  { "sTitle" : "Track Number"  , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         }, 
+              /* Upload Time   */  { "sTitle" : "Uploaded"      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          ,
+              /* Website       */  { "sTitle" : "Website"       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
+              /* Year          */  { "sTitle" : "Year"          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
               ],
                           
             "bProcessing": true,
@@ -350,15 +477,15 @@ var AIRTIME = (function(AIRTIME) {
                 delete oData.aoSearchCols;
             },
             "fnStateSave": function (oSettings, oData) {
-               
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
-                
                 $.ajax({
                     url: "/usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
                   });
+                
+                colReorderMap = oData.ColReorder;
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-library');
@@ -371,7 +498,7 @@ var AIRTIME = (function(AIRTIME) {
                 var i,
                     length,
                     a = oData.abVisCols;
-            
+                
                 //putting serialized data back into the correct js type to make
                 //sure everything works properly.
                 for (i = 0, length = a.length; i < length; i++) {
@@ -386,7 +513,7 @@ var AIRTIME = (function(AIRTIME) {
                         a[i] = parseInt(a[i], 10);
                     }
                 }
-               
+                
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
                 oData.iStart = parseInt(oData.iStart, 10);
@@ -397,15 +524,23 @@ var AIRTIME = (function(AIRTIME) {
             "sAjaxDataProp": "files",
             
             "fnServerData": function ( sSource, aoData, fnCallback ) {
+                /* The real validation check is done in dataTables.columnFilter.js
+                 * We also need to check it here because datatable is redrawn everytime
+                 * an action is performed in the Library page.
+                 * In order for datatable to redraw the advanced search fields
+                 * MUST all be valid.
+                 */
+                var advSearchFields = $("div#advanced_search").children(':visible');
+                var advSearchValid = validateAdvancedSearch(advSearchFields);
                 var type;
-                
                 aoData.push( { name: "format", value: "json"} );
+                aoData.push( { name: "advSearch", value: advSearchValid} );
                 
                 //push whether to search files/playlists or all.
                 type = $("#library_display_type").find("select").val();
                 type = (type === undefined) ? 0 : type;
                 aoData.push( { name: "type", value: type} );
-                
+            
                 $.ajax( {
                     "dataType": 'json',
                     "type": "POST",
@@ -423,7 +558,12 @@ var AIRTIME = (function(AIRTIME) {
                         playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
                         open_playlist_preview(playlistIndex, 0);
                     } else if (aData.ftype === 'audioclip') {
-                        open_audio_preview(aData.audioFile, aData.track_title, aData.artist_name);
+                        open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                    } else if (aData.ftype == 'stream') {
+                        open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                    } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
+                        blockIndex = $(this).parent().attr('id').substring(3); //remove the bl_
+                        open_block_preview(blockIndex, 0);
                     }
                     return false;
                 });
@@ -440,8 +580,7 @@ var AIRTIME = (function(AIRTIME) {
                         
                         $tr = $(el).parent();
                         data = $tr.data("aData");
-                        AIRTIME.library.dblClickAdd(data.id, data.ftype);
-                        //AIRTIME.playlist.fnAddItems([data.id], undefined, 'after');
+                        AIRTIME.library.dblClickAdd(data, data.ftype);
                     }
                     else
                     {
@@ -465,7 +604,7 @@ var AIRTIME = (function(AIRTIME) {
                             text: aData.track_title
                         },
                         ajax: {
-                            url: "/Library/get-file-meta-data",
+                            url: "/Library/get-file-metadata",
                             type: "get",
                             data: ({format: "html", id : aData.id, type: aData.ftype}),
                             success: function(data, status) {
@@ -485,7 +624,7 @@ var AIRTIME = (function(AIRTIME) {
                         effect: false // Disable positioning animation
                     },
                     style: {
-                        classes: "ui-tooltip-dark"
+                        classes: "ui-tooltip-dark file-md-long"
                     },
                     show: 'mousedown',
                     events: {
@@ -496,7 +635,7 @@ var AIRTIME = (function(AIRTIME) {
                          }
                        }
                     },
-                    hide: 'mouseout'  
+                    hide: {event:'mouseout', delay: 50, fixed:true}  
                 });
             },
            //remove any selected nodes before the draw.
@@ -522,7 +661,8 @@ var AIRTIME = (function(AIRTIME) {
             "oColVis": {
                 "sAlign": "right",
                 "aiExclude": [0, 1, 2],
-                "sSize": "css"
+                "sSize": "css",
+                "fnStateChange": setFilterElement
             },
             
             "oColReorder": {
@@ -530,7 +670,20 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
+
+        setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
+        
+        $libContent.on("click", "legend", function(){
+            var $fs = $(this).parents("fieldset");
+
+            if ($fs.hasClass("closed")) {
+                $fs.removeClass("closed");
+            }
+            else {
+                $fs.addClass("closed");
+            }
+        });
        
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
         
@@ -543,6 +696,8 @@ var AIRTIME = (function(AIRTIME) {
                 .append('<option value="0">All</option>')
                 .append('<option value="1">Files</option>')
                 .append('<option value="2">Playlists</option>')
+                .append('<option value="3">Smart Blocks</option>')
+                .append('<option value="4">Web Streams</option>')
                 .end()
             .change(function(ev){
                 oTable.fnDraw();
@@ -596,9 +751,11 @@ var AIRTIME = (function(AIRTIME) {
                     
                     //define an add to playlist callback.
                     if (oItems.pl_add !== undefined) {
+                        var aItems = [];
                         
                         callback = function() {
-                            AIRTIME.playlist.fnAddItems([data.id], undefined, 'after');
+                            aItems.push(new Array(data.id, data.ftype));
+                            AIRTIME.playlist.fnAddItems(aItems, undefined, 'after');
                         };
                         
                         oItems.pl_add.callback = callback;
@@ -611,23 +768,41 @@ var AIRTIME = (function(AIRTIME) {
                             callback = function() {
                                 document.location.href = oItems.edit.url;
                             };
-                        }
-                        else {
+                        } else if (data.ftype === "playlist" || data.ftype === "block") {
                             callback = function() {
-                                AIRTIME.playlist.fnEdit(data.id);
+		                        var url = '/Playlist/edit';
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                                AIRTIME.playlist.validatePlaylistElements();
                             };
+                        } else if (data.ftype === "stream") {
+                            callback = function() {
+		                        var url = '/Webstream/edit';
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                            }
+                        } else {
+                            throw new Exception("Unknown type: " + data.ftype);
                         }
                         oItems.edit.callback = callback;
                     }
 
                     //define a play callback.
                     if (oItems.play !== undefined) {
+
+                        if (oItems.play.mime !== undefined) {
+                            if (!isAudioSupported(oItems.play.mime)) {
+                                oItems.play.disabled = true;
+                            }
+                        }
+
                         callback = function() {
                            if (data.ftype === 'playlist' && data.length !== '0.0'){
                                 playlistIndex = $(this).parent().attr('id').substring(3); //remove the pl_
                                 open_playlist_preview(playlistIndex, 0);
-                            } else if (data.ftype === 'audioclip') {
-                                open_audio_preview(data.audioFile, data.track_title, data.artist_name);
+                            } else if (data.ftype === 'audioclip' || data.ftype === 'stream') {
+                                open_audio_preview(data.ftype, data.audioFile, data.track_title, data.artist_name);
+                            } else if (data.ftype === 'block') {
+                                blockIndex = $(this).parent().attr('id').substring(3); //remove the pl_
+                                open_block_preview(blockIndex, 0);
                             }
                         };
                         oItems.play.callback = callback;
@@ -638,11 +813,12 @@ var AIRTIME = (function(AIRTIME) {
                         
                         //delete through the playlist controller, will reset
                         //playlist screen if this is the currently edited playlist.
-                        if (data.ftype === "playlist" && screen === "playlist") {
+                        if ((data.ftype === "playlist" || data.ftype === "block") && screen === "playlist") {
                             callback = function() {
-                                
+                                aMedia = [];
+                                aMedia.push({"id": data.id, "type": data.ftype});
                                 if (confirm('Are you sure you want to delete the selected item?')) {
-                                    AIRTIME.playlist.fnDelete(data.id);
+                                    AIRTIME.library.fnDeleteItems(aMedia);
                                 }
                             };
                         }
@@ -816,7 +992,7 @@ function addQtipToSCIcons(){
         else if($(this).hasClass("soundcloud")){
             $(this).qtip({
                 content: {
-                    text: "Retreiving data from the server...",
+                    text: "Retrieving data from the server...",
                     ajax: {
                         url: "/Library/get-upload-to-soundcloud-status",
                         type: "post",
@@ -869,3 +1045,156 @@ function addQtipToSCIcons(){
         }
     });
 }
+
+/*
+ * This function is called from dataTables.columnFilter.js
+ */
+function validateAdvancedSearch(divs) {
+    var valid,
+        allValid = true,
+        fieldName,
+        fields,
+        searchTerm = Array(),
+        searchTermType,
+        regExpr,
+        timeRegEx = "\\d{2}[:]([0-5]){1}([0-9]){1}[:]([0-5]){1}([0-9]){1}([.]\\d{1,6})?",
+        dateRegEx = "\\d{4}[-]\\d{2}[-]\\d{2}?",
+        integerRegEx = "^\\d+$",
+        numericRegEx = "^\\d+[.]?\\d*$";
+
+    searchTerm[0] = "";
+    searchTerm[1] = "";
+    $.each(divs, function(i, div){
+        fieldName = $(div).children(':nth-child(2)').attr('id');
+        fields = $(div).children().find('input');
+        searchTermType = validationTypes[fieldName];
+        valid = true;
+        
+        $.each(fields, function(i, field){
+            searchTerm[i] = $(field).val();
+
+            if (searchTerm[i] !== "") {
+                
+                if (searchTermType === "l") {
+                    regExpr = new RegExp("^" +timeRegEx+ "$");
+                } else if (searchTermType === "t") {
+                    var pieces = searchTerm[i].split(" ");
+                    if (pieces.length === 2) {
+                        regExpr = new RegExp("^" +dateRegEx+ " " +timeRegEx+ "$");
+                    } else if (pieces.length === 1) {
+                        regExpr = new RegExp("^" +dateRegEx+ "$");
+                    }
+                } else if (searchTermType === "i") {
+                    regExpr = new RegExp(integerRegEx);
+                } else if (searchTermType === "n") {
+                    regExpr = new RegExp(numericRegEx);
+                    if (searchTerm[i].charAt(0) === "-") {
+                        searchTerm[i] = searchTerm[i].substr(1);
+                    }
+                }
+                
+                //string fields do not need validation
+                if (searchTermType !== "s") {
+                    valid = regExpr.test(searchTerm[i]);
+                    if (!valid) allValid = false;
+                }
+                
+                addRemoveValidationIcons(valid, $(field), searchTermType);
+                
+            /* Empty fields should not have valid/invalid indicator
+             * Range values are considered valid even if only the
+             * 'From' value is provided. Therefore, if the 'To' value
+             * is empty but the 'From' value is not empty we need to
+             * keep the validation icon on screen.
+             */
+            } else if (searchTerm[0] === "" && searchTerm[1] !== "" ||
+                    searchTerm[0] === "" && searchTerm[1] === ""){
+                if ($(field).closest('div').children(':last-child').hasClass('checked-icon') ||
+                        $(field).closest('div').children(':last-child').hasClass('not-available-icon')) {
+                    $(field).closest('div').children(':last-child').remove();
+                }
+            }
+            
+            if (!valid) {
+                return false;
+            }
+        });
+    });
+
+    return allValid;
+}
+
+function addRemoveValidationIcons(valid, field, searchTermType) {
+    var title = '';
+    if (searchTermType === 'i') {
+        title = 'Input must be a positive number';
+    } else if (searchTermType === 'n') {
+        title = 'Input must be a number';
+    } else if (searchTermType === 't') {
+        title = 'Input must be in the format: yyyy-mm-dd';
+    } else if (searchTermType === 'l') {
+        title = 'Input must be in the format: hh:mm:ss.t';
+    }
+    
+    var validIndicator = " <span class='checked-icon sp-checked-icon'></span>",
+        invalidIndicator = " <span title='"+title+"' class='not-available-icon sp-checked-icon'></span>";
+    
+    if (valid) {
+        if (!field.closest('div').children(':last-child').hasClass('checked-icon')) {
+            //remove invalid icon before adding valid icon
+            if (field.closest('div').children(':last-child').hasClass('not-available-icon')) {
+                field.closest('div').children(':last-child').remove();
+            }
+            field.closest('div').append(validIndicator);
+        }
+    } else {
+        if (!field.closest('div').children(':last-child').hasClass('not-available-icon')) {
+            //remove valid icon before adding invalid icon
+            if (field.closest('div').children(':last-child').hasClass('checked-icon')) {
+                field.closest('div').children(':last-child').remove();
+            }
+            field.closest('div').append(invalidIndicator);
+        }
+    }
+}
+
+/* Validation types:
+ * s => string
+ * i => integer
+ * n => numeric (positive/negative, whole/decimals)
+ * t => timestamp
+ * l => length
+ */
+var validationTypes = {
+    "album_title" : "s",
+    "artist_name" : "s",
+    "bit_rate" : "i",
+    "bpm" : "i",
+    "comments" : "s",
+    "composer" : "s",
+    "conductor" : "s",
+    "copyright" : "s",
+    "encoded_by" : "s",
+    "utime" : "t",
+    "mtime" : "t",
+    "lptime" : "t",
+    "disc_number" : "i",
+    "genre" : "s",
+    "isrc_number" : "s",
+    "label" : "s",
+    "language" : "s",
+    "length" : "l",
+    "lyricist" : "s",
+    "mood" : "s",
+    "mime" : "s",
+    "name" : "s",
+    "orchestra" : "s",
+    "owner_id" : "s",
+    "rating" : "i",
+    "replay_gain" : "n",
+    "sample_rate" : "i",
+    "track_title" : "s",
+    "track_number" : "i",
+    "info_url" : "s",
+    "year" : "i"
+};

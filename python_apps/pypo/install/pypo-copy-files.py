@@ -98,6 +98,7 @@ try:
 
     #copy init.d script
     shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
+    shutil.copy(config["bin_dir"]+"/bin/airtime-liquidsoap-init-d", "/etc/init.d/airtime-liquidsoap")
 
     #copy log rotate script
     shutil.copy(config["bin_dir"]+"/bin/liquidsoap_scripts/airtime-liquidsoap.logrotate", "/etc/logrotate.d/airtime-liquidsoap")

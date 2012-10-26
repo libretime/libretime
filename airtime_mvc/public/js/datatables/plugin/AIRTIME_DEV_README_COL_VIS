@@ -1,0 +1,33 @@
+Before you overwrite dataTables.ColVis.js, note that we have changed a few lines
+in this file.
+
+The following function has been modified:
+
+_fnDomBaseButton
+
+The new _fnDomBaseButton looks like this:
+
+    "_fnDomBaseButton": function ( text )
+    {
+        var
+            that = this,
+            nButton = document.createElement('button'),
+            nSpan = document.createElement('span'),
+            sEvent = this.s.activate=="mouseover" ? "mouseover" : "click";
+        
+        //nButton.className = !this.s.dt.bJUI ? "ColVis_Button TableTools_Button" :
+            //"ColVis_Button TableTools_Button ui-button ui-state-default";
+        nButton.className = "btn-toolbar btn btn-small dropdown-toggle ColVis_MasterButton";
+        
+        nButton.appendChild( nSpan );
+        $(nButton).append("<span class='caret'></span>");
+        nSpan.innerHTML = text;
+        
+        $(nButton).bind( 'click', function (e) {
+            that._fnCollectionShow();
+            e.preventDefault();
+        } );
+        
+        return nButton;
+    },
+    

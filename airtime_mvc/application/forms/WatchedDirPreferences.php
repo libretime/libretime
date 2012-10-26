@@ -32,20 +32,20 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
         ));
     }
 
-    public function verifyChosenFolder($p_form_element_id) {
-
+    public function verifyChosenFolder($p_form_element_id)
+    {
         $element = $this->getElement($p_form_element_id);
 
         if (!is_dir($element->getValue())) {
             $element->setErrors(array('Not a valid Directory'));
+
             return false;
-        }
-        else {
+        } else {
             $element->setValue("");
+
             return true;
         }
 
     }
 
 }
-

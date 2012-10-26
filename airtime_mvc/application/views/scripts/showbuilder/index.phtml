@@ -11,9 +11,9 @@
 <div id="show_builder" class="sb-content ui-widget ui-widget-content block-shadow omega-block padded">
     <div class="sb-timerange">
         <?php if(!$this->disableLib && !$this->showLib):?>
-        <div id="sb_edit" class="ui-button ui-state-default" title="open the library to schedule files.">
-            <span class="ui-icon ui-icon-arrowthick-1-nw"></span>
-        </div> 
+        <a id="sb_edit" class="btn btn-small" href="#" title="Open library to add or remove content">
+            Add / Remove Content
+        </a> 
         <?php endif; ?>
     <?php echo $this->sb_form; ?>
     </div>

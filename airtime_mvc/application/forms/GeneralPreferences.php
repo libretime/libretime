@@ -2,19 +2,19 @@
 
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {
-    private $isSaas;	
-	
+    private $isSaas;
+
     public function init()
     {
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $this->isSaas = $isSaas; 
-        
+        $this->isSaas = $isSaas;
+
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_general.phtml', "isSaas" => $isSaas))
         ));
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
-        if($defaultFade == ""){
+        if ($defaultFade == "") {
             $defaultFade = '0.500000';
         }
 
@@ -24,7 +24,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'label'      => 'Station Name',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'value' => Application_Model_Preference::GetValue("station_name"),
+            'value' => Application_Model_Preference::GetStationName(),
             'decorators' => array(
                 'ViewHelper'
             )
@@ -70,7 +70,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $this->addElement($week_start_day);
     }
 
-    private function getTimezones(){
+    private function getTimezones()
+    {
         $regions = array(
             'Africa' => DateTimeZone::AFRICA,
             'America' => DateTimeZone::AMERICA,
@@ -86,9 +87,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $tzlist = array();
 
-        foreach ($regions as $name => $mask){
+        foreach ($regions as $name => $mask) {
             $ids = DateTimeZone::listIdentifiers($mask);
-            foreach ($ids as $id){
+            foreach ($ids as $id) {
                 $tzlist[$id] = str_replace("_", " ", $id);
             }
         }
@@ -96,18 +97,18 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         return $tzlist;
     }
 
+    private function getWeekStartDays()
+    {
+        $days = array(
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday'
+        );
 
-    private function getWeekStartDays() {
-    	$days = array(
-    		'Sunday',
-    		'Monday',
-		    'Tuesday',
-		    'Wednesday',
-		    'Thursday',
-		    'Friday',
-		    'Saturday'
-    	);
-    	return $days;
+        return $days;
     }
 }
-

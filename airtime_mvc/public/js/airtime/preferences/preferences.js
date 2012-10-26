@@ -20,14 +20,19 @@ function setConfigureMailServerListener() {
     var configMailServer = $("#configureMailServer");
     configMailServer.click(function(event){
         setMailServerInputReadonly();
-    })
+    });
+    
+    var msRequiresAuth = $("#msRequiresAuth");
+    msRequiresAuth.click(function(event){
+        setMsAuthenticationFieldsReadonly($(this));
+    });
 }
 
 function setEnableSystemEmailsListener() {
     var enableSystemEmails = $("#enableSystemEmail");
     enableSystemEmails.click(function(event){
         setSystemFromEmailReadonly();
-    })
+    });
 }
 
 function setSystemFromEmailReadonly() {
@@ -43,19 +48,36 @@ function setSystemFromEmailReadonly() {
 function setMailServerInputReadonly() {
     var configMailServer = $("#configureMailServer");
     var mailServer = $("#mailServer");
-    var email = $("#email");
-    var password = $("#ms_password");
     var port = $("#port");
-    if ($(configMailServer).is(':checked')) {
+    var requiresAuthCB = $("#msRequiresAuth");
+    
+    if (configMailServer.is(':checked')) {
         mailServer.removeAttr("readonly");
-        email.removeAttr("readonly");
-        password.removeAttr("readonly");
         port.removeAttr("readonly");
+        requiresAuthCB.parent().show();
     } else {
         mailServer.attr("readonly", "readonly");
+        port.attr("readonly", "readonly");
+        requiresAuthCB.parent().hide();
+    }
+    
+    setMsAuthenticationFieldsReadonly(requiresAuthCB);
+}
+
+/*
+ * Enable/disable mail server authentication fields
+ */
+function setMsAuthenticationFieldsReadonly(ele) {
+    var email = $("#email");
+    var password = $("#ms_password");
+    var configureMailServer = $("#configureMailServer");
+    
+    if (ele.is(':checked') && configureMailServer.is(':checked')) {
+        email.removeAttr("readonly");
+        password.removeAttr("readonly");
+    } else if (ele.not(':checked') || configureMailServer.not(':checked')) {
         email.attr("readonly", "readonly");
         password.attr("readonly", "readonly");
-        port.attr("readonly", "readonly");
     }
 }
 
@@ -63,7 +85,7 @@ $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
         $(this).next().toggle('fast');
-        $(this).toggleClass("close");
+        $(this).toggleClass("closed");
         return false;
     }).next().hide();
 

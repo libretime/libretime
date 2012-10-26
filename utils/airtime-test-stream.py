@@ -25,6 +25,8 @@ def printUsage():
     print "     -u user (default: source) "
     print "     -p password (default: hackme) "
     print "     -m mount (default: test) "
+    print "     -h show help menu"
+
         
 def find_liquidsoap_binary():
     """
@@ -82,7 +84,8 @@ try:
     print "Port: %s" % port
     print "User: %s" % user
     print "Password: %s" % password
-    print "Mount: %s\n" % mount
+    if stream_type == "icecast":
+        print "Mount: %s\n" % mount
     
     url = "http://%s:%s/%s" % (host, port, mount)
     print "Outputting to %s streaming server. You should be able to hear a monotonous tone on '%s'. Press ctrl-c to quit." % (stream_type, url)
@@ -95,7 +98,8 @@ try:
     if stream_type == "icecast":
         command = "%s 'output.icecast(%%vorbis, host = \"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\", sine())'" % (liquidsoap_exe, host, port, user, password, mount)
     else:
-        command = "%s 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", mount=\"%s\",  sine())'" % (liquidsoap_exe, host, port, user, password, mount)
+        command = "%s /usr/lib/airtime/pypo/bin/liquidsoap_scripts/library/pervasives.liq 'output.shoutcast(%%mp3, host=\"%s\", port = %s, user= \"%s\", password = \"%s\", sine())'" \
+        % (liquidsoap_exe, host, port, user, password)
         
     if not verbose:
         command += " 2>/dev/null | grep \"failed\""

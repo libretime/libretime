@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("UTC");
+
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
 // Name of the web server user
@@ -33,6 +35,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/MusicDir.php');
+require_once($CC_CONFIG['phpDir'].'/application/common/OsPath.php');
 
 set_include_path($CC_CONFIG['phpDir'].'/library' . PATH_SEPARATOR . get_include_path());
 require_once($CC_CONFIG['phpDir'].'/application/models/Soundcloud.php');

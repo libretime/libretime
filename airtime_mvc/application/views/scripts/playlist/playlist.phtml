@@ -1,43 +1,66 @@
-<button id="spl_new" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">New</button>
-<?php if (isset($this->pl)) : ?>
-    <button id="spl_delete" class="ui-button ui-widget ui-state-default" role="button" aria-disabled="false">Delete</button>
-    <a href="#" id="spl_crossfade" class="ui-button ui-button-icon-only ui-widget ui-state-default crossfade-main-button">
-        <span class="ui-icon crossfade-main-icon"></span><span class="ui-button-text">Playlist crossfade</span>
-    </a>
-<?php endif; ?>
-
-<?php if (isset($this->pl)) : ?>
-    <input id="pl_id" type="hidden" value="<?php echo $this->pl->getId(); ?>"></input>
-    <input id="pl_lastMod" type="hidden" value="<?php echo $this->pl->getLastModified('U'); ?>"></input>
-    <div class="playlist_title">
-        <h3 id="spl_name">
-            <a id="playlist_name_display" contenteditable="true"><?php echo $this->pl->getName(); ?></a>
-        </h3>
-        <h4 id="spl_length"><?php echo $this->length; ?></h4>
+<?php
+if (isset($this->obj)) {
+    $contents = $this->obj->getContents();
+    $count = count($contents);
+}
+?>
+<div class="btn-toolbar spl-no-top-margin clearfix">
+    <div class="btn-group pull-left">
+        <button id="spl_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id='lib-new-pl'><a href="#">New Playlist</a></li>
+            <li id='lib-new-bl'><a href="#">New Smart Block</a></li>
+            <li id='lib-new-ws'><a href="#">New Webstream</a></li>
+        </ul>
     </div>
+<?php if (isset($this->obj)) : ?>
+    <div class='btn-group pull-right'>
+        <button class="btn btn-inverse" title='Save playlist' type="button" id="save_button">Save</button>
+    </div>
+    <div class='btn-group pull-right'>
+        <button id="spl_delete" class="btn" role="button" aria-disabled="false">Delete</button>
+    </div>
+    <div class='btn-group pull-right'>
+        <a href="#" id="spl_crossfade" class="btn crossfade-main-button" style="display:<?php echo $count > 0 ?"block;":"none;"?>">
+            <i class='crossfade-main-icon'></i><span class="ui-button-text">Playlist crossfade</span>
+        </a>
+    </div>
+<?php endif; ?>
+</div>
+
+<?php if (isset($this->obj)) : ?>
+    <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
+    <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
+    <input id='obj_type' type='hidden' value='playlist'></input>
+    <div class="playlist_title">
+        <h3 id="obj_name">
+            <a id="playlist_name_display" contenteditable="true"><?php echo $this->obj->getName(); ?></a>
+        </h3>
+        <h4 id="obj_length"><?php echo $this->length; ?></h4>
+    </div>
+    <div id='sp-success' class='success' style='display:none'></div>
 
     <fieldset class="toggle closed" id="fieldset-metadate_change">
         <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
         <dl class="zend_form">
             <dt id="description-label"><label for="description">Description</label></dt>
             <dd id="description-element">
-                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->pl->getDescription(); ?></textarea>
-            </dd>
-            <dt id="submit-label" style="display: none;">&nbsp;</dt>
-            <dd id="submit-element" class="buttons">
-                <input class="ui-button ui-state-default" type="submit" value="Cancel" id="description_cancel" name="cancel">
-                <input class="ui-button ui-state-default" type="submit" value="Save" id="description_save" name="submit">
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
             </dd>
         </dl>
     </fieldset>
+    
+    <?php //echo $this->form; ?>
 
     <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
-      	<span class="ui-icon ui-icon-closethick"></span>
+      	<span class="ui-icon ui-icon-closethick sp-closethick-center"></span>
 	    <dl id="spl_editor-main" class="inline-list">
-            <dt>Fade in (s):</dt>
+            <dt>Fade in: <span class='spl_cue_hint'>(ss.t)</span></dt>
             <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
             <dd class="edit-error"></dd>
-            <dt>Fade out (s):</dt>
+            <dt>Fade out: <span class='spl_cue_hint'>(ss.t)</span></dt>
             <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00</span></dd>
             <dd class="edit-error"></dd>
         </dl>
@@ -46,7 +69,8 @@
     <div class="clear"></div>
     <div class="" style="clear:both; float:none; width:100%;">
 	    <ul id="spl_sortable">
-            <?php echo $this->render('playlist/update.phtml') ?>
+            <?php  $this->contents = $contents;
+                echo $this->render('playlist/update.phtml') ?>
 	    </ul>
     </div>
 

@@ -1,7 +1,7 @@
         <?php 
         $s_name = "s".$this->stream_number;
         ?>
-        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"close":""?>"><span class="arrow-icon"></span>Stream <?php echo $this->stream_number?></h3>
+        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"closed":""?>"><span class="arrow-icon"></span>Stream <?php echo $this->stream_number?></h3>
         <div class="stream-setting-content" <?php echo $this->enabled == 0?'style="display: none;':''?> id="<?php echo $s_name?>-config">
         <fieldset class="padded">
             <dl class="zend_form clearfix">
@@ -60,7 +60,14 @@
             <dd id="<?php echo $s_name?>Output-element">
                 <?php echo $this->element->getElement('output')?>
             </dd>
-            
+
+             <dt id="<?php echo $s_name?>Channels-label">
+                <label for="<?php echo $s_name?>Channels"><?php echo $this->element->getElement('channels')->getLabel()?></label>
+            </dt>
+            <dd id="<?php echo $s_name?>Channels-element">
+                <?php echo $this->element->getElement('channels')?>
+            </dd>
+           
             <fieldset class="padded top-margin display_field toggle closed" id="output_setting">
                 <legend style="cursor: pointer;">
                     <span class="ui-icon ui-icon-triangle-2-n-s"></span>

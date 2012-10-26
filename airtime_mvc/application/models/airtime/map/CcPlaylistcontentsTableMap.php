@@ -41,6 +41,9 @@ class CcPlaylistcontentsTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', 'cc_playlist', 'ID', false, null, null);
 		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
+		$this->addForeignKey('BLOCK_ID', 'DbBlockId', 'INTEGER', 'cc_block', 'ID', false, null, null);
+		$this->addColumn('STREAM_ID', 'DbStreamId', 'INTEGER', false, null, null);
+		$this->addColumn('TYPE', 'DbType', 'SMALLINT', true, null, 0);
 		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
 		$this->addColumn('CLIPLENGTH', 'DbCliplength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEIN', 'DbCuein', 'VARCHAR', false, null, '00:00:00');
@@ -56,6 +59,7 @@ class CcPlaylistcontentsTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcBlock', 'CcBlock', RelationMap::MANY_TO_ONE, array('block_id' => 'id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::MANY_TO_ONE, array('playlist_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 

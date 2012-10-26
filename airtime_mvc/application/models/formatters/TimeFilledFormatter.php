@@ -1,7 +1,7 @@
 <?php
 
-class TimeFilledFormatter {
-
+class TimeFilledFormatter
+{
     /**
      * @string seconds
      */
@@ -21,7 +21,7 @@ class TimeFilledFormatter {
         $sign = ($this->_seconds < 0) ? "-" : "+";
         $perfect = true;
 
-        $time = Application_Model_Playlist::secondsToPlaylistTime(abs($this->_seconds));
+        $time = Application_Common_DateHelper::secondsToPlaylistTime(abs($this->_seconds));
         $info = explode(":", $time);
 
         $formatted .= $sign;

@@ -39,7 +39,7 @@
         <?php if (count($watched_dirs) > 0): ?>
             <?php foreach($watched_dirs as $watched_dir): ?>
                 <dd class="block-display selected-item">
-                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath"><?php echo $watched_dir->getDirectory();?></span></span>
+                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath" style="display:block; width:350px"><?php echo $watched_dir->getDirectory();?></span></span>
                     <span title="Rescan watched directory (This is useful if it is network mount and may be out of sync with Airtime)" class="ui-icon ui-icon-refresh"></span>
                     <span title="Remove watched directory" class="ui-icon ui-icon-close"></span>
                     

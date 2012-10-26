@@ -17,8 +17,8 @@ class StoredFileTest extends PHPUnit_TestCase {
             || ($metadata["audio"]["dataformat"] != "mp3")
             || ($metadata["dc:type"] != "Speech")) {
             $str = "  [dc:description] = " . $metadata["dc:description"] ."\n"
-							   . "  [audio][dataformat] = " . $metadata["audio"]["dataformat"]."\n"
-							   . "  [dc:type] = ".$metadata["dc:type"]."\n";
+                               . "  [audio][dataformat] = " . $metadata["audio"]["dataformat"]."\n"
+                               . "  [dc:type] = ".$metadata["dc:type"]."\n";
             $this->fail("Metadata has unexpected values:\n".$str);
         }
         //var_dump($metadata);

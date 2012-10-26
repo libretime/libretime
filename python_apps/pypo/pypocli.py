@@ -107,10 +107,10 @@ except Exception, e:
 
 class Global:
     def __init__(self):
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirtimeApiClient()
 
     def selfcheck(self):
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirtimeApiClient()
         return self.api_client.is_server_compatible()
 
     def test_api(self):
@@ -130,7 +130,7 @@ def liquidsoap_running_test(telnet_lock, host, port, logger):
         msg = "version\n"
         tn.write(msg)
         tn.write("exit\n")
-        logger.info("Liquidsoap version %s", tn.read_all())
+        logger.info("Found: %s", tn.read_all())
     except Exception, e:
         logger.error(str(e))
         success = False
@@ -172,7 +172,7 @@ if __name__ == '__main__':
         g.test_api()
         sys.exit()
 
-    api_client = api_client.api_client_factory(config)
+    api_client = api_client.AirtimeApiClient()
     api_client.register_component("pypo")
 
     pypoFetch_q = Queue()
@@ -210,7 +210,7 @@ if __name__ == '__main__':
     recorder.start()
 
     # all join() are commented out because we want to exit entire pypo
-    # if pypofetch is exiting 
+    # if pypofetch is exiting
     #pmh.join()
     #recorder.join()
     #pp.join()

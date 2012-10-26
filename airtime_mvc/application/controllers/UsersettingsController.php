@@ -13,75 +13,65 @@ class UsersettingsController extends Zend_Controller_Action
                     ->addActionContext('get-timeline-datatable', 'json')
                     ->addActionContext('set-timeline-datatable', 'json')
                     ->addActionContext('remindme', 'json')
+                    ->addActionContext('remindme-never', 'json')
                     ->addActionContext('donotshowregistrationpopup', 'json')
                     ->initContext();
     }
-    
-    public function setNowPlayingScreenSettingsAction() {
-        
+
+    public function setNowPlayingScreenSettingsAction()
+    {
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
-        
-        $data = serialize($settings);
-        Application_Model_Preference::SetValue("nowplaying_screen", $data, true);
+
+        Application_Model_Preference::setNowPlayingScreenSettings($settings);
     }
-    
-    public function getNowPlayingScreenSettingsAction() {
-    
-        $data = Application_Model_Preference::GetValue("nowplaying_screen", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
+
+    public function getNowPlayingScreenSettingsAction()
+    {
+        $data = Application_Model_Preference::getNowPlayingScreenSettings();
+        if (!is_null($data)) {
+            $this->view->settings = $data;
         }
     }
 
-    public function setLibraryDatatableAction() {
-
+    public function setLibraryDatatableAction()
+    {
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
-        $data = serialize($settings);
-        Application_Model_Preference::SetValue("library_datatable", $data, true);
+        Application_Model_Preference::setCurrentLibraryTableSetting($settings);
     }
 
-    public function getLibraryDatatableAction() {
-
-        $data = Application_Model_Preference::GetValue("library_datatable", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
+    public function getLibraryDatatableAction()
+    {
+        $data = Application_Model_Preference::getCurrentLibraryTableSetting();
+        if (!is_null($data)) {
+            $this->view->settings = $data;
         }
     }
 
-    public function setTimelineDatatableAction() {
-
-        $start = microtime(true);
-        
+    public function setTimelineDatatableAction()
+    {
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
-
-        $data = serialize($settings);
-        Application_Model_Preference::SetValue("timeline_datatable", $data, true);
-        
-        $end = microtime(true);
-        
-        Logging::debug("saving timeline datatables info took:");
-        Logging::debug(floatval($end) - floatval($start));
+        Application_Model_Preference::setTimelineDatatableSetting($settings);
     }
 
-    public function getTimelineDatatableAction() {
-        
+    public function getTimelineDatatableAction()
+    {
         $start = microtime(true);
 
-        $data = Application_Model_Preference::GetValue("timeline_datatable", true);
-        if ($data != "") {
-            $this->view->settings = unserialize($data);
+        $data = Application_Model_Preference::getTimelineDatatableSetting();
+        if (!is_null($data)) {
+            $this->view->settings = $data;
         }
-        
+
         $end = microtime(true);
-        
+
         Logging::debug("getting timeline datatables info took:");
         Logging::debug(floatval($end) - floatval($start));
     }
-    
+
     public function remindmeAction()
     {
         // unset session
@@ -89,6 +79,13 @@ class UsersettingsController extends Zend_Controller_Action
         Application_Model_Preference::SetRemindMeDate();
     }
     
+    public function remindmeNeverAction()
+    {
+        Zend_Session::namespaceUnset('referrer');
+        //pass in true to indicate 'Remind me never' was clicked
+        Application_Model_Preference::SetRemindMeDate(true);
+    }
+
     public function donotshowregistrationpopupAction()
     {
         // unset session

@@ -5,7 +5,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
     public function init()
     {
-        $user = Application_Model_User::GetCurrentUser();
+        $user = Application_Model_User::getCurrentUser();
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/showbuilder.phtml'))
@@ -67,7 +67,6 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
 
-
         // add a select to choose a show.
         $showSelect = new Zend_Form_Element_Select("sb_show_filter");
         $showSelect->setLabel("Show:");
@@ -84,8 +83,8 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
         }
     }
 
-    private function getShowNames() {
-
+    private function getShowNames()
+    {
         $showNames = array("0" => "-------------------------");
 
         $shows = CcShowQuery::create()

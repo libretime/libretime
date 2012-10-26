@@ -1,7 +1,7 @@
 <?php
 
-class SamplerateFormatter {
-
+class SamplerateFormatter
+{
     /**
      * @string sample rate
      */

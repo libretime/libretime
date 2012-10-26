@@ -3,13 +3,13 @@ $(document).ready(function() {
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
-		runtimes : 'gears, html5, html4',
-		url : '/Plupload/upload/format/json',
-		chunk_size: '5mb',
-		unique_names: 'true',
+		runtimes        : 'gears, html5, html4',
+		url             : '/Plupload/upload/format/json',
+		chunk_size      : '5mb',
+		unique_names    : 'true',
 		multiple_queues : 'true',
 		filters : [
-			{title: "Audio Files", extensions: "ogg,mp3"}
+			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4"}
 		]
 	});
 
@@ -27,7 +27,9 @@ $(document).ready(function() {
 			$("#plupload_error table").css("display", "inline-table");
 		}else{
 		    var tempFileName = j.tempfilepath;
-		    $.get('/Plupload/copyfile/format/json/name/'+encodeURIComponent(file.name)+'/tempname/'+encodeURIComponent(tempFileName), function(json){
+		    $.get('/Plupload/copyfile/format/json/name/' +
+                  encodeURIComponent(file.name)+'/tempname/' +
+                  encodeURIComponent(tempFileName), function(json){
 		        var jr = jQuery.parseJSON(json);
 		        if(jr.error !== undefined) {
 		            var row = $("<tr/>")
@@ -44,12 +46,8 @@ $(document).ready(function() {
 	var uploadProgress = false;
 	
 	uploader.bind('QueueChanged', function(){
-		if(uploader.files.length > 0){
-			uploadProgress = true;
-		}else{
-			uploadProgress = false;
-		}
-	});
+        uploadProgress = (uploader.files.length > 0)
+ 	});
 	
 	uploader.bind('UploadComplete', function(){
 		uploadProgress = false;

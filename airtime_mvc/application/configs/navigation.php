@@ -8,38 +8,38 @@
 * the navigation container below.
 */
 $pages = array(
-	array(
+    array(
         'label'      => 'Now Playing',
         'module'     => 'default',
         'controller' => 'Showbuilder',
         'action'     => 'index',
-        'resource'	=>	'showbuilder'
-	),
-	array(
-		'label'      => 'Add Media',
-		'module'     => 'default',
-		'controller' => 'Plupload',
-		'action'     => 'index',
-		'resource'	=>	'plupload'
-	),
-	array(
-		'label'      => 'Playlist Builder',
-		'module'     => 'default',
-		'controller' => 'Playlist',
-		'action'     => 'index',
-		'resource'	=>	'playlist'
-	),
-	array(
+        'resource'   =>    'showbuilder'
+    ),
+    array(
+        'label'      => 'Add Media',
+        'module'     => 'default',
+        'controller' => 'Plupload',
+        'action'     => 'index',
+        'resource'   =>    'plupload'
+    ),
+    array(
+        'label'      => 'Library',
+        'module'     => 'default',
+        'controller' => 'Library',
+        'action'     => 'index',
+        'resource'   =>    'playlist'
+    ),
+    array(
         'label'      => 'Calendar',
         'module'     => 'default',
         'controller' => 'Schedule',
         'action'     => 'index',
-        'resource'	=>	'schedule'
-	),
+        'resource'   =>    'schedule'
+    ),
     array(
         'label'      => 'System',
-        'uri' => '#',
-        'resource' => 'preference',
+        'uri'        => '#',
+        'resource'   => 'preference',
         'pages'      => array(
             array(
                 'label'      => 'Preferences',
@@ -51,14 +51,14 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'user',
                 'action'     => 'add-user',
-                'resource'	=>	'user'
+                'resource'   =>    'user'
             ),
             array(
                 'label'      => 'Media Folders',
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config',
-                'id'		 => 'manage_folder'
+                'id'         => 'manage_folder'
             ),
             array(
                 'label'      => 'Streams',
@@ -77,28 +77,28 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'systemstatus',
                 'action'     => 'index',
-                'resource'	=>	'systemstatus'
+                'resource'   =>    'systemstatus'
             ),
-        	array(
-        		'label'      => 'Playout History',
-        		'module'     => 'default',
-        		'controller' => 'playouthistory',
-        		'action'     => 'index',
-        		'resource'	=>	'playouthistory'
-        	)
+            array(
+                'label'      => 'Playout History',
+                'module'     => 'default',
+                'controller' => 'playouthistory',
+                'action'     => 'index',
+                'resource'   => 'playouthistory'
+            )
         )
     ),
-	array(
-		'label'      => 'Help',
-		'uri'     => '#',
-		'resource'	=>	'dashboard',
+    array(
+        'label'      => 'Help',
+        'uri'     => '#',
+        'resource'    =>    'dashboard',
         'pages'      => array(
             array(
                 'label'      => 'Getting Started',
                 'module'     => 'default',
                 'controller' => 'dashboard',
                 'action'     => 'help',
-                'resource'   =>	'dashboard'
+                'resource'   =>    'dashboard'
             ),
             array(
                 'label'      => 'User Manual',
@@ -110,10 +110,10 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'dashboard',
                 'action'     => 'about',
-                'resource'   =>	'dashboard'
+                'resource'   =>    'dashboard'
             )
         )
-	)
+    )
 );
 
 

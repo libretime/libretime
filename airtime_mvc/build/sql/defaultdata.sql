@@ -1,11 +1,5 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 
--- added in 2.2
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_name', 'Airtime!', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_name', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_name', '', 'string');
--- end of added in 2.2
-
 -- added in 2.1
 INSERT INTO cc_pref("keystr", "valstr") VALUES('scheduled_play_switch', 'on');
 
@@ -302,3 +296,15 @@ INSERT INTO cc_country (isocode, name) VALUES ('ESH', 'Western Sahara ');
 INSERT INTO cc_country (isocode, name) VALUES ('YEM', 'Yemen ');
 INSERT INTO cc_country (isocode, name) VALUES ('ZMB', 'Zambia ');
 INSERT INTO cc_country (isocode, name) VALUES ('ZWE', 'Zimbabwe ');
+
+
+-- added in 2.2
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_name', 'Airtime!', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_name', '', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_name', '', 'string');
+
+
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_channels', 'stereo', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'stereo', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
+-- end of added in 2.2

@@ -147,7 +147,8 @@ function dayClick(date, allDay, jsEvent, view){
 }
 
 function viewDisplay( view ) {
-
+    view_name = view.name;
+	
     if(view.name === 'agendaDay' || view.name === 'agendaWeek') {
 
         var calendarEl = this;
@@ -205,7 +206,7 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-
+    
     $(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
@@ -222,6 +223,13 @@ function eventRender(event, element, view) {
             });
 
         $(element).find(".fc-event-content").append(div);
+    }
+    
+    //need to add id for every event to find the current show
+    if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+        $(element).find(".fc-event-time").attr("id", event.id);
+    } else if (view.name === 'month') {
+        $(element).find(".fc-event-title").attr("id", event.id);
     }
 
     //add the record/rebroadcast/soundcloud icons if needed
@@ -244,14 +252,47 @@ function eventRender(event, element, view) {
     } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -3) {
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
     }
+    
+    //add scheduled show content empty icon
+    //addIcon = checkEmptyShowStatus(event);
+    //if (!addIcon) {
+        if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+            if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
+                if (event.soundcloud_id === -1) {
+                    $(element)
+                        .find(".fc-event-time")
+                        .before('<span id="'+event.id+'" title="Show is empty" class="small-icon show-empty"></span>');
+                } else if (event.soundcloud_id > 0) {
+                    
+                } else if (event.soundcloud_id === -2) {
+                
+                } else if (event.soundcloud_id === -3) {
+                    
+                }
+            }
+        } else if (view.name === 'month') {
+            if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
+                if (event.soundcloud_id === -1) {
+                    $(element)
+                        .find(".fc-event-title")
+                        .after('<span id="'+event.id+'" title="Show is empty" class="small-icon show-empty"></span>');
+                } else if (event.soundcloud_id > 0) {
+                    
+                } else if (event.soundcloud_id === -2) {
+                
+                } else if (event.soundcloud_id === -3) {
+                    
+                }
+            }
+        }
+    //}
 
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
-
         $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
+    
     if(view.name === 'month' && event.rebroadcast === 1) {
-
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
     }
 }
@@ -310,7 +351,7 @@ function getFullCalendarEvents(start, end, callback) {
     url = '/Schedule/event-feed';
 
     var d = new Date();
-
+    
     $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
         callback(json.events);
     });
@@ -329,9 +370,61 @@ function checkSCUploadStatus(){
         });
     });
 }
+/** This function adds and removes the current
+ *  show icon
+ */
+function getCurrentShow(){
+    var url = '/Schedule/get-current-show/format/json',
+        id,
+        $el;
+    $.post(url, {format: "json"}, function(json) {
+        if (json.current_show === true) {
+            $el = $("div[class*=fc-event-time][id="+json.si_id+"]");
+            if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
+
+                /* Need to remove now-playing class because if user
+                 * is switching from week view to day view (and vice versa)
+                 * the icon may already be there from previous view
+                 */ 
+                $el.siblings().remove("span[class=small-icon now-playing]");
+                if (!$el.siblings().hasClass("small-icon now-playing")) {
+                    if ($el.siblings().hasClass("small-icon recording")) {
+
+                        /* Without removing recording icon, the now playing
+                         * icon will overwrite it.
+                         */  
+                        $el.siblings().remove("span[class=small-icon recording]");
+                        $el.before('<span id="'+json.si_id+'" class="small-icon now-playing"></span><span id="'+json.si_id+'" class="small-icon recording"></span>');
+                    } else if ($el.siblings().hasClass("small-icon rebroadcast")) {
+
+                        /* Without removing rebroadcast icon, the now playing
+                         * icon will overwrite it.
+                         */ 
+                        $el.siblings().remove("span[class=small-icon rebroadcast]");
+                        $el.before('<span id="'+json.si_id+'" class="small-icon now-playing"></span><span id="'+json.si_id+'" class="small-icon rebroadcast"></span>');
+                    } else {
+                        $el.before('<span id="'+json.si_id+'" class="small-icon now-playing"></span>');
+                    }
+                }
+            } else if (view_name === 'month') {
+                if (!$("span[class*=fc-event-title][id="+json.si_id+"]").siblings().hasClass("small-icon now-playing")) {
+                    $("span[class*=fc-event-title][id="+json.si_id+"]").after('<span id="'+json.si_id+'" class="small-icon now-playing"></span>');
+                }
+            }
+        }
+        //remove icon from shows that have ended
+        $(".now-playing").each(function(){
+            id = $(this).attr("id");
+                if (id != json.si_id) {
+                    $(this).remove("span[small-icon now-playing]");	
+                }    	
+            });
+    }); 	
+}
 
 function addQtipToSCIcons(ele){
     var id = $(ele).attr("id");
+
     if($(ele).hasClass("progress")){
         $(ele).qtip({
             content: {
@@ -403,8 +496,58 @@ function addQtipToSCIcons(ele){
                 ready: true // Needed to make it show on first mouseover event
             }
         });
+    }else if ($(ele).hasClass("show-empty")){
+        $(ele).qtip({
+            content: {
+                text: "This show has no scheduled content."
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        });
     }
 }
+
+/* This functions does two things:
+ * 1. Checks if each event(i.e. a show) is over and removes the show empty icon if it is
+ * 2. Else, if an event is passed in, it checks if the event(i.e. a show) is over
+ *    This gets checked when we are deciding if the show-empty icon should be added
+ *    at the beginning of an event render callback.
+ */
+/*
+function checkEmptyShowStatus(e) {
+    var currDate = new Date();
+    var endTime;
+    
+    if (e === undefined) {
+        var events = $('#schedule_calendar').fullCalendar('clientEvents');
+        
+        $.each(events, function(i, event){
+            endTime = event.end;
+            $emptyIcon = $("span[id="+event.id+"][class='small-icon show-empty']");
+            if (currDate.getTime() > endTime.getTime() && $emptyIcon.length === 1) {
+                $emptyIcon.remove();
+            }
+        });
+    } else {
+        endTime = e.end;
+        var showOver = false;
+        if (currDate.getTime() > endTime.getTime()) {
+            showOver = true;
+        }
+        return showOver;
+    }
+}
+*/
 
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
@@ -415,4 +558,8 @@ function alertShowErrorAndReload(){
 
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
+    setInterval( "getCurrentShow()", 5000 );
+    //setInterval( "checkEmptyShowStatus()", 5000 );
 });
+
+var view_name;

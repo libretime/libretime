@@ -5,10 +5,10 @@ class SystemstatusController extends Zend_Controller_Action
     public function init()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
         $baseUrl = $request->getBaseUrl();
-        
+
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/status/status.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
     }
 
@@ -22,7 +22,7 @@ class SystemstatusController extends Zend_Controller_Action
         );
 
         $partitions = Application_Model_Systemstatus::GetDiskInfo();
-        
+
         $this->view->status = new StdClass;
         $this->view->status->services = $services;
         $this->view->status->partitions = $partitions;

@@ -23,15 +23,15 @@ def get_os_codename():
     try:
         p = Popen("which lsb_release > /dev/null", shell=True)
         sts = os.waitpid(p.pid, 0)[1]
-        
+
         if (sts == 0):
             #lsb_release is available on this system. Let's get the os codename
             p = Popen("lsb_release -sc", shell=True, stdout=PIPE)
             codename = p.communicate()[0].strip('\r\n')
- 
+
             p = Popen("lsb_release -sd", shell=True, stdout=PIPE)
             fullname = p.communicate()[0].strip('\r\n')
-            
+
             return (codename, fullname)
     except Exception, e:
         pass
@@ -58,7 +58,7 @@ def generate_liquidsoap_config(ss):
         fh.write(api_client.encode_to(buffer))
     fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
-    
+
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 PATH_LIQUIDSOAP_BIN = '/usr/lib/airtime/pypo/bin/liquidsoap_bin'
 
@@ -71,54 +71,46 @@ try:
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit(1)
-    
-try:    
+
+try:
     #select appropriate liquidsoap file for given system os/architecture
     architecture = platform.architecture()[0]
     arch = arch_map[architecture]
-        
+
     print "* Detecting OS: ...",
     (codename, fullname) = get_os_codename()
-    print " Found %s (%s) on %s architecture" % (fullname, codename, arch) 
-    
-    print " * Installing Liquidsoap binary"
-    
-    binary_path = os.path.join(PATH_LIQUIDSOAP_BIN, "liquidsoap_%s_%s" % (codename, arch))
-    
-    try:
-        open(binary_path)
-        
+    print " Found %s (%s) on %s architecture" % (fullname, codename, arch)
+
+    print " * Creating symlink to Liquidsoap binary"
+
+    p = Popen("which liquidsoap", shell=True, stdout=PIPE)
+    liq_path = p.communicate()[0].strip()
+    symlink_path = "/usr/bin/airtime-liquidsoap"
+
+    if p.returncode == 0:
         try:
-            os.remove("/usr/bin/airtime-liquidsoap")
-        except OSError, e:
-            #only get here if it doesn't exist
+            os.unlink(symlink_path)
+        except Exception:
+            #liq_path DNE, which is OK.
             pass
-        
-        os.symlink(binary_path, "/usr/bin/airtime-liquidsoap")
-    except IOError, e:
-        """
-        shutil.copy can throw this exception for two reasons. First reason is that it cannot open the source file.
-        This is when the liquidsoap file we requested does not exist, and therefore tells the user we don't support
-        their OS/System architecture. The second reason for this exception is the shutil.copy cannot open the target file.
-        Since this script is being run as root (and we cannot install to a read-only device), this should never happen. So
-        it is safe to assume this exception is a result of the first case. 
-        
-        Note: We cannot simply use os.path.exists before this, since it sometimes gives us "false" incorrectly
-        """
-        print "Unsupported OS/system architecture."
-        print e
+
+        os.symlink(liq_path, symlink_path)
+    else:
+        print " * Liquidsoap binary not found!"
         sys.exit(1)
-    
+
     #initialize init.d scripts
     subprocess.call("update-rc.d airtime-playout defaults >/dev/null 2>&1", shell=True)
+    subprocess.call("update-rc.d airtime-liquidsoap defaults >/dev/null 2>&1", shell=True)
 
     #clear out an previous pypo cache
-    print "* Clearing previous pypo cache"  
+    print "* Clearing previous pypo cache"
     subprocess.call("rm -rf /var/tmp/airtime/pypo/cache/scheduler/* >/dev/null 2>&1", shell=True)
-    
+
     if "airtime_service_start" in os.environ and os.environ["airtime_service_start"] == "t":
-        print "* Waiting for pypo processes to start..."    
+        print "* Waiting for pypo processes to start..."
         subprocess.call("invoke-rc.d airtime-playout start-no-monit  > /dev/null 2>&1", shell=True)
-    
+        subprocess.call("invoke-rc.d airtime-liquidsoap start-no-monit  > /dev/null 2>&1", shell=True)
+
 except Exception, e:
     print e

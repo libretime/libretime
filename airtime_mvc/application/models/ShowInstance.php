@@ -2,8 +2,8 @@
 
 require_once 'formatters/LengthFormatter.php';
 
-class Application_Model_ShowInstance {
-
+class Application_Model_ShowInstance
+{
     private $_instanceId;
     private $_showInstance;
 
@@ -12,7 +12,7 @@ class Application_Model_ShowInstance {
         $this->_instanceId = $instanceId;
         $this->_showInstance = CcShowInstancesQuery::create()->findPK($instanceId);
 
-        if (is_null($this->_showInstance)){
+        if (is_null($this->_showInstance)) {
             throw new Exception();
         }
     }
@@ -22,27 +22,31 @@ class Application_Model_ShowInstance {
         return $this->_showInstance->getDbShowId();
     }
 
+    /* TODO: A little inconsistent because other models have a getId() method
+        to get PK --RG */
     public function getShowInstanceId()
     {
         return $this->_instanceId;
     }
 
-    public function getShow(){
+    public function getShow()
+    {
         return new Application_Model_Show($this->getShowId());
     }
-    
-    public function deleteRebroadcasts(){
-        $con = Propel::getConnection();
 
+    public function deleteRebroadcasts()
+    {
         $timestamp = gmdate("Y-m-d H:i:s");
         $instance_id = $this->getShowInstanceId();
-
-        $sql = "DELETE FROM cc_show_instances"
-                ." WHERE starts > TIMESTAMP '$timestamp'"
-                ." AND instance_id = $instance_id"
-                ." AND rebroadcast = 1";
-
-        $con->exec($sql);    	
+        $sql = <<<SQL
+DELETE FROM cc_show_instances
+WHERE starts > :timestamp::TIMESTAMP
+AND instance_id = :instanceId
+AND rebroadcast = 1;
+SQL;
+        Application_Common_Database::prepareAndExecute( $sql, array(
+            ':instanceId' => $instance_id,
+            ':timestamp'  => $timestamp), 'execute');
     }
 
     /* This function is weird. It should return a boolean, but instead returns
@@ -62,12 +66,14 @@ class Application_Model_ShowInstance {
     public function getName()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
+
         return $show->getDbName();
     }
 
     public function getGenre()
     {
         $show = CcShowQuery::create()->findPK($this->getShowId());
+
         return $show->getDbGenre();
     }
 
@@ -93,6 +99,7 @@ class Application_Model_ShowInstance {
     {
         $showStart = $this->getShowInstanceStart();
         $showStartExplode = explode(" ", $showStart);
+
         return $showStartExplode[0];
     }
 
@@ -113,6 +120,7 @@ class Application_Model_ShowInstance {
     public function getSoundCloudFileId()
     {
         $file = Application_Model_StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+
         return $file->getSoundCloudId();
     }
 
@@ -161,26 +169,33 @@ class Application_Model_ShowInstance {
         $con = Propel::getConnection();
 
         $instance_id = $this->getShowInstanceId();
-        $sql = "SELECT starts from cc_schedule"
-            ." WHERE instance_id = $instance_id"
-            ." ORDER BY starts"
-            ." LIMIT 1";
-
-        $scheduleStarts = $con->query($sql)->fetchColumn(0);
+        $sql = <<<SQL
+SELECT starts
+FROM cc_schedule
+WHERE instance_id = :instanceId
+ORDER BY starts LIMIT 1;
+SQL;
+        $scheduleStarts = Application_Common_Database::prepareAndExecute( $sql,
+            array( ':instanceId' => $instance_id ), 'column' );
 
         if ($scheduleStarts) {
             $scheduleStartsEpoch = strtotime($scheduleStarts);
-            $showStartsEpoch = strtotime($this->getShowInstanceStart());
+            $showStartsEpoch     = strtotime($this->getShowInstanceStart());
 
             $diff = $showStartsEpoch - $scheduleStartsEpoch;
 
-            if ($diff != 0){
-                $sql = "UPDATE cc_schedule"
-                ." SET starts = starts + INTERVAL '$diff' second,"
-                ." ends = ends + INTERVAL '$diff' second"
-                ." WHERE instance_id = $instance_id";
-
-                $con->exec($sql);
+            if ($diff != 0) {
+                $sql = <<<SQL
+UPDATE cc_schedule
+SET starts = starts + :diff1::INTERVAL SECOND,
+    ends = ends + :diff2::INTERVAL SECOND
+WHERE instance_id = :instanceId
+SQL;
+                Application_Common_Database::prepareAndExecute($sql,
+                    array(
+                        ':diff1'      => $diff,
+                        ':diff2'      => $diff,
+                        ':instanceId' => $instance_id ), 'execute');
             }
         }
         Application_Model_RabbitMq::PushSchedule();
@@ -199,8 +214,8 @@ class Application_Model_ShowInstance {
      * @return $newDateTime
      *      php DateTime, $dateTime with the added time deltas.
      */
-    private static function addDeltas($dateTime, $deltaDay, $deltaMin) {
-
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    {
         $newDateTime = clone $dateTime;
 
         $days = abs($deltaDay);
@@ -211,15 +226,13 @@ class Application_Model_ShowInstance {
 
         if ($deltaDay > 0) {
             $newDateTime->add($dayInterval);
-        }
-        else if ($deltaDay < 0){
+        } elseif ($deltaDay < 0) {
             $newDateTime->sub($dayInterval);
         }
 
         if ($deltaMin > 0) {
             $newDateTime->add($minInterval);
-        }
-        else if ($deltaMin < 0) {
+        } elseif ($deltaMin < 0) {
             $newDateTime->sub($minInterval);
         }
 
@@ -228,7 +241,7 @@ class Application_Model_ShowInstance {
 
     public function moveShow($deltaDay, $deltaMin)
     {
-        if ($this->getShow()->isRepeating()){
+        if ($this->getShow()->isRepeating()) {
             return "Can't drag and drop repeating shows";
         }
 
@@ -257,6 +270,12 @@ class Application_Model_ShowInstance {
             return "Can't move show into past";
         }
 
+        //check if show is overlapping
+        $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime, $newEndsDateTime, true, $this->getShowInstanceId());
+        if ($overlapping) {
+            return "Cannot schedule overlapping shows";
+        }
+
         if ($this->isRecorded()) {
 
             //rebroadcasts should start at max 1 hour after a recorded show has ended.
@@ -280,6 +299,7 @@ class Application_Model_ShowInstance {
             //recorded show doesn't exist.
             catch (Exception $e) {
                 $this->_showInstance->delete();
+
                 return "Show was deleted because recorded show does not exist!";
             }
 
@@ -296,7 +316,7 @@ class Application_Model_ShowInstance {
         $this->correctScheduleStartTimes();
 
         $show = new Application_Model_Show($this->getShowId());
-        if(!$show->isRepeating() && is_null($this->isRebroadcast())){
+        if (!$show->isRepeating() && is_null($this->isRebroadcast())) {
             $show->setShowFirstShow($newStartsDateTime);
             $show->setShowLastShow($newEndsDateTime);
         }
@@ -304,33 +324,32 @@ class Application_Model_ShowInstance {
         Application_Model_RabbitMq::PushSchedule();
     }
 
-    /*
-     * FUNCTION SHOULD NOT BE CALLED
-     * - we are removing ability to resize just a single show instance
-     * -please use the resize method on the Show.php class.
-     */
     public function resizeShow($deltaDay, $deltaMin)
     {
         $con = Propel::getConnection();
 
-        $hours = $deltaMin/60;
-        if($hours > 0)
-            $hours = floor($hours);
-        else
-            $hours = ceil($hours);
+        $hours = $deltaMin / 60;
 
-        $mins = abs($deltaMin%60);
+        $hours = ($hours > 0) ? floor($hours) : ceil($hours);
+
+        $mins = abs($deltaMin % 60);
 
         $today_timestamp = gmdate("Y-m-d H:i:s");
-        $starts = $this->getShowInstanceStart();
-        $ends = $this->getShowInstanceEnd();
+        $starts          = $this->getShowInstanceStart();
+        $ends            = $this->getShowInstanceEnd();
 
-        if(strtotime($today_timestamp) > strtotime($starts)) {
+        if (strtotime($today_timestamp) > strtotime($starts)) {
             return "can't resize a past show";
         }
 
-        $sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $new_ends = $con->query($sql)->fetchColumn(0);
+        //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
+        $sql = "SELECT timestamp :ends + interval :deltaDays + interval :deltaTime";
+
+        $now_ends = Application_Common_Database::prepareAndExecute($sql,
+            array(':ends'      => $ends,
+                  ':deltaDays' => "$deltaDay days",
+                  ':deltaTime' => "{$hours}:{$mins}"), 'column'
+        );
 
         //only need to check overlap if show increased in size.
         if (strtotime($new_ends) > strtotime($ends)) {
@@ -340,17 +359,26 @@ class Application_Model_ShowInstance {
 
             $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
 
-            if(count($overlap) > 0) {
+            if (count($overlap) > 0) {
+                // TODO : fix ghetto error handling -- RG
                 return "Should not overlap shows";
             }
         }
         //with overbooking no longer need to check already scheduled content still fits.
 
         //must update length of all rebroadcast instances.
-        if($this->isRecorded()) {
-            $sql = "UPDATE cc_show_instances SET ends = (ends + interval '{$deltaDay} days' + interval '{$hours}:{$mins}')
-                    WHERE rebroadcast = 1 AND instance_id = {$this->_instanceId}";
-            $con->exec($sql);
+        if ($this->isRecorded()) {
+            $sql = <<<SQL
+UPDATE cc_show_instances
+SET ends = (ends + interval :deltaDays + interval :interval)
+WHERE rebroadcast = 1
+  AND instance_id = :instanceId;
+SQL;
+            Application_Common_Database::prepareAndExecute( $sql, array(
+                ':deltaDays' => "$deltaDay days",
+                ':interval' => "$hours:$mins",
+                ':instanceId' => $this->_instanceId ), 'execute');
+
         }
 
         $this->setShowEnd($new_ends);
@@ -370,7 +398,7 @@ class Application_Model_ShowInstance {
 
         $scheduler = new Application_Model_Scheduler();
         $scheduler->scheduleAfter(
-            array(array("id" => 0, "instance" => $id, "timestamp" => $ts)),
+            array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
     }
@@ -447,7 +475,7 @@ class Application_Model_ShowInstance {
             ->filterByDbRebroadcast(0)
             ->find();
 
-        if (is_null($showInstances)){
+        if (is_null($showInstances)) {
             return true;
         }
         //only 1 show instance left of the show, make it non repeating.
@@ -490,7 +518,7 @@ class Application_Model_ShowInstance {
         return false;
     }
 
-    public function delete()
+    public function delete($rabbitmqPush = true)
     {
         // see if it was recording show
         $recording = $this->isRecorded();
@@ -526,23 +554,23 @@ class Application_Model_ShowInstance {
                     ->delete();
 
 
-                if ($this->checkToDeleteShow($showId)){
+                if ($this->checkToDeleteShow($showId)) {
                     CcShowQuery::create()
                         ->filterByDbId($showId)
                         ->delete();
                 }
-            }
-            else {
+            } else {
                 if ($this->isRebroadcast()) {
                     $this->_showInstance->delete();
-                }
-                else {
+                } else {
                     $show->delete();
                 }
             }
         }
 
-        Application_Model_RabbitMq::PushSchedule();
+        if ($rabbitmqPush) {
+            Application_Model_RabbitMq::PushSchedule();
+        }
     }
 
     public function setRecordedFile($file_id)
@@ -561,11 +589,8 @@ class Application_Model_ShowInstance {
             try {
                 $rebroad = new Application_Model_ShowInstance($rebroadcast->getDbId());
                 $rebroad->addFileToShow($file_id, false);
-            }
-            catch (Exception $e) {
-                Logging::log("{$e->getFile()}");
-                Logging::log("{$e->getLine()}");
-                Logging::log("{$e->getMessage()}");
+            } catch (Exception $e) {
+                Logging::info($e->getMessage());
             }
         }
     }
@@ -573,21 +598,20 @@ class Application_Model_ShowInstance {
     public function getTimeScheduled()
     {
         $time = $this->_showInstance->getDbTimeFilled();
-		
+
         if ($time != "00:00:00" && !empty($time)) {
             $time_arr = explode(".", $time);
             if (count($time_arr) > 1) {
                 $time_arr[1] = "." . $time_arr[1];
                 $milliseconds = number_format(round($time_arr[1], 2), 2);
                 $time = $time_arr[0] . substr($milliseconds, 1);
-            }
-            else {
+            } else {
                 $time = $time_arr[0] . ".00";
             }
         } else {
             $time = "00:00:00.00";
         }
-		
+
         return $time;
     }
 
@@ -595,13 +619,15 @@ class Application_Model_ShowInstance {
     public function getTimeScheduledSecs()
     {
         $time_filled = $this->getTimeScheduled();
-        return Application_Model_Playlist::playlistTimeToSeconds($time_filled);
+
+        return Application_Common_DateHelper::playlistTimeToSeconds($time_filled);
     }
 
     public function getDurationSecs()
     {
         $ends = $this->getShowInstanceEnd(null);
         $starts = $this->getShowInstanceStart(null);
+
         return intval($ends->format('U')) - intval($starts->format('U'));
     }
 
@@ -631,22 +657,107 @@ class Application_Model_ShowInstance {
         } else {
             $returnStr = $hours . ":" . $interval->format("%I:%S") . ".00";
         }
-        
+
         return $returnStr;
+    }
+
+
+
+    public static function getContentCount($p_start, $p_end) 
+    {                 
+        $sql = <<<SQL
+SELECT instance_id,
+       count(*) AS instance_count
+FROM cc_schedule
+WHERE ends > :p_start::TIMESTAMP
+  AND starts < :p_end::TIMESTAMP
+GROUP BY instance_id
+SQL;
+
+        $counts = Application_Common_Database::prepareAndExecute($sql, array(
+            ':p_start' => $p_start->format("Y-m-d G:i:s"),
+            ':p_end' => $p_end->format("Y-m-d G:i:s"))
+        , 'all');
+
+        $real_counts = array();
+        foreach ($counts as $c) {
+            $real_counts[$c['instance_id']] = $c['instance_count'];
+        }
+        return $real_counts;
+
+    }
+
+    public function showEmpty()
+    {
+        $sql = <<<SQL
+SELECT s.starts
+FROM cc_schedule AS s
+WHERE s.instance_id = :instance_id
+  AND s.playout_status >= 0
+  AND ((s.stream_id IS NOT NULL)
+       OR (s.file_id IS NOT NULL)) LIMIT 1
+SQL;
+        # TODO : use prepareAndExecute properly
+        $res = Application_Common_Database::prepareAndExecute($sql,
+            array( ':instance_id' => $this->_instanceId ), 'all' );
+        # TODO : A bit retarded. fix this later
+        foreach ($res as $r) {
+            return false;
+        }
+        return true;
+
     }
 
     public function getShowListContent()
     {
         $con = Propel::getConnection();
 
-        $sql = "SELECT *
-            FROM (cc_schedule AS s LEFT JOIN cc_files AS f ON f.id = s.file_id)
-            WHERE s.instance_id = '{$this->_instanceId}' AND s.playout_status >= 0
-            ORDER BY starts";
+        $sql = <<<SQL
+SELECT *
+FROM (
+        (SELECT s.starts,
+                0::INTEGER as type ,
+                f.id           AS item_id,
+                f.track_title,
+                f.album_title  AS album,
+                f.genre        AS genre,
+                f.length       AS length,
+                f.artist_name  AS creator,
+                f.file_exists  AS EXISTS,
+                f.filepath     AS filepath,
+                f.mime         AS mime
+         FROM cc_schedule AS s
+         LEFT JOIN cc_files AS f ON f.id = s.file_id
+         WHERE s.instance_id = :instance_id1
+           AND s.playout_status >= 0
+           AND s.file_id IS NOT NULL)
+      UNION
+        (SELECT s.starts,
+                1::INTEGER as type,
+                ws.id AS item_id,
+                (ws.name || ': ' || ws.url) AS title,
+                null            AS album,
+                null            AS genre,
+                ws.length       AS length,
+                sub.login       AS creator,
+                't'::boolean    AS EXISTS,
+                ws.url          AS filepath,
+                ws.mime as mime
+         FROM cc_schedule AS s
+         LEFT JOIN cc_webstream AS ws ON ws.id = s.stream_id
+         LEFT JOIN cc_subjs AS sub ON ws.creator_id = sub.id
+         WHERE s.instance_id = :instance_id2
+           AND s.playout_status >= 0
+           AND s.stream_id IS NOT NULL)) AS temp
+ORDER BY starts;
+SQL;
 
-        //Logging::log($sql);
-
-        $results = $con->query($sql)->fetchAll();
+        $stmt = $con->prepare($sql);
+        $stmt->execute(array(
+            ':instance_id1' => $this->_instanceId,
+            ':instance_id2' => $this->_instanceId
+        ));
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($results as &$row) {
 
@@ -654,8 +765,10 @@ class Application_Model_ShowInstance {
             $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
             $row["starts"] = $dt->format("Y-m-d H:i:s");
 
-            $formatter = new LengthFormatter($row["clip_length"]);
-            $row["clip_length"] = $formatter->format();
+            if (isset($row['length'])) {
+                $formatter = new LengthFormatter($row["length"]);
+                $row["length"] = $formatter->format();
+            }
         }
 
 
@@ -664,126 +777,120 @@ class Application_Model_ShowInstance {
 
     public function getLastAudioItemEnd()
     {
-		$con = Propel::getConnection();
-
-		$sql = "SELECT ends FROM cc_schedule "
-			."WHERE instance_id = {$this->_instanceId} "
-			."ORDER BY ends DESC "
-			."LIMIT 1";
-
-		$query = $con->query($sql)->fetchColumn(0);
-        return ($query !== false) ? $query : NULL;
-	}
-
-    public function getShowEndGapTime(){
-		$showEnd = $this->getShowInstanceEnd();
-		$lastItemEnd = $this->getLastAudioItemEnd();
-
-		if (is_null($lastItemEnd)){
-			$lastItemEnd = $this->getShowInstanceStart();
-		}
-
-
-		$diff = strtotime($showEnd) - strtotime($lastItemEnd);
-
-		return ($diff < 0) ? 0 : $diff;
-	}
-
-    public static function GetLastShowInstance($p_timeNow){
-        global $CC_CONFIG;
         $con = Propel::getConnection();
 
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.ends < TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.ends DESC"
-            ." LIMIT 1";
+        $sql = "SELECT ends FROM cc_schedule "
+            ."WHERE instance_id = :instanceId"
+            ."ORDER BY ends DESC "
+            ."LIMIT 1";
 
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
+        $query = Application_Common_Database::prepareAndExecute( $sql,
+            array(':instanceId' => $this->_instanceId), 'column');
+
+        return ($query !== false) ? $query : null;
+    }
+
+    public function getShowEndGapTime()
+    {
+        $showEnd = $this->getShowInstanceEnd();
+        $lastItemEnd = $this->getLastAudioItemEnd();
+
+        if (is_null($lastItemEnd)) {
+            $lastItemEnd = $this->getShowInstanceStart();
         }
+
+
+        $diff = strtotime($showEnd) - strtotime($lastItemEnd);
+
+        return ($diff < 0) ? 0 : $diff;
+    }
+
+    public static function GetLastShowInstance($p_timeNow)
+    {
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.ends < :timeNow::TIMESTAMP
+  AND si.modified_instance = 'f'
+ORDER BY si.ends DESC LIMIT 1;
+SQL;
+        $id = Application_Common_Database( $sql, array(
+            ':timeNow' => $p_timeNow ), 'column' );
+
+        return ($id ? new Application_Model_ShowInstance($id) : null );
     }
 
     public static function GetCurrentShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
         /* Orderby si.starts descending, because in some cases
          * we can have multiple shows overlapping each other. In
          * this case, the show that started later is the one that
          * is actually playing, and so this is the one we want.
          */
 
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.starts <= TIMESTAMP '$p_timeNow'"
-            ." AND si.ends > TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.starts DESC"
-            ." LIMIT 1";
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.starts <= :timeNow1::TIMESTAMP
+  AND si.ends > :timeNow2::TIMESTAMP
+  AND si.modified_instance = 'f'
+ORDER BY si.starts DESC LIMIT 1
+SQL;
 
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        $id = Application_Common_Database( $sql, array(
+            ':timeNow1' => $p_timeNow,
+            ':timeNow2' => $p_timeNow ), 'column');
+
+        return ( $id ? new Application_Model_ShowInstance($id) : null );
     }
 
     public static function GetNextShowInstance($p_timeNow)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
-        $sql = "SELECT si.id"
-            ." FROM $CC_CONFIG[showInstances] si"
-            ." WHERE si.starts > TIMESTAMP '$p_timeNow'"
-            ." AND si.modified_instance = 'f'"
-            ." ORDER BY si.starts"
-            ." LIMIT 1";
-
-        $id = $con->query($sql)->fetchColumn(0);
-        if ($id) {
-            return new Application_Model_ShowInstance($id);
-        } else {
-            return null;
-        }
+        $sql = <<<SQL
+SELECT si.id
+FROM cc_show_instances si
+WHERE si.starts > :timeNow::TIMESTAMP
+AND si.modified_instance = 'f'
+ORDER BY si.starts
+LIMIT 1
+SQL;
+        $id = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'timeNow' => $p_timeNow ), 'column' );
+        return ( $id ? new Application_Model_ShowInstance($id) : null );
     }
 
     // returns number of show instances that ends later than $day
     public static function GetShowInstanceCount($day)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-        $sql = "SELECT count(*) as cnt FROM $CC_CONFIG[showInstances] WHERE ends < '$day'";
-        return $con->query($sql)->fetchColumn(0);
+        $sql = <<<SQL
+SELECT count(*) AS cnt
+FROM cc_show_instances
+WHERE ends < :day
+SQL;
+        return Application_Common_Database::prepareAndExecute( $sql,
+            array( ':day' => $day ), 'column' );
     }
 
     // this returns end timestamp of all shows that are in the range and has live DJ set up
     public static function GetEndTimeOfNextShowWithLiveDJ($p_startTime, $p_endTime)
     {
-        global $CC_CONFIG;
-        $con = Propel::getConnection();
-
-        $sql = "SELECT ends
-				FROM cc_show_instances as si
-                JOIN cc_show as sh ON si.show_id = sh.id
-        		WHERE si.ends > '$p_startTime' and si.ends < '$p_endTime' and (sh.live_stream_using_airtime_auth or live_stream_using_custom_auth)
-        		ORDER BY si.ends";
-
-        return $con->query($sql)->fetchAll();
+        $sql = <<<SQL
+SELECT ends
+FROM cc_show_instances AS si
+JOIN cc_show AS sh ON si.show_id = sh.id
+WHERE si.ends > :startTime::TIMESTAMP
+  AND si.ends < :endTime::TIMESTAMP
+  AND (sh.live_stream_using_airtime_auth
+       OR live_stream_using_custom_auth)
+ORDER BY si.ends
+SQL;
+        return Application_Common_Database::prepareAndExecute( $sql, array(
+            ':startTime' => $p_startTime,
+            ':endTime'   => $p_endTime), 'all');
     }
-    
-    function isRepeating(){
-        if ($this->getShow()->isRepeating()){
-            return true;
-        }else{
-            return false;
-        }
+
+    public function isRepeating()
+    {
+        return $this->getShow()->isRepeating();
     }
 }

@@ -8,6 +8,4 @@ class Application_Form_ScheduleShow extends Zend_Form
         /* Form Elements & Other Definitions Here ... */
     }
 
-
 }
-

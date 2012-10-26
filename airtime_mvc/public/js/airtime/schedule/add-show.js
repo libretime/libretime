@@ -118,6 +118,14 @@ function stringToColor(s)
     return intToRGB(hashCode(s));
 }
 
+function getContrastYIQ(hexcolor){
+	var r = parseInt(hexcolor.substr(0,2),16);
+	var g = parseInt(hexcolor.substr(2,2),16);
+	var b = parseInt(hexcolor.substr(4,2),16);
+	var yiq = ((r*299)+(g*587)+(b*114))/1000;
+	return (yiq >= 128) ? '000000' : 'ffffff';
+}
+
 
 function setAddShowEvents() {
 
@@ -578,9 +586,11 @@ function setAddShowEvents() {
 	}
     
     var bgColorEle = $("#add_show_background_color");
+    var textColorEle = $("#add_show_color");
     $('#add_show_name').bind('input', 'change', function(){
         var colorCode = stringToColor($(this).val());
         bgColorEle.val(colorCode);
+        textColorEle.val(getContrastYIQ(colorCode));
     });
 }
 

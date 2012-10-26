@@ -1,0 +1,87 @@
+<?php
+if (isset($this->obj)) {
+    $contents = $this->obj->getContents();
+    $count = count($contents);
+}
+?>
+<div class="btn-toolbar spl-no-top-margin clearfix">
+    <div class="btn-group pull-left">
+        <button id="spl_new" class="btn dropdown-toggle" data-toggle='dropdown' aria-disabled="false">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id='lib-new-pl'><a href="#">New Playlist</a></li>
+            <li id='lib-new-bl'><a href="#">New Smart Block</a></li>
+            <li id='lib-new-ws'><a href="#">New Webstream</a></li>
+        </ul>
+    </div>
+<?php if (isset($this->obj)) : ?>
+    <div class='btn-group pull-right'>
+        <button class="btn btn-inverse" title='Save smart block&#39s title, description, and criteria' type="button" id="save_button">Save</button>
+    </div>
+    <div class='btn-group pull-right'>
+        <button id="spl_delete" class="btn" role="button" aria-disabled="false">Delete</button>
+    </div>
+    <div class='btn-group pull-right'>
+        <a href="#" id="spl_crossfade" class="btn crossfade-main-button" style="display:<?php echo ($this->obj->isStatic() && $count > 0) ?"block;":"none;"?>">
+            <i class='crossfade-main-icon'></i><span class="ui-button-text">Playlist crossfade</span>
+        </a>
+    </div>
+<?php endif; ?>
+</div>
+
+<?php if (isset($this->obj)) : ?>
+    <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
+    <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
+    <input id='obj_type' type='hidden' value='block'></input>
+    <div class="playlist_title">
+        <h3 id="obj_name">
+            <a id="playlist_name_display" contenteditable="true">
+            <?php
+                if (isset($this->unsavedName)) echo $this->unsavedName;
+                else echo $this->obj->getName();
+            ?>
+            </a>
+        </h3>
+        <h4 id="obj_length"><?php echo $this->length; ?></h4>
+    </div>
+    <div id='sp-success-saved' class='success' style='display:none'></div>
+
+    <fieldset class="toggle closed" id="fieldset-metadate_change">
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
+        <dl class="zend_form">
+            <dt id="description-label"><label for="description">Description</label></dt>
+            <dd id="description-element">
+                <textarea cols="80" rows="24" id="description" name="description"><?php
+                    if (isset($this->unsavedDesc)) echo $this->unsavedDesc;
+                    else echo $this->obj->getDescription();?>
+                </textarea>
+            </dd>
+        </dl>
+    </fieldset>
+    
+    <?php echo $this->form; ?>
+
+    <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
+      	<span class="ui-icon ui-icon-closethick"></span>
+	    <dl id="spl_editor-main" class="inline-list">
+            <dt>Fade in: <span class='spl_cue_hint'>(ss.t)</span></dt>
+            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
+            <dd class="edit-error"></dd>
+            <dt>Fade out: <span class='spl_cue_hint'>(ss.t)</span></dt>
+            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00</span></dd>
+            <dd class="edit-error"></dd>
+        </dl>
+    </div>
+
+    <div class="clear"></div>
+    <div class="" style="clear:both; float:none; width:100%;">
+	    <ul id="spl_sortable">
+            <?php $this->contents = $contents;
+                echo $this->render('playlist/update.phtml') ?>
+	    </ul>
+    </div>
+
+<?php else : ?>
+    <div>No open smart block</div>
+<?php endif; ?>

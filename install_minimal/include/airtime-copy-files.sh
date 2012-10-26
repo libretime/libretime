@@ -88,15 +88,18 @@ ln -sf /usr/lib/airtime/utils/airtime-test-stream /usr/bin/airtime-test-stream
 echo "* Creating /var/log/airtime"
 mkdir -p /var/log/airtime
 chmod a+x /var/log/airtime
-touch /var/log/airtime/zendphp.log
-chown www-data:www-data /var/log/airtime/zendphp.log
-chmod 644 /var/log/airtime/zendphp.log
+chown www-data:www-data /var/log/airtime/
+chown pypo:pypo /var/log/airtime/pypo
+chown pypo:pypo /var/log/airtime/pypo-liquidsoap
+
 
 if [ "$web" = "t" ]; then
     echo "* Creating /usr/share/airtime"
     rm -rf "/usr/share/airtime"
     mkdir -p /usr/share/airtime
     cp -R $AIRTIMEROOT/airtime_mvc/* /usr/share/airtime/
+    rm -f /etc/logrotate.d/airtime-php
+    cp $AIRTIMEROOT/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
 fi
 
 echo "* Creating /var/log/airtime"

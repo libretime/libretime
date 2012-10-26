@@ -152,6 +152,11 @@ class Application_Common_DateHelper
     {
         return strtotime($time2) - strtotime($time1);
     }
+    
+    public static function TimeAdd($time1, $time2)
+    {
+        return strtotime($time2) + strtotime($time1);
+    }
 
     public static function ConvertMSToHHMMSSmm($time)
     {
@@ -304,6 +309,113 @@ class Application_Common_DateHelper
         list($hour, $min, $sec) = explode(":", $hour_min_sec);
         
         return new DateInterval("PT{$hour}H{$min}M{$sec}S");
+    }
+    
+    /**
+     * returns true or false depending on input is wether in
+     * valid range of SQL date/time
+     * @param string $p_datetime
+     *     should be in format of '0000-00-00 00:00:00'
+     */
+    public static function checkDateTimeRangeForSQL($p_datetime){
+        $info = explode(' ', $p_datetime);
+        $dateInfo = explode('-', $info[0]);
+        if (isset($info[1])) {
+            $timeInfo = explode(':', $info[1]);
+        }
+        $retVal = array();
+        $retVal["success"] = true;
+        
+        $year = $dateInfo[0];
+        $month = $dateInfo[1];
+        $day = $dateInfo[2];
+        // if year is < 1753 or > 9999 it's out of range
+        if ($year < 1753) {
+            $retVal['success'] = false;
+            $retVal['errMsg'] = "The year '$year' must be within the range of 1753 - 9999";
+        } else if (!checkdate($month, $day, $year)) {
+            $retVal['success'] = false;
+            $retVal['errMsg'] = "'$year-$month-$day' is not a valid date";        
+        } else {
+            // check time
+            if (isset($timeInfo)) {
+                if (isset($timeInfo[0]) && $timeInfo[0] != "") {
+                    $hour = intval($timeInfo[0]);
+                } else {
+                    $hour = -1;
+                }
+                
+                if (isset($timeInfo[1]) && $timeInfo[1] != "") {
+                    $min = intval($timeInfo[1]);
+                } else {
+                    $min = -1;
+                }
+                
+                if (isset($timeInfo[2]) && $timeInfo[2] != "") {
+                    $sec = intval($timeInfo[2]);
+                } else {
+                    $sec = -1;
+                }
+                
+                if ( ($hour < 0 || $hour > 23) || ($min < 0 || $min > 59) || ($sec < 0 || $sec > 59) ) {
+                    $retVal['success'] = false;
+                    $retVal['errMsg'] = "'$timeInfo[0]:$timeInfo[1]:$timeInfo[2]' is not a valid time";
+                }
+            }
+        }
+        return $retVal;
+    }
+    
+    /**
+     * This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert playlist time value to float seconds
+     *
+     * @param string $plt
+     *         playlist interval value (HH:mm:ss.dddddd)
+     * @return int
+     *         seconds
+     */
+    public static function playlistTimeToSeconds($plt)
+    {
+        $arr =  preg_split('/:/', $plt);
+        if (isset($arr[2])) {
+            return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
+        }
+        if (isset($arr[1])) {
+            return intval($arr[0])*60 + floatval($arr[1]);
+        }
+    
+        return floatval($arr[0]);
+    }
+    
+    
+    /**
+     *  This function is used for calculations! Don't modify for display purposes!
+     *
+     * Convert float seconds value to playlist time format
+     *
+     * @param  float  $seconds
+     * @return string
+     *         interval in playlist time format (HH:mm:ss.d)
+     */
+    public static function secondsToPlaylistTime($p_seconds)
+    {
+        $info = explode('.', $p_seconds);
+        $seconds = $info[0];
+        if (!isset($info[1])) {
+            $milliStr = 0;
+        } else {
+            $milliStr = $info[1];
+        }
+        $hours = floor($seconds / 3600);
+        $seconds -= $hours * 3600;
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+    
+        $res = sprintf("%02d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
+    
+        return $res;
     }
 }
 

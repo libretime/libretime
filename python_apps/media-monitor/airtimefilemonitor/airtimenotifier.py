@@ -8,13 +8,11 @@ import traceback
 
 # For RabbitMQ
 from kombu.connection import BrokerConnection
-from kombu.messaging import Exchange, Queue, Consumer, Producer
+from kombu.messaging import Exchange, Queue, Consumer
 
 import pyinotify
 from pyinotify import Notifier
 
-#from api_clients import api_client
-from api_clients import api_client
 from airtimemetadata import AirtimeMetadata
 
 class AirtimeNotifier(Notifier):
@@ -38,6 +36,11 @@ class AirtimeNotifier(Notifier):
             time.sleep(5)
 
     def init_rabbit_mq(self):
+        """
+        This function will attempt to connect to RabbitMQ Server and if successful
+        return 'True'. Returns 'False' otherwise.
+        """
+ 
         self.logger.info("Initializing RabbitMQ stuff")
         try:
             schedule_exchange = Exchange("airtime-media-monitor", "direct", durable=True, auto_delete=True)
@@ -53,13 +56,13 @@ class AirtimeNotifier(Notifier):
 
         return True
 
-    """
-    Messages received from RabbitMQ are handled here. These messages
-    instruct media-monitor of events such as a new directory being watched,
-    file metadata has been changed, or any other changes to the config of
-    media-monitor via the web UI.
-    """
     def handle_message(self, body, message):
+        """
+        Messages received from RabbitMQ are handled here. These messages
+        instruct media-monitor of events such as a new directory being watched,
+        file metadata has been changed, or any other changes to the config of
+        media-monitor via the web UI.
+        """
         # ACK the message to take it off the queue
         message.ack()
 
@@ -101,16 +104,12 @@ class AirtimeNotifier(Notifier):
             self.bootstrap.sync_database_to_filesystem(new_storage_directory_id, new_storage_directory)
 
             self.config.storage_directory = os.path.normpath(new_storage_directory)
-            self.config.imported_directory = os.path.normpath(new_storage_directory + '/imported')
-            self.config.organize_directory = os.path.normpath(new_storage_directory + '/organize')
+            self.config.imported_directory = os.path.normpath(os.path.join(new_storage_directory, '/imported'))
+            self.config.organize_directory = os.path.normpath(os.path.join(new_storage_directory, '/organize'))
 
-            self.mmc.ensure_is_dir(self.config.storage_directory)
-            self.mmc.ensure_is_dir(self.config.imported_directory)
-            self.mmc.ensure_is_dir(self.config.organize_directory)
-
-            self.mmc.is_readable(self.config.storage_directory, True)
-            self.mmc.is_readable(self.config.imported_directory, True)
-            self.mmc.is_readable(self.config.organize_directory, True)
+            for directory in [self.config.storage_directory, self.config.imported_directory, self.config.organize_directory]:
+                self.mmc.ensure_is_dir(directory)
+                self.mmc.is_readable(directory, True)
 
             self.watch_directory(new_storage_directory)
         elif m['event_type'] == "file_delete":
@@ -129,31 +128,29 @@ class AirtimeNotifier(Notifier):
                     self.logger.error("traceback: %s", traceback.format_exc())
 
 
-    """
-    Update airtime with information about files discovered in our
-    watched directories. 
-    event: a dict() object with the following attributes:
-     -filepath
-     -mode
-     -data
-     -is_recorded_show 
-    """
     def update_airtime(self, event):
-
+        """
+        Update airtime with information about files discovered in our
+        watched directories.
+        event: a dict() object with the following attributes:
+        -filepath
+        -mode
+        -data
+        -is_recorded_show
+        """
         try:
             self.logger.info("updating filepath: %s ", event['filepath'])
             filepath = event['filepath']
             mode = event['mode']
 
             md = {}
-            md['MDATA_KEY_FILEPATH'] = filepath
+            md['MDATA_KEY_FILEPATH'] = os.path.normpath(filepath)
 
             if 'data' in event:
                 file_md = event['data']
                 md.update(file_md)
             else:
                 file_md = None
-                data = None
 
             if (os.path.exists(filepath) and (mode == self.config.MODE_CREATE)):
                 if file_md is None:
@@ -184,7 +181,7 @@ class AirtimeNotifier(Notifier):
                     self.api_client.update_media_metadata(md, mode)
             elif (mode == self.config.MODE_DELETE):
                 self.api_client.update_media_metadata(md, mode)
-            
+
             elif (mode == self.config.MODE_DELETE_DIR):
                 self.api_client.update_media_metadata(md, mode)
 

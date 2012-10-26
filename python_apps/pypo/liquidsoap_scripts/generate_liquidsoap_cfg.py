@@ -1,7 +1,6 @@
 import logging
 import sys
-from api_clients import api_client
-from configobj import ConfigObj
+from api_clients.api_client import AirtimeApiClient
 
 def generate_liquidsoap_config(ss):
     data = ss['msg']
@@ -9,31 +8,24 @@ def generate_liquidsoap_config(ss):
     fh.write("################################################\n")
     fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
     fh.write("################################################\n")
+
     for d in data:
-        buffer = d[u'keyname'] + " = "
-        if(d[u'type'] == 'string'):
-            temp = d[u'value']
-            buffer += '"%s"' % temp
+        key = d['keyname']
+
+        str_buffer = d[u'keyname'] + " = "
+        if d[u'type'] == 'string':
+            val = '"%s"' % d['value']
         else:
-            temp = d[u'value']
-            if(temp == ""):
-                temp = "0"
-            buffer += temp
-        buffer += "\n"
-        fh.write(api_client.encode_to(buffer))
+            val = d[u'value']
+            val = val if len(val) > 0 else "0"
+        str_buffer = "%s = %s\n" % (key, val)
+        fh.write(str_buffer.encode('utf-8'))
+
     fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
 
-PATH_INI_FILE = '/etc/airtime/pypo.cfg'
-    
-try:
-    config = ConfigObj(PATH_INI_FILE)
-except Exception, e:
-    print 'Error loading config file: ', e
-    sys.exit(1)
-
 logging.basicConfig(format='%(message)s')
-ac = api_client.api_client_factory(config, logging.getLogger())
+ac = AirtimeApiClient(logging.getLogger())
 ss = ac.get_stream_setting()
 
 if ss is not None:

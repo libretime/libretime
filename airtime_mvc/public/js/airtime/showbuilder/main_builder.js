@@ -15,7 +15,7 @@ AIRTIME = (function(AIRTIME) {
 		timeStartId = "#sb_time_start",
 		dateEndId = "#sb_date_end",
 		timeEndId = "#sb_time_end",
-		$toggleLib = $('<div id="sb_edit" class="ui-button ui-state-default" title="open the library to schedule files."><span class="ui-icon ui-icon-arrowthick-1-nw"></span></div>'),
+		$toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='Open library to add or remove content'>Add / Remove Content</a>"),
 		$libClose = $('<a />', {
 			"class": "close-round",
 			"href": "#",
@@ -45,7 +45,7 @@ AIRTIME = (function(AIRTIME) {
 	function setWidgetSize() {
 		viewport = AIRTIME.utilities.findViewportDimensions();
 		widgetHeight = viewport.height - 180;
-		screenWidth = Math.floor(viewport.width - 90);
+		screenWidth = Math.floor(viewport.width - 40);
 		
 		var libTableHeight = widgetHeight - 130,
 			builderTableHeight = widgetHeight - 95,
@@ -69,9 +69,9 @@ AIRTIME = (function(AIRTIME) {
 		
 		if ($lib.filter(':visible').length > 0) {
 	    	
-	    	$lib.width(Math.floor(screenWidth * 0.5));
+	    	$lib.width(Math.floor(screenWidth * 0.48));
 	    	    
-	    	$builder.width(Math.floor(screenWidth * 0.5))
+	    	$builder.width(Math.floor(screenWidth * 0.48))
 				.find("#sb_edit")
 					.remove()
 					.end()
@@ -155,9 +155,9 @@ AIRTIME = (function(AIRTIME) {
 			AIRTIME.showbuilder.resetTimestamp();
 			
 			$lib.show()
-				.width(Math.floor(screenWidth * 0.5));
+				.width(Math.floor(screenWidth * 0.48));
 			
-			$builder.width(Math.floor(screenWidth * 0.5))
+			$builder.width(Math.floor(screenWidth * 0.48))
 				.find("#sb_edit")
 					.remove()
 					.end()

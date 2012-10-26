@@ -5,6 +5,10 @@ $(document).ready(function() {
 	    afterDetachCSSClass: "floated-panel",
 	    savePanelSpace: true
     });
+
+
+    //this statement tells the browser to fade out any success message after 5 seconds
+    setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
 });
 
 function adjustDateToServerDate(date, serverTimezoneOffset){
@@ -31,22 +35,30 @@ function openAudioPreview(p_event) {
     p_event.stopPropagation();
     
     var audioFileID = $(this).attr('audioFile');
-    var playlistID = $('#pl_id:first').attr('value');
-    var playlistIndex = $(this).parent().parent().attr('id');
-    playlistIndex = playlistIndex.substring(4); //remove the spl_
+    var objId = $('#obj_id:first').attr('value');
+    var objType = $('#obj_type:first').attr('value');
+    var playIndex = $(this).parent().parent().attr('id');
+    playIndex = playIndex.substring(4); //remove the spl_
     
-    open_playlist_preview(playlistID, playlistIndex);
+    if (objType == "playlist") {
+        open_playlist_preview(objId, playIndex);
+    } else if (objType == "block") {
+        open_block_preview(objId, playIndex);
+    }
 }
 
-function open_audio_preview(audioFileID, audioFileTitle, audioFileArtist) {
+function open_audio_preview(type, id, audioFileTitle, audioFileArtist) {
     // we need to remove soundcloud icon from audioFileTitle
     var index = audioFileTitle.indexOf("<span class=");
     if(index != -1){
         audioFileTitle = audioFileTitle.substring(0,index);
     }
-    openPreviewWindow('audiopreview/audio-preview/audioFileID/'+audioFileID+'/audioFileArtist/'+audioFileArtist+'/audioFileTitle/'+audioFileTitle);
+
+    openPreviewWindow('audiopreview/audio-preview/audioFileID/'+id+'/audioFileArtist/'+encodeURIComponent(audioFileArtist)+'/audioFileTitle/'+encodeURIComponent(audioFileTitle)+'/type/'+type);
+
     _preview_window.focus();
 }
+
 /**
  *Opens a jPlayer window for the specified info, for either an audio file or playlist.
  *If audioFile, audioFileTitle, audioFileArtist is supplied the jplayer opens for one file
@@ -65,6 +77,17 @@ function open_playlist_preview(p_playlistID, p_playlistIndex) {
     _preview_window.focus();
 }
 
+function open_block_preview(p_blockId, p_blockIndex) {
+    if (p_blockIndex == undefined) //Use a resonable default.
+        p_blockIndex = 0;
+    
+    if (_preview_window != null && !_preview_window.closed)
+        _preview_window.playBlock(p_blockId, p_blockIndex);
+    else
+        openPreviewWindow('audiopreview/block-preview/blockIndex/'+p_blockIndex+'/blockId/'+p_blockId);
+    _preview_window.focus();
+}
+
 /**
  *Opens a jPlayer window for the specified info, for either an audio file or playlist.
  *If audioFile, audioFileTitle, audioFileArtist is supplied the jplayer opens for one file
@@ -80,12 +103,7 @@ function open_show_preview(p_showID, p_showIndex) {
 }
 
 function openPreviewWindow(url) {
-    
-    //$.post(baseUri+'Playlist/audio-preview-player', {fileName: fileName, cueIn: cueIn, cueOut: cueOut, fadeIn: fadeIn, fadeInFileName: fadeInFileName, fadeOut: fadeOut, fadeOutFileName: fadeOutFileName})
     _preview_window = window.open(url, 'Audio Player', 'width=450,height=100,scrollbars=yes');
-    //Set the play button to pause.
-    //var elemID = "spl_"+elemIndexString;
-    //$('#'+elemID+' div.list-item-container a span').attr("class", "ui-icon ui-icon-pause");
     return false;
 }
 

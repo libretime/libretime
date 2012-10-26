@@ -1297,6 +1297,31 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 		return $this->getCcPlaylistcontentss($query, $con);
 	}
 
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcPlaylist is new, it will return
+	 * an empty collection; or if this CcPlaylist has previously
+	 * been saved, it will retrieve related CcPlaylistcontentss from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcPlaylist.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcPlaylistcontents[] List of CcPlaylistcontents objects
+	 */
+	public function getCcPlaylistcontentssJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcPlaylistcontentsQuery::create(null, $criteria);
+		$query->joinWith('CcBlock', $join_behavior);
+
+		return $this->getCcPlaylistcontentss($query, $con);
+	}
+
 	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */

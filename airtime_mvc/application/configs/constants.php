@@ -2,7 +2,7 @@
 
 define('AIRTIME_COPYRIGHT_DATE', '2010-2012');
 define('AIRTIME_REST_VERSION', '1.1');
-define('AIRTIME_API_VERSION', '1.0');
+define('AIRTIME_API_VERSION', '1.1');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH', 'filepath');
@@ -30,12 +30,16 @@ define('MDATA_KEY_BPM', 'bpm');
 define('MDATA_KEY_TRACKNUMBER', 'track_number');
 define('MDATA_KEY_CONDUCTOR', 'conductor');
 define('MDATA_KEY_LANGUAGE', 'language');
+define('MDATA_KEY_REPLAYGAIN', 'replay_gain');
+define('MDATA_KEY_OWNER_ID', 'owner_id');
 
 define('UI_MDATA_VALUE_FORMAT_FILE', 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM', 'live stream');
 
 // Session Keys
-define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
+define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
+/*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
+define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 
 // Soundcloud contants

@@ -1,15 +1,16 @@
 <?php
 require_once 'soundcloud-api/Services/Soundcloud.php';
 
-class Application_Model_Soundcloud {
-
+class Application_Model_Soundcloud
+{
     private $_soundcloud;
 
-	public function __construct()
+    public function __construct()
     {
         global $CC_CONFIG;
-
-        $this->_soundcloud = new Services_Soundcloud($CC_CONFIG['soundcloud-client-id'], $CC_CONFIG['soundcloud-client-secret']);
+        $this->_soundcloud = new Services_Soundcloud(
+            $CC_CONFIG['soundcloud-client-id'],
+            $CC_CONFIG['soundcloud-client-secret']);
     }
 
     private function getToken()
@@ -22,46 +23,43 @@ class Application_Model_Soundcloud {
         return $token;
     }
 
-    public function uploadTrack($filepath, $filename, $description, $tags=array(), $release=null, $genre=null)
+    public function uploadTrack($filepath, $filename, $description,
+        $tags=array(), $release=null, $genre=null)
     {
-        if($this->getToken())
-        {
-            if(count($tags)) {
+        if ($this->getToken()) {
+            if (count($tags)) {
                 $tags = join(" ", $tags);
                 $tags = $tags." ".Application_Model_Preference::GetSoundCloudTags();
-            }
-            else {
+            } else {
                 $tags = Application_Model_Preference::GetSoundCloudTags();
             }
 
-            $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1'?true:false;
-            
+            $downloadable = Application_Model_Preference::GetSoundCloudDownloadbleOption() == '1';
+
             $track_data = array(
-                'track[sharing]' => 'private',
-                'track[title]' => $filename,
-                'track[asset_data]' => '@' . $filepath,
-                'track[tag_list]' => $tags,
-                'track[description]' => $description,
+                'track[sharing]'      => 'private',
+                'track[title]'        => $filename,
+                'track[asset_data]'   => '@' . $filepath,
+                'track[tag_list]'     => $tags,
+                'track[description]'  => $description,
                 'track[downloadable]' => $downloadable,
 
             );
 
-            if(isset($release)) {
+            if (isset($release)) {
                 $release = str_replace(" ", "-", $release);
                 $release = str_replace(":", "-", $release);
 
                 //YYYY-MM-DD-HH-mm-SS
                 $release = explode("-", $release);
-
-                $track_data['track[release_year]'] = $release[0];
+                $track_data['track[release_year]']  = $release[0];
                 $track_data['track[release_month]'] = $release[1];
-                $track_data['track[release_day]'] = $release[2];
+                $track_data['track[release_day]']   = $release[2];
             }
 
             if (isset($genre) && $genre != "") {
                 $track_data['track[genre]'] = $genre;
-            }
-            else {
+            } else {
                 $default_genre = Application_Model_Preference::GetSoundCloudGenre();
                 if ($default_genre != "") {
                     $track_data['track[genre]'] = $default_genre;
@@ -77,14 +75,24 @@ class Application_Model_Soundcloud {
             if ($license != "") {
                 $track_data['track[license]'] = $license;
             }
-            
+
             $response = json_decode(
                 $this->_soundcloud->post('tracks', $track_data),
                 true
             );
 
             return $response;
+        } else {
+            throw new NoSoundCloundToken();
         }
     }
 
+    public static function uploadSoundcloud($id) 
+    {
+        $cmd = "/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &";
+        Logging::info("Uploading soundcloud with command: $cmd");
+        exec($cmd);
+    }
 }
+
+class NoSoundCloundToken extends Exception {}

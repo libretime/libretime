@@ -12,6 +12,22 @@
     margin-right: 5px;
 }
 
+.lib-content .fg-toolbar ul.dropdown-menu {
+    float: none;
+    padding: 5px 0;
+	margin: 2px 0 0;
+    cursor: default;
+	}
+	.lib-content .fg-toolbar ul.dropdown-menu li {
+	    list-style-type: none;
+	    float: none;
+	    padding: 0;
+	    margin-right: 0;
+		}
+		.lib-content .fg-toolbar ul.dropdown-menu li.nav-header {
+	    	padding-right: 20px;
+			padding-left: 20px;
+			}
 .lib-selected.even {
 	background-color: rgba(240, 109, 53, 1);
 }
@@ -22,7 +38,7 @@
 #library_content {
 	float: left;
 	width: 50%;
-	overflow: hidden;
+	overflow: auto;
 }
 
 #library_display {
@@ -130,3 +146,80 @@ td.library_bitrate {
 			}
 
 
+.fg-toolbar .btn-toolbar {margin: 6px 5px -6px 5px;}
+
+
+/* ///////////////////// ADVANCED SEARCH ///////////////////// */
+.advanced_search {
+	margin-bottom: 0;
+	}
+	.advanced_search > div {
+	 	margin-bottom: 6px;
+		}
+
+.lib-content fieldset {
+	border: 1px solid #9a9a9a;
+	margin: 0 0 8px 0;
+	padding: 8px;
+	}
+	.lib-content > div + fieldset {
+		margin-top:3px;
+		}
+	.lib-content fieldset.closed {
+		border-width: 1px 0 0;
+		margin-bottom: -6px;
+		margin-left: 1px;
+		}
+.dataTables_filter input[type="text"], .dataTables_filter select {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 25px;
+	width:60%;
+	}
+.dataTables_filter label {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	display: inline;
+}
+
+.search-criteria .criteria-element > div {
+	margin-bottom: 5px;
+	}
+	.search-criteria .criteria-element > div input[type="text"],
+	.search-criteria .criteria-element > div select  {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		height: 25px;
+		}
+	.search-criteria .criteria-element > div .btn-small {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		height: 25px;
+		padding: 3px 6px;
+		}
+
+.sb-timerange .btn-small {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	height: 25px;
+	vertical-align: middle;
+	margin: 0 !important;
+	line-height: 16px;
+	}	
+
+.sb-timerange input {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	display: inline-block;
+	float: none !important;
+	margin: 0 !important;
+	height: 25px;
+	outline: none;
+	vertical-align: middle !important;
+	}			

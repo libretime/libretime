@@ -7,13 +7,6 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-set +e
-DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
-set -e
-if [[ "$DEB" = "Status: install ok installed" ]]; then
-    echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
-    exit 1
-fi
 
 showhelp () {
     echo "Usage: airtime-install [options]
@@ -37,8 +30,9 @@ pypo="f"
 showrecorder="f"
 web="f"
 liquidsoap_keep_alive="f"
+disable_deb_check="f"
 
-set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,web,liquidsoap-keep-alive "hopnrmywl" "$@")
+set -- $(getopt -l help,overwrite,preserve,no-db,reinstall,media-monitor,pypo,web,liquidsoap-keep-alive,disable-deb-check "hopnrmywld" "$@")
 while [ $# -gt 0 ]
 do
     case "$1" in
@@ -51,6 +45,7 @@ do
     (-y|--pypo) pypo="t";;
     (-w|--web) web="t";;
     (-l|--liquidsoap-keep-alive) liquidsoap_keep_alive="t";;
+    (-d|--disable-deb-check) disable_deb_check="t";;
     
     (--) shift; break;;
     (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
@@ -67,41 +62,25 @@ if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$web" = "f" ]; then
     web="t"
 fi
 
+if [ "$disable_deb_check" == "f" ]; then
+    set +e
+    DEB=$(dpkg -s airtime 2> /dev/null | grep Status)
+    set -e
+    if [[ "$DEB" = "Status: install ok installed" ]]; then
+        echo -e "\nDebian package of Airtime detected. Please use the debian package to upgrade.\n"
+        exit 1
+    fi
+fi
+
+
+#Update apt sources.list to point to the new deb-multimedia domain.
+sed -i s/www.debian-multimedia.org/www.deb-multimedia.org/g /etc/apt/sources.list
+
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=`dirname $SCRIPT`
 AIRTIMEROOT=$SCRIPTPATH/../
-
-#Check if required zend mvc library is present. This is a temporary workaround for 2.0.1, 
-#and we should probably create a separate file that checks whether ALL dependencies are satisfied before 
-#allowing the install to continue. However in that case, we wouldn't check for Debian packages so that we 
-#can become less Debian platform dependent in the future...
-
-set +e
-dpkg -l | grep zendframework > /dev/null 2>&1
-ZENDFRAMEWORK=$?
-
-dpkg -l | grep libzend-framework-php > /dev/null 2>&1
-LIBZEND=$?
-
-dpkg -l | grep lsof > /dev/null 2>&1
-LSOF_EXIST=$?
-
-dpkg -l | grep sudo > /dev/null 2>&1
-SUDO_EXIST=$?
-
-set -e
-
-if [ "$ZENDFRAMEWORK" != "0" -a "$LIBZEND" != "0" ]; then
-    echo "zendframework/libzend-framework-php package missing. Please run airtime-full-install"
-    exit 1
-fi
-
-if [ "$LSOF_EXIST" != "0" -o "$SUDO_EXIST" != "0" ]; then
-    echo "Packages missing. Please run airtime-full-install"
-    exit 1
-fi
 
 echo "* Making sure /etc/default/locale is set properly"
 set +e
@@ -130,7 +109,6 @@ Now exiting install...
 fi
 set -e
 
-
 # Check if airtime exists already
 set +e
 php --php-ini ${SCRIPTPATH}/airtime-php.ini ${SCRIPTPATH}/include/airtime-installed-check.php
@@ -150,13 +128,14 @@ if [ "$result" -eq "0" ]; then
     rm -f "/etc/airtime/media-monitor.cfg"
     rm -f "/etc/airtime/pypo.cfg"
 elif [ "$result" -eq "1" -a "$reinstall" = "f" ]; then
-    echo " * Same version of Airtime already installed!"
-    exit 1;
+    echo " * Same version of Airtime already installed! Reusing database."
+    nodb='t'
+    overwrite='f'
 elif [ "$result" -eq "2" ]; then
-    echo " * Previous version of Airtime already installed..will perform upgrade"
+    echo " * Previous version of Airtime already installed..will perform upgrade."
     DO_UPGRADE="1"
 elif [ "$result" -eq "3" ]; then
-    echo " * You require at least Airtime 1.8.0 installed for upgrade"
+    echo " * You require at least Airtime 1.8.0 installed for upgrade."
     exit 1
 fi
 
@@ -168,6 +147,9 @@ if [ -e /etc/init.d/airtime-media-monitor ]; then
 fi
 if [ -e /etc/init.d/airtime-playout ]; then
     invoke-rc.d airtime-playout stop > /dev/null 2>&1
+fi
+if [ -e /etc/init.d/airtime-liquidsoap ]; then
+    invoke-rc.d airtime-liquidsoap stop > /dev/null 2>&1
 fi
 
 #export these variables to make them available in sub bash scripts

@@ -1,263 +1,319 @@
 <?php
 
-define('UTYPE_HOST', 'H');
-define('UTYPE_ADMIN', 'A');
-define('UTYPE_GUEST', 'G');
-define('UTYPE_PROGRAM_MANAGER', 'P');
+define('UTYPE_HOST'            , 'H');
+define('UTYPE_ADMIN'           , 'A');
+define('UTYPE_GUEST'           , 'G');
+define('UTYPE_PROGRAM_MANAGER' , 'P');
 
-class Application_Model_User {
-
+class Application_Model_User
+{
     private $_userInstance;
 
     public function __construct($userId)
     {
-        if (empty($userId)){
+        if (empty($userId)) {
             $this->_userInstance = $this->createUser();
-        }
-        else {
+        } else {
             $this->_userInstance = CcSubjsQuery::create()->findPK($userId);
 
-            if (is_null($this->_userInstance)){
+            if (is_null($this->_userInstance)) {
                 throw new Exception();
             }
         }
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->_userInstance->getDbId();
     }
 
-    public function isGuest() {
+    public function isGuest()
+    {
         return $this->getType() == UTYPE_GUEST;
     }
 
-    public function isHost($showId) {
-    	return $this->isUserType(UTYPE_HOST, $showId);
+    public function isHostOfShow($showId)
+    {
+        $userId = $this->_userInstance->getDbId();
+        return CcShowHostsQuery::create()
+            ->filterByDbShow($showId)
+            ->filterByDbHost($userId)->count() > 0;
     }
 
-    public function isPM() {
+    public function isHost()
+    {
+        return $this->isUserType(UTYPE_HOST);
+    }
+
+    public function isPM()
+    {
         return $this->isUserType(UTYPE_PROGRAM_MANAGER);
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->isUserType(UTYPE_ADMIN);
     }
 
-    public function canSchedule($p_showId) {
-       $type = $this->getType();
-       $result = false;
+    public function canSchedule($p_showId)
+    {
+        $type = $this->getType();
+        $result = false;
 
-       if ( $type === UTYPE_ADMIN ||
+        if ($type === UTYPE_ADMIN ||
             $type === UTYPE_PROGRAM_MANAGER ||
-            CcShowHostsQuery::create()->filterByDbShow($p_showId)->filterByDbHost($this->getId())->count() > 0 )
-       {
-           $result = true;
-       }
-
-       return $result;
+            self::isHostOfShow($p_showId)) {
+            $result = true;
+        }
+        return $result;
     }
 
-    public function isUserType($type, $showId=''){
-    	if(is_array($type)){
-    		$result = false;
-    		foreach($type as $t){
-	    		switch($t){
-		    		case UTYPE_ADMIN:
-		    			$result = $this->_userInstance->getDbType() === 'A';
-		    			break;
-		    		case UTYPE_HOST:
-		    			$userId = $this->_userInstance->getDbId();
-		        		$result = CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
-		        		break;
-		    		case UTYPE_PROGRAM_MANAGER:
-		    			$result = $this->_userInstance->getDbType() === 'P';
-		    			break;
-		    	}
-		    	if($result){
-		    		return $result;
-		    	}
-    		}
-    	}else{
-	    	switch($type){
-	    		case UTYPE_ADMIN:
-	    			return $this->_userInstance->getDbType() === 'A';
-	    		case UTYPE_HOST:
-	    			$userId = $this->_userInstance->getDbId();
-	        		return CcShowHostsQuery::create()->filterByDbShow($showId)->filterByDbHost($userId)->count() > 0;
-	    		case UTYPE_PROGRAM_MANAGER:
-	    			return $this->_userInstance->getDbType() === 'P';
-	    	}
-    	}
+    // TODO : refactor code to only accept arrays for isUserType and
+    // simplify code even further
+    public function isUserType($type)
+    {
+        if (!is_array($type)) {
+            $type = array($type);
+        }
+        $real_type = $this->_userInstance->getDbType();
+        return in_array($real_type, $type);
     }
 
-    public function setLogin($login){
+    public function setLogin($login)
+    {
         $user = $this->_userInstance;
         $user->setDbLogin($login);
     }
 
-    public function setPassword($password){
+    public function setPassword($password)
+    {
         $user = $this->_userInstance;
         $user->setDbPass(md5($password));
     }
 
-    public function setFirstName($firstName){
+    public function setFirstName($firstName)
+    {
         $user = $this->_userInstance;
         $user->setDbFirstName($firstName);
     }
 
-    public function setLastName($lastName){
+    public function setLastName($lastName)
+    {
         $user = $this->_userInstance;
         $user->setDbLastName($lastName);
     }
 
-    public function setType($type){
+    public function setType($type)
+    {
         $user = $this->_userInstance;
         $user->setDbType($type);
     }
 
-    public function setEmail($email){
+    public function setEmail($email)
+    {
         $user = $this->_userInstance;
         $user->setDbEmail(strtolower($email));
     }
-    
-    public function setCellPhone($cellPhone){
+
+    public function setCellPhone($cellPhone)
+    {
         $user = $this->_userInstance;
         $user->setDbCellPhone($cellPhone);
     }
 
-    public function setSkype($skype){
+    public function setSkype($skype)
+    {
         $user = $this->_userInstance;
         $user->setDbSkypeContact($skype);
     }
 
-    public function setJabber($jabber){
+    public function setJabber($jabber)
+    {
         $user = $this->_userInstance;
         $user->setDbJabberContact($jabber);
     }
 
-    public function getLogin(){
+    public function getLogin()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbLogin();
     }
 
-    public function getPassword(){
+    public function getPassword()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbPass();
     }
 
-    public function getFirstName(){
+    public function getFirstName()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbFirstName();
     }
 
-    public function getLastName(){
+    public function getLastName()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbLastName();
     }
 
-    public function getType(){
+    public function getType()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbType();
     }
 
-    public function getEmail(){
+    public function getEmail()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbEmail();
     }
-    
-    public function getCellPhone(){
+
+    public function getCellPhone()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbCellPhone();
     }
 
-    public function getSkype(){
+    public function getSkype()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbSkypeContact();
     }
 
-    public function getJabber(){
+    public function getJabber()
+    {
         $user = $this->_userInstance;
+
         return $user->getDbJabberContact();
 
     }
 
-    public function save(){
+    public function save()
+    {
         $this->_userInstance->save();
     }
 
-    public function delete(){
-        if (!$this->_userInstance->isDeleted())
+    public function delete()
+    {
+        if (!$this->_userInstance->isDeleted()) {
             $this->_userInstance->delete();
+        }
+    }
+    public function getOwnedFiles()
+    {
+        $user = $this->_userInstance;
+        // do we need a find call at the end here?
+        return $user->getCcFilessRelatedByDbOwnerId();
     }
 
-    private function createUser() {
+    public function donateFilesTo($user) // $user is object not user id
+    {
+        $my_files = $this->getOwnedFiles();
+        foreach ($my_files as $file) {
+            $file->reassignTo($user);
+        }
+    }
+
+    public function deleteAllFiles()
+    {
+        $my_files = $this->getOwnedFiles();
+        foreach ($files as $file) {
+            $file->delete();
+        }
+    }
+
+    private function createUser()
+    {
         $user = new CcSubjs();
+
         return $user;
     }
 
-    public static function getUsers($type, $search=NULL)
+    public static function getUsersOfType($type)
     {
-        $con = Propel::getConnection();
+        return CcSubjsQuery::create()->filterByDbType($type)->find();
+    }
+
+    public static function getFirstAdmin() {
+        $admins = Application_Model_User::getUsersOfType('A');
+        if (count($admins) > 0) { // found admin => pick first one
+            return $admins[0];
+        } else {
+            Logging::warn("Warning. no admins found in database");
+            return null;
+        }
+    }
+
+    public static function getFirstAdminId()
+    {
+        $admin = self::getFirstAdmin();
+        if ($admin) { 
+            return $admin->getDbId();
+        } else {
+            return null;
+        }
+    }
+
+    public static function getUsers(array $type, $search=null)
+    {
+        $con     = Propel::getConnection();
 
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
-        $sql = $sql_gen;
+        $sql     = $sql_gen;
 
-        if (is_array($type)) {
-            for($i=0; $i<count($type); $i++) {
-                $type[$i] = "type = '{$type[$i]}'";
-            }
-            $sql_type = join(" OR ", $type);
-        }
-        else {
-            $sql_type = "type = {$type}";
+        $types = array();
+        $params = array();
+        for ($i=0; $i<count($type); $i++) {
+            $p = ":type{$i}";
+            $types[] = "type = $p";
+            $params[$p] = $type[$i];
         }
 
-        $sql = $sql_gen ." WHERE (". $sql_type.") ";
+        $sql_type = join(" OR ", $types);
+
+        $sql      = $sql_gen ." WHERE (". $sql_type.") ";
 
         if (!is_null($search)) {
+            //need to use addslashes for 'LIKE' values
+            $search = addslashes($search);
             $like = "login ILIKE '%{$search}%'";
 
-            $sql = $sql . " AND ".$like;
+            $sql  = $sql . " AND ".$like;
         }
 
         $sql = $sql ." ORDER BY login";
 
-        return $con->query($sql)->fetchAll();;
+        return Application_Common_Database::prepareAndExecute($sql, $params, "all");
     }
 
-    public static function getUserCount($type=NULL){
+    public static function getUserCount()
+    {
         $con = Propel::getConnection();
-        $sql = '';
-        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs ";
+        $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs";
 
-        if (!isset($type)) {
-        	$sql = $sql_gen;
-        }
-        else{
-	        if (is_array($type)) {
-	            for ($i=0; $i<count($type); $i++) {
-	                $type[$i] = "type = '{$type[$i]}'";
-	            }
-	            $sql_type = join(" OR ", $type);
-	        }
-	        else {
-	            $sql_type = "type = {$type}";
-	        }
+        $query = $con->query($sql_gen)->fetchColumn(0);
 
-	        $sql = $sql_gen ." WHERE (". $sql_type.") ";
-        }
-
-        $query = $con->query($sql)->fetchColumn(0);
-        return ($query !== false) ? $query : NULL;
+        return ($query !== false) ? $query : null;
     }
 
-    public static function getHosts($search=NULL) {
+    public static function getHosts($search=null)
+    {
         return Application_Model_User::getUsers(array('H'), $search);
     }
 
-    public static function getUsersDataTablesInfo($datatables) {
+    public static function getUsersDataTablesInfo($datatables)
+    {
 
-    	$con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
+        $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME);
 
         $displayColumns = array("id", "login", "first_name", "last_name", "type");
         $fromTable = "cc_subjs";
@@ -273,8 +329,8 @@ class Application_Model_User {
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         // mark record which is for the current user
-        foreach($res['aaData'] as &$record){
-            if($record['login'] == $username){
+        foreach ($res['aaData'] as &$record) {
+            if ($record['login'] == $username) {
                 $record['delete'] = "self";
             } else {
                 $record['delete'] = "";
@@ -284,39 +340,32 @@ class Application_Model_User {
         return $res;
     }
 
-    public static function getUserData($id){
-        $con = Propel::getConnection();
-
-        $sql = "SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact, jabber_contact"
-        ." FROM cc_subjs"
-        ." WHERE id = $id";
-
-        return $con->query($sql)->fetch();
+    public static function getUserData($id)
+    {
+        $sql = <<<SQL
+SELECT login, first_name, last_name, type, id, email, cell_phone, skype_contact,
+       jabber_contact
+FROM cc_subjs
+WHERE id = :id
+SQL;
+        return Application_Common_Database::prepareAndExecute($sql, array(
+            ":id" => $id), 'single');
     }
 
-    public static function GetUserID($login){
-        $user = CcSubjsQuery::create()->findOneByDbLogin($login);
-        if (is_null($user)){
-            return -1;
-        } else {
-            return $user->getDbId();
-        }
-    }
-
-    public static function GetCurrentUser() {
+    public static function getCurrentUser()
+    {
         $userinfo = Zend_Auth::getInstance()->getStorage()->read();
-                
-        if (is_null($userinfo)){
+        if (is_null($userinfo)) {
             return null;
-        } else {
-            try {
-                return new self($userinfo->id);
-            } catch (Exception $e){
-                //we get here if $userinfo->id is defined, but doesn't exist
-                //in the database anymore.  
-                Zend_Auth::getInstance()->clearIdentity();
-                return null;
-            }
+        }
+        try {
+            return new self($userinfo->id);
+        } catch (Exception $e) {
+            //we get here if $userinfo->id is defined, but doesn't exist
+            //in the database anymore.
+            Zend_Auth::getInstance()->clearIdentity();
+
+            return null;
         }
     }
 }

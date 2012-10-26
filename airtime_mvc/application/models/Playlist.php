@@ -8,8 +8,8 @@ require_once 'formatters/LengthFormatter.php';
  * @copyright 2010 Sourcefabric O.P.S.
  * @license http://www.gnu.org/licenses/gpl.txt
  */
-class Application_Model_Playlist {
-
+class Application_Model_Playlist implements Application_Model_LibraryEditable
+{
     /**
      * propel connection object.
      */
@@ -20,17 +20,17 @@ class Application_Model_Playlist {
      */
     private $id;
 
-	/**
+    /**
      * propel object for this playlist.
      */
-	private $pl;
+    private $pl;
 
-	/**
+    /**
      * info needed to insert a new playlist element.
      */
-	private $plItem = array(
+    private $plItem = array(
         "id" => "",
-	    "pos" => "",
+        "pos" => "",
         "cliplength" => "",
         "cuein" => "00:00:00",
         "cueout" => "00:00:00",
@@ -38,14 +38,13 @@ class Application_Model_Playlist {
         "fadeout" => "0.0",
     );
 
-	//using propel's phpNames.
-	private $categories = array(
-	    "dc:title" => "Name",
-    	"dc:creator" => "Creator",
-    	"dc:description" => "Description",
-    	"dcterms:extent" => "Length"
-	);
-
+    //using propel's phpNames.
+    private $categories = array(
+        "dc:title" => "Name",
+        "dc:creator" => "Creator",
+        "dc:description" => "Description",
+        "dcterms:extent" => "Length"
+    );
 
     public function __construct($id=null, $con=null)
     {
@@ -55,10 +54,9 @@ class Application_Model_Playlist {
             if (is_null($this->pl)) {
                 throw new PlaylistNotFoundException();
             }
-        }
-        else {
+        } else {
             $this->pl = new CcPlaylist();
-            $this->pl->setDbUTime("now", new DateTimeZone("UTC"));
+            $this->pl->setDbUTime(new DateTime("now", new DateTimeZone("UTC")));
             $this->pl->save();
         }
 
@@ -79,7 +77,8 @@ class Application_Model_Playlist {
      *
      * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -90,12 +89,12 @@ class Application_Model_Playlist {
      */
     public function setName($p_newname)
     {
-    	$this->pl->setDbName($p_newname);
-    	$this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
-    	$this->pl->save($this->con);
+        $this->pl->setDbName($p_newname);
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->pl->save($this->con);
     }
 
- 	/**
+     /**
      * Get mnemonic playlist name
      *
      * @return string
@@ -107,9 +106,9 @@ class Application_Model_Playlist {
 
     public function setDescription($p_description)
     {
-    	$this->pl->setDbDescription($p_description);
-    	$this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
-    	$this->pl->save($this->con);
+        $this->pl->setDbDescription($p_description);
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->pl->save($this->con);
     }
 
     public function getDescription()
@@ -117,75 +116,148 @@ class Application_Model_Playlist {
         return $this->pl->getDbDescription();
     }
 
-    public function getCreator() {
-
+    public function getCreator()
+    {
         return $this->pl->getCcSubjs()->getDbLogin();
     }
-    
-    public function getCreatorId() {
+
+    public function getCreatorId()
+    {
         return $this->pl->getCcSubjs()->getDbId();
     }
 
-    public function setCreator($p_id) {
-
+    public function setCreator($p_id)
+    {
         $this->pl->setDbCreatorId($p_id);
         $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->pl->save($this->con);
     }
 
-    public function getLastModified($format = null) {
+    public function getLastModified($format = null)
+    {
+        //Logging::info($this->pl->getDbMtime($format));
+        //Logging::info($this->pl);
         return $this->pl->getDbMtime($format);
     }
 
-    public function getSize() {
-
+    public function getSize()
+    {
         return $this->pl->countCcPlaylistcontentss();
     }
 
     /**
      * Get the entire playlist as a two dimentional array, sorted in order of play.
      * @param boolean $filterFiles if this is true, it will only return files that has
-     * 			file_exists flag set to true
+     *             file_exists flag set to true
      * @return array
      */
-    public function getContents($filterFiles=false) {
+    public function getContents($filterFiles=false)
+    {
+        Logging::info("Getting contents for playlist {$this->id}");
 
-        Logging::log("Getting contents for playlist {$this->id}");
+        $sql = <<<SQL
+  SELECT *
+   FROM (
+           (SELECT pc.id AS id,
+                   pc.type,
+                   pc.position,
+                   pc.cliplength AS LENGTH,
+                   pc.cuein,
+                   pc.cueout,
+                   pc.fadein,
+                   pc.fadeout,
+                   f.id AS item_id,
+                   f.track_title,
+                   f.artist_name AS creator,
+                   f.file_exists AS EXISTS,
+                   f.filepath AS path,
+                   f.length AS orig_length,
+                   f.mime AS mime
+            FROM cc_playlistcontents AS pc
+            JOIN cc_files AS f ON pc.file_id=f.id
+            WHERE pc.playlist_id = :playlist_id1
+              AND TYPE = 0)
+         UNION ALL
+           (SELECT pc.id AS id,
+                   pc.TYPE, pc.position,
+                            pc.cliplength AS LENGTH,
+                            pc.cuein,
+                            pc.cueout,
+                            pc.fadein,
+                            pc.fadeout,
+                            ws.id AS item_id,
+                            (ws.name || ': ' || ws.url) AS title,
+                            sub.login AS creator,
+                            't'::boolean AS EXISTS,
+                            ws.url AS path,
+                            ws.length AS orig_length,
+                            ws.mime as mime
+            FROM cc_playlistcontents AS pc
+            JOIN cc_webstream AS ws ON pc.stream_id=ws.id
+            LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
+            WHERE pc.playlist_id = :playlist_id2
+              AND pc.TYPE = 1)
+         UNION ALL
+           (SELECT pc.id AS id,
+                   pc.TYPE, pc.position,
+                            pc.cliplength AS LENGTH,
+                            pc.cuein,
+                            pc.cueout,
+                            pc.fadein,
+                            pc.fadeout,
+                            bl.id AS item_id,
+                            bl.name AS title,
+                            sbj.login AS creator,
+                            't'::boolean AS EXISTS,
+                            NULL::text AS path,
+                            bl.length AS orig_length,
+                            NULL::text as mime
+            FROM cc_playlistcontents AS pc
+            JOIN cc_block AS bl ON pc.block_id=bl.id
+            JOIN cc_subjs AS sbj ON bl.creator_id=sbj.id
+            WHERE pc.playlist_id = :playlist_id3
+              AND pc.TYPE = 2)) AS temp
+   ORDER BY temp.position;
+SQL;
 
-        $files = array();
-        $query = CcPlaylistcontentsQuery::create()
-                ->filterByDbPlaylistId($this->id);
-                
-        if($filterFiles){
-            $query->useCcFilesQuery()
-                     ->filterByDbFileExists(true)
-                  ->endUse();
-        }
-        $query->orderByDbPosition()
-              ->leftJoinWith('CcFiles');
-        $rows = $query->find($this->con);
+        $rows = Application_Common_Database::prepareAndExecute($sql, array(':playlist_id1'=>$this->id, ':playlist_id2'=>$this->id, ':playlist_id3'=>$this->id));
 
-        $i = 0;
         $offset = 0;
-        foreach ($rows as $row) {
-          $files[$i] = $row->toArray(BasePeer::TYPE_FIELDNAME, true, true);
+        foreach ($rows as &$row) {
+            $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
+            $offset += $clipSec;
+            $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 
+            //format the length for UI.
+            if ($row['type'] == 2) {
+                $bl = new Application_Model_Block($row['item_id']);
+                $formatter = new LengthFormatter($bl->getLength());
+            } else {
+                $formatter = new LengthFormatter($row['length']);
+            }
+            $row['length'] = $formatter->format();
 
-          $clipSec = Application_Model_Playlist::playlistTimeToSeconds($files[$i]['cliplength']);
-          $offset += $clipSec;
-          $offset_cliplength = Application_Model_Playlist::secondsToPlaylistTime($offset);
+            $formatter = new LengthFormatter($offset_cliplength);
+            $row['offset'] = $formatter->format();
 
-          //format the length for UI.
-          $formatter = new LengthFormatter($files[$i]['cliplength']);
-          $files[$i]['cliplength'] = $formatter->format();
+            //format the fades in format 00(.000000)
+            $fades = $this->getFadeInfo($row['position']);
+            $row['fadein'] = $fades[0];
+            $row['fadeout'] = $fades[1];
+            
+            // format the cues in format 00:00:00(.0)
+            // we need to add the '.0' for cues and not fades
+            // because propel takes care of this for us
+            // (we use propel to fetch the fades)
+            $row['cuein'] = str_pad(substr($row['cuein'], 0, 10), 10, '.0');
+            $row['cueout'] = str_pad(substr($row['cueout'], 0, 10), 10, '.0');
 
-          $formatter = new LengthFormatter($offset_cliplength);
-          $files[$i]['offset'] = $formatter->format();
-
-          $i++;
+            //format original length
+            $formatter = new LengthFormatter($row['orig_length']);
+            $row['orig_length'] = $formatter->format();
         }
 
-        return $files;
+        return $rows;
     }
 
     /**
@@ -193,42 +265,94 @@ class Application_Model_Playlist {
     * but this isn't practical since fades shouldn't be very long usuall 1 second or less. This function
     * will normalize the fade so that it looks like 00.000000 to the user.
     **/
-    public function normalizeFade($fade) {
+    public function normalizeFade($fade)
+    {
+        //First get rid of the first six characters 00:00: which will be added back later for db update
+        $fade = substr($fade, 6);
 
-      //First get rid of the first six characters 00:00: which will be added back later for db update
-      $fade = substr($fade, 6);
+        //Second add .000000 if the fade does't have milliseconds format already
+        $dbFadeStrPos = strpos( $fade, '.' );
+        if ($dbFadeStrPos === false) {
+             $fade .= '.000000';
+        } else {
+            while (strlen($fade) < 9) {
+                 $fade .= '0';
+            }
+        }
 
-      //Second add .000000 if the fade does't have milliseconds format already
-      $dbFadeStrPos = strpos( $fade, '.' );
-      if ( $dbFadeStrPos === False )
-         $fade .= '.000000';
-      else
-         while( strlen( $fade ) < 9 )
-            $fade .= '0';
+        //done, just need to set back the formated values
+        return $fade;
+    }
 
-      //done, just need to set back the formated values
-      return $fade;
+    // returns true/false and ids of dynamic blocks
+    public function hasDynamicBlock()
+    {
+        $ids = $this->getIdsOfDynamicBlocks();
+        if (count($ids) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getIdsOfDynamicBlocks()
+    {
+        $sql = "SELECT bl.id FROM cc_playlistcontents as pc
+                JOIN cc_block as bl ON pc.type=2 AND pc.block_id=bl.id AND bl.type='dynamic'
+                WHERE playlist_id=:playlist_id AND pc.type=2";
+        
+        $result = Application_Common_Database::prepareAndExecute($sql, array(':playlist_id'=>$this->id));
+
+        return $result;
     }
 
     //aggregate column on playlistcontents cliplength column.
-    public function getLength() {
+    public function getLength()
+    {
+        if ($this->hasDynamicBlock()) {
+            $ids = $this->getIdsOfDynamicBlocks();
+            $length = $this->pl->getDbLength();
+            foreach ($ids as $id) {
+                $bl = new Application_Model_Block($id['id']);
+                if ($bl->hasItemLimit()) {
+                    return "N/A";
+                }
+            }
+            $formatter = new LengthFormatter($length);
 
-        return $this->pl->getDbLength();
+            return "~".$formatter->format();
+        } else {
+            return $this->pl->getDbLength();
+        }
     }
-
 
     private function insertPlaylistElement($info)
     {
         $row = new CcPlaylistcontents();
         $row->setDbPlaylistId($this->id);
-        $row->setDbFileId($info["id"]);
         $row->setDbPosition($info["pos"]);
         $row->setDbCliplength($info["cliplength"]);
         $row->setDbCuein($info["cuein"]);
         $row->setDbCueout($info["cueout"]);
         $row->setDbFadein($info["fadein"]);
         $row->setDbFadeout($info["fadeout"]);
+        if ($info["ftype"] == "audioclip") {
+            $row->setDbFileId($info["id"]);
+            $type = 0;
+        } elseif ($info["ftype"] == "stream") {
+            $row->setDbStreamId($info["id"]);
+            $type = 1;
+        } elseif ($info["ftype"] == "block") {
+            $row->setDbBlockId($info["id"]);
+            $type = 2;
+        }
+        $row->setDbType($type);
         $row->save($this->con);
+        // above save result update on cc_playlist table on length column.
+        // but $this->pl doesn't get updated automatically
+        // so we need to manually grab it again from DB so it has updated values
+        // It is something to do FORMAT_ON_DEMAND( Lazy Loading )
+        $this->pl = CcPlaylistQuery::create()->findPK($this->id);
     }
 
     /*
@@ -236,19 +360,31 @@ class Application_Model_Playlist {
      */
     private function buildEntry($p_item, $pos)
     {
-        $file = CcFilesQuery::create()->findPK($p_item, $this->con);
+        $objType = $p_item[1];
+        $objId = $p_item[0];
+        if ($objType == 'audioclip') {
+            $obj = CcFilesQuery::create()->findPK($objId, $this->con);
+        } elseif ($objType == "stream") {
+            $obj = CcWebstreamQuery::create()->findPK($objId, $this->con);
+        } elseif ($objType == "block") {
+            $obj = CcBlockQuery::create()->findPK($objId, $this->con);
+        } else {
+            throw new Exception("Unknown file type");
+        }
 
-        if (isset($file) && $file->getDbFileExists()) {
-            $entry = $this->plItem;
-            $entry["id"] = $file->getDbId();
-            $entry["pos"] = $pos;
-            $entry["cliplength"] = $file->getDbLength();
-            $entry["cueout"] = $file->getDbLength();
+        if (isset($obj)) {
+            if (($obj instanceof CcFiles && $obj->getDbFileExists()) || $obj instanceof CcWebstream || $obj instanceof CcBlock) {
+                $entry = $this->plItem;
+                $entry["id"] = $obj->getDbId();
+                $entry["pos"] = $pos;
+                $entry["cliplength"] = $obj->getDbLength();
+                $entry["cueout"] = $obj->getDbLength();
+                $entry["ftype"] = $objType;
+            }
 
             return $entry;
-        }
-        else {
-            throw new Exception("trying to add a file that does not exist.");
+        } else {
+            throw new Exception("trying to add a object that does not exist.");
         }
     }
 
@@ -260,7 +396,7 @@ class Application_Model_Playlist {
      * @param string (before|after) $addAfter
      *      whether to add the clips before or after the selected item.
      */
-    public function addAudioClips($p_items, $p_afterItem=NULL, $addType = 'after')
+    public function addAudioClips($p_items, $p_afterItem=null, $addType = 'after')
     {
         $this->con->beginTransaction();
         $contentsToUpdate = array();
@@ -268,13 +404,12 @@ class Application_Model_Playlist {
         try {
 
             if (is_numeric($p_afterItem)) {
-                Logging::log("Finding playlist content item {$p_afterItem}");
+                Logging::info("Finding playlist content item {$p_afterItem}");
 
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::log("index is {$index}");
+                Logging::info("index is {$index}");
                 $pos = ($addType == 'after') ? $index + 1 : $index;
-
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
                     ->filterByDbPlaylistId($this->id)
@@ -282,10 +417,7 @@ class Application_Model_Playlist {
                     ->orderByDbPosition()
                     ->find($this->con);
 
-                Logging::log("Adding to playlist");
-                Logging::log("at position {$pos}");
-            }
-            else {
+            } else {
 
                 //add to the end of the playlist
                 if ($addType == 'after') {
@@ -307,15 +439,16 @@ class Application_Model_Playlist {
                     ->orderByDbPosition()
                     ->find($this->con);
 
-                Logging::log("Adding to playlist");
-                Logging::log("at position {$pos}");
             }
 
-            foreach($p_items as $ac) {
-                Logging::log("Adding audio file {$ac}");
+            Logging::info("Adding to playlist");
+            Logging::info("at position {$pos}");
 
+            foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
                 $pos = $pos + 1;
+                Logging::info("Adding $ac[1] $ac[0]");
+
             }
 
             //reset the positions of the remaining items.
@@ -329,8 +462,7 @@ class Application_Model_Playlist {
             $this->pl->save($this->con);
 
             $this->con->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
@@ -364,33 +496,32 @@ class Application_Model_Playlist {
             $pos = 0;
             //moving items to beginning of the playlist.
             if (is_null($p_afterItem)) {
-                Logging::log("moving items to beginning of playlist");
+                Logging::info("moving items to beginning of playlist");
 
                 foreach ($contentsToMove as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
                 }
-            }
-            else {
-                Logging::log("moving items after {$p_afterItem}");
+            } else {
+                Logging::info("moving items after {$p_afterItem}");
 
                 foreach ($otherContent as $item) {
-                    Logging::log("item {$item->getDbId()} to pos {$pos}");
+                    Logging::info("item {$item->getDbId()} to pos {$pos}");
                     $item->setDbPosition($pos);
                     $item->save($this->con);
                     $pos = $pos + 1;
 
                     if ($item->getDbId() == $p_afterItem) {
                         foreach ($contentsToMove as $move) {
-                            Logging::log("item {$move->getDbId()} to pos {$pos}");
+                            Logging::info("item {$move->getDbId()} to pos {$pos}");
                             $move->setDbPosition($pos);
                             $move->save($this->con);
                             $pos = $pos + 1;
@@ -400,12 +531,10 @@ class Application_Model_Playlist {
             }
 
             $this->con->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
-
 
         $this->pl = CcPlaylistQuery::create()->findPK($this->id);
         $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
@@ -416,7 +545,7 @@ class Application_Model_Playlist {
      * Remove audioClip from playlist
      *
      * @param array $p_items
-     * 		array of unique item ids to remove from the playlist..
+     *         array of unique item ids to remove from the playlist..
      */
     public function delAudioClips($p_items)
     {
@@ -444,52 +573,53 @@ class Application_Model_Playlist {
             $this->pl->save($this->con);
 
             $this->con->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
     }
 
+    public function getFadeInfo($pos)
+    {
+        Logging::info("Getting fade info for pos {$pos}");
 
-	public function getFadeInfo($pos) {
-
-	    Logging::log("Getting fade info for pos {$pos}");
-
-		$row = CcPlaylistcontentsQuery::create()
+        $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbPlaylistId($this->id)
             ->filterByDbPosition($pos)
             ->findOne();
 
-            #Propel returns values in form 00.000000 format which is for only seconds.
-            $fadeIn = $row->getDbFadein();
-            $fadeOut = $row->getDbFadeout();
-            return array($fadeIn, $fadeOut);
-	}
+        if (!$row) {
+            return NULL;
+        }
+        //Propel returns values in form 00.000000 format which is for only seconds.
+        //We only want to display 1 decimal
+        $fadeIn = substr($row->getDbFadein(), 0, 4);
+        $fadeOut = substr($row->getDbFadeout(), 0, 4);
+
+        return array($fadeIn, $fadeOut);
+    }
 
     /**
      * Change fadeIn and fadeOut values for playlist Element
      *
      * @param int $pos
-     * 		position of audioclip in playlist
+     *         position of audioclip in playlist
      * @param string $fadeIn
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @param string $fadeOut
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @return boolean
      */
     public function changeFadeInfo($id, $fadeIn, $fadeOut)
     {
         //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
-	   //setting it to nonNull for checks down below
+       //setting it to nonNull for checks down below
         $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
 
         $this->con->beginTransaction();
-
-        $errArray= array();
 
         try {
             $row = CcPlaylistcontentsQuery::create()->findPK($id);
@@ -502,19 +632,17 @@ class Application_Model_Playlist {
 
             if (!is_null($fadeIn)) {
 
-    			$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$clipLength}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
+                $sql = "SELECT :fadein::INTERVAL > INTERVAL '{$clipLength}'";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':fadein'=>$fadeIn), 'column')) {
                     //"Fade In can't be larger than overall playlength.";
                     $fadeIn = $clipLength;
                 }
                 $row->setDbFadein($fadeIn);
             }
-            if (!is_null($fadeOut)){
+            if (!is_null($fadeOut)) {
 
-    			$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$clipLength}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
+                $sql = "SELECT :fadeout::INTERVAL > INTERVAL '{$clipLength}'";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':fadeout'=>$fadeOut), 'column')) {
                     //Fade Out can't be larger than overall playlength.";
                     $fadeOut = $clipLength;
                 }
@@ -526,8 +654,7 @@ class Application_Model_Playlist {
             $this->pl->save($this->con);
 
             $this->con->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
@@ -535,10 +662,10 @@ class Application_Model_Playlist {
         return array("fadeIn" => $fadeIn, "fadeOut" => $fadeOut);
     }
 
-    public function setPlaylistfades($fadein, $fadeout) {
-
+    public function setfades($fadein, $fadeout)
+    {
         if (isset($fadein)) {
-            Logging::log("Setting playlist fade in {$fadein}");
+            Logging::info("Setting playlist fade in {$fadein}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition(0)
@@ -548,7 +675,7 @@ class Application_Model_Playlist {
         }
 
         if (isset($fadeout)) {
-            Logging::log("Setting playlist fade out {$fadeout}");
+            Logging::info("Setting playlist fade out {$fadeout}");
             $row = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->filterByDbPosition($this->getSize()-1)
@@ -562,11 +689,11 @@ class Application_Model_Playlist {
      * Change cueIn/cueOut values for playlist element
      *
      * @param int $pos
-     * 		position of audioclip in playlist
+     *         position of audioclip in playlist
      * @param string $cueIn
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @param string $cueOut
-     * 		new value in ss.ssssss or extent format
+     *         new value in ss.ssssss or extent format
      * @return boolean or pear error object
      */
     public function changeClipLength($id, $cueIn, $cueOut)
@@ -578,6 +705,7 @@ class Application_Model_Playlist {
         try {
             if (is_null($cueIn) && is_null($cueOut)) {
                 $errArray["error"] = "Cue in and cue out are null.";
+
                 return $errArray;
             }
 
@@ -598,74 +726,69 @@ class Application_Model_Playlist {
             $file = $row->getCcFiles($this->con);
             $origLength = $file->getDbLength();
 
-            if (!is_null($cueIn) && !is_null($cueOut)){
+            if (!is_null($cueIn) && !is_null($cueOut)) {
 
-                if ($cueOut === ""){
+                if ($cueOut === "") {
                     $cueOut = $origLength;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$cueOut}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
+                $sql = "SELECT :cueIn::INTERVAL > :cueOut::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':cueOut'=>$cueOut), 'column')) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
+
                     return $errArray;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)){
+                $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
+
                     return $errArray;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$cueIn}'";
-    			$r = $this->con->query($sql);
-    			$cliplength = $r->fetchColumn(0);
+                $sql = "SELECT :cueOut::INTERVAL - :cueIn::INTERVAL";
+                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':cueIn'=>$cueIn), 'column');
 
                 $row->setDbCuein($cueIn);
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
 
-            }
-            else if (!is_null($cueIn)) {
+            } elseif (!is_null($cueIn)) {
 
-    			$sql = "SELECT INTERVAL '{$cueIn}' > INTERVAL '{$oldCueOut}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
+                $sql = "SELECT :cueIn::INTERVAL > :oldCueOut::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut), 'column')) {
                     $errArray["error"] = "Can't set cue in to be larger than cue out.";
+
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL '{$oldCueOut}' - INTERVAL '{$cueIn}'";
-    			$r = $this->con->query($sql);
-    			$cliplength = $r->fetchColumn(0);
+                $sql = "SELECT :oldCueOut::INTERVAL - :cueIn::INTERVAL";
+                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut), 'column');
 
                 $row->setDbCuein($cueIn);
                 $row->setDBCliplength($cliplength);
-            }
-            else if (!is_null($cueOut)) {
+            } elseif (!is_null($cueOut)) {
 
-                if ($cueOut === ""){
+                if ($cueOut === "") {
                     $cueOut = $origLength;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' < INTERVAL '{$oldCueIn}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)) {
+                $sql = "SELECT :cueOut::INTERVAL < :oldCueIn::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn), 'column')) {
                     $errArray["error"] = "Can't set cue out to be smaller than cue in.";
+
                     return $errArray;
                 }
 
-    			$sql = "SELECT INTERVAL '{$cueOut}' > INTERVAL '{$origLength}'";
-    			$r = $this->con->query($sql);
-                if ($r->fetchColumn(0)){
+                $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
+                if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
                     $errArray["error"] = "Can't set cue out to be greater than file length.";
+
                     return $errArray;
                 }
 
-                $sql = "SELECT INTERVAL '{$cueOut}' - INTERVAL '{$oldCueIn}'";
-    			$r = $this->con->query($sql);
-    			$cliplength = $r->fetchColumn(0);
+                $sql = "SELECT :cueOut::INTERVAL - :oldCueIn::INTERVAL";
+                $cliplength = Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn), 'column');
 
                 $row->setDbCueout($cueOut);
                 $row->setDBCliplength($cliplength);
@@ -673,16 +796,14 @@ class Application_Model_Playlist {
 
             $cliplength = $row->getDbCliplength();
 
-    		$sql = "SELECT INTERVAL '{$fadeIn}' > INTERVAL '{$cliplength}'";
-    		$r = $this->con->query($sql);
-            if ($r->fetchColumn(0)){
+            $sql = "SELECT :fadeIn::INTERVAL > :cliplength::INTERVAL";
+            if (Application_Common_Database::prepareAndExecute($sql, array(':fadeIn'=>$fadeIn, ':cliplength'=>$cliplength), 'column')) {
                 $fadeIn = $cliplength;
                 $row->setDbFadein($fadeIn);
             }
 
-    		$sql = "SELECT INTERVAL '{$fadeOut}' > INTERVAL '{$cliplength}'";
-    		$r = $this->con->query($sql);
-            if ($r->fetchColumn(0)){
+            $sql = "SELECT :fadeOut::INTERVAL > :cliplength::INTERVAL";
+            if (Application_Common_Database::prepareAndExecute($sql, array(':fadeOut'=>$fadeOut, ':cliplength'=>$cliplength), 'column')) {
                 $fadeOut = $cliplength;
                 $row->setDbFadein($fadeOut);
             }
@@ -692,8 +813,7 @@ class Application_Model_Playlist {
             $this->pl->save($this->con);
 
             $this->con->commit();
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->con->rollback();
             throw $e;
         }
@@ -707,7 +827,7 @@ class Application_Model_Playlist {
         $categories = $this->categories;
         $md = array();
 
-        foreach($categories as $key => $val) {
+        foreach ($categories as $key => $val) {
             $method = 'get' . $val;
             $md[$key] = $this->$method();
         }
@@ -715,14 +835,15 @@ class Application_Model_Playlist {
         return $md;
     }
 
-    public function getPLMetaData($category)
+    public function getMetaData($category)
     {
         $cat = $this->categories[$category];
         $method = 'get' . $cat;
+
         return $this->$method();
     }
 
-    public function setPLMetaData($category, $value)
+    public function setMetadata($category, $value)
     {
         $cat = $this->categories[$category];
 
@@ -730,62 +851,12 @@ class Application_Model_Playlist {
         $this->$method($value);
     }
 
-    /**
-     * This function is used for calculations! Don't modify for display purposes!
-     *
-     * Convert playlist time value to float seconds
-     *
-     * @param string $plt
-     *         playlist interval value (HH:mm:ss.dddddd)
-     * @return int
-     *         seconds
-     */
-    public static function playlistTimeToSeconds($plt)
-    {
-        $arr =  preg_split('/:/', $plt);
-        if (isset($arr[2])) {
-          return (intval($arr[0])*60 + intval($arr[1]))*60 + floatval($arr[2]);
-        }
-        if (isset($arr[1])) {
-            return intval($arr[0])*60 + floatval($arr[1]);
-        }
-        return floatval($arr[0]);
-    }
-
-
-    /**
-     *  This function is used for calculations! Don't modify for display purposes!
-     *
-     * Convert float seconds value to playlist time format
-     *
-     * @param float $seconds
-     * @return string
-     *         interval in playlist time format (HH:mm:ss.d)
-     */
-    public static function secondsToPlaylistTime($p_seconds)
-    {
-        $info = explode('.', $p_seconds);
-        $seconds = $info[0];
-        if(!isset($info[1])){
-            $milliStr = 0;
-        }else{
-            $milliStr = $info[1];
-        }
-        $hours = floor($seconds / 3600);
-        $seconds -= $hours * 3600;
-        $minutes = floor($seconds / 60);
-        $seconds -= $minutes * 60;
-
-        $res = sprintf("%02d:%02d:%02d.%s", $hours, $minutes, $seconds, $milliStr);
-
-       return $res;
-    }
-
     public static function getPlaylistCount()
     {
         global $CC_CONFIG;
         $con = Propel::getConnection();
         $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
+
         return $con->query($sql)->fetchColumn(0);
     }
 
@@ -802,12 +873,52 @@ class Application_Model_Playlist {
      * Delete playlists that match the ids..
      * @param array $p_ids
      */
-    public static function DeletePlaylists($p_ids)
+    public static function deletePlaylists($p_ids, $p_userId)
     {
-        CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        if (!$isAdminOrPM) {
+            $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
+            if (count($leftOver) == 0) {
+                CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new PlaylistNoPermissionException;
+            }
+        } else {
+            CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+        }
+    }
+
+    // This function returns that are not owen by $p_user_id among $p_ids
+    private static function playlistsNotOwnedByUser($p_ids, $p_userId)
+    {
+        $ownedByUser = CcPlaylistQuery::create()->filterByDbCreatorId($p_userId)->find()->getData();
+        $selectedPls = $p_ids;
+        $ownedPls = array();
+        foreach ($ownedByUser as $pl) {
+            if (in_array($pl->getDbId(), $selectedPls)) {
+                $ownedPls[] = $pl->getDbId();
+            }
+        }
+
+        $leftOvers = array_diff($selectedPls, $ownedPls);
+
+        return $leftOvers;
+    }
+
+    /**
+     * Delete all files from playlist
+     * @param int $p_playlistId
+     */
+    public function deleteAllFilesFromPlaylist()
+    {
+        CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
     }
 
 } // class Playlist
 
 class PlaylistNotFoundException extends Exception {}
+class PlaylistNoPermissionException extends Exception {}
 class PlaylistOutDatedException extends Exception {}

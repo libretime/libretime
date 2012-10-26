@@ -39,16 +39,23 @@ except Exception, e:
     logger.error('Error loading config file %s', e)
     sys.exit()
 
+def is_stream(media_item):
+    return media_item['type'] == 'stream_output_start'
+
+def is_file(media_item):
+    return media_item['type'] == 'file'
+
 class PypoPush(Thread):
     def __init__(self, q, telnet_lock):
         Thread.__init__(self)
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirtimeApiClient()
         self.queue = q
 
         self.telnet_lock = telnet_lock
 
         self.pushed_objects = {}
         self.logger = logging.getLogger('push')
+        self.current_prebuffering_stream_id = None
 
     def main(self):
         loops = 0
@@ -70,41 +77,43 @@ class PypoPush(Thread):
 
                 #We get to the following lines only if a schedule was received.
                 liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+                liquidsoap_stream_id = self.get_current_stream_id_from_liquidsoap()
 
                 tnow = datetime.utcnow()
                 current_event_chain, original_chain = self.get_current_chain(chains, tnow)
-                if len(current_event_chain) > 0 and len(liquidsoap_queue_approx) == 0:
-                    #Something is scheduled but Liquidsoap is not playing anything!
-                    #Need to schedule it immediately..this might happen if Liquidsoap crashed.
+
+                if len(current_event_chain) > 0:
                     try:
                         chains.remove(original_chain)
                     except ValueError, e:
                         self.logger.error(str(e))
 
-                    self.modify_cue_point(current_event_chain[0])
-                    next_media_item_chain = current_event_chain
-                    time_until_next_play = 0
-                    #sleep for 0.2 seconds to give pypo-file time to copy.
-                    time.sleep(0.2)
+                #At this point we know that Liquidsoap is playing something, and that something
+                #is scheduled. We need to verify whether the schedule we just received matches
+                #what Liquidsoap is playing, and if not, correct it.
+
+                self.handle_new_schedule(media_schedule, liquidsoap_queue_approx, liquidsoap_stream_id, current_event_chain)
+
+
+                #At this point everything in the present has been taken care of and Liquidsoap
+                #is playing whatever is scheduled.
+                #Now we need to prepare ourselves for future scheduled events.
+                #
+                next_media_item_chain = self.get_next_schedule_chain(chains, tnow)
+
+                self.logger.debug("Next schedule chain: %s", next_media_item_chain)
+                if next_media_item_chain is not None:
+                    try:
+                        chains.remove(next_media_item_chain)
+                    except ValueError, e:
+                        self.logger.error(str(e))
+
+                    chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
+                    time_until_next_play = self.date_interval_to_seconds(chain_start - datetime.utcnow())
+                    self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
                 else:
-                    media_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
-                    self.handle_new_media_schedule(media_schedule, liquidsoap_queue_approx, media_chain)
-
-                    next_media_item_chain = self.get_next_schedule_chain(chains, tnow)
-
-                    self.logger.debug("Next schedule chain: %s", next_media_item_chain)
-                    if next_media_item_chain is not None:
-                        try:
-                            chains.remove(next_media_item_chain)
-                        except ValueError, e:
-                            self.logger.error(str(e))
-
-                        chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
-                        time_until_next_play = self.date_interval_to_seconds(chain_start - datetime.utcnow())
-                        self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
-                    else:
-                        self.logger.debug("Blocking indefinitely since no show scheduled")
-                        time_until_next_play = None
+                    self.logger.debug("Blocking indefinitely since no show scheduled")
+                    time_until_next_play = None
             except Empty, e:
                 #We only get here when a new chain of tracks are ready to be played.
                 self.push_to_liquidsoap(next_media_item_chain)
@@ -124,6 +133,25 @@ class PypoPush(Thread):
                 self.logger.info("heartbeat")
                 loops = 0
             loops += 1
+
+    def get_current_stream_id_from_liquidsoap(self):
+        response = "-1"
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+            msg = 'dynamic_source.get_id\n'
+            tn.write(msg)
+            response = tn.read_until("\r\n").strip(" \r\n")
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error("Error connecting to Liquidsoap: %s", e)
+            response = []
+        finally:
+            self.telnet_lock.release()
+
+        return response
 
     def get_queue_items_from_liquidsoap(self):
         """
@@ -157,7 +185,7 @@ class PypoPush(Thread):
                 else:
                     """
                     We should only reach here if Pypo crashed and restarted (because self.pushed_objects was reset). In this case
-                    let's clear the entire Liquidsoap queue. 
+                    let's clear the entire Liquidsoap queue.
                     """
                     self.logger.error("ID exists in liquidsoap queue that does not exist in our pushed_objects queue: " + item)
                     self.clear_liquidsoap_queue()
@@ -166,43 +194,98 @@ class PypoPush(Thread):
 
         return liquidsoap_queue_approx
 
-    def handle_new_media_schedule(self, media_schedule, liquidsoap_queue_approx, media_chain):
+    def is_correct_current_item(self, media_item, liquidsoap_queue_approx, liquidsoap_stream_id):
+        correct = False
+        if media_item is None:
+            correct = (len(liquidsoap_queue_approx) == 0 and liquidsoap_stream_id == "-1")
+        else:
+            if is_file(media_item):
+                if len(liquidsoap_queue_approx) == 0:
+                    correct = False
+                else:
+                    correct = liquidsoap_queue_approx[0]['start'] == media_item['start'] and \
+                            liquidsoap_queue_approx[0]['row_id'] == media_item['row_id'] and \
+                            liquidsoap_queue_approx[0]['end'] == media_item['end']
+            elif is_stream(media_item):
+                correct = liquidsoap_stream_id == str(media_item['row_id'])
+
+        self.logger.debug("Is current item correct?: %s", str(correct))
+        return correct
+
+
+    #clear all webstreams and files from Liquidsoap
+    def clear_all_liquidsoap_items(self):
+        self.remove_from_liquidsoap_queue(0, None)
+        self.stop_web_stream_all()
+
+    def handle_new_schedule(self, media_schedule, liquidsoap_queue_approx, liquidsoap_stream_id, current_event_chain):
         """
         This function's purpose is to gracefully handle situations where
-        Liquidsoap already has a track in its queue, but the schedule 
+        Liquidsoap already has a track in its queue, but the schedule
         has changed. If the schedule has changed, this function's job is to
         call other functions that will connect to Liquidsoap and alter its
         queue.
         """
+        file_chain = filter(lambda item: (item["type"] == "file"), current_event_chain)
+        stream_chain = filter(lambda item: (item["type"] == "stream_output_start"), current_event_chain)
 
-        problem_at_iteration = self.find_removed_items(media_schedule, liquidsoap_queue_approx)
+        self.logger.debug(current_event_chain)
 
-        if problem_at_iteration is not None:
-            #Items that are in Liquidsoap's queue aren't scheduled anymore. We need to connect
-            #and remove these items.
-            self.logger.debug("Change in link %s of current chain", problem_at_iteration)
-            self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx[problem_at_iteration:])
+        #Take care of the case where the current playing may be incorrect
+        if len(current_event_chain) > 0:
 
-        if problem_at_iteration is None and len(media_chain) > len(liquidsoap_queue_approx):
-            self.logger.debug("New schedule has longer current chain.")
-            problem_at_iteration = len(liquidsoap_queue_approx)
+            current_item = current_event_chain[0]
+            if not self.is_correct_current_item(current_item, liquidsoap_queue_approx, liquidsoap_stream_id):
+                self.clear_all_liquidsoap_items()
+                if is_stream(current_item):
+                    if current_item['row_id'] != self.current_prebuffering_stream_id:
+                        #this is called if the stream wasn't scheduled sufficiently ahead of time
+                        #so that the prebuffering stage could take effect. Let's do the prebuffering now.
+                        self.start_web_stream_buffer(current_item)
+                    self.start_web_stream(current_item)
+                if is_file(current_item):
+                    self.modify_cue_point(file_chain[0])
+                    self.push_to_liquidsoap(file_chain)
+                    #we've changed the queue, so let's refetch it
+                    liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
 
-        if problem_at_iteration is not None:
-            self.logger.debug("Change in chain at link %s", problem_at_iteration)
+        elif not self.is_correct_current_item(None, liquidsoap_queue_approx, liquidsoap_stream_id):
+                #Liquidsoap is playing something even though it shouldn't be
+                self.clear_all_liquidsoap_items()
 
-            chain_to_push = media_chain[problem_at_iteration:]
-            if len(chain_to_push) > 0:
-                self.modify_cue_point(chain_to_push[0])
-                self.push_to_liquidsoap(chain_to_push)
+
+        #If the current item scheduled is a file, then files come in chains, and
+        #therefore we need to make sure the entire chain is correct.
+        if len(current_event_chain) > 0 and is_file(current_event_chain[0]):
+            problem_at_iteration = self.find_removed_items(media_schedule, liquidsoap_queue_approx)
+
+            if problem_at_iteration is not None:
+                #Items that are in Liquidsoap's queue aren't scheduled anymore. We need to connect
+                #and remove these items.
+                self.logger.debug("Change in link %s of current chain", problem_at_iteration)
+                self.remove_from_liquidsoap_queue(problem_at_iteration, liquidsoap_queue_approx[problem_at_iteration:])
+
+            if problem_at_iteration is None and len(file_chain) > len(liquidsoap_queue_approx):
+                self.logger.debug("New schedule has longer current chain.")
+                problem_at_iteration = len(liquidsoap_queue_approx)
+
+            if problem_at_iteration is not None:
+                self.logger.debug("Change in chain at link %s", problem_at_iteration)
+
+                chain_to_push = file_chain[problem_at_iteration:]
+                if len(chain_to_push) > 0:
+                    self.modify_cue_point(chain_to_push[0])
+                    self.push_to_liquidsoap(chain_to_push)
+
 
     """
     Compare whats in the liquidsoap_queue to the new schedule we just
     received in media_schedule. This function only iterates over liquidsoap_queue_approx
-    and finds if every item in that list is still scheduled in "media_schedule". It doesn't 
+    and finds if every item in that list is still scheduled in "media_schedule". It doesn't
     take care of the case where media_schedule has more items than liquidsoap_queue_approx
     """
     def find_removed_items(self, media_schedule, liquidsoap_queue_approx):
-        #iterate through the items we got from the liquidsoap queue and 
+        #iterate through the items we got from the liquidsoap queue and
         #see if they are the same as the newly received schedule
         iteration = 0
         problem_at_iteration = None
@@ -219,12 +302,12 @@ class PypoPush(Thread):
                 else:
                     #A different item has been scheduled at the same time! Need to remove
                     #all tracks from the Liquidsoap queue starting at this point, and re-add
-                    #them. 
+                    #them.
                     problem_at_iteration = iteration
                     break
             else:
                 #There are no more items scheduled for this time! The user has shortened
-                #the playlist, so we simply need to remove tracks from the queue. 
+                #the playlist, so we simply need to remove tracks from the queue.
                 problem_at_iteration = iteration
                 break
             iteration += 1
@@ -241,8 +324,12 @@ class PypoPush(Thread):
 
         for mkey in sorted_keys:
             media_item = media_schedule[mkey]
-            if media_item['type'] == "event":
+            if media_item['independent_event']:
+                if len(current_chain) > 0:
+                    chains.append(current_chain)
+
                 chains.append([media_item])
+                current_chain = []
             elif len(current_chain) == 0:
                 current_chain.append(media_item)
             elif media_item['start'] == current_chain[-1]['end']:
@@ -274,16 +361,16 @@ class PypoPush(Thread):
     """
     Returns two chains, original chain and current_chain. current_chain is a subset of
     original_chain but can also be equal to original chain.
-    
+
     We return original chain because the user of this function may want to clean
     up the input 'chains' list
-    
+
     chain, original = get_current_chain(chains)
-    
-    and 
+
+    and
     chains.remove(chain) can throw a ValueError exception
-    
-    but 
+
+    but
     chains.remove(original) won't
     """
     def get_current_chain(self, chains, tnow):
@@ -307,7 +394,7 @@ class PypoPush(Thread):
 
     """
     The purpose of this function is to take a look at the last received schedule from
-    pypo-fetch and return the next chain of media_items. A chain is defined as a sequence 
+    pypo-fetch and return the next chain of media_items. A chain is defined as a sequence
     of media_items where the end time of media_item 'n' is the start time of media_item
     'n+1'
     """
@@ -327,7 +414,15 @@ class PypoPush(Thread):
 
 
     def date_interval_to_seconds(self, interval):
-        return (interval.microseconds + (interval.seconds + interval.days * 24 * 3600) * 10 ** 6) / float(10 ** 6)
+        """
+        Convert timedelta object into int representing the number of seconds. If
+        number of seconds is less than 0, then return 0.
+        """
+        seconds = (interval.microseconds + \
+                   (interval.seconds + interval.days * 24 * 3600) * 10 ** 6) / float(10 ** 6)
+        if seconds < 0: seconds = 0
+
+        return seconds
 
     def push_to_liquidsoap(self, event_chain):
 
@@ -353,8 +448,132 @@ class PypoPush(Thread):
                         PypoFetch.disconnect_source(self.logger, self.telnet_lock, "live_dj")
                     elif media_item['event_type'] == "switch_off":
                         PypoFetch.switch_source(self.logger, self.telnet_lock, "live_dj", "off")
+                elif media_item['type'] == 'stream_buffer_start':
+                    self.start_web_stream_buffer(media_item)
+                elif media_item['type'] == "stream_output_start":
+                    if media_item['row_id'] != self.current_prebuffering_stream_id:
+                        #this is called if the stream wasn't scheduled sufficiently ahead of time
+                        #so that the prebuffering stage could take effect. Let's do the prebuffering now.
+                        self.start_web_stream_buffer(media_item)
+                    self.start_web_stream(media_item)
+                elif media_item['type'] == "stream_buffer_end":
+                    self.stop_web_stream_buffer(media_item)
+                elif media_item['type'] == "stream_output_end":
+                    self.stop_web_stream_output(media_item)
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)
+
+
+    def start_web_stream_buffer(self, media_item):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+            msg = 'dynamic_source.id %s\n' % media_item['row_id']
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            #example: dynamic_source.read_start http://87.230.101.24:80/top100station.mp3
+            msg = 'dynamic_source.read_start %s\n' % media_item['uri'].encode('latin-1')
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+
+            self.current_prebuffering_stream_id = media_item['row_id']
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+
+    def start_web_stream(self, media_item):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+            #TODO: DO we need this?
+            msg = 'streams.scheduled_play_start\n'
+            tn.write(msg)
+
+            msg = 'dynamic_source.output_start\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+
+            self.current_prebuffering_stream_id = None
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+    def stop_web_stream_all(self):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+
+            msg = 'dynamic_source.read_stop_all xxx\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            msg = 'dynamic_source.output_stop\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            msg = 'dynamic_source.id -1\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+    def stop_web_stream_buffer(self, media_item):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
+
+            msg = 'dynamic_source.read_stop %s\n' % media_item['row_id']
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            msg = 'dynamic_source.id -1\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+    def stop_web_stream_output(self, media_item):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
+
+            msg = 'dynamic_source.output_stop\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
 
     def clear_liquidsoap_queue(self):
         self.logger.debug("Clearing Liquidsoap queue")
@@ -474,9 +693,9 @@ class PypoPush(Thread):
             self.telnet_lock.release()
 
     def create_liquidsoap_annotation(self, media):
-        # we need lia_start_next value in the annotate. That is the value that controlls overlap duration of crossfade.
-        return 'annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s":%s' \
-            % (media['id'], float(media['fade_in']) / 1000, float(media['fade_out']) / 1000, float(media['cue_in']), float(media['cue_out']), media['row_id'], media['dst'])
+        # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
+        return 'annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s",replay_gain="%s dB":%s' \
+            % (media['id'], float(media['fade_in']) / 1000, float(media['fade_out']) / 1000, float(media['cue_in']), float(media['cue_out']), media['row_id'], media['replay_gain'], media['dst'])
 
     def run(self):
         try: self.main()

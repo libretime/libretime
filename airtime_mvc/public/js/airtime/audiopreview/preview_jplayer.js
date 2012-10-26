@@ -8,13 +8,24 @@ var _idToPostionLookUp;
  */
 $(document).ready(function(){
         
+    $.jPlayer.timeFormat.showHour = true;
+
+    var audioUri = $('.audioUri').text();
+    var audioMime = $('.audioMime').text();
+    var playlistID = $('.playlistID').text();
+    var playlistIndex = $('.playlistIndex').text();
+    var showID = $('.showID').text();
+    var showIndex = $('.showIndex').text();
+    var blockId = $('.blockId').text();
+    var blockIndex = $('.blockIndex').text();
+
     _playlist_jplayer = new jPlayerPlaylist({
         jPlayer: "#jquery_jplayer_1",
         cssSelectorAncestor: "#jp_container_1"
     },[], //array of songs will be filled with below's json call
     {
         swfPath: "/js/jplayer",
-        supplied:"oga, mp3, m4v",
+        supplied:"oga, mp3, m4v, m4a, wav",
         size: {
             width: "0px",
             height: "0px",
@@ -29,28 +40,20 @@ $(document).ready(function(){
             addTime: 0,
             removeTime: 0,
             shuffleTime: 0
+        },
+        ready: function(){
+            if (playlistID != "" && playlistID !== ""){
+                playAllPlaylist(playlistID, playlistIndex);
+            }else if (audioUri != "") {
+                playOne(audioUri, audioMime);
+            }else if (showID != "") {
+                playAllShow(showID, showIndex);
+            }else if(blockId != "" && blockIndex != ""){
+                playBlock(blockId, blockIndex);
+            }
         }
     });
-    
-    
-    $.jPlayer.timeFormat.showHour = true;
-    
-    var audioFileID = $('.audioFileID').text();
-    var playlistID = $('.playlistID').text();
-    var playlistIndex = $('.playlistIndex').text();
-    var showID = $('.showID').text();
-    var showIndex = $('.showIndex').text();
 
-    var numOfItems = 0;
-    
-    if (playlistID != "" && playlistID !== ""){
-        playAllPlaylist(playlistID, playlistIndex);
-    }else if (audioFileID != "") {
-        playOne(audioFileID);
-    }else if (showID != "") {
-        playAllShow(showID, showIndex);
-    }
-    
     $("#jp_container_1").on("mouseenter", "ul.jp-controls li", function(ev) {
     	$(this).addClass("ui-state-hover");
     });
@@ -58,6 +61,7 @@ $(document).ready(function(){
     $("#jp_container_1").on("mouseleave", "ul.jp-controls li", function(ev) {
     	$(this).removeClass("ui-state-hover");
     });
+
 });
 
 /**
@@ -71,8 +75,19 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
     
     if ( _idToPostionLookUp !== undefined && viewsPlaylistID == p_playlistID ) {
         play(p_playlistIndex);
-    }else {
+    } else {
         buildplaylist("/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
+    }
+}
+
+function playBlock(p_blockId, p_blockIndex)
+{
+    var viewsBlockId = $('.blockId').text();
+    
+    if ( _idToPostionLookUp !== undefined && viewsBlockId == p_blockId ) {
+        play(p_blockIndex);
+    } else {
+        buildplaylist("/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
     }
 }
 
@@ -95,8 +110,9 @@ function playAllShow(p_showID, p_index) {
 }
 
 /**
- * This function will call the AudiopreviewController to get the contents of either a show or playlist
- * Looping throught the returned contents and creating media for each track.
+ * This function will call the AudiopreviewController to get the contents of
+ * either a show or playlist Looping throught the returned contents and
+ * creating media for each track.
  *
  * Then trigger the jplayer to play the list.
  */
@@ -107,27 +123,53 @@ function buildplaylist(p_url, p_playIndex) {
         var media;
         var index;
         var total = 0;
-        for(index in data){
-            
-            if (data[index]['element_mp3'] != undefined){
-                media = {title: data[index]['element_title'],
+        var skipped = 0;
+        for(index in data) {
+            if (data[index]['type'] == 0) { 
+                if (data[index]['element_mp3'] != undefined){
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            mp3:data[index]['uri']
+                    };
+                } else if (data[index]['element_oga'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            oga:data[index]['uri']
+                    };
+                } else if (data[index]['element_m4a'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            m4a:data[index]['uri']
+                    };
+                } else if (data[index]['element_wav'] != undefined) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist'],
+                            wav:data[index]['uri']
+                    };
+                } else {
+                    // skip this track since it's not supported
+                    console.log("continue");
+                    skipped++;
+                    continue;
+                } 
+            } else if (data[index]['type'] == 1) {
+                 media = {title: data[index]['element_title'],
                         artist: data[index]['element_artist'],
-                        mp3:"/api/get-media/file/"+data[index]['element_mp3']
-                };
-            }else if (data[index]['element_oga'] != undefined) {
-                media = {title: data[index]['element_title'],
-                        artist: data[index]['element_artist'],
-                        oga:"/api/get-media/file/"+data[index]['element_oga']
+                        mp3:data[index]['uri']
                 };
             }
-            myPlaylist[index] = media;
-            
-            // we should create a map according to the new position in the player itself
-            // total is the index on the player
+            console.log(data[index]);
+            if (media && isAudioSupported(data[index]['mime'])) {
+                // javascript doesn't support associative array with numeric key
+                // so we need to remove the gap if we skip any of tracks due to
+                // browser incompatibility.
+                myPlaylist[index-skipped] = media;
+            }
+            // we should create a map according to the new position in the
+            // player itself total is the index on the player
             _idToPostionLookUp[data[index]['element_id']] = total;
             total++;
         }
-        
         _playlist_jplayer.setPlaylist(myPlaylist);
         _playlist_jplayer.option("autoPlay", true);
         play(p_playIndex);
@@ -164,25 +206,34 @@ function play(p_playlistIndex){
  * Playing one audio track occurs from the library. This function will create the media, setup
  * jplayer and play the track.
  */
-function playOne(p_audioFileID) {
+function playOne(uri, mime) {
     var playlist = new Array();
-    var fileExtension = p_audioFileID.split('.').pop();
-    if (fileExtension.toLowerCase() === 'mp3') {
-        media = {title: $('.audioFileTitle').text() !== 'null' ?$('.audioFileTitle').text():"",
-            artist: $('.audioFileArtist').text() !== 'null' ?$('.audioFileArtist').text():"",
-            mp3:"/api/get-media/file/"+p_audioFileID
-        };
-    }else if (fileExtension.toLowerCase() === 'ogg' ) {
+   
+    var media = null; 
+    var key = null;
+    if (mime.search(/mp3/i) > 0 || mime.search(/mpeg/i) > 0) {
+        key = "mp3";
+    } else if (mime.search(/og(g|a)/i) > 0 || mime.search(/vorbis/i) > 0) {
+        key = "oga";
+    } else if (mime.search(/mp4/i) > 0) {
+        key = "m4a";
+    } else if (mime.search(/wav/i) > 0) {
+        key = "wav";
+    } 
+
+    if (key) {
         media = {title: $('.audioFileTitle').text() != 'null' ?$('.audioFileTitle').text():"",
-            artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():"",
-            oga:"/api/get-media/file/"+p_audioFileID
-        };
+            artist: $('.audioFileArtist').text() != 'null' ?$('.audioFileArtist').text():""
+        };       
+        media[key] = uri;
     }
-    _playlist_jplayer.option("autoPlay", true);
-    playlist[0] = media;
-    //_playlist_jplayer.setPlaylist(playlist); --if I use this the player will call _init on the setPlaylist and on the ready
-    _playlist_jplayer._initPlaylist(playlist);
-    _playlist_jplayer.play(0);
+
+    if (media) {
+        _playlist_jplayer.option("autoPlay", true);
+        playlist[0] = media;
+        _playlist_jplayer.setPlaylist(playlist);
+        _playlist_jplayer.play(0);
+    }
     
     window.resizeTo(490, 167);
 }

@@ -6,10 +6,10 @@ Python part of radio playout (pypo)
 This function acts as a gateway between liquidsoap and the server API.
 Mainly used to tell the platform what pypo/liquidsoap does.
 
-Main case: 
+Main case:
  - whenever LS starts playing a new track, its on_metadata callback calls
    a function in ls (notify(m)) which then calls the python script here
-   with the currently starting filename as parameter 
+   with the currently starting filename as parameter
  - this python script takes this parameter, tries to extract the actual
    media id from it, and then calls back to the API to tell about it about it.
 
@@ -33,14 +33,17 @@ usage = "%prog [options]" + " - notification gateway"
 parser = OptionParser(usage=usage)
 
 # Options
-parser.add_option("-d", "--data", help="Pass JSON data from liquidsoap into this script.", metavar="data")
+parser.add_option("-d", "--data", help="Pass JSON data from Liquidsoap into this script.", metavar="data")
 parser.add_option("-m", "--media-id", help="ID of the file that is currently playing.", metavar="media_id")
-parser.add_option("-e", "--error", action="store", dest="error", type="string", help="liquidsoap error msg.", metavar="error_msg")
+parser.add_option("-e", "--error", action="store", dest="error", type="string", help="Liquidsoap error msg.", metavar="error_msg")
 parser.add_option("-s", "--stream-id", help="ID stream", metavar="stream_id")
-parser.add_option("-c", "--connect", help="liquidsoap connected", action="store_true", metavar="connect")
-parser.add_option("-t", "--time", help="liquidsoap boot up time", action="store", dest="time", metavar="time", type="string")
+parser.add_option("-c", "--connect", help="Liquidsoap connected", action="store_true", metavar="connect")
+parser.add_option("-t", "--time", help="Liquidsoap boot up time", action="store", dest="time", metavar="time", type="string")
 parser.add_option("-x", "--source-name", help="source connection name", metavar="source_name")
-parser.add_option("-y", "--source-status", help="source connection stauts", metavar="source_status")
+parser.add_option("-y", "--source-status", help="source connection status", metavar="source_status")
+parser.add_option("-w", "--webstream", help="JSON metadata associated with webstream", metavar="json_data")
+parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started", metavar="json_data", action="store_true", default=True)
+
 
 # parse options
 (options, args) = parser.parse_args()
@@ -64,22 +67,21 @@ except Exception, e:
 
 class Notify:
     def __init__(self):
-        self.api_client = api_client.api_client_factory(config)
+        self.api_client = api_client.AirtimeApiClient(logger=logger)
 
-    def notify_media_start_playing(self, data, media_id):
-        logger = logging.getLogger("notify")
+    def notify_liquidsoap_started(self):
+        logger.debug("Notifying server that Liquidsoap has started")
+        self.api_client.notify_liquidsoap_started()
 
+    def notify_media_start_playing(self, media_id):
         logger.debug('#################################################')
         logger.debug('# Calling server to update about what\'s playing #')
         logger.debug('#################################################')
-        logger.debug('data = ' + str(data))
-        response = self.api_client.notify_media_item_start_playing(data, media_id)
+        response = self.api_client.notify_media_item_start_playing(media_id)
         logger.debug("Response: " + json.dumps(response))
 
     # @pram time: time that LS started
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger = logging.getLogger("notify")
-
         logger.debug('#################################################')
         logger.debug('# Calling server to update liquidsoap status    #')
         logger.debug('#################################################')
@@ -88,14 +90,19 @@ class Notify:
         logger.debug("Response: " + json.dumps(response))
 
     def notify_source_status(self, source_name, status):
-        logger = logging.getLogger("notify")
-
         logger.debug('#################################################')
         logger.debug('# Calling server to update source status        #')
         logger.debug('#################################################')
         logger.debug('msg = ' + str(source_name) + ' : ' + str(status))
         response = self.api_client.notify_source_status(source_name, status)
         logger.debug("Response: " + json.dumps(response))
+
+    def notify_webstream_data(self, data, media_id):
+        logger.debug('#################################################')
+        logger.debug('# Calling server to update webstream data       #')
+        logger.debug('#################################################')
+        response = self.api_client.notify_webstream_data(data, media_id)
+
 
 if __name__ == '__main__':
     print
@@ -105,7 +112,6 @@ if __name__ == '__main__':
     print '#########################################'
 
     # initialize
-    logger = logging.getLogger("notify")
     if options.error and options.stream_id:
         try:
             n = Notify()
@@ -124,17 +130,23 @@ if __name__ == '__main__':
             n.notify_source_status(options.source_name, options.source_status)
         except Exception, e:
             print e
-    else:
-        if not options.data:
-            print "NOTICE: 'data' command-line argument not given."
-            sys.exit()
-
-        if not options.media_id:
-            print "NOTICE: 'media_id' command-line argument not given."
-            sys.exit()
+    elif options.webstream:
+        try:
+            n = Notify()
+            n.notify_webstream_data(options.webstream, options.media_id)
+        except Exception, e:
+            print e
+    elif options.media_id:
 
         try:
             n = Notify()
-            n.notify_media_start_playing(options.data, options.media_id)
+            n.notify_media_start_playing(options.media_id)
         except Exception, e:
             print e
+    elif options.liquidsoap_started:
+        try:
+            n = Notify()
+            n.notify_liquidsoap_started()
+        except Exception, e:
+            print e
+

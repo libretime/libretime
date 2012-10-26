@@ -1,10 +1,12 @@
 <?php
-class Application_Model_LoginAttempts {
-    public function __construct(){
-
+class Application_Model_LoginAttempts
+{
+    public function __construct()
+    {
     }
 
-    public static function increaseAttempts($ip){
+    public static function increaseAttempts($ip)
+    {
         $con = Propel::getConnection();
         $sql = "select count(*) from cc_login_attempts WHERE ip='$ip'";
         $res = $con->query($sql)->fetchColumn(0);
@@ -17,14 +19,17 @@ class Application_Model_LoginAttempts {
         }
     }
 
-    public static function getAttempts($ip){
+    public static function getAttempts($ip)
+    {
         $con = Propel::getConnection();
         $sql = "select attempts from cc_login_attempts WHERE ip='$ip'";
         $res = $con->query($sql)->fetchColumn(0);
+
         return $res ? $res : 0;
     }
 
-    public static function resetAttempts($ip){
+    public static function resetAttempts($ip)
+    {
         $con = Propel::getConnection();
         $sql = "select count(*) from cc_login_attempts WHERE ip='$ip'";
         $res = $con->query($sql)->fetchColumn(0);

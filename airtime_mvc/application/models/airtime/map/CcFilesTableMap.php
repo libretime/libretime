@@ -39,7 +39,6 @@ class CcFilesTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_files_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('GUNID', 'DbGunid', 'CHAR', true, 32, null);
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, '');
 		$this->addColumn('MIME', 'DbMime', 'VARCHAR', true, 255, '');
 		$this->addColumn('FTYPE', 'DbFtype', 'VARCHAR', true, 128, '');
@@ -65,7 +64,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('TRACK_NUMBER', 'DbTrackNumber', 'INTEGER', false, null, null);
 		$this->addColumn('CHANNELS', 'DbChannels', 'INTEGER', false, null, null);
 		$this->addColumn('URL', 'DbUrl', 'VARCHAR', false, 1024, null);
-		$this->addColumn('BPM', 'DbBpm', 'VARCHAR', false, 8, null);
+		$this->addColumn('BPM', 'DbBpm', 'INTEGER', false, null, null);
 		$this->addColumn('RATING', 'DbRating', 'VARCHAR', false, 8, null);
 		$this->addColumn('ENCODED_BY', 'DbEncodedBy', 'VARCHAR', false, 255, null);
 		$this->addColumn('DISC_NUMBER', 'DbDiscNumber', 'VARCHAR', false, 8, null);
@@ -101,6 +100,8 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('SOUNDCLOUD_ERROR_MSG', 'DbSoundcloudErrorMsg', 'VARCHAR', false, 512, null);
 		$this->addColumn('SOUNDCLOUD_LINK_TO_FILE', 'DbSoundcloudLinkToFile', 'VARCHAR', false, 4096, null);
 		$this->addColumn('SOUNDCLOUD_UPLOAD_TIME', 'DbSoundCloundUploadTime', 'TIMESTAMP', false, 6, null);
+		$this->addColumn('REPLAY_GAIN', 'DbReplayGain', 'NUMERIC', false, null, null);
+		$this->addForeignKey('OWNER_ID', 'DbOwnerId', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		// validators
 	} // initialize()
 
@@ -109,10 +110,12 @@ class CcFilesTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
+    $this->addRelation('FkOwner', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
+    $this->addRelation('CcSubjsRelatedByDbEditedby', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
     $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), null, null);
     $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
+    $this->addRelation('CcBlockcontents', 'CcBlockcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
 	} // buildRelations()
 

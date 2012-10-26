@@ -1,36 +1,5 @@
 
 -----------------------------------------------------------------------------
--- cc_access
------------------------------------------------------------------------------
-
-DROP TABLE "cc_access" CASCADE;
-
-
-CREATE TABLE "cc_access"
-(
-	"id" serial  NOT NULL,
-	"gunid" CHAR(32),
-	"token" INT8,
-	"chsum" CHAR(32) default '' NOT NULL,
-	"ext" VARCHAR(128) default '' NOT NULL,
-	"type" VARCHAR(20) default '' NOT NULL,
-	"parent" INT8,
-	"owner" INTEGER,
-	"ts" TIMESTAMP,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_access" IS '';
-
-
-SET search_path TO public;
-CREATE INDEX "cc_access_gunid_idx" ON "cc_access" ("gunid");
-
-CREATE INDEX "cc_access_parent_idx" ON "cc_access" ("parent");
-
-CREATE INDEX "cc_access_token_idx" ON "cc_access" ("token");
-
------------------------------------------------------------------------------
 -- cc_music_dirs
 -----------------------------------------------------------------------------
 
@@ -62,7 +31,6 @@ DROP TABLE "cc_files" CASCADE;
 CREATE TABLE "cc_files"
 (
 	"id" serial  NOT NULL,
-	"gunid" CHAR(32)  NOT NULL,
 	"name" VARCHAR(255) default '' NOT NULL,
 	"mime" VARCHAR(255) default '' NOT NULL,
 	"ftype" VARCHAR(128) default '' NOT NULL,
@@ -88,7 +56,7 @@ CREATE TABLE "cc_files"
 	"track_number" INTEGER,
 	"channels" INTEGER,
 	"url" VARCHAR(1024),
-	"bpm" VARCHAR(8),
+	"bpm" INTEGER,
 	"rating" VARCHAR(8),
 	"encoded_by" VARCHAR(255),
 	"disc_number" VARCHAR(8),
@@ -124,8 +92,9 @@ CREATE TABLE "cc_files"
 	"soundcloud_error_msg" VARCHAR(512),
 	"soundcloud_link_to_file" VARCHAR(4096),
 	"soundcloud_upload_time" TIMESTAMP(6),
-	PRIMARY KEY ("id"),
-	CONSTRAINT "cc_files_gunid_idx" UNIQUE ("gunid")
+	"replay_gain" NUMERIC,
+	"owner_id" INTEGER,
+	PRIMARY KEY ("id")
 );
 
 COMMENT ON TABLE "cc_files" IS '';
@@ -135,8 +104,6 @@ SET search_path TO public;
 CREATE INDEX "cc_files_md5_idx" ON "cc_files" ("md5");
 
 CREATE INDEX "cc_files_name_idx" ON "cc_files" ("name");
-
-CREATE INDEX "cc_files_file_exists_idx" ON "cc_files" ("file_exists");
 
 -----------------------------------------------------------------------------
 -- cc_perms
@@ -319,6 +286,9 @@ CREATE TABLE "cc_playlistcontents"
 	"id" serial  NOT NULL,
 	"playlist_id" INTEGER,
 	"file_id" INTEGER,
+	"block_id" INTEGER,
+	"stream_id" INTEGER,
+	"type" INT2 default 0 NOT NULL,
 	"position" INTEGER,
 	"cliplength" interval default '00:00:00',
 	"cuein" interval default '00:00:00',
@@ -329,6 +299,77 @@ CREATE TABLE "cc_playlistcontents"
 );
 
 COMMENT ON TABLE "cc_playlistcontents" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_block
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_block" CASCADE;
+
+
+CREATE TABLE "cc_block"
+(
+	"id" serial  NOT NULL,
+	"name" VARCHAR(255) default '' NOT NULL,
+	"mtime" TIMESTAMP(6),
+	"utime" TIMESTAMP(6),
+	"creator_id" INTEGER,
+	"description" VARCHAR(512),
+	"length" interval default '00:00:00',
+	"type" VARCHAR(7) default 'static',
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_block" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_blockcontents
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_blockcontents" CASCADE;
+
+
+CREATE TABLE "cc_blockcontents"
+(
+	"id" serial  NOT NULL,
+	"block_id" INTEGER,
+	"file_id" INTEGER,
+	"position" INTEGER,
+	"cliplength" interval default '00:00:00',
+	"cuein" interval default '00:00:00',
+	"cueout" interval default '00:00:00',
+	"fadein" TIME default '00:00:00',
+	"fadeout" TIME default '00:00:00',
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_blockcontents" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_blockcriteria
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_blockcriteria" CASCADE;
+
+
+CREATE TABLE "cc_blockcriteria"
+(
+	"id" serial  NOT NULL,
+	"criteria" VARCHAR(32)  NOT NULL,
+	"modifier" VARCHAR(16)  NOT NULL,
+	"value" VARCHAR(512)  NOT NULL,
+	"extra" VARCHAR(512),
+	"block_id" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_blockcriteria" IS '';
 
 
 SET search_path TO public;
@@ -369,6 +410,7 @@ CREATE TABLE "cc_schedule"
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"file_id" INTEGER,
+	"stream_id" INTEGER,
 	"clip_length" interval default '00:00:00',
 	"fade_in" TIME default '00:00:00',
 	"fade_out" TIME default '00:00:00',
@@ -385,6 +427,8 @@ COMMENT ON TABLE "cc_schedule" IS '';
 
 
 SET search_path TO public;
+CREATE INDEX "cc_schedule_instance_id_idx" ON "cc_schedule" ("instance_id");
+
 -----------------------------------------------------------------------------
 -- cc_sess
 -----------------------------------------------------------------------------
@@ -577,7 +621,53 @@ COMMENT ON TABLE "cc_live_log" IS '';
 
 
 SET search_path TO public;
-ALTER TABLE "cc_access" ADD CONSTRAINT "cc_access_owner_fkey" FOREIGN KEY ("owner") REFERENCES "cc_subjs" ("id");
+-----------------------------------------------------------------------------
+-- cc_webstream
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_webstream" CASCADE;
+
+
+CREATE TABLE "cc_webstream"
+(
+	"id" serial  NOT NULL,
+	"name" VARCHAR(255)  NOT NULL,
+	"description" VARCHAR(255)  NOT NULL,
+	"url" VARCHAR(512)  NOT NULL,
+	"length" interval default '00:00:00' NOT NULL,
+	"creator_id" INTEGER  NOT NULL,
+	"mtime" TIMESTAMP(6)  NOT NULL,
+	"utime" TIMESTAMP(6)  NOT NULL,
+	"lptime" TIMESTAMP(6),
+	"mime" VARCHAR(255),
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_webstream" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_webstream_metadata
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_webstream_metadata" CASCADE;
+
+
+CREATE TABLE "cc_webstream_metadata"
+(
+	"id" serial  NOT NULL,
+	"instance_id" INTEGER  NOT NULL,
+	"start_time" TIMESTAMP  NOT NULL,
+	"liquidsoap_data" VARCHAR(1024)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_webstream_metadata" IS '';
+
+
+SET search_path TO public;
+ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey" FOREIGN KEY ("owner_id") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
 
@@ -599,11 +689,21 @@ ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_show_fkey" FOREIGN KEY ("sho
 
 ALTER TABLE "cc_show_hosts" ADD CONSTRAINT "cc_perm_host_fkey" FOREIGN KEY ("subjs_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id");
+ALTER TABLE "cc_playlist" ADD CONSTRAINT "cc_playlist_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
+ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
+
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_block" ADD CONSTRAINT "cc_block_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id");
+
+ALTER TABLE "cc_blockcontents" ADD CONSTRAINT "cc_blockcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_blockcontents" ADD CONSTRAINT "cc_blockcontents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_blockcriteria" ADD CONSTRAINT "cc_blockcontents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_pref" ADD CONSTRAINT "cc_pref_subjid_fkey" FOREIGN KEY ("subjid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
@@ -611,6 +711,10 @@ ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey" FOREIGN KEY ("insta
 
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
+ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_stream_fkey" FOREIGN KEY ("stream_id") REFERENCES "cc_webstream" ("id") ON DELETE CASCADE;
+
 ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey" FOREIGN KEY ("user_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_webstream_metadata" ADD CONSTRAINT "cc_schedule_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_schedule" ("id") ON DELETE CASCADE;

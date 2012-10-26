@@ -29,7 +29,7 @@ except Exception, e:
     print('Error loading config file: %s', e)
     sys.exit()
 
-api_client = apc.api_client_factory(config)
+api_client = apc.AirtimeApiClient(config)
 
 #helper functions
 # copy or move files
