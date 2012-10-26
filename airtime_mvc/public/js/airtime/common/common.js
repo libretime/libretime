@@ -109,3 +109,9 @@ function openPreviewWindow(url) {
 function pad(number, length) {
     return sprintf("%'0"+length+"d", number);
 }
+
+function removeSuccessMsg() {
+    var $status = $('.success');
+    
+    $status.fadeOut("slow", function(){$status.empty()});
+}

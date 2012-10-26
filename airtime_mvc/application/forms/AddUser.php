@@ -11,6 +11,8 @@ class Application_Form_AddUser extends Zend_Form
                                     'validate');
                                     * */
 
+        $this->setAttrib('id', 'user_form');
+        
         $hidden = new Zend_Form_Element_Hidden('user_id');
         $hidden->setDecorators(array('ViewHelper'));
         $this->addElement($hidden);
@@ -85,11 +87,11 @@ class Application_Form_AddUser extends Zend_Form
         $select->setRequired(true);
         $this->addElement($select);
 
-        $submit = new Zend_Form_Element_Submit('submit');
-        $submit->setAttrib('class', 'ui-button ui-state-default right-floated');
-        $submit->setIgnore(true);
-        $submit->setLabel('Save');
-        $this->addElement($submit);
+        $saveBtn = new Zend_Form_Element_Button('save_user');
+        $saveBtn->setAttrib('class', 'btn btn-small right-floated');
+        $saveBtn->setIgnore(true);
+        $saveBtn->setLabel('Save');
+        $this->addElement($saveBtn);
     }
 
     public function validateLogin($data)

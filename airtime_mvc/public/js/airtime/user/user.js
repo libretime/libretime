@@ -60,7 +60,7 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     return nRow;
 }
 
-$(document).ready(function() {
+function populateUserTable() {
     $('#users_datatable').dataTable( {
         "bProcessing": true,
         "bServerSide": true,
@@ -92,11 +92,32 @@ $(document).ready(function() {
         
         "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
     });
+}
+
+$(document).ready(function() {
+    populateUserTable();
     
     //$('#user_details').hide();
     
     var newUser = {login:"", first_name:"", last_name:"", type:"G", id:""};
     
-    $('#add_user_button').click(function(){populateForm(newUser)});
+    $('#add_user_button').live('click', function(){populateForm(newUser)});
+    
+    $('#save_user').live('click', function(){
+        var data = $('#user_form').serialize();
+        var url = baseUrl+'/User/add-user';
+        
+        $.post(url, {format: "json", data: data}, function(data){
+            var json = $.parseJSON(data);
+            if (json.valid === "true") {
+                $('#content').empty().append(json.html);
+                populateUserTable();
+            } else {
+                //if form is invalid we only need to redraw the form
+                $('#user_form').empty().append($(json.html).find('#user_form').children());
+            }
+            setTimeout(removeSuccessMsg, 5000);
+        });
+    });
     
 });

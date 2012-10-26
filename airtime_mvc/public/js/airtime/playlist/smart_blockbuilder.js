@@ -483,12 +483,6 @@ function callback(data, type) {
     setTimeout(removeSuccessMsg, 5000);
 }
 
-function removeSuccessMsg() {
-    var $status = $('.success');
-    
-    $status.fadeOut("slow", function(){$status.empty()});
-}
-
 function appendAddButton() {
     var add_button = "<a class='btn btn-small' id='criteria_add'>" +
                      "<i class='icon-white icon-plus'></i></a>";

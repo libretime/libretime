@@ -88,6 +88,17 @@ $(document).ready(function() {
         $(this).toggleClass("closed");
         return false;
     }).next().hide();
+    
+    $('#pref_save').live('click', function() {
+        var data = $('#pref_form').serialize();
+        var url = baseUrl+'/Preference/index';
+        
+        $.post(url, {format: "json", data: data}, function(data){
+            var json = $.parseJSON(data);
+            $('#content').empty().append(json.html);
+            setTimeout(removeSuccessMsg, 5000);
+        });
+    });
 
     showErrorSections();
     
