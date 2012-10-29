@@ -100,8 +100,8 @@ def RequestProvider(object):
             new_url = self.url.params(action=action_value)
             self.requests[action_name] = new_url
 
-    def available_requests(self): return self.requests.keys
-    def __contains__(self, request): return request in self.requests
+    def available_requests(self)    : return self.requests.keys
+    def __contains__(self, request) : return request in self.requests
 
     def __getattr__(self, attr):
         if attr in self: return self.requests[attr]
