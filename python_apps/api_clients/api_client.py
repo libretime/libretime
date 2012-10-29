@@ -20,6 +20,11 @@ import traceback
 
 AIRTIME_VERSION = "2.2.0"
 
+
+# TODO : Place these functions in some common module. Right now, media
+# monitor uses the same functions and it would be better to reuse them
+# instead of copy pasting them around
+
 def to_unicode(obj, encoding='utf-8'):
     if isinstance(obj, basestring):
         if not isinstance(obj, unicode):
