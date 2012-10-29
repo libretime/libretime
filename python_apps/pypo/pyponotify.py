@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import traceback
 
 """
 Python part of radio playout (pypo)
@@ -102,6 +103,24 @@ class Notify:
         logger.debug('# Calling server to update webstream data       #')
         logger.debug('#################################################')
         response = self.api_client.notify_webstream_data(data, media_id)
+        logger.debug("Response: " + json.dumps(response))
+
+    def run_with_options(self, options):
+        if options.error and options.stream_id:
+            self.notify_liquidsoap_status(options.error, options.stream_id, options.time)
+        elif options.connect and options.stream_id:
+            self.notify_liquidsoap_status("OK", options.stream_id, options.time)
+        elif options.source_name and options.source_status:
+            self.notify_source_status(options.source_name, options.source_status)
+        elif options.webstream:
+            self.notify_webstream_data(options.webstream, options.media_id)
+        elif options.media_id:
+            self.notify_media_start_playing(options.media_id)
+        elif options.liquidsoap_started:
+            self.notify_liquidsoap_started()
+        else:
+            logger.debug("Unrecognized option in options(%s). Doing nothing" \
+                  % str(options))
 
 
 if __name__ == '__main__':
@@ -112,41 +131,9 @@ if __name__ == '__main__':
     print '#########################################'
 
     # initialize
-    if options.error and options.stream_id:
-        try:
-            n = Notify()
-            n.notify_liquidsoap_status(options.error, options.stream_id, options.time)
-        except Exception, e:
-            print e
-    elif options.connect and options.stream_id:
-        try:
-            n = Notify()
-            n.notify_liquidsoap_status("OK", options.stream_id, options.time)
-        except Exception, e:
-            print e
-    elif options.source_name and options.source_status:
-        try:
-            n = Notify()
-            n.notify_source_status(options.source_name, options.source_status)
-        except Exception, e:
-            print e
-    elif options.webstream:
-        try:
-            n = Notify()
-            n.notify_webstream_data(options.webstream, options.media_id)
-        except Exception, e:
-            print e
-    elif options.media_id:
-
-        try:
-            n = Notify()
-            n.notify_media_start_playing(options.media_id)
-        except Exception, e:
-            print e
-    elif options.liquidsoap_started:
-        try:
-            n = Notify()
-            n.notify_liquidsoap_started()
-        except Exception, e:
-            print e
+    try:
+        n = Notify()
+        n.run_with_options(options)
+    except Exception as e:
+        print( traceback.format_exc() )
 

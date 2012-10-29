@@ -21,10 +21,14 @@ end
 # @param a Key to look for
 # @param l List of pairs (key,value)
 def list.mem_assoc(a,l)
-  v = list.assoc(a,l)
-  # We check for existence, since "" may indicate
-  # either a binding (a,"") or no binding..
-  list.mem((a,v),l)
+  def f(cur, el) =
+    if not cur then
+      fst(el) == a
+    else
+      cur
+    end
+  end
+  list.fold(f, false, l)
 end
 
 # Remove a pair from an associative list
@@ -164,8 +168,7 @@ def out(s)
   output.prefered(mksafe(s))
 end
 
-# Special track insensitive fallback that
-# always skip current song before switching.
+# Special track insensitive fallback that always skips current song before switching.
 # @category Source / Track Processing
 # @param ~input The input source
 # @param f The fallback source
@@ -212,14 +215,17 @@ end
 # Simple crossfade.
 # @category Source / Track Processing
 # @param ~start_next Duration in seconds of the crossed end of track.
-# @param ~fade_in Duration of the fade in for next track
-# @param ~fade_out Duration of the fade out for previous track
-# @param s The source to use
-def crossfade(~id="",~start_next,~fade_in,~fade_out,s)
+# @param ~fade_in Duration of the fade in for next track.
+# @param ~fade_out Duration of the fade out for previous track.
+# @param ~conservative Always prepare for a premature end-of-track.
+# @param s The source to use.
+def crossfade(~id="",~conservative=true,
+              ~start_next=5.,~fade_in=3.,~fade_out=3.,
+              s)
   s = fade.in(duration=fade_in,s)
   s = fade.out(duration=fade_out,s)
   fader = fun (a,b) -> add(normalize=false,[b,a])
-  cross(id=id,conservative=true,duration=start_next,fader,s)
+  cross(id=id,conservative=conservative,duration=start_next,fader,s)
 end
 
 # Append speech-synthesized tracks reading the metadata.
@@ -242,8 +248,7 @@ def helium(s)
 end
 %endif
 
-# Return true if process exited with 0 code.
-# Command should return quickly.
+# Return true if process exited with 0 code. Command should return quickly.
 # @category System
 # @param command    Command to test
 def test_process(command)
@@ -277,12 +282,9 @@ def url.split(uri) =
   end
 end
 
-# Register a server/telnet command to 
-# update a source's metadata. Returns
-# a new source, which will receive the 
-# updated metadata. It behaves just like
-# the pre-1.0 insert_metadata() operator, 
-# i.e. insert key1="val1",key2="val2",...
+# Register a server/telnet command to update a source's metadata. Returns
+# a new source, which will receive the updated metadata. The command has
+# the following format: insert key1="val1",key2="val2",...
 # @category Source / Track Processing
 # @param ~id Force the value of the source ID.
 def server.insert_metadata(~id="",s) = 
@@ -424,15 +426,15 @@ end
 # @param ~conservative Always prepare for a premature end-of-track.
 # @param ~default      Transition used when no rule applies \
 #                      (default: sequence).
-# @param ~high         Value, in dB, for loud sound level
-# @param ~medium       Value, in dB, for medium sound level
+# @param ~high         Value, in dB, for loud sound level.
+# @param ~medium       Value, in dB, for medium sound level.
 # @param ~margin       Margin to detect sources that have too different \
 #                      sound level for crossing.
 # @param s             The input source.
 def smart_crossfade (~start_next=5.,~fade_in=3.,~fade_out=3.,
                      ~default=(fun (a,b) -> sequence([a, b])),
                      ~high=-15., ~medium=-32., ~margin=4.,
-                     ~width=2.,~conservative=false,s)
+                     ~width=2.,~conservative=true,s)
   fade.out = fade.out(type="sin",duration=fade_out)
   fade.in  = fade.in(type="sin",duration=fade_in)
   add = fun (a,b) -> add(normalize=false,[b, a])
@@ -549,7 +551,18 @@ def playlist.reloadable(~id="",~random=false,~on_done={()},uri)
           if request.resolve(playlist) then
             playlist = request.filename(playlist)
             files = playlist.parse(playlist)
-            list.map(snd,files)
+            def file_request(el) =
+              meta = fst(el)
+              file = snd(el)
+              s = list.fold(fun (cur, el) ->
+                "#{cur},#{fst(el)}=#{string.escape(snd(el))}", "", meta)
+              if s == "" then
+                file
+              else
+                "annotate:#{s}:#{file}"
+              end
+            end
+            list.map(file_request,files)
           else
             log(label=id,"Couldn't read playlist: request resolution failed.")
             []

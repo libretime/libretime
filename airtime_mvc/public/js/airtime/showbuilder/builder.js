@@ -339,11 +339,23 @@ var AIRTIME = (function(AIRTIME){
         });
     };
     
+    mod.jumpToCurrentTrack = function() {
+        var $scroll = $sbContent.find(".dataTables_scrolling");
+        var scrolled = $scroll.scrollTop();
+        var scrollingTop = $scroll.offset().top;
+        var oTable = $('#show_builder_table').dataTable();
+        var current = $sbTable.find("."+NOW_PLAYING_CLASS);
+        var currentTop = current.offset().top;
+
+        $scroll.scrollTop(currentTop - scrollingTop + scrolled);
+    }
+    
     mod.builderDataTable = function() {
         $sbContent = $('#show_builder');
         $lib = $("#library_content"),
         $sbTable = $sbContent.find('table');
-        
+        var isInitialized = false;
+
         oSchedTable = $sbTable.dataTable( {
             "aoColumns": [
             /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "15px", "sClass": "sb-checkbox"},
@@ -636,6 +648,13 @@ var AIRTIME = (function(AIRTIME){
                 $("#draggingContainer").remove();
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
+                if (!isInitialized) {
+                    if ($(this).find("."+NOW_PLAYING_CLASS).length > 0) {
+                        mod.jumpToCurrentTrack();
+                    }
+                }
+
+                isInitialized = true;
                 var wrapperDiv,
                     markerDiv,
                     $td,
@@ -1021,7 +1040,7 @@ var AIRTIME = (function(AIRTIME){
                 if (AIRTIME.button.isDisabled('icon-step-forward', true) === true) {
                     return;
                 }
-                
+                /*
                 var $scroll = $sbContent.find(".dataTables_scrolling"),
                     scrolled = $scroll.scrollTop(),
                     scrollingTop = $scroll.offset().top,
@@ -1029,6 +1048,8 @@ var AIRTIME = (function(AIRTIME){
                     currentTop = current.offset().top;
         
                 $scroll.scrollTop(currentTop - scrollingTop + scrolled);
+                */
+                mod.jumpToCurrentTrack();
             });
         
         //delete overbooked tracks.
@@ -1196,7 +1217,7 @@ var AIRTIME = (function(AIRTIME){
                 };
     
             }
-        }); 
+        });
     };
     
     return AIRTIME;
