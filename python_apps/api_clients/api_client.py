@@ -202,6 +202,7 @@ class AirtimeApiClient(object):
 
         return version
 
+    # TODO : this isn't being used anywhere. consider removing this method
     def test(self):
         logger = self.logger
         items = self.get_schedule()[1]
@@ -290,7 +291,6 @@ class AirtimeApiClient(object):
         logger = self.logger
         response = ''
         try:
-            schedule_id = data
             url = self.construct_url("update_start_playing_url")
             url = url.replace("%%media_id%%", str(media_id))
             logger.debug(url)
