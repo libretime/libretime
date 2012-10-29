@@ -198,7 +198,9 @@ class Application_Model_ShowBuilder
         } elseif (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
 
-            if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
+            // at the time of creating on show, the recorded file is not in the DB yet.
+            // therefore, 'si_file_id' is null. So we need to check it.
+            if (Application_Model_Preference::GetUploadToSoundcloudOption() && isset($p_item['si_file_id'])) {
                 $file = Application_Model_StoredFile::Recall(
                     $p_item['si_file_id']);
                 if (isset($file)) {
@@ -398,7 +400,7 @@ class Application_Model_ShowBuilder
 
         //see if the displayed show instances have changed. (deleted,
         //empty schedule etc)
-        if ($outdated === false && count($instances) 
+        if ($outdated === false && count($instances)
             !== count($currentInstances)) {
             Logging::debug("show instances have changed.");
             $outdated = true;
@@ -421,8 +423,7 @@ class Application_Model_ShowBuilder
         }
 
         $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems(
-            $this->startDT->format("Y-m-d H:i:s"), $this->endDT->format(
-                "Y-m-d H:i:s"), $shows);
+            $this->startDT, $this->endDT, $shows);
 
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 
@@ -459,7 +460,7 @@ class Application_Model_ShowBuilder
                 $display_items[] = $row;
             }
 
-            if ($current_id !== -1 && 
+            if ($current_id !== -1 &&
                 !in_array($current_id, $this->showInstances)) {
                 $this->showInstances[] = $current_id;
             }

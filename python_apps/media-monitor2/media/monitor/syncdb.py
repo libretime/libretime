@@ -53,11 +53,11 @@ class AirtimeDB(Loggable):
         """
         return self.id_to_dir[ dir_id ]
 
-    def storage_path(self): return self.base_storage
-    def organize_path(self): return self.storage_paths['organize']
-    def problem_path(self): return self.storage_paths['problem_files']
-    def import_path(self): return self.storage_paths['imported']
-    def recorded_path(self): return self.storage_paths['recorded']
+    def storage_path(self)  : return self.base_storage
+    def organize_path(self) : return self.storage_paths['organize']
+    def problem_path(self)  : return self.storage_paths['problem_files']
+    def import_path(self)   : return self.storage_paths['imported']
+    def recorded_path(self) : return self.storage_paths['recorded']
 
     def list_watched(self):
         """

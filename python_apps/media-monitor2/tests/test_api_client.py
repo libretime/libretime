@@ -19,8 +19,8 @@ class TestApiClient(unittest.TestCase):
         self.apc.register_component("api-client-tester")
         # All of the following requests should error out in some way
         self.bad_requests = [
-                { 'mode' : 'dang it', 'is_record' : 0 },
-                { 'mode' : 'damn frank', 'is_record' : 1 },
+                { 'mode' : 'foo', 'is_record' : 0 },
+                { 'mode' : 'bar', 'is_record' : 1 },
                 { 'no_mode' : 'at_all' }, ]
 
     def test_bad_requests(self):

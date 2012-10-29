@@ -117,3 +117,5 @@ get_files_without_replay_gain = 'get-files-without-replay-gain/api_key/%%api_key
 update_replay_gain_value = 'update-replay-gain-value/api_key/%%api_key%%'
 
 notify_webstream_data = 'notify-webstream-data/api_key/%%api_key%%/media_id/%%media_id%%/format/json'
+
+notify_liquidsoap_started = 'rabbitmq-do-push/api_key/%%api_key%%/format/json'

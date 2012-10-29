@@ -181,7 +181,8 @@ libmad-ocaml-dev libtaglib-ocaml-dev libalsa-ocaml-dev libtaglib-ocaml-dev libvo
 libspeex-dev libspeexdsp-dev speex libladspa-ocaml-dev festival festival-dev \
 libsamplerate-dev libxmlplaylist-ocaml-dev libxmlrpc-light-ocaml-dev libflac-dev \
 libxml-dom-perl libxml-dom-xpath-perl patch autoconf libmp3lame-dev \
-libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev camlidl libfaad-dev''')
+libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev
+camlidl libfaad-dev libpcre-ocaml-dev''')
 
     root = '/home/martin/src'
     do_run('mkdir -p %s' % root)

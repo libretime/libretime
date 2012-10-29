@@ -263,6 +263,15 @@ SQL;
         global $CC_CONFIG;
         $con = Propel::getConnection();
 
+        $p_start_str = $p_start->format("Y-m-d H:i:s");
+        $p_end_str = $p_end->format("Y-m-d H:i:s");
+
+
+        //We need to search 24 hours before and after the show times so that that we
+        //capture all of the show's contents. 
+        $p_track_start= $p_start->sub(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
+        $p_track_end = $p_end->add(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
+
         $templateSql = <<<SQL
 SELECT DISTINCT sched.starts AS sched_starts,
                 sched.ends AS sched_ends,
@@ -287,7 +296,14 @@ SQL;
 SQL;
         $filesJoin = <<<SQL
        cc_schedule AS sched
-       JOIN cc_files AS ft ON (sched.file_id = ft.id)
+       JOIN cc_files AS ft ON (sched.file_id = ft.id
+           AND ((sched.starts >= '{$p_track_start}'
+               AND sched.starts < '{$p_track_end}')
+               OR (sched.ends > '{$p_track_start}'
+               AND sched.ends <= '{$p_track_end}')
+               OR (sched.starts <= '{$p_track_start}'
+               AND sched.ends >= '{$p_track_end}'))
+        )
 SQL;
 
 
@@ -307,7 +323,14 @@ SQL;
 SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched
-      JOIN cc_webstream AS ws ON (sched.stream_id = ws.id)
+      JOIN cc_webstream AS ws ON (sched.stream_id = ws.id
+          AND ((sched.starts >= '{$p_track_start}'
+               AND sched.starts < '{$p_track_end}')
+               OR (sched.ends > '{$p_track_start}'
+               AND sched.ends <= '{$p_track_end}')
+               OR (sched.starts <= '{$p_track_start}'
+               AND sched.ends >= '{$p_track_end}'))
+      )
       LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)
 SQL;
 
@@ -344,12 +367,12 @@ SELECT showt.name AS show_name,
 JOIN cc_show AS showt ON (showt.id = si.show_id)
 WHERE si.modified_instance = FALSE
   $showPredicate
-  AND ((si.starts >= '{$p_start}'
-       AND si.starts < '{$p_end}')
-  OR (si.ends > '{$p_start}'
-      AND si.ends <= '{$p_end}')
-  OR (si.starts <= '{$p_start}'
-      AND si.ends >= '{$p_end}'))
+  AND ((si.starts >= '{$p_start_str}'
+       AND si.starts < '{$p_end_str}')
+  OR (si.ends > '{$p_start_str}'
+      AND si.ends <= '{$p_end_str}')
+  OR (si.starts <= '{$p_start_str}'
+      AND si.ends >= '{$p_end_str}'))
 ORDER BY si_starts,
          sched_starts;
 SQL;
@@ -713,6 +736,7 @@ SQL;
             'end'               => $stream_end,
             'uri'               => $uri,
             'type'              => 'stream_buffer_end',
+            'row_id'            => $item["id"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $stream_end, $schedule_item);
@@ -1127,7 +1151,6 @@ SQL;
                 }
             } else {
                 if ($isAdminOrPM) {
-                    Logging::info( $data );
                     Application_Model_Show::create($data);
                 }
 

@@ -60,7 +60,8 @@ def main(global_config, api_client_config, log_config,
             try:
                 with open(config['index_path'], 'w') as f: f.write(" ")
             except Exception as e:
-                log.info("Failed to create index file with exception: %s" % str(e))
+                log.info("Failed to create index file with exception: %s" \
+                         % str(e))
             else:
                 log.info("Created index file, reloading configuration:")
                 main( global_config,  api_client_config, log_config,

@@ -490,6 +490,10 @@ class ApiController extends Zend_Controller_Action
                 $file->setFileExistsFlag(true);
                 $file->setMetadata($md);
             }
+            if ($md['is_record'] != 0) {
+                $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
+            }
+            
         } elseif ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -562,7 +566,6 @@ class ApiController extends Zend_Controller_Action
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
-            unset( $info_json["is_record"] );
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");

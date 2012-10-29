@@ -18,7 +18,7 @@ class ManagerTimeout(threading.Thread,Loggable):
     secnods. This used to be just a work around for cc-4235 but recently
     became a permanent solution because it's "cheap" and reliable
     """
-    def __init__(self, manager, interval=3):
+    def __init__(self, manager, interval=1.5):
         # TODO : interval should be read from config and passed here instead
         # of just using the hard coded value
         threading.Thread.__init__(self)
@@ -26,7 +26,7 @@ class ManagerTimeout(threading.Thread,Loggable):
         self.interval = interval
     def run(self):
         while True:
-            time.sleep(self.interval) # every 3 seconds
+            time.sleep(self.interval)
             self.manager.flush_organize()
 
 class Manager(Loggable):
@@ -178,7 +178,7 @@ class Manager(Loggable):
         # the OrganizeListener instance will walk path and dispatch an organize
         # event for every file in that directory
         self.organize['organize_listener'].flush_events(new_path)
-        self.__add_watch(new_path, self.organize['organize_listener'])
+        #self.__add_watch(new_path, self.organize['organize_listener'])
 
     def flush_organize(self):
         path = self.organize['organize_path']

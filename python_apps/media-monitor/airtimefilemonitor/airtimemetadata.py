@@ -12,14 +12,14 @@ import traceback
 
 """
 list of supported easy tags in mutagen version 1.20
-['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry', 
-'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby', 
-'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid', 
-'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort', 
-'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor', 
-'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid', 
-'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid', 
-'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid', 
+['albumartistsort', 'musicbrainz_albumstatus', 'lyricist', 'releasecountry',
+'date', 'performer', 'musicbrainz_albumartistid', 'composer', 'encodedby',
+'tracknumber', 'musicbrainz_albumid', 'album', 'asin', 'musicbrainz_artistid',
+'mood', 'copyright', 'author', 'media', 'length', 'version', 'artistsort',
+'titlesort', 'discsubtitle', 'website', 'musicip_fingerprint', 'conductor',
+'compilation', 'barcode', 'performer:*', 'composersort', 'musicbrainz_discid',
+'musicbrainz_albumtype', 'genre', 'isrc', 'discnumber', 'musicbrainz_trmid',
+'replaygain_*_gain', 'musicip_puid', 'artist', 'title', 'bpm', 'musicbrainz_trackid',
 'arranger', 'albumsort', 'replaygain_*_peak', 'organization']
 """
 
@@ -139,7 +139,7 @@ class AirtimeMetadata:
     def get_md_from_file(self, filepath):
         """
         Returns None if error retrieving metadata. Otherwise returns a dictionary
-        representing the file's metadata 
+        representing the file's metadata
         """
 
         self.logger.info("getting info from filepath %s", filepath)
@@ -248,9 +248,9 @@ class AirtimeMetadata:
         try:
             md['MDATA_KEY_BITRATE'] = getattr(file_info.info, "bitrate", 0)
             md['MDATA_KEY_SAMPLERATE'] = getattr(file_info.info, "sample_rate", 0)
-            
+
             md['MDATA_KEY_DURATION'] = self.format_length(getattr(file_info.info, "length", 0.0))
-            
+
             md['MDATA_KEY_MIME'] = ""
             if len(file_info.mime) > 0:
                 md['MDATA_KEY_MIME'] = file_info.mime[0]

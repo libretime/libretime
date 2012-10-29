@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("UTC");
+
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
 
 // Name of the web server user
