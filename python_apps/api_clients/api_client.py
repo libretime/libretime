@@ -62,7 +62,7 @@ class ApcUrl(object):
     api_client.cfg"""
     def __init__(self, base_url): self.base_url = base_url
 
-    def params(self, params):
+    def params(self, **params):
         temp_url = self.base_url
         for k, v in params.iteritems():
             wrapped_param = "%%" + k + "%%"
@@ -75,13 +75,37 @@ class ApcUrl(object):
         if '%%' in self.base_url: raise IncompleteUrl(self.base_url)
         else: return self.base_url
 
-# Change baseclass to Loggable from mm2 to enable logging
-class ApiClient(object):
+def ApiRequest(object):
+    def __init__(self, name, url):
+        self.name = name
+        self.url  = url
+    def __call__(self, **kwargs):
+        final_url = self.url.params(**kwargs).url()
+        response  = urllib2.urlopen(final_url).read()
+        return response
+
+def RequestProvider(object):
+    """ Creates the available ApiRequest instance that can be read from
+    a config file """
     def __init__(self, cfg):
         self.config = cfg
-        self.url = "http://%s:%s/%s/%s/%s" \
+        self.requests = {}
+        self.url = ApcUrl("http://%s:%s/%s/%s/%s" \
             % (self.config["host"], str(self.config["base_port"]),
-               self.config["base_dir"], self.config["api_base"],)
+               self.config["base_dir"], self.config["api_base"],
+               '%%action%%'))
+        # Now we must discover the possible actions
+        actions = dict( (k,v) for k,v in cfg.iteritems() if '%%api_key%%' in v)
+        for action_name, action_value in actions.iteritems():
+            new_url = self.url.params(action=action_value)
+            self.requests[action_name] = new_url
+
+    def available_requests(self): return self.requests.keys
+    def __contains__(self, request): return request in self.requests
+
+    def __getattr__(self, attr):
+        if attr in self: return self.requests[attr]
+        else: return super(RequestProvider, self).__getattribute__(attr)
 
 
 class AirtimeApiClient(object):
