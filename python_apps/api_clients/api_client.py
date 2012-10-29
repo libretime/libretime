@@ -44,7 +44,7 @@ def convert_dict_value_to_utf8(md):
 # Airtime API Client
 ################################################################################
 
-class AirtimeApiClient():
+class AirtimeApiClient(object):
 
     # This is a little hacky fix so that I don't have to pass the config object
     # everywhere where AirtimeApiClient needs to be initialized
