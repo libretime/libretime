@@ -422,53 +422,46 @@ class AirtimeApiClient():
 
     def send_media_monitor_requests(self, action_list, dry=False):
         """
-        Send a gang of media monitor events at a time. actions_list is a list
-        of dictionaries where every dictionary is representing an action. Every
-        action dict must contain a 'mode' key that says what kind of action it
-        is and an optional 'is_record' key that says whether the show was
-        recorded or not. The value of this key does not matter, only if it's
-        present or not.
+        Send a gang of media monitor events at a time. actions_list is a
+        list of dictionaries where every dictionary is representing an
+        action. Every action dict must contain a 'mode' key that says
+        what kind of action it is and an optional 'is_record' key that
+        says whether the show was recorded or not. The value of this key
+        does not matter, only if it's present or not.
         """
-        logger = self.logger
-        try:
-            url = self.construct_url('reload_metadata_group')
-            # We are assuming that action_list is a list of dictionaries such
-            # that every dictionary represents the metadata of a file along
-            # with a special mode key that is the action to be executed by the
-            # controller.
-            valid_actions = []
-            # We could get a list of valid_actions in a much shorter way using
-            # filter but here we prefer a little more verbosity to help
-            # debugging
-            for action in action_list:
-                if not 'mode' in action:
-                    self.logger.debug("Warning: Trying to send a request element without a 'mode'")
-                    self.logger.debug("Here is the the request: '%s'" % str(action) )
-                else:
-                    # We alias the value of is_record to true or false no
-                    # matter what it is based on if it's absent in the action
-                    if 'is_record' not in action:
-                        action['is_record'] = 0
-                    valid_actions.append(action)
-            # Note that we must prefix every key with: mdX where x is a number
-            # Is there a way to format the next line a little better? The
-            # parenthesis make the code almost unreadable
-            md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) \
-                    for i,md in enumerate(valid_actions))
-            # For testing we add the following "dry" parameter to tell the
-            # controller not to actually do any changes
-            if dry: md_list['dry'] = 1
-            self.logger.info("Pumping out %d requests..." % len(valid_actions))
-            data = urllib.urlencode(md_list)
-            req = urllib2.Request(url, data)
-            response = self.get_response_from_server(req)
-            response = json.loads(response)
-            return response
-        except ValueError: raise
-        except Exception, e:
-            logger.error('Exception: %s', e)
-            logger.error("traceback: %s", traceback.format_exc())
-            raise
+        url = self.construct_url('reload_metadata_group')
+        # We are assuming that action_list is a list of dictionaries such
+        # that every dictionary represents the metadata of a file along
+        # with a special mode key that is the action to be executed by the
+        # controller.
+        valid_actions = []
+        # We could get a list of valid_actions in a much shorter way using
+        # filter but here we prefer a little more verbosity to help
+        # debugging
+        for action in action_list:
+            if not 'mode' in action:
+                self.logger.debug("Warning: Trying to send a request element without a 'mode'")
+                self.logger.debug("Here is the the request: '%s'" % str(action) )
+            else:
+                # We alias the value of is_record to true or false no
+                # matter what it is based on if it's absent in the action
+                if 'is_record' not in action:
+                    action['is_record'] = 0
+                valid_actions.append(action)
+        # Note that we must prefix every key with: mdX where x is a number
+        # Is there a way to format the next line a little better? The
+        # parenthesis make the code almost unreadable
+        md_list = dict((("md%d" % i), json.dumps(convert_dict_value_to_utf8(md))) \
+                for i,md in enumerate(valid_actions))
+        # For testing we add the following "dry" parameter to tell the
+        # controller not to actually do any changes
+        if dry: md_list['dry'] = 1
+        self.logger.info("Pumping out %d requests..." % len(valid_actions))
+        data = urllib.urlencode(md_list)
+        req = urllib2.Request(url, data)
+        response = self.get_response_from_server(req)
+        response = json.loads(response)
+        return response
 
     #returns a list of all db files for a given directory in JSON format:
     #{"files":["path/to/file1", "path/to/file2"]}
