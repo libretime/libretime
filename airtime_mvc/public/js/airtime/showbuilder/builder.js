@@ -649,7 +649,9 @@ var AIRTIME = (function(AIRTIME){
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
                 if (!isInitialized) {
-                    mod.jumpToCurrentTrack();
+                    if ($(this).find("."+NOW_PLAYING_CLASS).length > 0) {
+                        mod.jumpToCurrentTrack();
+                    }
                 }
 
                 isInitialized = true;
