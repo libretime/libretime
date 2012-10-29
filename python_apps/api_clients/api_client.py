@@ -44,6 +44,41 @@ def convert_dict_value_to_utf8(md):
 # Airtime API Client
 ################################################################################
 
+class UrlException(Exception): pass
+
+class IncompleteUrl(UrlException):
+    def __init__(self, url):
+        self.url = url
+    def __str__(self):
+        return "Incomplete url: '%s'" % self.url
+
+class UrlBadParam(UrlException):
+    def __init__(self, url, param):
+        self.url = url
+        self.param = param
+    def __str__(self):
+        return "Bad param '%s' passed into url: '%s'" % (self.param, self.url)
+
+class ApcUrl(object):
+    """ A safe abstraction and testable for filling in parameters in
+    api_client.cfg"""
+    def __init__(self, base_url):
+        self.base_url = base_url
+
+    def params(self, params):
+        temp_url = self.base_url
+        for k, v in params.iteritems():
+            wrapped_param = "%%" + k + "%%"
+            if wrapped_param in temp_url:
+                temp_url = temp_url.replace(wrapped_param, v)
+            else: raise UrlBadParam(self.base_url, k)
+            return ApcUrl(temp_url)
+
+    def url(self):
+        if '%%' in self.base_url: raise IncompleteUrl(self.base_url)
+        else: return self.base_url
+
+
 class AirtimeApiClient(object):
 
     # This is a little hacky fix so that I don't have to pass the config object
@@ -156,7 +191,7 @@ class AirtimeApiClient(object):
         url= self.construct_url("version_url")
 
         logger.debug("Trying to contact %s", url)
-        
+
         version = -1
         try:
             data = self.get_response_from_server(url)
