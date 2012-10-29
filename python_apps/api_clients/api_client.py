@@ -47,10 +47,8 @@ def convert_dict_value_to_utf8(md):
 class UrlException(Exception): pass
 
 class IncompleteUrl(UrlException):
-    def __init__(self, url):
-        self.url = url
-    def __str__(self):
-        return "Incomplete url: '%s'" % self.url
+    def __init__(self, url): self.url = url
+    def __str__(self): return "Incomplete url: '%s'" % self.url
 
 class UrlBadParam(UrlException):
     def __init__(self, url, param):
