@@ -705,17 +705,12 @@ class AirtimeApiClient(object):
         'pairs' is a list of pairs in (x, y), where x is the file's database
         row id and y is the file's replay_gain value in dB
         """
-
         #http://localhost/api/update-replay-gain-value/
-        try:
-            url = self.construct_url("update_replay_gain_value")
-            data = urllib.urlencode({'data': json.dumps(pairs)})
-            request = urllib2.Request(url, data)
+        url = self.construct_url("update_replay_gain_value")
+        data = urllib.urlencode({'data': json.dumps(pairs)})
+        request = urllib2.Request(url, data)
 
-            self.logger.debug(self.get_response_from_server(request))
-        except Exception, e:
-            self.logger.error("Exception: %s", e)
-            raise
+        self.logger.debug(self.get_response_from_server(request))
 
 
     def notify_webstream_data(self, data, media_id):
