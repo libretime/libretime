@@ -60,8 +60,7 @@ class UrlBadParam(UrlException):
 class ApcUrl(object):
     """ A safe abstraction and testable for filling in parameters in
     api_client.cfg"""
-    def __init__(self, base_url):
-        self.base_url = base_url
+    def __init__(self, base_url): self.base_url = base_url
 
     def params(self, params):
         temp_url = self.base_url
