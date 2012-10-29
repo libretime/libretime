@@ -75,6 +75,14 @@ class ApcUrl(object):
         if '%%' in self.base_url: raise IncompleteUrl(self.base_url)
         else: return self.base_url
 
+# Change baseclass to Loggable from mm2 to enable logging
+class ApiClient(object):
+    def __init__(self, cfg):
+        self.config = cfg
+        self.url = "http://%s:%s/%s/%s/%s" \
+            % (self.config["host"], str(self.config["base_port"]),
+               self.config["base_dir"], self.config["api_base"],)
+
 
 class AirtimeApiClient(object):
 
@@ -389,7 +397,10 @@ class AirtimeApiClient(object):
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""
         # TODO : Make other methods in this class use this this method.
-        url = "http://%s:%s/%s/%s/%s" % (self.config["host"], str(self.config["base_port"]), self.config["base_dir"], self.config["api_base"], self.config[config_action_key])
+        url = "http://%s:%s/%s/%s/%s" %  \
+            (self.config["host"], str(self.config["base_port"]),
+             self.config["base_dir"], self.config["api_base"],
+             self.config[config_action_key])
         url = url.replace("%%api_key%%", self.config["api_key"])
         return url
 
