@@ -268,7 +268,7 @@ SQL;
 
 
         //We need to search 24 hours before and after the show times so that that we
-        //capture all of the show's contents. 
+        //capture all of the show's contents.
         $p_track_start= $p_start->sub(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
         $p_track_end = $p_end->add(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
 
@@ -661,6 +661,7 @@ SQL;
                 $data["media"][$switch_start]['start']             = $switch_start;
                 $data["media"][$switch_start]['end']               = $switch_start;
                 $data["media"][$switch_start]['event_type']        = "switch_off";
+                $data["media"][$kick_start]['type']                = "event";
                 $data["media"][$switch_start]['independent_event'] = true;
             }
         }
