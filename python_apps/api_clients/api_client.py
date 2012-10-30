@@ -15,7 +15,6 @@ import json
 from urlparse import urlparse
 import base64
 from configobj import ConfigObj
-import string
 import traceback
 
 AIRTIME_VERSION = "2.2.0"
@@ -610,29 +609,6 @@ class AirtimeApiClient(object):
             self.get_response_from_server(url, attempts = 5)
         except Exception, e:
             logger.error("Exception: %s", e)
-
-    """
-    This function updates status of mounted file system information on airtime
-    """
-    def update_file_system_mount(self, added_dir, removed_dir):
-        logger = self.logger
-        try:
-            url = self.construct_url("update_fs_mount")
-
-            added_data_string = string.join(added_dir, ',')
-            removed_data_string = string.join(removed_dir, ',')
-
-            map = [("added_dir", added_data_string), ("removed_dir", removed_data_string)]
-
-            data = urllib.urlencode(map)
-
-            req = urllib2.Request(url, data)
-            response = self.get_response_from_server(req)
-
-            logger.info("update file system mount: %s", json.loads(response))
-        except Exception, e:
-            logger.error('Exception: %s', e)
-            logger.error("traceback: %s", traceback.format_exc())
 
     def get_bootstrap_info(self):
         """ Retrive infomations needed on bootstrap time """
