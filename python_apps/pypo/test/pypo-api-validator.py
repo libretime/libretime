@@ -21,27 +21,26 @@ import inspect
 from configobj import ConfigObj
 
 # custom imports
-from util import *
-from api_clients import *
+#from util import *
+from api_client import AirtimeApiClient
 
-import random
 import unittest
 
 # configure logging
-logging.config.fileConfig("logging-api-validator.cfg")
+#logging.config.fileConfig("logging-api-validator.cfg")
 
 try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
     print 'Error loading config file: ', e
     sys.exit()
-    
-    
+
+
 class TestApiFunctions(unittest.TestCase):
 
     def setUp(self):
-        self.api_client = api_client.api_client_factory(config)
-        
+        self.api_client = AirtimeApiClient()
+
     def test_is_server_compatible(self):
         self.assertTrue(self.api_client.is_server_compatible(False))
 
@@ -59,16 +58,17 @@ class TestApiFunctions(unittest.TestCase):
         arr = dict()
         arr["x"] = dict()
         arr["x"]["schedule_id"]=1
-        
+
         response = self.api_client.notify_scheduled_item_start_playing("x", arr)
         self.assertTrue(response.has_key("status"))
         self.assertTrue(response.has_key("message"))
 
-    def test_notify_media_item_start_playing(self):     
+    def test_notify_media_item_start_playing(self):
         response = self.api_client.notify_media_item_start_playing('{"schedule_id":1}', 5)
+        return response =
         self.assertTrue(response.has_key("status"))
         self.assertTrue(response.has_key("message"))
-		
- 
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -275,6 +275,7 @@ class AirtimeApiClient(object):
 
 
     def get_schedule(self):
+        # TODO : properly refactor this routine
         logger = self.logger
 
         # Construct the URL
