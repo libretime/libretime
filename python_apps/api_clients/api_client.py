@@ -83,7 +83,8 @@ class ApiRequest(object):
         # TODO : get rid of god damn urllib and replace everything with
         # grequests or requests at least
         final_url = self.url.params(**kwargs).url()
-        req = urllib2.Request(final_url, _post_data)
+        post_data = urllib.urlencode(_post_data)
+        req = urllib2.Request(final_url, post_data)
         response  = urllib2.urlopen(req).read()
         return json.loads(response)
 
