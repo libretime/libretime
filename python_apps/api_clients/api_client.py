@@ -80,6 +80,8 @@ class ApiRequest(object):
         self.name = name
         self.url  = url
     def __call__(self,_post_data=None, **kwargs):
+        # TODO : get rid of god damn urllib and replace everything with
+        # grequests or requests at least
         final_url = self.url.params(**kwargs).url()
         req = urllib2.Request(final_url, _post_data)
         response  = urllib2.urlopen(req).read()
