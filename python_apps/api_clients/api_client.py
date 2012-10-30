@@ -75,7 +75,7 @@ class ApcUrl(object):
         if '%%' in self.base_url: raise IncompleteUrl(self.base_url)
         else: return self.base_url
 
-def ApiRequest(object):
+class ApiRequest(object):
     def __init__(self, name, url):
         self.name = name
         self.url  = url
