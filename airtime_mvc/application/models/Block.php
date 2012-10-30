@@ -308,10 +308,11 @@ SQL;
             $length = $value." ".$modifier;
         } else {
             $hour = "00";
+            $mins = "00";
             if ($modifier == "minutes") {
                 if ($value >59) {
                     $hour  = intval($value/60);
-                    $value = $value%60;
+                    $mins = $value%60;
 
                 }
             } elseif ($modifier == "hours") {
