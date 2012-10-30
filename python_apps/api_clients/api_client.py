@@ -308,15 +308,7 @@ class AirtimeApiClient(object):
             logger.error("%s", e)
 
     def notify_liquidsoap_started(self):
-        logger = self.logger
-
-        try:
-            url = self.construct_url("notify_liquidsoap_started")
-
-            self.get_response_from_server(url, attempts=5)
-        except Exception, e:
-            logger.error("Exception: %s", str(e))
-
+        return self.services.notify_liquidsoap_started()
 
     """
     This is a callback from liquidsoap, we use this to notify about the
