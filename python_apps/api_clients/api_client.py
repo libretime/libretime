@@ -532,7 +532,6 @@ class AirtimeApiClient(object):
             all_files = u"1" if all_files else u"0"
             response = self.services.list_all_db_files(dir_id=dir_id,
                                                        all=all_files)
-            response = json.loads(response)
         except Exception, e:
             response = {}
             logger.error("Exception: %s", e)
