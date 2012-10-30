@@ -69,7 +69,7 @@ class ApcUrl(object):
             if wrapped_param in temp_url:
                 temp_url = temp_url.replace(wrapped_param, v)
             else: raise UrlBadParam(self.base_url, k)
-            return ApcUrl(temp_url)
+        return ApcUrl(temp_url)
 
     def url(self):
         if '%%' in self.base_url: raise IncompleteUrl(self.base_url)
