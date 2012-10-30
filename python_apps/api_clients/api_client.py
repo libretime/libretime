@@ -307,17 +307,7 @@ class AirtimeApiClient(object):
         return url
 
     def setup_media_monitor(self):
-        logger = self.logger
-        response = None
-        try:
-            url = self.construct_url("media_setup_url")
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
-            logger.info("Connected to Airtime Server. Json Media Storage Dir: %s", response)
-        except Exception, e:
-            response = None
-            logger.error("Exception: %s", e)
-        return response
+        return self.services.media_setup_url()
 
     def update_media_metadata(self, md, mode, is_record=False):
         logger = self.logger
