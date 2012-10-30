@@ -634,22 +634,6 @@ class AirtimeApiClient(object):
             logger.error('Exception: %s', e)
             logger.error("traceback: %s", traceback.format_exc())
 
-    """
-        When watched dir is missing(unplugged or something) on boot up, this
-        function will get called and will call appropriate function on Airtime.
-    """
-    def handle_watched_dir_missing(self, dir):
-        logger = self.logger
-        try:
-            url = self.construct_url("handle_watched_dir_missing")
-            url = url.replace("%%dir%%", base64.b64encode(dir))
-
-            response = self.get_response_from_server(url)
-            logger.info("update file system mount: %s", json.loads(response))
-        except Exception, e:
-            logger.error('Exception: %s', e)
-            logger.error("traceback: %s", traceback.format_exc())
-
     def get_bootstrap_info(self):
         """
         Retrive infomations needed on bootstrap time
