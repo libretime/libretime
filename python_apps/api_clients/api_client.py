@@ -635,20 +635,8 @@ class AirtimeApiClient(object):
             logger.error("traceback: %s", traceback.format_exc())
 
     def get_bootstrap_info(self):
-        """
-        Retrive infomations needed on bootstrap time
-        """
-        logger = self.logger
-        try:
-            url = self.construct_url("get_bootstrap_info")
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
-            logger.info("Bootstrap info retrieved %s", response)
-        except Exception, e:
-            response = None
-            logger.error('Exception: %s', e)
-            logger.error("traceback: %s", traceback.format_exc())
-        return response
+        """ Retrive infomations needed on bootstrap time """
+        return self.services.get_bootstrap_info()
 
     def get_files_without_replay_gain_value(self, dir_id):
         """
@@ -658,22 +646,7 @@ class AirtimeApiClient(object):
         """
 
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
-
-        logger = self.logger
-        try:
-            url = self.construct_url("get_files_without_replay_gain")
-            url = url.replace("%%dir_id%%", dir_id)
-            response = self.get_response_from_server(url)
-
-            logger.info("update file system mount: %s", response)
-            response = json.loads(response)
-            #file_path = self.get_response_into_file(url)
-        except Exception, e:
-            response = None
-            logger.error('Exception: %s', e)
-            logger.error("traceback: %s", traceback.format_exc())
-
-        return response
+        return self.services.get_files_without_replay_gain_value()
 
     def update_replay_gain_values(self, pairs):
         """
