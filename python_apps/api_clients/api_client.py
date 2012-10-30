@@ -324,22 +324,7 @@ class AirtimeApiClient(object):
     liquidsoap in get_liquidsoap_data().
     """
     def notify_media_item_start_playing(self, media_id):
-        logger = self.logger
-        response = ''
-        try:
-            url = self.construct_url("update_start_playing_url")
-            url = url.replace("%%media_id%%", str(media_id))
-            logger.debug(url)
-
-            response = self.get_response_from_server(url, attempts = 5)
-            response = json.loads(response)
-            logger.info("API-Status %s", response['status'])
-            logger.info("API-Message %s", response['message'])
-
-        except Exception, e:
-            logger.error("Exception: %s", e)
-
-        return response
+        return self.services.update_start_playing_url(media_id=media_id)
 
     def get_liquidsoap_data(self, pkey, schedule):
         playlist = schedule[pkey]
