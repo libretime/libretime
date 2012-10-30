@@ -577,13 +577,7 @@ class AirtimeApiClient(object):
     monit's http service, or download log files via a http server.
     """
     def register_component(self, component):
-        logger = self.logger
-        try:
-            url = self.construct_url("register_component")
-            url = url.replace("%%component%%", component)
-            self.get_response_from_server(url)
-        except Exception, e:
-            logger.error("Exception: %s", e)
+        return self.services.register_component(component=component)
 
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
