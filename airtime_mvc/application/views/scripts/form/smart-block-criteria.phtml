@@ -59,6 +59,20 @@
         <br />
         </dd>
         
+        <dd id='sp_repeate_tracks-element'>
+            <span class='sp_text_font'><?php echo $this->element->getElement('sp_repeat_tracks')->getLabel() ?></span>
+            <span class='repeat_tracks_help_icon'></span>
+            <?php echo $this->element->getElement('sp_repeat_tracks')?>
+            <?php if($this->element->getElement("sp_repeat_tracks")->hasErrors()) : ?>
+                <?php foreach($this->element->getElement("sp_repeat_tracks")->getMessages() as $error): ?>
+                <span class='errors sp-errors'>
+                   <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <br />
+        </dd>
+        
         <dd id='sp_limit-element'>
             <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></span>
             <?php echo $this->element->getElement('sp_limit_value')?>
