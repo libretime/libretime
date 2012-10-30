@@ -1,4 +1,5 @@
 import unittest
+import json
 from mock import MagicMock, patch
 from .. api_client import ApcUrl, ApiRequest
 
@@ -8,14 +9,14 @@ class TestApiRequest(unittest.TestCase):
         self.assertEquals(u.name, "request_name")
 
     def test_call(self):
-        ret = 'ok'
+        ret = json.dumps( {u'ok':u'ok'} )
         read = MagicMock()
         read.read = MagicMock(return_value=ret)
         u = '/testing'
         with patch('urllib2.urlopen') as mock_method:
             mock_method.return_value = read
             request = ApiRequest('mm', ApcUrl(u))()
-            self.assertEquals(request, ret)
+            self.assertEquals(request, json.loads(ret))
             mock_method.assert_called_once_with(u)
 
 if __name__ == '__main__': unittest.main()

@@ -82,7 +82,7 @@ class ApiRequest(object):
     def __call__(self, **kwargs):
         final_url = self.url.params(**kwargs).url()
         response  = urllib2.urlopen(final_url).read()
-        return response
+        return json.loads(response)
 
 class RequestProvider(object):
     """ Creates the available ApiRequest instance that can be read from
