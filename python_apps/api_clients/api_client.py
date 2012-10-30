@@ -293,26 +293,8 @@ class AirtimeApiClient(object):
         return response
 
     def check_live_stream_auth(self, username, password, dj_type):
-        """
-        TODO: Why are we using print statements here? Possibly use logger that
-        is directed to stdout. -MK
-        """
-
-        response = ''
-        try:
-            url = self.construct_url("check_live_stream_auth")
-            url = url.replace("%%username%%", username)
-            url = url.replace("%%djtype%%", dj_type)
-            url = url.replace("%%password%%", password)
-
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
-        except Exception, e:
-            print "Exception: %s", e
-            print "traceback: %s", traceback.format_exc()
-            response = None
-
-        return response
+        return self.services.check_live_stream_auth(
+            username=username, password=password, dj_type=dj_type)
 
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""
