@@ -17,6 +17,5 @@ class TestApiRequest(unittest.TestCase):
             mock_method.return_value = read
             request = ApiRequest('mm', ApcUrl(u))()
             self.assertEquals(request, json.loads(ret))
-            mock_method.assert_called_once_with(u)
 
 if __name__ == '__main__': unittest.main()

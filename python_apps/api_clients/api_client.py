@@ -79,9 +79,10 @@ class ApiRequest(object):
     def __init__(self, name, url):
         self.name = name
         self.url  = url
-    def __call__(self, **kwargs):
+    def __call__(self,_post_data=None, **kwargs):
         final_url = self.url.params(**kwargs).url()
-        response  = urllib2.urlopen(final_url).read()
+        req = urllib2.Request(final_url, _post_data)
+        response  = urllib2.urlopen(req).read()
         return json.loads(response)
 
 class RequestProvider(object):
