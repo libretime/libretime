@@ -613,7 +613,7 @@ class AirtimeApiClient(object):
         to this file is the return value.
         """
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
-        return self.services.get_files_without_replay_gain_value()
+        return self.services.get_files_without_replay_gain(dir_id=dir_id)
 
     def update_replay_gain_values(self, pairs):
         """
