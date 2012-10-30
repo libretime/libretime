@@ -661,7 +661,7 @@ SQL;
                 $data["media"][$switch_start]['start']             = $switch_start;
                 $data["media"][$switch_start]['end']               = $switch_start;
                 $data["media"][$switch_start]['event_type']        = "switch_off";
-                $data["media"][$kick_start]['type']                = "event";
+                $data["media"][$switch_start]['type']                = "event";
                 $data["media"][$switch_start]['independent_event'] = true;
             }
         }
