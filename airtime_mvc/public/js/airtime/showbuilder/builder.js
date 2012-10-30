@@ -648,6 +648,8 @@ var AIRTIME = (function(AIRTIME){
                 $("#draggingContainer").remove();
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
+                var isInitialized = false;
+
                 if (!isInitialized) {
                     //when coming to 'Now Playing' page we want the page
                     //to jump to the current track
