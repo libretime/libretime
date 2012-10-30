@@ -557,18 +557,7 @@ class AirtimeApiClient(object):
         return self.services.remove_watched_dir(path=base64.b64encode(path))
 
     def set_storage_dir(self, path):
-        logger = self.logger
-        try:
-            url = self.construct_url("set_storage_dir")
-            url = url.replace("%%path%%", base64.b64encode(path))
-
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
-        except Exception, e:
-            response = None
-            logger.error("Exception: %s", e)
-
-        return response
+        return self.services.set_storage_dir(path=base64.b64encode(path))
 
     def get_stream_setting(self):
         logger = self.logger
