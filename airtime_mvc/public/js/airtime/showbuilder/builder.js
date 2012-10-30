@@ -648,7 +648,11 @@ var AIRTIME = (function(AIRTIME){
                 $("#draggingContainer").remove();
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
+                var isInitialized = false;
+
                 if (!isInitialized) {
+                    //when coming to 'Now Playing' page we want the page
+                    //to jump to the current track
                     if ($(this).find("."+NOW_PLAYING_CLASS).length > 0) {
                         mod.jumpToCurrentTrack();
                     }
@@ -985,13 +989,18 @@ var AIRTIME = (function(AIRTIME){
                     "<i class='icon-white icon-cut'></i></button></div>")
             .append("<div class='btn-group'>" +
                     "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
-                    "<i class='icon-white icon-trash'></i></button></div>")
-            .append("<div class='btn-group'>" +
+                    "<i class='icon-white icon-trash'></i></button></div>");
+
+        //if 'Add/Remove content' was chosen from the context menu
+        //in the Calendar do not append these buttons
+        if ($(".ui-dialog-content").length === 0) {
+            $menu.append("<div class='btn-group'>" +
                     "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
                     "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
+        }
 
         $toolbar.append($menu);
         $menu = undefined;
