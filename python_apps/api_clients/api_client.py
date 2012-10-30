@@ -67,7 +67,7 @@ class ApcUrl(object):
         for k, v in params.iteritems():
             wrapped_param = "%%" + k + "%%"
             if wrapped_param in temp_url:
-                temp_url = temp_url.replace(wrapped_param, v)
+                temp_url = temp_url.replace(wrapped_param, str(v))
             else: raise UrlBadParam(self.base_url, k)
         return ApcUrl(temp_url)
 
@@ -97,10 +97,11 @@ class RequestProvider(object):
         # Now we must discover the possible actions
         actions = dict( (k,v) for k,v in cfg.iteritems() if '%%api_key%%' in v)
         for action_name, action_value in actions.iteritems():
-            new_url = self.url.params(action=action_value)
-            self.requests[action_name] = new_url
+            new_url = self.url.params(action=action_value).params(
+                api_key=self.config['api_key'])
+            self.requests[action_name] = ApiRequest(action_name, new_url)
 
-    def available_requests(self)    : return self.requests.keys
+    def available_requests(self)    : return self.requests.keys()
     def __contains__(self, request) : return request in self.requests
 
     def __getattr__(self, attr):
