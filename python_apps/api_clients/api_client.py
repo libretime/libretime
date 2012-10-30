@@ -522,7 +522,7 @@ class AirtimeApiClient(object):
         req = urllib2.Request(url, data)
         #response = self.get_response_from_server(req)
         #response = json.loads(response)
-        response = self.servoices.reload_metadata_group(_post_data=md_list)
+        response = self.services.reload_metadata_group(_post_data=md_list)
         return response
 
     #returns a list of all db files for a given directory in JSON format:
