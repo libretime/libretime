@@ -600,13 +600,11 @@ class AirtimeApiClient(object):
             logger.error("Exception: %s", e)
 
     def notify_source_status(self, sourcename, status):
-        logger = self.logger
         try:
-            url = self.construct_url("update_source_status")
-            url = url.replace("%%sourcename%%", sourcename)
-            url = url.replace("%%status%%", status)
-
-            self.get_response_from_server(url, attempts = 5)
+            logger = self.logger
+            return self.services.update_source_status(sourcename=sourcename,
+                                                      status=status)
+            #self.get_response_from_server(url, attempts = 5)
         except Exception, e:
             logger.error("Exception: %s", e)
 
@@ -620,7 +618,6 @@ class AirtimeApiClient(object):
         calculated. This list of files is downloaded into a file and the path
         to this file is the return value.
         """
-
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
         return self.services.get_files_without_replay_gain_value()
 
