@@ -491,7 +491,6 @@ class AirtimeApiClient(object):
         says whether the show was recorded or not. The value of this key
         does not matter, only if it's present or not.
         """
-        url = self.construct_url('reload_metadata_group')
         # We are assuming that action_list is a list of dictionaries such
         # that every dictionary represents the metadata of a file along
         # with a special mode key that is the action to be executed by the
@@ -519,8 +518,6 @@ class AirtimeApiClient(object):
         # controller not to actually do any changes
         if dry: md_list['dry'] = 1
         self.logger.info("Pumping out %d requests..." % len(valid_actions))
-        data = urllib.urlencode(md_list)
-        req = urllib2.Request(url, data)
         #response = self.get_response_from_server(req)
         #response = json.loads(response)
         response = self.services.reload_metadata_group(_post_data=md_list)
