@@ -530,15 +530,12 @@ class AirtimeApiClient(object):
         logger = self.logger
         try:
             all_files = u"1" if all_files else u"0"
-            url = self.construct_url("list_all_db_files")
-            url = url.replace("%%dir_id%%", dir_id)
-            url = url.replace("%%all%%", all_files)
-            response = self.get_response_from_server(url)
+            response = self.services.list_all_db_files(dir_id=dir_id,
+                                                       all=all_files)
             response = json.loads(response)
         except Exception, e:
             response = {}
             logger.error("Exception: %s", e)
-
         try:
             return response["files"]
         except KeyError:
