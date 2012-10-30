@@ -83,8 +83,8 @@ class ApiRequest(object):
         # TODO : get rid of god damn urllib and replace everything with
         # grequests or requests at least
         final_url = self.url.params(**kwargs).url()
-        post_data = urllib.urlencode(_post_data)
-        req = urllib2.Request(final_url, post_data)
+        if _post_data is not None: _post_data = urllib.urlencode(_post_data)
+        req = urllib2.Request(final_url, _post_data)
         response  = urllib2.urlopen(req).read()
         return json.loads(response)
 
@@ -549,6 +549,7 @@ class AirtimeApiClient(object):
 
     def list_all_watched_dirs(self):
         # Does this include the stor directory as well?
+        return self.services.list_all_watched_dirs()
         logger = self.logger
         try:
             url = self.construct_url("list_all_watched_dirs")
