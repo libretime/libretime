@@ -84,7 +84,7 @@ class ApiRequest(object):
         response  = urllib2.urlopen(final_url).read()
         return response
 
-def RequestProvider(object):
+class RequestProvider(object):
     """ Creates the available ApiRequest instance that can be read from
     a config file """
     def __init__(self, cfg):
