@@ -548,34 +548,10 @@ class AirtimeApiClient(object):
             return []
 
     def list_all_watched_dirs(self):
-        # Does this include the stor directory as well?
         return self.services.list_all_watched_dirs()
-        logger = self.logger
-        try:
-            url = self.construct_url("list_all_watched_dirs")
-
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
-        except Exception, e:
-            response = None
-            logger.error("Exception: %s", e)
-            self.logger.debug(traceback.format_exc())
-
-        return response
 
     def add_watched_dir(self, path):
-        logger = self.logger
-        try:
-            url = self.construct_url("add_watched_dir")
-            url = url.replace("%%path%%", base64.b64encode(path))
-
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
-        except Exception, e:
-            response = None
-            logger.error("Exception: %s", e)
-
-        return response
+        return self.services.add_watched_dir(path=base64.b64encode(path))
 
     def remove_watched_dir(self, path):
         logger = self.logger
