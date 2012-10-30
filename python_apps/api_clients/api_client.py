@@ -179,45 +179,6 @@ class AirtimeApiClient(object):
 
         return response
 
-    def get_response_into_file(self, url, block=True):
-        """
-        This function will query the server and download its response directly
-        into a temporary file. This is useful in the situation where the
-        response from the server can be huge and we don't want to store it into
-        memory (potentially causing Python to use hundreds of MB's of memory).
-        By writing into a file we can then open this file later, and read data
-        a little bit at a time and be very mem efficient.
-
-        The return value of this function is the path of the temporary file.
-        Unless specified using block = False, this function will block until a
-        successful HTTP 200 response is received.
-        """
-
-        logger = self.logger
-        successful_response = False
-
-        while not successful_response:
-            try:
-                path = urllib.urlretrieve(url)[0]
-                successful_response = True
-            except IOError, e:
-                logger.error('Error Authenticating with remote server: %s', e)
-                if not block:
-                    raise
-            except Exception, e:
-                logger.error('Couldn\'t connect to remote server. Is it running?')
-                logger.error("%s" % e)
-                if not block:
-                    raise
-
-            if not successful_response:
-                logger.error("Error connecting to server, waiting 5 seconds and trying again.")
-                time.sleep(5)
-
-        return path
-
-
-
     def __get_airtime_version(self):
         logger = self.logger
         url= self.construct_url("version_url")
