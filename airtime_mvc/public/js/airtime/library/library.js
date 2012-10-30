@@ -675,13 +675,16 @@ var AIRTIME = (function(AIRTIME) {
         oTable.fnSetFilteringDelay(350);
         
         $libContent.on("click", "legend", function(){
+            $simpleSearch = $libContent.find("#library_display_filter label");
             var $fs = $(this).parents("fieldset");
 
             if ($fs.hasClass("closed")) {
                 $fs.removeClass("closed");
+                $simpleSearch.addClass("sp-invisible");
             }
             else {
                 $fs.addClass("closed");
+                $simpleSearch.removeClass("sp-invisible");
             }
         });
        
