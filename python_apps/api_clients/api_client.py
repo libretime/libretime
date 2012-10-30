@@ -257,21 +257,7 @@ class AirtimeApiClient(object):
         return data
 
     def get_shows_to_record(self):
-        logger = self.logger
-        response = None
-        try:
-            url = self.construct_url("show_schedule_url")
-            logger.debug(url)
-            response = self.get_response_from_server(url)
-
-            response = json.loads(response)
-            logger.info("shows %s", response)
-
-        except Exception, e:
-            logger.error("Exception: %s", e)
-            response = None
-
-        return response
+        return self.services.show_schedule_url()
 
     def upload_recorded_show(self, data, headers):
         logger = self.logger
