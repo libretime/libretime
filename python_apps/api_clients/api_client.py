@@ -129,14 +129,13 @@ class AirtimeApiClient(object):
                 config_path=AirtimeApiClient.default_config )
 
     def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
-        if logger is None:
-            self.logger = logging
-        else:
-            self.logger = logger
+        if logger is None: self.logger = logging
+        else: self.logger = logger
 
         # loading config file
         try:
             self.config = ConfigObj(config_path)
+            self.services = RequestProvider(self.config)
         except Exception, e:
             self.logger.error('Error loading config file: %s', e)
             sys.exit(1)
