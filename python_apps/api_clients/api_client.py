@@ -236,20 +236,6 @@ class AirtimeApiClient(object):
 
         return success, response
 
-
-    def get_media(self, uri, dst):
-        logger = self.logger
-
-        try:
-            src = uri + "/api_key/%%api_key%%"
-            logger.info("try to download from %s to %s", src, dst)
-            src = src.replace("%%api_key%%", self.config["api_key"])
-            # check if file exists already before downloading again
-            headers = urllib.urlretrieve(src, dst)[1]
-            logger.info(headers)
-        except Exception, e:
-            logger.error("%s", e)
-
     def notify_liquidsoap_started(self):
         return self.services.notify_liquidsoap_started()
 
