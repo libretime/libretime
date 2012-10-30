@@ -12,7 +12,6 @@ import urllib
 import urllib2
 import logging
 import json
-from urlparse import urlparse
 import base64
 from configobj import ConfigObj
 import traceback
@@ -197,23 +196,6 @@ class AirtimeApiClient(object):
             return -1
 
         return version
-
-    # TODO : this isn't being used anywhere. consider removing this method
-    def test(self):
-        logger = self.logger
-        items = self.get_schedule()[1]
-        schedule = items["playlists"]
-        logger.debug("Number of playlists found: %s", str(len(schedule)))
-        count = 1
-        for pkey in sorted(schedule.iterkeys()):
-            logger.debug("Playlist #%s", str(count))
-            count += 1
-            playlist = schedule[pkey]
-            for item in playlist["medias"]:
-                filename = urlparse(item["uri"])
-                filename = filename.query[5:]
-                self.get_media(item["uri"], filename)
-
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger
