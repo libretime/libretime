@@ -76,6 +76,7 @@
     <column name="soundcloud_upload_time" phpName="DbSoundCloundUploadTime" type="TIMESTAMP" size="6" required="false"/>
     <column name="replay_gain" phpName="DbReplayGain" type="NUMERIC" required="false"/>
     <column name="owner_id" phpName="DbOwnerId" type="INTEGER" required="false"/>
+    <column name="hidden" phpName="DbHidden" type="BOOLEAN" defaultValue="false"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
