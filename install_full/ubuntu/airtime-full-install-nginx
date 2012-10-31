@@ -29,9 +29,9 @@ dist=`lsb_release -is`
 code=`lsb_release -cs`
 
 if [ "$dist" -eq "Debian" ]; then
-    grep "deb http://www.deb-multimedia.org squeeze main non-free" /etc/apt/sources.list
+    grep "deb http://backports.debian.org/debian-backports squeeze-backports main" /etc/apt/sources.list
     if [ "$?" -ne "0" ]; then
-        echo "deb http://www.deb-multimedia.org squeeze main non-free" >> /etc/apt/sources.list
+        echo "deb http://backports.debian.org/debian-backports squeeze-backports main" >> /etc/apt/sources.list
     fi
 fi
 
