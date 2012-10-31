@@ -222,10 +222,8 @@ class AirtimeApiClient(object):
     def get_liquidsoap_data(self, pkey, schedule):
         playlist = schedule[pkey]
         data = dict()
-        try:
-            data["schedule_id"] = playlist['id']
-        except Exception:
-            data["schedule_id"] = 0
+        try: data["schedule_id"] = playlist['id']
+        except Exception: data["schedule_id"] = 0
         return data
 
     def get_shows_to_record(self):
