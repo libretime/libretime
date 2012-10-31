@@ -424,13 +424,5 @@ class AirtimeApiClient(object):
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        try:
-            url = self.construct_url("notify_webstream_data")
-            url = url.replace("%%media_id%%", str(media_id))
-            data = urllib.urlencode({'data': data})
-            self.logger.debug(url)
-            request = urllib2.Request(url, data)
-
-            self.logger.info(self.get_response_from_server(request, attempts = 5))
-        except Exception, e:
-            self.logger.error("Exception: %s", e)
+        self.logger.info( self.notify_webstream_data.req(
+            _post_data={'data':data}, media_id=str(media_id)).retry(5))
