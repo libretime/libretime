@@ -1093,6 +1093,14 @@ SQL;
         ->setDbValue($p_criteriaData['etc']['sp_limit_value'])
         ->setDbBlockId($this->id)
         ->save();
+        
+        // insert repeate track option
+        $qry = new CcBlockcriteria();
+        $qry->setDbCriteria("repeat_tracks")
+        ->setDbModifier("N/A")
+        ->setDbValue($p_criteriaData['etc']['sp_repeat_tracks'])
+        ->setDbBlockId($this->id)
+        ->save();
     }
 
     /**
@@ -1105,7 +1113,12 @@ SQL;
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();
         $this->deleteAllFilesFromBlock();
-        $this->addAudioClips(array_keys($insertList));
+        // constrcut id array
+        $ids = array();
+        foreach ($insertList as $ele) {
+            $ids[] = $ele['id'];
+        }
+        $this->addAudioClips(array_values($ids));
         // update length in playlist contents.
         $this->updateBlockLengthInAllPlaylist();
 
@@ -1134,6 +1147,7 @@ SQL;
         $info       = $this->getListofFilesMeetCriteria();
         $files      = $info['files'];
         $limit      = $info['limit'];
+        $repeat     = $info['repeat_tracks'];
 
         $insertList = array();
         $totalTime  = 0;
@@ -1142,18 +1156,36 @@ SQL;
         // this moves the pointer to the first element in the collection
         $files->getFirst();
         $iterator = $files->getIterator();
-        while ($iterator->valid() && $totalTime < $limit['time']) {
+        
+        $isBlockFull = false;
+        
+        while ($iterator->valid()) {
             $id = $iterator->current()->getDbId();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
-            $insertList[$id] = $length;
+            $insertList[] = array('id'=>$id, 'length'=>$length);
             $totalTime += $length;
             $totalItems++;
-
-            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500) {
+            
+            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
+                $isBlockFull = true;
                 break;
             }
 
             $iterator->next();
+        }
+        
+        $sizeOfInsert = count($insertList);
+        
+        // if block is not full and reapeat_track is check, fill up more
+        while (!$isBlockFull && $repeat == 1) {
+            $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
+            $insertList[] = $insertList[$randomEleKey];
+            $totalTime += $insertList[$randomEleKey]['length'];
+            $totalItems++;
+            
+            if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
+                break;
+            }
         }
 
         return $insertList;
@@ -1202,6 +1234,8 @@ SQL;
 
             if ($criteria == "limit") {
                 $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
+            } else if($criteria == "repeat_tracks") {
+                $storedCrit["repeat_tracks"] = array("value"=>$value);
             } else {
                 $storedCrit["crit"][$criteria][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra, "display_name"=>$criteriaOptions[$criteria]);
             }
@@ -1317,6 +1351,7 @@ SQL;
         }
         // construct limit restriction
         $limits = array();
+        
         if (isset($storedCrit['limit'])) {
             if ($storedCrit['limit']['modifier'] == "items") {
                 $limits['time'] = 1440 * 60;
@@ -1328,10 +1363,16 @@ SQL;
                 $limits['items'] = null;
             }
         }
+        
+        $repeatTracks = 0;
+        if (isset($storedCrit['repeat_tracks'])) {
+            $repeatTracks = $storedCrit['repeat_tracks']['value'];
+        }
+        
         try {
             $out = $qry->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
 
-            return array("files"=>$out, "limit"=>$limits, "count"=>$out->count());
+            return array("files"=>$out, "limit"=>$limits, "repeat_tracks"=> $repeatTracks, "count"=>$out->count());
         } catch (Exception $e) {
             Logging::info($e);
         }
@@ -1377,7 +1418,7 @@ SQL;
                 $output['etc'][$ele['name']] = $ele['value'];
             }
         }
-
+        
         return $output;
     }
     // smart block functions end
