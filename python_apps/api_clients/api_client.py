@@ -205,22 +205,9 @@ class AirtimeApiClient(object):
 
     def get_schedule(self):
         # TODO : properly refactor this routine
-        logger = self.logger
-
-        # Construct the URL
-        export_url = self.construct_url("export_url")
-        logger.info("Fetching schedule from %s", export_url)
-
-        response = ""
-        try:
-            response_json = self.get_response_from_server(export_url)
-            response = json.loads(response_json)
-            success = True
-        except Exception, e:
-            logger.error(e)
-            success = False
-
-        return success, response
+        # For now thre return type is a little fucked for compatibility reasons
+        try: return (True, self.services.export_url())
+        except: (False, "")
 
     def notify_liquidsoap_started(self):
         return self.services.notify_liquidsoap_started()
