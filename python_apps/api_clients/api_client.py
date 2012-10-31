@@ -76,6 +76,7 @@ class ApiRequest(object):
     def __init__(self, name, url):
         self.name = name
         self.url  = url
+        self.__req = None
     def __call__(self,_post_data=None, **kwargs):
         # TODO : get rid of god damn urllib and replace everything with
         # grequests or requests at least
@@ -88,13 +89,17 @@ class ApiRequest(object):
         try: return json.loads(response)
         except ValueError: return response
 
-    def retry(self, n):
+    def req(self, *args, **kwargs):
+        self.__req = lambda : self(*args, **kwargs)
+        return self
+
+    def retry(self, n, delay=5):
         """Try to send request n times. If after n times it fails then
         we finally raise exception"""
         for i in range(0,n-1):
-            try: return self()
-            except Exception: pass
-        return self()
+            try: return self.__req()
+            except Exception: time.sleep(delay)
+        return self.__req()
 
 class RequestProvider(object):
     """ Creates the available ApiRequest instance that can be read from
@@ -174,9 +179,9 @@ class AirtimeApiClient(object):
                 else:
                     logger.debug(url)
 
-            #If the user passed in a positive attempts number then that means
-            #attempts will roll over 0 and we stop. If attempts was initially negative,
-            #then we have unlimited attempts
+            #If the user passed in a positive attempts number then that
+            #means attempts will roll over 0 and we stop. If attempts
+            #was initially negative, then we have unlimited attempts
             if attempts > 0:
                 attempts = attempts - 1
                 if attempts == 0:
@@ -377,14 +382,9 @@ class AirtimeApiClient(object):
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
         try:
-            url = self.construct_url("update_liquidsoap_status")
-            msg = msg.replace('/', ' ')
             encoded_msg = urllib.quote(msg, '')
-            url = url.replace("%%msg%%", encoded_msg)
-            url = url.replace("%%stream_id%%", stream_id)
-            url = url.replace("%%boot_time%%", time)
-
-            self.get_response_from_server(url, attempts = 5)
+            self.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
+                                          boot_time=time).retry(5)
         except Exception, e:
             logger.error("Exception: %s", e)
 
