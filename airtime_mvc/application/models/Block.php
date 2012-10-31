@@ -1113,7 +1113,12 @@ SQL;
         $this->saveSmartBlockCriteria($p_criteria);
         $insertList = $this->getListOfFilesUnderLimit();
         $this->deleteAllFilesFromBlock();
-        $this->addAudioClips(array_values($insertList));
+        // constrcut id array
+        $ids = array();
+        foreach ($insertList as $ele) {
+            $ids[] = $ele['id'];
+        }
+        $this->addAudioClips(array_values($ids));
         // update length in playlist contents.
         $this->updateBlockLengthInAllPlaylist();
 
@@ -1157,7 +1162,7 @@ SQL;
         while ($iterator->valid()) {
             $id = $iterator->current()->getDbId();
             $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
-            $insertList[] = $id;
+            $insertList[] = array('id'=>$id, 'length'=>$length);
             $totalTime += $length;
             $totalItems++;
             
@@ -1169,26 +1174,18 @@ SQL;
             $iterator->next();
         }
         
+        $sizeOfInsert = count($insertList);
+        
         // if block is not full and reapeat_track is check, fill up more
         while (!$isBlockFull && $repeat == 1) {
-            if (!$iterator->valid()) {
-                $iterator->closeCursor();
-                $info       = $this->getListofFilesMeetCriteria();
-                $files      = $info['files'];
-                $files->getFirst();
-                $iterator = $files->getIterator();
-            }
-            $id = $iterator->current()->getDbId();
-            $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
-            $insertList[] = $id;
-            $totalTime += $length;
+            $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
+            $insertList[] = $insertList[$randomEleKey];
+            $totalTime += $insertList[$randomEleKey]['length'];
             $totalItems++;
             
             if ((!is_null($limit['items']) && $limit['items'] == count($insertList)) || $totalItems > 500 || $totalTime > $limit['time']) {
                 break;
             }
-            
-            $iterator->next();
         }
 
         return $insertList;

@@ -190,7 +190,7 @@
             } else if (th.attr('id') == "length") {
                 label = " hh:mm:ss.t";
             } else if (th.attr('id') == "sample_rate") {
-                label = " Hz";
+                label = " kHz";
             }
             
             th.html(_fnRangeLabelPart(0));
