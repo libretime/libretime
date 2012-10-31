@@ -181,7 +181,8 @@ class LibraryController extends Zend_Controller_Action
                     }
                 }
             }
-            if ($isAdminOrPM) {
+            
+            if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
                 $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/library/delete");
                 $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => "/library/edit-file-md/id/{$id}");
             }
@@ -364,15 +365,17 @@ class LibraryController extends Zend_Controller_Action
     {
         $user = Application_Model_User::getCurrentUser();
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        if (!$isAdminOrPM) {
-            return;
-        }
 
         $request = $this->getRequest();
-        $form = new Application_Form_EditAudioMD();
 
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::Recall($file_id);
+
+        if (!$isAdminOrPM && $file->getFileOwnerId() != $user->getId()) {
+            return;
+        }
+        
+        $form = new Application_Form_EditAudioMD();
         $form->populate($file->getDbColMetadata());
 
         if ($request->isPost()) {
