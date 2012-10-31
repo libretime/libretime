@@ -157,42 +157,6 @@ class AirtimeApiClient(object):
             self.logger.error('Error loading config file: %s', e)
             sys.exit(1)
 
-    def get_response_from_server(self, url, attempts=-1):
-        logger = self.logger
-        successful_response = False
-
-        while not successful_response:
-            try:
-                response = urllib2.urlopen(url).read()
-                successful_response = True
-            except IOError, e:
-                logger.error('Error Authenticating with remote server: %s %s', e, url)
-                if isinstance(url, urllib2.Request):
-                    logger.debug(url.get_full_url())
-                else:
-                    logger.debug(url)
-            except Exception, e:
-                logger.error('Couldn\'t connect to remote server. Is it running?')
-                logger.error("%s" % e)
-                if isinstance(url, urllib2.Request):
-                    logger.debug(url.get_full_url())
-                else:
-                    logger.debug(url)
-
-            #If the user passed in a positive attempts number then that
-            #means attempts will roll over 0 and we stop. If attempts
-            #was initially negative, then we have unlimited attempts
-            if attempts > 0:
-                attempts = attempts - 1
-                if attempts == 0:
-                    successful_response = True
-
-            if not successful_response:
-                logger.error("Error connecting to server, waiting 5 seconds and trying again.")
-                time.sleep(5)
-
-        return response
-
     def __get_airtime_version(self):
         # TODO : maybe fix this function to drop an exception?
         try: return self.services.version_url()
@@ -391,9 +355,8 @@ class AirtimeApiClient(object):
     def notify_source_status(self, sourcename, status):
         try:
             logger = self.logger
-            return self.services.update_source_status(sourcename=sourcename,
-                                                      status=status)
-            #self.get_response_from_server(url, attempts = 5)
+            return self.services.update_source_status.req(sourcename=sourcename,
+                                                      status=status).retry(5)
         except Exception, e:
             logger.error("Exception: %s", e)
 
