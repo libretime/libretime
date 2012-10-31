@@ -94,6 +94,7 @@ CREATE TABLE "cc_files"
 	"soundcloud_upload_time" TIMESTAMP(6),
 	"replay_gain" NUMERIC,
 	"owner_id" INTEGER,
+	"hidden" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );
 
