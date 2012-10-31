@@ -270,6 +270,8 @@ SQL;
 
         try {
             //update the status flag in cc_schedule.
+            
+            CcShowInstancesPeer::clearInstancePool();
             $instances = CcShowInstancesQuery::create()
                 ->filterByDbEnds($current_timestamp, Criteria::GREATER_THAN)
                 ->filterByDbShowId($this->_showId)
@@ -1253,6 +1255,7 @@ SQL;
         if ($data['add_show_id'] != -1) {
             $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
             $con->beginTransaction();
+            
 
             //current timesamp in UTC.
             $current_timestamp = gmdate("Y-m-d H:i:s");
