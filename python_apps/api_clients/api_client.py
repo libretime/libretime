@@ -212,14 +212,13 @@ class AirtimeApiClient(object):
     def notify_liquidsoap_started(self):
         return self.services.notify_liquidsoap_started()
 
-    """
-    This is a callback from liquidsoap, we use this to notify about the
-    currently playing *song*.  We get passed a JSON string which we handed to
-    liquidsoap in get_liquidsoap_data().
-    """
     def notify_media_item_start_playing(self, media_id):
+        """ This is a callback from liquidsoap, we use this to notify
+        about the currently playing *song*. We get passed a JSON string
+        which we handed to liquidsoap in get_liquidsoap_data(). """
         return self.services.update_start_playing_url(media_id=media_id)
 
+    # TODO : get this routine out of here it doesn't belong at all here
     def get_liquidsoap_data(self, pkey, schedule):
         playlist = schedule[pkey]
         data = dict()
