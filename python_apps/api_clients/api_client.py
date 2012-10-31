@@ -179,6 +179,7 @@ class AirtimeApiClient(object):
         return response
 
     def __get_airtime_version(self):
+        # TODO : maybe fix this function to drop an exception?
         logger = self.logger
         url= self.construct_url("version_url")
 
