@@ -353,15 +353,10 @@ class AirtimeApiClient(object):
 
     def get_stream_setting(self):
         logger = self.logger
-        try:
-            url = self.construct_url("get_stream_setting")
-            response = self.get_response_from_server(url)
-            response = json.loads(response)
+        try: return self.services.get_stream_setting()
         except Exception, e:
-            response = None
             logger.error("Exception: %s", e)
-
-        return response
+            return None
 
     def register_component(self, component):
         """ Purpose of this method is to contact the server with a "Hey its
