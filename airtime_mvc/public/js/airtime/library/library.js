@@ -1195,7 +1195,7 @@ var validationTypes = {
     "owner_id" : "s",
     "rating" : "i",
     "replay_gain" : "n",
-    "sample_rate" : "i",
+    "sample_rate" : "n",
     "track_title" : "s",
     "track_number" : "i",
     "info_url" : "s",
