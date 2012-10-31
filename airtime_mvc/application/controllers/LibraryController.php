@@ -319,6 +319,8 @@ class LibraryController extends Zend_Controller_Action
             if (isset($file)) {
                 try {
                     $res = $file->delete(true);
+                } catch (FileNoPermissionException $e) {
+                    $this->view->message = "You don't have permission to delete selected items.";
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
                     $message = "Could not delete some scheduled files.";

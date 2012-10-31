@@ -344,6 +344,13 @@ SQL;
             throw new DeleteScheduledFileException();
         }
 
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
+            throw new FileNoPermissionException();
+        }
+
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         $type = $music_dir->getType();
 
@@ -1213,3 +1220,4 @@ SQL;
 
 class DeleteScheduledFileException extends Exception {}
 class FileDoesNotExistException extends Exception {}
+class FileNoPermissionException extends Exception {}
