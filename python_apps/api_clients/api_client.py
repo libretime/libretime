@@ -363,13 +363,12 @@ class AirtimeApiClient(object):
 
         return response
 
-    """
-    Purpose of this method is to contact the server with a "Hey its me!"
-    message.  This will allow the server to register the component's (component
-    = media-monitor, pypo etc.) ip address, and later use it to query monit via
-    monit's http service, or download log files via a http server.
-    """
     def register_component(self, component):
+        """ Purpose of this method is to contact the server with a "Hey its
+        me!" message. This will allow the server to register the component's
+        (component = media-monitor, pypo etc.) ip address, and later use it
+        to query monit via monit's http service, or download log files via a
+        http server. """
         return self.services.register_component(component=component)
 
     def notify_liquidsoap_status(self, msg, stream_id, time):
