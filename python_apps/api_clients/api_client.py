@@ -14,7 +14,6 @@ import logging
 import json
 import base64
 from configobj import ConfigObj
-import traceback
 
 AIRTIME_VERSION = "2.2.0"
 
@@ -278,43 +277,6 @@ class AirtimeApiClient(object):
 
     def setup_media_monitor(self):
         return self.services.media_setup_url()
-
-    def update_media_metadata(self, md, mode, is_record=False):
-        logger = self.logger
-        response = None
-        try:
-            url = self.construct_url("update_media_url")
-            url = url.replace("%%mode%%", mode)
-
-            self.logger.info("Requesting url %s" % url)
-
-            md = convert_dict_value_to_utf8(md)
-
-            data = urllib.urlencode(md)
-            req = urllib2.Request(url, data)
-
-            response = self.get_response_from_server(req)
-            logger.info("update media %s, filepath: %s, mode: %s", response, md['MDATA_KEY_FILEPATH'], mode)
-            self.logger.info("Received response:")
-            self.logger.info(response)
-            try: response = json.loads(response)
-            except ValueError:
-                logger.info("Could not parse json from response: '%s'" % response)
-
-            if("error" not in response and is_record):
-                url = self.construct_url("upload_recorded")
-                url = url.replace("%%fileid%%", str(response[u'id']))
-                url = url.replace("%%showinstanceid%%", str(md['MDATA_KEY_TRACKNUMBER']))
-
-                response = self.get_response_from_server(url)
-                response = json.loads(response)
-                logger.info("associate recorded %s", response)
-        except Exception, e:
-            response = None
-            logger.error('Exception: %s', e)
-            logger.error("traceback: %s", traceback.format_exc())
-
-        return response
 
     def send_media_monitor_requests(self, action_list, dry=False):
         """
