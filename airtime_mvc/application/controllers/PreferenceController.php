@@ -353,7 +353,7 @@ class PreferenceController extends Zend_Controller_Action
         $data['directory'] = $dir->getDirectory();
         $data['id'] = $id;
         Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
-        die();
+        die(); # Get rid of this ugliness later
     }
 
     public function removeWatchDirectoryAction()
