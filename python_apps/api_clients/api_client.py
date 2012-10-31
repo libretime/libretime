@@ -88,6 +88,14 @@ class ApiRequest(object):
         try: return json.loads(response)
         except ValueError: return response
 
+    def retry(self, n):
+        """Try to send request n times. If after n times it fails then
+        we finally raise exception"""
+        for i in range(0,n-1):
+            try: return self()
+            except Exception: pass
+        return self()
+
 class RequestProvider(object):
     """ Creates the available ApiRequest instance that can be read from
     a config file """
