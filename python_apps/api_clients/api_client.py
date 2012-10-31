@@ -180,23 +180,8 @@ class AirtimeApiClient(object):
 
     def __get_airtime_version(self):
         # TODO : maybe fix this function to drop an exception?
-        logger = self.logger
-        url= self.construct_url("version_url")
-
-        logger.debug("Trying to contact %s", url)
-
-        version = -1
-        try:
-            data = self.get_response_from_server(url)
-            logger.debug("Data: %s", data)
-            response_json = json.loads(data)
-            version = response_json['version']
-            logger.debug("Airtime Version %s detected", version)
-        except Exception, e:
-            logger.error("Unable to detect Airtime Version - %s", e)
-            return -1
-
-        return version
+        try: return self.services.version_url()
+        except Exception: return -1
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger
