@@ -314,10 +314,7 @@ class AirtimeApiClient(object):
         # controller not to actually do any changes
         if dry: md_list['dry'] = 1
         self.logger.info("Pumping out %d requests..." % len(valid_actions))
-        #response = self.get_response_from_server(req)
-        #response = json.loads(response)
-        response = self.services.reload_metadata_group(_post_data=md_list)
-        return response
+        return self.services.reload_metadata_group(_post_data=md_list)
 
     #returns a list of all db files for a given directory in JSON format:
     #{"files":["path/to/file1", "path/to/file2"]}
