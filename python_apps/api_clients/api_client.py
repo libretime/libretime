@@ -83,7 +83,10 @@ class ApiRequest(object):
         if _post_data is not None: _post_data = urllib.urlencode(_post_data)
         req = urllib2.Request(final_url, _post_data)
         response  = urllib2.urlopen(req).read()
-        return json.loads(response)
+        # Ghetto hack for now because we don't the content type we are getting
+        # (Pointless to look at mime since it's not being set correctly always)
+        try: return json.loads(response)
+        except ValueError: return response
 
 class RequestProvider(object):
     """ Creates the available ApiRequest instance that can be read from
