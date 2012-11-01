@@ -104,6 +104,9 @@ def main(global_config, api_client_config, log_config,
     airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
     store = apiclient.setup_media_monitor()
+
+    log.info("Initing with the following airtime response:%s" % str(store))
+
     airtime_receiver.change_storage({ 'directory':store[u'stor'] })
 
     for watch_dir in store[u'watched_dirs']:
