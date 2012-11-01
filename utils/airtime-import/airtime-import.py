@@ -159,6 +159,7 @@ def WatchAddAction(option, opt, value, parser):
         path = currentDir+path
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
+        os.chmod(path, 0765)
         res = api_client.add_watched_dir(path)
         if(res is None):
             exit("Unable to connect to the server.")
