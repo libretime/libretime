@@ -25,11 +25,8 @@ class ListenerstatController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'/js/airtime/playouthistory/historytable.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
-        //$this->view->headLink()->appendStylesheet($baseUrl.'/js/datatables/plugin/TableTools/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
-        //$this->view->headLink()->appendStylesheet($baseUrl.'/css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
         
         //default time is the last 24 hours.
         $now = time();
@@ -49,6 +46,9 @@ class ListenerstatController extends Zend_Controller_Action
                 'his_time_end' => $end->format("H:i")
         ));
         
+        $allMPs = Application_Model_ListenerStat::getAllMPNames();
+        
+        $this->view->mps = $allMPs;
         $this->view->date_form = $form;
     }
     
@@ -60,11 +60,12 @@ class ListenerstatController extends Zend_Controller_Action
         
         $starts_epoch = $request->getParam("startTimestamp", $current_time - (60*60*24));
         $ends_epoch = $request->getParam("endTimestamp", $current_time);
+        $mountName = $request->getParam("mountName", null);
         
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
         
-        $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format("Y-m-d H:i:s"), $endsDT->format("Y-m-d H:i:s"));
+        $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format("Y-m-d H:i:s"), $endsDT->format("Y-m-d H:i:s"), $mountName);
         die(json_encode($data));
     }
 }

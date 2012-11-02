@@ -1,6 +1,13 @@
 <div id="listenerstat_content" class="ui-widget ui-widget-content block-shadow alpha-block padded">
-    Timestamp vs Listener Count
+    Timestamp vs Listener Count<br>
+    <select id='all_mps'>
+        <option value="all">All Mount Potins</option>
+    <?php foreach($this->mps as $mp) {?>
+        <option value="<?php echo $mp?>"><?php echo $mp?></option>
+    <?php } ?>
+    </select>
     <div id="flot_placeholder" style="width:600px;height:300px;margin:0px 50px 0px 50px"></div>
     
     <?php echo $this->date_form; ?>
+    
 </div>
