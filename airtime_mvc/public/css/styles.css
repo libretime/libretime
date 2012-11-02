@@ -514,6 +514,9 @@ table.library-get-file-md.table-small{
 
 
 /***** SMART BLOCK SPECIFIC STYLES BEGIN *****/
+.db-logic-label{
+    font-size:11px;
+}
 .sp-invisible{
     visibility: hidden;
 }
