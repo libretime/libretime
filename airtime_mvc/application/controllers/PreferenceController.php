@@ -349,7 +349,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         $dir = Application_Model_MusicDir::getDirByPath($this->getRequest()->getParam("dir"));
         $data = array( 'directory' => $dir->getDirectory(),
-            'id' => $dir->getId());
+                              'id' => $dir->getId());
         Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
         die(); # Get rid of this ugliness later
     }
