@@ -37,6 +37,11 @@ var AIRTIME = (function(AIRTIME) {
         var $nRow = $(nRow);
         if (aData.ftype === "audioclip") {
             $nRow.addClass("lib-audio");
+            $image = $nRow.find('td.library_type');
+            if (!isAudioSupported(aData.mime)) {
+                $image.html('<span class="ui-icon ui-icon-locked"></span>');
+                aData.image = '<span class="ui-icon ui-icon-locked"></span>';
+            }
         } else if (aData.ftype === "stream") {
             $nRow.addClass("lib-stream");
         } else if (aData.ftype === "block") {
@@ -64,8 +69,9 @@ var AIRTIME = (function(AIRTIME) {
                     helper : function() {
 
                         var $el = $(this), selected = mod
-                                .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul[id='spl_sortable'] li:first"), width = li
-                                .width(), height = 55;
+                                .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul[id='spl_sortable'] li:first"),
+                                width = li.width(), height = 55;
+                        if (width > 798) width = 798;
 
                         // dragging an element that has an unselected
                         // checkbox.

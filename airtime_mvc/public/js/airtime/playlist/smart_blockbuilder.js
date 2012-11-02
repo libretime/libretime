@@ -8,14 +8,17 @@ function setSmartBlockEvents() {
     /********** ADD CRITERIA ROW **********/
     form.find('#criteria_add').live('click', function(){
         
-        var div = $('dd[id="sp_criteria-element"]').children('div:visible:last').next();
-        
-        div.show();
+        var div = $('dd[id="sp_criteria-element"]').children('div:visible:last');
+
+        div.find('.db-logic-label').text('and').show();
+        div = div.next().show();
+
         div.children().removeAttr('disabled');
         div = div.next();
         if (div.length === 0) {
             $(this).hide();
         }
+        
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
@@ -24,7 +27,7 @@ function setSmartBlockEvents() {
     /********** ADD MODIFIER ROW **********/
     form.find('a[id^="modifier_add"]').live('click', function(){
         var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
-        
+
         //make new modifier row
         var newRow = $(this).parent().clone(),
             newRowCrit = newRow.find('select[name^="sp_criteria_field"]'),
@@ -285,6 +288,11 @@ function reindexElements() {
     var divs = $('#smart-block-form').find('div select[name^="sp_criteria_field"]').parent(),
         index = 0,
         modIndex = 0;
+    /* Hide all logic labels
+     * We will re-add them as each row gets indexed
+     */
+    $('.db-logic-label').text('').hide();
+
     $.each(divs, function(i, div){
         if (i > 0 && index < 26) {
             
@@ -292,8 +300,14 @@ function reindexElements() {
              * a modifier row
              */
             if ($(div).find('select[name^="sp_criteria_field"]').hasClass('sp-invisible')) {
+                if ($(div).is(':visible')) {
+                    $(div).prev().find('.db-logic-label').text('or').show();
+                }
                 modIndex++;
             } else {
+                if ($(div).is(':visible')) {
+                    $(div).prev().find('.db-logic-label').text('and').show();
+                }
                 index++;
                 modIndex = 0;
             }
@@ -337,8 +351,8 @@ function setupUI() {
      */
     var plContents = $('#spl_sortable').children();
     var shuffleButton = $('button[id="shuffle_button"]');
-    
-    if (plContents.text() !== 'Empty playlist') {
+
+    if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {
             shuffleButton.removeClass('ui-state-disabled');
             shuffleButton.removeAttr('disabled');
@@ -367,6 +381,28 @@ function setupUI() {
                   "This allows you to edit and view it in the Library before adding it to a show.<br /><br />" +
                   "A dynamic smart block will only save the criteria. The block content will get generated upon " +
                   "adding it to a show. You will not be able to view and edit the content in the Library."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    });
+    
+    $(".repeat_tracks_help_icon").qtip({
+        content: {
+            text: "If your criteria is too strict, Airtime may not be able to fill up the desired smart block length." +
+                  " Hence, if you check this option, tracks will be used more than once."
         },
         hide: {
             delay: 500,

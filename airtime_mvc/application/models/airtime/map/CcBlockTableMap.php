@@ -54,7 +54,7 @@ class CcBlockTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('creator_id' => 'id', ), null, null);
+    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('creator_id' => 'id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
     $this->addRelation('CcBlockcontents', 'CcBlockcontents', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
     $this->addRelation('CcBlockcriteria', 'CcBlockcriteria', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
