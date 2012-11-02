@@ -15,7 +15,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
         if ($defaultFade == "") {
-            $defaultFade = '0.500000';
+            $defaultFade = '0.5';
         }
 
         //Station name
@@ -37,8 +37,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'required'   => false,
             'filters'    => array('StringTrim'),
             'validators' => array(array('regex', false,
-                array('/^[0-9]{1,2}(\.\d{1,6})?$/',
-                'messages' => 'enter a time in seconds 0{.000000}'))),
+                array('/^[0-9]{1,2}(\.\d{1})?$/',
+                'messages' => 'enter a time in seconds 0{.0}'))),
             'value' => $defaultFade,
             'decorators' => array(
                 'ViewHelper'
