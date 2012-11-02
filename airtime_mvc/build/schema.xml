@@ -445,6 +445,7 @@
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="timestamp_id" phpName="DbTimestampId" type="INTEGER" required="true"/>
     <column name="listener_count" phpName="DbListenerCount" type="INTEGER" required="true" />
+    <column name="mount_name" phpName="DbMountName" type="VARCHAR" required="true" />
     <foreign-key foreignTable="cc_timestamp" name="cc_timestamp_inst_fkey" onDelete="CASCADE">
       <reference local="timestamp_id" foreign="id"/>
     </foreign-key>

@@ -9,10 +9,12 @@
  * @method     CcListenerCountQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcListenerCountQuery orderByDbTimestampId($order = Criteria::ASC) Order by the timestamp_id column
  * @method     CcListenerCountQuery orderByDbListenerCount($order = Criteria::ASC) Order by the listener_count column
+ * @method     CcListenerCountQuery orderByDbMountName($order = Criteria::ASC) Order by the mount_name column
  *
  * @method     CcListenerCountQuery groupByDbId() Group by the id column
  * @method     CcListenerCountQuery groupByDbTimestampId() Group by the timestamp_id column
  * @method     CcListenerCountQuery groupByDbListenerCount() Group by the listener_count column
+ * @method     CcListenerCountQuery groupByDbMountName() Group by the mount_name column
  *
  * @method     CcListenerCountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcListenerCountQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -28,10 +30,12 @@
  * @method     CcListenerCount findOneByDbId(int $id) Return the first CcListenerCount filtered by the id column
  * @method     CcListenerCount findOneByDbTimestampId(int $timestamp_id) Return the first CcListenerCount filtered by the timestamp_id column
  * @method     CcListenerCount findOneByDbListenerCount(int $listener_count) Return the first CcListenerCount filtered by the listener_count column
+ * @method     CcListenerCount findOneByDbMountName(string $mount_name) Return the first CcListenerCount filtered by the mount_name column
  *
  * @method     array findByDbId(int $id) Return CcListenerCount objects filtered by the id column
  * @method     array findByDbTimestampId(int $timestamp_id) Return CcListenerCount objects filtered by the timestamp_id column
  * @method     array findByDbListenerCount(int $listener_count) Return CcListenerCount objects filtered by the listener_count column
+ * @method     array findByDbMountName(string $mount_name) Return CcListenerCount objects filtered by the mount_name column
  *
  * @package    propel.generator.airtime.om
  */
@@ -218,6 +222,28 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcListenerCountPeer::LISTENER_COUNT, $dbListenerCount, $comparison);
+	}
+
+	/**
+	 * Filter the query on the mount_name column
+	 * 
+	 * @param     string $dbMountName The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcListenerCountQuery The current query, for fluid interface
+	 */
+	public function filterByDbMountName($dbMountName = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbMountName)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbMountName)) {
+				$dbMountName = str_replace('*', '%', $dbMountName);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcListenerCountPeer::MOUNT_NAME, $dbMountName, $comparison);
 	}
 
 	/**

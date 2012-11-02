@@ -43,6 +43,12 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 	protected $listener_count;
 
 	/**
+	 * The value for the mount_name field.
+	 * @var        string
+	 */
+	protected $mount_name;
+
+	/**
 	 * @var        CcTimestamp
 	 */
 	protected $aCcTimestamp;
@@ -89,6 +95,16 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 	public function getDbListenerCount()
 	{
 		return $this->listener_count;
+	}
+
+	/**
+	 * Get the [mount_name] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbMountName()
+	{
+		return $this->mount_name;
 	}
 
 	/**
@@ -156,6 +172,26 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 	} // setDbListenerCount()
 
 	/**
+	 * Set the value of [mount_name] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcListenerCount The current object (for fluent API support)
+	 */
+	public function setDbMountName($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->mount_name !== $v) {
+			$this->mount_name = $v;
+			$this->modifiedColumns[] = CcListenerCountPeer::MOUNT_NAME;
+		}
+
+		return $this;
+	} // setDbMountName()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -190,6 +226,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->timestamp_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->listener_count = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+			$this->mount_name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -198,7 +235,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 3; // 3 = CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcListenerCount object", $e);
@@ -534,6 +571,9 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			case 2:
 				return $this->getDbListenerCount();
 				break;
+			case 3:
+				return $this->getDbMountName();
+				break;
 			default:
 				return null;
 				break;
@@ -561,6 +601,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbTimestampId(),
 			$keys[2] => $this->getDbListenerCount(),
+			$keys[3] => $this->getDbMountName(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcTimestamp) {
@@ -606,6 +647,9 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			case 2:
 				$this->setDbListenerCount($value);
 				break;
+			case 3:
+				$this->setDbMountName($value);
+				break;
 		} // switch()
 	}
 
@@ -633,6 +677,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbTimestampId($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbListenerCount($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbMountName($arr[$keys[3]]);
 	}
 
 	/**
@@ -647,6 +692,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcListenerCountPeer::ID)) $criteria->add(CcListenerCountPeer::ID, $this->id);
 		if ($this->isColumnModified(CcListenerCountPeer::TIMESTAMP_ID)) $criteria->add(CcListenerCountPeer::TIMESTAMP_ID, $this->timestamp_id);
 		if ($this->isColumnModified(CcListenerCountPeer::LISTENER_COUNT)) $criteria->add(CcListenerCountPeer::LISTENER_COUNT, $this->listener_count);
+		if ($this->isColumnModified(CcListenerCountPeer::MOUNT_NAME)) $criteria->add(CcListenerCountPeer::MOUNT_NAME, $this->mount_name);
 
 		return $criteria;
 	}
@@ -710,6 +756,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 	{
 		$copyObj->setDbTimestampId($this->timestamp_id);
 		$copyObj->setDbListenerCount($this->listener_count);
+		$copyObj->setDbMountName($this->mount_name);
 
 		$copyObj->setNew(true);
 		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
@@ -810,6 +857,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 		$this->id = null;
 		$this->timestamp_id = null;
 		$this->listener_count = null;
+		$this->mount_name = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

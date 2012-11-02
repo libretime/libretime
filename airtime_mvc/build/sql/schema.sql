@@ -697,6 +697,7 @@ CREATE TABLE "cc_listener_count"
 	"id" serial  NOT NULL,
 	"timestamp_id" INTEGER  NOT NULL,
 	"listener_count" INTEGER  NOT NULL,
+	"mount_name" VARCHAR(255)  NOT NULL,
 	PRIMARY KEY ("id")
 );
 

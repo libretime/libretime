@@ -41,6 +41,7 @@ class CcListenerCountTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('TIMESTAMP_ID', 'DbTimestampId', 'INTEGER', 'cc_timestamp', 'ID', true, null, null);
 		$this->addColumn('LISTENER_COUNT', 'DbListenerCount', 'INTEGER', true, null, null);
+		$this->addColumn('MOUNT_NAME', 'DbMountName', 'VARCHAR', true, 255, null);
 		// validators
 	} // initialize()
 

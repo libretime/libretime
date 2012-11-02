@@ -26,7 +26,7 @@ abstract class BaseCcListenerCountPeer {
 	const TM_CLASS = 'CcListenerCountTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 3;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -39,6 +39,9 @@ abstract class BaseCcListenerCountPeer {
 
 	/** the column name for the LISTENER_COUNT field */
 	const LISTENER_COUNT = 'cc_listener_count.LISTENER_COUNT';
+
+	/** the column name for the MOUNT_NAME field */
+	const MOUNT_NAME = 'cc_listener_count.MOUNT_NAME';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcListenerCount objects.
@@ -56,12 +59,12 @@ abstract class BaseCcListenerCountPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTimestampId', 'DbListenerCount', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTimestampId', 'dbListenerCount', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::TIMESTAMP_ID, self::LISTENER_COUNT, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIMESTAMP_ID', 'LISTENER_COUNT', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'timestamp_id', 'listener_count', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTimestampId', 'DbListenerCount', 'DbMountName', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTimestampId', 'dbListenerCount', 'dbMountName', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::TIMESTAMP_ID, self::LISTENER_COUNT, self::MOUNT_NAME, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIMESTAMP_ID', 'LISTENER_COUNT', 'MOUNT_NAME', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'timestamp_id', 'listener_count', 'mount_name', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -71,12 +74,12 @@ abstract class BaseCcListenerCountPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTimestampId' => 1, 'DbListenerCount' => 2, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTimestampId' => 1, 'dbListenerCount' => 2, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TIMESTAMP_ID => 1, self::LISTENER_COUNT => 2, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIMESTAMP_ID' => 1, 'LISTENER_COUNT' => 2, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'timestamp_id' => 1, 'listener_count' => 2, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTimestampId' => 1, 'DbListenerCount' => 2, 'DbMountName' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTimestampId' => 1, 'dbListenerCount' => 2, 'dbMountName' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TIMESTAMP_ID => 1, self::LISTENER_COUNT => 2, self::MOUNT_NAME => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIMESTAMP_ID' => 1, 'LISTENER_COUNT' => 2, 'MOUNT_NAME' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'timestamp_id' => 1, 'listener_count' => 2, 'mount_name' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -151,10 +154,12 @@ abstract class BaseCcListenerCountPeer {
 			$criteria->addSelectColumn(CcListenerCountPeer::ID);
 			$criteria->addSelectColumn(CcListenerCountPeer::TIMESTAMP_ID);
 			$criteria->addSelectColumn(CcListenerCountPeer::LISTENER_COUNT);
+			$criteria->addSelectColumn(CcListenerCountPeer::MOUNT_NAME);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.TIMESTAMP_ID');
 			$criteria->addSelectColumn($alias . '.LISTENER_COUNT');
+			$criteria->addSelectColumn($alias . '.MOUNT_NAME');
 		}
 	}
 
