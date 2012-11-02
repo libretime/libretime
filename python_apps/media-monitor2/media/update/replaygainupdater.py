@@ -56,7 +56,10 @@ class ReplayGainUpdater(Thread, Loggable):
                         full_path = os.path.join(dir_path, f['fp'])
                         processed_data.append((f['id'], replaygain.calculate_replay_gain(full_path)))
 
-                    self.api_client.update_replay_gain_values(processed_data)
+                    try:
+                        self.api_client.update_replay_gain_values(processed_data)
+                    except Exception as e: self.unexpected_exception(e)
+
                     if len(files) == 0: break
                 self.logger.info("Processed: %d songs" % total)
 

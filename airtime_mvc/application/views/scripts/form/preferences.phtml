@@ -1,4 +1,4 @@
-<form method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="multipart/form-data">
+<form method="<?php echo $this->element->getMethod() ?>" enctype="multipart/form-data">
 
     <?php echo $this->element->getSubform('preferences_general') ?>
     
@@ -15,8 +15,6 @@
         <?php echo $this->element->getSubform('preferences_soundcloud') ?>
     </div>
 
-    <div class="button-bar bottom" id="submit-element">
-        <?php echo $this->element->getElement('submit') ?>
-    </div>
+    <?php echo $this->element->getElement('pref_save') ?>
 
 </form>

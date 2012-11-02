@@ -264,7 +264,7 @@ var AIRTIME = (function(AIRTIME){
         
         mod.disableUI();
         
-        $.post("/showbuilder/schedule-add", 
+        $.post(baseUrl+"/showbuilder/schedule-add", 
             {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
             mod.fnItemCallback
         );
@@ -274,7 +274,7 @@ var AIRTIME = (function(AIRTIME){
         
         mod.disableUI();
         
-        $.post("/showbuilder/schedule-move", 
+        $.post(baseUrl+"/showbuilder/schedule-move", 
             {"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
             mod.fnItemCallback
         );
@@ -283,8 +283,8 @@ var AIRTIME = (function(AIRTIME){
     mod.fnRemove = function(aItems) {
         
         mod.disableUI();
-        if (confirm("Remove selected scheduled item(s)?")) {
-	        $.post( "/showbuilder/schedule-remove",
+        if (confirm("Delete selected item(s)?")) {
+	        $.post( baseUrl+"/showbuilder/schedule-remove",
 	            {"items": aItems, "format": "json"},
 	            mod.fnItemCallback
 	        );
@@ -392,7 +392,7 @@ var AIRTIME = (function(AIRTIME){
                 localStorage.setItem('datatables-timeline', JSON.stringify(oData));
                 
                 $.ajax({
-                  url: "/usersettings/set-timeline-datatable",
+                  url: baseUrl+"/usersettings/set-timeline-datatable",
                   type: "POST",
                   data: {settings : oData, format: "json"},
                   dataType: "json"
@@ -554,7 +554,7 @@ var AIRTIME = (function(AIRTIME){
                         if (!isAudioSupported(aData.mime)) {
                             $image.html('<span class="ui-icon ui-icon-locked"></span>');
                         } else {
-                            $image.html('<img title="Track preview" src="/css/images/icon_audioclip.png"></img>')
+                            $image.html('<img title="Track preview" src="'+baseUrl+'/css/images/icon_audioclip.png"></img>')
                             .click(function() {
                                 open_show_preview(aData.instance, aData.pos);
                                 return false;
@@ -791,7 +791,7 @@ var AIRTIME = (function(AIRTIME){
             "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
             
             "sAjaxDataProp": "schedule",
-            "sAjaxSource": "/showbuilder/builder-feed"  
+            "sAjaxSource": baseUrl+"/showbuilder/builder-feed"  
         });
         
         $sbTable.find("tbody").on("click", "input:checkbox", function(ev) {
@@ -1035,7 +1035,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     if (confirm(msg)) {
-                        var url = "/Schedule/cancel-current-show";
+                        var url = baseUrl+"/Schedule/cancel-current-show";
                         $.ajax({
                             url: url,
                             data: {format: "json", id: data.instance},
@@ -1217,7 +1217,7 @@ var AIRTIME = (function(AIRTIME){
                 }
                 
                 request = $.ajax({
-                  url: "/showbuilder/context-menu",
+                  url: baseUrl+"/showbuilder/context-menu",
                   type: "GET",
                   data: {id : data.id, format: "json"},
                   dataType: "json",

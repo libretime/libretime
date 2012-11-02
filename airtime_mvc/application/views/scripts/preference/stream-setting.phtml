@@ -1,10 +1,9 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
     <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>>Stream Settings</h2>
+    <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
     <?php if($this->enable_stream_conf == "true"){?>
-    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded" onsubmit="return confirm('<?php echo $this->confirm_pypo_restart_text ?>');">
-    <div class="button-bar bottom" id="submit-element" style="float:right">
-        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
-    </div>
+    <form method="post" id="stream_form" enctype="application/x-www-form-urlencoded">
+    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated">Save</button>
     <div style="clear:both"></div>
     <?php }?>
   <?php echo $this->statusMsg;?>
@@ -78,9 +77,8 @@
     ?>
     </fieldset>
     <?php if($this->enable_stream_conf == "true"){?>
-    <div class="button-bar bottom" id="submit-element">
-        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
-    </div>
+    <br />
+    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated">Save</button>
     <?php }?>
   </div>
     </form>

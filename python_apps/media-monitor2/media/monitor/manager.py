@@ -256,3 +256,10 @@ class Manager(Loggable):
         notifier = pyinotify.Notifier(self.wm)
         notifier.coalesce_events()
         notifier.loop()
+        #notifier = pyinotify.ThreadedNotifier(self.wm, read_freq=1)
+        #notifier.coalesce_events()
+        #notifier.start()
+        #return notifier
+        #import asyncore
+        #notifier = pyinotify.AsyncNotifier(self.wm)
+        #asyncore.loop()

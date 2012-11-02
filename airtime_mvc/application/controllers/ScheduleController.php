@@ -227,6 +227,7 @@ class ScheduleController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         $menu = array();
         $epochNow = time();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -250,7 +251,7 @@ class ScheduleController extends Zend_Controller_Action
             $fileId = $file->getId();
 
             $menu["view_recorded"] = array("name" => "View Recorded File Metadata", "icon" => "overview",
-                    "url" => "/library/edit-file-md/id/".$fileId);
+                    "url" => $baseUrl."/library/edit-file-md/id/".$fileId);
         }
 
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
@@ -259,16 +260,16 @@ class ScheduleController extends Zend_Controller_Action
                 && !$instance->isRebroadcast()) {
 
                 $menu["schedule"] = array("name"=> "Add / Remove Content", "icon" => "add-remove-content",
-                    "url" => "/showbuilder/builder-dialog/");
+                    "url" => $baseUrl."/showbuilder/builder-dialog/");
 
                 $menu["clear"] = array("name"=> "Remove All Content", "icon" => "remove-all-content",
-                    "url" => "/schedule/clear-show");
+                    "url" => $baseUrl."/schedule/clear-show");
             }
         }
 
         if (!$instance->isRecorded()) {
 
-            $menu["content"] = array("name"=> "Show Content", "icon" => "overview", "url" => "/schedule/show-content-dialog");
+            $menu["content"] = array("name"=> "Show Content", "icon" => "overview", "url" => $baseUrl."/schedule/show-content-dialog");
         }
 
         if ($showEndLocalDT->getTimestamp() <= $epochNow
@@ -296,7 +297,7 @@ class ScheduleController extends Zend_Controller_Action
             } else {
 
                 if (!$instance->isRebroadcast()) {
-                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
                 }
 
                 $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
@@ -306,7 +307,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
                 if (!$instance->isRebroadcast() && $isAdminOrPM) {
-                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => "/Schedule/populate-show-form");
+                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
                 }
 
                 if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
@@ -314,12 +315,12 @@ class ScheduleController extends Zend_Controller_Action
                     //create delete sub menu.
                     $menu["del"] = array("name"=> "Delete", "icon" => "delete", "items" => array());
 
-                    $menu["del"]["items"]["single"] = array("name"=> "Delete This Instance", "icon" => "delete", "url" => "/schedule/delete-show");
+                    $menu["del"]["items"]["single"] = array("name"=> "Delete This Instance", "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
 
-                    $menu["del"]["items"]["following"] = array("name"=> "Delete This Instance and All Following", "icon" => "delete", "url" => "/schedule/cancel-show");
+                    $menu["del"]["items"]["following"] = array("name"=> "Delete This Instance and All Following", "icon" => "delete", "url" => $baseUrl."/schedule/cancel-show");
                 } elseif ($isAdminOrPM) {
 
-                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => "/schedule/delete-show");
+                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
                 }
         }
 

@@ -24,13 +24,13 @@ function populateForm(entries){
 }
 
 function rowClickCallback(row_id){
-      $.ajax({ url: '/User/get-user-data/id/'+ row_id +'/format/json', dataType:"json", success:function(data){
+      $.ajax({ url: baseUrl+'/User/get-user-data/id/'+ row_id +'/format/json', dataType:"json", success:function(data){
         populateForm(data.entries);
 	  }});    
 }
 
 function removeUserCallback(row_id, nRow){
-      $.ajax({ url: '/User/remove-user/id/'+ row_id +'/format/json', dataType:"text", success:function(data){
+      $.ajax({ url: baseUrl+'/User/remove-user/id/'+ row_id +'/format/json', dataType:"text", success:function(data){
         var o = $('#users_datatable').dataTable().fnDeleteRow(nRow);
 	  }});
 }
@@ -60,11 +60,11 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     return nRow;
 }
 
-$(document).ready(function() {
+function populateUserTable() {
     $('#users_datatable').dataTable( {
         "bProcessing": true,
         "bServerSide": true,
-        "sAjaxSource": "/User/get-user-data-table-info/format/json",
+        "sAjaxSource": baseUrl+"/User/get-user-data-table-info/format/json",
         "fnServerData": function ( sSource, aoData, fnCallback ) {
             $.ajax( {
                 "dataType": 'json', 
@@ -92,11 +92,32 @@ $(document).ready(function() {
         
         "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
     });
+}
+
+$(document).ready(function() {
+    populateUserTable();
     
     //$('#user_details').hide();
     
     var newUser = {login:"", first_name:"", last_name:"", type:"G", id:""};
     
-    $('#add_user_button').click(function(){populateForm(newUser)});
+    $('#add_user_button').live('click', function(){populateForm(newUser)});
+    
+    $('#save_user').live('click', function(){
+        var data = $('#user_form').serialize();
+        var url = baseUrl+'/User/add-user';
+        
+        $.post(url, {format: "json", data: data}, function(data){
+            var json = $.parseJSON(data);
+            if (json.valid === "true") {
+                $('#content').empty().append(json.html);
+                populateUserTable();
+            } else {
+                //if form is invalid we only need to redraw the form
+                $('#user_form').empty().append($(json.html).find('#user_form').children());
+            }
+            setTimeout(removeSuccessMsg, 5000);
+        });
+    });
     
 });

@@ -18,7 +18,7 @@ class UserController extends Zend_Controller_Action
         global $CC_CONFIG;
 
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $js_files = array(
             '/js/datatables/js/jquery.dataTables.js?',
@@ -38,39 +38,53 @@ class UserController extends Zend_Controller_Action
         $this->view->successMessage = "";
 
         if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {
+            $params = $request->getPost();
+            $postData = explode('&', $params['data']);
+            foreach($postData as $k=>$v) {
+                $v = explode('=', $v);
+                $formData[$v[0]] = urldecode($v[1]);
+            }
 
-                $formdata = $form->getValues();
+            if ($form->isValid($formData)) {
+
                 if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 
-                        && $formdata['login'] == 'admin' 
-                        && $formdata['user_id'] != 0) {
+                        && $formData['login'] == 'admin' 
+                        && $formData['user_id'] != 0) {
+                    $this->view->form = $form;
                     $this->view->successMessage = "<div class='errors'>Specific action is not allowed in demo version!</div>";
-                } elseif ($form->validateLogin($formdata)) {
-                    $user = new Application_Model_User($formdata['user_id']);
-                    $user->setFirstName($formdata['first_name']);
-                    $user->setLastName($formdata['last_name']);
-                    $user->setLogin($formdata['login']);
+                    die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
+                } elseif ($form->validateLogin($formData)) {
+                    $user = new Application_Model_User($formData['user_id']);
+                    $user->setFirstName($formData['first_name']);
+                    $user->setLastName($formData['last_name']);
+                    $user->setLogin($formData['login']);
                     // We don't allow 6 x's as a password.
                     // The reason is because we that as a password placeholder
                     // on the client side.
-                    if ($formdata['password'] != "xxxxxx") {
-                        $user->setPassword($formdata['password']);
+                    if ($formData['password'] != "xxxxxx") {
+                        $user->setPassword($formData['password']);
                     }
-                    $user->setType($formdata['type']);
-                    $user->setEmail($formdata['email']);
-                    $user->setCellPhone($formdata['cell_phone']);
-                    $user->setSkype($formdata['skype']);
-                    $user->setJabber($formdata['jabber']);
+                    $user->setType($formData['type']);
+                    $user->setEmail($formData['email']);
+                    $user->setCellPhone($formData['cell_phone']);
+                    $user->setSkype($formData['skype']);
+                    $user->setJabber($formData['jabber']);
                     $user->save();
 
                     $form->reset();
+                    $this->view->form = $form;
 
-                    if (strlen($formdata['user_id']) == 0) {
+                    if (strlen($formData['user_id']) == 0) {
                         $this->view->successMessage = "<div class='success'>User added successfully!</div>";
                     } else {
                         $this->view->successMessage = "<div class='success'>User updated successfully!</div>";
                     }
+                    
+                    die(json_encode(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml'))));
                 }
+            } else {
+                $this->view->form = $form;
+                die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
             }
         }
 

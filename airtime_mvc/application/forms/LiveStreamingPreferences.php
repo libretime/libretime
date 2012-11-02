@@ -156,17 +156,20 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             if ($master_harbor_input_port == $dj_harbor_input_port && $master_harbor_input_port != "") {
                 $element = $this->getElement("dj_harbor_input_port");
                 $element->addError("You cannot use same port as Master DJ port.");
+                $isValid = false;
             }
             if ($master_harbor_input_port != "") {
                 if (is_numeric($master_harbor_input_port)) {
                     if ($master_harbor_input_port != Application_Model_StreamSetting::getMasterLiveStreamPort()) {
                         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                        $res = socket_bind($sock, 0, $master_harbor_input_port);
-                        if (!$res) {
+                        try {
+                            socket_bind($sock, 0, $master_harbor_input_port);
+                        } catch (Exception $e) {
                             $element = $this->getElement("master_harbor_input_port");
                             $element->addError("Port '$master_harbor_input_port' is not available.");
                             $isValid = false;
                         }
+                        
                         socket_close($sock);
                     }
                 } else {
@@ -177,8 +180,9 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                 if (is_numeric($dj_harbor_input_port)) {
                     if ($dj_harbor_input_port != Application_Model_StreamSetting::getDjLiveStreamPort()) {
                         $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                        $res = socket_bind($sock, 0, $dj_harbor_input_port);
-                        if (!$res) {
+                        try {
+                            socket_bind($sock, 0, $dj_harbor_input_port);
+                        } catch (Exception $e) {
                             $element = $this->getElement("dj_harbor_input_port");
                             $element->addError("Port '$dj_harbor_input_port' is not available.");
                             $isValid = false;

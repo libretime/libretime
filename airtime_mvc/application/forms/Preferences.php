@@ -6,7 +6,8 @@ class Application_Form_Preferences extends Zend_Form
 
     public function init()
     {
-        $this->setAction('/Preference');
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+
         $this->setMethod('post');
 
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
@@ -27,13 +28,11 @@ class Application_Form_Preferences extends Zend_Form
         $soundcloud_pref = new Application_Form_SoundcloudPreferences();
         $this->addSubForm($soundcloud_pref, 'preferences_soundcloud');
 
-        $this->addElement('submit', 'submit', array(
-            'class'    => 'ui-button ui-state-default right-floated',
-            'ignore'   => true,
-            'label'    => 'Save',
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
+        $saveBtn = new Zend_Form_Element_Button('pref_save');
+        $saveBtn->setAttrib('class', 'btn btn-small right-floated');
+        $saveBtn->setIgnore(true);
+        $saveBtn->setLabel('Save');
+        $this->addElement($saveBtn);
+
     }
 }
