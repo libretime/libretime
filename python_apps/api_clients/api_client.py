@@ -737,3 +737,35 @@ class AirtimeApiClient(object):
             self.logger.info(self.get_response_from_server(request, attempts = 5))
         except Exception, e:
             self.logger.error("Exception: %s", e)
+
+
+    def get_stream_parameters(self):
+        response = None
+        try:
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(get_stream_parameters)s/" % (self.config)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            self.logger.debug(url)
+            request = urllib2.Request(url)
+
+            response = self.get_response_from_server(request, attempts = 5)
+            self.logger.debug(response)
+
+            response = json.loads(response)
+        except Exception, e:
+            self.logger.error("Exception: %s", e)
+
+        return response
+
+    def push_stream_stats(self, data):
+        try:
+            url = "http://%(base_url)s:%(base_port)s/%(api_base)s/%(push_stream_stats)s/" \
+                    % (self.config)
+            url = url.replace("%%api_key%%", self.config["api_key"])
+            json_data = json.dumps(data)
+            encoded_data = urllib.urlencode({'data': json_data})
+            request = urllib2.Request(url, encoded_data)
+            print self.get_response_from_server(request)
+
+        except Exception, e:
+            self.logger.error("Exception: %s", e)
+

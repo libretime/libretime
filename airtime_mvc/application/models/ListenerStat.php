@@ -17,4 +17,25 @@ SQL;
         
         return $data;
     }
+
+    public static function insertDataPoints($p_dataPoints) {
+
+
+        $timestamp_sql = "INSERT INTO cc_timestamp (timestamp) VALUES (:ts::TIMESTAMP) RETURNING id;";
+        $stats_sql = "INSERT INTO cc_listener_count (timestamp_id, listener_count)
+            VALUES (:timestamp_id, :listener_count)";
+        foreach ($p_dataPoints as $dp) {
+            $timestamp_id = Application_Common_Database::prepareAndExecute($timestamp_sql, 
+                array('ts'=> $dp['timestamp']), "column");
+
+            Application_Common_Database::prepareAndExecute($stats_sql,
+                array('timestamp_id' => $timestamp_id, 
+                'listener_count' => $dp["num_listeners"])
+            );
+        }
+
+    }
+
+
+
 }
