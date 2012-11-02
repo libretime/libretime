@@ -21,6 +21,7 @@ from pypopush import PypoPush
 from pypofetch import PypoFetch
 from pypofile import PypoFile
 from recorder import Recorder
+from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
 
 from configobj import ConfigObj
@@ -208,6 +209,10 @@ if __name__ == '__main__':
     recorder = Recorder(recorder_q)
     recorder.daemon = True
     recorder.start()
+
+    stat = ListenerStat()
+    stat.daemon = True
+    stat.start()
 
     # all join() are commented out because we want to exit entire pypo
     # if pypofetch is exiting
