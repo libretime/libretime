@@ -102,11 +102,11 @@ class ListenerStat(Thread):
                 self.logger.debug(stats)
 
                 self.push_stream_stats(stats)
-                time.sleep(120)
             except Exception, e:
                 top = traceback.format_exc()
                 self.logger.error('Exception: %s', top)
-                time.sleep(120)
+
+            time.sleep(120)
 
 
 if __name__ == "__main__":
