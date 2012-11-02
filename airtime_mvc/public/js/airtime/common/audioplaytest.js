@@ -14,5 +14,6 @@ function isAudioSupported(mime){
     //Note that checking the navigator.mimeTypes value does not work for IE7, but the alternative
     //is adding a javascript library to do the work for you, which seems like overkill....
     return (!!audio.canPlayType && audio.canPlayType(bMime) != "") || 
-        (mime.indexOf("mp3") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined);
+        (mime.indexOf("mp3") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined) ||
+        (mime.indexOf("mp4") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined);
 }        

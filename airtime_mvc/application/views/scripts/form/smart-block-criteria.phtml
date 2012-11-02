@@ -30,8 +30,22 @@
         
         <dd id='sp_criteria-element' class='criteria-element'>
         <?php for ($i = 0; $i < $this->criteriasLength; $i++) {?>
-        <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {?>
-            <div <?php if (($i > 0) && ($this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled')) {
+        <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {
+                if ($this->modRowMap[$i] > 1 && $j != $this->modRowMap[$i]-1) $logicLabel = 'or';
+                else $logicLabel = 'and';
+                $disabled = $this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled'?true:false;
+                // determine if the next row is disabled and only display the logic label if it isn't
+                if ($j == $this->modRowMap[$i]-1 && $i < 25) {
+                    $n = $i+1;
+                    $nextIndex = $n."_0";
+                } elseif ($j+1 < $this->modRowMap[$i]-1) {
+                    $n = $j+1;
+                    $nextIndex = $i."_".$n;
+                    
+                }
+                $nextDisabled = $this->element->getElement("sp_criteria_field_".$nextIndex)->getAttrib('disabled') == 'disabled'?true:false;
+        ?>
+            <div <?php if (($i > 0) && $disabled) {
                            echo 'style=display:none';
                        } ?>>
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
@@ -45,6 +59,9 @@
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
                     <i class='icon-white icon-remove'></i>
                 </a>
+                <span class='db-logic-label' <?php if ($nextDisabled) echo "style='display:none'"?>>
+                    <?php echo $logicLabel;?>
+                </span>
                 <?php if($this->element->getElement("sp_criteria_field_".$i."_".$j)->hasErrors()) : ?>
                     <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>
                     <span class='errors sp-errors'>

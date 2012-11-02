@@ -251,7 +251,7 @@
       <parameter name="foreign_table" value="cc_blockcontents" />
       <parameter name="expression" value="SUM(cliplength)" />
     </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_block_createdby_fkey">
+    <foreign-key foreignTable="cc_subjs" name="cc_block_createdby_fkey" onDelete="CASCADE">
       <reference local="creator_id" foreign="id"/>
     </foreign-key>
   </table>

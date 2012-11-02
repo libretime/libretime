@@ -202,6 +202,12 @@ class Manager(Loggable):
         organize.
         """
         store_paths = mmp.expand_storage(store)
+        # First attempt to make sure that all paths exist before adding any
+        # watches
+        for path_type, path in store_paths.iteritems():
+            try: mmp.create_dir(path)
+            except mmp.FailedToCreateDir as e: self.unexpected_exception(e)
+
         self.set_problem_files_path(store_paths['problem_files'])
         self.set_imported_path(store_paths['imported'])
         self.set_recorded_path(store_paths['recorded'])

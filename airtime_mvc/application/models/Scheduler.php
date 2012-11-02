@@ -104,6 +104,10 @@ class Application_Model_Scheduler
             if ($this->checkUserPermissions && $this->user->canSchedule($show->getDbId()) === false) {
                 throw new Exception("You are not allowed to schedule show {$show->getDbName()}.");
             }
+            
+            if ($instance->getDbRecord()) {
+                throw new Exception("You cannot add files to recording shows.");
+            }
 
             $showEndEpoch = floatval($instance->getDbEnds("U.u"));
 

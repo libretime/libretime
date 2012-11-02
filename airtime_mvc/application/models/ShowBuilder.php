@@ -41,6 +41,7 @@ class Application_Model_ShowBuilder
         "fadein"          => "",
         "fadeout"         => "",
         "image"           => false,
+        "mime"            => null,
         "color"           => "", //in hex without the '#' sign.
         "backgroundColor" => "", //in hex without the '#' sign.
     );
@@ -277,6 +278,7 @@ class Application_Model_ShowBuilder
             $row["cueout"]   = $p_item["cue_out"];
             $row["fadein"]   = round(substr($p_item["fade_in"], 6), 6);
             $row["fadeout"]  = round(substr($p_item["fade_out"], 6), 6);
+            $row["mime"]     = $p_item["file_mime"];
 
             $row["pos"]      = $this->pos++;
 
@@ -471,7 +473,7 @@ class Application_Model_ShowBuilder
             $display_items[] = $this->makeFooterRow($scheduled_items[
                 count($scheduled_items)-1]);
         }
-
+        
         return array(
             "schedule"      => $display_items,
             "showInstances" => $this->showInstances);

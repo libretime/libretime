@@ -698,7 +698,7 @@ ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_block_id_f
 
 ALTER TABLE "cc_playlistcontents" ADD CONSTRAINT "cc_playlistcontents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_block" ADD CONSTRAINT "cc_block_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id");
+ALTER TABLE "cc_block" ADD CONSTRAINT "cc_block_createdby_fkey" FOREIGN KEY ("creator_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_blockcontents" ADD CONSTRAINT "cc_blockcontents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
