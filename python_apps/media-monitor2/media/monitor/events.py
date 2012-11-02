@@ -148,6 +148,9 @@ class BaseEvent(Loggable):
             owners.remove_file_owner(self.path)
             return ret
         except BadSongFile as e: return [e]
+        except Exception as e:
+            self.unexpected_exception(e)
+            return[e]
 
     # nothing to see here, please move along
     def morph_into(self, evt):
