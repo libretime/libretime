@@ -37,6 +37,11 @@ var AIRTIME = (function(AIRTIME) {
         var $nRow = $(nRow);
         if (aData.ftype === "audioclip") {
             $nRow.addClass("lib-audio");
+            $image = $nRow.find('td.library_type');
+            if (!isAudioSupported(aData.mime)) {
+                $image.html('<span class="ui-icon ui-icon-locked"></span>');
+                aData.image = '<span class="ui-icon ui-icon-locked"></span>';
+            }
         } else if (aData.ftype === "stream") {
             $nRow.addClass("lib-stream");
         } else if (aData.ftype === "block") {
