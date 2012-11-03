@@ -10,4 +10,3 @@ wsgiref==0.1.2
 configobj==4.7.2
 mutagen==1.20
 docopt==0.4.2
-gevent==0.13.7

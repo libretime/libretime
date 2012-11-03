@@ -369,7 +369,8 @@ var AIRTIME = (function(AIRTIME){
             /* cue in */ {"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false, "sClass": "sb-cue-in"},
             /* cue out */ {"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false, "sClass": "sb-cue-out"},
             /* fade in */ {"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false, "sClass": "sb-fade-in"},
-            /* fade out */ {"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false, "sClass": "sb-fade-out"}
+            /* fade out */ {"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false, "sClass": "sb-fade-out"},
+            /* Mime */  {"mDataProp" : "mime", "sTitle" : "Mime", "bVisible": false, "sClass": "sb-mime"}
             ],
             
             "bJQueryUI": true,
@@ -549,11 +550,16 @@ var AIRTIME = (function(AIRTIME){
                     $image = $nRow.find('td.sb-image');
                     //check if the file exists.
                     if (aData.image === true) {
-                        $image.html('<img title="Track preview" src="'+baseUrl+'/css/images/icon_audioclip.png"></img>')
+                        $nRow.addClass("lib-audio");
+                        if (!isAudioSupported(aData.mime)) {
+                            $image.html('<span class="ui-icon ui-icon-locked"></span>');
+                        } else {
+                            $image.html('<img title="Track preview" src="'+baseUrl+'/css/images/icon_audioclip.png"></img>')
                             .click(function() {
                                 open_show_preview(aData.instance, aData.pos);
                                 return false;
                             });
+                        }
                     }
                     else {
                         $image.html('<span class="ui-icon ui-icon-alert"></span>');

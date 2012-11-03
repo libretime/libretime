@@ -419,7 +419,6 @@ AIRTIME = (function(AIRTIME) {
 	};
 	
 	return AIRTIME;
-	
 } (AIRTIME || {}));
 
 $(document).ready(AIRTIME.builderMain.onReady);
