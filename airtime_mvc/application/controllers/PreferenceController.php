@@ -352,6 +352,7 @@ class PreferenceController extends Zend_Controller_Action
         $data = array( 'directory' => $dir->getDirectory(),
                               'id' => $dir->getId());
         Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
+        $dir->unhideFiles();
         die(); # Get rid of this ugliness later
     }
 

@@ -445,4 +445,12 @@ SQL;
         return array($mus_dir->getDirectory(), trim($fp));
     }
 
+
+    public function unhideFiles() 
+    {
+        $files = $this->_dir->getCcFiless();
+        foreach ($files as $file) {
+            $file->setExists(false);
+        }
+    }
 }
