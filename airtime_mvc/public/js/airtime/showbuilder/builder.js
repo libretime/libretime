@@ -339,11 +339,23 @@ var AIRTIME = (function(AIRTIME){
         });
     };
     
+    mod.jumpToCurrentTrack = function() {
+        var $scroll = $sbContent.find(".dataTables_scrolling");
+        var scrolled = $scroll.scrollTop();
+        var scrollingTop = $scroll.offset().top;
+        var oTable = $('#show_builder_table').dataTable();
+        var current = $sbTable.find("."+NOW_PLAYING_CLASS);
+        var currentTop = current.offset().top;
+
+        $scroll.scrollTop(currentTop - scrollingTop + scrolled);
+    }
+    
     mod.builderDataTable = function() {
         $sbContent = $('#show_builder');
         $lib = $("#library_content"),
         $sbTable = $sbContent.find('table');
-        
+        var isInitialized = false;
+
         oSchedTable = $sbTable.dataTable( {
             "aoColumns": [
             /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "15px", "sClass": "sb-checkbox"},
@@ -636,6 +648,17 @@ var AIRTIME = (function(AIRTIME){
                 $("#draggingContainer").remove();
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
+                var isInitialized = false;
+
+                if (!isInitialized) {
+                    //when coming to 'Now Playing' page we want the page
+                    //to jump to the current track
+                    if ($(this).find("."+NOW_PLAYING_CLASS).length > 0) {
+                        mod.jumpToCurrentTrack();
+                    }
+                }
+
+                isInitialized = true;
                 var wrapperDiv,
                     markerDiv,
                     $td,
@@ -966,13 +989,18 @@ var AIRTIME = (function(AIRTIME){
                     "<i class='icon-white icon-cut'></i></button></div>")
             .append("<div class='btn-group'>" +
                     "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
-                    "<i class='icon-white icon-trash'></i></button></div>")
-            .append("<div class='btn-group'>" +
+                    "<i class='icon-white icon-trash'></i></button></div>");
+
+        //if 'Add/Remove content' was chosen from the context menu
+        //in the Calendar do not append these buttons
+        if ($(".ui-dialog-content").length === 0) {
+            $menu.append("<div class='btn-group'>" +
                     "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
                     "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
+        }
 
         $toolbar.append($menu);
         $menu = undefined;
@@ -1021,7 +1049,7 @@ var AIRTIME = (function(AIRTIME){
                 if (AIRTIME.button.isDisabled('icon-step-forward', true) === true) {
                     return;
                 }
-                
+                /*
                 var $scroll = $sbContent.find(".dataTables_scrolling"),
                     scrolled = $scroll.scrollTop(),
                     scrollingTop = $scroll.offset().top,
@@ -1029,6 +1057,8 @@ var AIRTIME = (function(AIRTIME){
                     currentTop = current.offset().top;
         
                 $scroll.scrollTop(currentTop - scrollingTop + scrolled);
+                */
+                mod.jumpToCurrentTrack();
             });
         
         //delete overbooked tracks.
@@ -1196,7 +1226,7 @@ var AIRTIME = (function(AIRTIME){
                 };
     
             }
-        }); 
+        });
     };
     
     return AIRTIME;

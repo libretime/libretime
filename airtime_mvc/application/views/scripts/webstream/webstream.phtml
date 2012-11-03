@@ -9,6 +9,10 @@
             <li id='lib-new-ws'><a href="#">New Webstream</a></li>
         </ul>
     </div>
+            
+ <div class="btn-group pull-right">
+    <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit">Save</button>
+</div>
 <?php if (isset($this->obj)) : ?>
 <div class="btn-group pull-right">
     <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false">Delete</button>
@@ -37,24 +41,23 @@
             <dd id="description-element">
                 <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
             </dd>
-         <dt id="submit-label" style="display: none;">&nbsp;</dt>
-         <div id="url-error" class="errors" style="display:none;"></div>
-         <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
-         <dd id="streamurl-element">
-         <input type="text" value="<?php echo $this->obj->getUrl(); ?>" size="40"/>
-         </dd>
-         <div id="length-error" class="errors" style="display:none;"></div>
-         <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
-         <dd id="streamlength-element">
-         <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>"/>
-         </dd>        
-         <dd id="submit-element" class="buttons">
-            <input class="btn btn-inverse" type="submit" value="Save" id="webstream_save" name="submit">
-        </dd>
+         
        </dl>
     </fieldset>
-
-
+    
+    <dl class="zend_form">
+        <dt id="submit-label" style="display: none;">&nbsp;</dt>
+        <div id="url-error" class="errors" style="display:none;"></div>
+        <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
+        <dd id="streamurl-element">
+        <input type="text" value="<?php echo $this->obj->getUrl(); ?>" size="40"/>
+        </dd>
+        <div id="length-error" class="errors" style="display:none;"></div>
+        <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
+        <dd id="streamlength-element">
+        <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>"/>
+        </dd>
+    </dl>
 
 <?php else : ?>
     <div>No webstream</div>

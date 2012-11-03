@@ -384,6 +384,28 @@ function setupUI() {
             at: "right center"
         },
     });
+    
+    $(".repeat_tracks_help_icon").qtip({
+        content: {
+            text: "If your criteria is too strict, Airtime may not be able to fill up the desired smart block length." +
+                  " Hence, if you check this option, tracks will be used more than once."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    });
 }
 
 function enableAndShowExtraField(valEle, index) {
