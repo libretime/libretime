@@ -449,7 +449,7 @@ SQL;
     {
         $files = $this->_dir->getCcFiless();
         foreach ($files as $file) {
-            $file->setExists(false);
+            $file->setDbHidden(false);
         }
     }
 }

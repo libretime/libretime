@@ -363,7 +363,7 @@ SQL;
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         }
         // set file_exists falg to false
-        $this->_file->setDbFileExists(false);
+        $this->_file->setDbHidden(true);
         $this->_file->save();
     }
 
