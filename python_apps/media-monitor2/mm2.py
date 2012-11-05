@@ -151,9 +151,6 @@ Options:
     --log=<path>       log config at <path>
 """
 
-def main_loop():
-    while True: pass
-
 if __name__ == '__main__':
     from docopt import docopt
     args = docopt(__doc__,version="mm1.99")
