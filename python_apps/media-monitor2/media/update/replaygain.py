@@ -71,8 +71,10 @@ def get_file_type(file_path):
 
 def calculate_replay_gain(file_path):
     """
-    This function accepts files of type mp3/ogg/flac and returns a calculated ReplayGain value in dB.
-    If the value cannot be calculated for some reason, then we default to 0 (Unity Gain).
+    This function accepts files of type mp3/ogg/flac and returns a calculated
+    ReplayGain value in dB.
+    If the value cannot be calculated for some reason, then we default to 0
+    (Unity Gain).
 
     http://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification
     """
@@ -92,20 +94,37 @@ def calculate_replay_gain(file_path):
         if file_type:
             if file_type == 'mp3':
                 if run_process("which mp3gain > /dev/null") == 0:
-                    out = get_process_output('nice -n %s mp3gain -q "%s" 2> /dev/null' % (nice_level, temp_file_path))
-                    search = re.search(r'Recommended "Track" dB change: (.*)', out)
+                    command = 'nice -n %s mp3gain -q "%s" 2> /dev/null' \
+                            % (nice_level, temp_file_path)
+                    out = get_process_output()
+                    search = re.search(r'Recommended "Track" dB change: (.*)', \
+                                       out)
                 else:
                     logger.warn("mp3gain not found")
             elif file_type == 'vorbis':
-                if run_process("which vorbisgain > /dev/null  && which ogginfo > /dev/null") == 0:
-                    run_process('nice -n %s vorbisgain -q -f "%s" 2>/dev/null >/dev/null' % (nice_level,temp_file_path))
+                command = "which vorbisgain > /dev/null  && which ogginfo > \
+                        /dev/null"
+                if run_process() == 0:
+                    command = 'nice -n %s vorbisgain -q -f "%s" 2>/dev/null \
+                                >/dev/null' % (nice_level,temp_file_path)
+                    run_process(command)
+
                     out = get_process_output('ogginfo "%s"' % temp_file_path)
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else:
                     logger.warn("vorbisgain/ogginfo not found")
             elif file_type == 'flac':
                 if run_process("which metaflac > /dev/null") == 0:
-                    out = get_process_output('nice -n %s metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % (nice_level, temp_file_path))
+
+                    command = 'nice -n %s metaflac --add-replay-gain "%s"' \
+                            % (nice_level, temp_file_path)
+                    run_process(command)
+
+                    command = 'nice -n %s metaflac \
+                            --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' \
+                            % (nice_level, temp_file_path)
+
+                    out = get_process_output()
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else: logger.warn("metaflac not found")
 
