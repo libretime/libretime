@@ -39,17 +39,44 @@ SQL;
     public static function insertDataPoints($p_dataPoints) {
 
 
-        $timestamp_sql = "INSERT INTO cc_timestamp (timestamp) VALUES (:ts::TIMESTAMP) RETURNING id;";
-        $stats_sql = "INSERT INTO cc_listener_count (timestamp_id, listener_count, mount_name)
-            VALUES (:timestamp_id, :listener_count, :mount_name)";
+        $timestamp_sql = "INSERT INTO cc_timestamp (timestamp) VALUES 
+            (:ts::TIMESTAMP) RETURNING id;";
+
+        $mount_name_check_sql = "SELECT id from cc_mount_name WHERE 
+            mount_name = :mn;";
+
+        $mount_name_insert_sql = "INSERT INTO cc_mount_name (mount_name) VALUES 
+                (:mn) RETURNING id;";
+
+        $stats_sql = "INSERT INTO cc_listener_count (timestamp_id, 
+            listener_count, mount_name_id) VALUES (:timestamp_id, 
+            :listener_count, :mount_name_id)";
+
         foreach ($p_dataPoints as $dp) {
-            $timestamp_id = Application_Common_Database::prepareAndExecute($timestamp_sql, 
-                array('ts'=> $dp['timestamp']), "column");
+            $timestamp_id = Application_Common_Database::prepareAndExecute(
+                $timestamp_sql, 
+                array('ts'=> $dp['timestamp']), 
+                "column");
+
+            $mount_name_id = Application_Common_Database::prepareAndExecute(
+                $mount_name_check_sql,
+                array('mn' => $dp['mount_name']), 
+                "column");
+
+            if (strlen($mount_name_id) == 0) {
+                //there is a race condition here where theoretically the row
+                //with value "mount_name" could appear, but this is *very* 
+                //unlikely and won't break anything even if it happens.
+                $mount_name_id = Application_Common_Database::prepareAndExecute(
+                    $mount_name_insert_sql,
+                    array('mn' => $dp['mount_name']), 
+                    "column");              
+            }
 
             Application_Common_Database::prepareAndExecute($stats_sql,
                 array('timestamp_id' => $timestamp_id, 
                 'listener_count' => $dp["num_listeners"],
-                'mount_name' => $dp["mount_name"],
+                'mount_name_id' => $mount_name_id,
                 )
             );
         }

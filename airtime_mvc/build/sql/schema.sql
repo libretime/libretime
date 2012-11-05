@@ -668,6 +668,24 @@ COMMENT ON TABLE "cc_webstream_metadata" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
+-- cc_mount_name
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_mount_name" CASCADE;
+
+
+CREATE TABLE "cc_mount_name"
+(
+	"id" serial  NOT NULL,
+	"mount_name" VARCHAR(255)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_mount_name" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
 -- cc_timestamp
 -----------------------------------------------------------------------------
 
@@ -696,8 +714,8 @@ CREATE TABLE "cc_listener_count"
 (
 	"id" serial  NOT NULL,
 	"timestamp_id" INTEGER  NOT NULL,
+	"mount_name_id" INTEGER  NOT NULL,
 	"listener_count" INTEGER  NOT NULL,
-	"mount_name" VARCHAR(255)  NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -758,3 +776,5 @@ ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey" FOREIGN
 ALTER TABLE "cc_webstream_metadata" ADD CONSTRAINT "cc_schedule_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_schedule" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_timestamp_inst_fkey" FOREIGN KEY ("timestamp_id") REFERENCES "cc_timestamp" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_mount_name_inst_fkey" FOREIGN KEY ("mount_name_id") REFERENCES "cc_mount_name" ("id") ON DELETE CASCADE;

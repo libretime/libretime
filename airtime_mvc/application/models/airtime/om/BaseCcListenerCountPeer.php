@@ -37,11 +37,11 @@ abstract class BaseCcListenerCountPeer {
 	/** the column name for the TIMESTAMP_ID field */
 	const TIMESTAMP_ID = 'cc_listener_count.TIMESTAMP_ID';
 
+	/** the column name for the MOUNT_NAME_ID field */
+	const MOUNT_NAME_ID = 'cc_listener_count.MOUNT_NAME_ID';
+
 	/** the column name for the LISTENER_COUNT field */
 	const LISTENER_COUNT = 'cc_listener_count.LISTENER_COUNT';
-
-	/** the column name for the MOUNT_NAME field */
-	const MOUNT_NAME = 'cc_listener_count.MOUNT_NAME';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcListenerCount objects.
@@ -59,11 +59,11 @@ abstract class BaseCcListenerCountPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTimestampId', 'DbListenerCount', 'DbMountName', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTimestampId', 'dbListenerCount', 'dbMountName', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::TIMESTAMP_ID, self::LISTENER_COUNT, self::MOUNT_NAME, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIMESTAMP_ID', 'LISTENER_COUNT', 'MOUNT_NAME', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'timestamp_id', 'listener_count', 'mount_name', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTimestampId', 'DbMountNameId', 'DbListenerCount', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTimestampId', 'dbMountNameId', 'dbListenerCount', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::TIMESTAMP_ID, self::MOUNT_NAME_ID, self::LISTENER_COUNT, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TIMESTAMP_ID', 'MOUNT_NAME_ID', 'LISTENER_COUNT', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'timestamp_id', 'mount_name_id', 'listener_count', ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
@@ -74,11 +74,11 @@ abstract class BaseCcListenerCountPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTimestampId' => 1, 'DbListenerCount' => 2, 'DbMountName' => 3, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTimestampId' => 1, 'dbListenerCount' => 2, 'dbMountName' => 3, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TIMESTAMP_ID => 1, self::LISTENER_COUNT => 2, self::MOUNT_NAME => 3, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIMESTAMP_ID' => 1, 'LISTENER_COUNT' => 2, 'MOUNT_NAME' => 3, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'timestamp_id' => 1, 'listener_count' => 2, 'mount_name' => 3, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTimestampId' => 1, 'DbMountNameId' => 2, 'DbListenerCount' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTimestampId' => 1, 'dbMountNameId' => 2, 'dbListenerCount' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TIMESTAMP_ID => 1, self::MOUNT_NAME_ID => 2, self::LISTENER_COUNT => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TIMESTAMP_ID' => 1, 'MOUNT_NAME_ID' => 2, 'LISTENER_COUNT' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'timestamp_id' => 1, 'mount_name_id' => 2, 'listener_count' => 3, ),
 		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
@@ -153,13 +153,13 @@ abstract class BaseCcListenerCountPeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcListenerCountPeer::ID);
 			$criteria->addSelectColumn(CcListenerCountPeer::TIMESTAMP_ID);
+			$criteria->addSelectColumn(CcListenerCountPeer::MOUNT_NAME_ID);
 			$criteria->addSelectColumn(CcListenerCountPeer::LISTENER_COUNT);
-			$criteria->addSelectColumn(CcListenerCountPeer::MOUNT_NAME);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.TIMESTAMP_ID');
+			$criteria->addSelectColumn($alias . '.MOUNT_NAME_ID');
 			$criteria->addSelectColumn($alias . '.LISTENER_COUNT');
-			$criteria->addSelectColumn($alias . '.MOUNT_NAME');
 		}
 	}
 
@@ -496,6 +496,56 @@ abstract class BaseCcListenerCountPeer {
 
 
 	/**
+	 * Returns the number of rows matching criteria, joining the related CcTimestamp table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinCcTimestamp(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcListenerCountPeer::TABLE_NAME);
+
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcListenerCountPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcListenerCountPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
 	 * Selects a collection of CcListenerCount objects pre-filled with their CcTimestamp objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -518,6 +568,72 @@ abstract class BaseCcListenerCountPeer {
 		CcTimestampPeer::addSelectColumns($criteria);
 
 		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcListenerCountPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcListenerCountPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+
+				$cls = CcListenerCountPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcListenerCountPeer::addInstanceToPool($obj1, $key1);
+			} // if $obj1 already loaded
+
+			$key2 = CcTimestampPeer::getPrimaryKeyHashFromRow($row, $startcol);
+			if ($key2 !== null) {
+				$obj2 = CcTimestampPeer::getInstanceFromPool($key2);
+				if (!$obj2) {
+
+					$cls = CcTimestampPeer::getOMClass(false);
+
+					$obj2 = new $cls();
+					$obj2->hydrate($row, $startcol);
+					CcTimestampPeer::addInstanceToPool($obj2, $key2);
+				} // if obj2 already loaded
+
+				// Add the $obj1 (CcListenerCount) to $obj2 (CcTimestamp)
+				$obj2->addCcListenerCount($obj1);
+
+			} // if joined row was not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Selects a collection of CcListenerCount objects pre-filled with their CcTimestamp objects.
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcListenerCount objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinCcTimestamp(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcListenerCountPeer::addSelectColumns($criteria);
+		$startcol = (CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS);
+		CcTimestampPeer::addSelectColumns($criteria);
+
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -599,6 +715,8 @@ abstract class BaseCcListenerCountPeer {
 
 		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
 
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
+
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -635,7 +753,12 @@ abstract class BaseCcListenerCountPeer {
 		CcTimestampPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcTimestampPeer::NUM_COLUMNS - CcTimestampPeer::NUM_LAZY_LOAD_COLUMNS);
 
+		CcTimestampPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcTimestampPeer::NUM_COLUMNS - CcTimestampPeer::NUM_LAZY_LOAD_COLUMNS);
+
 		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
+
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -671,6 +794,218 @@ abstract class BaseCcListenerCountPeer {
 				// Add the $obj1 (CcListenerCount) to the collection in $obj2 (CcTimestamp)
 				$obj2->addCcListenerCount($obj1);
 			} // if joined row not null
+
+			// Add objects for joined CcTimestamp rows
+
+			$key3 = CcTimestampPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+			if ($key3 !== null) {
+				$obj3 = CcTimestampPeer::getInstanceFromPool($key3);
+				if (!$obj3) {
+
+					$cls = CcTimestampPeer::getOMClass(false);
+
+					$obj3 = new $cls();
+					$obj3->hydrate($row, $startcol3);
+					CcTimestampPeer::addInstanceToPool($obj3, $key3);
+				} // if obj3 loaded
+
+				// Add the $obj1 (CcListenerCount) to the collection in $obj3 (CcTimestamp)
+				$obj3->addCcListenerCount($obj1);
+			} // if joined row not null
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcTimestamp table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcTimestamp(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcListenerCountPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcListenerCountPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcListenerCountPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Returns the number of rows matching criteria, joining the related CcTimestamp table
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     int Number of matching rows.
+	 */
+	public static function doCountJoinAllExceptCcTimestamp(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		// we're going to modify criteria, so copy it first
+		$criteria = clone $criteria;
+
+		// We need to set the primary table name, since in the case that there are no WHERE columns
+		// it will be impossible for the BasePeer::createSelectSql() method to determine which
+		// tables go into the FROM clause.
+		$criteria->setPrimaryTableName(CcListenerCountPeer::TABLE_NAME);
+		
+		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+			$criteria->setDistinct();
+		}
+
+		if (!$criteria->hasSelectClause()) {
+			CcListenerCountPeer::addSelectColumns($criteria);
+		}
+		
+		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
+		
+		// Set the correct dbName
+		$criteria->setDbName(self::DATABASE_NAME);
+
+		if ($con === null) {
+			$con = Propel::getConnection(CcListenerCountPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+		}
+	
+		$stmt = BasePeer::doCount($criteria, $con);
+
+		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$count = (int) $row[0];
+		} else {
+			$count = 0; // no rows returned; we infer that means 0 matches.
+		}
+		$stmt->closeCursor();
+		return $count;
+	}
+
+
+	/**
+	 * Selects a collection of CcListenerCount objects pre-filled with all related objects except CcTimestamp.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcListenerCount objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcTimestamp(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcListenerCountPeer::addSelectColumns($criteria);
+		$startcol2 = (CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcListenerCountPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcListenerCountPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcListenerCountPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcListenerCountPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
+
+			$results[] = $obj1;
+		}
+		$stmt->closeCursor();
+		return $results;
+	}
+
+
+	/**
+	 * Selects a collection of CcListenerCount objects pre-filled with all related objects except CcTimestamp.
+	 *
+	 * @param      Criteria  $criteria
+	 * @param      PropelPDO $con
+	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+	 * @return     array Array of CcListenerCount objects.
+	 * @throws     PropelException Any exceptions caught during processing will be
+	 *		 rethrown wrapped into a PropelException.
+	 */
+	public static function doSelectJoinAllExceptCcTimestamp(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$criteria = clone $criteria;
+
+		// Set the correct dbName if it has not been overridden
+		// $criteria->getDbName() will return the same object if not set to another value
+		// so == check is okay and faster
+		if ($criteria->getDbName() == Propel::getDefaultDB()) {
+			$criteria->setDbName(self::DATABASE_NAME);
+		}
+
+		CcListenerCountPeer::addSelectColumns($criteria);
+		$startcol2 = (CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS);
+
+
+		$stmt = BasePeer::doSelect($criteria, $con);
+		$results = array();
+
+		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+			$key1 = CcListenerCountPeer::getPrimaryKeyHashFromRow($row, 0);
+			if (null !== ($obj1 = CcListenerCountPeer::getInstanceFromPool($key1))) {
+				// We no longer rehydrate the object, since this can cause data loss.
+				// See http://www.propelorm.org/ticket/509
+				// $obj1->hydrate($row, 0, true); // rehydrate
+			} else {
+				$cls = CcListenerCountPeer::getOMClass(false);
+
+				$obj1 = new $cls();
+				$obj1->hydrate($row);
+				CcListenerCountPeer::addInstanceToPool($obj1, $key1);
+			} // if obj1 already loaded
 
 			$results[] = $obj1;
 		}
