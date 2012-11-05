@@ -210,10 +210,23 @@ FROM cc_blockcontents AS pc
 LEFT JOIN cc_files AS f ON pc.file_id=f.id
 LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
 WHERE pc.block_id = :block_id
-ORDER BY pc.position
+
 SQL;
 
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id));
+        if ($filterFiles) {
+            $sql .= <<<SQL
+            AND f.file_exists = :file_exists
+SQL;
+        }
+        $sql .= <<<SQL
+
+ORDER BY pc.position
+SQL;
+        $params = array(':block_id'=>$this->id);
+        if ($filterFiles) {
+            $params[':file_exists'] = $filterFiles;
+        }
+        $rows = Application_Common_Database::prepareAndExecute($sql, $params);
 
         $offset = 0;
         foreach ($rows as &$row) {
