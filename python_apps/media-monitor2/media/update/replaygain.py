@@ -105,7 +105,16 @@ def calculate_replay_gain(file_path):
                     logger.warn("vorbisgain/ogginfo not found")
             elif file_type == 'flac':
                 if run_process("which metaflac > /dev/null") == 0:
-                    out = get_process_output('nice -n %s metaflac --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' % (nice_level, temp_file_path))
+
+                    command = 'nice -n %s metaflac --add-replay-gain "%s"' \
+                            % (nice_level, temp_file_path)
+                    run_process(command)
+
+                    command = 'nice -n %s metaflac \
+                            --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' \
+                            % (nice_level, temp_file_path)
+
+                    out = get_process_output()
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else: logger.warn("metaflac not found")
 
