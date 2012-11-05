@@ -160,5 +160,4 @@ if __name__ == '__main__':
             sys.exit(0)
     print("Running mm1.99")
     main(args['--config'],args['--apiclient'],args['--log'])
-    #gevent.joinall([ gevent.spawn(main_loop) ])
 
