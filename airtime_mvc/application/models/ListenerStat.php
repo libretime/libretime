@@ -7,13 +7,15 @@ class Application_Model_ListenerStat
     
     public static function getDataPointsWithinRange($p_start, $p_end) {
         $sql = <<<SQL
-SELECT cc_listener_count.ID, cc_timestamp.TIMESTAMP, cc_listener_count.LISTENER_COUNT, mount_name
-FROM cc_listener_count
-INNER JOIN cc_timestamp ON (cc_listener_count.TIMESTAMP_ID=cc_timestamp.ID)
-WHERE (cc_timestamp.TIMESTAMP>=:p1 AND cc_timestamp.TIMESTAMP<=:p2)
-ORDER BY cc_listener_count.mount_name, cc_timestamp.TIMESTAMP
+SELECT lc.id, ts.timestamp, lc.listener_count, mn.mount_name
+    FROM cc_listener_count AS lc
+    INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
+    INNER JOIN cc_mount_name AS mn ON (lc.mount_name_id = mn.ID)
+WHERE (ts.timestamp >=:p1 AND ts.timestamp <= :p2)
+    ORDER BY mount_name, timestamp 
 SQL;
-        $data = Application_Common_Database::prepareAndExecute($sql, array('p1'=>$p_start, 'p2'=>$p_end));
+        $data = Application_Common_Database::prepareAndExecute($sql, 
+            array('p1'=>$p_start, 'p2'=>$p_end));
         
         $out = array();
         foreach ($data as $d) {
@@ -26,7 +28,7 @@ SQL;
     public static function getAllMPNames() {
         $sql = <<<SQL
 SELECT DISTINCT mount_name
-FROM cc_listener_count
+    FROM cc_listener_count
 SQL;
         $mps = Application_Common_Database::prepareAndExecute($sql, array());
         $out = array();
