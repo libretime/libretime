@@ -379,7 +379,7 @@ SQL;
     {
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
-        if (isset($file) && $file->getDbFileExists() && !$file->getDbHidden()) {
+        if (isset($file) && $file->displayable()) {
             $entry               = $this->blockItem;
             $entry["id"]         = $file->getDbId();
             $entry["pos"]        = $pos;
