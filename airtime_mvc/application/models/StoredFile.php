@@ -335,7 +335,7 @@ SQL;
      * @param boolean $p_deleteFile
      *
      */
-    public function delete($deleteFromPlaylist=false)
+    public function delete()
     {
 
         $filepath = $this->getFilePath();
@@ -359,9 +359,6 @@ SQL;
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
 
-        if ($deleteFromPlaylist) {
-            Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
-        }
         // set file_exists falg to false
         $this->_file->setDbHidden(true);
         $this->_file->save();
