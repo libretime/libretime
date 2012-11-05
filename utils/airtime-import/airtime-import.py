@@ -168,6 +168,8 @@ def WatchAddAction(option, opt, value, parser):
             print "%s added to watched folder list successfully" % path
         else:
             print "Adding a watched folder failed: %s" % res['msg']['error']
+            print "This error most likely caused by wrong permissions"
+            print "Try fixing this error by chmodding the parent directory(ies)"
     else:
         print "Given path is not a directory: %s" % path
 
