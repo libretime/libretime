@@ -24,6 +24,24 @@ import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
 
+def setup_global(log):
+    """ setup unicode and other stuff """
+    log.info("Attempting to set the locale...")
+    try:
+        mmp.configure_locale(mmp.get_system_locale())
+    except FailedToSetLocale as e:
+        log.info("Failed to set the locale...")
+        sys.exit(1)
+    except FailedToObtainLocale as e:
+        log.info("Failed to obtain the locale form the default path: \
+                '/etc/default/locale'")
+        sys.exit(1)
+    except Exception as e:
+        log.info("Failed to set the locale for unknown reason. \
+                Logging exception.")
+        log.info(str(e))
+
+
 
 def main(global_config, api_client_config, log_config,
         index_create_attempt=False):
@@ -72,21 +90,7 @@ def main(global_config, api_client_config, log_config,
     if not os.path.exists(config['index_path']):
         log.info("Index file does not exist. Terminating")
 
-    log.info("Attempting to set the locale...")
-
-    try:
-        mmp.configure_locale(mmp.get_system_locale())
-    except FailedToSetLocale as e:
-        log.info("Failed to set the locale...")
-        sys.exit(1)
-    except FailedToObtainLocale as e:
-        log.info("Failed to obtain the locale form the default path: \
-                '/etc/default/locale'")
-        sys.exit(1)
-    except Exception as e:
-        log.info("Failed to set the locale for unknown reason. \
-                Logging exception.")
-        log.info(str(e))
+    setup_global(log)
 
     watch_syncer = WatchSyncer(signal='watch',
                                chunking_number=config['chunking_number'],
