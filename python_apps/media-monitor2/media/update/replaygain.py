@@ -96,7 +96,7 @@ def calculate_replay_gain(file_path):
                 if run_process("which mp3gain > /dev/null") == 0:
                     command = 'nice -n %s mp3gain -q "%s" 2> /dev/null' \
                             % (nice_level, temp_file_path)
-                    out = get_process_output()
+                    out = get_process_output(command)
                     search = re.search(r'Recommended "Track" dB change: (.*)', \
                                        out)
                 else:
@@ -104,7 +104,7 @@ def calculate_replay_gain(file_path):
             elif file_type == 'vorbis':
                 command = "which vorbisgain > /dev/null  && which ogginfo > \
                         /dev/null"
-                if run_process() == 0:
+                if run_process(command) == 0:
                     command = 'nice -n %s vorbisgain -q -f "%s" 2>/dev/null \
                                 >/dev/null' % (nice_level,temp_file_path)
                     run_process(command)
@@ -124,7 +124,7 @@ def calculate_replay_gain(file_path):
                             --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' \
                             % (nice_level, temp_file_path)
 
-                    out = get_process_output()
+                    out = get_process_output(command)
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else: logger.warn("metaflac not found")
 
