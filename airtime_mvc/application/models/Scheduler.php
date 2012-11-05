@@ -137,7 +137,7 @@ class Application_Model_Scheduler
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
 
-            if (is_null($file) || !$file->displayable()) {
+            if (is_null($file) || !$file->visible()) {
                 throw new Exception("A selected File does not exist!");
             } else {
                 $data = $this->fileInfo;
@@ -195,7 +195,7 @@ class Application_Model_Scheduler
                         $dynamicFiles = $bl->getListOfFilesUnderLimit();
                         foreach ($dynamicFiles as $fileId=>$f) {
                             $file = CcFilesQuery::create()->findPk($fileId);
-                            if (isset($file) && $file->displayable()) {
+                            if (isset($file) && $file->visible()) {
                                 $data["id"] = $file->getDbId();
                                 $data["cliplength"] = $file->getDbLength();
                                 $data["cuein"] = "00:00:00";
@@ -217,7 +217,7 @@ class Application_Model_Scheduler
             //need to return
              $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
 
-            if (is_null($stream) /* || !$file->displayable() */) {
+            if (is_null($stream) /* || !$file->visible() */) {
                 throw new Exception("A selected File does not exist!");
             } else {
                 $data = $this->fileInfo;
@@ -252,7 +252,7 @@ class Application_Model_Scheduler
                 $dynamicFiles = $bl->getListOfFilesUnderLimit();
                 foreach ($dynamicFiles as $fileId=>$f) {
                     $file = CcFilesQuery::create()->findPk($fileId);
-                    if (isset($file) && $file->displayable()) {
+                    if (isset($file) && $file->visible()) {
                         $data["id"] = $file->getDbId();
                         $data["cliplength"] = $file->getDbLength();
                         $data["cuein"] = "00:00:00";

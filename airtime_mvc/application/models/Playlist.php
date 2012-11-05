@@ -373,7 +373,7 @@ SQL;
         }
 
         if (isset($obj)) {
-            if (($obj instanceof CcFiles && $obj->displayable()) 
+            if (($obj instanceof CcFiles && $obj->visible()) 
                 || $obj instanceof CcWebstream || 
                 $obj instanceof CcBlock) {
 

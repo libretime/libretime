@@ -42,7 +42,7 @@ class CcFiles extends BaseCcFiles {
     }
 
     // returns true if the file exists and is not hidden
-    public function displayable() {
+    public function visible() {
         return $this->getDbFileExists() && !$this->getDbHidden();
     }
 
