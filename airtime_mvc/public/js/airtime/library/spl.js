@@ -370,29 +370,33 @@ var AIRTIME = (function(AIRTIME){
         $.each($("div .big_play"), function(index, value){
             if ($(value).attr('blockId') === undefined) {
                 var mime = $(value).attr("data-mime-type");
-                if (isAudioSupported(mime)) {
-                    $(value).bind("click", openAudioPreview);
-                } else {
-                    $(value).attr("class", "big_play_disabled dark_class"); 
-                    $(value).qtip({
-                       content: 'Your browser does not support playing this file type: "'+ mime +'"',
-                       show: 'mouseover',
-                        hide: {
-                            delay: 500,
-                            fixed: true
-                        },
-                        style: {
-                            border: {
-                                width: 0,
-                                radius: 4
+                //If mime is undefined it is likely because the file was
+                //deleted from the library. This case is handled in mod.onReady()
+                if (mime !== undefined) {
+                    if (isAudioSupported(mime)) {
+                        $(value).bind("click", openAudioPreview);
+                    } else {
+                        $(value).attr("class", "big_play_disabled dark_class"); 
+                        $(value).qtip({
+                           content: 'Your browser does not support playing this file type: "'+ mime +'"',
+                           show: 'mouseover',
+                            hide: {
+                                delay: 500,
+                                fixed: true
                             },
-                            classes: "ui-tooltip-dark ui-tooltip-rounded"
-                        },
-                        position: {
-                            my: "left bottom",
-                            at: "right center"
-                        },
-                    }) 
+                            style: {
+                                border: {
+                                    width: 0,
+                                    radius: 4
+                                },
+                                classes: "ui-tooltip-dark ui-tooltip-rounded"
+                            },
+                            position: {
+                                my: "left bottom",
+                                at: "right center"
+                            },
+                        }) 
+                    }
                 }
             } else {
                 if ($(value).attr('blocktype') === 'dynamic') {

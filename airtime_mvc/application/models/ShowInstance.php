@@ -730,7 +730,8 @@ FROM (
          LEFT JOIN cc_files AS f ON f.id = s.file_id
          WHERE s.instance_id = :instance_id1
            AND s.playout_status >= 0
-           AND s.file_id IS NOT NULL)
+           AND s.file_id IS NOT NULL
+           AND s.hidden = 'false')
       UNION
         (SELECT s.starts,
                 1::INTEGER as type,

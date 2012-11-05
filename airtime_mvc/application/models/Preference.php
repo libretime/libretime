@@ -189,8 +189,8 @@ class Application_Model_Preference
         $fade = self::getValue("default_fade");
 
         if ($fade === "") {
-            // the default value of the fade is 00.500000
-            return "00.500000";
+            // the default value of the fade is 00.5
+            return "00.5";
         }
 
         // we need this function to work with 2.0 version on default_fade value in cc_pref
@@ -204,9 +204,9 @@ class Application_Model_Preference
             $fade = $out;
         }
 
-        $fade = number_format($fade, 6);
+        $fade = number_format($fade, 2);
         //fades need 2 leading zeros for DateTime conversion
-        $fade = str_pad($fade, 9, "0", STR_PAD_LEFT);
+        $fade = rtrim(str_pad($fade, 5, "0", STR_PAD_LEFT), "0");
 
         return $fade;
     }
