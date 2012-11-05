@@ -394,11 +394,7 @@ SQL;
 
     public function isStatic()
     {
-        if ($this->block->getDbType() == "static") {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->block->getDbType() == "static";
     }
 
     /*
