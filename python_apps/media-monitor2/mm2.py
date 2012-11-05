@@ -27,8 +27,7 @@ from api_clients import api_client as apc
 def setup_global(log):
     """ setup unicode and other stuff """
     log.info("Attempting to set the locale...")
-    try:
-        mmp.configure_locale(mmp.get_system_locale())
+    try: mmp.configure_locale(mmp.get_system_locale())
     except FailedToSetLocale as e:
         log.info("Failed to set the locale...")
         sys.exit(1)
