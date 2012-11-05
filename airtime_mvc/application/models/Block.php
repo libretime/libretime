@@ -379,7 +379,7 @@ SQL;
     {
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
-        if (isset($file) && $file->getDbFileExists()) {
+        if (isset($file) && $file->visible()) {
             $entry               = $this->blockItem;
             $entry["id"]         = $file->getDbId();
             $entry["pos"]        = $pos;
@@ -394,11 +394,7 @@ SQL;
 
     public function isStatic()
     {
-        if ($this->block->getDbType() == "static") {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->block->getDbType() == "static";
     }
 
     /*
@@ -1347,6 +1343,7 @@ SQL;
             
             // check if file exists
             $qry->add("file_exists", "true", Criteria::EQUAL);
+            $qry->add("hidden", "false", Criteria::EQUAL);
             $qry->addAscendingOrderByColumn('random()');
         }
         // construct limit restriction

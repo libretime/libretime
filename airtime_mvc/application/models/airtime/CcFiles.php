@@ -41,6 +41,11 @@ class CcFiles extends BaseCcFiles {
         return $this;
     }
 
+    // returns true if the file exists and is not hidden
+    public function visible() {
+        return $this->getDbFileExists() && !$this->getDbHidden();
+    }
+
     public function reassignTo($user) 
     {
         $this->setDbOwnerId( $user->getDbId() );

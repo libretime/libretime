@@ -70,6 +70,7 @@
  * @method     CcFilesQuery orderByDbSoundCloundUploadTime($order = Criteria::ASC) Order by the soundcloud_upload_time column
  * @method     CcFilesQuery orderByDbReplayGain($order = Criteria::ASC) Order by the replay_gain column
  * @method     CcFilesQuery orderByDbOwnerId($order = Criteria::ASC) Order by the owner_id column
+ * @method     CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbName() Group by the name column
@@ -135,6 +136,7 @@
  * @method     CcFilesQuery groupByDbSoundCloundUploadTime() Group by the soundcloud_upload_time column
  * @method     CcFilesQuery groupByDbReplayGain() Group by the replay_gain column
  * @method     CcFilesQuery groupByDbOwnerId() Group by the owner_id column
+ * @method     CcFilesQuery groupByDbHidden() Group by the hidden column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -235,6 +237,7 @@
  * @method     CcFiles findOneByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return the first CcFiles filtered by the soundcloud_upload_time column
  * @method     CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  * @method     CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
+ * @method     CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -300,6 +303,7 @@
  * @method     array findByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return CcFiles objects filtered by the soundcloud_upload_time column
  * @method     array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
  * @method     array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
+ * @method     array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
  *
  * @package    propel.generator.airtime.om
  */
@@ -1949,6 +1953,23 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::OWNER_ID, $dbOwnerId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the hidden column
+	 * 
+	 * @param     boolean|string $dbHidden The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbHidden($dbHidden = null, $comparison = null)
+	{
+		if (is_string($dbHidden)) {
+			$hidden = in_array(strtolower($dbHidden), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcFilesPeer::HIDDEN, $dbHidden, $comparison);
 	}
 
 	/**

@@ -373,13 +373,16 @@ SQL;
         }
 
         if (isset($obj)) {
-            if (($obj instanceof CcFiles && $obj->getDbFileExists()) || $obj instanceof CcWebstream || $obj instanceof CcBlock) {
-                $entry = $this->plItem;
-                $entry["id"] = $obj->getDbId();
-                $entry["pos"] = $pos;
+            if (($obj instanceof CcFiles && $obj->visible()) 
+                || $obj instanceof CcWebstream || 
+                $obj instanceof CcBlock) {
+
+                $entry               = $this->plItem;
+                $entry["id"]         = $obj->getDbId();
+                $entry["pos"]        = $pos;
                 $entry["cliplength"] = $obj->getDbLength();
-                $entry["cueout"] = $obj->getDbLength();
-                $entry["ftype"] = $objType;
+                $entry["cueout"]     = $obj->getDbLength();
+                $entry["ftype"]      = $objType;
             }
 
             return $entry;

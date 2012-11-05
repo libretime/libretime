@@ -102,6 +102,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('SOUNDCLOUD_UPLOAD_TIME', 'DbSoundCloundUploadTime', 'TIMESTAMP', false, 6, null);
 		$this->addColumn('REPLAY_GAIN', 'DbReplayGain', 'NUMERIC', false, null, null);
 		$this->addForeignKey('OWNER_ID', 'DbOwnerId', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
+		$this->addColumn('HIDDEN', 'DbHidden', 'BOOLEAN', false, null, false);
 		// validators
 	} // initialize()
 
