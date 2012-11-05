@@ -92,7 +92,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         if (count($leftOver) == 0) {
             CcWebstreamQuery::create()->findPKs($p_ids)->delete();
         } else {
-            throw new Exception("Invalid user permissions");
+            throw new WebstreamNoPermissionException;
         }
     }
 
@@ -370,3 +370,6 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         return $webstream->getDbId();
     }
 }
+
+class WebstreamNoPermissionException extends Exception {}
+

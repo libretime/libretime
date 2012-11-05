@@ -277,6 +277,7 @@ class LibraryController extends Zend_Controller_Action
         $streams   = array();
 
         $message = null;
+        $noPermissionMsg = "You don't have permission to delete selected items.";
 
         foreach ($mediaItems as $media) {
 
@@ -294,19 +295,21 @@ class LibraryController extends Zend_Controller_Action
         try {
             Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
         } catch (PlaylistNoPermissionException $e) {
-            $this->view->message = "You don't have permission to delete selected items.";
-
-            return;
+            $message = $noPermissionMsg;
         }
 
         try {
             Application_Model_Block::deleteBlocks($blocks, $user->getId());
+        } catch (BlockNoPermissionException $e) {
+            $message = $noPermissionMsg;
         } catch (Exception $e) {
             //TODO: warn user that not all blocks could be deleted.
         }
 
         try {
             Application_Model_Webstream::deleteStreams($streams, $user->getId());
+        } catch (WebstreamNoPermissionException $e) {
+            $message = $noPermissionMsg;
         } catch (Exception $e) {
             //TODO: warn user that not all streams could be deleted.
             Logging::info($e);
@@ -318,7 +321,9 @@ class LibraryController extends Zend_Controller_Action
 
             if (isset($file)) {
                 try {
-                    $res = $file->delete(true);
+                    $res = $file->delete();
+                } catch (FileNoPermissionException $e) {
+                    $message = $noPermissionMsg;
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
                     $message = "Could not delete some scheduled files.";
