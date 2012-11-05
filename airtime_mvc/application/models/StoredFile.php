@@ -1160,10 +1160,14 @@ SQL;
             ->save();
     }
 
-    public function getFileExistsFlag()
-    {
-        return $this->_file->getDbFileExists();
-    }
+    
+    // This method seems to be unsued everywhere so I've commented it out
+    // If it's absence does not have any effect then it will be completely 
+    // removed soon
+    //public function getFileExistsFlag()
+    //{
+        //return $this->_file->getDbFileExists();
+    //}
 
     public function getFileOwnerId()
     {
