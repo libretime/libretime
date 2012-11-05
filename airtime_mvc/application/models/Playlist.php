@@ -373,8 +373,8 @@ SQL;
         }
 
         if (isset($obj)) {
-            if (($obj instanceof CcFiles && $obj->getDbFileExists() && 
-                !$obj->getDbHidden()) || $obj instanceof CcWebstream || 
+            if (($obj instanceof CcFiles && $obj->displayable()) 
+                || $obj instanceof CcWebstream || 
                 $obj instanceof CcBlock) {
 
                 $entry               = $this->plItem;
