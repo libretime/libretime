@@ -1021,6 +1021,10 @@ SELECT filepath AS fp
 FROM CC_FILES AS f
 WHERE f.directory = :dir_id 
 SQL;
+
+        # TODO : the option $all is deprecated now and is always true.
+        # refactor code where it's still being passed
+        $all = true;
                 
         if (!$all) {
             $sql .= " AND f.file_exists = 'TRUE'";
