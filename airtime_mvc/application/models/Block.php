@@ -323,6 +323,7 @@ SQL;
             $hour = "00";
             $mins = "00";
             if ($modifier == "minutes") {
+                $mins = $value;
                 if ($value >59) {
                     $hour  = intval($value/60);
                     $mins = $value%60;
