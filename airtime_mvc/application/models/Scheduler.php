@@ -193,7 +193,8 @@ class Application_Model_Scheduler
                         }
                     } else {
                         $dynamicFiles = $bl->getListOfFilesUnderLimit();
-                        foreach ($dynamicFiles as $fileId=>$f) {
+                        foreach ($dynamicFiles as $f) {
+                            $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
                             if (isset($file) && $file->getDbFileExists()) {
                                 $data["id"] = $file->getDbId();
@@ -250,7 +251,8 @@ class Application_Model_Scheduler
                 }
             } else {
                 $dynamicFiles = $bl->getListOfFilesUnderLimit();
-                foreach ($dynamicFiles as $fileId=>$f) {
+                foreach ($dynamicFiles as $f) {
+                    $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
                     if (isset($file) && $file->getDbFileExists()) {
                         $data["id"] = $file->getDbId();
@@ -445,7 +447,6 @@ class Application_Model_Scheduler
                     } else {
                         $sched = new CcSchedule();
                     }
-                    Logging::info($file);
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
                         ->setDbCueIn($file['cuein'])
