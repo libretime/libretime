@@ -50,6 +50,20 @@
                 </ul>
             <?php endif; ?>
         </dd>
+        <dt id="widgetCode-label" class="block-display">
+            <label class="optional" for="widgetCode"><?php echo $this->element->getElement('widgetCode')->getLabel() ?></label>
+        </dt>
+        <dd id="widgetCode-element" class="block-display clearfix">
+            <?php echo $this->element->getElement('widgetCode') ?>
+            <?php if($this->element->getElement('widgetCode')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('widgetCode')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+
         <dt id="timezone-label" class="block-display">
             <label class="required" for="timezone"><?php echo $this->element->getElement('timezone')->getLabel() ?>
                 <span class="info-text-small">(Required)</span> :

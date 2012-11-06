@@ -48,6 +48,18 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
+        //
+         // Add the description element
+        $this->addElement('textarea', 'widgetCode', array(
+            'label'      => 'Javascript Code:',
+            'required'   => false,
+            'readonly'   => true,
+            'class'      => 'input_text_area',
+            'value' => self::getWidgetCode(), //$_SERVER["SERVER_NAME"],
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
 
         /* Form Element for setting the Timezone */
         $timezone = new Zend_Form_Element_Select("timezone");
@@ -91,6 +103,33 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         }
 
         return $tzlist;
+    }
+
+    private static function getWidgetCode() {
+        
+        $code = <<<CODE
+$("#headerLiveHolder").airtimeLiveInfo({
+    sourceDomain: "http://{$_SERVER['SERVER_NAME']}",
+    text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
+    updatePeriod: 20 //seconds
+});
+
+$("#onAirToday").airtimeShowSchedule({
+    sourceDomain: "http://{$_SERVER['SERVER_NAME']}",
+    text: {onAirToday:"On air today"},
+    updatePeriod: 5, //seconds
+    showLimit: 10
+});
+
+$("#scheduleTabs").airtimeWeekSchedule({
+    sourceDomain:"http://{$_SERVER['SERVER_NAME']}",
+    dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
+    miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
+    updatePeriod: 600 //seconds
+});
+CODE;
+
+        return $code;
     }
 
     private function getWeekStartDays()
