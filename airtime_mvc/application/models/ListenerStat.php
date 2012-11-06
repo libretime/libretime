@@ -17,9 +17,14 @@ SQL;
         
         $out = array();
         foreach ($data as $d) {
+            $t = new DateTime($d['timestamp'], new DateTimeZone("UTC"));
+            $t->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            // tricking javascript so it thinks the server timezone is in UTC
+            $dt = new DateTime($t->format("Y-m-d H:i:s"), new DateTimeZone("UTC"));
+            
+            $d['timestamp'] = $dt->format("U");
             $out[$d['mount_name']][] = $d;
         }
-        
         return $out;
     }
     
@@ -43,11 +48,11 @@ SQL;
         $stats_sql = "INSERT INTO cc_listener_count (timestamp_id, listener_count, mount_name)
             VALUES (:timestamp_id, :listener_count, :mount_name)";
         foreach ($p_dataPoints as $dp) {
-            $timestamp_id = Application_Common_Database::prepareAndExecute($timestamp_sql, 
+            $timestamp_id = Application_Common_Database::prepareAndExecute($timestamp_sql,
                 array('ts'=> $dp['timestamp']), "column");
 
             Application_Common_Database::prepareAndExecute($stats_sql,
-                array('timestamp_id' => $timestamp_id, 
+                array('timestamp_id' => $timestamp_id,
                 'listener_count' => $dp["num_listeners"],
                 'mount_name' => $dp["mount_name"],
                 )
