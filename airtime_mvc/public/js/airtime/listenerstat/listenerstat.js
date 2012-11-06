@@ -63,6 +63,12 @@ function plot(datasets){
                     if (this.checked)
                     {         
                          data.push(datasets[this.id]);
+                         if (firstTimestamp.getTime() > datasets[this.id].data[0][0].getTime()) {
+                             firstTimestamp = datasets[this.id].data[0][0];
+                         }
+                         if (lastTimestamp.getTime() < datasets[this.id].data[datasets[this.id].data.length-1][0].getTime()) {
+                             lastTimestamp = datasets[this.id].data[datasets[this.id].data.length-1][0];
+                         }
                     }
                     else
                     {

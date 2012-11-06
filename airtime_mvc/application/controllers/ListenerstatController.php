@@ -46,9 +46,6 @@ class ListenerstatController extends Zend_Controller_Action
                 'his_time_end' => $end->format("H:i")
         ));
         
-        $allMPs = Application_Model_ListenerStat::getAllMPNames();
-        
-        $this->view->mps = $allMPs;
         $this->view->date_form = $form;
     }
     
