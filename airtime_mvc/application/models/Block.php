@@ -1191,7 +1191,7 @@ SQL;
         $sizeOfInsert = count($insertList);
         
         // if block is not full and reapeat_track is check, fill up more
-        while (!$isBlockFull && $repeat == 1) {
+        while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
             $insertList[] = $insertList[$randomEleKey];
             $totalTime += $insertList[$randomEleKey]['length'];
