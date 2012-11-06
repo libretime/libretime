@@ -9,7 +9,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
         $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
 
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
         if ($defaultFade == "") {
             $defaultFade = '00.000000';
@@ -82,7 +81,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($live_dj_connection_url);
 
         //liquidsoap harbor.input port
-        if (!$isSaas) {
             $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
             $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
             $master_dj_port->setLabel("Master Source Port")
@@ -119,7 +117,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                             array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($live_dj_mount);
-        }
         // demo only code
         if (!$isStreamConfigable) {
             $elements = $this->getElements();
@@ -135,21 +132,18 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     {
         global $CC_CONFIG;
 
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
         $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();
         $live_dj_connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
 
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isSaas' => $isSaas, 'isDemo' => $isDemo))
+            array('ViewScript', array('viewScript' => 'form/preferences_livestream.phtml', 'master_dj_connection_url'=>$master_dj_connection_url, 'live_dj_connection_url'=>$live_dj_connection_url, 'isDemo' => $isDemo))
         ));
     }
 
     public function isValid($data)
     {
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         $isValid = parent::isValid($data);
-        if (!$isSaas) {
             $master_harbor_input_port = $data['master_harbor_input_port'];
             $dj_harbor_input_port = $data['dj_harbor_input_port'];
 
@@ -189,7 +183,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                     $isValid = false;
                 }
             }
-        }
 
         return $isValid;
     }

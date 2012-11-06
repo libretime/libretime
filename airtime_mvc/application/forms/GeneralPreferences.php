@@ -2,15 +2,12 @@
 
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {
-    private $isSaas;
 
     public function init()
     {
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $this->isSaas = $isSaas;
 
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_general.phtml', "isSaas" => $isSaas))
+            array('ViewScript', array('viewScript' => 'form/preferences_general.phtml'))
         ));
 
         $defaultFade = Application_Model_Preference::GetDefaultFade();
