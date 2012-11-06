@@ -227,22 +227,9 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                                 //this is a new show
                                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $repeatShowStart, $repeatShowEnd);
-                                
-                                /* If the repeating show is rebroadcasted we need to check
-                                 * the rebroadcast dates relative to the repeating show
-                                 */
-                                if (!$overlapping && $formData['add_show_rebroadcast']) {
-                                    $overlapping = self::checkRebroadcastDates(
-                                        $repeatShowStart, $formData, $hours, $minutes);
-                                }
                             } else {
                                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $repeatShowStart, $repeatShowEnd, $update, null, $formData["add_show_id"]);
-                                    
-                                if (!$overlapping && $formData['add_show_rebroadcast']) {
-                                    $overlapping = self::checkRebroadcastDates(
-                                        $repeatShowStart, $formData, $hours, $minutes, true);
-                                }
                             }
                             
                             if ($overlapping) {
