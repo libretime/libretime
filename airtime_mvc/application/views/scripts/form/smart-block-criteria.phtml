@@ -38,7 +38,7 @@
                 if ($j == $this->modRowMap[$i]-1 && $i < 25) {
                     $n = $i+1;
                     $nextIndex = $n."_0";
-                } elseif ($j+1 < $this->modRowMap[$i]-1) {
+                } elseif ($j+1 <= $this->modRowMap[$i]-1) {
                     $n = $j+1;
                     $nextIndex = $i."_".$n;
                     
