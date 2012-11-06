@@ -12,7 +12,9 @@ def reset_owners():
 
 def get_owner(f):
     """ Get the owner id of the file 'f' """
-    return owners[f] if f in owners else -1
+    o = owners[f] if f in owners else -1
+    log.info("Received owner for %s. Owner: %s" % (f, o))
+    return o
 
 
 def add_file_owner(f,owner):
