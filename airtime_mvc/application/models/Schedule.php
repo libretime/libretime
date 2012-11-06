@@ -883,8 +883,6 @@ SQL;
 
     public static function createNewFormSections($p_view)
     {
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-
         $formWhat    = new Application_Form_AddShowWhat();
         $formWho     = new Application_Form_AddShowWho();
         $formWhen    = new Application_Form_AddShowWhen();
@@ -916,19 +914,6 @@ SQL;
 
         $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
 
-        if (!$isSaas) {
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-
-            $p_view->rr = $formRecord;
-            $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-            $p_view->rebroadcast = $formRebroadcast;
-        }
         $p_view->addNewShow = true;
     }
 
@@ -939,8 +924,6 @@ SQL;
      * 2.1 deadline looming, this is OK for now. -Martin */
     public static function updateShowInstance($data, $controller)
     {
-        $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
-
         $formWhat    = new Application_Form_AddShowWhat();
         $formWhen    = new Application_Form_AddShowWhen();
         $formRepeats = new Application_Form_AddShowRepeats();
@@ -955,15 +938,6 @@ SQL;
         $formStyle->removeDecorator('DtDdWrapper');
         $formLive->removeDecorator('DtDdWrapper');
 
-        if (!$isSaas) {
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-        }
         $when = $formWhen->isValid($data);
 
         if ($when && $formWhen->checkReliantFields($data, true, null, true)) {
@@ -997,15 +971,6 @@ SQL;
             $controller->view->who     = $formWho;
             $controller->view->style   = $formStyle;
             $controller->view->live    = $formLive;
-            if (!$isSaas) {
-                $controller->view->rr = $formRecord;
-                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                $controller->view->rebroadcast = $formRebroadcast;
-
-                //$formRecord->disable();
-                //$formAbsoluteRebroadcast->disable();
-                //$formRebroadcast->disable();
-            }
 
             return false;
         }
@@ -1026,7 +991,6 @@ SQL;
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
-        $isSaas = (Application_Model_Preference::GetPlanLevel() != 'disabled');
         $record = false;
 
         $formWhat    = new Application_Form_AddShowWhat();
@@ -1072,97 +1036,27 @@ SQL;
 
         $data["add_show_duration"] = $hValue.":".$mValue;
 
-        if (!$isSaas) {
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-
-
-            $record = $formRecord->isValid($data);
-        }
-
         if ($data["add_show_repeats"]) {
             $repeats = $formRepeats->isValid($data);
             if ($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
-            if (!$isSaas) {
-                $formAbsoluteRebroadcast->reset();
-                //make it valid, results don't matter anyways.
-                $rebroadAb = 1;
-
-                if ($data["add_show_rebroadcast"]) {
-                    $rebroad = $formRebroadcast->isValid($data);
-                    if ($rebroad) {
-                        $rebroad = $formRebroadcast->checkReliantFields($data);
-                    }
-                } else {
-                    $rebroad = 1;
-                }
-            }
         } else {
             $repeats = 1;
-            if (!$isSaas) {
-                $formRebroadcast->reset();
-                 //make it valid, results don't matter anyways.
-                $rebroad = 1;
-
-                if ($data["add_show_rebroadcast"]) {
-                    $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
-                    if ($rebroadAb) {
-                        $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
-                    }
-                } else {
-                    $rebroadAb = 1;
-                }
-            }
         }
 
         $who = $formWho->isValid($data);
         $style = $formStyle->isValid($data);
         if ($what && $when && $repeats && $who && $style && $live) {
-            if (!$isSaas) {
-                if ($record && $rebroadAb && $rebroad) {
-                    if ($isAdminOrPM) {
-                        Application_Model_Show::create($data);
-                    }
-
-                    //send back a new form for the user.
-                    Application_Model_Schedule::createNewFormSections($controller->view);
-
-                    //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
-                    return true;
-                } else {
-                    $controller->view->what = $formWhat;
-                    $controller->view->when = $formWhen;
-                    $controller->view->repeats = $formRepeats;
-                    $controller->view->who = $formWho;
-                    $controller->view->style = $formStyle;
-                    $controller->view->rr = $formRecord;
-                    $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                    $controller->view->rebroadcast = $formRebroadcast;
-                    $controller->view->live = $formLive;
-                    //$controller->view->addNewShow = !$editShow;
-
-                    //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
-                    return false;
-
-                }
-            } else {
-                if ($isAdminOrPM) {
-                    Application_Model_Show::create($data);
-                }
-
-                //send back a new form for the user.
-                Application_Model_Schedule::createNewFormSections($controller->view);
-
-                //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
-                return true;
+            if ($isAdminOrPM) {
+                Application_Model_Show::create($data);
             }
+
+            //send back a new form for the user.
+            Application_Model_Schedule::createNewFormSections($controller->view);
+
+            //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
+            return true;
         } else {
             $controller->view->what    = $formWhat;
             $controller->view->when    = $formWhen;
@@ -1171,11 +1065,6 @@ SQL;
             $controller->view->style   = $formStyle;
             $controller->view->live    = $formLive;
 
-            if (!$isSaas) {
-                $controller->view->rr = $formRecord;
-                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                $controller->view->rebroadcast = $formRebroadcast;
-            }
             //$controller->view->addNewShow = !$editShow;
             //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
             return false;

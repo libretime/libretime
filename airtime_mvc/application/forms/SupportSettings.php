@@ -4,16 +4,12 @@ require_once 'customfilters/ImageSize.php';
 
 class Application_Form_SupportSettings extends Zend_Form
 {
-    private $isSass;
-
     public function init()
     {
         $country_list = Application_Model_Preference::GetCountryList();
-        $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $this->isSass = $isSass;
 
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/support-setting.phtml', "isSaas" => $isSass)),
+            array('ViewScript', array('viewScript' => 'form/support-setting.phtml')),
             array('File', array('viewScript' => 'form/support-setting.phtml', 'placement' => false)))
         );
 
