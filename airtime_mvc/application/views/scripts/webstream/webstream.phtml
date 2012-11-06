@@ -9,11 +9,11 @@
             <li id='lib-new-ws'><a href="#">New Webstream</a></li>
         </ul>
     </div>
-            
+
+<?php if (isset($this->obj)) : ?>
  <div class="btn-group pull-right">
     <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit">Save</button>
 </div>
-<?php if (isset($this->obj)) : ?>
 <div class="btn-group pull-right">
     <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false">Delete</button>
 </div>
