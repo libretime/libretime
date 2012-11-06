@@ -40,8 +40,8 @@ class CcListenerCountTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('TIMESTAMP_ID', 'DbTimestampId', 'INTEGER', 'cc_timestamp', 'ID', true, null, null);
+		$this->addForeignKey('MOUNT_NAME_ID', 'DbMountNameId', 'INTEGER', 'cc_mount_name', 'ID', true, null, null);
 		$this->addColumn('LISTENER_COUNT', 'DbListenerCount', 'INTEGER', true, null, null);
-		$this->addColumn('MOUNT_NAME', 'DbMountName', 'VARCHAR', true, 255, null);
 		// validators
 	} // initialize()
 
@@ -51,6 +51,7 @@ class CcListenerCountTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcTimestamp', 'CcTimestamp', RelationMap::MANY_TO_ONE, array('timestamp_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcTimestamp', 'CcTimestamp', RelationMap::MANY_TO_ONE, array('mount_name_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcListenerCountTableMap

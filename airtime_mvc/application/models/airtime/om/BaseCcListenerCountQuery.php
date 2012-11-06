@@ -8,17 +8,21 @@
  *
  * @method     CcListenerCountQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcListenerCountQuery orderByDbTimestampId($order = Criteria::ASC) Order by the timestamp_id column
+ * @method     CcListenerCountQuery orderByDbMountNameId($order = Criteria::ASC) Order by the mount_name_id column
  * @method     CcListenerCountQuery orderByDbListenerCount($order = Criteria::ASC) Order by the listener_count column
- * @method     CcListenerCountQuery orderByDbMountName($order = Criteria::ASC) Order by the mount_name column
  *
  * @method     CcListenerCountQuery groupByDbId() Group by the id column
  * @method     CcListenerCountQuery groupByDbTimestampId() Group by the timestamp_id column
+ * @method     CcListenerCountQuery groupByDbMountNameId() Group by the mount_name_id column
  * @method     CcListenerCountQuery groupByDbListenerCount() Group by the listener_count column
- * @method     CcListenerCountQuery groupByDbMountName() Group by the mount_name column
  *
  * @method     CcListenerCountQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcListenerCountQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcListenerCountQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ *
+ * @method     CcListenerCountQuery leftJoinCcTimestamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcTimestamp relation
+ * @method     CcListenerCountQuery rightJoinCcTimestamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTimestamp relation
+ * @method     CcListenerCountQuery innerJoinCcTimestamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcTimestamp relation
  *
  * @method     CcListenerCountQuery leftJoinCcTimestamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcTimestamp relation
  * @method     CcListenerCountQuery rightJoinCcTimestamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTimestamp relation
@@ -29,13 +33,13 @@
  *
  * @method     CcListenerCount findOneByDbId(int $id) Return the first CcListenerCount filtered by the id column
  * @method     CcListenerCount findOneByDbTimestampId(int $timestamp_id) Return the first CcListenerCount filtered by the timestamp_id column
+ * @method     CcListenerCount findOneByDbMountNameId(int $mount_name_id) Return the first CcListenerCount filtered by the mount_name_id column
  * @method     CcListenerCount findOneByDbListenerCount(int $listener_count) Return the first CcListenerCount filtered by the listener_count column
- * @method     CcListenerCount findOneByDbMountName(string $mount_name) Return the first CcListenerCount filtered by the mount_name column
  *
  * @method     array findByDbId(int $id) Return CcListenerCount objects filtered by the id column
  * @method     array findByDbTimestampId(int $timestamp_id) Return CcListenerCount objects filtered by the timestamp_id column
+ * @method     array findByDbMountNameId(int $mount_name_id) Return CcListenerCount objects filtered by the mount_name_id column
  * @method     array findByDbListenerCount(int $listener_count) Return CcListenerCount objects filtered by the listener_count column
- * @method     array findByDbMountName(string $mount_name) Return CcListenerCount objects filtered by the mount_name column
  *
  * @package    propel.generator.airtime.om
  */
@@ -194,6 +198,37 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query on the mount_name_id column
+	 * 
+	 * @param     int|array $dbMountNameId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcListenerCountQuery The current query, for fluid interface
+	 */
+	public function filterByDbMountNameId($dbMountNameId = null, $comparison = null)
+	{
+		if (is_array($dbMountNameId)) {
+			$useMinMax = false;
+			if (isset($dbMountNameId['min'])) {
+				$this->addUsingAlias(CcListenerCountPeer::MOUNT_NAME_ID, $dbMountNameId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbMountNameId['max'])) {
+				$this->addUsingAlias(CcListenerCountPeer::MOUNT_NAME_ID, $dbMountNameId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcListenerCountPeer::MOUNT_NAME_ID, $dbMountNameId, $comparison);
+	}
+
+	/**
 	 * Filter the query on the listener_count column
 	 * 
 	 * @param     int|array $dbListenerCount The value to use as filter.
@@ -225,25 +260,67 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the mount_name column
-	 * 
-	 * @param     string $dbMountName The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * Filter the query by a related CcTimestamp object
+	 *
+	 * @param     CcTimestamp $ccTimestamp  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcListenerCountQuery The current query, for fluid interface
 	 */
-	public function filterByDbMountName($dbMountName = null, $comparison = null)
+	public function filterByCcTimestamp($ccTimestamp, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbMountName)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbMountName)) {
-				$dbMountName = str_replace('*', '%', $dbMountName);
-				$comparison = Criteria::LIKE;
-			}
+		return $this
+			->addUsingAlias(CcListenerCountPeer::TIMESTAMP_ID, $ccTimestamp->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcTimestamp relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcListenerCountQuery The current query, for fluid interface
+	 */
+	public function joinCcTimestamp($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcTimestamp');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
 		}
-		return $this->addUsingAlias(CcListenerCountPeer::MOUNT_NAME, $dbMountName, $comparison);
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcTimestamp');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcTimestamp relation CcTimestamp object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcTimestampQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcTimestampQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	{
+		return $this
+			->joinCcTimestamp($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcTimestamp', 'CcTimestampQuery');
 	}
 
 	/**
@@ -257,7 +334,7 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 	public function filterByCcTimestamp($ccTimestamp, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcListenerCountPeer::TIMESTAMP_ID, $ccTimestamp->getDbId(), $comparison);
+			->addUsingAlias(CcListenerCountPeer::MOUNT_NAME_ID, $ccTimestamp->getDbId(), $comparison);
 	}
 
 	/**
