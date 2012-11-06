@@ -6,69 +6,9 @@ import copy
 from media.monitor.handler         import ReportHandler
 from media.monitor.log             import Loggable
 from media.monitor.exceptions      import BadSongFile
-from media.monitor.pure            import LazyProperty
 from media.monitor.eventcontractor import EventContractor
 from media.monitor.events          import EventProxy
-
-import api_clients.api_client as ac
-
-class RequestSync(threading.Thread,Loggable):
-    """
-    This class is responsible for making the api call to send a request
-    to airtime. In the process it packs the requests and retries for
-    some number of times
-    """
-    def __init__(self, watcher, requests):
-        threading.Thread.__init__(self)
-        self.watcher      = watcher
-        self.requests     = requests
-        self.retries      = 1
-        self.request_wait = 0.3
-
-    @LazyProperty
-    def apiclient(self):
-        return ac.AirtimeApiClient.create_right_config()
-
-    def run(self):
-        self.logger.info("Attempting request with %d items." %
-                len(self.requests))
-        # Note that we must attach the appropriate mode to every
-        # response. Also Not forget to attach the 'is_record' to any
-        # requests that are related to recorded shows
-        # TODO : recorded shows aren't flagged right
-        # Is this retry shit even necessary? Consider getting rid of this.
-        packed_requests = []
-        for request_event in self.requests:
-            try:
-                for request in request_event.safe_pack():
-                    if isinstance(request, BadSongFile):
-                        self.logger.info("Bad song file: '%s'" % request.path)
-                    else: packed_requests.append(request)
-            except Exception as e:
-                self.unexpected_exception( e )
-                if hasattr(request_event, 'path'):
-                    self.logger.info("Possibly related to path: '%s'" %
-                            request_event.path)
-        def make_req():
-            self.apiclient.send_media_monitor_requests( packed_requests )
-        for try_index in range(0,self.retries):
-            try: make_req()
-            # most likely we did not get json response as we expected
-            except ValueError:
-                self.logger.info("ApiController.php probably crashed, we \
-                        diagnose this from the fact that it did not return \
-                        valid json")
-                self.logger.info("Trying again after %f seconds" %
-                        self.request_wait)
-                time.sleep( self.request_wait )
-            except Exception as e: self.unexpected_exception(e)
-            else:
-                self.logger.info("Request worked on the '%d' try" %
-                        (try_index + 1))
-                break
-        else: self.logger.info("Failed to send request after '%d' tries..." %
-                self.retries)
-        self.watcher.flag_done()
+from media.monitor.request         import ThreadedRequestSync, RequestSync
 
 class TimeoutWatcher(threading.Thread,Loggable):
     """
@@ -131,8 +71,7 @@ class WatchSyncer(ReportHandler,Loggable):
                 #self.push_queue( event )
             except BadSongFile as e:
                 self.fatal_exception("Received bas song file '%s'" % e.path, e)
-            except Exception as e:
-                self.unexpected_exception(e)
+            except Exception as e: self.unexpected_exception(e)
         else:
             self.logger.info("Received event that does not implement packing.\
                     Printing its representation:")
@@ -209,8 +148,8 @@ class WatchSyncer(ReportHandler,Loggable):
         requests = copy.copy(self.__queue)
         def launch_request():
             # Need shallow copy here
-            t = RequestSync(watcher=self, requests=requests)
-            t.start()
+            t = ThreadedRequestSync( RequestSync.create_with_api_client(
+                watcher=self, requests=requests) )
             self.__current_thread = t
         self.__requests.append(launch_request)
         self.__reset_queue()
@@ -218,7 +157,8 @@ class WatchSyncer(ReportHandler,Loggable):
     def __reset_queue(self): self.__queue = []
 
     def __del__(self):
-        # Ideally we would like to do a little more to ensure safe shutdown
+        #this destructor is completely untested and it's unclear whether
+        #it's even doing anything useful. consider removing it
         if self.events_in_queue():
             self.logger.warn("Terminating with events still in the queue...")
         if self.requests_in_queue():

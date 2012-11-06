@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import time
 import media.monitor.pure   as mmp
 import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
@@ -11,14 +10,12 @@ from os.path                  import dirname
 import os.path
 
 class Organizer(ReportHandler,Loggable):
-    """
-    Organizer is responsible to to listening to OrganizeListener events
-    and committing the appropriate changes to the filesystem. It does
-    not in any interact with WatchSyncer's even when the the WatchSyncer
-    is a "storage directory". The "storage" directory picks up all of
-    its events through pyinotify. (These events are fed to it through
-    StoreWatchListener)
-    """
+    """ Organizer is responsible to to listening to OrganizeListener
+    events and committing the appropriate changes to the filesystem.
+    It does not in any interact with WatchSyncer's even when the the
+    WatchSyncer is a "storage directory". The "storage" directory picks
+    up all of its events through pyinotify. (These events are fed to it
+    through StoreWatchListener) """
 
     # Commented out making this class a singleton because it's just a band aid
     # for the real issue. The real issue being making multiple Organizer
@@ -42,11 +39,9 @@ class Organizer(ReportHandler,Loggable):
         super(Organizer, self).__init__(signal=self.channel, weak=False)
 
     def handle(self, sender, event):
-        """
-        Intercept events where a new file has been added to the organize
-        directory and place it in the correct path (starting with
-        self.target_path)
-        """
+        """ Intercept events where a new file has been added to the
+        organize directory and place it in the correct path (starting
+        with self.target_path) """
         # Only handle this event type
         assert isinstance(event, OrganizeFile), \
             "Organizer can only handle OrganizeFile events.Given '%s'" % event
@@ -72,12 +67,8 @@ class Organizer(ReportHandler,Loggable):
                             directory=d)
                 return cb
 
-            time.sleep(0.05)
-
             mmp.magic_move(event.path, new_path,
                     after_dir_make=new_dir_watch(dirname(new_path)))
-
-            time.sleep(0.05)
 
             # The reason we need to go around saving the owner in this ass
             # backwards way is bewcause we are unable to encode the owner id

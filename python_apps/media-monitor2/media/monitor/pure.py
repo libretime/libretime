@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+from subprocess import Popen, PIPE
 import subprocess
 import os
 import math
@@ -21,7 +22,6 @@ from configobj import ConfigObj
 
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
-#supported_extensions =  [u"mp3", u"ogg", u"oga"]
 supported_extensions = [u"mp3", u"ogg", u"oga", u"flac", u"wav",
                         u'm4a', u'mp4']
 
@@ -66,7 +66,6 @@ class IncludeOnly(object):
                 return func(moi, event, *args, **kwargs)
         return _wrap
 
-
 def partition(f, alist):
     """
     Partition is very similar to filter except that it also returns the
@@ -92,14 +91,13 @@ def is_file_supported(path):
 # TODO : In the future we would like a better way to find out whether a show
 # has been recorded
 def is_airtime_recorded(md):
-    """
-    Takes a metadata dictionary and returns True if it belongs to a file that
-    was recorded by Airtime.
-    """
+    """ Takes a metadata dictionary and returns True if it belongs to a
+    file that was recorded by Airtime. """
     if not 'MDATA_KEY_CREATOR' in md: return False
     return md['MDATA_KEY_CREATOR'] == u'Airtime Show Recorder'
 
 def read_wave_duration(path):
+    """ Read the length of .wav file (mutagen does not handle this) """
     with contextlib.closing(wave.open(path,'r')) as f:
         frames   = f.getnframes()
         rate     = f.getframerate()
@@ -107,9 +105,7 @@ def read_wave_duration(path):
         return duration
 
 def clean_empty_dirs(path):
-    """
-    walks path and deletes every empty directory it finds
-    """
+    """ walks path and deletes every empty directory it finds """
     # TODO : test this function
     if path.endswith('/'): clean_empty_dirs(path[0:-1])
     else:
@@ -154,22 +150,25 @@ def no_extension_basename(path):
     else: return '.'.join(base.split(".")[0:-1])
 
 def walk_supported(directory, clean_empties=False):
-    """
-    A small generator wrapper around os.walk to only give us files that support
-    the extensions we are considering. When clean_empties is True we
-    recursively delete empty directories left over in directory after the walk.
-    """
+    """ A small generator wrapper around os.walk to only give us files
+    that support the extensions we are considering. When clean_empties
+    is True we recursively delete empty directories left over in
+    directory after the walk. """
     for root, dirs, files in os.walk(directory):
         full_paths = ( os.path.join(root, name) for name in files
                 if is_file_supported(name) )
         for fp in full_paths: yield fp
     if clean_empties: clean_empty_dirs(directory)
 
+
+def file_locked(path):
+    cmd = "lsof %s" % path
+    f = Popen(cmd, shell=True, stdout=PIPE).stdout
+    return bool(f.readlines())
+
 def magic_move(old, new, after_dir_make=lambda : None):
-    """
-    Moves path old to new and constructs the necessary to directories for new
-    along the way
-    """
+    """ Moves path old to new and constructs the necessary to
+    directories for new along the way """
     new_dir = os.path.dirname(new)
     if not os.path.exists(new_dir): os.makedirs(new_dir)
     # We need this crusty hack because anytime a directory is created we must
@@ -179,18 +178,15 @@ def magic_move(old, new, after_dir_make=lambda : None):
     shutil.move(old,new)
 
 def move_to_dir(dir_path,file_path):
-    """
-    moves a file at file_path into dir_path/basename(filename)
-    """
+    """ moves a file at file_path into dir_path/basename(filename) """
     bs = os.path.basename(file_path)
     magic_move(file_path, os.path.join(dir_path, bs))
 
 def apply_rules_dict(d, rules):
-    """
-    Consumes a dictionary of rules that maps some keys to lambdas which it
-    applies to every matching element in d and returns a new dictionary with
-    the rules applied. If a rule returns none then it's not applied
-    """
+    """ Consumes a dictionary of rules that maps some keys to lambdas
+    which it applies to every matching element in d and returns a new
+    dictionary with the rules applied. If a rule returns none then it's
+    not applied """
     new_d = copy.deepcopy(d)
     for k, rule in rules.iteritems():
         if k in d:
@@ -205,17 +201,14 @@ def default_to_f(dictionary, keys, default, condition):
     return new_d
 
 def default_to(dictionary, keys, default):
-    """
-    Checks if the list of keys 'keys' exists in 'dictionary'. If not then it
-    returns a new dictionary with all those missing keys defaults to 'default'
-    """
+    """ Checks if the list of keys 'keys' exists in 'dictionary'. If
+    not then it returns a new dictionary with all those missing keys
+    defaults to 'default' """
     cnd = lambda dictionary, key: key not in dictionary
     return default_to_f(dictionary, keys, default, cnd)
 
 def remove_whitespace(dictionary):
-    """
-    Remove values that empty whitespace in the dictionary
-    """
+    """ Remove values that empty whitespace in the dictionary """
     nd = copy.deepcopy(dictionary)
     bad_keys = []
     for k,v in nd.iteritems():
@@ -227,6 +220,7 @@ def remove_whitespace(dictionary):
     return nd
 
 def parse_int(s):
+    # TODO : this function isn't used anywhere yet but it may useful for emf
     """
     Tries very hard to get some sort of integer result from s. Defaults to 0
     when it fails
@@ -242,53 +236,6 @@ def parse_int(s):
         try   : return str(reduce(op.add, takewhile(lambda x: x.isdigit(), s)))
         except: return None
 
-def normalized_metadata(md, original_path):
-    """
-    consumes a dictionary of metadata and returns a new dictionary with the
-    formatted meta data. We also consume original_path because we must set
-    MDATA_KEY_CREATOR based on in it sometimes
-    """
-    new_md = copy.deepcopy(md)
-    # replace all slashes with dashes
-    #for k,v in new_md.iteritems(): new_md[k] = unicode(v).replace('/','-')
-    # Specific rules that are applied in a per attribute basis
-    format_rules = {
-        'MDATA_KEY_TRACKNUMBER' : parse_int,
-        'MDATA_KEY_FILEPATH'    : lambda x: os.path.normpath(x),
-        'MDATA_KEY_BPM'         : lambda x: x[0:8],
-        'MDATA_KEY_MIME' : lambda x: x.replace('audio/vorbis','audio/ogg'),
-        # Whenever 0 is reported we change it to empty
-        #'MDATA_KEY_BITRATE' : lambda x: '' if str(x) == '0' else x
-    }
-
-    new_md = remove_whitespace(new_md) # remove whitespace fields
-    # Format all the fields in format_rules
-    new_md = apply_rules_dict(new_md, format_rules)
-    # set filetype to audioclip by default
-    new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_FTYPE'],
-                        default=u'audioclip')
-
-    # Try to parse bpm but delete the whole key if that fails
-    if 'MDATA_KEY_BPM' in new_md:
-        new_md['MDATA_KEY_BPM'] = parse_int(new_md['MDATA_KEY_BPM'])
-        if new_md['MDATA_KEY_BPM'] is None:
-            del new_md['MDATA_KEY_BPM']
-
-    if not is_airtime_recorded(new_md):
-        # Read title from filename if it does not exist
-        default_title = no_extension_basename(original_path)
-        default_title = re.sub(r'__\d+\.',u'.', default_title)
-        if re.match(".+-%s-.+$" % unicode_unknown, default_title):
-            default_title = u''
-        new_md = default_to(dictionary=new_md, keys=['MDATA_KEY_TITLE'],
-                            default=default_title)
-        new_md['MDATA_KEY_TITLE'] = re.sub(r'-\d+kbps$', u'',
-                new_md['MDATA_KEY_TITLE'])
-
-    # TODO : wtf is this for again?
-    new_md['MDATA_KEY_TITLE'] = re.sub(r'-?%s-?' % unicode_unknown, u'',
-            new_md['MDATA_KEY_TITLE'])
-    return new_md
 
 def organized_path(old_path, root_path, orig_md):
     """
@@ -348,10 +295,9 @@ def organized_path(old_path, root_path, orig_md):
 # TODO : Get rid of this function and every one of its uses. We no longer use
 # the md5 signature of a song for anything
 def file_md5(path,max_length=100):
-    """
-    Get md5 of file path (if it exists). Use only max_length characters to save
-    time and memory. Pass max_length=-1 to read the whole file (like in mm1)
-    """
+    """ Get md5 of file path (if it exists). Use only max_length
+    characters to save time and memory. Pass max_length=-1 to read the
+    whole file (like in mm1) """
     if os.path.exists(path):
         with open(path, 'rb') as f:
             m = hashlib.md5()
@@ -367,16 +313,12 @@ def encode_to(obj, encoding='utf-8'):
     return obj
 
 def convert_dict_value_to_utf8(md):
-    """
-    formats a dictionary to send as a request to api client
-    """
+    """ formats a dictionary to send as a request to api client """
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
 
 def get_system_locale(locale_path='/etc/default/locale'):
-    """
-    Returns the configuration object for the system's default locale. Normally
-    requires root access.
-    """
+    """ Returns the configuration object for the system's default
+    locale. Normally requires root access. """
     if os.path.exists(locale_path):
         try:
             config = ConfigObj(locale_path)
@@ -386,9 +328,7 @@ def get_system_locale(locale_path='/etc/default/locale'):
             permissions issue?" % locale_path)
 
 def configure_locale(config):
-    """
-    sets the locale according to the system's locale.
-    """
+    """ sets the locale according to the system's locale. """
     current_locale = locale.getlocale()
     if current_locale[1] is None:
         default_locale = locale.getdefaultlocale()
@@ -405,27 +345,21 @@ def configure_locale(config):
 
 def fondle(path,times=None):
     # TODO : write unit tests for this
-    """
-    touch a file to change the last modified date. Beware of calling this
-    function on the same file from multiple threads.
-    """
+    """ touch a file to change the last modified date. Beware of calling
+    this function on the same file from multiple threads. """
     with file(path, 'a'): os.utime(path, times)
 
 def last_modified(path):
-    """
-    return the time of the last time mm2 was ran. path refers to the index file
-    whose date modified attribute contains this information. In the case when
-    the file does not exist we set this time 0 so that any files on the
-    filesystem were modified after it
-    """
+    """ return the time of the last time mm2 was ran. path refers to the
+    index file whose date modified attribute contains this information.
+    In the case when the file does not exist we set this time 0 so that
+    any files on the filesystem were modified after it """
     if os.path.exists(path): return os.path.getmtime(path)
     else: return 0
 
 def expand_storage(store):
-    """
-    A storage directory usually consists of 4 different subdirectories. This
-    function returns their paths
-    """
+    """ A storage directory usually consists of 4 different
+    subdirectories. This function returns their paths """
     store = os.path.normpath(store)
     return {
         'organize'      : os.path.join(store, 'organize'),
@@ -435,10 +369,8 @@ def expand_storage(store):
     }
 
 def create_dir(path):
-    """
-    will try and make sure that path exists at all costs. raises an exception
-    if it fails at this task.
-    """
+    """ will try and make sure that path exists at all costs. raises an
+    exception if it fails at this task. """
     if not os.path.exists(path):
         try                   : os.makedirs(path)
         except Exception as e : raise FailedToCreateDir(path, e)
@@ -456,11 +388,10 @@ def sub_path(directory,f):
     return common == normalized
 
 def owner_id(original_path):
-    """
-    Given 'original_path' return the file name of the of 'identifier' file.
-    return the id that is contained in it. If no file is found or nothing is
-    read then -1 is returned. File is deleted after the number has been read
-    """
+    """ Given 'original_path' return the file name of the of
+    'identifier' file. return the id that is contained in it. If no file
+    is found or nothing is read then -1 is returned. File is deleted
+    after the number has been read """
     fname = "%s.identifier" % original_path
     owner_id = -1
     try:
@@ -476,9 +407,8 @@ def owner_id(original_path):
     return owner_id
 
 def file_playable(pathname):
-    """
-    Returns True if 'pathname' is playable by liquidsoap. False otherwise.
-    """
+    """ Returns True if 'pathname' is playable by liquidsoap. False
+    otherwise. """
     # when there is an single apostrophe inside of a string quoted by
     # apostrophes, we can only escape it by replace that apostrophe with
     # '\''. This breaks the string into two, and inserts an escaped
@@ -514,18 +444,14 @@ def toposort(data):
     assert not data, "A cyclic dependency exists amongst %r" % data
 
 def truncate_to_length(item, length):
-    """
-    Truncates 'item' to 'length'
-    """
+    """ Truncates 'item' to 'length' """
     if isinstance(item, int): item = str(item)
     if isinstance(item, basestring):
         if len(item) > length: return item[0:length]
         else: return item
 
 def format_length(mutagen_length):
-    """
-    Convert mutagen length to airtime length
-    """
+    """ Convert mutagen length to airtime length """
     t = float(mutagen_length)
     h = int(math.floor(t / 3600))
     t = t % 3600
