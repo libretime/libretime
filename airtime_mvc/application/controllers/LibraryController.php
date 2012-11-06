@@ -176,7 +176,7 @@ class LibraryController extends Zend_Controller_Action
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
                         $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
-                    } elseif ($obj_sess->type === "block") {
+                    } elseif ($obj_sess->type === "block" && $obj->isStatic()) {
                         $menu["pl_add"] = array("name"=> "Add to Smart Block", "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
