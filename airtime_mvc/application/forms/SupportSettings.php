@@ -105,7 +105,6 @@ class Application_Form_SupportSettings extends Zend_Form
         $upload->setAttrib('accept', 'image/*');
         $this->addElement($upload);
 
-        if (!$isSass) {
             //enable support feedback
             $this->addElement('checkbox', 'SupportFeedback', array(
                 'label'      => 'Send support feedback',
@@ -146,7 +145,6 @@ class Application_Form_SupportSettings extends Zend_Form
             $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"http://www.sourcefabric.org/en/about/policy/\" onclick=\"window.open(this.href); return false;\">privacy policy</a>.")
                 ->setDecorators(array('ViewHelper'));
             $this->addElement($checkboxPrivacy);
-        }
 
         // submit button
         $submit = new Zend_Form_Element_Submit("submit");
@@ -161,7 +159,6 @@ class Application_Form_SupportSettings extends Zend_Form
     public function isValid ($data)
     {
         $isValid = parent::isValid($data);
-        if (!$this->isSass) {
             if ($data['Publicise'] != 1) {
                 $isValid = true;
             }
@@ -172,7 +169,6 @@ class Application_Form_SupportSettings extends Zend_Form
                     $isValid = false;
                 }
             }
-        }
 
         return $isValid;
     }

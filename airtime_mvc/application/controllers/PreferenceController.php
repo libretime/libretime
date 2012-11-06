@@ -65,13 +65,12 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
-        $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
             $values = $request->getPost();
             if ($form->isValid($values)) {
-                if (!$isSass && $values["Publicise"] != 1) {
+                if ($values["Publicise"] != 1) {
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                     Application_Model_Preference::SetPublicise($values["Publicise"]);
                     if (isset($values["Privacy"])) {
@@ -82,10 +81,8 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetPhone($values["Phone"]);
                     Application_Model_Preference::SetEmail($values["Email"]);
                     Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                    if (!$isSass) {
                         Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                         Application_Model_Preference::SetPublicise($values["Publicise"]);
-                    }
 
                     $form->Logo->receive();
                     $imagePath = $form->Logo->getFileName();
@@ -94,7 +91,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationCity($values["City"]);
                     Application_Model_Preference::SetStationDescription($values["Description"]);
                     Application_Model_Preference::SetStationLogo($imagePath);
-                    if (!$isSass && isset($values["Privacy"])) {
+                    if (isset($values["Privacy"])) {
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
                 }

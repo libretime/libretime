@@ -52,8 +52,6 @@ class RequestSync(Loggable):
             self.logger.info("ApiController.php probably crashed, we \
                     diagnose this from the fact that it did not return \
                     valid json")
-            self.logger.info("Trying again after %f seconds" %
-                    self.request_wait)
         except Exception as e: self.unexpected_exception(e)
         else: self.logger.info("Request was successful")
         self.watcher.flag_done() # poor man's condition variable

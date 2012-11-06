@@ -176,6 +176,14 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
             FROM cc_playlistcontents AS pc
             JOIN cc_files AS f ON pc.file_id=f.id
             WHERE pc.playlist_id = :playlist_id1
+SQL;
+
+        if ($filterFiles) {
+            $sql .= <<<SQL
+            AND f.file_exists = :file_exists
+SQL;
+        }
+        $sql .= <<<SQL
               AND TYPE = 0)
          UNION ALL
            (SELECT pc.id AS id,
@@ -220,7 +228,13 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
    ORDER BY temp.position;
 SQL;
 
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(':playlist_id1'=>$this->id, ':playlist_id2'=>$this->id, ':playlist_id3'=>$this->id));
+        $params = array(
+            ':playlist_id1'=>$this->id, ':playlist_id2'=>$this->id, ':playlist_id3'=>$this->id);
+        if ($filterFiles) {
+            $params[':file_exists'] = $filterFiles;
+        }
+
+        $rows = Application_Common_Database::prepareAndExecute($sql, $params);
 
         $offset = 0;
         foreach ($rows as &$row) {
