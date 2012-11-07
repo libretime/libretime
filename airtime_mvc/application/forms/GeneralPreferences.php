@@ -42,7 +42,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         ));
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
-        $third_party_api->setLabel('Allow Remote Websites To Access "Schedule" Info?<br> (Enable this to make front-end widgets work.)');
+        $third_party_api->setLabel('Website Widgets:');
         $third_party_api->setMultiOptions(array("Disabled",
                                             "Enabled"));
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
