@@ -542,7 +542,7 @@ var AIRTIME = (function(AIRTIME) {
                 type = $("#library_display_type").find("select").val();
                 type = (type === undefined) ? 0 : type;
                 aoData.push( { name: "type", value: type} );
-            
+                
                 $.ajax( {
                     "dataType": 'json',
                     "type": "POST",
@@ -562,7 +562,9 @@ var AIRTIME = (function(AIRTIME) {
                                                                                     // pl_
                         open_playlist_preview(playlistIndex, 0);
                     } else if (aData.ftype === 'audioclip') {
-                        open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                        if (isAudioSupported(aData.mime)) {
+                            open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                        }
                     } else if (aData.ftype == 'stream') {
                         open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
                     } else if (aData.ftype == 'block' && aData.bl_type == 'static') {

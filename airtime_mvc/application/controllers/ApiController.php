@@ -688,6 +688,22 @@ class ApiController extends Zend_Controller_Action
         Logging::info("Registered Component: ".$component."@".$remoteAddr);
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
+        
+        //send ip, subdomain
+        if (Application_Model_Preference::GetPlanLevel() != 'disabled'){
+            if ($component == "pypo"){
+                $split = explode('.', $_SERVER['SERVER_NAME']);
+                if (count($split) > 0){
+                    $subDomain = $split[0];
+                    
+                    $md = array();
+                    $md["sub_domain"] = $subDomain;
+                    $md["pypo_ip"] = $remoteAddr;
+                    
+                    Application_Model_RabbitMq::SendMessageToHaproxyConfigDaemon($md);
+                }
+            }
+        }
     }
 
     public function updateLiquidsoapStatusAction()

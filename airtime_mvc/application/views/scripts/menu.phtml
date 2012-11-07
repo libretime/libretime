@@ -1,9 +1,3 @@
-<?php
-    $isSaas = true;
-    if(Application_Model_Preference::GetPlanLevel() == "disabled"){
-        $isSaas = false;
-    } 
-?>
 <ul id="nav">
 <?php foreach ($this->container as $page) : ?>
     <?php if($this->navigation()->accept($page)) : ?>
@@ -14,7 +8,7 @@
 		    </a>
 		    <ul class="sub">
 			    <?php foreach ($page->getPages() as $sub) :
-			             if($isSaas && $sub->getId() == "manage_folder"){
+			             if($sub->getId() == "manage_folder"){
 			                 continue;
 			             } ?>
 			    <li>

@@ -8,10 +8,16 @@ var AIRTIME = (function(AIRTIME) {
     mod = AIRTIME.library;
 
     mod.checkAddButton = function() {
-        var selected = mod.getChosenItemsLength(), sortable = $('#spl_sortable'), check = false;
 
-        // make sure audioclips are selected and a playlist is currently open.
-        if (selected !== 0 && sortable.length !== 0) {
+        var selected = mod.getChosenItemsLength(),
+            sortable = $('#spl_sortable:visible'),
+            check = false,
+            blockType = $('input[name=sp_type]:checked', '#smart-block-form').val();
+
+        // make sure audioclips are selected and a playlist or static block is currently open.
+        // static blocks have value of 0
+        // dynamic blocks have value of 1
+        if (selected !== 0 && (sortable.length !== 0 || blockType === "0")) {
             check = true;
         }
 
@@ -37,6 +43,11 @@ var AIRTIME = (function(AIRTIME) {
         var $nRow = $(nRow);
         if (aData.ftype === "audioclip") {
             $nRow.addClass("lib-audio");
+            $image = $nRow.find('td.library_type');
+            if (!isAudioSupported(aData.mime)) {
+                $image.html('<span class="ui-icon ui-icon-locked"></span>');
+                aData.image = '<span class="ui-icon ui-icon-locked"></span>';
+            }
         } else if (aData.ftype === "stream") {
             $nRow.addClass("lib-stream");
         } else if (aData.ftype === "block") {
@@ -91,6 +102,10 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor : 'pointer',
+                    cursorAt: {
+                        top: 30,
+                        left: 100
+                    },
                     connectToSortable : '#spl_sortable'
                 });
     };

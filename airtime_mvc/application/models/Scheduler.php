@@ -104,6 +104,10 @@ class Application_Model_Scheduler
             if ($this->checkUserPermissions && $this->user->canSchedule($show->getDbId()) === false) {
                 throw new Exception("You are not allowed to schedule show {$show->getDbName()}.");
             }
+            
+            if ($instance->getDbRecord()) {
+                throw new Exception("You cannot add files to recording shows.");
+            }
 
             $showEndEpoch = floatval($instance->getDbEnds("U.u"));
 
@@ -189,7 +193,8 @@ class Application_Model_Scheduler
                         }
                     } else {
                         $dynamicFiles = $bl->getListOfFilesUnderLimit();
-                        foreach ($dynamicFiles as $fileId=>$f) {
+                        foreach ($dynamicFiles as $f) {
+                            $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
                             if (isset($file) && $file->getDbFileExists()) {
                                 $data["id"] = $file->getDbId();
@@ -246,7 +251,8 @@ class Application_Model_Scheduler
                 }
             } else {
                 $dynamicFiles = $bl->getListOfFilesUnderLimit();
-                foreach ($dynamicFiles as $fileId=>$f) {
+                foreach ($dynamicFiles as $f) {
+                    $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
                     if (isset($file) && $file->getDbFileExists()) {
                         $data["id"] = $file->getDbId();
@@ -441,7 +447,6 @@ class Application_Model_Scheduler
                     } else {
                         $sched = new CcSchedule();
                     }
-                    Logging::info($file);
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
                         ->setDbCueIn($file['cuein'])

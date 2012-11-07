@@ -335,13 +335,20 @@ SQL;
      * @param boolean $p_deleteFile
      *
      */
-    public function delete($deleteFromPlaylist=false)
+    public function delete()
     {
 
         $filepath = $this->getFilePath();
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
+        }
+
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
+            throw new FileNoPermissionException();
         }
 
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
@@ -352,12 +359,26 @@ SQL;
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
 
-        if ($deleteFromPlaylist) {
-            Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
-        }
-        // set file_exists falg to false
+        // set file_exists flag to false
         $this->_file->setDbFileExists(false);
         $this->_file->save();
+        
+        // need to explicitly update any playlist's and block's length
+        // that contains the file getting deleted
+        $fileId = $this->_file->getDbId();
+        $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId()->find();
+        foreach ($plRows as $row) {
+            $pl = CcPlaylistQuery::create()->filterByDbId($row->getDbPlaylistId($fileId))->findOne();
+            $pl->setDbLength($pl->computeDbLength(Propel::getConnection(CcPlaylistPeer::DATABASE_NAME)));
+            $pl->save();
+        }
+        
+        $blRows = CcBlockcontentsQuery::create()->filterByDbFileId($fileId)->find();
+        foreach ($blRows as $row) {
+            $bl = CcBlockQuery::create()->filterByDbId($row->getDbBlockId())->findOne();
+            $bl->setDbLength($bl->computeDbLength(Propel::getConnection(CcBlockPeer::DATABASE_NAME)));
+            $bl->save();
+        }
     }
 
     /**
@@ -1213,3 +1234,4 @@ SQL;
 
 class DeleteScheduledFileException extends Exception {}
 class FileDoesNotExistException extends Exception {}
+class FileNoPermissionException extends Exception {}

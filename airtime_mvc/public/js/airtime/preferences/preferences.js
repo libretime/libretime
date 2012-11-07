@@ -81,6 +81,47 @@ function setMsAuthenticationFieldsReadonly(ele) {
     }
 }
 
+function setCollapsibleWidgetJsCode() {
+    $('#thirdPartyApi-element input').click(function() {
+        if ($(this).first().attr("value") == '1') {
+            //show js textarea
+            $('#widgetCode-label').show("fast");
+            $('#widgetCode-element').show("fast");
+        } else {
+            //hide js textarea
+            $('#widgetCode-label').hide("fast");
+            $('#widgetCode-element').hide("fast");
+        }
+     });
+}
+
+function createWidgetHelpDescription() {
+    $('#thirdPartyApiInfo').qtip({
+        content: {
+            text: "Enabling this feature will allow Airtime to " +
+            "provide schedule data to external widgets that can be embedded " +
+            "in your website. Enable this feature to reveal the embeddable " +
+            "code."
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    });
+
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -95,4 +136,6 @@ $(document).ready(function() {
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
+    setCollapsibleWidgetJsCode();
+    createWidgetHelpDescription();
 });
