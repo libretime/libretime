@@ -3,7 +3,7 @@ import os
 from media.monitor.exceptions import NoConfigFile
 from media.monitor.pure import LazyProperty
 from media.monitor.config import MMConfig
-from api_cients import AirtimeApiClient
+from api_clients import AirtimeApiClient
 
 class AirtimeInstance(object):
     """ AirtimeInstance is a class that abstracts away every airtime
