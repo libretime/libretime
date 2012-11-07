@@ -50,10 +50,10 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dt id="widgetCode-label" class="block-display">
+        <dt id="widgetCode-label" style="display:none;" class="block-display">
             <label class="optional" for="widgetCode"><?php echo $this->element->getElement('widgetCode')->getLabel() ?></label>
         </dt>
-        <dd id="widgetCode-element" class="block-display clearfix">
+        <dd id="widgetCode-element" style="display:none;" class="block-display clearfix">
             <?php echo $this->element->getElement('widgetCode') ?>
             <?php if($this->element->getElement('widgetCode')->hasErrors()) : ?>
                 <ul class='errors'>

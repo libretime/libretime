@@ -54,6 +54,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'label'      => 'Javascript Code:',
             'required'   => false,
             'readonly'   => true,
+            'style'      => 'font-family: Consolas, "Liberation Mono", Courier, 
+                monospace;',
             'class'      => 'input_text_area',
             'value' => self::getWidgetCode(), //$_SERVER["SERVER_NAME"],
             'decorators' => array(
@@ -107,26 +109,35 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
     private static function getWidgetCode() {
         
+        $host = $_SERVER['SERVER_NAME'];
         $code = <<<CODE
-$("#headerLiveHolder").airtimeLiveInfo({
-    sourceDomain: "http://{$_SERVER['SERVER_NAME']}",
-    text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
-    updatePeriod: 20 //seconds
-});
+<script src="http://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="http://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+<script src="http://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
 
-$("#onAirToday").airtimeShowSchedule({
-    sourceDomain: "http://{$_SERVER['SERVER_NAME']}",
-    text: {onAirToday:"On air today"},
-    updatePeriod: 5, //seconds
-    showLimit: 10
-});
+<div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
+<div id="onAirToday"></div>
+<div id="scheduleTabs"></div>
 
-$("#scheduleTabs").airtimeWeekSchedule({
-    sourceDomain:"http://{$_SERVER['SERVER_NAME']}",
-    dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
-    miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
-    updatePeriod: 600 //seconds
-});
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#headerLiveHolder").airtimeLiveInfo({
+        sourceDomain: "http://$host",
+        updatePeriod: 20 //seconds
+    });
+
+    $("#onAirToday").airtimeShowSchedule({
+        sourceDomain: "http://$host",
+        updatePeriod: 5, //seconds
+        showLimit: 10
+    });
+
+    $("#scheduleTabs").airtimeWeekSchedule({
+        sourceDomain:"http://$host",
+        updatePeriod: 600 //seconds
+    });
+}
+</script>
 CODE;
 
         return $code;

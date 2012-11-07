@@ -81,6 +81,21 @@ function setMsAuthenticationFieldsReadonly(ele) {
     }
 }
 
+function setCollapsibleWidgetJsCode() {
+    $('#thirdPartyApi-element input').click(function() {
+        if ($(this).first().attr("value") == '1') {
+            //show js textarea
+            $('#widgetCode-label').show("fast");
+            $('#widgetCode-element').show("fast");
+        } else {
+            //hide js textarea
+            $('#widgetCode-label').hide("fast");
+            $('#widgetCode-element').hide("fast");
+        }
+        
+     });
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -95,4 +110,5 @@ $(document).ready(function() {
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
+    setCollapsibleWidgetJsCode();
 });
