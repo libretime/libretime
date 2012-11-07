@@ -348,7 +348,7 @@ class AirtimeApiClient(object):
         logger = self.logger
         try:
             encoded_msg = urllib.quote(msg, '')
-            self.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
+            self.services.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
                                           boot_time=time).retry(5)
         except Exception, e:
             logger.error("Exception: %s", e)
