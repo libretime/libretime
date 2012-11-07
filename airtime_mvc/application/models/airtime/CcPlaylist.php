@@ -87,7 +87,13 @@ class CcPlaylist extends BaseCcPlaylist {
      */
     public function computeDbLength(PropelPDO $con)
     {
-        $stmt = $con->prepare('SELECT SUM(cliplength) FROM "cc_playlistcontents" WHERE cc_playlistcontents.PLAYLIST_ID = :p1');
+        $sql = <<<SQL
+        SELECT SUM(cliplength) FROM cc_playlistcontents as pc
+        JOIN cc_files as f ON pc.file_id = f.id
+        WHERE PLAYLIST_ID = :p1
+        AND f.file_exists = true
+SQL;
+        $stmt = $con->prepare($sql);
         $stmt->bindValue(':p1', $this->getDbId());
         $stmt->execute();
         $length = $stmt->fetchColumn();

@@ -513,7 +513,7 @@ class PlaylistController extends Zend_Controller_Action
         } catch (BlockNotFoundException $e) {
             $this->playlistNotFound('block', true);
         } catch (Exception $e) {
-            //Logging::info($e);
+            Logging::info($e);
             $this->playlistUnknownError($e);
         }
     }
