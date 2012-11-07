@@ -29,16 +29,22 @@
         </dd>
         
         <dd id='sp_criteria-element' class='criteria-element'>
-        <?php for ($i = 0; $i < $this->criteriasLength; $i++) {?>
+        <?php for ($i = 0; $i < $this->criteriasLength; $i++) {
+        // modRowMap holds the number of modifier rows for each criteria element
+        // i.e. if we have 'Album contains 1' and 'Album contains 2' the modRowMap
+        // for Album is 2
+        ?>
         <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {
+                // determine if logic label should be 'and' or 'or'
                 if ($this->modRowMap[$i] > 1 && $j != $this->modRowMap[$i]-1) $logicLabel = 'or';
                 else $logicLabel = 'and';
+
                 $disabled = $this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled'?true:false;
                 // determine if the next row is disabled and only display the logic label if it isn't
                 if ($j == $this->modRowMap[$i]-1 && $i < 25) {
                     $n = $i+1;
                     $nextIndex = $n."_0";
-                } elseif ($j+1 < $this->modRowMap[$i]-1) {
+                } elseif ($j+1 <= $this->modRowMap[$i]-1) {
                     $n = $j+1;
                     $nextIndex = $i."_".$n;
                     

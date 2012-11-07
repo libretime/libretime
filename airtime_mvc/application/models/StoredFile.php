@@ -359,9 +359,27 @@ SQL;
             Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
         }
 
-        // set file_exists falg to false
+
+        // set hidden falg to true
         $this->_file->setDbHidden(true);
         $this->_file->save();
+        
+        // need to explicitly update any playlist's and block's length
+        // that contains the file getting deleted
+        $fileId = $this->_file->getDbId();
+        $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId()->find();
+        foreach ($plRows as $row) {
+            $pl = CcPlaylistQuery::create()->filterByDbId($row->getDbPlaylistId($fileId))->findOne();
+            $pl->setDbLength($pl->computeDbLength(Propel::getConnection(CcPlaylistPeer::DATABASE_NAME)));
+            $pl->save();
+        }
+        
+        $blRows = CcBlockcontentsQuery::create()->filterByDbFileId($fileId)->find();
+        foreach ($blRows as $row) {
+            $bl = CcBlockQuery::create()->filterByDbId($row->getDbBlockId())->findOne();
+            $bl->setDbLength($bl->computeDbLength(Propel::getConnection(CcBlockPeer::DATABASE_NAME)));
+            $bl->save();
+        }
     }
 
     /**

@@ -21,7 +21,6 @@ class PreferenceController extends Zend_Controller_Action
     public function indexAction()
     {
         global $CC_CONFIG;
-        
         $request = $this->getRequest();
         
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
@@ -48,16 +47,14 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 
-                if (!$isSaas) {
-                    Application_Model_Preference::SetEnableSystemEmail($values["enableSystemEmail"]);
-                    Application_Model_Preference::SetSystemEmail($values["systemEmail"]);
-                    Application_Model_Preference::SetMailServerConfigured($values["configureMailServer"]);
-                    Application_Model_Preference::SetMailServer($values["mailServer"]);
-                    Application_Model_Preference::SetMailServerEmailAddress($values["email"]);
-                    Application_Model_Preference::SetMailServerPassword($values["ms_password"]);
-                    Application_Model_Preference::SetMailServerPort($values["port"]);
-                    Application_Model_Preference::SetMailServerRequiresAuth($values["msRequiresAuth"]);
-                }
+                Application_Model_Preference::SetEnableSystemEmail($values["preferences_email_server"]["enableSystemEmail"]);
+                Application_Model_Preference::SetSystemEmail($values["preferences_email_server"]["systemEmail"]);
+                Application_Model_Preference::SetMailServerConfigured($values["preferences_email_server"]["configureMailServer"]);
+                Application_Model_Preference::SetMailServer($values["preferences_email_server"]["mailServer"]);
+                Application_Model_Preference::SetMailServerEmailAddress($values["preferences_email_server"]["email"]);
+                Application_Model_Preference::SetMailServerPassword($values["preferences_email_server"]["ms_password"]);
+                Application_Model_Preference::SetMailServerPort($values["preferences_email_server"]["port"]);
+                Application_Model_Preference::SetMailServerRequiresAuth($values["preferences_email_server"]["msRequiresAuth"]);
 
                 Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["UseSoundCloud"]);
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
@@ -91,13 +88,12 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
-        $isSass = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
             $values = $request->getPost();
             if ($form->isValid($values)) {
-                if (!$isSass && $values["Publicise"] != 1) {
+                if ($values["Publicise"] != 1) {
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                     Application_Model_Preference::SetPublicise($values["Publicise"]);
                     if (isset($values["Privacy"])) {
@@ -108,10 +104,8 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetPhone($values["Phone"]);
                     Application_Model_Preference::SetEmail($values["Email"]);
                     Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                    if (!$isSass) {
                         Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                         Application_Model_Preference::SetPublicise($values["Publicise"]);
-                    }
 
                     $form->Logo->receive();
                     $imagePath = $form->Logo->getFileName();
@@ -120,7 +114,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationCity($values["City"]);
                     Application_Model_Preference::SetStationDescription($values["Description"]);
                     Application_Model_Preference::SetStationLogo($imagePath);
-                    if (!$isSass && isset($values["Privacy"])) {
+                    if (isset($values["Privacy"])) {
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
                 }
@@ -168,7 +162,6 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
 
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
@@ -248,10 +241,8 @@ class PreferenceController extends Zend_Controller_Action
 
             $error = false;
             if ($form->isValid($values)) {
-                if (!$isSaas) {
                     $values['output_sound_device'] = $form->getValue('output_sound_device');
                     $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
-                }
 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
                 $values['streamFormat'] = $form->getValue('streamFormat');
@@ -266,7 +257,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
 
-                if (!$isSaas) {
                     if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
                         $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
                         if (empty($values["master_harbor_input_port"]) || empty($values["master_harbor_input_mount_point"])) {
@@ -294,7 +284,6 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
                     Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
                     Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
-                }
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();

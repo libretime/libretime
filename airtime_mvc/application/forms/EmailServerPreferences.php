@@ -4,15 +4,12 @@ require_once 'customvalidators/PasswordNotEmpty.php';
 
 class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
 {
-    private $isSaas;
 
     public function init()
     {
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        $this->isSaas = $isSaas;
 
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/preferences_email_server.phtml', "isSaas" => $isSaas))
+            array('ViewScript', array('viewScript' => 'form/preferences_email_server.phtml'))
         ));
 
         // Enable system emails

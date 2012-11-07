@@ -201,7 +201,8 @@ function setSmartBlockEvents() {
 	
     /********** CHANGE PLAYLIST TYPE **********/
     form.find('dd[id="sp_type-element"]').live("change", function(){
-        setupUI();  	
+        setupUI();
+        AIRTIME.library.checkAddButton();
     });
     
     /********** CRITERIA CHANGE **********/

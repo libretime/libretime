@@ -715,7 +715,7 @@
    * =================================== */
 
   $(document)
-    //menu options don't work on tablet so trying this hack for now:
+    // menu options don't work on tablet so trying this hack for now:
     // https://github.com/twitter/bootstrap/issues/4550
     //.on('click.dropdown.data-api touchstart.dropdown.data-api', clearMenus)
     .on('click.dropdown.data-api', clearMenus)
