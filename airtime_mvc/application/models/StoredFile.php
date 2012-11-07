@@ -1161,6 +1161,10 @@ SQL;
         return $this->_file->getDbFileExists();
     }
 
+    public function getFileOwnerId()
+    {
+        return $this->_file->getDbOwnerId();
+    }
 
     // note: never call this method from controllers because it does a sleep
     public function uploadToSoundCloud()

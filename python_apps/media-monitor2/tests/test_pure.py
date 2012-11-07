@@ -2,7 +2,6 @@
 import unittest
 import os
 import media.monitor.pure as mmp
-from media.monitor.metadata import Metadata
 
 class TestMMP(unittest.TestCase):
     def setUp(self):
@@ -34,68 +33,6 @@ class TestMMP(unittest.TestCase):
         sd = mmp.default_to(dictionary=sd, keys=def_keys, default='DEF')
         for k in def_keys: self.assertEqual( sd[k], 'DEF' )
 
-    def test_normalized_metadata(self):
-        #Recorded show test first
-        orig = Metadata.airtime_dict({
-                'date'        : [u'2012-08-21'],
-                'tracknumber' : [u'2'],
-                'title'       : [u'record-2012-08-21-11:29:00'],
-                'artist'      : [u'Airtime Show Recorder']
-        })
-        orga = Metadata.airtime_dict({
-                'date'        : [u'2012-08-21'],
-                'tracknumber' : [u'2'],
-                'artist'      : [u'Airtime Show Recorder'],
-                'title'       : [u'record-2012-08-21-11:29:00']
-        })
-        orga['MDATA_KEY_FTYPE']   = u'audioclip'
-        orig['MDATA_KEY_BITRATE'] = u'256000'
-        orga['MDATA_KEY_BITRATE'] = u'256000'
-        old_path   = "/home/rudi/recorded/2012-08-21-11:29:00.ogg"
-        normalized = mmp.normalized_metadata(orig, old_path)
-        normalized['MDATA_KEY_BITRATE'] = u'256000'
-
-        self.assertEqual( orga, normalized )
-
-        organized_base_name = "11:29:00-record-256kbps.ogg"
-        base                = "/srv/airtime/stor/"
-        organized_path      = mmp.organized_path(old_path,base, normalized)
-        self.assertEqual(os.path.basename(organized_path), organized_base_name)
-
-    def test_normalized_metadata2(self):
-        """
-        cc-4305
-        """
-        orig = Metadata.airtime_dict({
-            'date'        : [u'2012-08-27'],
-            'tracknumber' : [u'3'],
-            'title'       : [u'18-11-00-Untitled Show'],
-            'artist'      : [u'Airtime Show Recorder']
-        })
-        old_path   = "/home/rudi/recorded/doesnt_really_matter.ogg"
-        normalized = mmp.normalized_metadata(orig, old_path)
-        normalized['MDATA_KEY_BITRATE'] = u'256000'
-        opath = mmp.organized_path(old_path, "/srv/airtime/stor/",
-                normalized)
-        # TODO : add a better test than this...
-        self.assertTrue( len(opath) > 0 )
-
-    def test_normalized_metadata3(self):
-        """
-        Test the case where the metadata is empty
-        """
-        orig = Metadata.airtime_dict({})
-        paths_unknown_title = [
-                ("/testin/unknown-unknown-unknown.mp3",""),
-                ("/testin/01-unknown-123kbps.mp3",""),
-                ("/testin/02-unknown-140kbps.mp3",""),
-                ("/testin/unknown-unknown-123kbps.mp3",""),
-                ("/testin/unknown-bibimbop-unknown.mp3","bibimbop"),
-        ]
-        for p,res in paths_unknown_title:
-            normalized = mmp.normalized_metadata(orig, p)
-            self.assertEqual( normalized['MDATA_KEY_TITLE'], res)
-
     def test_file_md5(self):
         p = os.path.realpath(__file__)
         m1 = mmp.file_md5(p)
@@ -115,6 +52,13 @@ class TestMMP(unittest.TestCase):
         self.assertEqual( mmp.parse_int("123"), "123" )
         self.assertEqual( mmp.parse_int("123asf"), "123" )
         self.assertEqual( mmp.parse_int("asdf"), None )
+
+    def test_truncate_to_length(self):
+        s1 = "testing with non string literal"
+        s2 = u"testing with unicode literal"
+        self.assertEqual( len(mmp.truncate_to_length(s1, 5)), 5)
+        self.assertEqual( len(mmp.truncate_to_length(s2, 8)), 8)
+
 
     def test_owner_id(self):
         start_path = "testing.mp3"

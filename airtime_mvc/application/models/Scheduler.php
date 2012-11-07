@@ -366,12 +366,11 @@ class Application_Model_Scheduler
      * @param array $fileIds
      * @param array $playlistIds
      */
-    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true)
+    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true, $mediaItems = null)
     {
         try {
-
             $affectedShowInstances = array();
-
+            
             //dont want to recalculate times for moved items.
             $excludeIds = array();
             foreach ($schedFiles as $file) {
@@ -384,7 +383,17 @@ class Application_Model_Scheduler
 
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
-
+                
+                // if mediaItmes is passed in, we want to create contents
+                // at the time of insert. This is for dyanmic blocks or
+                // playlist that contains dynamic blocks
+                if ($mediaItems != null) {
+                    $schedFiles = array();
+                    foreach ($mediaItems as $media) {
+                        $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
+                    }
+                }
+                
                 if ($id !== 0) {
                     $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
                     $instance = $schedItem->getCcShowInstances($this->con);
@@ -527,10 +536,32 @@ class Application_Model_Scheduler
 
             $this->validateRequest($scheduleItems);
 
+            $requireDynamicContentCreation = false;
+            
             foreach ($mediaItems as $media) {
-                $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
+                if ($media['type'] == "playlist") {
+                    $pl = new Application_Model_Playlist($media['id']);
+                    if ($pl->hasDynamicBlock()) {
+                        $requireDynamicContentCreation = true;
+                        break;
+                    }
+                } else if ($media['type'] == "block") {
+                    $bl = new Application_Model_Block($media['id']);
+                    if (!$bl->isStatic()) {
+                        $requireDynamicContentCreation = true;
+                        break;
+                    }
+                }
             }
-            $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
+            
+            if ($requireDynamicContentCreation) {
+                $this->insertAfter($scheduleItems, $schedFiles, $adjustSched, $mediaItems);
+            } else {
+                foreach ($mediaItems as $media) {
+                    $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
+                }
+                $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
+            }
 
             $this->con->commit();
 

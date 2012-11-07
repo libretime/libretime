@@ -21,7 +21,7 @@ logger.addHandler(ch)
 if (os.geteuid() != 0):
     print 'Must be a root user.'
     sys.exit()
-    
+
 # loading config file
 try:
     config = ConfigObj('/etc/airtime/media-monitor.cfg')
@@ -66,12 +66,12 @@ def copy_or_move_files_to(paths, dest, flag):
                 print "Cannot find file or path: %s" % path
     except Exception as e:
             print "Error: ", e
-            
+
 def format_dir_string(path):
     if(path[-1] != '/'):
         path = path+'/'
     return path
-            
+
 def helper_get_stor_dir():
     res = api_client.list_all_watched_dirs()
     if(res is None):
@@ -87,18 +87,18 @@ def checkOtherOption(args):
     for i in args:
         if(i[0] == '-'):
             return True
-    
+
 def errorIfMultipleOption(args, msg=''):
     if(checkOtherOption(args)):
         if(msg != ''):
             raise OptionValueError(msg)
         else:
             raise OptionValueError("This option cannot be combined with other options")
-    
+
 def printHelp():
     storage_dir = helper_get_stor_dir()
     if(storage_dir is None):
-        storage_dir = "Unknown" 
+        storage_dir = "Unknown"
     else:
         storage_dir += "imported/"
     print """
@@ -111,15 +111,15 @@ There are two ways to import audio files into Airtime:
 
    Copied or moved files will be placed into the folder:
    %s
-        
+
    Files will be automatically organized into the structure
    "Artist/Album/TrackNumber-TrackName-Bitrate.file_extension".
 
 2) Use airtime-import to add a folder to the Airtime library ("watch" a folder).
-    
+
    All the files in the watched folder will be imported to Airtime and the
    folder will be monitored to automatically detect any changes. Hence any
-   changes done in the folder(add, delete, edit a file) will trigger 
+   changes done in the folder(add, delete, edit a file) will trigger
    updates in Airtime library.
 """ % storage_dir
     parser.print_help()
@@ -209,7 +209,7 @@ def WatchRemoveAction(option, opt, value, parser):
             print "Removing the watch folder failed: %s" % res['msg']['error']
     else:
         print "The given path is not a directory: %s" % path
-        
+
 def StorageSetAction(option, opt, value, parser):
     bypass = False
     isF = '-f' in parser.rargs
@@ -231,12 +231,12 @@ def StorageSetAction(option, opt, value, parser):
             confirm = confirm or 'N'
         if(confirm == 'n' or confirm =='N'):
             sys.exit(1)
-    
+
     if(len(parser.rargs) > 1):
         raise OptionValueError("Too many arguments. This option requires exactly one argument.")
     elif(len(parser.rargs) == 0 ):
         raise OptionValueError("No argument found. This option requires exactly one argument.")
-    
+
     path = parser.rargs[0]
     if (path[0] == "/" or path[0] == "~"):
         path = os.path.realpath(path)
@@ -254,17 +254,17 @@ def StorageSetAction(option, opt, value, parser):
             print "Setting storage folder failed: %s" % res['msg']['error']
     else:
         print "The given path is not a directory: %s" % path
-        
+
 def StorageGetAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
         raise OptionValueError("This option does not take any arguments.")
     print helper_get_stor_dir()
-    
+
 class OptionValueError(RuntimeError):
     def __init__(self, msg):
         self.msg = msg
-          
+
 usage = """[-c|--copy FILE/DIR [FILE/DIR...]] [-m|--move FILE/DIR [FILE/DIR...]]
        [--watch-add DIR] [--watch-list] [--watch-remove DIR]
        [--storage-dir-set DIR] [--storage-dir-get]"""
@@ -293,7 +293,7 @@ if('-h' in sys.argv):
 if(len(sys.argv) == 1 or '-' not in sys.argv[1]):
     printHelp()
     sys.exit()
-    
+
 try:
     (option, args) = parser.parse_args()
 except Exception, e:
@@ -306,7 +306,7 @@ except Exception, e:
 except SystemExit:
     printHelp()
     sys.exit()
-    
+
 if option.help:
     printHelp()
     sys.exit()

@@ -92,5 +92,13 @@ if ($item['type'] == 2) {
 <?php endforeach; ?>
 
 <?php else : ?>
-<li class="spl_empty">Empty playlist</li>
+<li class="spl_empty">
+<?php
+    if ($this->obj instanceof Application_Model_Block) {
+        echo 'Empty smart block';
+    } else {
+        echo 'Empty playlist';
+    }
+?>
+</li>
 <?php endif; ?>

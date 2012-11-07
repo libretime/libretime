@@ -40,6 +40,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('get-files-without-replay-gain' , 'json')
                 ->addActionContext('reload-metadata-group'         , 'json')
                 ->addActionContext('notify-webstream-data'         , 'json')
+                ->addActionContext('get-stream-parameters'         , 'json')
+                ->addActionContext('push-stream-stats'         , 'json')
                 ->initContext();
     }
 
@@ -490,6 +492,10 @@ class ApiController extends Zend_Controller_Action
                 $file->setFileExistsFlag(true);
                 $file->setMetadata($md);
             }
+            if ($md['is_record'] != 0) {
+                $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
+            }
+            
         } elseif ($mode == "modify") {
             $filepath = $md['MDATA_KEY_FILEPATH'];
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
@@ -562,7 +568,6 @@ class ApiController extends Zend_Controller_Action
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
-            unset( $info_json["is_record"] );
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
@@ -952,6 +957,24 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->response = $data;
         $this->view->media_id = $media_id;
+    }
+
+    public function getStreamParametersAction() {
+        $streams = array("s1", "s2", "s3");
+        $stream_params = array();
+        foreach ($streams as $s) {
+            $stream_params[$s] = 
+                Application_Model_StreamSetting::getStreamDataNormalized($s);
+        }
+        $this->view->stream_params = $stream_params;
+    }
+
+    public function pushStreamStatsAction() {
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam("data"), true);
+
+        Application_Model_ListenerStat::insertDataPoints($data);
+        $this->view->data = $data;
     }
 
 }

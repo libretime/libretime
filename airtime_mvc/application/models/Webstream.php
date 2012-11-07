@@ -185,7 +185,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
                 }
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
-                if (preg_match("/(x-mpegurl)|(xspf\+xml)|(pls\+xml)/", $mime)) {
+                if (preg_match("/(x-mpegurl)|(xspf\+xml)|(pls\+xml)|(x-scpls)/", $mime)) {
                      list($mime, $content_length_found) = self::discoverStreamMime($mediaUrl);
                 }
             } catch (Exception $e) {
@@ -307,7 +307,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $media_url = self::getM3uUrl($url);
         } elseif (preg_match("/xspf\+xml/", $mime)) {
             $media_url = self::getXspfUrl($url);
-        } elseif (preg_match("/pls\+xml/", $mime)) {
+        } elseif (preg_match("/pls\+xml/", $mime) || preg_match("/x-scpls/", $mime)) {
             $media_url = self::getPlsUrl($url);
         } elseif (preg_match("/(mpeg|ogg)/", $mime)) {
             if ($content_length_found) {

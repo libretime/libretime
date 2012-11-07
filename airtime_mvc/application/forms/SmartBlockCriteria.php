@@ -212,6 +212,14 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         }//for
 
+        $repeatTracks = new Zend_Form_Element_Checkbox('sp_repeat_tracks');
+        $repeatTracks->setDecorators(array('viewHelper'))
+                     ->setLabel('Allow Repeat Tracks:');
+        if (isset($storedCrit["repeat_tracks"])) {
+                $repeatTracks->setChecked($storedCrit["repeat_tracks"]["value"] == 1?true:false);
+        }
+        $this->addElement($repeatTracks);
+        
         $limit = new Zend_Form_Element_Select('sp_limit_options');
         $limit->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
@@ -220,7 +228,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $limit->setValue($storedCrit["limit"]["modifier"]);
         }
         $this->addElement($limit);
-
+        
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
         $limitValue->setAttrib('class', 'sp_input_text_limit')
                    ->setLabel('Limit to')
@@ -454,7 +462,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
                         // validation on type of column
                         if ($d['sp_criteria_field'] == 'length') {
-                            if (!preg_match("/(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
+                            if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
                                 $element->addError("'Length' should be in '00:00:00' format");
                                 $isValid = false;
                             }

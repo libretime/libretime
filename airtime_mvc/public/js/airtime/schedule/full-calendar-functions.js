@@ -206,7 +206,6 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    getCurrentShow();
     
     $(element).data("event", event);
 
@@ -371,7 +370,9 @@ function checkSCUploadStatus(){
         });
     });
 }
-
+/** This function adds and removes the current
+ *  show icon
+ */
 function getCurrentShow(){
     var url = '/Schedule/get-current-show/format/json',
         id,

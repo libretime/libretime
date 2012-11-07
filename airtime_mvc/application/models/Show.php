@@ -270,6 +270,13 @@ SQL;
 
         try {
             //update the status flag in cc_schedule.
+
+            /* Since we didn't use a propel object when updating
+             * cc_show_instances table we need to clear the instances
+             * so the correct information is retrieved from the db
+             */
+            CcShowInstancesPeer::clearInstancePool();
+
             $instances = CcShowInstancesQuery::create()
                 ->filterByDbEnds($current_timestamp, Criteria::GREATER_THAN)
                 ->filterByDbShowId($this->_showId)
@@ -1253,6 +1260,7 @@ SQL;
         if ($data['add_show_id'] != -1) {
             $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
             $con->beginTransaction();
+            
 
             //current timesamp in UTC.
             $current_timestamp = gmdate("Y-m-d H:i:s");
@@ -1743,7 +1751,8 @@ SQL;
         $days     = $interval->format('%a');
         $shows    = Application_Model_Show::getShows($p_start, $p_end);
         $nowEpoch = time();
-
+        $content_count = Application_Model_ShowInstance::getContentCount(
+            $p_start, $p_end);
         $timezone = date_default_timezone_get();
 
         foreach ($shows as $show) {
@@ -1789,9 +1798,9 @@ SQL;
 
             $showInstance = new Application_Model_ShowInstance(
                 $show["instance_id"]);
-            $showContent = $showInstance->getShowListContent();
 
-            $options["show_empty"] = empty($showContent) ? 1 : 0;
+            $options["show_empty"] = (array_key_exists($show['instance_id'],
+                $content_count)) ? 0 : 1;
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
