@@ -159,12 +159,13 @@ class AirtimeApiClient(object):
 
     def __get_airtime_version(self):
         # TODO : maybe fix this function to drop an exception?
-        try: return self.services.version_url()
+        try: return self.services.version_url()[u'version']
         except Exception: return -1
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger
         version = self.__get_airtime_version()
+        # logger.info('Airtime version found: ' + str(version))
         if (version == -1):
             if (verbose):
                 logger.info('Unable to get Airtime version number.\n')

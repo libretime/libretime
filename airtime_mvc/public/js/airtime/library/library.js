@@ -616,7 +616,7 @@ var AIRTIME = (function(AIRTIME) {
                             text: aData.track_title
                         },
                         ajax: {
-                            url: baseUrl+"/Library/get-file-meta-data",
+                            url: baseUrl+"/Library/get-file-metadata",
                             type: "get",
                             data: ({format: "html", id : aData.id, type: aData.ftype}),
                             success: function(data, status) {

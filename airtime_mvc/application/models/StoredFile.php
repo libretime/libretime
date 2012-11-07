@@ -177,7 +177,7 @@ class Application_Model_StoredFile
                     $this->_file->setDbOwnerId( $owner->getDbId() );
                 } else {
                     Logging::info("Could not find suitable owner for file
-                        '".$p_md['MDATA_KEY_FILEPATH']."'");
+                        '".$p_md['filepath']."'");
                 }
             }
             # We don't want to process owner_id in bulk because we already
