@@ -10,8 +10,9 @@ import time
 from api_clients import api_client
 
 class ListenerStat(Thread):
-    def __init__(self, logger=None):
+    def __init__(self, config, logger=None):
         Thread.__init__(self)
+        self.config = config
         self.api_client = api_client.AirtimeApiClient()
         if logger is None:
             self.logger = logging.getLogger()
@@ -31,20 +32,18 @@ class ListenerStat(Thread):
 
 
     def get_icecast_xml(self, ip):
-        encoded = base64.b64encode("%(admin_user)s:%(admin_password)s" % ip)
+        #encoded = base64.b64encode("%(admin_user)s:%(admin_password)s" % ip)
 
-        header = {"Authorization":"Basic %s" % encoded}
+        #header = {"Authorization":"Basic %s" % encoded}
         self.logger.debug(ip)
-        url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
+        url = 'http://%(host)s:%(port)s/stats.xsl' % ip
         self.logger.debug(url)
-        req = urllib2.Request(
-            #assuming that the icecast stats path is /admin/stats.xml
-            #need to fix this
-            url=url,
-            headers=header)
+        req = urllib2.Request(url=url)
+            #headers=header)
 
         f = urllib2.urlopen(req)
         document = f.read()
+
         return document
 
 
@@ -78,11 +77,10 @@ class ListenerStat(Thread):
         #streams are the same server, we will still initiate 3 separate
         #connections
         for k, v in stream_parameters.items():
-            v["admin_user"] = "admin"
-            v["admin_password"] = "hackme"
+            #v["admin_user"] = "admin"
+            #v["admin_password"] = "hackme"
             if v["enable"] == 'true':
                 stats.append(self.get_icecast_stats(v))
-            #stats.append(get_shoutcast_stats(ip))
 
         return stats
 
@@ -123,5 +121,5 @@ if __name__ == "__main__":
     # add ch to logger
     #logger.addHandler(ch)
 
-    ls = ListenerStat(logger)
-    ls.run()
+    #ls = ListenerStat(logger=logger)
+    #ls.run()
