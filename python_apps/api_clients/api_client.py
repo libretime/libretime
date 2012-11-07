@@ -388,5 +388,14 @@ class AirtimeApiClient(object):
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        self.logger.info( self.notify_webstream_data.req(
+        self.logger.info( self.services.notify_webstream_data.req(
             _post_data={'data':data}, media_id=str(media_id)).retry(5))
+
+    def get_stream_parameters(self):
+        response = self.services.get_stream_parameters()
+        self.logger.debug(response)
+        return response
+    
+    def push_stream_stats(self, data):
+        # TODO : users of this method should do their own error handling
+        response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
