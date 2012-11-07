@@ -7,25 +7,44 @@ class Application_Model_ListenerStat
     
     public static function getDataPointsWithinRange($p_start, $p_end) {
         $sql = <<<SQL
-SELECT lc.id, ts.timestamp, lc.listener_count, mn.mount_name
+SELECT mount_name, count(*)
     FROM cc_listener_count AS lc
     INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
     INNER JOIN cc_mount_name AS mn ON (lc.mount_name_id = mn.ID)
-WHERE (ts.timestamp >=:p1 AND ts.timestamp <= :p2)
-    ORDER BY mount_name, timestamp
+WHERE (ts.timestamp >=:p1 AND ts.timestamp <=:p2)
+group by mount_name
 SQL;
         $data = Application_Common_Database::prepareAndExecute($sql,
-            array('p1'=>$p_start, 'p2'=>$p_end));
+                array('p1'=>$p_start, 'p2'=>$p_end));
         
         $out = array();
         foreach ($data as $d) {
-            $t = new DateTime($d['timestamp'], new DateTimeZone("UTC"));
-            $t->setTimezone(new DateTimeZone(date_default_timezone_get()));
-            // tricking javascript so it thinks the server timezone is in UTC
-            $dt = new DateTime($t->format("Y-m-d H:i:s"), new DateTimeZone("UTC"));
+            $jump = intval($d['count']/1000);
+            $jump = max(1, $jump);
+            $remainder = $jump == 1?0:1;
             
-            $d['timestamp'] = $dt->format("U");
-            $out[$d['mount_name']][] = $d;
+            $sql = <<<SQL
+SELECT *
+FROM
+    (SELECT lc.id, ts.timestamp, lc.listener_count, mn.mount_name,
+        ROW_NUMBER() OVER (ORDER BY timestamp) as rownum
+    FROM cc_listener_count AS lc
+    INNER JOIN cc_timestamp AS ts ON (lc.timestamp_id = ts.ID)
+    INNER JOIN cc_mount_name AS mn ON (lc.mount_name_id = mn.ID)
+    WHERE (ts.timestamp >=:p1 AND ts.timestamp <= :p2) AND mount_name=:p3) as temp
+WHERE (temp.rownum%:p4) = :p5;
+SQL;
+            $result = Application_Common_Database::prepareAndExecute($sql,
+                    array('p1'=>$p_start, 'p2'=>$p_end, 'p3'=>$d['mount_name'], 'p4'=>$jump, 'p5'=>$remainder));
+            foreach ($result as $r) {
+                $t = new DateTime($r['timestamp'], new DateTimeZone("UTC"));
+                $t->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                // tricking javascript so it thinks the server timezone is in UTC
+                $dt = new DateTime($t->format("Y-m-d H:i:s"), new DateTimeZone("UTC"));
+                
+                $r['timestamp'] = $dt->format("U");
+                $out[$r['mount_name']][] = $r;
+            }
         }
         return $out;
     }

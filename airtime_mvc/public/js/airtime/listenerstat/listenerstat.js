@@ -35,6 +35,7 @@ function getDataAndPlot(startTimestamp, endTimestamp){
 }
 
 function plot(datasets){
+    var plot;
     data = null;
     function plotByChoice(doAll)
     {
@@ -81,9 +82,20 @@ function plot(datasets){
         numOfTicks = 10;
         tickSize = (lastTimestamp.getTime() - firstTimestamp.getTime())/1000/numOfTicks;
         
-        $.plot($("#flot_placeholder"), data, {
+        plot = $.plot($("#flot_placeholder"), data, {
             yaxis: { min: 0, tickDecimals: 0 },
             xaxis: { mode: "time", timeformat:"%y/%m/%0d %H:%M", tickSize: [tickSize, "second"] },
+            grid: {
+                hoverable: true,
+                backgroundColor: { colors: ["#888888", "#999999"] }
+            },
+            series: {
+                lines: {
+                    show: true,
+                    fill: 0.3
+                },
+                points: { show: true }
+            },
             legend: {
                 container: $('#legend'),
                 noColumns: 5,
@@ -96,6 +108,45 @@ function plot(datasets){
                     cb += label;
                     return cb;
                  }
+            }
+        });
+        
+        function showTooltip(x, y, contents) {
+            $('<div id="tooltip">' + contents + '</div>').css( {
+                position: 'absolute',
+                display: 'none',
+                top: y + 5,
+                left: x + 5,
+                border: '1px solid #fdd',
+                padding: '2px',
+                'background-color': '#fee',
+                opacity: 0.80
+            }).appendTo("body").fadeIn(200);
+        }
+
+        var previousPoint = null;
+        $("#flot_placeholder").bind("plothover", function (event, pos, item) {
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+                    
+                    $("#tooltip").remove();
+                    var y = item.datapoint[1].toFixed(2);
+                    
+                    showTooltip(item.pageX, item.pageY,
+                                "Listener Count on '"+item.series.label + "': " + Math.floor(y));
+                }
+            }
+            else {
+                $("#tooltip").remove();
+                previousPoint = null;
+            }
+        });
+
+        $("#placeholder").bind("plotclick", function (event, pos, item) {
+            if (item) {
+                $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
+                plot.highlight(item.series, item.datapoint);
             }
         });
         
