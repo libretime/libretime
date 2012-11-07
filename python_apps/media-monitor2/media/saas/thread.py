@@ -2,18 +2,16 @@ import threading
 
 tc = threading.local()
 
-class InstanceThread(threading.Thread):
+class HasUser(object):
+    def user(self): 
+        return self._user
+
+class InstanceThread(threading.Thread, HasUser):
     def __init__(self,user, *args, **kwargs):
         super(InstanceThread, self).__init__(*args, **kwargs)
         self._user = user
-
-    def run(self):
-        tc._user = self._user
         
-    def user(self):
-        return tc._user
-
-class InstanceInheritingThread(threading.Thread):
+class InstanceInheritingThread(threading.Thread, HasUser):
     def __init__(self, *args, **kwargs):
+        self._user = threading.current_thread().user()
         super(InstanceInheritingThread, self).__init__(*args, **kwargs)
-        self.user = tc._user
