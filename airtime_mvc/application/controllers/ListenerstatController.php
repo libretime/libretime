@@ -18,6 +18,7 @@ class ListenerstatController extends Zend_Controller_Action
         $baseUrl = $request->getBaseUrl();
     
         $this->view->headScript()->appendFile($baseUrl.'/js/flot/jquery.flot.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'/js/flot/jquery.flot.crosshair.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/listenerstat/listenerstat.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
         $offset = date("Z") * -1;
@@ -46,9 +47,6 @@ class ListenerstatController extends Zend_Controller_Action
                 'his_time_end' => $end->format("H:i")
         ));
         
-        $allMPs = Application_Model_ListenerStat::getAllMPNames();
-        
-        $this->view->mps = $allMPs;
         $this->view->date_form = $form;
     }
     

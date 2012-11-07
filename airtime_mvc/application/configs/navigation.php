@@ -87,7 +87,7 @@ $pages = array(
                 'resource'   => 'playouthistory'
             ),
             array(
-                'label'      => 'Listener Stat',
+                'label'      => 'Listener Stats',
                 'module'     => 'default',
                 'controller' => 'listenerstat',
                 'action'     => 'index',
