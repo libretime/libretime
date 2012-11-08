@@ -687,7 +687,7 @@ SQL;
             'end'               => $end,
             'show_name'         => $item["show_name"],
             'replay_gain'       => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
-            'independent_event' => true
+            'independent_event' => false
         );
         self::appendScheduleItem($data, $start, $schedule_item);
     }
