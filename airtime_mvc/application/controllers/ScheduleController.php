@@ -526,8 +526,6 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-
         $showInstanceId = $this->_getParam('id');
 
         $this->view->action = "edit-show";
@@ -632,7 +630,6 @@ class ScheduleController extends Zend_Controller_Action
 
         $formLive->populate($show->getLiveStreamInfo());
 
-        if (!$isSaas) {
             $formRecord = new Application_Form_AddShowRR();
             $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
             $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
@@ -676,7 +673,6 @@ class ScheduleController extends Zend_Controller_Action
                 $formAbsoluteRebroadcast->disable();
                 $formRebroadcast->disable();
             }
-        }
 
         if (!$isAdminOrPM) {
             $formWhat->disable();

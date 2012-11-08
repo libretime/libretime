@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-import media.monitor.owners as owners
+from media.monitor import owners
 
 class TestMMP(unittest.TestCase):
     def setUp(self):

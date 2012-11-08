@@ -102,6 +102,10 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor : 'pointer',
+                    cursorAt: {
+                        top: 30,
+                        left: 100
+                    },
                     connectToSortable : '#spl_sortable'
                 });
     };
