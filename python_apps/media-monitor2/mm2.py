@@ -124,8 +124,6 @@ def main(global_config, api_client_config, log_config,
             airtime_receiver.new_watch({ 'directory':watch_dir }, restart=True)
         else: log.info("Failed to add watch on %s" % str(watch_dir))
 
-    bs = Bootstrapper( db=sdb, watch_signal='watch' )
-
     ed = EventDrainer(airtime_notifier.connection,
             interval=float(config['rmq_event_wait']))
 

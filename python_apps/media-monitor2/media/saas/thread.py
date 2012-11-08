@@ -21,3 +21,5 @@ class InstanceInheritingThread(threading.Thread, HasUser):
 def user():
     try: return threading.current_thread().user()
     except AttributeError: raise UserlessThread()
+
+def apc(): return user().api_client
