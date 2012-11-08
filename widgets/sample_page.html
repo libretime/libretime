@@ -14,6 +14,11 @@ $(document).ready(function() {
         text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
         updatePeriod: 20 //seconds
     });
+    $("#headerLiveTrackHolder").airtimeLiveTrackInfo({
+        sourceDomain: "http://localhost",
+        text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"},
+        updatePeriod: 20 //seconds
+    });
     $("#onAirToday").airtimeShowSchedule({
         sourceDomain: "http://localhost",
         text: {onAirToday:"On air today"},
@@ -34,10 +39,17 @@ $(document).ready(function() {
 </head>
 <body>
 <h1>"Now Playing" Widget</h1>
-This widget displays what is currently playing:
+This widget displays which show is currently playing:
 <br/>
 <br/>
 <div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
+<br/>
+<br/>
+<h1>"Current Show & Track Information" Widget</h1>
+This widget displays which show and track are currently playing:
+<br/>
+<br/>
+<div id="headerLiveTrackHolder" style="border: 1px solid #999999; padding: 10px;"></div>
 <br/>
 <br/>
 <h1>"Today's Program" Widget</h1>
