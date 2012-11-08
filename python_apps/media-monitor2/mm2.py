@@ -5,7 +5,6 @@ import logging
 import logging.config
 
 from media.monitor.manager          import Manager
-from media.monitor.bootstrap        import Bootstrapper
 from media.monitor.log              import get_logger, setup_logging
 from media.monitor.config           import MMConfig
 from media.monitor.toucher          import ToucherThread
@@ -23,7 +22,6 @@ from std_err_override               import LogWriter
 import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
-
 def setup_global(log):
     """ setup unicode and other stuff """
     log.info("Attempting to set the locale...")
@@ -39,7 +37,6 @@ def setup_global(log):
         log.info("Failed to set the locale for unknown reason. \
                 Logging exception.")
         log.info(str(e))
-
 
 
 def main(global_config, api_client_config, log_config,
@@ -99,8 +96,6 @@ def main(global_config, api_client_config, log_config,
             config_path=api_client_config)
 
     ReplayGainUpdater.start_reply_gain(apiclient)
-
-    sdb = AirtimeDB(apiclient)
 
     manager = Manager()
 
