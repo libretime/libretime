@@ -48,7 +48,7 @@ def main(global_config, api_client_config, log_config,
         if not os.path.exists(cfg): raise NoConfigFile(cfg)
     # MMConfig is a proxy around ConfigObj instances. it does not allow
     # itself users of MMConfig instances to modify any config options
-    # directly through the dictionary. Users of this object muse use the
+    # directly through the dictionary. Users of this object must use the
     # correct methods designated for modification
     try: config = MMConfig(global_config)
     except NoConfigFile as e:
