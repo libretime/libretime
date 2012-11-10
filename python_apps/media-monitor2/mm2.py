@@ -22,6 +22,17 @@ from std_err_override               import LogWriter
 import media.monitor.pure          as mmp
 from api_clients import api_client as apc
 
+def setup_logger(log_config, logpath):
+    logging.config.fileConfig(log_config)
+    #need to wait for Python 2.7 for this..
+    #logging.captureWarnings(True)
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
+    logfile = unicode(logpath)
+    setup_logging(logfile)
+    log = get_logger()
+    return log
+
 def setup_global(log):
     """ setup unicode and other stuff """
     log.info("Attempting to set the locale...")
@@ -55,18 +66,8 @@ def main(global_config, api_client_config, log_config,
     except Exception as e:
         print("Unknown error reading configuration file: '%s'" % global_config)
         print(str(e))
-
-
-    logging.config.fileConfig(log_config)
-
-    #need to wait for Python 2.7 for this..
-    #logging.captureWarnings(True)
-
-    logger = logging.getLogger()
-    LogWriter.override_std_err(logger)
-    logfile = unicode( config['logpath'] )
-    setup_logging(logfile)
-    log = get_logger()
+    
+    log = setup_logger( log_config, config['logpath'] )
 
     if not index_create_attempt:
         if not os.path.exists(config['index_path']):
