@@ -764,7 +764,7 @@ class AirtimeApiClient(object):
             json_data = json.dumps(data)
             encoded_data = urllib.urlencode({'data': json_data})
             request = urllib2.Request(url, encoded_data)
-            print self.get_response_from_server(request)
+            print self.get_response_from_server(request, attempts = 1)
 
         except Exception, e:
             self.logger.error("Exception: %s", e)
