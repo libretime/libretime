@@ -171,7 +171,7 @@ function setLiveSourceConnectionOverrideListener(){
 }
 
 
-$(document).ready(function() {
+function setupEventListeners() {
     // initial stream url
     $("dd[id=outputStreamURL-element]").each(function(){
         rebuildStreamURL($(this))
@@ -388,7 +388,13 @@ $(document).ready(function() {
             $.post(url, {format:"json", data: data}, function(data){
                 var json = $.parseJSON(data);
                 $('#content').empty().append(json.html);
+                setupEventListeners();
             });
         }
     });
+}
+
+$(document).ready(function() {
+    setupEventListeners();
 });
+
