@@ -4,18 +4,18 @@
             New <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li id='lib-new-pl'><a href="#">New Playlist</a></li>
-            <li id='lib-new-bl'><a href="#">New Smart Block</a></li>
-            <li id='lib-new-ws'><a href="#">New Webstream</a></li>
+            <li id='lib-new-pl'><a href="#"><? echo _("New Playlist") ?></a></li>
+            <li id='lib-new-bl'><a href="#"><? echo _("New Smart Block") ?></a></li>
+            <li id='lib-new-ws'><a href="#"><? echo _("New Webstream") ?></a></li>
         </ul>
     </div>
 
 <?php if (isset($this->obj)) : ?>
  <div class="btn-group pull-right">
-    <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit">Save</button>
+    <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit"><? echo _("Save") ?></button>
 </div>
 <div class="btn-group pull-right">
-    <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false">Delete</button>
+    <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false"><? echo _("Delete") ?></button>
 </div>
 <?php endif; ?>
 </div>
@@ -37,7 +37,7 @@
     <fieldset class="toggle" id="fieldset-metadate_change">
         <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
         <dl class="zend_form">
-            <dt id="description-label"><label for="description">Description</label></dt>
+            <dt id="description-label"><label for="description"><? echo _("Description") ?></label></dt>
             <dd id="description-element">
                 <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
             </dd>
@@ -60,5 +60,5 @@
     </dl>
 
 <?php else : ?>
-    <div>No webstream</div>
+    <div><? echo _("No webstream") ?></div>
 <?php endif; ?>
