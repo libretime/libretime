@@ -693,13 +693,21 @@ class ApiController extends Zend_Controller_Action
         if (Application_Model_Preference::GetPlanLevel() != 'disabled'){
             if ($component == "pypo"){
                 $split = explode('.', $_SERVER['SERVER_NAME']);
-                if (count($split) > 0){
-                    $subDomain = $split[0];
-                    
+                $subdomain = array();
+                foreach ($split as $value) {
+                    if ($value == 'airtime') {
+                        break;
+                    } else {
+                        $subdomain[] = $value;
+                    }
+                }
+                if (count($subdomain) > 0){
+                    $subDomain = implode('.',$subdomain);
+
                     $md = array();
                     $md["sub_domain"] = $subDomain;
                     $md["pypo_ip"] = $remoteAddr;
-                    
+
                     Application_Model_RabbitMq::SendMessageToHaproxyConfigDaemon($md);
                 }
             }
