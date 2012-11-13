@@ -35,7 +35,7 @@
     </div>
 
     <fieldset class="toggle" id="fieldset-metadate_change">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>View / edit description</legend>
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><? echo _("View / edit description"); ?></legend>
         <dl class="zend_form">
             <dt id="description-label"><label for="description"><? echo _("Description") ?></label></dt>
             <dd id="description-element">
@@ -48,12 +48,12 @@
     <dl class="zend_form">
         <dt id="submit-label" style="display: none;">&nbsp;</dt>
         <div id="url-error" class="errors" style="display:none;"></div>
-        <dt id="streamurl-label"><label for="streamurl">Stream URL:</label></dt>
+        <dt id="streamurl-label"><label for="streamurl"><? echo _("Stream URL:"); ?></label></dt>
         <dd id="streamurl-element">
         <input type="text" value="<?php echo $this->obj->getUrl(); ?>" size="40"/>
         </dd>
         <div id="length-error" class="errors" style="display:none;"></div>
-        <dt id="streamlength-label"><label for="streamlength">Default Length:</label></dt>
+        <dt id="streamlength-label"><label for="streamlength"><? echo _("Default Length:"); ?></label></dt>
         <dd id="streamlength-element">
         <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>"/>
         </dd>
