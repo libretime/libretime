@@ -2,7 +2,7 @@
 /* CSS Document */
 
 
-#headerLiveHolder {
+#headerLiveHolder, #headerLiveTrackHolder {
     overflow: hidden;
 	position:relative;
 	width:300px!important;
@@ -11,7 +11,7 @@
 	margin: 0;
 	padding: 0;
     }
-	#headerLiveHolder * {
+	#headerLiveHolder *, #headerLiveTrackHolder * {
 	  margin: 0;
 	  padding: 0;
 	  }
@@ -27,7 +27,14 @@
 	  font-weight:normal;
 	  line-height:12px;
 	  }
-	#headerLiveHolder ul li {
+	#headerLiveTrackHolder span#status-current-show {
+	  font-size:10px;
+	  color:#68bd44;
+	  text-transform:uppercase;
+	  font-weight:normal;
+	  line-height:12px;
+	  }
+	#headerLiveHolder ul li, #headerLiveTrackHolder ul li {
 	  overflow:hidden;
 	  position:relative;
 	  height:12px;
@@ -36,14 +43,13 @@
 	  color:#999999;
 	  line-height:11px;
 	  }
-	#headerLiveHolder ul li.current {
+	#headerLiveHolder ul li.current, #headerLiveTrackHolder ul li.current {
 	  font-weight:bold;
 	  color:#666666;
 	  }
 	  #headerLiveHolder ul li span {
 		position:absolute;
 		right:0px;
-		top:0px;
 		}
 	  #headerLiveHolder ul li span#time-elapsed {
 		right: 50px;
@@ -54,6 +60,23 @@
 	  #headerLiveHolder ul li span#time-remaining:before {
 		content: "r.";
 	  }
+	  #headerLiveTrackHolder span.current{
+	  font-weight:bold;
+	  color:#666666;
+	  position:absolute;
+		right:10px;
+		font-size: 11px;
+	  }
+	  #headerLiveTrackHolder span#time-elapsed {
+		right: 65px;
+	  }
+	  #headerLiveTrackHolder span#time-elapsed:before {
+		content: "e.";
+	  }
+	  #headerLiveTrackHolder span#time-remaining:before {
+		content: "r.";
+	  }
+	  
 
 #onAirToday {
   width:300px;

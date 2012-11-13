@@ -129,6 +129,35 @@ class Application_Model_StreamSetting
         return $data;
     }
 
+    /* Similar to getStreamData, but removes all sX prefixes to
+     * make data easier to iterate over */
+    public static function getStreamDataNormalized($p_streamId)
+    {
+        $con = Propel::getConnection();
+        $streamId = pg_escape_string($p_streamId);
+        $sql = "SELECT * "
+                ."FROM cc_stream_setting "
+                ."WHERE keyname LIKE '{$streamId}_%'";
+
+        $stmt = $con->prepare($sql);
+        
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll();
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+
+        $data = array();
+
+        foreach ($rows as $row) {
+            list($id, $key) = explode("_", $row["keyname"], 2);
+            $data[$key] = $row["value"];
+        }
+
+        return $data;
+    }
+
     public static function getStreamSetting()
     {
         $con = Propel::getConnection();

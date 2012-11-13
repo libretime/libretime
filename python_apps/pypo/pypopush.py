@@ -120,6 +120,10 @@ class PypoPush(Thread):
 
                 next_media_item_chain = self.get_next_schedule_chain(chains, datetime.utcnow())
                 if next_media_item_chain is not None:
+                    try:
+                        chains.remove(next_media_item_chain)
+                    except ValueError, e:
+                        self.logger.error(str(e))
                     chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
                     time_until_next_play = self.date_interval_to_seconds(chain_start - datetime.utcnow())
                     self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
@@ -405,8 +409,9 @@ class PypoPush(Thread):
         closest_chain = None
         for chain in chains:
             chain_start = datetime.strptime(chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
+            chain_end = datetime.strptime(chain[-1]['end'], "%Y-%m-%d-%H-%M-%S")
             self.logger.debug("tnow %s, chain_start %s", tnow, chain_start)
-            if (closest_start == None or chain_start < closest_start) and chain_start > tnow:
+            if (closest_start == None or chain_start < closest_start) and (chain_start > tnow or (chain_start < tnow and chain_end > tnow)):
                 closest_start = chain_start
                 closest_chain = chain
 

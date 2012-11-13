@@ -23,11 +23,5 @@ class Application_Form_Preferences extends Zend_Form
         $soundcloud_pref = new Application_Form_SoundcloudPreferences();
         $this->addSubForm($soundcloud_pref, 'preferences_soundcloud');
 
-        $saveBtn = new Zend_Form_Element_Button('pref_save');
-        $saveBtn->setAttrib('class', 'btn btn-small right-floated');
-        $saveBtn->setIgnore(true);
-        $saveBtn->setLabel('Save');
-        $this->addElement($saveBtn);
-
     }
 }
