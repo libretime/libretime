@@ -387,8 +387,8 @@ SQL;
         }
 
         if (isset($obj)) {
-            if (($obj instanceof CcFiles && $obj->visible()) 
-                || $obj instanceof CcWebstream || 
+            if (($obj instanceof CcFiles && $obj->visible())
+                || $obj instanceof CcWebstream ||
                 $obj instanceof CcBlock) {
 
                 $entry               = $this->plItem;
@@ -932,6 +932,29 @@ SQL;
     public function deleteAllFilesFromPlaylist()
     {
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
+    }
+    
+    public function shuffle()
+    {
+        $sql = <<<SQL
+SELECT max(position) from cc_playlistcontents WHERE playlist_id=:p1
+SQL;
+        $out = Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
+        $maxPosition = $out[0]['max'];
+        
+        $map = range(0, $maxPosition);
+        shuffle($map);
+        
+        $currentPos = implode(',', array_keys($map));
+        $sql = "UPDATE cc_playlistcontents SET position = CASE position ";
+        foreach ($map as $current => $after) {
+            $sql .= sprintf("WHEN %d THEN %d ", $current, $after);
+        }
+        $sql .= "END WHERE position IN ($currentPos) and playlist_id=:p1";
+        
+        Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
+        $result['result'] = 0;
+        return $result;
     }
 
 } // class Playlist
