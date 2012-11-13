@@ -1,13 +1,13 @@
 <div id="master-panel">
   <div class="now-playing-block">
-    <div class="text-row"><strong>Previous:</strong> <span id='previous'></span> <span id='prev-length'></span></div>
+    <div class="text-row"><strong><? echo _("Previous:"); ?></strong><? echo _(" "); ?><span id='previous'></span><? echo _(" "); ?><span id='prev-length'></span></div>
     <div class="now-playing-info song">
       <div class="time-flow"><span class="time-elapsed" id="time-elapsed"></span><span class="time-remaining" id="time-remaining"></span></div>
-      <span id='current'></span> <span class="length" id="song-length"></span><? echo _(" ") ?></div>
+      <span id='current'></span><? echo _(" "); ?><span class="length" id="song-length"></span><? echo _(" ") ?></div>
     <div class="progressbar">
       <div class="progress-song" id="progress-bar" style="width:0%;"></div>
     </div>
-    <div class="text-row next-song"><strong>Next:</strong> <span id='next'></span> <span id='next-length'></span></div>
+    <div class="text-row next-song"><strong><? echo _("Next:"); ?></strong><? echo _(" "); ?><span id='next'></span><? echo _(" "); ?><span id='next-length'></span></div>
   </div>
     <div class="show-block">
       <div class="text-row">&nbsp;</div>
