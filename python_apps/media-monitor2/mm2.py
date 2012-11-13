@@ -8,7 +8,6 @@ from media.monitor.manager          import Manager
 from media.monitor.log              import get_logger, setup_logging
 from media.monitor.config           import MMConfig
 from media.monitor.toucher          import ToucherThread
-from media.monitor.syncdb           import AirtimeDB
 from media.monitor.exceptions       import FailedToObtainLocale, \
                                            FailedToSetLocale, \
                                            NoConfigFile
