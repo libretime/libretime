@@ -15,7 +15,7 @@
                 <?php if($i > 1): ?>
                     <a class="ui-button ui-button-icon-only  ui-widget ui-state-default" id="remove_rebroadcast_absolute_<?php echo $i ?>">
                         <span class="ui-icon ui-icon-closethick"></span>
-                        <span class="ui-button-text">Remove</span>
+                        <span class="ui-button-text"><? echo _("Remove") ?></span>
                     </a>
                 <?php endif; ?>
                 <?php if(($this->element->getElement('add_show_rebroadcast_date_absolute_'.$i)->hasErrors()) 
@@ -37,7 +37,7 @@
     </ul>
     <a class="ui-button ui-button-icon-only  ui-widget ui-state-default add_absolute_rebroadcast_day">
         <span class="ui-icon ui-icon-plusthick"></span>
-        <span class="ui-button-text">Add</span>
+        <span class="ui-button-text"><? echo _("Add") ?></span>
     </a>
     </dd>          
     </dl>

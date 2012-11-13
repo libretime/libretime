@@ -36,10 +36,10 @@
 
 <?php if ($this->type == "playlist") { ?>
 <div class='file-md-qtip-legend'>
-<span class='webstream'>o</span> <span>Web Stream</span><br />
-<span class='dynamic'>o</span> <span>Dynamic Smart Block</span><br />
-<span class='static'>o</span> <span>Static Smart Block</span><br />
-<span>o</span> <span>Audio Track</span>
+<span class='webstream'><? echo _("o") ?></span> <span>Web Stream</span><br />
+<span class='dynamic'><? echo _("o") ?></span> <span>Dynamic Smart Block</span><br />
+<span class='static'><? echo _("o") ?></span> <span>Static Smart Block</span><br />
+<span><? echo _("o") ?></span> <span>Audio Track</span>
 </div>
 <?php } ?>
 
@@ -115,7 +115,7 @@
             <?php endforeach; ?>
         <?php endforeach; ?>
             <tr>
-                <td>Limit to </td>
+                <td><? echo _("Limit to ") ?></td>
                 <td><?php echo $this->contents["limit"]["value"] ?> <?php echo $this->contents["limit"]["modifier"] ?></td>
             </tr>
         </table>
