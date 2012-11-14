@@ -94,8 +94,6 @@ def main(global_config, api_client_config, log_config,
     apiclient = apc.AirtimeApiClient.create_right_config(log=log,
             config_path=api_client_config)
 
-    #ReplayGainUpdater.start_reply_gain(apiclient)
-
     manager = Manager()
 
     airtime_receiver = AirtimeMessageReceiver(config,manager)
