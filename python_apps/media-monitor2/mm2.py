@@ -15,7 +15,6 @@ from media.monitor.airtime          import AirtimeNotifier, \
                                            AirtimeMessageReceiver
 from media.monitor.watchersyncer    import WatchSyncer
 from media.monitor.eventdrainer     import EventDrainer
-from media.update.replaygainupdater import ReplayGainUpdater
 from std_err_override               import LogWriter
 
 import media.monitor.pure          as mmp
@@ -95,7 +94,7 @@ def main(global_config, api_client_config, log_config,
     apiclient = apc.AirtimeApiClient.create_right_config(log=log,
             config_path=api_client_config)
 
-    ReplayGainUpdater.start_reply_gain(apiclient)
+    #ReplayGainUpdater.start_reply_gain(apiclient)
 
     manager = Manager()
 
