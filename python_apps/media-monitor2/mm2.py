@@ -49,8 +49,10 @@ def main(global_config, api_client_config, log_config):
     ai = AirtimeInstance('hosted_install', '/', cfg)
     log = setup_logger( log_config, ai.mm_config['logpath'] )
     setup_global(log)
-    mm = MM2(ai)
-    mm.start()
+    run_instance(ai)
+
+def run_instance(airtime_intance):
+    MM2(airtime_intance).start()
 
 __doc__ = """
 Usage:
