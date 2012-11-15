@@ -31,6 +31,17 @@ Zend_Validate::setDefaultNamespaces("Zend");
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
 
+//localization configuration
+$lang = 'en_US.utf8';
+putenv("LC_ALL=$lang");
+putenv("LANG=$lang");
+$res = setlocale(LC_MESSAGES, $lang);
+
+$domain = 'airtime';
+bindtextdomain($domain, '/usr/share/airtime/locale');
+textdomain($domain);
+bind_textdomain_codeset($domain,'UTF-8');
+
 
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */

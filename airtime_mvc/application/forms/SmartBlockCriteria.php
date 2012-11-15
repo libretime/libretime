@@ -1,88 +1,119 @@
 <?php
 class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 {
-    private $criteriaOptions = array(
-            0              => "Select criteria",
-            "album_title"  => "Album",
-            "bit_rate"     => "Bit Rate (Kbps)",
-            "bpm"          => "BPM",
-            "composer"     => "Composer",
-            "conductor"    => "Conductor",
-            "copyright"    => "Copyright",
-            "artist_name"  => "Creator",
-            "encoded_by"   => "Encoded By",
-            "genre"        => "Genre",
-            "isrc_number"  => "ISRC",
-            "label"        => "Label",
-            "language"     => "Language",
-            "mtime"        => "Last Modified",
-            "lptime"       => "Last Played",
-            "length"       => "Length",
-            "mime"         => "Mime",
-            "mood"         => "Mood",
-            "owner_id"     => "Owner",
-            "replay_gain"  => "Replay Gain",
-            "sample_rate"  => "Sample Rate (kHz)",
-            "track_title"  => "Title",
-            "track_number" => "Track Number",
-            "utime"        => "Uploaded",
-            "info_url"     => "Website",
-            "year"         => "Year"
-    );
-
+    private $criteriaOptions;
+    private $stringCriteriaOptions;
+    private $numericCriteriaOptions;
+    private $limitOptions;
     private $criteriaTypes = array(
-            0              => "",
-            "album_title"  => "s",
-            "bit_rate"     => "n",
-            "bpm"          => "n",
-            "composer"     => "s",
-            "conductor"    => "s",
-            "copyright"    => "s",
-            "artist_name"  => "s",
-            "encoded_by"   => "s",
-            "utime"        => "n",
-            "mtime"        => "n",
-            "lptime"       => "n",
-            "genre"        => "s",
-            "isrc_number"  => "s",
-            "label"        => "s",
-            "language"     => "s",
-            "length"       => "n",
-            "mime"         => "s",
-            "mood"         => "s",
-            "owner_id"     => "s",
-            "replay_gain"  => "n",
-            "sample_rate"  => "n",
-            "track_title"  => "s",
-            "track_number" => "n",
-            "info_url"     => "s",
-            "year"         => "n"
+        0              => "",
+        "album_title"  => "s",
+        "bit_rate"     => "n",
+        "bpm"          => "n",
+        "composer"     => "s",
+        "conductor"    => "s",
+        "copyright"    => "s",
+        "artist_name"  => "s",
+        "encoded_by"   => "s",
+        "utime"        => "n",
+        "mtime"        => "n",
+        "lptime"       => "n",
+        "genre"        => "s",
+        "isrc_number"  => "s",
+        "label"        => "s",
+        "language"     => "s",
+        "length"       => "n",
+        "mime"         => "s",
+        "mood"         => "s",
+        "owner_id"     => "s",
+        "replay_gain"  => "n",
+        "sample_rate"  => "n",
+        "track_title"  => "s",
+        "track_number" => "n",
+        "info_url"     => "s",
+        "year"         => "n"
     );
+    
+    private function getCriteriaOptions($option = null)
+    {
+        if (!isset($this->criteriaOptions)) {
+            $this->criteriaOptions = array(
+                0              => _("Select criteria"),
+                "album_title"  => _("Album"),
+                "bit_rate"     => _("Bit Rate (Kbps)"),
+                "bpm"          => _("BPM"),
+                "composer"     => _("Composer"),
+                "conductor"    => _("Conductor"),
+                "copyright"    => _("Copyright"),
+                "artist_name"  => _("Creator"),
+                "encoded_by"   => _("Encoded By"),
+                "genre"        => _("Genre"),
+                "isrc_number"  => _("ISRC"),
+                "label"        => _("Label"),
+                "language"     => _("Language"),
+                "mtime"        => _("Last Modified"),
+                "lptime"       => _("Last Played"),
+                "length"       => _("Length"),
+                "mime"         => _("Mime"),
+                "mood"         => _("Mood"),
+                "owner_id"     => _("Owner"),
+                "replay_gain"  => _("Replay Gain"),
+                "sample_rate"  => _("Sample Rate (kHz)"),
+                "track_title"  => _("Title"),
+                "track_number" => _("Track Number"),
+                "utime"        => _("Uploaded"),
+                "info_url"     => _("Website"),
+                "year"         => _("Year")
+            );
+        }
+        
+        if (is_null($option)) return $this->criteriaOptions;
+        else return $this->criteriaOptions[$option];
+    }
 
-    private $stringCriteriaOptions = array(
-            "0"                => "Select modifier",
-            "contains"         => "contains",
-            "does not contain" => "does not contain",
-            "is"               => "is",
-            "is not"           => "is not",
-            "starts with"      => "starts with",
-            "ends with"        => "ends with"
-    );
+    private function getStringCriteriaOptions()
+    {
+        if (!isset($this->stringCriteriaOptions)) {
+            $this->stringCriteriaOptions = array(
+                "0"                => _("Select modifier"),
+                "contains"         => _("contains"),
+                "does not contain" => _("does not contain"),
+                "is"               => _("is"),
+                "is not"           => _("is not"),
+                "starts with"      => _("starts with"),
+                "ends with"        => _("ends with")
+            );
+        }
+        return $this->stringCriteriaOptions;
+    }
 
-    private $numericCriteriaOptions = array(
-            "0"               => "Select modifier",
-            "is"              => "is",
-            "is not"          => "is not",
-            "is greater than" => "is greater than",
-            "is less than"    => "is less than",
-            "is in the range" => "is in the range"
-    );
+    private function getNumericCriteriaOptions()
+    {
+        if (!isset($this->numericCriteriaOptions)) {
+            $this->numericCriteriaOptions = array(
+                "0"               => _("Select modifier"),
+                "is"              => _("is"),
+                "is not"          => _("is not"),
+                "is greater than" => _("is greater than"),
+                "is less than"    => _("is less than"),
+                "is in the range" => _("is in the range")
+            );
+        }
+        return $this->numericCriteriaOptions;
+    }
 
-    private $limitOptions = array(
-            "hours"   => "hours",
-            "minutes" => "minutes",
-            "items"   => "items"
-    );
+    private function getLimitOptions()
+    {
+        if (!isset($this->limitOptions)) {
+            $this->limitOptions = array(
+                "hours"   => _("hours"),
+                "minutes" => _("minutes"),
+                "items"   => _("items")
+            );
+        }
+        return $this->limitOptions;
+    }
+        
 
     public function init()
     {
@@ -99,11 +130,11 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
 
         $spType = new Zend_Form_Element_Radio('sp_type');
-        $spType->setLabel('Set smart block type:')
+        $spType->setLabel(_('Set smart block type:'))
                ->setDecorators(array('viewHelper'))
                ->setMultiOptions(array(
-                    'static' => 'Static',
-                    'dynamic' => 'Dynamic'
+                    'static' => _('Static'),
+                    'dynamic' => _('Dynamic')
                 ))
                ->setValue($blockType);
         $this->addElement($spType);
@@ -126,7 +157,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         if (isset($storedCrit["crit"])) {
             $criteriaKeys = array_keys($storedCrit["crit"]);
         }
-        $numElements = count($this->criteriaOptions);
+        $numElements = count($this->getCriteriaOptions());
         for ($i = 0; $i < $numElements; $i++) {
             $criteriaType = "";
 
@@ -153,7 +184,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $criteria->setAttrib('class', 'input_select sp_input_select'.$invisible)
                          ->setValue('Select criteria')
                          ->setDecorators(array('viewHelper'))
-                         ->setMultiOptions($this->criteriaOptions);
+                         ->setMultiOptions($this->getCriteriaOptions());
                 if ($i != 0 && !isset($criteriaKeys[$i])) {
                     $criteria->setAttrib('disabled', 'disabled');
                 }
@@ -174,13 +205,13 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 }
                 if (isset($criteriaKeys[$i])) {
                     if ($criteriaType == "s") {
-                        $criteriaModifers->setMultiOptions($this->stringCriteriaOptions);
+                        $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
                     } else {
-                        $criteriaModifers->setMultiOptions($this->numericCriteriaOptions);
+                        $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
                     }
                     $criteriaModifers->setValue($storedCrit["crit"][$criteriaKeys[$i]][$j]["modifier"]);
                 } else {
-                    $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
+                    $criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
                 }
                 $this->addElement($criteriaModifers);
 
@@ -214,7 +245,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $repeatTracks = new Zend_Form_Element_Checkbox('sp_repeat_tracks');
         $repeatTracks->setDecorators(array('viewHelper'))
-                     ->setLabel('Allow Repeat Tracks:');
+                     ->setLabel(_('Allow Repeat Tracks:'));
         if (isset($storedCrit["repeat_tracks"])) {
                 $repeatTracks->setChecked($storedCrit["repeat_tracks"]["value"] == 1?true:false);
         }
@@ -223,7 +254,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $limit = new Zend_Form_Element_Select('sp_limit_options');
         $limit->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
-              ->setMultiOptions($this->limitOptions);
+              ->setMultiOptions($this->getLimitOptions());
         if (isset($storedCrit["limit"])) {
             $limit->setValue($storedCrit["limit"]["modifier"]);
         }
@@ -231,7 +262,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
         $limitValue->setAttrib('class', 'sp_input_text_limit')
-                   ->setLabel('Limit to')
+                   ->setLabel(_('Limit to'))
                    ->setDecorators(array('viewHelper'));
         $this->addElement($limitValue);
         if (isset($storedCrit["limit"])) {
@@ -253,23 +284,23 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $generate = new Zend_Form_Element_Button('generate_button');
         $generate->setAttrib('class', 'btn btn-small');
-        $generate->setAttrib('title', 'Generate playlist content and save criteria');
+        $generate->setAttrib('title', _('Generate playlist content and save criteria'));
         $generate->setIgnore(true);
-        $generate->setLabel('Generate');
+        $generate->setLabel(_('Generate'));
         $generate->setDecorators(array('viewHelper'));
         $this->addElement($generate);
 
         $shuffle = new Zend_Form_Element_Button('shuffle_button');
         $shuffle->setAttrib('class', 'btn btn-small');
-        $shuffle->setAttrib('title', 'Shuffle playlist content');
+        $shuffle->setAttrib('title', _('Shuffle playlist content'));
         $shuffle->setIgnore(true);
-        $shuffle->setLabel('Shuffle');
+        $shuffle->setLabel(_('Shuffle'));
         $shuffle->setDecorators(array('viewHelper'));
         $this->addElement($shuffle);
 
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/smart-block-criteria.phtml', "openOption"=> $openSmartBlockOption,
-                        'criteriasLength' => count($this->criteriaOptions), 'poolCount' => $files['count'], 'modRowMap' => $modRowMap,
+                        'criteriasLength' => count($this->getCriteriaOptions()), 'poolCount' => $files['count'], 'modRowMap' => $modRowMap,
                         'showPoolCount' => $showPoolCount))
         ));
     }
@@ -285,17 +316,17 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             foreach ($d as $modKey=>$modInfo) {
                 if ($modKey == 0) {
                     $eleCrit = $this->getElement("sp_criteria_field_".$critKey."_".$modKey);
-                    $eleCrit->setValue($this->criteriaOptions[$modInfo['sp_criteria_field']]);
+                    $eleCrit->setValue($this->getCriteriaOptions($modInfo['sp_criteria_field']));
                     $eleCrit->setAttrib("disabled", null);
 
                     $eleMod = $this->getElement("sp_criteria_modifier_".$critKey."_".$modKey);
                     $criteriaType = $this->criteriaTypes[$modInfo['sp_criteria_field']];
                     if ($criteriaType == "s") {
-                        $eleMod->setMultiOptions($this->stringCriteriaOptions);
+                        $eleMod->setMultiOptions($this->getStringCriteriaOptions());
                     } elseif ($criteriaType == "n") {
-                        $eleMod->setMultiOptions($this->numericCriteriaOptions);
+                        $eleMod->setMultiOptions($this->getNumericCriteriaOptions());
                     } else {
-                        $eleMod->setMultiOptions(array('0' => 'Select modifier'));
+                        $eleMod->setMultiOptions(array('0' => _('Select modifier')));
                     }
                     $eleMod->setValue($modInfo['sp_criteria_modifier']);
                     $eleMod->setAttrib("disabled", null);
@@ -316,10 +347,10 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $criteria->setAttrib('class', 'input_select sp_input_select sp-invisible')
                     ->setValue('Select criteria')
                     ->setDecorators(array('viewHelper'))
-                    ->setMultiOptions($this->criteriaOptions);
+                    ->setMultiOptions($this->getCriteriaOptions());
 
                     $criteriaType = $this->criteriaTypes[$modInfo['sp_criteria_field']];
-                    $criteria->setValue($this->criteriaOptions[$modInfo['sp_criteria_field']]);
+                    $criteria->setValue($this->getCriteriaOptions($modInfo['sp_criteria_field']));
                     $this->addElement($criteria);
 
                     /****************** MODIFIER ***********/
@@ -329,11 +360,11 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     ->setDecorators(array('viewHelper'));
 
                     if ($criteriaType == "s") {
-                        $criteriaModifers->setMultiOptions($this->stringCriteriaOptions);
+                        $criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
                     } elseif ($criteriaType == "n") {
-                        $criteriaModifers->setMultiOptions($this->numericCriteriaOptions);
+                        $criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
                     } else {
-                        $criteriaModifers->setMultiOptions(array('0' => 'Select modifier'));
+                        $criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
                     }
                     $criteriaModifers->setValue($modInfo['sp_criteria_modifier']);
                     $this->addElement($criteriaModifers);
@@ -427,25 +458,25 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         if ($data['etc']['sp_limit_options'] == 'hours' || $data['etc']['sp_limit_options'] == 'mins') {
             $element = $this->getElement("sp_limit_value");
             if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
-                $element->addError("Limit cannot be empty or smaller than 0");
+                $element->addError(_("Limit cannot be empty or smaller than 0"));
                 $isValid = false;
             } else {
                 $mins = floatval($data['etc']['sp_limit_value']) * $multiplier;
                 if ($mins > 1440) {
-                    $element->addError("Limit cannot be more than 24 hrs");
+                    $element->addError(_("Limit cannot be more than 24 hrs"));
                     $isValid = false;
                 }
             }
         } else {
             $element = $this->getElement("sp_limit_value");
             if ($data['etc']['sp_limit_value'] == "" || floatval($data['etc']['sp_limit_value']) <= 0) {
-                $element->addError("Limit cannot be empty or smaller than 0");
+                $element->addError(_("Limit cannot be empty or smaller than 0"));
                 $isValid = false;
             } elseif (!ctype_digit($data['etc']['sp_limit_value'])) {
-                $element->addError("The value should be an integer");
+                $element->addError(_("The value should be an integer"));
                 $isValid = false;
             } elseif (intval($data['etc']['sp_limit_value']) > 500) {
-                $element->addError("500 is the max item limit value you can set");
+                $element->addError(_("500 is the max item limit value you can set"));
                 $isValid = false;
             }
         }
@@ -456,19 +487,19 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     $element = $this->getElement("sp_criteria_field_".$rowKey."_".$key);
                     // check for not selected select box
                     if ($d['sp_criteria_field'] == "0" || $d['sp_criteria_modifier'] == "0") {
-                        $element->addError("You must select Criteria and Modifier");
+                        $element->addError(_("You must select Criteria and Modifier"));
                         $isValid = false;
                     } else {
                         $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
                         // validation on type of column
                         if ($d['sp_criteria_field'] == 'length') {
                             if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
-                                $element->addError("'Length' should be in '00:00:00' format");
+                                $element->addError(_("'Length' should be in '00:00:00' format"));
                                 $isValid = false;
                             }
                         } elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                             if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                                $element->addError("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00");
+                                $element->addError(_("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00)"));
                                 $isValid = false;
                             } else {
                                 $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
@@ -481,7 +512,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
                             if (isset($d['sp_criteria_extra'])) {
                                 if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
-                                    $element->addError("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00");
+                                    $element->addError(_("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00)"));
                                     $isValid = false;
                                 } else {
                                     $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);
@@ -495,24 +526,24 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                         } elseif ($column->getType() == PropelColumnTypes::INTEGER &&
                             $d['sp_criteria_field'] != 'owner_id') {
                             if (!is_numeric($d['sp_criteria_value'])) {
-                                $element->addError("The value has to be numeric");
+                                $element->addError(_("The value has to be numeric"));
                                 $isValid = false;
                             }
                             // length check
                             if (intval($d['sp_criteria_value']) >= pow(2,31)) {
-                                $element->addError("The value should be less then 2147483648");
+                                $element->addError(_("The value should be less then 2147483648"));
                                 $isValid = false;
                             }
                         } elseif ($column->getType() == PropelColumnTypes::VARCHAR) {
                             if (strlen($d['sp_criteria_value']) > $column->getSize()) {
-                                $element->addError("The value should be less ".$column->getSize()." characters");
+                                $element->addError(sprintf(_("The value should be less than %s characters"), $column->getSize()));
                                 $isValid = false;
                             }
                         }
                     }
 
                     if ($d['sp_criteria_value'] == "") {
-                        $element->addError("Value cannot be empty");
+                        $element->addError(_("Value cannot be empty"));
                         $isValid = false;
                     }
                 }//end foreach

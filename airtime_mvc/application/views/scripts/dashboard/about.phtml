@@ -1,8 +1,21 @@
 <div class="text-content">
     <h2><? echo _("About") ?></h2>
 <p>
-<a href="http://airtime.sourcefabric.org" target="_blank"><? echo _("Airtime") ?></a><? echo _(" "); ?><?php echo $this->airtime_version ?><? echo _(", the open radio software for scheduling and remote station management."); ?><br>
-© 2012 <a href="http://www.sourcefabric.org" target="_blank"><? echo _("Sourcefabric") ?></a><? echo _(" o.p.s. Airtime is distributed under the "); ?><a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html" target="_blank">GNU GPL v.3</a>
+<?php 
+echo sprintf(_("%sAirtime%s %s, , the open radio software for scheduling and remote station management. %s"),
+    "<a href='http://airtime.sourcefabric.org' target='_blank'>",
+    "</a>",
+     $this->airtime_version,
+    "<br />")
+?>
+<br>© 2012 
+<?php 
+echo sprintf(_("%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"),
+    "<a href='http://www.sourcefabric.org' target='_blank'>",
+    "</a>",
+    "<a href='http://www.gnu.org/licenses/gpl-3.0-standalone.html' target='_blank'>",
+    "</a>")
+?>
 </p>
 </div>
 <br>

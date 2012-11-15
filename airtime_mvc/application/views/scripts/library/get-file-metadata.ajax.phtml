@@ -18,7 +18,7 @@
 <tr><td><? echo _("Isrc Number:"); ?></td><td><?php echo ($this->md["MDATA_KEY_ISRC"]);?></td></tr>
 <tr><td><? echo _("Website:"); ?></td><td><?php echo ($this->md["MDATA_KEY_URL"]);?></td></tr>
 <tr><td><? echo _("Language:"); ?></td><td><?php echo ($this->md["MDATA_KEY_LANGUAGE"]);?></td></tr>
-<tr><td>File&nbsp;Path:</td><td><?php echo ($this->md["MDATA_KEY_FILEPATH"]);?></td></tr>
+<tr><td><? echo _("File"); ?>&nbsp;<? echo _("Path:"); ?></td><td><?php echo ($this->md["MDATA_KEY_FILEPATH"]);?></td></tr>
 </table>
 <?php endif; ?>
 
@@ -36,10 +36,10 @@
 
 <?php if ($this->type == "playlist") { ?>
 <div class='file-md-qtip-legend'>
-<span class='webstream'><? echo _("o") ?></span><? echo _(" "); ?><span><? echo _("Web Stream"); ?></span><br />
-<span class='dynamic'><? echo _("o") ?></span><? echo _(" "); ?><span><? echo _("Dynamic Smart Block"); ?></span><br />
-<span class='static'><? echo _("o") ?></span><? echo _(" "); ?><span><? echo _("Static Smart Block"); ?></span><br />
-<span><? echo _("o") ?></span><? echo _(" "); ?><span><? echo _("Audio Track"); ?></span>
+<span class='webstream'>o</span> <span><? echo _("Web Stream"); ?></span><br />
+<span class='dynamic'>o</span> <span><? echo _("Dynamic Smart Block"); ?></span><br />
+<span class='static'>o</span> <span><? echo _("Static Smart Block"); ?></span><br />
+<span>o</span> <span><? echo _("Audio Track"); ?></span>
 </div>
 <?php } ?>
 
@@ -116,7 +116,7 @@
         <?php endforeach; ?>
             <tr>
                 <td><? echo _("Limit to ") ?></td>
-                <td><?php echo $this->contents["limit"]["value"] ?><? echo _(" "); ?><?php echo $this->contents["limit"]["modifier"] ?></td>
+                <td><?php echo $this->contents["limit"]["value"] ?> <?php echo $this->contents["limit"]["modifier"] ?></td>
             </tr>
         </table>
     <?php } ?>
