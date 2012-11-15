@@ -1,5 +1,4 @@
 import pyinotify
-import threading
 import time
 from pydispatch import dispatcher
 
@@ -9,10 +8,11 @@ from media.monitor.log       import Loggable
 from media.monitor.listeners import StoreWatchListener, OrganizeListener
 from media.monitor.handler   import ProblemFileHandler
 from media.monitor.organizer import Organizer
+from media.saas.thread import InstanceInheritingThread
 import media.monitor.pure as mmp
 
 
-class ManagerTimeout(threading.Thread,Loggable):
+class ManagerTimeout(InstanceInheritingThread,Loggable):
     """ The purpose of this class is to flush the organize directory
     every 3 secnods. This used to be just a work around for cc-4235
     but recently became a permanent solution because it's "cheap" and
@@ -20,7 +20,7 @@ class ManagerTimeout(threading.Thread,Loggable):
     def __init__(self, manager, interval=1.5):
         # TODO : interval should be read from config and passed here instead
         # of just using the hard coded value
-        threading.Thread.__init__(self)
+        super(ManagerTimeout, self).__init__()
         self.manager  = manager
         self.interval = interval
     def run(self):
