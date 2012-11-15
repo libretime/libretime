@@ -1,7 +1,12 @@
 import os, sys
+import logging
+import logging.config
 
 from media.monitor.exceptions       import FailedToObtainLocale, \
                                            FailedToSetLocale
+
+from media.monitor.log              import get_logger, setup_logging
+from std_err_override               import LogWriter
 
 from media.saas.thread import InstanceThread, user, apc
 from media.monitor.log import Loggable
@@ -103,3 +108,14 @@ def setup_global(log):
         log.info("Failed to set the locale for unknown reason. \
                 Logging exception.")
         log.info(str(e))
+
+def setup_logger(log_config, logpath):
+    logging.config.fileConfig(log_config)
+    #need to wait for Python 2.7 for this..
+    #logging.captureWarnings(True)
+    logger = logging.getLogger()
+    LogWriter.override_std_err(logger)
+    logfile = unicode(logpath)
+    setup_logging(logfile)
+    log = get_logger()
+    return log

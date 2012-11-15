@@ -1,25 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
-import logging
-import logging.config
-
-from media.monitor.log              import get_logger, setup_logging
-from std_err_override               import LogWriter
-from media.saas.launcher import setup_global, launch_instance
-from media.saas.airtimeinstance import AirtimeInstance
+from media.saas.launcher import setup_global, launch_instance, setup_logger
 from media.monitor.config import MMConfig
-
-def setup_logger(log_config, logpath):
-    logging.config.fileConfig(log_config)
-    #need to wait for Python 2.7 for this..
-    #logging.captureWarnings(True)
-    logger = logging.getLogger()
-    LogWriter.override_std_err(logger)
-    logfile = unicode(logpath)
-    setup_logging(logfile)
-    log = get_logger()
-    return log
 
 def main(global_config, api_client_config, log_config):
     """ function to run hosted install """
