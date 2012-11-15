@@ -157,15 +157,15 @@ SQL;
             $diff = strlen($dir) - strlen($p_path);
             if ($diff == 0) {
                 if ($dir == $p_path) {
-                    throw new NestedDirectoryException("'$p_path' is already watched.");
+                    throw new NestedDirectoryException(sprintf(_("%s is already watched."), $p_path));
                 }
             } elseif ($diff > 0) {
                 if (self::isAncestorDir($p_path, $dir)) {
-                    throw new NestedDirectoryException("'$p_path' contains nested watched directory: '$dir'");
+                    throw new NestedDirectoryException(sprintf(_("%s contains nested watched directory: %s"), $p_path, $dir));
                 }
             } else { /* diff < 0*/
                 if (self::isAncestorDir($dir, $p_path)) {
-                    throw new NestedDirectoryException("'$p_path' is nested within existing watched directory: '$dir'");
+                    throw new NestedDirectoryException(sprintf(_("%s is nested within existing watched directory: %s"), $p_path, $dir));
                 }
             }
         }
@@ -186,7 +186,7 @@ SQL;
     public static function addDir($p_path, $p_type, $userAddedWatchedDir=true, $nestedWatch=false)
     {
         if (!is_dir($p_path)) {
-            return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
+            return array("code"=>2, "error"=>sprintf(_("%s is not a valid directory."), $p_path));
         }
         $real_path = Application_Common_OsPath::normpath($p_path)."/";
         if ($real_path != "/") {
@@ -227,7 +227,8 @@ SQL;
 
             return array("code"=>1, "error"=>"$msg");
         } catch (Exception $e) {
-            return array("code"=>1, "error"=>"'$p_path' is already set as the current storage dir or in the watched folders list");
+            return array("code"=>1,
+                         "error"=>sprintf(_("%s is already set as the current storage dir or in the watched folders list"), $p_path));
         }
 
     }
@@ -359,7 +360,7 @@ SQL;
         // path should always ends with trailing '/'
         $p_dir = Application_Common_OsPath::normpath($p_dir)."/";
         if (!is_dir($p_dir)) {
-            return array("code"=>2, "error"=>"'$p_dir' is not a valid directory.");
+            return array("code"=>2, "error"=>sprintf(_("%s is not a valid directory."), $p_dir));
         } elseif (Application_Model_Preference::GetImportTimestamp()+10 > time()) {
             return array("code"=>3, "error"=>"Airtime is currently importing files. Please wait until this is complete before changing the storage directory.");
         }
@@ -376,7 +377,8 @@ SQL;
 
             return array("code"=>0);
         } else {
-            return array("code"=>1, "error"=>"'$p_dir' is already set as the current storage dir or in the watched folders list.");
+            return array("code"=>1,
+                "error"=>sprintf(_("%s is already set as the current storage dir or in the watched folders list."), $p_dir));
         }
     }
 
@@ -419,7 +421,7 @@ SQL;
         }
         $dir = Application_Model_MusicDir::getDirByPath($p_dir);
         if (is_null($dir)) {
-            return array("code"=>1, "error"=>"'$p_dir' doesn't exist in the watched list.");
+            return array("code"=>1, "error"=>sprintf(_("%s doesn't exist in the watched list."), $p_dir));
         } else {
             $dir->remove($userAddedWatchedDir);
             $data = array();

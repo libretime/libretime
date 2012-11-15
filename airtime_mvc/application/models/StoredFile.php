@@ -794,14 +794,14 @@ SQL;
             // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img title="Track preview" src="'.$baseUrl.'/css/images/icon_audioclip.png">';
+                $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'/css/images/icon_audioclip.png">';
             } elseif ($type == "pl") {
-                $row['image'] = '<img title="Playlist preview" src="'.$baseUrl.'/css/images/icon_playlist.png">';
+                $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'/css/images/icon_playlist.png">';
             } elseif ($type == "st") {
                 $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="Webstream preview" src="'.$baseUrl.'/css/images/icon_webstream.png">';
+                $row['image'] = '<img title="'._("Webstream preview").'" src="'.$baseUrl.'/css/images/icon_webstream.png">';
             } elseif ($type == "bl") {
-                $row['image'] = '<img title="Smart Block" src="'.$baseUrl.'/css/images/icon_smart-block.png">';
+                $row['image'] = '<img title="'._("Smart Block").'" src="'.$baseUrl.'/css/images/icon_smart-block.png">';
             }
         }
 
@@ -853,7 +853,7 @@ SQL;
 
             closedir($dir);
         } else
-            die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": "Failed to open temp directory."}, "id" : "id"}');
+            die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": _("Failed to open temp directory.")}, "id" : "id"}');
 
         // Look for the content type header
         if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
@@ -880,14 +880,14 @@ SQL;
                         while ($buff = fread($in, 4096))
                             fwrite($out, $buff);
                     } else
-                        die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+                        die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
 
                     fclose($out);
                     unlink($_FILES['file']['tmp_name']);
                 } else
-                    die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+                    die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": _("Failed to open output stream.")}, "id" : "id"}');
             } else
-                die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": "Failed to move uploaded file."}, "id" : "id"}');
+                die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": _("Failed to move uploaded file.")}, "id" : "id"}');
         } else {
             // Open temp file
             $out = fopen($tempFilePath, $chunk == 0 ? "wb" : "ab");
@@ -899,11 +899,11 @@ SQL;
                     while ($buff = fread($in, 4096))
                         fwrite($out, $buff);
                 } else
-                    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": "Failed to open input stream."}, "id" : "id"}');
+                    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
 
                 fclose($out);
             } else
-                die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": "Failed to open output stream."}, "id" : "id"}');
+                die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": _("Failed to open output stream.")}, "id" : "id"}');
         }
 
         return $tempFilePath;
@@ -934,7 +934,7 @@ SQL;
             if (!mkdir($stor."/organize", 0777)) {
                 return array(
                     "code"    => 109,
-                    "message" => "Failed to create 'organize' directory.");
+                    "message" => _("Failed to create 'organize' directory."));
             }
         }
 
@@ -947,17 +947,17 @@ SQL;
             $freeSpace = disk_free_space($stor);
 
             return array("code" => 107,
-                "message" => "The file was not uploaded, there is
-                ".$freeSpace."MB of disk space left and the file you are
-                uploading has a size of  ".$fileSize."MB.");
+                "message" => sprintf(_("The file was not uploaded, there is "
+                ."%s MB of disk space left and the file you are "
+                ."uploading has a size of %s MB."), $freeSpace, $fileSize));
         }
 
         // Check if liquidsoap can play this file
         if (!self::liquidsoapFilePlayabilityTest($audio_file)) {
             return array(
                 "code"    => 110,
-                "message" => "This file appears to be corrupted and will not
-                be added to media library.");
+                "message" => _("This file appears to be corrupted and will not "
+                ."be added to media library."));
         }
 
         // Did all the checks for real, now trying to copy
@@ -992,10 +992,9 @@ SQL;
 
             return array(
                 "code"    => 108,
-                "message" => "
-                The file was not uploaded, this error can occur if the computer
-                hard drive does not have enough disk space or the stor
-                directory does not have correct write permissions.");
+                "message" => _("The file was not uploaded, this error can occur if the computer "
+                ."hard drive does not have enough disk space or the stor "
+                ."directory does not have correct write permissions."));
         }
         // Now that we successfully added this file, we will add another tag
         // file that will identify the user that owns it

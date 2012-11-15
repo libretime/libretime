@@ -154,12 +154,12 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
             if ($totalMinutes == 0) {
                 $valid['length'][0] = false;
-                $valid['length'][1] = 'Length needs to be greater than 0 minutes';
+                $valid['length'][1] = _('Length needs to be greater than 0 minutes');
             }
 
         } else {
             $valid['length'][0] = false;
-            $valid['length'][1] = 'Length should be of form "00h 00m"';
+            $valid['length'][1] = _('Length should be of form "00h 00m"');
         }
 
         $url = $parameters["url"];
@@ -172,16 +172,16 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $mediaUrl = null;
         if ($result == 0) {
             $valid['url'][0] = false;
-            $valid['url'][1] = 'URL should be of form "http://domain"';
+            $valid['url'][1] = _('URL should be of form "http://domain"');
         } elseif (strlen($url) > 512) {
             $valid['url'][0] = false;
-            $valid['url'][1] = 'URL should be 512 characters or less';
+            $valid['url'][1] = _('URL should be 512 characters or less');
         } else {
 
             try {
                 list($mime, $content_length_found) = self::discoverStreamMime($url);
                 if (is_null($mime)) {
-                    throw new Exception("No MIME type found for webstream.");
+                    throw new Exception(_("No MIME type found for webstream."));
                 }
                 $mediaUrl = self::getMediaUrl($url, $mime, $content_length_found);
 
@@ -197,7 +197,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $name = $parameters["name"];
         if (strlen($name) == 0) {
             $valid['name'][0] = false;
-            $valid['name'][1] = 'Webstream name cannot be empty';
+            $valid['name'][1] = _('Webstream name cannot be empty');
         }
 
         $id = $parameters["id"];
@@ -266,7 +266,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             }
         }
 
-        throw new Exception("Could not parse XSPF playlist");
+        throw new Exception(_("Could not parse XSPF playlist"));
     }
     
     private static function getPlsUrl($url)
@@ -278,7 +278,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             return $ini["playlist"]["File1"];
         }
 
-        throw new Exception("Could not parse PLS playlist");
+        throw new Exception(_("Could not parse PLS playlist"));
     }
 
     private static function getM3uUrl($url)
@@ -297,7 +297,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             return $lines[0];
         }
 
-        throw new Exception("Could not parse M3U playlist");
+        throw new Exception(_("Could not parse M3U playlist"));
     }
 
     private static function getMediaUrl($url, $mime, $content_length_found)
@@ -311,11 +311,11 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $media_url = self::getPlsUrl($url);
         } elseif (preg_match("/(mpeg|ogg)/", $mime)) {
             if ($content_length_found) {
-                throw new Exception("Invalid webstream - This appears to be a file download.");
+                throw new Exception(_("Invalid webstream - This appears to be a file download."));
             }
             $media_url = $url;
         } else {
-            throw new Exception("Unrecognized stream type: $mime");
+            throw new Exception(sprintf(_("Unrecognized stream type: %s"), $mime));
         }
 
         return $media_url;

@@ -242,7 +242,7 @@ SQL;
     public function moveShow($deltaDay, $deltaMin)
     {
         if ($this->getShow()->isRepeating()) {
-            return "Can't drag and drop repeating shows";
+            return _("Can't drag and drop repeating shows");
         }
 
         $today_timestamp = time();
@@ -250,7 +250,7 @@ SQL;
         $endsDateTime = new DateTime($this->getShowInstanceEnd(), new DateTimeZone("UTC"));
 
         if ($today_timestamp > $startsDateTime->getTimestamp()) {
-            return "Can't move a past show";
+            return _("Can't move a past show");
         }
 
         //the user is moving the show on the calendar from the perspective of local time.
@@ -267,13 +267,13 @@ SQL;
         $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
 
         if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
-            return "Can't move show into past";
+            return _("Can't move show into past");
         }
 
         //check if show is overlapping
         $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime, $newEndsDateTime, true, $this->getShowInstanceId());
         if ($overlapping) {
-            return "Cannot schedule overlapping shows";
+            return _("Cannot schedule overlapping shows");
         }
 
         if ($this->isRecorded()) {
@@ -287,7 +287,7 @@ SQL;
                 ->find();
 
             if (count($rebroadcasts) > 0) {
-                return "Can't move a recorded show less than 1 hour before its rebroadcasts.";
+                return _("Can't move a recorded show less than 1 hour before its rebroadcasts.");
             }
         }
 
@@ -300,14 +300,14 @@ SQL;
             catch (Exception $e) {
                 $this->_showInstance->delete();
 
-                return "Show was deleted because recorded show does not exist!";
+                return _("Show was deleted because recorded show does not exist!");
             }
 
             $recordEndDateTime = new DateTime($recordedShow->getShowInstanceEnd(), new DateTimeZone("UTC"));
             $newRecordEndDateTime = self::addDeltas($recordEndDateTime, 0, 60);
 
             if ($newStartsDateTime->getTimestamp() < $newRecordEndDateTime->getTimestamp()) {
-                return "Must wait 1 hour to rebroadcast.";
+                return _("Must wait 1 hour to rebroadcast.");
             }
         }
 
@@ -339,7 +339,7 @@ SQL;
         $ends            = $this->getShowInstanceEnd();
 
         if (strtotime($today_timestamp) > strtotime($starts)) {
-            return "can't resize a past show";
+            return _("can't resize a past show");
         }
 
         //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
@@ -361,7 +361,7 @@ SQL;
 
             if (count($overlap) > 0) {
                 // TODO : fix ghetto error handling -- RG
-                return "Should not overlap shows";
+                return _("Should not overlap shows");
             }
         }
         //with overbooking no longer need to check already scheduled content still fits.

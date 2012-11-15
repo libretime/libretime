@@ -177,7 +177,7 @@ SQL;
         $con = Propel::getConnection();
 
         if ($deltaDay > 0) {
-            return "Shows can have a max length of 24 hours.";
+            return _("Shows can have a max length of 24 hours.");
         }
         
         $utc = new DateTimeZone("UTC");
@@ -208,7 +208,7 @@ SQL;
             $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
             
             if ($newEndsDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
-                return "End date/time cannot be in the past";
+                return _("End date/time cannot be in the past");
             }
 
             //convert our new starts/ends to UTC.
@@ -219,8 +219,8 @@ SQL;
                 $newStartsDateTime, $newEndsDateTime, true, $si->getDbId());
 
             if ($overlapping) {
-                return "Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
-                       "affects all of its repeats.";
+                return _("Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
+                       "affects all of its repeats.");
             }
         }
 
