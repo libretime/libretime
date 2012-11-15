@@ -33,9 +33,9 @@ class DashboardController extends Zend_Controller_Action
             Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
         } else {
             if ($source_connected) {
-                $this->view->error = "You don't have permission to disconnect source.";
+                $this->view->error = _("You don't have permission to disconnect source.");
             } else {
-                $this->view->error = "There is no source connected to this input.";
+                $this->view->error = _("There is no source connected to this input.");
             }
         }
     }
@@ -79,12 +79,12 @@ class DashboardController extends Zend_Controller_Action
             }
         } else {
             if ($source_connected) {
-                $this->view->error = "You don't have permission to switch source.";
+                $this->view->error = _("You don't have permission to switch source.");
             } else {
                 if ($sourcename == 'scheduled_play') {
-                    $this->view->error = "You don't have permission to disconnect source.";
+                    $this->view->error = _("You don't have permission to disconnect source.");
                 } else {
-                    $this->view->error = "There is no source connected to this input.";
+                    $this->view->error = _("There is no source connected to this input.");
                 }
             }
         }

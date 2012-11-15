@@ -53,7 +53,7 @@ class ApiController extends Zend_Controller_Action
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
+            print _('You are not allowed to access this resource.');
             exit;
         }
     }
@@ -80,7 +80,7 @@ class ApiController extends Zend_Controller_Action
 
         if (is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
+            print _('You are not allowed to access this resource.');
 
             return;
         }
@@ -282,7 +282,7 @@ class ApiController extends Zend_Controller_Action
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource. ';
+            print _('You are not allowed to access this resource. ');
             exit;
         }
     }
@@ -321,7 +321,7 @@ class ApiController extends Zend_Controller_Action
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource. ';
+            print _('You are not allowed to access this resource. ');
             exit;
         }
     }
@@ -502,7 +502,7 @@ class ApiController extends Zend_Controller_Action
 
             //File is not in database anymore.
             if (is_null($file)) {
-                $return_hash['error'] = "File does not exist in Airtime.";
+                $return_hash['error'] = _("File does not exist in Airtime.");
 
                 return $return_hash;
             }
@@ -515,7 +515,7 @@ class ApiController extends Zend_Controller_Action
                 $md['MDATA_KEY_ORIGINAL_PATH']);
 
             if (is_null($file)) {
-                $return_hash['error'] = 'File does not exist in Airtime';
+                $return_hash['error'] = _('File does not exist in Airtime');
             } else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
@@ -527,7 +527,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $return_hash['error'] = "File doesn't exist in Airtime.";
+                $return_hash['error'] = _("File doesn't exist in Airtime.");
                 Logging::warn("Attempt to delete file that doesn't exist.
                     Path: '$filepath'");
 
@@ -573,7 +573,7 @@ class ApiController extends Zend_Controller_Action
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::info( $info_json );
                 array_push( $responses, array(
-                    'error' => "Bad request. no 'mode' parameter passed.",
+                    'error' => _("Bad request. no 'mode' parameter passed."),
                     'key' => $k));
                 continue;
             } elseif ( !in_array($info_json['mode'], $valid_modes) ) {
@@ -583,7 +583,7 @@ class ApiController extends Zend_Controller_Action
                 Logging::info("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
                 Logging::info( $info_json );
                 array_push( $responses, array(
-                    'error' => "Bad request. 'mode' parameter is invalid",
+                    'error' => _("Bad request. 'mode' parameter is invalid"),
                     'key' => $k,
                     'mode' => $mode ) );
                 continue;
