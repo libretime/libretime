@@ -15,7 +15,7 @@ from media.monitor.exceptions import DirectoryIsNotListed
 from media.monitor.bootstrap  import Bootstrapper
 from media.monitor.listeners  import FileMediator
 
-from api_clients import api_client as apc
+from media.saas.thread import apc
 
 class AirtimeNotifier(Loggable):
     """
@@ -98,7 +98,7 @@ class AirtimeMessageReceiver(Loggable):
         if (not directory_id) and (not directory):
             raise ValueError("You must provide either directory_id or \
                     directory")
-        sdb = AirtimeDB(apc.AirtimeApiClient.create_right_config())
+        sdb = AirtimeDB(apc())
         if directory            : directory = os.path.normpath(directory)
         if directory_id == None : directory_id = sdb.to_id(directory)
         if directory    == None : directory = sdb.to_directory(directory_id)

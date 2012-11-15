@@ -24,6 +24,8 @@ from recorder import Recorder
 from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
 
+from media.update.replaygainupdater import ReplayGainUpdater
+
 from configobj import ConfigObj
 
 # custom imports
@@ -174,6 +176,9 @@ if __name__ == '__main__':
         sys.exit()
 
     api_client = api_client.AirtimeApiClient()
+    
+    ReplayGainUpdater.start_reply_gain(api_client)
+
     api_client.register_component("pypo")
 
     pypoFetch_q = Queue()

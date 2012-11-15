@@ -399,3 +399,4 @@ class AirtimeApiClient(object):
     def push_stream_stats(self, data):
         # TODO : users of this method should do their own error handling
         response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
+        return response

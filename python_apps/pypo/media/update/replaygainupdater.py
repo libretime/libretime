@@ -3,12 +3,11 @@ from threading import Thread
 import traceback
 import os
 import time
+import logging
 
 from media.update import replaygain
-from media.monitor.log import Loggable
 
-
-class ReplayGainUpdater(Thread, Loggable):
+class ReplayGainUpdater(Thread):
     """
     The purpose of the class is to query the server for a list of files which
     do not have a ReplayGain value calculated. This class will iterate over the
@@ -30,6 +29,7 @@ class ReplayGainUpdater(Thread, Loggable):
     def __init__(self,apc):
         Thread.__init__(self)
         self.api_client = apc
+        self.logger = logging.getLogger()
 
     def main(self):
         raw_response = self.api_client.list_all_watched_dirs()
