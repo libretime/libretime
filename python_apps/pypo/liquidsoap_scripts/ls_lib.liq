@@ -446,6 +446,7 @@ def cross_http(~debug=true,~http_input_id,source)
   change = ref false
 
   def on_m(m)
+    notify_stream(m)
     changed = m["source_url"] != !last_url
     log("URL now #{m['source_url']} (change: #{changed})")
     if changed then
