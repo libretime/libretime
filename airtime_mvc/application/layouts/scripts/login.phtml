@@ -13,8 +13,9 @@
         <?php echo $this->layout()->content ?>
     </div>
     <div class="footer">
-      Airtime&nbsp;Copyright &copy; Sourcefabric o.p.s. All rights reserved.<br/>
-      Maintained and distributed under GNU GPL v.3 by <a href="http://www.sourcefabric.org"> Sourcefabric o.p.s </a> 
+      <?php echo sprintf(_("Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%s"
+      ."Maintained and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"),
+      "<br>", "<a href='http://www.sourcefabric.org'>" ,"</a>");?> 
     </div>
  
 </body>
