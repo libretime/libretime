@@ -45,6 +45,7 @@ just_switched = ref false
 
 
 http = input.http_restart(id="http")
+http = on_metadata(notify_stream, http)
 http = cross_http(http_input_id="http",http)
 stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
 
