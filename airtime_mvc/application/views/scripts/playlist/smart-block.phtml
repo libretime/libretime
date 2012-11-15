@@ -7,7 +7,7 @@ if (isset($this->obj)) {
 <div class="btn-toolbar spl-no-top-margin clearfix">
     <div class="btn-group pull-left">
         <button id="spl_new" class="btn dropdown-toggle" data-toggle='dropdown' aria-disabled="false">
-            New <span class="caret"></span>
+            <? echo _("New")?> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             <li id='lib-new-pl'><a href="#"><? echo _("New Playlist") ?></a></li>
@@ -65,10 +65,10 @@ if (isset($this->obj)) {
     <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
       	<span class="ui-icon ui-icon-closethick"></span>
 	    <dl id="spl_editor-main" class="inline-list">
-            <dt><? echo _("Fade in: "); ?><span class='spl_cue_hint'>(ss.t)</span></dt>
+            <dt><? echo _("Fade in: "); ?><span class='spl_cue_hint'><? echo _("(ss.t)")?></span></dt>
             <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
             <dd class="edit-error"></dd>
-            <dt><? echo _("Fade out: "); ?><span class='spl_cue_hint'>(ss.t)</span></dt>
+            <dt><? echo _("Fade out: "); ?><span class='spl_cue_hint'><? echo _("(ss.t)")?></span></dt>
             <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00</span></dd>
             <dd class="edit-error"></dd>
         </dl>

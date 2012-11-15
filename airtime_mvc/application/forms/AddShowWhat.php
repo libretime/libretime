@@ -22,7 +22,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
         // Add name element
         $this->addElement('text', 'add_show_name', array(
-            'label'      => 'Name:',
+            'label'      => _('Name:'),
             'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
@@ -33,7 +33,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
          // Add URL element
         $this->addElement('text', 'add_show_url', array(
-            'label'      => 'URL:',
+            'label'      => _('URL:'),
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
@@ -42,7 +42,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
          // Add genre element
         $this->addElement('text', 'add_show_genre', array(
-            'label'      => 'Genre:',
+            'label'      => _('Genre:'),
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
@@ -51,7 +51,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
          // Add the description element
         $this->addElement('textarea', 'add_show_description', array(
-            'label'      => 'Description:',
+            'label'      => _('Description:'),
             'required'   => false,
             'class'      => 'input_text_area',
             'validators' => array(array('StringLength', false, array(0, $maxLens['description'])))

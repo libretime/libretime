@@ -29,7 +29,8 @@
                 <?php echo $this->element->getElement('bitrate')?>
             </dd>
             <dt id="outputServer-label">
-                <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+                <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel()?><span class="info-text-small">
+                <?php echo _("(Required)")?></span> :</label>
             </dt>
             <dd id="outputServer-element">
                 <?php echo $this->element->getElement('host')?>
@@ -42,7 +43,8 @@
                 <?php endif; ?>
             </dd>
             <dt id="outputPort-label">
-                <label for="outputPort"><?php echo $this->element->getElement('port')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+                <label for="outputPort"><?php echo $this->element->getElement('port')->getLabel()?><span class="info-text-small">
+                <?php echo _("(Required)")?></span> :</label>
             </dt>
             <dd id="outputPort-element">
                 <?php echo $this->element->getElement('port')?>
@@ -71,7 +73,7 @@
             <fieldset class="padded top-margin display_field toggle closed" id="output_setting">
                 <legend style="cursor: pointer;">
                     <span class="ui-icon ui-icon-triangle-2-n-s"></span>
-                    Additional Options
+                    <?php echo _("Additional Options")?>
                 </legend>
                 <dl class="zend_form">
                 <dt id="outputUser-label">
@@ -103,7 +105,7 @@
                     <?php endif; ?>
                 </dd>
                 <dt class="block-display info-block">
-                    The following info will be displayed to listeners in their media player:
+                    <?php echo _("The following info will be displayed to listeners in their media player:")?>
                 </dt>
                 <dt id="stationName-label">
                     <label for="stationName"><?php echo $this->element->getElement('name')->getLabel()?> :</label>

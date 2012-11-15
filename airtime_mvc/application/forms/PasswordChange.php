@@ -11,7 +11,7 @@ class Application_Form_PasswordChange extends Zend_Form
         ));
 
         $this->addElement('password', 'password', array(
-            'label' => 'Password',
+            'label' => _('Password'),
             'required' => true,
             'filters' => array('stringTrim'),
             'validators' => array(
@@ -23,7 +23,7 @@ class Application_Form_PasswordChange extends Zend_Form
         ));
 
         $this->addElement('password', 'password_confirm', array(
-            'label' => 'Confirm new password',
+            'label' => _('Confirm new password'),
             'required' => true,
             'filters' => array('stringTrim'),
             'validators' => array(
@@ -38,7 +38,7 @@ class Application_Form_PasswordChange extends Zend_Form
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => 'Get new password',
+            'label' => _('Get new password'),
             'ignore' => true,
             'class' => 'ui-button ui-widget ui-state-default ui-button-text-only center',
             'decorators' => array(
