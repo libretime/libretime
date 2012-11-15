@@ -16,6 +16,8 @@ from media.monitor.airtime          import AirtimeNotifier, \
 from media.monitor.watchersyncer    import WatchSyncer
 from media.monitor.eventdrainer     import EventDrainer
 from std_err_override               import LogWriter
+from media.saas.launcher import MM2
+from media.saas.airtimeinstance import AirtimeInstance
 
 import media.monitor.pure          as mmp
 from api_clients import api_client as apc
@@ -47,8 +49,22 @@ def setup_global(log):
                 Logging exception.")
         log.info(str(e))
 
+def main(global_config, api_client_config, log_config):
+    cfg = {
+        'api_client'    : api_client_config,
+        'media_monitor' : global_config,
+        'logging'       : log_config,
+    }
+    ai = AirtimeInstance('hosted_install', '/', cfg)
+    log = setup_logger( log_config, ai.mm_config['logpath'] )
+    setup_global(log)
+    apc.AirtimeApiClient.create_right_config(log=log,
+            config_path=api_client_config)
+    apc.AirtimeApiClient(api_client_config)
+    mm = MM2(ai)
+    mm.start()
 
-def main(global_config, api_client_config, log_config,
+def main2(global_config, api_client_config, log_config,
         index_create_attempt=False):
     for cfg in [global_config, api_client_config]:
         if not os.path.exists(cfg): raise NoConfigFile(cfg)
