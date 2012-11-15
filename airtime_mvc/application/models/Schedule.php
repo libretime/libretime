@@ -321,7 +321,7 @@ SQL;
                 ws.description AS file_album_title,
                 ws.length AS file_length,
                 't'::BOOL AS file_exists,
-                NULL as file_mime
+                ws.mime as file_mime
 SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched
