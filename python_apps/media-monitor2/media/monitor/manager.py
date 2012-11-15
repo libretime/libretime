@@ -29,6 +29,8 @@ class ManagerTimeout(InstanceInheritingThread,Loggable):
             self.manager.flush_organize()
 
 class Manager(Loggable):
+    # NOTE : this massive class is a source of many problems of mm and
+    # is in dire need of breaking up and refactoring.
     """ An abstraction over media monitors core pyinotify functions.
     These include adding watched,store, organize directories, etc.
     Basically composes over WatchManager from pyinotify """
