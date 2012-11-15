@@ -1,7 +1,11 @@
-import os
+import os, sys
+
+from media.monitor.exceptions       import FailedToObtainLocale, \
+                                           FailedToSetLocale
 
 from media.saas.thread import InstanceThread, user, apc
 from media.monitor.log import Loggable
+import media.monitor.pure          as mmp
 from media.monitor.exceptions import CouldNotCreateIndexFile
 from media.monitor.toucher          import ToucherThread
 from media.monitor.airtime          import AirtimeNotifier, \
@@ -9,6 +13,7 @@ from media.monitor.airtime          import AirtimeNotifier, \
 from media.monitor.watchersyncer    import WatchSyncer
 from media.monitor.eventdrainer     import EventDrainer
 from media.monitor.manager          import Manager
+from media.saas.airtimeinstance import AirtimeInstance
 
 class MM2(InstanceThread, Loggable):
 
@@ -73,3 +78,28 @@ class MM2(InstanceThread, Loggable):
         apiclient.register_component('media-monitor')
 
         manager.loop()
+
+def launch_instance(name, root, global_cfg, apc_cfg, log_cfg):
+    cfg = {
+        'api_client'    : apc_cfg,
+        'media_monitor' : global_cfg,
+        'logging'       : log_cfg,
+    }
+    ai = AirtimeInstance('name', 'root', cfg)
+    MM2(ai).start()
+
+def setup_global(log):
+    """ setup unicode and other stuff """
+    log.info("Attempting to set the locale...")
+    try: mmp.configure_locale(mmp.get_system_locale())
+    except FailedToSetLocale as e:
+        log.info("Failed to set the locale...")
+        sys.exit(1)
+    except FailedToObtainLocale as e:
+        log.info("Failed to obtain the locale form the default path: \
+                '/etc/default/locale'")
+        sys.exit(1)
+    except Exception as e:
+        log.info("Failed to set the locale for unknown reason. \
+                Logging exception.")
+        log.info(str(e))
