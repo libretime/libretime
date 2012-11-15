@@ -254,29 +254,15 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         if user == "" then
             user_ref := "source"
         end
-        
-        description_ref = ref description
-        if description == "" then
-            description_ref := "N/A"
-        end
-        
-        genre_ref = ref genre
-        if genre == "" then
-            genre_ref := "N/A"
-        end
-        
-        url_ref = ref url
-        if url == "" then
-            url_ref := "N/A"
-        end
+
         output.shoutcast_mono = output.shoutcast(id = "shoutcast_stream_#{stream}",
                     host = host,
                     port = port,
                     password = pass,
                     fallible = true,
-                    url = !url_ref,
-                    genre = !genre_ref,
-                    name = !description_ref,
+                    url = url,
+                    genre = genre,
+                    name = description,
                     user = !user_ref,
                     on_error = on_error,
                     on_connect = on_connect)
@@ -286,9 +272,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     port = port,
                     password = pass,
                     fallible = true,
-                    url = !url_ref,
-                    genre = !genre_ref,
-                    name = !description_ref,
+                    url = url,
+                    genre = genre,
+                    name = description,
                     user = !user_ref,
                     on_error = on_error,
                     on_connect = on_connect)
