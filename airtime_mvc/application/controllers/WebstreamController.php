@@ -135,7 +135,7 @@ class WebstreamController extends Zend_Controller_Action
 
                 Application_Model_Library::changePlaylist($streamId, "stream");
 
-                $this->view->statusMessage = "<div class='success'>_(Webstream saved.)</div>";
+                $this->view->statusMessage = "<div class='success'>"._("Webstream saved.")."</div>";
                 $this->view->streamId = $streamId;
                 $this->view->length = $di->format("%Hh %Im");
             } else {
@@ -143,7 +143,7 @@ class WebstreamController extends Zend_Controller_Action
             }
         } catch (Exception $e) {
             Logging::debug($e->getMessage());
-            $this->view->statusMessage = "<div class='errors'>_(Invalid form values.)</div>";
+            $this->view->statusMessage = "<div class='errors'>"._("Invalid form values.")."</div>";
             $this->view->streamId = -1;
             $this->view->analysis = $analysis;
         }
