@@ -159,12 +159,13 @@ class AirtimeApiClient(object):
 
     def __get_airtime_version(self):
         # TODO : maybe fix this function to drop an exception?
-        try: return self.services.version_url()
+        try: return self.services.version_url()[u'version']
         except Exception: return -1
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger
         version = self.__get_airtime_version()
+        # logger.info('Airtime version found: ' + str(version))
         if (version == -1):
             if (verbose):
                 logger.info('Unable to get Airtime version number.\n')
@@ -347,7 +348,7 @@ class AirtimeApiClient(object):
         logger = self.logger
         try:
             encoded_msg = urllib.quote(msg, '')
-            self.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
+            self.services.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
                                           boot_time=time).retry(5)
         except Exception, e:
             logger.error("Exception: %s", e)
@@ -387,5 +388,14 @@ class AirtimeApiClient(object):
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        self.logger.info( self.notify_webstream_data.req(
+        self.logger.info( self.services.notify_webstream_data.req(
             _post_data={'data':data}, media_id=str(media_id)).retry(5))
+
+    def get_stream_parameters(self):
+        response = self.services.get_stream_parameters()
+        self.logger.debug(response)
+        return response
+    
+    def push_stream_stats(self, data):
+        # TODO : users of this method should do their own error handling
+        response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})

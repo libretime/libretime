@@ -210,10 +210,23 @@ FROM cc_blockcontents AS pc
 LEFT JOIN cc_files AS f ON pc.file_id=f.id
 LEFT JOIN cc_block AS bl ON pc.block_id = bl.id
 WHERE pc.block_id = :block_id
-ORDER BY pc.position
+
 SQL;
 
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id));
+        if ($filterFiles) {
+            $sql .= <<<SQL
+            AND f.file_exists = :file_exists
+SQL;
+        }
+        $sql .= <<<SQL
+
+ORDER BY pc.position
+SQL;
+        $params = array(':block_id'=>$this->id);
+        if ($filterFiles) {
+            $params[':file_exists'] = $filterFiles;
+        }
+        $rows = Application_Common_Database::prepareAndExecute($sql, $params);
 
         $offset = 0;
         foreach ($rows as &$row) {
@@ -310,6 +323,7 @@ SQL;
             $hour = "00";
             $mins = "00";
             if ($modifier == "minutes") {
+                $mins = $value;
                 if ($value >59) {
                     $hour  = intval($value/60);
                     $mins = $value%60;
@@ -1173,7 +1187,7 @@ SQL;
         $sizeOfInsert = count($insertList);
         
         // if block is not full and reapeat_track is check, fill up more
-        while (!$isBlockFull && $repeat == 1) {
+        while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
             $insertList[] = $insertList[$randomEleKey];
             $totalTime += $insertList[$randomEleKey]['length'];

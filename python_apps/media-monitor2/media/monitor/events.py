@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import abc
+import re
 import media.monitor.pure   as mmp
 import media.monitor.owners as owners
 from media.monitor.pure       import LazyProperty
@@ -101,6 +102,12 @@ class BaseEvent(Loggable):
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
         self.owner = owners.get_owner(self.path)
+        owner_re = re.search('stor/imported/(?P<owner>\d+)/', self.path)
+        if owner_re: 
+            self.logger.info("matched path: %s" % self.path)
+            self.owner = owner_re.group('owner')
+        else:
+            self.logger.info("did not match path: %s" % self.path)
         self._pack_hook = lambda: None # no op
         # into another event
 

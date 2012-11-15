@@ -201,7 +201,8 @@ function setSmartBlockEvents() {
 	
     /********** CHANGE PLAYLIST TYPE **********/
     form.find('dd[id="sp_type-element"]').live("change", function(){
-        setupUI();  	
+        setupUI();
+        AIRTIME.library.checkAddButton();
     });
     
     /********** CRITERIA CHANGE **********/
@@ -350,7 +351,7 @@ function setupUI() {
      * It is only active if playlist is not empty
      */
     var plContents = $('#spl_sortable').children();
-    var shuffleButton = $('button[id="shuffle_button"]');
+    var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"]');
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {

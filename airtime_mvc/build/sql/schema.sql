@@ -668,6 +668,62 @@ COMMENT ON TABLE "cc_webstream_metadata" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_mount_name
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_mount_name" CASCADE;
+
+
+CREATE TABLE "cc_mount_name"
+(
+	"id" serial  NOT NULL,
+	"mount_name" VARCHAR(255)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_mount_name" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_timestamp
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_timestamp" CASCADE;
+
+
+CREATE TABLE "cc_timestamp"
+(
+	"id" serial  NOT NULL,
+	"timestamp" TIMESTAMP  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_timestamp" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_listener_count
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_listener_count" CASCADE;
+
+
+CREATE TABLE "cc_listener_count"
+(
+	"id" serial  NOT NULL,
+	"timestamp_id" INTEGER  NOT NULL,
+	"mount_name_id" INTEGER  NOT NULL,
+	"listener_count" INTEGER  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_listener_count" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey" FOREIGN KEY ("owner_id") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
@@ -719,3 +775,7 @@ ALTER TABLE "cc_sess" ADD CONSTRAINT "cc_sess_userid_fkey" FOREIGN KEY ("userid"
 ALTER TABLE "cc_subjs_token" ADD CONSTRAINT "cc_subjs_token_userid_fkey" FOREIGN KEY ("user_id") REFERENCES "cc_subjs" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_webstream_metadata" ADD CONSTRAINT "cc_schedule_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_schedule" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_timestamp_inst_fkey" FOREIGN KEY ("timestamp_id") REFERENCES "cc_timestamp" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_mount_name_inst_fkey" FOREIGN KEY ("mount_name_id") REFERENCES "cc_mount_name" ("id") ON DELETE CASCADE;

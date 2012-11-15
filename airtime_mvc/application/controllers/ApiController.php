@@ -40,6 +40,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('get-files-without-replay-gain' , 'json')
                 ->addActionContext('reload-metadata-group'         , 'json')
                 ->addActionContext('notify-webstream-data'         , 'json')
+                ->addActionContext('get-stream-parameters'         , 'json')
+                ->addActionContext('push-stream-stats'         , 'json')
                 ->initContext();
     }
 
@@ -955,6 +957,24 @@ class ApiController extends Zend_Controller_Action
 
         $this->view->response = $data;
         $this->view->media_id = $media_id;
+    }
+
+    public function getStreamParametersAction() {
+        $streams = array("s1", "s2", "s3");
+        $stream_params = array();
+        foreach ($streams as $s) {
+            $stream_params[$s] = 
+                Application_Model_StreamSetting::getStreamDataNormalized($s);
+        }
+        $this->view->stream_params = $stream_params;
+    }
+
+    public function pushStreamStatsAction() {
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam("data"), true);
+
+        Application_Model_ListenerStat::insertDataPoints($data);
+        $this->view->data = $data;
     }
 
 }

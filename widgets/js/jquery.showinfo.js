@@ -153,6 +153,86 @@
 })(jQuery);
 
 (function($){
+    $.fn.airtimeLiveTrackInfo = function(options) {
+
+       var defaults = {
+           updatePeriod: 5, //seconds
+           sourceDomain: "http://localhost/", //where to get show status from
+           text: {onAirNow:"On Air Now", offline:"Offline", current:"Current", next:"Next"}
+       };
+       options = $.extend(true, defaults, options);    
+       options.sourceDomain = addEndingBackslash(options.sourceDomain);
+
+       return this.each(function() {
+           var obj = $(this);
+           var sd = null;
+           getServerData();
+
+           //refresh the UI to update the elapsed/remaining time
+           setInterval(updateWidget, 1000);
+
+           function updateWidget(){
+               if (sd == null){
+                   return;
+               }
+               
+               var currentShow = sd.getCurrentShow();
+               var nextShows = sd.getNextShows();
+
+               var showStatus = options.text.offline;
+               var currentShowName = "";
+               var timeElapsed = "";
+               var timeRemaining = "";
+
+               var nextShowName = "";
+               var nextShowRange = "";
+
+               if (currentShow.length > 0){
+                   showStatus = options.text.onAirNow;
+                   currentShowName = currentShow[0].getName();
+
+                   timeElapsed = sd.getShowTimeElapsed(currentShow[0]);
+                   timeRemaining = sd.getShowTimeRemaining(currentShow[0]);
+               }
+
+               if (nextShows.length > 0){
+                   nextShowName = nextShows[0].getName();
+                   nextShowRange = nextShows[0].getRange();
+               }
+
+               obj.empty();
+               obj.append("<span id='status-current-show' style='display:inline'>"+showStatus+" &gt;&gt;&nbsp;"+currentShowName+"</span>" +
+                       "<span class='current' id='time-elapsed' class='time-elapsed'>"+timeElapsed+"</span>" +
+                       "<span class='current' id='time-remaining' class='time-remaining'>"+timeRemaining+"</span>");
+               obj.append("<ul class='widget now-playing-bar'>" +
+                   "<li class='current track-metadata'>"+options.text.current+": "+sd.currentTrack.getTitle()+"</li>" +
+                   "<li class='next track-metadata'>"+options.text.next+": "+sd.nextTrack.getTitle()+"</span></li>" +                   
+                   "</ul>");
+           }
+
+           function processData(data){
+               checkWidgetVersion(data);
+               sd = new ScheduleData(data);
+           }
+
+           function airtimeScheduleJsonpError(jqXHR, textStatus, errorThrown){
+           }
+
+           function getServerData(){
+               $.ajax({url: options.sourceDomain + "api/live-info/", 
+                       data: {type:"interval",limit:"5"}, 
+                       dataType: "jsonp", 
+                       success: function(data) {
+                           processData(data);
+                       }, 
+                       error: airtimeScheduleJsonpError});
+               setTimeout(getServerData, options.updatePeriod*1000);
+           }
+       });
+    };
+   })(jQuery);
+
+(function($){
  $.fn.airtimeWeekSchedule = function(options) {
 
     var defaults = {
@@ -281,6 +361,8 @@ function ScheduleData(data){
         }
     }
     
+    this.currentTrack = new AudioTrack(data.current);
+    this.nextTrack = new AudioTrack(data.next);
 
     this.schedulePosixTime = convertDateToPosixTime(data.schedulerTime);
     //this.schedulePosixTime += parseInt(data.timezoneOffset, 10)*1000;
@@ -339,6 +421,16 @@ Show.prototype.getEndTimestamp = function(){
 }
 /* Show class END */
 
+/* AudioTrack class BEGINS */
+function AudioTrack(trackData){
+    this.trackData = trackData;
+}
+
+AudioTrack.prototype.getTitle = function(){
+    if (this.trackData === null) return "";
+    return this.trackData.name;
+}
+/* AudioTrack class ENDS */
 
 function getTime(timestamp) {
     var time = timestamp.split(" ")[1].split(":");

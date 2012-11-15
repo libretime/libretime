@@ -86,8 +86,14 @@ class CcBlock extends BaseCcBlock {
      */
     public function computeDbLength(PropelPDO $con)
     {
-        $stmt = $con->prepare('SELECT SUM(cliplength) FROM "cc_blockcontents" WHERE cc_blockcontents.BLOCK_ID = :p1');
-        $stmt->bindValue(':p1', $this->getDbId());
+        $sql = <<<SQL
+        SELECT SUM(cliplength) FROM cc_blockcontents as bc
+        JOIN cc_files as f ON bc.file_id = f.id
+        WHERE BLOCK_ID = :b1
+        AND f.file_exists = true
+SQL;
+        $stmt = $con->prepare($sql);
+        $stmt->bindValue(':b1', $this->getDbId());
         $stmt->execute();
         $length = $stmt->fetchColumn();
 
