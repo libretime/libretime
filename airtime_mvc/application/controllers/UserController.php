@@ -51,7 +51,7 @@ class UserController extends Zend_Controller_Action
                         && $formData['login'] == 'admin' 
                         && $formData['user_id'] != 0) {
                     $this->view->form = $form;
-                    $this->view->successMessage = "<div class='errors'>Specific action is not allowed in demo version!</div>";
+                    $this->view->successMessage = "<div class='errors'>_(Specific action is not allowed in demo version!)</div>";
                     die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
                 } elseif ($form->validateLogin($formData)) {
                     $user = new Application_Model_User($formData['user_id']);
@@ -75,9 +75,9 @@ class UserController extends Zend_Controller_Action
                     $this->view->form = $form;
 
                     if (strlen($formData['user_id']) == 0) {
-                        $this->view->successMessage = "<div class='success'>User added successfully!</div>";
+                        $this->view->successMessage = "<div class='success'>_(User added successfully!)</div>";
                     } else {
-                        $this->view->successMessage = "<div class='success'>User updated successfully!</div>";
+                        $this->view->successMessage = "<div class='success'>_(User updated successfully!)</div>";
                     }
                     
                     die(json_encode(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml'))));

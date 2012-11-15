@@ -210,7 +210,7 @@ class AudiopreviewController extends Zend_Controller_Action
                 throw new Exception("Unknown file type: $mime");
             }
 
-            $elementMap['uri'] = "/api/get-media/file/".$track['item_id'];
+            $elementMap['uri'] = $baseUrl."/api/get-media/file/".$track['item_id'];
         } else {
             $elementMap['uri'] = $track['path'];
         }

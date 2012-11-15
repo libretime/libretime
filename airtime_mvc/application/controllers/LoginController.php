@@ -31,7 +31,7 @@ class LoginController extends Zend_Controller_Action
 
         $form = new Application_Form_Login();
 
-        $message = "Please enter your user name and password";
+        $message = _("Please enter your user name and password");
 
         if ($request->isPost()) {
             // if the post contains recaptcha field, which means form had recaptcha field.
@@ -70,7 +70,7 @@ class LoginController extends Zend_Controller_Action
 
                         $this->_redirect('Showbuilder');
                     } else {
-                        $message = "Wrong username or password provided. Please try again.";
+                        $message = _("Wrong username or password provided. Please try again.");
                         Application_Model_Subjects::increaseLoginAttempts($username);
                         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
                         $form = new Application_Form_Login();
@@ -132,10 +132,10 @@ class LoginController extends Zend_Controller_Action
                     if ($success) {
                         $this->_helper->redirector('password-restore-after', 'login');
                     } else {
-                        $form->email->addError($this->view->translate("Email could not be sent. Check your mail server settings and ensure it has been configured properly."));
+                        $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    $form->email->addError($this->view->translate("Given email not found."));
+                    $form->email->addError($this->view->translate(_("Given email not found.")));
                 }
             }
 

@@ -250,7 +250,7 @@ class ScheduleController extends Zend_Controller_Action
             $file = $instance->getRecordedFile();
             $fileId = $file->getId();
 
-            $menu["view_recorded"] = array("name" => "View Recorded File Metadata", "icon" => "overview",
+            $menu["view_recorded"] = array("name" => _("View Recorded File Metadata"), "icon" => "overview",
                     "url" => $baseUrl."/library/edit-file-md/id/".$fileId);
         }
 
@@ -259,17 +259,17 @@ class ScheduleController extends Zend_Controller_Action
                 && !$instance->isRecorded()
                 && !$instance->isRebroadcast()) {
 
-                $menu["schedule"] = array("name"=> "Add / Remove Content", "icon" => "add-remove-content",
+                $menu["schedule"] = array("name"=> _("Add / Remove Content"), "icon" => "add-remove-content",
                     "url" => $baseUrl."/showbuilder/builder-dialog/");
 
-                $menu["clear"] = array("name"=> "Remove All Content", "icon" => "remove-all-content",
+                $menu["clear"] = array("name"=> _("Remove All Content"), "icon" => "remove-all-content",
                     "url" => $baseUrl."/schedule/clear-show");
             }
         }
 
         if (!$instance->isRecorded()) {
 
-            $menu["content"] = array("name"=> "Show Content", "icon" => "overview", "url" => $baseUrl."/schedule/show-content-dialog");
+            $menu["content"] = array("name"=> _("Show Content"), "icon" => "overview", "url" => $baseUrl."/schedule/show-content-dialog");
         }
 
         if ($showEndLocalDT->getTimestamp() <= $epochNow
@@ -282,10 +282,10 @@ class ScheduleController extends Zend_Controller_Action
 
             if ($scid > 0) {
                 $url = $file->getSoundCloudLinkToFile();
-                $menu["soundcloud_view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
+                $menu["soundcloud_view"] = array("name" => _("View on Soundcloud"), "icon" => "soundcloud", "url" => $url);
             }
 
-            $text = is_null($scid) ? 'Upload to SoundCloud' : 'Re-upload to SoundCloud';
+            $text = is_null($scid) ? _('Upload to SoundCloud') : _('Re-upload to SoundCloud');
             $menu["soundcloud_upload"] = array("name"=> $text, "icon" => "soundcloud");
         }
 
@@ -293,34 +293,34 @@ class ScheduleController extends Zend_Controller_Action
                 $epochNow < $showEndLocalDT->getTimestamp() && $isAdminOrPM) {
 
             if ($instance->isRecorded()) {
-                $menu["cancel_recorded"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+                $menu["cancel_recorded"] = array("name"=> _("Cancel Current Show"), "icon" => "delete");
             } else {
 
                 if (!$instance->isRebroadcast()) {
-                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
+                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
                 }
 
-                $menu["cancel"] = array("name"=> "Cancel Current Show", "icon" => "delete");
+                $menu["cancel"] = array("name"=> _("Cancel Current Show"), "icon" => "delete");
             }
         }
 
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
                 if (!$instance->isRebroadcast() && $isAdminOrPM) {
-                    $menu["edit"] = array("name"=> "Edit Show", "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
+                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
                 }
 
                 if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
 
                     //create delete sub menu.
-                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "items" => array());
+                    $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "items" => array());
 
-                    $menu["del"]["items"]["single"] = array("name"=> "Delete This Instance", "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
+                    $menu["del"]["items"]["single"] = array("name"=> _("Delete This Instance"), "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
 
-                    $menu["del"]["items"]["following"] = array("name"=> "Delete This Instance and All Following", "icon" => "delete", "url" => $baseUrl."/schedule/cancel-show");
+                    $menu["del"]["items"]["following"] = array("name"=> _("Delete This Instance and All Following"), "icon" => "delete", "url" => $baseUrl."/schedule/cancel-show");
                 } elseif ($isAdminOrPM) {
 
-                    $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
+                    $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
                 }
         }
 
@@ -443,8 +443,10 @@ class ScheduleController extends Zend_Controller_Action
             $originalDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
             //$timestamp  = Application_Common_DateHelper::ConvertToLocalDateTimeString($originalDateTime->format("Y-m-d H:i:s"));
             $this->view->additionalShowInfo =
-                "Rebroadcast of show \"$originalShowName\" from "
-                .$originalDateTime->format("l, F jS")." at ".$originalDateTime->format("G:i");
+                sprintf(_("Rebroadcast of show %s from %s at %s"),
+                    $originalShowName,
+                    $originalDateTime->format("l, F jS"),
+                    $originalDateTime->format("G:i"));
         }
         $this->view->showLength = $show->getShowLength();
         $this->view->timeFilled = $show->getTimeScheduled();
@@ -895,7 +897,7 @@ class ScheduleController extends Zend_Controller_Action
         $baseUrl = $this->getRequest()->getBaseUrl();
         $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
         $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
-                            'title' => 'Download');
+                            'title' => _('Download'));
 
         //returns format jjmenu is looking for.
         die(json_encode($menu));

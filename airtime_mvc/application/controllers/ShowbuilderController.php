@@ -187,15 +187,15 @@ class ShowbuilderController extends Zend_Controller_Action
         $item = CcScheduleQuery::create()->findPK($id);
         $instance = $item->getCcShowInstances();
 
-        $menu["preview"] = array("name"=> "Preview", "icon" => "play");
+        $menu["preview"] = array("name"=> _("Preview"), "icon" => "play");
         //select the cursor
-        $menu["selCurs"] = array("name"=> "Select cursor","icon" => "select-cursor");
-        $menu["delCurs"] = array("name"=> "Remove cursor","icon" => "select-cursor");
+        $menu["selCurs"] = array("name"=> _("Select cursor"),"icon" => "select-cursor");
+        $menu["delCurs"] = array("name"=> _("Remove cursor"),"icon" => "select-cursor");
 
         if ($now < floatval($item->getDbEnds("U.u")) && $user->canSchedule($instance->getDbShowId())) {
 
             //remove/truncate the item from the schedule
-            $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/showbuilder/schedule-remove");
+            $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/showbuilder/schedule-remove");
         }
 
         $this->view->items = $menu;
@@ -209,7 +209,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $instance = CcShowInstancesQuery::create()->findPK($id);
 
         if (is_null($instance)) {
-            $this->view->error = "show does not exist";
+            $this->view->error = _("show does not exist");
 
             return;
         }

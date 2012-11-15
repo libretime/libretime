@@ -14,12 +14,12 @@ class ErrorController extends Zend_Controller_Action
 
                 // 404 error -- controller or action not found
                 $this->getResponse()->setHttpResponseCode(404);
-                $this->view->message = 'Page not found';
+                $this->view->message = _('Page not found');
                 break;
             default:
                 // application error
                 $this->getResponse()->setHttpResponseCode(500);
-                $this->view->message = 'Application error';
+                $this->view->message = _('Application error');
                 break;
         }
 
