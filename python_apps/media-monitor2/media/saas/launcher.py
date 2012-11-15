@@ -16,23 +16,23 @@ class MM2(InstanceThread, Loggable):
         config = user().mm_config
         if not index_create_attempt:
             if not os.path.exists(config['index_path']):
-                self.log.info("Attempting to create index file:...")
+                self.logger.info("Attempting to create index file:...")
                 try:
                     with open(config['index_path'], 'w') as f: f.write(" ")
                 except Exception as e:
-                    self.log.info("Failed to create index file with exception: %s" \
+                    self.logger.info("Failed to create index file with exception: %s" \
                              % str(e))
                 else:
-                    self.log.info("Created index file, reloading configuration:")
+                    self.logger.info("Created index file, reloading configuration:")
                     self.index_create(index_create_attempt=True)
         else:
-            self.log.info("Already tried to create index. Will not try again ")
+            self.logger.info("Already tried to create index. Will not try again ")
 
         if not os.path.exists(config['index_path']):
             raise CouldNotCreateIndexFile(config['index_path'])
 
     def run(self):
-        self.index_create_attempt()
+        self.index_create()
         manager = Manager()
         apiclient = apc()
         config = user().mm_config
@@ -44,7 +44,7 @@ class MM2(InstanceThread, Loggable):
 
         store = apiclient.setup_media_monitor()
 
-        self.log.info(
+        self.logger.info(
                 "Initing with the following airtime response:%s" % str(store))
 
         airtime_receiver.change_storage({ 'directory':store[u'stor'] })
@@ -54,11 +54,11 @@ class MM2(InstanceThread, Loggable):
                 # Create the watch_directory here
                 try: os.makedirs(watch_dir)
                 except Exception:
-                    self.log.error("Could not create watch directory: '%s' \
+                    self.logger.error("Could not create watch directory: '%s' \
                             (given from the database)." % watch_dir)
             if os.path.exists(watch_dir):
                 airtime_receiver.new_watch({ 'directory':watch_dir }, restart=True)
-            else: self.log.info("Failed to add watch on %s" % str(watch_dir))
+            else: self.logger.info("Failed to add watch on %s" % str(watch_dir))
 
         ed = EventDrainer(airtime_notifier.connection,
                 interval=float(config['rmq_event_wait']))
@@ -72,4 +72,4 @@ class MM2(InstanceThread, Loggable):
 
         apiclient.register_component('media-monitor')
 
-        return manager.loop()
+        manager.loop()
