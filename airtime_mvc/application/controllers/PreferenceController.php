@@ -66,7 +66,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
                 Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);
 
-                $this->view->statusMsg = "<div class='success'>_(Preferences updated.)</div>";
+                $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
                 die(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml'))));
             } else {
@@ -118,7 +118,7 @@ class PreferenceController extends Zend_Controller_Action
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
                 }
-                $this->view->statusMsg = "<div class='success'>_(Support setting updated.)</div>";
+                $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
             }
         }
         $logo = Application_Model_Preference::GetStationLogo();
@@ -301,7 +301,7 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
-                $this->view->statusMsg = "<div class='success'>_(Stream Setting Updated.)</div>";
+                $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
                 die(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/stream-setting.phtml'))));
             } else {
                 $live_stream_subform->updateVariables();
