@@ -9,8 +9,7 @@ def main(global_config, api_client_config, log_config):
     mm_config = MMConfig(global_config)
     log = setup_logger( log_config, mm_config['logpath'] )
     setup_global(log)
-    launch_instance('hosted_install', '/', global_config, api_client_config,
-            log_config)
+    launch_instance('hosted_install', '/', global_config, api_client_config)
 
 __doc__ = """
 Usage:
