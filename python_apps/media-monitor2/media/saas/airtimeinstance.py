@@ -1,4 +1,5 @@
 import os
+from os.path import join
 
 from media.monitor.exceptions import NoConfigFile
 from media.monitor.pure import LazyProperty
