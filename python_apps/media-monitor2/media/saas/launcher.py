@@ -15,6 +15,7 @@ from media.monitor.airtime       import AirtimeNotifier, AirtimeMessageReceiver
 from media.monitor.watchersyncer import WatchSyncer
 from media.monitor.eventdrainer  import EventDrainer
 from media.monitor.manager       import Manager
+from media.monitor.syncdb        import AirtimeDB
 from media.saas.airtimeinstance  import AirtimeInstance
 
 class MM2(InstanceThread, Loggable):
@@ -49,7 +50,12 @@ class MM2(InstanceThread, Loggable):
         airtime_receiver = AirtimeMessageReceiver(config,manager)
         airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
-        store = apiclient.setup_media_monitor()
+
+        adb = AirtimeDB(apiclient)
+        store = {
+                u'stor' : adb.storage_path(),
+                u'watched_dirs' : adb.list_watched(),
+        }
 
         self.logger.info("initializing mm with directories: %s" % str(store))
 
