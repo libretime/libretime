@@ -28,13 +28,12 @@ def main(main_cfg):
     log_config, log_path = main_cfg['log_config'], main_cfg['log_path']
     log = setup_logger(log_config, log_path)
     setup_global(log)
-    for instance in autoscan_instances(main_cfg):
-        MM2(instance).start()
+    for instance in autoscan_instances(main_cfg): MM2(instance).start()
 
 if __name__ == '__main__': 
-    fake = {
-            'log_config' : '',
-            'log_path' : '',
+    default = {
+            'log_config'    : '',
+            'log_path'      : '',
             'instance_root' : ''
     }
-    main(fake)
+    main(default)
