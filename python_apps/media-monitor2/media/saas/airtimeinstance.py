@@ -10,9 +10,17 @@ class AirtimeInstance(object):
     instance by providing all the necessary objects required to interact
     with the instance. ApiClient, configs, root_directory """
 
+    @classmethod
+    def root_make(cls, name, root):
+        cfg = {
+                'api_client' : join(root, 'etc/airtime/api_client.cfg'),
+                'media_monitor' : join(root, 'etc/airtime/media-monitor.cfg'),
+        }
+        return cls(name, root, cfg)
+
     def __init__(self,name, root_path, config_paths):
         """ name is an internal name only """
-        for cfg in ['api_client','media_monitor', 'logging']:
+        for cfg in ['api_client','media_monitor']:
             if cfg not in config_paths: raise NoConfigFile(config_paths)
             elif not os.path.exists(config_paths[cfg]):
                 raise NoConfigFile(config_paths[cfg])
