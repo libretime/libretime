@@ -11,11 +11,10 @@ class AirtimeDB(Loggable):
         if reload_now: self.reload_directories()
 
     def reload_directories(self):
-        """
-        this is the 'real' constructor, should be called if you ever want the
-        class reinitialized.  there's not much point to doing it yourself
-        however, you should just create a new AirtimeDB instance.
-        """
+        """ this is the 'real' constructor, should be called if you ever
+        want the class reinitialized. there's not much point to doing
+        it yourself however, you should just create a new AirtimeDB
+        instance. """
         # dirs_setup is a dict with keys:
         # u'watched_dirs' and u'stor' which point to lists of corresponding
         # dirs
@@ -42,15 +41,11 @@ class AirtimeDB(Loggable):
             dirs_setup[u'watched_dirs'] ])
 
     def to_id(self, directory):
-        """
-        directory path -> id
-        """
+        """ directory path -> id """
         return self.dir_to_id[ directory ]
 
     def to_directory(self, dir_id):
-        """
-        id -> directory path
-        """
+        """ id -> directory path """
         return self.id_to_dir[ dir_id ]
 
     def storage_path(self)  : return self.base_storage
@@ -60,37 +55,31 @@ class AirtimeDB(Loggable):
     def recorded_path(self) : return self.storage_paths['recorded']
 
     def list_watched(self):
-        """
-        returns all watched directories as a list
-        """
+        """ returns all watched directories as a list """
         return list(self.watched_directories)
 
     def list_storable_paths(self):
-        """
-        returns a list of all the watched directories in the datatabase.
-        (Includes the imported directory and the recorded directory)
-        """
+        """ returns a list of all the watched directories in the
+        datatabase. (Includes the imported directory and the recorded
+        directory) """
         l = self.list_watched()
         l.append(self.import_path())
         l.append(self.recorded_path())
         return l
 
     def dir_id_get_files(self, dir_id, all_files=True):
-        """
-        Get all files in a directory with id dir_id
-        """
+        """ Get all files in a directory with id dir_id """
         base_dir = self.id_to_dir[ dir_id ]
         return set(( os.path.join(base_dir,p) for p in
             self.apc.list_all_db_files( dir_id, all_files ) ))
 
     def directory_get_files(self, directory, all_files=True):
-        """
-        returns all the files(recursively) in a directory. a directory is an
-        "actual" directory path instead of its id. This is super hacky because
-        you create one request for the recorded directory and one for the
-        imported directory even though they're the same dir in the database so
-        you get files for both dirs in 1 request...
-        """
+        """ returns all the files(recursively) in a directory. a
+        directory is an "actual" directory path instead of its id. This
+        is super hacky because you create one request for the recorded
+        directory and one for the imported directory even though they're
+        the same dir in the database so you get files for both dirs in 1
+        request... """
         normal_dir = os.path.normpath(unicode(directory))
         if normal_dir not in self.dir_to_id:
             raise NoDirectoryInAirtime( normal_dir, self.dir_to_id )
