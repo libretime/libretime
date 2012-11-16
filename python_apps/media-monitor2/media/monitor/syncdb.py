@@ -17,7 +17,7 @@ class AirtimeDB(Loggable):
         it yourself however, you should just create a new AirtimeDB
         instance. """
 
-        saas = user().root
+        saas = user().root_path
 
         # dirs_setup is a dict with keys:
         # u'watched_dirs' and u'stor' which point to lists of corresponding
