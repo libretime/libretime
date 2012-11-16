@@ -89,7 +89,7 @@ def launch_instance(name, root, global_cfg, apc_cfg):
         'api_client'    : apc_cfg,
         'media_monitor' : global_cfg,
     }
-    ai = AirtimeInstance('name', 'root', cfg)
+    ai = AirtimeInstance(name, root, cfg)
     MM2(ai).start()
 
 def setup_global(log):
