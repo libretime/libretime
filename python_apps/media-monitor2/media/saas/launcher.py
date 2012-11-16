@@ -51,6 +51,8 @@ class MM2(InstanceThread, Loggable):
 
         store = apiclient.setup_media_monitor()
 
+        self.logger.info("initializing mm with directories: %s" % str(store))
+
         self.logger.info(
                 "Initing with the following airtime response:%s" % str(store))
 
