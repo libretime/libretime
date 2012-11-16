@@ -2,23 +2,20 @@ import os, sys
 import logging
 import logging.config
 
-from media.monitor.exceptions       import FailedToObtainLocale, \
-                                           FailedToSetLocale
-
-from media.monitor.log              import get_logger, setup_logging
-from std_err_override               import LogWriter
-
-from media.saas.thread import InstanceThread, user, apc
-from media.monitor.log import Loggable
 import media.monitor.pure          as mmp
-from media.monitor.exceptions import CouldNotCreateIndexFile
-from media.monitor.toucher          import ToucherThread
-from media.monitor.airtime          import AirtimeNotifier, \
-                                           AirtimeMessageReceiver
-from media.monitor.watchersyncer    import WatchSyncer
-from media.monitor.eventdrainer     import EventDrainer
-from media.monitor.manager          import Manager
-from media.saas.airtimeinstance import AirtimeInstance
+
+from media.monitor.exceptions    import FailedToObtainLocale, FailedToSetLocale
+from media.monitor.log           import get_logger, setup_logging
+from std_err_override            import LogWriter
+from media.saas.thread           import InstanceThread, user, apc
+from media.monitor.log           import Loggable
+from media.monitor.exceptions    import CouldNotCreateIndexFile
+from media.monitor.toucher       import ToucherThread
+from media.monitor.airtime       import AirtimeNotifier, AirtimeMessageReceiver
+from media.monitor.watchersyncer import WatchSyncer
+from media.monitor.eventdrainer  import EventDrainer
+from media.monitor.manager       import Manager
+from media.saas.airtimeinstance  import AirtimeInstance
 
 class MM2(InstanceThread, Loggable):
 
