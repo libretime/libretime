@@ -15,12 +15,16 @@ class AirtimeDB(Loggable):
         want the class reinitialized. there's not much point to doing
         it yourself however, you should just create a new AirtimeDB
         instance. """
+
+        saas = user().root
+
         # dirs_setup is a dict with keys:
         # u'watched_dirs' and u'stor' which point to lists of corresponding
         # dirs
         dirs_setup = self.apc.setup_media_monitor()
-        dirs_setup[u'stor'] = normpath( dirs_setup[u'stor'] )
-        dirs_setup[u'watched_dirs'] = map(normpath, dirs_setup[u'watched_dirs'])
+        dirs_setup[u'stor'] = normpath( join(saas, dirs_setup[u'stor'] ) )
+        dirs_setup[u'watched_dirs'] = map(lambda p: normpath(join(saas,p)),
+            dirs_setup[u'watched_dirs'])
         dirs_with_id = dict([ (k,normpath(v)) for k,v in
             self.apc.list_all_watched_dirs()['dirs'].iteritems() ])
 
