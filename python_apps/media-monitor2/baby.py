@@ -38,6 +38,7 @@ def main(main_cfg):
     print("Launched all instances")
 
 if __name__ == '__main__': 
+    root = '/home/rudi/reps/Airtime/python_apps/media-monitor2'
     default = {
             'log_path'      : join(root, 'test.log'), # config for log
             'log_config'    : join(root, 'configs/logging.cfg'), # where to log
