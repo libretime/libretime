@@ -7,7 +7,7 @@ from os import listdir
 
 def list_dirs(d): return (x for x in listdir(d) if isdir(join(d,x)))
 
-def filter_instance(d): return bool(re.match('.+/\d+$',d))
+def filter_instance(d): return bool(re.match('.+\d+$',d))
 
 def get_name(p): return re.match('.+/(\d+)$',p).group(1)
 
