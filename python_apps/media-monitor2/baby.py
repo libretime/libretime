@@ -32,7 +32,10 @@ def main(main_cfg):
     verify_exists(log_config)
     log = setup_logger(log_config, log_path)
     setup_global(log)
-    for instance in autoscan_instances(main_cfg): MM2(instance).start()
+    for instance in autoscan_instances(main_cfg): 
+        print("Launching instance: %s" % str(instance))
+        MM2(instance).start()
+    print("Launched all instances")
 
 if __name__ == '__main__': 
     default = {
