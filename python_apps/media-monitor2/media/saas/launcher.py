@@ -7,7 +7,7 @@ import media.monitor.pure          as mmp
 from media.monitor.exceptions    import FailedToObtainLocale, FailedToSetLocale
 from media.monitor.log           import get_logger, setup_logging
 from std_err_override            import LogWriter
-from media.saas.thread           import InstanceThread, user, apc
+from media.saas.thread           import InstanceThread, user, apc, getsig
 from media.monitor.log           import Loggable
 from media.monitor.exceptions    import CouldNotCreateIndexFile
 from media.monitor.toucher       import ToucherThread
@@ -44,7 +44,7 @@ class MM2(InstanceThread, Loggable):
         manager = Manager()
         apiclient = apc()
         config = user().mm_config
-        watch_syncer = WatchSyncer(signal='watch',
+        watch_syncer = WatchSyncer(signal=getsig('watch'),
                                    chunking_number=config['chunking_number'],
                                    timeout=config['request_max_wait'])
         airtime_receiver = AirtimeMessageReceiver(config,manager)

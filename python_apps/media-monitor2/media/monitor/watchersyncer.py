@@ -8,7 +8,7 @@ from media.monitor.exceptions      import BadSongFile
 from media.monitor.eventcontractor import EventContractor
 from media.monitor.events          import EventProxy
 from media.monitor.request         import ThreadedRequestSync, RequestSync
-from media.saas.thread import InstanceInheritingThread
+from media.saas.thread             import InstanceInheritingThread, getsig
 
 class TimeoutWatcher(InstanceInheritingThread,Loggable):
     """
@@ -52,7 +52,7 @@ class WatchSyncer(ReportHandler,Loggable):
         tc = TimeoutWatcher(self, self.timeout)
         tc.daemon = True
         tc.start()
-        super(WatchSyncer, self).__init__(signal=signal)
+        super(WatchSyncer, self).__init__(signal=getsig(signal))
 
     def handle(self, sender, event):
         """

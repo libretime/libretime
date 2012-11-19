@@ -9,7 +9,7 @@ from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
                                  DeleteDir, EventRegistry, MoveDir,\
                                  DeleteDirWatch
 from media.monitor.log import Loggable, get_logger
-
+from media.saas.thread import getsig
 # Note: Because of the way classes that inherit from pyinotify.ProcessEvent
 # interact with constructors. you should only instantiate objects from them
 # using keyword arguments. For example:
@@ -45,7 +45,7 @@ class BaseListener(object):
     def __str__(self):
         return "Listener(%s), Signal(%s)" % \
                 (self.__class__.__name__, self.  signal)
-    def my_init(self, signal): self.signal = signal
+    def my_init(self, signal): self.signal = getsig(signal)
 
 class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
     def process_IN_CLOSE_WRITE(self, event):
@@ -66,14 +66,14 @@ class OrganizeListener(BaseListener, pyinotify.ProcessEvent, Loggable):
             self.logger.info("Bootstrapping: File in 'organize' directory: \
                     '%s'" % f)
             if not mmp.file_locked(f):
-                dispatcher.send(signal=self.signal, sender=self,
+                dispatcher.send(signal=getsig(self.signal), sender=self,
                         event=OrganizeFile(f))
             flushed += 1
         #self.logger.info("Flushed organized directory with %d files" % flushed)
 
     @IncludeOnly(mmp.supported_extensions)
     def process_to_organize(self, event):
-        dispatcher.send(signal=self.signal, sender=self,
+        dispatcher.send(signal=getsig(self.signal), sender=self,
                 event=OrganizeFile(event))
 
 class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
@@ -101,14 +101,14 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
 
     def delete_watch_dir(self, event):
         e = DeleteDirWatch(event)
-        dispatcher.send(signal='watch_move', sender=self, event=e)
-        dispatcher.send(signal=self.signal, sender=self, event=e)
+        dispatcher.send(signal=getsig('watch_move'), sender=self, event=e)
+        dispatcher.send(signal=getsig(self.signal), sender=self, event=e)
 
     @mediate_ignored
     @IncludeOnly(mmp.supported_extensions)
     def process_create(self, event):
         evt = NewFile(event)
-        dispatcher.send(signal=self.signal, sender=self, event=evt)
+        dispatcher.send(signal=getsig(self.signal), sender=self, event=evt)
         return evt
 
     @mediate_ignored
@@ -117,13 +117,13 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
         evt = None
         if event.dir : evt = DeleteDir(event)
         else         : evt = DeleteFile(event)
-        dispatcher.send(signal=self.signal, sender=self, event=evt)
+        dispatcher.send(signal=getsig(self.signal), sender=self, event=evt)
         return evt
 
     @mediate_ignored
     def process_delete_dir(self, event):
         evt = DeleteDir(event)
-        dispatcher.send(signal=self.signal, sender=self, event=evt)
+        dispatcher.send(signal=getsig(self.signal), sender=self, event=evt)
         return evt
 
     def flush_events(self, path):
@@ -138,6 +138,6 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
         added = 0
         for f in mmp.walk_supported(path, clean_empties=False):
             added += 1
-            dispatcher.send( signal=self.signal, sender=self, event=NewFile(f) )
+            dispatcher.send( signal=getsig(self.signal), sender=self, event=NewFile(f) )
         self.logger.info( "Flushed watch directory. added = %d" % added )
 

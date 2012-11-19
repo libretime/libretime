@@ -7,6 +7,7 @@ from media.monitor.exceptions import BadSongFile
 from media.monitor.events     import OrganizeFile
 from pydispatch               import dispatcher
 from os.path                  import dirname
+from media.saas.thread        import getsig
 import os.path
 
 class Organizer(ReportHandler,Loggable):
@@ -36,7 +37,7 @@ class Organizer(ReportHandler,Loggable):
         self.channel       = channel
         self.target_path   = target_path
         self.recorded_path = recorded_path
-        super(Organizer, self).__init__(signal=self.channel, weak=False)
+        super(Organizer, self).__init__(signal=getsig(self.channel), weak=False)
 
     def handle(self, sender, event):
         """ Intercept events where a new file has been added to the
@@ -63,7 +64,7 @@ class Organizer(ReportHandler,Loggable):
             def new_dir_watch(d):
                 # TODO : rewrite as return lambda : dispatcher.send(...
                 def cb():
-                    dispatcher.send(signal="add_subwatch", sender=self,
+                    dispatcher.send(signal=getsig("add_subwatch"), sender=self,
                             directory=d)
                 return cb
 

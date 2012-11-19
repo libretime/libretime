@@ -8,7 +8,7 @@ from media.monitor.log       import Loggable
 from media.monitor.listeners import StoreWatchListener, OrganizeListener
 from media.monitor.handler   import ProblemFileHandler
 from media.monitor.organizer import Organizer
-from media.saas.thread import InstanceInheritingThread
+from media.saas.thread       import InstanceInheritingThread, getsig
 import media.monitor.pure as mmp
 
 
@@ -37,8 +37,8 @@ class Manager(Loggable):
     def __init__(self):
         self.wm = pyinotify.WatchManager()
         # These two instance variables are assumed to be constant
-        self.watch_channel    = 'watch'
-        self.organize_channel = 'organize'
+        self.watch_channel    = getsig('watch')
+        self.organize_channel = getsig('organize')
         self.watch_listener   = StoreWatchListener(signal = self.watch_channel)
         self.__timeout_thread = ManagerTimeout(self)
         self.__timeout_thread.daemon = True
@@ -54,11 +54,11 @@ class Manager(Loggable):
                 self.organize_channel),
         }
         def dummy(sender, event): self.watch_move( event.path, sender=sender )
-        dispatcher.connect(dummy, signal='watch_move', sender=dispatcher.Any,
-                weak=False)
+        dispatcher.connect(dummy, signal=getsig('watch_move'), 
+                sender=dispatcher.Any, weak=False)
         def subwatch_add(sender, directory):
             self.__add_watch(directory, self.watch_listener)
-        dispatcher.connect(subwatch_add, signal='add_subwatch',
+        dispatcher.connect(subwatch_add, signal=getsig('add_subwatch'),
                 sender=dispatcher.Any, weak=False)
         # A private mapping path => watch_descriptor
         # we use the same dictionary for organize, watch, store wd events.
@@ -81,7 +81,7 @@ class Manager(Loggable):
     def watch_signal(self):
         """ Return the signal string our watch_listener is reading
         events from """
-        return self.watch_listener.signal
+        return getsig(self.watch_listener.signal)
 
     def __remove_watch(self,path):
         """ Remove path from being watched (first will check if 'path'
@@ -131,7 +131,8 @@ class Manager(Loggable):
         """ Set the path where problem files should go """
         self.organize['problem_files_path'] = new_path
         self.organize['problem_handler'] = \
-            ProblemFileHandler( PathChannel(signal='badfile',path=new_path) )
+            ProblemFileHandler( PathChannel(signal=getsig('badfile'),
+                path=new_path) )
 
     def get_recorded_path(self):
         """ returns the path of the recorded directory """
