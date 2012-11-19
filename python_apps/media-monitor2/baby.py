@@ -19,7 +19,7 @@ def autoscan_instances(main_cfg):
     for instance_machine in list_dirs(root):
         instance_machine = join(root, instance_machine)
         for instance_root in filter_instances(list_dirs(instance_machine)):
-            full_path = abspath(join(root,instance_root))
+            full_path = abspath(join(instance_machine,instance_root))
             ai = AirtimeInstance.root_make(get_name(full_path), full_path)
             instances.append(ai)
     return instances
