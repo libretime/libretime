@@ -32,8 +32,8 @@ def main(main_cfg):
 
 if __name__ == '__main__': 
     default = {
-            'log_config'    : '',
-            'log_path'      : '',
-            'instance_root' : ''
+            'log_config'    : '', # config for log
+            'log_path'      : '', # where to log
+            'instance_root' : '' # root dir of all instances
     }
     main(default)
