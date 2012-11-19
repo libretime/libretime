@@ -24,8 +24,12 @@ def autoscan_instances(main_cfg):
             instances.append(ai)
     return instances
 
+def verify_exists(p):
+    if not exists(p): raise Exception("%s must exist" % p)
+
 def main(main_cfg):
     log_config, log_path = main_cfg['log_config'], main_cfg['log_path']
+    verify_exists(log_config)
     log = setup_logger(log_config, log_path)
     setup_global(log)
     for instance in autoscan_instances(main_cfg): MM2(instance).start()
