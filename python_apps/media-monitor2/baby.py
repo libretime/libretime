@@ -32,8 +32,9 @@ def main(main_cfg):
 
 if __name__ == '__main__': 
     default = {
-            'log_config'    : '', # config for log
-            'log_path'      : '', # where to log
-            'instance_root' : '' # root dir of all instances
+            'log_path'      : join(root, 'test.log'), # config for log
+            'log_config'    : join(root, 'configs/logging.cfg'), # where to log
+            # root dir of all instances
+            'instance_root' : join(root, 'saas_stub')
     }
     main(default)
