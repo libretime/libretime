@@ -23,3 +23,5 @@ def user():
     except AttributeError: raise UserlessThread()
 
 def apc(): return user().api_client
+
+def getsig(s): return user().signal(s)

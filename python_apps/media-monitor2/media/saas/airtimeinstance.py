@@ -6,6 +6,9 @@ from media.monitor.pure import LazyProperty
 from media.monitor.config import MMConfig
 from api_clients.api_client import AirtimeApiClient
 
+# poor man's phantom types...
+class SignalString(str): pass
+
 class AirtimeInstance(object):
     """ AirtimeInstance is a class that abstracts away every airtime
     instance by providing all the necessary objects required to interact
@@ -28,6 +31,10 @@ class AirtimeInstance(object):
         self.name         = name
         self.config_paths = config_paths
         self.root_path    = root_path
+
+    def signal(self, sig):
+        if isinstance(sig, SignalString): return sig
+        else: return SignalString("%s_%s" % (self.name, sig))
 
     def __str__(self):
         return "%s,%s(%s)" % (self.name, self.root_path, self.config_paths)
