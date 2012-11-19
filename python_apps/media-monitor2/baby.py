@@ -11,7 +11,7 @@ def filter_instance(d): return bool(re.match('.+/\d+$',d))
 
 def get_name(p): return re.match('.+/(\d+)$',p).group(1)
 
-def filter_instances(l): return (x for x in l if filter_instance(l))
+def filter_instances(l): return (x for x in l if filter_instance(x))
 
 def autoscan_instances(main_cfg):
     root = main_cfg['instance_root']
