@@ -73,11 +73,11 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
     def process_IN_CLOSE_WRITE(self, event):
         self.process_create(event)
     def process_IN_MOVED_TO(self, event):
-        if EventRegistry.registered(event):
+        if user().event_registry.registered(event):
             # We need this trick because we don't how to "expand" dir events
             # into file events until we know for sure if we deleted or moved
             morph = MoveDir(event) if event.dir else MoveFile(event)
-            EventRegistry.matching(event).morph_into(morph)
+            user().event_registry.matching(event).morph_into(morph)
         else: self.process_create(event)
     def process_IN_MOVED_FROM(self, event):
         # Is either delete dir or delete file
@@ -85,7 +85,7 @@ class StoreWatchListener(BaseListener, Loggable, pyinotify.ProcessEvent):
         # evt can be none whenever event points that a file that would be
         # ignored by @IncludeOnly
         if hasattr(event,'cookie') and (evt != None):
-            EventRegistry.register(evt)
+            user().event_registry.register(evt)
     def process_IN_DELETE(self,event): self.process_delete(event)
     def process_IN_MOVE_SELF(self, event):
         if '-unknown-path' in event.pathname:

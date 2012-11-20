@@ -5,6 +5,7 @@ from media.monitor.exceptions import NoConfigFile
 from media.monitor.pure import LazyProperty
 from media.monitor.config import MMConfig
 from media.monitor.owners import Owner
+from media.monitor.events import EventRegistry
 from media.monitor.listeners import FileMediator
 from api_clients.api_client import AirtimeApiClient
 
@@ -52,6 +53,11 @@ class AirtimeInstance(object):
     @LazyProperty
     def owner(self):
         return Owner()
+
+    @LazyProperty
+    def event_registry(self):
+        return EventRegistry()
+
     @LazyProperty
     def file_mediator(self):
         return FileMediator()

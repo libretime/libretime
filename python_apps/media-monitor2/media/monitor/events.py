@@ -21,28 +21,20 @@ class PathChannel(object):
 # TODO : Move this to it's file. Also possible unsingleton and use it as a
 # simple module just like m.m.owners
 class EventRegistry(object):
-    """
-    This class's main use is to keep track all events with a cookie attribute.
-    This is done mainly because some events must be 'morphed' into other events
-    because we later detect that they are move events instead of delete events.
-    """
-    registry = {}
-    @staticmethod
-    def register(evt): EventRegistry.registry[evt.cookie] = evt
-    @staticmethod
-    def unregister(evt): del EventRegistry.registry[evt.cookie]
-    @staticmethod
-    def registered(evt): return evt.cookie in EventRegistry.registry
-    @staticmethod
-    def matching(evt):
-        event = EventRegistry.registry[evt.cookie]
+    """ This class's main use is to keep track all events with a cookie
+    attribute. This is done mainly because some events must be 'morphed'
+    into other events because we later detect that they are move events
+    instead of delete events. """
+    def __init__(self):
+        self.registry = {}
+    def register(self,evt): self.registry[evt.cookie] = evt
+    def unregister(self,evt): del self.registry[evt.cookie]
+    def registered(self,evt): return evt.cookie in self.registry
+    def matching(self,evt):
+        event = self.registry[evt.cookie]
         # Want to disallow accessing the same event twice
-        EventRegistry.unregister(event)
+        self.unregister(event)
         return event
-    def __init__(self,*args,**kwargs):
-        raise Exception("You can instantiate this class. Must only use class \
-                         methods")
-
 
 class EventProxy(Loggable):
     """
