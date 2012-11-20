@@ -360,7 +360,7 @@ SQL;
         }
 
 
-        // set hidden falg to true
+        // set hidden flag to true
         $this->_file->setDbHidden(true);
         $this->_file->save();
         
