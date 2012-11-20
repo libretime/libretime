@@ -8,6 +8,7 @@ from media.monitor.pure       import LazyProperty
 from media.monitor.metadata   import Metadata
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
+from media.saas.thread        import getsig
 
 class PathChannel(object):
     """
@@ -15,7 +16,7 @@ class PathChannel(object):
     used as a named tuple
     """
     def __init__(self, signal, path):
-        self.signal = signal
+        self.signal = getsig(signal)
         self.path   = path
 
 # TODO : Move this to it's file. Also possible unsingleton and use it as a

@@ -637,6 +637,26 @@ var AIRTIME = (function(AIRTIME){
 	        	$fs.addClass("closed");
 	        }
 	    });
+		
+
+	    $pl.on("click", 'button[id="playlist_shuffle_button"]', function(){
+	        obj_id = $('input[id="obj_id"]').val();
+	        url = "/Playlist/shuffle";
+    	    enableLoadingIcon();
+    	    $.post(url, {format: "json", obj_id: obj_id}, function(data){
+    	        var json = $.parseJSON(data)
+
+    	        if (json.error !== undefined) {
+    	            alert(json.error);
+    	        }
+    	        AIRTIME.playlist.fnOpenPlaylist(json);
+    	        if (json.result == "0") {
+    	            $pl.find('.success').text('Playlist shuffled');
+    	            $pl.find('.success').show();
+    	        }
+    	        disableLoadingIcon();
+    	    });
+	    })
 
 		$pl.on("click", "#webstream_save", function(){
             //get all fields and POST to server

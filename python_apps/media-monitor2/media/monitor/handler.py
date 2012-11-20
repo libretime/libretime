@@ -3,6 +3,7 @@ from pydispatch import dispatcher
 import abc
 
 from media.monitor.log import Loggable
+from media.saas.thread import getsig
 import media.monitor.pure as mmp
 
 # Defines the handle interface
@@ -21,10 +22,10 @@ class ReportHandler(Handles):
     """
     __metaclass__ = abc.ABCMeta
     def __init__(self, signal, weak=False):
-        self.signal = signal
-        self.report_signal = "badfile"
+        self.signal = getsig(signal)
+        self.report_signal = getsig("badfile")
         def dummy(sender, event): self.handle(sender,event)
-        dispatcher.connect(dummy, signal=signal, sender=dispatcher.Any,
+        dispatcher.connect(dummy, signal=self.signal, sender=dispatcher.Any,
                 weak=weak)
 
     def report_problem_file(self, event, exception=None):
@@ -38,7 +39,7 @@ class ProblemFileHandler(Handles, Loggable):
     """
     def __init__(self, channel, **kwargs):
         self.channel = channel
-        self.signal = self.channel.signal
+        self.signal = getsig(self.channel.signal)
         self.problem_dir = self.channel.path
         def dummy(sender, event, exception):
             self.handle(sender, event, exception)

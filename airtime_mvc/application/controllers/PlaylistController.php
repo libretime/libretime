@@ -25,6 +25,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('smart-block-generate', 'json')
                     ->addActionContext('smart-block-shuffle', 'json')
                     ->addActionContext('get-block-info', 'json')
+                    ->addActionContext('shuffle', 'json')
                     ->initContext();
 
     }
@@ -72,7 +73,6 @@ class PlaylistController extends Zend_Controller_Action
             $isBlock = true;
             $viewPath = 'playlist/smart-block.phtml';
         }
-
         if (isset($obj)) {
             $formatter = new LengthFormatter($obj->getLength());
             $this->view->length = $formatter->format();
@@ -94,7 +94,11 @@ class PlaylistController extends Zend_Controller_Action
             } else {
                 $this->view->obj = $obj;
                 $this->view->id = $obj->getId();
-                $this->view->html = $this->view->render($viewPath);
+                if ($isJson) {
+                    return $this->view->html = $this->view->render($viewPath);
+                } else {
+                    $this->view->html = $this->view->render($viewPath);
+                }
                 unset($this->view->obj);
             }
         } else {
@@ -532,6 +536,26 @@ class PlaylistController extends Zend_Controller_Action
                 die(json_encode($result));
             }
         } catch (BlockNotFoundException $e) {
+            $this->playlistNotFound('block', true);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
+        }
+    }
+    
+    public function shuffleAction()
+    {
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        try {
+            $pl = new Application_Model_Playlist($params['obj_id']);
+            $result = $pl->shuffle();
+            
+            if ($result['result'] == 0) {
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+            } else {
+                die(json_encode($result));
+            }
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound('block', true);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
