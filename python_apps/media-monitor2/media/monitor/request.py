@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import threading
-
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log        import Loggable
-import api_clients.api_client as ac
+from media.saas.thread import apc, InstanceInheritingThread
 
-class ThreadedRequestSync(threading.Thread, Loggable):
+class ThreadedRequestSync(InstanceInheritingThread, Loggable):
     def __init__(self, rs):
-        threading.Thread.__init__(self)
+        super(ThreadedRequestSync, self).__init__()
         self.rs = rs
         self.daemon = True
         self.start()
@@ -22,7 +20,7 @@ class RequestSync(Loggable):
     for some number of times """
     @classmethod
     def create_with_api_client(cls, watcher, requests):
-        apiclient = ac.AirtimeApiClient.create_right_config()
+        apiclient = apc()
         self = cls(watcher, requests, apiclient)
         return self
 

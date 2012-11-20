@@ -2,6 +2,7 @@ import os
 from pydispatch           import dispatcher
 from media.monitor.events import NewFile, DeleteFile, ModifyFile
 from media.monitor.log    import Loggable
+from media.saas.thread    import getsig
 import media.monitor.pure as mmp
 
 class Bootstrapper(Loggable):
@@ -16,7 +17,7 @@ class Bootstrapper(Loggable):
         watch_signal - the signals should send events for every file on.
         """
         self.db           = db
-        self.watch_signal = watch_signal
+        self.watch_signal = getsig(watch_signal)
 
     def flush_all(self, last_ran):
         """

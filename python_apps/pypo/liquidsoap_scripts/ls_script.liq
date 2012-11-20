@@ -7,11 +7,11 @@ set("server.telnet", true)
 set("server.telnet.port", 1234)
 
 #Dynamic source list
-dyn_sources = ref []
+#dyn_sources = ref []
 webstream_enabled = ref false
 
 time = ref string_of(gettimeofday())
-queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
+queue = audio_to_stereo(id="queue_src", mksafe(request.equeue(id="queue", length=0.5)))
 queue = cue_cut(queue)
 queue = amplify(1., override="replay_gain", queue)
 
@@ -35,14 +35,18 @@ s2_namespace = ref ''
 s3_namespace = ref ''
 just_switched = ref false
 
-stream_harbor_pass = list.hd(get_process_lines('pwgen -s -N 1 -n 20'))
+#stream_harbor_pass = list.hd(get_process_lines('pwgen -s -N 1 -n 20'))
 
 %include "ls_lib.liq"
 
-web_stream = input.harbor("test-harbor", port=8999, password=stream_harbor_pass)
-web_stream = on_metadata(notify_stream, web_stream)
-output.dummy(fallible=true, web_stream)
+#web_stream = input.harbor("test-harbor", port=8999, password=stream_harbor_pass)
+#web_stream = on_metadata(notify_stream, web_stream)
+#output.dummy(fallible=true, web_stream)
 
+
+http = input.http_restart(id="http")
+http = cross_http(http_input_id="http",http)
+stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
 
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
@@ -51,10 +55,10 @@ queue = map_metadata(update=false, append_title, queue)
 output.dummy(fallible=true, queue)
 
 
-stream_queue = switch(id="stream_queue_switch", track_sensitive=false,
-    transitions=[transition, transition],
-    [({!webstream_enabled},web_stream),
-    ({true}, queue)])
+#stream_queue = switch(id="stream_queue_switch", track_sensitive=false,
+#    transitions=[transition, transition],
+#    [({!webstream_enabled},web_stream),
+#    ({true}, queue)])
 
 ignore(output.dummy(stream_queue, fallible=true))
 
@@ -92,32 +96,33 @@ server.register(namespace="dynamic_source",
                 fun (s) -> begin log("dynamic_source.output_stop") webstream_enabled := false "disabled" end)
 
 server.register(namespace="dynamic_source",
-                description="Set the cc_schedule row id",
+                description="Set the streams cc_schedule row id",
                 usage="id <id>",
                 "id",
                 fun (s) -> begin log("dynamic_source.id") set_dynamic_source_id(s) end)
 
 server.register(namespace="dynamic_source",
-                description="Get the cc_schedule row id",
+                description="Get the streams cc_schedule row id",
                 usage="get_id",
                 "get_id",
                 fun (s) -> begin log("dynamic_source.get_id") get_dynamic_source_id() end)
 
-server.register(namespace="dynamic_source",
-                description="Start a new dynamic source.",
-                usage="start <uri>",
-                "read_start",
-                fun (uri) -> begin log("dynamic_source.read_start") create_dynamic_source(uri) end)
-server.register(namespace="dynamic_source",
-                description="Stop a dynamic source.",
-                usage="stop <id>",
-                "read_stop",
-                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source(s) end)
-server.register(namespace="dynamic_source",
-                description="Stop a dynamic source.",
-                usage="stop <id>",
-                "read_stop_all",
-                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
+#server.register(namespace="dynamic_source",
+#                description="Start a new dynamic source.",
+#                usage="start <uri>",
+#                "read_start",
+#                fun (uri) -> begin log("dynamic_source.read_start") begin_stream_read(uri) end)
+#server.register(namespace="dynamic_source",
+#                description="Stop a dynamic source.",
+#                usage="stop <id>",
+#                "read_stop",
+#                fun (s) -> begin log("dynamic_source.read_stop") stop_stream_read(s) end)
+
+#server.register(namespace="dynamic_source",
+#                description="Stop a dynamic source.",
+#                usage="stop <id>",
+#                "read_stop_all",
+#                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
 default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)

@@ -1116,7 +1116,6 @@ class Application_Model_Preference
             } else {
                 /*For now we just have this hack for debugging. We should not
                     rely on this crappy behaviour in case of failure*/
-                Logging::info("Pref: $pref_param");
                 Logging::warn("Index $x does not exist preferences");
                 Logging::warn("Defaulting to identity and printing preferences");
                 Logging::warn($ds);

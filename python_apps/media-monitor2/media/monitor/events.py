@@ -3,11 +3,11 @@ import os
 import abc
 import re
 import media.monitor.pure   as mmp
-import media.monitor.owners as owners
 from media.monitor.pure       import LazyProperty
 from media.monitor.metadata   import Metadata
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
+from media.saas.thread        import getsig, user
 
 class PathChannel(object):
     """
@@ -15,34 +15,26 @@ class PathChannel(object):
     used as a named tuple
     """
     def __init__(self, signal, path):
-        self.signal = signal
+        self.signal = getsig(signal)
         self.path   = path
 
 # TODO : Move this to it's file. Also possible unsingleton and use it as a
 # simple module just like m.m.owners
 class EventRegistry(object):
-    """
-    This class's main use is to keep track all events with a cookie attribute.
-    This is done mainly because some events must be 'morphed' into other events
-    because we later detect that they are move events instead of delete events.
-    """
-    registry = {}
-    @staticmethod
-    def register(evt): EventRegistry.registry[evt.cookie] = evt
-    @staticmethod
-    def unregister(evt): del EventRegistry.registry[evt.cookie]
-    @staticmethod
-    def registered(evt): return evt.cookie in EventRegistry.registry
-    @staticmethod
-    def matching(evt):
-        event = EventRegistry.registry[evt.cookie]
+    """ This class's main use is to keep track all events with a cookie
+    attribute. This is done mainly because some events must be 'morphed'
+    into other events because we later detect that they are move events
+    instead of delete events. """
+    def __init__(self):
+        self.registry = {}
+    def register(self,evt): self.registry[evt.cookie] = evt
+    def unregister(self,evt): del self.registry[evt.cookie]
+    def registered(self,evt): return evt.cookie in self.registry
+    def matching(self,evt):
+        event = self.registry[evt.cookie]
         # Want to disallow accessing the same event twice
-        EventRegistry.unregister(event)
+        self.unregister(event)
         return event
-    def __init__(self,*args,**kwargs):
-        raise Exception("You can instantiate this class. Must only use class \
-                         methods")
-
 
 class EventProxy(Loggable):
     """
@@ -101,7 +93,7 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
-        self.owner = owners.get_owner(self.path)
+        self.owner = user().owner.get_owner(self.path)
         owner_re = re.search('stor/imported/(?P<owner>\d+)/', self.path)
         if owner_re: 
             self.logger.info("matched path: %s" % self.path)
@@ -152,7 +144,7 @@ class BaseEvent(Loggable):
             ret = self.pack()
             # Remove owner of this file only after packing. Otherwise packing
             # will not serialize the owner correctly into the airtime request
-            owners.remove_file_owner(self.path)
+            user().owner.remove_file_owner(self.path)
             return ret
         except BadSongFile as e: return [e]
         except Exception as e:
