@@ -17,6 +17,8 @@ from media.saas.thread import getsig, user
 # OrganizeListener(signal='watch_signal') <= right
 
 class FileMediator(Loggable):
+    # TODO : this class is not actually used. remove all references to it 
+    # everywhere (including tests).
     """ FileMediator is used an intermediate mechanism that filters out
     certain events. """
     def __init__(self)        : self.ignored_set = set([]) # for paths only
