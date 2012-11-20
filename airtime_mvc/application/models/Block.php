@@ -471,9 +471,9 @@ SQL;
                 Logging::info("Adding to block");
                 Logging::info("at position {$pos}");
             }
-
+            
             foreach ($p_items as $ac) {
-                Logging::info("Adding audio file {$ac}");
+                Logging::info("Adding audio file {$ac[0]}");
                 try {
                     if (is_array($ac) && $ac[1] == 'audioclip') {
                         $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
