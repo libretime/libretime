@@ -1,7 +1,7 @@
 import threading
 
 class UserlessThread(Exception):
-    def __str__():
+    def __str__(self):
         return "Current thread: %s is not an instance of InstanceThread \
                 of InstanceInheritingThread" % str(threading.current_thread())
 
