@@ -86,9 +86,7 @@ function populateUserTable() {
         "bJQueryUI": true,
         "bAutoWidth": false,
         "bLengthChange": false,
-        "oLanguage": {
-            "sSearch": ""
-        },
+        "oLanguage": datatables_dict,
         
         "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
     });

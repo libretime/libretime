@@ -585,7 +585,7 @@
             sRangeSeparator: "~",
             iFilteringDelay: 500,
             aoColumns: null,
-            sRangeFormat: "From {from} to {to}"
+            sRangeFormat: $.i18n._("From {from} to {to}")
         };
 
         properties = $.extend(defaults, options);

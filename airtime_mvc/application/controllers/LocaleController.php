@@ -5,11 +5,23 @@ class LocaleController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('language-table', 'json')
+        $ajaxContext->addActionContext('general-translation-table', 'json')
+                    ->addActionContext('datatables-translation-table', 'json')
                     ->initContext();
     }
     
-    public function translationTableAction()
+    public function datatablesTranslationTableAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        header("Content-type: text/javascript");
+
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        echo "var datatables_dict =" .
+            file_get_contents($_SERVER['DOCUMENT_ROOT'].$baseUrl.'/js/datatables/i18n/de_DE.txt');
+    }
+    
+    public function generalTranslationTableAction()
     {
         $translations = array (
             //common/common.js
@@ -196,6 +208,48 @@ class LocaleController extends Zend_Controller_Action
             //already in schedule/add-show.js
             //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
             //schedule/schedule.js
+            "January" => _("January"),
+            "February" => _("February"),
+            "March" => _("March"),
+            "April" => _("April"),
+            "May" => _("May"),
+            "June" => _("June"),
+            "July" => _("July"),
+            "August" => _("August"),
+            "September" => _("September"),
+            "October" => _("October"),
+            "November" => _("November"),
+            "December" => _("December"),
+            "Jan" => _("Jan"),
+            "Feb" => _("Feb"),
+            "Mar" => _("Mar"),
+            "Apr" => _("Apr"),
+            "May" => _("May"),
+            "Jun" => _("Jun"),
+            "Jul" => _("Jul"),
+            "Aug" => _("Aug"),
+            "Sep" => _("Sep"),
+            "Oct" => _("Oct"),
+            "Nov" => _("Nov"),
+            "Dec" => _("Dec"),
+            "today" => _("today"),
+            "day" => _("day"),
+            "week" => _("week"),
+            "month" => _("month"),
+            "Sunday" => _("Sunday"),
+            "Monday" => _("Monday"),
+            "Tuesday" => _("Tuesday"),
+            "Wednesday" => _("Wednesday"),
+            "Thursday" => _("Thursday"),
+            "Friday" => _("Friday"),
+            "Saturday" => _("Saturday"),
+            "Sun" => _("Sun"),
+            "Mon" => _("Mon"),
+            "Tue" => _("Tue"),
+            "Wed" => _("Wed"),
+            "Thu" => _("Thu"),
+            "Fri" => _("Fri"),
+            "Sat" => _("Sat"),    
             "Shows longer than their scheduled time will be cut off by a following show." => _("Shows longer than their scheduled time will be cut off by a following show."),
             "Cancel Current Show?" => _("Cancel Current Show?"),
             "Stop recording current show?" => _("Stop recording current show?"),
@@ -221,7 +275,7 @@ class LocaleController extends Zend_Controller_Action
             "Show Empty" => _("Show Empty"),
             "Recording From Line In" => _("Recording From Line In"),
             "Track preview" => _("Track preview"),
-            //already in library/spl/js
+            //already in library/spl.js
             //"Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
                 //=> _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."),
             "Cannot schedule outside a show." => _("Cannot schedule outside a show."),
@@ -230,7 +284,7 @@ class LocaleController extends Zend_Controller_Action
             " Item." => _(" Item."),
             " Items." => _(" Items."),
             //already in library/library.js
-            "Select" => _("Select"),
+            //"Select" => _("Select"),
             "Select all" => _("Select all"),
             "Select none" => _("Select none"),
             "Remove overbooked tracks" => _("Remove overbooked tracks"),
@@ -251,12 +305,15 @@ class LocaleController extends Zend_Controller_Action
             "DJ" => _("DJ"),
             "Program Manager" => _("Program Manager"),
             "Guest" => _("Guest"),
-            
+            //dataTables/ColVis.js
+            "Show / hide columns" => _("Show / hide columns"),
+            //datatables.columnFilter.js
+            "From {from} to {to}" => _("From {from} to {to}")
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         header("Content-type: text/javascript");
-        echo "var lang_dict=".json_encode($translations);
+        echo "var general_dict=".json_encode($translations);
         
     }
 }

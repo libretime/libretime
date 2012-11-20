@@ -465,6 +465,7 @@ var AIRTIME = (function(AIRTIME) {
               /* Website */  { "sTitle" : $.i18n._("Website")       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
               /* Year */  { "sTitle" : $.i18n._("Year")          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
               ],
+            
                           
             "bProcessing": true,
             "bServerSide": true,
@@ -664,10 +665,7 @@ var AIRTIME = (function(AIRTIME) {
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": false,
-            "oLanguage": {
-                "sSearch": "",
-                "sLengthMenu": "Show _MENU_"
-            },
+            "oLanguage": datatables_dict,
             
             // R = ColReorder, C = ColVis
             "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',

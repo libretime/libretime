@@ -154,12 +154,12 @@ function viewDisplay( view ) {
         var calendarEl = this;
 
         var select = $('<select class="schedule_change_slots input_select"/>')
-            .append('<option value="1">'+$.i18n._("1m").'</option>')
-            .append('<option value="5">'+$.i18n._("5m").'</option>')
-            .append('<option value="10">'+$.i18n._("10m").'</option>')
-            .append('<option value="15">'+$.i18n._("15m").'</option>')
-            .append('<option value="30">'+$.i18n._("30m").'</option>')
-            .append('<option value="60">'+$.i18n._("60m").'</option>')
+            .append('<option value="1">'+$.i18n._("1m")+'</option>')
+            .append('<option value="5">'+$.i18n._("5m")+'</option>')
+            .append('<option value="10">'+$.i18n._("10m")+'</option>')
+            .append('<option value="15">'+$.i18n._("15m")+'</option>')
+            .append('<option value="30">'+$.i18n._("30m")+'</option>')
+            .append('<option value="60">'+$.i18n._("60m")+'</option>')
             .change(function(){
                 var slotMin = $(this).val();
                 var opt = view.calendar.options;
@@ -424,7 +424,7 @@ function addQtipToSCIcons(ele){
     if($(ele).hasClass("progress")){
         $(ele).qtip({
             content: {
-                text: $.i18n.("Uploading in progress...")
+                text: $.i18n._("Uploading in progress...")
             },
             position:{
                 adjust: {
@@ -442,13 +442,13 @@ function addQtipToSCIcons(ele){
     }else if($(ele).hasClass("soundcloud")){
         $(ele).qtip({
             content: {
-                text: $.i18n.("Retreiving data from the server..."),
+                text: $.i18n._("Retreiving data from the server..."),
                 ajax: {
                     url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                     type: "post",
                     data: ({format: "json", id : id, type: "file"}),
                     success: function(json, status){
-                        this.set('content.text', $.i18n.("The soundcloud id for this file is: ")+json.sc_id);
+                        this.set('content.text', $.i18n._("The soundcloud id for this file is: ")+json.sc_id);
                     }
                 }
             },
@@ -468,13 +468,13 @@ function addQtipToSCIcons(ele){
     }else if($(ele).hasClass("sc-error")){
         $(ele).qtip({
             content: {
-                text: $.i18n.("Retreiving data from the server..."),
+                text: $.i18n._("Retreiving data from the server..."),
                 ajax: {
                     url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                     type: "post",
                     data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){
-                        this.set('content.text', $.i18n.("There was error while uploading to soundcloud.")+"<br>"+$.i18n._("Error code: ")+json.error_code+
+                        this.set('content.text', $.i18n._("There was error while uploading to soundcloud.")+"<br>"+$.i18n._("Error code: ")+json.error_code+
                                 "<br>"+$.i18n._("Error msg: ")+json.error_msg+"<br>");
                     }
                 }
@@ -548,7 +548,7 @@ function checkEmptyShowStatus(e) {
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
-  alert($.i18n.("The show instance doesn't exist anymore!"));
+  alert($.i18n._("The show instance doesn't exist anymore!"));
   window.location.reload();
 }
 

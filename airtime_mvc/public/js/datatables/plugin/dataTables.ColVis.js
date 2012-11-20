@@ -95,7 +95,7 @@ ColVis = function( oDTSettings, oInit )
          *  @type     String
          *  @default  Show / hide columns
          */
-        "buttonText": "Show / hide columns",
+        "buttonText": $.i18n._("Show / hide columns"),
         
         /**
          * Flag to say if the collection is hidden

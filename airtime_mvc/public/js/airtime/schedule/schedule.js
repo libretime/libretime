@@ -262,6 +262,58 @@ function createFullCalendar(data){
             agenda: 'H:mm{ - H:mm}',
             month: 'H:mm{ - H:mm}'
         },
+        monthNames: [
+            $.i18n._('January'),
+            $.i18n._('February'),
+            $.i18n._('March'),
+            $.i18n._('April'),
+            $.i18n._('May'),
+            $.i18n._('June'),
+            $.i18n._('July'),
+            $.i18n._('August'),
+            $.i18n._('September'),
+            $.i18n._('October'),
+            $.i18n._('November'),
+            $.i18n._('December')
+        ],
+        monthNamesShort: [
+            $.i18n._('Jan'),
+            $.i18n._('Feb'),
+            $.i18n._('Mar'),
+            $.i18n._('Apr'),
+            $.i18n._('May'),
+            $.i18n._('Jun'),
+            $.i18n._('Jul'),
+            $.i18n._('Aug'),
+            $.i18n._('Sep'),
+            $.i18n._('Oct'),
+            $.i18n._('Nov'),
+            $.i18n._('Dec')
+        ],
+        buttonText: {
+            today: $.i18n._('today'),
+            month: $.i18n._('month'),
+            week: $.i18n._('week'),
+            day: $.i18n._('day')
+        },
+        dayNames: [
+            $.i18n._('Sunday'),
+            $.i18n._('Monday'),
+            $.i18n._('Tuesday'),
+            $.i18n._('Wednesday'),
+            $.i18n._('Thursday'),
+            $.i18n._('Friday'),
+            $.i18n._('Saturday')
+        ],
+        dayNamesShort: [
+            $.i18n._('Sun'),
+            $.i18n._('Mon'),
+            $.i18n._('Tue'),
+            $.i18n._('Wed'),
+            $.i18n._('Thu'),
+            $.i18n._('Fri'),
+            $.i18n._('Sat')
+        ],
         contentHeight: mainHeight,
         theme: true,
         lazyFetching: false,
