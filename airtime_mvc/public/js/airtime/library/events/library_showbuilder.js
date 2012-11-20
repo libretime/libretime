@@ -66,9 +66,9 @@ var AIRTIME = (function(AIRTIME) {
                         }
 
                         if (selected === 1) {
-                            message = "Adding 1 Item.";
+                            message = $.i18n._("Adding 1 Item.");
                         } else {
-                            message = "Adding " + selected + " Items.";
+                            message = $.i18n._("Adding ") + selected + $.i18n._(" Items.");
                         }
 
                         container = $('<div/>').attr('id',

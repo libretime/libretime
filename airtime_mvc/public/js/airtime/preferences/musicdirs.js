@@ -15,7 +15,7 @@ function setWatchedDirEvents() {
         imageUrl: 'img/icons/',
         systemImageUrl: baseUrl+'/css/img/',
         handlerUrl: baseUrl+'/Preference/server-browse/format/json',
-        title: 'Choose Storage Folder',
+        title: $.i18n._('Choose Storage Folder'),
         basePath: '',
         requestMethod: 'POST',
     });
@@ -35,7 +35,7 @@ function setWatchedDirEvents() {
         imageUrl: 'img/icons/',
         systemImageUrl: baseUrl+'/css/img/',
         handlerUrl: baseUrl+'/Preference/server-browse/format/json',
-        title: 'Choose Folder to Watch',
+        title: $.i18n._('Choose Folder to Watch'),
         basePath: '',
         requestMethod: 'POST',
     });
@@ -43,7 +43,7 @@ function setWatchedDirEvents() {
     $('#storageFolder-ok').click(function(){
         var url, chosen;
         
-        if(confirm("Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!")){
+        if(confirm($.i18n._("Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!"))){
             url = baseUrl+"/Preference/change-stor-directory";
             chosen = $('#storageFolder').val();
 
@@ -72,7 +72,7 @@ function setWatchedDirEvents() {
 
             function(json) {
                 $("#watched-folder-section").empty();
-                $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
+                $("#watched-folder-section").append("<h2>"+$.i18n._("Manage Media Folders")+"</h2>");
                 $("#watched-folder-section").append(json.subform);
                 setWatchedDirEvents();
             });
@@ -84,7 +84,7 @@ function setWatchedDirEvents() {
     });
 
     $('.selected-item').find('.ui-icon-close').click(function(){
-        if(confirm("Are you sure you want to remove the watched folder?")){
+        if(confirm($.i18n._("Are you sure you want to remove the watched folder?"))){
             var row = $(this).parent();
             var folder = row.find('#folderPath').text();
 
@@ -95,7 +95,7 @@ function setWatchedDirEvents() {
 
                 function(json) {
                     $("#watched-folder-section").empty();
-                    $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
+                    $("#watched-folder-section").append("<h2>"+$.i18n._("Manage Media Folders")+"</h2>");
                     $("#watched-folder-section").append(json.subform);
                     setWatchedDirEvents();
                 });
@@ -108,7 +108,7 @@ $(document).ready(function() {
     setWatchedDirEvents();
     $(".ui-icon-alert").qtip({
         content: {
-            text: "This path is currently not accessible."
+            text: $.i18n._("This path is currently not accessible.")
         },
         position:{
             adjust: {

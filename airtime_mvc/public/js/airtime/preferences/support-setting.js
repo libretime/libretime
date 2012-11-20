@@ -61,7 +61,7 @@ $(document).ready(function() {
     		var ul, li; 
     			
     		ul = logoEl.find('.errors');
-    		li = $("<li/>").append("Image must be one of jpg, jpeg, png, or gif");
+    		li = $("<li/>").append($.i18n._("Image must be one of jpg, jpeg, png, or gif"));
     		
     		//errors ul has already been created.
     		if (ul.length > 0) {

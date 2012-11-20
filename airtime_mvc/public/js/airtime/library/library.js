@@ -109,12 +109,12 @@ var AIRTIME = (function(AIRTIME) {
         $menu
             .append("<div class='btn-group'>" +
                         "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
-                            "Select <span class='caret'></span>" +
+                            $.i18n._("Select")+" <span class='caret'></span>" +
                         "</button>" +
                         "<ul class='dropdown-menu'>" +
-                            "<li id='sb-select-page'><a href='#'>Select this page</a></li>" +
-                            "<li id='sb-dselect-page'><a href='#'>Deselect this page</a></li>" +
-                            "<li id='sb-dselect-all'><a href='#'>Deselect all</a></li>" +
+                            "<li id='sb-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
+                            "<li id='sb-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
+                            "<li id='sb-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
                         "</ul>" +
                     "</div>")
             .append("<div class='btn-group'>" +
@@ -322,7 +322,7 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.fnDeleteSelectedItems = function() {
-    	if (confirm('Are you sure you want to delete the selected item(s)?')) {
+    	if (confirm($.i18n._('Are you sure you want to delete the selected item(s)?'))) {
 	        var aData = AIRTIME.library.getSelectedData(),
 	            item,
 	            temp,
@@ -439,31 +439,31 @@ var AIRTIME = (function(AIRTIME) {
               /* ftype */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
               /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
               /* Type */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
-              /* Title */  { "sTitle" : "Title"         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
-              /* Creator */  { "sTitle" : "Creator"       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
-              /* Album */  { "sTitle" : "Album"         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
-              /* Bit Rate */  { "sTitle" : "Bit Rate"      , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         }, 
-              /* BPM */  { "sTitle" : "BPM"           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
-              /* Composer */  { "sTitle" : "Composer"      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        }, 
-              /* Conductor */  { "sTitle" : "Conductor"     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
-              /* Copyright */  { "sTitle" : "Copyright"     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
-              /* Encoded */  { "sTitle" : "Encoded By"    , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        }, 
-              /* Genre */  { "sTitle" : "Genre"         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        }, 
-              /* ISRC Number */  { "sTitle" : "ISRC"          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        }, 
-              /* Label */  { "sTitle" : "Label"         , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        }, 
-              /* Language */  { "sTitle" : "Language"      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }, 
-              /* Last Modified */  { "sTitle" : "Last Modified" , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
-              /* Last Played */  { "sTitle" : "Last Played  " , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },  
-              /* Length */  { "sTitle" : "Length"        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          , 
-              /* Mime */  { "sTitle" : "Mime"          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         }, 
-              /* Mood */  { "sTitle" : "Mood"          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         },
-              /* Owner */  { "sTitle" : "Owner"         , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }, 
-              /* Replay Gain */  { "sTitle" : "Replay Gain"   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"      , "sWidth" : "80px"      }, 
-              /* Sample Rate */  { "sTitle" : "Sample Rate"   , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         }, 
-              /* Track Number */  { "sTitle" : "Track Number"  , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         }, 
-              /* Upload Time */  { "sTitle" : "Uploaded"      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          ,
-              /* Website */  { "sTitle" : "Website"       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
-              /* Year */  { "sTitle" : "Year"          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
+              /* Title */  { "sTitle" : $.i18n._("Title")         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
+              /* Creator */  { "sTitle" : $.i18n._("Creator")       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
+              /* Album */  { "sTitle" : $.i18n._("Album")         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
+              /* Bit Rate */  { "sTitle" : $.i18n._("Bit Rate")      , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         }, 
+              /* BPM */  { "sTitle" : $.i18n._("BPM")           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
+              /* Composer */  { "sTitle" : $.i18n._("Composer")      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        }, 
+              /* Conductor */  { "sTitle" : $.i18n._("Conductor")     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
+              /* Copyright */  { "sTitle" : $.i18n._("Copyright")     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
+              /* Encoded */  { "sTitle" : $.i18n._("Encoded By")    , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        }, 
+              /* Genre */  { "sTitle" : $.i18n._("Genre")         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        }, 
+              /* ISRC Number */  { "sTitle" : $.i18n._("ISRC")          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        }, 
+              /* Label */  { "sTitle" : $.i18n._("Label")         , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        }, 
+              /* Language */  { "sTitle" : $.i18n._("Language")      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }, 
+              /* Last Modified */  { "sTitle" : $.i18n._("Last Modified") , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
+              /* Last Played */  { "sTitle" : $.i18n._("Last Played") , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },  
+              /* Length */  { "sTitle" : $.i18n._("Length")        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          , 
+              /* Mime */  { "sTitle" : $.i18n._("Mime")          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         }, 
+              /* Mood */  { "sTitle" : $.i18n._("Mood")          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         },
+              /* Owner */  { "sTitle" : $.i18n._("Owner")         , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        }, 
+              /* Replay Gain */  { "sTitle" : $.i18n._("Replay Gain")   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"      , "sWidth" : "80px"      }, 
+              /* Sample Rate */  { "sTitle" : $.i18n._("Sample Rate")   , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         }, 
+              /* Track Number */  { "sTitle" : $.i18n._("Track Number")  , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         }, 
+              /* Upload Time */  { "sTitle" : $.i18n._("Uploaded")      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          ,
+              /* Website */  { "sTitle" : $.i18n._("Website")       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
+              /* Year */  { "sTitle" : $.i18n._("Year")          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
               ],
                           
             "bProcessing": true,
@@ -611,7 +611,7 @@ var AIRTIME = (function(AIRTIME) {
                 // icon.
                 $(nRow).find("td:not(.library_checkbox, .library_type)").qtip({
                     content: {
-                        text: "Loading...",
+                        text: $.i18n._("Loading..."),
                         title: {
                             text: aData.track_title
                         },
@@ -725,11 +725,11 @@ var AIRTIME = (function(AIRTIME) {
             .addClass("dataTables_type")
             .append('<select name="library_display_type" />')
             .find("select")
-                .append('<option value="0">All</option>')
-                .append('<option value="1">Files</option>')
-                .append('<option value="2">Playlists</option>')
-                .append('<option value="3">Smart Blocks</option>')
-                .append('<option value="4">Web Streams</option>')
+                .append('<option value="0">'+$.i18n._("All")+'</option>')
+                .append('<option value="1">'+$.i18n._("Files")+'</option>')
+                .append('<option value="2">'+$.i18n._("Playlists")+'</option>')
+                .append('<option value="3">'+$.i18n._("Smart Blocks")+'</option>')
+                .append('<option value="4">'+$.i18n._("Web Streams")+'</option>')
                 .end()
             .change(function(ev){
                 oTable.fnDraw();
@@ -812,7 +812,7 @@ var AIRTIME = (function(AIRTIME) {
                                 AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
                             }
                         } else {
-                            throw new Exception("Unknown type: " + data.ftype);
+                            throw new Exception($.i18n._("Unknown type: ") + data.ftype);
                         }
                         oItems.edit.callback = callback;
                     }
@@ -854,7 +854,7 @@ var AIRTIME = (function(AIRTIME) {
                             callback = function() {
                                 aMedia = [];
                                 aMedia.push({"id": data.id, "type": data.ftype});
-                                if (confirm('Are you sure you want to delete the selected item?')) {
+                                if (confirm($.i18n._('Are you sure you want to delete the selected item?'))) {
                                     AIRTIME.library.fnDeleteItems(aMedia);
                                 }
                             };
@@ -863,7 +863,7 @@ var AIRTIME = (function(AIRTIME) {
                             callback = function() {
                                 var media = [];
                                 
-                                if (confirm('Are you sure you want to delete the selected item?')) {
+                                if (confirm($.i18n._('Are you sure you want to delete the selected item?'))) {
                                     
                                     media.push({"id": data.id, "type": data.ftype});
                                     $.post(oItems.del.url, {format: "json", media: media }, function(json){
@@ -1010,7 +1010,7 @@ function addQtipToSCIcons(){
         if ($(this).hasClass("progress")){
             $(this).qtip({
                 content: {
-                    text: "Uploading in progress..."
+                    text: $.i18n._("Uploading in progress...")
                 },
                 position:{
                     adjust: {
@@ -1030,13 +1030,13 @@ function addQtipToSCIcons(){
         else if($(this).hasClass("soundcloud")){
             $(this).qtip({
                 content: {
-                    text: "Retrieving data from the server...",
+                    text: $.i18n._("Retrieving data from the server..."),
                     ajax: {
                         url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
-                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id);
+                            this.set('content.text', $.i18n._("The soundcloud id for this file is: ")+json.sc_id);
                         }
                     }
                 },
@@ -1057,14 +1057,15 @@ function addQtipToSCIcons(){
         }else if($(this).hasClass("sc-error")){
             $(this).qtip({
                 content: {
-                    text: "Retreiving data from the server...",
+                    text: $.i18n._("Retreiving data from the server..."),
                     ajax: {
                         url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
-                            this.set('content.text', "There was error while uploading to soundcloud.<br>"+"Error code: "+json.error_code+
-                                    "<br>"+"Error msg: "+json.error_msg+"<br>");
+                            this.set('content.text', $.i18n._("There was an error while uploading to soundcloud.")+"<br>"+
+                                    $.i18n._("Error code: ")+json.error_code+
+                                    "<br>"+$.i18n._("Error msg: ")+json.error_msg+"<br>");
                         }
                     }
                 },
@@ -1167,13 +1168,13 @@ function validateAdvancedSearch(divs) {
 function addRemoveValidationIcons(valid, field, searchTermType) {
     var title = '';
     if (searchTermType === 'i') {
-        title = 'Input must be a positive number';
+        title = $.i18n._('Input must be a positive number');
     } else if (searchTermType === 'n') {
-        title = 'Input must be a number';
+        title = $.i18n._('Input must be a number');
     } else if (searchTermType === 't') {
-        title = 'Input must be in the format: yyyy-mm-dd';
+        title = $.i18n._('Input must be in the format: yyyy-mm-dd');
     } else if (searchTermType === 'l') {
-        title = 'Input must be in the format: hh:mm:ss.t';
+        title = $.i18n._('Input must be in the format: hh:mm:ss.t');
     }
     
     var validIndicator = " <span class='checked-icon sp-checked-icon'></span>",

@@ -45,16 +45,16 @@ function rowCallback( nRow, aData, iDisplayIndex ){
 
     if ( aData['type'] == "A" )
     {
-	    $('td:eq(3)', nRow).html( 'Admin' );
+	    $('td:eq(3)', nRow).html( $.i18n._('Admin') );
     } else if ( aData['type'] == "H" )
     {
-	    $('td:eq(3)', nRow).html( 'DJ' );
+	    $('td:eq(3)', nRow).html( $.i18n._('DJ') );
     } else if ( aData['type'] == "G" )
     {
-	    $('td:eq(3)', nRow).html( 'Guest' );
+	    $('td:eq(3)', nRow).html( $.i18n._('Guest') );
     } else if ( aData['type'] == "P" )
     {
-    	$('td:eq(3)', nRow).html( 'Program Manager' );
+    	$('td:eq(3)', nRow).html( $.i18n._('Program Manager') );
     }
     
     return nRow;

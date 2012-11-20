@@ -30,11 +30,11 @@ var AIRTIME = (function(AIRTIME) {
         var objType = $('#obj_type').val(),
             btnText;
         if (objType === 'playlist') {
-            btnText = ' Add to current playlist';
+            btnText = $.i18n._(' Add to current playlist');
         } else if (objType === 'block') {
-            btnText = ' Add to current smart block';
+            btnText = $.i18n._(' Add to current smart block');
         } else {
-            btnText = ' Add to current playlist';
+            btnText = $.i18n._(' Add to current playlist');
         }
         AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), btnText);
     };
@@ -86,9 +86,9 @@ var AIRTIME = (function(AIRTIME) {
                         }
 
                         if (selected === 1) {
-                            message = "Adding 1 Item.";
+                            message = $.i18n._("Adding 1 Item.");
                         } else {
-                            message = "Adding " + selected + " Items.";
+                            message = $.i18n._("Adding ") + selected + $.i18n._(" Items.");
                         }
 
                         container = $('<div class="helper"/>').append(
@@ -158,9 +158,9 @@ var AIRTIME = (function(AIRTIME) {
                             undefined, 'after');
                 } else {
                     if ($('#obj_type').val() == 'block') {
-                        alert('You can only add tracks to smart blocks.');
+                        alert($.i18n._('You can only add tracks to smart blocks.'));
                     } else if ($('#obj_type').val() == 'playlist') {
-                        alert('You can only add tracks, smart blocks, and webstreams to playlists.');
+                        alert($.i18n._('You can only add tracks, smart blocks, and webstreams to playlists.'));
                     }
                 }
             });

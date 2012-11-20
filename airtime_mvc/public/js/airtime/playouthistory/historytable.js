@@ -65,12 +65,12 @@ var AIRTIME = (function(AIRTIME) {
         oTable = historyTableDiv.dataTable( {
             
             "aoColumns": [
-               {"sTitle": "Title", "mDataProp": "title", "sClass": "his_title"}, /* Title */
-               {"sTitle": "Creator", "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
-               {"sTitle": "Played", "mDataProp": "played", "sClass": "his_artist"}, /* times played */
-               {"sTitle": "Length", "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
-               {"sTitle": "Composer", "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
-               {"sTitle": "Copyright", "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
+               {"sTitle": $.i18n._("Title"), "mDataProp": "title", "sClass": "his_title"}, /* Title */
+               {"sTitle": $.i18n._("Creator"), "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
+               {"sTitle": $.i18n._("Played"), "mDataProp": "played", "sClass": "his_artist"}, /* times played */
+               {"sTitle": $.i18n._("Length"), "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
+               {"sTitle": $.i18n._("Composer"), "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
+               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
             ],
                           
             "bProcessing": true,
