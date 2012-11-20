@@ -18,7 +18,7 @@ class LocaleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
         echo "var datatables_dict =" .
-            file_get_contents($_SERVER['DOCUMENT_ROOT'].$baseUrl.'/js/datatables/i18n/de_DE.txt');
+            file_get_contents($_SERVER['DOCUMENT_ROOT'].$baseUrl.'/js/datatables/i18n/en_CA.txt');
     }
     
     public function generalTranslationTableAction()
@@ -36,7 +36,7 @@ class LocaleController extends Zend_Controller_Action
             "You are running the latest version" => _("You are running the latest version"),
             "New version available: " => _("New version available: "),
             "This version will soon be obsolete." => _("This version will soon be obsolete."),
-        	"This version is no longer supported." => _("This version is no longer supported."),
+            "This version is no longer supported." => _("This version is no longer supported."),
             "Please upgrade to " => _("Please upgrade to "),
             //library/events/library_playlistbuilder.js
             " Add to current playlist" => _(" Add to current playlist"),
@@ -249,7 +249,7 @@ class LocaleController extends Zend_Controller_Action
             "Wed" => _("Wed"),
             "Thu" => _("Thu"),
             "Fri" => _("Fri"),
-            "Sat" => _("Sat"),    
+            "Sat" => _("Sat"),
             "Shows longer than their scheduled time will be cut off by a following show." => _("Shows longer than their scheduled time will be cut off by a following show."),
             "Cancel Current Show?" => _("Cancel Current Show?"),
             "Stop recording current show?" => _("Stop recording current show?"),
