@@ -104,7 +104,7 @@ function open_show_preview(p_showID, p_showIndex) {
 }
 
 function openPreviewWindow(url) {
-    _preview_window = window.open(url, 'Audio Player', 'width=450,height=100,scrollbars=yes');
+    _preview_window = window.open(url, $.i18n._('Audio Player'), 'width=450,height=100,scrollbars=yes');
     return false;
 }
 

@@ -53,7 +53,7 @@ function findHosts(request, callback) {
 	var noResult = new Array();
     noResult[0] = new Array();
     noResult[0]['value'] = $("#add_show_hosts_autocomplete").val();
-    noResult[0]['label'] = "No result found";
+    noResult[0]['label'] = $.i18n._("No result found");
     noResult[0]['index'] = null;
     
 	$.post(url,
@@ -226,7 +226,7 @@ function setAddShowEvents() {
     
     form.find(".airtime_auth_help_icon").qtip({
         content: {
-            text: "This follows the same security pattern for the shows: only users assigned to the show can connect."
+            text: $.i18n._("This follows the same security pattern for the shows: only users assigned to the show can connect.")
         },
         hide: {
             delay: 500,
@@ -246,7 +246,7 @@ function setAddShowEvents() {
     });
     form.find(".custom_auth_help_icon").qtip({
         content: {
-            text: "Specify custom authentication which will work only for this show."
+            text: $.i18n._("Specify custom authentication which will work only for this show.")
         },
         hide: {
             delay: 500,
@@ -266,7 +266,7 @@ function setAddShowEvents() {
     });
     form.find(".stream_username_help_icon").qtip({
         content: {
-            text: "If your live streaming client does not ask for a username, this field should be 'source'."
+            text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")
         },
         hide: {
             delay: 500,
@@ -628,7 +628,7 @@ $(document).ready(function() {
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
-    alert("The show instance doesn't exist anymore!");
+    alert($.i18n._("The show instance doesn't exist anymore!"));
     window.location.reload();
 }
 

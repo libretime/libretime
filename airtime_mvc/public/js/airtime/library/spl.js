@@ -74,7 +74,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
         
         if (!isTimeValid(cueIn)){
-            showError(span, "please put in a time '00:00:00 (.0)'");
+            showError(span, $.i18n("please put in a time '00:00:00 (.0)'"));
             return;
         }
         $.post(url, 
@@ -111,7 +111,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
         if (!isTimeValid(cueOut)){
-            showError(span, "please put in a time '00:00:00 (.0)'");
+            showError(span, $.i18n("please put in a time '00:00:00 (.0)'"));
             return;
         }
         
@@ -150,7 +150,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
         if (!isFadeValid(fadeIn)){
-            showError(span, "please put in a time in seconds '00 (.0)'");
+            showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
             return;
         }
 
@@ -188,7 +188,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
 		if (!isFadeValid(fadeOut)){
-	        showError(span, "please put in a time in seconds '00 (.0)'");
+	        showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
 			return;
 		}
 
@@ -378,7 +378,7 @@ var AIRTIME = (function(AIRTIME){
                     } else {
                         $(value).attr("class", "big_play_disabled dark_class"); 
                         $(value).qtip({
-                           content: 'Your browser does not support playing this file type: "'+ mime +'"',
+                           content: $.i18n._("Your browser does not support playing this file type: ")+ mime,
                            show: 'mouseover',
                             hide: {
                                 delay: 500,
@@ -402,7 +402,7 @@ var AIRTIME = (function(AIRTIME){
                 if ($(value).attr('blocktype') === 'dynamic') {
                     $(value).attr("class", "big_play_disabled dark_class"); 
                     $(value).qtip({
-                       content: 'Dynamic block is not previewable',
+                       content: $.i18n._('Dynamic block is not previewable'),
                        show: 'mouseover',
                         hide: {
                             delay: 500,
@@ -483,7 +483,7 @@ var AIRTIME = (function(AIRTIME){
                                             "</li>";
                                     });
                                 }
-                                $html += "<li><br /><span class='block-item-title'>Limit to: "+data.limit.value+"  "+data.limit.modifier+"</span></li>";
+                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.modifier+"</span></li>";
                             }
                             $pl.find("#block_"+id+"_info").html($html).show();
                             mod.enableUI();
@@ -575,7 +575,7 @@ var AIRTIME = (function(AIRTIME){
 	            type = $('#obj_type').val();
 		    
 		    if (!isFadeValid(fadeIn)){
-	            showError(span, "please put in a time in seconds '00 (.0)'");
+	            showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
 			    return;
 		    }
 
@@ -599,7 +599,7 @@ var AIRTIME = (function(AIRTIME){
 	            type = $('#obj_type').val();
 
 		    if (!isFadeValid(fadeOut)){
-	            showError(span, "please put in a time in seconds '00 (.0)'");
+	            showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
 			    return;
 		    }
 
@@ -682,7 +682,7 @@ var AIRTIME = (function(AIRTIME){
                             var field = json.analysis[s];
                             
                             if (!field[0]) {
-                                var elemId = "#"+s+"-error";
+                                var elemId = "#"+s+$.i18n._("-error");
                                 var $div = $("#side_playlist " + elemId).text(field[1]).show();
                             }
                         }
@@ -738,7 +738,7 @@ var AIRTIME = (function(AIRTIME){
                         if (obj_type == "block") {
         	                callback(data, "save");
                         } else {
-                            $('.success').text('Playlist saved');
+                            $('.success').text($.i18n._('Playlist saved'));
                             $('.success').show();
                             setTimeout(removeSuccessMsg, 5000);
             	            dt.fnStandingRedraw();
@@ -1075,7 +1075,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		$pl.find(".ui-icon-alert").qtip({
 	        content: {
-	            text: "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't \"watched\" anymore."
+	            text: $.i18n._("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore.")
 	        },
 	        position:{
 	            adjust: {

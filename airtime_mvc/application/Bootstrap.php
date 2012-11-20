@@ -102,6 +102,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/sprintf/sprintf-0.7-beta1.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/bootstrap/bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/i18n/jquery.i18n.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/locale/translation-table?'.$CC_CONFIG['airtime_version'].rand(5, 10),'text/javascript');
+        $view->headScript()->appendScript("$.i18n.setDictionary(lang_dict)");
         $view->headScript()->appendScript("var baseUrl='$baseUrl'");
         
         //scripts for now playing bar

@@ -22,7 +22,7 @@ function checkShowLength(json) {
 
     if (percent > 100){
         $("#show_time_warning")
-            .text("Shows longer than their scheduled time will be cut off by a following show.")
+            .text($.i18n._("Shows longer than their scheduled time will be cut off by a following show."))
             .show();
     }
     else {
@@ -33,7 +33,7 @@ function checkShowLength(json) {
 }
 
 function confirmCancelShow(show_instance_id){
-    if (confirm('Cancel Current Show?')) {
+    if (confirm($.i18n._('Cancel Current Show?'))) {
         var url = baseUrl+"/Schedule/cancel-current-show";
         $.ajax({
             url: url,
@@ -46,7 +46,7 @@ function confirmCancelShow(show_instance_id){
 }
 
 function confirmCancelRecordedShow(show_instance_id){
-    if (confirm('Stop recording current show?')) {
+    if (confirm($.i18n._('Stop recording current show?'))) {
         var url = baseUrl+"/Schedule/cancel-current-show";
         $.ajax({
             url: url,
@@ -165,7 +165,7 @@ function buildScheduleDialog (json) {
         close: closeDialog,
         buttons: [
             {
-                text: "Ok",
+                text: $.i18n._("Ok"),
                 "class": "btn",
                 click: function() {
                     $(this).dialog("close");
@@ -207,14 +207,14 @@ function buildContentDialog (json){
      
     dialog.dialog({
         autoOpen: false,
-        title: "Contents of Show \"" + json.showTitle + "\"",
+        title: $.i18n._("Contents of Show") +" '" + json.showTitle + "'",
         width: width,
         height: height,
         modal: true,
         close: closeDialog,
         buttons: [
             {
-                text: "Ok",
+                text: $.i18n._("Ok"),
                 "class": "btn",
                 click: function() {
                     dialog.remove();
@@ -283,7 +283,7 @@ function createFullCalendar(data){
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
-    alert("The show instance doesn't exist anymore!");
+    alert($.i18n._("The show instance doesn't exist anymore!"));
     window.location.reload();
 }
 
@@ -324,7 +324,7 @@ $(document).ready(function() {
                 if (oItems.clear !== undefined) {
                     
                     callback = function() {
-                        if (confirm("Remove all content?")) {
+                        if (confirm($.i18n._("Remove all content?"))) {
                             $.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
                                 scheduleRefetchEvents(json);
                             });
