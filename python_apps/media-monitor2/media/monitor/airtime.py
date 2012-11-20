@@ -13,9 +13,8 @@ from media.monitor.log        import Loggable
 from media.monitor.syncdb     import AirtimeDB
 from media.monitor.exceptions import DirectoryIsNotListed
 from media.monitor.bootstrap  import Bootstrapper
-from media.monitor.listeners  import FileMediator
 
-from media.saas.thread import apc
+from media.saas.thread import apc, user
 
 class AirtimeNotifier(Loggable):
     """
@@ -192,7 +191,7 @@ class AirtimeMessageReceiver(Loggable):
                 # request that we'd normally get form pyinotify. But right
                 # now event contractor would take care of this sort of
                 # thing anyway so this might not be necessary after all
-                FileMediator.ignore(msg['filepath'])
+                user().file_mediator.ignore(msg['filepath'])
                 os.unlink(msg['filepath'])
                 # Verify deletion:
                 if not os.path.exists(msg['filepath']):

@@ -6,38 +6,31 @@ from functools import wraps
 import media.monitor.pure as mmp
 from media.monitor.pure import IncludeOnly
 from media.monitor.events import OrganizeFile, NewFile, MoveFile, DeleteFile, \
-                                 DeleteDir, EventRegistry, MoveDir,\
+                                 DeleteDir, MoveDir,\
                                  DeleteDirWatch
-from media.monitor.log import Loggable, get_logger
-from media.saas.thread import getsig
+from media.monitor.log import Loggable
+from media.saas.thread import getsig, user
 # Note: Because of the way classes that inherit from pyinotify.ProcessEvent
 # interact with constructors. you should only instantiate objects from them
 # using keyword arguments. For example:
 # OrganizeListener('watch_signal') <= wrong
 # OrganizeListener(signal='watch_signal') <= right
 
-class FileMediator(object):
-    """
-    FileMediator is used an intermediate mechanism that filters out certain
-    events.
-    """
-    ignored_set = set([]) # for paths only
-    logger = get_logger()
-
-    @staticmethod
-    def is_ignored(path): return path in FileMediator.ignored_set
-    @staticmethod
-    def ignore(path): FileMediator.ignored_set.add(path)
-    @staticmethod
-    def unignore(path): FileMediator.ignored_set.remove(path)
+class FileMediator(Loggable):
+    """ FileMediator is used an intermediate mechanism that filters out
+    certain events. """
+    def __init__(self)        : self.ignored_set = set([]) # for paths only
+    def is_ignored(self,path) : return path in self.ignored_set
+    def ignore(self, path)    : self.ignored_set.add(path)
+    def unignore(self, path)  : self.ignored_set.remove(path)
 
 def mediate_ignored(fn):
     @wraps(fn)
     def wrapped(self, event, *args,**kwargs):
         event.pathname = unicode(event.pathname, "utf-8")
-        if FileMediator.is_ignored(event.pathname):
-            FileMediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
-            FileMediator.unignore(event.pathname)
+        if user().file_mediator.is_ignored(event.pathname):
+            user().file_mediator.logger.info("Ignoring: '%s' (once)" % event.pathname)
+            user().file_mediator.unignore(event.pathname)
         else: return fn(self, event, *args, **kwargs)
     return wrapped
 
