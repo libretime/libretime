@@ -932,10 +932,10 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     if (selected.length === 1) {
-                        message = $.i18n._("Moving ")+selected.length+$.i18n._(" Item.");
+                        message = $.i18n._("Moving 1 Item");
                     }
                     else {
-                        message = $.i18n._("Moving ")+selected.length+$.i18n._(" Items.");
+                        message = sprintf($.i18n._("Moving %s Items"), selected.length);
                     }
                     
                     draggingContainer = $('<tr/>')

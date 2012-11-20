@@ -251,7 +251,8 @@ function setupEventListeners() {
     $(".override_help_icon").qtip({
         content: {
             text: $.i18n._("If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151.")+" "+
-                $.i18n._("For more details, please read the ")+"<a target=\"_blank\" href=\"http://www.sourcefabric.org/en/airtime/manuals/\">"+$.i18n._("Airtime manual")+"</a>."
+                sprintf($.i18n._(
+                    "For more details, please read the %sAirtime Manual%s"), "<a target='_blank' href='http://www.sourcefabric.org/en/airtime/manuals/'>", "</a>")
         },
         hide: {
             delay: 500,

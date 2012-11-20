@@ -41,17 +41,14 @@ class LocaleController extends Zend_Controller_Action
             //library/events/library_playlistbuilder.js
             " Add to current playlist" => _(" Add to current playlist"),
             " Add to current smart block" => _(" Add to current smart block"),
-            "Adding 1 Item." => _("Adding 1 Item."),
-            /*****embedded variable*****/
-            "Adding " => _("Adding "),
-            " Items." => _(" Items."),
+            "Adding 1 Item" => _("Adding 1 Item"),
+            "Adding %s Items" => _("Adding %s Items"),
             "You can only add tracks to smart blocks." => _("You can only add tracks to smart blocks."),
             "You can only add tracks, smart blocks, and webstreams to playlists." => _("You can only add tracks, smart blocks, and webstreams to playlists."),
             //library/events/library_showbuilder.js
-            "Adding 1 Item." => _("Adding 1 Item."),
-            /****string with variable*****/
-            "Adding " => _("Adding "),
-            " Items." => _(" Items."),
+            //already in library/events/library_playlistbuilder.js
+            //"Adding 1 Item" => _("Adding 1 Item"),
+            //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
             "Select" => _("Select"),
             "Select this page" => _("Select this page"),
@@ -167,9 +164,7 @@ class LocaleController extends Zend_Controller_Action
             "Can not connect to the streaming server" => _("Can not connect to the streaming server"),
             "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
                 => _("If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."),
-            /*****embedded variable*****/
-            "For more details, please read the " => _("For more details, please read the "),
-            "Airtime manual" => _("Airtime manual"),
+            "For more details, please read the %sAirtime Manual%s" => _("For more details, please read the %sAirtime Manual%s"),
             "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
                 => _("Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."),
             "Check this box to automatically switch off Master/Show source upon source disconnection." => _("Check this box to automatically switch off Master/Show source upon source disconnection."),
@@ -279,10 +274,8 @@ class LocaleController extends Zend_Controller_Action
             //"Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
                 //=> _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."),
             "Cannot schedule outside a show." => _("Cannot schedule outside a show."),
-            /*****embedded variable*****/
-            "Moving " => _("Moving "),
-            " Item." => _(" Item."),
-            " Items." => _(" Items."),
+            "Moving 1 Item" => _("Moving 1 Item"),
+            "Moving %s Items" => _("Moving %s Items"),
             //already in library/library.js
             //"Select" => _("Select"),
             "Select all" => _("Select all"),
