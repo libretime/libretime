@@ -4,6 +4,7 @@ from os.path import join
 from media.monitor.exceptions import NoConfigFile
 from media.monitor.pure import LazyProperty
 from media.monitor.config import MMConfig
+from media.monitor.owners import Owner
 from api_clients.api_client import AirtimeApiClient
 
 # poor man's phantom types...
@@ -46,3 +47,7 @@ class AirtimeInstance(object):
     @LazyProperty
     def mm_config(self):
         return MMConfig(self.config_paths['media_monitor'])
+
+    @LazyProperty
+    def owner(self):
+        return Owner()

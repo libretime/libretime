@@ -3,12 +3,11 @@ import os
 import abc
 import re
 import media.monitor.pure   as mmp
-import media.monitor.owners as owners
 from media.monitor.pure       import LazyProperty
 from media.monitor.metadata   import Metadata
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
-from media.saas.thread        import getsig
+from media.saas.thread        import getsig, user
 
 class PathChannel(object):
     """
@@ -102,7 +101,7 @@ class BaseEvent(Loggable):
             self._raw_event = raw_event
             self.path = os.path.normpath(raw_event.pathname)
         else: self.path = raw_event
-        self.owner = owners.get_owner(self.path)
+        self.owner = user().owner.get_owner(self.path)
         owner_re = re.search('stor/imported/(?P<owner>\d+)/', self.path)
         if owner_re: 
             self.logger.info("matched path: %s" % self.path)
@@ -153,7 +152,7 @@ class BaseEvent(Loggable):
             ret = self.pack()
             # Remove owner of this file only after packing. Otherwise packing
             # will not serialize the owner correctly into the airtime request
-            owners.remove_file_owner(self.path)
+            user().owner.remove_file_owner(self.path)
             return ret
         except BadSongFile as e: return [e]
         except Exception as e:
