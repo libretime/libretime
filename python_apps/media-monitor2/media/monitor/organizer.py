@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import media.monitor.pure   as mmp
-import media.monitor.owners as owners
 from media.monitor.handler    import ReportHandler
 from media.monitor.log        import Loggable
 from media.monitor.exceptions import BadSongFile
 from media.monitor.events     import OrganizeFile
 from pydispatch               import dispatcher
 from os.path                  import dirname
-from media.saas.thread        import getsig
+from media.saas.thread        import getsig, user
 import os.path
 
 class Organizer(ReportHandler,Loggable):
@@ -75,7 +74,7 @@ class Organizer(ReportHandler,Loggable):
             # backwards way is bewcause we are unable to encode the owner id
             # into the file itself so that the StoreWatchListener listener can
             # detect it from the file
-            owners.add_file_owner(new_path, owner_id )
+            user().owner.add_file_owner(new_path, owner_id )
 
             self.logger.info('Organized: "%s" into "%s"' %
                     (event.path, new_path))

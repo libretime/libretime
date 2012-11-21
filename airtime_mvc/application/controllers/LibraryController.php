@@ -343,6 +343,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $params = $this->getRequest()->getParams();
 
+        # terrible name for the method below. it does not only search files.
         $r = Application_Model_StoredFile::searchLibraryFiles($params);
 
         //TODO move this to the datatables row callback.

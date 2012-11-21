@@ -254,29 +254,15 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
         if user == "" then
             user_ref := "source"
         end
-        
-        description_ref = ref description
-        if description == "" then
-            description_ref := "N/A"
-        end
-        
-        genre_ref = ref genre
-        if genre == "" then
-            genre_ref := "N/A"
-        end
-        
-        url_ref = ref url
-        if url == "" then
-            url_ref := "N/A"
-        end
+
         output.shoutcast_mono = output.shoutcast(id = "shoutcast_stream_#{stream}",
                     host = host,
                     port = port,
                     password = pass,
                     fallible = true,
-                    url = !url_ref,
-                    genre = !genre_ref,
-                    name = !description_ref,
+                    url = url,
+                    genre = genre,
+                    name = description,
                     user = !user_ref,
                     on_error = on_error,
                     on_connect = on_connect)
@@ -286,9 +272,9 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
                     port = port,
                     password = pass,
                     fallible = true,
-                    url = !url_ref,
-                    genre = !genre_ref,
-                    name = !description_ref,
+                    url = url,
+                    genre = genre,
+                    name = description,
                     user = !user_ref,
                     on_error = on_error,
                     on_connect = on_connect)
@@ -390,13 +376,6 @@ def add_skip_command(s)
                  "skip",fun(s) -> begin log("source.skip") skip(s) end)
 end
 
-dyn_out = output.icecast(%wav,
-                     host="localhost",
-                     port=8999,
-                     password=stream_harbor_pass,
-                     mount="test-harbor",
-                     fallible=true)
-
 def set_dynamic_source_id(id) =
     current_dyn_id := id 
     string_of(!current_dyn_id)
@@ -406,123 +385,159 @@ def get_dynamic_source_id() =
     string_of(!current_dyn_id)
 end
 
+#cc-4633
 
-# Function to create a playlist source and output it.
-def create_dynamic_source(uri) =
-    # The playlist source 
-    s = audio_to_stereo(input.http(buffer=2., max=12., uri))
 
-    # The output
-    active_dyn_out = dyn_out(s)
+# NOTE
+# A few values are hardcoded and may be dependent:
+#  - the delay in gracetime is linked with the buffer duration of input.http
+#    (delay should be a bit less than buffer)
+#  - crossing duration should be less than buffer length
+#    (at best, a higher duration will be ineffective)
 
-    # We register both source and output 
-    # in the list of sources
-    dyn_sources := 
-      list.append([(!current_dyn_id, s),(!current_dyn_id, active_dyn_out)], !dyn_sources)
+# HTTP input with "restart" command that waits for "stop" to be effected
+# before "start" command is issued. Optionally it takes a new URL to play,
+# which makes it a convenient replacement for "url".
+# In the future, this may become a core feature of the HTTP input.
+# TODO If we stop and restart quickly several times in a row,
+#   the data bursts accumulate and create buffer overflow.
+#   Flushing the buffer on restart could be a good idea, but
+#   it would also create an interruptions while the buffer is
+#   refilling... on the other hand, this would avoid having to
+#   fade using both cross() and switch().
+def input.http_restart(~id,~initial_url="http://dummy/url")
 
-    notify([("schedule_table_id", !current_dyn_id)])
-    "Done!"
+  source = input.http(buffer=5.,max=15.,id=id,autostart=false,initial_url)
+
+  def stopped()
+    "stopped" == list.hd(server.execute("#{id}.status"))
+  end
+
+  server.register(namespace=id,
+                  "restart",
+                  usage="restart [url]",
+                  fun (url) -> begin
+                    if url != "" then
+                      log(string_of(server.execute("#{id}.url #{url}")))
+                    end
+                    log(string_of(server.execute("#{id}.stop")))
+                    add_timeout(0.5,
+                      { if stopped() then
+                          log(string_of(server.execute("#{id}.start"))) ;
+                          (-1.)
+                        else 0.5 end})
+                    "OK"
+                  end)
+
+  # Dummy output should be useless if HTTP stream is meant
+  # to be listened to immediately. Otherwise, apply it.
+  #
+  # output.dummy(fallible=true,source)
+
+  source
+
 end
 
+# Transitions between URL changes in HTTP streams.
+def cross_http(~debug=true,~http_input_id,source)
 
-# A function to destroy a dynamic source
-def destroy_dynamic_source(id) = 
-  # We need to find the source in the list,
-  # remove it and destroy it. Currently, the language
-  # lacks some nice operators for that so we do it
-  # the functional way
+  id = http_input_id
+  last_url = ref ""
+  change = ref false
 
-  # This function is executed on every item in the list
-  # of dynamic sources
-  def parse_list(ret, current_element) = 
-    # ret is of the form: (matching_sources, remaining_sources)
-    # We extract those two:
-    matching_sources = fst(ret)
-    remaining_sources = snd(ret)
-
-    # current_element is of the form: ("uri", source) so 
-    # we check the first element
-    current_id = fst(current_element)
-    if current_id == id then
-      # In this case, we add the source to the list of
-      # matched sources
-      (list.append( [snd(current_element)], 
-                     matching_sources),
-       remaining_sources)
-    else
-       # In this case, we put the element in the list of remaining
-       # sources
-      (matching_sources,
-       list.append([current_element], 
-                    remaining_sources))
+  def on_m(m)
+    notify_stream(m)
+    changed = m["source_url"] != !last_url
+    log("URL now #{m['source_url']} (change: #{changed})")
+    if changed then
+      if !last_url != "" then change := true end
+      last_url := m["source_url"]
     end
   end
-    
-  # Now we execute the function:
-  result = list.fold(parse_list, ([], []), !dyn_sources)
-  matching_sources = fst(result)
-  remaining_sources = snd(result)
 
-  # We store the remaining sources in dyn_sources
-  dyn_sources := remaining_sources
+  # We use both metadata and status to know about the current URL.
+  # Using only metadata may be more precise is crazy corner cases,
+  # but it's also asking too much: the metadata may not pass through
+  # before the crosser is instantiated.
+  # Using only status in crosser misses some info, eg. on first URL.
+  source = on_metadata(on_m,source)
 
-  # If no source matched, we return an error
-  if list.length(matching_sources) == 0 then
-    "Error: no matching sources!"
-  else
-    # We stop all sources
-    list.iter(source.shutdown, matching_sources)
-    # And return
-    "Done!"
+  cross_d = 3.
+
+  def crosser(a,b)
+    url = list.hd(server.execute('#{id}.url'))
+    status = list.hd(server.execute('#{id}.status'))
+    on_m([("source_url",url)])
+    if debug then
+      log("New track inside HTTP stream")
+      log("  status: #{status}")
+      log("  need to cross: #{!change}")
+      log("  remaining #{source.remaining(a)} sec before, \
+             #{source.remaining(b)} sec after")
+    end
+    if !change then
+      change := false
+      # In principle one should avoid crossing on a live stream
+      # it'd be okay to do it here (eg. use add instead of sequence)
+      # because it's only once per URL, but be cautious.
+      sequence([fade.out(duration=cross_d,a),fade.in(b)])
+    else
+      # This is done on tracks inside a single stream.
+      # Do NOT cross here or you'll gradually empty the buffer!
+      sequence([a,b])
+    end
   end
+
+  # Setting conservative=true would mess with the delayed switch below
+  cross(duration=cross_d,conservative=false,crosser,source)
+
 end
 
+# Custom fallback between http and default source with fading of
+# beginning and end of HTTP stream.
+# It does not take potential URL changes into account, as long as
+# they do not interrupt streaming (thanks to the HTTP buffer).
+def http_fallback(~http_input_id,~http,~default)
 
+  id = http_input_id
 
+  # We use a custom switching predicate to trigger switching (and thus,
+  # transitions) before the end of a track (rather, end of HTTP stream).
+  # It is complexified because we don't want to trigger switching when
+  # HTTP disconnects for just an instant, when changing URL: for that
+  # we use gracetime below.
 
-# A function to destroy a dynamic source
-def destroy_dynamic_source_all() = 
-  # We need to find the source in the list,
-  # remove it and destroy it. Currently, the language
-  # lacks some nice operators for that so we do it
-  # the functional way
-
-  # This function is executed on every item in the list
-  # of dynamic sources
-  def parse_list(ret, current_element) = 
-    # ret is of the form: (matching_sources, remaining_sources)
-    # We extract those two:
-    matching_sources = fst(ret)
-    remaining_sources = snd(ret)
-
-    # current_element is of the form: ("uri", source) so 
-    # we check the first element
-    current_uri = fst(current_element)
-    # in this case, we add the source to the list of
-    # matched sources
-    (list.append( [snd(current_element)], 
-                    matching_sources),
-    remaining_sources)
+  def gracetime(~delay=3.,f)
+    last_true = ref 0.
+    { if f() then
+        last_true := gettimeofday()
+        true
+      else
+        gettimeofday() < !last_true+delay
+      end }
   end
-    
-  # now we execute the function:
-  result = list.fold(parse_list, ([], []), !dyn_sources)
-  matching_sources = fst(result)
-  remaining_sources = snd(result)
 
-  # we store the remaining sources in dyn_sources
-  dyn_sources := remaining_sources
-
-  # if no source matched, we return an error
-  if list.length(matching_sources) == 0 then
-    "error: no matching sources!"
-  else
-    # we stop all sources
-    list.iter(source.shutdown, matching_sources)
-    # And return
-    "Done!"
+  def connected()
+    status = list.hd(server.execute("#{id}.status"))
+    not(list.mem(status,["polling","stopped"]))
   end
+  connected = gracetime(connected)
+
+  def to_live(a,b) =
+    log("TRANSITION to live")
+    add(normalize=false,
+        [fade.initial(b),fade.final(a)])
+  end
+  def to_static(a,b) =
+    log("TRANSITION to static")
+    sequence([fade.out(a),fade.initial(b)])
+  end
+
+  switch(
+    track_sensitive=false,
+    transitions=[to_live,to_static],
+    [(# make sure it is connected, and not buffering
+      {connected() and source.is_ready(http) and !webstream_enabled}, http),
+     ({true},default)])
+
 end
-
-
-

@@ -28,7 +28,8 @@ echo "----------------------------------------------------"
 dist=`lsb_release -is`
 code=`lsb_release -cs`
 
-if [ "$dist" -eq "Debian" ]; then
+#enable squeeze backports to get lame packages
+if [ "$dist" = "Debian" -a "$code" = "squeeze" ]; then
     grep "deb http://backports.debian.org/debian-backports squeeze-backports main" /etc/apt/sources.list
     if [ "$?" -ne "0" ]; then
         echo "deb http://backports.debian.org/debian-backports squeeze-backports main" >> /etc/apt/sources.list
