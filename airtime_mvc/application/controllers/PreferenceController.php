@@ -387,11 +387,12 @@ class PreferenceController extends Zend_Controller_Action
 
     public function rescanWatchDirectoryAction()
     {
-        $dir = Application_Model_MusicDir::getDirByPath(
-            $this->getRequest()->getParam("dir"));
+        $dir_path = $this->getRequest()->getParam('dir');
+        $dir = Application_Model_MusicDir::getDirByPath($dir_path);
         $data = array( 'directory' => $dir->getDirectory(),
                               'id' => $dir->getId());
         Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
+        Logging::info("Unhiding all files belonging to:: $dir_path");
         $dir->unhideFiles();
         die(); # Get rid of this ugliness later
     }

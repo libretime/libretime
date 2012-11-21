@@ -321,7 +321,7 @@ SQL;
                 ws.description AS file_album_title,
                 ws.length AS file_length,
                 't'::BOOL AS file_exists,
-                NULL as file_mime
+                ws.mime as file_mime
 SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched
@@ -674,6 +674,12 @@ SQL;
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end   = self::AirtimeTimeToPypoTime($item["end"]);
 
+        list(,,,$start_hour,,) = explode("-", $start);
+        list(,,,$end_hour,,) = explode("-", $end);
+
+        $same_hour = $start_hour == $end_hour;
+        $independent_event = !$same_hour;
+
         $schedule_item = array(
             'id'                => $media_id,
             'type'              => 'file',
@@ -687,7 +693,7 @@ SQL;
             'end'               => $end,
             'show_name'         => $item["show_name"],
             'replay_gain'       => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
-            'independent_event' => false
+            'independent_event' => $independent_event, 
         );
         self::appendScheduleItem($data, $start, $schedule_item);
     }
@@ -859,6 +865,8 @@ SQL;
         $data = array();
         $data["media"] = array();
 
+        //Harbor kick times *MUST* be ahead of schedule events, so that pypo
+        //executes them first.
         self::createInputHarborKickTimes($data, $range_start, $range_end);
         self::createScheduledEvents($data, $range_start, $range_end);
 

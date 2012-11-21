@@ -655,6 +655,7 @@ var AIRTIME = (function(AIRTIME){
     	            $pl.find('.success').show();
     	        }
     	        disableLoadingIcon();
+    	        setTimeout(removeSuccessMsg, 5000);
     	    });
 	    })
 

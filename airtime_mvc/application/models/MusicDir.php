@@ -450,8 +450,12 @@ SQL;
     public function unhideFiles() 
     {
         $files = $this->_dir->getCcFiless();
+        $hid = 0;
         foreach ($files as $file) {
+            $hid++;
             $file->setDbHidden(false);
+            $file->save();
         }
+        Logging::info("unhide '$hid' files");
     }
 }
