@@ -32,7 +32,9 @@ $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
 
 //localization configuration
-$lang = 'en_US.utf8';
+$codeset = 'UTF-8';
+$lang = Application_Model_Preference::GetLocale().'.'.$codeset;
+
 putenv("LC_ALL=$lang");
 putenv("LANG=$lang");
 $res = setlocale(LC_MESSAGES, $lang);
@@ -40,7 +42,7 @@ $res = setlocale(LC_MESSAGES, $lang);
 $domain = 'airtime';
 bindtextdomain($domain, '/usr/share/airtime/locale');
 textdomain($domain);
-bind_textdomain_codeset($domain,'UTF-8');
+bind_textdomain_codeset($domain, $codeset);
 
 
 /* The bootstrap class should only be used to initialize actions that return a view.
