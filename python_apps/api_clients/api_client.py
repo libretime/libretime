@@ -136,7 +136,8 @@ class AirtimeApiClient(object):
             self.config = ConfigObj(config_path)
             self.services = RequestProvider(self.config)
         except Exception, e:
-            self.logger.error('Error loading config file: %s', e)
+            self.logger.error('Error loading config file: %s', config_path)
+            self.logger.error('Exception: %s', str(e))
             sys.exit(1)
 
     def __get_airtime_version(self):
@@ -377,7 +378,7 @@ class AirtimeApiClient(object):
         response = self.services.get_stream_parameters()
         self.logger.debug(response)
         return response
-    
+
     def push_stream_stats(self, data):
         # TODO : users of this method should do their own error handling
         response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
