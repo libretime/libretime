@@ -428,6 +428,16 @@ class Application_Model_Preference
     {
         return self::getValue("timezone");
     }
+    
+    public static function SetLocale($locale)
+    {
+        self::setValue("locale", $locale);
+    }
+    
+    public static function GetLocale()
+    {
+        return self::getValue("locale");
+    }
 
     public static function SetStationLogo($imagePath)
     {

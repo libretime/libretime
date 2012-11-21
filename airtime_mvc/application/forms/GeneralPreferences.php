@@ -50,6 +50,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
+        
+        $locale = new Zend_Form_Element_Select("locale");
+        $locale->setLabel(_("locale"));
+        $locale->setMultiOptions($this->getLocales());
+        $locale->setValue(Application_Model_Preference::GetLocale());
+        $locale->setDecorators(array('ViewHelper'));
+        $this->addElement($locale);
 
         /* Form Element for setting the Timezone */
         $timezone = new Zend_Form_Element_Select("timezone");
@@ -108,5 +115,14 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         );
 
         return $days;
+    }
+    
+    private function getLocales()
+    {
+        $locales = array(
+            'en_CA' => 'English'
+        );
+        
+        return $locales;
     }
 }

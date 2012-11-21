@@ -44,6 +44,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
+                Application_Model_Preference::SetLocale($values["locale"]);
                 Application_Model_Preference::SetTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 

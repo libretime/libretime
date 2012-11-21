@@ -17,8 +17,9 @@ class LocaleController extends Zend_Controller_Action
         header("Content-type: text/javascript");
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
+        $locale = Application_Model_Preference::GetLocale();
         echo "var datatables_dict =" .
-            file_get_contents($_SERVER['DOCUMENT_ROOT'].$baseUrl.'/js/datatables/i18n/en_CA.txt');
+            file_get_contents($_SERVER['DOCUMENT_ROOT'].$baseUrl.'/js/datatables/i18n/'.$locale.'.txt');
     }
     
     public function generalTranslationTableAction()
