@@ -44,9 +44,9 @@ class MM2(InstanceThread, Loggable):
         manager = Manager()
         apiclient = apc()
         config = user().mm_config
-        watch_syncer = WatchSyncer(signal=getsig('watch'),
-                                   chunking_number=config['chunking_number'],
-                                   timeout=config['request_max_wait'])
+        WatchSyncer(signal=getsig('watch'),
+                chunking_number=config['chunking_number'],
+                timeout=config['request_max_wait'])
         airtime_receiver = AirtimeMessageReceiver(config,manager)
         airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
@@ -75,15 +75,15 @@ class MM2(InstanceThread, Loggable):
                 airtime_receiver.new_watch({ 'directory':watch_dir }, restart=True)
             else: self.logger.info("Failed to add watch on %s" % str(watch_dir))
 
-        ed = EventDrainer(airtime_notifier.connection,
+        EventDrainer(airtime_notifier.connection,
                 interval=float(config['rmq_event_wait']))
 
         # Launch the toucher that updates the last time when the script was
         # ran every n seconds.
         # TODO : verify that this does not interfere with bootstrapping because the
         # toucher thread might update the last_ran variable too fast
-        tt = ToucherThread(path=config['index_path'],
-                           interval=int(config['touch_interval']))
+        ToucherThread(path=user().touch_file_path(),
+                interval=int(config['touch_interval']))
 
         apiclient.register_component('media-monitor')
 
