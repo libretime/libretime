@@ -53,11 +53,6 @@ http = input.http_restart(id="http")
 http = cross_http(http_input_id="http",http)
 stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
 
-#stream_queue = switch(id="stream_queue_switch", track_sensitive=false,
-#    transitions=[transition, transition],
-#    [({!webstream_enabled},web_stream),
-#    ({true}, queue)])
-
 ignore(output.dummy(stream_queue, fallible=true))
 
 server.register(namespace="vars",
