@@ -43,17 +43,15 @@ just_switched = ref false
 #web_stream = on_metadata(notify_stream, web_stream)
 #output.dummy(fallible=true, web_stream)
 
-
-http = input.http_restart(id="http")
-http = cross_http(http_input_id="http",http)
-stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
-
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
 queue = on_metadata(notify, queue)
 queue = map_metadata(update=false, append_title, queue)
 output.dummy(fallible=true, queue)
 
+http = input.http_restart(id="http")
+http = cross_http(http_input_id="http",http)
+stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
 
 #stream_queue = switch(id="stream_queue_switch", track_sensitive=false,
 #    transitions=[transition, transition],
