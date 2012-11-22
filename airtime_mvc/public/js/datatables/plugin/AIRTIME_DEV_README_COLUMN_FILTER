@@ -5,8 +5,8 @@ Running a diff between the original column filter plugin (dataTables.columnFilte
 our modified one (dataTables.columnFilter.js):
 
 denise@denise-DX4860:~/airtime/airtime_mvc/public/js/datatables/plugin$ diff -u dataTables.columnFilter_orig.js dataTables.columnFilter.js
---- dataTables.columnFilter_orig.js	2012-09-11 11:53:16.476101955 -0400
-+++ dataTables.columnFilter.js	2012-10-04 12:15:13.270199949 -0400
+--- dataTables.columnFilter_orig.js	2012-10-17 11:41:05.000000000 -0400
++++ dataTables.columnFilter.js	2012-11-22 12:20:03.997107451 -0500
 @@ -103,7 +103,8 @@
              label = label.replace(/(^\s*)|(\s*$)/g, "");
              var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
@@ -88,13 +88,13 @@ denise@denise-DX4860:~/airtime/airtime_mvc/public/js/datatables/plugin$ diff -u 
 +            
 +            var label = "";
 +            if (th.attr('id') == "bit_rate") {
-+                label = " bps";
++                label = $.i18n._(" kbps");
 +            } else if (th.attr('id') == "utime" || th.attr('id') == "mtime" || th.attr('id') == "lptime") {
-+                label = " yyyy-mm-dd";
++                label = $.i18n._(" yyyy-mm-dd");
 +            } else if (th.attr('id') == "length") {
-+                label = " hh:mm:ss.t";
++                label = $.i18n._(" hh:mm:ss.t");
 +            } else if (th.attr('id') == "sample_rate") {
-+                label = " Hz";
++                label = $.i18n._(" kHz");
 +            }
 +            
              th.html(_fnRangeLabelPart(0));
@@ -133,7 +133,20 @@ denise@denise-DX4860:~/airtime/airtime_mvc/public/js/datatables/plugin$ diff -u 
 +                }
              });
  
-
-
  
-
+@@ -566,7 +585,7 @@
+             sRangeSeparator: "~",
+             iFilteringDelay: 500,
+             aoColumns: null,
+-            sRangeFormat: "From {from} to {to}"
++            sRangeFormat: $.i18n._("From {from} to {to}")
+         };
+ 
+         properties = $.extend(defaults, options);
+@@ -730,4 +749,4 @@
+ 
+ 
+ 
+-})(jQuery);
+\ No newline at end of file
++})(jQuery);

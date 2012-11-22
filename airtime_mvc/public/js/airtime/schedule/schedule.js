@@ -262,20 +262,8 @@ function createFullCalendar(data){
             agenda: 'H:mm{ - H:mm}',
             month: 'H:mm{ - H:mm}'
         },
-        monthNames: [
-            $.i18n._('January'),
-            $.i18n._('February'),
-            $.i18n._('March'),
-            $.i18n._('April'),
-            $.i18n._('May'),
-            $.i18n._('June'),
-            $.i18n._('July'),
-            $.i18n._('August'),
-            $.i18n._('September'),
-            $.i18n._('October'),
-            $.i18n._('November'),
-            $.i18n._('December')
-        ],
+        //i18n_months is in common.js
+        monthNames: i18n_months,
         monthNamesShort: [
             $.i18n._('Jan'),
             $.i18n._('Feb'),

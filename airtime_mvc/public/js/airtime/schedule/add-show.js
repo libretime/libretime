@@ -32,8 +32,11 @@ function createDateInput(el, onSelect) {
         minDate: adjustDateToServerDate(new Date(), timezoneOffset),
         onSelect: onSelect,
         dateFormat: 'yy-mm-dd',
-        closeText: 'Close',
-        showButtonPanel: true,
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
+        closeText: $.i18n._('Close'),
+        //showButtonPanel: true,
         firstDay: weekStart
 		});
 }
@@ -318,7 +321,9 @@ function setAddShowEvents() {
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
-        defaultTime: ''
+        defaultTime: '',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     });
 
     form.find(".add_absolute_rebroadcast_day").click(function(){

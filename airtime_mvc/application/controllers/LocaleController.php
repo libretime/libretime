@@ -51,6 +51,7 @@ class LocaleController extends Zend_Controller_Action
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
+            " Add to selected show" => _(" Add to selected show"),
             "Select" => _("Select"),
             "Select this page" => _("Select this page"),
             "Deselect this page" => _("Deselect this page"),
@@ -100,9 +101,8 @@ class LocaleController extends Zend_Controller_Action
             "Input must be in the format: yyyy-mm-dd" => _("Input must be in the format: yyyy-mm-dd"),
             "Input must be in the format: hh:mm:ss.t" => _("Input must be in the format: hh:mm:ss.t"),
             //library/plupload.js
-            "You are currently uploading files." => _("You are currently uploading files."),
-            "Going to another screen will cancel the upload process." => _("Going to another screen will cancel the upload process."),
-            "Are you sure you want to leave the page?" => _("Are you sure you want to leave the page?"),
+            "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+                => _("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),
             //library/spl.js
             "please put in a time '00:00:00 (.0)'" => _("please put in a time '00:00:00 (.0)'"),
             "please put in a time in seconds '00 (.0)'" => _("please put in a time in seconds '00 (.0)'"),
@@ -127,8 +127,8 @@ class LocaleController extends Zend_Controller_Action
                 => _("A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."),
             "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
                 => _("A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."),
-            "If your criteria is too strict, Airtime may not be able to fill up the desired smart block length. Hence, if you check this option, tracks will be used more than once."
-                => _("If your criteria is too strict, Airtime may not be able to fill up the desired smart block length. Hence, if you check this option, tracks will be used more than once."),
+            "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+                => _("The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."),
             "Smart block shuffled" => _("Smart block shuffled"),
             "Smart block generated and criteria saved" => _("Smart block generated and criteria saved"),
             "Smart block saved" => _("Smart block saved"),
@@ -302,7 +302,26 @@ class LocaleController extends Zend_Controller_Action
             //dataTables/ColVis.js
             "Show / hide columns" => _("Show / hide columns"),
             //datatables.columnFilter.js
-            "From {from} to {to}" => _("From {from} to {to}")
+            "From {from} to {to}" => _("From {from} to {to}"),
+            " kbps" => _(" kbps"),
+            " yyyy-mm-dd" => _(" yyyy-mm-dd"),
+            " hh:mm:ss.t" => _(" hh:mm:ss.t"),
+            " kHz" => _(" kHz"),
+            //datepicker
+            //months are already in schedule/schedule.js
+            "Su" => _("Su"),
+            "Mo" => _("Mo"),
+            "Tu" => _("Tu"),
+            "We" => _("We"),
+            "Th" => _("Th"),
+            "Fr" => _("Fr"),
+            "Sa" => _("Sa"),
+            "Close" => _("Close"),
+            //timepicker
+            "Hour" => _("Hour"),
+            "Minute" => _("Minute"),
+            "Done" => _("Done")
+            
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

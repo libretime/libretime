@@ -30,6 +30,9 @@ AIRTIME = (function(AIRTIME) {
     
     oBaseDatePickerSettings = {
         dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
         onClick: function(sDate, oDatePicker) {     
             $(this).datepicker( "setDate", sDate );
         }
@@ -38,8 +41,11 @@ AIRTIME = (function(AIRTIME) {
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
+        showButtonText: $.i18n._("Done"),
         showLeadingZero: false,
-        defaultTime: '0:00'
+        defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     };
     
     function setWidgetSize() {

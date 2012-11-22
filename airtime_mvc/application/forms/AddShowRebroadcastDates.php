@@ -12,7 +12,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
         $relativeDates = array();
         $relativeDates[""] = "";
         for ($i=0; $i<=30; $i++) {
-           $relativeDates["$i days"] = "+$i days";
+           $relativeDates["$i days"] = "+$i "._("days");
         }
 
         for ($i=1; $i<=10; $i++) {

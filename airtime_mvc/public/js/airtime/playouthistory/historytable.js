@@ -150,6 +150,9 @@ $(document).ready(function(){
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
 		onSelect: function(sDate, oDatePicker) {		
 			$(this).datepicker( "setDate", sDate );
 		}
@@ -158,8 +161,11 @@ $(document).ready(function(){
 	oBaseTimePickerSettings = {
 		showPeriodLabels: false,
 		showCloseButton: true,
+        showButtonText: $.i18n._("Done"),
 		showLeadingZero: false,
-		defaultTime: '0:00'
+		defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
 	};
 	
 	oTable = AIRTIME.history.historyTable();

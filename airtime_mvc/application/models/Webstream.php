@@ -50,7 +50,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             list($hours, $min, $sec) = $arr;
             $di = new DateInterval("PT{$hours}H{$min}M{$sec}S");
 
-            return $di->format("%Hh %Im");
+            return $di->format("%H"._("h")."  %I"._("m"));
         } 
 
         return "";

@@ -11,6 +11,35 @@ $(document).ready(function() {
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
 });
 
+/*
+ * i18n_months and i18n_days_short are used in jquery datepickers
+ * which we use in multiple places
+ */
+var i18n_months = [
+    $.i18n._("January"),
+    $.i18n._("February"),
+    $.i18n._("March"),
+    $.i18n._("April"),
+    $.i18n._("May"),
+    $.i18n._("June"),
+    $.i18n._("July"),
+    $.i18n._("August"),
+    $.i18n._("September"),
+    $.i18n._("October"),
+    $.i18n._("November"),
+    $.i18n._("December")
+];
+
+var i18n_days_short = [
+    $.i18n._("Su"),
+    $.i18n._("Mo"),
+    $.i18n._("Tu"),
+    $.i18n._("We"),
+    $.i18n._("Th"),
+    $.i18n._("Fr"),
+    $.i18n._("Sa"),
+]
+
 function adjustDateToServerDate(date, serverTimezoneOffset){
     //date object stores time in the browser's localtime. We need to artificially shift 
     //it to 

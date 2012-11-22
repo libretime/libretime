@@ -11,9 +11,9 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             'label' => _('Repeat Type:'),
             'class' => ' input_select',
             'multiOptions' => array(
-                "0" => "weekly",
-                "1" => "bi-weekly",
-                "2" => "monthly"
+                "0" => _("weekly"),
+                "1" => _("bi-weekly"),
+                "2" => _("monthly")
             ),
         ));
 
@@ -25,13 +25,13 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
                 'label' => _('Select Days:'),
                 'required' => false,
                 'multiOptions' => array(
-                    "0" => "Sun",
-                    "1" => "Mon",
-                    "2" => "Tue",
-                    "3" => "Wed",
-                    "4" => "Thu",
-                    "5" => "Fri",
-                    "6" => "Sat",
+                    "0" => _("Sun"),
+                    "1" => _("Mon"),
+                    "2" => _("Tue"),
+                    "3" => _("Wed"),
+                    "4" => _("Thu"),
+                    "5" => _("Fri"),
+                    "6" => _("Sat"),
                 ),
          ));
 
