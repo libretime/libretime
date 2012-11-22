@@ -56,9 +56,8 @@ $(document).ready(function() {
 	
 	$(window).bind('beforeunload', function(){
 		if(uploadProgress){
-            return $.i18n._("You are currently uploading files.")+"\n"+
-            $.i18n._("Going to another screen will cancel the upload process.")+"\n"+
-            $.i18n._("Are you sure you want to leave the page?");
+            return sprintf($.i18n._("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),
+                    "\n", "\n");
 		}
 	});
 
