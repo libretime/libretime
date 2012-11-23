@@ -15,5 +15,6 @@ function isAudioSupported(mime){
     //is adding a javascript library to do the work for you, which seems like overkill....
     return (!!audio.canPlayType && audio.canPlayType(bMime) != "") || 
         (mime.indexOf("mp3") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined) ||
-        (mime.indexOf("mp4") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined);
+        (mime.indexOf("mp4") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined) ||
+        (mime.indexOf("mpeg") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined);
 }        
