@@ -149,18 +149,18 @@ function updatePlaybar(){
     }else{
         if (master_dj_on_air) {
             if (showName) {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - "+$.i18n._("Master Stream")+"</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+showName+" - "+$.i18n._("Master Stream")+"</span>");
             } else {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+$.i18n._("Master Stream")+"</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Master Stream")+"</span>");
             }
         } else if (live_dj_on_air) {
             if (showName) {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - "+$.i18n._("Live Stream")+"</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+showName+" - "+$.i18n._("Live Stream")+"</span>");
             } else {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+$.i18n._("Live Stream")+"</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Live Stream")+"</span>");
             }
         } else {
-            $('#current').html("Current: <span style='color:red; font-weight:bold'>"+$.i18n._("Nothing Scheduled")+"</span>");
+            $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Nothing Scheduled")+"</span>");
         }
     }
 

@@ -33,6 +33,7 @@ class LocaleController extends Zend_Controller_Action
             "Live Stream" => _("Live Stream"),
             "Nothing Scheduled" => _("Nothing Scheduled"),
             "Current Show:" => _("Current Show:"),
+            "Current" => _("Current"),
             //dashboard/versiontooltip.js
             "You are running the latest version" => _("You are running the latest version"),
             "New version available: " => _("New version available: "),
