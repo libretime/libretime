@@ -81,7 +81,9 @@ server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='start',
                 "output_start",
-                fun (s) -> begin log("dynamic_source.output_start") webstream_enabled := true "enabled" end)
+                fun (s) -> begin log("dynamic_source.output_start") 
+                    notify([("schedule_table_id", !current_dyn_id)]) 
+                    webstream_enabled := true "enabled" end)
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='stop',

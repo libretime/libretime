@@ -114,7 +114,6 @@ class Notify:
             self.notify_source_status(options.source_name, options.source_status)
         elif options.webstream:
             self.notify_webstream_data(options.webstream, options.media_id)
-            self.notify_media_start_playing(options.media_id)
         elif options.media_id:
             self.notify_media_start_playing(options.media_id)
         elif options.liquidsoap_started:
