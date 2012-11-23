@@ -48,7 +48,7 @@ class Application_Common_DateHelper
     /**
      * Get the week start date of this week in the format
      * YYYY-MM-DD
-     * 
+     *
      * @return String - week start date
      */
     function getWeekStartDate()
@@ -231,7 +231,7 @@ class Application_Common_DateHelper
         if (2 !== substr_count($p_time, ":")){
             return FALSE;
         }
-
+        
         if (1 === substr_count($p_time, ".")){
             list($hhmmss, $ms) = explode(".", $p_time);
         } else {
@@ -275,17 +275,17 @@ class Application_Common_DateHelper
         return $dateTime;
     }
     
-    /* Convenience method to return a date formatted into a String rather than a 
+    /* Convenience method to return a date formatted into a String rather than a
      * DateTime object. Note that if an empty string is provided for $p_dateString
-     * then the current time is provided. 
-     * 
+     * then the current time is provided.
+     *
      * @param $p_dateString
      *      Date string in UTC timezone.
      * @param $p_format
      *      Format which the string should be returned in.
-     * 
-     * @return string 
-     *      Date String in localtime 
+     *
+     * @return string
+     *      Date String in localtime
      * */
     public static function ConvertToLocalDateTimeString($p_dateString, $p_format="Y-m-d H:i:s"){
         if (is_null($p_dateString) || strlen($p_dateString) == 0)
@@ -302,7 +302,7 @@ class Application_Common_DateHelper
     /*
      * Example input: "00:02:32.746562". Output is a DateInterval object
      * representing that 2 minute, 32.746562 second interval.
-     * 
+     *
      */
     public static function getDateIntervalFromString($p_interval){
         list($hour_min_sec, $subsec) = explode(".", $p_interval);
@@ -335,7 +335,7 @@ class Application_Common_DateHelper
             $retVal['errMsg'] = "The year '$year' must be within the range of 1753 - 9999";
         } else if (!checkdate($month, $day, $year)) {
             $retVal['success'] = false;
-            $retVal['errMsg'] = "'$year-$month-$day' is not a valid date";        
+            $retVal['errMsg'] = "'$year-$month-$day' is not a valid date";
         } else {
             // check time
             if (isset($timeInfo)) {

@@ -266,8 +266,12 @@ class Application_Model_ShowBuilder
             $row["instance"] = intval($p_item["si_id"]);
             $row["starts"]   = $schedStartDT->format("H:i:s");
             $row["ends"]     = $schedEndDT->format("H:i:s");
-
-            $formatter       = new LengthFormatter($p_item['file_length']);
+            
+            $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_out']);
+            $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_in']);
+            $run_time = $cue_out-$cue_in;
+            
+            $formatter       = new LengthFormatter(Application_Common_DateHelper::ConvertMSToHHMMSSmm($run_time*1000));
             $row['runtime']  = $formatter->format();
 
             $row["title"]    = $p_item["file_track_title"];

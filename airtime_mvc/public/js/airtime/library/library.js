@@ -975,7 +975,6 @@ function addProgressIcon(id) {
 }
     
 function checkLibrarySCUploadStatus(){
-    
     var url = '/Library/get-upload-to-soundcloud-status',
         span,
         id;
@@ -1028,15 +1027,22 @@ function addQtipToSCIcons(){
             });
         }
         else if($(this).hasClass("soundcloud")){
+            var sc_id = $(this).parent().parent().data("aData").soundcloud_id;
             $(this).qtip({
                 content: {
+                    //text: "The soundcloud id for this file is: "+sc_id
                     text: "Retrieving data from the server...",
                     ajax: {
                         url: "/Library/get-upload-to-soundcloud-status",
                         type: "post",
                         data: ({format: "json", id : id, type: "file"}),
                         success: function(json, status){
-                            this.set('content.text', "The soundcloud id for this file is: "+json.sc_id);
+                            id = sc_id;
+                            if (id == undefined) {
+                                id = json.sc_id;
+                            } 
+                            
+                            this.set('content.text', "The soundcloud id for this file is: "+id);
                         }
                     }
                 },
