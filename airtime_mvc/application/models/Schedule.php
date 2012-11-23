@@ -833,26 +833,60 @@ SQL;
              
         }
     }
+    
+    /* Check if two events are less than or equal to 1 second apart
+     */
+    public static function areEventsLinked($event1, $event2) {
+        $dt1 = DateTime::createFromFormat("Y-m-d-H-i-s", $event1['start']); 
+        $dt2 = DateTime::createFromFormat("Y-m-d-H-i-s", $event2['start']); 
+
+        $seconds = $dt2->getTimestamp() - $dt1->getTimestamp();
+        return $seconds <= 1;
+    }
 
     /**
-     * Purpose of this function is to iterate through the entire
-     * schedule array that was just built and fix the data up a bit. For
-     * example, if we have two consecutive webstreams, we don't need the
-     * first webstream to shutdown the output, when the second one will
-     * just switch it back on. Preventing this behaviour stops hiccups
-     * in output sound.
+     * Streams are a 4 stage process.
+     * 1) start buffering stream 5 seconds ahead of its start time
+     * 2) at the start time tell liquidsoap to switch to this source
+     * 3) at the end time, tell liquidsoap to stop reading this stream
+     * 4) at the end time, tell liquidsoap to switch away from input.http source.
+     *
+     * When we have two streams back-to-back, some of these steps are unnecessary
+     * for the second stream. Instead of sending commands 1,2,3,4,1,2,3,4 we should
+     * send 1,2,1,2,3,4 - We don't need to tell liquidsoap to stop reading (#3), because #1
+     * of the next stream implies this when we pass in a new url. We also don't need #4.
+     *
+     * There's a special case here is well. When the back-to-back streams are the same, we
+     * can collapse the instructions 1,2,(3,4,1,2),3,4 to 1,2,3,4. We basically cut out the
+     * middle part. This function handles this. 
      */
-    private static function filterData(&$data)
+    private static function foldData(&$data)
     {
         $previous_key = null;
         $previous_val = null;
+        $previous_previous_key = null;
+        $previous_previous_val = null;
+        $previous_previous_previous_key = null;
+        $previous_previous_previous_val = null;
         foreach ($data as $k => $v) {
-            if ($v["type"] == "stream_buffer_start"
-                && !is_null($previous_val)
-                && $previous_val["type"] == "stream_output_end") {
 
+            if ($v["type"] == "stream_output_start"
+                && !is_null($previous_previous_val)
+                && $previous_previous_val["type"] == "stream_output_end"
+                && self::areEventsLinked($previous_previous_val, $v)) {
+
+                unset($data[$previous_previous_previous_key]);
+                unset($data[$previous_previous_key]);
                 unset($data[$previous_key]);
+                if ($previous_previous_val['uri'] == $v['uri']) {
+                    unset($data[$k]);
+                }
             }
+
+            $previous_previous_previous_key = $previous_previous_key;
+            $previous_previous_previous_val = $previous_previous_val;
+            $previous_previous_key = $previous_key;
+            $previous_previous_val = $previous_val;
             $previous_key = $k;
             $previous_val = $v;
         }
@@ -870,7 +904,7 @@ SQL;
         self::createInputHarborKickTimes($data, $range_start, $range_end);
         self::createScheduledEvents($data, $range_start, $range_end);
 
-        self::filterData($data["media"]);
+        self::foldData($data["media"]);
 
         return $data;
     }
