@@ -305,11 +305,15 @@ function setAddShowEvents() {
     $("#add_show_start_time").timepicker({
         amPmText: ['', ''],
         defaultTime: '00:00',
-        onSelect: onStartTimeSelect
+        onSelect: onStartTimeSelect,
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     });
     $("#add_show_end_time").timepicker({
         amPmText: ['', ''],
-        onSelect: onEndTimeSelect
+        onSelect: onEndTimeSelect,
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
@@ -322,6 +326,7 @@ function setAddShowEvents() {
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
         defaultTime: '',
+        closeButtonText: $.i18n._("Done"),
         hourText: $.i18n._("Hour"),
         minuteText: $.i18n._("Minute")
     });

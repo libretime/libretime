@@ -167,7 +167,7 @@ function plot(datasets){
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
-        showButtonText: $.i18n._("Done"),
+        closeButtonText: $.i18n._("Done"),
         showLeadingZero: false,
         defaultTime: '0:00',
         hourText: $.i18n._("Hour"),

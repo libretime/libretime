@@ -110,19 +110,19 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $select->setAttrib('class', 'input_select');
         $select->setMultiOptions(array(
                 "" => "",
-                "original" => "Original",
-                "remix" => "Remix",
-                "live" => "Live",
-                "recording" => "Recording",
-                "spoken" => "Spoken",
-                "podcast" => "Podcast",
-                "demo" => "Demo",
-                "in progress" => "Work in progress",
-                "stem" => "Stem",
-                "loop" => "Loop",
-                "sound effect" => "Sound Effect",
-                "sample" => "One Shot Sample",
-                "other" => "Other"
+                "original" => _("Original"),
+                "remix" => _("Remix"),
+                "live" => _("Live"),
+                "recording" => _("Recording"),
+                "spoken" => _("Spoken"),
+                "podcast" => _("Podcast"),
+                "demo" => _("Demo"),
+                "in progress" => _("Work in progress"),
+                "stem" => _("Stem"),
+                "loop" => _("Loop"),
+                "sound effect" => _("Sound Effect"),
+                "sample" => _("One Shot Sample"),
+                "other" => _("Other")
             ));
         $select->setRequired(false);
         $select->setValue(Application_Model_Preference::GetSoundCloudTrackType());
@@ -134,14 +134,14 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $select->setAttrib('class', 'input_select');
         $select->setMultiOptions(array(
                 "" => "",
-                "no-rights-reserved" => "The work is in the public domain",
-                "all-rights-reserved" => "All rights are reserved",
-                "cc-by" => "Creative Commons Attribution",
-                "cc-by-nc" => "Creative Commons Attribution Noncommercial",
-                "cc-by-nd" => "Creative Commons Attribution No Derivative Works",
-                "cc-by-sa" => "Creative Commons Attribution Share Alike",
-                "cc-by-nc-nd" => "Creative Commons Attribution Noncommercial Non Derivate Works",
-                "cc-by-nc-sa" => "Creative Commons Attribution Noncommercial Share Alike"
+                "no-rights-reserved" => _("The work is in the public domain"),
+                "all-rights-reserved" => _("All rights are reserved"),
+                "cc-by" => _("Creative Commons Attribution"),
+                "cc-by-nc" => _("Creative Commons Attribution Noncommercial"),
+                "cc-by-nd" => _("Creative Commons Attribution No Derivative Works"),
+                "cc-by-sa" => _("Creative Commons Attribution Share Alike"),
+                "cc-by-nc-nd" => _("Creative Commons Attribution Noncommercial Non Derivate Works"),
+                "cc-by-nc-sa" => _("Creative Commons Attribution Noncommercial Share Alike")
             ));
         $select->setRequired(false);
         $select->setValue(Application_Model_Preference::GetSoundCloudLicense());
