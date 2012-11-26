@@ -360,8 +360,10 @@ SQL;
     {
         $sql = <<<SQL
 SELECT SUM(cliplength) AS LENGTH
-FROM cc_blockcontents
+FROM cc_blockcontents as bc
+JOIN cc_files as f ON bc.file_id = f.id
 WHERE block_id = :block_id
+AND f.file_exists = true
 SQL;
         $result = Application_Common_Database::prepareAndExecute($sql, array(':block_id'=>$this->id), 'all', PDO::FETCH_NUM);
         return $result[0][0];
