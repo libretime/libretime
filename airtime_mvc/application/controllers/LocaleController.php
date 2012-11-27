@@ -9,7 +9,7 @@ class LocaleController extends Zend_Controller_Action
                     ->addActionContext('datatables-translation-table', 'json')
                     ->initContext();
     }
-    
+
     public function datatablesTranslationTableAction()
     {
         $this->view->layout()->disableLayout();
@@ -19,7 +19,12 @@ class LocaleController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $locale = Application_Model_Preference::GetLocale();
         echo "var datatables_dict =" .
-            file_get_contents($_SERVER['DOCUMENT_ROOT'].$baseUrl.'/js/datatables/i18n/'.$locale.'.txt');
+            file_get_contents(Application_Common_OsPath::join(
+                $_SERVER['DOCUMENT_ROOT'],
+                $baseUrl,
+                '/js/datatables/i18n/',
+                $locale.'.txt')
+            );
     }
     
     public function generalTranslationTableAction()
@@ -81,7 +86,7 @@ class LocaleController extends Zend_Controller_Action
             "Sample Rate" => _("Sample Rate"),
             "Track Number" => _("Track Number"),
             "Uploaded" => _("Uploaded"),
-            "Website" => _("Webiste"),
+            "Website" => _("Website"),
             "Year" => _("Year"),
             "Loading..." => _("Loading..."),
             "All" => _("All"),
@@ -110,14 +115,11 @@ class LocaleController extends Zend_Controller_Action
             "Your browser does not support playing this file type: " => _("Your browser does not support playing this file type: "),
             "Dynamic block is not previewable" => _("Dynamic block is not previewable"),
             "Limit to: " => _("Limit to: "),
-            "-error" => _("-error"),
             "Playlist saved" => _("Playlist saved"),
             "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
                 => _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."),
             //listenerstat/listenerstat.js
-            "Listener Count on" => _("Listener Count on"),
-            "You clicked point " => _("You clicked point "),
-            "in" => _("in"),
+            "Listener Count on %s: %s" => _("Listener Count on %s: %s"),
             //nowplaying/register.js
             "Remind me in 1 week" => _("Remind me in 1 week"),
             "Remind me never" => _("Remind me never"),
@@ -151,6 +153,7 @@ class LocaleController extends Zend_Controller_Action
             "Length" => _("Length"),
             "Composer" => _("Composer"),
             "Copyright" => _("Copyright"),
+            "All" => _("All"),
             //preferences/musicdirs.js
             "Choose Storage Folder" => _("Choose Storage Folder"),
             "Choose Folder to Watch" => _("Choose Folder to Watch"),
