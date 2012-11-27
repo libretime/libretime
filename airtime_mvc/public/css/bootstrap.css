@@ -503,7 +503,7 @@ input[type="submit"].btn.btn-mini {
 [class^="icon-"],
 [class*=" icon-"] {
   display: inline-block;
-  width: 14px;
+  width: 25px;
   height: 14px;
   *margin-right: .3em;
   line-height: 14px;
