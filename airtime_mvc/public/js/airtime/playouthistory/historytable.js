@@ -82,7 +82,7 @@ var AIRTIME = (function(AIRTIME) {
             
             "oLanguage": datatables_dict,
             
-            "aLengthMenu": [[50, 100, 500, -1], [50, 100, 500, "All"]],
+            "aLengthMenu": [[50, 100, 500, -1], [50, 100, 500, $.i18n._("All")]],
             "iDisplayLength": 50,
             
             "sPaginationType": "full_numbers",
