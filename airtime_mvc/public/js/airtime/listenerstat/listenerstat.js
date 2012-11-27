@@ -134,7 +134,7 @@ function plot(datasets){
                     var y = item.datapoint[1].toFixed(2);
                     
                     showTooltip(item.pageX, item.pageY,
-                                $.i18n._("Listener Count on")+" '"+item.series.label + "': " + Math.floor(y));
+                                sprintf($.i18n._("Listener Count on %s: %s"), item.series.label, Math.floor(y)));
                 }
             }
             else {
@@ -143,13 +143,6 @@ function plot(datasets){
             }
         });
 
-        $("#placeholder").bind("plotclick", function (event, pos, item) {
-            if (item) {
-                $("#clickdata").text($.i18n._("You clicked point ") + item.dataIndex + " "+$.i18n._("in")+" " + item.series.label + ".");
-                plot.highlight(item.series, item.datapoint);
-            }
-        });
-        
         $('#legend').find("input").click(function(){setTimeout(plotByChoice,100);});
     }
     

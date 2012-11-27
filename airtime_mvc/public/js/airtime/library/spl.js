@@ -683,7 +683,7 @@ var AIRTIME = (function(AIRTIME){
                             var field = json.analysis[s];
                             
                             if (!field[0]) {
-                                var elemId = "#"+s+$.i18n._("-error");
+                                var elemId = "#"+s+"-error";
                                 var $div = $("#side_playlist " + elemId).text(field[1]).show();
                             }
                         }

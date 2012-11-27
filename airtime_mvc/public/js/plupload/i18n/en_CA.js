@@ -21,5 +21,6 @@ plupload.addI18n({
     'Stop Upload': 'Stop Upload',
     'Add Files': 'Add Files',
     'Start Upload': 'Start Upload',
+    'Start upload': 'Start upload',
     '%d files queued': '%d files queued'
 });
