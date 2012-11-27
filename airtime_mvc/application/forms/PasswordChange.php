@@ -11,14 +11,14 @@ class Application_Form_PasswordChange extends Zend_Form
         ));
         
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
+        $stringLengthValidator = Application_Form_Helper_ValidationTypes::overrideStringLengthValidator(6, 80);
 
         $this->addElement('password', 'password', array(
             'label' => _('Password'),
             'required' => true,
             'filters' => array('stringTrim'),
             'validators' => array($notEmptyValidator,
-                array('stringLength', false, array(6, 80)),
-            ),
+                $stringLengthValidator),
             'decorators' => array(
                 'ViewHelper'
             )
