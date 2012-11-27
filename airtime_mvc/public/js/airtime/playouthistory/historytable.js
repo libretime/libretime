@@ -80,9 +80,7 @@ var AIRTIME = (function(AIRTIME) {
             
             "fnServerData": fnServerData,
             
-            "oLanguage": {
-                "sSearch": ""
-            },
+            "oLanguage": datatables_dict,
             
             "aLengthMenu": [[50, 100, 500, -1], [50, 100, 500, "All"]],
             "iDisplayLength": 50,
