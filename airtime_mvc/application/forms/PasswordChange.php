@@ -9,12 +9,14 @@ class Application_Form_PasswordChange extends Zend_Form
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/password-change.phtml'))
         ));
+        
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
 
         $this->addElement('password', 'password', array(
             'label' => _('Password'),
             'required' => true,
             'filters' => array('stringTrim'),
-            'validators' => array(
+            'validators' => array($notEmptyValidator,
                 array('stringLength', false, array(6, 80)),
             ),
             'decorators' => array(
@@ -31,7 +33,7 @@ class Application_Form_PasswordChange extends Zend_Form
                     return $value == $context['password'];
                 }),
             ),
-            'errorMessages' => array("Password confirmation does not match your password."),
+            'errorMessages' => array(_("Password confirmation does not match your password.")),
             'decorators' => array(
                 'ViewHelper'
             )

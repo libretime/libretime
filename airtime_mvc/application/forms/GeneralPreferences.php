@@ -6,6 +6,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
     public function init()
     {
 
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_general.phtml'))
         ));
@@ -31,9 +32,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $this->addElement('text', 'stationDefaultFade', array(
             'class'      => 'input_text',
             'label'      => _('Default Fade (s):'),
-            'required'   => false,
+            'required'   => true,
             'filters'    => array('StringTrim'),
-            'validators' => array(array('regex', false,
+            'validators' => array(array($notEmptyValidator, 'regex', false,
                 array('/^[0-9]{1,2}(\.\d{1})?$/',
                 'messages' => _('enter a time in seconds 0{.0}')))),
             'value' => $defaultFade,

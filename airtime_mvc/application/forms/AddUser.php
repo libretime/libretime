@@ -10,6 +10,8 @@ class Application_Form_AddUser extends Zend_Form
                                     '../application/validate',
                                     'validate');
                                     * */
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
+        $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
 
         $this->setAttrib('id', 'user_form');
         
@@ -21,6 +23,7 @@ class Application_Form_AddUser extends Zend_Form
         $login->setLabel(_('Username:'));
         $login->setAttrib('class', 'input_text');
         $login->setRequired(true);
+        $login->addValidator($notEmptyValidator);
         $login->addFilter('StringTrim');
         //$login->addValidator('UserNameValidate');
         $this->addElement($login);
@@ -30,21 +33,21 @@ class Application_Form_AddUser extends Zend_Form
         $password->setAttrib('class', 'input_text');
         $password->setRequired(true);
         $password->addFilter('StringTrim');
-        $password->addValidator('NotEmpty');
+        $password->addValidator($notEmptyValidator);
         $this->addElement($password);
 
         $firstName = new Zend_Form_Element_Text('first_name');
         $firstName->setLabel(_('Firstname:'));
         $firstName->setAttrib('class', 'input_text');
         $firstName->addFilter('StringTrim');
-        $firstName->addValidator('NotEmpty');
+        $firstName->addValidator($notEmptyValidator);
         $this->addElement($firstName);
 
         $lastName = new Zend_Form_Element_Text('last_name');
         $lastName->setLabel(_('Lastname:'));
         $lastName->setAttrib('class', 'input_text');
         $lastName->addFilter('StringTrim');
-        $lastName->addValidator('NotEmpty');
+        $lastName->addValidator($notEmptyValidator);
         $this->addElement($lastName);
 
         $email = new Zend_Form_Element_Text('email');
@@ -52,7 +55,8 @@ class Application_Form_AddUser extends Zend_Form
         $email->setAttrib('class', 'input_text');
         $email->addFilter('StringTrim');
         $email->setRequired(true);
-        $email->addValidator('EmailAddress');
+        $email->addValidator($notEmptyValidator);
+        $email->addValidator($emailValidator);
         $this->addElement($email);
 
         $cellPhone = new Zend_Form_Element_Text('cell_phone');
@@ -71,7 +75,7 @@ class Application_Form_AddUser extends Zend_Form
         $jabber->setLabel(_('Jabber:'));
         $jabber->setAttrib('class', 'input_text');
         $jabber->addFilter('StringTrim');
-        $jabber->addValidator('EmailAddress');
+        $jabber->addValidator($emailValidator);
         $this->addElement($jabber);
 
         $select = new Zend_Form_Element_Select('type');

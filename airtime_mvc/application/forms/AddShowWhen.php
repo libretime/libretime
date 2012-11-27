@@ -9,6 +9,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/add-show-when.phtml'))
         ));
 
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
+        $dateValidator = Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD");
+        $regexValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
+            "/^[0-2]?[0-9]:[0-5][0-9]$/",
+            _("'%value%' does not fit the time format 'HH:mm'"));
+
         // Add start date element
         $startDate = new Zend_Form_Element_Text('add_show_start_date');
         $startDate->class = 'input_text';
@@ -17,8 +23,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValue(date("Y-m-d"))
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('YYYY-MM-DD'))))
+                        $notEmptyValidator,
+                        $dateValidator))
                     ->setDecorators(array('ViewHelper'));
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
@@ -30,9 +36,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValue('00:00')
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('HH:mm')),
-                        array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Time format should be HH:mm')))
+                        $notEmptyValidator,
+                        $regexValidator
                         ))->setDecorators(array('ViewHelper'));
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
@@ -45,8 +50,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValue(date("Y-m-d"))
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('YYYY-MM-DD'))))
+                        $notEmptyValidator,
+                        $dateValidator))
                     ->setDecorators(array('ViewHelper'));
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
@@ -58,9 +63,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValue('01:00')
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('HH:mm')),
-                        array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Time format should be HH:mm')))))
+                        $notEmptyValidator,
+                        $regexValidator))
                     ->setDecorators(array('ViewHelper'));
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);

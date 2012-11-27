@@ -4,6 +4,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 {
     public function init()
     {
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         // retrieves the length limit for each char field
         // and store to assoc array
         $maxLens = Application_Model_Show::getMaxLengths();
@@ -26,9 +27,8 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty'),
             'value'        => _('Untitled Show'),
-            'validators' => array(array('StringLength', false, array(0, $maxLens['name'])))
+            'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
          // Add URL element
@@ -37,7 +37,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty', array('StringLength', false, array(0, $maxLens['url'])))
+            'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['url'])))
         ));
 
          // Add genre element

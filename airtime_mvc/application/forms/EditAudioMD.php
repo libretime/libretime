@@ -49,9 +49,9 @@ class Application_Form_EditAudioMD extends Zend_Form
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
             'validators' => array(
-                array('date', false, array('YYYY-MM-DD')),
-                array('date', false, array('YYYY-MM')),
-                array('date', false, array('YYYY'))
+                Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD"),
+                Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM"),
+                Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY")
             )
         ));
 
