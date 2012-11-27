@@ -791,6 +791,7 @@ var AIRTIME = (function(AIRTIME){
             "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
             
             "sAjaxDataProp": "schedule",
+            "oLanguage": datatables_dict,
             "sAjaxSource": baseUrl+"/showbuilder/builder-feed"  
         });
         
