@@ -120,7 +120,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
     private function getLocales()
     {
         $locales = array(
-            'en_CA' => _('English')
+            'en_CA' => 'English'
         );
         
         return $locales;
