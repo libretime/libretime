@@ -18,7 +18,7 @@ from configobj import ConfigObj
 import string
 import traceback
 
-AIRTIME_VERSION = "2.2.0"
+AIRTIME_VERSION = "2.2.1"
 
 
 # TODO : Place these functions in some common module. Right now, media
