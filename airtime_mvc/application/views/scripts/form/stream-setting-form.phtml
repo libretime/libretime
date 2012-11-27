@@ -138,7 +138,7 @@
                 </dt>
                 <dd id="stationURL-element" class="clearfix">
                     <?php echo $this->element->getElement('url')?>
-                    <span class="info-text-small">(Your radio station website)</span>
+                    <span class="info-text-small"><?php echo _("(Your radio station website)")?></span>
                     <?php if($this->element->getElement('url')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('url')->getMessages() as $error): ?>
