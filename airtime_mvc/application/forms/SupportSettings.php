@@ -8,6 +8,7 @@ class Application_Form_SupportSettings extends Zend_Form
     public function init()
     {
         $country_list = Application_Model_Preference::GetCountryList();
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/support-setting.phtml')),
@@ -20,7 +21,7 @@ class Application_Form_SupportSettings extends Zend_Form
             'label'      => _('Station Name'),
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'validator'  => array('NotEmpty'),
+            'validators'  => array($notEmptyValidator),
             'value' => Application_Model_Preference::GetStationName(),
             'decorators' => array(
                 'ViewHelper'

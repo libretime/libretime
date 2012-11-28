@@ -43,7 +43,7 @@
     <dl id="public-info" style="display:<?php echo "none"?>;">
         <dt id="stationName-label" class="block-display">
             <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
-                <span class="info-text-small">(Required)</span>:
+                <span class="info-text-small"><?php echo _("(Required)")?></span>:
             </label>
         </dt>
         <dd id="stationName-element" class="block-display">
@@ -58,7 +58,7 @@
         </dd>
         <dt id="Phone-label" class="block-display">
             <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
-            <span class="info-text-small">(for verification purposes only, will not be published)</span>
+            <span class="info-text-small"><?php echo _("(for verification purposes only, will not be published)")?></span>
         </dt>
         <dd id="Phone-element" class="block-display">
             <?php echo $this->element->getElement('Phone') ?>
@@ -148,7 +148,7 @@
             
             <?php echo $this->element->getElement('Logo') ?>
             <div class="info-text">
-                <p><?php echo ("Note: Anything larger than 600x600 will be resized.")?></p>
+                <p><?php echo _("Note: Anything larger than 600x600 will be resized.")?></p>
             </div>
             <?php if($this->element->getElement('Logo')->hasErrors()) : ?>
                 <ul class='errors'>

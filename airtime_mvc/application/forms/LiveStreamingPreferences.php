@@ -81,11 +81,12 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($live_dj_connection_url);
 
         //liquidsoap harbor.input port
+            $betweenValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(1024, 49151);
             $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
             $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
             $master_dj_port->setLabel(_("Master Source Port"))
                     ->setValue($m_port)
-                    ->setValidators(array(new Zend_Validate_Between(array('min'=>1024, 'max'=>49151))))
+                    ->setValidators(array($betweenValidator))
                     ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))))
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($master_dj_port);
@@ -104,7 +105,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
             $live_dj_port = new Zend_Form_Element_Text('dj_harbor_input_port');
             $live_dj_port->setLabel(_("Show Source Port"))
                     ->setValue($l_port)
-                    ->setValidators(array(new Zend_Validate_Between(array('min'=>1024, 'max'=>49151))))
+                    ->setValidators(array($betweenValidator))
                     ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))))
                     ->setDecorators(array('ViewHelper'));
             $this->addElement($live_dj_port);

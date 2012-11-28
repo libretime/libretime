@@ -61,8 +61,20 @@ Class Application_Form_Helper_ValidationTypes {
         );
 
         $validator->setMessage(
-            _("'%value%' is less than %max% characters long"),
+            _("'%value%' is more than %max% characters long"),
             Zend_Validate_StringLength::TOO_LONG
+        );
+
+        return $validator;
+    }
+
+    public static function overrideBetweenValidator($p_min, $p_max)
+    {
+        $validator = new Zend_Validate_Between($p_min, $p_max, true);
+
+        $validator->setMessage(
+            _("'%value%' is not between '%min%' and '%max%', inclusively"),
+            Zend_Validate_Between::NOT_BETWEEN
         );
 
         return $validator;

@@ -184,13 +184,13 @@
             
             var label = "";
             if (th.attr('id') == "bit_rate") {
-                label = $.i18n._(" kbps");
+                label = $.i18n._("kbps");
             } else if (th.attr('id') == "utime" || th.attr('id') == "mtime" || th.attr('id') == "lptime") {
-                label = $.i18n._(" yyyy-mm-dd");
+                label = $.i18n._("yyyy-mm-dd");
             } else if (th.attr('id') == "length") {
-                label = $.i18n._(" hh:mm:ss.t");
+                label = $.i18n._("hh:mm:ss.t");
             } else if (th.attr('id') == "sample_rate") {
-                label = $.i18n._(" kHz");
+                label = $.i18n._("kHz");
             }
             
             th.html(_fnRangeLabelPart(0));

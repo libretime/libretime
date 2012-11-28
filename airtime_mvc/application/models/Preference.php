@@ -466,7 +466,7 @@ class Application_Model_Preference
         $sql = "SELECT * FROM cc_country";
         $res =  $con->query($sql)->fetchAll();
         $out = array();
-        $out[""] = "Select Country";
+        $out[""] = _("Select Country");
         foreach ($res as $r) {
             $out[$r["isocode"]] = $r["name"];
         }

@@ -46,8 +46,8 @@ class LocaleController extends Zend_Controller_Action
             "This version is no longer supported." => _("This version is no longer supported."),
             "Please upgrade to " => _("Please upgrade to "),
             //library/events/library_playlistbuilder.js
-            " Add to current playlist" => _(" Add to current playlist"),
-            " Add to current smart block" => _(" Add to current smart block"),
+            "Add to current playlist" => _("Add to current playlist"),
+            "Add to current smart block" => _("Add to current smart block"),
             "Adding 1 Item" => _("Adding 1 Item"),
             "Adding %s Items" => _("Adding %s Items"),
             "You can only add tracks to smart blocks." => _("You can only add tracks to smart blocks."),
@@ -57,7 +57,7 @@ class LocaleController extends Zend_Controller_Action
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
-            " Add to selected show" => _(" Add to selected show"),
+            "Add to selected show" => _("Add to selected show"),
             "Select" => _("Select"),
             "Select this page" => _("Select this page"),
             "Deselect this page" => _("Deselect this page"),
@@ -311,10 +311,10 @@ class LocaleController extends Zend_Controller_Action
             "Show / hide columns" => _("Show / hide columns"),
             //datatables.columnFilter.js
             "From {from} to {to}" => _("From {from} to {to}"),
-            " kbps" => _(" kbps"),
-            " yyyy-mm-dd" => _(" yyyy-mm-dd"),
-            " hh:mm:ss.t" => _(" hh:mm:ss.t"),
-            " kHz" => _(" kHz"),
+            "kbps" => _("kbps"),
+            "yyyy-mm-dd" => _("yyyy-mm-dd"),
+            "hh:mm:ss.t" => _("hh:mm:ss.t"),
+            "kHz" => _("kHz"),
             //datepicker
             //months are already in schedule/schedule.js
             "Su" => _("Su"),

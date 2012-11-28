@@ -30,11 +30,11 @@ var AIRTIME = (function(AIRTIME) {
         var objType = $('#obj_type').val(),
             btnText;
         if (objType === 'playlist') {
-            btnText = $.i18n._(' Add to current playlist');
+            btnText = ' '+$.i18n._('Add to current playlist');
         } else if (objType === 'block') {
-            btnText = $.i18n._(' Add to current smart block');
+            btnText = ' '+$.i18n._('Add to current smart block');
         } else {
-            btnText = $.i18n._(' Add to current playlist');
+            btnText = ' '+$.i18n._('Add to current playlist');
         }
         AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), btnText);
     };

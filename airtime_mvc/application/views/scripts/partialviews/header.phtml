@@ -3,7 +3,7 @@
     <div class="text-row"><strong><? echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
     <div class="now-playing-info song">
       <div class="time-flow"><span class="time-elapsed" id="time-elapsed"></span><span class="time-remaining" id="time-remaining"></span></div>
-      <span id='current'></span><? echo _(" "); ?><span class="length" id="song-length"></span><? echo _(" ") ?></div>
+      <span id='current'></span><span class="length" id="song-length"></span></div>
     <div class="progressbar">
       <div class="progress-song" id="progress-bar" style="width:0%;"></div>
     </div>
@@ -42,7 +42,7 @@
         <div class="line-to-on-air"></div>
       </li>
       <li>
-        <div id="scheduled_play_div" class="source-label"><? echo _(" Scheduled Play") ?></div>
+        <div id="scheduled_play_div" class="source-label"><? echo " "._("Scheduled Play") ?></div>
         <div class="line-to-switch"></div>
         <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
         <div class="line-to-on-air"></div>
