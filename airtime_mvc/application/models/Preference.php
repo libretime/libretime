@@ -204,9 +204,9 @@ class Application_Model_Preference
             $fade = $out;
         }
 
-        $fade = number_format($fade, 2);
+        $fade = number_format($fade, 1);
         //fades need 2 leading zeros for DateTime conversion
-        $fade = rtrim(str_pad($fade, 5, "0", STR_PAD_LEFT), "0");
+        $fade = str_pad($fade, 4, "0", STR_PAD_LEFT);
 
         return $fade;
     }
@@ -1109,7 +1109,6 @@ class Application_Model_Preference
             } else {
                 /*For now we just have this hack for debugging. We should not
                     rely on this crappy behaviour in case of failure*/
-                Logging::info("Pref: $pref_param");
                 Logging::warn("Index $x does not exist preferences");
                 Logging::warn("Defaulting to identity and printing preferences");
                 Logging::warn($ds);
