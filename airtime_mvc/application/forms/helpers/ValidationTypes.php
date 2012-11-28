@@ -40,12 +40,12 @@ Class Application_Form_Helper_ValidationTypes {
     public static function overrideRegexValidator($p_pattern, $p_msg)
     {
         $validator = new Zend_Validate_Regex($p_pattern);
-        
+
         $validator->setMessage(
             $p_msg,
             Zend_Validate_Regex::NOT_MATCH
         );
-        
+
         return $validator;
     }
     
@@ -54,17 +54,17 @@ Class Application_Form_Helper_ValidationTypes {
         $validator = new Zend_Validate_StringLength();
         $validator->setMin($p_min);
         $validator->setMax($p_max);
-        
+
         $validator->setMessage(
             _("'%value%' is less than %min% characters long"),
             Zend_Validate_StringLength::TOO_SHORT
         );
-        
+
         $validator->setMessage(
             _("'%value%' is less than %max% characters long"),
             Zend_Validate_StringLength::TOO_LONG
         );
-        
+
         return $validator;
     }
 

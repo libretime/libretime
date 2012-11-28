@@ -298,6 +298,10 @@ class LocaleController extends Zend_Controller_Action
             //status/status.js
             "in use" => _("in use"),
             "Disk" => _("Disk"),
+            //serverbrowse/serverbrowse.js
+            "Look in" => _("Look in"),
+            "Cancel" => _("Cancel"),
+            "Open" => _("Open"),
             //user/user.js
             "Admin" => _("Admin"),
             "DJ" => _("DJ"),

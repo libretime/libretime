@@ -309,7 +309,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     {
         $data = Application_Model_Block::organizeSmartPlyalistCriteria($params['data']);
         // add elelments that needs to be added
-        // set multioption for modifier according to creiteria_field
+        // set multioption for modifier according to criteria_field
         $modRowMap = array();
         foreach ($data['criteria'] as $critKey=>$d) {
             $count = 1;

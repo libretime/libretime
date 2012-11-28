@@ -65,14 +65,14 @@
                 modal: true,
                 buttons: [
                     {
-                        text: $.i18n._("Cancel"),
+                        text: "Cancel",
                         "class": "btn",
                         click: function() {
                             browserDlg.dialog("close");
                         }
                     },
                     {
-                        text: $.i18n._("Open"),
+                        text: "Open",
                         "class": "btn",
                         click: function() {
                             doneOk();
@@ -123,7 +123,7 @@
                 function() { $(this).removeClass('ui-state-hover'); }
             );
 
-            var enterLabel = $('<span></span>').text($.i18n._('Look in')+': ').appendTo(enterButton.clone(false).appendTo(enterPathDiv));
+            var enterLabel = $('<span></span>').text('Look in: ').appendTo(enterButton.clone(false).appendTo(enterPathDiv));
 
             var enterText = $('<input type="text">').keypress(function(e) {
                 if (e.keyCode == '13') {
