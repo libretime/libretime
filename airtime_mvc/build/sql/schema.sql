@@ -724,6 +724,25 @@ COMMENT ON TABLE "cc_listener_count" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_locale
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_locale" CASCADE;
+
+
+CREATE TABLE "cc_locale"
+(
+	"id" serial  NOT NULL,
+	"locale_code" VARCHAR(16)  NOT NULL,
+	"locale_lang" VARCHAR(128)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_locale" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey" FOREIGN KEY ("owner_id") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");

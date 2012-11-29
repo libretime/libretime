@@ -54,7 +54,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         
         $locale = new Zend_Form_Element_Select("locale");
         $locale->setLabel(_("Language"));
-        $locale->setMultiOptions($this->getLocales());
+        $locale->setMultiOptions(Application_Model_Locale::getLocales());
         $locale->setValue(Application_Model_Preference::GetLocale());
         $locale->setDecorators(array('ViewHelper'));
         $this->addElement($locale);
@@ -116,14 +116,5 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         );
 
         return $days;
-    }
-    
-    private function getLocales()
-    {
-        $locales = array(
-            'en_CA' => 'English'
-        );
-        
-        return $locales;
     }
 }
