@@ -1,5 +1,5 @@
 import os
-from os.path import join
+from os.path import join, basename, dirname
 
 from media.monitor.exceptions import NoConfigFile
 from media.monitor.pure import LazyProperty
@@ -38,6 +38,14 @@ class AirtimeInstance(object):
     def signal(self, sig):
         if isinstance(sig, SignalString): return sig
         else: return SignalString("%s_%s" % (self.name, sig))
+
+    def touch_file_path(self):
+        """ Get the path of the touch file for every instance """
+        touch_base_path = self.mm_config['index_path']
+        touch_base_name = basename(touch_base_path)
+        new_base_name   = self.name + touch_base_name
+        return join(dirname(touch_base_path), new_base_name)
+        
 
     def __str__(self):
         return "%s,%s(%s)" % (self.name, self.root_path, self.config_paths)
