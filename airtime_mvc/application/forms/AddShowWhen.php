@@ -250,35 +250,6 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $valid = false;
                     $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
                 }
-            } elseif ($formData["add_show_rebroadcast"]) {
-                /* Check first show
-                 * Continue if the first show does not overlap
-                 */
-                $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
-
-                if (!$overlapping) {
-                    $durationToAdd = "PT".$hours."H".$minutes."M";
-                    for ($i = 1; $i <= 10; $i++) {
-                        
-                        if (empty($formData["add_show_rebroadcast_date_absolute_".$i])) break;
-                        
-                        $abs_rebroadcast_start = $formData["add_show_rebroadcast_date_absolute_".$i]." ".
-                                                 $formData["add_show_rebroadcast_time_absolute_".$i];
-                        $rebroadcastShowStart = new DateTime($abs_rebroadcast_start);
-                        $rebroadcastShowStart->setTimezone(new DateTimeZone('UTC'));
-                        $rebroadcastShowEnd = clone $rebroadcastShowStart;
-                        $rebroadcastShowEnd->add(new DateInterval($durationToAdd));
-                        $overlapping = Application_Model_Schedule::checkOverlappingShows($rebroadcastShowStart, $rebroadcastShowEnd, $update, $instanceId);
-                        if ($overlapping) {
-                            $valid = false;
-                            $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
-                            break;
-                        }
-                    }
-                } else {
-                    $valid = false;
-                    $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
-                }
             } else {
               $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
                 if ($overlapping) {
