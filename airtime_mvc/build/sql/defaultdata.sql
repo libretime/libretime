@@ -3,6 +3,9 @@ INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'
 -- added in 2.1
 INSERT INTO cc_pref("keystr", "valstr") VALUES('scheduled_play_switch', 'on');
 
+-- added in 2.3
+INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
+
 INSERT INTO cc_live_log("state", "start_time") VALUES('S', now() at time zone 'UTC');
 -- end of added in 2.1
 
