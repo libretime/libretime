@@ -6,7 +6,7 @@ import os
 import math
 import wave
 import contextlib
-import shutil
+import shutil, pipes
 import re
 import sys
 import hashlib
@@ -162,7 +162,7 @@ def walk_supported(directory, clean_empties=False):
 
 
 def file_locked(path):
-    cmd = "lsof %s" % path
+    cmd = "lsof %s" % (pipes.quote(path))
     f = Popen(cmd, shell=True, stdout=PIPE).stdout
     return bool(f.readlines())
 

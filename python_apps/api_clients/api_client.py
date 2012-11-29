@@ -227,7 +227,7 @@ class AirtimeApiClient(object):
 
     def check_live_stream_auth(self, username, password, dj_type):
         return self.services.check_live_stream_auth(
-            username=username, password=password, dj_type=dj_type)
+            username=username, password=password, djtype=dj_type)
 
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""

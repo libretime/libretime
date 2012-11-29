@@ -45,6 +45,10 @@ Files: airtime_mvc/library/propel/test/etc/xsl/*
 Copyright: 2001-2004 The Apache Software Foundation
 License: Apache-2.0
 
+Files: airtime_mvc/public/js/flot/*
+Copyright: 2007-2009 IOLA and Ole Laursen
+License: Expat
+
 Files: debian/*
 Copyright:
  2012 Alessio Treglia <alessio@debian.org>
