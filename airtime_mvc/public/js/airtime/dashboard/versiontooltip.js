@@ -8,13 +8,13 @@ function getContent() {
     var msg = "";
     // See file airtime_mvc/application/views/helpers/VersionNotify.php for more info
     if(isUpToDate()) {
-        msg = "You are running the latest version";
+        msg = $.i18n._("You are running the latest version");
     } else if (diff < 20) {  
-        msg = "New version available: " + link;
+        msg = $.i18n._("New version available: ") + link;
     } else if (diff < 30) {
-        msg = "This version will soon be obsolete.<br/>Please upgrade to " + link;
+        msg = $.i18n._("This version will soon be obsolete.")+"<br/>"+$.i18n._("Please upgrade to ") + link;
     } else {
-        msg = "This version is no longer supported.<br/>Please upgrade to " + link;
+        msg = $.i18n._("This version is no longer supported.")+"<br/>"+$.i18n._("Please upgrade to ") + link;
     }
     
     return msg;

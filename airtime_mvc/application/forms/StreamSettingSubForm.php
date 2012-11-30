@@ -45,7 +45,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $disable_all = Application_Model_Preference::GetEnableStreamConf() == "false";
 
         $enable = new Zend_Form_Element_Checkbox('enable');
-        $enable->setLabel('Enabled:')
+        $enable->setLabel(_('Enabled:'))
                             ->setValue($setting[$prefix.'_enable'] == 'true' ? 1 : 0)
                             ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
@@ -54,7 +54,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($enable);
 
         $type = new Zend_Form_Element_Select('type');
-        $type->setLabel("Stream Type:")
+        $type->setLabel(_("Stream Type:"))
                 ->setMultiOptions($stream_types)
                 ->setValue(isset($setting[$prefix.'_type'])?$setting[$prefix.'_type']:0)
                 ->setDecorators(array('ViewHelper'));
@@ -64,7 +64,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($type);
 
         $bitrate = new Zend_Form_Element_Select('bitrate');
-        $bitrate->setLabel("Bit Rate:")
+        $bitrate->setLabel(_("Bit Rate:"))
                 ->setMultiOptions($stream_bitrates)
                 ->setValue(isset($setting[$prefix.'_bitrate'])?$setting[$prefix.'_bitrate']:0)
                 ->setDecorators(array('ViewHelper'));
@@ -74,7 +74,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($bitrate);
 
         $output = new Zend_Form_Element_Select('output');
-        $output->setLabel("Service Type:")
+        $output->setLabel(_("Service Type:"))
                 ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"SHOUTcast"))
                 ->setValue(isset($setting[$prefix.'_output'])?$setting[$prefix.'_output']:"icecast")
                 ->setDecorators(array('ViewHelper'));
@@ -84,8 +84,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($output);
 
         $channels = new Zend_Form_Element_Select('channels');
-        $channels->setLabel("Channels:")
-                ->setMultiOptions(array("mono"=>"1 - Mono", "stereo"=>"2 - Stereo"))
+        $channels->setLabel(_("Channels:"))
+                ->setMultiOptions(array("mono"=>_("1 - Mono"), "stereo"=>_("2 - Stereo")))
                 ->setValue(isset($setting[$prefix.'_channels']) ? $setting[$prefix.'_channels'] : "stereo")
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
@@ -94,10 +94,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($channels);
 
         $host = new Zend_Form_Element_Text('host');
-        $host->setLabel("Server")
+        $host->setLabel(_("Server"))
                 ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")
                 ->setValidators(array(
-                        array('regex', false, array('/^[0-9a-zA-Z-_.]+$/', 'messages' => 'Invalid character entered'))))
+                        array('regex', false, array('/^[0-9a-zA-Z-_.]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
             $host->setAttrib("disabled", "disabled");
@@ -106,10 +106,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($host);
 
         $port = new Zend_Form_Element_Text('port');
-        $port->setLabel("Port")
+        $port->setLabel(_("Port"))
                 ->setValue(isset($setting[$prefix.'_port'])?$setting[$prefix.'_port']:"")
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
-                ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>'Only numbers are allowed.')))
+                ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))))
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
             $port->setAttrib("disabled", "disabled");
@@ -117,10 +117,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($port);
 
         $pass = new Zend_Form_Element_Text('pass');
-        $pass->setLabel("Password")
+        $pass->setLabel(_("Password"))
                 ->setValue(isset($setting[$prefix.'_pass'])?$setting[$prefix.'_pass']:"")
                 ->setValidators(array(
-                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
             $pass->setAttrib("disabled", "disabled");
@@ -129,7 +129,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($pass);
 
         $genre = new Zend_Form_Element_Text('genre');
-        $genre->setLabel("Genre")
+        $genre->setLabel(_("Genre"))
                 ->setValue(isset($setting[$prefix.'_genre'])?$setting[$prefix.'_genre']:"")
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
@@ -138,10 +138,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($genre);
 
         $url = new Zend_Form_Element_Text('url');
-        $url->setLabel("URL")
+        $url->setLabel(_("URL"))
                 ->setValue(isset($setting[$prefix.'_url'])?$setting[$prefix.'_url']:"")
                 ->setValidators(array(
-                        array('regex', false, array('/^[0-9a-zA-Z\-_.:\/]+$/', 'messages' => 'Invalid character entered'))))
+                        array('regex', false, array('/^[0-9a-zA-Z\-_.:\/]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
             $url->setAttrib("disabled", "disabled");
@@ -150,7 +150,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($url);
 
         $name = new Zend_Form_Element_Text('name');
-        $name->setLabel("Name")
+        $name->setLabel(_("Name"))
              ->setValue(isset($setting[$prefix.'_name'])?$setting[$prefix.'_name']:"")
              ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
@@ -159,7 +159,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($name);
 
         $description = new Zend_Form_Element_Text('description');
-        $description->setLabel("Description")
+        $description->setLabel(_("Description"))
                 ->setValue(isset($setting[$prefix.'_description'])?$setting[$prefix.'_description']:"")
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
@@ -168,10 +168,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($description);
 
         $mount = new Zend_Form_Element_Text('mount');
-        $mount->setLabel("Mount Point")
+        $mount->setLabel(_("Mount Point"))
                 ->setValue(isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:"")
                 ->setValidators(array(
-                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
             $mount->setAttrib("disabled", "disabled");
@@ -180,10 +180,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($mount);
 
         $user = new Zend_Form_Element_Text('user');
-        $user->setLabel("Username")
+        $user->setLabel(_("Username"))
                 ->setValue(isset($setting[$prefix.'_user'])?$setting[$prefix.'_user']:"")
                 ->setValidators(array(
-                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => 'Invalid character entered'))))
+                        array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
         if ($disable_all) {
             $user->setAttrib("disabled", "disabled");
@@ -191,7 +191,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $user->setAttrib('alt', 'regular_text');
         $this->addElement($user);
 
-        $liquidsopa_error_msg = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>';
+        $liquidsopa_error_msg = '<div class="stream-status status-info"><h3>'._('Getting information from the server...').'</h3></div>';
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number, "enabled"=>$enable->getValue(), "liquidsoap_error_msg"=>$liquidsopa_error_msg))
@@ -205,18 +205,18 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         if ($f_data['enable'] == 1) {
             if ($f_data['host'] == '') {
                 $element = $this->getElement("host");
-                $element->addError("Server cannot be empty.");
+                $element->addError(_("Server cannot be empty."));
                 $isValid = false;
             }
             if ($f_data['port'] == '') {
                 $element = $this->getElement("port");
-                $element->addError("Port cannot be empty.");
+                $element->addError(_("Port cannot be empty."));
                 $isValid = false;
             }
             if ($f_data['output'] == 'icecast') {
                 if ($f_data['mount'] == '') {
                     $element = $this->getElement("mount");
-                    $element->addError("Mount cannot be empty with Icecast server.");
+                    $element->addError(_("Mount cannot be empty with Icecast server."));
                     $isValid = false;
                 }
             }

@@ -1,13 +1,12 @@
-<div id="register_popup" class="dialogPopup register-dialog" title="Register Airtime" style="display: none;">
+<div id="register_popup" class="dialogPopup register-dialog" title="<?php _("Register Airtime") ?>" style="display: none;">
     <form id="register-form" method="<?php echo $this->element->getMethod() ?>" action="<?php echo $this->element->getAction() ?>" enctype="multipart/form-data">
         <fieldset>
             <dl class="zend_form">
                <dt class="block-display info-text">
-                    Help Airtime improve by letting us know how you are using it. This info
-                    will be collected regularly in order to enhance your user experience.
-                    <br /><br />
-                    Click "Yes, help Airtime" and we'll make sure the features you use are
-                    constantly improving.
+                    <?php echo sprintf(_("Help Airtime improve by letting us know how you are using it. This info "
+                    ."will be collected regularly in order to enhance your user experience.%s"
+                    ."Click 'Yes, help Airtime' and we'll make sure the features you use are "
+                    ."constantly improving."), "<br /><br />") ?>
                 </dt>
                 <dd id="SupportFeedback-element" class="block-display">
                     <label class="optional" for="SupportFeedback">
@@ -23,9 +22,10 @@
                     <?php endif; ?>
                 </dd>
                 <dt class="block-display info-text">
-                    Click the box below to advertise your station on 
-                    <a id="link_to_whos_using" href="http://sourcefabric.org/en/airtime/whosusing" onclick="window.open(this.href); return false">Sourcefabric.org</a>. 
-                    In order to promote your station, "Send support feedback" must be enabled. This data will be collected in addition to the support feedback.
+                    <?php echo sprintf(_("Click the box below to advertise your station on %sSourcefabric.org%s."
+                        ." In order to promote your station, 'Send support feedback' must be enabled. This data will be collected in addition to the support feedback."),
+                        "<a id='link_to_whos_using' href='http://sourcefabric.org/en/airtime/whosusing' onclick='window.open(this.href); return false'>",
+                        "</a>")?>
                 </dt>
                 <dd id="publicize-element" class="block-display">
                     <label class="optional" for="Publicise">
@@ -44,7 +44,7 @@
             <dl id="public-info" style="display:none;">
                 <dt id="stnName-label">
                     <label class="optional" for="stnName"><?php echo $this->element->getElement('stnName')->getLabel() ?>
-                        <span class="info-text-small">(Required)</span> :
+                        <span class="info-text-small"><?php echo _("(Required)")?></span> :
                     </label>
                 </dt>
                 <dd id="stnName-element">
@@ -62,7 +62,7 @@
                 </dt>
                 <dd id="Phone-element">
                     <?php echo $this->element->getElement('Phone') ?>
-                    <span class="info-text-small">(for verification purposes only, will not be published)</span>
+                    <span class="info-text-small"><?php echo _("(for verification purposes only, will not be published)")?></span>
                     <?php if($this->element->getElement('Phone')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('Phone')->getMessages() as $error): ?>
@@ -76,7 +76,7 @@
                 </dt>
                 <dd id="Email-element">
                     <?php echo $this->element->getElement('Email') ?>
-                    <span class="info-text-small">(for verification purposes only, will not be published)</span>
+                    <span class="info-text-small"><?php echo _("(for verification purposes only, will not be published)")?></span>
                     <?php if($this->element->getElement('Email')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('Email')->getMessages() as $error): ?>
@@ -147,7 +147,7 @@
                     <?php }?>
                     
                     <?php echo $this->element->getElement('Logo') ?>
-                    <p class="info-text">Note: Anything larger than 600x600 will be resized.</p>
+                    <p class="info-text"><?php echo _("Note: Anything larger than 600x600 will be resized.")?></p>
                     <?php if($this->element->getElement('Logo')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('Logo')->getMessages() as $error): ?>
@@ -161,7 +161,7 @@
         
             <div id="show_what_sending" style="display: block;">
                 <fieldset class="display_field toggle closed">
-                <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>Show me what I am sending </legend>
+                <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><? echo _("Show me what I am sending ") ?></legend>
                     <dl>
                         <?php echo $this->element->getElement('SendInfo') ?>
                     </dl>
@@ -175,7 +175,7 @@
                         <?php echo $this->element->getElement('Privacy')->getLabel() ?>
                     </label>
                 <?php }else{?>
-                    <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Terms and Conditions</a>
+                    <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><? echo _("Terms and Conditions") ?></a>
                 <?php }?>
             </div>
     </form>

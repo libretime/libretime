@@ -90,7 +90,7 @@ class LibraryController extends Zend_Controller_Action
 
     protected function playlistNotFound($p_type)
     {
-        $this->view->error = "$p_type not found";
+        $this->view->error = sprintf(_("%s not found"), $p_type);
 
         Logging::info("$p_type not found");
         Application_Model_Library::changePlaylist(null, $p_type);
@@ -99,7 +99,7 @@ class LibraryController extends Zend_Controller_Action
 
     protected function playlistUnknownError($e)
     {
-        $this->view->error = "Something went wrong.";
+        $this->view->error = _("Something went wrong.");
         Logging::info($e->getMessage());
     }
 
@@ -156,7 +156,7 @@ class LibraryController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
 
         //Open a jPlayer window and play the audio clip.
-        $menu["play"] = array("name"=> "Preview", "icon" => "play", "disabled" => false);
+        $menu["play"] = array("name"=> _("Preview"), "icon" => "play", "disabled" => false);
 
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
@@ -177,19 +177,19 @@ class LibraryController extends Zend_Controller_Action
                 }
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
-                        $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                        $menu["pl_add"] = array("name"=> _("Add to Playlist"), "icon" => "add-playlist", "icon" => "copy");
                     } elseif ($obj_sess->type === "block" && $obj->isStatic()) {
-                        $menu["pl_add"] = array("name"=> "Add to Smart Block", "icon" => "add-playlist", "icon" => "copy");
+                        $menu["pl_add"] = array("name"=> _("Add to Smart Block"), "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }
             if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/library/delete");
-                $menu["edit"] = array("name"=> "Edit Metadata", "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
+                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
+                $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
             }
 
             $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
-            $menu["download"] = array("name" => "Download", "icon" => "download", "url" => $url);
+            $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
@@ -200,19 +200,19 @@ class LibraryController extends Zend_Controller_Action
                 }
                 if (($isAdminOrPM || $obj->getCreatorId() == $user->getId()) && $screen == "playlist") {
                     if ($obj_sess->type === "playlist") {
-                        $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                        $menu["pl_add"] = array("name"=> _("Add to Playlist"), "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }
 
             if ($obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit");
+                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit");
                 }
             }
 
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/library/delete");
+                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
         } elseif ($type == "stream") {
 
@@ -221,15 +221,15 @@ class LibraryController extends Zend_Controller_Action
             if (isset($obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
-                        $menu["pl_add"] = array("name"=> "Add to Playlist", "icon" => "add-playlist", "icon" => "copy");
+                        $menu["pl_add"] = array("name"=> _("Add to Playlist"), "icon" => "add-playlist", "icon" => "copy");
                     }
                 }
             }
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 if ($screen == "playlist") {
-                    $menu["edit"] = array("name"=> "Edit", "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
+                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
                 }
-                $menu["del"] = array("name"=> "Delete", "icon" => "delete", "url" => $baseUrl."/library/delete");
+                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
         }
 
@@ -240,26 +240,26 @@ class LibraryController extends Zend_Controller_Action
             $menu["sep1"] = "-----------";
 
             //create a sub menu for Soundcloud actions.
-            $menu["soundcloud"] = array("name" => "Soundcloud", "icon" => "soundcloud", "items" => array());
+            $menu["soundcloud"] = array("name" => _("Soundcloud"), "icon" => "soundcloud", "items" => array());
 
             $scid = $file->getSoundCloudId();
 
             if ($scid > 0) {
                 $url = $file->getSoundCloudLinkToFile();
-                $menu["soundcloud"]["items"]["view"] = array("name" => "View on Soundcloud", "icon" => "soundcloud", "url" => $url);
+                $menu["soundcloud"]["items"]["view"] = array("name" => _("View on Soundcloud"), "icon" => "soundcloud", "url" => $url);
             }
 
             if (!is_null($scid)) {
-                $text = "Re-upload to SoundCloud";
+                $text = _("Re-upload to SoundCloud");
             } else {
-                $text = "Upload to SoundCloud";
+                $text = _("Upload to SoundCloud");
             }
 
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."/library/upload-file-soundcloud/id/{$id}");
         }
 
         if (empty($menu)) {
-            $menu["noaction"] = array("name"=>"No action available");
+            $menu["noaction"] = array("name"=>_("No action available"));
         }
 
         $this->view->items = $menu;
@@ -279,7 +279,7 @@ class LibraryController extends Zend_Controller_Action
         $streams   = array();
 
         $message = null;
-        $noPermissionMsg = "You don't have permission to delete selected items.";
+        $noPermissionMsg = _("You don't have permission to delete selected items.");
 
         foreach ($mediaItems as $media) {
 
@@ -328,7 +328,7 @@ class LibraryController extends Zend_Controller_Action
                     $message = $noPermissionMsg;
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
-                    $message = "Could not delete some scheduled files.";
+                    $message = _("Could not delete some scheduled files.");
                     Logging::debug($e->getMessage());
                 }
             }
@@ -456,10 +456,10 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
                 if ($block->isStatic()) {
-                    $this->view->blType = 'Static';
+                    $this->view->blType = _('Static');
                     $this->view->contents = $block->getContents();
                 } else {
-                    $this->view->blType = 'Dynamic';
+                    $this->view->blType = _('Dynamic');
                     $this->view->contents = $block->getCriteria();
                 }
                 $this->view->block = $block;

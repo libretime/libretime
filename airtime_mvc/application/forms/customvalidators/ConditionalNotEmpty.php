@@ -7,9 +7,7 @@ class ConditionalNotEmpty extends Zend_Validate_Abstract
 {
     const KEY_IS_EMPTY   = 'keyIsEmpty';
 
-    protected $_messageTemplates = array(
-        self::KEY_IS_EMPTY   => 'Value is required and can\'t be empty'
-    );
+    protected $_messageTemplates;
 
     protected $_fieldValues;
 
@@ -24,6 +22,9 @@ class ConditionalNotEmpty extends Zend_Validate_Abstract
     public function __construct($fieldValues)
     {
         $this->_fieldValues = $fieldValues;
+        $this->_messageTemplates = array(
+            self::KEY_IS_EMPTY   => _("Value is required and can't be empty")
+        );
     }
 
     /**

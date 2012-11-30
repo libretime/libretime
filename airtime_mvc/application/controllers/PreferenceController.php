@@ -44,6 +44,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
+                Application_Model_Preference::SetLocale($values["locale"]);
                 Application_Model_Preference::SetTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 
@@ -66,7 +67,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
                 Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);
 
-                $this->view->statusMsg = "<div class='success'>Preferences updated.</div>";
+                $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
                 die(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml'))));
             } else {
@@ -118,7 +119,7 @@ class PreferenceController extends Zend_Controller_Action
                         Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                     }
                 }
-                $this->view->statusMsg = "<div class='success'>Support setting updated.</div>";
+                $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
             }
         }
         $logo = Application_Model_Preference::GetStationLogo();
@@ -130,7 +131,7 @@ class PreferenceController extends Zend_Controller_Action
             $privacyChecked = true;
         }
         $this->view->privacyChecked = $privacyChecked;
-        $this->view->section_title = 'Support Feedback';
+        $this->view->section_title = _('Support Feedback');
         $this->view->form = $form;
         //$form->render($this->view);
     }
@@ -301,7 +302,7 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
-                $this->view->statusMsg = "<div class='success'>Stream Setting Updated.</div>";
+                $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
                 die(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/stream-setting.phtml'))));
             } else {
                 $live_stream_subform->updateVariables();
@@ -328,7 +329,7 @@ class PreferenceController extends Zend_Controller_Action
 
         if (is_null($path)) {
             $element = array();
-            $element["name"] = "path should be specified";
+            $element["name"] = _("path should be specified");
             $element["isFolder"] = false;
             $element["isError"] = true;
             $result[$path] = $element;
@@ -423,7 +424,7 @@ class PreferenceController extends Zend_Controller_Action
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         for ($i=1; $i<=$num_of_stream; $i++) {
             $status = Application_Model_StreamSetting::getLiquidsoapError($i);
-            $status = $status == NULL?"Problem with Liquidsoap...":$status;
+            $status = $status == NULL?_("Problem with Liquidsoap..."):$status;
             if (!Application_Model_StreamSetting::getStreamEnabled($i)) {
                 $status = "N/A";
             }

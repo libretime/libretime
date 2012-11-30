@@ -15,7 +15,7 @@ AIRTIME = (function(AIRTIME) {
         timeStartId = "#sb_time_start",
         dateEndId = "#sb_date_end",
         timeEndId = "#sb_time_end",
-        $toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='Open library to add or remove content'>Add / Remove Content</a>"),
+        $toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open library to add or remove content")+"'>"+$.i18n._("Add / Remove Content")+"</a>"),
         $libClose = $('<a />', {
             "class": "close-round",
             "href": "#",
@@ -30,6 +30,9 @@ AIRTIME = (function(AIRTIME) {
     
     oBaseDatePickerSettings = {
         dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
         onClick: function(sDate, oDatePicker) {     
             $(this).datepicker( "setDate", sDate );
         }
@@ -38,8 +41,11 @@ AIRTIME = (function(AIRTIME) {
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
+        closeButtonText: $.i18n._("Done"),
         showLeadingZero: false,
-        defaultTime: '0:00'
+        defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     };
     
     function setWidgetSize() {

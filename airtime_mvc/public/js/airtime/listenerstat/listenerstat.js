@@ -134,7 +134,7 @@ function plot(datasets){
                     var y = item.datapoint[1].toFixed(2);
                     
                     showTooltip(item.pageX, item.pageY,
-                                "Listener Count on '"+item.series.label + "': " + Math.floor(y));
+                                sprintf($.i18n._("Listener Count on %s: %s"), item.series.label, Math.floor(y)));
                 }
             }
             else {
@@ -143,19 +143,15 @@ function plot(datasets){
             }
         });
 
-        $("#placeholder").bind("plotclick", function (event, pos, item) {
-            if (item) {
-                $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
-                plot.highlight(item.series, item.datapoint);
-            }
-        });
-        
         $('#legend').find("input").click(function(){setTimeout(plotByChoice,100);});
     }
     
     plotByChoice(true);  
     oBaseDatePickerSettings = {
         dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
         onSelect: function(sDate, oDatePicker) {
             $(this).datepicker( "setDate", sDate );
         }
@@ -164,8 +160,11 @@ function plot(datasets){
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
+        closeButtonText: $.i18n._("Done"),
         showLeadingZero: false,
-        defaultTime: '0:00'
+        defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     };
     
     listenerstat_content.find(dateStartId).datepicker(oBaseDatePickerSettings);

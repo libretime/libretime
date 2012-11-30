@@ -378,10 +378,8 @@ function setupUI() {
     
     $(".playlist_type_help_icon").qtip({
         content: {
-            text: "A static smart block will save the criteria and generate the block content immediately. " +
-                  "This allows you to edit and view it in the Library before adding it to a show.<br /><br />" +
-                  "A dynamic smart block will only save the criteria. The block content will get generated upon " +
-                  "adding it to a show. You will not be able to view and edit the content in the Library."
+            text: $.i18n._("A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show.")+"<br /><br />" +
+                  $.i18n._("A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library.")
         },
         hide: {
             delay: 500,
@@ -402,9 +400,7 @@ function setupUI() {
     
     $(".repeat_tracks_help_icon").qtip({
         content: {
-            text: "The desired block length will not be reached if Airtime cannot find " +
-            "enough unique tracks to match your criteria. Enable this option if you wish to allow " +
-            "tracks to be added multiple times to the smart block."
+            text: $.i18n._("The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block.")
         },
         hide: {
             delay: 500,
@@ -496,9 +492,9 @@ function callback(data, type) {
         var form = $('#smart-block-form');
         if (json.result == "0") {
             if (type == 'shuffle') {
-                form.find('.success').text('Smart block shuffled');
+                form.find('.success').text($.i18n._('Smart block shuffled'));
             } else if (type == 'generate') {
-            	form.find('.success').text('Smart block generated and criteria saved');
+            	form.find('.success').text($.i18n._('Smart block generated and criteria saved'));
             	//redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }
@@ -509,7 +505,7 @@ function callback(data, type) {
         AIRTIME.playlist.fnOpenPlaylist(json);
         var form = $('#smart-block-form');
         if (json.result == "0") {
-            $('#sp-success-saved').text('Smart block saved');
+            $('#sp-success-saved').text($.i18n._('Smart block saved'));
             $('#sp-success-saved').show();
         
             //redraw library table so the length gets updated
@@ -554,7 +550,7 @@ function removeButtonCheck() {
 
 function enableLoadingIcon() {
     $("#side_playlist").block({ 
-        message: "Processing...",
+        message: $.i18n._("Processing..."),
         theme: true,
         allowBodyStretch: true,
         applyPlatformOpacityRules: false
@@ -595,20 +591,20 @@ var criteriaTypes = {
 };
 
 var stringCriteriaOptions = {
-    "0" : "Select modifier",
-    "contains" : "contains",
-    "does not contain" : "does not contain",
-    "is" : "is",
-    "is not" : "is not",
-    "starts with" : "starts with",
-    "ends with" : "ends with"
+    "0" : $.i18n._("Select modifier"),
+    "contains" : $.i18n._("contains"),
+    "does not contain" : $.i18n._("does not contain"),
+    "is" : $.i18n._("is"),
+    "is not" : $.i18n._("is not"),
+    "starts with" : $.i18n._("starts with"),
+    "ends with" : $.i18n._("ends with")
 };
     
 var numericCriteriaOptions = {
-    "0" : "Select modifier",
-    "is" : "is",
-    "is not" : "is not",
-    "is greater than" : "is greater than",
-    "is less than" : "is less than",
-    "is in the range" : "is in the range"
+    "0" : $.i18n._("Select modifier"),
+    "is" : $.i18n._("is"),
+    "is not" : $.i18n._("is not"),
+    "is greater than" : $.i18n._("is greater than"),
+    "is less than" : $.i18n._("is less than"),
+    "is in the range" : $.i18n._("is in the range")
 };

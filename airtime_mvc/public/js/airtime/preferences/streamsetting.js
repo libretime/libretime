@@ -93,13 +93,13 @@ function checkLiquidsoapStatus(){
             }
             var html;
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><h3>Connected to the streaming server</h3></div>';
+                html = '<div class="stream-status status-good"><h3>'+$.i18n._("Connected to the streaming server")+'</h3></div>';
             }else if(status == "N/A"){
-                html = '<div class="stream-status status-disabled"><h3>The stream is disabled</h3></div>';
+                html = '<div class="stream-status status-disabled"><h3>'+$.i18n._("The stream is disabled")+'</h3></div>';
             }else if(status == "waiting"){
-            	html = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>';
+            	html = '<div class="stream-status status-info"><h3>'+$.i18n._("Getting information from the server...")+'</h3></div>';
             }else{
-                html = '<div class="stream-status status-error"><h3>Can not connect to the streaming server</h3><p>'+status+'</p></div>';
+                html = '<div class="stream-status status-error"><h3>'+$.i18n._("Can not connect to the streaming server")+'</h3><p>'+status+'</p></div>';
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }
@@ -250,7 +250,9 @@ function setupEventListeners() {
     // qtip for help text
     $(".override_help_icon").qtip({
         content: {
-            text: "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151. For more detail, please read the <a target=\"_blank\" href=\"http://www.sourcefabric.org/en/airtime/manuals/\">Airtime manual</a>."
+            text: $.i18n._("If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151.")+" "+
+                sprintf($.i18n._(
+                    "For more details, please read the %sAirtime Manual%s"), "<a target='_blank' href='http://www.sourcefabric.org/en/airtime/manuals/'>", "</a>")
         },
         hide: {
             delay: 500,
@@ -271,7 +273,7 @@ function setupEventListeners() {
     
     $(".icecast_metadata_help_icon").qtip({
         content: {
-            text: "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+            text: $.i18n._("Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option.")
         },
         hide: {
             delay: 500,
@@ -292,7 +294,7 @@ function setupEventListeners() {
     
     $("#auto_transition_help").qtip({
         content: {
-            text: "Check this box to automatically switch off Master/Show source upon source disconnection."
+            text: $.i18n._("Check this box to automatically switch off Master/Show source upon source disconnection.")
         },
         hide: {
             delay: 500,
@@ -313,7 +315,7 @@ function setupEventListeners() {
     
     $("#auto_switch_help").qtip({
         content: {
-            text: "Check this box to automatically switch on Master/Show source upon source connection."
+            text: $.i18n._("Check this box to automatically switch on Master/Show source upon source connection.")
         },
         hide: {
             delay: 500,
@@ -334,7 +336,7 @@ function setupEventListeners() {
     
     $(".stream_username_help_icon").qtip({
         content: {
-            text: "If your Icecast server expects a username of 'source', this field can be left blank."
+            text: $.i18n._("If your Icecast server expects a username of 'source', this field can be left blank.")
         },
         hide: {
             delay: 500,
@@ -355,7 +357,7 @@ function setupEventListeners() {
     
     $(".master_username_help_icon").qtip({
         content: {
-            text: "If your live streaming client does not ask for a username, this field should be 'source'."
+            text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")
         },
         hide: {
             delay: 500,
@@ -375,12 +377,7 @@ function setupEventListeners() {
     })
     
     $('#stream_save').live('click', function(){
-        var confirm_pypo_restart_text = "If you change the username or password values for an enabled stream the "
-            + "playout engine will be rebooted and your listeners will hear silence for"
-            + "5-10 seconds. Changing the following fields will NOT cause a reboot: "
-            + "Stream Label (Global Settings), and Switch Transition Fade(s), Master "
-            + "Username, and Master Password (Input Stream Settings). If Airtime is recording"
-            + ", and if the change causes a playout engine restart, the recording will be interrupted.";
+        var confirm_pypo_restart_text = $.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.");
         if (confirm(confirm_pypo_restart_text)) {
             var data = $('#stream_form').serialize();
             var url = baseUrl+'/Preference/stream-setting';

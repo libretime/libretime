@@ -9,16 +9,22 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/add-show-when.phtml'))
         ));
 
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
+        $dateValidator = Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD");
+        $regexValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
+            "/^[0-2]?[0-9]:[0-5][0-9]$/",
+            _("'%value%' does not fit the time format 'HH:mm'"));
+
         // Add start date element
         $startDate = new Zend_Form_Element_Text('add_show_start_date');
         $startDate->class = 'input_text';
         $startDate->setRequired(true)
-                    ->setLabel('Date/Time Start:')
+                    ->setLabel(_('Date/Time Start:'))
                     ->setValue(date("Y-m-d"))
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('YYYY-MM-DD'))))
+                        $notEmptyValidator,
+                        $dateValidator))
                     ->setDecorators(array('ViewHelper'));
         $startDate->setAttrib('alt', 'date');
         $this->addElement($startDate);
@@ -30,9 +36,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValue('00:00')
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('HH:mm')),
-                        array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Time format should be HH:mm'))
+                        $notEmptyValidator,
+                        $regexValidator
                         ))->setDecorators(array('ViewHelper'));
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
@@ -41,12 +46,12 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $endDate = new Zend_Form_Element_Text('add_show_end_date_no_repeat');
         $endDate->class = 'input_text';
         $endDate->setRequired(true)
-                    ->setLabel('Date/Time End:')
+                    ->setLabel(_('Date/Time End:'))
                     ->setValue(date("Y-m-d"))
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('YYYY-MM-DD'))))
+                        $notEmptyValidator,
+                        $dateValidator))
                     ->setDecorators(array('ViewHelper'));
         $endDate->setAttrib('alt', 'date');
         $this->addElement($endDate);
@@ -58,16 +63,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     ->setValue('01:00')
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
-                        'NotEmpty',
-                        array('date', false, array('HH:mm')),
-                        array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Time format should be HH:mm'))))
+                        $notEmptyValidator,
+                        $regexValidator))
                     ->setDecorators(array('ViewHelper'));
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);
 
         // Add duration element
         $this->addElement('text', 'add_show_duration', array(
-            'label'      => 'Duration:',
+            'label'      => _('Duration:'),
             'class'      => 'input_text',
             'value'      => '01h 00m',
             'readonly'   => true,
@@ -76,7 +80,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
         // Add repeats element
         $this->addElement('checkbox', 'add_show_repeats', array(
-            'label'      => 'Repeats?',
+            'label'      => _('Repeats?'),
             'required'   => false,
             'decorators'  => array('ViewHelper')
         ));
@@ -96,7 +100,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $showEndDateTime = new DateTime($end_time);
         if ($validateStartDate) {
             if ($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
-                $this->getElement('add_show_start_time')->setErrors(array('Cannot create show in the past'));
+                $this->getElement('add_show_start_time')->setErrors(array(_('Cannot create show in the past')));
                 $valid = false;
             }
             // if edit action, check if original show start time is in the past. CC-3864
@@ -104,7 +108,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 if ($originalStartDate->getTimestamp() < $nowDateTime->getTimestamp()) {
                     $this->getElement('add_show_start_time')->setValue($originalStartDate->format("H:i"));
                     $this->getElement('add_show_start_date')->setValue($originalStartDate->format("Y-m-d"));
-                    $this->getElement('add_show_start_time')->setErrors(array('Cannot modify start date/time of the show that is already started'));
+                    $this->getElement('add_show_start_time')->setErrors(array(_('Cannot modify start date/time of the show that is already started')));
                     $this->disableStartDateAndTime();
                     $valid = false;
                 }
@@ -113,7 +117,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
         // if end time is in the past, return error
         if ($showEndDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
-            $this->getElement('add_show_end_time')->setErrors(array('End date/time cannot be in the past'));
+            $this->getElement('add_show_end_time')->setErrors(array(_('End date/time cannot be in the past')));
             $valid = false;
         }
 
@@ -123,15 +127,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $hours = $matches[1];
             $minutes = $matches[2];
             if ($formData["add_show_duration"] == "00h 00m") {
-                $this->getElement('add_show_duration')->setErrors(array('Cannot have duration 00h 00m'));
+                $this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration 00h 00m')));
                 $valid = false;
             } elseif (strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
                 if ($hours > 24 || ($hours == 24 && $minutes > 0)) {
-                    $this->getElement('add_show_duration')->setErrors(array('Cannot have duration greater than 24h'));
+                    $this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration greater than 24h')));
                     $valid = false;
                 }
             } elseif ( strstr($formData["add_show_duration"], '-') ) {
-                $this->getElement('add_show_duration')->setErrors(array('Cannot have duration < 0m'));
+                $this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration < 0m')));
                 $valid = false;
             }
         } else {
@@ -247,7 +251,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                             
                             if ($overlapping) {
                                 $valid = false;
-                                $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
+                                $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                                 break 1;
                             } else {
                                 $repeatShowStart->setTimezone($localTimezone);
@@ -261,7 +265,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     }
                 } else {
                     $valid = false;
-                    $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
+                    $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                 }
             } elseif ($formData["add_show_rebroadcast"]) {
                 /* Check first show
@@ -284,18 +288,18 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         $overlapping = Application_Model_Schedule::checkOverlappingShows($rebroadcastShowStart, $rebroadcastShowEnd, $update, $instanceId);
                         if ($overlapping) {
                             $valid = false;
-                            $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
+                            $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                             break;
                         }
                     }
                 } else {
                     $valid = false;
-                    $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
+                    $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                 }
             } else {
               $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
                 if ($overlapping) {
-                    $this->getElement('add_show_duration')->setErrors(array('Cannot schedule overlapping shows'));
+                    $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                     $valid = false;
                 }
             }

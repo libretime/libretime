@@ -23,7 +23,7 @@
     $this->navigation()->menu()->setPartial($partial); ?>
     <div class="personal-block solo">
         <ul>
-          <li><span class="name"><?php echo $this->loggedInAs()?></span> | <a href=<?php echo $baseUrl . "/Login/logout"?>>Logout</a></li>
+          <li><span class="name"><?php echo $this->loggedInAs()?></span> | <a href=<?php echo $baseUrl . "/Login/logout"?>><?php echo _("Logout")?></a></li>
         </ul>
     </div>
 

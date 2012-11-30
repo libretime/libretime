@@ -16,7 +16,7 @@ $(document).ready(function(){
         buttons: [
             {
                 id: "remind_me",
-                text: "Remind me in 1 week",
+                text: $.i18n._("Remind me in 1 week"),
                 "class": "btn",
                 click: function() {
                     var url = baseUrl+'/Usersettings/remindme';
@@ -29,7 +29,7 @@ $(document).ready(function(){
             },
             {
                 id: "remind_never",
-                text: "Remind me never",
+                text: $.i18n._("Remind me never"),
                 "class": "btn", 
                 click: function() {
                     var url =baseUrl+'/Usersettings/remindme-never';
@@ -42,7 +42,7 @@ $(document).ready(function(){
             },
             {
             	id: "help_airtime",
-            	text: "Yes, help Airtime",
+            	text: $.i18n._("Yes, help Airtime"),
             	"class": "btn",
             	click: function() {
             	    $("#register-form").submit();
@@ -129,7 +129,7 @@ $(document).ready(function(){
     		var ul, li; 
     			
     		ul = logoEl.find('.errors');
-    		li = $("<li/>").append("Image must be one of jpg, jpeg, png, or gif");
+    		li = $("<li/>").append($.i18n._("Image must be one of jpg, jpeg, png, or gif"));
     		
     		//errors ul has already been created.
     		if (ul.length > 0) {

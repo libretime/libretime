@@ -13,7 +13,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         //enable soundcloud uploads
         $this->addElement('checkbox', 'UseSoundCloud', array(
-            'label'      => 'Automatically Upload Recorded Shows',
+            'label'      => _('Automatically Upload Recorded Shows'),
             'required'   => false,
             'value' => Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud(),
             'decorators' => array(
@@ -23,7 +23,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         //enable soundcloud uploads option
         $this->addElement('checkbox', 'UploadToSoundcloudOption', array(
-            'label'      => 'Enable SoundCloud Upload',
+            'label'      => _('Enable SoundCloud Upload'),
             'required'   => false,
             'value' => Application_Model_Preference::GetUploadToSoundcloudOption(),
             'decorators' => array(
@@ -33,7 +33,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         //enable downloadable for soundcloud
         $this->addElement('checkbox', 'SoundCloudDownloadbleOption', array(
-            'label'      => 'Automatically Mark Files "Downloadable" on SoundCloud',
+            'label'      => _('Automatically Mark Files "Downloadable" on SoundCloud'),
             'required'   => false,
             'value' => Application_Model_Preference::GetSoundCloudDownloadbleOption(),
             'decorators' => array(
@@ -44,7 +44,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         //SoundCloud Username
         $this->addElement('text', 'SoundCloudUser', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Email',
+            'label'      => _('SoundCloud Email'),
             'filters'    => array('StringTrim'),
             'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudUser(),
@@ -64,7 +64,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         //SoundCloud Password
         $this->addElement('password', 'SoundCloudPassword', array(
             'class'      => 'input_text',
-            'label'      => 'SoundCloud Password',
+            'label'      => _('SoundCloud Password'),
             'filters'    => array('StringTrim'),
             'autocomplete' => 'off',
             'value' => Application_Model_Preference::GetSoundCloudPassword(),
@@ -84,7 +84,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
          // Add the description element
         $this->addElement('textarea', 'SoundCloudTags', array(
-            'label'      => 'SoundCloud Tags: (separate tags with spaces)',
+            'label'      => _('SoundCloud Tags: (separate tags with spaces)'),
             'required'   => false,
             'class'      => 'input_text_area',
             'value' => Application_Model_Preference::GetSoundCloudTags(),
@@ -96,7 +96,7 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         //SoundCloud default genre
         $this->addElement('text', 'SoundCloudGenre', array(
             'class'      => 'input_text',
-            'label'      => 'Default Genre:',
+            'label'      => _('Default Genre:'),
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetSoundCloudGenre(),
@@ -106,23 +106,23 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         ));
 
         $select = new Zend_Form_Element_Select('SoundCloudTrackType');
-        $select->setLabel('Default Track Type:');
+        $select->setLabel(_('Default Track Type:'));
         $select->setAttrib('class', 'input_select');
         $select->setMultiOptions(array(
                 "" => "",
-                "original" => "Original",
-                "remix" => "Remix",
-                "live" => "Live",
-                "recording" => "Recording",
-                "spoken" => "Spoken",
-                "podcast" => "Podcast",
-                "demo" => "Demo",
-                "in progress" => "Work in progress",
-                "stem" => "Stem",
-                "loop" => "Loop",
-                "sound effect" => "Sound Effect",
-                "sample" => "One Shot Sample",
-                "other" => "Other"
+                "original" => _("Original"),
+                "remix" => _("Remix"),
+                "live" => _("Live"),
+                "recording" => _("Recording"),
+                "spoken" => _("Spoken"),
+                "podcast" => _("Podcast"),
+                "demo" => _("Demo"),
+                "in progress" => _("Work in progress"),
+                "stem" => _("Stem"),
+                "loop" => _("Loop"),
+                "sound effect" => _("Sound Effect"),
+                "sample" => _("One Shot Sample"),
+                "other" => _("Other")
             ));
         $select->setRequired(false);
         $select->setValue(Application_Model_Preference::GetSoundCloudTrackType());
@@ -130,18 +130,18 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $this->addElement($select);
 
         $select = new Zend_Form_Element_Select('SoundCloudLicense');
-        $select->setLabel('Default License:');
+        $select->setLabel(_('Default License:'));
         $select->setAttrib('class', 'input_select');
         $select->setMultiOptions(array(
                 "" => "",
-                "no-rights-reserved" => "The work is in the public domain",
-                "all-rights-reserved" => "All rights are reserved",
-                "cc-by" => "Creative Commons Attribution",
-                "cc-by-nc" => "Creative Commons Attribution Noncommercial",
-                "cc-by-nd" => "Creative Commons Attribution No Derivative Works",
-                "cc-by-sa" => "Creative Commons Attribution Share Alike",
-                "cc-by-nc-nd" => "Creative Commons Attribution Noncommercial Non Derivate Works",
-                "cc-by-nc-sa" => "Creative Commons Attribution Noncommercial Share Alike"
+                "no-rights-reserved" => _("The work is in the public domain"),
+                "all-rights-reserved" => _("All rights are reserved"),
+                "cc-by" => _("Creative Commons Attribution"),
+                "cc-by-nc" => _("Creative Commons Attribution Noncommercial"),
+                "cc-by-nd" => _("Creative Commons Attribution No Derivative Works"),
+                "cc-by-sa" => _("Creative Commons Attribution Share Alike"),
+                "cc-by-nc-nd" => _("Creative Commons Attribution Noncommercial Non Derivate Works"),
+                "cc-by-nc-sa" => _("Creative Commons Attribution Noncommercial Share Alike")
             ));
         $select->setRequired(false);
         $select->setValue(Application_Model_Preference::GetSoundCloudLicense());

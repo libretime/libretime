@@ -8,6 +8,7 @@ class Application_Form_SupportSettings extends Zend_Form
     public function init()
     {
         $country_list = Application_Model_Preference::GetCountryList();
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/support-setting.phtml')),
@@ -17,10 +18,10 @@ class Application_Form_SupportSettings extends Zend_Form
         //Station name
         $this->addElement('text', 'stationName', array(
             'class'      => 'input_text',
-            'label'      => 'Station Name',
+            'label'      => _('Station Name'),
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'validator'  => array('NotEmpty'),
+            'validators'  => array($notEmptyValidator),
             'value' => Application_Model_Preference::GetStationName(),
             'decorators' => array(
                 'ViewHelper'
@@ -30,7 +31,7 @@ class Application_Form_SupportSettings extends Zend_Form
         // Phone number
         $this->addElement('text', 'Phone', array(
             'class'      => 'input_text',
-            'label'      => 'Phone:',
+            'label'      => _('Phone:'),
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetPhone(),
@@ -42,7 +43,7 @@ class Application_Form_SupportSettings extends Zend_Form
         //Email
         $this->addElement('text', 'Email', array(
             'class'      => 'input_text',
-            'label'      => 'Email:',
+            'label'      => _('Email:'),
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => Application_Model_Preference::GetEmail(),
@@ -53,7 +54,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
          // Station Web Site
         $this->addElement('text', 'StationWebSite', array(
-            'label'      => 'Station Web Site:',
+            'label'      => _('Station Web Site:'),
             'required'   => false,
             'class'      => 'input_text',
             'value' => Application_Model_Preference::GetStationWebSite(),
@@ -64,7 +65,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
         // county list dropdown
         $this->addElement('select', 'Country', array(
-            'label'        => 'Country:',
+            'label'        => _('Country:'),
             'required'    => false,
             'value'        => Application_Model_Preference::GetStationCountry(),
             'multiOptions'    => $country_list,
@@ -75,7 +76,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
         // Station city
         $this->addElement('text', 'City', array(
-            'label'      => 'City:',
+            'label'      => _('City:'),
             'required'   => false,
             'class'      => 'input_text',
             'value' => Application_Model_Preference::GetStationCity(),
@@ -87,7 +88,7 @@ class Application_Form_SupportSettings extends Zend_Form
         // Station Description
         $description = new Zend_Form_Element_Textarea('Description');
         $description->class = 'input_text_area';
-        $description->setLabel('Station Description:')
+        $description->setLabel(_('Station Description:'))
                     ->setRequired(false)
                     ->setValue(Application_Model_Preference::GetStationDescription())
                     ->setDecorators(array('ViewHelper'))
@@ -97,7 +98,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
         // Station Logo
         $upload = new Zend_Form_Element_File('Logo');
-        $upload->setLabel('Station Logo:')
+        $upload->setLabel(_('Station Logo:'))
                 ->setRequired(false)
                 ->setDecorators(array('File'))
                 ->addValidator('Count', false, 1)
@@ -108,7 +109,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
             //enable support feedback
             $this->addElement('checkbox', 'SupportFeedback', array(
-                'label'      => 'Send support feedback',
+                'label'      => _('Send support feedback'),
                 'required'   => false,
                 'value' => Application_Model_Preference::GetSupportFeedback(),
                 'decorators' => array(
@@ -118,7 +119,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
             // checkbox for publicise
             $checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
-            $checkboxPublicise->setLabel('Promote my station on Sourcefabric.org')
+            $checkboxPublicise->setLabel(_('Promote my station on Sourcefabric.org'))
                               ->setRequired(false)
                               ->setDecorators(array('ViewHelper'))
                               ->setValue(Application_Model_Preference::GetPublicise());
@@ -143,7 +144,10 @@ class Application_Form_SupportSettings extends Zend_Form
 
             // checkbox for privacy policy
             $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
-            $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"http://www.sourcefabric.org/en/about/policy/\" onclick=\"window.open(this.href); return false;\">privacy policy</a>.")
+            $checkboxPrivacy->setLabel(
+                sprintf(_("By checking this box, I agree to Sourcefabric's %sprivacy policy%s."),
+                    "<a id='link_to_privacy' href='http://www.sourcefabric.org/en/about/policy/' onclick='window.open(this.href); return false;'>",
+                    "</a>"))
                 ->setDecorators(array('ViewHelper'));
             $this->addElement($checkboxPrivacy);
 
@@ -151,7 +155,7 @@ class Application_Form_SupportSettings extends Zend_Form
         $submit = new Zend_Form_Element_Submit("submit");
         $submit->class = 'ui-button ui-state-default right-floated';
         $submit->setIgnore(true)
-                ->setLabel("Save")
+                ->setLabel(_("Save"))
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($submit);
     }
@@ -166,7 +170,7 @@ class Application_Form_SupportSettings extends Zend_Form
             if (isset($data["Privacy"])) {
                 $checkPrivacy = $this->getElement('Privacy');
                 if ($data["SupportFeedback"] == "1" && $data["Privacy"] != "1") {
-                    $checkPrivacy->addError("You have to agree to privacy policy.");
+                    $checkPrivacy->addError(_("You have to agree to privacy policy."));
                     $isValid = false;
                 }
             }

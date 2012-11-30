@@ -197,4 +197,11 @@ return array (
   'BaseCcListenerCountPeer' => 'airtime/om/BaseCcListenerCountPeer.php',
   'BaseCcListenerCount' => 'airtime/om/BaseCcListenerCount.php',
   'BaseCcListenerCountQuery' => 'airtime/om/BaseCcListenerCountQuery.php',
+  'CcLocaleTableMap' => 'airtime/map/CcLocaleTableMap.php',
+  'CcLocalePeer' => 'airtime/CcLocalePeer.php',
+  'CcLocale' => 'airtime/CcLocale.php',
+  'CcLocaleQuery' => 'airtime/CcLocaleQuery.php',
+  'BaseCcLocalePeer' => 'airtime/om/BaseCcLocalePeer.php',
+  'BaseCcLocale' => 'airtime/om/BaseCcLocale.php',
+  'BaseCcLocaleQuery' => 'airtime/om/BaseCcLocaleQuery.php',
 );

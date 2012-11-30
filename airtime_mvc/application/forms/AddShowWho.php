@@ -7,7 +7,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
     {
         // Add hosts autocomplete
         $this->addElement('text', 'add_show_hosts_autocomplete', array(
-            'label'      => 'Search Users:',
+            'label'      => _('Search Users:'),
             'class'      => 'input_text ui-autocomplete-input',
             'required'   => false
         ));
@@ -21,7 +21,7 @@ class Application_Form_AddShowWho extends Zend_Form_SubForm
 
         //Add hosts selection
         $hosts = new Zend_Form_Element_MultiCheckbox('add_show_hosts');
-        $hosts->setLabel('DJs:')
+        $hosts->setLabel(_('DJs:'))
             ->setMultiOptions($options);
 
         $this->addElement($hosts);

@@ -11,7 +11,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 
         $this->addElement('text', 'storageFolder', array(
             'class'      => 'input_text',
-            'label'      => 'Import Folder:',
+            'label'      => _('Import Folder:'),
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => '',
@@ -22,7 +22,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
 
         $this->addElement('text', 'watchedFolder', array(
             'class'      => 'input_text',
-            'label'      => 'Watched Folders:',
+            'label'      => _('Watched Folders:'),
             'required'   => false,
             'filters'    => array('StringTrim'),
             'value' => '',
@@ -37,7 +37,7 @@ class Application_Form_WatchedDirPreferences extends Zend_Form_SubForm
         $element = $this->getElement($p_form_element_id);
 
         if (!is_dir($element->getValue())) {
-            $element->setErrors(array('Not a valid Directory'));
+            $element->setErrors(array(_('Not a valid Directory')));
 
             return false;
         } else {

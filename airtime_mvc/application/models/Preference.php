@@ -428,6 +428,16 @@ class Application_Model_Preference
     {
         return self::getValue("timezone");
     }
+    
+    public static function SetLocale($locale)
+    {
+        self::setValue("locale", $locale);
+    }
+    
+    public static function GetLocale()
+    {
+        return self::getValue("locale");
+    }
 
     public static function SetStationLogo($imagePath)
     {
@@ -456,7 +466,7 @@ class Application_Model_Preference
         $sql = "SELECT * FROM cc_country";
         $res =  $con->query($sql)->fetchAll();
         $out = array();
-        $out[""] = "Select Country";
+        $out[""] = _("Select Country");
         foreach ($res as $r) {
             $out[$r["isocode"]] = $r["name"];
         }

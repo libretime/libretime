@@ -21,7 +21,7 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.button.disableButton("btn-group #library-plus", false);
         }
         
-        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), ' Add to selected show');
+        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), ' '+$.i18n._('Add to selected show'));
     };
 
     mod.fnRowCallback = function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -66,9 +66,9 @@ var AIRTIME = (function(AIRTIME) {
                         }
 
                         if (selected === 1) {
-                            message = "Adding 1 Item.";
+                            message = $.i18n._("Adding 1 Item");
                         } else {
-                            message = "Adding " + selected + " Items.";
+                            message = sprintf($.i18n._("Adding %s Items"), selected);
                         }
 
                         container = $('<div/>').attr('id',

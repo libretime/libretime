@@ -143,24 +143,24 @@ function updatePlaybar(){
     }
     if (currentSong !== null && !master_dj_on_air && !live_dj_on_air){
         if (currentSong.record == "1")
-            $('#current').html("<span style='color:red; font-weight:bold'>Recording: </span>"+currentSong.name+",");
+            $('#current').html("<span style='color:red; font-weight:bold'>"+$.i18n._("Recording:")+"</span>"+currentSong.name+",");
         else
             $('#current').text(currentSong.name+",");
     }else{
         if (master_dj_on_air) {
             if (showName) {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - Master Stream</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+showName+" - "+$.i18n._("Master Stream")+"</span>");
             } else {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>Master Stream</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Master Stream")+"</span>");
             }
         } else if (live_dj_on_air) {
             if (showName) {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>"+showName+" - Live Stream</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+showName+" - "+$.i18n._("Live Stream")+"</span>");
             } else {
-                $('#current').html("Current: <span style='color:red; font-weight:bold'>Live Stream</span>");
+                $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Live Stream")+"</span>");
             }
         } else {
-            $('#current').html("Current: <span style='color:red; font-weight:bold'>Nothing Scheduled</span>");
+            $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Nothing Scheduled")+"</span>");
         }
     }
 
@@ -191,7 +191,7 @@ function updatePlaybar(){
         $('#song-length').text(convertToHHMMSSmm(currentSong.songLengthMs));
     }
     /* Column 1 update */
-    $('#playlist').text("Current Show:");
+    $('#playlist').text($.i18n._("Current Show:"));
     var recElem = $('.recording-show');
     if (currentShow.length > 0){
         $('#playlist').text(currentShow[0].name);

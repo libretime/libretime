@@ -10,75 +10,75 @@ class Application_Form_EditAudioMD extends Zend_Form
 
         // Add title field
         $this->addElement('text', 'track_title', array(
-            'label'      => 'Title:',
+            'label'      => _('Title:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
         ));
 
         // Add artist field
         $this->addElement('text', 'artist_name', array(
-            'label'      => 'Creator:',
+            'label'      => _('Creator:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
         ));
 
         // Add album field
         $this->addElement('text', 'album_title', array(
-            'label'      => 'Album:',
+            'label'      => _('Album:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add track number field
         $this->addElement('text', 'track_number', array(
-            'label'      => 'Track:',
+            'label'      => _('Track:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add genre field
         $this->addElement('text', 'genre', array(
-            'label'      => 'Genre:',
+            'label'      => _('Genre:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add year field
         $this->addElement('text', 'year', array(
-            'label'      => 'Year:',
+            'label'      => _('Year:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim'),
             'validators' => array(
-                array('date', false, array('YYYY-MM-DD')),
-                array('date', false, array('YYYY-MM')),
-                array('date', false, array('YYYY'))
+                Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD"),
+                Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM"),
+                Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY")
             )
         ));
 
         // Add label field
         $this->addElement('text', 'label', array(
-            'label'      => 'Label:',
+            'label'      => _('Label:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add composer field
         $this->addElement('text', 'composer', array(
-            'label'      => 'Composer:',
+            'label'      => _('Composer:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add conductor field
         $this->addElement('text', 'conductor', array(
-            'label'      => 'Conductor:',
+            'label'      => _('Conductor:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add mood field
         $this->addElement('text', 'mood', array(
-            'label'      => 'Mood:',
+            'label'      => _('Mood:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
@@ -86,7 +86,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add bmp field
         $bpm = new Zend_Form_Element_Text('bpm');
         $bpm->class = 'input_text';
-        $bpm->setLabel('BPM:')
+        $bpm->setLabel(_('BPM:'))
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                         new Zend_Validate_StringLength(array('min'=>0,'max' => 8)),
@@ -95,28 +95,28 @@ class Application_Form_EditAudioMD extends Zend_Form
 
         // Add copyright field
         $this->addElement('text', 'copyright', array(
-            'label'      => 'Copyright:',
+            'label'      => _('Copyright:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add isrc number field
         $this->addElement('text', 'isrc_number', array(
-            'label'      => 'ISRC Number:',
+            'label'      => _('ISRC Number:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add website field
         $this->addElement('text', 'info_url', array(
-            'label'      => 'Website:',
+            'label'      => _('Website:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
 
         // Add language field
         $this->addElement('text', 'language', array(
-            'label'      => 'Language:',
+            'label'      => _('Language:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
@@ -125,7 +125,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
             'class'    => 'btn',
-            'label'    => 'Save',
+            'label'    => _('Save'),
             'decorators' => array(
                 'ViewHelper'
             )
@@ -135,7 +135,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('button', 'cancel', array(
             'ignore'   => true,
             'class'    => 'btn md-cancel',
-            'label'    => 'Cancel',
+            'label'    => _('Cancel'),
             'onclick' => 'javascript:document.location.href="'.$baseUrl.'/Library"',
             'decorators' => array(
                 'ViewHelper'

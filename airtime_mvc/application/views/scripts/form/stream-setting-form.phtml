@@ -1,7 +1,7 @@
         <?php 
         $s_name = "s".$this->stream_number;
         ?>
-        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"closed":""?>"><span class="arrow-icon"></span>Stream <?php echo $this->stream_number?></h3>
+        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"closed":""?>"><span class="arrow-icon"></span><? echo _("Stream "); ?><?php echo $this->stream_number?></h3>
         <div class="stream-setting-content" <?php echo $this->enabled == 0?'style="display: none;':''?> id="<?php echo $s_name?>-config">
         <fieldset class="padded">
             <dl class="zend_form clearfix">
@@ -29,7 +29,8 @@
                 <?php echo $this->element->getElement('bitrate')?>
             </dd>
             <dt id="outputServer-label">
-                <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+                <label for="outputServer"><?php echo $this->element->getElement('host')->getLabel()?><span class="info-text-small">
+                <?php echo _("(Required)")?></span> :</label>
             </dt>
             <dd id="outputServer-element">
                 <?php echo $this->element->getElement('host')?>
@@ -42,7 +43,8 @@
                 <?php endif; ?>
             </dd>
             <dt id="outputPort-label">
-                <label for="outputPort"><?php echo $this->element->getElement('port')->getLabel()?><span class="info-text-small">(Required)</span> :</label>
+                <label for="outputPort"><?php echo $this->element->getElement('port')->getLabel()?><span class="info-text-small">
+                <?php echo _("(Required)")?></span> :</label>
             </dt>
             <dd id="outputPort-element">
                 <?php echo $this->element->getElement('port')?>
@@ -71,7 +73,7 @@
             <fieldset class="padded top-margin display_field toggle closed" id="output_setting">
                 <legend style="cursor: pointer;">
                     <span class="ui-icon ui-icon-triangle-2-n-s"></span>
-                    Additional Options
+                    <?php echo _("Additional Options")?>
                 </legend>
                 <dl class="zend_form">
                 <dt id="outputUser-label">
@@ -103,7 +105,7 @@
                     <?php endif; ?>
                 </dd>
                 <dt class="block-display info-block">
-                    The following info will be displayed to listeners in their media player:
+                    <?php echo _("The following info will be displayed to listeners in their media player:")?>
                 </dt>
                 <dt id="stationName-label">
                     <label for="stationName"><?php echo $this->element->getElement('name')->getLabel()?> :</label>
@@ -136,7 +138,7 @@
                 </dt>
                 <dd id="stationURL-element" class="clearfix">
                     <?php echo $this->element->getElement('url')?>
-                    <span class="info-text-small">(Your radio station website)</span>
+                    <span class="info-text-small"><?php echo _("(Your radio station website)")?></span>
                     <?php if($this->element->getElement('url')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('url')->getMessages() as $error): ?>
@@ -174,7 +176,7 @@
                 </dl>
             </fieldset>
             <dt id="outputStreamURL-label">
-                <label for="outputStreamURL">Stream URL: </label>
+                <label for="outputStreamURL"><? echo _("Stream URL: "); ?></label>
             </dt>
             <dd id="outputStreamURL-element">
                 <span id="stream_url" class="static_text"></span>

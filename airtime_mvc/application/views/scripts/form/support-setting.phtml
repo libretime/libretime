@@ -2,10 +2,9 @@
     <dl class="zend_form">
         <dd id="SupportFeedback-element" style="width:90%;">
             <div class="info-text">
-                Help Airtime improve by letting Sourcefabric know how you are using it. This information
-                will be collected regularly in order to enhance your user experience.<br />
-                Click the "Send support feedback" box and we'll make sure the features you use are
-                constantly improving.
+               <?php echo sprintf(_("Help Airtime improve by letting Sourcefabric know how you are using it. This information"
+                ." will be collected regularly in order to enhance your user experience.%s"
+                ."Click the 'Send support feedback' box and we'll make sure the features you use are constantly improving."), "<br />")?>
             </div>
             <label class="optional" for="SupportFeedback">
                 <?php echo $this->element->getElement('SupportFeedback') ?>
@@ -20,8 +19,10 @@
             <?php endif; ?> 
         </dd>
         <dd id="publicize-element" style="width:90%;">
-            <div class="info-text">Click the box below to promote your station on 
-            <a id="link_to_whos_using" href="http://www.sourcefabric.org/en/airtime/whosusing/" onclick="window.open(this.href); return false">Sourcefabric.org</a>.
+            <div class="info-text">
+                <?php echo sprintf(_("Click the box below to promote your station on %sSourcefabric.org%s."), 
+                    "<a id='link_to_whos_using' href='http://www.sourcefabric.org/en/airtime/whosusing/' onclick='window.open(this.href); return false'>",
+                    "</a>")?>
             </div>
             <label class="optional" for="Publicise">
                 <?php echo $this->element->getElement('Publicise') ?>
@@ -36,11 +37,13 @@
             <?php endif; ?> 
         </dd>
     </dl>
-    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;">(In order to promote your station, "Send support feedback" must be enabled).<br /><br /></div>
+    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;">
+        <?php echo _("(In order to promote your station, 'Send support feedback' must be enabled).")?><br /><br />
+    </div>
     <dl id="public-info" style="display:<?php echo "none"?>;">
         <dt id="stationName-label" class="block-display">
             <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
-                <span class="info-text-small">(Required)</span>:
+                <span class="info-text-small"><?php echo _("(Required)")?></span>:
             </label>
         </dt>
         <dd id="stationName-element" class="block-display">
@@ -55,7 +58,7 @@
         </dd>
         <dt id="Phone-label" class="block-display">
             <label class="optional" for="Phone"><?php echo $this->element->getElement('Phone')->getLabel() ?></label>
-            <span class="info-text-small">(for verification purposes only, will not be published)</span>
+            <span class="info-text-small"><?php echo _("(for verification purposes only, will not be published)")?></span>
         </dt>
         <dd id="Phone-element" class="block-display">
             <?php echo $this->element->getElement('Phone') ?>
@@ -69,7 +72,9 @@
         </dd>
         <dt id="Email-label" class="block-display">
             <label class="optional" for="Email"><?php echo $this->element->getElement('Email')->getLabel() ?></label>
-            <span class="info-text-small">(for verification purposes only, will not be published)</span>
+            <span class="info-text-small">
+                <?php echo _("(for verification purposes only, will not be published)")?>
+            </span>
         </dt>
         <dd id="Email-element" class="block-display">
             <?php echo $this->element->getElement('Email') ?>
@@ -142,7 +147,9 @@
             <?php }?>
             
             <?php echo $this->element->getElement('Logo') ?>
-            <div class="info-text"><p>Note: Anything larger than 600x600 will be resized.</p></div>
+            <div class="info-text">
+                <p><?php echo _("Note: Anything larger than 600x600 will be resized.")?></p>
+            </div>
             <?php if($this->element->getElement('Logo')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('Logo')->getMessages() as $error): ?>
@@ -154,7 +161,7 @@
     </dl>
     <div id="show_what_sending" style="display: block;">
         <fieldset class="display_field toggle closed">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span>Show me what I am sending </legend>
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><? echo _("Show me what I am sending ") ?></legend>
             <dl>
                 <?php echo $this->element->getElement('SendInfo') ?>
             </dl>
@@ -176,7 +183,7 @@
                 </ul>
             <?php endif; ?>
         <?php }else{?>
-            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;">Sourcefabric Privacy Policy</a>
+            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><? echo _("Sourcefabric Privacy Policy") ?></a>
         <?php }?>
     </div>
 </fieldset>

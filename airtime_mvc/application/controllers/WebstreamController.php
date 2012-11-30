@@ -26,11 +26,11 @@ class WebstreamController extends Zend_Controller_Action
 
         //we're not saving this primary key in the DB so it's OK to be -1
         $webstream->setDbId(-1);
-        $webstream->setDbName("Untitled Webstream");
+        $webstream->setDbName(_("Untitled Webstream"));
         $webstream->setDbDescription("");
         $webstream->setDbUrl("http://");
         $webstream->setDbLength("00:30:00");
-        $webstream->setDbName("Untitled Webstream");
+        $webstream->setDbName(_("Untitled Webstream"));
         $webstream->setDbCreatorId($userInfo->id);
         $webstream->setDbUtime(new DateTime("now", new DateTimeZone('UTC')));
         $webstream->setDbMtime(new DateTime("now", new DateTimeZone('UTC')));
@@ -135,7 +135,7 @@ class WebstreamController extends Zend_Controller_Action
 
                 Application_Model_Library::changePlaylist($streamId, "stream");
 
-                $this->view->statusMessage = "<div class='success'>Webstream saved.</div>";
+                $this->view->statusMessage = "<div class='success'>"._("Webstream saved.")."</div>";
                 $this->view->streamId = $streamId;
                 $this->view->length = $di->format("%Hh %Im");
             } else {
@@ -143,7 +143,7 @@ class WebstreamController extends Zend_Controller_Action
             }
         } catch (Exception $e) {
             Logging::debug($e->getMessage());
-            $this->view->statusMessage = "<div class='errors'>Invalid form values.</div>";
+            $this->view->statusMessage = "<div class='errors'>"._("Invalid form values.")."</div>";
             $this->view->streamId = -1;
             $this->view->analysis = $analysis;
         }
