@@ -204,9 +204,9 @@ class Application_Model_Preference
             $fade = $out;
         }
 
-        $fade = number_format($fade, 2);
+        $fade = number_format($fade, 1);
         //fades need 2 leading zeros for DateTime conversion
-        $fade = rtrim(str_pad($fade, 5, "0", STR_PAD_LEFT), "0");
+        $fade = str_pad($fade, 4, "0", STR_PAD_LEFT);
 
         return $fade;
     }

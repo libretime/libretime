@@ -154,12 +154,24 @@ function buildplaylist(p_url, p_playIndex) {
                     continue;
                 } 
             } else if (data[index]['type'] == 1) {
-                 media = {title: data[index]['element_title'],
-                        artist: data[index]['element_artist'],
-                        mp3:data[index]['uri']
-                };
+                var mime = data[index]['mime'];
+                if (mime.search(/mp3/i) > 0 || mime.search(/mpeg/i) > 0) {
+                    key = "mp3";
+                } else if (mime.search(/og(g|a)/i) > 0 || mime.search(/vorbis/i) > 0) {
+                    key = "oga";
+                } else if (mime.search(/mp4/i) > 0) {
+                    key = "m4a";
+                } else if (mime.search(/wav/i) > 0) {
+                    key = "wav";
+                } 
+
+                if (key) {
+                    media = {title: data[index]['element_title'],
+                            artist: data[index]['element_artist']
+                    };       
+                    media[key] = data[index]['uri']
+                }
             }
-            console.log(data[index]);
             if (media && isAudioSupported(data[index]['mime'])) {
                 // javascript doesn't support associative array with numeric key
                 // so we need to remove the gap if we skip any of tracks due to

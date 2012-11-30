@@ -8,6 +8,9 @@ import json
 import shutil
 import commands
 
+sys.path.append('/usr/lib/airtime/media-monitor/mm2/')
+from media.monitor.pure import is_file_supported
+
 # create logger
 logger = logging.getLogger()
 
@@ -53,8 +56,7 @@ def copy_or_move_files_to(paths, dest, flag):
                     copy_or_move_files_to(sub_path, dest, flag)
                 elif(os.path.isfile(path)):
                     #copy file to dest
-                    ext = os.path.splitext(path)[1]
-                    if( 'mp3' in ext or 'ogg' in ext ):
+                    if(is_file_supported(path)):
                         destfile = dest+os.path.basename(path)
                         if(flag == 'copy'):
                             print "Copying %(src)s to %(dest)s..." % {'src':path, 'dest':destfile}
@@ -159,7 +161,7 @@ def WatchAddAction(option, opt, value, parser):
         path = currentDir+path
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
-        os.chmod(path, 0765)
+        #os.chmod(path, 0765)
         res = api_client.add_watched_dir(path)
         if(res is None):
             exit("Unable to connect to the server.")

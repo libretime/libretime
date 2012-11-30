@@ -11,11 +11,7 @@ set("server.telnet.port", 1234)
 webstream_enabled = ref false
 
 time = ref string_of(gettimeofday())
-queue = audio_to_stereo(id="queue_src", mksafe(request.equeue(id="queue", length=0.5)))
-queue = cue_cut(queue)
-queue = amplify(1., override="replay_gain", queue)
 
-#fallback between queue and input.harbor (for restreaming other web-streams)
 #live stream setup
 set("harbor.bind_addr", "0.0.0.0")
 
@@ -43,10 +39,9 @@ just_switched = ref false
 #web_stream = on_metadata(notify_stream, web_stream)
 #output.dummy(fallible=true, web_stream)
 
-
-http = input.http_restart(id="http")
-http = cross_http(http_input_id="http",http)
-stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
+queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
+queue = cue_cut(queue)
+queue = amplify(1., override="replay_gain", queue)
 
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
@@ -54,11 +49,9 @@ queue = on_metadata(notify, queue)
 queue = map_metadata(update=false, append_title, queue)
 output.dummy(fallible=true, queue)
 
-
-#stream_queue = switch(id="stream_queue_switch", track_sensitive=false,
-#    transitions=[transition, transition],
-#    [({!webstream_enabled},web_stream),
-#    ({true}, queue)])
+http = input.http_restart(id="http")
+http = cross_http(http_input_id="http",http)
+stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
@@ -88,7 +81,9 @@ server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='start',
                 "output_start",
-                fun (s) -> begin log("dynamic_source.output_start") webstream_enabled := true "enabled" end)
+                fun (s) -> begin log("dynamic_source.output_start") 
+                    notify([("schedule_table_id", !current_dyn_id)]) 
+                    webstream_enabled := true "enabled" end)
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='stop',
@@ -229,6 +224,7 @@ end
 s = switch(id="default_switch", track_sensitive=false,
     transitions=[transition_default, transition],
     [({!scheduled_play_enabled}, stream_queue),({true},default)])
+
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp,
     dj_live_stream_port, dj_live_stream_mp, s)
 

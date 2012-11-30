@@ -928,31 +928,33 @@ class ApiController extends Zend_Controller_Action
 
         $data_arr = json_decode($data);
 
-        if (!is_null($media_id) && isset($data_arr->title) && strlen($data_arr->title) < 1024) {
+        if (!is_null($media_id)) {
+            if (isset($data_arr->title) && 
+                strlen($data_arr->title) < 1024) {
 
-            $previous_metadata = CcWebstreamMetadataQuery::create()
-                ->orderByDbStartTime('desc')
-                ->filterByDbInstanceId($media_id)
-                ->findOne();
+                $previous_metadata = CcWebstreamMetadataQuery::create()
+                    ->orderByDbStartTime('desc')
+                    ->filterByDbInstanceId($media_id)
+                    ->findOne();
 
-            $do_insert = true;
-            if ($previous_metadata) {
-                if ($previous_metadata->getDbLiquidsoapData() == $data_arr->title) {
-                    Logging::debug("Duplicate found: ".$data_arr->title);
-                    $do_insert = false;
+                $do_insert = true;
+                if ($previous_metadata) {
+                    if ($previous_metadata->getDbLiquidsoapData() == $data_arr->title) {
+                        Logging::debug("Duplicate found: ".$data_arr->title);
+                        $do_insert = false;
+                    }
+                }
+
+                if ($do_insert) {
+                    $webstream_metadata = new CcWebstreamMetadata();
+                    $webstream_metadata->setDbInstanceId($media_id);
+                    $webstream_metadata->setDbStartTime(new DateTime("now", new DateTimeZone("UTC")));
+                    $webstream_metadata->setDbLiquidsoapData($data_arr->title);
+                    $webstream_metadata->save();
                 }
             }
-
-            if ($do_insert) {
-                $webstream_metadata = new CcWebstreamMetadata();
-                $webstream_metadata->setDbInstanceId($media_id);
-                $webstream_metadata->setDbStartTime(new DateTime("now", new DateTimeZone("UTC")));
-                $webstream_metadata->setDbLiquidsoapData($data_arr->title);
-                $webstream_metadata->save();
-            }
-
         } else {
-            throw new Error("Unexpected error. media_id $media_id has a null stream value in cc_schedule!");
+            throw new Exception("Null value of media_id");
         }
 
         $this->view->response = $data;
