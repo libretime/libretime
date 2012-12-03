@@ -162,8 +162,7 @@ def walk_supported(directory, clean_empties=False):
 
 
 def file_locked(path):
-    cmd = "lsof %s" % path
-    f = Popen(cmd, shell=True, stdout=PIPE).stdout
+    f = Popen(["lsof", path], stdout=PIPE).stdout
     return bool(f.readlines())
 
 def magic_move(old, new, after_dir_make=lambda : None):
