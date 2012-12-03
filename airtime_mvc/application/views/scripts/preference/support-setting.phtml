@@ -1,13 +1,12 @@
-<div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences">
+<div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences" id="support-feedback-view">
 <h2><?php echo $this->section_title?></h2>
 <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
-    <form method="post" action=<?php echo $baseUrl . "/Preference/support-setting"?> enctype="multipart/form-data">
+    <form method="post" id="support-feedback-form" action="enctype="multipart/form-data">
         <div id="support-settings">
             <?php echo $this->statusMsg ?>
             <?php echo $this->form ?>
         </div>
-        <div class="button-bar bottom" id="submit-element">
-            <?php echo $this->form->getElement('submit') ?>
-        </div>
+        <br />
+        <button name="support_save" id="support_save" type="button" class="btn right-floated"><? echo _("Save") ?></button>
     </form>
 </div>

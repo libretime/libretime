@@ -81,7 +81,7 @@ class PreferenceController extends Zend_Controller_Action
     public function supportSettingAction()
     {
         global $CC_CONFIG;
-        
+
         $request = $this->getRequest();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -89,10 +89,15 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
-
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
-            $values = $request->getPost();
+            $postData = $request->getPost();
+            $values = array();
+            //put postData in array format isValid() expects it to be in
+            foreach ($postData["data"] as $field) {
+                $values[$field["name"]] = $field["value"];
+            }
+
             if ($form->isValid($values)) {
                 if ($values["Publicise"] != 1) {
                     Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
@@ -133,7 +138,9 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->privacyChecked = $privacyChecked;
         $this->view->section_title = _('Support Feedback');
         $this->view->form = $form;
-        //$form->render($this->view);
+        if ($request->isPost()) {
+            die(json_encode(array("html"=>$this->view->render('preference/support-setting.phtml'))));
+        }
     }
 
     public function directoryConfigAction()

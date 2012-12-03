@@ -11,7 +11,22 @@ function showErrorSections() {
 }
 
 $(document).ready(function() {
+    setUpEventListeners();
+});
+
+function setUpEventListeners() {
     var form = $("form");
+
+    $("#support_save").click( function() {
+        var data = $("#support-feedback-form").serializeArray();
+        var url = baseUrl+'/Preference/support-setting';
+
+        $.post(url, {format:"json", data: data}, function(data){
+            var json = $.parseJSON(data);
+            $("#support-feedback-view").parent().empty().append(json.html);
+            setUpEventListeners();
+        });
+    });
 
     $("#SupportFeedback").click( function(){
         var pub = $("#Publicise");
@@ -81,4 +96,4 @@ $(document).ready(function() {
     		logoEl.find(".errors").remove();
     	}
     });
-});
+}
