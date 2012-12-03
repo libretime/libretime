@@ -973,7 +973,6 @@ function addProgressIcon(id) {
 }
     
 function checkLibrarySCUploadStatus(){
-    
     var url = baseUrl+'/Library/get-upload-to-soundcloud-status',
         span,
         id;
@@ -1026,6 +1025,7 @@ function addQtipToSCIcons(){
             });
         }
         else if($(this).hasClass("soundcloud")){
+            var sc_id = $(this).parent().parent().data("aData").soundcloud_id;
             $(this).qtip({
                 content: {
                     text: $.i18n._("Retrieving data from the server..."),

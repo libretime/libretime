@@ -81,6 +81,10 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor : 'pointer',
+                    cursorAt: {
+                        top: 30,
+                        left: 100
+                    },
                     connectToSortable : '#show_builder_table'
                 });
     };
