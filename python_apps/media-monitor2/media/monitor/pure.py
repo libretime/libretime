@@ -154,6 +154,9 @@ def walk_supported(directory, clean_empties=False):
     that support the extensions we are considering. When clean_empties
     is True we recursively delete empty directories left over in
     directory after the walk. """
+    if directory is None:
+        return
+
     for root, dirs, files in os.walk(directory):
         full_paths = ( os.path.join(root, name) for name in files
                 if is_file_supported(name) )
