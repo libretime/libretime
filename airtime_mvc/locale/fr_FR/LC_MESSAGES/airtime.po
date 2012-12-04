@@ -1,7 +1,7 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FRENCH (fr_FR) translation for Airtime.
+# Copyright (C) 2012 Sourcefabric
+# This file is distributed under the same license as the Airtime package.
+# Sourcefabric <contact@sourcefabric.org>, 2012.
 #
 msgid ""
 msgstr ""
