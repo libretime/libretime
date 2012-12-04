@@ -126,20 +126,6 @@ class Application_Form_SupportSettings extends Zend_Form
             }
             $this->addElement($checkboxPublicise);
 
-            // text area for sending detail
-            $this->addElement('textarea', 'SendInfo', array(
-                'class'        => 'sending_textarea',
-                'required'   => false,
-                'filters'    => array('StringTrim'),
-                'readonly'    => true,
-                'cols'     => 61,
-                'rows'        => 5,
-                'value' => Application_Model_Preference::GetSystemInfo(false, true),
-                'decorators' => array(
-                    'ViewHelper'
-                )
-            ));
-
             // checkbox for privacy policy
             $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
             $checkboxPrivacy->setLabel("By checking this box, I agree to Sourcefabric's <a id=\"link_to_privacy\" href=\"http://www.sourcefabric.org/en/about/policy/\" onclick=\"window.open(this.href); return false;\">privacy policy</a>.")
@@ -159,9 +145,6 @@ class Application_Form_SupportSettings extends Zend_Form
     public function isValid ($data)
     {
         $isValid = parent::isValid($data);
-            if ($data['Publicise'] != 1) {
-                $isValid = true;
-            }
             if (isset($data["Privacy"])) {
                 $checkPrivacy = $this->getElement('Privacy');
                 if ($data["SupportFeedback"] == "1" && $data["Privacy"] != "1") {
