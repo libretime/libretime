@@ -82,8 +82,9 @@ function setMsAuthenticationFieldsReadonly(ele) {
 }
 
 function setCollapsibleWidgetJsCode() {
-    $('#thirdPartyApi-element input').click(function() {
-        if ($(this).first().attr("value") == '1') {
+    var x = function() {
+        var val = $('input:radio[name=thirdPartyApi]:checked').val();
+        if (val == "1") {
             //show js textarea
             $('#widgetCode-label').show("fast");
             $('#widgetCode-element').show("fast");
@@ -92,7 +93,9 @@ function setCollapsibleWidgetJsCode() {
             $('#widgetCode-label').hide("fast");
             $('#widgetCode-element').hide("fast");
         }
-     });
+    }
+    x();
+    $('#thirdPartyApi-element input').click(x);
 }
 
 function createWidgetHelpDescription() {
