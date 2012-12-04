@@ -91,12 +91,7 @@ class PreferenceController extends Zend_Controller_Action
 
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
-            $postData = $request->getPost();
-            $values = array();
-            //put postData in array format isValid() expects it to be in
-            foreach ($postData["data"] as $field) {
-                $values[$field["name"]] = $field["value"];
-            }
+            $values = $request->getPost();
 
            if ($values["Publicise"] != 1) {
                 Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
@@ -137,9 +132,6 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->privacyChecked = $privacyChecked;
         $this->view->section_title = _('Support Feedback');
         $this->view->form = $form;
-        if ($request->isPost()) {
-            die(json_encode(array("html"=>$this->view->render('preference/support-setting.phtml'))));
-        }
     }
 
     public function directoryConfigAction()
