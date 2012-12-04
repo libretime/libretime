@@ -164,16 +164,14 @@ class Application_Form_SupportSettings extends Zend_Form
     public function isValid ($data)
     {
         $isValid = parent::isValid($data);
-            if ($data['Publicise'] != 1) {
-                $isValid = true;
+
+        if (isset($data["Privacy"])) {
+            $checkPrivacy = $this->getElement('Privacy');
+            if ($data["SupportFeedback"] == "1" && $data["Privacy"] != "1") {
+                $checkPrivacy->addError(_("You have to agree to privacy policy."));
+                $isValid = false;
             }
-            if (isset($data["Privacy"])) {
-                $checkPrivacy = $this->getElement('Privacy');
-                if ($data["SupportFeedback"] == "1" && $data["Privacy"] != "1") {
-                    $checkPrivacy->addError(_("You have to agree to privacy policy."));
-                    $isValid = false;
-                }
-            }
+        }
 
         return $isValid;
     }
