@@ -98,35 +98,34 @@ class PreferenceController extends Zend_Controller_Action
                 $values[$field["name"]] = $field["value"];
             }
 
-            if ($form->isValid($values)) {
-                if ($values["Publicise"] != 1) {
-                    Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                    Application_Model_Preference::SetPublicise($values["Publicise"]);
-                    if (isset($values["Privacy"])) {
-                        Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                    }
-                } else {
-                    Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
-                    Application_Model_Preference::SetPhone($values["Phone"]);
-                    Application_Model_Preference::SetEmail($values["Email"]);
-                    Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                        Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                        Application_Model_Preference::SetPublicise($values["Publicise"]);
-
-                    $form->Logo->receive();
-                    $imagePath = $form->Logo->getFileName();
-
-                    Application_Model_Preference::SetStationCountry($values["Country"]);
-                    Application_Model_Preference::SetStationCity($values["City"]);
-                    Application_Model_Preference::SetStationDescription($values["Description"]);
-                    Application_Model_Preference::SetStationLogo($imagePath);
-                    if (isset($values["Privacy"])) {
-                        Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                    }
+           if ($values["Publicise"] != 1) {
+                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                Application_Model_Preference::SetPublicise($values["Publicise"]);
+                if (isset($values["Privacy"])) {
+                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
-                $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
+            } else if ($form->isValid($values)) {
+                Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
+                Application_Model_Preference::SetPhone($values["Phone"]);
+                Application_Model_Preference::SetEmail($values["Email"]);
+                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
+                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+                Application_Model_Preference::SetPublicise($values["Publicise"]);
+
+                $form->Logo->receive();
+                $imagePath = $form->Logo->getFileName();
+
+                Application_Model_Preference::SetStationCountry($values["Country"]);
+                Application_Model_Preference::SetStationCity($values["City"]);
+                Application_Model_Preference::SetStationDescription($values["Description"]);
+                Application_Model_Preference::SetStationLogo($imagePath);
+                if (isset($values["Privacy"])) {
+                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
+                }
             }
+            $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
         }
+
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logoImg = $logo;
