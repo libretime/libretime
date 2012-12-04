@@ -1,3 +1,15 @@
+2.2.1 - December 4th, 2012
+  * Bug fixes
+    * Improved fades between webstreams
+	* Fix webstreams disconnecting occasionally
+	* Put 'and' and 'or' connectors between smart blocks
+	* Fix inability to preview webstreams in the Now Playing page on some
+	browsers
+	* Fix airtime-import script failing on FLAC files
+	* Fix DJ's being able to delete files they don't own
+	* Add support for 'x-scpls' webstream playlist types
+	* Fix media-monitor requiring a restart for initial import.
+
 2.2.0 - October 25th, 2012
   * New features
     * Smart Playlists
