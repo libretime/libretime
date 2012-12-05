@@ -1398,7 +1398,7 @@ msgstr "초단위를 입력해주세요 0{.0}"
 #, php-format
 msgid ""
 "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make "
-"front-end widgets work."
+"front-end widgets work.)"
 msgstr "리모트 웹사이트에서 스케쥴 정보에 접근을 허용? %s (위젯을 사용하려면 체크 하세요)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:48
