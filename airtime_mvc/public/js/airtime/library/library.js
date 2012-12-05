@@ -1273,4 +1273,8 @@ $(document).ready(function() {
             $("#edit-md-dialog").dialog().remove();
         });
     });
+    
+    $('#editmdcancel').live("click", function() {
+        $("#edit-md-dialog").dialog().remove();
+    });
 });

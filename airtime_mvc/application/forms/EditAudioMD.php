@@ -138,17 +138,16 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         // Add the submit button
-        $this->addElement('button', 'cancel', array(
+        $this->addElement('button', 'editmdcancel', array(
             'ignore'   => true,
             'class'    => 'btn md-cancel',
             'label'    => _('Cancel'),
-            'onclick' => 'javascript:document.location.href="'.$baseUrl.'/Library"',
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('editmdsave', 'cancel'), 'submitButtons', array(
+        $this->addDisplayGroup(array('editmdsave', 'editmdcancel'), 'submitButtons', array(
                 'decorators' => array(
                     'FormElements',
                     'DtDdWrapper'
