@@ -2,12 +2,18 @@
 
 class Application_Form_EditAudioMD extends Zend_Form
 {
-    public function init()
+    
+    public function init() {}
+    
+    public function startForm($p_id)
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
          // Set the method for the display form to POST
         $this->setMethod('post');
 
+        $this->addElement('hidden', 'file_id', array(
+            'value' => $p_id
+        ));
         // Add title field
         $this->addElement('text', 'track_title', array(
             'label'      => _('Title:'),
@@ -122,7 +128,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         // Add the submit button
-        $this->addElement('submit', 'submit', array(
+        $this->addElement('button', 'editmdsave', array(
             'ignore'   => true,
             'class'    => 'btn',
             'label'    => _('Save'),
@@ -132,17 +138,16 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         // Add the submit button
-        $this->addElement('button', 'cancel', array(
+        $this->addElement('button', 'editmdcancel', array(
             'ignore'   => true,
             'class'    => 'btn md-cancel',
             'label'    => _('Cancel'),
-            'onclick' => 'javascript:document.location.href="'.$baseUrl.'/Library"',
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('submit', 'cancel'), 'submitButtons', array(
+        $this->addDisplayGroup(array('editmdsave', 'editmdcancel'), 'submitButtons', array(
                 'decorators' => array(
                     'FormElements',
                     'DtDdWrapper'
