@@ -949,18 +949,9 @@ function buildEditMetadataDialog (json){
         autoOpen: false,
         title: $.i18n._("Edit Metadata"),
         width: 460,
-        height: 700,
+        height: 660,
         modal: true,
-        close: closeDialog,
-        buttons: [
-            {
-                text: $.i18n._("Ok"),
-                "class": "btn",
-                click: function() {
-                    dialog.remove();
-                }
-            }
-        ]
+        close: closeDialog
     });
 
     dialog.dialog('open');
@@ -1278,3 +1269,4 @@ $(document).ready(function() {
         $("#edit-md-dialog").dialog().remove();
     });
 });
+
