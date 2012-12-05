@@ -5,6 +5,12 @@ $(document).ready(function() {
     dateEndId = "#his_date_end",
     timeEndId = "#his_time_end";
     
+    // set width dynamically
+    var width = $("#content").width();
+    width = width - 120;
+    $("#listenerstat_content").find("#flot_placeholder").width(width);
+    $("#listenerstat_content").find("#legend").width(width);
+    
     getDataAndPlot();
     
     listenerstat_content.find("#his_submit").click(function(){
