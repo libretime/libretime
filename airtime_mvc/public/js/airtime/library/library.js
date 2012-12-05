@@ -796,7 +796,9 @@ var AIRTIME = (function(AIRTIME) {
                         
                         if (data.ftype === "audioclip") {
                             callback = function() {
-                                document.location.href = oItems.edit.url;
+                                $.get(oItems.edit.url, {format: "json"}, function(json){
+                                    buildEditMetadataDialog(json);
+                                });
                             };
                         } else if (data.ftype === "playlist" || data.ftype === "block") {
                             callback = function() {
@@ -939,6 +941,34 @@ var AIRTIME = (function(AIRTIME) {
     return AIRTIME;
     
 }(AIRTIME || {}));
+
+function buildEditMetadataDialog (json){
+    var dialog = $(json.dialog);
+     
+    dialog.dialog({
+        autoOpen: false,
+        title: $.i18n._("Edit Metadata"),
+        width: 460,
+        height: 700,
+        modal: true,
+        close: closeDialog,
+        buttons: [
+            {
+                text: $.i18n._("Ok"),
+                "class": "btn",
+                click: function() {
+                    dialog.remove();
+                }
+            }
+        ]
+    });
+
+    dialog.dialog('open');
+}
+
+function closeDialog(event, ui) {
+    $(this).remove();
+}
 
 function checkImportStatus() {
     $.getJSON(baseUrl+'/Preference/is-import-in-progress', function(data){
@@ -1234,3 +1264,13 @@ var validationTypes = {
     "info_url" : "s",
     "year" : "i"
 };
+
+$(document).ready(function() {
+    $('#editmdsave').live("click", function() {
+        var file_id = $('#file_id').val(),
+            data = $("#edit-md-dialog form").serializeArray();
+        $.post(baseUrl+'/library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
+            $("#edit-md-dialog").dialog().remove();
+        });
+    });
+});

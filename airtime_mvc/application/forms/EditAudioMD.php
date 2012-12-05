@@ -2,12 +2,18 @@
 
 class Application_Form_EditAudioMD extends Zend_Form
 {
-    public function init()
+    
+    public function init() {}
+    
+    public function startForm($p_id)
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
          // Set the method for the display form to POST
         $this->setMethod('post');
 
+        $this->addElement('hidden', 'file_id', array(
+            'value' => $p_id
+        ));
         // Add title field
         $this->addElement('text', 'track_title', array(
             'label'      => _('Title:'),
@@ -122,7 +128,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         // Add the submit button
-        $this->addElement('submit', 'submit', array(
+        $this->addElement('button', 'editmdsave', array(
             'ignore'   => true,
             'class'    => 'btn',
             'label'    => _('Save'),
@@ -142,7 +148,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             )
         ));
 
-        $this->addDisplayGroup(array('submit', 'cancel'), 'submitButtons', array(
+        $this->addDisplayGroup(array('editmdsave', 'cancel'), 'submitButtons', array(
                 'decorators' => array(
                     'FormElements',
                     'DtDdWrapper'

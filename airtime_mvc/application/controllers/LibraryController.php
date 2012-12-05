@@ -18,6 +18,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('upload-file-soundcloud', 'json')
                     ->addActionContext('get-upload-to-soundcloud-status', 'json')
                     ->addActionContext('set-num-entries', 'json')
+                    ->addActionContext('edit-file-md', 'json')
                     ->initContext();
     }
 
@@ -382,14 +383,19 @@ class LibraryController extends Zend_Controller_Action
         if (!$isAdminOrPM && $file->getFileOwnerId() != $user->getId()) {
             return;
         }
-        
+
         $form = new Application_Form_EditAudioMD();
+        $form->startForm($file_id);
         $form->populate($file->getDbColMetadata());
 
         if ($request->isPost()) {
             if ($form->isValid($request->getPost())) {
 
-                $formdata = $form->getValues();
+                $formValues = $this->_getParam('data', null);
+                $formdata = array();
+                foreach ($formValues as $val) {
+                    $formdata[$val["name"]] = $val["value"];
+                }
                 $file->setDbColMetadata($formdata);
 
                 $data = $file->getMetadata();
@@ -404,6 +410,7 @@ class LibraryController extends Zend_Controller_Action
         }
 
         $this->view->form = $form;
+        $this->view->dialog = $this->view->render('library/edit-file-md.phtml');
     }
 
     public function getFileMetadataAction()
