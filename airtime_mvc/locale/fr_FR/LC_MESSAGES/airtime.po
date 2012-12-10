@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: http://forum.sourcefabric.org/\n"
 "POT-Creation-Date: 2012-11-29 11:44-0500\n"
-"PO-Revision-Date: 2012-12-03 21:49+0100\n"
+"PO-Revision-Date: 2012-12-08 13:56+0100\n"
 "Last-Translator: Albert Bruc <a.bruc@ab-ae.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -899,7 +899,7 @@ msgstr "Invité"
 #: airtime_mvc/application/forms/AddUser.php:87
 #: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "DJ"
-msgstr "DJ"
+msgstr "DeaJee"
 
 #: airtime_mvc/application/forms/AddUser.php:88
 #: airtime_mvc/application/controllers/LocaleController.php:308
@@ -1469,7 +1469,7 @@ msgid ""
 "front-end widgets work.)"
 msgstr ""
 "Autoriser les sites internet à acceder aux informations de la Programmation ?"
-"%s (Activer cette option permetra aux widgets de fonctionner.)"
+"%s (Activer cette option permettra aux widgets de fonctionner.)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:49
 msgid "Disabled"
@@ -2098,16 +2098,16 @@ msgid ""
 "Check this box to automatically switch off Master/Show source upon source "
 "disconnection."
 msgstr ""
-"Cochez cette case pour arrête automatiquement  la source Maître/Emission "
-"lors de la déconnexion."
+"Cochez cette case arrête automatiquement  la source Maître/Emission lors de "
+"la déconnexion."
 
 #: airtime_mvc/application/controllers/LocaleController.php:176
 msgid ""
 "Check this box to automatically switch on Master/Show source upon source "
 "connection."
 msgstr ""
-"Cochez cette case pour démarrer automatiquement la source Maître/Emission "
-"lors de la connexion."
+"Cochez cette case démarre automatiquement la source Maître/Emission lors de "
+"la connexion."
 
 #: airtime_mvc/application/controllers/LocaleController.php:177
 msgid ""
@@ -2750,7 +2750,7 @@ msgstr "Lecture Programmée"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
-msgstr "EN DIRECT"
+msgstr "DIRECT"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:55
 msgid "Listen"
@@ -2879,7 +2879,7 @@ msgstr "Alors vous êtes prêt à démarrer!"
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:13
 #, php-format
 msgid "For more detailed help, read the %suser manual%s."
-msgstr "Pour une aide plus déraillée, lisez le %smanuel utilisateur%s."
+msgstr "Pour une aide plus détaillée, lisez le %smanuel utilisateur%s."
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:40
 msgid "Expand Static Block"
