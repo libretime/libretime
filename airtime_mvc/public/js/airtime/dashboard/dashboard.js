@@ -441,7 +441,65 @@ function init() {
     });
 }
 
+/* We never retrieve the user's password from the db
+ * and when we call isValid($params) the form values are cleared
+ * and repopulated with $params which does not have the password
+ * field. Therefore, we fill the password field with 6 x's
+ */
+function setCurrentUserPseudoPassword() {
+    $('#cu_password').val("xxxxxx");
+}
+
 $(document).ready(function() {
     if ($('#master-panel').length > 0)
         init();
+
+    var timer;
+
+    $('.tipsy').live('mouseover', function() {
+        clearTimeout(timer);
+    });
+
+    $('.tipsy').live('mouseout', function() {
+        timer = setTimeout("$('#current-user').tipsy('hide')", 500);
+    });
+
+    $('#current-user').bind('mouseover', function() {
+        $.ajax({
+            url: baseUrl+'/user/edit-user/format/json',
+            dataType: 'json',
+            success: function(json) {
+                $('#current-user').tipsy({
+                    gravity: 'n',
+                    html: true,
+                    fade: true,
+                    opacity: 0.9,
+                    trigger: 'manual',
+                    title: function() {
+                        return json.html;
+                    }
+                });
+            },
+            cache: false,
+            complete: function() {
+                $('#current-user').tipsy('show');
+                setCurrentUserPseudoPassword();
+            }
+        });
+        
+    });
+
+    $('#current-user').bind('mouseout', function() {
+        timer = setTimeout("$('#current-user').tipsy('hide')", 500);
+    });
+
+    $('#cu_save_user').live('click', function() {
+        var data = $('#current-user-form').serialize();
+        $.post(baseUrl+'/user/edit-user', {format: 'json', data: data}, function(data) {
+            var json = $.parseJSON(data);
+            $('#current-user-container').empty().append(json.html);
+            setCurrentUserPseudoPassword();
+            setTimeout(removeSuccessMsg, 5000);
+        });
+    })
 });

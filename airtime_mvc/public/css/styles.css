@@ -93,6 +93,10 @@ select {
 }
 /* Version Notification Ends*/
 
+#current-user-container {
+    padding-bottom: 20px;
+}
+
 .override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
