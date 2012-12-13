@@ -162,6 +162,7 @@ $(document).ready(function() {
     $('#type').tipsy({
         gravity: 'w',
         html: true,
+        opacity: 0.9,
         trigger: 'manual',
         live: true,
         title: function() {
