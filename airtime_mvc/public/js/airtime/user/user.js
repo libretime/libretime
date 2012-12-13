@@ -104,7 +104,7 @@ $(document).ready(function() {
                 $(this).attr('user-rights',
                     $.i18n._('Guests can do the following:')+'<br><br>'+
                     $.i18n._('View schedule')+'<br>'+
-                    $.i18n._('View current playing tracks')
+                    $.i18n._('View show content')
                 );
                 break;
             case 'H':
@@ -112,11 +112,11 @@ $(document).ready(function() {
                 $(this).attr('user-rights',
                     $.i18n._('DJs can do the following:')+'<br><br>'+
                     $.i18n._('View schedule')+'<br>'+
-                    $.i18n._('View current playing tracks')+'<br>'+
+                    $.i18n._('View show content')+'<br>'+
                     $.i18n._('Manage assigned show content')+'<br>'+
                     $.i18n._('Import media files')+'<br>'+
-                    $.i18n._('Manage their own library content')+'<br>'+
-                    $.i18n._('Create playlists, smart blocks, and webstreams')
+                    $.i18n._('Create playlists, smart blocks, and webstreams')+'<br>'+
+                    $.i18n._('Manage their own library content')
                 );
                 break;
             case 'P':
@@ -124,11 +124,11 @@ $(document).ready(function() {
                 $(this).attr('user-rights',
                     $.i18n._('Progam Managers can do the following:')+'<br><br>'+
                     $.i18n._('View schedule')+'<br>'+
+                    $.i18n._('View and manage show content')+'<br>'+
                     $.i18n._('Schedule shows')+'<br>'+
                     $.i18n._('Import media files')+'<br>'+
-                    $.i18n._('Manage all library content')+'<br>'+
                     $.i18n._('Create playlists, smart blocks, and webstreams')+'<br>'+
-                    $.i18n._('Manage show content')
+                    $.i18n._('Manage all library content')
                 );
                 break;
             case 'A':
@@ -143,11 +143,11 @@ $(document).ready(function() {
                     $.i18n._('Access playout history')+'<br>'+
                     $.i18n._('View listener stats')+'<br>'+
                     $.i18n._('View schedule')+'<br>'+
+                    $.i18n._('View and manage show content')+'<br>'+
                     $.i18n._('Schedule shows')+'<br>'+
                     $.i18n._('Import media files')+'<br>'+
-                    $.i18n._('Manage all library content')+'<br>'+
                     $.i18n._('Create playlists, smart blocks, and webstreams')+'<br>'+
-                    $.i18n._('Manage show content')
+                    $.i18n._('Manage all library content')
                 );
                 break;
         }
