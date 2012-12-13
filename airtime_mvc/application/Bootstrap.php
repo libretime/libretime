@@ -117,7 +117,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/helperfunctions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/dashboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/dashboard/versiontooltip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'/js/tipsy/jquery.tipsy.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/tipsy/jquery.tipsy.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/airtime/common/audioplaytest.js?'.$CC_CONFIG['airtime_version'],'text/javascript');

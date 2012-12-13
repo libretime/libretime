@@ -94,8 +94,82 @@ function populateUserTable() {
 
 $(document).ready(function() {
     populateUserTable();
+
+    //assign user-rights and id to each user type option so we can
+    //display user rights for each with tipsy tooltip
+    $.each($('#type').children(), function(i, opt) {
+        switch ($(this).val()) {
+            case 'G':
+                $(this).attr('id', 'user-type-G');
+                $(this).attr('user-rights',
+                    $.i18n._('Guests can do the following:')+'<br><br>'+
+                    $.i18n._('View schedule')+'<br>'+
+                    $.i18n._('View current playing tracks')
+                );
+                break;
+            case 'H':
+                $(this).attr('id', 'user-type-H');
+                $(this).attr('user-rights',
+                    $.i18n._('DJs can do the following:')+'<br><br>'+
+                    $.i18n._('View schedule')+'<br>'+
+                    $.i18n._('View current playing tracks')+'<br>'+
+                    $.i18n._('Manage assigned show content')+'<br>'+
+                    $.i18n._('Import media files')+'<br>'+
+                    $.i18n._('Manage their own library content')+'<br>'+
+                    $.i18n._('Create playlists, smart blocks, and webstreams')
+                );
+                break;
+            case 'P':
+                $(this).attr('id', 'user-type-P');
+                $(this).attr('user-rights',
+                    $.i18n._('Progam Managers can do the following:')+'<br><br>'+
+                    $.i18n._('View schedule')+'<br>'+
+                    $.i18n._('Schedule shows')+'<br>'+
+                    $.i18n._('Import media files')+'<br>'+
+                    $.i18n._('Manage all library content')+'<br>'+
+                    $.i18n._('Create playlists, smart blocks, and webstreams')+'<br>'+
+                    $.i18n._('Manage show content')
+                );
+                break;
+            case 'A':
+                $(this).attr('id', 'user-type-A');
+                $(this).attr('user-rights',
+                    $.i18n._('Admins can do the following:')+'<br><br>'+
+                    $.i18n._('Manage preferences')+'<br>'+
+                    $.i18n._('Manage users')+'<br>'+
+                    $.i18n._('Manage watched folders')+'<br>'+
+                    $.i18n._('Send support feedback')+'<br>'+
+                    $.i18n._('View system status')+'<br>'+
+                    $.i18n._('Access playout history')+'<br>'+
+                    $.i18n._('View listener stats')+'<br>'+
+                    $.i18n._('View schedule')+'<br>'+
+                    $.i18n._('Schedule shows')+'<br>'+
+                    $.i18n._('Import media files')+'<br>'+
+                    $.i18n._('Manage all library content')+'<br>'+
+                    $.i18n._('Create playlists, smart blocks, and webstreams')+'<br>'+
+                    $.i18n._('Manage show content')
+                );
+                break;
+        }
+    });
+
+    $('#type').live("change", function(){
+        //when the title changes on live tipsy tooltips the changes take
+        //affect the next time tipsy is shown so we need to hide and re-show it
+        $(this).tipsy('hide').tipsy('show');
+    });
     
-    //$('#user_details').hide();
+    $('#type').tipsy({
+        gravity: 'w',
+        html: true,
+        trigger: 'manual',
+        live: true,
+        title: function() {
+            return $('#user-type-'+$(this).val()).attr('user-rights');
+        }
+    });
+    
+    $('#type').tipsy('show');
     
     var newUser = {login:"", first_name:"", last_name:"", type:"G", id:""};
     
