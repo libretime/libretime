@@ -45,7 +45,7 @@ class Application_Form_EditUser extends Zend_Form
         $this->addElement($password);
 
         $firstName = new Zend_Form_Element_Text('cu_first_name');
-        $firstName->setLabel(_('First name:'));
+        $firstName->setLabel(_('Firstname:'));
         $firstName->setValue($userData["first_name"]);
         $firstName->setAttrib('class', 'input_text');
         $firstName->addFilter('StringTrim');
@@ -53,7 +53,7 @@ class Application_Form_EditUser extends Zend_Form
         $this->addElement($firstName);
 
         $lastName = new Zend_Form_Element_Text('cu_last_name');
-        $lastName->setLabel(_('Last name:'));
+        $lastName->setLabel(_('Lastname:'));
         $lastName->setValue($userData["last_name"]);
         $lastName->setAttrib('class', 'input_text');
         $lastName->addFilter('StringTrim');
