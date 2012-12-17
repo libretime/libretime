@@ -467,7 +467,6 @@ $(document).ready(function() {
     $('#current-user').bind('mouseover', function() {
         $.ajax({
             url: baseUrl+'/user/edit-user/format/json',
-            dataType: 'json',
             success: function(json) {
                 $('#current-user').tipsy({
                     gravity: 'n',
@@ -497,9 +496,9 @@ $(document).ready(function() {
         var data = $('#current-user-form').serialize();
         $.post(baseUrl+'/user/edit-user', {format: 'json', data: data}, function(data) {
             var json = $.parseJSON(data);
-            $('#current-user-container').empty().append(json.html);
+            $('.tipsy-inner').empty().append(json.html);
             setCurrentUserPseudoPassword();
             setTimeout(removeSuccessMsg, 5000);
         });
-    })
+    });
 });

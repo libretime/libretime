@@ -15,10 +15,9 @@ class Application_Form_EditUser extends Zend_Form
         $userData = Application_Model_User::GetUserData($currentUser->getId());
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
-/*
+
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/edit-user.phtml'))));
-*/
         $this->setAttrib('id', 'current-user-form');
         
         $hidden = new Zend_Form_Element_Hidden('cu_user_id');
@@ -33,8 +32,7 @@ class Application_Form_EditUser extends Zend_Form
         $login->setRequired(true);
         $login->addValidator($notEmptyValidator);
         $login->addFilter('StringTrim');
-        //$login->setDecorators(array('viewHelper'));
-        //$login->addValidator('UserNameValidate');
+        $login->setDecorators(array('viewHelper'));
         $this->addElement($login);
 
         $password = new Zend_Form_Element_Password('cu_password');
@@ -43,22 +41,23 @@ class Application_Form_EditUser extends Zend_Form
         $password->setRequired(true);
         $password->addFilter('StringTrim');
         $password->addValidator($notEmptyValidator);
+        $password->setDecorators(array('viewHelper'));
         $this->addElement($password);
 
         $firstName = new Zend_Form_Element_Text('cu_first_name');
-        $firstName->setLabel(_('Firstname:'));
+        $firstName->setLabel(_('First name:'));
         $firstName->setValue($userData["first_name"]);
         $firstName->setAttrib('class', 'input_text');
         $firstName->addFilter('StringTrim');
-        $firstName->addValidator($notEmptyValidator);
+        $firstName->setDecorators(array('viewHelper'));
         $this->addElement($firstName);
 
         $lastName = new Zend_Form_Element_Text('cu_last_name');
-        $lastName->setLabel(_('Lastname:'));
+        $lastName->setLabel(_('Last name:'));
         $lastName->setValue($userData["last_name"]);
         $lastName->setAttrib('class', 'input_text');
         $lastName->addFilter('StringTrim');
-        $lastName->addValidator($notEmptyValidator);
+        $lastName->setDecorators(array('viewHelper'));
         $this->addElement($lastName);
 
         $email = new Zend_Form_Element_Text('cu_email');
@@ -69,6 +68,7 @@ class Application_Form_EditUser extends Zend_Form
         $email->setRequired(true);
         $email->addValidator($notEmptyValidator);
         $email->addValidator($emailValidator);
+        $email->setDecorators(array('viewHelper'));
         $this->addElement($email);
 
         $cellPhone = new Zend_Form_Element_Text('cu_cell_phone');
@@ -76,6 +76,7 @@ class Application_Form_EditUser extends Zend_Form
         $cellPhone->setValue($userData["cell_phone"]);
         $cellPhone->setAttrib('class', 'input_text');
         $cellPhone->addFilter('StringTrim');
+        $cellPhone->setDecorators(array('viewHelper'));
         $this->addElement($cellPhone);
 
         $skype = new Zend_Form_Element_Text('cu_skype');
@@ -83,6 +84,7 @@ class Application_Form_EditUser extends Zend_Form
         $skype->setValue($userData["skype_contact"]);
         $skype->setAttrib('class', 'input_text');
         $skype->addFilter('StringTrim');
+        $skype->setDecorators(array('viewHelper'));
         $this->addElement($skype);
 
         $jabber = new Zend_Form_Element_Text('cu_jabber');
@@ -91,13 +93,17 @@ class Application_Form_EditUser extends Zend_Form
         $jabber->setAttrib('class', 'input_text');
         $jabber->addFilter('StringTrim');
         $jabber->addValidator($emailValidator);
+        $jabber->setDecorators(array('viewHelper'));
         $this->addElement($jabber);
 
+        /*
         $saveBtn = new Zend_Form_Element_Button('cu_save_user');
         $saveBtn->setAttrib('class', 'btn btn-small right-floated');
         $saveBtn->setIgnore(true);
         $saveBtn->setLabel(_('Save'));
+        $saveBtn->setDecorators(array('viewHelper'));
         $this->addElement($saveBtn);
+        */
     }
 
     public function validateLogin($p_login, $p_userId) {

@@ -40,14 +40,12 @@ class Application_Form_AddUser extends Zend_Form
         $firstName->setLabel(_('Firstname:'));
         $firstName->setAttrib('class', 'input_text');
         $firstName->addFilter('StringTrim');
-        $firstName->addValidator($notEmptyValidator);
         $this->addElement($firstName);
 
         $lastName = new Zend_Form_Element_Text('last_name');
         $lastName->setLabel(_('Lastname:'));
         $lastName->setAttrib('class', 'input_text');
         $lastName->addFilter('StringTrim');
-        $lastName->addValidator($notEmptyValidator);
         $this->addElement($lastName);
 
         $email = new Zend_Form_Element_Text('email');
