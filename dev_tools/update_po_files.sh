@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd ~/airtime
+cd ..
 
 #generate a new .po file
 #this will generate a file called messages.po
