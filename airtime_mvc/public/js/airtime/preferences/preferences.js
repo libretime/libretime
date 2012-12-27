@@ -80,6 +80,20 @@ function setMsAuthenticationFieldsReadonly(ele) {
     }
 }
 
+function setSliderForReplayGain(){
+    $( "#slider-range-max" ).slider({
+        range: "max",
+        min: 0,
+        max: 10,
+        value: $("#rg_modifier_value").html(),
+        slide: function( event, ui ) {
+            $( "#replayGainModifier" ).val( ui.value );
+            $("#rg_modifier_value").html(ui.value);
+        }
+    });
+    $( "#replayGainModifier" ).val( $( "#slider-range-max" ).slider( "value" ) );
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -97,6 +111,7 @@ $(document).ready(function() {
             $('#content').empty().append(json.html);
             setTimeout(removeSuccessMsg, 5000);
             showErrorSections();
+            setSliderForReplayGain();
         });
     });
 
@@ -106,4 +121,6 @@ $(document).ready(function() {
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
+    
+    setSliderForReplayGain();
 });

@@ -679,6 +679,8 @@ SQL;
 
         $same_hour = $start_hour == $end_hour;
         $independent_event = !$same_hour;
+        $replay_gain = is_null($item["replay_gain"]) ? "0": $item["replay_gain"];
+        $replay_gain += Application_Model_Preference::getReplayGainModifier();
 
         $schedule_item = array(
             'id'                => $media_id,
@@ -692,7 +694,7 @@ SQL;
             'start'             => $start,
             'end'               => $end,
             'show_name'         => $item["show_name"],
-            'replay_gain'       => is_null($item["replay_gain"]) ? "0": $item["replay_gain"],
+            'replay_gain'       => $replay_gain,
             'independent_event' => $independent_event, 
         );
         self::appendScheduleItem($data, $start, $schedule_item);

@@ -1183,4 +1183,19 @@ class Application_Model_Preference
         $data = self::getValue("nowplaying_screen", true);
         return ($data != "") ? unserialize($data) : null;
     }
+    
+    public static function getReplayGainModifier(){
+        $rg_modifier = self::getValue("replay_gain_modifier");
+        
+        if ($rg_modifier === "") {
+            return "0";
+        }
+        
+        return $rg_modifier;
+    }
+    
+    public static function setReplayGainModifier($rg_modifier)
+    {
+        self::setValue("replay_gain_modifier", $rg_modifier, true);
+    }
 }

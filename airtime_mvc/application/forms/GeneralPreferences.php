@@ -74,6 +74,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
         $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
+        
+        $replay_gain = new Zend_Form_Element_Hidden("replayGainModifier");
+        $replay_gain->setLabel(_("Replay Gain Modifier"))
+                    ->setValue(Application_Model_Preference::getReplayGainModifier())
+                    ->setAttribs(array('style' => "border: 0; color: #f6931f; font-weight: bold;"))
+                    ->setDecorators(array('ViewHelper'));
+        $this->addElement($replay_gain);
     }
 
     private function getTimezones()

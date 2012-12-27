@@ -66,6 +66,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudGenre($values["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
                 Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);
+                Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
