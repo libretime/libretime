@@ -309,7 +309,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
             $media_url = self::getXspfUrl($url);
         } elseif (preg_match("/pls\+xml/", $mime) || preg_match("/x-scpls/", $mime)) {
             $media_url = self::getPlsUrl($url);
-        } elseif (preg_match("/(mpeg|ogg)/", $mime)) {
+        } elseif (preg_match("/(mpeg|ogg|audio\/aacp)/", $mime)) {
             if ($content_length_found) {
                 throw new Exception("Invalid webstream - This appears to be a file download.");
             }
@@ -322,10 +322,49 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     }
 
+    /* PHP get_headers has an annoying property where if the passed in URL is 
+     * a redirect, then it goes to the new URL, and returns headers from both
+     * requests. We only want the headers from the final request. Here's an
+     * example:
+     *
+     * 0 => "HTTP/1.1 302 Moved Temporarily",
+     * 1 => "X-Powered-By: Servlet/3.0 JSP/2.2 (GlassFish Server Open Source Edition 3.1.1 Java/Sun Microsystems Inc./1.6)",
+     * 2 => "Server: GlassFish Server Open Source Edition 3.1.1",
+     * 3 => "Location: http://3043.live.streamtheworld.com:80/SAM04AAC89_SC",
+     * 4 => "Content-Type: text/html;charset=ISO-8859-1",
+     * 5 => "Content-Language: en-US",
+     * 6 => "Content-Length: 202",
+     * 7 => "Date: Thu, 27 Dec 2012 21:52:59 GMT",
+     * 8 => "Connection: close",
+     * 9 => "HTTP/1.0 200 OK",
+     * 10 => "Expires: Thu, 01 Dec 2003 16:00:00 GMT",
+     * 11 => "Cache-Control: no-cache, must-revalidate",
+     * 12 => "Pragma: no-cache",
+     * 13 => "Content-Type: audio/aacp",
+     * 14 => "icy-br: 68",
+     * 15 => "Server: MediaGateway 3.2.1-04",
+     * */
+    private static function cleanHeaders($headers) {
+        //find the position of HTTP/1  200 OK
+        //
+        $position = 0;
+        foreach ($headers as $i => $v) {
+            if (preg_match("/^HTTP.*200 OK$/i", $v)) {
+                $position = $i;
+                break;
+            }
+        }
+
+        return array_slice($headers, $position); 
+    }
+
     private static function discoverStreamMime($url)
     {
         //TODO: What if invalid URL?
         $headers = get_headers($url);
+
+        $headers = self::cleanHeaders($headers);
+
         $mime = null;
         $content_length_found = false;
         foreach ($headers as $h) {
