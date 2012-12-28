@@ -12,6 +12,7 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents-feed', 'json')
                     ->addActionContext('delete', 'json')
+                    ->addActionContext('duplicate', 'json')
                     ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-metadata', 'html')
@@ -215,6 +216,7 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
+            $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."/library/duplicate");
         } elseif ($type == "stream") {
 
             $webstream = CcWebstreamQuery::create()->findPK($id);
@@ -338,6 +340,36 @@ class LibraryController extends Zend_Controller_Action
         if (isset($message)) {
             $this->view->message = $message;
         }
+    }
+    
+    // duplicate playlist
+    public function duplicateAction(){
+        $params = $this->getRequest()->getParams();
+        $id = $params['id'];
+        
+        $originalPl = new Application_Model_Playlist($id);
+        $newPl = new Application_Model_Playlist();
+        
+        $contents = $originalPl->getContents();
+        foreach ($contents as &$c) {
+            if ($c['type'] == '0') {
+                $c[1] = 'audioclip';
+            } else if ($c['type'] == '2') {
+                $c[1] = 'block';
+            } else if ($c['type'] == '1') {
+                $c[1] = 'stream';
+            }
+            $c[0] = $c['item_id'];
+        }
+        $newPl->addAudioClips($contents, null, 'begining');
+        
+        $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
+        $newPl->setDescription($originalPl->getDescription());
+        
+        list($plFadeIn, ) = $originalPl->getFadeInfo(0);
+        list($plFadeOut, ) = $originalPl->getFadeInfo($originalPl->getSize()-1);
+        $newPl->setfades($plFadeIn, $plFadeOut);
+        $newPl->setName("Copy of ".$originalPl->getName());
     }
 
     public function contentsFeedAction()

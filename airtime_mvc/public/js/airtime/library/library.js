@@ -915,6 +915,16 @@ var AIRTIME = (function(AIRTIME) {
                             soundcloud.view.callback = callback;
                         }
                     }
+                    // add callbacks for duplicate menu items.
+                    if (oItems.duplicate !== undefined) {
+                        var url = oItems.duplicate.url;
+                        callback = function() {
+                            $.post(url, {format: "json", id: data.id }, function(json){
+                                oTable.fnStandingRedraw();
+                            });
+                        };
+                        oItems.duplicate.callback = callback;
+                    }
                     // remove 'Add to smart block' option if the current
                     // block is dynamic
                     if ($('input:radio[name=sp_type]:checked').val() === "1") {
