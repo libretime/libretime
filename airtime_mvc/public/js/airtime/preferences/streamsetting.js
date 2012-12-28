@@ -386,12 +386,28 @@ function setupEventListeners() {
                 var json = $.parseJSON(data);
                 $('#content').empty().append(json.html);
                 setupEventListeners();
+                setSliderForReplayGain();
             });
         }
     });
 }
 
+function setSliderForReplayGain(){
+    $( "#slider-range-max" ).slider({
+        range: "max",
+        min: -10,
+        max: 10,
+        value: $("#rg_modifier_value").html(),
+        slide: function( event, ui ) {
+            $( "#replayGainModifier" ).val( ui.value );
+            $("#rg_modifier_value").html(ui.value);
+        }
+    });
+    $( "#replayGainModifier" ).val( $( "#slider-range-max" ).slider( "value" ) );
+}
+
 $(document).ready(function() {
     setupEventListeners();
+    setSliderForReplayGain();
 });
 

@@ -108,23 +108,5 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dt id="replayGainModifier-label" class="block-display">
-            <label><?php echo $this->element->getElement('replayGainModifier')->getLabel() ?>:
-            </label>
-            <span id="rg_modifier_value" style="border: 0; color: #f6931f; font-weight: bold;">
-                <?php echo $this->element->getElement('replayGainModifier')->getValue() ?>
-            </span>
-        </dt>
-        <dd id="replayGainModifier-element" class="block-display">
-            <?php echo $this->element->getElement('replayGainModifier') ?>
-            <?php if($this->element->getElement('replayGainModifier')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('replayGainModifier')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-            <div id="slider-range-max"></div>
-        </dd>
     </dl>
 </fieldset>
