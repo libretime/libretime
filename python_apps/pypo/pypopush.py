@@ -209,7 +209,8 @@ class PypoPush(Thread):
                 else:
                     correct = liquidsoap_queue_approx[0]['start'] == media_item['start'] and \
                             liquidsoap_queue_approx[0]['row_id'] == media_item['row_id'] and \
-                            liquidsoap_queue_approx[0]['end'] == media_item['end']
+                            liquidsoap_queue_approx[0]['end'] == media_item['end'] and \
+                            liquidsoap_queue_approx[0]['replay_gain'] == media_item['replay_gain']
             elif is_stream(media_item):
                 correct = liquidsoap_stream_id == str(media_item['row_id'])
 
