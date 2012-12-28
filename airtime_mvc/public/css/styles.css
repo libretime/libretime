@@ -93,6 +93,10 @@ select {
 }
 /* Version Notification Ends*/
 
+#current-user-container {
+    padding-bottom: 20px;
+}
+
 .override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
@@ -2934,4 +2938,20 @@ dd .stream-status {
     /* position:absolute; */
     top: 0px;
     left: 0px;
+}
+
+.edit-user-global dt {
+    width: 90px;
+    float: left;
+    margin-top: 4px;
+    margin-left: 2px;
+}
+
+.edit-user-global dd {
+    width: 230px;
+    padding-bottom: 5px;
+}
+
+.edit-user-global input {
+    width: 170px;
 }

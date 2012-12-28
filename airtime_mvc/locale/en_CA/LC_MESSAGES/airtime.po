@@ -833,11 +833,11 @@ msgstr "Password:"
 
 #: airtime_mvc/application/forms/AddUser.php:40
 msgid "Firstname:"
-msgstr "Firstname:"
+msgstr "First name:"
 
 #: airtime_mvc/application/forms/AddUser.php:47
 msgid "Lastname:"
-msgstr "Lastname:"
+msgstr "Last name:"
 
 #: airtime_mvc/application/forms/AddUser.php:63
 msgid "Mobile Phone:"

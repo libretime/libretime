@@ -915,7 +915,11 @@ var AIRTIME = (function(AIRTIME) {
                             soundcloud.view.callback = callback;
                         }
                     }
-                
+                    // remove 'Add to smart block' option if the current
+                    // block is dynamic
+                    if ($('input:radio[name=sp_type]:checked').val() === "1") {
+                        delete oItems.pl_add;
+                    }
                     items = oItems;
                 }
                 

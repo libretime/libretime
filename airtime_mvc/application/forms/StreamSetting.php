@@ -58,6 +58,13 @@ class Application_Form_StreamSetting extends Zend_Form
         $stream_format->setValue(Application_Model_Preference::GetStreamLabelFormat());
         $stream_format->setDecorators(array('ViewHelper'));
         $this->addElement($stream_format);
+        
+        $replay_gain = new Zend_Form_Element_Hidden("replayGainModifier");
+        $replay_gain->setLabel(_("Replay Gain Modifier"))
+        ->setValue(Application_Model_Preference::getReplayGainModifier())
+        ->setAttribs(array('style' => "border: 0; color: #f6931f; font-weight: bold;"))
+        ->setDecorators(array('ViewHelper'));
+        $this->addElement($replay_gain);
     }
 
     public function isValid($data)

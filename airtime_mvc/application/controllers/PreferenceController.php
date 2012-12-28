@@ -255,6 +255,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
+                Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 
                     if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
                         $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];

@@ -10,6 +10,7 @@ class UserController extends Zend_Controller_Action
                     ->addActionContext('get-user-data-table-info', 'json')
                     ->addActionContext('get-user-data', 'json')
                     ->addActionContext('remove-user', 'json')
+                    ->addActionContext('edit-user', 'json')
                     ->initContext();
     }
 
@@ -113,6 +114,49 @@ class UserController extends Zend_Controller_Action
     {
         $id = $this->_getParam('id');
         $this->view->entries = Application_Model_User::GetUserData($id);
+    }
+    
+    public function editUserAction()
+    {
+        $request = $this->getRequest();
+        $form = new Application_Form_EditUser();
+        if ($request->isPost()) {
+            $params = $request->getPost();
+            $postData = explode('&', $params['data']);
+            foreach($postData as $k=>$v) {
+                $v = explode('=', $v);
+                $formData[$v[0]] = urldecode($v[1]);
+            }
+            
+            if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 
+                    && $formData['cu_login'] == 'admin') {
+                $this->view->form = $form;
+                $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
+                die(json_encode(array("html"=>$this->view->render('user/edit-user.phtml'))));
+            } else if ($form->isValid($formData) && 
+                       $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
+                $user = new Application_Model_User($formData['cu_user_id']);
+                $user->setFirstName($formData['cu_first_name']);
+                $user->setLastName($formData['cu_last_name']);
+                $user->setLogin($formData['cu_login']);
+                // We don't allow 6 x's as a password.
+                // The reason is because we use that as a password placeholder
+                // on the client side.
+                if ($formData['cu_password'] != "xxxxxx") {
+                    $user->setPassword($formData['cu_password']);
+                }
+                $user->setEmail($formData['cu_email']);
+                $user->setCellPhone($formData['cu_cell_phone']);
+                $user->setSkype($formData['cu_skype']);
+                $user->setJabber($formData['cu_jabber']);
+                $user->save();
+                $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
+            }
+            $this->view->form = $form;
+            die(json_encode(array("html"=>$this->view->render('user/edit-user.phtml'))));
+        }
+        $this->view->form = $form;
+        $this->view->html = $this->view->render('user/edit-user.phtml');
     }
 
     public function removeUserAction()
