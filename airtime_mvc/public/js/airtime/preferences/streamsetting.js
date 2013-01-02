@@ -39,8 +39,8 @@ function restrictOggBitrate(ele, on){
         div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","disabled");
         div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","disabled");
     }else{
-        div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","");
-        div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","");
+        div.find("select[id$=data-bitrate]").find("option[value='24']").removeAttr("disabled");
+        div.find("select[id$=data-bitrate]").find("option[value='32']").removeAttr("disabled");
     }
 }
 function hideForShoutcast(ele){
