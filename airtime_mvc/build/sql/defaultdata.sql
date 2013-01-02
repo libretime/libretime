@@ -318,6 +318,7 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English - US');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'French');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'German');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italian');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', 'Korean');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Russian');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Spanish');
