@@ -20,5 +20,6 @@ plupload.addI18n({
     'IO error.': 'Ein/Ausgabe-Fehler',
     'Stop Upload': 'Hochladen stoppen',
     'Start upload': 'Hochladen',
-    '%d files queued': '%d Dateien in der Warteschlange'
+    '%d files queued': '%d Dateien in der Warteschlange',
+    "Error: Invalid file extension: " : $.i18n._("Error: Invalid file extension: ")
 });
