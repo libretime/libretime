@@ -635,7 +635,7 @@ SQL;
        //setting it to nonNull for checks down below
         $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
-
+        
         $this->con->beginTransaction();
 
         try {
@@ -646,7 +646,6 @@ SQL;
             }
 
             $clipLength = $row->getDbCliplength();
-
             if (!is_null($fadeIn)) {
 
                 $sql = "SELECT :fadein::INTERVAL > INTERVAL '{$clipLength}'";
@@ -665,11 +664,9 @@ SQL;
                 }
                 $row->setDbFadeout($fadeOut);
             }
-
-            $row->save($this->con);
             $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->pl->save($this->con);
-
+            
             $this->con->commit();
         } catch (Exception $e) {
             $this->con->rollback();
@@ -690,7 +687,6 @@ SQL;
 
             $this->changeFadeInfo($row->getDbId(), $fadein, null);
         }
-
         if (isset($fadeout)) {
             Logging::info("Setting playlist fade out {$fadeout}");
             $row = CcPlaylistcontentsQuery::create()
