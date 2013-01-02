@@ -1934,7 +1934,7 @@ msgstr "Проиграно"
 
 #: airtime_mvc/application/controllers/LocaleController.php:158
 msgid "Choose Storage Folder"
-msgstr "Выбрать для хранения"
+msgstr "выберите папку для хранения"
 
 #: airtime_mvc/application/controllers/LocaleController.php:159
 msgid "Choose Folder to Watch"
@@ -2994,7 +2994,7 @@ msgstr "URL потока: "
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:9
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:27
 msgid "Choose folder"
-msgstr "Выберите папку"
+msgstr "Выбрать"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:10
 msgid "Set"
