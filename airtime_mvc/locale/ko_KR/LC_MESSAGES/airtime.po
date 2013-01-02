@@ -2622,8 +2622,8 @@ msgid "Show Source"
 msgstr "쇼 소스"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
-msgid " Scheduled Play"
-msgstr " 스케쥴"
+msgid "Scheduled Play"
+msgstr "스케쥴"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
