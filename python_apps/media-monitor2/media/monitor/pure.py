@@ -9,6 +9,7 @@ import contextlib
 import shutil, pipes
 import re
 import sys
+import stat
 import hashlib
 import locale
 import operator as op
