@@ -709,6 +709,11 @@ SQL;
                 $blSelect[]     = "NULL::VARCHAR AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "url AS ".$key;
+            } else if ($key == "mime") {
+                $plSelect[]     = "NULL::VARCHAR AS ".$key;
+                $blSelect[]     = "NULL::VARCHAR AS ".$key;
+                $fileSelect[]   = $key;
+                $streamSelect[] = $key;
             } else {
                 $plSelect[]     = "NULL::text AS ".$key;
                 $blSelect[]     = "NULL::text AS ".$key;
