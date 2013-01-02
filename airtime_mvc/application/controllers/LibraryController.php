@@ -218,9 +218,11 @@ class LibraryController extends Zend_Controller_Action
             }
             $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."/library/duplicate");
         } elseif ($type == "stream") {
-
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
+            
+            $menu["play"]["mime"] = $webstream->getDbMime();
+
             if (isset($obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
