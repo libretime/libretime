@@ -4,9 +4,9 @@ class LocaleController extends Zend_Controller_Action
 {
     public function init()
     {
-        $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('general-translation-table', 'json')
-                    ->addActionContext('datatables-translation-table', 'json')
+        $ajaxContext = $this->_helper->getHelper("AjaxContext");
+        $ajaxContext->addActionContext("general-translation-table", "json")
+                    ->addActionContext("datatables-translation-table", "json")
                     ->initContext();
     }
 
@@ -20,10 +20,10 @@ class LocaleController extends Zend_Controller_Action
         $locale = Application_Model_Preference::GetLocale();
         echo "var datatables_dict =" .
             file_get_contents(Application_Common_OsPath::join(
-                $_SERVER['DOCUMENT_ROOT'],
+                $_SERVER["DOCUMENT_ROOT"],
                 $baseUrl,
-                '/js/datatables/i18n/',
-                $locale.'.txt')
+                "/js/datatables/i18n/",
+                $locale.".txt")
             );
     }
     
@@ -57,6 +57,7 @@ class LocaleController extends Zend_Controller_Action
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
+            "Edit Metadata" => _("Edit Metadata"),
             "Add to selected show" => _("Add to selected show"),
             "Select" => _("Select"),
             "Select this page" => _("Select this page"),
@@ -154,6 +155,7 @@ class LocaleController extends Zend_Controller_Action
             "Composer" => _("Composer"),
             "Copyright" => _("Copyright"),
             "All" => _("All"),
+            "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
             //preferences/musicdirs.js
             "Choose Storage Folder" => _("Choose Storage Folder"),
             "Choose Folder to Watch" => _("Choose Folder to Watch"),
@@ -206,7 +208,7 @@ class LocaleController extends Zend_Controller_Action
             //"Error msg: " => _("Error msg: "),
             "This show has no scheduled content." => _("This show has no scheduled content."),
             //already in schedule/add-show.js
-            //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
+            //"The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
             //schedule/schedule.js
             "January" => _("January"),
             "February" => _("February"),
@@ -256,7 +258,7 @@ class LocaleController extends Zend_Controller_Action
             "Ok" => _("Ok"),
             "Contents of Show" => _("Contents of Show"),
             //already in schedule/add-show.js
-            //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
+            //"The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
             "Remove all content?" => _("Remove all content?"),
             //showbuilder/builder.js
             "Delete selected item(s)?" => _("Delete selected item(s)?"),
@@ -276,8 +278,8 @@ class LocaleController extends Zend_Controller_Action
             "Recording From Line In" => _("Recording From Line In"),
             "Track preview" => _("Track preview"),
             //already in library/spl.js
-            //"Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
-                //=> _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."),
+            //"Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn"t "watched" anymore."
+                //=> _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn"t "watched" anymore."),
             "Cannot schedule outside a show." => _("Cannot schedule outside a show."),
             "Moving 1 Item" => _("Moving 1 Item"),
             "Moving %s Items" => _("Moving %s Items"),
@@ -348,8 +350,37 @@ class LocaleController extends Zend_Controller_Action
             //timepicker
             "Hour" => _("Hour"),
             "Minute" => _("Minute"),
-            "Done" => _("Done")
-            
+            "Done" => _("Done"),
+            //plupload ships with translation files but a lot are incomplete
+            //so we will keep them here to prevent incomplete translations
+            "Select files" => _("Select files"),
+            "Add files to the upload queue and click the start button." => _("Add files to the upload queue and click the start button."),
+            "Filename" => _("Add files to the upload queue and click the start button."),
+            "Status" => _("Status"),
+            "Size" => _("Status"),
+            "Add Files" => _("Add Files"),
+            "Stop Upload" => _("Stop Upload"),
+            "Start upload" => _("Start upload"),
+            "Add files" => _("Add files"),
+            "Uploaded %d/%d files"=> _("Uploaded %d/%d files"),
+            "N/A" => _("N/A"),
+            "Drag files here." => _("Drag files here."),
+            "File extension error." => _("File extension error."),
+            "File size error." => _("File size error."),
+            "File count error." => _("File count error."),
+            "Init error." => _("Init error."),
+            "HTTP Error." => _("HTTP Error."),
+            "Security error." => _("Security error."),
+            "Generic error." => _("Generic error."),
+            "IO error." => _("IO error."),
+            "File: %s" => _("File: %s"),
+            "Close" => _("Close"),
+            "%d files queued" => _("%d files queued"),
+            "File: %f, size: %s, max file size: %m" => _("File: %f, size: %s, max file size: %m"),
+            "Upload URL might be wrong or doesn't exist" => _("Upload URL might be wrong or doesn't exist"),
+            "Error: File too large: " => _("Error: File too large: "),
+            "Error: Invalid file extension: " => _("Error: Invalid file extension: ")
+                
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

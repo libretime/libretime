@@ -94,17 +94,25 @@ var AIRTIME = (function(AIRTIME) {
             "oTableTools": {
                 "sSwfPath": baseUrl+"/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
                 "aButtons": [
-                             "copy",
-                             {
-                                 "sExtends": "csv",
-                                 "fnClick": setFlashFileName
-                             },
-                             {
-                                 "sExtends": "pdf",
-                                 "fnClick": setFlashFileName
-                             },
-                             "print"
-                         ]
+                     {
+                         "sExtends": "copy",
+                         "fnComplete": function(nButton, oConfig, oFlash, text) {
+                             var lines = text.split('\n').length,
+                                 len = this.s.dt.nTFoot === null ? lines-1 : lines-2,
+                                 plural = (len==1) ? "" : "s";
+                             alert(sprintf($.i18n._('Copied %s row%s to the clipboard'), len, plural));
+                         }
+                     },
+                     {
+                         "sExtends": "csv",
+                         "fnClick": setFlashFileName
+                     },
+                     {
+                         "sExtends": "pdf",
+                         "fnClick": setFlashFileName
+                     },
+                     "print"
+                 ]
             }
         });
         oTable.fnSetFilteringDelay(350);
