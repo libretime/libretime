@@ -313,6 +313,7 @@ INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'ste
 -- added in 2.3
 INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', 'Chinese');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English - US');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'French');
