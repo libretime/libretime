@@ -56,7 +56,7 @@ msgstr "Streams"
 #: airtime_mvc/application/configs/navigation.php:70
 #: airtime_mvc/application/controllers/PreferenceController.php:134
 msgid "Support Feedback"
-msgstr "Retroalimentación sobre el soporte técnico"
+msgstr "Tu estación en nuestro catálogo"
 
 #: airtime_mvc/application/configs/navigation.php:76
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
