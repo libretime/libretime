@@ -599,7 +599,7 @@ msgstr "Телефон:"
 #: airtime_mvc/application/forms/AddUser.php:54
 #: airtime_mvc/application/forms/SupportSettings.php:46
 msgid "Email:"
-msgstr "Электронный адрес:"
+msgstr "Email:"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:62
 #: airtime_mvc/application/forms/SupportSettings.php:57
@@ -826,7 +826,7 @@ msgstr "Не является допустимой папкой"
 #: airtime_mvc/application/forms/AddUser.php:23
 #: airtime_mvc/application/forms/Login.php:19
 msgid "Username:"
-msgstr "Имя пользователя:"
+msgstr "Логин:"
 
 #: airtime_mvc/application/forms/AddUser.php:32
 #: airtime_mvc/application/forms/Login.php:34
@@ -843,7 +843,7 @@ msgstr "Фамилия"
 
 #: airtime_mvc/application/forms/AddUser.php:63
 msgid "Mobile Phone:"
-msgstr "Мобильный телефон:"
+msgstr "Тел:"
 
 #: airtime_mvc/application/forms/AddUser.php:69
 msgid "Skype:"
@@ -1934,7 +1934,7 @@ msgstr "Проиграно"
 
 #: airtime_mvc/application/controllers/LocaleController.php:158
 msgid "Choose Storage Folder"
-msgstr "Выберите папку для хранения"
+msgstr "Выбрать для хранения"
 
 #: airtime_mvc/application/controllers/LocaleController.php:159
 msgid "Choose Folder to Watch"
@@ -2600,7 +2600,7 @@ msgstr "Источник Show "
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
-msgstr "Запланированное проигрывание"
+msgstr "Из календаря"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
@@ -3080,7 +3080,7 @@ msgstr "Настройки входного потока"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
 msgid "Master Source Connection URL:"
-msgstr "URL подключения к источнику Master:"
+msgstr "URL подключения к Master:"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
@@ -3099,7 +3099,7 @@ msgstr "ВОССТАНОВИТЬ"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "URL подключения к источнику Show:"
+msgstr "URL подключения к Show:"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
