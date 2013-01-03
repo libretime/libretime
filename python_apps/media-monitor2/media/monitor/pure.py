@@ -412,6 +412,8 @@ def owner_id(original_path):
 def file_playable(pathname):
     """ Returns True if 'pathname' is playable by liquidsoap. False
     otherwise. """
+
+    return True
     #remove all write permissions. This is due to stupid taglib library bug
     #where all files are opened in write mode. The only way around this is to
     #modify the file permissions
