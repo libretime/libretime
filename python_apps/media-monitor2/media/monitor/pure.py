@@ -460,7 +460,7 @@ def format_length(mutagen_length):
     m = int(math.floor(t / 60))
     s = t % 60
     # will be ss.uuu
-    s = str(s)
+    s = str('{0:f}'.format(s))
     seconds = s.split(".")
     s = seconds[0]
     # have a maximum of 6 subseconds.

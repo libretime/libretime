@@ -143,7 +143,8 @@ class Application_Model_Scheduler
                 $data = $this->fileInfo;
                 $data["id"] = $id;
                 $data["cliplength"] = $file->getDbLength();
-                $data["cueout"] = $file->getDbLength();
+                $data["cuein"] = $file->getDbCuein();
+                $data["cueout"] = $file->getDbCueout();
 
                 $defaultFade = Application_Model_Preference::GetDefaultFade();
                 if (isset($defaultFade)) {

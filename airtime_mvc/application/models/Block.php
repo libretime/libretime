@@ -400,7 +400,8 @@ SQL;
             $entry["id"]         = $file->getDbId();
             $entry["pos"]        = $pos;
             $entry["cliplength"] = $file->getDbLength();
-            $entry["cueout"]     = $file->getDbLength();
+            $entry["cueout"]     = $file->getDbCueout();
+            $entry["cuein"]     = $file->getDbCuein();
 
             return $entry;
         } else {

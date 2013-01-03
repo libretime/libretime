@@ -48,7 +48,9 @@ class Application_Model_StoredFile
         "language"     => "DbLanguage",
         "replay_gain"  => "DbReplayGain",
         "directory"    => "DbDirectory",
-        "owner_id"     => "DbOwnerId"
+        "owner_id"     => "DbOwnerId",
+        "cuein"        => "DbCueIn",
+        "cueout"       => "DbCueOut",
     );
 
     public function getId()
@@ -438,7 +440,7 @@ SQL;
             return "flac";
         } elseif ($mime == "audio/mp4") {
             return "mp4";
-        } else {    
+        } else {
             throw new Exception("Unknown $mime");
         }
     }
@@ -559,10 +561,10 @@ SQL;
 
     public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null,
         $p_filepath=null) {
-        if( isset($p_id ) ) { 
+        if( isset($p_id ) ) {
            $f =  CcFilesQuery::create()->findPK(intval($p_id));
            return is_null($f) ? null : self::createWithFile($f);
-        } elseif ( isset($p_gunid) ) { 
+        } elseif ( isset($p_gunid) ) {
             throw new Exception("You should never use gunid ($gunid) anymore");
         } elseif ( isset($p_md5sum) ) {
             throw new Exception("Searching by md5($p_md5sum) is disabled");
@@ -790,7 +792,7 @@ SQL;
             //generalized within the project access to zend view methods
             //to access url helpers is needed.
 
-            // TODO : why is there inline html here? breaks abstraction and is 
+            // TODO : why is there inline html here? breaks abstraction and is
             // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
@@ -1038,7 +1040,7 @@ SQL;
         $sql = <<<SQL
 SELECT filepath AS fp
 FROM CC_FILES AS f
-WHERE f.directory = :dir_id 
+WHERE f.directory = :dir_id
 SQL;
 
         # TODO : the option $all is deprecated now and is always true.
@@ -1185,7 +1187,7 @@ SQL;
 
     
     // This method seems to be unsued everywhere so I've commented it out
-    // If it's absence does not have any effect then it will be completely 
+    // If it's absence does not have any effect then it will be completely
     // removed soon
     //public function getFileExistsFlag()
     //{

@@ -929,7 +929,7 @@ class ApiController extends Zend_Controller_Action
         $data_arr = json_decode($data);
 
         if (!is_null($media_id)) {
-            if (isset($data_arr->title) && 
+            if (isset($data_arr->title) &&
                 strlen($data_arr->title) < 1024) {
 
                 $previous_metadata = CcWebstreamMetadataQuery::create()
@@ -965,7 +965,7 @@ class ApiController extends Zend_Controller_Action
         $streams = array("s1", "s2", "s3");
         $stream_params = array();
         foreach ($streams as $s) {
-            $stream_params[$s] = 
+            $stream_params[$s] =
                 Application_Model_StreamSetting::getStreamDataNormalized($s);
         }
         $this->view->stream_params = $stream_params;
