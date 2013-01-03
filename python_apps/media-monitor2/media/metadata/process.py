@@ -9,6 +9,7 @@ from collections     import namedtuple
 import mutagen
 import subprocess
 import json
+import logging
 
 class FakeMutagen(dict):
     """
@@ -178,7 +179,8 @@ def normalize_mutagen(path):
         md['cuein'] = info['sound'][0][0]
         md['cueout'] = info['sound'][-1][1]
     except Exception:
-        raise
+        logger = logging.getLogger()
+        logger.info('silan is missing')
     
     if 'title' not in md: md['title']  = u''
     return md
