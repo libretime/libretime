@@ -29,6 +29,7 @@ class Application_Form_EditUser extends Zend_Form
         $login->setLabel(_('Username:'));
         $login->setValue($userData["login"]);
         $login->setAttrib('class', 'input_text');
+        $login->setAttrib('readonly', 'readonly');
         $login->setRequired(true);
         $login->addValidator($notEmptyValidator);
         $login->addFilter('StringTrim');
