@@ -9,6 +9,7 @@ import contextlib
 import shutil, pipes
 import re
 import sys
+import stat
 import hashlib
 import locale
 import operator as op
@@ -411,17 +412,24 @@ def owner_id(original_path):
 def file_playable(pathname):
     """ Returns True if 'pathname' is playable by liquidsoap. False
     otherwise. """
+    #remove all write permissions. This is due to stupid taglib library bug
+    #where all files are opened in write mode. The only way around this is to
+    #modify the file permissions
+    os.chmod(pathname, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
+
     # when there is an single apostrophe inside of a string quoted by
     # apostrophes, we can only escape it by replace that apostrophe with
     # '\''. This breaks the string into two, and inserts an escaped
-    # single quote in between them. We run the command as pypo because
-    # otherwise the target file is opened with write permissions, and
-    # this causes an inotify ON_CLOSE_WRITE event to be fired :/
+    # single quote in between them.
     command = ("airtime-liquidsoap -c 'output.dummy" + \
         "(audio_to_stereo(single(\"%s\")))' > /dev/null 2>&1") % \
         pathname.replace("'", "'\\''")
-    return True
+
     return_code = subprocess.call(command, shell=True)
+
+    #change/restore permissions to acceptable
+    os.chmod(pathname, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH | \
+             stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH)
     return (return_code == 0)
 
 def toposort(data):
