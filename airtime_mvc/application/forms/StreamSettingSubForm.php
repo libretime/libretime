@@ -190,6 +190,30 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         }
         $user->setAttrib('alt', 'regular_text');
         $this->addElement($user);
+        
+        $adminUser = new Zend_Form_Element_Text('admin_user');
+        $adminUser->setLabel(_("Admin User"))
+                         ->setValue(Application_Model_StreamSetting::getAdminUser($prefix))
+                         ->setValidators(array(
+                            array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
+                         ->setDecorators(array('ViewHelper'));
+        if ($disable_all) {
+            $adminUser->setAttrib("disabled", "disabled");
+        }
+        $adminUser->setAttrib('alt', 'regular_text');
+        $this->addElement($adminUser);
+        
+        $adminPass = new Zend_Form_Element_Text('admin_pass');
+        $adminPass->setLabel(_("Admin Password"))
+                         ->setValue(Application_Model_StreamSetting::getAdminPass($prefix))
+                         ->setValidators(array(
+                            array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
+                         ->setDecorators(array('ViewHelper'));
+        if ($disable_all) {
+            $adminPass->setAttrib("disabled", "disabled");
+        }
+        $adminPass->setAttrib('alt', 'regular_text');
+        $this->addElement($adminPass);
 
         $liquidsopa_error_msg = '<div class="stream-status status-info"><h3>'._('Getting information from the server...').'</h3></div>';
 

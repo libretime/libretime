@@ -31,7 +31,7 @@ class ListenerStat(Thread):
 
 
     def get_icecast_xml(self, ip):
-        encoded = base64.b64encode("%(admin_user)s:%(admin_password)s" % ip)
+        encoded = base64.b64encode("%(admin_user)s:%(admin_pass)s" % ip)
 
         header = {"Authorization":"Basic %s" % encoded}
         self.logger.debug(ip)
@@ -78,8 +78,6 @@ class ListenerStat(Thread):
         #streams are the same server, we will still initiate 3 separate
         #connections
         for k, v in stream_parameters.items():
-            v["admin_user"] = "admin"
-            v["admin_password"] = "hackme"
             if v["enable"] == 'true':
                 stats.append(self.get_icecast_stats(v))
             #stats.append(get_shoutcast_stats(ip))
@@ -103,8 +101,7 @@ class ListenerStat(Thread):
 
                 self.push_stream_stats(stats)
             except Exception, e:
-                top = traceback.format_exc()
-                self.logger.error('Exception: %s', top)
+                self.logger.error('Exception: %s', e)
 
             time.sleep(120)
 
