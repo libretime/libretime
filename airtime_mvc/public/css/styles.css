@@ -2955,3 +2955,38 @@ dd .stream-status {
 .edit-user-global input {
     width: 170px;
 }
+
+
+.jp-container a#popup-link {
+    width: 104px;
+    border: 1px solid black;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top:3px;
+    text-align: center;
+    right: 16px;
+    position: absolute;
+    top: 40px;
+    color: #FF5D1A
+}
+
+#popup-share {
+    display:none;
+    position: fixed;
+    width:360px;
+    height: 26px;
+    margin-left:8px;
+    margin-right: 150px;
+    margin-top: 0px;
+    border:1px solid black;
+    background-color:#282828;
+    padding:10px;
+    z-index:102;
+    font-size:10pt;
+    font-weight:bold;
+}
+
+#popup-share-link {
+    width: 320px;
+}
