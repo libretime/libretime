@@ -170,12 +170,15 @@ def normalize_mutagen(path):
     md['path']        = normpath(path)
     
     # silence detect(set default queue in and out)
-    command = ['silan', '-f', 'JSON', md['path']]
-    proc = subprocess.Popen(command, stdout=subprocess.PIPE)
-    out = proc.stdout.read()
-    info = json.loads(out)
-    md['cuein'] = info['sound'][0][0]
-    md['cueout'] = info['sound'][-1][1]
+    try:
+        command = ['silan', '-f', 'JSON', md['path']]
+        proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+        out = proc.stdout.read()
+        info = json.loads(out)
+        md['cuein'] = info['sound'][0][0]
+        md['cueout'] = info['sound'][-1][1]
+    except Exception:
+        raise
     
     if 'title' not in md: md['title']  = u''
     return md
