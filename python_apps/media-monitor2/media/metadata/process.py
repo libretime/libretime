@@ -169,7 +169,7 @@ def normalize_mutagen(path):
     md['sample_rate'] = getattr(m.info, 'sample_rate', 0)
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
     md['path']        = normpath(path)
-    
+
     # silence detect(set default queue in and out)
     try:
         command = ['silan', '-f', 'JSON', md['path']]
@@ -181,7 +181,7 @@ def normalize_mutagen(path):
     except Exception:
         logger = logging.getLogger()
         logger.info('silan is missing')
-    
+
     if 'title' not in md: md['title']  = u''
     return md
 

@@ -34,7 +34,13 @@ $front->registerPlugin(new RabbitMqPlugin());
 
 //localization configuration
 $codeset = 'UTF-8';
-$lang = Application_Model_Preference::GetLocale().'.'.$codeset;
+$auth = Zend_Auth::getInstance();
+if ($auth->hasIdentity()) {
+    $id = $auth->getIdentity()->id;
+    $lang = Application_Model_Preference::GetCurrentUserLocale($id).'.'.$codeset;
+} else {
+    $lang = Application_Model_Preference::GetLocale().'.'.$codeset;
+}
 
 putenv("LC_ALL=$lang");
 putenv("LANG=$lang");
