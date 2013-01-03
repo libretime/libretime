@@ -16,6 +16,16 @@ def load_definitions():
         t.default(u'0.0')
         t.depends('length')
         t.translate(lambda k: format_length(k['length']))
+        
+    with md.metadata('MDATA_KEY_CUE_IN') as t:
+        t.default(u'0.0')
+        t.depends('cuein')
+        t.translate(lambda k: format_length(k['cuein']))
+
+    with md.metadata('MDATA_KEY_CUE_OUT') as t:
+        t.default(u'0.0')
+        t.depends('cueout')
+        t.translate(lambda k: format_length(k['cueout']))
 
     with md.metadata('MDATA_KEY_MIME') as t:
         t.default(u'')

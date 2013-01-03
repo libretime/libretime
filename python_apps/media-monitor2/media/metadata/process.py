@@ -7,6 +7,8 @@ from media.monitor.log import Loggable
 import media.monitor.pure as mmp
 from collections     import namedtuple
 import mutagen
+import subprocess
+import json
 
 class FakeMutagen(dict):
     """
@@ -94,7 +96,6 @@ class MetadataElement(Loggable):
         # If value is present and normalized then we only check if it's
         # normalized or not. We normalize if it's not normalized already
 
-
         if self.name in original:
             v = original[self.name]
             if self.__is_normalized(v): return v
@@ -167,6 +168,18 @@ def normalize_mutagen(path):
     md['sample_rate'] = getattr(m.info, 'sample_rate', 0)
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
     md['path']        = normpath(path)
+    
+    # silence detect(set default queue in and out)
+    try:
+        command = ['silan', '-f', 'JSON', md['path']]
+        proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+        out = proc.stdout.read()
+        info = json.loads(out)
+        md['cuein'] = info['sound'][0][0]
+        md['cueout'] = info['sound'][-1][1]
+    except Exception:
+        raise
+    
     if 'title' not in md: md['title']  = u''
     return md
 

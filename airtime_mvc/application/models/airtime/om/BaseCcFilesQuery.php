@@ -70,6 +70,8 @@
  * @method     CcFilesQuery orderByDbSoundCloundUploadTime($order = Criteria::ASC) Order by the soundcloud_upload_time column
  * @method     CcFilesQuery orderByDbReplayGain($order = Criteria::ASC) Order by the replay_gain column
  * @method     CcFilesQuery orderByDbOwnerId($order = Criteria::ASC) Order by the owner_id column
+ * @method     CcFilesQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
+ * @method     CcFilesQuery orderByDbCueout($order = Criteria::ASC) Order by the cueout column
  * @method     CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
@@ -136,6 +138,8 @@
  * @method     CcFilesQuery groupByDbSoundCloundUploadTime() Group by the soundcloud_upload_time column
  * @method     CcFilesQuery groupByDbReplayGain() Group by the replay_gain column
  * @method     CcFilesQuery groupByDbOwnerId() Group by the owner_id column
+ * @method     CcFilesQuery groupByDbCuein() Group by the cuein column
+ * @method     CcFilesQuery groupByDbCueout() Group by the cueout column
  * @method     CcFilesQuery groupByDbHidden() Group by the hidden column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -237,6 +241,8 @@
  * @method     CcFiles findOneByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return the first CcFiles filtered by the soundcloud_upload_time column
  * @method     CcFiles findOneByDbReplayGain(string $replay_gain) Return the first CcFiles filtered by the replay_gain column
  * @method     CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
+ * @method     CcFiles findOneByDbCuein(string $cuein) Return the first CcFiles filtered by the cuein column
+ * @method     CcFiles findOneByDbCueout(string $cueout) Return the first CcFiles filtered by the cueout column
  * @method     CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
@@ -303,6 +309,8 @@
  * @method     array findByDbSoundCloundUploadTime(string $soundcloud_upload_time) Return CcFiles objects filtered by the soundcloud_upload_time column
  * @method     array findByDbReplayGain(string $replay_gain) Return CcFiles objects filtered by the replay_gain column
  * @method     array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
+ * @method     array findByDbCuein(string $cuein) Return CcFiles objects filtered by the cuein column
+ * @method     array findByDbCueout(string $cueout) Return CcFiles objects filtered by the cueout column
  * @method     array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
  *
  * @package    propel.generator.airtime.om
@@ -1953,6 +1961,50 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::OWNER_ID, $dbOwnerId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the cuein column
+	 * 
+	 * @param     string $dbCuein The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbCuein($dbCuein = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbCuein)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCuein)) {
+				$dbCuein = str_replace('*', '%', $dbCuein);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::CUEIN, $dbCuein, $comparison);
+	}
+
+	/**
+	 * Filter the query on the cueout column
+	 * 
+	 * @param     string $dbCueout The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbCueout($dbCueout = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbCueout)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbCueout)) {
+				$dbCueout = str_replace('*', '%', $dbCueout);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::CUEOUT, $dbCueout, $comparison);
 	}
 
 	/**
