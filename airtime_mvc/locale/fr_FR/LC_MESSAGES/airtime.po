@@ -1149,11 +1149,11 @@ msgstr "'%value%' ne correspond pas au format de durée 'HH:mm'"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:22
 msgid "Date/Time Start:"
-msgstr "Date / Heure de Début:"
+msgstr "Date/Heure de Début:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:49
 msgid "Date/Time End:"
-msgstr "Date / Heure de Fin:"
+msgstr "Date/Heure de Fin:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:74
 msgid "Duration:"

@@ -193,4 +193,7 @@ $(document).ready(function() {
         });
     });
     
+    $("dt[id$='label']").addClass('user-form-label');
+    $("dd[id$='element']").addClass('user-form-element');
+    
 });
