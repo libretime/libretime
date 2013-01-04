@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: contact@sourcefabric.org\n"
 "POT-Creation-Date: 2012-11-28 16:00-0500\n"
-"PO-Revision-Date: 2012-12-05 11:35+0100\n"
+"PO-Revision-Date: 2013-01-04 17:48+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: United States Localization <contact@sourcefabric.org>\n"
 "Language: en_US\n"
@@ -2650,8 +2650,8 @@ msgstr "User Type"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:5
 #, php-format
-msgid "%sAirtime%s %s, , the open radio software for scheduling and remote station management. %s"
-msgstr "%sAirtime%s %s, , the open radio software for scheduling and remote station management. %s"
+msgid "%sAirtime%s %s, the open radio software for scheduling and remote station management. %s"
+msgstr "%sAirtime%s %s, the open radio software for scheduling and remote station management. %s"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
 #, php-format
