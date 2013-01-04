@@ -255,15 +255,15 @@ function eventRender(event, element, view) {
 
     if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
         if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
-                $(element)
-                    .find(".fc-event-time")
-                    .before('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+            $(element)
+                .find(".fc-event-time")
+                .before('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
         }
     } else if (view.name === 'month') {
         if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
-                $(element)
-                    .find(".fc-event-title")
-                    .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+            $(element)
+                .find(".fc-event-title")
+                .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
         }
     }
 
