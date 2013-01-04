@@ -2941,14 +2941,14 @@ dd .stream-status {
 }
 
 .edit-user-global dt {
-    width: 90px;
+    width: 100px;
     float: left;
     margin-top: 4px;
     margin-left: 2px;
 }
 
 .edit-user-global dd {
-    width: 230px;
+    width: 240px;
     padding-bottom: 5px;
 }
 

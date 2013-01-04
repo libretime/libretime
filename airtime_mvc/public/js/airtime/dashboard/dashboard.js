@@ -488,7 +488,7 @@ $(document).ready(function() {
         
     });
 
-    $('#current-user').bind('blur', function() {
+    $('#current-user').bind('mouseout', function() {
         timer = setTimeout("$('#current-user').tipsy('hide')", 500);
     });
 
