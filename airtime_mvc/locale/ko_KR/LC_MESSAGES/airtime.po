@@ -672,8 +672,8 @@ msgstr "종료"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:15
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:6
-msgid "일"
-msgstr ""
+msgid "days"
+msgstr "일"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:63
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:58
