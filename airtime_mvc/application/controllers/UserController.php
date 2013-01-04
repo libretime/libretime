@@ -143,7 +143,6 @@ class UserController extends Zend_Controller_Action
                 $user = new Application_Model_User($formData['cu_user_id']);
                 $user->setFirstName($formData['cu_first_name']);
                 $user->setLastName($formData['cu_last_name']);
-                $user->setLogin($formData['cu_login']);
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.
