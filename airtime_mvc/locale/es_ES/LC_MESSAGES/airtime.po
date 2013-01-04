@@ -2597,7 +2597,7 @@ msgstr "Fuente del show"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
-msgstr "Reproducción programada"
+msgstr "Contenido programado"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
