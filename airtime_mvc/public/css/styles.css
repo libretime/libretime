@@ -2010,7 +2010,10 @@ span.errors.sp-errors{
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
-.preferences, .manage-folders {
+.preferences {
+    width: 500px;
+}
+.manage-folders {
     width: 610px;
 }
 
