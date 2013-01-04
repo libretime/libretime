@@ -30,13 +30,10 @@ class ListenerStat(Thread):
         return self.api_client.get_stream_parameters()
 
 
-    def get_icecast_xml(self, ip):
+    def get_stream_server_xml(self, ip, url):
         encoded = base64.b64encode("%(admin_user)s:%(admin_pass)s" % ip)
 
         header = {"Authorization":"Basic %s" % encoded}
-        self.logger.debug(ip)
-        url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
-        self.logger.debug(url)
         req = urllib2.Request(
             #assuming that the icecast stats path is /admin/stats.xml
             #need to fix this
@@ -49,7 +46,8 @@ class ListenerStat(Thread):
 
 
     def get_icecast_stats(self, ip):
-        document = self.get_icecast_xml(ip)
+        url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
+        document = self.get_stream_server_xml(ip, url)
         dom = xml.dom.minidom.parseString(document)
         sources = dom.getElementsByTagName("source")
 
@@ -67,6 +65,24 @@ class ListenerStat(Thread):
                 mount_stats = {"timestamp":timestamp, \
                             "num_listeners": num_listeners, \
                             "mount_name": mount_name}
+
+        return mount_stats
+
+    def get_shoutcast_stats(self, ip):
+        url = 'http://%(host)s:%(port)s/admin.cgi?sid=1&mode=viewxml' % ip
+        document = self.get_stream_server_xml(ip, url)
+        dom = xml.dom.minidom.parseString(document)
+        current_listeners = dom.getElementsByTagName("CURRENTLISTENERS")
+
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        num_listeners = 0
+        if len(current_listeners):
+            num_listeners = self.get_node_text(current_listeners[0].childNodes)
+
+        mount_stats = {"timestamp":timestamp, \
+                    "num_listeners": num_listeners, \
+                    "mount_name": "shoutcast"}
+
         return mount_stats
 
     def get_stream_stats(self, stream_parameters):
@@ -79,8 +95,10 @@ class ListenerStat(Thread):
         #connections
         for k, v in stream_parameters.items():
             if v["enable"] == 'true':
-                stats.append(self.get_icecast_stats(v))
-            #stats.append(get_shoutcast_stats(ip))
+                if v["output"] == "icecast":
+                    stats.append(self.get_icecast_stats(v))
+                else:
+                    stats.append(self.get_shoutcast_stats(v))
 
         return stats
 
