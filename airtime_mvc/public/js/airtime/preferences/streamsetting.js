@@ -355,6 +355,27 @@ function setupEventListeners() {
         },
     })
     
+    $(".admin_username_help_icon").qtip({
+        content: {
+            text: $.i18n._("This admin username and password for Icecast to get listener statistics.")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    })
+    
     $(".master_username_help_icon").qtip({
         content: {
             text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")

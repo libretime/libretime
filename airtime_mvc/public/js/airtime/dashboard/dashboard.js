@@ -460,7 +460,7 @@ $(document).ready(function() {
         clearTimeout(timer);
     });
 
-    $('.tipsy').live('mouseout', function() {
+    $('.tipsy').live('blur', function() {
         timer = setTimeout("$('#current-user').tipsy('hide')", 500);
     });
 

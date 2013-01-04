@@ -109,7 +109,8 @@ select {
 }
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
-.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon{
+.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon,
+.admin_username_help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
@@ -2941,14 +2942,14 @@ dd .stream-status {
 }
 
 .edit-user-global dt {
-    width: 90px;
+    width: 100px;
     float: left;
     margin-top: 4px;
     margin-left: 2px;
 }
 
 .edit-user-global dd {
-    width: 230px;
+    width: 240px;
     padding-bottom: 5px;
 }
 

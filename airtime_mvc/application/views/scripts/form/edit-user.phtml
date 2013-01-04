@@ -114,6 +114,20 @@
                 </ul>
             <?php endif; ?> 
         </dd>
+        <dt id="cu-locale-label">
+            <label><?php echo $this->element->getElement('cu_locale')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="cu-locale-element">
+            <?php echo $this->element->getElement('cu_locale') ?>
+            <?php if($this->element->getElement('cu_locale')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('cu_locale')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
         <button id="cu_save_user" type="button" class="btn btn-small right-floated">Save</button>
     </dl>
 </form>
