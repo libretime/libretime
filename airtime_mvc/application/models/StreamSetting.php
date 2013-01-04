@@ -163,7 +163,7 @@ class Application_Model_StreamSetting
         $con = Propel::getConnection();
         $sql = "SELECT *"
                 ." FROM cc_stream_setting"
-                ." WHERE keyname not like '%_error'";
+                ." WHERE keyname not like '%_error' AND keyname not like '%_admin_%'";
 
         $rows = $con->query($sql)->fetchAll();
 
@@ -432,5 +432,21 @@ class Application_Model_StreamSetting
     public static function getDjLiveStreamMountPoint()
     {
         return self::getValue("dj_live_stream_mp");
+    }
+    
+    public static function getAdminUser($stream){
+        return self::getValue($stream."_admin_user");
+    }
+    
+    public static function setAdminUser($stream, $v){
+        self::setValue($stream."_admin_user", $v, "string");
+    }
+    
+    public static function getAdminPass($stream){
+        return self::getValue($stream."_admin_pass");
+    }
+    
+    public static function setAdminPass($stream, $v){
+        self::setValue($stream."_admin_pass", $v, "string");
     }
 }
