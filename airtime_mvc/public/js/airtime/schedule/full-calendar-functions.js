@@ -252,40 +252,20 @@ function eventRender(event, element, view) {
     } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -3) {
         $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
     }
-    
-    //add scheduled show content empty icon
-    //addIcon = checkEmptyShowStatus(event);
-    //if (!addIcon) {
-        if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
-            if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
-                if (event.soundcloud_id === -1) {
-                    $(element)
-                        .find(".fc-event-time")
-                        .before('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
-                } else if (event.soundcloud_id > 0) {
-                    
-                } else if (event.soundcloud_id === -2) {
-                
-                } else if (event.soundcloud_id === -3) {
-                    
-                }
-            }
-        } else if (view.name === 'month') {
-            if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
-                if (event.soundcloud_id === -1) {
-                    $(element)
-                        .find(".fc-event-title")
-                        .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
-                } else if (event.soundcloud_id > 0) {
-                    
-                } else if (event.soundcloud_id === -2) {
-                
-                } else if (event.soundcloud_id === -3) {
-                    
-                }
-            }
+
+    if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+        if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
+                $(element)
+                    .find(".fc-event-time")
+                    .before('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
         }
-    //}
+    } else if (view.name === 'month') {
+        if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
+                $(element)
+                    .find(".fc-event-title")
+                    .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+        }
+    }
 
     //rebroadcast icon
     if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
