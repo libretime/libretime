@@ -1051,6 +1051,9 @@ function addQtipToSCIcons(){
                     my: "left top",
                     viewport: $(window)
                 },
+                style: {
+                    classes: "ui-tooltip-dark file-md-long"
+                },
                 show: {
                     ready: true // Needed to make it show on first mouseover
                                 // event
@@ -1080,6 +1083,9 @@ function addQtipToSCIcons(){
                     my: "left top",
                     viewport: $(window)
                 },
+                style: {
+                    classes: "ui-tooltip-dark file-md-long"
+                },
                 show: {
                     ready: true // Needed to make it show on first mouseover
                                 // event
@@ -1108,6 +1114,9 @@ function addQtipToSCIcons(){
                     at: "right center",
                     my: "left top",
                     viewport: $(window)
+                },
+                style: {
+                    classes: "ui-tooltip-dark file-md-long"
                 },
                 show: {
                     ready: true // Needed to make it show on first mouseover

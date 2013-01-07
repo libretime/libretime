@@ -288,7 +288,7 @@ function eventRender(event, element, view) {
 function eventAfterRender( event, element, view ) {
 
     $(element).find(".small-icon").live('mouseover',function(){
-        addQtipToSCIcons($(this));
+        addQtipsToIcons($(this));
     });
 }
 
@@ -406,7 +406,8 @@ function getCurrentShow(){
     }); 	
 }
 
-function addQtipToSCIcons(ele){
+
+function addQtipsToIcons(ele){
     var id = $(ele).attr("id");
 
     if($(ele).hasClass("progress")){
@@ -422,6 +423,9 @@ function addQtipToSCIcons(ele){
                 at: "right center",
                 my: "left top",
                 viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
             },
             show: {
                 ready: true // Needed to make it show on first mouseover event
@@ -448,6 +452,9 @@ function addQtipToSCIcons(ele){
                 at: "right center",
                 my: "left top",
                 viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
             },
             show: {
                 ready: true // Needed to make it show on first mouseover event
@@ -476,6 +483,9 @@ function addQtipToSCIcons(ele){
                 my: "left top",
                 viewport: $(window)
             },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
@@ -500,7 +510,6 @@ function addQtipToSCIcons(ele){
         });
     }
 }
-
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
