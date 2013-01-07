@@ -98,7 +98,7 @@ class Application_Form_EditUser extends Zend_Form
         $this->addElement($jabber);
 
         $locale = new Zend_Form_Element_Select("cu_locale");
-        $locale->setLabel(_("Language"));
+        $locale->setLabel(_("Language:"));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
         $locale->setValue(Application_Model_Preference::GetUserLocale($currentUser->getId()));
         $locale->setDecorators(array('ViewHelper'));
