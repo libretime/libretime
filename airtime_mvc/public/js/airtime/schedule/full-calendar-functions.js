@@ -501,38 +501,6 @@ function addQtipToSCIcons(ele){
     }
 }
 
-/* This functions does two things:
- * 1. Checks if each event(i.e. a show) is over and removes the show empty icon if it is
- * 2. Else, if an event is passed in, it checks if the event(i.e. a show) is over
- *    This gets checked when we are deciding if the show-empty icon should be added
- *    at the beginning of an event render callback.
- */
-/*
-function checkEmptyShowStatus(e) {
-    var currDate = new Date();
-    var endTime;
-    
-    if (e === undefined) {
-        var events = $('#schedule_calendar').fullCalendar('clientEvents');
-        
-        $.each(events, function(i, event){
-            endTime = event.end;
-            $emptyIcon = $("span[id="+event.id+"][class='small-icon show-empty']");
-            if (currDate.getTime() > endTime.getTime() && $emptyIcon.length === 1) {
-                $emptyIcon.remove();
-            }
-        });
-    } else {
-        endTime = e.end;
-        var showOver = false;
-        if (currDate.getTime() > endTime.getTime()) {
-            showOver = true;
-        }
-        return showOver;
-    }
-}
-*/
-
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
@@ -543,7 +511,6 @@ function alertShowErrorAndReload(){
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
     setInterval( "getCurrentShow()", 5000 );
-    //setInterval( "checkEmptyShowStatus()", 5000 );
 });
 
 var view_name;
