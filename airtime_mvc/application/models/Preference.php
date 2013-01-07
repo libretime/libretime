@@ -455,7 +455,7 @@ class Application_Model_Preference
     {
         return self::getValue("locale");
     }
-    
+
     public static function GetCurrentUserLocale($id)
     {
         return self::getValue("user_".$id."_locale", true);
