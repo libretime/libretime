@@ -449,4 +449,12 @@ class Application_Model_StreamSetting
     public static function setAdminPass($stream, $v){
         self::setValue($stream."_admin_pass", $v, "string");
     }
+    
+    public static function getOffAirMeta(){
+        return self::getValue("off_air_meta");
+    }
+    
+    public static function setOffAirMeta($offAirMeta){
+        self::setValue("off_air_meta", $offAirMeta, "string");
+    }
 }

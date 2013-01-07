@@ -1,4 +1,7 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
+-- added in 2.3
+INSERT INTO cc_pref("keystr", "valstr") VALUES('off_air_meta', 'Airtime - offline');
+-- end of added in 2.3
 
 -- added in 2.1
 INSERT INTO cc_pref("keystr", "valstr") VALUES('scheduled_play_switch', 'on');
