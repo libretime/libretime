@@ -257,11 +257,11 @@ function eventRender(event, element, view) {
         if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
             $(element)
                 .find(".fc-event-time")
-                .before('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+                .before('<span id="'+event.id+'" class="small-icon show-empty"></span>');
         } else if (event.show_partial_filled === true) {
             $(element)
                 .find(".fc-event-time")
-                .before('<span id="'+event.id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+                .before('<span id="'+event.id+'" class="small-icon show-partial-filled"></span>');
         }
     } else if (view.name === 'month') {
         if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
@@ -494,6 +494,27 @@ function addQtipsToIcons(ele){
         $(ele).qtip({
             content: {
                 text: $.i18n._("This show has no scheduled content.")
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        });
+    } else if ($(ele).hasClass("show-partial-filled")){
+        $(ele).qtip({
+            content: {
+                text: $.i18n._("This show is not completely filled with content.")
             },
             position:{
                 adjust: {
