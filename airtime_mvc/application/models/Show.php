@@ -1801,6 +1801,8 @@ SQL;
 
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;
+                
+            $options["show_partial_filled"] = $showInstance->showPartialFilled();
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
