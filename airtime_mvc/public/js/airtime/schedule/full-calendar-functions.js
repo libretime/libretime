@@ -438,7 +438,7 @@ function addQtipsToIcons(ele){
                 ajax: {
                     url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                     type: "post",
-                    data: ({format: "json", id : id, type: "file"}),
+                    data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){
                         this.set('content.text', $.i18n._("The soundcloud id for this file is: ")+json.sc_id);
                     }
@@ -503,6 +503,9 @@ function addQtipsToIcons(ele){
                 at: "right center",
                 my: "left top",
                 viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
             },
             show: {
                 ready: true // Needed to make it show on first mouseover event
