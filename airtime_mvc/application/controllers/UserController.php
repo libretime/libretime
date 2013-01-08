@@ -72,6 +72,11 @@ class UserController extends Zend_Controller_Action
                     $user->setJabber($formData['jabber']);
                     $user->save();
 
+                    // Language settings are saved on a per-user basis
+                    // By default, the general language setting on preferences
+                    // page is what gets assigned.
+                    Application_Model_Preference::SetUserLocale($user->getId());
+
                     $form->reset();
                     $this->view->form = $form;
 
@@ -138,7 +143,6 @@ class UserController extends Zend_Controller_Action
                 $user = new Application_Model_User($formData['cu_user_id']);
                 $user->setFirstName($formData['cu_first_name']);
                 $user->setLastName($formData['cu_last_name']);
-                $user->setLogin($formData['cu_login']);
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.
@@ -150,6 +154,7 @@ class UserController extends Zend_Controller_Action
                 $user->setSkype($formData['cu_skype']);
                 $user->setJabber($formData['cu_jabber']);
                 $user->save();
+                Application_Model_Preference::SetUserLocale($user->getId(), $formData['cu_locale']);
                 $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
             }
             $this->view->form = $form;

@@ -63,6 +63,14 @@
                     </ul>
                 <?php endif; ?>
             </dd>
+            <dt id="offAirMeta-label">
+                <label>
+                    <?php echo $this->form->getElement('offAirMeta')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="offAirMeta-element">
+                <?php echo $this->form->getElement('offAirMeta') ?>
+            </dd>
             <dt id="replayGainModifier-label" class="block-display">
             <label><?php echo $this->form->getElement('replayGainModifier')->getLabel() ?>:
             </label>
@@ -80,7 +88,7 @@
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
-            <div id="slider-range-max"></div>
+            <div id="slider-range-max" style="width: 99%"></div>
         </dd>
         </dl>
     </fieldset>

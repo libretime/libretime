@@ -45,6 +45,8 @@ airtime2mutagen = {
     "MDATA_KEY_URL"         : "website",
     "MDATA_KEY_ISRC"        : "isrc",
     "MDATA_KEY_COPYRIGHT"   : "copyright",
+    "MDATA_KEY_CUE_IN"      : "cuein",
+    "MDATA_KEY_CUE_OUT"     : "cueout",
 }
 
 

@@ -39,8 +39,8 @@ function restrictOggBitrate(ele, on){
         div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","disabled");
         div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","disabled");
     }else{
-        div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","");
-        div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","");
+        div.find("select[id$=data-bitrate]").find("option[value='24']").removeAttr("disabled");
+        div.find("select[id$=data-bitrate]").find("option[value='32']").removeAttr("disabled");
     }
 }
 function hideForShoutcast(ele){
@@ -231,7 +231,7 @@ function setupEventListeners() {
         }
     })
     
-    $('.toggle legend').live('click',function() {
+    $('.toggle legend').click(function() {
         $(this).parent().toggleClass('closed');
         return false;
     });
@@ -355,6 +355,27 @@ function setupEventListeners() {
         },
     })
     
+    $(".admin_username_help_icon").qtip({
+        content: {
+            text: $.i18n._("This admin username and password for Icecast to get listener statistics.")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    })
+    
     $(".master_username_help_icon").qtip({
         content: {
             text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")
@@ -375,21 +396,6 @@ function setupEventListeners() {
             at: "right center"
         },
     })
-    
-    $('#stream_save').live('click', function(){
-        var confirm_pypo_restart_text = $.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.");
-        if (confirm(confirm_pypo_restart_text)) {
-            var data = $('#stream_form').serialize();
-            var url = baseUrl+'/Preference/stream-setting';
-
-            $.post(url, {format:"json", data: data}, function(data){
-                var json = $.parseJSON(data);
-                $('#content').empty().append(json.html);
-                setupEventListeners();
-                setSliderForReplayGain();
-            });
-        }
-    });
 }
 
 function setSliderForReplayGain(){
@@ -409,5 +415,20 @@ function setSliderForReplayGain(){
 $(document).ready(function() {
     setupEventListeners();
     setSliderForReplayGain();
+    
+    $('#stream_save').live('click', function(){
+        var confirm_pypo_restart_text = $.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.");
+        if (confirm(confirm_pypo_restart_text)) {
+            var data = $('#stream_form').serialize();
+            var url = baseUrl+'/Preference/stream-setting';
+
+            $.post(url, {format:"json", data: data}, function(data){
+                var json = $.parseJSON(data);
+                $('#content').empty().append(json.html);
+                setupEventListeners();
+                setSliderForReplayGain();
+            });
+        }
+    });
 });
 

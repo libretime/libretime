@@ -558,20 +558,18 @@ var AIRTIME = (function(AIRTIME) {
                 // add the play function to the library_type td
                 $(nRow).find('td.library_type').click(function(){
                     if (aData.ftype === 'playlist' && aData.length !== '0.0'){
-                        playlistIndex = $(this).parent().attr('id').substring(3); // remove
-                                                                                    // the
-                                                                                    // pl_
+                        playlistIndex = $(this).parent().attr('id').substring(3);
                         open_playlist_preview(playlistIndex, 0);
                     } else if (aData.ftype === 'audioclip') {
                         if (isAudioSupported(aData.mime)) {
                             open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
                         }
                     } else if (aData.ftype == 'stream') {
-                        open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                        if (isAudioSupported(aData.mime)) {
+                            open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                        }
                     } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
-                        blockIndex = $(this).parent().attr('id').substring(3); // remove
-                                                                                // the
-                                                                                // bl_
+                        blockIndex = $(this).parent().attr('id').substring(3);
                         open_block_preview(blockIndex, 0);
                     }
                     return false;
@@ -1053,6 +1051,9 @@ function addQtipToSCIcons(){
                     my: "left top",
                     viewport: $(window)
                 },
+                style: {
+                    classes: "ui-tooltip-dark file-md-long"
+                },
                 show: {
                     ready: true // Needed to make it show on first mouseover
                                 // event
@@ -1082,6 +1083,9 @@ function addQtipToSCIcons(){
                     my: "left top",
                     viewport: $(window)
                 },
+                style: {
+                    classes: "ui-tooltip-dark file-md-long"
+                },
                 show: {
                     ready: true // Needed to make it show on first mouseover
                                 // event
@@ -1110,6 +1114,9 @@ function addQtipToSCIcons(){
                     at: "right center",
                     my: "left top",
                     viewport: $(window)
+                },
+                style: {
+                    classes: "ui-tooltip-dark file-md-long"
                 },
                 show: {
                     ready: true // Needed to make it show on first mouseover

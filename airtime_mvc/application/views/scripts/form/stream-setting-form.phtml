@@ -1,4 +1,4 @@
-        <?php 
+        <?php
         $s_name = "s".$this->stream_number;
         ?>
         <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"closed":""?>"><span class="arrow-icon"></span><? echo _("Stream "); ?><?php echo $this->stream_number?></h3>
@@ -99,6 +99,34 @@
                     <?php if($this->element->getElement('pass')->hasErrors()) : ?>
                         <ul class='errors'>
                             <?php foreach($this->element->getElement('pass')->getMessages() as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </dd>
+                <dt id="adminUser-label">
+                    <label for="outputUser"><?php echo $this->element->getElement('admin_user')->getLabel()?> :
+                    <span class='admin_username_help_icon'></span>
+                    </label>
+                </dt>
+                <dd id="adminUser-element">
+                    <?php echo $this->element->getElement('admin_user')?>
+                    <?php if($this->element->getElement('admin_user')->hasErrors()) : ?>
+                        <ul class='errors'>
+                            <?php foreach($this->element->getElement('admin_user')->getMessages() as $error): ?>
+                                <li><?php echo $error; ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </dd>
+                <dt id="adminPassword-label">
+                    <label class="optional" for="outputPassword"><?php echo $this->element->getElement('admin_pass')->getLabel()?> :</label>
+                </dt>
+                <dd id="adminPassword-element" class="clearfix">
+                    <?php echo $this->element->getElement('admin_pass')?>
+                    <?php if($this->element->getElement('admin_pass')->hasErrors()) : ?>
+                        <ul class='errors'>
+                            <?php foreach($this->element->getElement('admin_pass')->getMessages() as $error): ?>
                                 <li><?php echo $error; ?></li>
                             <?php endforeach; ?>
                         </ul>

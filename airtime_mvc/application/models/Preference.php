@@ -3,7 +3,12 @@
 class Application_Model_Preference
 {
 
-    private static function setValue($key, $value, $isUserValue = false)
+    /**
+     *
+     * @param integer $userId is not null when we are setting a locale for a specific user
+     * @param boolean $isUserValue is true when we are setting a value for the current user
+     */
+    private static function setValue($key, $value, $isUserValue = false, $userId = null)
     {
         try {
             //called from a daemon process
@@ -22,9 +27,12 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             
             //For user specific preference, check if id matches as well
-            if ($isUserValue) {
+            if ($isUserValue && is_null($userId)) {
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $id;
+            } else if (!is_null($userId)) {
+                $sql .= " AND subjid= :id";
+                $paramMap[':id'] = $userId;
             }
 
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
@@ -42,7 +50,11 @@ class Application_Model_Preference
                     $sql = "UPDATE cc_pref"
                     . " SET valstr = :value"
                     . " WHERE keystr = :key AND subjid = :id";
-                    $paramMap[':id'] = $id;
+                    if (is_null($userId)) {
+                        $paramMap[':id'] = $id;
+                    } else {
+                        $paramMap[':id'] = $userId;
+                    }
                 }
             } else {
                 // result not found
@@ -54,7 +66,11 @@ class Application_Model_Preference
                     // user pref
                     $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
                     ." VALUES (:id, :key, :value)";
-                    $paramMap[':id'] = $id;
+                    if (is_null($userId)) {
+                        $paramMap[':id'] = $id;
+                    } else {
+                        $paramMap[':id'] = $userId;
+                    }
                 }
             }
             $paramMap[':key'] = $key;
@@ -428,15 +444,42 @@ class Application_Model_Preference
     {
         return self::getValue("timezone");
     }
-    
-    public static function SetLocale($locale)
+
+    // This is the language setting on preferences page
+    public static function SetDefaultLocale($locale)
     {
         self::setValue("locale", $locale);
     }
-    
-    public static function GetLocale()
+
+    public static function GetDefaultLocale()
     {
         return self::getValue("locale");
+    }
+
+    public static function GetUserLocale($id)
+    {
+        return self::getValue("user_".$id."_locale", true);
+    }
+
+    public static function SetUserLocale($userId, $locale = null)
+    {
+        // When a new user is created they will get the default locale
+        // setting which the admin sets on preferences page
+        if (is_null($locale)) {
+            $locale = self::GetDefaultLocale();
+        }
+        self::setValue("user_".$userId."_locale", $locale, true, $userId);
+    }
+
+    public static function GetLocale()
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $id = $auth->getIdentity()->id;
+            return self::GetUserLocale($id);
+        } else {
+            return self::GetDefaultLocale();
+        }
     }
 
     public static function SetStationLogo($imagePath)

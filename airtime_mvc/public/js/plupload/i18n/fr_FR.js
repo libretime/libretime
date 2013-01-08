@@ -21,5 +21,6 @@ plupload.addI18n({
     'Stop Upload': 'Arrêter les envois.',
     'Add Files': 'Ajouter des fichiers',
     'Start upload': 'Démarrer les envois.',
-    '%d files queued': '%d fichiers en attente.'
+    '%d files queued': '%d fichiers en attente.',
+    "Error: Invalid file extension: " : $.i18n._("Error: Invalid file extension: ")
 });

@@ -17,6 +17,7 @@ plupload.addI18n({
     'HTTP Error.': 'Errore HTTP.',
     'Security error.': 'Errore sicurezza.',
     'Generic error.': 'Errore generico.',
+    "Error: Invalid file extension: " : $.i18n._("Error: Invalid file extension: "),
     'IO error.': 'Errore IO.',
         'Stop Upload': 'Ferma Upload',
         'Start upload': 'Inizia Upload',

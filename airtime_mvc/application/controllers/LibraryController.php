@@ -195,6 +195,7 @@ class LibraryController extends Zend_Controller_Action
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
+                $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."/library/duplicate");
             } elseif ($type === 'block') {
                 $obj = new Application_Model_Block($id);
                 if (!$obj->isStatic()) {
@@ -216,11 +217,12 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
-            $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."/library/duplicate");
         } elseif ($type == "stream") {
-
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
+            
+            $menu["play"]["mime"] = $webstream->getDbMime();
+
             if (isset($obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
