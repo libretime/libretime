@@ -357,7 +357,7 @@ function setupEventListeners() {
     
     $(".admin_username_help_icon").qtip({
         content: {
-            text: $.i18n._("This admin username and password for Icecast to get listener statistics.")
+            text: $.i18n._("This is the admin username and password for Icecast/SHOUTcast to get listener statistics.")
         },
         hide: {
             delay: 500,

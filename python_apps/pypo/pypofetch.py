@@ -277,7 +277,7 @@ class PypoFetch(Thread):
                 if (existing[s[u'keyname']] != str(s[u'value'])):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
-            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname']:
+            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname'] or "off_air_meta" in s[u'keyname']:
                 if (existing[s[u'keyname']] != s[u'value']):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
