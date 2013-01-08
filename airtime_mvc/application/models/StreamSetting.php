@@ -457,4 +457,13 @@ class Application_Model_StreamSetting
     public static function setOffAirMeta($offAirMeta){
         self::setValue("off_air_meta", $offAirMeta, "string");
     }
+    
+    public static function GetAllListenerStatErrors(){
+        $sql = "SELECT * FROM cc_stream_setting WHERE keyname like :p1";
+        return Application_Common_Database::prepareAndExecute($sql, array(':p1'=>'%_listener_stat_error'));
+    }
+    
+    public static function SetListenerStatError($key, $v) {
+        self::setValue($key, $v, 'string');
+    }
 }

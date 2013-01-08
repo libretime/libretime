@@ -47,6 +47,15 @@ class ListenerstatController extends Zend_Controller_Action
                 'his_time_end' => $end->format("H:i")
         ));
         
+        $errorStatus = Application_Model_StreamSetting::GetAllListenerStatErrors();
+        Logging::info($errorStatus);
+        $out = array();
+        foreach ($errorStatus as $v) {
+            $key = explode('_listener_stat_error', $v['keyname']);
+            $out[$key[0]] = $v['value'];
+        }
+        
+        $this->view->errorStatus = $out;
         $this->view->date_form = $form;
     }
     

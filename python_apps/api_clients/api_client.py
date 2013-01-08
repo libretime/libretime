@@ -383,3 +383,7 @@ class AirtimeApiClient(object):
         # TODO : users of this method should do their own error handling
         response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
         return response
+
+    def update_stream_setting_table(self, data):
+        response = self.services.update_stream_setting_table(_post_data={'data': json.dumps(data)})
+        return response

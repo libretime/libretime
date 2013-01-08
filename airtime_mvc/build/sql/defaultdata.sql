@@ -1,9 +1,6 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 -- added in 2.3
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_listener_stat_error', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_listener_stat_error', '', 'string');
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_listener_stat_error', '', 'string');
 -- end of added in 2.3
 
 -- added in 2.1
