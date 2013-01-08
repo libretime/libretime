@@ -122,7 +122,7 @@ $(document).ready(function() {
             case 'P':
                 $(this).attr('id', 'user-type-P');
                 $(this).attr('user-rights',
-                    $.i18n._('Progam Managers can do the following:')+'<br><br>'+
+                    $.i18n._('Program Managers can do the following:')+'<br><br>'+
                     $.i18n._('View schedule')+'<br>'+
                     $.i18n._('View and manage show content')+'<br>'+
                     $.i18n._('Schedule shows')+'<br>'+
