@@ -55,7 +55,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $locale = new Zend_Form_Element_Select("locale");
         $locale->setLabel(_("Default Interface Language"));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
-        $locale->setValue(Application_Model_Preference::GetLocale());
+        $locale->setValue(Application_Model_Preference::GetDefaultLocale());
         $locale->setDecorators(array('ViewHelper'));
         $this->addElement($locale);
 

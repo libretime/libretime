@@ -99,7 +99,7 @@ def create_fresh_os(vm_name, debian=False):
     do_local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
 
-    time.sleep(15)
+    time.sleep(30)
 
     try_again = True
     while try_again:
@@ -115,7 +115,7 @@ def create_fresh_os(vm_name, debian=False):
     env.host_string = ip_addr
 
     if debian:
-        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+        append('/etc/apt/sources.list', "deb http://backports.debian.org/debian-backports squeeze-backports main", use_sudo=True)
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -157,6 +157,14 @@ def ubuntu_precise_32(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_12.04_32')
 
+def ubuntu_quantal_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.10_32')
+
+def ubuntu_quantal_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.10_64')
+
 def debian_squeeze_32(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Debian_Squeeze_32', debian=True)
@@ -164,6 +172,14 @@ def debian_squeeze_32(fresh_os=True):
 def debian_squeeze_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Debian_Squeeze_64', debian=True)
+
+def debian_wheezy_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Wheezy_32')
+
+def debian_wheezy_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Wheezy_64')
 
 
 def compile_liquidsoap(filename="liquidsoap"):
@@ -179,11 +195,11 @@ def compile_liquidsoap(filename="liquidsoap"):
     do_sudo('''apt-get install -y --force-yes ocaml-findlib libao-ocaml-dev libportaudio-ocaml-dev \
 libmad-ocaml-dev libtaglib-ocaml-dev libalsa-ocaml-dev libtaglib-ocaml-dev libvorbis-ocaml-dev \
 libspeex-dev libspeexdsp-dev speex libladspa-ocaml-dev festival festival-dev \
-libsamplerate-dev libxmlplaylist-ocaml-dev libxmlrpc-light-ocaml-dev libflac-dev \
+libsamplerate-dev libxmlplaylist-ocaml-dev libflac-dev \
 libxml-dom-perl libxml-dom-xpath-perl patch autoconf libmp3lame-dev \
-libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev
+libcamomile-ocaml-dev libcamlimages-ocaml-dev libtool libpulse-dev libjack-dev \
 camlidl libfaad-dev libpcre-ocaml-dev''')
-
+#libxmlrpc-light-ocaml-dev
     root = '/home/martin/src'
     do_run('mkdir -p %s' % root)
 
@@ -202,13 +218,14 @@ camlidl libfaad-dev libpcre-ocaml-dev''')
     #do_run('cd %s/liquidsoap-1.0.1-full && make' % root)
     #get('%s/liquidsoap-1.0.1-full/liquidsoap-1.0.1/src/liquidsoap' % root, filename)
 
-    do_run('cd %s/savonet && cp PACKAGES.minimal PACKAGES' % root)
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
-    sed('%s/savonet/PACKAGES' % root, '#ocaml-faad', 'ocaml-faad')
-    do_run('cd %s/savonet && make clean' % root)
-    do_run('cd %s/savonet && ./bootstrap' % root)
-    do_run('cd %s/savonet && ./configure' % root)
-    do_run('cd %s/savonet && make' % root)
-    get('%s/savonet/liquidsoap/src/liquidsoap' % root, filename)
+    do_run('cd %s/liquidsoap && cp PACKAGES.minimal PACKAGES' % root)
+    sed('%s/liquidsoap/PACKAGES' % root, '#ocaml-portaudio', 'ocaml-portaudio')
+    sed('%s/liquidsoap/PACKAGES' % root, '#ocaml-alsa', 'ocaml-alsa')
+    sed('%s/liquidsoap/PACKAGES' % root, '#ocaml-pulseaudio', 'ocaml-pulseaudio')
+    sed('%s/liquidsoap/PACKAGES' % root, '#ocaml-faad', 'ocaml-faad')
+    do_run('cd %s/liquidsoap && ./bootstrap' % root)
+    do_run('cd %s/liquidsoap && ./configure' % root)
+    do_run('cd %s/liquidsoap && make clean' % root)
+    do_run('cd %s/liquidsoap && make' % root)
+    do_sudo('chmod 755 %s/liquidsoap/liquidsoap/src/liquidsoap' % root)
+    get('%s/liquidsoap/liquidsoap/src/liquidsoap' % root, filename)
