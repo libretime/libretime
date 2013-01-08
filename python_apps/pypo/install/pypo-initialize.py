@@ -38,27 +38,6 @@ def get_os_codename():
 
     return ("unknown", "unknown")
 
-def generate_liquidsoap_config(ss):
-    data = ss['msg']
-    fh = open('/etc/airtime/liquidsoap.cfg', 'w')
-    fh.write("################################################\n")
-    fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
-    fh.write("################################################\n")
-    for d in data:
-        buffer = d[u'keyname'] + " = "
-        if(d[u'type'] == 'string'):
-            temp = d[u'value']
-            buffer += '"%s"' % temp
-        else:
-            temp = d[u'value']
-            if(temp == ""):
-                temp = "0"
-            buffer += temp
-        buffer += "\n"
-        fh.write(api_client.encode_to(buffer))
-    fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
-    fh.close()
-
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 PATH_LIQUIDSOAP_BIN = '/usr/lib/airtime/pypo/bin/liquidsoap_bin'
 
