@@ -1184,6 +1184,11 @@ SQL;
         $this->_file->setDbFileExists($flag)
             ->save();
     }
+    public function setFileHiddenFlag($flag)
+    {
+        $this->_file->setDbHidden($flag)
+            ->save();
+    }
     public function setSoundCloudUploadTime($time)
     {
         $this->_file->setDbSoundCloundUploadTime($time)
