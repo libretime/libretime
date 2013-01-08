@@ -1,6 +1,6 @@
 <div id="content" class="jp-container">
 <h1><? echo _("Live stream") ?></h1>
-<a id="popup-link" href="#">Share</a> 
+<a id="popup-link" href="#"><?php echo _("Share") ?></a> 
 <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
 <script>
 function setjPlayer(url, type, serverType){
