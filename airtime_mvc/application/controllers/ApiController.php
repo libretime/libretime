@@ -490,6 +490,7 @@ class ApiController extends Zend_Controller_Action
                 // If the file already exists we will update and make sure that
                 // it's marked as 'exists'.
                 $file->setFileExistsFlag(true);
+                $file->setFileHiddenFlag(false);
                 $file->setMetadata($md);
             }
             if ($md['is_record'] != 0) {

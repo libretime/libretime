@@ -201,13 +201,6 @@ class Application_Model_StreamSetting
                             "value"=>self::getDjLiveStreamMountPoint(),
                             "type"=>"string");
         }
-        
-        $sql = "SELECT *"
-        ." FROM cc_pref"
-        ." WHERE keystr = 'off_air_meta'";
-
-        $out = $con->query($sql)->fetchAll();
-        $rows[] = array("keyname" => $out[0]["keystr"], "value"=>$out[0]["valstr"], "type"=>"string");
 
         return $rows;
     }
