@@ -201,6 +201,13 @@ class Application_Model_StreamSetting
                             "value"=>self::getDjLiveStreamMountPoint(),
                             "type"=>"string");
         }
+        
+        $sql = "SELECT *"
+        ." FROM cc_pref"
+        ." WHERE keystr = 'off_air_meta'";
+
+        $out = $con->query($sql)->fetchAll();
+        $rows[] = array("keyname" => $out[0]["keystr"], "value"=>$out[0]["valstr"], "type"=>"string");
 
         return $rows;
     }
@@ -448,5 +455,13 @@ class Application_Model_StreamSetting
     
     public static function setAdminPass($stream, $v){
         self::setValue($stream."_admin_pass", $v, "string");
+    }
+    
+    public static function getOffAirMeta(){
+        return self::getValue("off_air_meta");
+    }
+    
+    public static function setOffAirMeta($offAirMeta){
+        self::setValue("off_air_meta", $offAirMeta, "string");
     }
 }

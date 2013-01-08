@@ -395,8 +395,10 @@ SQL;
                 $entry["id"]         = $obj->getDbId();
                 $entry["pos"]        = $pos;
                 $entry["cliplength"] = $obj->getDbLength();
-                $entry["cuein"]      = $obj->getDbCuein();
-                $entry["cueout"]     = $obj->getDbCueout();
+                if ($obj instanceof CcFiles && $obj) {
+                    $entry["cuein"]      = $obj->getDbCuein();
+                    $entry["cueout"]     = $obj->getDbCueout();
+                }
                 $entry["ftype"]      = $objType;
             }
 

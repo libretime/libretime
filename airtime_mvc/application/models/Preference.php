@@ -446,17 +446,17 @@ class Application_Model_Preference
     }
 
     // This is the language setting on preferences page
-    public static function SetLocale($locale)
+    public static function SetDefaultLocale($locale)
     {
         self::setValue("locale", $locale);
     }
 
-    public static function GetLocale()
+    public static function GetDefaultLocale()
     {
         return self::getValue("locale");
     }
-    
-    public static function GetCurrentUserLocale($id)
+
+    public static function GetUserLocale($id)
     {
         return self::getValue("user_".$id."_locale", true);
     }
@@ -466,14 +466,20 @@ class Application_Model_Preference
         // When a new user is created they will get the default locale
         // setting which the admin sets on preferences page
         if (is_null($locale)) {
-            $locale = self::GetLocale();
+            $locale = self::GetDefaultLocale();
         }
         self::setValue("user_".$userId."_locale", $locale, true, $userId);
     }
 
-    public static function GetUserLocale($userId)
+    public static function GetLocale()
     {
-        return self::getValue("user_".$userId."_locale");
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $id = $auth->getIdentity()->id;
+            return self::GetUserLocale($id);
+        } else {
+            return self::GetDefaultLocale();
+        }
     }
 
     public static function SetStationLogo($imagePath)

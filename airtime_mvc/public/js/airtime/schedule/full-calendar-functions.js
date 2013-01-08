@@ -257,13 +257,21 @@ function eventRender(event, element, view) {
         if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
             $(element)
                 .find(".fc-event-time")
-                .before('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+                .before('<span id="'+event.id+'" class="small-icon show-empty"></span>');
+        } else if (event.show_partial_filled === true) {
+            $(element)
+                .find(".fc-event-time")
+                .before('<span id="'+event.id+'" class="small-icon show-partial-filled"></span>');
         }
     } else if (view.name === 'month') {
         if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
             $(element)
                 .find(".fc-event-title")
                 .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+        } else if (event.show_partial_filled === true) {
+            $(element)
+                .find(".fc-event-title")
+                .after('<span id="'+event.id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
         }
     }
 
@@ -280,7 +288,7 @@ function eventRender(event, element, view) {
 function eventAfterRender( event, element, view ) {
 
     $(element).find(".small-icon").live('mouseover',function(){
-        addQtipToSCIcons($(this));
+        addQtipsToIcons($(this));
     });
 }
 
@@ -398,7 +406,8 @@ function getCurrentShow(){
     }); 	
 }
 
-function addQtipToSCIcons(ele){
+
+function addQtipsToIcons(ele){
     var id = $(ele).attr("id");
 
     if($(ele).hasClass("progress")){
@@ -415,6 +424,9 @@ function addQtipToSCIcons(ele){
                 my: "left top",
                 viewport: $(window)
             },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
@@ -426,7 +438,7 @@ function addQtipToSCIcons(ele){
                 ajax: {
                     url: baseUrl+"/Library/get-upload-to-soundcloud-status",
                     type: "post",
-                    data: ({format: "json", id : id, type: "file"}),
+                    data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){
                         this.set('content.text', $.i18n._("The soundcloud id for this file is: ")+json.sc_id);
                     }
@@ -440,6 +452,9 @@ function addQtipToSCIcons(ele){
                 at: "right center",
                 my: "left top",
                 viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
             },
             show: {
                 ready: true // Needed to make it show on first mouseover event
@@ -468,6 +483,9 @@ function addQtipToSCIcons(ele){
                 my: "left top",
                 viewport: $(window)
             },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
@@ -486,45 +504,36 @@ function addQtipToSCIcons(ele){
                 my: "left top",
                 viewport: $(window)
             },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
+            show: {
+                ready: true // Needed to make it show on first mouseover event
+            }
+        });
+    } else if ($(ele).hasClass("show-partial-filled")){
+        $(ele).qtip({
+            content: {
+                text: $.i18n._("This show is not completely filled with content.")
+            },
+            position:{
+                adjust: {
+                resize: true,
+                method: "flip flip"
+                },
+                at: "right center",
+                my: "left top",
+                viewport: $(window)
+            },
+            style: {
+                classes: "ui-tooltip-dark file-md-long"
+            },
             show: {
                 ready: true // Needed to make it show on first mouseover event
             }
         });
     }
 }
-
-/* This functions does two things:
- * 1. Checks if each event(i.e. a show) is over and removes the show empty icon if it is
- * 2. Else, if an event is passed in, it checks if the event(i.e. a show) is over
- *    This gets checked when we are deciding if the show-empty icon should be added
- *    at the beginning of an event render callback.
- */
-/*
-function checkEmptyShowStatus(e) {
-    var currDate = new Date();
-    var endTime;
-    
-    if (e === undefined) {
-        var events = $('#schedule_calendar').fullCalendar('clientEvents');
-        
-        $.each(events, function(i, event){
-            endTime = event.end;
-            $emptyIcon = $("span[id="+event.id+"][class='small-icon show-empty']");
-            if (currDate.getTime() > endTime.getTime() && $emptyIcon.length === 1) {
-                $emptyIcon.remove();
-            }
-        });
-    } else {
-        endTime = e.end;
-        var showOver = false;
-        if (currDate.getTime() > endTime.getTime()) {
-            showOver = true;
-        }
-        return showOver;
-    }
-}
-*/
-
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
@@ -535,7 +544,6 @@ function alertShowErrorAndReload(){
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
     setInterval( "getCurrentShow()", 5000 );
-    //setInterval( "checkEmptyShowStatus()", 5000 );
 });
 
 var view_name;

@@ -120,7 +120,11 @@ server.register(namespace="dynamic_source",
 #                fun (s) -> begin log("dynamic_source.read_stop") destroy_dynamic_source_all() end)
 
 default = amplify(id="silence_src", 0.00001, noise())
-default = rewrite_metadata([("artist","Airtime"), ("title", "offline")], default)
+ref_off_air_meta = ref off_air_meta
+if !ref_off_air_meta == "" then
+    ref_off_air_meta := "Airtime - offline"
+end
+default = rewrite_metadata([("title", !ref_off_air_meta)], default)
 ignore(output.dummy(default, fallible=true))
 
 master_dj_enabled = ref false

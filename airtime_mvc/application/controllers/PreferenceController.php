@@ -44,7 +44,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
-                Application_Model_Preference::SetLocale($values["locale"]);
+                Application_Model_Preference::SetDefaultLocale($values["locale"]);
                 Application_Model_Preference::SetTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 
@@ -284,6 +284,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
                     Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
                     Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
+                    Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();

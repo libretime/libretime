@@ -1981,6 +1981,9 @@ span.errors.sp-errors{
 .small-icon.show-empty {
     background:url(images/icon_alert_cal_alt.png) no-repeat 0 0;
 }
+.small-icon.show-partial-filled {
+    background:url(images/icon_alert_cal_alt.png) no-repeat 0 0;
+}
 .medium-icon {
 	display:block;
 	width:25px;
