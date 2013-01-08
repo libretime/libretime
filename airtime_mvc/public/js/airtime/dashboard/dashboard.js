@@ -470,7 +470,10 @@ $(document).ready(function() {
             setTimeout(removeSuccessMsg, 5000);
         });
     });
-    
+
+    // When the 'Listen' button is clicked we set the width
+    // of the share button to the width of the 'Live Stream'
+    // text. This differs depending on the language setting
     $('#popup-link').css('width', $('.jp-container h1').css('width'));
 
 });
