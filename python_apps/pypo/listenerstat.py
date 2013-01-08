@@ -95,15 +95,25 @@ class ListenerStat(Thread):
         #connections
         for k, v in stream_parameters.items():
             if v["enable"] == 'true':
-                if v["output"] == "icecast":
-                    stats.append(self.get_icecast_stats(v))
-                else:
-                    stats.append(self.get_shoutcast_stats(v))
+                try:
+                    if v["output"] == "icecast":
+                        stats.append(self.get_icecast_stats(v))
+                    else:
+                        stats.append(self.get_shoutcast_stats(v))
+                    self.update_listener_stat_error(v["mount"], 'OK')
+                except Exception, e:
+                    self.logger.error('Exception: %s', e)
+                    self.update_listener_stat_error(v["mount"], str(e))
 
         return stats
 
     def push_stream_stats(self, stats):
         self.api_client.push_stream_stats(stats)
+    
+    def update_listener_stat_error(self, stream_id, error):
+        keyname = '%s_listener_stat_error' % stream_id
+        data = {keyname: error}
+        self.api_client.update_stream_setting_table(data)
 
     def run(self):
         #Wake up every 120 seconds and gather icecast statistics. Note that we
@@ -116,8 +126,11 @@ class ListenerStat(Thread):
 
                 stats = self.get_stream_stats(stream_parameters["stream_params"])
                 self.logger.debug(stats)
-
-                self.push_stream_stats(stats)
+                
+                if not stats:
+                    self.logger.error("Not able to get listener stats")
+                else:
+                    self.push_stream_stats(stats)
             except Exception, e:
                 self.logger.error('Exception: %s', e)
 

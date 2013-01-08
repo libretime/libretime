@@ -42,6 +42,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('notify-webstream-data'         , 'json')
                 ->addActionContext('get-stream-parameters'         , 'json')
                 ->addActionContext('push-stream-stats'         , 'json')
+                ->addActionContext('update-stream-setting-table'         , 'json')
                 ->initContext();
     }
 
@@ -978,6 +979,15 @@ class ApiController extends Zend_Controller_Action
 
         Application_Model_ListenerStat::insertDataPoints($data);
         $this->view->data = $data;
+    }
+    
+    public function updateStreamSettingTableAction() {
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam("data"), true);
+        
+        foreach ($data as $k=>$v) {
+            Application_Model_StreamSetting::SetListenerStatError($k, $v);
+        }
     }
 
 }
