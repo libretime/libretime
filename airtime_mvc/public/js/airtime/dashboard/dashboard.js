@@ -453,52 +453,22 @@ function setCurrentUserPseudoPassword() {
 $(document).ready(function() {
     if ($('#master-panel').length > 0)
         init();
-
-    var timer;
-
-    $('.tipsy').live('mouseover', function() {
-        clearTimeout(timer);
-    });
-
-    $('.tipsy').live('blur', function() {
-        timer = setTimeout("$('#current-user').tipsy('hide')", 500);
-    });
-
-    $('#current-user').bind('mouseover', function() {
+    setCurrentUserPseudoPassword();
+    
+    $('#current-user').live('click', function() {
         $.ajax({
-            url: baseUrl+'/user/edit-user/format/json',
-            success: function(json) {
-                $('#current-user').tipsy({
-                    gravity: 'n',
-                    html: true,
-                    fade: true,
-                    opacity: 0.9,
-                    trigger: 'manual',
-                    title: function() {
-                        return json.html;
-                    }
-                });
-            },
-            cache: false,
-            complete: function() {
-                $('#current-user').tipsy('show');
-                setCurrentUserPseudoPassword();
-            }
+            url: baseUrl+'/user/edit-user/format/json'
         });
-        
     });
-
-    $('#current-user').bind('mouseout', function() {
-        timer = setTimeout("$('#current-user').tipsy('hide')", 500);
-    });
-
+    
     $('#cu_save_user').live('click', function() {
         var data = $('#current-user-form').serialize();
         $.post(baseUrl+'/user/edit-user', {format: 'json', data: data}, function(data) {
             var json = $.parseJSON(data);
-            $('.tipsy-inner').empty().append(json.html);
+            $('.edit-current-user').parent().empty().append(json.html);
             setCurrentUserPseudoPassword();
             setTimeout(removeSuccessMsg, 5000);
         });
     });
+
 });

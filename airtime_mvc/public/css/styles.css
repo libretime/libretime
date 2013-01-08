@@ -97,6 +97,14 @@ select {
     padding-bottom: 20px;
 }
 
+.edit-current-user {
+    width: 450px;
+}
+
+.edit-current-user label {
+    font-weight: bold;
+}
+
 .override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
@@ -2956,19 +2964,19 @@ dd .stream-status {
 }
 
 .edit-user-global dt {
-    width: 100px;
+    width: 150px;
     float: left;
     margin-top: 4px;
     margin-left: 2px;
 }
 
 .edit-user-global dd {
-    width: 240px;
+    width: 340px;
     padding-bottom: 5px;
 }
 
-.edit-user-global input {
-    width: 170px;
+.edit-user-global input, select {
+    width: 200px;
 }
 
 
