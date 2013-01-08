@@ -470,5 +470,7 @@ $(document).ready(function() {
             setTimeout(removeSuccessMsg, 5000);
         });
     });
+    
+    $('#popup-link').css('width', $('.jp-container h1').css('width'));
 
 });

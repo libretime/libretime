@@ -105,6 +105,13 @@ select {
     font-weight: bold;
 }
 
+.stream-player-label {
+    padding-left: 8px !important;
+}
+.jp-stream form {
+    margin-left: 7px !important;
+}
+
 .override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
