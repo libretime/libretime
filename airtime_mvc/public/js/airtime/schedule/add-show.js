@@ -494,8 +494,8 @@ function setAddShowEvents() {
             });
 		});
 
-	var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]/);
-    var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]/);
+    var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/);
+    var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]$/);
     
 	// when start date/time changes, set end date/time to start date/time+1 hr
 	$('#add_show_start_date, #add_show_start_time').bind('input', 'change', function(){

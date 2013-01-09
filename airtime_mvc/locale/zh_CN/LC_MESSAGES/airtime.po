@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-08 10:46-0500\n"
-"PO-Revision-Date: 2013-01-08 11:53-0500\n"
+"POT-Creation-Date: 2013-01-09 14:52-0500\n"
+"PO-Revision-Date: 2013-01-09 15:14-0500\n"
 "Last-Translator: Cliff Wang <cliff.wang@sourcefabric.org>\n"
 "Language-Team: Chinese Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -25,7 +25,7 @@ msgid "Rebroadcast of %s from %s"
 msgstr "%s是%s的重播"
 
 #: airtime_mvc/application/models/StoredFile.php:804
-#: airtime_mvc/application/controllers/LocaleController.php:279
+#: airtime_mvc/application/controllers/LocaleController.php:280
 msgid "Track preview"
 msgstr "试听媒体"
 
@@ -481,7 +481,7 @@ msgid "View Recorded File Metadata"
 msgstr "查看录制文件的元数据"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:262
-#: airtime_mvc/application/controllers/LocaleController.php:299
+#: airtime_mvc/application/controllers/LocaleController.php:300
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
 msgstr "添加 / 删除内容"
@@ -690,7 +690,7 @@ msgid "Are you sure you want to delete the selected item?"
 msgstr "确定删除所选项？"
 
 #: airtime_mvc/application/controllers/LocaleController.php:100
-#: airtime_mvc/application/controllers/LocaleController.php:202
+#: airtime_mvc/application/controllers/LocaleController.php:203
 msgid "Uploading in progress..."
 msgstr "正在上传..."
 
@@ -781,7 +781,7 @@ msgid "Yes, help Airtime"
 msgstr "是的，帮助Airtime"
 
 #: airtime_mvc/application/controllers/LocaleController.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:184
+#: airtime_mvc/application/controllers/LocaleController.php:185
 msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "图像文件格式只能是jpg，jpeg，png或者gif"
 
@@ -950,7 +950,7 @@ msgid "If your Icecast server expects a username of 'source', this field can be 
 msgstr "如果你的Icecast服务器所要求的用户名是‘source’，那么当前项可以留空。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:180
-#: airtime_mvc/application/controllers/LocaleController.php:189
+#: airtime_mvc/application/controllers/LocaleController.php:190
 msgid "If your live streaming client does not ask for a username, this field should be 'source'."
 msgstr "如果你的流客户端不需要用户名，那么当前项可以留空"
 
@@ -958,642 +958,646 @@ msgstr "如果你的流客户端不需要用户名，那么当前项可以留空
 msgid "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
 msgstr "如果你更改了一个已经启用了的输出流的用户名或者密码，那么内置的播放输出引擎模块将会重启，你的听众将会听到一段时间的空白，大概持续5到10秒。而改变如下的模块将不会导致该模块重启：流标签（全局设置里）和流切换淡入淡出效果（秒），主输入流用户名和密码（输入流设置）。如果Airtime正在录制过程中，而且改变设置导致引擎模块重启后，当前的录制进程将会被打断。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:186
+#: airtime_mvc/application/controllers/LocaleController.php:183
+msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgstr "此处填写Icecast或者SHOUTcast的管理员用户名和密码，用于获取收听数据的统计。"
+
+#: airtime_mvc/application/controllers/LocaleController.php:187
 msgid "No result found"
 msgstr "搜索无结果"
 
-#: airtime_mvc/application/controllers/LocaleController.php:187
+#: airtime_mvc/application/controllers/LocaleController.php:188
 msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
 msgstr "当前遵循与节目同样的安全模式：只有指定到当前节目的用户才能连接的上。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:188
+#: airtime_mvc/application/controllers/LocaleController.php:189
 msgid "Specify custom authentication which will work only for this show."
 msgstr "所设置的自定义认证设置只对当前的节目有效。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:190
+#: airtime_mvc/application/controllers/LocaleController.php:191
 msgid "The show instance doesn't exist anymore!"
 msgstr "此节目已不存在"
 
-#: airtime_mvc/application/controllers/LocaleController.php:194
+#: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Show"
 msgstr "节目"
 
-#: airtime_mvc/application/controllers/LocaleController.php:195
+#: airtime_mvc/application/controllers/LocaleController.php:196
 msgid "Show is empty"
 msgstr "节目内容为空"
 
-#: airtime_mvc/application/controllers/LocaleController.php:196
+#: airtime_mvc/application/controllers/LocaleController.php:197
 msgid "1m"
 msgstr "1分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:197
+#: airtime_mvc/application/controllers/LocaleController.php:198
 msgid "5m"
 msgstr "5分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:198
+#: airtime_mvc/application/controllers/LocaleController.php:199
 msgid "10m"
 msgstr "10分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:199
+#: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "15m"
 msgstr "15分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:200
+#: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "30m"
 msgstr "30分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:201
+#: airtime_mvc/application/controllers/LocaleController.php:202
 msgid "60m"
 msgstr "60分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:203
+#: airtime_mvc/application/controllers/LocaleController.php:204
 msgid "Retreiving data from the server..."
 msgstr "从服务器下载数据中..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:209
+#: airtime_mvc/application/controllers/LocaleController.php:210
 msgid "This show has no scheduled content."
 msgstr "此节目没有安排内容。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:213
+#: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "January"
 msgstr "一月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:214
+#: airtime_mvc/application/controllers/LocaleController.php:215
 msgid "February"
 msgstr "二月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:215
+#: airtime_mvc/application/controllers/LocaleController.php:216
 msgid "March"
 msgstr "三月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:216
+#: airtime_mvc/application/controllers/LocaleController.php:217
 msgid "April"
 msgstr "四月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:217
-#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:218
+#: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "May"
 msgstr "五月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:218
+#: airtime_mvc/application/controllers/LocaleController.php:219
 msgid "June"
 msgstr "六月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:219
+#: airtime_mvc/application/controllers/LocaleController.php:220
 msgid "July"
 msgstr "七月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:220
+#: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "August"
 msgstr "八月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:221
+#: airtime_mvc/application/controllers/LocaleController.php:222
 msgid "September"
 msgstr "九月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:222
+#: airtime_mvc/application/controllers/LocaleController.php:223
 msgid "October"
 msgstr "十月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:224
 msgid "November"
 msgstr "十一月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:225
 msgid "December"
 msgstr "十二月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:225
+#: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "Jan"
 msgstr "一月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:226
+#: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "Feb"
 msgstr "二月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:227
+#: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "Mar"
 msgstr "三月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:228
+#: airtime_mvc/application/controllers/LocaleController.php:229
 msgid "Apr"
 msgstr "四月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:230
+#: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "Jun"
 msgstr "六月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:231
+#: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "Jul"
 msgstr "七月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:232
+#: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "Aug"
 msgstr "八月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:233
+#: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "Sep"
 msgstr "九月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:234
+#: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "Oct"
 msgstr "十月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:235
+#: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "Nov"
 msgstr "十一月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:236
+#: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "Dec"
 msgstr "十二月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:237
+#: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "today"
 msgstr "今天"
 
-#: airtime_mvc/application/controllers/LocaleController.php:238
+#: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "day"
 msgstr "日"
 
-#: airtime_mvc/application/controllers/LocaleController.php:239
+#: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "week"
 msgstr "星期"
 
-#: airtime_mvc/application/controllers/LocaleController.php:240
+#: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "month"
 msgstr "月"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
+#: airtime_mvc/application/controllers/LocaleController.php:242
 #: airtime_mvc/application/forms/GeneralPreferences.php:109
 msgid "Sunday"
 msgstr "周日"
 
-#: airtime_mvc/application/controllers/LocaleController.php:242
+#: airtime_mvc/application/controllers/LocaleController.php:243
 #: airtime_mvc/application/forms/GeneralPreferences.php:110
 msgid "Monday"
 msgstr "周一"
 
-#: airtime_mvc/application/controllers/LocaleController.php:243
+#: airtime_mvc/application/controllers/LocaleController.php:244
 #: airtime_mvc/application/forms/GeneralPreferences.php:111
 msgid "Tuesday"
 msgstr "周二"
 
-#: airtime_mvc/application/controllers/LocaleController.php:244
+#: airtime_mvc/application/controllers/LocaleController.php:245
 #: airtime_mvc/application/forms/GeneralPreferences.php:112
 msgid "Wednesday"
 msgstr "周三"
 
-#: airtime_mvc/application/controllers/LocaleController.php:245
+#: airtime_mvc/application/controllers/LocaleController.php:246
 #: airtime_mvc/application/forms/GeneralPreferences.php:113
 msgid "Thursday"
 msgstr "周四"
 
-#: airtime_mvc/application/controllers/LocaleController.php:246
+#: airtime_mvc/application/controllers/LocaleController.php:247
 #: airtime_mvc/application/forms/GeneralPreferences.php:114
 msgid "Friday"
 msgstr "周五"
 
-#: airtime_mvc/application/controllers/LocaleController.php:247
+#: airtime_mvc/application/controllers/LocaleController.php:248
 #: airtime_mvc/application/forms/GeneralPreferences.php:115
 msgid "Saturday"
 msgstr "周六"
 
-#: airtime_mvc/application/controllers/LocaleController.php:248
+#: airtime_mvc/application/controllers/LocaleController.php:249
 #: airtime_mvc/application/forms/AddShowRepeats.php:28
 msgid "Sun"
 msgstr "周日"
 
-#: airtime_mvc/application/controllers/LocaleController.php:249
+#: airtime_mvc/application/controllers/LocaleController.php:250
 #: airtime_mvc/application/forms/AddShowRepeats.php:29
 msgid "Mon"
 msgstr "周一"
 
-#: airtime_mvc/application/controllers/LocaleController.php:250
+#: airtime_mvc/application/controllers/LocaleController.php:251
 #: airtime_mvc/application/forms/AddShowRepeats.php:30
 msgid "Tue"
 msgstr "周二"
 
-#: airtime_mvc/application/controllers/LocaleController.php:251
+#: airtime_mvc/application/controllers/LocaleController.php:252
 #: airtime_mvc/application/forms/AddShowRepeats.php:31
 msgid "Wed"
 msgstr "周三"
 
-#: airtime_mvc/application/controllers/LocaleController.php:252
+#: airtime_mvc/application/controllers/LocaleController.php:253
 #: airtime_mvc/application/forms/AddShowRepeats.php:32
 msgid "Thu"
 msgstr "周四"
 
-#: airtime_mvc/application/controllers/LocaleController.php:253
+#: airtime_mvc/application/controllers/LocaleController.php:254
 #: airtime_mvc/application/forms/AddShowRepeats.php:33
 msgid "Fri"
 msgstr "周五"
 
-#: airtime_mvc/application/controllers/LocaleController.php:254
+#: airtime_mvc/application/controllers/LocaleController.php:255
 #: airtime_mvc/application/forms/AddShowRepeats.php:34
 msgid "Sat"
 msgstr "周六"
 
-#: airtime_mvc/application/controllers/LocaleController.php:255
+#: airtime_mvc/application/controllers/LocaleController.php:256
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "超出的节目内容将被随后的节目所取代。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:256
+#: airtime_mvc/application/controllers/LocaleController.php:257
 msgid "Cancel Current Show?"
 msgstr "取消当前的节目？"
 
-#: airtime_mvc/application/controllers/LocaleController.php:257
-#: airtime_mvc/application/controllers/LocaleController.php:296
+#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:297
 msgid "Stop recording current show?"
 msgstr "停止录制当前的节目？"
 
-#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:259
 msgid "Ok"
 msgstr "确定"
 
-#: airtime_mvc/application/controllers/LocaleController.php:259
+#: airtime_mvc/application/controllers/LocaleController.php:260
 msgid "Contents of Show"
 msgstr "浏览节目内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:262
+#: airtime_mvc/application/controllers/LocaleController.php:263
 msgid "Remove all content?"
 msgstr "清空全部内容？"
 
-#: airtime_mvc/application/controllers/LocaleController.php:264
+#: airtime_mvc/application/controllers/LocaleController.php:265
 msgid "Delete selected item(s)?"
 msgstr "删除选定的项目？"
 
-#: airtime_mvc/application/controllers/LocaleController.php:265
+#: airtime_mvc/application/controllers/LocaleController.php:266
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
 msgstr "开始"
 
-#: airtime_mvc/application/controllers/LocaleController.php:266
+#: airtime_mvc/application/controllers/LocaleController.php:267
 msgid "End"
 msgstr "结束"
 
-#: airtime_mvc/application/controllers/LocaleController.php:267
+#: airtime_mvc/application/controllers/LocaleController.php:268
 msgid "Duration"
 msgstr "时长"
 
-#: airtime_mvc/application/controllers/LocaleController.php:273
+#: airtime_mvc/application/controllers/LocaleController.php:274
 msgid "Cue In"
 msgstr "切入"
 
-#: airtime_mvc/application/controllers/LocaleController.php:274
+#: airtime_mvc/application/controllers/LocaleController.php:275
 msgid "Cue Out"
 msgstr "切出"
 
-#: airtime_mvc/application/controllers/LocaleController.php:275
+#: airtime_mvc/application/controllers/LocaleController.php:276
 msgid "Fade In"
 msgstr "淡入"
 
-#: airtime_mvc/application/controllers/LocaleController.php:276
+#: airtime_mvc/application/controllers/LocaleController.php:277
 msgid "Fade Out"
 msgstr "淡出"
 
-#: airtime_mvc/application/controllers/LocaleController.php:277
+#: airtime_mvc/application/controllers/LocaleController.php:278
 msgid "Show Empty"
 msgstr "节目无内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:278
+#: airtime_mvc/application/controllers/LocaleController.php:279
 msgid "Recording From Line In"
 msgstr "从线路输入录制"
 
-#: airtime_mvc/application/controllers/LocaleController.php:283
+#: airtime_mvc/application/controllers/LocaleController.php:284
 msgid "Cannot schedule outside a show."
 msgstr "没有指定节目，无法凭空安排内容。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:284
+#: airtime_mvc/application/controllers/LocaleController.php:285
 msgid "Moving 1 Item"
 msgstr "移动1个项目"
 
-#: airtime_mvc/application/controllers/LocaleController.php:285
+#: airtime_mvc/application/controllers/LocaleController.php:286
 #, php-format
 msgid "Moving %s Items"
 msgstr "移动%s个项目"
 
-#: airtime_mvc/application/controllers/LocaleController.php:288
+#: airtime_mvc/application/controllers/LocaleController.php:289
 msgid "Select all"
 msgstr "全选"
 
-#: airtime_mvc/application/controllers/LocaleController.php:289
+#: airtime_mvc/application/controllers/LocaleController.php:290
 msgid "Select none"
 msgstr "全不选"
 
-#: airtime_mvc/application/controllers/LocaleController.php:290
+#: airtime_mvc/application/controllers/LocaleController.php:291
 msgid "Remove overbooked tracks"
 msgstr "移除安排多余的内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:291
+#: airtime_mvc/application/controllers/LocaleController.php:292
 msgid "Remove selected scheduled items"
 msgstr "移除所选的项目"
 
-#: airtime_mvc/application/controllers/LocaleController.php:292
+#: airtime_mvc/application/controllers/LocaleController.php:293
 msgid "Jump to the current playing track"
 msgstr "跳转到当前播放的项目"
 
-#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Cancel current show"
 msgstr "取消当前的节目"
 
-#: airtime_mvc/application/controllers/LocaleController.php:298
+#: airtime_mvc/application/controllers/LocaleController.php:299
 msgid "Open library to add or remove content"
 msgstr "打开媒体库，添加或者删除节目内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/controllers/LocaleController.php:302
 msgid "in use"
 msgstr "使用中"
 
-#: airtime_mvc/application/controllers/LocaleController.php:302
+#: airtime_mvc/application/controllers/LocaleController.php:303
 msgid "Disk"
 msgstr "磁盘"
 
-#: airtime_mvc/application/controllers/LocaleController.php:304
+#: airtime_mvc/application/controllers/LocaleController.php:305
 msgid "Look in"
 msgstr "查询"
 
-#: airtime_mvc/application/controllers/LocaleController.php:305
+#: airtime_mvc/application/controllers/LocaleController.php:306
 #: airtime_mvc/application/forms/EditAudioMD.php:144
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 msgid "Cancel"
 msgstr "取消"
 
-#: airtime_mvc/application/controllers/LocaleController.php:306
+#: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Open"
 msgstr "打开"
 
-#: airtime_mvc/application/controllers/LocaleController.php:308
+#: airtime_mvc/application/controllers/LocaleController.php:309
 #: airtime_mvc/application/forms/AddUser.php:87
 msgid "Admin"
 msgstr "系统管理员"
 
-#: airtime_mvc/application/controllers/LocaleController.php:309
+#: airtime_mvc/application/controllers/LocaleController.php:310
 #: airtime_mvc/application/forms/AddUser.php:85
 msgid "DJ"
 msgstr "节目编辑"
 
-#: airtime_mvc/application/controllers/LocaleController.php:310
+#: airtime_mvc/application/controllers/LocaleController.php:311
 #: airtime_mvc/application/forms/AddUser.php:86
 msgid "Program Manager"
 msgstr "节目主管"
 
-#: airtime_mvc/application/controllers/LocaleController.php:311
+#: airtime_mvc/application/controllers/LocaleController.php:312
 #: airtime_mvc/application/forms/AddUser.php:84
 msgid "Guest"
 msgstr "游客"
 
-#: airtime_mvc/application/controllers/LocaleController.php:312
+#: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "Guests can do the following:"
 msgstr "游客的权限包括："
 
-#: airtime_mvc/application/controllers/LocaleController.php:313
+#: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "View schedule"
 msgstr "显示节目日程"
 
-#: airtime_mvc/application/controllers/LocaleController.php:314
+#: airtime_mvc/application/controllers/LocaleController.php:315
 msgid "View show content"
 msgstr "显示节目内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:315
+#: airtime_mvc/application/controllers/LocaleController.php:316
 msgid "DJs can do the following:"
 msgstr "节目编辑的权限包括："
 
-#: airtime_mvc/application/controllers/LocaleController.php:316
+#: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "Manage assigned show content"
 msgstr "为指派的节目管理节目内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:317
+#: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "Import media files"
 msgstr "导入媒体文件"
 
-#: airtime_mvc/application/controllers/LocaleController.php:318
+#: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "Create playlists, smart blocks, and webstreams"
 msgstr "创建播放列表，智能模块和网络流媒体"
 
-#: airtime_mvc/application/controllers/LocaleController.php:319
+#: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "Manage their own library content"
 msgstr "管理媒体库中属于自己的内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:320
+#: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Progam Managers can do the following:"
 msgstr "节目主管的权限包括："
 
-#: airtime_mvc/application/controllers/LocaleController.php:321
+#: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "View and manage show content"
 msgstr "查看和管理节目内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:322
+#: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "Schedule shows"
 msgstr "安排节目日程"
 
-#: airtime_mvc/application/controllers/LocaleController.php:323
+#: airtime_mvc/application/controllers/LocaleController.php:324
 msgid "Manage all library content"
 msgstr "管理媒体库的所有内容"
 
-#: airtime_mvc/application/controllers/LocaleController.php:324
+#: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "Admins can do the following:"
 msgstr "管理员的权限包括："
 
-#: airtime_mvc/application/controllers/LocaleController.php:325
+#: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "Manage preferences"
 msgstr "属性管理"
 
-#: airtime_mvc/application/controllers/LocaleController.php:326
+#: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Manage users"
 msgstr "管理用户"
 
-#: airtime_mvc/application/controllers/LocaleController.php:327
+#: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Manage watched folders"
 msgstr "管理监控文件夹"
 
-#: airtime_mvc/application/controllers/LocaleController.php:328
+#: airtime_mvc/application/controllers/LocaleController.php:329
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:112
 msgid "Send support feedback"
 msgstr "提交反馈意见"
 
-#: airtime_mvc/application/controllers/LocaleController.php:329
+#: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "View system status"
 msgstr "显示系统状态"
 
-#: airtime_mvc/application/controllers/LocaleController.php:330
+#: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "Access playout history"
 msgstr "查看播放历史"
 
-#: airtime_mvc/application/controllers/LocaleController.php:331
+#: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "View listener stats"
 msgstr "显示收听统计数据"
 
-#: airtime_mvc/application/controllers/LocaleController.php:333
+#: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Show / hide columns"
 msgstr "显示/隐藏栏"
 
-#: airtime_mvc/application/controllers/LocaleController.php:335
+#: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "From {from} to {to}"
 msgstr "从{from}到{to}"
 
-#: airtime_mvc/application/controllers/LocaleController.php:336
+#: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "kbps"
 msgstr "千比特每秒"
 
-#: airtime_mvc/application/controllers/LocaleController.php:337
+#: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "yyyy-mm-dd"
 msgstr "年-月-日"
 
-#: airtime_mvc/application/controllers/LocaleController.php:338
+#: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "hh:mm:ss.t"
 msgstr "时:分:秒"
 
-#: airtime_mvc/application/controllers/LocaleController.php:339
+#: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "kHz"
 msgstr "千赫兹"
 
-#: airtime_mvc/application/controllers/LocaleController.php:342
+#: airtime_mvc/application/controllers/LocaleController.php:343
 msgid "Su"
 msgstr "周天"
 
-#: airtime_mvc/application/controllers/LocaleController.php:343
+#: airtime_mvc/application/controllers/LocaleController.php:344
 msgid "Mo"
 msgstr "周一"
 
-#: airtime_mvc/application/controllers/LocaleController.php:344
+#: airtime_mvc/application/controllers/LocaleController.php:345
 msgid "Tu"
 msgstr "周二"
 
-#: airtime_mvc/application/controllers/LocaleController.php:345
+#: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "We"
 msgstr "周三"
 
-#: airtime_mvc/application/controllers/LocaleController.php:346
+#: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "Th"
 msgstr "周四"
 
-#: airtime_mvc/application/controllers/LocaleController.php:347
+#: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "Fr"
 msgstr "周五"
 
-#: airtime_mvc/application/controllers/LocaleController.php:348
+#: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "Sa"
 msgstr "周六"
 
-#: airtime_mvc/application/controllers/LocaleController.php:349
-#: airtime_mvc/application/controllers/LocaleController.php:377
+#: airtime_mvc/application/controllers/LocaleController.php:350
+#: airtime_mvc/application/controllers/LocaleController.php:378
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
 msgstr "关闭"
 
-#: airtime_mvc/application/controllers/LocaleController.php:351
+#: airtime_mvc/application/controllers/LocaleController.php:352
 msgid "Hour"
 msgstr "小时"
 
-#: airtime_mvc/application/controllers/LocaleController.php:352
+#: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "Minute"
 msgstr "分钟"
 
-#: airtime_mvc/application/controllers/LocaleController.php:353
+#: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Done"
 msgstr "设定"
 
-#: airtime_mvc/application/controllers/LocaleController.php:356
+#: airtime_mvc/application/controllers/LocaleController.php:357
 msgid "Select files"
 msgstr "选择文件"
 
-#: airtime_mvc/application/controllers/LocaleController.php:357
 #: airtime_mvc/application/controllers/LocaleController.php:358
+#: airtime_mvc/application/controllers/LocaleController.php:359
 msgid "Add files to the upload queue and click the start button."
 msgstr "添加需要上传的文件到传输队列中，然后点击开始上传。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:359
 #: airtime_mvc/application/controllers/LocaleController.php:360
+#: airtime_mvc/application/controllers/LocaleController.php:361
 #: airtime_mvc/application/configs/navigation.php:76
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
 msgid "Status"
 msgstr "系统状态"
 
-#: airtime_mvc/application/controllers/LocaleController.php:361
+#: airtime_mvc/application/controllers/LocaleController.php:362
 msgid "Add Files"
 msgstr "添加文件"
 
-#: airtime_mvc/application/controllers/LocaleController.php:362
+#: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Stop Upload"
 msgstr "停止上传"
 
-#: airtime_mvc/application/controllers/LocaleController.php:363
+#: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Start upload"
 msgstr "开始上传"
 
-#: airtime_mvc/application/controllers/LocaleController.php:364
+#: airtime_mvc/application/controllers/LocaleController.php:365
 msgid "Add files"
 msgstr "添加文件"
 
-#: airtime_mvc/application/controllers/LocaleController.php:365
+#: airtime_mvc/application/controllers/LocaleController.php:366
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "已经上传%d/%d个文件"
 
-#: airtime_mvc/application/controllers/LocaleController.php:366
+#: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "N/A"
 msgstr "未知"
 
-#: airtime_mvc/application/controllers/LocaleController.php:367
+#: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Drag files here."
 msgstr "拖拽文件到此处。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:368
+#: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "File extension error."
 msgstr "文件后缀名出错。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:369
+#: airtime_mvc/application/controllers/LocaleController.php:370
 msgid "File size error."
 msgstr "文件大小出错。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:370
+#: airtime_mvc/application/controllers/LocaleController.php:371
 msgid "File count error."
 msgstr "发生文件统计错误。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:371
+#: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Init error."
 msgstr "发生初始化错误。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:372
+#: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "HTTP Error."
 msgstr "发生HTTP类型的错误"
 
-#: airtime_mvc/application/controllers/LocaleController.php:373
+#: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Security error."
 msgstr "发生安全性错误。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:374
+#: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "Generic error."
 msgstr "发生通用类型的错误。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:375
+#: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "IO error."
 msgstr "输入输出错误。"
 
-#: airtime_mvc/application/controllers/LocaleController.php:376
+#: airtime_mvc/application/controllers/LocaleController.php:377
 #, php-format
 msgid "File: %s"
 msgstr "文件：%s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:378
+#: airtime_mvc/application/controllers/LocaleController.php:379
 #, php-format
 msgid "%d files queued"
 msgstr "队列中有%d个文件"
 
-#: airtime_mvc/application/controllers/LocaleController.php:379
+#: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "文件：%f，大小：%s，最大的文件大小：%m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:380
+#: airtime_mvc/application/controllers/LocaleController.php:381
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "用于上传的地址有误或者不存在"
 
-#: airtime_mvc/application/controllers/LocaleController.php:381
+#: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "Error: File too large: "
 msgstr "错误：文件过大："
 
-#: airtime_mvc/application/controllers/LocaleController.php:382
+#: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "Error: Invalid file extension: "
 msgstr "错误：无效的文件后缀名："
 
@@ -1674,16 +1678,16 @@ msgid "You don't have permission to switch source."
 msgstr "你没有切换的权限。"
 
 #: airtime_mvc/application/controllers/UserController.php:55
-#: airtime_mvc/application/controllers/UserController.php:139
+#: airtime_mvc/application/controllers/UserController.php:138
 msgid "Specific action is not allowed in demo version!"
 msgstr "该操作在预览版中不可用！"
 
-#: airtime_mvc/application/controllers/UserController.php:84
+#: airtime_mvc/application/controllers/UserController.php:83
 msgid "User added successfully!"
 msgstr "用户已添加成功！"
 
-#: airtime_mvc/application/controllers/UserController.php:86
-#: airtime_mvc/application/controllers/UserController.php:158
+#: airtime_mvc/application/controllers/UserController.php:85
+#: airtime_mvc/application/controllers/UserController.php:157
 msgid "User updated successfully!"
 msgstr "用于已成功更新！"
 
@@ -1729,33 +1733,33 @@ msgstr "删除游标"
 msgid "show does not exist"
 msgstr "节目不存在"
 
-#: airtime_mvc/application/controllers/ApiController.php:56
-#: airtime_mvc/application/controllers/ApiController.php:83
+#: airtime_mvc/application/controllers/ApiController.php:57
+#: airtime_mvc/application/controllers/ApiController.php:84
 msgid "You are not allowed to access this resource."
 msgstr "你没有访问该资源的权限"
 
-#: airtime_mvc/application/controllers/ApiController.php:285
-#: airtime_mvc/application/controllers/ApiController.php:324
+#: airtime_mvc/application/controllers/ApiController.php:286
+#: airtime_mvc/application/controllers/ApiController.php:325
 msgid "You are not allowed to access this resource. "
 msgstr "你没有访问该资源的权限"
 
-#: airtime_mvc/application/controllers/ApiController.php:505
+#: airtime_mvc/application/controllers/ApiController.php:507
 msgid "File does not exist in Airtime."
 msgstr "Airtime中不存在该文件。"
 
-#: airtime_mvc/application/controllers/ApiController.php:518
+#: airtime_mvc/application/controllers/ApiController.php:520
 msgid "File does not exist in Airtime"
 msgstr "Airtime中不存在该文件。"
 
-#: airtime_mvc/application/controllers/ApiController.php:530
+#: airtime_mvc/application/controllers/ApiController.php:532
 msgid "File doesn't exist in Airtime."
 msgstr "Airtime中不存在该文件。"
 
-#: airtime_mvc/application/controllers/ApiController.php:576
+#: airtime_mvc/application/controllers/ApiController.php:578
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "请求错误。没有提供‘模式’参数。"
 
-#: airtime_mvc/application/controllers/ApiController.php:586
+#: airtime_mvc/application/controllers/ApiController.php:588
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "请求错误。提供的‘模式’参数无效。"
 
@@ -1895,7 +1899,7 @@ msgstr "情怀："
 #: airtime_mvc/application/forms/EditAudioMD.php:95
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:14
 msgid "BPM:"
-msgstr "拍子（BPM）"
+msgstr "拍子（BPM）："
 
 #: airtime_mvc/application/forms/EditAudioMD.php:104
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:17
@@ -3248,6 +3252,10 @@ msgstr "然后就大功告成啦！"
 msgid "For more detailed help, read the %suser manual%s."
 msgstr "详细的指导，可以参考%s用户手册%s。"
 
+#: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
+msgid "Share"
+msgstr "共享"
+
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
 msgstr "选择流："
@@ -3289,6 +3297,10 @@ msgstr "姓"
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
 msgstr "用户类型"
+
+#: airtime_mvc/application/views/scripts/user/edit-user.phtml:2
+msgid "Edit User"
+msgstr "用户编辑"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:4
 msgid "Service"
