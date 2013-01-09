@@ -56,6 +56,9 @@ class UserController extends Zend_Controller_Action
                     die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
                 } elseif ($form->validateLogin($formData)) {
                     $user = new Application_Model_User($formData['user_id']);
+                    if (empty($formData['user_id'])) {
+                        $user->setLogin($formData['login']);
+                    }
                     $user->setFirstName($formData['first_name']);
                     $user->setLastName($formData['last_name']);
                     // We don't allow 6 x's as a password.
