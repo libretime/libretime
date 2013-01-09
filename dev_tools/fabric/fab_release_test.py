@@ -83,7 +83,7 @@ def download_if_needed(vdi_dir, xml_dir, vm_name, vm_vdi_file, vm_xml_file):
         do_local("wget %s/%s/%s -O %s"%(env.vm_download_url, vm_name, vm_xml_file, os.path.join(xml_dir, vm_xml_file)))       
    
 
-def create_fresh_os(vm_name, lucid=False, debian=False):
+def create_fresh_os(vm_name, lucid=False, debian=False, icecast2_config=False):
     
     """
     remove known_hosts because if two virtual machines get the same ip address,
@@ -115,7 +115,7 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
     do_local('VBoxManage startvm %s'%vm_name)
     print "Please wait while attempting to acquire IP address"
         
-    time.sleep(15)
+    time.sleep(30)
 
     try_again = True
     while try_again:
@@ -143,7 +143,11 @@ def create_fresh_os(vm_name, lucid=False, debian=False):
         do_sudo('echo "rabbitmq-server rabbitmq-server/upgrade_previous note" | debconf-set-selections')
         
     if debian:
-        append('/etc/apt/sources.list', "deb http://www.debian-multimedia.org squeeze main non-free", use_sudo=True)
+        append('/etc/apt/sources.list', "deb http://backports.debian.org/debian-backports squeeze-backports main", use_sudo=True)
+
+    if icecast2_config:
+                print "Updating icecast2 setup settings"
+                do_sudo('echo "icecast2 icecast2/icecast-setup  boolean false" | debconf-set-selections')
 
 def ubuntu_lucid_32(fresh_os=True):
     if (fresh_os):
@@ -176,6 +180,22 @@ def ubuntu_oneiric_32(fresh_os=True):
 def ubuntu_oneiric_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_11.10_64')
+
+def ubuntu_precise_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.04_32', icecast2_config=True)
+    
+def ubuntu_precise_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.04_64', icecast2_config=True)
+
+def ubuntu_quantal_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.10_32', icecast2_config=True)
+    
+def ubuntu_quantal_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_12.10_64', icecast2_config=True)
         
 def debian_squeeze_32(fresh_os=True):
     if (fresh_os):
@@ -184,6 +204,14 @@ def debian_squeeze_32(fresh_os=True):
 def debian_squeeze_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Debian_Squeeze_64', debian=True)
+
+def debian_wheezy_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Wheezy_32', icecast2_config=True)
+    
+def debian_wheezy_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Debian_Wheezy_64', icecast2_config=True)
         
 def airtime_180_tar():
     airtime_18x_tar("airtime", "1.8.0")
@@ -286,6 +314,58 @@ def airtime_195_tar():
     do_run('tar xfz airtime-1.9.5.tar.gz')
     do_sudo('cd /home/martin/airtime-1.9.5/install_full/ubuntu && ./airtime-full-install')
 
+def airtime_200_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.0.0/airtime-2.0.0.tar.gz')
+    do_run('tar xfz airtime-2.0.0.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.0.0/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_201_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.0.1/airtime-2.0.1.tar.gz')
+    do_run('tar xfz airtime-2.0.1.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.0.1/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_202_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.0.2/airtime-2.0.2.tar.gz')
+    do_run('tar xfz airtime-2.0.2.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.0.2/install_full/ubuntu && ./airtime-full-install')
+
+    
+def airtime_203_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.0.3/airtime-2.0.3.tar.gz')
+    do_run('tar xfz airtime-2.0.3.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.0.3/install_full/ubuntu && ./airtime-full-install')
+    
+def airtime_210_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.1.0/airtime-2.1.0.tar.gz')
+    do_run('tar xfz airtime-2.1.0.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.1.0/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_211_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.1.1/airtime-2.1.1.tar.gz')
+    do_run('tar xfz airtime-2.1.1.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.1.1/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_212_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.1.2/airtime-2.1.2.tar.gz')
+    do_run('tar xfz airtime-2.1.2.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.1.2/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_213_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.1.3/airtime-2.1.3.tar.gz')
+    do_run('tar xfz airtime-2.1.3.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.1.3/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_220_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.2.0/airtime-2.2.0.tar.gz')
+    do_run('tar xfz airtime-2.2.0.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.2.0/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_221_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.2.1/airtime-2.2.1.tar.gz')  
+    do_run('tar xfz airtime-2.2.1.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.2.1/install_full/ubuntu && ./airtime-full-install')
+
+
 def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)
     append('/etc/apt/sources.list', "deb http://archive.ubuntu.com/ubuntu/ lucid multiverse", use_sudo=True)
@@ -303,5 +383,5 @@ def airtime_git_branch(branch="devel"):
     do_sudo('cd /home/martin/airtime_git && git checkout %s && install_full/ubuntu/airtime-full-install || true' % branch)
 
 
-def airtime_200():
-    pass
+#def airtime_200():
+#    pass
