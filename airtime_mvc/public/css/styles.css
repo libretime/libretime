@@ -2982,7 +2982,7 @@ dd .stream-status {
     padding-bottom: 5px;
 }
 
-.edit-user-global input, select {
+.edit-user-global input, .edit-user-global select {
     width: 200px;
 }
 
