@@ -466,6 +466,7 @@ $(document).ready(function() {
         $.post(baseUrl+'/user/edit-user', {format: 'json', data: data}, function(data) {
             var json = $.parseJSON(data);
             $('.edit-current-user').parent().empty().append(json.html);
+            $.cookie("airtime_locale", json.locale, {path: '/'});
             setCurrentUserPseudoPassword();
             setTimeout(removeSuccessMsg, 5000);
         });

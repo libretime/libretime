@@ -162,7 +162,7 @@ class UserController extends Zend_Controller_Action
                 $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
             }
             $this->view->form = $form;
-            die(json_encode(array("html"=>$this->view->render('user/edit-user.phtml'))));
+            die(json_encode(array("locale"=>$formData['cu_locale'], "html"=>$this->view->render('user/edit-user.phtml'))));
         }
         $this->view->form = $form;
         $this->view->html = $this->view->render('user/edit-user.phtml');

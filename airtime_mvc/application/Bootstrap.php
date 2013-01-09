@@ -7,6 +7,7 @@ Propel::init(__DIR__."/configs/airtime-conf-production.php");
 
 require_once __DIR__."/configs/constants.php";
 require_once 'Preference.php';
+require_once 'Locale.php';
 require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
@@ -34,18 +35,7 @@ $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
 
 //localization configuration
-$codeset = 'UTF-8';
-$lang = Application_Model_Preference::GetLocale().'.'.$codeset;
-
-putenv("LC_ALL=$lang");
-putenv("LANG=$lang");
-$res = setlocale(LC_MESSAGES, $lang);
-
-$domain = 'airtime';
-bindtextdomain($domain, '/usr/share/airtime/locale');
-textdomain($domain);
-bind_textdomain_codeset($domain, $codeset);
-
+Application_Model_Locale::configureLocalization();
 
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */
@@ -107,6 +97,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'/js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/sprintf/sprintf-0.7-beta1.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/bootstrap/bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile($baseUrl.'/js/cookie/jquery.cookie.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/js/i18n/jquery.i18n.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/locale/general-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'/locale/datatables-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');

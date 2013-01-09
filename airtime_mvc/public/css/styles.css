@@ -1002,6 +1002,9 @@ dt.block-display, dd.block-display {
 	font-size:14px;
 	padding: 6px 0 6px 3px;
 }
+.login-content dd select {
+    width: 100%;
+}
 .login-content dd input.ui-button, .login-content dd input.btn {
 	width:100%;
 	font-size:14px;

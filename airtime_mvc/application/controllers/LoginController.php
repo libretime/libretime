@@ -5,7 +5,6 @@ class LoginController extends Zend_Controller_Action
 
     public function init()
     {
-        /* Initialize action controller here */
     }
 
     public function indexAction()
@@ -14,6 +13,7 @@ class LoginController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale'));
         if (Zend_Auth::getInstance()->hasIdentity())
         {
 
@@ -43,6 +43,7 @@ class LoginController extends Zend_Controller_Action
                 //get the username and password from the form
                 $username = $form->getValue('username');
                 $password = $form->getValue('password');
+                $locale = $form->getValue('locale');
                 if (Application_Model_Subjects::getLoginAttempts($username) >= 3 && $form->getElement('captcha') == NULL) {
                     $form->addRecaptcha();
                 } else {
@@ -67,6 +68,9 @@ class LoginController extends Zend_Controller_Action
 
                         $tempSess = new Zend_Session_Namespace("referrer");
                         $tempSess->referrer = 'login';
+                        
+                        //set the user locale in case user changed it in when logging in
+                        Application_Model_Preference::SetUserLocale($auth->getIdentity()->id, $locale);
 
                         $this->_redirect('Showbuilder');
                     } else {
