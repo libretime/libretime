@@ -417,6 +417,20 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $owner_id;
 
 	/**
+	 * The value for the cuein field.
+	 * Note: this column has a database default value of: '00:00:00'
+	 * @var        string
+	 */
+	protected $cuein;
+
+	/**
+	 * The value for the cueout field.
+	 * Note: this column has a database default value of: '00:00:00'
+	 * @var        string
+	 */
+	protected $cueout;
+
+	/**
 	 * The value for the hidden field.
 	 * Note: this column has a database default value of: false
 	 * @var        boolean
@@ -488,6 +502,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->currentlyaccessing = 0;
 		$this->length = '00:00:00';
 		$this->file_exists = true;
+		$this->cuein = '00:00:00';
+		$this->cueout = '00:00:00';
 		$this->hidden = false;
 	}
 
@@ -1231,6 +1247,26 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function getDbOwnerId()
 	{
 		return $this->owner_id;
+	}
+
+	/**
+	 * Get the [cuein] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbCuein()
+	{
+		return $this->cuein;
+	}
+
+	/**
+	 * Get the [cueout] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbCueout()
+	{
+		return $this->cueout;
 	}
 
 	/**
@@ -2652,6 +2688,46 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbOwnerId()
 
 	/**
+	 * Set the value of [cuein] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbCuein($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->cuein !== $v || $this->isNew()) {
+			$this->cuein = $v;
+			$this->modifiedColumns[] = CcFilesPeer::CUEIN;
+		}
+
+		return $this;
+	} // setDbCuein()
+
+	/**
+	 * Set the value of [cueout] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbCueout($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->cueout !== $v || $this->isNew()) {
+			$this->cueout = $v;
+			$this->modifiedColumns[] = CcFilesPeer::CUEOUT;
+		}
+
+		return $this;
+	} // setDbCueout()
+
+	/**
 	 * Set the value of [hidden] column.
 	 * 
 	 * @param      boolean $v new value
@@ -2710,6 +2786,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			}
 
 			if ($this->file_exists !== true) {
+				return false;
+			}
+
+			if ($this->cuein !== '00:00:00') {
+				return false;
+			}
+
+			if ($this->cueout !== '00:00:00') {
 				return false;
 			}
 
@@ -2803,7 +2887,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->soundcloud_upload_time = ($row[$startcol + 61] !== null) ? (string) $row[$startcol + 61] : null;
 			$this->replay_gain = ($row[$startcol + 62] !== null) ? (string) $row[$startcol + 62] : null;
 			$this->owner_id = ($row[$startcol + 63] !== null) ? (int) $row[$startcol + 63] : null;
-			$this->hidden = ($row[$startcol + 64] !== null) ? (boolean) $row[$startcol + 64] : null;
+			$this->cuein = ($row[$startcol + 64] !== null) ? (string) $row[$startcol + 64] : null;
+			$this->cueout = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
+			$this->hidden = ($row[$startcol + 66] !== null) ? (boolean) $row[$startcol + 66] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -2812,7 +2898,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 65; // 65 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 67; // 67 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcFiles object", $e);
@@ -3438,6 +3524,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return $this->getDbOwnerId();
 				break;
 			case 64:
+				return $this->getDbCuein();
+				break;
+			case 65:
+				return $this->getDbCueout();
+				break;
+			case 66:
 				return $this->getDbHidden();
 				break;
 			default:
@@ -3528,7 +3620,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[61] => $this->getDbSoundCloundUploadTime(),
 			$keys[62] => $this->getDbReplayGain(),
 			$keys[63] => $this->getDbOwnerId(),
-			$keys[64] => $this->getDbHidden(),
+			$keys[64] => $this->getDbCuein(),
+			$keys[65] => $this->getDbCueout(),
+			$keys[66] => $this->getDbHidden(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aFkOwner) {
@@ -3764,6 +3858,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->setDbOwnerId($value);
 				break;
 			case 64:
+				$this->setDbCuein($value);
+				break;
+			case 65:
+				$this->setDbCueout($value);
+				break;
+			case 66:
 				$this->setDbHidden($value);
 				break;
 		} // switch()
@@ -3854,7 +3954,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[61], $arr)) $this->setDbSoundCloundUploadTime($arr[$keys[61]]);
 		if (array_key_exists($keys[62], $arr)) $this->setDbReplayGain($arr[$keys[62]]);
 		if (array_key_exists($keys[63], $arr)) $this->setDbOwnerId($arr[$keys[63]]);
-		if (array_key_exists($keys[64], $arr)) $this->setDbHidden($arr[$keys[64]]);
+		if (array_key_exists($keys[64], $arr)) $this->setDbCuein($arr[$keys[64]]);
+		if (array_key_exists($keys[65], $arr)) $this->setDbCueout($arr[$keys[65]]);
+		if (array_key_exists($keys[66], $arr)) $this->setDbHidden($arr[$keys[66]]);
 	}
 
 	/**
@@ -3930,6 +4032,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME)) $criteria->add(CcFilesPeer::SOUNDCLOUD_UPLOAD_TIME, $this->soundcloud_upload_time);
 		if ($this->isColumnModified(CcFilesPeer::REPLAY_GAIN)) $criteria->add(CcFilesPeer::REPLAY_GAIN, $this->replay_gain);
 		if ($this->isColumnModified(CcFilesPeer::OWNER_ID)) $criteria->add(CcFilesPeer::OWNER_ID, $this->owner_id);
+		if ($this->isColumnModified(CcFilesPeer::CUEIN)) $criteria->add(CcFilesPeer::CUEIN, $this->cuein);
+		if ($this->isColumnModified(CcFilesPeer::CUEOUT)) $criteria->add(CcFilesPeer::CUEOUT, $this->cueout);
 		if ($this->isColumnModified(CcFilesPeer::HIDDEN)) $criteria->add(CcFilesPeer::HIDDEN, $this->hidden);
 
 		return $criteria;
@@ -4055,6 +4159,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbSoundCloundUploadTime($this->soundcloud_upload_time);
 		$copyObj->setDbReplayGain($this->replay_gain);
 		$copyObj->setDbOwnerId($this->owner_id);
+		$copyObj->setDbCuein($this->cuein);
+		$copyObj->setDbCueout($this->cueout);
 		$copyObj->setDbHidden($this->hidden);
 
 		if ($deepCopy) {
@@ -4958,6 +5064,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->soundcloud_upload_time = null;
 		$this->replay_gain = null;
 		$this->owner_id = null;
+		$this->cuein = null;
+		$this->cueout = null;
 		$this->hidden = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;

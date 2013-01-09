@@ -1,5 +1,6 @@
 <div id="content" class="jp-container">
-<h1><? echo _("Live stream") ?></h1> 
+<h1><? echo _("Live stream") ?></h1>
+<a id="popup-link" href="#"><?php echo _("Share") ?></a> 
 <?php $ids = Application_Model_StreamSetting::getEnabledStreamIds(); ?>
 <script>
 function setjPlayer(url, type, serverType){
@@ -31,22 +32,35 @@ $(document).ready(function(){
         setjPlayer(elem.attr("data-url"), elem.attr("data-type"), elem.attr("server-type"));
     });
 
-        <?php
-            if (count($ids) > 0){
-                $id = $ids[0];
-                $streamData = Application_Model_StreamSetting::getStreamData($id);
-                $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
-                $type = $streamData["${id}_type"];
-                $serverType = $streamData["${id}_output"];
-                if ($type == "ogg")
-                    $type = "oga";
-                echo "setjPlayer('$url', '$type', '$serverType');";
-            }
-        ?>
+    <?php
+        if (count($ids) > 0){
+            $id = $ids[0];
+            $streamData = Application_Model_StreamSetting::getStreamData($id);
+            $url = "http://".$streamData["${id}_host"].":".$streamData["${id}_port"]."/".$streamData["${id}_mount"];
+            $type = $streamData["${id}_type"];
+            $serverType = $streamData["${id}_output"];
+            if ($type == "ogg")
+                $type = "oga";
+            echo "setjPlayer('$url', '$type', '$serverType');";
+        }
+    ?>
+
+    $("#popup-link").click(function() {
+        $("#popup-share").show("slow");
+        $("#popup-share-link").val($("#combo-box option:selected").attr("data-url"));
+    });
+
+    $("#popup-close").click(function() {
+        $("#popup-share").hide("slow");
+    });
 });
 </script>
   <div class="jp-logo"><img id="logo-img" onload='resizeToMaxHeight(this, 40);' src="<?php echo $this->logo ?>" /></div>
-        <div class="jp-stream">
+  <div id="popup-share">
+    <a class="close-round" href="#" id="popup-close"></a>
+      <input id="popup-share-link" type="text" readonly="readonly"/>
+  </div>
+        <div class="jp-stream stream-player-label">
             <div class="jp-stream-text"><? echo _("Select stream:"); ?></div>
                 
               <form id="form1" method="post" action="">

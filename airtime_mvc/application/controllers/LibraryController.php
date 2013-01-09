@@ -12,6 +12,7 @@ class LibraryController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents-feed', 'json')
                     ->addActionContext('delete', 'json')
+                    ->addActionContext('duplicate', 'json')
                     ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-metadata', 'html')
@@ -194,6 +195,7 @@ class LibraryController extends Zend_Controller_Action
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
+                $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."/library/duplicate");
             } elseif ($type === 'block') {
                 $obj = new Application_Model_Block($id);
                 if (!$obj->isStatic()) {
@@ -216,9 +218,11 @@ class LibraryController extends Zend_Controller_Action
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
             }
         } elseif ($type == "stream") {
-
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
+            
+            $menu["play"]["mime"] = $webstream->getDbMime();
+
             if (isset($obj_sess->id) && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                     if ($obj_sess->type === "playlist") {
@@ -338,6 +342,37 @@ class LibraryController extends Zend_Controller_Action
         if (isset($message)) {
             $this->view->message = $message;
         }
+    }
+    
+    // duplicate playlist
+    public function duplicateAction(){
+        $params = $this->getRequest()->getParams();
+        $id = $params['id'];
+        
+        $originalPl = new Application_Model_Playlist($id);
+        $newPl = new Application_Model_Playlist();
+        
+        $contents = $originalPl->getContents();
+        foreach ($contents as &$c) {
+            if ($c['type'] == '0') {
+                $c[1] = 'audioclip';
+            } else if ($c['type'] == '2') {
+                $c[1] = 'block';
+            } else if ($c['type'] == '1') {
+                $c[1] = 'stream';
+            }
+            $c[0] = $c['item_id'];
+        }
+        $newPl->addAudioClips($contents, null, 'begining');
+        
+        $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
+        $newPl->setDescription($originalPl->getDescription());
+        
+        list($plFadeIn, ) = $originalPl->getFadeInfo(0);
+        list(, $plFadeOut) = $originalPl->getFadeInfo($originalPl->getSize()-1);
+        
+        $newPl->setfades($plFadeIn, $plFadeOut);
+        $newPl->setName("Copy of ".$originalPl->getName());
     }
 
     public function contentsFeedAction()

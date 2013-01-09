@@ -2,5 +2,13 @@
     <?php echo _("Listener Count Over Time")?><br>
     <div id="flot_placeholder" style="width:600px;height:300px;margin:0px 50px 0px 50px"></div>
     <div id="legend" style="width:600px;height:70px;margin:0px 50px 0px 50px"></div>
-    <div id="date_form" style="margin:0px 50px 0px 50px"><?php echo $this->date_form; ?></div>
+    <div id="date_form" style="float:left; margin:0px 50px 0px 50px"><?php echo $this->date_form; ?></div>
+    <div id="errorStatus" style="float:right; width: 400px">
+        <fieldset class="padded stream-setting-global">
+        <legend>Status</legend>
+        <?php foreach ($this->errorStatus as $k=>$v) {?>
+        <div class='stream-status <?php echo ($v == 'OK')? 'status-good' : 'status-error' ?>'><h3><?php echo $k?>: <?php echo $v?></h3></div>
+        <?php }?>
+        </fieldset>
+    </div>
 </div>

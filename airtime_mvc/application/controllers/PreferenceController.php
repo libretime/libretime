@@ -44,8 +44,8 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
-                Application_Model_Preference::SetLocale($values["locale"]);
-                Application_Model_Preference::SetTimezone($values["timezone"]);
+                Application_Model_Preference::SetDefaultLocale($values["locale"]);
+                Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 
                 Application_Model_Preference::SetEnableSystemEmail($values["enableSystemEmail"]);
@@ -66,7 +66,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudGenre($values["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
                 Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);
-                Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
@@ -256,6 +255,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
+                Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 
                     if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
                         $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
@@ -284,6 +284,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
                     Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
                     Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
+                    Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();

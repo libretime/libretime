@@ -42,6 +42,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('notify-webstream-data'         , 'json')
                 ->addActionContext('get-stream-parameters'         , 'json')
                 ->addActionContext('push-stream-stats'         , 'json')
+                ->addActionContext('update-stream-setting-table'         , 'json')
                 ->initContext();
     }
 
@@ -490,6 +491,7 @@ class ApiController extends Zend_Controller_Action
                 // If the file already exists we will update and make sure that
                 // it's marked as 'exists'.
                 $file->setFileExistsFlag(true);
+                $file->setFileHiddenFlag(false);
                 $file->setMetadata($md);
             }
             if ($md['is_record'] != 0) {
@@ -929,7 +931,7 @@ class ApiController extends Zend_Controller_Action
         $data_arr = json_decode($data);
 
         if (!is_null($media_id)) {
-            if (isset($data_arr->title) && 
+            if (isset($data_arr->title) &&
                 strlen($data_arr->title) < 1024) {
 
                 $previous_metadata = CcWebstreamMetadataQuery::create()
@@ -965,7 +967,7 @@ class ApiController extends Zend_Controller_Action
         $streams = array("s1", "s2", "s3");
         $stream_params = array();
         foreach ($streams as $s) {
-            $stream_params[$s] = 
+            $stream_params[$s] =
                 Application_Model_StreamSetting::getStreamDataNormalized($s);
         }
         $this->view->stream_params = $stream_params;
@@ -977,6 +979,15 @@ class ApiController extends Zend_Controller_Action
 
         Application_Model_ListenerStat::insertDataPoints($data);
         $this->view->data = $data;
+    }
+    
+    public function updateStreamSettingTableAction() {
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam("data"), true);
+        
+        foreach ($data as $k=>$v) {
+            Application_Model_StreamSetting::SetListenerStatError($k, $v);
+        }
     }
 
 }

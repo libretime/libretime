@@ -2702,7 +2702,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:5
 #, php-format
 msgid ""
-"%sAirtime%s %s, , the open radio software for scheduling and remote station "
+"%sAirtime%s %s, the open radio software for scheduling and remote station "
 "management. %s"
 msgstr ""
 

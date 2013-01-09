@@ -94,6 +94,8 @@ CREATE TABLE "cc_files"
 	"soundcloud_upload_time" TIMESTAMP(6),
 	"replay_gain" NUMERIC,
 	"owner_id" INTEGER,
+	"cuein" interval default '00:00:00',
+	"cueout" interval default '00:00:00',
 	"hidden" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );

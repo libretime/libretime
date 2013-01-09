@@ -56,9 +56,11 @@ class UserController extends Zend_Controller_Action
                     die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
                 } elseif ($form->validateLogin($formData)) {
                     $user = new Application_Model_User($formData['user_id']);
+                    if (empty($formData['user_id'])) {
+                        $user->setLogin($formData['login']);
+                    }
                     $user->setFirstName($formData['first_name']);
                     $user->setLastName($formData['last_name']);
-                    $user->setLogin($formData['login']);
                     // We don't allow 6 x's as a password.
                     // The reason is because we that as a password placeholder
                     // on the client side.
@@ -71,6 +73,12 @@ class UserController extends Zend_Controller_Action
                     $user->setSkype($formData['skype']);
                     $user->setJabber($formData['jabber']);
                     $user->save();
+
+                    // Language and timezone settings are saved on a per-user basis
+                    // By default, the default language, and timezone setting on
+                    // preferences page is what gets assigned.
+                    Application_Model_Preference::SetUserLocale($user->getId());
+                    Application_Model_Preference::SetUserTimezone($user->getId());
 
                     $form->reset();
                     $this->view->form = $form;
@@ -138,7 +146,6 @@ class UserController extends Zend_Controller_Action
                 $user = new Application_Model_User($formData['cu_user_id']);
                 $user->setFirstName($formData['cu_first_name']);
                 $user->setLastName($formData['cu_last_name']);
-                $user->setLogin($formData['cu_login']);
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.
@@ -150,6 +157,8 @@ class UserController extends Zend_Controller_Action
                 $user->setSkype($formData['cu_skype']);
                 $user->setJabber($formData['cu_jabber']);
                 $user->save();
+                Application_Model_Preference::SetUserLocale($user->getId(), $formData['cu_locale']);
+                Application_Model_Preference::SetUserTimezone($user->getId(), $formData['cu_timezone']);
                 $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
             }
             $this->view->form = $form;

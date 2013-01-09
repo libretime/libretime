@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: http://forum.sourcefabric.org/\n"
 "POT-Creation-Date: 2012-11-29 11:44-0500\n"
-"PO-Revision-Date: 2012-12-14 09:50+0100\n"
-"Last-Translator: Luba Sirina <contact@sourcefabric.org>\n"
+"PO-Revision-Date: 2013-01-04 17:49+0100\n"
+"Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Russian Localization <contact@sourcefabric.org>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -599,7 +599,7 @@ msgstr "Телефон:"
 #: airtime_mvc/application/forms/AddUser.php:54
 #: airtime_mvc/application/forms/SupportSettings.php:46
 msgid "Email:"
-msgstr "Электронный адрес:"
+msgstr "Email:"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:62
 #: airtime_mvc/application/forms/SupportSettings.php:57
@@ -826,7 +826,7 @@ msgstr "Не является допустимой папкой"
 #: airtime_mvc/application/forms/AddUser.php:23
 #: airtime_mvc/application/forms/Login.php:19
 msgid "Username:"
-msgstr "Имя пользователя:"
+msgstr "Логин:"
 
 #: airtime_mvc/application/forms/AddUser.php:32
 #: airtime_mvc/application/forms/Login.php:34
@@ -843,7 +843,7 @@ msgstr "Фамилия"
 
 #: airtime_mvc/application/forms/AddUser.php:63
 msgid "Mobile Phone:"
-msgstr "Мобильный телефон:"
+msgstr "Тел:"
 
 #: airtime_mvc/application/forms/AddUser.php:69
 msgid "Skype:"
@@ -1934,7 +1934,7 @@ msgstr "Проиграно"
 
 #: airtime_mvc/application/controllers/LocaleController.php:158
 msgid "Choose Storage Folder"
-msgstr "Выберите папку для хранения"
+msgstr "выберите папку для хранения"
 
 #: airtime_mvc/application/controllers/LocaleController.php:159
 msgid "Choose Folder to Watch"
@@ -2600,7 +2600,7 @@ msgstr "Источник Show "
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
-msgstr "Запланированное проигрывание"
+msgstr "Из календаря"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
@@ -2652,8 +2652,8 @@ msgstr "Тип пользователя"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:5
 #, php-format
-msgid "%sAirtime%s %s, , the open radio software for scheduling and remote station management. %s"
-msgstr "%sAirtime%s %s , открытое программное обеспечение для радио для планирования и удаленного управления станцией.%s"
+msgid "%sAirtime%s %s, the open radio software for scheduling and remote station management. %s"
+msgstr "%sAirtime%s %s, открытое программное обеспечение для радио для планирования и удаленного управления станцией.%s"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
 #, php-format
@@ -2994,7 +2994,7 @@ msgstr "URL потока: "
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:9
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:27
 msgid "Choose folder"
-msgstr "Выберите папку"
+msgstr "Выбрать"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:10
 msgid "Set"
@@ -3080,7 +3080,7 @@ msgstr "Настройки входного потока"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
 msgid "Master Source Connection URL:"
-msgstr "URL подключения к источнику Master:"
+msgstr "URL подключения к Master:"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
@@ -3099,7 +3099,7 @@ msgstr "ВОССТАНОВИТЬ"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "URL подключения к источнику Show:"
+msgstr "URL подключения к Show:"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"

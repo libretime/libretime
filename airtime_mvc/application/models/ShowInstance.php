@@ -687,6 +687,22 @@ SQL;
 
     }
 
+    public function showPartialFilled()
+    {
+        $sql = <<<SQL
+SELECT time_filled > '00:00:00'
+AND time_filled < ends - starts
+AND file_id IS null AS partial_filled
+FROM cc_show_instances
+WHERE id = :instance_id
+SQL;
+
+        $res = Application_Common_Database::prepareAndExecute($sql,
+            array(':instance_id' => $this->_instanceId), 'all');
+
+        return $res[0]["partial_filled"];
+    }
+
     public function showEmpty()
     {
         $sql = <<<SQL

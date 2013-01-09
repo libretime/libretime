@@ -30,13 +30,10 @@ class ListenerStat(Thread):
         return self.api_client.get_stream_parameters()
 
 
-    def get_icecast_xml(self, ip):
-        encoded = base64.b64encode("%(admin_user)s:%(admin_password)s" % ip)
+    def get_stream_server_xml(self, ip, url):
+        encoded = base64.b64encode("%(admin_user)s:%(admin_pass)s" % ip)
 
         header = {"Authorization":"Basic %s" % encoded}
-        self.logger.debug(ip)
-        url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
-        self.logger.debug(url)
         req = urllib2.Request(
             #assuming that the icecast stats path is /admin/stats.xml
             #need to fix this
@@ -49,7 +46,8 @@ class ListenerStat(Thread):
 
 
     def get_icecast_stats(self, ip):
-        document = self.get_icecast_xml(ip)
+        url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
+        document = self.get_stream_server_xml(ip, url)
         dom = xml.dom.minidom.parseString(document)
         sources = dom.getElementsByTagName("source")
 
@@ -67,6 +65,24 @@ class ListenerStat(Thread):
                 mount_stats = {"timestamp":timestamp, \
                             "num_listeners": num_listeners, \
                             "mount_name": mount_name}
+
+        return mount_stats
+
+    def get_shoutcast_stats(self, ip):
+        url = 'http://%(host)s:%(port)s/admin.cgi?sid=1&mode=viewxml' % ip
+        document = self.get_stream_server_xml(ip, url)
+        dom = xml.dom.minidom.parseString(document)
+        current_listeners = dom.getElementsByTagName("CURRENTLISTENERS")
+
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        num_listeners = 0
+        if len(current_listeners):
+            num_listeners = self.get_node_text(current_listeners[0].childNodes)
+
+        mount_stats = {"timestamp":timestamp, \
+                    "num_listeners": num_listeners, \
+                    "mount_name": "shoutcast"}
+
         return mount_stats
 
     def get_stream_stats(self, stream_parameters):
@@ -78,16 +94,26 @@ class ListenerStat(Thread):
         #streams are the same server, we will still initiate 3 separate
         #connections
         for k, v in stream_parameters.items():
-            v["admin_user"] = "admin"
-            v["admin_password"] = "hackme"
             if v["enable"] == 'true':
-                stats.append(self.get_icecast_stats(v))
-            #stats.append(get_shoutcast_stats(ip))
+                try:
+                    if v["output"] == "icecast":
+                        stats.append(self.get_icecast_stats(v))
+                    else:
+                        stats.append(self.get_shoutcast_stats(v))
+                    self.update_listener_stat_error(v["mount"], 'OK')
+                except Exception, e:
+                    self.logger.error('Exception: %s', e)
+                    self.update_listener_stat_error(v["mount"], str(e))
 
         return stats
 
     def push_stream_stats(self, stats):
         self.api_client.push_stream_stats(stats)
+    
+    def update_listener_stat_error(self, stream_id, error):
+        keyname = '%s_listener_stat_error' % stream_id
+        data = {keyname: error}
+        self.api_client.update_stream_setting_table(data)
 
     def run(self):
         #Wake up every 120 seconds and gather icecast statistics. Note that we
@@ -100,11 +126,13 @@ class ListenerStat(Thread):
 
                 stats = self.get_stream_stats(stream_parameters["stream_params"])
                 self.logger.debug(stats)
-
-                self.push_stream_stats(stats)
+                
+                if not stats:
+                    self.logger.error("Not able to get listener stats")
+                else:
+                    self.push_stream_stats(stats)
             except Exception, e:
-                top = traceback.format_exc()
-                self.logger.error('Exception: %s', top)
+                self.logger.error('Exception: %s', e)
 
             time.sleep(120)
 

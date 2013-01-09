@@ -12,7 +12,8 @@ class Application_Form_EditUser extends Zend_Form
                                     * */
 
         $currentUser = Application_Model_User::getCurrentUser();
-        $userData = Application_Model_User::GetUserData($currentUser->getId());
+        $currentUserId = $currentUser->getId();
+        $userData = Application_Model_User::GetUserData($currentUserId);
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
 
@@ -29,6 +30,7 @@ class Application_Form_EditUser extends Zend_Form
         $login->setLabel(_('Username:'));
         $login->setValue($userData["login"]);
         $login->setAttrib('class', 'input_text');
+        $login->setAttrib('readonly', 'readonly');
         $login->setRequired(true);
         $login->addValidator($notEmptyValidator);
         $login->addFilter('StringTrim');
@@ -96,14 +98,19 @@ class Application_Form_EditUser extends Zend_Form
         $jabber->setDecorators(array('viewHelper'));
         $this->addElement($jabber);
 
-        /*
-        $saveBtn = new Zend_Form_Element_Button('cu_save_user');
-        $saveBtn->setAttrib('class', 'btn btn-small right-floated');
-        $saveBtn->setIgnore(true);
-        $saveBtn->setLabel(_('Save'));
-        $saveBtn->setDecorators(array('viewHelper'));
-        $this->addElement($saveBtn);
-        */
+        $locale = new Zend_Form_Element_Select("cu_locale");
+        $locale->setLabel(_("Language:"));
+        $locale->setMultiOptions(Application_Model_Locale::getLocales());
+        $locale->setValue(Application_Model_Preference::GetUserLocale($currentUserId));
+        $locale->setDecorators(array('ViewHelper'));
+        $this->addElement($locale);
+        
+        $timezone = new Zend_Form_Element_Select("cu_timezone");
+        $timezone->setLabel(_("Timezone:"));
+        $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
+        $timezone->setValue(Application_Model_Preference::GetUserTimezone($currentUserId));
+        $timezone->setDecorators(array('ViewHelper'));
+        $this->addElement($timezone);
     }
 
     public function validateLogin($p_login, $p_userId) {

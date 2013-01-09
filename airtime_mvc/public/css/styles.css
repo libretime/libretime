@@ -97,6 +97,21 @@ select {
     padding-bottom: 20px;
 }
 
+.edit-current-user {
+    width: 450px;
+}
+
+.edit-current-user label {
+    font-weight: bold;
+}
+
+.stream-player-label {
+    padding-left: 8px !important;
+}
+.jp-stream form {
+    margin-left: 7px !important;
+}
+
 .override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
@@ -109,7 +124,8 @@ select {
 }
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
-.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon{
+.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon,
+.admin_username_help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
@@ -1390,6 +1406,14 @@ h2#scheduled_playlist_name span {
 	padding: 4px 0 8px;
 }
 
+.user-form-label {
+    width: 30% !important;
+}
+
+.user-form-element {
+    width: 65% !important;
+}
+
 .simple-formblock dd.block-display {
     width: 100%;
 }
@@ -1972,6 +1996,9 @@ span.errors.sp-errors{
 .small-icon.show-empty {
     background:url(images/icon_alert_cal_alt.png) no-repeat 0 0;
 }
+.small-icon.show-partial-filled {
+    background:url(images/icon_alert_cal_alt.png) no-repeat 0 0;
+}
 .medium-icon {
 	display:block;
 	width:25px;
@@ -2001,8 +2028,11 @@ span.errors.sp-errors{
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
-.preferences, .manage-folders {
+.preferences {
     width: 500px;
+}
+.manage-folders {
+    width: 610px;
 }
 
 .stream-config {
@@ -2941,17 +2971,52 @@ dd .stream-status {
 }
 
 .edit-user-global dt {
-    width: 90px;
+    width: 150px;
     float: left;
     margin-top: 4px;
     margin-left: 2px;
 }
 
 .edit-user-global dd {
-    width: 230px;
+    width: 340px;
     padding-bottom: 5px;
 }
 
-.edit-user-global input {
-    width: 170px;
+.edit-user-global input, .edit-user-global select {
+    width: 200px;
+}
+
+
+.jp-container a#popup-link {
+    width: 104px;
+    border: 1px solid black;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top:3px;
+    text-align: center;
+    right: 16px;
+    position: absolute;
+    top: 40px;
+    color: #FF5D1A
+}
+
+#popup-share {
+    display:none;
+    position: fixed;
+    width:360px;
+    height: 26px;
+    margin-left:8px;
+    margin-right: 150px;
+    margin-top: 0px;
+    border:1px solid black;
+    background-color:#282828;
+    padding:10px;
+    z-index:102;
+    font-size:10pt;
+    font-weight:bold;
+}
+
+#popup-share-link {
+    width: 320px;
 }
