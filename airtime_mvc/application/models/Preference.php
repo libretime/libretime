@@ -434,15 +434,41 @@ class Application_Model_Preference
         return self::getValue("description");
     }
 
-    public static function SetTimezone($timezone)
+    public static function SetDefaultTimezone($timezone)
     {
         self::setValue("timezone", $timezone);
         date_default_timezone_set($timezone);
     }
 
-    public static function GetTimezone()
+    public static function GetDefaultTimezone()
     {
         return self::getValue("timezone");
+    }
+
+    public static function SetUserTimezone($userId, $timezone = null)
+    {
+        // When a new user is created they will get the default timezone
+        // setting which the admin sets on preferences page
+        if (is_null($timezone)) {
+            $timezone = self::GetDefaultTimezone();
+        }
+        self::setValue("user_".$userId."_timezone", $timezone, true, $userId);
+    }
+
+    public static function GetUserTimezone($id)
+    {
+        return self::getValue("user_".$id."_timezone", true);
+    }
+
+    public static function GetTimezone()
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $id = $auth->getIdentity()->id;
+            return self::GetUserTimezone($id);
+        } else {
+            return self::GetDefaultTimezone();
+        }
     }
 
     // This is the language setting on preferences page

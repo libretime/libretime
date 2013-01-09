@@ -10,6 +10,7 @@ require_once 'Preference.php';
 require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
+require_once "Timezone.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 

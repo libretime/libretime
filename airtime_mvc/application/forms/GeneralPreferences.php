@@ -61,9 +61,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         /* Form Element for setting the Timezone */
         $timezone = new Zend_Form_Element_Select("timezone");
-        $timezone->setLabel(_("Timezone"));
-        $timezone->setMultiOptions($this->getTimezones());
-        $timezone->setValue(Application_Model_Preference::GetTimezone());
+        $timezone->setLabel(_("Default Interface Timezone"));
+        $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
+        $timezone->setValue(Application_Model_Preference::GetDefaultTimezone());
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
 
@@ -74,33 +74,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
         $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
-    }
-
-    private function getTimezones()
-    {
-        $regions = array(
-            'Africa' => DateTimeZone::AFRICA,
-            'America' => DateTimeZone::AMERICA,
-            'Antarctica' => DateTimeZone::ANTARCTICA,
-            'Arctic' => DateTimeZone::ARCTIC,
-            'Asia' => DateTimeZone::ASIA,
-            'Atlantic' => DateTimeZone::ATLANTIC,
-            'Australia' => DateTimeZone::AUSTRALIA,
-            'Europe' => DateTimeZone::EUROPE,
-            'Indian' => DateTimeZone::INDIAN,
-            'Pacific' => DateTimeZone::PACIFIC
-        );
-
-        $tzlist = array();
-
-        foreach ($regions as $name => $mask) {
-            $ids = DateTimeZone::listIdentifiers($mask);
-            foreach ($ids as $id) {
-                $tzlist[$id] = str_replace("_", " ", $id);
-            }
-        }
-
-        return $tzlist;
     }
 
     private function getWeekStartDays()

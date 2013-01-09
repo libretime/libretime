@@ -128,6 +128,20 @@
                 </ul>
             <?php endif; ?> 
         </dd>
+        <dt id="cu-timezone-label">
+            <label><?php echo $this->element->getElement('cu_timezone')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="cu-timezone-element">
+            <?php echo $this->element->getElement('cu_timezone') ?>
+            <?php if($this->element->getElement('cu_timezone')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('cu_timezone')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
         <button id="cu_save_user" type="button" class="btn btn-small right-floated">Save</button>
     </dl>
 </form>
