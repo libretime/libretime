@@ -462,14 +462,7 @@ $(document).ready(function() {
     });
     
     $('#cu_save_user').live('click', function() {
-        var data = $('#current-user-form').serialize();
-        $.post(baseUrl+'/user/edit-user', {format: 'json', data: data}, function(data) {
-            var json = $.parseJSON(data);
-            $('.edit-current-user').parent().empty().append(json.html);
-            $.cookie("airtime_locale", json.locale, {path: '/'});
-            setCurrentUserPseudoPassword();
-            setTimeout(removeSuccessMsg, 5000);
-        });
+        $.cookie("airtime_locale", $('#cu_locale').val(), {path: '/'});
     });
 
     // When the 'Listen' button is clicked we set the width

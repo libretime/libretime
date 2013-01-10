@@ -129,12 +129,7 @@ class UserController extends Zend_Controller_Action
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();
         if ($request->isPost()) {
-            $params = $request->getPost();
-            $postData = explode('&', $params['data']);
-            foreach($postData as $k=>$v) {
-                $v = explode('=', $v);
-                $formData[$v[0]] = urldecode($v[1]);
-            }
+            $formData = $request->getPost();
             
             if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 
                     && $formData['cu_login'] == 'admin') {
@@ -157,12 +152,18 @@ class UserController extends Zend_Controller_Action
                 $user->setSkype($formData['cu_skype']);
                 $user->setJabber($formData['cu_jabber']);
                 $user->save();
+
+                //configure localization with new locale setting
+                Application_Model_Locale::configureLocalization($formData['cu_locale']);
+                //reinitialize form so language gets translated
+                $form = new Application_Form_EditUser();
+
                 Application_Model_Preference::SetUserLocale($user->getId(), $formData['cu_locale']);
                 Application_Model_Preference::SetUserTimezone($user->getId(), $formData['cu_timezone']);
-                $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
+                $this->view->successMessage = "<div class='success'>"._("Settings updated successfully!")."</div>";
             }
             $this->view->form = $form;
-            die(json_encode(array("locale"=>$formData['cu_locale'], "html"=>$this->view->render('user/edit-user.phtml'))));
+            $this->view->html = $this->view->render('user/edit-user.phtml');
         }
         $this->view->form = $form;
         $this->view->html = $this->view->render('user/edit-user.phtml');
