@@ -17,9 +17,11 @@ function populateForm(entries){
     if (entries.id.length != 0){
         $('#login').attr('readonly', 'readonly');
         $('#password').val("xxxxxx");
+        $('#passwordVerify').val("xxxxxx");
     } else {
         $('#login').removeAttr('readonly');
         $('#password').val("");
+        $('#passwordVerify').val("");
     }
 }
 
@@ -90,6 +92,11 @@ function populateUserTable() {
         
         "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
     });
+}
+
+function sizeFormElements() {
+    $("dt[id$='label']").addClass('user-form-label');
+    $("dd[id$='element']").addClass('user-form-element');
 }
 
 $(document).ready(function() {
@@ -188,12 +195,14 @@ $(document).ready(function() {
             } else {
                 //if form is invalid we only need to redraw the form
                 $('#user_form').empty().append($(json.html).find('#user_form').children());
+                $('#password').val("");
+                $('#passwordVerify').val("");
             }
             setTimeout(removeSuccessMsg, 5000);
+            sizeFormElements();
         });
     });
-    
-    $("dt[id$='label']").addClass('user-form-label');
-    $("dd[id$='element']").addClass('user-form-element');
+
+    sizeFormElements();
     
 });

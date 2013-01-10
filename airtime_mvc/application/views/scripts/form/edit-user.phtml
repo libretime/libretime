@@ -10,7 +10,7 @@
         <dd id="cu-username-element">
             <?php echo $this->element->getElement('cu_login') ?>
             <?php if($this->element->getElement('cu_login')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_login')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -24,8 +24,22 @@
         <dd id="cu-password-element">
             <?php echo $this->element->getElement('cu_password') ?>
             <?php if($this->element->getElement('cu_password')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_password')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dt id="cu-passwordVerify-label">
+            <label><?php echo $this->element->getElement('cu_passwordVerify')->getLabel() ?>
+            </label>
+        </dt>
+        <dd id="cu-passwordVerify-element">
+            <?php echo $this->element->getElement('cu_passwordVerify') ?>
+            <?php if($this->element->getElement('cu_passwordVerify')->hasErrors()) : ?>
+                <ul class='errors edit-user-errors'>
+                    <?php foreach($this->element->getElement('cu_passwordVerify')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
@@ -38,7 +52,7 @@
         <dd id="cu-firstname-element">
             <?php echo $this->element->getElement('cu_first_name') ?>
             <?php if($this->element->getElement('cu_first_name')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_first_name')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -52,7 +66,7 @@
         <dd id="cu-lastname-element">
             <?php echo $this->element->getElement('cu_last_name') ?>
             <?php if($this->element->getElement('cu_last_name')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_last_name')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -66,7 +80,7 @@
         <dd id="cu-email-element">
             <?php echo $this->element->getElement('cu_email') ?>
             <?php if($this->element->getElement('cu_email')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_email')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -80,7 +94,7 @@
         <dd id="cu-cell_phone-element">
             <?php echo $this->element->getElement('cu_cell_phone') ?>
             <?php if($this->element->getElement('cu_cell_phone')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_cell_phone')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -94,7 +108,7 @@
         <dd id="cu-skype-element">
             <?php echo $this->element->getElement('cu_skype') ?>
             <?php if($this->element->getElement('cu_skype')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_skype')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -108,7 +122,7 @@
         <dd id="cu-jabber-element">
             <?php echo $this->element->getElement('cu_jabber') ?>
             <?php if($this->element->getElement('cu_jabber')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_jabber')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -122,7 +136,7 @@
         <dd id="cu-locale-element">
             <?php echo $this->element->getElement('cu_locale') ?>
             <?php if($this->element->getElement('cu_locale')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_locale')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
@@ -136,7 +150,7 @@
         <dd id="cu-timezone-element">
             <?php echo $this->element->getElement('cu_timezone') ?>
             <?php if($this->element->getElement('cu_timezone')->hasErrors()) : ?>
-                <ul class='errors'>
+                <ul class='errors edit-user-errors'>
                     <?php foreach($this->element->getElement('cu_timezone')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>

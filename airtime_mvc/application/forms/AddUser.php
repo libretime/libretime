@@ -36,6 +36,16 @@ class Application_Form_AddUser extends Zend_Form
         $password->addValidator($notEmptyValidator);
         $this->addElement($password);
 
+        $passwordIdenticalValidator = Application_Form_Helper_ValidationTypes::overridePasswordIdenticalValidator('password');
+        $passwordVerify = new Zend_Form_Element_Password('passwordVerify');
+        $passwordVerify->setLabel(_('Verify Password:'));
+        $passwordVerify->setAttrib('class', 'input_text');
+        $passwordVerify->setRequired(true);
+        $passwordVerify->addFilter('StringTrim');
+        $passwordVerify->addValidator($notEmptyValidator);
+        $passwordVerify->addValidator($passwordIdenticalValidator);
+        $this->addElement($passwordVerify);
+
         $firstName = new Zend_Form_Element_Text('first_name');
         $firstName->setLabel(_('Firstname:'));
         $firstName->setAttrib('class', 'input_text');

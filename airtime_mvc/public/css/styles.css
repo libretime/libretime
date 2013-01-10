@@ -2989,6 +2989,9 @@ dd .stream-status {
     width: 200px;
 }
 
+.edit-user-errors {
+    margin-left: 33% !important;
+    width: 208px;
 
 .jp-container a#popup-link {
     width: 104px;

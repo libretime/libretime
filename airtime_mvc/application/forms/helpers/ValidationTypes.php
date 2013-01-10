@@ -80,4 +80,17 @@ Class Application_Form_Helper_ValidationTypes {
         return $validator;
     }
 
+    public static function overridePasswordIdenticalValidator($p_matchAgainst)
+    {
+        $validator = new Zend_Validate_Identical();
+        $validator->setToken($p_matchAgainst);
+
+        $validator->setMessage(
+            _("Passwords do not match"),
+            Zend_Validate_Identical::NOT_SAME
+        );
+
+        return $validator;
+    }
+
 }

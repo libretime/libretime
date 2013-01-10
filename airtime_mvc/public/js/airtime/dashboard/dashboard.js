@@ -448,12 +448,15 @@ function init() {
  */
 function setCurrentUserPseudoPassword() {
     $('#cu_password').val("xxxxxx");
+    $('#cu_passwordVerify').val("xxxxxx");
 }
 
 $(document).ready(function() {
     if ($('#master-panel').length > 0)
         init();
-    setCurrentUserPseudoPassword();
+    if ($('.errors').length === 0) {
+        setCurrentUserPseudoPassword();
+    }
     
     $('#current-user').live('click', function() {
         $.ajax({
