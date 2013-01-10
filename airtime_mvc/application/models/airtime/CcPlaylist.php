@@ -89,9 +89,9 @@ class CcPlaylist extends BaseCcPlaylist {
     {
         $sql = <<<SQL
         SELECT SUM(cliplength) FROM cc_playlistcontents as pc
-        JOIN cc_files as f ON pc.file_id = f.id
+        LEFT JOIN cc_files as f ON pc.file_id = f.id
         WHERE PLAYLIST_ID = :p1
-        AND f.file_exists = true
+        AND f.file_exists is NUll or f.file_exists = true
 SQL;
         $stmt = $con->prepare($sql);
         $stmt->bindValue(':p1', $this->getDbId());
