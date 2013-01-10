@@ -317,11 +317,14 @@ function setAddShowEvents() {
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
-		minDate: adjustDateToServerDate(new Date(), timezoneOffset),
-		dateFormat: 'yy-mm-dd',
-		closeText: 'Close',
-		showButtonPanel: true,
-                firstDay: weekStart
+        minDate: adjustDateToServerDate(new Date(), timezoneOffset),
+        dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
+        closeText: 'Close',
+        showButtonPanel: true,
+        firstDay: weekStart
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
