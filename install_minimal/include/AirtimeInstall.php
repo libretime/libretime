@@ -340,7 +340,7 @@ class AirtimeInstall
         if ($result < 1) {
             return false;
         }
-        $sql = "INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_1_timezone', '$defaultTimezone')";
+        $sql = "INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', '$defaultTimezone')";
         $result = $con->exec($sql);
         if ($result < 1) {
             return false;
