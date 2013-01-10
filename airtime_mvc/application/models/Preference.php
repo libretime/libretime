@@ -1253,6 +1253,14 @@ class Application_Model_Preference
         return ($data != "") ? unserialize($data) : null;
     }
     
+    public static function SetEnableReplayGain($value) {
+        self::setValue("enable_replay_gain", $value, false);
+    }
+    
+    public static function GetEnableReplayGain() {
+        return self::getValue("enable_replay_gain", false);
+    }
+    
     public static function getReplayGainModifier(){
         $rg_modifier = self::getValue("replay_gain_modifier");
         

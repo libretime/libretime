@@ -65,6 +65,12 @@ class Application_Form_StreamSetting extends Zend_Form
                    ->setDecorators(array('ViewHelper'));
         $this->addElement($offAirMeta);
         
+        $enable_replay_gain = new Zend_Form_Element_Checkbox("enableReplayGain");
+        $enable_replay_gain->setLabel(_("Enable Replay Gain"))
+                           ->setValue(Application_Model_Preference::GetEnableReplayGain())
+                           ->setDecorators(array('ViewHelper'));
+        $this->addElement($enable_replay_gain);
+        
         $replay_gain = new Zend_Form_Element_Hidden("replayGainModifier");
         $replay_gain->setLabel(_("Replay Gain Modifier"))
         ->setValue(Application_Model_Preference::getReplayGainModifier())

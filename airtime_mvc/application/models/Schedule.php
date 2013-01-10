@@ -679,8 +679,13 @@ SQL;
 
         $same_hour = $start_hour == $end_hour;
         $independent_event = !$same_hour;
+
         $replay_gain = is_null($item["replay_gain"]) ? "0": $item["replay_gain"];
         $replay_gain += Application_Model_Preference::getReplayGainModifier();
+        
+        if ( !Application_Model_Preference::GetEnableReplayGain() ) {
+            $replay_gain = 0;
+        }
 
         $schedule_item = array(
             'id'                => $media_id,
@@ -695,7 +700,7 @@ SQL;
             'end'               => $end,
             'show_name'         => $item["show_name"],
             'replay_gain'       => $replay_gain,
-            'independent_event' => $independent_event, 
+            'independent_event' => $independent_event,
         );
         self::appendScheduleItem($data, $start, $schedule_item);
     }
@@ -839,8 +844,8 @@ SQL;
     /* Check if two events are less than or equal to 1 second apart
      */
     public static function areEventsLinked($event1, $event2) {
-        $dt1 = DateTime::createFromFormat("Y-m-d-H-i-s", $event1['start']); 
-        $dt2 = DateTime::createFromFormat("Y-m-d-H-i-s", $event2['start']); 
+        $dt1 = DateTime::createFromFormat("Y-m-d-H-i-s", $event1['start']);
+        $dt2 = DateTime::createFromFormat("Y-m-d-H-i-s", $event2['start']);
 
         $seconds = $dt2->getTimestamp() - $dt1->getTimestamp();
         return $seconds <= 1;
@@ -860,7 +865,7 @@ SQL;
      *
      * There's a special case here is well. When the back-to-back streams are the same, we
      * can collapse the instructions 1,2,(3,4,1,2),3,4 to 1,2,3,4. We basically cut out the
-     * middle part. This function handles this. 
+     * middle part. This function handles this.
      */
     private static function foldData(&$data)
     {
