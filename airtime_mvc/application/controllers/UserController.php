@@ -153,13 +153,14 @@ class UserController extends Zend_Controller_Action
                 $user->setJabber($formData['cu_jabber']);
                 $user->save();
 
+                Application_Model_Preference::SetUserLocale($user->getId(), $formData['cu_locale']);
+                Application_Model_Preference::SetUserTimezone($user->getId(), $formData['cu_timezone']);
+
                 //configure localization with new locale setting
                 Application_Model_Locale::configureLocalization($formData['cu_locale']);
                 //reinitialize form so language gets translated
                 $form = new Application_Form_EditUser();
 
-                Application_Model_Preference::SetUserLocale($user->getId(), $formData['cu_locale']);
-                Application_Model_Preference::SetUserTimezone($user->getId(), $formData['cu_timezone']);
                 $this->view->successMessage = "<div class='success'>"._("Settings updated successfully!")."</div>";
             }
             $this->view->form = $form;
