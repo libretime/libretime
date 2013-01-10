@@ -270,11 +270,7 @@ class Application_Model_ShowBuilder
             $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_out']);
             $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_in']);
             
-            if ($cue_out == 0 && $cue_in == 0) {
-                $run_time = Application_Common_DateHelper::calculateLengthInSeconds($p_item['file_length']);
-            } else {
-                $run_time = $cue_out-$cue_in;
-            }
+            $run_time = $cue_out-$cue_in;
             
             $formatter       = new LengthFormatter(Application_Common_DateHelper::ConvertMSToHHMMSSmm($run_time*1000));
             $row['runtime']  = $formatter->format();

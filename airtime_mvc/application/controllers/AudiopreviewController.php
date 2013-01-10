@@ -177,6 +177,8 @@ class AudiopreviewController extends Zend_Controller_Action
 
     private function createElementMap($track)
     {
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+
         $elementMap = array( 'element_title' => isset($track['track_title'])?$track['track_title']:"",
                 'element_artist' => isset($track['artist_name'])?$track['artist_name']:"",
                 'element_id' => isset($track['id'])?$track['id']:"",

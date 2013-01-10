@@ -117,6 +117,7 @@ class LocaleController extends Zend_Controller_Action
             "Dynamic block is not previewable" => _("Dynamic block is not previewable"),
             "Limit to: " => _("Limit to: "),
             "Playlist saved" => _("Playlist saved"),
+            "Playlist shuffled" => _("Playlist shuffled"),
             "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
                 => _("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."),
             //listenerstat/listenerstat.js
