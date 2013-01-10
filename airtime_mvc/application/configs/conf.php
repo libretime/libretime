@@ -24,30 +24,6 @@ $CC_CONFIG = array(
 $configFile = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
 Config::loadConfig($configFile);
 
-// Add database table names
-$CC_CONFIG['playListTable'] = $CC_CONFIG['tblNamePrefix'].'playlist';
-$CC_CONFIG['playListContentsTable'] = $CC_CONFIG['tblNamePrefix'].'playlistcontents';
-$CC_CONFIG['filesTable'] = $CC_CONFIG['tblNamePrefix'].'files';
-$CC_CONFIG['accessTable'] = $CC_CONFIG['tblNamePrefix'].'access';
-$CC_CONFIG['permTable'] = $CC_CONFIG['tblNamePrefix'].'perms';
-$CC_CONFIG['sessTable'] = $CC_CONFIG['tblNamePrefix'].'sess';
-$CC_CONFIG['subjTable'] = $CC_CONFIG['tblNamePrefix'].'subjs';
-$CC_CONFIG['smembTable'] = $CC_CONFIG['tblNamePrefix'].'smemb';
-$CC_CONFIG['prefTable'] = $CC_CONFIG['tblNamePrefix'].'pref';
-$CC_CONFIG['scheduleTable'] = $CC_CONFIG['tblNamePrefix'].'schedule';
-$CC_CONFIG['playListTimeView'] = $CC_CONFIG['tblNamePrefix'].'playlisttimes';
-$CC_CONFIG['showSchedule'] = $CC_CONFIG['tblNamePrefix'].'show_schedule';
-$CC_CONFIG['showDays'] = $CC_CONFIG['tblNamePrefix'].'show_days';
-$CC_CONFIG['showTable'] = $CC_CONFIG['tblNamePrefix'].'show';
-$CC_CONFIG['showInstances'] = $CC_CONFIG['tblNamePrefix'].'show_instances';
-
-$CC_CONFIG['playListSequence'] = $CC_CONFIG['playListTable'].'_id';
-$CC_CONFIG['filesSequence'] = $CC_CONFIG['filesTable'].'_id';
-$CC_CONFIG['prefSequence'] = $CC_CONFIG['prefTable'].'_id';
-$CC_CONFIG['permSequence'] = $CC_CONFIG['permTable'].'_id';
-$CC_CONFIG['subjSequence'] = $CC_CONFIG['subjTable'].'_id';
-$CC_CONFIG['smembSequence'] = $CC_CONFIG['smembTable'].'_id';
-
 class Config {
     public static function loadConfig($p_path) {
         global $CC_CONFIG;
@@ -85,6 +61,6 @@ class Config {
         
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
-        } 
+        }
     }
 }
