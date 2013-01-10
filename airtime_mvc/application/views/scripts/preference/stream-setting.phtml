@@ -71,25 +71,33 @@
             <dd id="offAirMeta-element">
                 <?php echo $this->form->getElement('offAirMeta') ?>
             </dd>
+            <dt id="enableReplayGain-label">
+                <label>
+                <?php echo $this->form->getElement('enableReplayGain')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="enableReplayGain-element">
+                <?php echo $this->form->getElement('enableReplayGain') ?>
+            </dd>
             <dt id="replayGainModifier-label" class="block-display">
-            <label><?php echo $this->form->getElement('replayGainModifier')->getLabel() ?>:
-            </label>
-            <span id="rg_modifier_value" style="border: 0; color: #f6931f; font-weight: bold;">
-                <?php echo $this->form->getElement('replayGainModifier')->getValue() ?>
-            </span>
-            dB
-        </dt>
-        <dd id="replayGainModifier-element" class="block-display">
-            <?php echo $this->form->getElement('replayGainModifier') ?>
-            <?php if($this->form->getElement('replayGainModifier')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->form->getElement('replayGainModifier')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-            <div id="slider-range-max" style="width: 99%"></div>
-        </dd>
+                <label><?php echo $this->form->getElement('replayGainModifier')->getLabel() ?>:
+                </label>
+                <span id="rg_modifier_value" style="border: 0; color: #f6931f; font-weight: bold;">
+                    <?php echo $this->form->getElement('replayGainModifier')->getValue() ?>
+                </span>
+                dB
+            </dt>
+            <dd id="replayGainModifier-element" class="block-display">
+                <?php echo $this->form->getElement('replayGainModifier') ?>
+                <?php if($this->form->getElement('replayGainModifier')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->form->getElement('replayGainModifier')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                <div id="slider-range-max" style="width: 99%"></div>
+            </dd>
         </dl>
     </fieldset>
     <?php echo $this->form->getSubform('live_stream_subform'); ?>

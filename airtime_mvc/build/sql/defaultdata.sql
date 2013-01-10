@@ -1,6 +1,7 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 -- added in 2.3
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('enable_replay_gain', 1);
 -- end of added in 2.3
 
 -- added in 2.1
