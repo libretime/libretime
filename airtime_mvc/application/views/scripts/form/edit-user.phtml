@@ -1,5 +1,6 @@
+<h2><? echo sprintf(_("%s's Settings"), $this->currentUser) ?></h2>
 <div id="current-user-container">
-<form id="current-user-form" class="edit-user-global" enctype="application/x-www-form-urlencoded">
+<form id="current-user-form" class="edit-user-global" method="post" enctype="application/x-www-form-urlencoded">
     <dl class="zend_form">
         <?php echo $this->element->getElement('cu_user_id') ?>
         <dt id="cu-username-label">
@@ -142,7 +143,7 @@
                 </ul>
             <?php endif; ?> 
         </dd>
-        <button id="cu_save_user" type="button" class="btn btn-small right-floated">Save</button>
+        <button type="submit" id="cu_save_user" class="btn btn-small right-floated">Save</button>
     </dl>
 </form>
 </div>

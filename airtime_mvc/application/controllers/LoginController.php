@@ -13,7 +13,7 @@ class LoginController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         
-        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale'));
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
         if (Zend_Auth::getInstance()->hasIdentity())
         {
 

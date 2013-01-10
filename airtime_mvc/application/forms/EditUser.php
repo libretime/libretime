@@ -18,7 +18,7 @@ class Application_Form_EditUser extends Zend_Form
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
 
         $this->setDecorators(array(
-                array('ViewScript', array('viewScript' => 'form/edit-user.phtml'))));
+                array('ViewScript', array('viewScript' => 'form/edit-user.phtml', "currentUser" => $currentUser->getLogin()))));
         $this->setAttrib('id', 'current-user-form');
         
         $hidden = new Zend_Form_Element_Hidden('cu_user_id');
