@@ -35,10 +35,6 @@ just_switched = ref false
 
 %include "ls_lib.liq"
 
-#web_stream = input.harbor("test-harbor", port=8999, password=stream_harbor_pass)
-#web_stream = on_metadata(notify_stream, web_stream)
-#output.dummy(fallible=true, web_stream)
-
 queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
 queue = cue_cut(queue)
 queue = amplify(1., override="replay_gain", queue)
@@ -51,7 +47,8 @@ output.dummy(fallible=true, queue)
 
 http = input.http_restart(id="http")
 http = cross_http(http_input_id="http",http)
-stream_queue = http_fallback(http_input_id="http",http=http,default=queue)
+output.dummy(fallible=true, http)
+stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
