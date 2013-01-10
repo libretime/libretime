@@ -641,7 +641,7 @@ var AIRTIME = (function(AIRTIME){
 
 	    $pl.on("click", 'button[id="playlist_shuffle_button"]', function(){
 	        obj_id = $('input[id="obj_id"]').val();
-	        url = "/Playlist/shuffle";
+	        url = baseUrl+"/Playlist/shuffle";
     	    enableLoadingIcon();
     	    $.post(url, {format: "json", obj_id: obj_id}, function(data){
     	        var json = $.parseJSON(data)
@@ -651,7 +651,7 @@ var AIRTIME = (function(AIRTIME){
     	        }
     	        AIRTIME.playlist.fnOpenPlaylist(json);
     	        if (json.result == "0") {
-    	            $pl.find('.success').text('Playlist shuffled');
+    	            $pl.find('.success').text($.i18n._('Playlist shuffled'));
     	            $pl.find('.success').show();
     	        }
     	        disableLoadingIcon();
