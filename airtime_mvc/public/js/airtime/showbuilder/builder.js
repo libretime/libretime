@@ -38,6 +38,28 @@ var AIRTIME = (function(AIRTIME){
         
         mod.timestamp = timestamp;
     };
+
+    mod.updateCalendarStatusIcon = function(json) {
+
+        if (window.location.pathname.toLowerCase() != "/schedule") {
+            return;
+        }
+
+        var instance_id = json.schedule[0].instance;
+
+        var lastElem = json.schedule[json.schedule.length-1];
+        var $elem = $($(".fc-event-inner.fc-event-skin .fc-event-title#"+instance_id).parent());
+        $elem.find(".small-icon").remove();
+        if (json.schedule[1].empty) {
+            $elem
+                .find(".fc-event-title")
+                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+        } else if (lastElem["fRuntime"][0] == "-") {
+            $elem
+                .find(".fc-event-title")
+                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+        }
+    }
     
     mod.getTimestamp = function() {
         
@@ -331,6 +353,7 @@ var AIRTIME = (function(AIRTIME){
             "url": sSource,
             "data": aoData,
             "success": function(json) {
+                mod.updateCalendarStatusIcon(json)
                 mod.setTimestamp(json.timestamp);
                 mod.setShowInstances(json.instances);
                 mod.getSelectedCursors();
