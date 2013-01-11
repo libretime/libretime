@@ -448,7 +448,7 @@ var AIRTIME = (function(AIRTIME){
 		            var id = parseInt($(this).attr("id").split("_").pop(), 10);
 		            var blockId = parseInt($(this).attr("blockId"), 10);
 		            if ($(this).hasClass('close')) {
-                        var sUrl = "/playlist/get-block-info";
+                        var sUrl = baseUrl+"/playlist/get-block-info";
                         mod.disableUI();
                         $.post(sUrl, {format:"json", id:blockId}, function(json){
                             $html = "";
