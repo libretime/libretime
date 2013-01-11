@@ -2133,7 +2133,7 @@ msgid "Station name - Show name"
 msgstr "电台名 - 节目名"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
-msgid "Off Air Meatadata"
+msgid "Off Air Metadata"
 msgstr "非直播状态下的输出流元数据"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69

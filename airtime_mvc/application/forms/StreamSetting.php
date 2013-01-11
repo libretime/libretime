@@ -60,7 +60,7 @@ class Application_Form_StreamSetting extends Zend_Form
         $this->addElement($stream_format);
         
         $offAirMeta = new Zend_Form_Element_Text('offAirMeta');
-        $offAirMeta->setLabel(_('Off Air Meatadata'))
+        $offAirMeta->setLabel(_('Off Air Metadata'))
                    ->setValue(Application_Model_StreamSetting::getOffAirMeta())
                    ->setDecorators(array('ViewHelper'));
         $this->addElement($offAirMeta);
