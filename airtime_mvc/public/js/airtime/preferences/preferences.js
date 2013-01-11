@@ -80,6 +80,22 @@ function setMsAuthenticationFieldsReadonly(ele) {
     }
 }
 
+function setSoundCloudCheckBoxListener() {
+    var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");
+    var mainCheckBox= $("#UploadToSoundcloudOption");
+    subCheckBox.change(function(e){
+        if (subCheckBox.is(':checked')) {
+            mainCheckBox.attr("checked", true);
+        }
+    });
+
+    mainCheckBox.change(function(e){
+         if (!mainCheckBox.is(':checked')) {
+            $("#UseSoundCloud,#SoundCloudDownloadbleOption").attr("checked", false);
+        }   
+    });
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -102,6 +118,7 @@ $(document).ready(function() {
 
     showErrorSections();
     
+    setSoundCloudCheckBoxListener();
     setMailServerInputReadonly();
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
