@@ -99,9 +99,7 @@ function sizeFormElements() {
     $("dd[id$='element']").addClass('user-form-element');
 }
 
-$(document).ready(function() {
-    populateUserTable();
-
+function assignUserRightsToUserTypes() {
     //assign user-rights and id to each user type option so we can
     //display user rights for each with tipsy tooltip
     $.each($('#type').children(), function(i, opt) {
@@ -159,6 +157,10 @@ $(document).ready(function() {
                 break;
         }
     });
+}
+$(document).ready(function() {
+    populateUserTable();
+    assignUserRightsToUserTypes();
 
     $('#type').live("change", function(){
         //when the title changes on live tipsy tooltips the changes take
@@ -192,6 +194,7 @@ $(document).ready(function() {
             if (json.valid === "true") {
                 $('#content').empty().append(json.html);
                 populateUserTable();
+                assignUserRightsToUserTypes();
             } else {
                 //if form is invalid we only need to redraw the form
                 $('#user_form').empty().append($(json.html).find('#user_form').children());
