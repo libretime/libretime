@@ -12,7 +12,7 @@ class ListenerstatController extends Zend_Controller_Action
     
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
     
         $request = $this->getRequest();
         $baseUrl = Application_Common_OsPath::getBaseDir();
