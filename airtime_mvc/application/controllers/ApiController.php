@@ -48,7 +48,7 @@ class ApiController extends Zend_Controller_Action
 
     public function checkAuth()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $api_key = $this->_getParam('api_key');
 
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&

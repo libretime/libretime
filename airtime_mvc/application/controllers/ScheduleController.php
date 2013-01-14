@@ -40,7 +40,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
@@ -879,8 +879,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function contentContextMenuAction()
     {
-        global $CC_CONFIG;
-
         $id = $this->_getParam('id');
 
         $params = '/format/json/id/#id#/';
@@ -922,8 +920,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function calculateDurationAction()
     {
-        global $CC_CONFIG;
-
         $startParam = $this->_getParam('startTime');
         $endParam = $this->_getParam('endTime');
 

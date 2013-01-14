@@ -10,6 +10,8 @@ require_once(__DIR__.'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+Config::loadConfig();
+$CC_CONFIG = Config::getConfig();
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 
@@ -24,7 +26,6 @@ AirtimeInstall::DbConnect(true);
 AirtimeInstall::InstallPostgresScriptingLanguage();
 
 //Load Database parameters
-global $CC_CONFIG;
 $dbuser = $CC_CONFIG['dsn']['username'];
 $dbpasswd = $CC_CONFIG['dsn']['password'];
 $dbname = $CC_CONFIG['dsn']['database'];

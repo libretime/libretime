@@ -5,7 +5,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
     public function init()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
         $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
 
@@ -131,7 +131,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
 
     public function updateVariables()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
         $master_dj_connection_url = Application_Model_Preference::GetMasterDJSourceConnectionURL();

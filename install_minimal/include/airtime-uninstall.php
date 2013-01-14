@@ -17,6 +17,8 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
 }
 require_once(__DIR__.'/airtime-constants.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+Config::loadConfig();
+$CC_CONFIG = Config::getConfig();
 
 
 require_once 'propel/runtime/lib/Propel.php';
@@ -37,6 +39,7 @@ $sql = "SELECT pg_cancel_backend(procpid) FROM pg_stat_activity WHERE datname = 
 $command = "echo \"$sql\" | su postgres -c psql";
 @exec($command, $output);
 
+$CC_CONFIG = Config::getConfig();
 echo " * Dropping the database '".$CC_CONFIG["dsn"]["database"]."'...".PHP_EOL;
 
 //dropdb returns 1 if other sessions are using the database, otherwise returns 0
