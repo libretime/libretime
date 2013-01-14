@@ -372,7 +372,7 @@ class LibraryController extends Zend_Controller_Action
         list(, $plFadeOut) = $originalPl->getFadeInfo($originalPl->getSize()-1);
         
         $newPl->setfades($plFadeIn, $plFadeOut);
-        $newPl->setName("Copy of ".$originalPl->getName());
+        $newPl->setName(sprintf(_("Copy of %s"), $originalPl->getName()));
     }
 
     public function contentsFeedAction()
