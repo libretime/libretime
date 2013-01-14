@@ -158,6 +158,7 @@ class LocaleController extends Zend_Controller_Action
             "Copyright" => _("Copyright"),
             "All" => _("All"),
             "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
+            "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
             //preferences/musicdirs.js
             "Choose Storage Folder" => _("Choose Storage Folder"),
             "Choose Folder to Watch" => _("Choose Folder to Watch"),
