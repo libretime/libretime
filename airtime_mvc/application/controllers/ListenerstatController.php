@@ -52,6 +52,9 @@ class ListenerstatController extends Zend_Controller_Action
         $out = array();
         foreach ($errorStatus as $v) {
             $key = explode('_listener_stat_error', $v['keyname']);
+            if ($v['value'] != 'OK') {
+                $v['value'] = _("Please make sure admin user/password is correct on System->Streams page.");
+            }
             $out[$key[0]] = $v['value'];
         }
         
