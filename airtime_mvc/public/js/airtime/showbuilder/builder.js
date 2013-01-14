@@ -41,9 +41,11 @@ var AIRTIME = (function(AIRTIME){
 
     mod.updateCalendarStatusIcon = function(json) {
 
-        if (window.location.pathname.toLowerCase() != "/schedule") {
+
+        if (window.location.pathname.toLowerCase() != baseUrl+"/schedule") {
             return;
         }
+
 
         var instance_id = json.schedule[0].instance;
 
