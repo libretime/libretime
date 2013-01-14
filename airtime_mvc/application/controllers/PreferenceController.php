@@ -255,6 +255,15 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
+                
+                // compare new values with current value
+                $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
+                $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
+                if ($changeRGenabled || $changeRGmodifier) {
+                    $md = array('schedule' => Application_Model_Schedule::getSchedule());
+                    Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
+                }
+                
                 Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
                 Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 
