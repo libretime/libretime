@@ -504,7 +504,7 @@ SQL;
      */
     public function getFileUrlUsingConfigAddress()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         if (isset($CC_CONFIG['baseUrl'])) {
             $serverName = $CC_CONFIG['baseUrl'];
@@ -1218,7 +1218,7 @@ SQL;
     // note: never call this method from controllers because it does a sleep
     public function uploadToSoundCloud()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $file = $this->_file;
         if (is_null($file)) {

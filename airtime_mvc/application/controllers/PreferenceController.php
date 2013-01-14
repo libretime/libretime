@@ -20,7 +20,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $request = $this->getRequest();
         
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
@@ -80,7 +80,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function supportSettingAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
 
@@ -136,7 +136,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
             
@@ -153,7 +153,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function streamSettingAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
 

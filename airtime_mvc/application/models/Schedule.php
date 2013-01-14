@@ -763,7 +763,7 @@ SQL;
 
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */

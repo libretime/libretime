@@ -68,7 +68,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadLink()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $view = $this->getResource('view');
 
@@ -85,7 +85,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadScript()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $view = $this->getResource('view');
         

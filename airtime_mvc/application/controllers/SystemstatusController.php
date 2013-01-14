@@ -4,7 +4,7 @@ class SystemstatusController extends Zend_Controller_Action
 {
     public function init()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 

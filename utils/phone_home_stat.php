@@ -5,7 +5,12 @@ exitIfNotRoot();
 date_default_timezone_set("UTC");
 
 $values = parse_ini_file('/etc/airtime/airtime.conf', true);
+$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
+require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
+Config::loadConfig();
+$CC_CONFIG = Config::getConfig();
 
+/*
 // Name of the web server user
 $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
 $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
@@ -25,11 +30,11 @@ $CC_CONFIG['apiKey'] = array($values['general']['api_key']);
 
 $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
 $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
-
+*/
 require_once($CC_CONFIG['phpDir'].'/application/configs/constants.php');
-require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
+//require_once($CC_CONFIG['phpDir'].'/application/configs/conf.php');
 
-$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
+//$CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
 
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
@@ -38,7 +43,7 @@ realpath($CC_CONFIG['phpDir'] . '/library')
 )));
 
 function my_autoload($classname){
-    global $CC_CONFIG;
+    $CC_CONFIG = Config::getConfig();
     $info = explode('_', $classname);
     if (isset($info[1]) && isset($info[2])) {
         $filename = $info[2].".php";
