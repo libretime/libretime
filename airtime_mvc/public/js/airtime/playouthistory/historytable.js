@@ -111,7 +111,10 @@ var AIRTIME = (function(AIRTIME) {
                          "sExtends": "pdf",
                          "fnClick": setFlashFileName
                      },
-                     "print"
+                     {
+                         "sExtends": "print",
+                         "sInfo" : sprintf($.i18n._("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."), "<h6>", "</h6><p>")
+                     }
                  ]
             }
         });
