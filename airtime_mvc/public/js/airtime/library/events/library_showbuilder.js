@@ -113,7 +113,7 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (aSchedIds.length == 0) {
-            alert("Please select a cursor position on timeline.");
+            alert($.i18n._("Please select a cursor position on timeline."));
             return false;
         }
         console.log(aMediaIds);
