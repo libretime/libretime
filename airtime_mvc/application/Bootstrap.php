@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__."/configs/conf.php";
+Config::loadConfig();
+$CC_CONFIG = Config::getConfig();
+
 require_once __DIR__."/configs/ACL.php";
 require_once 'propel/runtime/lib/Propel.php';
 
@@ -20,13 +23,11 @@ require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 date_default_timezone_set('UTC');
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
-
+Logging::info($CC_CONFIG);
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
-global $CC_CONFIG;
-$airtime_version = Application_Model_Preference::GetAirtimeVersion();
-$uniqueid = Application_Model_Preference::GetUniqueId();
-$CC_CONFIG['airtime_version'] = md5($airtime_version.$uniqueid);
+Config::setAirtimeVersion();
+$CC_CONFIG = Config::getConfig();
 require_once __DIR__."/configs/navigation.php";
 
 Zend_Validate::setDefaultNamespaces("Zend");
@@ -127,7 +128,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         if (Application_Model_Preference::GetPlanLevel() != "disabled"
-                && !($_SERVER['REQUEST_URI'] == $baseUrl.'/Dashboard/stream-player' || 
+                && !($_SERVER['REQUEST_URI'] == $baseUrl.'/Dashboard/stream-player' ||
                      strncmp($_SERVER['REQUEST_URI'], $baseUrl.'/audiopreview/audio-preview', strlen($baseUrl.'/audiopreview/audio-preview'))==0)) {
             $client_id = Application_Model_Preference::GetClientId();
             $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
@@ -151,7 +152,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initZFDebug()
     {
 
-        Zend_Controller_Front::getInstance()->throwExceptions(true); 
+        Zend_Controller_Front::getInstance()->throwExceptions(true);
 
         /*
         if (APPLICATION_ENV == "development") {

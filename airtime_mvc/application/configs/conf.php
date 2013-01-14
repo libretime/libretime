@@ -6,29 +6,20 @@
  * /etc/airtime/recorder.cfg
  */
 
-global $CC_CONFIG;
-
-$CC_CONFIG = array(
-    // prefix for table names in the database
-    'tblNamePrefix' => 'cc_',
-
-    /* ================================================ storage configuration */
-
-    'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
-    'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
-
-    "rootDir" => __DIR__."/../.."
-);
-
-
-$configFile = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
-Config::loadConfig($configFile);
-
 class Config {
-    public static function loadConfig($p_path) {
-        global $CC_CONFIG;
+    private static $CC_CONFIG;
+    public static function loadConfig() {
+        $CC_CONFIG = array(
+                /* ================================================ storage configuration */
         
-        $filename = $p_path;
+                'soundcloud-client-id' => '2CLCxcSXYzx7QhhPVHN4A',
+                'soundcloud-client-secret' => 'pZ7beWmF06epXLHVUP1ufOg2oEnIt9XhE8l8xt0bBs',
+        
+                "rootDir" => __DIR__."/../.."
+        );
+        
+        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user
@@ -62,5 +53,16 @@ class Config {
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }
+        self::$CC_CONFIG = $CC_CONFIG;
+    }
+    
+    public static function setAirtimeVersion() {
+        $airtime_version = Application_Model_Preference::GetAirtimeVersion();
+        $uniqueid = Application_Model_Preference::GetUniqueId();
+        self::$CC_CONFIG['airtime_version'] = md5($airtime_version.$uniqueid);
+    }
+    
+    public static function getConfig() {
+        return self::$CC_CONFIG;
     }
 }
