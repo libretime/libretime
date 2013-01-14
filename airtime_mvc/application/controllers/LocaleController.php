@@ -54,6 +54,7 @@ class LocaleController extends Zend_Controller_Action
             "You can only add tracks, smart blocks, and webstreams to playlists." => _("You can only add tracks, smart blocks, and webstreams to playlists."),
             //library/events/library_showbuilder.js
             //already in library/events/library_playlistbuilder.js
+            "Please select a cursor position on timeline." => _("Please select a cursor position on timeline."),
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
