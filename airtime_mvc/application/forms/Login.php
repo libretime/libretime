@@ -5,7 +5,7 @@ class Application_Form_Login extends Zend_Form
 
     public function init()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         // Set the method for the display form to POST
         $this->setMethod('post');

@@ -5,14 +5,6 @@
  * yet available because airtime.conf hasn't been updated yet. This situation ends up throwing a lot of errors to stdout.
  * airtime*/
 
-global $CC_CONFIG;
+require_once("conf.php");
 
-$filename = "/etc/airtime/airtime.conf";
-$values = parse_ini_file($filename, true);
-
-// Database config
-$CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
-$CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];
-$CC_CONFIG['dsn']['hostspec'] = $values['database']['host'];
-$CC_CONFIG['dsn']['phptype'] = 'pgsql';
-$CC_CONFIG['dsn']['database'] = $values['database']['dbname'];
+$CC_CONFIG = Config::getConfig();

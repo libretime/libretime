@@ -181,15 +181,14 @@ SQL;
 
     public static function GetLastScheduleItem($p_timeNow)
     {
-        global $CC_CONFIG;
         $sql = <<<SQL
 SELECT ft.artist_name,
        ft.track_title,
        st.starts AS starts,
        st.ends AS ends
 FROM cc_schedule st
-LEFT JOIN $CC_CONFIG[filesTable] ft ON st.file_id = ft.id
-LEFT JOIN $CC_CONFIG[showInstances] sit ON st.instance_id = sit.id
+LEFT JOIN cc_files ft ON st.file_id = ft.id
+LEFT JOIN cc_show_instances sit ON st.instance_id = sit.id
 -- this and the next line are necessary since we can overbook shows.
 WHERE st.ends < TIMESTAMP :timeNow
 
@@ -204,7 +203,6 @@ SQL;
 
     public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId)
     {
-        global $CC_CONFIG;
         /* Note that usually there will be one result returned. In some
          * rare cases two songs are returned. This happens when a track
          * that was overbooked from a previous show appears as if it
@@ -213,8 +211,8 @@ SQL;
          * this is the *real* track that is currently playing. So this
          * is why we are ordering by track start time. */
         $sql = "SELECT *"
-        ." FROM $CC_CONFIG[scheduleTable] st"
-        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." FROM cc_schedule st"
+        ." LEFT JOIN cc_files ft"
         ." ON st.file_id = ft.id"
         ." WHERE st.starts <= TIMESTAMP :timeNow1"
         ." AND st.instance_id = :instanceId"
@@ -229,14 +227,13 @@ SQL;
 
     public static function GetNextScheduleItem($p_timeNow)
     {
-        global $CC_CONFIG;
         $sql = "SELECT"
         ." ft.artist_name, ft.track_title,"
         ." st.starts as starts, st.ends as ends"
-        ." FROM $CC_CONFIG[scheduleTable] st"
-        ." LEFT JOIN $CC_CONFIG[filesTable] ft"
+        ." FROM cc_schedule st"
+        ." LEFT JOIN cc_files ft"
         ." ON st.file_id = ft.id"
-        ." LEFT JOIN $CC_CONFIG[showInstances] sit"
+        ." LEFT JOIN cc_show_instances sit"
         ." ON st.instance_id = sit.id"
         ." WHERE st.starts > TIMESTAMP :timeNow"
         ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
@@ -260,7 +257,6 @@ SQL;
      */
     public static function GetScheduleDetailItems($p_start, $p_end, $p_shows)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
 
         $p_start_str = $p_start->format("Y-m-d H:i:s");
@@ -386,9 +382,8 @@ SQL;
 
     public static function UpdateMediaPlayedStatus($p_id)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "UPDATE ".$CC_CONFIG['scheduleTable']
+        $sql = "UPDATE cc_schedule"
                 ." SET media_item_played=TRUE";
         // we need to update 'broadcasted' column as well
         // check the current switch status
@@ -427,9 +422,8 @@ SQL;
 
     public static function getSchduledPlaylistCount()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "SELECT count(*) as cnt FROM ".$CC_CONFIG['scheduleTable'];
+        $sql = "SELECT count(*) as cnt FROM cc_schedule";
 
         return $con->query($sql)->fetchColumn(0);
     }
@@ -769,7 +763,7 @@ SQL;
 
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */
@@ -918,15 +912,13 @@ SQL;
 
     public static function deleteAll()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $con->exec("TRUNCATE TABLE ".$CC_CONFIG["scheduleTable"]);
+        $con->exec("TRUNCATE TABLE cc_schedule");
     }
 
     public static function deleteWithFileId($fileId)
     {
-        global $CC_CONFIG;
-        $sql = "DELETE FROM ".$CC_CONFIG["scheduleTable"]." WHERE file_id=:file_id";
+        $sql = "DELETE FROM cc_schedule WHERE file_id=:file_id";
         Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
