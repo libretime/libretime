@@ -50,7 +50,7 @@ function autoSelect(event, ui) {
 function findHosts(request, callback) {
 	var search, url;
 
-	url = baseUrl+"/User/get-hosts";
+	url = baseUrl+"User/get-hosts";
 	search = request.term;
 
 	var noResult = new Array();
@@ -410,7 +410,7 @@ function setAddShowEvents() {
                 .fullCalendar('render');
 
 			$("#add-show-form").hide();
-            $.get(baseUrl+"/Schedule/get-form", {format:"json"}, function(json){
+            $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                 $("#add-show-form")
                     .empty()
                     .append(json.form);
@@ -456,7 +456,7 @@ function setAddShowEvents() {
                 applyPlatformOpacityRules: false
             });
 
-            var action = baseUrl+"/Schedule/"+String(addShowButton.attr("data-action"));
+            var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
             
             $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");
@@ -476,7 +476,7 @@ function setAddShowEvents() {
                     .fullCalendar('render');
 
                     $("#add-show-form").hide();
-                    $.get(baseUrl+"/Schedule/get-form", {format:"json"}, function(json){
+                    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                         $("#add-show-form")
                             .empty()
                             .append(json.form);
@@ -592,7 +592,7 @@ function setAddShowEvents() {
 		var loadingIcon = $('#icon-loader-small');
 		
 		loadingIcon.show();
-		$.post(baseUrl+"/Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
+		$.post(baseUrl+"Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
 		    $('#add_show_duration').val(JSON.parse(data));
 		    loadingIcon.hide();
 		});

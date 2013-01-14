@@ -22,7 +22,7 @@ class LocaleController extends Zend_Controller_Action
             file_get_contents(Application_Common_OsPath::join(
                 $_SERVER["DOCUMENT_ROOT"],
                 $baseUrl,
-                "/js/datatables/i18n/",
+                "js/datatables/i18n/",
                 $locale.".txt")
             );
     }

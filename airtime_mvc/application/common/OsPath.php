@@ -66,8 +66,15 @@ class Application_Common_OsPath{
     
     public static function getBaseDir() {
         $baseUrl = dirname($_SERVER['SCRIPT_NAME']);
-        if (strcmp($baseUrl, '/') ==0) $baseUrl = "";
-        
+
+        if ($baseUrl[0] != "/") {
+            $baseUrl = "/".$baseUrl;
+        }
+
+        if ($baseUrl[strlen($baseUrl) -1] != "/") {
+            $baseUrl = $baseUrl."/";
+        }
+
         return $baseUrl;
     }
 }

@@ -176,7 +176,7 @@ function viewDisplay( view ) {
                     .fullCalendar( 'gotoDate', date );
 
                 //save slotMin value to db
-                var url = baseUrl+'/Schedule/set-time-interval/format/json';
+                var url = baseUrl+'Schedule/set-time-interval/format/json';
                 $.post(url, {timeInterval: slotMin});
             });
 
@@ -201,7 +201,7 @@ function viewDisplay( view ) {
     }
 
     //save view name to db
-    var url = baseUrl+'/Schedule/set-time-scale/format/json';
+    var url = baseUrl+'Schedule/set-time-scale/format/json';
     $.post(url, {timeScale: view.name});
 }
 
@@ -293,7 +293,7 @@ function eventAfterRender( event, element, view ) {
 }
 
 function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
-    var url = baseUrl+'/Schedule/move-show/format/json';
+    var url = baseUrl+'Schedule/move-show/format/json';
 
     $.post(url,
         {day: dayDelta, min: minuteDelta, showInstanceId: event.id},
@@ -309,7 +309,7 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
 }
 
 function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) {
-    var url = baseUrl+'/Schedule/resize-show/format/json';
+    var url = baseUrl+'Schedule/resize-show/format/json';
 
     $.post(url,
         {day: dayDelta, min: minuteDelta, showId: event.showId},
@@ -332,7 +332,7 @@ function getFullCalendarEvents(start, end, callback) {
     start_date = makeTimeStamp(start);
     end_date = makeTimeStamp(end);
 
-    url = baseUrl+'/Schedule/event-feed';
+    url = baseUrl+'Schedule/event-feed';
 
     var d = new Date();
     
@@ -342,7 +342,7 @@ function getFullCalendarEvents(start, end, callback) {
 }
 
 function checkSCUploadStatus(){
-    var url = baseUrl+'/Library/get-upload-to-soundcloud-status/format/json';
+    var url = baseUrl+'Library/get-upload-to-soundcloud-status/format/json';
     $("span[class*=progress]").each(function(){
         var id = $(this).attr("id");
         $.post(url, {format: "json", id: id, type:"show"}, function(json){
@@ -358,7 +358,7 @@ function checkSCUploadStatus(){
  *  show icon
  */
 function getCurrentShow(){
-    var url = baseUrl+'/Schedule/get-current-show/format/json',
+    var url = baseUrl+'Schedule/get-current-show/format/json',
         id,
         $el;
     $.post(url, {format: "json"}, function(json) {
@@ -436,7 +436,7 @@ function addQtipsToIcons(ele){
             content: {
                 text: $.i18n._("Retreiving data from the server..."),
                 ajax: {
-                    url: baseUrl+"/Library/get-upload-to-soundcloud-status",
+                    url: baseUrl+"Library/get-upload-to-soundcloud-status",
                     type: "post",
                     data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){
@@ -465,7 +465,7 @@ function addQtipsToIcons(ele){
             content: {
                 text: $.i18n._("Retreiving data from the server..."),
                 ajax: {
-                    url: baseUrl+"/Library/get-upload-to-soundcloud-status",
+                    url: baseUrl+"Library/get-upload-to-soundcloud-status",
                     type: "post",
                     data: ({format: "json", id : id, type: "show"}),
                     success: function(json, status){

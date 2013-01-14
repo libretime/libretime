@@ -42,51 +42,50 @@ class ScheduleController extends Zend_Controller_Action
     {
         global $CC_CONFIG;
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/full-calendar-functions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/schedule/full-calendar-functions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/fullcalendar/fullcalendar.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/colorpicker/js/colorpicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/fullcalendar/fullcalendar.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/colorpicker/js/colorpicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/add-show.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/schedule/schedule.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/schedule/add-show.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/schedule/schedule.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/fullcalendar.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/colorpicker/css/colorpicker.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/add-show.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/fullcalendar.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/colorpicker/css/colorpicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/add-show.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
 
         //Start Show builder JS/CSS requirements
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/showbuilder/builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/TableTools.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
         //End Show builder JS/CSS requirements
 
         Application_Model_Schedule::createNewFormSections($this->view);
@@ -251,7 +250,7 @@ class ScheduleController extends Zend_Controller_Action
             $fileId = $file->getId();
 
             $menu["view_recorded"] = array("name" => _("View Recorded File Metadata"), "icon" => "overview",
-                    "url" => $baseUrl."/library/edit-file-md/id/".$fileId);
+                    "url" => $baseUrl."library/edit-file-md/id/".$fileId);
         }
 
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
@@ -260,16 +259,16 @@ class ScheduleController extends Zend_Controller_Action
                 && !$instance->isRebroadcast()) {
 
                 $menu["schedule"] = array("name"=> _("Add / Remove Content"), "icon" => "add-remove-content",
-                    "url" => $baseUrl."/showbuilder/builder-dialog/");
+                    "url" => $baseUrl."showbuilder/builder-dialog/");
 
                 $menu["clear"] = array("name"=> _("Remove All Content"), "icon" => "remove-all-content",
-                    "url" => $baseUrl."/schedule/clear-show");
+                    "url" => $baseUrl."schedule/clear-show");
             }
         }
 
         if (!$instance->isRecorded()) {
 
-            $menu["content"] = array("name"=> _("Show Content"), "icon" => "overview", "url" => $baseUrl."/schedule/show-content-dialog");
+            $menu["content"] = array("name"=> _("Show Content"), "icon" => "overview", "url" => $baseUrl."schedule/show-content-dialog");
         }
 
         if ($showEndLocalDT->getTimestamp() <= $epochNow
@@ -297,7 +296,7 @@ class ScheduleController extends Zend_Controller_Action
             } else {
 
                 if (!$instance->isRebroadcast()) {
-                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
+                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."Schedule/populate-show-form");
                 }
 
                 $menu["cancel"] = array("name"=> _("Cancel Current Show"), "icon" => "delete");
@@ -307,7 +306,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($epochNow < $showStartLocalDT->getTimestamp()) {
 
                 if (!$instance->isRebroadcast() && $isAdminOrPM) {
-                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."/Schedule/populate-show-form");
+                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."Schedule/populate-show-form");
                 }
 
                 if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
@@ -315,12 +314,12 @@ class ScheduleController extends Zend_Controller_Action
                     //create delete sub menu.
                     $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "items" => array());
 
-                    $menu["del"]["items"]["single"] = array("name"=> _("Delete This Instance"), "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
+                    $menu["del"]["items"]["single"] = array("name"=> _("Delete This Instance"), "icon" => "delete", "url" => $baseUrl."schedule/delete-show");
 
-                    $menu["del"]["items"]["following"] = array("name"=> _("Delete This Instance and All Following"), "icon" => "delete", "url" => $baseUrl."/schedule/cancel-show");
+                    $menu["del"]["items"]["following"] = array("name"=> _("Delete This Instance and All Following"), "icon" => "delete", "url" => $baseUrl."schedule/cancel-show");
                 } elseif ($isAdminOrPM) {
 
-                    $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/schedule/delete-show");
+                    $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."schedule/delete-show");
                 }
         }
 
@@ -895,7 +894,7 @@ class ScheduleController extends Zend_Controller_Action
         $file = Application_Model_StoredFile::Recall($file_id);
 
         $baseUrl = $this->getRequest()->getBaseUrl();
-        $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
+        $url = $file->getRelativeFileUrl($baseUrl).'download/true';
         $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
                             'title' => _('Download'));
 
