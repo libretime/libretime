@@ -74,7 +74,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
         
         if (!isTimeValid(cueIn)){
-            showError(span, $.i18n("please put in a time '00:00:00 (.0)'"));
+            showError(span, $.i18n._("please put in a time '00:00:00 (.0)'"));
             return;
         }
         $.post(url, 
@@ -111,7 +111,7 @@ var AIRTIME = (function(AIRTIME){
             type = $('#obj_type').val();
 
         if (!isTimeValid(cueOut)){
-            showError(span, $.i18n("please put in a time '00:00:00 (.0)'"));
+            showError(span, $.i18n._("please put in a time '00:00:00 (.0)'"));
             return;
         }
         

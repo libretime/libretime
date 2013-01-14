@@ -210,6 +210,7 @@ class LocaleController extends Zend_Controller_Action
             //"Error code: " => _("Error code: "),
             //"Error msg: " => _("Error msg: "),
             "This show has no scheduled content." => _("This show has no scheduled content."),
+            "This show is not completely filled with content." => _("This show is not completely filled with content."),
             //already in schedule/add-show.js
             //"The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
             //schedule/schedule.js
