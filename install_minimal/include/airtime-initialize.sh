@@ -7,8 +7,19 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+dist=`lsb_release -is`
 echo "Generating locales"
-for i in `ls /usr/share/airtime/locale | grep ".._.."`; do locale-gen "$i.utf8"; done
+for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
+    if [ "$dist" = "Debian" ]; then
+        echo "$i.UTF-8 UTF-8" >> /etc/locale.gen
+    else
+        locale-gen "$i.utf8"
+    fi
+done
+
+if [ "$dist" = "Debian" ]; then
+    /usr/sbin/locale-gen
+fi
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
