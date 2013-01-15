@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-01-14 10:38-0500\n"
+"PO-Revision-Date: 2013-01-15 10:59-0500\n"
 "Last-Translator: Cliff Wang <cliff.wang@sourcefabric.org>\n"
 "Language-Team: Chinese Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -46,7 +46,7 @@ msgstr "系统属性"
 
 #: airtime_mvc/application/configs/navigation.php:50
 msgid "Users"
-msgstr "用户"
+msgstr "用户管理"
 
 #: airtime_mvc/application/configs/navigation.php:57
 msgid "Media Folders"
@@ -496,7 +496,7 @@ msgstr "所有者"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:60
 #: airtime_mvc/application/controllers/LocaleController.php:87
 msgid "Replay Gain"
-msgstr "播放增益"
+msgstr "回放增益"
 
 #: airtime_mvc/application/models/Block.php:1229
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
@@ -758,11 +758,11 @@ msgstr "文字颜色："
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:19
 msgid "Auto Switch Off"
-msgstr "当输入源断开时自动关闭"
+msgstr "当输入流断开时自动关闭"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:26
 msgid "Auto Switch On"
-msgstr "当输入源连接时自动打开"
+msgstr "当输入流连接时自动打开"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:33
 msgid "Switch Transition Fade (s)"
@@ -774,23 +774,23 @@ msgstr "请输入秒数00{.000000}"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:45
 msgid "Master Username"
-msgstr "主输入源用户名"
+msgstr "主输入流的用户名"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:62
 msgid "Master Password"
-msgstr "主输入源密码"
+msgstr "主输入流的密码"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:70
 msgid "Master Source Connection URL"
-msgstr "主输入源的链接地址"
+msgstr "主输入流的链接地址"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:78
 msgid "Show Source Connection URL"
-msgstr "节目定制输入源的链接地址"
+msgstr "节目定制输入流的链接地址"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:87
 msgid "Master Source Port"
-msgstr "主输入源端口"
+msgstr "主输入流的端口"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:90
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:109
@@ -800,15 +800,15 @@ msgstr "只允许输入数字"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:96
 msgid "Master Source Mount Point"
-msgstr "主输入源的加载点"
+msgstr "主输入流的加载点"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:106
 msgid "Show Source Port"
-msgstr "节目定制输入源端口"
+msgstr "节目定制输入流的端口"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:115
 msgid "Show Source Mount Point"
-msgstr "节目定制输入源的加载点"
+msgstr "节目定制输入流的加载点"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:153
 msgid "You cannot use same port as Master DJ port."
@@ -1267,7 +1267,7 @@ msgstr "语言："
 #: airtime_mvc/application/forms/Login.php:65
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
 msgid "Login"
-msgstr "登录名："
+msgstr "登录"
 
 #: airtime_mvc/application/forms/Login.php:83
 msgid "Type the characters you see in the picture below."
@@ -1798,7 +1798,7 @@ msgstr "播放列表只能添加声音文件，只能模块和网络流媒体。
 
 #: airtime_mvc/application/controllers/LocaleController.php:57
 msgid "Please select a cursor position on timeline."
-msgstr ""
+msgstr "请在右部的时间表视图中选择一个游标位置。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:61
 #: airtime_mvc/application/controllers/LibraryController.php:190
@@ -2010,7 +2010,7 @@ msgstr "复制%s行%s到剪贴板"
 #: airtime_mvc/application/controllers/LocaleController.php:161
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
-msgstr ""
+msgstr "%s打印预览%s请使用浏览器的打印功能进行打印。按下Esc键可以退出当前状态。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:163
 msgid "Choose Storage Folder"
@@ -2149,7 +2149,7 @@ msgstr "此节目没有安排内容。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "This show is not completely filled with content."
-msgstr ""
+msgstr "节目内容只填充了一部分。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:218
 msgid "January"
@@ -2662,7 +2662,7 @@ msgstr "节目不存在"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
 msgid "Please make sure admin user/password is correct on System->Streams page."
-msgstr ""
+msgstr "请检查系统->媒体流设置中，管理员用户/密码的设置是否正确。"
 
 #: airtime_mvc/application/controllers/ApiController.php:57
 #: airtime_mvc/application/controllers/ApiController.php:84
@@ -2763,7 +2763,7 @@ msgstr "部分已经安排的节目内容不能删除。"
 #: airtime_mvc/application/controllers/LibraryController.php:375
 #, php-format
 msgid "Copy of %s"
-msgstr ""
+msgstr "%s的副本"
 
 #: airtime_mvc/application/controllers/PlaylistController.php:45
 #, php-format
@@ -2861,15 +2861,15 @@ msgstr "输入流"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:29
 msgid "Master Source"
-msgstr "主输入源"
+msgstr "主输入流"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:38
 msgid "Show Source"
-msgstr "节目定制输入源"
+msgstr "节目定制的输入流"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
-msgstr "预先安排的内容"
+msgstr "预先安排的节目流"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
@@ -3353,7 +3353,7 @@ msgstr "输入流设置"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
 msgid "Master Source Connection URL:"
-msgstr "主输入源链接地址："
+msgstr "主输入流的链接地址："
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
@@ -3372,7 +3372,7 @@ msgstr "重置"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "节目定制输入源链接地址："
+msgstr "节目定制输入流的链接地址："
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #, php-format
@@ -3454,7 +3454,7 @@ msgstr "全局设定"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:88
 msgid "dB"
-msgstr ""
+msgstr "分贝"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:107
 msgid "Output Stream Settings"
