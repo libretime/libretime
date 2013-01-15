@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-01-15 10:59-0500\n"
+"PO-Revision-Date: 2013-01-15 14:37-0500\n"
 "Last-Translator: Cliff Wang <cliff.wang@sourcefabric.org>\n"
 "Language-Team: Chinese Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -2422,7 +2422,7 @@ msgid "Manage their own library content"
 msgstr "管理媒体库中属于自己的内容"
 
 #: airtime_mvc/application/controllers/LocaleController.php:325
-msgid "Progam Managers can do the following:"
+msgid "Program Managers can do the following:"
 msgstr "节目主管的权限包括："
 
 #: airtime_mvc/application/controllers/LocaleController.php:326
