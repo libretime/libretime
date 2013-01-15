@@ -7,7 +7,7 @@
  */
 
 class Config {
-    private static $CC_CONFIG;
+    private static $CC_CONFIG = null;
     public static function loadConfig() {
         $CC_CONFIG = array(
                 /* ================================================ storage configuration */
@@ -64,6 +64,9 @@ class Config {
     }
     
     public static function getConfig() {
+        if (is_null(self::$CC_CONFIG)) {
+            self::loadConfig();
+        }
         return self::$CC_CONFIG;
     }
 }
