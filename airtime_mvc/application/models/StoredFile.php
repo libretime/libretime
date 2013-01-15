@@ -133,8 +133,12 @@ class Application_Model_StoredFile
             $track_length_in_sec = Application_Common_DateHelper::calculateLengthInSeconds($track_length);
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)) {
-                    if ($mdConst == "MDATA_KEY_CUE_OUT" && $mdValue == '0.0') {
-                        $mdValue = $track_length_in_sec;
+                    if ($mdConst == "MDATA_KEY_CUE_OUT") {
+                        if ($mdValue == '0.0') {
+                            $mdValue = $track_length_in_sec;
+                        } else {
+                            $this->_file->setDbSilanCheck(true)->save();
+                        }
                     }
                     $dbMd[constant($mdConst)] = $mdValue;
                     

@@ -72,6 +72,7 @@
  * @method     CcFilesQuery orderByDbOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method     CcFilesQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
  * @method     CcFilesQuery orderByDbCueout($order = Criteria::ASC) Order by the cueout column
+ * @method     CcFilesQuery orderByDbSilanCheck($order = Criteria::ASC) Order by the silan_check column
  * @method     CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
@@ -140,6 +141,7 @@
  * @method     CcFilesQuery groupByDbOwnerId() Group by the owner_id column
  * @method     CcFilesQuery groupByDbCuein() Group by the cuein column
  * @method     CcFilesQuery groupByDbCueout() Group by the cueout column
+ * @method     CcFilesQuery groupByDbSilanCheck() Group by the silan_check column
  * @method     CcFilesQuery groupByDbHidden() Group by the hidden column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -243,6 +245,7 @@
  * @method     CcFiles findOneByDbOwnerId(int $owner_id) Return the first CcFiles filtered by the owner_id column
  * @method     CcFiles findOneByDbCuein(string $cuein) Return the first CcFiles filtered by the cuein column
  * @method     CcFiles findOneByDbCueout(string $cueout) Return the first CcFiles filtered by the cueout column
+ * @method     CcFiles findOneByDbSilanCheck(boolean $silan_check) Return the first CcFiles filtered by the silan_check column
  * @method     CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
@@ -311,6 +314,7 @@
  * @method     array findByDbOwnerId(int $owner_id) Return CcFiles objects filtered by the owner_id column
  * @method     array findByDbCuein(string $cuein) Return CcFiles objects filtered by the cuein column
  * @method     array findByDbCueout(string $cueout) Return CcFiles objects filtered by the cueout column
+ * @method     array findByDbSilanCheck(boolean $silan_check) Return CcFiles objects filtered by the silan_check column
  * @method     array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
  *
  * @package    propel.generator.airtime.om
@@ -2005,6 +2009,23 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcFilesPeer::CUEOUT, $dbCueout, $comparison);
+	}
+
+	/**
+	 * Filter the query on the silan_check column
+	 * 
+	 * @param     boolean|string $dbSilanCheck The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbSilanCheck($dbSilanCheck = null, $comparison = null)
+	{
+		if (is_string($dbSilanCheck)) {
+			$silan_check = in_array(strtolower($dbSilanCheck), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcFilesPeer::SILAN_CHECK, $dbSilanCheck, $comparison);
 	}
 
 	/**
