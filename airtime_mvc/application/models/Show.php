@@ -177,7 +177,7 @@ SQL;
         $con = Propel::getConnection();
 
         if ($deltaDay > 0) {
-            return "Shows can have a max length of 24 hours.";
+            return _("Shows can have a max length of 24 hours.");
         }
         
         $utc = new DateTimeZone("UTC");
@@ -189,7 +189,7 @@ SQL;
             ->find($con);
 
         /* Check two things:
-           1. If the show being resized and any of its repeats end in the past 
+           1. If the show being resized and any of its repeats end in the past
            2. If the show being resized and any of its repeats overlap
               with other scheduled shows */
 
@@ -208,7 +208,7 @@ SQL;
             $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
             
             if ($newEndsDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
-                return "End date/time cannot be in the past";
+                return _("End date/time cannot be in the past");
             }
 
             //convert our new starts/ends to UTC.
@@ -219,8 +219,8 @@ SQL;
                 $newStartsDateTime, $newEndsDateTime, true, $si->getDbId());
 
             if ($overlapping) {
-                return "Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
-                       "affects all of its repeats.";
+                return _("Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
+                       "affects all of its repeats.");
             }
         }
 
@@ -321,7 +321,7 @@ SQL;
             } catch (Exception $e) {
                 Logging::info($e->getMessage());
             }
-        } 
+        }
 
         Application_Model_RabbitMq::PushSchedule();
     }
@@ -467,7 +467,7 @@ SQL;
             $startDateTime = new DateTime($show["starts"], $utc);
             $startDateTime->setTimezone($dtz);
 
-            $rebroadcastsLocal[$i]["start_date"] = 
+            $rebroadcastsLocal[$i]["start_date"] =
                 $startDateTime->format("Y-m-d");
             $rebroadcastsLocal[$i]["start_time"] =
                 $startDateTime->format("H:i");
@@ -533,7 +533,7 @@ SQL;
             ->filterByDbShowId($this->_showId)
             ->findOne();
 
-        if (!is_null($showDaysRow))  
+        if (!is_null($showDaysRow))
             return $showDaysRow->getDbRepeatType();
         else
             return -1;
@@ -582,7 +582,7 @@ WHERE starts > :timestamp::TIMESTAMP
   AND show_id = :showId
 SQL;
         Application_Common_Database::prepareAndExecute( $sql,
-            array( ':timestamp' => gmdate("Y-m-d H:i:s"), 
+            array( ':timestamp' => gmdate("Y-m-d H:i:s"),
                    ':showId'    => $this->getId()), 'execute');
     }
 
@@ -838,7 +838,7 @@ WHERE show_id = :show_id
   AND ends > :timestamp::TIMESTAMP
 SQL;
         
-        Application_Common_Database::prepareAndExecute( $sql, array( 
+        Application_Common_Database::prepareAndExecute( $sql, array(
             ':add_show_duration' => $p_data['add_show_duration'],
             ':show_id' => $p_data['add_show_id'],
             ':timestamp' => $timestamp), "execute");
@@ -1222,12 +1222,12 @@ SQL;
 SELECT :rebroadcast::date - :start::date
 SQL;
 
-                    $offset_days = 
+                    $offset_days =
                         Application_Common_Database::prepareAndExecute($sql,
                             array(
-                                'rebroadcast' => 
+                                'rebroadcast' =>
                                 $data["add_show_rebroadcast_date_absolute_$i"],
-                                'start' => 
+                                'start' =>
                                 $data['add_show_start_date']), "column" );
 
                     //$r = $con->query($sql);
@@ -1770,7 +1770,7 @@ SQL;
                 $parentStartsEpoch = intval($parentStartsDT->format("U"));
             }
 
-            $startsDT = DateTime::createFromFormat("Y-m-d G:i:s", 
+            $startsDT = DateTime::createFromFormat("Y-m-d G:i:s",
                 $show["starts"],$utc);
             $endsDT   = DateTime::createFromFormat("Y-m-d G:i:s",
                 $show["ends"], $utc);
@@ -1801,6 +1801,8 @@ SQL;
 
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;
+                
+            $options["show_partial_filled"] = $showInstance->showPartialFilled();
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
@@ -1905,7 +1907,7 @@ SQL;
      */
     public static function getCurrentShow($timeNow=null)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $con = Propel::getConnection();
         if ($timeNow == null) {
             $date = new Application_Common_DateHelper;
@@ -1951,7 +1953,7 @@ SQL;
      */
     public static function getPrevCurrentNext($p_timeNow)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $con = Propel::getConnection();
         //
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin

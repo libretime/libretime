@@ -3,7 +3,12 @@
 class Application_Model_Preference
 {
 
-    private static function setValue($key, $value, $isUserValue = false)
+    /**
+     *
+     * @param integer $userId is not null when we are setting a locale for a specific user
+     * @param boolean $isUserValue is true when we are setting a value for the current user
+     */
+    private static function setValue($key, $value, $isUserValue = false, $userId = null)
     {
         try {
             //called from a daemon process
@@ -22,9 +27,12 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             
             //For user specific preference, check if id matches as well
-            if ($isUserValue) {
+            if ($isUserValue && is_null($userId)) {
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $id;
+            } else if (!is_null($userId)) {
+                $sql .= " AND subjid= :id";
+                $paramMap[':id'] = $userId;
             }
 
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
@@ -42,7 +50,11 @@ class Application_Model_Preference
                     $sql = "UPDATE cc_pref"
                     . " SET valstr = :value"
                     . " WHERE keystr = :key AND subjid = :id";
-                    $paramMap[':id'] = $id;
+                    if (is_null($userId)) {
+                        $paramMap[':id'] = $id;
+                    } else {
+                        $paramMap[':id'] = $userId;
+                    }
                 }
             } else {
                 // result not found
@@ -54,7 +66,11 @@ class Application_Model_Preference
                     // user pref
                     $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
                     ." VALUES (:id, :key, :value)";
-                    $paramMap[':id'] = $id;
+                    if (is_null($userId)) {
+                        $paramMap[':id'] = $id;
+                    } else {
+                        $paramMap[':id'] = $userId;
+                    }
                 }
             }
             $paramMap[':key'] = $key;
@@ -418,15 +434,78 @@ class Application_Model_Preference
         return self::getValue("description");
     }
 
-    public static function SetTimezone($timezone)
+    public static function SetDefaultTimezone($timezone)
     {
         self::setValue("timezone", $timezone);
         date_default_timezone_set($timezone);
     }
 
-    public static function GetTimezone()
+    public static function GetDefaultTimezone()
     {
         return self::getValue("timezone");
+    }
+
+    public static function SetUserTimezone($userId, $timezone = null)
+    {
+        // When a new user is created they will get the default timezone
+        // setting which the admin sets on preferences page
+        if (is_null($timezone)) {
+            $timezone = self::GetDefaultTimezone();
+        }
+        self::setValue("user_timezone", $timezone, true, $userId);
+    }
+
+    public static function GetUserTimezone($id)
+    {
+        return self::getValue("user_timezone", true);
+    }
+
+    public static function GetTimezone()
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $id = $auth->getIdentity()->id;
+            return self::GetUserTimezone($id);
+        } else {
+            return self::GetDefaultTimezone();
+        }
+    }
+
+    // This is the language setting on preferences page
+    public static function SetDefaultLocale($locale)
+    {
+        self::setValue("locale", $locale);
+    }
+
+    public static function GetDefaultLocale()
+    {
+        return self::getValue("locale");
+    }
+
+    public static function GetUserLocale($id)
+    {
+        return self::getValue("user_locale", true);
+    }
+
+    public static function SetUserLocale($userId, $locale = null)
+    {
+        // When a new user is created they will get the default locale
+        // setting which the admin sets on preferences page
+        if (is_null($locale)) {
+            $locale = self::GetDefaultLocale();
+        }
+        self::setValue("user_locale", $locale, true, $userId);
+    }
+
+    public static function GetLocale()
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity()) {
+            $id = $auth->getIdentity()->id;
+            return self::GetUserLocale($id);
+        } else {
+            return self::GetDefaultLocale();
+        }
     }
 
     public static function SetStationLogo($imagePath)
@@ -456,7 +535,7 @@ class Application_Model_Preference
         $sql = "SELECT * FROM cc_country";
         $res =  $con->query($sql)->fetchAll();
         $out = array();
-        $out[""] = "Select Country";
+        $out[""] = _("Select Country");
         foreach ($res as $r) {
             $out[$r["isocode"]] = $r["name"];
         }
@@ -500,6 +579,7 @@ class Application_Model_Preference
         } else {
             $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = NULL;
         }
+
         $outputArray['STATION_NAME'] = self::GetStationName();
         $outputArray['PHONE'] = self::GetPhone();
         $outputArray['EMAIL'] = self::GetEmail();
@@ -513,7 +593,7 @@ class Application_Model_Preference
            $url = $systemInfoArray["AIRTIME_VERSION_URL"];
            $index = strpos($url,'/api/');
            $url = substr($url, 0, $index);
-
+           
            $headerInfo = get_headers(trim($url),1);
            $outputArray['WEB_SERVER'] = $headerInfo['Server'][0];
         }
@@ -1165,5 +1245,28 @@ class Application_Model_Preference
     {
         $data = self::getValue("nowplaying_screen", true);
         return ($data != "") ? unserialize($data) : null;
+    }
+    
+    public static function SetEnableReplayGain($value) {
+        self::setValue("enable_replay_gain", $value, false);
+    }
+    
+    public static function GetEnableReplayGain() {
+        return self::getValue("enable_replay_gain", false);
+    }
+    
+    public static function getReplayGainModifier(){
+        $rg_modifier = self::getValue("replay_gain_modifier");
+        
+        if ($rg_modifier === "") {
+            return "0";
+        }
+        
+        return $rg_modifier;
+    }
+    
+    public static function setReplayGainModifier($rg_modifier)
+    {
+        self::setValue("replay_gain_modifier", $rg_modifier, true);
     }
 }

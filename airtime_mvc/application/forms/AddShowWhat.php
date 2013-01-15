@@ -4,6 +4,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 {
     public function init()
     {
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         // retrieves the length limit for each char field
         // and store to assoc array
         $maxLens = Application_Model_Show::getMaxLengths();
@@ -22,27 +23,26 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
         // Add name element
         $this->addElement('text', 'add_show_name', array(
-            'label'      => 'Name:',
+            'label'      => _('Name:'),
             'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty'),
-            'value'        => 'Untitled Show',
-            'validators' => array(array('StringLength', false, array(0, $maxLens['name'])))
+            'value'        => _('Untitled Show'),
+            'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
          // Add URL element
         $this->addElement('text', 'add_show_url', array(
-            'label'      => 'URL:',
+            'label'      => _('URL:'),
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
-            'validators' => array('NotEmpty', array('StringLength', false, array(0, $maxLens['url'])))
+            'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['url'])))
         ));
 
          // Add genre element
         $this->addElement('text', 'add_show_genre', array(
-            'label'      => 'Genre:',
+            'label'      => _('Genre:'),
             'class'      => 'input_text',
             'required'   => false,
             'filters'    => array('StringTrim'),
@@ -51,7 +51,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
 
          // Add the description element
         $this->addElement('textarea', 'add_show_description', array(
-            'label'      => 'Description:',
+            'label'      => _('Description:'),
             'required'   => false,
             'class'      => 'input_text_area',
             'validators' => array(array('StringLength', false, array(0, $maxLens['description'])))

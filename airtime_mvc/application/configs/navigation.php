@@ -9,85 +9,85 @@
 */
 $pages = array(
     array(
-        'label'      => 'Now Playing',
+        'label'      => _('Now Playing'),
         'module'     => 'default',
         'controller' => 'Showbuilder',
         'action'     => 'index',
         'resource'   =>    'showbuilder'
     ),
     array(
-        'label'      => 'Add Media',
+        'label'      => _('Add Media'),
         'module'     => 'default',
         'controller' => 'Plupload',
         'action'     => 'index',
         'resource'   =>    'plupload'
     ),
     array(
-        'label'      => 'Library',
+        'label'      => _('Library'),
         'module'     => 'default',
         'controller' => 'Library',
         'action'     => 'index',
         'resource'   =>    'playlist'
     ),
     array(
-        'label'      => 'Calendar',
+        'label'      => _('Calendar'),
         'module'     => 'default',
         'controller' => 'Schedule',
         'action'     => 'index',
         'resource'   =>    'schedule'
     ),
     array(
-        'label'      => 'System',
+        'label'      => _('System'),
         'uri'        => '#',
         'resource'   => 'preference',
         'pages'      => array(
             array(
-                'label'      => 'Preferences',
+                'label'      => _('Preferences'),
                 'module'     => 'default',
                 'controller' => 'Preference'
             ),
             array(
-                'label'      => 'Users',
+                'label'      => _('Users'),
                 'module'     => 'default',
                 'controller' => 'user',
                 'action'     => 'add-user',
                 'resource'   =>    'user'
             ),
             array(
-                'label'      => 'Media Folders',
+                'label'      => _('Media Folders'),
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'directory-config',
                 'id'         => 'manage_folder'
             ),
             array(
-                'label'      => 'Streams',
+                'label'      => _('Streams'),
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'stream-setting'
             ),
             array(
-                'label'      => 'Support Feedback',
+                'label'      => _('Support Feedback'),
                 'module'     => 'default',
                 'controller' => 'Preference',
                 'action'     => 'support-setting'
             ),
             array(
-                'label'      => 'Status',
+                'label'      => _('Status'),
                 'module'     => 'default',
                 'controller' => 'systemstatus',
                 'action'     => 'index',
                 'resource'   =>    'systemstatus'
             ),
             array(
-                'label'      => 'Playout History',
+                'label'      => _('Playout History'),
                 'module'     => 'default',
                 'controller' => 'playouthistory',
                 'action'     => 'index',
                 'resource'   => 'playouthistory'
             ),
             array(
-                'label'      => 'Listener Stats',
+                'label'      => _('Listener Stats'),
                 'module'     => 'default',
                 'controller' => 'listenerstat',
                 'action'     => 'index',
@@ -96,24 +96,24 @@ $pages = array(
         )
     ),
     array(
-        'label'      => 'Help',
+        'label'      => _('Help'),
         'uri'     => '#',
         'resource'    =>    'dashboard',
         'pages'      => array(
             array(
-                'label'      => 'Getting Started',
+                'label'      => _('Getting Started'),
                 'module'     => 'default',
                 'controller' => 'dashboard',
                 'action'     => 'help',
                 'resource'   =>    'dashboard'
             ),
             array(
-                'label'      => 'User Manual',
+                'label'      => _('User Manual'),
                 'uri'        => "http://www.sourcefabric.org/en/airtime/manuals/",
                 'target'     => "_blank"
             ),
             array(
-                'label'      => 'About',
+                'label'      => _('About'),
                 'module'     => 'default',
                 'controller' => 'dashboard',
                 'action'     => 'about',

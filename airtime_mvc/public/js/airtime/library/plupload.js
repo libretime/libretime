@@ -1,10 +1,11 @@
 $(document).ready(function() {
+	
     var uploader;
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
 		runtimes        : 'gears, html5, html4',
-		url             : '/Plupload/upload/format/json',
+		url             :  baseUrl+'Plupload/upload/format/json',
 		chunk_size      : '5mb',
 		unique_names    : 'true',
 		multiple_queues : 'true',
@@ -27,9 +28,9 @@ $(document).ready(function() {
 			$("#plupload_error table").css("display", "inline-table");
 		}else{
 		    var tempFileName = j.tempfilepath;
-		    $.get('/Plupload/copyfile/format/json/name/' +
-                  encodeURIComponent(file.name)+'/tempname/' +
-                  encodeURIComponent(tempFileName), function(json){
+		    $.get(baseUrl+'Plupload/copyfile/format/json/name/'+
+		          encodeURIComponent(file.name)+'/tempname/' +
+		          encodeURIComponent(tempFileName), function(json){
 		        var jr = jQuery.parseJSON(json);
 		        if(jr.error !== undefined) {
 		            var row = $("<tr/>")
@@ -55,7 +56,8 @@ $(document).ready(function() {
 	
 	$(window).bind('beforeunload', function(){
 		if(uploadProgress){
-            return "You are currently uploading files.\nGoing to another screen will cancel the upload process.\nAre you sure you want to leave the page?";
+            return sprintf($.i18n._("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),
+                    "\n", "\n");
 		}
 	});
 

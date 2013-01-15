@@ -19,10 +19,19 @@
       <?php echo $this->element->getElement('password') ?>
     </dd>
     
+    <dt id="locale-label">
+      <label for="locale" class="required">
+          <?php echo $this->element->getElement('locale')->getLabel() ?>
+      </label>
+    </dt>
+    <dd id="locale-element">
+      <?php echo $this->element->getElement('locale') ?>
+    </dd>
+    
     <?php if (Application_Model_Preference::GetEnableSystemEmail()): ?>
         <dt id="reset-label" class="hidden">&nbsp;</dt>
         <dd id="reset-element" class="text-right">
-          <a href="<?php echo $this->baseUrl('login/password-restore'); ?>" class="link reset">Reset password</a>
+          <a href="<?php echo $this->baseUrl('login/password-restore'); ?>" class="link reset"><? echo _("Reset password") ?></a>
         </dd>
     <?php endif; ?>
     <?php echo $this->element->getElement('captcha') ?>

@@ -32,8 +32,11 @@ function createDateInput(el, onSelect) {
         minDate: adjustDateToServerDate(new Date(), timezoneOffset),
         onSelect: onSelect,
         dateFormat: 'yy-mm-dd',
-        closeText: 'Close',
-        showButtonPanel: true,
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
+        closeText: $.i18n._('Close'),
+        //showButtonPanel: true,
         firstDay: weekStart
 		});
 }
@@ -47,13 +50,13 @@ function autoSelect(event, ui) {
 function findHosts(request, callback) {
 	var search, url;
 
-	url = "/User/get-hosts";
+	url = baseUrl+"User/get-hosts";
 	search = request.term;
 
 	var noResult = new Array();
     noResult[0] = new Array();
     noResult[0]['value'] = $("#add_show_hosts_autocomplete").val();
-    noResult[0]['label'] = "No result found";
+    noResult[0]['label'] = $.i18n._("No result found");
     noResult[0]['index'] = null;
     
 	$.post(url,
@@ -226,7 +229,7 @@ function setAddShowEvents() {
     
     form.find(".airtime_auth_help_icon").qtip({
         content: {
-            text: "This follows the same security pattern for the shows: only users assigned to the show can connect."
+            text: $.i18n._("This follows the same security pattern for the shows: only users assigned to the show can connect.")
         },
         hide: {
             delay: 500,
@@ -246,7 +249,7 @@ function setAddShowEvents() {
     });
     form.find(".custom_auth_help_icon").qtip({
         content: {
-            text: "Specify custom authentication which will work only for this show."
+            text: $.i18n._("Specify custom authentication which will work only for this show.")
         },
         hide: {
             delay: 500,
@@ -266,7 +269,7 @@ function setAddShowEvents() {
     });
     form.find(".stream_username_help_icon").qtip({
         content: {
-            text: "If your live streaming client does not ask for a username, this field should be 'source'."
+            text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")
         },
         hide: {
             delay: 500,
@@ -302,23 +305,33 @@ function setAddShowEvents() {
     $("#add_show_start_time").timepicker({
         amPmText: ['', ''],
         defaultTime: '00:00',
-        onSelect: onStartTimeSelect
+        onSelect: onStartTimeSelect,
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     });
     $("#add_show_end_time").timepicker({
         amPmText: ['', ''],
-        onSelect: onEndTimeSelect
+        onSelect: onEndTimeSelect,
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     });
 
     form.find('input[name^="add_show_rebroadcast_date_absolute"]').datepicker({
-		minDate: adjustDateToServerDate(new Date(), timezoneOffset),
-		dateFormat: 'yy-mm-dd',
-		closeText: 'Close',
-		showButtonPanel: true,
-                firstDay: weekStart
+        minDate: adjustDateToServerDate(new Date(), timezoneOffset),
+        dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
+        closeText: 'Close',
+        showButtonPanel: true,
+        firstDay: weekStart
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
-        defaultTime: ''
+        defaultTime: '',
+        closeButtonText: $.i18n._("Done"),
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     });
 
     form.find(".add_absolute_rebroadcast_day").click(function(){
@@ -397,7 +410,7 @@ function setAddShowEvents() {
                 .fullCalendar('render');
 
 			$("#add-show-form").hide();
-            $.get("/Schedule/get-form", {format:"json"}, function(json){
+            $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                 $("#add-show-form")
                     .empty()
                     .append(json.form);
@@ -443,7 +456,7 @@ function setAddShowEvents() {
                 applyPlatformOpacityRules: false
             });
 
-            var action = "/Schedule/"+String(addShowButton.attr("data-action"));
+            var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
             
             $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");
@@ -463,7 +476,7 @@ function setAddShowEvents() {
                     .fullCalendar('render');
 
                     $("#add-show-form").hide();
-                    $.get("/Schedule/get-form", {format:"json"}, function(json){
+                    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                         $("#add-show-form")
                             .empty()
                             .append(json.form);
@@ -484,8 +497,8 @@ function setAddShowEvents() {
             });
 		});
 
-	var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]/);
-    var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]/);
+    var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/);
+    var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]$/);
     
 	// when start date/time changes, set end date/time to start date/time+1 hr
 	$('#add_show_start_date, #add_show_start_time').bind('input', 'change', function(){
@@ -579,7 +592,7 @@ function setAddShowEvents() {
 		var loadingIcon = $('#icon-loader-small');
 		
 		loadingIcon.show();
-		$.post("/Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
+		$.post(baseUrl+"Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
 		    $('#add_show_duration').val(JSON.parse(data));
 		    loadingIcon.hide();
 		});
@@ -628,7 +641,7 @@ $(document).ready(function() {
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
-    alert("The show instance doesn't exist anymore!");
+    alert($.i18n._("The show instance doesn't exist anymore!"));
     window.location.reload();
 }
 

@@ -94,6 +94,9 @@ CREATE TABLE "cc_files"
 	"soundcloud_upload_time" TIMESTAMP(6),
 	"replay_gain" NUMERIC,
 	"owner_id" INTEGER,
+	"cuein" interval default '00:00:00',
+	"cueout" interval default '00:00:00',
+	"hidden" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );
 
@@ -720,6 +723,25 @@ CREATE TABLE "cc_listener_count"
 );
 
 COMMENT ON TABLE "cc_listener_count" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_locale
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_locale" CASCADE;
+
+
+CREATE TABLE "cc_locale"
+(
+	"id" serial  NOT NULL,
+	"locale_code" VARCHAR(16)  NOT NULL,
+	"locale_lang" VARCHAR(128)  NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_locale" IS '';
 
 
 SET search_path TO public;

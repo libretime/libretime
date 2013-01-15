@@ -5,7 +5,7 @@ class Application_Model_Systemstatus
 
     public static function GetMonitStatus($p_ip)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $monit_user = $CC_CONFIG['monit_user'];
         $monit_password = $CC_CONFIG['monit_password'];
 

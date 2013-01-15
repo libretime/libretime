@@ -1,6 +1,6 @@
 <form id="smart-block-form" method="post" action="">
 <fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?> sb-criteria-fieldset' id='smart_block_options'>
-<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span>Smart Block Options</legend>
+<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span><? echo _("Smart Block Options") ?></legend>
 
     <dl class='zend_form search-criteria'>
         <div class='btn-toolbar clearfix'>
@@ -60,7 +60,7 @@
                 </a>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
-                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>> to <?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
+                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><? echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
 
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
                     <i class='icon-white icon-remove'></i>
@@ -117,20 +117,20 @@
                 if ($this->poolCount > 1) {
                     echo $this->poolCount;
                 ?>
-                    files meet the criteria
+                    <?php echo _("files meet the criteria")?>
                     </span>
                     <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
                 <?php
                 } else if ($this->poolCount == 1) {
                     echo $this->poolCount;
                 ?>
-                    file meets the criteria
+                    <?php echo _("file meet the criteria")?>
                     </span>
                     <span class='checked-icon sp-checked-icon' id='sp_pool_count_icon'></span>
                 <?php
                 } else {
                 ?>
-                    0 files meet the criteria
+                    0 <?php echo " "._("files meet the criteria")?>
                     </span>
                     <span class='sp-warning-icon' id='sp_pool_count_icon'></span>
                 <?php

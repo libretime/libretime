@@ -407,7 +407,7 @@ end
 #   fade using both cross() and switch().
 def input.http_restart(~id,~initial_url="http://dummy/url")
 
-  source = input.http(buffer=5.,max=15.,id=id,autostart=false,initial_url)
+  source = audio_to_stereo(input.http(buffer=5.,max=15.,id=id,autostart=false,initial_url))
 
   def stopped()
     "stopped" == list.hd(server.execute("#{id}.status"))

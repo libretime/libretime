@@ -1,5 +1,4 @@
 function showErrorSections() {
-
     if($("#soundcloud-settings .errors").length > 0) {
         $("#soundcloud-settings").show();
         $(window).scrollTop($("#soundcloud-settings .errors").position().top);
@@ -123,6 +122,20 @@ function createWidgetHelpDescription() {
         },
     });
 
+function setSoundCloudCheckBoxListener() {
+    var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");
+    var mainCheckBox= $("#UploadToSoundcloudOption");
+    subCheckBox.change(function(e){
+        if (subCheckBox.is(':checked')) {
+            mainCheckBox.attr("checked", true);
+        }
+    });
+
+    mainCheckBox.change(function(e){
+         if (!mainCheckBox.is(':checked')) {
+            $("#UseSoundCloud,#SoundCloudDownloadbleOption").attr("checked", false);
+        }   
+    });
 }
 
 $(document).ready(function() {
@@ -132,9 +145,22 @@ $(document).ready(function() {
         $(this).toggleClass("closed");
         return false;
     }).next().hide();
+    
+    $('#pref_save').live('click', function() {
+        var data = $('#pref_form').serialize();
+        var url = baseUrl+'Preference/index';
+        
+        $.post(url, {format: "json", data: data}, function(data){
+            var json = $.parseJSON(data);
+            $('#content').empty().append(json.html);
+            setTimeout(removeSuccessMsg, 5000);
+            showErrorSections();
+        });
+    });
 
     showErrorSections();
     
+    setSoundCloudCheckBoxListener();
     setMailServerInputReadonly();
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();

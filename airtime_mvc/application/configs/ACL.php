@@ -26,18 +26,21 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('listenerstat'))
       ->add(new Zend_Acl_Resource('usersettings'))
       ->add(new Zend_Acl_Resource('audiopreview'))
-      ->add(new Zend_Acl_Resource('webstream'));
+      ->add(new Zend_Acl_Resource('webstream'))
+      ->add(new Zend_Acl_Resource('locale'));
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
       ->allow('G', 'login')
       ->allow('G', 'error')
+      ->allow('G', 'user', 'edit-user')
       ->allow('G', 'showbuilder')
       ->allow('G', 'api')
       ->allow('G', 'schedule')
       ->allow('G', 'dashboard')
       ->allow('G', 'audiopreview')
       ->allow('G', 'webstream')
+      ->allow('G', 'locale')
       ->allow('H', 'preference', 'is-import-in-progress')
       ->allow('H', 'usersettings')
       ->allow('H', 'plupload')

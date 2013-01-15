@@ -1,118 +1,124 @@
 AIRTIME = (function(AIRTIME) {
-	
-	var viewport,
-		$lib,
-		$libWrapper,
-		$builder,
-		$fs,
-		widgetHeight,
-		screenWidth,
-		resizeTimeout,
-		oBaseDatePickerSettings,
-		oBaseTimePickerSettings,
-		oRange,
-		dateStartId = "#sb_date_start",
-		timeStartId = "#sb_time_start",
-		dateEndId = "#sb_date_end",
-		timeEndId = "#sb_time_end",
-		$toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='Open library to add or remove content'>Add / Remove Content</a>"),
-		$libClose = $('<a />', {
-			"class": "close-round",
-			"href": "#",
-			"id": "sb_lib_close"
-		}),
-		mod;
-	
-	if (AIRTIME.builderMain === undefined) {
-		AIRTIME.builderMain = {};
-	}
-	mod = AIRTIME.builderMain;
-	
-	oBaseDatePickerSettings = {
-		dateFormat: 'yy-mm-dd',
-		onClick: function(sDate, oDatePicker) {		
-			$(this).datepicker( "setDate", sDate );
-		}
-	};
-	
-	oBaseTimePickerSettings = {
-		showPeriodLabels: false,
-		showCloseButton: true,
-		showLeadingZero: false,
-		defaultTime: '0:00'
-	};
-	
-	function setWidgetSize() {
-		viewport = AIRTIME.utilities.findViewportDimensions();
-		widgetHeight = viewport.height - 180;
-		screenWidth = Math.floor(viewport.width - 40);
-		
-		var libTableHeight = widgetHeight - 130,
-			builderTableHeight = widgetHeight - 95,
-			oTable;
-		
-		if ($fs.is(':visible')) {
-			builderTableHeight = builderTableHeight - 40;
-		}
-		
-		//set the heights of the main widgets.
-		$builder.height(widgetHeight)
-			.find(".dataTables_scrolling")
-	    			.css("max-height", builderTableHeight)
-	    			.end()
-			.width(screenWidth);
-		
-		$lib.height(widgetHeight)
-			.find(".dataTables_scrolling")
-				.css("max-height", libTableHeight)
-				.end();
-		
-		if ($lib.filter(':visible').length > 0) {
-	    	
-	    	$lib.width(Math.floor(screenWidth * 0.48));
-	    	    
-	    	$builder.width(Math.floor(screenWidth * 0.48))
-				.find("#sb_edit")
-					.remove()
-					.end()
-				.find("#sb_date_start")
-					.css("margin-left", 0)
-					.end();
-	    	
-	    	oTable = $('#show_builder_table').dataTable();
-	    	oTable.fnDraw();
-	    }	
-	}
-	
+    
+    var viewport,
+        $lib,
+        $libWrapper,
+        $builder,
+        $fs,
+        widgetHeight,
+        screenWidth,
+        resizeTimeout,
+        oBaseDatePickerSettings,
+        oBaseTimePickerSettings,
+        oRange,
+        dateStartId = "#sb_date_start",
+        timeStartId = "#sb_time_start",
+        dateEndId = "#sb_date_end",
+        timeEndId = "#sb_time_end",
+        $toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open library to add or remove content")+"'>"+$.i18n._("Add / Remove Content")+"</a>"),
+        $libClose = $('<a />', {
+            "class": "close-round",
+            "href": "#",
+            "id": "sb_lib_close"
+        }),
+        mod;
+    
+    if (AIRTIME.builderMain === undefined) {
+        AIRTIME.builderMain = {};
+    }
+    mod = AIRTIME.builderMain;
+    
+    oBaseDatePickerSettings = {
+        dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
+        onClick: function(sDate, oDatePicker) {     
+            $(this).datepicker( "setDate", sDate );
+        }
+    };
+    
+    oBaseTimePickerSettings = {
+        showPeriodLabels: false,
+        showCloseButton: true,
+        closeButtonText: $.i18n._("Done"),
+        showLeadingZero: false,
+        defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
+    };
+    
+    function setWidgetSize() {
+        viewport = AIRTIME.utilities.findViewportDimensions();
+        widgetHeight = viewport.height - 180;
+        screenWidth = Math.floor(viewport.width - 40);
+        
+        var libTableHeight = widgetHeight - 130,
+            builderTableHeight = widgetHeight - 95,
+            oTable;
+        
+        if ($fs.is(':visible')) {
+            builderTableHeight = builderTableHeight - 40;
+        }
+        
+        //set the heights of the main widgets.
+        $builder.height(widgetHeight)
+            .find(".dataTables_scrolling")
+                    .css("max-height", builderTableHeight)
+                    .end()
+            .width(screenWidth);
+        
+        $lib.height(widgetHeight)
+            .find(".dataTables_scrolling")
+                .css("max-height", libTableHeight)
+                .end();
+        
+        if ($lib.filter(':visible').length > 0) {
+            
+            $lib.width(Math.floor(screenWidth * 0.48));
+                
+            $builder.width(Math.floor(screenWidth * 0.48))
+                .find("#sb_edit")
+                    .remove()
+                    .end()
+                .find("#sb_date_start")
+                    .css("margin-left", 0)
+                    .end();
+            
+            oTable = $('#show_builder_table').dataTable();
+            oTable.fnDraw();
+        }   
+    }
+    
     function showSearchSubmit() {
         var fn,
             oRange,
             op,
             oTable = $('#show_builder_table').dataTable();
-			
+            
         //reset timestamp value since input values could have changed.
         AIRTIME.showbuilder.resetTimestamp();
-			
+            
         oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
-			
+            
         fn = oTable.fnSettings().fnServerData;
         fn.start = oRange.start;
         fn.end = oRange.end;
-		    
+            
         op = $("div.sb-advanced-options");
         if (op.is(":visible")) {
-		    	
+                
             if (fn.ops === undefined) {
                 fn.ops = {};
             }
             fn.ops.showFilter = op.find("#sb_show_filter").val();
             fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
         }
-			
+            
         oTable.fnDraw();
     }
 
-	mod.onReady = function() {
+    mod.onReady = function() {
         // define module vars.
         $lib = $("#library_content");
         $builder = $("#show_builder");
@@ -165,7 +171,7 @@ AIRTIME = (function(AIRTIME) {
             schedTable.fnDraw();
 
             $.ajax( {
-                url : "/usersettings/set-now-playing-screen-settings",
+                url : baseUrl+"usersettings/set-now-playing-screen-settings",
                 type : "POST",
                 data : {
                     settings : {
@@ -191,7 +197,7 @@ AIRTIME = (function(AIRTIME) {
             schedTable.fnDraw();
 
             $.ajax( {
-                url : "/usersettings/set-now-playing-screen-settings",
+                url : baseUrl+"usersettings/set-now-playing-screen-settings",
                 type : "POST",
                 data : {
                     settings : {
@@ -265,7 +271,7 @@ AIRTIME = (function(AIRTIME) {
             $.ajax( {
                 "dataType" : "json",
                 "type" : "GET",
-                "url" : "/showbuilder/check-builder-feed",
+                "url" : baseUrl+"showbuilder/check-builder-feed",
                 "data" : data,
                 "success" : function(json) {
                     if (json.update === true) {

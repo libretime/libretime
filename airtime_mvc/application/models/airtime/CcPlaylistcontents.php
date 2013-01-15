@@ -68,7 +68,8 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             $this->fadein = $dt->format('H:i:s').".".$microsecond;
         }
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
-
+        $this->save();
+        
         return $this;
     } // setDbFadein()
 
@@ -105,7 +106,8 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
             $this->fadeout = $dt->format('H:i:s').".".$microsecond;
         }
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
-
+        $this->save();
+        
         return $this;
     } // setDbFadeout()
 

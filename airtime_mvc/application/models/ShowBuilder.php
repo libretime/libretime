@@ -195,7 +195,7 @@ class Application_Model_ShowBuilder
             $dt->setTimezone(new DateTimeZone($this->timezone));
             $time = $dt->format("Y-m-d H:i");
 
-            $row["rebroadcast_title"] = "Rebroadcast of {$name} from {$time}";
+            $row["rebroadcast_title"] = sprintf(_("Rebroadcast of %s from %s"), $name, $time);
         } elseif (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
 
@@ -269,6 +269,7 @@ class Application_Model_ShowBuilder
             
             $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_out']);
             $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_in']);
+            
             $run_time = $cue_out-$cue_in;
             
             $formatter       = new LengthFormatter(Application_Common_DateHelper::ConvertMSToHHMMSSmm($run_time*1000));

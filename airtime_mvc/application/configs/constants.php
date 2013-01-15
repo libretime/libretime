@@ -32,6 +32,8 @@ define('MDATA_KEY_CONDUCTOR'   , 'conductor');
 define('MDATA_KEY_LANGUAGE'    , 'language');
 define('MDATA_KEY_REPLAYGAIN'  , 'replay_gain');
 define('MDATA_KEY_OWNER_ID'    , 'owner_id');
+define('MDATA_KEY_CUE_IN'      , 'cuein');
+define('MDATA_KEY_CUE_OUT'     , 'cueout');
 
 define('UI_MDATA_VALUE_FORMAT_FILE'   , 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM' , 'live stream');

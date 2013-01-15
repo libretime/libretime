@@ -38,6 +38,30 @@ var AIRTIME = (function(AIRTIME){
         
         mod.timestamp = timestamp;
     };
+
+    mod.updateCalendarStatusIcon = function(json) {
+
+
+        if (window.location.pathname.toLowerCase() != baseUrl+"schedule") {
+            return;
+        }
+
+
+        var instance_id = json.schedule[0].instance;
+
+        var lastElem = json.schedule[json.schedule.length-1];
+        var $elem = $($(".fc-event-inner.fc-event-skin .fc-event-title#"+instance_id).parent());
+        $elem.find(".small-icon").remove();
+        if (json.schedule[1].empty) {
+            $elem
+                .find(".fc-event-title")
+                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+        } else if (lastElem["fRuntime"][0] == "-") {
+            $elem
+                .find(".fc-event-title")
+                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+        }
+    }
     
     mod.getTimestamp = function() {
         
@@ -264,7 +288,7 @@ var AIRTIME = (function(AIRTIME){
         
         mod.disableUI();
         
-        $.post("/showbuilder/schedule-add", 
+        $.post(baseUrl+"showbuilder/schedule-add", 
             {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
             mod.fnItemCallback
         );
@@ -274,7 +298,7 @@ var AIRTIME = (function(AIRTIME){
         
         mod.disableUI();
         
-        $.post("/showbuilder/schedule-move", 
+        $.post(baseUrl+"showbuilder/schedule-move", 
             {"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
             mod.fnItemCallback
         );
@@ -283,8 +307,8 @@ var AIRTIME = (function(AIRTIME){
     mod.fnRemove = function(aItems) {
         
         mod.disableUI();
-        if (confirm("Remove selected scheduled item(s)?")) {
-	        $.post( "/showbuilder/schedule-remove",
+        if (confirm($.i18n._("Delete selected item(s)?"))) {
+	        $.post( baseUrl+"showbuilder/schedule-remove",
 	            {"items": aItems, "format": "json"},
 	            mod.fnItemCallback
 	        );
@@ -331,6 +355,7 @@ var AIRTIME = (function(AIRTIME){
             "url": sSource,
             "data": aoData,
             "success": function(json) {
+                mod.updateCalendarStatusIcon(json)
                 mod.setTimestamp(json.timestamp);
                 mod.setShowInstances(json.instances);
                 mod.getSelectedCursors();
@@ -360,17 +385,17 @@ var AIRTIME = (function(AIRTIME){
             "aoColumns": [
             /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "15px", "sClass": "sb-checkbox"},
             /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "16px"},
-            /* starts */ {"mDataProp": "starts", "sTitle": "Start", "sClass": "sb-starts", "sWidth": "60px"},
-            /* ends */ {"mDataProp": "ends", "sTitle": "End", "sClass": "sb-ends", "sWidth": "60px"},
-            /* runtime */ {"mDataProp": "runtime", "sTitle": "Duration", "sClass": "library_length sb-length", "sWidth": "65px"},
-            /* title */ {"mDataProp": "title", "sTitle": "Title", "sClass": "sb-title"},
-            /* creator */ {"mDataProp": "creator", "sTitle": "Creator", "sClass": "sb-creator"},
-            /* album */ {"mDataProp": "album", "sTitle": "Album", "sClass": "sb-album"},
-            /* cue in */ {"mDataProp": "cuein", "sTitle": "Cue In", "bVisible": false, "sClass": "sb-cue-in"},
-            /* cue out */ {"mDataProp": "cueout", "sTitle": "Cue Out", "bVisible": false, "sClass": "sb-cue-out"},
-            /* fade in */ {"mDataProp": "fadein", "sTitle": "Fade In", "bVisible": false, "sClass": "sb-fade-in"},
-            /* fade out */ {"mDataProp": "fadeout", "sTitle": "Fade Out", "bVisible": false, "sClass": "sb-fade-out"},
-            /* Mime */  {"mDataProp" : "mime", "sTitle" : "Mime", "bVisible": false, "sClass": "sb-mime"}
+            /* starts */ {"mDataProp": "starts", "sTitle": $.i18n._("Start"), "sClass": "sb-starts", "sWidth": "60px"},
+            /* ends */ {"mDataProp": "ends", "sTitle": $.i18n._("End"), "sClass": "sb-ends", "sWidth": "60px"},
+            /* runtime */ {"mDataProp": "runtime", "sTitle": $.i18n._("Duration"), "sClass": "library_length sb-length", "sWidth": "65px"},
+            /* title */ {"mDataProp": "title", "sTitle": $.i18n._("Title"), "sClass": "sb-title"},
+            /* creator */ {"mDataProp": "creator", "sTitle": $.i18n._("Creator"), "sClass": "sb-creator"},
+            /* album */ {"mDataProp": "album", "sTitle": $.i18n._("Album"), "sClass": "sb-album"},
+            /* cue in */ {"mDataProp": "cuein", "sTitle": $.i18n._("Cue In"), "bVisible": false, "sClass": "sb-cue-in"},
+            /* cue out */ {"mDataProp": "cueout", "sTitle": $.i18n._("Cue Out"), "bVisible": false, "sClass": "sb-cue-out"},
+            /* fade in */ {"mDataProp": "fadein", "sTitle": $.i18n._("Fade In"), "bVisible": false, "sClass": "sb-fade-in"},
+            /* fade out */ {"mDataProp": "fadeout", "sTitle": $.i18n._("Fade Out"), "bVisible": false, "sClass": "sb-fade-out"},
+            /* Mime */  {"mDataProp" : "mime", "sTitle" : $.i18n._("Mime"), "bVisible": false, "sClass": "sb-mime"}
             ],
             
             "bJQueryUI": true,
@@ -392,7 +417,7 @@ var AIRTIME = (function(AIRTIME){
                 localStorage.setItem('datatables-timeline', JSON.stringify(oData));
                 
                 $.ajax({
-                  url: "/usersettings/set-timeline-datatable",
+                  url: baseUrl+"usersettings/set-timeline-datatable",
                   type: "POST",
                   data: {settings : oData, format: "json"},
                   dataType: "json"
@@ -527,7 +552,7 @@ var AIRTIME = (function(AIRTIME){
                     $node = $(nRow.children[0]);
                     $node.html('');
                     
-                    sSeparatorHTML = '<span>Show Empty</span>';
+                    sSeparatorHTML = '<span>'+$.i18n._("Show Empty")+'</span>';
                     cl = cl + " sb-empty odd";
                     
                     fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
@@ -539,7 +564,7 @@ var AIRTIME = (function(AIRTIME){
                     $node = $(nRow.children[0]);
                     $node.html('');
                     
-                    sSeparatorHTML = '<span>Recording From Line In</span>';
+                    sSeparatorHTML = '<span>'+$.i18n._("Recording From Line In")+'</span>';
                     cl = cl + " sb-record odd";
                     
                     fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
@@ -554,7 +579,7 @@ var AIRTIME = (function(AIRTIME){
                         if (!isAudioSupported(aData.mime)) {
                             $image.html('<span class="ui-icon ui-icon-locked"></span>');
                         } else {
-                            $image.html('<img title="Track preview" src="/css/images/icon_audioclip.png"></img>')
+                            $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>')
                             .click(function() {
                                 open_show_preview(aData.instance, aData.pos);
                                 return false;
@@ -565,7 +590,7 @@ var AIRTIME = (function(AIRTIME){
                         $image.html('<span class="ui-icon ui-icon-alert"></span>');
                         $image.find(".ui-icon-alert").qtip({
                             content: {
-                                text: "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't \"watched\" anymore."
+                                text: $.i18n._("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't \"watched\" anymore.")
                             },
                             style: {
                                 classes: "ui-tooltip-dark"
@@ -791,7 +816,8 @@ var AIRTIME = (function(AIRTIME){
             "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
             
             "sAjaxDataProp": "schedule",
-            "sAjaxSource": "/showbuilder/builder-feed"  
+            "oLanguage": datatables_dict,
+            "sAjaxSource": baseUrl+"showbuilder/builder-feed"  
         });
         
         $sbTable.find("tbody").on("click", "input:checkbox", function(ev) {
@@ -877,7 +903,7 @@ var AIRTIME = (function(AIRTIME){
                 //can't add items outside of shows.
                 if (prev.find("td:first").hasClass("dataTables_empty")
                         || prev.length === 0) {
-                    alert("Cannot schedule outside a show.");
+                    alert($.i18n._("Cannot schedule outside a show."));
                     ui.item.remove();
                     return;
                 }
@@ -932,10 +958,10 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     if (selected.length === 1) {
-                        message = "Moving "+selected.length+" Item.";
+                        message = $.i18n._("Moving 1 Item");
                     }
                     else {
-                        message = "Moving "+selected.length+" Items.";
+                        message = sprintf($.i18n._("Moving %s Items"), selected.length);
                     }
                     
                     draggingContainer = $('<tr/>')
@@ -983,28 +1009,28 @@ var AIRTIME = (function(AIRTIME){
         $menu = $("<div class='btn-toolbar'/>");
         $menu.append("<div class='btn-group'>" +
                      "<button class='btn btn-small dropdown-toggle'  id='timeline-select' data-toggle='dropdown'>" +
-                         "Select <span class='caret'></span>" +
+                         $.i18n._("Select")+" <span class='caret'></span>" +
                      "</button>" +
                      "<ul class='dropdown-menu'>" +
-                         "<li id='timeline-sa'><a href='#'>Select all</a></li>" +
-                         "<li id='timeline-sn'><a href='#'>Select none</a></li>" +
+                         "<li id='timeline-sa'><a href='#'>"+$.i18n._("Select all")+"</a></li>" +
+                         "<li id='timeline-sn'><a href='#'>"+$.i18n._("Select none")+"</a></li>" +
                      "</ul>" +
                      "</div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Remove overbooked tracks' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
+                    "<button title='"+$.i18n._("Remove overbooked tracks")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-cut'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Remove selected scheduled items' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
+                    "<button title='"+$.i18n._("Remove selected scheduled items")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-trash'></i></button></div>");
 
         //if 'Add/Remove content' was chosen from the context menu
         //in the Calendar do not append these buttons
         if ($(".ui-dialog-content").length === 0) {
             $menu.append("<div class='btn-group'>" +
-                    "<button  title='Jump to the current playing track' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
+                    "<button  title='"+$.i18n._("Jump to the current playing track")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='Cancel current show' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
+                    "<button title='"+$.i18n._("Cancel current show")+"' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
         }
 
@@ -1019,7 +1045,7 @@ var AIRTIME = (function(AIRTIME){
             .click(function() {
                 var $tr,
                     data,
-                    msg = 'Cancel Current Show?';
+                    msg = $.i18n._('Cancel Current Show?');
                 
                 if (AIRTIME.button.isDisabled('icon-ban-circle', true) === true) {
                     return;
@@ -1031,11 +1057,11 @@ var AIRTIME = (function(AIRTIME){
                     data = $tr.data("aData");
                     
                     if (data.record === true) {
-                        msg = 'Stop recording current show?';
+                        msg = $.i18n._('Stop recording current show?');
                     }
                     
                     if (confirm(msg)) {
-                        var url = "/Schedule/cancel-current-show";
+                        var url = baseUrl+"Schedule/cancel-current-show";
                         $.ajax({
                             url: url,
                             data: {format: "json", id: data.instance},
@@ -1217,7 +1243,7 @@ var AIRTIME = (function(AIRTIME){
                 }
                 
                 request = $.ajax({
-                  url: "/showbuilder/context-menu",
+                  url: baseUrl+"showbuilder/context-menu",
                   type: "GET",
                   data: {id : data.id, format: "json"},
                   dataType: "json",

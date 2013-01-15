@@ -13,7 +13,7 @@ class Application_Form_DateRange extends Zend_Form_SubForm
         $startDate = new Zend_Form_Element_Text('his_date_start');
         $startDate->class = 'input_text';
         $startDate->setRequired(true)
-                  ->setLabel('Date Start:')
+                  ->setLabel(_('Date Start:'))
                   ->setValue(date("Y-m-d"))
                   ->setFilters(array('StringTrim'))
                   ->setValidators(array(
@@ -32,7 +32,7 @@ class Application_Form_DateRange extends Zend_Form_SubForm
                   ->setValidators(array(
                       'NotEmpty',
                       array('date', false, array('HH:mm')),
-                      array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Invalid character entered'))))
+                      array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')))))
                   ->setDecorators(array('ViewHelper'));
         $startTime->setAttrib('alt', 'time');
         $this->addElement($startTime);
@@ -41,7 +41,7 @@ class Application_Form_DateRange extends Zend_Form_SubForm
         $endDate = new Zend_Form_Element_Text('his_date_end');
         $endDate->class = 'input_text';
         $endDate->setRequired(true)
-                ->setLabel('Date End:')
+                ->setLabel(_('Date End:'))
                 ->setValue(date("Y-m-d"))
                 ->setFilters(array('StringTrim'))
                 ->setValidators(array(
@@ -60,7 +60,7 @@ class Application_Form_DateRange extends Zend_Form_SubForm
                 ->setValidators(array(
                     'NotEmpty',
                     array('date', false, array('HH:mm')),
-                    array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Invalid character entered'))))
+                    array('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
         $endTime->setAttrib('alt', 'time');
         $this->addElement($endTime);

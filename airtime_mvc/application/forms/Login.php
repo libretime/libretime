@@ -5,7 +5,7 @@ class Application_Form_Login extends Zend_Form
 
     public function init()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         // Set the method for the display form to POST
         $this->setMethod('post');
@@ -16,7 +16,7 @@ class Application_Form_Login extends Zend_Form
 
         // Add username element
         $this->addElement('text', 'username', array(
-            'label'      => 'Username:',
+            'label'      => _('Username:'),
             'class'      => 'input_text',
             'required'   => true,
             'value'      => (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1)?'admin':'',
@@ -31,7 +31,7 @@ class Application_Form_Login extends Zend_Form
 
         // Add password element
         $this->addElement('password', 'password', array(
-            'label'      => 'Password:',
+            'label'      => _('Password:'),
             'class'      => 'input_text',
             'required'   => true,
             'value'      => (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1)?'admin':'',
@@ -43,6 +43,12 @@ class Application_Form_Login extends Zend_Form
                 'ViewHelper'
             )
         ));
+        
+        $locale = new Zend_Form_Element_Select("locale");
+        $locale->setLabel(_("Language:"));
+        $locale->setMultiOptions(Application_Model_Locale::getLocales());
+        $locale->setDecorators(array('ViewHelper'));
+        $this->addElement($locale);
 
         $recaptchaNeeded = false;
         if (Application_Model_LoginAttempts::getAttempts($_SERVER['REMOTE_ADDR']) >= 3) {
@@ -56,7 +62,7 @@ class Application_Form_Login extends Zend_Form
         // Add the submit button
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
-            'label'    => 'Login',
+            'label'    => _('Login'),
             'class'      => 'ui-button ui-widget ui-state-default ui-button-text-only center',
             'decorators' => array(
                 'ViewHelper'
@@ -74,7 +80,7 @@ class Application_Form_Login extends Zend_Form
 
         $captcha = new Zend_Form_Element_Captcha('captcha',
             array(
-                'label' => 'Type the characters you see in the picture below.',
+                'label' => _('Type the characters you see in the picture below.'),
                 'captcha' =>  'ReCaptcha',
                 'captchaOptions'        => array(
                     'captcha'   => 'ReCaptcha',

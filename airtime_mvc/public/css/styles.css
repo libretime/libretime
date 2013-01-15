@@ -71,16 +71,16 @@ select {
     background-position:center;
 }
 #version-icon.outdated {
-	background-image:url(/css/images/icon_outdated.png);
+	background-image:url(images/icon_outdated.png);
 }
 #version-icon.update2 {
-	background-image:url(/css/images/icon_update2.png);
+	background-image:url(images/icon_update2.png);
 }
 #version-icon.update {
-	background-image:url(/css/images/icon_update.png);
+	background-image:url(images/icon_update.png);
 }
 #version-icon.uptodate {
-	background-image:url(/css/images/icon_uptodate.png);
+	background-image:url(images/icon_uptodate.png);
 }
 
 #ui-tooltip-version a {
@@ -93,24 +93,44 @@ select {
 }
 /* Version Notification Ends*/
 
+#current-user-container {
+    padding-bottom: 20px;
+}
+
+.edit-current-user {
+    width: 450px;
+}
+
+.edit-current-user label {
+    font-weight: bold;
+}
+
+.stream-player-label {
+    padding-left: 8px !important;
+}
+.jp-stream form {
+    margin-left: 7px !important;
+}
+
 .override_help_icon, .icecast_metadata_help_icon {
         cursor: help;
         position: relative;
         
         display:inline-block; zoom:1; display:inline;
         width:14px; height:14px;
-        background:url(/css/images/icon_info.png) 0 0 no-repeat;
+        background:url(images/icon_info.png) 0 0 no-repeat;
         float:right; position:relative; top:2px; right:7px;
         line-height:16px !important;
 }
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
-.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon{
+.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon,
+.admin_username_help_icon {
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
         width:14px; height:14px;
-        background:url(/css/images/icon_info.png) 0 0 no-repeat;
+        background:url(images/icon_info.png) 0 0 no-repeat;
         top:2px; right:7px; left: 3px;
         line-height:16px !important;
 }
@@ -982,6 +1002,9 @@ dt.block-display, dd.block-display {
 	font-size:14px;
 	padding: 6px 0 6px 3px;
 }
+.login-content dd select {
+    width: 100%;
+}
 .login-content dd input.ui-button, .login-content dd input.btn {
 	width:100%;
 	font-size:14px;
@@ -1384,6 +1407,14 @@ h2#scheduled_playlist_name span {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box; 
 	padding: 4px 0 8px;
+}
+
+.user-form-label {
+    width: 30% !important;
+}
+
+.user-form-element {
+    width: 65% !important;
 }
 
 .simple-formblock dd.block-display {
@@ -1968,6 +1999,9 @@ span.errors.sp-errors{
 .small-icon.show-empty {
     background:url(images/icon_alert_cal_alt.png) no-repeat 0 0;
 }
+.small-icon.show-partial-filled {
+    background:url(images/icon_alert_cal_alt2.png) no-repeat 0 0;
+}
 .medium-icon {
 	display:block;
 	width:25px;
@@ -1997,8 +2031,11 @@ span.errors.sp-errors{
 .medium-icon.finishedplaying {
 	background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
-.preferences, .manage-folders {
+.preferences {
     width: 500px;
+}
+.manage-folders {
+    width: 610px;
 }
 
 .stream-config {
@@ -2934,4 +2971,58 @@ dd .stream-status {
     /* position:absolute; */
     top: 0px;
     left: 0px;
+}
+
+.edit-user-global dt {
+    width: 150px;
+    float: left;
+    margin-top: 4px;
+    margin-left: 2px;
+}
+
+.edit-user-global dd {
+    width: 340px;
+    padding-bottom: 5px;
+}
+
+.edit-user-global input, .edit-user-global select {
+    width: 200px;
+}
+
+.edit-user-errors {
+    margin-left: 33% !important;
+    width: 208px;
+}
+.jp-container a#popup-link {
+    width: 104px;
+    border: 1px solid black;
+    font-size: 13px;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top:3px;
+    text-align: center;
+    right: 16px;
+    position: absolute;
+    top: 40px;
+    color: #FF5D1A
+}
+
+#popup-share {
+    display:none;
+    position: fixed;
+    width:360px;
+    height: 26px;
+    margin-left:8px;
+    margin-right: 150px;
+    margin-top: 0px;
+    border:1px solid black;
+    background-color:#282828;
+    padding:10px;
+    z-index:102;
+    font-size:10pt;
+    font-weight:bold;
+}
+
+#popup-share-link {
+    width: 320px;
 }

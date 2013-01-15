@@ -126,7 +126,7 @@ class AirtimeInstall
      */
     public static function DbConnect($p_exitOnError = true)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         try {
             $con = Propel::getConnection();
         } catch (Exception $e) {
@@ -147,7 +147,7 @@ class AirtimeInstall
      * install script. */
     public static function InstallStorageDirectory()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         echo "* Storage directory setup".PHP_EOL;
 
         $ini = parse_ini_file(__DIR__."/airtime-install.ini");
@@ -183,7 +183,7 @@ class AirtimeInstall
 
     public static function CreateDatabaseUser()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         echo " * Creating Airtime database user".PHP_EOL;
 
@@ -208,7 +208,7 @@ class AirtimeInstall
 
     public static function CreateDatabase()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         echo " * Creating Airtime database".PHP_EOL;
 
@@ -340,6 +340,11 @@ class AirtimeInstall
         if ($result < 1) {
             return false;
         }
+        $sql = "INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', '$defaultTimezone')";
+        $result = $con->exec($sql);
+        if ($result < 1) {
+            return false;
+        }
         return true;
     }
 
@@ -407,7 +412,7 @@ class AirtimeInstall
 
     public static function InstallPhpCode()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         echo "* Installing PHP code to ".AirtimeInstall::CONF_DIR_WWW.PHP_EOL;
         exec("mkdir -p ".AirtimeInstall::CONF_DIR_WWW);
         exec("cp -R ".AirtimeInstall::GetAirtimeSrcDir()."/* ".AirtimeInstall::CONF_DIR_WWW);
@@ -456,7 +461,7 @@ class AirtimeInstall
     }
 
     public static function CreateZendPhpLogFile(){
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $path = AirtimeInstall::CONF_DIR_LOG;
         $file = $path.'/zendphp.log';

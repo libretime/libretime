@@ -7,6 +7,9 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+echo "Generating locales"
+for i in `ls /usr/share/airtime/locale | grep ".._.."`; do locale-gen "$i.utf8"; done
+
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
 # Absolute path this script is in, thus /home/user/bin

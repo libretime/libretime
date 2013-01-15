@@ -78,6 +78,10 @@ else
 	echo "NGINX config for Airtime already exists..."
 fi
 
+#Install Sourcefabric's custom Liquidsoap debian package
+apt-get -y --force-yes install sourcefabric-keyring
+apt-get -y --force-yes install liquidsoap
+
 # php-fpm Airtime pool file
 echo "----------------------------------------------------"
 echo "2.2 Airtime php pool file"

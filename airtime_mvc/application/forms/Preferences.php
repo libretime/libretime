@@ -4,7 +4,8 @@ class Application_Form_Preferences extends Zend_Form
 {
     public function init()
     {
-        $this->setAction('/Preference');
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+
         $this->setMethod('post');
 
         $this->setDecorators(array(
@@ -17,13 +18,5 @@ class Application_Form_Preferences extends Zend_Form
         $soundcloud_pref = new Application_Form_SoundcloudPreferences();
         $this->addSubForm($soundcloud_pref, 'preferences_soundcloud');
 
-        $this->addElement('submit', 'submit', array(
-            'class'    => 'ui-button ui-state-default right-floated',
-            'ignore'   => true,
-            'label'    => 'Save',
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
     }
 }

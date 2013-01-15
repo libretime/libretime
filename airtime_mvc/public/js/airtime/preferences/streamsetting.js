@@ -39,8 +39,8 @@ function restrictOggBitrate(ele, on){
         div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","disabled");
         div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","disabled");
     }else{
-        div.find("select[id$=data-bitrate]").find("option[value='24']").attr("disabled","");
-        div.find("select[id$=data-bitrate]").find("option[value='32']").attr("disabled","");
+        div.find("select[id$=data-bitrate]").find("option[value='24']").removeAttr("disabled");
+        div.find("select[id$=data-bitrate]").find("option[value='32']").removeAttr("disabled");
     }
 }
 function hideForShoutcast(ele){
@@ -75,7 +75,7 @@ function showForIcecast(ele){
 }
 
 function checkLiquidsoapStatus(){
-    var url = '/Preference/get-liquidsoap-status/format/json';
+    var url = baseUrl+'Preference/get-liquidsoap-status/format/json';
     var id = $(this).attr("id");
     $.post(url, function(json){
         var json_obj = jQuery.parseJSON(json);
@@ -93,13 +93,13 @@ function checkLiquidsoapStatus(){
             }
             var html;
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><h3>Connected to the streaming server</h3></div>';
+                html = '<div class="stream-status status-good"><h3>'+$.i18n._("Connected to the streaming server")+'</h3></div>';
             }else if(status == "N/A"){
-                html = '<div class="stream-status status-disabled"><h3>The stream is disabled</h3></div>';
+                html = '<div class="stream-status status-disabled"><h3>'+$.i18n._("The stream is disabled")+'</h3></div>';
             }else if(status == "waiting"){
-            	html = '<div class="stream-status status-info"><h3>Getting information from the server...</h3></div>';
+            	html = '<div class="stream-status status-info"><h3>'+$.i18n._("Getting information from the server...")+'</h3></div>';
             }else{
-                html = '<div class="stream-status status-error"><h3>Can not connect to the streaming server</h3><p>'+status+'</p></div>';
+                html = '<div class="stream-status status-error"><h3>'+$.i18n._("Can not connect to the streaming server")+'</h3><p>'+status+'</p></div>';
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }
@@ -127,7 +127,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
+        $.get(baseUrl+"Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
     	event.preventDefault()
     })
     
@@ -142,7 +142,7 @@ function setLiveSourceConnectionOverrideListener(){
         live_dj_input.val(url)
         live_dj_input.attr("readonly", "readonly")
         live_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
+        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
     	event.preventDefault()
     })
     
@@ -151,7 +151,7 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1})
+        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1})
         event.preventDefault()
     })
     
@@ -165,13 +165,13 @@ function setLiveSourceConnectionOverrideListener(){
         master_dj_input.val(url)
         master_dj_input.attr("readonly", "readonly")
         master_dj_actions.hide()
-        $.get("/Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0})
+        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0})
         event.preventDefault()
     })
 }
 
 
-$(document).ready(function() {
+function setupEventListeners() {
     // initial stream url
     $("dd[id=outputStreamURL-element]").each(function(){
         rebuildStreamURL($(this))
@@ -231,7 +231,7 @@ $(document).ready(function() {
         }
     })
     
-    $('.toggle legend').live('click',function() {
+    $('.toggle legend').click(function() {
         $(this).parent().toggleClass('closed');
         return false;
     });
@@ -250,7 +250,9 @@ $(document).ready(function() {
     // qtip for help text
     $(".override_help_icon").qtip({
         content: {
-            text: "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151. For more detail, please read the <a target=\"_blank\" href=\"http://www.sourcefabric.org/en/airtime/manuals/\">Airtime manual</a>."
+            text: $.i18n._("If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151.")+" "+
+                sprintf($.i18n._(
+                    "For more details, please read the %sAirtime Manual%s"), "<a target='_blank' href='http://www.sourcefabric.org/en/airtime/manuals/'>", "</a>")
         },
         hide: {
             delay: 500,
@@ -271,7 +273,7 @@ $(document).ready(function() {
     
     $(".icecast_metadata_help_icon").qtip({
         content: {
-            text: "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+            text: $.i18n._("Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option.")
         },
         hide: {
             delay: 500,
@@ -292,7 +294,7 @@ $(document).ready(function() {
     
     $("#auto_transition_help").qtip({
         content: {
-            text: "Check this box to automatically switch off Master/Show source upon source disconnection."
+            text: $.i18n._("Check this box to automatically switch off Master/Show source upon source disconnection.")
         },
         hide: {
             delay: 500,
@@ -313,7 +315,7 @@ $(document).ready(function() {
     
     $("#auto_switch_help").qtip({
         content: {
-            text: "Check this box to automatically switch on Master/Show source upon source connection."
+            text: $.i18n._("Check this box to automatically switch on Master/Show source upon source connection.")
         },
         hide: {
             delay: 500,
@@ -334,7 +336,28 @@ $(document).ready(function() {
     
     $(".stream_username_help_icon").qtip({
         content: {
-            text: "If your Icecast server expects a username of 'source', this field can be left blank."
+            text: $.i18n._("If your Icecast server expects a username of 'source', this field can be left blank.")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    })
+    
+    $(".admin_username_help_icon").qtip({
+        content: {
+            text: $.i18n._("This is the admin username and password for Icecast/SHOUTcast to get listener statistics.")
         },
         hide: {
             delay: 500,
@@ -355,7 +378,7 @@ $(document).ready(function() {
     
     $(".master_username_help_icon").qtip({
         content: {
-            text: "If your live streaming client does not ask for a username, this field should be 'source'."
+            text: $.i18n._("If your live streaming client does not ask for a username, this field should be 'source'.")
         },
         hide: {
             delay: 500,
@@ -373,4 +396,39 @@ $(document).ready(function() {
             at: "right center"
         },
     })
+}
+
+function setSliderForReplayGain(){
+    $( "#slider-range-max" ).slider({
+        range: "max",
+        min: -10,
+        max: 10,
+        value: $("#rg_modifier_value").html(),
+        slide: function( event, ui ) {
+            $( "#replayGainModifier" ).val( ui.value );
+            $("#rg_modifier_value").html(ui.value);
+        }
+    });
+    $( "#replayGainModifier" ).val( $( "#slider-range-max" ).slider( "value" ) );
+}
+
+$(document).ready(function() {
+    setupEventListeners();
+    setSliderForReplayGain();
+    
+    $('#stream_save').live('click', function(){
+        var confirm_pypo_restart_text = $.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.");
+        if (confirm(confirm_pypo_restart_text)) {
+            var data = $('#stream_form').serialize();
+            var url = baseUrl+'Preference/stream-setting';
+
+            $.post(url, {format:"json", data: data}, function(data){
+                var json = $.parseJSON(data);
+                $('#content').empty().append(json.html);
+                setupEventListeners();
+                setSliderForReplayGain();
+            });
+        }
+    });
 });
+

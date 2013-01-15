@@ -12,7 +12,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
         $relativeDates = array();
         $relativeDates[""] = "";
         for ($i=0; $i<=30; $i++) {
-           $relativeDates["$i days"] = "+$i days";
+           $relativeDates["$i days"] = "+$i "._("days");
         }
 
         for ($i=1; $i<=10; $i++) {
@@ -28,7 +28,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $text->setAttrib('class', 'input_text');
             $text->addFilter('StringTrim');
             $text->addValidator('date', false, array('HH:mm'));
-            $text->addValidator('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => 'Invalid character entered'));
+            $text->addValidator('regex', false, array('/^[0-2]?[0-9]:[0-5][0-9]$/', 'messages' => _('Invalid character entered')));
             $text->setRequired(false);
             $text->setDecorators(array('ViewHelper'));
             $this->addElement($text);
@@ -60,12 +60,12 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             }
 
             if (trim($days) == "") {
-                $this->getElement('add_show_rebroadcast_date_'.$i)->setErrors(array("Day must be specified"));
+                $this->getElement('add_show_rebroadcast_date_'.$i)->setErrors(array(_("Day must be specified")));
                 $valid = false;
             }
 
             if (trim($time) == "") {
-                $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Time must be specified"));
+                $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array(_("Time must be specified")));
                 $valid = false;
             }
 
@@ -92,7 +92,7 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
             $rebroad_start->add(new DateInterval("P".$day."D"));
 
             if ($rebroad_start < $show_end) {
-                $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array("Must wait at least 1 hour to rebroadcast"));
+                $this->getElement('add_show_rebroadcast_time_'.$i)->setErrors(array(_("Must wait at least 1 hour to rebroadcast")));
                 $valid = false;
                 $noError = false;
             }

@@ -395,12 +395,13 @@ SQL;
     {
         $file = CcFilesQuery::create()->findPK($p_item, $this->con);
 
-        if (isset($file) && $file->getDbFileExists()) {
+        if (isset($file) && $file->visible()) {
             $entry               = $this->blockItem;
             $entry["id"]         = $file->getDbId();
             $entry["pos"]        = $pos;
             $entry["cliplength"] = $file->getDbLength();
-            $entry["cueout"]     = $file->getDbLength();
+            $entry["cueout"]     = $file->getDbCueout();
+            $entry["cuein"]     = $file->getDbCuein();
 
             return $entry;
         } else {
@@ -410,11 +411,7 @@ SQL;
 
     public function isStatic()
     {
-        if ($this->block->getDbType() == "static") {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->block->getDbType() == "static";
     }
 
     /*
@@ -760,7 +757,7 @@ SQL;
 
         try {
             if (is_null($cueIn) && is_null($cueOut)) {
-                $errArray["error"] = "Cue in and cue out are null.";
+                $errArray["error"] = _("Cue in and cue out are null.");
 
                 return $errArray;
             }
@@ -795,7 +792,7 @@ SQL;
                 );
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                    $errArray["error"] = _("Can't set cue out to be greater than file length.");
                     return $errArray;
                 }
 
@@ -806,7 +803,7 @@ SQL;
                 );
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                    $errArray["error"] = _("Can't set cue in to be larger than cue out.");
                     return $errArray;
                 }
 
@@ -827,7 +824,7 @@ SQL;
                 );
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                    $errArray["error"] = _("Can't set cue in to be larger than cue out.");
                     return $errArray;
                 }
 
@@ -851,7 +848,7 @@ SQL;
                 );
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                    $errArray["error"] = _("Can't set cue out to be greater than file length.");
                     return $errArray;
                 }
 
@@ -862,7 +859,7 @@ SQL;
                 );
                 $result = Application_Common_Database::prepareAndExecute($sql, $params, 'column');
                 if ($result) {
-                    $errArray["error"] = "Can't set cue out to be smaller than cue in.";
+                    $errArray["error"] = _("Can't set cue out to be smaller than cue in.");
                     return $errArray;
                 }
 
@@ -943,9 +940,8 @@ SQL;
 
     public static function getBlockCount()
     {
-        global $CC_CONFIG;
          $con = Propel::getConnection();
-         $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
+         $sql = 'SELECT count(*) as cnt FROM cc_playlist';
 
          return $con->query($sql)->fetchColumn(0);
      }
@@ -1210,32 +1206,32 @@ SQL;
     public function getCriteria()
     {
         $criteriaOptions = array(
-                0              => "Select criteria",
-                "album_title"  => "Album",
-                "bit_rate"     => "Bit Rate (Kbps)",
-                "bpm"          => "BPM",
-                "composer"     => "Composer",
-                "conductor"    => "Conductor",
-                "copyright"    => "Copyright",
-                "artist_name"  => "Creator",
-                "encoded_by"   => "Encoded By",
-                "genre"        => "Genre",
-                "isrc_number"  => "ISRC",
-                "label"        => "Label",
-                "language"     => "Language",
-                "mtime"        => "Last Modified",
-                "lptime"       => "Last Played",
-                "length"       => "Length",
-                "mime"         => "Mime",
-                "mood"         => "Mood",
-                "owner_id"     => "Owner",
-                "replay_gain"  => "Replay Gain",
-                "sample_rate"  => "Sample Rate (kHz)",
-                "track_title"  => "Title",
-                "track_number" => "Track Number",
-                "utime"        => "Uploaded",
-                "info_url"     => "Website",
-                "year"         => "Year"
+            0              => _("Select criteria"),
+            "album_title"  => _("Album"),
+            "bit_rate"     => _("Bit Rate (Kbps)"),
+            "bpm"          => _("BPM"),
+            "composer"     => _("Composer"),
+            "conductor"    => _("Conductor"),
+            "copyright"    => _("Copyright"),
+            "artist_name"  => _("Creator"),
+            "encoded_by"   => _("Encoded By"),
+            "genre"        => _("Genre"),
+            "isrc_number"  => _("ISRC"),
+            "label"        => _("Label"),
+            "language"     => _("Language"),
+            "mtime"        => _("Last Modified"),
+            "lptime"       => _("Last Played"),
+            "length"       => _("Length"),
+            "mime"         => _("Mime"),
+            "mood"         => _("Mood"),
+            "owner_id"     => _("Owner"),
+            "replay_gain"  => _("Replay Gain"),
+            "sample_rate"  => _("Sample Rate (kHz)"),
+            "track_title"  => _("Title"),
+            "track_number" => _("Track Number"),
+            "utime"        => _("Uploaded"),
+            "info_url"     => _("Website"),
+            "year"         => _("Year")
         );
 
         // Load criteria from db
@@ -1363,6 +1359,7 @@ SQL;
             
             // check if file exists
             $qry->add("file_exists", "true", Criteria::EQUAL);
+            $qry->add("hidden", "false", Criteria::EQUAL);
             $qry->addAscendingOrderByColumn('random()');
         }
         // construct limit restriction

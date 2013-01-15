@@ -63,4 +63,18 @@ class Application_Common_OsPath{
 
         return join(DIRECTORY_SEPARATOR, $paths);
     }
+    
+    public static function getBaseDir() {
+        $baseUrl = dirname($_SERVER['SCRIPT_NAME']);
+
+        if ($baseUrl[0] != "/") {
+            $baseUrl = "/".$baseUrl;
+        }
+
+        if ($baseUrl[strlen($baseUrl) -1] != "/") {
+            $baseUrl = $baseUrl."/";
+        }
+
+        return $baseUrl;
+    }
 }

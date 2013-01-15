@@ -1,4 +1,8 @@
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
+-- added in 2.3
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('enable_replay_gain', 1);
+-- end of added in 2.3
 
 -- added in 2.1
 INSERT INTO cc_pref("keystr", "valstr") VALUES('scheduled_play_switch', 'on');
@@ -25,6 +29,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_host', '1
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_port', '8000', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_pass', 'hackme', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_mount', 'airtime_128', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_url', 'http://airtime.sourcefabric.org', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s1_description', 'Airtime Radio! Stream #1', 'string');
@@ -38,6 +44,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_host', ''
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_port', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_pass', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_mount', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_url', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s2_description', '', 'string');
@@ -51,6 +59,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_host', ''
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_port', '', 'integer');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_user', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_pass', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_pass', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_mount', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_url', '', 'string');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_description', '', 'string');
@@ -308,3 +318,21 @@ INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s1_channels', 'ste
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s2_channels', 'stereo', 'string');
 INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s3_channels', 'stereo', 'string');
 -- end of added in 2.2
+
+
+-- added in 2.3
+INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
+
+INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
+
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English - US');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', '한국어');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
+
+-- end of added in 2.3

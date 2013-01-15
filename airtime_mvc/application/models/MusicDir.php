@@ -157,15 +157,15 @@ SQL;
             $diff = strlen($dir) - strlen($p_path);
             if ($diff == 0) {
                 if ($dir == $p_path) {
-                    throw new NestedDirectoryException("'$p_path' is already watched.");
+                    throw new NestedDirectoryException(sprintf(_("%s is already watched."), $p_path));
                 }
             } elseif ($diff > 0) {
                 if (self::isAncestorDir($p_path, $dir)) {
-                    throw new NestedDirectoryException("'$p_path' contains nested watched directory: '$dir'");
+                    throw new NestedDirectoryException(sprintf(_("%s contains nested watched directory: %s"), $p_path, $dir));
                 }
             } else { /* diff < 0*/
                 if (self::isAncestorDir($dir, $p_path)) {
-                    throw new NestedDirectoryException("'$p_path' is nested within existing watched directory: '$dir'");
+                    throw new NestedDirectoryException(sprintf(_("%s is nested within existing watched directory: %s"), $p_path, $dir));
                 }
             }
         }
@@ -186,7 +186,7 @@ SQL;
     public static function addDir($p_path, $p_type, $userAddedWatchedDir=true, $nestedWatch=false)
     {
         if (!is_dir($p_path)) {
-            return array("code"=>2, "error"=>"'$p_path' is not a valid directory.");
+            return array("code"=>2, "error"=>sprintf(_("%s is not a valid directory."), $p_path));
         }
         $real_path = Application_Common_OsPath::normpath($p_path)."/";
         if ($real_path != "/") {
@@ -227,7 +227,8 @@ SQL;
 
             return array("code"=>1, "error"=>"$msg");
         } catch (Exception $e) {
-            return array("code"=>1, "error"=>"'$p_path' is already set as the current storage dir or in the watched folders list");
+            return array("code"=>1,
+                         "error"=>sprintf(_("%s is already set as the current storage dir or in the watched folders list"), $p_path));
         }
 
     }
@@ -246,49 +247,48 @@ SQL;
     {
         $res = self::addDir($p_path, "watched", $userAddedWatchedDir, $nestedWatch);
 
-        if ($res['code'] == 0) {
+        if ($res['code'] != 0) { return $res; }
 
-            //convert "linked" files (Airtime <= 1.8.2) to watched files.
-            $propel_link_dir = CcMusicDirsQuery::create()
-               ->filterByType('link')
+        //convert "linked" files (Airtime <= 1.8.2) to watched files.
+        $propel_link_dir = CcMusicDirsQuery::create()
+           ->filterByType('link')
+           ->findOne();
+
+        //see if any linked files exist.
+        if (isset($propel_link_dir)) {
+
+            //newly added watched directory object
+            $propel_new_watch = CcMusicDirsQuery::create()
+               ->filterByDirectory(Application_Common_OsPath::normpath($p_path)."/")
                ->findOne();
 
-            //see if any linked files exist.
-            if (isset($propel_link_dir)) {
+            //any files of the deprecated "link" type.
+            $link_files = CcFilesQuery::create()
+               ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+               ->filterByDbDirectory($propel_link_dir->getId())
+               ->find();
 
-                //newly added watched directory object
-                $propel_new_watch = CcMusicDirsQuery::create()
-                   ->filterByDirectory(Application_Common_OsPath::normpath($p_path)."/")
-                   ->findOne();
+            $newly_watched_dir = $propel_new_watch->getDirectory();
 
-                //any files of the deprecated "link" type.
-                $link_files = CcFilesQuery::create()
-                   ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-                   ->filterByDbDirectory($propel_link_dir->getId())
-                   ->find();
+            foreach ($link_files as $link_file) {
+                $link_filepath = $link_file->getDbFilepath();
 
-                $newly_watched_dir = $propel_new_watch->getDirectory();
+                //convert "link" file into a watched file.
+                if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
 
-                foreach ($link_files as $link_file) {
-                    $link_filepath = $link_file->getDbFilepath();
+                    //get the filepath path not including the watched directory.
+                    $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
 
-                    //convert "link" file into a watched file.
-                    if ((strlen($newly_watched_dir) < strlen($link_filepath)) && (substr($link_filepath, 0, strlen($newly_watched_dir)) === $newly_watched_dir)) {
-
-                        //get the filepath path not including the watched directory.
-                        $sub_link_filepath = substr($link_filepath, strlen($newly_watched_dir));
-
-                        $link_file->setDbDirectory($propel_new_watch->getId());
-                        $link_file->setDbFilepath($sub_link_filepath);
-                        $link_file->save();
-                    }
+                    $link_file->setDbDirectory($propel_new_watch->getId());
+                    $link_file->setDbFilepath($sub_link_filepath);
+                    $link_file->save();
                 }
             }
-
-            $data = array();
-            $data["directory"] = $p_path;
-            Application_Model_RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
         }
+
+        $data = array();
+        $data["directory"] = $p_path;
+        Application_Model_RabbitMq::SendMessageToMediaMonitor("new_watch", $data);
 
         return $res;
     }
@@ -360,7 +360,7 @@ SQL;
         // path should always ends with trailing '/'
         $p_dir = Application_Common_OsPath::normpath($p_dir)."/";
         if (!is_dir($p_dir)) {
-            return array("code"=>2, "error"=>"'$p_dir' is not a valid directory.");
+            return array("code"=>2, "error"=>sprintf(_("%s is not a valid directory."), $p_dir));
         } elseif (Application_Model_Preference::GetImportTimestamp()+10 > time()) {
             return array("code"=>3, "error"=>"Airtime is currently importing files. Please wait until this is complete before changing the storage directory.");
         }
@@ -377,7 +377,8 @@ SQL;
 
             return array("code"=>0);
         } else {
-            return array("code"=>1, "error"=>"'$p_dir' is already set as the current storage dir or in the watched folders list.");
+            return array("code"=>1,
+                "error"=>sprintf(_("%s is already set as the current storage dir or in the watched folders list."), $p_dir));
         }
     }
 
@@ -420,7 +421,7 @@ SQL;
         }
         $dir = Application_Model_MusicDir::getDirByPath($p_dir);
         if (is_null($dir)) {
-            return array("code"=>1, "error"=>"'$p_dir' doesn't exist in the watched list.");
+            return array("code"=>1, "error"=>sprintf(_("%s doesn't exist in the watched list."), $p_dir));
         } else {
             $dir->remove($userAddedWatchedDir);
             $data = array();
@@ -445,4 +446,16 @@ SQL;
         return array($mus_dir->getDirectory(), trim($fp));
     }
 
+
+    public function unhideFiles() 
+    {
+        $files = $this->_dir->getCcFiless();
+        $hid = 0;
+        foreach ($files as $file) {
+            $hid++;
+            $file->setDbHidden(false);
+            $file->save();
+        }
+        Logging::info("unhide '$hid' files");
+    }
 }

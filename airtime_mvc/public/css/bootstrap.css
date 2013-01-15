@@ -513,6 +513,10 @@ input[type="submit"].btn.btn-mini {
   background-repeat: no-repeat;
   margin-top: 1px;
 }
+
+.add-show-close {
+    width: 25px;
+}
 /* White icons with optional class, or on hover/active states of certain elements */
 .icon-white,
 .nav > .active > a > [class^="icon-"],

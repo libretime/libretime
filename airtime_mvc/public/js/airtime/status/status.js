@@ -2,7 +2,7 @@ function generatePartitions(partitions){
 
     var rowTemplate = 
             '<tr class="partition-info">'+
-                '<td><span class="strong">Disk #%s</span>'+
+                '<td><span class="strong">'+$.i18n._("Disk")+' #%s</span>'+
                     '<ul id="watched-dir-list-%s">'+
                     '</ul>'+
                 '</td>'+
@@ -12,7 +12,7 @@ function generatePartitions(partitions){
                         '<div class="diskspace" style="width:%s%%;">'+
                         '</div>'+
                     '</div>'+
-                    '<div>%s%% in use</div>'+
+                    '<div>%s%% '+$.i18n._("in use")+'</div>'+
                 '</td>'+
             '</tr>';
 
@@ -69,7 +69,7 @@ function success(data, textStatus, jqXHR){
 }
 
 function updateStatus(getDiskInfo){
-    $.getJSON( "api/status/format/json/diskinfo/"+getDiskInfo, null, success);
+    $.getJSON( baseUrl+"api/status/format/json/diskinfo/"+getDiskInfo, null, success);
     
 }
 

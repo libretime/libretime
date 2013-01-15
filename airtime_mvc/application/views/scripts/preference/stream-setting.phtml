@@ -1,16 +1,15 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
-    <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>>Stream Settings</h2>
+    <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>><? echo _("Stream Settings") ?></h2>
+    <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
     <?php if($this->enable_stream_conf == "true"){?>
-    <form method="post" action="/Preference/stream-setting" enctype="application/x-www-form-urlencoded" onsubmit="return confirm('<?php echo $this->confirm_pypo_restart_text ?>');">
-    <div class="button-bar bottom" id="submit-element" style="float:right">
-        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
-    </div>
+    <form method="post" id="stream_form" enctype="application/x-www-form-urlencoded">
+    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><? echo _("Save") ?></button>
     <div style="clear:both"></div>
     <?php }?>
   <?php echo $this->statusMsg;?>
   <div style="float: left; margin-right: 10px; width: 490px; overflow: auto;">
     <fieldset class="padded stream-setting-global">
-        <legend>Global Settings</legend>
+        <legend><? echo _("Global Settings") ?></legend>
         <dl class="zend_form">
         <?php if($this->form->getElement('output_sound_device') != null){?>
             <dt id="hardwareOut-label">
@@ -64,13 +63,48 @@
                     </ul>
                 <?php endif; ?>
             </dd>
+            <dt id="offAirMeta-label">
+                <label>
+                    <?php echo $this->form->getElement('offAirMeta')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="offAirMeta-element">
+                <?php echo $this->form->getElement('offAirMeta') ?>
+            </dd>
+            <dt id="enableReplayGain-label">
+                <label>
+                <?php echo $this->form->getElement('enableReplayGain')->getLabel() ?> :
+                </label>
+            </dt>
+            <dd id="enableReplayGain-element">
+                <?php echo $this->form->getElement('enableReplayGain') ?>
+            </dd>
+            <dt id="replayGainModifier-label" class="block-display">
+                <label><?php echo $this->form->getElement('replayGainModifier')->getLabel() ?>:
+                </label>
+                <span id="rg_modifier_value" style="border: 0; color: #f6931f; font-weight: bold;">
+                    <?php echo $this->form->getElement('replayGainModifier')->getValue() ?>
+                </span>
+                <?php echo _("dB")?>
+            </dt>
+            <dd id="replayGainModifier-element" class="block-display">
+                <?php echo $this->form->getElement('replayGainModifier') ?>
+                <?php if($this->form->getElement('replayGainModifier')->hasErrors()) : ?>
+                    <ul class='errors'>
+                        <?php foreach($this->form->getElement('replayGainModifier')->getMessages() as $error): ?>
+                            <li><?php echo $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                <div id="slider-range-max" style="width: 99%"></div>
+            </dd>
         </dl>
     </fieldset>
     <?php echo $this->form->getSubform('live_stream_subform'); ?>
   </div>
   <div style="float: left; width: 600px;">
     <fieldset class="padded">
-    <legend>Output Stream Settings</legend>
+    <legend><? echo _("Output Stream Settings") ?></legend>
     <?php
         for($i=1;$i<=$this->num_stream;$i++){
             echo $this->form->getSubform("s".$i."_subform");
@@ -78,9 +112,8 @@
     ?>
     </fieldset>
     <?php if($this->enable_stream_conf == "true"){?>
-    <div class="button-bar bottom" id="submit-element">
-        <input type="submit" class="ui-button ui-state-default right-floated" value="Save" id="Save" name="Save" />
-    </div>
+    <br />
+    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><? echo _("Save") ?></button>
     <?php }?>
   </div>
     </form>

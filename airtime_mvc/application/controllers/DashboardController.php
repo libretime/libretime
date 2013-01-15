@@ -33,9 +33,9 @@ class DashboardController extends Zend_Controller_Action
             Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
         } else {
             if ($source_connected) {
-                $this->view->error = "You don't have permission to disconnect source.";
+                $this->view->error = _("You don't have permission to disconnect source.");
             } else {
-                $this->view->error = "There is no source connected to this input.";
+                $this->view->error = _("There is no source connected to this input.");
             }
         }
     }
@@ -79,12 +79,12 @@ class DashboardController extends Zend_Controller_Action
             }
         } else {
             if ($source_connected) {
-                $this->view->error = "You don't have permission to switch source.";
+                $this->view->error = _("You don't have permission to switch source.");
             } else {
                 if ($sourcename == 'scheduled_play') {
-                    $this->view->error = "You don't have permission to disconnect source.";
+                    $this->view->error = _("You don't have permission to disconnect source.");
                 } else {
-                    $this->view->error = "There is no source connected to this input.";
+                    $this->view->error = _("There is no source connected to this input.");
                 }
             }
         }
@@ -96,19 +96,18 @@ class DashboardController extends Zend_Controller_Action
 
     public function streamPlayerAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.blue.monday.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'js/jplayer/skin/jplayer.blue.monday.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('bare');
 
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
-            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+            $this->view->logo = $baseUrl."css/images/airtime_logo_jp.png";
         }
     }
 

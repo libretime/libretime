@@ -42,18 +42,19 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('notify-webstream-data'         , 'json')
                 ->addActionContext('get-stream-parameters'         , 'json')
                 ->addActionContext('push-stream-stats'         , 'json')
+                ->addActionContext('update-stream-setting-table'         , 'json')
                 ->initContext();
     }
 
     public function checkAuth()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $api_key = $this->_getParam('api_key');
 
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
+            print _('You are not allowed to access this resource.');
             exit;
         }
     }
@@ -80,7 +81,7 @@ class ApiController extends Zend_Controller_Action
 
         if (is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource.';
+            print _('You are not allowed to access this resource.');
 
             return;
         }
@@ -282,7 +283,7 @@ class ApiController extends Zend_Controller_Action
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource. ';
+            print _('You are not allowed to access this resource. ');
             exit;
         }
     }
@@ -321,7 +322,7 @@ class ApiController extends Zend_Controller_Action
             echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            print 'You are not allowed to access this resource. ';
+            print _('You are not allowed to access this resource. ');
             exit;
         }
     }
@@ -490,6 +491,7 @@ class ApiController extends Zend_Controller_Action
                 // If the file already exists we will update and make sure that
                 // it's marked as 'exists'.
                 $file->setFileExistsFlag(true);
+                $file->setFileHiddenFlag(false);
                 $file->setMetadata($md);
             }
             if ($md['is_record'] != 0) {
@@ -502,7 +504,7 @@ class ApiController extends Zend_Controller_Action
 
             //File is not in database anymore.
             if (is_null($file)) {
-                $return_hash['error'] = "File does not exist in Airtime.";
+                $return_hash['error'] = _("File does not exist in Airtime.");
 
                 return $return_hash;
             }
@@ -515,7 +517,7 @@ class ApiController extends Zend_Controller_Action
                 $md['MDATA_KEY_ORIGINAL_PATH']);
 
             if (is_null($file)) {
-                $return_hash['error'] = 'File does not exist in Airtime';
+                $return_hash['error'] = _('File does not exist in Airtime');
             } else {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
@@ -527,7 +529,7 @@ class ApiController extends Zend_Controller_Action
             $file = Application_Model_StoredFile::RecallByFilepath($filepath);
 
             if (is_null($file)) {
-                $return_hash['error'] = "File doesn't exist in Airtime.";
+                $return_hash['error'] = _("File doesn't exist in Airtime.");
                 Logging::warn("Attempt to delete file that doesn't exist.
                     Path: '$filepath'");
 
@@ -573,7 +575,7 @@ class ApiController extends Zend_Controller_Action
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
                 Logging::info( $info_json );
                 array_push( $responses, array(
-                    'error' => "Bad request. no 'mode' parameter passed.",
+                    'error' => _("Bad request. no 'mode' parameter passed."),
                     'key' => $k));
                 continue;
             } elseif ( !in_array($info_json['mode'], $valid_modes) ) {
@@ -583,7 +585,7 @@ class ApiController extends Zend_Controller_Action
                 Logging::info("Received bad request(key=$k). 'mode' parameter was invalid with value: '$mode'. Request:");
                 Logging::info( $info_json );
                 array_push( $responses, array(
-                    'error' => "Bad request. 'mode' parameter is invalid",
+                    'error' => _("Bad request. 'mode' parameter is invalid"),
                     'key' => $k,
                     'mode' => $mode ) );
                 continue;
@@ -953,7 +955,7 @@ class ApiController extends Zend_Controller_Action
         $data_arr = json_decode($data);
 
         if (!is_null($media_id)) {
-            if (isset($data_arr->title) && 
+            if (isset($data_arr->title) &&
                 strlen($data_arr->title) < 1024) {
 
                 $previous_metadata = CcWebstreamMetadataQuery::create()
@@ -989,7 +991,7 @@ class ApiController extends Zend_Controller_Action
         $streams = array("s1", "s2", "s3");
         $stream_params = array();
         foreach ($streams as $s) {
-            $stream_params[$s] = 
+            $stream_params[$s] =
                 Application_Model_StreamSetting::getStreamDataNormalized($s);
         }
         $this->view->stream_params = $stream_params;
@@ -1001,6 +1003,15 @@ class ApiController extends Zend_Controller_Action
 
         Application_Model_ListenerStat::insertDataPoints($data);
         $this->view->data = $data;
+    }
+    
+    public function updateStreamSettingTableAction() {
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam("data"), true);
+        
+        foreach ($data as $k=>$v) {
+            Application_Model_StreamSetting::SetListenerStatError($k, $v);
+        }
     }
 
 }

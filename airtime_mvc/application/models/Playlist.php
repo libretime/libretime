@@ -387,13 +387,19 @@ SQL;
         }
 
         if (isset($obj)) {
-            if (($obj instanceof CcFiles && $obj->getDbFileExists()) || $obj instanceof CcWebstream || $obj instanceof CcBlock) {
-                $entry = $this->plItem;
-                $entry["id"] = $obj->getDbId();
-                $entry["pos"] = $pos;
+            if (($obj instanceof CcFiles && $obj->visible())
+                || $obj instanceof CcWebstream ||
+                $obj instanceof CcBlock) {
+
+                $entry               = $this->plItem;
+                $entry["id"]         = $obj->getDbId();
+                $entry["pos"]        = $pos;
                 $entry["cliplength"] = $obj->getDbLength();
-                $entry["cueout"] = $obj->getDbLength();
-                $entry["ftype"] = $objType;
+                if ($obj instanceof CcFiles && $obj) {
+                    $entry["cuein"]      = $obj->getDbCuein();
+                    $entry["cueout"]     = $obj->getDbCueout();
+                }
+                $entry["ftype"]      = $objType;
             }
 
             return $entry;
@@ -632,7 +638,7 @@ SQL;
        //setting it to nonNull for checks down below
         $fadeIn = $fadeIn?'00:00:'.$fadeIn:$fadeIn;
         $fadeOut = $fadeOut?'00:00:'.$fadeOut:$fadeOut;
-
+        
         $this->con->beginTransaction();
 
         try {
@@ -643,7 +649,6 @@ SQL;
             }
 
             $clipLength = $row->getDbCliplength();
-
             if (!is_null($fadeIn)) {
 
                 $sql = "SELECT :fadein::INTERVAL > INTERVAL '{$clipLength}'";
@@ -662,11 +667,9 @@ SQL;
                 }
                 $row->setDbFadeout($fadeOut);
             }
-
-            $row->save($this->con);
             $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
             $this->pl->save($this->con);
-
+            
             $this->con->commit();
         } catch (Exception $e) {
             $this->con->rollback();
@@ -687,7 +690,6 @@ SQL;
 
             $this->changeFadeInfo($row->getDbId(), $fadein, null);
         }
-
         if (isset($fadeout)) {
             Logging::info("Setting playlist fade out {$fadeout}");
             $row = CcPlaylistcontentsQuery::create()
@@ -718,7 +720,7 @@ SQL;
 
         try {
             if (is_null($cueIn) && is_null($cueOut)) {
-                $errArray["error"] = "Cue in and cue out are null.";
+                $errArray["error"] = _("Cue in and cue out are null.");
 
                 return $errArray;
             }
@@ -748,14 +750,14 @@ SQL;
 
                 $sql = "SELECT :cueIn::INTERVAL > :cueOut::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':cueOut'=>$cueOut), 'column')) {
-                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                    $errArray["error"] = _("Can't set cue in to be larger than cue out.");
 
                     return $errArray;
                 }
 
                 $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
-                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                    $errArray["error"] = _("Can't set cue out to be greater than file length.");
 
                     return $errArray;
                 }
@@ -771,7 +773,7 @@ SQL;
 
                 $sql = "SELECT :cueIn::INTERVAL > :oldCueOut::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut), 'column')) {
-                    $errArray["error"] = "Can't set cue in to be larger than cue out.";
+                    $errArray["error"] = _("Can't set cue in to be larger than cue out.");
 
                     return $errArray;
                 }
@@ -789,14 +791,14 @@ SQL;
 
                 $sql = "SELECT :cueOut::INTERVAL < :oldCueIn::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn), 'column')) {
-                    $errArray["error"] = "Can't set cue out to be smaller than cue in.";
+                    $errArray["error"] = _("Can't set cue out to be smaller than cue in.");
 
                     return $errArray;
                 }
 
                 $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
-                    $errArray["error"] = "Can't set cue out to be greater than file length.";
+                    $errArray["error"] = _("Can't set cue out to be greater than file length.");
 
                     return $errArray;
                 }
@@ -867,9 +869,8 @@ SQL;
 
     public static function getPlaylistCount()
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
+        $sql = 'SELECT count(*) as cnt FROM cc_playlist';
 
         return $con->query($sql)->fetchColumn(0);
     }
@@ -929,6 +930,29 @@ SQL;
     public function deleteAllFilesFromPlaylist()
     {
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
+    }
+    
+    public function shuffle()
+    {
+        $sql = <<<SQL
+SELECT max(position) from cc_playlistcontents WHERE playlist_id=:p1
+SQL;
+        $out = Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
+        $maxPosition = $out[0]['max'];
+        
+        $map = range(0, $maxPosition);
+        shuffle($map);
+        
+        $currentPos = implode(',', array_keys($map));
+        $sql = "UPDATE cc_playlistcontents SET position = CASE position ";
+        foreach ($map as $current => $after) {
+            $sql .= sprintf("WHEN %d THEN %d ", $current, $after);
+        }
+        $sql .= "END WHERE position IN ($currentPos) and playlist_id=:p1";
+        
+        Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
+        $result['result'] = 0;
+        return $result;
     }
 
 } // class Playlist

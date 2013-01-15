@@ -5,6 +5,12 @@ $(document).ready(function() {
     dateEndId = "#his_date_end",
     timeEndId = "#his_time_end";
     
+    // set width dynamically
+    var width = $("#content").width();
+    width = width - 120;
+    $("#listenerstat_content").find("#flot_placeholder").width(width);
+    $("#listenerstat_content").find("#legend").width(width);
+    
     getDataAndPlot();
     
     listenerstat_content.find("#his_submit").click(function(){
@@ -16,7 +22,7 @@ $(document).ready(function() {
 
 function getDataAndPlot(startTimestamp, endTimestamp){
     // get data
-    $.get('/Listenerstat/get-data', {startTimestamp: startTimestamp, endTimestamp: endTimestamp}, function(data){
+    $.get(baseUrl+'Listenerstat/get-data', {startTimestamp: startTimestamp, endTimestamp: endTimestamp}, function(data){
         data = JSON.parse(data);
         out = new Object();
         $.each(data, function(mpName, v){
@@ -134,7 +140,7 @@ function plot(datasets){
                     var y = item.datapoint[1].toFixed(2);
                     
                     showTooltip(item.pageX, item.pageY,
-                                "Listener Count on '"+item.series.label + "': " + Math.floor(y));
+                                sprintf($.i18n._("Listener Count on %s: %s"), item.series.label, Math.floor(y)));
                 }
             }
             else {
@@ -143,19 +149,15 @@ function plot(datasets){
             }
         });
 
-        $("#placeholder").bind("plotclick", function (event, pos, item) {
-            if (item) {
-                $("#clickdata").text("You clicked point " + item.dataIndex + " in " + item.series.label + ".");
-                plot.highlight(item.series, item.datapoint);
-            }
-        });
-        
         $('#legend').find("input").click(function(){setTimeout(plotByChoice,100);});
     }
     
     plotByChoice(true);  
     oBaseDatePickerSettings = {
         dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
         onSelect: function(sDate, oDatePicker) {
             $(this).datepicker( "setDate", sDate );
         }
@@ -164,8 +166,11 @@ function plot(datasets){
     oBaseTimePickerSettings = {
         showPeriodLabels: false,
         showCloseButton: true,
+        closeButtonText: $.i18n._("Done"),
         showLeadingZero: false,
-        defaultTime: '0:00'
+        defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
     };
     
     listenerstat_content.find(dateStartId).datepicker(oBaseDatePickerSettings);

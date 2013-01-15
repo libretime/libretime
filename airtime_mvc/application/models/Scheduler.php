@@ -79,12 +79,12 @@ class Application_Model_Scheduler
 
         //an item has been deleted
         if (count($schedIds) !== count($schedItems)) {
-            throw new OutDatedScheduleException("The schedule you're viewing is out of date! (sched mismatch)");
+            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (sched mismatch)"));
         }
 
         //a show has been deleted
         if (count($instanceIds) !== count($showInstances)) {
-            throw new OutDatedScheduleException("The schedule you're viewing is out of date! (instance mismatch)");
+            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (instance mismatch)"));
         }
 
         foreach ($schedItems as $schedItem) {
@@ -92,7 +92,7 @@ class Application_Model_Scheduler
             $instance = $schedItem->getCcShowInstances($this->con);
 
             if (intval($schedInfo[$id]) !== $instance->getDbId()) {
-                throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+                throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
             }
         }
 
@@ -102,24 +102,24 @@ class Application_Model_Scheduler
             $show = $instance->getCcShow($this->con);
 
             if ($this->checkUserPermissions && $this->user->canSchedule($show->getDbId()) === false) {
-                throw new Exception("You are not allowed to schedule show {$show->getDbName()}.");
+                throw new Exception(sprintf(_("You are not allowed to schedule show %s."), $show->getDbName()));
             }
             
             if ($instance->getDbRecord()) {
-                throw new Exception("You cannot add files to recording shows.");
+                throw new Exception(_("You cannot add files to recording shows."));
             }
 
             $showEndEpoch = floatval($instance->getDbEnds("U.u"));
 
             if ($showEndEpoch < $nowEpoch) {
-                throw new OutDatedScheduleException("The show {$show->getDbName()} is over and cannot be scheduled.");
+                throw new OutDatedScheduleException(sprintf(_("The show %s is over and cannot be scheduled."), $show->getDbName()));
             }
 
             $ts = intval($instanceInfo[$id]);
             $lastSchedTs = intval($instance->getDbLastScheduled("U")) ? : 0;
             if ($ts < $lastSchedTs) {
                 Logging::info("ts {$ts} last sched {$lastSchedTs}");
-                throw new OutDatedScheduleException("The show {$show->getDbName()} has been previously updated!");
+                throw new OutDatedScheduleException(sprintf(_("The show %s has been previously updated!"), $show->getDbName()));
             }
         }
     }
@@ -137,13 +137,14 @@ class Application_Model_Scheduler
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
 
-            if (is_null($file) || !$file->getDbFileExists()) {
-                throw new Exception("A selected File does not exist!");
+            if (is_null($file) || !$file->visible()) {
+                throw new Exception(_("A selected File does not exist!"));
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
                 $data["cliplength"] = $file->getDbLength();
-                $data["cueout"] = $file->getDbLength();
+                $data["cuein"] = $file->getDbCuein();
+                $data["cueout"] = $file->getDbCueout();
 
                 $defaultFade = Application_Model_Preference::GetDefaultFade();
                 if (isset($defaultFade)) {
@@ -196,7 +197,7 @@ class Application_Model_Scheduler
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
                             $file = CcFilesQuery::create()->findPk($fileId);
-                            if (isset($file) && $file->getDbFileExists()) {
+                            if (isset($file) && $file->visible()) {
                                 $data["id"] = $file->getDbId();
                                 $data["cliplength"] = $file->getDbLength();
                                 $data["cuein"] = "00:00:00";
@@ -218,8 +219,8 @@ class Application_Model_Scheduler
             //need to return
              $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
 
-            if (is_null($stream) /* || !$file->getDbFileExists() */) {
-                throw new Exception("A selected File does not exist!");
+            if (is_null($stream) /* || !$file->visible() */) {
+                throw new Exception(_("A selected File does not exist!"));
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
@@ -254,7 +255,7 @@ class Application_Model_Scheduler
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
                     $file = CcFilesQuery::create()->findPk($fileId);
-                    if (isset($file) && $file->getDbFileExists()) {
+                    if (isset($file) && $file->visible()) {
                         $data["id"] = $file->getDbId();
                         $data["cliplength"] = $file->getDbLength();
                         $data["cuein"] = "00:00:00";
@@ -343,7 +344,7 @@ class Application_Model_Scheduler
 
         $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
         if (is_null($instance)) {
-            throw new OutDatedScheduleException("The schedule you're viewing is out of date!");
+            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
         }
 
         $itemStartDT = $instance->getDbStarts(null);

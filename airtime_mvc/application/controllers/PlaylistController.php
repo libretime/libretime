@@ -25,6 +25,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('smart-block-generate', 'json')
                     ->addActionContext('smart-block-shuffle', 'json')
                     ->addActionContext('get-block-info', 'json')
+                    ->addActionContext('shuffle', 'json')
                     ->initContext();
 
     }
@@ -41,7 +42,7 @@ class PlaylistController extends Zend_Controller_Action
             $modified = $this->_getParam('modified', null);
             if ($obj->getLastModified("U") !== $modified) {
                 $this->createFullResponse($obj);
-                throw new PlaylistOutDatedException("You are viewing an older version of {$obj->getName()}");
+                throw new PlaylistOutDatedException(sprintf(_("You are viewing an older version of %s"), $obj->getName()));
             }
         }
 
@@ -72,7 +73,6 @@ class PlaylistController extends Zend_Controller_Action
             $isBlock = true;
             $viewPath = 'playlist/smart-block.phtml';
         }
-
         if (isset($obj)) {
             $formatter = new LengthFormatter($obj->getLength());
             $this->view->length = $formatter->format();
@@ -94,7 +94,11 @@ class PlaylistController extends Zend_Controller_Action
             } else {
                 $this->view->obj = $obj;
                 $this->view->id = $obj->getId();
-                $this->view->html = $this->view->render($viewPath);
+                if ($isJson) {
+                    return $this->view->html = $this->view->render($viewPath);
+                } else {
+                    $this->view->html = $this->view->render($viewPath);
+                }
                 unset($this->view->obj);
             }
         } else {
@@ -113,14 +117,14 @@ class PlaylistController extends Zend_Controller_Action
 
     private function blockDynamic($obj)
     {
-        $this->view->error = "You cannot add tracks to dynamic blocks.";
+        $this->view->error = _("You cannot add tracks to dynamic blocks.");
         $this->createFullResponse($obj);
     }
 
     private function playlistNotFound($p_type, $p_isJson = false)
     {
         $p_type = ucfirst($p_type);
-        $this->view->error = "{$p_type} not found";
+        $this->view->error = sprintf(_("%s not found"), $p_type);
 
         Logging::info("{$p_type} not found");
         Application_Model_Library::changePlaylist(null, $p_type);
@@ -134,26 +138,26 @@ class PlaylistController extends Zend_Controller_Action
 
     private function playlistNoPermission($p_type)
     {
-        $this->view->error = "You don't have permission to delete selected {$p_type}(s).";
+        $this->view->error = sprintf(_("You don't have permission to delete selected %s(s)."), $p_type);
         $this->changePlaylist(null, $p_type);
         $this->createFullResponse(null);
     }
 
     private function playlistUnknownError($e)
     {
-        $this->view->error = "Something went wrong.";
+        $this->view->error = _("Something went wrong.");
         Logging::info($e->getMessage());
     }
 
     private function wrongTypeToBlock($obj)
     {
-        $this->view->error = "You can only add tracks to smart block.";
+        $this->view->error = _("You can only add tracks to smart block.");
         $this->createFullResponse($obj);
     }
 
     private function wrongTypeToPlaylist($obj)
     {
-        $this->view->error = "You can only add tracks, smart blocks, and webstreams to playlists.";
+        $this->view->error = _("You can only add tracks, smart blocks, and webstreams to playlists.");
         $this->createFullResponse($obj);
     }
 
@@ -165,9 +169,9 @@ class PlaylistController extends Zend_Controller_Action
 
         $objInfo = Application_Model_Library::getObjInfo($type);
 
-        $name = 'Untitled Playlist';
+        $name = _('Untitled Playlist');
         if ($type == 'block') {
-            $name = 'Untitled Smart Block';
+            $name = _('Untitled Smart Block');
         }
 
         $obj = new $objInfo['className']();
@@ -430,7 +434,7 @@ class PlaylistController extends Zend_Controller_Action
 
     public function setPlaylistNameDescAction()
     {
-        $name = $this->_getParam('name', 'Unknown Playlist');
+        $name = $this->_getParam('name', _('Unknown Playlist'));
         $description = $this->_getParam('description', "");
         $type = $this->_getParam('type');
 
@@ -532,6 +536,26 @@ class PlaylistController extends Zend_Controller_Action
                 die(json_encode($result));
             }
         } catch (BlockNotFoundException $e) {
+            $this->playlistNotFound('block', true);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
+        }
+    }
+    
+    public function shuffleAction()
+    {
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        try {
+            $pl = new Application_Model_Playlist($params['obj_id']);
+            $result = $pl->shuffle();
+            
+            if ($result['result'] == 0) {
+                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+            } else {
+                die(json_encode($result));
+            }
+        } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound('block', true);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);

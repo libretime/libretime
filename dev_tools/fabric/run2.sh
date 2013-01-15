@@ -2,8 +2,9 @@
 
 exec 2>&1
 
-ubuntu_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_maverick_32" "ubuntu_maverick_64" "ubuntu_natty_32" "ubuntu_natty_64" "ubuntu_oneiric_32" "ubuntu_oneiric_64" "debian_squeeze_32" "debian_squeeze_64" "ubuntu_precise_32" "ubuntu_precise_64")
+ubuntu_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_natty_32" "ubuntu_natty_64" "ubuntu_oneiric_32" "ubuntu_oneiric_64" "debian_squeeze_32" "debian_squeeze_64" "ubuntu_precise_32" "ubuntu_precise_64" "ubuntu_quantal_32" "ubuntu_quantal_64" "debian_wheezy_32" "debian_wheezy_64")
 
+#ubuntu_versions=("ubuntu_quantal_64")
 num1=${#ubuntu_versions[@]}
 
 mkdir -p ./upgrade_logs2

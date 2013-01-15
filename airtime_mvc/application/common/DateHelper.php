@@ -332,10 +332,10 @@ class Application_Common_DateHelper
         // if year is < 1753 or > 9999 it's out of range
         if ($year < 1753) {
             $retVal['success'] = false;
-            $retVal['errMsg'] = "The year '$year' must be within the range of 1753 - 9999";
+            $retVal['errMsg'] = sprintf(_("The year %s must be within the range of 1753 - 9999"), $year);
         } else if (!checkdate($month, $day, $year)) {
             $retVal['success'] = false;
-            $retVal['errMsg'] = "'$year-$month-$day' is not a valid date";
+            $retVal['errMsg'] = sprintf(_("%s-%s-%s is not a valid date"), $year, $month, $day);
         } else {
             // check time
             if (isset($timeInfo)) {
@@ -359,7 +359,7 @@ class Application_Common_DateHelper
                 
                 if ( ($hour < 0 || $hour > 23) || ($min < 0 || $min > 59) || ($sec < 0 || $sec > 59) ) {
                     $retVal['success'] = false;
-                    $retVal['errMsg'] = "'$timeInfo[0]:$timeInfo[1]:$timeInfo[2]' is not a valid time";
+                    $retVal['errMsg'] = sprintf(_("%s:%s:%s is not a valid time"), $timeInfo[0], $timeInfo[1] ,$timeInfo[2]);
                 }
             }
         }

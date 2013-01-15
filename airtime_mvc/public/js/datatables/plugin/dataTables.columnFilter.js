@@ -184,13 +184,13 @@
             
             var label = "";
             if (th.attr('id') == "bit_rate") {
-                label = " kbps";
+                label = $.i18n._("kbps");
             } else if (th.attr('id') == "utime" || th.attr('id') == "mtime" || th.attr('id') == "lptime") {
-                label = " yyyy-mm-dd";
+                label = $.i18n._("yyyy-mm-dd");
             } else if (th.attr('id') == "length") {
-                label = " hh:mm:ss.t";
+                label = $.i18n._("hh:mm:ss.t");
             } else if (th.attr('id') == "sample_rate") {
-                label = " kHz";
+                label = $.i18n._("kHz");
             }
             
             th.html(_fnRangeLabelPart(0));
@@ -585,7 +585,7 @@
             sRangeSeparator: "~",
             iFilteringDelay: 500,
             aoColumns: null,
-            sRangeFormat: "From {from} to {to}"
+            sRangeFormat: $.i18n._("From {from} to {to}")
         };
 
         properties = $.extend(defaults, options);

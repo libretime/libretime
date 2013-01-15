@@ -22,7 +22,7 @@ function checkShowLength(json) {
 
     if (percent > 100){
         $("#show_time_warning")
-            .text("Shows longer than their scheduled time will be cut off by a following show.")
+            .text($.i18n._("Shows longer than their scheduled time will be cut off by a following show."))
             .show();
     }
     else {
@@ -33,8 +33,8 @@ function checkShowLength(json) {
 }
 
 function confirmCancelShow(show_instance_id){
-    if (confirm('Cancel Current Show?')) {
-        var url = "/Schedule/cancel-current-show";
+    if (confirm($.i18n._('Cancel Current Show?'))) {
+        var url = baseUrl+"Schedule/cancel-current-show";
         $.ajax({
             url: url,
             data: {format: "json", id: show_instance_id},
@@ -46,8 +46,8 @@ function confirmCancelShow(show_instance_id){
 }
 
 function confirmCancelRecordedShow(show_instance_id){
-    if (confirm('Stop recording current show?')) {
-        var url = "/Schedule/cancel-current-show";
+    if (confirm($.i18n._('Stop recording current show?'))) {
+        var url = baseUrl+"Schedule/cancel-current-show";
         $.ajax({
             url: url,
             data: {format: "json", id: show_instance_id},
@@ -60,7 +60,7 @@ function confirmCancelRecordedShow(show_instance_id){
 
 function uploadToSoundCloud(show_instance_id){
     
-    var url = "/Schedule/upload-to-sound-cloud";
+    var url = baseUrl+"Schedule/upload-to-sound-cloud";
     var span = $(window.triggerElement).find(".recording");
     
     $.post(url,
@@ -80,8 +80,7 @@ function uploadToSoundCloud(show_instance_id){
 }
 
 function checkCalendarSCUploadStatus(){
-    
-    var url = '/Library/get-upload-to-soundcloud-status',
+    var url = baseUrl+'Library/get-upload-to-soundcloud-status',
         span,
         id;
     
@@ -166,7 +165,7 @@ function buildScheduleDialog (json) {
         close: closeDialog,
         buttons: [
             {
-                text: "Ok",
+                text: $.i18n._("Ok"),
                 "class": "btn",
                 click: function() {
                     $(this).dialog("close");
@@ -208,14 +207,14 @@ function buildContentDialog (json){
      
     dialog.dialog({
         autoOpen: false,
-        title: "Contents of Show \"" + json.showTitle + "\"",
+        title: $.i18n._("Contents of Show") +" '" + json.showTitle + "'",
         width: width,
         height: height,
         modal: true,
         close: closeDialog,
         buttons: [
             {
-                text: "Ok",
+                text: $.i18n._("Ok"),
                 "class": "btn",
                 click: function() {
                     dialog.remove();
@@ -263,6 +262,46 @@ function createFullCalendar(data){
             agenda: 'H:mm{ - H:mm}',
             month: 'H:mm{ - H:mm}'
         },
+        //i18n_months is in common.js
+        monthNames: i18n_months,
+        monthNamesShort: [
+            $.i18n._('Jan'),
+            $.i18n._('Feb'),
+            $.i18n._('Mar'),
+            $.i18n._('Apr'),
+            $.i18n._('May'),
+            $.i18n._('Jun'),
+            $.i18n._('Jul'),
+            $.i18n._('Aug'),
+            $.i18n._('Sep'),
+            $.i18n._('Oct'),
+            $.i18n._('Nov'),
+            $.i18n._('Dec')
+        ],
+        buttonText: {
+            today: $.i18n._('today'),
+            month: $.i18n._('month'),
+            week: $.i18n._('week'),
+            day: $.i18n._('day')
+        },
+        dayNames: [
+            $.i18n._('Sunday'),
+            $.i18n._('Monday'),
+            $.i18n._('Tuesday'),
+            $.i18n._('Wednesday'),
+            $.i18n._('Thursday'),
+            $.i18n._('Friday'),
+            $.i18n._('Saturday')
+        ],
+        dayNamesShort: [
+            $.i18n._('Sun'),
+            $.i18n._('Mon'),
+            $.i18n._('Tue'),
+            $.i18n._('Wed'),
+            $.i18n._('Thu'),
+            $.i18n._('Fri'),
+            $.i18n._('Sat')
+        ],
         contentHeight: mainHeight,
         theme: true,
         lazyFetching: false,
@@ -284,12 +323,12 @@ function createFullCalendar(data){
 //Alert the error and reload the page
 //this function is used to resolve concurrency issue
 function alertShowErrorAndReload(){
-    alert("The show instance doesn't exist anymore!");
+    alert($.i18n._("The show instance doesn't exist anymore!"));
     window.location.reload();
 }
 
 $(document).ready(function() {
-    $.ajax({ url: "/Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
+	$.ajax({ url: baseUrl+"Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
             , error:function(jqXHR, textStatus, errorThrown){}});
     
     setInterval(checkCalendarSCUploadStatus, 5000);
@@ -325,7 +364,7 @@ $(document).ready(function() {
                 if (oItems.clear !== undefined) {
                     
                     callback = function() {
-                        if (confirm("Remove all content?")) {
+                        if (confirm($.i18n._("Remove all content?"))) {
                             $.post(oItems.clear.url, {format: "json", id: data.id}, function(json){
                                 scheduleRefetchEvents(json);
                             });
@@ -459,7 +498,7 @@ $(document).ready(function() {
             }
             
             $.ajax({
-              url: "/schedule/make-context-menu",
+              url: baseUrl+"schedule/make-context-menu",
               type: "GET",
               data: {id : data.id, format: "json"},
               dataType: "json",

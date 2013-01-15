@@ -9,21 +9,23 @@ class Application_Form_PasswordChange extends Zend_Form
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/password-change.phtml'))
         ));
+        
+        $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
+        $stringLengthValidator = Application_Form_Helper_ValidationTypes::overrideStringLengthValidator(6, 80);
 
         $this->addElement('password', 'password', array(
-            'label' => 'Password',
+            'label' => _('Password'),
             'required' => true,
             'filters' => array('stringTrim'),
-            'validators' => array(
-                array('stringLength', false, array(6, 80)),
-            ),
+            'validators' => array($notEmptyValidator,
+                $stringLengthValidator),
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
         $this->addElement('password', 'password_confirm', array(
-            'label' => 'Confirm new password',
+            'label' => _('Confirm new password'),
             'required' => true,
             'filters' => array('stringTrim'),
             'validators' => array(
@@ -31,14 +33,14 @@ class Application_Form_PasswordChange extends Zend_Form
                     return $value == $context['password'];
                 }),
             ),
-            'errorMessages' => array("Password confirmation does not match your password."),
+            'errorMessages' => array(_("Password confirmation does not match your password.")),
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => 'Get new password',
+            'label' => _('Get new password'),
             'ignore' => true,
             'class' => 'ui-button ui-widget ui-state-default ui-button-text-only center',
             'decorators' => array(

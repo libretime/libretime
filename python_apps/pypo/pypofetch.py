@@ -188,28 +188,6 @@ class PypoFetch(Thread):
             self.update_liquidsoap_station_name(info['station_name'])
             self.update_liquidsoap_transition_fade(info['transition_fade'])
 
-    def write_liquidsoap_config(self, setting):
-        fh = open('/etc/airtime/liquidsoap.cfg', 'w')
-        self.logger.info("Rewriting liquidsoap.cfg...")
-        fh.write("################################################\n")
-        fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
-        fh.write("################################################\n")
-        for k, d in setting:
-            buffer_str = d[u'keyname'] + " = "
-            if d[u'type'] == 'string':
-                temp = d[u'value']
-                buffer_str += '"%s"' % temp
-            else:
-                temp = d[u'value']
-                if temp == "":
-                    temp = "0"
-                buffer_str += temp
-
-            buffer_str += "\n"
-            fh.write(api_client.encode_to(buffer_str))
-        fh.write("log_file = \"/var/log/airtime/pypo-liquidsoap/<script>.log\"\n");
-        fh.close()
-
     def restart_liquidsoap(self):
 
         self.telnet_lock.acquire()
@@ -296,10 +274,10 @@ class PypoFetch(Thread):
                 dump, stream = s[u'keyname'].split('_', 1)
                 state_change_restart[stream] = False
                 # This is the case where restart is required no matter what
-                if (existing[s[u'keyname']] != s[u'value']):
+                if (existing[s[u'keyname']] != str(s[u'value'])):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;
-            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname']:
+            elif "master_live_stream_port" in s[u'keyname'] or "master_live_stream_mp" in s[u'keyname'] or "dj_live_stream_port" in s[u'keyname'] or "dj_live_stream_mp" in s[u'keyname'] or "off_air_meta" in s[u'keyname']:
                 if (existing[s[u'keyname']] != s[u'value']):
                     self.logger.info("'Need-to-restart' state detected for %s...", s[u'keyname'])
                     restart = True;

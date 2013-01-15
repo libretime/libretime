@@ -20,9 +20,8 @@ class Application_Model_Subjects
 
     public static function increaseLoginAttempts($login)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET login_attempts = login_attempts+1"
+        $sql = "UPDATE cc_subjs SET login_attempts = login_attempts+1"
             ." WHERE login='$login'";
         $res = $con->exec($sql);
 
@@ -31,9 +30,8 @@ class Application_Model_Subjects
 
     public static function resetLoginAttempts($login)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "UPDATE ".$CC_CONFIG['subjTable']." SET login_attempts = '0'"
+        $sql = "UPDATE cc_subjs SET login_attempts = '0'"
             ." WHERE login='$login'";
         $res = $con->exec($sql);
 
@@ -42,9 +40,8 @@ class Application_Model_Subjects
 
     public static function getLoginAttempts($login)
     {
-        global $CC_CONFIG;
         $con = Propel::getConnection();
-        $sql = "SELECT login_attempts FROM ".$CC_CONFIG['subjTable']." WHERE login='$login'";
+        $sql = "SELECT login_attempts FROM cc_subjs WHERE login='$login'";
         $res = $con->query($sql)->fetchColumn(0);
 
         return ($res !== false) ? $res : 0;

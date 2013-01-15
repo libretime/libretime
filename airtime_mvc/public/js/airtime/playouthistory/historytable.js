@@ -65,26 +65,24 @@ var AIRTIME = (function(AIRTIME) {
         oTable = historyTableDiv.dataTable( {
             
             "aoColumns": [
-               {"sTitle": "Title", "mDataProp": "title", "sClass": "his_title"}, /* Title */
-               {"sTitle": "Creator", "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
-               {"sTitle": "Played", "mDataProp": "played", "sClass": "his_artist"}, /* times played */
-               {"sTitle": "Length", "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
-               {"sTitle": "Composer", "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
-               {"sTitle": "Copyright", "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
+               {"sTitle": $.i18n._("Title"), "mDataProp": "title", "sClass": "his_title"}, /* Title */
+               {"sTitle": $.i18n._("Creator"), "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
+               {"sTitle": $.i18n._("Played"), "mDataProp": "played", "sClass": "his_artist"}, /* times played */
+               {"sTitle": $.i18n._("Length"), "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
+               {"sTitle": $.i18n._("Composer"), "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
+               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
             ],
                           
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "/Playouthistory/playout-history-feed",
+            "sAjaxSource": baseUrl+"Playouthistory/playout-history-feed",
             "sAjaxDataProp": "history",
             
             "fnServerData": fnServerData,
             
-            "oLanguage": {
-                "sSearch": ""
-            },
+            "oLanguage": datatables_dict,
             
-            "aLengthMenu": [[50, 100, 500, -1], [50, 100, 500, "All"]],
+            "aLengthMenu": [[50, 100, 500, -1], [50, 100, 500, $.i18n._("All")]],
             "iDisplayLength": 50,
             
             "sPaginationType": "full_numbers",
@@ -94,19 +92,30 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
-                "sSwfPath": "/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": baseUrl+"js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
                 "aButtons": [
-                             "copy",
-                             {
-                                 "sExtends": "csv",
-                                 "fnClick": setFlashFileName
-                             },
-                             {
-                                 "sExtends": "pdf",
-                                 "fnClick": setFlashFileName
-                             },
-                             "print"
-                         ]
+                     {
+                         "sExtends": "copy",
+                         "fnComplete": function(nButton, oConfig, oFlash, text) {
+                             var lines = text.split('\n').length,
+                                 len = this.s.dt.nTFoot === null ? lines-1 : lines-2,
+                                 plural = (len==1) ? "" : "s";
+                             alert(sprintf($.i18n._('Copied %s row%s to the clipboard'), len, plural));
+                         }
+                     },
+                     {
+                         "sExtends": "csv",
+                         "fnClick": setFlashFileName
+                     },
+                     {
+                         "sExtends": "pdf",
+                         "fnClick": setFlashFileName
+                     },
+                     {
+                         "sExtends": "print",
+                         "sInfo" : sprintf($.i18n._("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."), "<h6>", "</h6><p>")
+                     }
+                 ]
             }
         });
         oTable.fnSetFilteringDelay(350);
@@ -150,6 +159,9 @@ $(document).ready(function(){
 	
 	oBaseDatePickerSettings = {
 		dateFormat: 'yy-mm-dd',
+        //i18n_months, i18n_days_short are in common.js
+        monthNames: i18n_months,
+        dayNamesMin: i18n_days_short,
 		onSelect: function(sDate, oDatePicker) {		
 			$(this).datepicker( "setDate", sDate );
 		}
@@ -158,8 +170,11 @@ $(document).ready(function(){
 	oBaseTimePickerSettings = {
 		showPeriodLabels: false,
 		showCloseButton: true,
+        closeButtonText: $.i18n._("Done"),
 		showLeadingZero: false,
-		defaultTime: '0:00'
+		defaultTime: '0:00',
+        hourText: $.i18n._("Hour"),
+        minuteText: $.i18n._("Minute")
 	};
 	
 	oTable = AIRTIME.history.historyTable();

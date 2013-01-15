@@ -5,14 +5,18 @@ class LoginController extends Zend_Controller_Action
 
     public function init()
     {
-        /* Initialize action controller here */
     }
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
+        
+        $request = $this->getRequest();
+        
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+        if (Zend_Auth::getInstance()->hasIdentity())
+        {
 
-        if (Zend_Auth::getInstance()->hasIdentity()) {
             $this->_redirect('Showbuilder');
         }
 
@@ -20,14 +24,14 @@ class LoginController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('login');
 
         $error = false;
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $form = new Application_Form_Login();
 
-        $message = "Please enter your user name and password";
+        $message = _("Please enter your user name and password");
 
         if ($request->isPost()) {
             // if the post contains recaptcha field, which means form had recaptcha field.
@@ -39,6 +43,7 @@ class LoginController extends Zend_Controller_Action
                 //get the username and password from the form
                 $username = $form->getValue('username');
                 $password = $form->getValue('password');
+                $locale = $form->getValue('locale');
                 if (Application_Model_Subjects::getLoginAttempts($username) >= 3 && $form->getElement('captcha') == NULL) {
                     $form->addRecaptcha();
                 } else {
@@ -63,10 +68,13 @@ class LoginController extends Zend_Controller_Action
 
                         $tempSess = new Zend_Session_Namespace("referrer");
                         $tempSess->referrer = 'login';
+                        
+                        //set the user locale in case user changed it in when logging in
+                        Application_Model_Preference::SetUserLocale($auth->getIdentity()->id, $locale);
 
                         $this->_redirect('Showbuilder');
                     } else {
-                        $message = "Wrong username or password provided. Please try again.";
+                        $message = _("Wrong username or password provided. Please try again.");
                         Application_Model_Subjects::increaseLoginAttempts($username);
                         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
                         $form = new Application_Form_Login();
@@ -94,11 +102,11 @@ class LoginController extends Zend_Controller_Action
 
     public function passwordRestoreAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
-        $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         if (!Application_Model_Preference::GetEnableSystemEmail()) {
             $this->_redirect('login');
@@ -128,10 +136,10 @@ class LoginController extends Zend_Controller_Action
                     if ($success) {
                         $this->_helper->redirector('password-restore-after', 'login');
                     } else {
-                        $form->email->addError($this->view->translate("Email could not be sent. Check your mail server settings and ensure it has been configured properly."));
+                        $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    $form->email->addError($this->view->translate("Given email not found."));
+                    $form->email->addError($this->view->translate(_("Given email not found.")));
                 }
             }
 

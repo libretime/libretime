@@ -16,6 +16,8 @@ $iniExists = file_exists("/etc/airtime/airtime.conf");
 if ($iniExists){
     //reinstall, Will ask if we should rewrite config files.
     require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+    Config::loadConfig();
+    $CC_CONFIG = Config::getConfig();
     require_once 'propel/runtime/lib/Propel.php';
     Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
     $version = AirtimeInstall::GetVersionInstalled();
@@ -51,6 +53,8 @@ if ($overwrite) {
 }
 if (!$iniExists){
     require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+    Config::loadConfig();
+    $CC_CONFIG = Config::getConfig();
     require_once 'propel/runtime/lib/Propel.php';
     Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 }

@@ -15,7 +15,7 @@ class Application_Model_RabbitMq
 
     private static function sendMessage($exchange, $data)
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $conn = new AMQPConnection($CC_CONFIG["rabbitmq"]["host"],
                                          $CC_CONFIG["rabbitmq"]["port"],

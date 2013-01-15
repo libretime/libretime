@@ -13,9 +13,9 @@ function setWatchedDirEvents() {
         //knownPaths: [{text:'Desktop', image:'desktop.png', path:'/home'}],
         knownPaths: [],
         imageUrl: 'img/icons/',
-        systemImageUrl: '/css/img/',
-        handlerUrl: '/Preference/server-browse/format/json',
-        title: 'Choose Storage Folder',
+        systemImageUrl: baseUrl+'css/img/',
+        handlerUrl: baseUrl+'Preference/server-browse/format/json',
+        title: $.i18n._('Choose Storage Folder'),
         basePath: '',
         requestMethod: 'POST',
     });
@@ -33,9 +33,9 @@ function setWatchedDirEvents() {
         //knownPaths: [{text:'Desktop', image:'desktop.png', path:'/home'}],
         knownPaths: [],
         imageUrl: 'img/icons/',
-        systemImageUrl: '/css/img/',
-        handlerUrl: '/Preference/server-browse/format/json',
-        title: 'Choose Folder to Watch',
+        systemImageUrl: baseUrl+'css/img/',
+        handlerUrl: baseUrl+'Preference/server-browse/format/json',
+        title: $.i18n._('Choose Folder to Watch'),
         basePath: '',
         requestMethod: 'POST',
     });
@@ -43,8 +43,8 @@ function setWatchedDirEvents() {
     $('#storageFolder-ok').click(function(){
         var url, chosen;
         
-        if(confirm("Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!")){
-            url = "/Preference/change-stor-directory";
+        if(confirm($.i18n._("Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!"))){
+            url = baseUrl+"Preference/change-stor-directory";
             chosen = $('#storageFolder').val();
 
             $.post(url,
@@ -64,7 +64,7 @@ function setWatchedDirEvents() {
     $('#watchedFolder-ok').click(function(){
         var url, chosen;
 
-        url = "/Preference/reload-watch-directory";
+        url = baseUrl+"Preference/reload-watch-directory";
         chosen = $('#watchedFolder').val();
 
         $.post(url,
@@ -72,7 +72,7 @@ function setWatchedDirEvents() {
 
             function(json) {
                 $("#watched-folder-section").empty();
-                $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
+                $("#watched-folder-section").append("<h2>"+$.i18n._("Manage Media Folders")+"</h2>");
                 $("#watched-folder-section").append(json.subform);
                 setWatchedDirEvents();
             });
@@ -80,22 +80,22 @@ function setWatchedDirEvents() {
     
     $('.selected-item').find('.ui-icon-refresh').click(function(){
         var folder = $(this).prev().text();
-        $.get("/Preference/rescan-watch-directory", {format: "json", dir: folder});
+        $.get(baseUrl+"Preference/rescan-watch-directory", {format: "json", dir: folder});
     });
 
     $('.selected-item').find('.ui-icon-close').click(function(){
-        if(confirm("Are you sure you want to remove the watched folder?")){
+        if(confirm($.i18n._("Are you sure you want to remove the watched folder?"))){
             var row = $(this).parent();
             var folder = row.find('#folderPath').text();
 
-            url = "/Preference/remove-watch-directory";
+            url = baseUrl+"Preference/remove-watch-directory";
 
             $.post(url,
                 {format: "json", dir: folder},
 
                 function(json) {
                     $("#watched-folder-section").empty();
-                    $("#watched-folder-section").append("<h2>Manage Media Folders</h2>");
+                    $("#watched-folder-section").append("<h2>"+$.i18n._("Manage Media Folders")+"</h2>");
                     $("#watched-folder-section").append(json.subform);
                     setWatchedDirEvents();
                 });
@@ -108,7 +108,7 @@ $(document).ready(function() {
     setWatchedDirEvents();
     $(".ui-icon-alert").qtip({
         content: {
-            text: "This path is currently not accessible."
+            text: $.i18n._("This path is currently not accessible.")
         },
         position:{
             adjust: {

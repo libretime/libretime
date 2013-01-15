@@ -31,3 +31,7 @@ The new _fnDomBaseButton looks like this:
         return nButton;
     },
     
+--------------------------------------------------------------------------------
+* Line 96 has changed
+- "buttonText": "Show / hide columns",
++ "buttonText": $.i18n._("Show / hide columns"),

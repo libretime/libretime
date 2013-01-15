@@ -7,7 +7,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
     {
        // Add show background-color input
         $this->addElement('text', 'add_show_background_color', array(
-            'label'      => 'Background Colour:',
+            'label'      => _('Background Colour:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
@@ -19,14 +19,14 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
             'class'      => 'big'
         ))));
 
+        $stringLengthValidator = Application_Form_Helper_ValidationTypes::overrideStringLengthValidator(6, 6);
         $bg->setValidators(array(
-            'Hex',
-            array('stringLength', false, array(6, 6))
+            'Hex', $stringLengthValidator
         ));
 
     // Add show color input
         $this->addElement('text', 'add_show_color', array(
-            'label'      => 'Text Colour:',
+            'label'      => _('Text Colour:'),
             'class'      => 'input_text',
             'filters'    => array('StringTrim')
         ));
@@ -39,8 +39,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         ))));
 
         $c->setValidators(array(
-                'Hex',
-                array('stringLength', false, array(6, 6))
+                'Hex', $stringLengthValidator
         ));
     }
 
