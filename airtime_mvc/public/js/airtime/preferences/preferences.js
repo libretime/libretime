@@ -121,6 +121,7 @@ function createWidgetHelpDescription() {
             at: "right center"
         },
     });
+}
 
 function setSoundCloudCheckBoxListener() {
     var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");

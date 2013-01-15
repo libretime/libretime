@@ -64,6 +64,11 @@
             <?php if($this->element->getElement('widgetCode')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('widgetCode')->getMessages() as $error): ?>
+                          <li><?php echo $error; ?></li>
+                      <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
         <dt id="locale-label" class="block-display">
             <label class="required" for="locale"><?php echo $this->element->getElement('locale')->getLabel() ?>:
             </label>
