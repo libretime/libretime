@@ -7,7 +7,7 @@ class Application_Model_Soundcloud
 
     public function __construct()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $this->_soundcloud = new Services_Soundcloud(
             $CC_CONFIG['soundcloud-client-id'],
             $CC_CONFIG['soundcloud-client-secret']);
@@ -25,11 +25,11 @@ class Application_Model_Soundcloud
 
     public function uploadTrack($filepath, $filename, $description,
         $tags=array(), $release=null, $genre=null)
-    {                            
+    {
 
         if (!$this->getToken()) {
             throw new NoSoundCloundToken();
-        } 
+        }
         if (count($tags)) {
             $tags = join(" ", $tags);
             $tags = $tags." ".Application_Model_Preference::GetSoundCloudTags();
@@ -88,7 +88,7 @@ class Application_Model_Soundcloud
 
     }
 
-    public static function uploadSoundcloud($id) 
+    public static function uploadSoundcloud($id)
     {
         $cmd = "/usr/lib/airtime/utils/soundcloud-uploader $id > /dev/null &";
         Logging::info("Uploading soundcloud with command: $cmd");

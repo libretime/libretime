@@ -75,7 +75,7 @@ var AIRTIME = (function(AIRTIME) {
                           
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": baseUrl+"/Playouthistory/playout-history-feed",
+            "sAjaxSource": baseUrl+"Playouthistory/playout-history-feed",
             "sAjaxDataProp": "history",
             
             "fnServerData": fnServerData,
@@ -92,7 +92,7 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>', 
             
             "oTableTools": {
-                "sSwfPath": baseUrl+"/js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
+                "sSwfPath": baseUrl+"js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
                 "aButtons": [
                      {
                          "sExtends": "copy",
@@ -111,7 +111,10 @@ var AIRTIME = (function(AIRTIME) {
                          "sExtends": "pdf",
                          "fnClick": setFlashFileName
                      },
-                     "print"
+                     {
+                         "sExtends": "print",
+                         "sInfo" : sprintf($.i18n._("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."), "<h6>", "</h6><p>")
+                     }
                  ]
             }
         });

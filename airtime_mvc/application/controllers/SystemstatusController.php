@@ -4,11 +4,11 @@ class SystemstatusController extends Zend_Controller_Action
 {
     public function init()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/status/status.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/status/status.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
     }
 
     public function indexAction()

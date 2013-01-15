@@ -940,9 +940,8 @@ SQL;
 
     public static function getBlockCount()
     {
-        global $CC_CONFIG;
          $con = Propel::getConnection();
-         $sql = 'SELECT count(*) as cnt FROM '.$CC_CONFIG["playListTable"];
+         $sql = 'SELECT count(*) as cnt FROM cc_playlist';
 
          return $con->query($sql)->fetchColumn(0);
      }

@@ -76,7 +76,7 @@ function playAllPlaylist(p_playlistID, p_playlistIndex) {
     if ( _idToPostionLookUp !== undefined && viewsPlaylistID == p_playlistID ) {
         play(p_playlistIndex);
     }else {
-        buildplaylist(baseUrl+"/audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
+        buildplaylist(baseUrl+"audiopreview/get-playlist/playlistID/"+p_playlistID, p_playlistIndex);
     }
 }
 
@@ -87,7 +87,7 @@ function playBlock(p_blockId, p_blockIndex)
     if ( _idToPostionLookUp !== undefined && viewsBlockId == p_blockId ) {
         play(p_blockIndex);
     } else {
-        buildplaylist(baseUrl+"/audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
+        buildplaylist(baseUrl+"audiopreview/get-block/blockId/"+p_blockId, p_blockIndex);
     }
 }
 
@@ -105,7 +105,7 @@ function playAllShow(p_showID, p_index) {
     if ( _idToPostionLookUp !== undefined && viewsShowID == p_showID ) {
         play(p_index);
     }else {
-        buildplaylist(baseUrl+"/audiopreview/get-show/showID/"+p_showID, p_index);
+        buildplaylist(baseUrl+"audiopreview/get-show/showID/"+p_showID, p_index);
     }
 }
 

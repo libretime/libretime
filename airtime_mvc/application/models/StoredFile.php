@@ -504,7 +504,7 @@ SQL;
      */
     public function getFileUrlUsingConfigAddress()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         if (isset($CC_CONFIG['baseUrl'])) {
             $serverName = $CC_CONFIG['baseUrl'];
@@ -532,7 +532,7 @@ SQL;
      */
     public function getRelativeFileUrl($baseUrl)
     {
-        return $baseUrl."/api/get-media/file/".$this->getId().".".$this->getFileExtension();
+        return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 
     public static function Insert($md)
@@ -807,14 +807,14 @@ SQL;
             // ugly
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'/css/images/icon_audioclip.png">';
+                $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'css/images/icon_audioclip.png">';
             } elseif ($type == "pl") {
-                $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'/css/images/icon_playlist.png">';
+                $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'css/images/icon_playlist.png">';
             } elseif ($type == "st") {
                 $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="'._("Webstream preview").'" src="'.$baseUrl.'/css/images/icon_webstream.png">';
+                $row['image'] = '<img title="'._("Webstream preview").'" src="'.$baseUrl.'css/images/icon_webstream.png">';
             } elseif ($type == "bl") {
-                $row['image'] = '<img title="'._("Smart Block").'" src="'.$baseUrl.'/css/images/icon_smart-block.png">';
+                $row['image'] = '<img title="'._("Smart Block").'" src="'.$baseUrl.'css/images/icon_smart-block.png">';
             }
         }
 
@@ -1218,7 +1218,7 @@ SQL;
     // note: never call this method from controllers because it does a sleep
     public function uploadToSoundCloud()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $file = $this->_file;
         if (is_null($file)) {

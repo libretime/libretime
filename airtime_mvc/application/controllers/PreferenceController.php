@@ -20,14 +20,14 @@ class PreferenceController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         $request = $this->getRequest();
         
         $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
         
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
         $form = new Application_Form_Preferences();
@@ -80,13 +80,13 @@ class PreferenceController extends Zend_Controller_Action
 
     public function supportSettingAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
         $form = new Application_Form_SupportSettings();
@@ -136,14 +136,14 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
             
             $baseUrl = Application_Common_OsPath::getBaseDir();
 
-            $this->view->headScript()->appendFile($baseUrl.'/js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-            $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+            $this->view->headScript()->appendFile($baseUrl.'js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
             $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
 
@@ -153,13 +153,13 @@ class PreferenceController extends Zend_Controller_Action
 
     public function streamSettingAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
 
         // get current settings
@@ -255,6 +255,15 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
                 Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
                 Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
+                
+                // compare new values with current value
+                $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
+                $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
+                if ($changeRGenabled || $changeRGmodifier) {
+                    $md = array('schedule' => Application_Model_Schedule::getSchedule());
+                    Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
+                }
+                
                 Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
                 Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 

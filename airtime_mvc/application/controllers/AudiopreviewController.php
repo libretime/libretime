@@ -19,7 +19,7 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function audioPreviewAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $audioFileID     = $this->_getParam('audioFileID');
         $audioFileArtist = $this->_getParam('audioFileArtist');
@@ -29,20 +29,20 @@ class AudiopreviewController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile(
-            $baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],
+            $baseUrl.'js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],
             'text/javascript');
         $this->view->headScript()->appendFile(
-            $baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],
+            $baseUrl.'js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],
             'text/javascript');
         $this->view->headLink()->appendStylesheet(
-            $baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+            $baseUrl.'js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
-            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+            $this->view->logo = $baseUrl."css/images/airtime_logo_jp.png";
         }
 
         if ($type == "audioclip") {
@@ -73,23 +73,23 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function playlistPreviewAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $playlistIndex = $this->_getParam('playlistIndex');
         $playlistID = $this->_getParam('playlistID');
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
-            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+            $this->view->logo = $baseUrl."css/images/airtime_logo_jp.png";
         }
         $this->view->playlistIndex= $playlistIndex;
         $this->view->playlistID = $playlistID;
@@ -99,23 +99,23 @@ class AudiopreviewController extends Zend_Controller_Action
 
     public function blockPreviewAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $blockIndex = $this->_getParam('blockIndex');
         $blockId = $this->_getParam('blockId');
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
-            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+            $this->view->logo = $baseUrl."css/images/airtime_logo_jp.png";
         }
         $this->view->blockIndex= $blockIndex;
         $this->view->blockId = $blockId;
@@ -212,7 +212,7 @@ class AudiopreviewController extends Zend_Controller_Action
                 throw new Exception("Unknown file type: $mime");
             }
 
-            $elementMap['uri'] = $baseUrl."/api/get-media/file/".$track['item_id'];
+            $elementMap['uri'] = $baseUrl."api/get-media/file/".$track['item_id'];
         } else {
             $elementMap['uri'] = $track['path'];
         }
@@ -226,24 +226,23 @@ class AudiopreviewController extends Zend_Controller_Action
      */
     public function showPreviewAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $showID = $this->_getParam('showID');
         $showIndex = $this->_getParam('showIndex');
 
-        $baseUrl = dirname($_SERVER['SCRIPT_NAME']);
-        if (strcmp($baseUrl, '/') ==0) $baseUrl = "";
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/audiopreview/preview_jplayer.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
         $this->_helper->layout->setLayout('audioPlayer');
 
         $logo = Application_Model_Preference::GetStationLogo();
         if ($logo) {
             $this->view->logo = "data:image/png;base64,$logo";
         } else {
-            $this->view->logo = "$baseUrl/css/images/airtime_logo_jp.png";
+            $this->view->logo = $baseUrl."css/images/airtime_logo_jp.png";
         }
 
         $this->view->showID = $showID;
@@ -298,7 +297,7 @@ class AudiopreviewController extends Zend_Controller_Action
                     throw new Exception("Unknown file type: $mime");
                 }
 
-                $elementMap['uri'] = $baseUrl."/api/get-media/file/".$track['item_id'];
+                $elementMap['uri'] = $baseUrl."api/get-media/file/".$track['item_id'];
             } else {
                 $elementMap['uri'] = $track['filepath'];
             }

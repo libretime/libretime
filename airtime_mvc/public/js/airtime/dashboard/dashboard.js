@@ -360,7 +360,7 @@ function controlSwitchLight(){
 }
 
 function getScheduleFromServer(){
-    $.ajax({ url: baseUrl+"/Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+    $.ajax({ url: baseUrl+"Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
                 parseItems(data.entries);
                 parseSourceStatus(data.source_status);
                 parseSwitchStatus(data.switch_status);
@@ -398,7 +398,7 @@ function setSwitchListener(ele){
     var sourcename = $(ele).attr('id');
     var status_span = $(ele).find("span");
     var status = status_span.html();
-    $.get(baseUrl+"/Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
+    $.get(baseUrl+"Dashboard/switch-source/format/json/sourcename/"+sourcename+"/status/"+status, function(data){
         if(data.error){
             alert(data.error);
         }else{
@@ -415,7 +415,7 @@ function setSwitchListener(ele){
 function kickSource(ele){
     var sourcename = $(ele).attr('id');
     
-    $.get(baseUrl+"/Dashboard/disconnect-source/format/json/sourcename/"+sourcename, function(data){
+    $.get(baseUrl+"Dashboard/disconnect-source/format/json/sourcename/"+sourcename, function(data){
         if(data.error){
             alert(data.error);
         }
@@ -435,7 +435,7 @@ function init() {
     
     $('.listen-control-button').click(function() {
         if (stream_window == null || stream_window.closed)
-            stream_window=window.open(baseUrl+"/Dashboard/stream-player", 'name', 'width=400,height=158');
+            stream_window=window.open(baseUrl+"Dashboard/stream-player", 'name', 'width=400,height=158');
         stream_window.focus();
         return false;
     });
@@ -460,7 +460,7 @@ $(document).ready(function() {
     
     $('#current-user').live('click', function() {
         $.ajax({
-            url: baseUrl+'/user/edit-user/format/json'
+            url: baseUrl+'user/edit-user/format/json'
         });
     });
     

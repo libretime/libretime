@@ -22,7 +22,7 @@ $(document).ready(function() {
 
 function getDataAndPlot(startTimestamp, endTimestamp){
     // get data
-    $.get(baseUrl+'/Listenerstat/get-data', {startTimestamp: startTimestamp, endTimestamp: endTimestamp}, function(data){
+    $.get(baseUrl+'Listenerstat/get-data', {startTimestamp: startTimestamp, endTimestamp: endTimestamp}, function(data){
         data = JSON.parse(data);
         out = new Object();
         $.each(data, function(mpName, v){

@@ -22,7 +22,7 @@ class LocaleController extends Zend_Controller_Action
             file_get_contents(Application_Common_OsPath::join(
                 $_SERVER["DOCUMENT_ROOT"],
                 $baseUrl,
-                "/js/datatables/i18n/",
+                "js/datatables/i18n/",
                 $locale.".txt")
             );
     }
@@ -54,6 +54,7 @@ class LocaleController extends Zend_Controller_Action
             "You can only add tracks, smart blocks, and webstreams to playlists." => _("You can only add tracks, smart blocks, and webstreams to playlists."),
             //library/events/library_showbuilder.js
             //already in library/events/library_playlistbuilder.js
+            "Please select a cursor position on timeline." => _("Please select a cursor position on timeline."),
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
@@ -157,6 +158,7 @@ class LocaleController extends Zend_Controller_Action
             "Copyright" => _("Copyright"),
             "All" => _("All"),
             "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
+            "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
             //preferences/musicdirs.js
             "Choose Storage Folder" => _("Choose Storage Folder"),
             "Choose Folder to Watch" => _("Choose Folder to Watch"),
@@ -209,6 +211,7 @@ class LocaleController extends Zend_Controller_Action
             //"Error code: " => _("Error code: "),
             //"Error msg: " => _("Error msg: "),
             "This show has no scheduled content." => _("This show has no scheduled content."),
+            "This show is not completely filled with content." => _("This show is not completely filled with content."),
             //already in schedule/add-show.js
             //"The show instance doesn"t exist anymore!" => _("The show instance doesn"t exist anymore!"),
             //schedule/schedule.js

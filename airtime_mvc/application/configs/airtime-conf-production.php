@@ -8,7 +8,7 @@
  * that the user can customize these.
  */
 
-global $CC_CONFIG;
+$CC_CONFIG = Config::getConfig();
 
 $dbhost = $CC_CONFIG['dsn']['hostspec'];
 $dbname = $CC_CONFIG['dsn']['database'];

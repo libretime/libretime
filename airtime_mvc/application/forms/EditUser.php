@@ -46,14 +46,12 @@ class Application_Form_EditUser extends Zend_Form
         $password->setDecorators(array('viewHelper'));
         $this->addElement($password);
 
-        $passwordIdenticalValidator = Application_Form_Helper_ValidationTypes::overridePasswordIdenticalValidator('cu_password');
         $passwordVerify = new Zend_Form_Element_Password('cu_passwordVerify');
         $passwordVerify->setLabel(_('Verify Password:'));
         $passwordVerify->setAttrib('class', 'input_text');
         $passwordVerify->setRequired(true);
         $passwordVerify->addFilter('StringTrim');
         $passwordVerify->addValidator($notEmptyValidator);
-        $passwordVerify->addValidator($passwordIdenticalValidator);
         $passwordVerify->setDecorators(array('viewHelper'));
         $this->addElement($passwordVerify);
 
@@ -136,5 +134,14 @@ class Application_Form_EditUser extends Zend_Form
         } else {
             return true;
         }
+    }
+
+    // We need to add the password identical validator here in case
+    // Zend version is less than 1.10.5
+    public function isValid($data) {
+        $passwordIdenticalValidator = Application_Form_Helper_ValidationTypes::overridePasswordIdenticalValidator(
+            $data['cu_password']);
+        $this->getElement('cu_passwordVerify')->addValidator($passwordIdenticalValidator);
+        return parent::isValid($data);
     }
 }

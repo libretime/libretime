@@ -9,7 +9,7 @@ class LoginController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
         
         $request = $this->getRequest();
         
@@ -27,7 +27,7 @@ class LoginController extends Zend_Controller_Action
         
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $form = new Application_Form_Login();
 
@@ -102,11 +102,11 @@ class LoginController extends Zend_Controller_Action
 
     public function passwordRestoreAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
         
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         if (!Application_Model_Preference::GetEnableSystemEmail()) {
             $this->_redirect('login');

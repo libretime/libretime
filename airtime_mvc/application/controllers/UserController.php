@@ -16,15 +16,15 @@ class UserController extends Zend_Controller_Action
 
     public function addUserAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $js_files = array(
-            '/js/datatables/js/jquery.dataTables.js?',
-            '/js/datatables/plugin/dataTables.pluginAPI.js?',
-            '/js/airtime/user/user.js?'
+            'js/datatables/js/jquery.dataTables.js?',
+            'js/datatables/plugin/dataTables.pluginAPI.js?',
+            'js/airtime/user/user.js?'
         );
 
         foreach ($js_files as $js) {
@@ -32,7 +32,7 @@ class UserController extends Zend_Controller_Action
                 $baseUrl.$js.$CC_CONFIG['airtime_version'],'text/javascript');
         }
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/users.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/users.css?'.$CC_CONFIG['airtime_version']);
 
         $form = new Application_Form_AddUser();
 
@@ -48,8 +48,8 @@ class UserController extends Zend_Controller_Action
 
             if ($form->isValid($formData)) {
 
-                if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 
-                        && $formData['login'] == 'admin' 
+                if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1
+                        && $formData['login'] == 'admin'
                         && $formData['user_id'] != 0) {
                     $this->view->form = $form;
                     $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
@@ -131,12 +131,12 @@ class UserController extends Zend_Controller_Action
         if ($request->isPost()) {
             $formData = $request->getPost();
             
-            if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1 
+            if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1
                     && $formData['cu_login'] == 'admin') {
                 $this->view->form = $form;
                 $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
                 die(json_encode(array("html"=>$this->view->render('user/edit-user.phtml'))));
-            } else if ($form->isValid($formData) && 
+            } else if ($form->isValid($formData) &&
                        $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
                 $user = new Application_Model_User($formData['cu_user_id']);
                 $user->setFirstName($formData['cu_first_name']);
@@ -186,7 +186,7 @@ class UserController extends Zend_Controller_Action
         # only delete when valid action is selected for the owned files
         if (! in_array($files_action, $valid_actions) ) {
             return;
-        } 
+        }
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $userId = $userInfo->id;

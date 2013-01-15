@@ -25,34 +25,34 @@ class LibraryController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/events/library_playlistbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_playlistbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/media_library.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/media_library.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
 
@@ -186,16 +186,16 @@ class LibraryController extends Zend_Controller_Action
                 }
             }
             if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
-                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
-                $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
+                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
+                $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
             }
 
-            $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
+            $url = $file->getRelativeFileUrl($baseUrl).'download/true';
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
                 $obj = new Application_Model_Playlist($id);
-                $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."/library/duplicate");
+                $menu["duplicate"] = array("name" => _("Duplicate Playlist"), "icon" => "edit", "url" => $baseUrl."library/duplicate");
             } elseif ($type === 'block') {
                 $obj = new Application_Model_Block($id);
                 if (!$obj->isStatic()) {
@@ -215,7 +215,7 @@ class LibraryController extends Zend_Controller_Action
             }
 
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
+                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
             }
         } elseif ($type == "stream") {
             $webstream = CcWebstreamQuery::create()->findPK($id);
@@ -232,9 +232,9 @@ class LibraryController extends Zend_Controller_Action
             }
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 if ($screen == "playlist") {
-                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit", "url" => $baseUrl."/library/edit-file-md/id/{$id}");
+                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
                 }
-                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."/library/delete");
+                $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
             }
         }
 
@@ -260,7 +260,7 @@ class LibraryController extends Zend_Controller_Action
                 $text = _("Upload to SoundCloud");
             }
 
-            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."/library/upload-file-soundcloud/id/{$id}");
+            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."library/upload-file-soundcloud/id/{$id}");
         }
 
         if (empty($menu)) {
@@ -372,7 +372,7 @@ class LibraryController extends Zend_Controller_Action
         list(, $plFadeOut) = $originalPl->getFadeInfo($originalPl->getSize()-1);
         
         $newPl->setfades($plFadeIn, $plFadeOut);
-        $newPl->setName("Copy of ".$originalPl->getName());
+        $newPl->setName(sprintf(_("Copy of %s"), $originalPl->getName()));
     }
 
     public function contentsFeedAction()

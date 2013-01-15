@@ -12,22 +12,22 @@ class ListenerstatController extends Zend_Controller_Action
     
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
     
         $request = $this->getRequest();
-        $baseUrl = $request->getBaseUrl();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
     
-        $this->view->headScript()->appendFile($baseUrl.'/js/flot/jquery.flot.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/flot/jquery.flot.crosshair.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/listenerstat/listenerstat.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/flot/jquery.flot.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/flot/jquery.flot.crosshair.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/listenerstat/listenerstat.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
         $offset = date("Z") * -1;
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'/js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         
         //default time is the last 24 hours.
         $now = time();
@@ -52,6 +52,9 @@ class ListenerstatController extends Zend_Controller_Action
         $out = array();
         foreach ($errorStatus as $v) {
             $key = explode('_listener_stat_error', $v['keyname']);
+            if ($v['value'] != 'OK') {
+                $v['value'] = _("Please make sure admin user/password is correct on System->Streams page.");
+            }
             $out[$key[0]] = $v['value'];
         }
         

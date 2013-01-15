@@ -13,17 +13,17 @@ class PluploadController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        global $CC_CONFIG;
+        $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $locale = Application_Model_Preference::GetLocale();
 
-        $this->view->headScript()->appendFile($baseUrl.'/js/plupload/plupload.full.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/plupload/jquery.plupload.queue.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/airtime/library/plupload.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'/js/plupload/i18n/'.$locale.'.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/plupload/plupload.full.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/plupload/jquery.plupload.queue.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/plupload.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/plupload/i18n/'.$locale.'.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'/css/plupload.queue.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/plupload.queue.css?'.$CC_CONFIG['airtime_version']);
     }
 
     public function uploadAction()
