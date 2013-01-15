@@ -17,7 +17,6 @@ if (!file_exists(AirtimeIni::CONF_FILE_AIRTIME)) {
 }
 require_once(__DIR__.'/airtime-constants.php');
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
-Config::loadConfig();
 $CC_CONFIG = Config::getConfig();
 
 

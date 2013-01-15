@@ -21,7 +21,6 @@ if (!file_exists('/etc/airtime/airtime.conf')) {
 }
 
 require_once(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/db-conf.php");
-Config::loadConfig();
 $CC_CONFIG = Config::getConfig();
 require_once('propel/runtime/lib/Propel.php');
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");

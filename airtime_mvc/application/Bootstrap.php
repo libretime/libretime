@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__."/configs/conf.php";
-Config::loadConfig();
 $CC_CONFIG = Config::getConfig();
 
 require_once __DIR__."/configs/ACL.php";
