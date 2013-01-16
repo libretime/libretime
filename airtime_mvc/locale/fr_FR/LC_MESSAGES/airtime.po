@@ -8,10 +8,9 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-01-04 17:39+0100\n"
-"Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
+"PO-Revision-Date: 2013-01-15 17:03-0500\n"
+"Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: French Localization <contact@sourcefabric.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -716,7 +715,7 @@ msgstr "'%value%' n'est pas entre '%min%' et '%max%', inclusivement"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:89
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Les mots de passe ne correspondent pas"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:15
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:6
@@ -845,7 +844,7 @@ msgstr "Mot de Passe:"
 #: airtime_mvc/application/forms/AddUser.php:40
 #: airtime_mvc/application/forms/EditUser.php:50
 msgid "Verify Password:"
-msgstr ""
+msgstr "Vérification du Mot de Passe:"
 
 #: airtime_mvc/application/forms/AddUser.php:48
 #: airtime_mvc/application/forms/EditUser.php:59
@@ -974,11 +973,11 @@ msgstr "Utilisateur"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:195
 msgid "Admin User"
-msgstr ""
+msgstr "Utilisateur Admin"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:207
 msgid "Admin Password"
-msgstr ""
+msgstr "Mot de Passe Admin"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:218
 #: airtime_mvc/application/controllers/LocaleController.php:173
@@ -1125,15 +1124,15 @@ msgstr "Nom de la Station - Nom de l'Emission"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
-msgstr ""
+msgstr "Métadonnées Hors Entenne"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
 msgid "Enable Replay Gain"
-msgstr ""
+msgstr "Activer"
 
 #: airtime_mvc/application/forms/StreamSetting.php:75
 msgid "Replay Gain Modifier"
-msgstr ""
+msgstr "Modifier le Niveau du Gain"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:14
 msgid "E-mail"
@@ -1435,7 +1434,7 @@ msgstr "Toutes Mes Emissions:"
 
 #: airtime_mvc/application/forms/EditUser.php:118
 msgid "Timezone:"
-msgstr ""
+msgstr "Fuseau horaire:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 msgid "Use Airtime Authentication:"
@@ -1484,11 +1483,11 @@ msgstr "Activé"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:56
 msgid "Default Interface Language"
-msgstr ""
+msgstr "Langue de l'interface par défaut"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:64
 msgid "Default Interface Timezone"
-msgstr ""
+msgstr "Fuseau horaire de l'Interface par défaut"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:72
 msgid "Week Starts On"
@@ -1722,7 +1721,7 @@ msgstr "Utilisateur mis à jour avec succès!"
 
 #: airtime_mvc/application/controllers/UserController.php:164
 msgid "Settings updated successfully!"
-msgstr ""
+msgstr "Paramètres mis à jour avec succès!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:36
 msgid "Recording:"
@@ -1796,7 +1795,7 @@ msgstr "Vous pouvez uniquement ajouter des pistes, des blocs intelligents et flu
 
 #: airtime_mvc/application/controllers/LocaleController.php:57
 msgid "Please select a cursor position on timeline."
-msgstr ""
+msgstr "S'il vous plaît sélectionner un curseur sur la timeline."
 
 #: airtime_mvc/application/controllers/LocaleController.php:61
 #: airtime_mvc/application/controllers/LibraryController.php:190
@@ -1940,7 +1939,7 @@ msgstr "Liste de Lecture sauvegardé"
 
 #: airtime_mvc/application/controllers/LocaleController.php:121
 msgid "Playlist shuffled"
-msgstr ""
+msgstr "liste de lecture mélangée"
 
 #: airtime_mvc/application/controllers/LocaleController.php:123
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
@@ -2003,12 +2002,12 @@ msgstr "Joué"
 #: airtime_mvc/application/controllers/LocaleController.php:160
 #, php-format
 msgid "Copied %s row%s to the clipboard"
-msgstr ""
+msgstr "Copié %s ligne(s)%s dans le presse papier"
 
 #: airtime_mvc/application/controllers/LocaleController.php:161
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
-msgstr ""
+msgstr "%sVue Imprimante%s Veuillez utiliser la fonction d'impression de votre navigateur pour imprimer ce tableau. Appuyez sur échapper lorsque vous avez terminé."
 
 #: airtime_mvc/application/controllers/LocaleController.php:163
 msgid "Choose Storage Folder"
@@ -2087,7 +2086,7 @@ msgstr "Si vous modifiez les valeurs du nom d'utilisateur ou du mot de passe pou
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
-msgstr ""
+msgstr "C'est le nom d'utilisateur administrateur et mot de passe pour icecast / shoutcast qui permet obtenir les statistiques d'écoute."
 
 #: airtime_mvc/application/controllers/LocaleController.php:190
 msgid "No result found"
@@ -2147,7 +2146,7 @@ msgstr "Cette émission n'a pas de contenu programmée."
 
 #: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "This show is not completely filled with content."
-msgstr ""
+msgstr "Cette émission n'est pas complètement remplie avec ce contenu."
 
 #: airtime_mvc/application/controllers/LocaleController.php:218
 msgid "January"
@@ -2389,79 +2388,79 @@ msgstr "Ouvrir"
 
 #: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "Guests can do the following:"
-msgstr ""
+msgstr "Les Invités peuvent effectuer les opérations suivantes:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "View schedule"
-msgstr ""
+msgstr "Voir le calendrier"
 
 #: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "View show content"
-msgstr ""
+msgstr "Voir le contenu des émissions"
 
 #: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "DJs can do the following:"
-msgstr ""
+msgstr "Les DJs peuvent effectuer les opérations suivantes:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Manage assigned show content"
-msgstr ""
+msgstr "Gérer le contenu des émissions attribué"
 
 #: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Import media files"
-msgstr ""
+msgstr "Importer des fichiers multimédias"
 
 #: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "Create playlists, smart blocks, and webstreams"
-msgstr ""
+msgstr "Créez des listes de lectures, des blocs intelligents et des flux web"
 
 #: airtime_mvc/application/controllers/LocaleController.php:324
 msgid "Manage their own library content"
-msgstr ""
+msgstr "Gérer le contenu  de leur propre audiotheque"
 
 #: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "Progam Managers can do the following:"
-msgstr ""
+msgstr "Les gestionnaires pouvent effectuer les opérations suivantes:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "View and manage show content"
-msgstr ""
+msgstr "Afficher et gérer le contenu des émissions"
 
 #: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Schedule shows"
-msgstr ""
+msgstr "Programmer des émissions"
 
 #: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Manage all library content"
-msgstr ""
+msgstr "Gérez tout le contenu de l'audiotheque"
 
 #: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Admins can do the following:"
-msgstr ""
+msgstr "Les Administrateurs peuvent effectuer les opérations suivantes:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Manage preferences"
-msgstr ""
+msgstr "Gérer les préférences"
 
 #: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "Manage users"
-msgstr ""
+msgstr "Gérer les utilisateurs"
 
 #: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "Manage watched folders"
-msgstr ""
+msgstr "Gérer les dossiers surveillés"
 
 #: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "View system status"
-msgstr ""
+msgstr "Voir l'état du système"
 
 #: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Access playout history"
-msgstr ""
+msgstr "Accédez à l'historique diffusion"
 
 #: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "View listener stats"
-msgstr ""
+msgstr "Voir les statistiques des auditeurs"
 
 #: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Show / hide columns"
@@ -2535,99 +2534,99 @@ msgstr "Fait"
 
 #: airtime_mvc/application/controllers/LocaleController.php:361
 msgid "Select files"
-msgstr ""
+msgstr "Sélectionnez les fichiers"
 
 #: airtime_mvc/application/controllers/LocaleController.php:362
 #: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Add files to the upload queue and click the start button."
-msgstr ""
+msgstr "Ajouter des fichiers à la file d'attente de téléversement, puis cliquez sur le bouton Démarrer."
 
 #: airtime_mvc/application/controllers/LocaleController.php:366
 msgid "Add Files"
-msgstr ""
+msgstr "Ajouter des fichiers"
 
 #: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "Stop Upload"
-msgstr ""
+msgstr "Arreter le Téléversement"
 
 #: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Start upload"
-msgstr ""
+msgstr "Démarrer le Téléversement"
 
 #: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "Add files"
-msgstr ""
+msgstr "Ajouter des fichiers"
 
 #: airtime_mvc/application/controllers/LocaleController.php:370
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr ""
+msgstr "Téléversement de %d/%d fichiers"
 
 #: airtime_mvc/application/controllers/LocaleController.php:371
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Drag files here."
-msgstr ""
+msgstr "Faites glisser les fichiers ici."
 
 #: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "File extension error."
-msgstr ""
+msgstr "Erreur d'extension du fichier."
 
 #: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "File size error."
-msgstr ""
+msgstr "Erreur de la Taille de Fichier."
 
 #: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "File count error."
-msgstr ""
+msgstr "Erreur de comptage des fichiers."
 
 #: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "Init error."
-msgstr ""
+msgstr "Erreur d'Initialisation."
 
 #: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "HTTP Error."
-msgstr ""
+msgstr "Erreur HTTP."
 
 #: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "Security error."
-msgstr ""
+msgstr "Erreur de sécurité."
 
 #: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "Generic error."
-msgstr ""
+msgstr "Erreur générique."
 
 #: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "IO error."
-msgstr ""
+msgstr "Erreur d'E/S."
 
 #: airtime_mvc/application/controllers/LocaleController.php:381
 #, php-format
 msgid "File: %s"
-msgstr ""
+msgstr "Fichier: %s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:383
 #, php-format
 msgid "%d files queued"
-msgstr ""
+msgstr "%d fichiers en file d'attente"
 
 #: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "File: %f, size: %s, max file size: %m"
-msgstr ""
+msgstr "Fichier:%f, taille: %s, taille de fichier maximale: %m"
 
 #: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "Upload URL might be wrong or doesn't exist"
-msgstr ""
+msgstr "l'URL de Téléversement est peut être erronée ou inexistante"
 
 #: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "Error: File too large: "
-msgstr ""
+msgstr "Erreur: Fichier trop grand:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:387
 msgid "Error: Invalid file extension: "
-msgstr ""
+msgstr "Erreur: extension de fichier non valide:"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:190
 #: airtime_mvc/application/controllers/LibraryController.php:161
@@ -2660,7 +2659,7 @@ msgstr "L'Emission n'existe pas"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
 msgid "Please make sure admin user/password is correct on System->Streams page."
-msgstr ""
+msgstr "S'il vous plaît assurez-vous que l'utilisateur admin a un mot de passe correct sur le système-> page flux."
 
 #: airtime_mvc/application/controllers/ApiController.php:57
 #: airtime_mvc/application/controllers/ApiController.php:84
@@ -2720,7 +2719,7 @@ msgstr "Téléchargement"
 
 #: airtime_mvc/application/controllers/LibraryController.php:198
 msgid "Duplicate Playlist"
-msgstr ""
+msgstr "dupliquer  la Liste de lecture"
 
 #: airtime_mvc/application/controllers/LibraryController.php:213
 #: airtime_mvc/application/controllers/LibraryController.php:235
@@ -2761,7 +2760,7 @@ msgstr "Impossible de supprimer certains fichiers programmés."
 #: airtime_mvc/application/controllers/LibraryController.php:375
 #, php-format
 msgid "Copy of %s"
-msgstr ""
+msgstr "Copie de %s"
 
 #: airtime_mvc/application/controllers/PlaylistController.php:45
 #, php-format
@@ -2929,7 +2928,7 @@ msgstr "%sSourcefabric%s o.p.s. Airtime est distribué sous la licence %sGNU GPL
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
 msgid "Share"
-msgstr ""
+msgstr "Partager"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
@@ -3375,7 +3374,7 @@ msgstr "URL de Connexion de la Source Emission:"
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #, php-format
 msgid "%s's Settings"
-msgstr ""
+msgstr "%s's Réglages"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
@@ -3452,7 +3451,7 @@ msgstr "Réglages Globaux"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:88
 msgid "dB"
-msgstr ""
+msgstr "dB"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:107
 msgid "Output Stream Settings"
@@ -3475,7 +3474,7 @@ msgstr "Numéro ISRC:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:21
 msgid "File Path:"
-msgstr ""
+msgstr "Chemin du fichier:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:39
 msgid "Web Stream"
