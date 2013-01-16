@@ -15,6 +15,7 @@ class PreferenceController extends Zend_Controller_Action
                     ->addActionContext('change-stream-setting', 'json')
                     ->addActionContext('get-liquidsoap-status', 'json')
                     ->addActionContext('set-source-connection-url', 'json')
+                    ->addActionContext('get-admin-password-status', 'json')
                     ->initContext();
     }
 
@@ -161,7 +162,6 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-
         // get current settings
         $temp = Application_Model_StreamSetting::getStreamSetting();
         $setting = array();
@@ -248,6 +248,16 @@ class PreferenceController extends Zend_Controller_Action
 
                 Application_Model_StreamSetting::setStreamSetting($values);
 
+                /* If the admin password values are empty then we should not
+                 * set the pseudo password ('xxxxxx') on the front-end
+                 */
+                $s1_set_admin_pass = true;
+                $s2_set_admin_pass = true;
+                $s3_set_admin_pass = true;
+                if (empty($values["s1_data"]["admin_pass"])) $s1_set_admin_pass = false;
+                if (empty($values["s2_data"]["admin_pass"])) $s2_set_admin_pass = false;
+                if (empty($values["s3_data"]["admin_pass"])) $s3_set_admin_pass = false;
+
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
                 Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
@@ -313,7 +323,13 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
                 $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
-                die(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/stream-setting.phtml'))));
+                die(json_encode(array(
+                    "valid"=>"true",
+                    "html"=>$this->view->render('preference/stream-setting.phtml'),
+                    "s1_set_admin_pass"=>$s1_set_admin_pass,
+                    "s2_set_admin_pass"=>$s2_set_admin_pass,
+                    "s3_set_admin_pass"=>$s3_set_admin_pass,
+                )));
             } else {
                 $live_stream_subform->updateVariables();
                 $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
@@ -459,5 +475,18 @@ class PreferenceController extends Zend_Controller_Action
         }
 
         die();
+    }
+
+    public function getAdminPasswordStatusAction()
+    {
+        $out = array();
+        for ($i=1; $i<=3; $i++) {
+            if (Application_Model_StreamSetting::getAdminPass('s'.$i)=='') {
+                $out["s".$i] = false;
+            } else {
+                $out["s".$i] = true;
+            }
+        }
+        die(json_encode($out));
     }
 }

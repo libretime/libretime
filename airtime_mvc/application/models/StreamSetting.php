@@ -242,7 +242,14 @@ class Application_Model_StreamSetting
                         $v = $d['enable'] == 1 ? 'true' : 'false';
                     }
                     $v = trim($v);
-                    self::saveStreamSetting($keyname, $v);
+                    if ($k != 'admin_pass') {
+                        self::saveStreamSetting($keyname, $v);
+                    /* We use 'xxxxxx' as the admin password placeholder so we
+                     * only want to save it when it is a different string
+                     */
+                    } elseif ($v != 'xxxxxx') {
+                        self::saveStreamSetting($keyname, $v);
+                    }
                 }
             }
         }
