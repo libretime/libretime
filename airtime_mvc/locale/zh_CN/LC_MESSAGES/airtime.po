@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-01-15 14:37-0500\n"
+"PO-Revision-Date: 2013-01-16 16:32-0500\n"
 "Last-Translator: Cliff Wang <cliff.wang@sourcefabric.org>\n"
 "Language-Team: Chinese Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -434,7 +434,7 @@ msgstr "编曲"
 #: airtime_mvc/application/controllers/LocaleController.php:77
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:10
 msgid "Genre"
-msgstr "类型"
+msgstr "风格"
 
 #: airtime_mvc/application/models/Block.php:1219
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:51
@@ -1951,7 +1951,7 @@ msgstr "文件的状态不可知。这可能是由于文件位于远程存储位
 #: airtime_mvc/application/controllers/LocaleController.php:125
 #, php-format
 msgid "Listener Count on %s: %s"
-msgstr "听众计数%s：%s"
+msgstr "听众统计%s：%s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:127
 msgid "Remind me in 1 week"
@@ -2845,7 +2845,7 @@ msgstr "无效的表格内容。"
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:2
 msgid "Listener Count Over Time"
-msgstr "听众收听时间"
+msgstr "听众统计报告"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
