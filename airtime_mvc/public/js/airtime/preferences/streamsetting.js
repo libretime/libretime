@@ -412,9 +412,28 @@ function setSliderForReplayGain(){
     $( "#replayGainModifier" ).val( $( "#slider-range-max" ).slider( "value" ) );
 }
 
+function setPseudoAdminPassword(s1, s2, s3) {
+    if (s1) {
+        $('#s1_data-admin_pass').val('xxxxxx');
+    }
+    if (s2) {
+        $('#s2_data-admin_pass').val('xxxxxx');
+    }
+    if (s3) {
+        $('#s3_data-admin_pass').val('xxxxxx');
+    }
+}
+
+function getAdminPasswordStatus() {
+    $.ajax({ url: baseUrl+'Preference/get-admin-password-status/format/json', dataType:"json", success:function(data){
+        setPseudoAdminPassword(data.s1, data.s2, data.s3);
+      }});   
+}
+
 $(document).ready(function() {
     setupEventListeners();
     setSliderForReplayGain();
+    getAdminPasswordStatus();
     
     $('#stream_save').live('click', function(){
         var confirm_pypo_restart_text = $.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.");
@@ -427,6 +446,7 @@ $(document).ready(function() {
                 $('#content').empty().append(json.html);
                 setupEventListeners();
                 setSliderForReplayGain();
+                setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass);
             });
         }
     });

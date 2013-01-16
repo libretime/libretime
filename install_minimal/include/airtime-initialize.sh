@@ -11,7 +11,10 @@ dist=`lsb_release -is`
 echo "Generating locales"
 for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
     if [ "$dist" = "Debian" ]; then
-        echo "$i.UTF-8 UTF-8" >> /etc/locale.gen
+        grep -qi "^$i" /etc/locale.gen
+        if [ $? -ne 0 ]; then
+            echo "$i.UTF-8 UTF-8" >> /etc/locale.gen
+        fi
     else
         locale-gen "$i.utf8"
     fi
