@@ -2660,7 +2660,7 @@ msgstr "show does not exist"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
 msgid "Please make sure admin user/password is correct on System->Streams page."
-msgstr ""
+msgstr "Please make sure Admin User and Admin Password for the streaming server are present and correct under Stream -> Additional Options on the System -> Streams page."
 
 #: airtime_mvc/application/controllers/ApiController.php:57
 #: airtime_mvc/application/controllers/ApiController.php:84
