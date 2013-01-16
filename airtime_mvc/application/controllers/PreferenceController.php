@@ -236,6 +236,7 @@ class PreferenceController extends Zend_Controller_Action
                 
                 Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
                 Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
+                Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
