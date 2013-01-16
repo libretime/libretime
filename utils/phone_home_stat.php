@@ -88,30 +88,6 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
     curl_close($ch);
 }
 
-// Get latest version from stat server and store to db
-if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
-    $url = 'http://stat.sourcefabric.org/airtime-stats/airtime_latest_version';
-    //$url = 'http://localhost:9999/index.php?p=airtime';
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $result = curl_exec($ch);
-
-    if(curl_errno($ch)) {
-        echo "curl error: " . curl_error($ch) . "\n";
-    } else {
-        $resultArray = explode("\n", $result);
-        if (isset($resultArray[0])) {
-            Application_Model_Preference::SetLatestVersion($resultArray[0]);
-        }
-        if (isset($resultArray[1])) {
-            Application_Model_Preference::SetLatestLink($resultArray[1]);
-        }
-    }
-
-    curl_close($ch);
-}
 
 /**
  * Ensures that the user is running this PHP script with root
