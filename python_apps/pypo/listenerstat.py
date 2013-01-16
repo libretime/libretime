@@ -48,8 +48,13 @@ class ListenerStat(Thread):
 
 
     def get_icecast_stats(self, ip):
-        url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
-        document = self.get_stream_server_xml(ip, url)
+        document = None
+        if "airtime.pro" in ip["host"].lower():
+            url = 'http://%(host)s:%(port)s/stats.xsl' % ip
+            document = self.get_stream_server_xml(ip, url)
+        else:
+            url = 'http://%(host)s:%(port)s/admin/stats.xml' % ip
+            document = self.get_stream_server_xml(ip, url)
         dom = xml.dom.minidom.parseString(document)
         sources = dom.getElementsByTagName("source")
 
