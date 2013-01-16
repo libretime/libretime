@@ -457,7 +457,12 @@ class Application_Model_Preference
 
     public static function GetUserTimezone($id)
     {
-        return self::getValue("user_timezone", true);
+        $timezone = self::getValue("user_timezone", true); 
+        if (!$timezone) {
+            return self::GetDefaultTimezone();
+        } else {
+            return $timezone;
+        }
     }
 
     public static function GetTimezone()
@@ -484,7 +489,12 @@ class Application_Model_Preference
 
     public static function GetUserLocale($id)
     {
-        return self::getValue("user_locale", true);
+        $locale = self::getValue("user_locale", true);
+        if (!$locale) {
+            return self::GetDefaultLocale();
+        } else {
+            return $locale;
+        }
     }
 
     public static function SetUserLocale($userId, $locale = null)
