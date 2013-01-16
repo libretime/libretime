@@ -48,7 +48,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 
-                Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["UseSoundCloud"]);
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["SoundCloudDownloadbleOption"]);
                 Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
