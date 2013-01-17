@@ -78,3 +78,15 @@ ALTER TABLE cc_listener_count
 ALTER TABLE cc_listener_count
 	ADD CONSTRAINT cc_timestamp_inst_fkey FOREIGN KEY (timestamp_id) REFERENCES cc_timestamp(id) ON DELETE CASCADE;
 
+INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
+
+INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
+
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', '한국어');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
