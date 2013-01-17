@@ -1,6 +1,9 @@
 DELETE FROM cc_pref WHERE keystr = 'system_version';
 INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.3.0');
 
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('enable_replay_gain', 1);
+
 CREATE SEQUENCE cc_listener_count_id_seq
 	START WITH 1
 	INCREMENT BY 1
