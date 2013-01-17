@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-01-04 17:49+0100\n"
-"Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
+"PO-Revision-Date: 2013-01-17 14:46-0500\n"
+"Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: Russian Localization <contact@sourcefabric.org>\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -2885,7 +2885,7 @@ msgstr "Время станции"
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:3
 msgid "Your trial expires in"
-msgstr "Ваш испытательный период истекает через"
+msgstr "лизензия истекает через"
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "Purchase your copy of Airtime"
