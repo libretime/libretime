@@ -220,7 +220,7 @@ class Application_Model_Preference
             $fade = $out;
         }
 
-        $fade = number_format($fade, 1);
+        $fade = number_format($fade, 1, '.', '');
         //fades need 2 leading zeros for DateTime conversion
         $fade = str_pad($fade, 4, "0", STR_PAD_LEFT);
 
@@ -457,7 +457,12 @@ class Application_Model_Preference
 
     public static function GetUserTimezone($id)
     {
-        return self::getValue("user_timezone", true);
+        $timezone = self::getValue("user_timezone", true); 
+        if (!$timezone) {
+            return self::GetDefaultTimezone();
+        } else {
+            return $timezone;
+        }
     }
 
     public static function GetTimezone()
@@ -484,7 +489,12 @@ class Application_Model_Preference
 
     public static function GetUserLocale($id)
     {
-        return self::getValue("user_locale", true);
+        $locale = self::getValue("user_locale", true);
+        if (!$locale) {
+            return self::GetDefaultLocale();
+        } else {
+            return $locale;
+        }
     }
 
     public static function SetUserLocale($userId, $locale = null)

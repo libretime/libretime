@@ -326,7 +326,6 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
 
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English - US');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');

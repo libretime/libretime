@@ -203,7 +203,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $adminUser->setAttrib('alt', 'regular_text');
         $this->addElement($adminUser);
         
-        $adminPass = new Zend_Form_Element_Text('admin_pass');
+        $adminPass = new Zend_Form_Element_Password('admin_pass');
         $adminPass->setLabel(_("Admin Password"))
                          ->setValue(Application_Model_StreamSetting::getAdminPass($prefix))
                          ->setValidators(array(
