@@ -81,13 +81,7 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
             $values = $request->getPost();
-           if ($values["Publicise"] != 1) {
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-            } else if ($form->isValid($values)) {
+        if ($form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
