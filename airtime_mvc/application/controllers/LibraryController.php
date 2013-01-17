@@ -498,10 +498,10 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
                 if ($block->isStatic()) {
-                    $this->view->blType = _('Static');
+                    $this->view->blType = 'Static';
                     $this->view->contents = $block->getContents();
                 } else {
-                    $this->view->blType = _('Dynamic');
+                    $this->view->blType = 'Dynamic';
                     $this->view->contents = $block->getCriteria();
                 }
                 $this->view->block = $block;
