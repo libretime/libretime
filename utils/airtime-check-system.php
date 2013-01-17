@@ -106,8 +106,11 @@ class AirtimeCheck {
     }
 
     public static function GetStatus($p_baseUrl, $p_basePort, $p_baseDir, $p_apiKey){
-
-        $url = "http://$p_baseUrl:$p_basePort/$p_baseDir/api/status/format/json/api_key/%%api_key%%";
+        if ($p_baseDir == '/') {
+            $url = "http://$p_baseUrl:$p_basePort/api/status/format/json/api_key/%%api_key%%";
+        } else {
+            $url = "http://$p_baseUrl:$p_basePort/$p_baseDir"."api/status/format/json/api_key/%%api_key%%";
+        }
         self::output_status("AIRTIME_STATUS_URL", $url);
         $url = str_replace("%%api_key%%", $p_apiKey, $url);
         
