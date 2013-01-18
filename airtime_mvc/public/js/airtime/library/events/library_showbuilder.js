@@ -116,7 +116,6 @@ var AIRTIME = (function(AIRTIME) {
             alert($.i18n._("Please select a cursor position on timeline."));
             return false;
         }
-        console.log(aMediaIds);
         AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
     };
 
