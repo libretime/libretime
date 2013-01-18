@@ -270,41 +270,40 @@ class PreferenceController extends Zend_Controller_Action
                 $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
                 $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
                 if ($changeRGenabled || $changeRGmodifier) {
+                    Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
+                    Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
                     $md = array('schedule' => Application_Model_Schedule::getSchedule());
                     Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
                 }
-                
-                Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
-                Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
 
-                    if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
-                        $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
-                        if (empty($values["master_harbor_input_port"]) || empty($values["master_harbor_input_mount_point"])) {
-                            Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
-                        } else {
-                            Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
-                        }
+                if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
+                    $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
+                    if (empty($values["master_harbor_input_port"]) || empty($values["master_harbor_input_mount_point"])) {
+                        Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
                     } else {
-                        Application_Model_Preference::SetMasterDJSourceConnectionURL($values["master_dj_connection_url"]);
+                        Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
                     }
+                } else {
+                    Application_Model_Preference::SetMasterDJSourceConnectionURL($values["master_dj_connection_url"]);
+                }
 
-                    if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
-                        $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
-                        if (empty($values["dj_harbor_input_port"]) || empty($values["dj_harbor_input_mount_point"])) {
-                            Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
-                        } else {
-                            Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
-                        }
+                if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
+                    $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
+                    if (empty($values["dj_harbor_input_port"]) || empty($values["dj_harbor_input_mount_point"])) {
+                        Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
                     } else {
-                        Application_Model_Preference::SetLiveDJSourceConnectionURL($values["live_dj_connection_url"]);
+                        Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
                     }
+                } else {
+                    Application_Model_Preference::SetLiveDJSourceConnectionURL($values["live_dj_connection_url"]);
+                }
 
-                    // extra info that goes into cc_stream_setting
-                    Application_Model_StreamSetting::setMasterLiveStreamPort($values["master_harbor_input_port"]);
-                    Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
-                    Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
-                    Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
-                    Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
+                // extra info that goes into cc_stream_setting
+                Application_Model_StreamSetting::setMasterLiveStreamPort($values["master_harbor_input_port"]);
+                Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
+                Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
+                Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
+                Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
                 Application_Model_Preference::SetStreamUpdateTimestamp();
