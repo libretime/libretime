@@ -1111,6 +1111,29 @@ SQL;
 
         return $rows;
     }
+    
+    public static function getAllFilesWithoutSilan() {
+        $con = Propel::getConnection();
+        
+        $sql = <<<SQL
+SELECT f.id,
+       m.directory || f.filepath AS fp
+FROM cc_files as f
+JOIN cc_music_dirs as m ON f.directory = m.id
+WHERE file_exists = 'TRUE'
+  AND silan_check IS FALSE Limit 100
+SQL;
+        $stmt = $con->prepare($sql);
+        
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+        
+        return $rows;
+    }
 
     /* Gets number of tracks uploaded to
      * Soundcloud in the last 24 hours

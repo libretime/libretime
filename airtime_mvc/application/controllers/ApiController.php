@@ -38,6 +38,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-source-status'          , 'json')
                 ->addActionContext('get-bootstrap-info'            , 'json')
                 ->addActionContext('get-files-without-replay-gain' , 'json')
+                ->addActionContext('get-files-without-silan-value' , 'json')
                 ->addActionContext('reload-metadata-group'         , 'json')
                 ->addActionContext('notify-webstream-data'         , 'json')
                 ->addActionContext('get-stream-parameters'         , 'json')
@@ -903,6 +904,18 @@ class ApiController extends Zend_Controller_Action
 
         echo json_encode($rows);
     }
+    
+    public function getFilesWithoutSilanValueAction()
+    {
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+    
+        //connect to db and get get sql
+        $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
+    
+        echo json_encode($rows);
+    }
 
     public function updateReplayGainValueAction()
     {
@@ -918,6 +931,28 @@ class ApiController extends Zend_Controller_Action
             // TODO : move this code into model -- RG
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
             $file->setDbReplayGain($gain);
+            $file->save();
+        }
+    }
+    
+    public function updateCueValuesBySilanAction()
+    {
+        // disable layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+    
+        $request = $this->getRequest();
+        $data = json_decode($request->getParam('data'));
+    Logging::info($data);
+        foreach ($data as $pair) {
+            list($id, $info) = $pair;
+            // TODO : move this code into model -- RG
+            $cuein = $info->cuein;
+            $cueout = $info->cueout;
+            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            $file->setDbCuein($cuein);
+            $file->setDbCueout($cueout);
+            $file->setDbSilanCheck(true);
             $file->save();
         }
     }
