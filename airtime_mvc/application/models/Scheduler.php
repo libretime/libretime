@@ -448,6 +448,12 @@ class Application_Model_Scheduler
                     } else {
                         $sched = new CcSchedule();
                     }
+
+                    // default fades are in seconds
+                    // we need to convert to '00:00:00' format
+                    $file['fadein'] = Application_Common_DateHelper::convertSecondsToTimeFormat($file['fadein']);
+                    $file['fadeout'] = Application_Common_DateHelper::convertSecondsToTimeFormat($file['fadeout']);
+                    
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
                         ->setDbCueIn($file['cuein'])
