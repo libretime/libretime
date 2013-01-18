@@ -4,6 +4,10 @@ INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.3.0');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('enable_replay_gain', 1);
 
+--Make sure that cc_music_dir has a trailing '/' and cc_files does not have a leading '/'
+UPDATE cc_music_dir SET directory = directory || '/' where id in (select id from cc_music_dirs where substr(directory, length(directory)) != '/');
+UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id from cc_files where substring(filepath from 1 for 1) = '/')
+
 CREATE SEQUENCE cc_listener_count_id_seq
 	START WITH 1
 	INCREMENT BY 1
@@ -58,6 +62,7 @@ CREATE TABLE cc_timestamp (
 ALTER TABLE cc_files
 	ADD COLUMN cuein interval DEFAULT '00:00:00'::interval,
 	ADD COLUMN cueout interval DEFAULT '00:00:00'::interval,
+	ADD COLUMN silan_check boolean DEFAULT false,
 	ADD COLUMN hidden boolean DEFAULT false;
 
 ALTER TABLE cc_listener_count
