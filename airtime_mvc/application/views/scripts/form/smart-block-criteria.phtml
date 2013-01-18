@@ -36,8 +36,8 @@
         ?>
         <?php for ($j = 0; $j < $this->modRowMap[$i]; $j++) {
                 // determine if logic label should be 'and' or 'or'
-                if ($this->modRowMap[$i] > 1 && $j != $this->modRowMap[$i]-1) $logicLabel = 'or';
-                else $logicLabel = 'and';
+                if ($this->modRowMap[$i] > 1 && $j != $this->modRowMap[$i]-1) $logicLabel = _('or');
+                else $logicLabel = _('and');
 
                 $disabled = $this->element->getElement("sp_criteria_field_".$i."_".$j)->getAttrib('disabled') == 'disabled'?true:false;
                 // determine if the next row is disabled and only display the logic label if it isn't
