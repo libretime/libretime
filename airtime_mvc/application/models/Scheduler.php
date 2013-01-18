@@ -451,8 +451,8 @@ class Application_Model_Scheduler
 
                     // default fades are in seconds
                     // we need to convert to '00:00:00' format
-                    $file['fadein'] = Application_Common_DateHelper::convertSecondsToTimeFormat($file['fadein']);
-                    $file['fadeout'] = Application_Common_DateHelper::convertSecondsToTimeFormat($file['fadeout']);
+                    $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
+                    $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
                     
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)

@@ -417,16 +417,5 @@ class Application_Common_DateHelper
     
         return $res;
     }
-
-    /* Returns a string of seconds converted into 'H:i:s.t' format
-     * 
-     */
-    public static function convertSecondsToTimeFormat($p_seconds)
-    {
-        $time = explode('.', $p_seconds);
-        $seconds = $time[0];
-        $milliseconds = $time[1];
-        return sprintf("%02d%s%02d%s%02d%s%d", floor($seconds/3600), ':', ($seconds/60)%60, ':', $seconds%60, '.', $milliseconds);
-    }
 }
 
