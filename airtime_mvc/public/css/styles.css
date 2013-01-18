@@ -2978,6 +2978,7 @@ dd .stream-status {
     float: left;
     margin-top: 4px;
     margin-left: 2px;
+    clear: left;
 }
 
 .edit-user-global dd {
