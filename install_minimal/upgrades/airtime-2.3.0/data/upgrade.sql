@@ -62,6 +62,7 @@ CREATE TABLE cc_timestamp (
 ALTER TABLE cc_files
 	ADD COLUMN cuein interval DEFAULT '00:00:00'::interval,
 	ADD COLUMN cueout interval DEFAULT '00:00:00'::interval,
+	ADD COLUMN silan_check boolean DEFAULT false,
 	ADD COLUMN hidden boolean DEFAULT false;
 
 ALTER TABLE cc_listener_count
