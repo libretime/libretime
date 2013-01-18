@@ -1283,6 +1283,7 @@ $(document).ready(function() {
             data = $("#edit-md-dialog form").serializeArray();
         $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
             $("#edit-md-dialog").dialog().remove();
+            oTable.fnStandingRedraw();
         });
     });
     
