@@ -1,13 +1,3 @@
-DELETE FROM cc_pref WHERE keystr = 'system_version';
-INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.3.0');
-
-INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');
-INSERT INTO cc_pref("keystr", "valstr") VALUES('enable_replay_gain', 1);
-
---Make sure that cc_music_dir has a trailing '/' and cc_files does not have a leading '/'
-UPDATE cc_music_dir SET directory = directory || '/' where id in (select id from cc_music_dirs where substr(directory, length(directory)) != '/');
-UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id from cc_files where substring(filepath from 1 for 1) = '/')
-
 CREATE SEQUENCE cc_listener_count_id_seq
 	START WITH 1
 	INCREMENT BY 1
@@ -83,15 +73,4 @@ ALTER TABLE cc_listener_count
 ALTER TABLE cc_listener_count
 	ADD CONSTRAINT cc_timestamp_inst_fkey FOREIGN KEY (timestamp_id) REFERENCES cc_timestamp(id) ON DELETE CASCADE;
 
-INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
-INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
-
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', '한국어');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
