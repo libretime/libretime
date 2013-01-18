@@ -19,6 +19,7 @@ class AirtimeDatabaseUpgrade{
         $database = $p_dbValues['database']['dbname'];
         $dir = __DIR__;
         
+        passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/data/schema.sql $database 2>&1 | grep -v \"will create implicit index\"");
         passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/data/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
     }
 }
