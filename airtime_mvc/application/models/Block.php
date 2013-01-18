@@ -378,6 +378,8 @@ SQL;
         $row->setDbCliplength($info["cliplength"]);
         $row->setDbCuein($info["cuein"]);
         $row->setDbCueout($info["cueout"]);
+        $info["fadein"] = Application_Common_DateHelper::secondsToPlaylistTime($info["fadein"]);
+        $info["fadeout"] = Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]);
         $row->setDbFadein($info["fadein"]);
         $row->setDbFadeout($info["fadeout"]);
         $row->save($this->con);

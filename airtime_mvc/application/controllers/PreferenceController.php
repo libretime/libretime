@@ -235,12 +235,15 @@ class PreferenceController extends Zend_Controller_Action
                 $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
                 $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
                 if ($changeRGenabled || $changeRGmodifier) {
+                    Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
+                    Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
                     $md = array('schedule' => Application_Model_Schedule::getSchedule());
                     Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
                 }
                 
                 Application_Model_Preference::SetEnableReplayGain($values["enableReplayGain"]);
                 Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
+
                 Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp
