@@ -356,6 +356,14 @@ class AirtimeApiClient(object):
         """
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
         return self.services.get_files_without_replay_gain(dir_id=dir_id)
+    
+    def get_files_without_silan_value(self):
+        """
+        Download a list of files that need to have their cue in/out value
+        calculated. This list of files is downloaded into a file and the path
+        to this file is the return value.
+        """
+        return self.services.get_files_without_silan_value()
 
     def update_replay_gain_values(self, pairs):
         """
@@ -364,6 +372,13 @@ class AirtimeApiClient(object):
         """
         self.logger.debug(self.services.update_replay_gain_value(
             _post_data={'data': json.dumps(pairs)}))
+        
+    def update_cue_values_by_silan(self, pairs):
+        """
+        'pairs' is a list of pairs in (x, y), where x is the file's database
+        row id and y is the file's cue values in dB
+        """
+        print self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
 
 
     def notify_webstream_data(self, data, media_id):

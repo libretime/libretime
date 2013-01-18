@@ -190,7 +190,7 @@ class LibraryController extends Zend_Controller_Action
                 $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
             }
 
-            $url = $file->getRelativeFileUrl($baseUrl).'download/true';
+            $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
@@ -498,10 +498,10 @@ class LibraryController extends Zend_Controller_Action
 
                 $this->view->md = $md;
                 if ($block->isStatic()) {
-                    $this->view->blType = _('Static');
+                    $this->view->blType = 'Static';
                     $this->view->contents = $block->getContents();
                 } else {
-                    $this->view->blType = _('Dynamic');
+                    $this->view->blType = 'Dynamic';
                     $this->view->contents = $block->getCriteria();
                 }
                 $this->view->block = $block;

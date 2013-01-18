@@ -28,7 +28,7 @@ class Application_Model_Locale
         $res = setlocale(LC_MESSAGES, $lang);
 
         $domain = 'airtime';
-        bindtextdomain($domain, '/usr/share/airtime/locale');
+        bindtextdomain($domain, '../locale');
         textdomain($domain);
         bind_textdomain_codeset($domain, $codeset);
     }

@@ -431,6 +431,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $cueout;
 
 	/**
+	 * The value for the silan_check field.
+	 * Note: this column has a database default value of: false
+	 * @var        boolean
+	 */
+	protected $silan_check;
+
+	/**
 	 * The value for the hidden field.
 	 * Note: this column has a database default value of: false
 	 * @var        boolean
@@ -504,6 +511,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->file_exists = true;
 		$this->cuein = '00:00:00';
 		$this->cueout = '00:00:00';
+		$this->silan_check = false;
 		$this->hidden = false;
 	}
 
@@ -1267,6 +1275,16 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function getDbCueout()
 	{
 		return $this->cueout;
+	}
+
+	/**
+	 * Get the [silan_check] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbSilanCheck()
+	{
+		return $this->silan_check;
 	}
 
 	/**
@@ -2728,6 +2746,26 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbCueout()
 
 	/**
+	 * Set the value of [silan_check] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbSilanCheck($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->silan_check !== $v || $this->isNew()) {
+			$this->silan_check = $v;
+			$this->modifiedColumns[] = CcFilesPeer::SILAN_CHECK;
+		}
+
+		return $this;
+	} // setDbSilanCheck()
+
+	/**
 	 * Set the value of [hidden] column.
 	 * 
 	 * @param      boolean $v new value
@@ -2794,6 +2832,10 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			}
 
 			if ($this->cueout !== '00:00:00') {
+				return false;
+			}
+
+			if ($this->silan_check !== false) {
 				return false;
 			}
 
@@ -2889,7 +2931,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->owner_id = ($row[$startcol + 63] !== null) ? (int) $row[$startcol + 63] : null;
 			$this->cuein = ($row[$startcol + 64] !== null) ? (string) $row[$startcol + 64] : null;
 			$this->cueout = ($row[$startcol + 65] !== null) ? (string) $row[$startcol + 65] : null;
-			$this->hidden = ($row[$startcol + 66] !== null) ? (boolean) $row[$startcol + 66] : null;
+			$this->silan_check = ($row[$startcol + 66] !== null) ? (boolean) $row[$startcol + 66] : null;
+			$this->hidden = ($row[$startcol + 67] !== null) ? (boolean) $row[$startcol + 67] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -2898,7 +2941,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 67; // 67 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 68; // 68 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcFiles object", $e);
@@ -3530,6 +3573,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return $this->getDbCueout();
 				break;
 			case 66:
+				return $this->getDbSilanCheck();
+				break;
+			case 67:
 				return $this->getDbHidden();
 				break;
 			default:
@@ -3622,7 +3668,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[63] => $this->getDbOwnerId(),
 			$keys[64] => $this->getDbCuein(),
 			$keys[65] => $this->getDbCueout(),
-			$keys[66] => $this->getDbHidden(),
+			$keys[66] => $this->getDbSilanCheck(),
+			$keys[67] => $this->getDbHidden(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aFkOwner) {
@@ -3864,6 +3911,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->setDbCueout($value);
 				break;
 			case 66:
+				$this->setDbSilanCheck($value);
+				break;
+			case 67:
 				$this->setDbHidden($value);
 				break;
 		} // switch()
@@ -3956,7 +4006,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[63], $arr)) $this->setDbOwnerId($arr[$keys[63]]);
 		if (array_key_exists($keys[64], $arr)) $this->setDbCuein($arr[$keys[64]]);
 		if (array_key_exists($keys[65], $arr)) $this->setDbCueout($arr[$keys[65]]);
-		if (array_key_exists($keys[66], $arr)) $this->setDbHidden($arr[$keys[66]]);
+		if (array_key_exists($keys[66], $arr)) $this->setDbSilanCheck($arr[$keys[66]]);
+		if (array_key_exists($keys[67], $arr)) $this->setDbHidden($arr[$keys[67]]);
 	}
 
 	/**
@@ -4034,6 +4085,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::OWNER_ID)) $criteria->add(CcFilesPeer::OWNER_ID, $this->owner_id);
 		if ($this->isColumnModified(CcFilesPeer::CUEIN)) $criteria->add(CcFilesPeer::CUEIN, $this->cuein);
 		if ($this->isColumnModified(CcFilesPeer::CUEOUT)) $criteria->add(CcFilesPeer::CUEOUT, $this->cueout);
+		if ($this->isColumnModified(CcFilesPeer::SILAN_CHECK)) $criteria->add(CcFilesPeer::SILAN_CHECK, $this->silan_check);
 		if ($this->isColumnModified(CcFilesPeer::HIDDEN)) $criteria->add(CcFilesPeer::HIDDEN, $this->hidden);
 
 		return $criteria;
@@ -4161,6 +4213,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbOwnerId($this->owner_id);
 		$copyObj->setDbCuein($this->cuein);
 		$copyObj->setDbCueout($this->cueout);
+		$copyObj->setDbSilanCheck($this->silan_check);
 		$copyObj->setDbHidden($this->hidden);
 
 		if ($deepCopy) {
@@ -5066,6 +5119,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->owner_id = null;
 		$this->cuein = null;
 		$this->cueout = null;
+		$this->silan_check = null;
 		$this->hidden = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;

@@ -104,6 +104,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addForeignKey('OWNER_ID', 'DbOwnerId', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('CUEIN', 'DbCuein', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEOUT', 'DbCueout', 'VARCHAR', false, null, '00:00:00');
+		$this->addColumn('SILAN_CHECK', 'DbSilanCheck', 'BOOLEAN', false, null, false);
 		$this->addColumn('HIDDEN', 'DbHidden', 'BOOLEAN', false, null, false);
 		// validators
 	} // initialize()
