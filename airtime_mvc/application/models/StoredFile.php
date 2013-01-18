@@ -133,8 +133,12 @@ class Application_Model_StoredFile
             $track_length_in_sec = Application_Common_DateHelper::calculateLengthInSeconds($track_length);
             foreach ($p_md as $mdConst => $mdValue) {
                 if (defined($mdConst)) {
-                    if ($mdConst == "MDATA_KEY_CUE_OUT" && $mdValue == '0.0') {
-                        $mdValue = $track_length_in_sec;
+                    if ($mdConst == "MDATA_KEY_CUE_OUT") {
+                        if ($mdValue == '0.0') {
+                            $mdValue = $track_length_in_sec;
+                        } else {
+                            $this->_file->setDbSilanCheck(true)->save();
+                        }
                     }
                     $dbMd[constant($mdConst)] = $mdValue;
                     
@@ -1105,6 +1109,29 @@ SQL;
             throw new Exception("Error: $msg");
         }
 
+        return $rows;
+    }
+    
+    public static function getAllFilesWithoutSilan() {
+        $con = Propel::getConnection();
+        
+        $sql = <<<SQL
+SELECT f.id,
+       m.directory || f.filepath AS fp
+FROM cc_files as f
+JOIN cc_music_dirs as m ON f.directory = m.id
+WHERE file_exists = 'TRUE'
+  AND silan_check IS FALSE Limit 100
+SQL;
+        $stmt = $con->prepare($sql);
+        
+        if ($stmt->execute()) {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $msg = implode(',', $stmt->errorInfo());
+            throw new Exception("Error: $msg");
+        }
+        
         return $rows;
     }
 

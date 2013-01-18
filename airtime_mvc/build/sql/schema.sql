@@ -96,6 +96,7 @@ CREATE TABLE "cc_files"
 	"owner_id" INTEGER,
 	"cuein" interval default '00:00:00',
 	"cueout" interval default '00:00:00',
+	"silan_check" BOOLEAN default 'f',
 	"hidden" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );
