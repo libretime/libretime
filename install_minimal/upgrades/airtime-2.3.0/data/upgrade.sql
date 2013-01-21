@@ -12,8 +12,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_use
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_pass', '', 'string');
 
 --Make sure that cc_music_dir has a trailing '/' and cc_files does not have a leading '/'
-UPDATE cc_music_dir SET directory = directory || '/' where id in (select id from cc_music_dirs where substr(directory, length(directory)) != '/');
-UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id from cc_files where substring(filepath from 1 for 1) = '/')
+UPDATE cc_music_dirs SET directory = directory || '/' where id in (select id from cc_music_dirs where substr(directory, length(directory)) != '/');
+UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id from cc_files where substring(filepath from 1 for 1) = '/');
 
 INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
