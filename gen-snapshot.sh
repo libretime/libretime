@@ -3,7 +3,6 @@
 # Run from the directory containg the files checked out from git
 
 VERSION=2.3.0~$(date "+%Y%m%d")
-#VERSION=2.2.0-rc1
 BUILDDEST=/tmp/airtime-${VERSION}/
 DEBDIR=`pwd`/debian
 
@@ -24,9 +23,9 @@ cd ${BUILDDEST} || exit
 
 # Set the version of the snapshot package
 
-sed -i "1s:(2.2.0-1):(${VERSION}):g" debian/changelog
+sed -i "1s:(2.3.0-1):(${VERSION}):g" debian/changelog
 
-# FIXES for 2.2.0 #############
+# FIXES for 2.3.0 #############
 
 # these are all moved to debian/copyright
 rm airtime/python_apps/pypo/LICENSE
@@ -35,7 +34,7 @@ rm airtime/airtime_mvc/library/phing/LICENSE
 rm airtime/airtime_mvc/library/propel/LICENSE
 rm airtime/airtime_mvc/library/soundcloud-api/README.md
 
-# Remove Liquidsoap binaries
+# Remove Liquidsoap binary
 rm -r airtime/python_apps/pypo/liquidsoap_bin/
 
 #Remove phing library
