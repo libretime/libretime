@@ -12,7 +12,7 @@ includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
-NEWVERSION="2.2.0"
+NEWVERSION="2.3.0"
 
 case "$1" in
   configure|reconfigure)
@@ -125,6 +125,11 @@ case "$1" in
           db_get airtime/icecast-sourcepw
           ICESOURCE=$RET
           sed -i "s:'s1_pass', 'hackme', 'string':'s1_pass', '$ICESOURCE', 'string':g" ${tmpdir}/airtime_mvc/build/sql/defaultdata.sql
+
+          db_get airtime/icecast-adminpw
+          ICEADMIN=$RET
+          sed -i "s:'s1_admin_user', '', 'string':'s1_admin_user', 'admin', 'string':g" ${tmpdir}/airtime_mvc/build/sql/defaultdata.sql
+          sed -i "s:'s1_admin_pass', '', 'string':'s1_admin_pass', '$ICEADMIN', 'string':g" ${tmpdir}/airtime_mvc/build/sql/defaultdata.sql
 
       else
         echo "The icecast2 package does not appear to be installed on this server."
