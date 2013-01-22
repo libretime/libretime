@@ -7,6 +7,7 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+set +e
 dist=`lsb_release -is`
 echo "Generating locales"
 for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
@@ -19,6 +20,7 @@ for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
         locale-gen "$i.utf8"
     fi
 done
+set -e
 
 if [ "$dist" = "Debian" ]; then
     /usr/sbin/locale-gen

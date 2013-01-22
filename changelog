@@ -1,3 +1,14 @@
+2.3.0 - Jan 21st, 2013
+  * New features
+    * Localization (Brazilian, Chinese, Czech, English, French, German, Italian, Korean, Portugese, Russian, Spanish)
+    * User management page for non-admin users
+    * Listener statistics (Icecast/Shoutcast) 
+    * Airtime no longer requires Apache document root
+    * Replay Gain offset in real-time
+    * Enable/disable replay gain
+    * Liquidsoap memory footprint improvements
+    * Automatically set cue points on import to avoid leading/trailing silence
+
 2.2.1 - December 4th, 2012
   * Bug fixes
     * Improved fades between webstreams
