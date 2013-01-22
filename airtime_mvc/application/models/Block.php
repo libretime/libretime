@@ -378,10 +378,8 @@ SQL;
         $row->setDbCliplength($info["cliplength"]);
         $row->setDbCuein($info["cuein"]);
         $row->setDbCueout($info["cueout"]);
-        $info["fadein"] = Application_Common_DateHelper::secondsToPlaylistTime($info["fadein"]);
-        $info["fadeout"] = Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]);
-        $row->setDbFadein($info["fadein"]);
-        $row->setDbFadeout($info["fadeout"]);
+        $row->setDbFadein(Application_Common_DateHelper::secondsToPlaylistTime($info["fadein"]));
+        $row->setDbFadeout(Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]));
         $row->save($this->con);
         // above save result update on cc_block table on length column.
         // but $this->block doesn't get updated automatically
