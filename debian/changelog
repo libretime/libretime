@@ -1,8 +1,26 @@
+airtime (2.3.0-1) unstable; urgency=low
+
+  * Nightly development snapshot of Airtime 2.3.x
+
+ -- Daniel James <daniel@64studio.com>  Tue, 22 Jan 2013 11:44:57 +0000
+
+airtime (2.2.1-1) unstable; urgency=low
+
+  * Upstream 2.2.1 release
+
+ -- Daniel James <daniel@64studio.com>  Tue, 04 Dec 2012 11:10:37 +0000
+
+airtime (2.2.0-2) unstable; urgency=low
+
+  * Added dependency on flac package for metaflac support
+
+ -- Daniel James <daniel@64studio.com>  Mon, 05 Nov 2012 10:54:49 +0000
+
 airtime (2.2.0-1) unstable; urgency=low
 
-  * Nightly development snapshot of Airtime 2.2.x
+  * Upstream 2.2.0 release
 
- -- Daniel James <daniel@64studio.com>  Thu, 02 Aug 2012 11:19:03 +0100
+ -- Daniel James <daniel@64studio.com>  Fri, 26 Oct 2012 10:44:06 +0100
 
 airtime (2.1.3-2) unstable; urgency=low
 
