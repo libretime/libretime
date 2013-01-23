@@ -1750,12 +1750,13 @@ SQL;
         $interval = $p_start->diff($p_end);
         $days     = $interval->format('%a');
         $shows    = Application_Model_Show::getShows($p_start, $p_end);
-        $nowEpoch = time();
         $content_count = Application_Model_ShowInstance::getContentCount(
             $p_start, $p_end);
         $isFull = Application_Model_ShowInstance::getIsFull($p_start, $p_end);
         $timezone = date_default_timezone_get();
+        $current_timezone = new DateTimeZone($timezone);
         $utc = new DateTimeZone("UTC");
+        $now = new DateTime("now", $utc);
 
         foreach ($shows as $show) {
             $options = array();
@@ -1767,7 +1768,6 @@ SQL;
 
             if (isset($show["parent_starts"])) {
                 $parentStartsDT = new DateTime($show["parent_starts"], $utc);
-                $parentStartsEpoch = intval($parentStartsDT->format("U"));
             }
 
             $startsDT = DateTime::createFromFormat("Y-m-d G:i:s",
@@ -1775,35 +1775,53 @@ SQL;
             $endsDT   = DateTime::createFromFormat("Y-m-d G:i:s",
                 $show["ends"], $utc);
 
-            $startsEpochStr = $startsDT->format("U");
-            $endsEpochStr   = $endsDT->format("U");
-
-            $startsEpoch    = intval($startsEpochStr);
-            $endsEpoch      = intval($endsEpochStr);
-
-            $startsDT->setTimezone(new DateTimeZone($timezone));
-            $endsDT->setTimezone(new DateTimeZone($timezone));
-
             if( $p_editable ) {
-                if ($show["record"] && $nowEpoch > $startsEpoch) {
+                if ($show["record"] && $now > $startsDT) {
                     $options["editable"] = false;
                 } elseif ($show["rebroadcast"] &&
-                    $nowEpoch > $parentStartsEpoch) {
+                    $now > $parentStartsDT) {
                     $options["editable"] = false;
-                } elseif ($nowEpoch < $endsEpoch) {
+                } elseif ($now < $endsDT) {
                     $options["editable"] = true;
                 }
             }
+
+            $startsDT->setTimezone($current_timezone);
+            $endsDT->setTimezone($current_timezone);
 
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;
 
             $options["show_partial_filled"] = !$isFull[$show['instance_id']];
 
-            $events[] = &self::makeFullCalendarEvent($show, $options,
-                $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
-        }
+            $event = array();
 
+            $event["id"]            = intval($show["instance_id"]);
+            $event["title"]         = $show["name"];
+            $event["start"]         = $startsDT->format("Y-m-d H:i:s");
+            $event["end"]           = $endsDT->format("Y-m-d H:i:s");
+            $event["allDay"]        = false;
+            $event["showId"]        = intval($show["show_id"]);
+            $event["record"]        = intval($show["record"]);
+            $event["rebroadcast"]   = intval($show["rebroadcast"]);
+            $event["soundcloud_id"] = is_null($show["soundcloud_id"])
+                ? -1 : $show["soundcloud_id"];
+
+            //event colouring
+            if ($show["color"] != "") {
+                $event["textColor"] = "#".$show["color"];
+            }
+
+            if ($show["background_color"] != "") {
+                $event["color"] = "#".$show["background_color"];
+            }
+
+            foreach ($options as $key => $value) {
+                $event[$key] = $value;
+            }
+
+            $events[] = $event;
+        }
         return $events;
     }
 
@@ -1820,7 +1838,7 @@ SQL;
         return $percent;
     }
 
-    private static function &makeFullCalendarEvent(&$show, $options=array(), $startDateTime, $endDateTime, $startsEpoch, $endsEpoch)
+/*    private static function &makeFullCalendarEvent(&$show, $options=array(), $startDateTime, $endDateTime, $startsEpoch, $endsEpoch)
     {
         $event = array();
 
@@ -1851,7 +1869,7 @@ SQL;
         }
 
         return $event;
-    }
+    }*/
 
     /* Takes in a UTC DateTime object.
      * Converts this to local time, since cc_show days
