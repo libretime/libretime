@@ -26,6 +26,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('smart-block-shuffle', 'json')
                     ->addActionContext('get-block-info', 'json')
                     ->addActionContext('shuffle', 'json')
+                    ->addActionContext('empty-content', 'json')
                     ->initContext();
 
     }
@@ -327,6 +328,26 @@ class PlaylistController extends Zend_Controller_Action
         try {
             $obj = $this->getPlaylist($type);
             $obj->delAudioClips($ids);
+            $this->createUpdateResponse($obj);
+        } catch (PlaylistOutDatedException $e) {
+            $this->playlistOutdated($e);
+        } catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound($type);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
+        }
+    }
+    
+    public function emptyContentAction()
+    {
+        $type = $this->_getParam('obj_type');
+        try {
+            $obj = $this->getPlaylist($type);
+            if ($type == 'playlist') {
+                $obj->deleteAllFilesFromPlaylist();
+            } else {
+                $obj->deleteAllFilesFromBlock();
+            }
             $this->createUpdateResponse($obj);
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);

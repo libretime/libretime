@@ -749,6 +749,12 @@ var AIRTIME = (function(AIRTIME){
                     }
             );
         });
+        
+        $("#pl-bl-clear-content").live("click", function(event) {
+            var sUrl = baseUrl+"playlist/empty-content",
+                oData = {};
+            playlistRequest(sUrl, oData);
+        });
 	}
 	
 	function setUpPlaylist() {

@@ -351,7 +351,7 @@ function setupUI() {
      * It is only active if playlist is not empty
      */
     var plContents = $('#spl_sortable').children();
-    var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"]');
+    var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"], button[id="pl-bl-clear-content"]');
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {

@@ -930,6 +930,10 @@ SQL;
     public function deleteAllFilesFromPlaylist()
     {
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
+
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->pl->save($this->con);
+        $this->con->commit();
     }
     
     public function shuffle()

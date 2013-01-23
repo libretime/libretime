@@ -1001,7 +1001,10 @@ SQL;
     public function deleteAllFilesFromBlock()
     {
         CcBlockcontentsQuery::create()->findByDbBlockId($this->id)->delete();
-        $this->block->reload();
+        //$this->block->reload();
+        $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->block->save($this->con);
+        $this->con->commit();
     }
 
     // smart block functions start

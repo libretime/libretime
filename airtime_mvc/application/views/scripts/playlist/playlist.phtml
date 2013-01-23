@@ -17,6 +17,9 @@ if (isset($this->obj)) {
     </div>
 <?php if (isset($this->obj)) : ?>
     <div class='btn-group pull-right'>
+        <button class="btn btn-inverse" title='<?php echo _("Empty playlist content") ?>' type="button" id="pl-bl-clear-content"><? echo _("Clear") ?></button>
+    </div>
+    <div class='btn-group pull-right'>
         <button class="btn btn-inverse" title='<?php echo _("Shuffle playlist") ?>' type="button" id="playlist_shuffle_button"><? echo _("Shuffle") ?></button>
     </div>
     <div class='btn-group pull-right'>
