@@ -688,7 +688,7 @@ SQL;
     public static function getIsFull($p_start, $p_end)
     {
         $sql = <<<SQL
-SELECT id, ends-starts < time_filled as filled 
+SELECT id, ends-starts-'00:00:05' < time_filled as filled
 from cc_show_instances
 WHERE ends > :p_start::TIMESTAMP
 AND starts < :p_end::TIMESTAMP
