@@ -1753,7 +1753,9 @@ SQL;
         $nowEpoch = time();
         $content_count = Application_Model_ShowInstance::getContentCount(
             $p_start, $p_end);
+        $isFull = Application_Model_ShowInstance::getIsFull($p_start, $p_end);
         $timezone = date_default_timezone_get();
+        $utc = new DateTimeZone("UTC");
 
         foreach ($shows as $show) {
             $options = array();
@@ -1762,8 +1764,6 @@ SQL;
             if (intval($days) <= 7) {
                 $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
             }
-
-            $utc = new DateTimeZone("UTC");
 
             if (isset($show["parent_starts"])) {
                 $parentStartsDT = new DateTime($show["parent_starts"], $utc);
@@ -1795,14 +1795,10 @@ SQL;
                 }
             }
 
-
-            $showInstance = new Application_Model_ShowInstance(
-                $show["instance_id"]);
-
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;
-                
-            $options["show_partial_filled"] = $showInstance->showPartialFilled();
+
+            $options["show_partial_filled"] = $isFull[$show['instance_id']];
 
             $events[] = &self::makeFullCalendarEvent($show, $options,
                 $startsDT, $endsDT, $startsEpochStr, $endsEpochStr);
