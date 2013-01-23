@@ -661,10 +661,8 @@ SQL;
         return $returnStr;
     }
 
-
-
     public static function getContentCount($p_start, $p_end) 
-    {                 
+    {
         $sql = <<<SQL
 SELECT instance_id,
        count(*) AS instance_count
@@ -687,20 +685,26 @@ SQL;
 
     }
 
-    public function showPartialFilled()
+    public static function getIsFull($p_start, $p_end)
     {
         $sql = <<<SQL
-SELECT time_filled > '00:00:00'
-AND time_filled < ends - starts
-AND file_id IS null AS partial_filled
-FROM cc_show_instances
-WHERE id = :instance_id
+SELECT id, ends-starts < time_filled as filled 
+from cc_show_instances
+WHERE ends > :p_start::TIMESTAMP
+AND starts < :p_end::TIMESTAMP
 SQL;
 
-        $res = Application_Common_Database::prepareAndExecute($sql,
-            array(':instance_id' => $this->_instanceId), 'all');
+        $res = Application_Common_Database::prepareAndExecute($sql, array(
+            ':p_start' => $p_start->format("Y-m-d G:i:s"),
+            ':p_end' => $p_end->format("Y-m-d G:i:s"))
+        , 'all');
 
-        return $res[0]["partial_filled"];
+        $isFilled = array();
+        foreach ($res as $r) {
+            $isFilled[$r['id']] = $r['filled'];
+        }
+
+        return $isFilled;
     }
 
     public function showEmpty()
