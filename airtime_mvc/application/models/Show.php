@@ -2183,10 +2183,34 @@ SQL;
         while (date('w', $first_day_of_calendar_month_view) != $weekStart) {
             $first_day_of_calendar_month_view -= 60*60*24;
         }
-        $last_day_of_calendar_view = $first_day_of_calendar_month_view + 3600*24*41;
+        $last_day_of_calendar_view = $first_day_of_calendar_month_view + 3600*24*42;
 
         $start = new DateTime("@".$first_day_of_calendar_month_view);
         $end = new DateTime("@".$last_day_of_calendar_view);
+
+        return array($start, $end);
+    }
+
+    public static function getStartEndCurrentWeekView() {
+        $first_day_of_calendar_week_view = mktime(0, 0, 0, date("n"), date("j"));
+        $weekStart = Application_Model_Preference::GetWeekStartDay();
+        while (date('w', $first_day_of_calendar_week_view) != $weekStart) {
+            $first_day_of_calendar_week_view -= 60*60*24;
+        }
+        $last_day_of_calendar_view = $first_day_of_calendar_week_view + 3600*24*7;
+
+        $start = new DateTime("@".$first_day_of_calendar_week_view);
+        $end = new DateTime("@".$last_day_of_calendar_view);
+
+        return array($start, $end);
+    }
+
+    public static function getStartEndCurrentDayView() {
+        $today = mktime(0, 0, 0, date("n"), date("j"));
+        $tomorrow = $today + 3600*24;
+
+        $start = new DateTime("@".$today);
+        $end = new DateTime("@".$tomorrow);
 
         return array($start, $end);
     }

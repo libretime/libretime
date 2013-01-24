@@ -129,14 +129,19 @@ class ScheduleController extends Zend_Controller_Action
         $user = new Application_Model_User($userInfo->id);
         $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
-        $calendar_interval = Application_Model_Preference::GetCalendarTimeInterval();
+        $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
+        Logging::info($calendar_interval);
         if ($calendar_interval == "agendaDay") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentDayView();
         } else if ($calendar_interval == "agendaWeek") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentWeekView();
         } else if ($calendar_interval == "month") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
+        } else {
+            Logging::error("Invalid Calendar Interval '$calendar_interval'");
         }
-        list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
-        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
 
+        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
         $this->view->events = $events;
     }
 
