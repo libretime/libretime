@@ -326,7 +326,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
         });
 }
 
-function preload () {
+function preloadEventFeed () {
     var url = baseUrl+'Schedule/event-feed-preload';
     var d = new Date();
 
@@ -335,7 +335,6 @@ function preload () {
         createFullCalendar({calendarInit: calendarPref});
     });
 }
-preload();
 
 var initialLoad = true;
 function getFullCalendarEvents(start, end, callback) {
@@ -355,8 +354,6 @@ function getFullCalendarEvents(start, end, callback) {
                 callback(json.events);
             });
     }
-    //TODO: Look at the type of calendar view...we may be returning too much information
-
 }
 
 function checkSCUploadStatus(){
@@ -559,6 +556,7 @@ function alertShowErrorAndReload(){
   window.location.reload();
 }
 
+preloadEventFeed();
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
     setInterval( "getCurrentShow()", 5000 );
