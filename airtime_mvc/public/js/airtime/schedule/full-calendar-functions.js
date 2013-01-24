@@ -326,19 +326,34 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
         });
 }
 
-function getFullCalendarEvents(start, end, callback) {
-    var url, start_date, end_date;
-
-    start_date = makeTimeStamp(start);
-    end_date = makeTimeStamp(end);
-
-    url = baseUrl+'Schedule/event-feed';
-
+function preloadEventFeed () {
+    var url = baseUrl+'Schedule/event-feed-preload';
     var d = new Date();
-    
-    $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
-        callback(json.events);
+
+    $.post(url, {format: "json", cachep: d.getTime()}, function(json){
+        calendarEvents = json.events;
+        createFullCalendar({calendarInit: calendarPref});
     });
+}
+
+var initialLoad = true;
+function getFullCalendarEvents(start, end, callback) {
+    
+    if (initialLoad) {
+        initialLoad = false;
+        callback(calendarEvents);
+    } else {
+        var url, start_date, end_date;
+
+        start_date = makeTimeStamp(start);
+        end_date = makeTimeStamp(end);
+        url = baseUrl+'Schedule/event-feed';
+
+        var d = new Date();
+            $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
+                callback(json.events);
+            });
+    }
 }
 
 function checkSCUploadStatus(){
@@ -541,6 +556,7 @@ function alertShowErrorAndReload(){
   window.location.reload();
 }
 
+preloadEventFeed();
 $(document).ready(function(){
     setInterval( "checkSCUploadStatus()", 5000 );
     setInterval( "getCurrentShow()", 5000 );

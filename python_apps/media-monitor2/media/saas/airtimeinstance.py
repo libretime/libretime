@@ -45,7 +45,7 @@ class AirtimeInstance(object):
         touch_base_name = basename(touch_base_path)
         new_base_name   = self.name + touch_base_name
         return join(dirname(touch_base_path), new_base_name)
-        
+
 
     def __str__(self):
         return "%s,%s(%s)" % (self.name, self.root_path, self.config_paths)

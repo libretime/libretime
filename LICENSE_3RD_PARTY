@@ -141,6 +141,12 @@ Non-linked code:
    - Web site: http://www.python.org/
    - License: PSF License. See http://docs.python.org/license.html
 
+ * Silan
+   - What is it: Silence detector
+   - Web site: https://github.com/x42/silan
+   - License: GPL-2+
+   - Compatible with GPLv3? Yes.
+
 -------------
 Show Recorder
 -------------
@@ -175,8 +181,6 @@ Non-linked code:
    - Web site: http://www.python.org/
    - License: PSF License. See http://docs.python.org/license.html
 
- * Liquidsoap 1.0.0 
+ * Liquidsoap 1.0.1
    - Web site: http://savonet.sourceforge.net/
    - License: GPLv2
-
-

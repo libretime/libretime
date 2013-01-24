@@ -46,7 +46,7 @@ class AudiopreviewController extends Zend_Controller_Action
         }
 
         if ($type == "audioclip") {
-            $uri   = $baseUrl."/api/get-media/file/".$audioFileID;
+            $uri   = $baseUrl."api/get-media/file/".$audioFileID;
             $media = Application_Model_StoredFile::Recall($audioFileID);
             $mime  = $media->getPropelOrm()->getDbMime();
         } elseif ($type == "stream") {

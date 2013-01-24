@@ -2,7 +2,7 @@
 import re
 from media.saas.launcher import setup_logger, setup_global, MM2
 from media.saas.airtimeinstance import AirtimeInstance
-from os.path import isdir, join, abspath, exists
+from os.path import isdir, join, abspath, exists, dirname
 from os import listdir
 
 def list_dirs(d): return (x for x in listdir(d) if isdir(join(d,x)))
@@ -32,17 +32,17 @@ def main(main_cfg):
     verify_exists(log_config)
     log = setup_logger(log_config, log_path)
     setup_global(log)
-    for instance in autoscan_instances(main_cfg): 
+    for instance in autoscan_instances(main_cfg):
         print("Launching instance: %s" % str(instance))
-        MM2(instance).start()
+        #MM2(instance).start()
     print("Launched all instances")
 
-if __name__ == '__main__': 
-    root = '/home/rudi/reps/Airtime/python_apps/media-monitor2'
+if __name__ == '__main__':
+    pwd = dirname(__file__)
     default = {
-            'log_path'      : join(root, 'test.log'), # config for log
-            'log_config'    : join(root, 'configs/logging.cfg'), # where to log
+            'log_path'      : join(pwd, 'test.log'), # config for log
+            'log_config'    : join(pwd, 'configs/logging.cfg'), # where to log
             # root dir of all instances
-            'instance_root' : join(root, 'saas_stub')
+            'instance_root' : '/mnt/airtimepro/instances'
     }
     main(default)
