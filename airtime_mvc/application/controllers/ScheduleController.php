@@ -96,6 +96,22 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->preloadShowForm = true;
         }
 
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+            $editable = true;
+        } else {
+            $editable = false;
+        }
+
+        $calendar_interval = Application_Model_Preference::GetCalendarTimeInterval();
+        if ($calendar_interval == "agendaDay") {
+        } else if ($calendar_interval == "agendaWeek") {
+        } else if ($calendar_interval == "month") {
+        }
+        list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
+        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
+
         $this->view->headScript()->appendScript(
             "var calendarPref = {};\n".
             "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
@@ -103,7 +119,8 @@ class ScheduleController extends Zend_Controller_Action
             "calendarPref.timezoneOffset = ".date("Z").";\n".
             "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
             "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
-            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n"
+            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "var calendarEvents = ".json_encode($events).";"
         );
     }
 

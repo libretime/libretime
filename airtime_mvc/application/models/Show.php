@@ -2176,4 +2176,18 @@ SQL;
         }
         return $assocArray;
     }
+
+    public static function getStartEndCurrentMonthView() {
+        $first_day_of_calendar_month_view = mktime(0, 0, 0, date("n"), 1);
+        $weekStart = Application_Model_Preference::GetWeekStartDay();
+        while (date('w', $first_day_of_calendar_month_view) != $weekStart) {
+            $first_day_of_calendar_month_view -= 60*60*24;
+        }
+        $last_day_of_calendar_view = $first_day_of_calendar_month_view + 3600*24*41;
+
+        $start = new DateTime("@".$first_day_of_calendar_month_view);
+        $end = new DateTime("@".$last_day_of_calendar_view);
+
+        return array($start, $end);
+    }
 }

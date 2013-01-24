@@ -326,19 +326,26 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
         });
 }
 
+var initialLoad = true;
 function getFullCalendarEvents(start, end, callback) {
-    var url, start_date, end_date;
-
-    start_date = makeTimeStamp(start);
-    end_date = makeTimeStamp(end);
-
-    url = baseUrl+'Schedule/event-feed';
-
-    var d = new Date();
     
-    $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
-        callback(json.events);
-    });
+    if (initialLoad) {
+        initialLoad = false;
+        callback(calendarEvents);
+    } else {
+        var url, start_date, end_date;
+
+        start_date = makeTimeStamp(start);
+        end_date = makeTimeStamp(end);
+        url = baseUrl+'Schedule/event-feed';
+
+        var d = new Date();
+            $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
+                callback(json.events);
+            });
+    }
+    //TODO: Look at the type of calendar view...we may be returning too much information
+
 }
 
 function checkSCUploadStatus(){
