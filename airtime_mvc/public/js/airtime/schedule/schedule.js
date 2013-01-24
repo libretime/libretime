@@ -328,10 +328,6 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
-    var data = {};
-    data.calendarInit = calendarPref;
-    createFullCalendar(data);
-    
     setInterval(checkCalendarSCUploadStatus, 5000);
     
     $.contextMenu({

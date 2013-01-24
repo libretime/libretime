@@ -326,6 +326,17 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
         });
 }
 
+function preload () {
+    var url = baseUrl+'Schedule/event-feed-preload';
+    var d = new Date();
+
+    $.post(url, {format: "json", cachep: d.getTime()}, function(json){
+        calendarEvents = json.events;
+        createFullCalendar({calendarInit: calendarPref});
+    });
+}
+preload();
+
 var initialLoad = true;
 function getFullCalendarEvents(start, end, callback) {
     
