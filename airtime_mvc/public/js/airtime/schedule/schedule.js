@@ -328,8 +328,9 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
-	$.ajax({ url: baseUrl+"Api/calendar-init/format/json", dataType:"json", success:createFullCalendar
-            , error:function(jqXHR, textStatus, errorThrown){}});
+    var data = {};
+    data.calendarInit = calendarPref;
+    createFullCalendar(data);
     
     setInterval(checkCalendarSCUploadStatus, 5000);
     

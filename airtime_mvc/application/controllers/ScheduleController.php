@@ -96,7 +96,15 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->preloadShowForm = true;
         }
 
-        $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
+        $this->view->headScript()->appendScript(
+            "var calendarPref = {};\n".
+            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "calendarPref.timestamp = ".time().";\n".
+            "calendarPref.timezoneOffset = ".date("Z").";\n".
+            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
+            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
+            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n"
+        );
     }
 
     public function eventFeedAction()
