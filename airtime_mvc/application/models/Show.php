@@ -1758,7 +1758,7 @@ SQL;
         $utc = new DateTimeZone("UTC");
         $now = new DateTime("now", $utc);
 
-        foreach ($shows as $show) {
+        foreach ($shows as &$show) {
             $options = array();
 
             //only bother calculating percent for week or day view.
