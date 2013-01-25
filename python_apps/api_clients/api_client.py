@@ -168,9 +168,9 @@ class AirtimeApiClient(object):
 
     def get_schedule(self):
         # TODO : properly refactor this routine
-        # For now thre return type is a little fucked for compatibility reasons
+        # For now the return type is a little fucked for compatibility reasons
         try: return (True, self.services.export_url())
-        except: (False, "")
+        except: return (False, None)
 
     def notify_liquidsoap_started(self):
         return self.services.notify_liquidsoap_started()
@@ -356,7 +356,7 @@ class AirtimeApiClient(object):
         """
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
         return self.services.get_files_without_replay_gain(dir_id=dir_id)
-    
+
     def get_files_without_silan_value(self):
         """
         Download a list of files that need to have their cue in/out value
@@ -372,7 +372,7 @@ class AirtimeApiClient(object):
         """
         self.logger.debug(self.services.update_replay_gain_value(
             _post_data={'data': json.dumps(pairs)}))
-        
+
     def update_cue_values_by_silan(self, pairs):
         """
         'pairs' is a list of pairs in (x, y), where x is the file's database
