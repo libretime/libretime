@@ -43,7 +43,7 @@ parser.add_option("-t", "--time", help="Liquidsoap boot up time", action="store"
 parser.add_option("-x", "--source-name", help="source connection name", metavar="source_name")
 parser.add_option("-y", "--source-status", help="source connection status", metavar="source_status")
 parser.add_option("-w", "--webstream", help="JSON metadata associated with webstream", metavar="json_data")
-parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started", metavar="json_data", action="store_true", default=True)
+parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started", metavar="json_data", action="store_true", default=False)
 
 
 # parse options
