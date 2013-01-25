@@ -217,7 +217,7 @@ class PypoFetch(Thread):
             self.set_bootstrap_variables()
             #get the most up to date schedule, which will #initiate the process
             #of making sure Liquidsoap is playing the schedule
-            self.manual_schedule_fetch()
+            self.persistent_manual_schedule_fetch(max_attempts=5)
         except Exception, e:
             self.logger.error(str(e))
 
@@ -488,10 +488,20 @@ class PypoFetch(Thread):
             self.process_schedule(self.schedule_data)
         return success
 
+    def persistent_manual_schedule_fetch(self, max_attempts=1):
+        success = False
+        num_attempts = 0
+        while not success and num_attempts < max_attempts:
+            success = self.manual_schedule_fetch()
+            num_attempts += 1
+
+        return success
+
+
     def main(self):
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates.
-        success = self.manual_schedule_fetch()
+        success = self.persistent_manual_schedule_fetch(max_attempts=5)
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.set_bootstrap_variables()
@@ -519,7 +529,7 @@ class PypoFetch(Thread):
                 self.handle_message(message)
             except Empty, e:
                 self.logger.info("Queue timeout. Fetching schedule manually")
-                self.manual_schedule_fetch()
+                self.persistent_manual_schedule_fetch(max_attempts=5)
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()
