@@ -132,8 +132,8 @@ class PypoFetch(Thread):
         elif(sourcename == "live_dj"):
             command += "live_dj_harbor.kick\n"
 
-        lock.acquire()
         try:
+            lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
@@ -159,8 +159,9 @@ class PypoFetch(Thread):
         else:
             command += "stop\n"
 
-        lock.acquire()
         try:
+            lock.acquire()
+
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             tn.write(command)
             tn.write('exit\n')
@@ -179,7 +180,6 @@ class PypoFetch(Thread):
         info = self.api_client.get_bootstrap_info()
         if info is None:
             self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
-            sys.exit(1)
         else:
             self.logger.debug('info:%s', info)
             for k, v in info['switch_status'].iteritems():
@@ -190,8 +190,8 @@ class PypoFetch(Thread):
 
     def restart_liquidsoap(self):
 
-        self.telnet_lock.acquire()
         try:
+            self.telnet_lock.acquire()
             self.logger.info("Restarting Liquidsoap")
             subprocess.call('/etc/init.d/airtime-liquidsoap restart', shell=True)
 
@@ -322,8 +322,8 @@ class PypoFetch(Thread):
         This function updates the bootup time variable in Liquidsoap script
         """
 
-        self.telnet_lock.acquire()
         try:
+            self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
             # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
             # we are manually adjusting the bootup time variable so the status msg will get
@@ -395,8 +395,8 @@ class PypoFetch(Thread):
             self.logger.info(LS_HOST)
             self.logger.info(LS_PORT)
 
-            self.telnet_lock.acquire()
             try:
+                self.telnet_lock.acquire()
                 tn = telnetlib.Telnet(LS_HOST, LS_PORT)
                 command = ('vars.station_name %s\n' % station_name).encode('utf-8')
                 self.logger.info(command)
