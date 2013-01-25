@@ -4,10 +4,6 @@ class LocaleController extends Zend_Controller_Action
 {
     public function init()
     {
-        $ajaxContext = $this->_helper->getHelper("AjaxContext");
-        $ajaxContext->addActionContext("general-translation-table", "json")
-                    ->addActionContext("datatables-translation-table", "json")
-                    ->initContext();
     }
 
     public function datatablesTranslationTableAction()
@@ -26,7 +22,7 @@ class LocaleController extends Zend_Controller_Action
                 $locale.".txt")
             );
     }
-    
+
     public function generalTranslationTableAction()
     {
         $translations = array (
