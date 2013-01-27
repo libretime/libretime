@@ -144,6 +144,24 @@ class PypoFetch(Thread):
             lock.release()
 
     @staticmethod
+    def telnet_send(logger, lock, commands):
+         try:
+            lock.acquire()
+
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            for i in commands:
+                logger.info(i)
+                tn.write(i)
+
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.error(str(e))
+        finally:
+            lock.release()
+
+
+    @staticmethod
     def switch_source(logger, lock, sourcename, status):
         logger.debug('Switching source: %s to "%s" status', sourcename, status)
         command = "streams."
@@ -159,17 +177,7 @@ class PypoFetch(Thread):
         else:
             command += "stop\n"
 
-        try:
-            lock.acquire()
-
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error(str(e))
-        finally:
-            lock.release()
+        PypoFetch.telnet_send(logger, lock, [command])
 
     """
         grabs some information that are needed to be set on bootstrap time
@@ -184,9 +192,19 @@ class PypoFetch(Thread):
             self.logger.debug('info:%s', info)
             for k, v in info['switch_status'].iteritems():
                 self.switch_source(self.logger, self.telnet_lock, k, v)
-            self.update_liquidsoap_stream_format(info['stream_label'])
-            self.update_liquidsoap_station_name(info['station_name'])
-            self.update_liquidsoap_transition_fade(info['transition_fade'])
+            #self.update_liquidsoap_stream_format(info['stream_label'])
+            #self.update_liquidsoap_station_name(info['station_name'])
+            #self.update_liquidsoap_transition_fade(info['transition_fade'])
+
+            stream_format = info['stream_label']
+            station_name = info['station_name']
+            fade = info['transition_fade']
+
+            commands = []
+            commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
+            commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
+            commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
+            PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
 
     def restart_liquidsoap(self):
 
@@ -355,6 +373,7 @@ class PypoFetch(Thread):
             status = info[1]
             if(status == "true"):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
+
 
     def update_liquidsoap_stream_format(self, stream_format):
         # Push stream metadata to liquidsoap
