@@ -135,6 +135,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            self.logger.info(command)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
@@ -330,8 +331,13 @@ class PypoFetch(Thread):
             # updated.
             current_time = time.time()
             boot_up_time_command = "vars.bootup_time " + str(current_time) + "\n"
+            self.logger.info(boot_up_time_command)
             tn.write(boot_up_time_command)
-            tn.write("streams.connection_status\n")
+
+            connection_status = "streams.connection_status\n"
+            self.logger.info(connection_status)
+            tn.write(connection_status)
+
             tn.write('exit\n')
 
             output = tn.read_all()
