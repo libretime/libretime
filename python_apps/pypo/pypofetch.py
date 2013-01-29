@@ -179,6 +179,25 @@ class PypoFetch(Thread):
 
         PypoFetch.telnet_send(logger, lock, [command])
 
+
+    #TODO: Merge this with switch_source
+    def switch_source_temp(self, sourcename, status):
+        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        command = "streams."
+        if sourcename == "master_dj":
+            command += "master_dj_"
+        elif sourcename == "live_dj":
+            command += "live_dj_"
+        elif sourcename == "scheduled_play":
+            command += "scheduled_play_"
+
+        if status == "on":
+            command += "start\n"
+        else:
+            command += "stop\n"
+
+        return command
+
     """
         grabs some information that are needed to be set on bootstrap time
         and configures them
@@ -190,17 +209,14 @@ class PypoFetch(Thread):
             self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
         else:
             self.logger.debug('info:%s', info)
+            commands = []
             for k, v in info['switch_status'].iteritems():
-                self.switch_source(self.logger, self.telnet_lock, k, v)
-            #self.update_liquidsoap_stream_format(info['stream_label'])
-            #self.update_liquidsoap_station_name(info['station_name'])
-            #self.update_liquidsoap_transition_fade(info['transition_fade'])
+                commands.append(self.switch_source_temp(k, v))
 
             stream_format = info['stream_label']
             station_name = info['station_name']
             fade = info['transition_fade']
 
-            commands = []
             commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
             commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
             commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
