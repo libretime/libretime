@@ -773,7 +773,8 @@ SQL;
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
         
         $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
-
+        $playlistBlockFiles = array_merge(Application_Model_Playlist::getAllPlaylistContent(),
+            Application_Model_Block::getAllBlockContent());
         //Used by the audio preview functionality in the library.
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
@@ -814,8 +815,12 @@ SQL;
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'css/images/icon_audioclip.png">';
-                if (in_array($row['id'], $futureScheduledFiles)) {
-                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-future"></span>';
+                if (in_array($row['id'], $futureScheduledFiles) && in_array($row['id'], $playlistBlockFiles)) {
+                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-sched-pl-bl"></span>';
+                } elseif (in_array($row['id'], $futureScheduledFiles)) {
+                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-scheduled"></span>';
+                } elseif (in_array($row['id'], $playlistBlockFiles)) {
+                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-pl-bl"></span>';
                 }
             } elseif ($type == "pl") {
                 $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'css/images/icon_playlist.png">';

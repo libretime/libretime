@@ -955,6 +955,21 @@ SQL;
         return $result;
     }
 
+    public static function getAllPlaylistContent()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(file_id)
+FROM cc_playlistcontents
+SQL;
+        $files = $con->query($sql)->fetchAll();
+        $real_files = array();
+        foreach ($files as $f) {
+            $real_files[] = $f['file_id'];
+        }
+        return $real_files;
+    }
+
 } // class Playlist
 
 class PlaylistNotFoundException extends Exception {}

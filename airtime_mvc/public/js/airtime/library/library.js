@@ -606,9 +606,49 @@ var AIRTIME = (function(AIRTIME) {
                     return false;
                 });
 
-                $(nRow).find(".track-future").qtip({
+                $(nRow).find(".track-scheduled").qtip({
                     content: {
                         text: $.i18n._("This track is scheduled in the future")
+                    },
+                    hide: {
+                        delay: 500,
+                        fixed: true
+                    },
+                    style: {
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
+                    },
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
+                });
+                $(nRow).find(".track-sched-pl-bl").qtip({
+                    content: {
+                        text: $.i18n._("This track is scheduled in the future and belongs to a playlist or smart block")
+                    },
+                    hide: {
+                        delay: 500,
+                        fixed: true
+                    },
+                    style: {
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
+                    },
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
+                });
+                $(nRow).find(".track-pl-bl").qtip({
+                    content: {
+                        text: $.i18n._("This track belongs to a playlist or smart block")
                     },
                     hide: {
                         delay: 500,

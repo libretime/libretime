@@ -1434,6 +1434,20 @@ SQL;
         
         return $output;
     }
+    public static function getAllBlockContent()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(file_id)
+FROM cc_blockcontents
+SQL;
+        $files = $con->query($sql)->fetchAll();
+        $real_files = array();
+        foreach ($files as $f) {
+            $real_files[] = $f['file_id'];
+        }
+        return $real_files;
+    }
     // smart block functions end
 }
 
