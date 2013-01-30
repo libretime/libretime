@@ -385,6 +385,15 @@ class LibraryController extends Zend_Controller_Action
         //TODO move this to the datatables row callback.
         foreach ($r["aaData"] as &$data) {
 
+            foreach ($data as $k => &$v) {
+                if ($k != "image" && $k != "checkbox") {
+                    $v = htmlspecialchars($v);
+                }
+            }
+            //TODO: Replace the above foreach loop with the line below when ticket
+            //CC-4896 is completed.
+            //$data = array_map('htmlspecialchars', $data);
+
             if ($data['ftype'] == 'audioclip') {
                 $file = Application_Model_StoredFile::Recall($data['id']);
                 $scid = $file->getSoundCloudId();

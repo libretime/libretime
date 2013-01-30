@@ -135,6 +135,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            self.logger.info(command)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
@@ -142,6 +143,24 @@ class PypoFetch(Thread):
             logger.error(str(e))
         finally:
             lock.release()
+
+    @staticmethod
+    def telnet_send(logger, lock, commands):
+         try:
+            lock.acquire()
+
+            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            for i in commands:
+                logger.info(i)
+                tn.write(i)
+
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            logger.error(str(e))
+        finally:
+            lock.release()
+
 
     @staticmethod
     def switch_source(logger, lock, sourcename, status):
@@ -159,17 +178,26 @@ class PypoFetch(Thread):
         else:
             command += "stop\n"
 
-        try:
-            lock.acquire()
+        PypoFetch.telnet_send(logger, lock, [command])
 
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error(str(e))
-        finally:
-            lock.release()
+
+    #TODO: Merge this with switch_source
+    def switch_source_temp(self, sourcename, status):
+        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        command = "streams."
+        if sourcename == "master_dj":
+            command += "master_dj_"
+        elif sourcename == "live_dj":
+            command += "live_dj_"
+        elif sourcename == "scheduled_play":
+            command += "scheduled_play_"
+
+        if status == "on":
+            command += "start\n"
+        else:
+            command += "stop\n"
+
+        return command
 
     """
         grabs some information that are needed to be set on bootstrap time
@@ -182,11 +210,18 @@ class PypoFetch(Thread):
             self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
         else:
             self.logger.debug('info:%s', info)
+            commands = []
             for k, v in info['switch_status'].iteritems():
-                self.switch_source(self.logger, self.telnet_lock, k, v)
-            self.update_liquidsoap_stream_format(info['stream_label'])
-            self.update_liquidsoap_station_name(info['station_name'])
-            self.update_liquidsoap_transition_fade(info['transition_fade'])
+                commands.append(self.switch_source_temp(k, v))
+
+            stream_format = info['stream_label']
+            station_name = info['station_name']
+            fade = info['transition_fade']
+
+            commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
+            commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
+            commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
+            PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
 
     def restart_liquidsoap(self):
 
@@ -330,8 +365,13 @@ class PypoFetch(Thread):
             # updated.
             current_time = time.time()
             boot_up_time_command = "vars.bootup_time " + str(current_time) + "\n"
+            self.logger.info(boot_up_time_command)
             tn.write(boot_up_time_command)
-            tn.write("streams.connection_status\n")
+
+            connection_status = "streams.connection_status\n"
+            self.logger.info(connection_status)
+            tn.write(connection_status)
+
             tn.write('exit\n')
 
             output = tn.read_all()
@@ -355,6 +395,7 @@ class PypoFetch(Thread):
             status = info[1]
             if(status == "true"):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
+
 
     def update_liquidsoap_stream_format(self, stream_format):
         # Push stream metadata to liquidsoap

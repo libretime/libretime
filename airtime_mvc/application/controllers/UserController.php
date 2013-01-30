@@ -115,7 +115,7 @@ class UserController extends Zend_Controller_Action
         $post = $this->getRequest()->getPost();
         $users = Application_Model_User::getUsersDataTablesInfo($post);
 
-        die(json_encode($users));
+        $this->_helper->json->sendJson($users);
     }
 
     public function getUserDataAction()

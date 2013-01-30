@@ -335,6 +335,8 @@ class Application_Model_User
             } else {
                 $record['delete'] = "";
             }
+
+            $record = array_map('htmlspecialchars', $record);
         }
 
         return $res;

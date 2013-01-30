@@ -227,7 +227,7 @@ class Application_Model_ShowBuilder
         $row["endDate"]   = $showEndDT->format("Y-m-d");
         $row["endTime"]   = $showEndDT->format("H:i");
         $row["duration"]  = floatval($showEndDT->format("U.u")) - floatval($showStartDT->format("U.u"));
-        $row["title"]     = $p_item["show_name"];
+        $row["title"]     = htmlspecialchars($p_item["show_name"]);
         $row["instance"]  = intval($p_item["si_id"]);
         $row["image"]     = '';
 
