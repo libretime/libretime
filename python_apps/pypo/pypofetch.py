@@ -146,7 +146,7 @@ class PypoFetch(Thread):
 
     @staticmethod
     def telnet_send(logger, lock, commands):
-         try:
+        try:
             lock.acquire()
 
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
