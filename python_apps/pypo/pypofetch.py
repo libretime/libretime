@@ -146,20 +146,20 @@ class PypoFetch(Thread):
 
     @staticmethod
     def telnet_send(logger, lock, commands):
-         try:
-            lock.acquire()
+        try:
+           lock.acquire()
 
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            for i in commands:
-                logger.info(i)
-                tn.write(i)
+           tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+           for i in commands:
+               logger.info(i)
+               tn.write(i)
 
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error(str(e))
-        finally:
-            lock.release()
+           tn.write('exit\n')
+           tn.read_all()
+       except Exception, e:
+           logger.error(str(e))
+       finally:
+           lock.release()
 
 
     @staticmethod
