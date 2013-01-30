@@ -32,6 +32,8 @@ class Logging {
     {
         if (is_array($p_msg) || is_object($p_msg)) {
             return print_r($p_msg, true);
+        } else if (is_bool($p_msg)) {
+            return $p_msg ? "true" : "false";
         } else {
             return $p_msg;
         }
