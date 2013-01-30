@@ -438,7 +438,7 @@ class LibraryController extends Zend_Controller_Action
                 $formValues = $this->_getParam('data', null);
                 $formdata = array();
                 foreach ($formValues as $val) {
-                    $formdata[$val["name"]] = $val["value"];
+                    $formdata[$val["name"]] = htmlspecialchars($val["value"]);
                 }
                 $file->setDbColMetadata($formdata);
 
