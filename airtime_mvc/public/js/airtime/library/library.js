@@ -608,21 +608,23 @@ var AIRTIME = (function(AIRTIME) {
 
                 $(nRow).find(".track-future").qtip({
                     content: {
-                        text: $.i18n._("Track is scheduled in the future")
+                        text: $.i18n._("This track is scheduled in the future")
                     },
-                    position:{
-                        adjust: {
-                            resize: true,
-                            method: "flip flip"
-                        },
-                        at: "right center",
-                        my: "left top",
-                        viewport: $(window)
+                    hide: {
+                        delay: 500,
+                        fixed: true
                     },
                     style: {
-                        classes: "ui-tooltip-dark"
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
                     },
-                    show: 'mousedown'
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
                 });
                 
                 // add a tool tip to appear when the user clicks on the type
