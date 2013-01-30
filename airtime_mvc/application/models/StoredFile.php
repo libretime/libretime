@@ -773,8 +773,13 @@ SQL;
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
         
         $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
-        $playlistBlockFiles = array_merge(Application_Model_Playlist::getAllPlaylistContent(),
+        // we are only interested in which files belong to playlists and blocks
+        $playlistBlockFiles = array_merge(Application_Model_Playlist::getAllPlaylistFiles(),
             Application_Model_Block::getAllBlockContent());
+
+        $futureScheduledStreams = Application_Model_Schedule::getAllFutureScheduledWebstreams();
+        // here we are only interested in which streams belong to a playlist
+        $playlistStreams = Application_Model_Playlist::getAllPlaylistStreams();
 
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
@@ -792,18 +797,34 @@ SQL;
                 //soundcloud status
                 $file = Application_Model_StoredFile::Recall($row['id']);
                 $row['soundcloud_status'] = $file->getSoundCloudId();
-                
+
                 //file 'in use' status
                 if (in_array($row['id'], $futureScheduledFiles) && in_array($row['id'], $playlistBlockFiles)) {
-                    $row['status_scheduled_pl_bl'] = true;
+                    $row['status_in_use'] = true;
+                    $row['status_msg'] = _("This track is scheduled in the future and belongs to a playlist or smart block");
                 } elseif (in_array($row['id'], $futureScheduledFiles)) {
-                    $row['status_scheduled'] = true;
+                    $row['status_in_use'] = true;
+                    $row['status_msg'] = _("This track is scheduled in the future");
                 } elseif (in_array($row['id'], $playlistBlockFiles)) {
-                    $row['status_pl_bl'] = true;
+                    $row['status_in_use'] = true;
+                    $row['status_msg'] = _("This track belongs to a playlist or smart block");
                 }
-                
+
                 // for audio preview
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
+            } else if ($row['ftype'] === "stream") {
+                $row['audioFile'] = $row['id'];
+
+                if (in_array($row['id'], $futureScheduledStreams) && in_array($row['id'], $playlistStreams)) {
+                    $row['status_in_use'] = true;
+                    $row['status_msg'] = _("This webstream is scheduled in the future and belongs to a playlist");
+                } elseif (in_array($row['id'], $futureScheduledStreams)) {
+                    $row['status_in_use'] = true;
+                    $row['status_msg'] = _("This webstream is scheduled in the future");
+                } elseif (in_array($row['id'], $playlistStreams)) {
+                    $row['status_in_use'] = true;
+                    $row['status_msg'] = _("This webstream belongs to a playlist");
+                }
             } else {
                 $row['audioFile'] = $row['id'];
             }

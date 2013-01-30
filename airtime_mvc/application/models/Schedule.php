@@ -27,13 +27,33 @@ SQL;
 SELECT distinct(file_id)
 FROM cc_schedule
 WHERE ends > now() AT TIME ZONE 'UTC'
+AND file_id is not null
 SQL;
         $files = $con->query($sql)->fetchAll();
         $real_files = array();
         foreach ($files as $f) {
             $real_files[] = $f['file_id'];
         }
+
         return $real_files;
+    }
+
+    public static function getAllFutureScheduledWebstreams()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(stream_id)
+FROM cc_schedule
+WHERE ends > now() AT TIME ZONE 'UTC'
+AND stream_id is not null
+SQL;
+        $streams = $con->query($sql)->fetchAll();
+        $real_streams = array();
+        foreach ($streams as $s) {
+            $real_streams[] = $s['stream_id'];
+        }
+
+        return $real_streams;
     }
     /**
      * Returns data related to the scheduled items.

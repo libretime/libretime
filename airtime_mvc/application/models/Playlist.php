@@ -955,12 +955,13 @@ SQL;
         return $result;
     }
 
-    public static function getAllPlaylistContent()
+    public static function getAllPlaylistFiles()
     {
         $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT distinct(file_id)
 FROM cc_playlistcontents
+WHERE file_id is not null
 SQL;
         $files = $con->query($sql)->fetchAll();
         $real_files = array();
@@ -968,6 +969,22 @@ SQL;
             $real_files[] = $f['file_id'];
         }
         return $real_files;
+    }
+
+    public static function getAllPlaylistStreams()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(stream_id)
+FROM cc_playlistcontents
+WHERE stream_id is not null
+SQL;
+        $streams = $con->query($sql)->fetchAll();
+        $real_streams = array();
+        foreach ($streams as $s) {
+            $real_streams[] = $s['stream_id'];
+        }
+        return $real_streams;
     }
 
 } // class Playlist
