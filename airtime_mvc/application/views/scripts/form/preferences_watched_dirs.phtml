@@ -11,7 +11,7 @@
             <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
+                        <li><?php echo $this->escape($error); ?></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
@@ -29,7 +29,7 @@
             <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
+                        <li><?php echo $this->escape($error); ?></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>

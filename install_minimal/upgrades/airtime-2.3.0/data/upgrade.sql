@@ -15,6 +15,8 @@ INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s3_admin_pas
 UPDATE cc_music_dirs SET directory = directory || '/' where id in (select id from cc_music_dirs where substr(directory, length(directory)) != '/');
 UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id from cc_files where substring(filepath from 1 for 1) = '/');
 
+UPDATE cc_files SET cueout = length where cueout = '00:00:00';
+
 INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
 INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');

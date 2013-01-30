@@ -73,17 +73,26 @@ class ApcUrl(object):
         else: return self.base_url
 
 class ApiRequest(object):
-    def __init__(self, name, url):
+    def __init__(self, name, url, logger=None):
         self.name = name
         self.url  = url
         self.__req = None
+        if logger is None: self.logger = logging
+        else: self.logger = logger
     def __call__(self,_post_data=None, **kwargs):
         # TODO : get rid of god damn urllib and replace everything with
         # grequests or requests at least
         final_url = self.url.params(**kwargs).url()
         if _post_data is not None: _post_data = urllib.urlencode(_post_data)
-        req = urllib2.Request(final_url, _post_data)
-        response  = urllib2.urlopen(req).read()
+        try:
+            req = urllib2.Request(final_url, _post_data)
+            response  = urllib2.urlopen(req).read()
+        except Exception, e:
+            self.logger.error('Exception: %s', e)
+            import traceback
+            top = traceback.format_exc()
+            self.logger.error("traceback: %s", top)
+            response = ""
         # Ghetto hack for now because we don't the content type we are getting
         # (Pointless to look at mime since it's not being set correctly always)
         try: return json.loads(response)

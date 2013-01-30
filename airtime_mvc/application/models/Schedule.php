@@ -696,6 +696,10 @@ SQL;
             'replay_gain'       => $replay_gain,
             'independent_event' => $independent_event,
         );
+        
+        if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
+            $schedule_item['cue_in'] = $schedule_item['cue_out'];
+        }
         self::appendScheduleItem($data, $start, $schedule_item);
     }
 
@@ -906,7 +910,6 @@ SQL;
         self::createScheduledEvents($data, $range_start, $range_end);
 
         self::foldData($data["media"]);
-
         return $data;
     }
 

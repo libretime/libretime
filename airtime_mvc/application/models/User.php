@@ -343,6 +343,8 @@ class Application_Model_User
                 $res['iTotalDisplayRecords']--;
                 $res['iTotalRecords']--;
             }
+
+            $record = array_map('htmlspecialchars', $record);
         }
 
         $res['aaData'] = array_values($res['aaData']);
