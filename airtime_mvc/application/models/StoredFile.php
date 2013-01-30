@@ -775,7 +775,7 @@ SQL;
         $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
         $playlistBlockFiles = array_merge(Application_Model_Playlist::getAllPlaylistContent(),
             Application_Model_Block::getAllBlockContent());
-        //Used by the audio preview functionality in the library.
+
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
@@ -788,6 +788,24 @@ SQL;
 
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
+
+                //soundcloud status
+                $file = Application_Model_StoredFile::Recall($row['id']);
+                $row['soundcloud_status'] = $file->getSoundCloudId();
+                
+                //file 'in use' status
+                if (in_array($row['id'], $futureScheduledFiles) && in_array($row['id'], $playlistBlockFiles)) {
+                    $row['status_scheduled_pl_bl'] = true;
+                } elseif (in_array($row['id'], $futureScheduledFiles)) {
+                    $row['status_scheduled'] = true;
+                } elseif (in_array($row['id'], $playlistBlockFiles)) {
+                    $row['status_pl_bl'] = true;
+                }
+                
+                // for audio preview
+                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
+            } else {
+                $row['audioFile'] = $row['id'];
             }
 
             //convert mtime and utime to localtime
@@ -798,38 +816,13 @@ SQL;
             $row['utime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
             $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
 
-            // add checkbox row
-            $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
-
-            $type = substr($row['ftype'], 0, 2);
+            // we need to initalize the checkbox and image row because we do not retrieve
+            // any data from the db for these and datatables will complain
+            $row['checkbox'] = "";
+            $row['image'] = "";
+            $row['status'] = "";
 
             $row['tr_id'] = "{$type}_{$row['id']}";
-
-            //TODO url like this to work on both playlist/showbuilder
-            //screens. datatable stuff really needs to be pulled out and
-            //generalized within the project access to zend view methods
-            //to access url helpers is needed.
-
-            // TODO : why is there inline html here? breaks abstraction and is
-            // ugly
-            if ($type == "au") {
-                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'css/images/icon_audioclip.png">';
-                if (in_array($row['id'], $futureScheduledFiles) && in_array($row['id'], $playlistBlockFiles)) {
-                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-sched-pl-bl"></span>';
-                } elseif (in_array($row['id'], $futureScheduledFiles)) {
-                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-scheduled"></span>';
-                } elseif (in_array($row['id'], $playlistBlockFiles)) {
-                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-pl-bl"></span>';
-                }
-            } elseif ($type == "pl") {
-                $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'css/images/icon_playlist.png">';
-            } elseif ($type == "st") {
-                $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="'._("Webstream preview").'" src="'.$baseUrl.'css/images/icon_webstream.png">';
-            } elseif ($type == "bl") {
-                $row['image'] = '<img title="'._("Smart Block").'" src="'.$baseUrl.'css/images/icon_smart-block.png">';
-            }
         }
 
         return $results;

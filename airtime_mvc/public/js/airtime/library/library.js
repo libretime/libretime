@@ -439,6 +439,7 @@ var AIRTIME = (function(AIRTIME) {
               /* ftype */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
               /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
               /* Type */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
+              /* Status */  { "sTitle" : ""              , "mDataProp" : "status"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_status" , "iDataSort" : 0                  }  ,
               /* Title */  { "sTitle" : $.i18n._("Title")         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
               /* Creator */  { "sTitle" : $.i18n._("Creator")       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
               /* Album */  { "sTitle" : $.i18n._("Album")         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
@@ -554,12 +555,47 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                
+                //add soundcloud icon
+                if (aData.soundcloud_status !== undefined) {
+                    if (aData.soundcloud_status === "-2") {
+                        $(nRow).find("td.library_title").append('<span class="small-icon progress"/>');
+                    } else if (aData.soundcloud_status === "-3") {
+                        $(nRow).find("td.library_title").append('<span class="small-icon sc-error"/>');
+                    } else if (aData.soundcloud_status !== null) {
+                        $(nRow).find("td.library_title").append('<span class="small-icon soundcloud"/>');
+                    }
+                }
+
+                // add checkbox
+                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
+
+                // add audio preview image/button
+                if (aData.ftype === "audioclip") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
+                } else if (aData.ftype === "playlist") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Playlist preview")+'" src="'+baseUrl+'css/images/icon_playlist.png">');
+                } else if (aData.ftype === "block") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Smart Block")+'" src="'+baseUrl+'css/images/icon_smart-block.png">');
+                } else if (aData.ftype === "stream") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Webstream preview")+'" src="'+baseUrl+'css/images/icon_webstream.png">');
+                }
+
+                // add status icon
+                $status = $(nRow).find("td.library_status");
+                if (aData.status_scheduled_pl_bl !== null && aData.status_scheduled_pl_bl) {
+                    $status.html('<span class="small-icon show-partial-filled track-sched-pl-bl"></span>');
+                }
+                if (aData.status_scheduled !== null && aData.status_scheduled) {
+                    $status.html('<span class="small-icon show-partial-filled track-scheduled"></span>');
+                }
+                if (aData.status_pl_bl !== null && aData.status_pl_bl) {
+                    $status.html('<span class="small-icon show-partial-filled track-pl-bl"></span>');
+                }
+
                 // add the play function to the library_type td
                 $(nRow).find('td.library_type').click(function(){
                     if (aData.ftype === 'playlist' && aData.length !== '0.0'){
-                        playlistIndex = $(this).parent().attr('id').substring(3);
-                        open_playlist_preview(playlistIndex, 0);
+                        open_playlist_preview(aData.audioFile, 0);
                     } else if (aData.ftype === 'audioclip') {
                         if (isAudioSupported(aData.mime)) {
                             open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
@@ -569,8 +605,7 @@ var AIRTIME = (function(AIRTIME) {
                             open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
                         }
                     } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
-                        blockIndex = $(this).parent().attr('id').substring(3);
-                        open_block_preview(blockIndex, 0);
+                        open_block_preview(aData.audioFile, 0);
                     }
                     return false;
                 });

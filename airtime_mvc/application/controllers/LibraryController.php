@@ -382,23 +382,6 @@ class LibraryController extends Zend_Controller_Action
         # terrible name for the method below. it does not only search files.
         $r = Application_Model_StoredFile::searchLibraryFiles($params);
 
-        //TODO move this to the datatables row callback.
-        foreach ($r["aaData"] as &$data) {
-
-            if ($data['ftype'] == 'audioclip') {
-                $file = Application_Model_StoredFile::Recall($data['id']);
-                $scid = $file->getSoundCloudId();
-
-                if ($scid == "-2") {
-                    $data['track_title'] .= '<span class="small-icon progress"/>';
-                } elseif ($scid == "-3") {
-                    $data['track_title'] .= '<span class="small-icon sc-error"/>';
-                } elseif (!is_null($scid)) {
-                    $data['track_title'] .= '<span class="small-icon soundcloud"/>';
-                }
-            }
-        }
-
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
         $this->view->iTotalRecords = $r["iTotalRecords"];
