@@ -20,6 +20,21 @@ SQL;
         return (is_numeric($count) && ($count != '0'));
     }
 
+    public static function getAllFutureScheduledFiles()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(file_id)
+FROM cc_schedule
+WHERE ends > now() AT TIME ZONE 'UTC'
+SQL;
+        $files = $con->query($sql)->fetchAll();
+        $real_files = array();
+        foreach ($files as $f) {
+            $real_files[] = $f['file_id'];
+        }
+        return $real_files;
+    }
     /**
      * Returns data related to the scheduled items.
      *

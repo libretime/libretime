@@ -771,6 +771,8 @@ SQL;
         }
 
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
+        
+        $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
 
         //Used by the audio preview functionality in the library.
         foreach ($results['aaData'] as &$row) {
@@ -812,6 +814,9 @@ SQL;
             if ($type == "au") {
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
                 $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'css/images/icon_audioclip.png">';
+                if (in_array($row['id'], $futureScheduledFiles)) {
+                    $row['checkbox'] .= '<span class="small-icon show-partial-filled track-future"></span>';
+                }
             } elseif ($type == "pl") {
                 $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'css/images/icon_playlist.png">';
             } elseif ($type == "st") {
