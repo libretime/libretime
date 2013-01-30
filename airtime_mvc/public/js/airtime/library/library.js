@@ -605,6 +605,27 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     return false;
                 });
+
+                $(nRow).find(".track-future").qtip({
+                    content: {
+                        text: $.i18n._("This track is scheduled in the future")
+                    },
+                    hide: {
+                        delay: 500,
+                        fixed: true
+                    },
+                    style: {
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
+                    },
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
+                });
                 
                 // add a tool tip to appear when the user clicks on the type
                 // icon.
