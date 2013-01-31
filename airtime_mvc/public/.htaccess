@@ -4,15 +4,6 @@ php_value request_order "GPC"
 php_value session.gc_probability 0
 php_value session.auto_start 0
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} -s [OR]
-RewriteCond %{REQUEST_FILENAME} -l [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^.*$ - [NC,L]
-RewriteRule ^.*$ index.php [NC,L]
-#RewriteBase /
-
-
 AddOutputFilterByType DEFLATE text/plain
 AddOutputFilterByType DEFLATE text/html
 AddOutputFilterByType DEFLATE text/xml

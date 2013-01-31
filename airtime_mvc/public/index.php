@@ -12,7 +12,6 @@ function exception_error_handler($errno, $errstr, $errfile, $errline)
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
     return false;
 }
-set_error_handler("exception_error_handler");
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -48,31 +47,8 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 require_once 'Zend/Application.php';
 $application = new Zend_Application(
     APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
+    $_SERVER["AIRTIME_APPINI"]
 );
-
-require_once (APPLICATION_PATH."/logging/Logging.php");
-Logging::setLogPath('/var/log/airtime/zendphp.log');
-
-// Create application, bootstrap, and run
-try {
-    $sapi_type = php_sapi_name();
-    if (substr($sapi_type, 0, 3) == 'cli') {
-        set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());
-        require_once("Bootstrap.php");
-    } else {
-        $application->bootstrap()->run();
-    }
-} catch (Exception $e) {
-    echo $e->getMessage();
-    echo "<pre>";
-    echo $e->getTraceAsString();
-    echo "</pre>";
-    Logging::info($e->getMessage());
-    if (VERBOSE_STACK_TRACE) {
-        Logging::info($e->getTraceAsString());
-    } else {
-        Logging::info($e->getTrace());
-    }
-}
+$application->bootstrap()
+            ->run();
 
