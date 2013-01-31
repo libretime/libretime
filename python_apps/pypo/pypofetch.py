@@ -18,7 +18,8 @@ from std_err_override import LogWriter
 from configobj import ConfigObj
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+logging_cfg = os.path.join(os.path.dirname(__file__), "logging.cfg")
+logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
