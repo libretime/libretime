@@ -10,7 +10,6 @@ telnet_lock = Lock()
 pp = PypoPush(pypoPush_q, telnet_lock)
 
 def test_modify_cue_in():
-
     link = pp.modify_first_link_cue_point([])
     assert len(link) == 0
 
@@ -24,6 +23,4 @@ def test_modify_cue_in():
              "cue_in":"0", "cue_out":"70"}]
     link = pp.modify_first_link_cue_point(link)
     assert len(link) == 1
-
-
 
