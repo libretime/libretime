@@ -132,7 +132,7 @@ class PlaylistController extends Zend_Controller_Action
         if (!$p_isJson) {
             $this->createFullResponse(null);
         } else {
-            die(json_encode(array("error"=>$this->view->error, "result"=>1, "html"=>$this->createFullResponse(null, $p_isJson))));
+            $this->_helper->json->sendJson(json_encode(array("error"=>$this->view->error, "result"=>1, "html"=>$this->createFullResponse(null, $p_isJson))));
         }
     }
 
@@ -488,7 +488,7 @@ class PlaylistController extends Zend_Controller_Action
         }
 
         $result["modified"] = $this->view->modified;
-        die(json_encode($result));
+        $this->_helper->json->sendJson(json_encode($result));
     }
 
     public function smartBlockGenerateAction()
@@ -504,7 +504,7 @@ class PlaylistController extends Zend_Controller_Action
             $form->startForm($params['obj_id']);
             if ($form->isValid($params)) {
                 $result = $bl->generateSmartBlock($params['data']);
-                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true))));
+                $this->_helper->json->sendJson(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true, true))));
             } else {
                 $this->view->obj = $bl;
                 $this->view->id = $bl->getId();
@@ -512,7 +512,7 @@ class PlaylistController extends Zend_Controller_Action
                 $viewPath = 'playlist/smart-block.phtml';
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
-                die(json_encode($result));
+                $this->_helper->json->sendJson(json_encode($result));
             }
         } catch (BlockNotFoundException $e) {
             $this->playlistNotFound('block', true);
@@ -531,9 +531,9 @@ class PlaylistController extends Zend_Controller_Action
             $result = $bl->shuffleSmartBlock();
     
             if ($result['result'] == 0) {
-                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
+                $this->_helper->json->sendJson(json_encode(array("result"=>0, "html"=>$this->createFullResponse($bl, true))));
             } else {
-                die(json_encode($result));
+                $this->_helper->json->sendJson(json_encode($result));
             }
         } catch (BlockNotFoundException $e) {
             $this->playlistNotFound('block', true);
@@ -551,9 +551,9 @@ class PlaylistController extends Zend_Controller_Action
             $result = $pl->shuffle();
             
             if ($result['result'] == 0) {
-                die(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
+                $this->_helper->json->sendJson(json_encode(array("result"=>0, "html"=>$this->createFullResponse($pl, true))));
             } else {
-                die(json_encode($result));
+                $this->_helper->json->sendJson(json_encode($result));
             }
         } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound('block', true);
@@ -574,7 +574,7 @@ class PlaylistController extends Zend_Controller_Action
             $out = $bl->getCriteria();
             $out['isStatic'] = false;
         }
-        die(json_encode($out));
+        $this->_helper->json->sendJson(json_encode($out));
     }
 }
 class WrongTypeToBlockException extends Exception {}

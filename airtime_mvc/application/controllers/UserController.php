@@ -53,7 +53,7 @@ class UserController extends Zend_Controller_Action
                         && $formData['user_id'] != 0) {
                     $this->view->form = $form;
                     $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
-                    die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
+                    $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
                 } elseif ($form->validateLogin($formData)) {
                     $user = new Application_Model_User($formData['user_id']);
                     if (empty($formData['user_id'])) {
@@ -89,14 +89,14 @@ class UserController extends Zend_Controller_Action
                         $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
                     }
                     
-                    die(json_encode(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml'))));
+                    $this->_helper->json->sendJson(json_encode(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml'))));
                 } else {
                     $this->view->form = $form;
-                    die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
+                    $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
                 }
             } else {
                 $this->view->form = $form;
-                die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
+                $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
             }
         }
 
@@ -115,7 +115,7 @@ class UserController extends Zend_Controller_Action
         $post = $this->getRequest()->getPost();
         $users = Application_Model_User::getUsersDataTablesInfo($post);
 
-        die(json_encode($users));
+        $this->_helper->json->sendJson($users);
     }
 
     public function getUserDataAction()
@@ -135,7 +135,7 @@ class UserController extends Zend_Controller_Action
                     && $formData['cu_login'] == 'admin') {
                 $this->view->form = $form;
                 $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
-                die(json_encode(array("html"=>$this->view->render('user/edit-user.phtml'))));
+                $this->_helper->json->sendJson(json_encode(array("html"=>$this->view->render('user/edit-user.phtml'))));
             } else if ($form->isValid($formData) &&
                        $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
                 $user = new Application_Model_User($formData['cu_user_id']);

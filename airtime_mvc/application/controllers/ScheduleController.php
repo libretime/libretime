@@ -218,7 +218,7 @@ class ScheduleController extends Zend_Controller_Action
         $id = $file->getId();
         Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
-        die();
+        $this->_helper->json->sendJson(null);
     }
 
     public function makeContextMenuAction()
@@ -897,7 +897,7 @@ class ScheduleController extends Zend_Controller_Action
                             'title' => _('Download'));
 
         //returns format jjmenu is looking for.
-        die(json_encode($menu));
+        $this->_helper->json->sendJson(json_encode($menu));
     }
 
     /**

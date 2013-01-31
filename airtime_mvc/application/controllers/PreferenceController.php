@@ -70,10 +70,10 @@ class PreferenceController extends Zend_Controller_Action
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
-                die(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml'))));
+                $this->_helper->json->sendJson(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml'))));
             } else {
                 $this->view->form = $form;
-                die(json_encode(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml'))));
+                $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml'))));
             }
         }
         $this->view->form = $form;
@@ -322,7 +322,7 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
                 $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
-                die(json_encode(array(
+                $this->_helper->json->sendJson(json_encode(array(
                     "valid"=>"true",
                     "html"=>$this->view->render('preference/stream-setting.phtml'),
                     "s1_set_admin_pass"=>$s1_set_admin_pass,
@@ -334,7 +334,7 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
-                die(json_encode(array("valid"=>"false", "html"=>$this->view->render('preference/stream-setting.phtml'))));
+                $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('preference/stream-setting.phtml'))));
             }
         }
 
@@ -378,7 +378,7 @@ class PreferenceController extends Zend_Controller_Action
         }
         ksort($result);
         //returns format serverBrowse is looking for.
-        die(json_encode($result));
+        $this->_helper->json->sendJson($result);
     }
 
     public function changeStorDirectoryAction()
@@ -420,7 +420,7 @@ class PreferenceController extends Zend_Controller_Action
         Application_Model_RabbitMq::SendMessageToMediaMonitor('rescan_watch', $data);
         Logging::info("Unhiding all files belonging to:: $dir_path");
         $dir->unhideFiles();
-        die(); # Get rid of this ugliness later
+        $this->_helper->json->sendJson(null);
     }
 
     public function removeWatchDirectoryAction()
@@ -440,7 +440,7 @@ class PreferenceController extends Zend_Controller_Action
         if (Application_Model_Preference::GetImportTimestamp()+10 > $now) {
             $res = true;
         }
-        die(json_encode($res));
+        $this->_helper->json->sendJson(json_encode($res));
     }
 
     public function getLiquidsoapStatusAction()
@@ -455,7 +455,7 @@ class PreferenceController extends Zend_Controller_Action
             }
             $out[] = array("id"=>$i, "status"=>$status);
         }
-        die(json_encode($out));
+        $this->_helper->json->sendJson(json_encode($out));
     }
 
     public function setSourceConnectionUrlAction()
@@ -473,7 +473,7 @@ class PreferenceController extends Zend_Controller_Action
             Application_Model_Preference::SetLiveDjConnectionUrlOverride($override);
         }
 
-        die();
+        $this->_helper->json->sendJson(null);
     }
 
     public function getAdminPasswordStatusAction()
@@ -486,6 +486,6 @@ class PreferenceController extends Zend_Controller_Action
                 $out["s".$i] = true;
             }
         }
-        die(json_encode($out));
+        $this->_helper->json->sendJson(json_encode($out));
     }
 }

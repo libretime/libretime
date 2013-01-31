@@ -507,7 +507,7 @@ class LibraryController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
-        die();
+        $this->_helper->json->sendJson(null); 
     }
 
     public function getUploadToSoundcloudStatusAction()
