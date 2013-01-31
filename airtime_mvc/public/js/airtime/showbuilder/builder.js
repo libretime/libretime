@@ -251,10 +251,11 @@ var AIRTIME = (function(AIRTIME){
     mod.fnItemCallback = function(json) {
         checkError(json);
 
-        mod.getSelectedCursors(); 
+        mod.getSelectedCursors();
         oSchedTable.fnDraw();
-        
+
         mod.enableUI();
+        $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
     };
     
     mod.getSelectedCursors = function() {
