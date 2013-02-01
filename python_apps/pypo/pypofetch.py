@@ -136,7 +136,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            self.logger.info(command)
+            logger.info(command)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
