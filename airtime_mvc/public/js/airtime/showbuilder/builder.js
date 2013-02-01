@@ -81,8 +81,18 @@ var AIRTIME = (function(AIRTIME){
         return mod.showInstances;
     };
     
-    mod.refresh = function() {
+    mod.refresh = function(schedId) {
         mod.resetTimestamp();
+
+        // once a track plays out we need to check if we can update
+        // the is_scheduled flag in cc_files
+        $.post(baseUrl+"schedule/update-future-is-scheduled", 
+                {"format": "json", "schedId": schedId}, function(json) {
+                    var data = $.parseJSON(json);
+                    if (data.redrawLibTable) {
+                        $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
+                    }
+                });
         oSchedTable.fnDraw();
     };
     
@@ -797,7 +807,7 @@ var AIRTIME = (function(AIRTIME){
 						if(refreshInterval > maxRefreshInterval){
 							refreshInterval = maxRefreshInterval;
 						}
-						mod.timeout = setTimeout(mod.refresh, refreshInterval); //need refresh in milliseconds
+						mod.timeout = setTimeout(function() {mod.refresh(aData.id)}, refreshInterval); //need refresh in milliseconds
                         break;
                     }
                 }

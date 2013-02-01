@@ -33,6 +33,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('dj-edit-show', 'json')
                     ->addActionContext('calculate-duration', 'json')
                     ->addActionContext('get-current-show', 'json')
+                    ->addActionContext('update-future-is-scheduled', 'json')
                     ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -949,5 +950,12 @@ class ScheduleController extends Zend_Controller_Action
 
         echo Zend_Json::encode($result);
         exit();
+    }
+
+    public function updateFutureIsScheduledAction()
+    {
+        $schedId = $this->_getParam('schedId');
+        $redrawLibTable = Application_Model_StoredFile::setIsScheduled($schedId, false);
+        $this->_helper->json->sendJson(json_encode(array("redrawLibTable" => $redrawLibTable)));
     }
 }

@@ -98,6 +98,8 @@ CREATE TABLE "cc_files"
 	"cueout" interval default '00:00:00',
 	"silan_check" BOOLEAN default 'f',
 	"hidden" BOOLEAN default 'f',
+	"is_scheduled" BOOLEAN default 'f',
+	"is_playlist" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );
 

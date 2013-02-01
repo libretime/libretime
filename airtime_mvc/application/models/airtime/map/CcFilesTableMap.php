@@ -106,6 +106,8 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('CUEOUT', 'DbCueout', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('SILAN_CHECK', 'DbSilanCheck', 'BOOLEAN', false, null, false);
 		$this->addColumn('HIDDEN', 'DbHidden', 'BOOLEAN', false, null, false);
+		$this->addColumn('IS_SCHEDULED', 'DbIsScheduled', 'BOOLEAN', false, null, false);
+		$this->addColumn('IS_PLAYLIST', 'DbIsPlaylist', 'BOOLEAN', false, null, false);
 		// validators
 	} // initialize()
 

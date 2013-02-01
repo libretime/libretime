@@ -645,7 +645,7 @@ SQL;
         "track_number", "mood", "bpm", "composer", "info_url",
         "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label",
         "copyright", "mime", "language", "filepath", "owner_id",
-        "conductor", "replay_gain", "lptime" );
+        "conductor", "replay_gain", "lptime", "is_playlist", "is_scheduled" );
     }
 
     public static function searchLibraryFiles($datatables)
@@ -697,6 +697,11 @@ SQL;
                 $blSelect[]     = "NULL::TIMESTAMP AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
+            } elseif ($key === "is_scheduled" || $key === "is_playlist") {
+                $plSelect[]     = "NULL::boolean AS ".$key;
+                $blSelect[]     = "NULL::boolean AS ".$key;
+                $fileSelect[]   = $key;
+                $streamSelect[] = "NULL::boolean AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
@@ -771,15 +776,6 @@ SQL;
         }
 
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
-        
-        $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
-        // we are only interested in which files belong to playlists and blocks
-        $playlistBlockFiles = array_merge(Application_Model_Playlist::getAllPlaylistFiles(),
-            Application_Model_Block::getAllBlockContent());
-
-        $futureScheduledStreams = Application_Model_Schedule::getAllFutureScheduledWebstreams();
-        // here we are only interested in which streams belong to a playlist
-        $playlistStreams = Application_Model_Playlist::getAllPlaylistStreams();
 
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
@@ -798,33 +794,8 @@ SQL;
                 $file = Application_Model_StoredFile::Recall($row['id']);
                 $row['soundcloud_status'] = $file->getSoundCloudId();
 
-                //file 'in use' status
-                if (in_array($row['id'], $futureScheduledFiles) && in_array($row['id'], $playlistBlockFiles)) {
-                    $row['status_in_use'] = true;
-                    $row['status_msg'] = _("This track is scheduled in the future and belongs to a playlist or smart block");
-                } elseif (in_array($row['id'], $futureScheduledFiles)) {
-                    $row['status_in_use'] = true;
-                    $row['status_msg'] = _("This track is scheduled in the future");
-                } elseif (in_array($row['id'], $playlistBlockFiles)) {
-                    $row['status_in_use'] = true;
-                    $row['status_msg'] = _("This track belongs to a playlist or smart block");
-                }
-
                 // for audio preview
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-            } else if ($row['ftype'] === "stream") {
-                $row['audioFile'] = $row['id'];
-
-                if (in_array($row['id'], $futureScheduledStreams) && in_array($row['id'], $playlistStreams)) {
-                    $row['status_in_use'] = true;
-                    $row['status_msg'] = _("This webstream is scheduled in the future and belongs to a playlist");
-                } elseif (in_array($row['id'], $futureScheduledStreams)) {
-                    $row['status_in_use'] = true;
-                    $row['status_msg'] = _("This webstream is scheduled in the future");
-                } elseif (in_array($row['id'], $playlistStreams)) {
-                    $row['status_in_use'] = true;
-                    $row['status_msg'] = _("This webstream belongs to a playlist");
-                }
             } else {
                 $row['audioFile'] = $row['id'];
             }
@@ -841,7 +812,6 @@ SQL;
             // any data from the db for these and datatables will complain
             $row['checkbox'] = "";
             $row['image'] = "";
-            $row['status'] = "";
 
             $row['tr_id'] = "{$type}_{$row['id']}";
         }
@@ -1308,6 +1278,37 @@ SQL;
                 sleep($CC_CONFIG['soundcloud-connection-wait']);
             }
         }
+    }
+    
+    public static function setIsPlaylist($p_playlistItems, $p_type, $p_status) {
+        foreach ($p_playlistItems as $item) {
+            $file = self::Recall($item->getDbFileId());
+            $fileId = $file->_file->getDbId();
+            if ($p_type == 'playlist') {
+                // we have to check if the file is in another playlist before
+                // we can update
+                if (!is_null($fileId) && !in_array($fileId, Application_Model_Playlist::getAllPlaylistFiles())) {
+                    $file->_file->setDbIsPlaylist($p_status)->save();
+                }
+            } elseif ($p_type == 'block') {
+                if (!is_null($fileId) && !in_array($fileId, Application_Model_Block::getAllBlockFiles())) {
+                    $file->_file->setDbIsPlaylist($p_status)->save();
+                }
+            }
+        }
+    }
+    
+    public static function setIsScheduled($p_scheduleItem, $p_status) {
+        $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
+        $file = self::Recall($fileId);
+        $updateIsScheduled = false;
+
+        if (!is_null($fileId) && !in_array($fileId, Application_Model_Schedule::getAllFutureScheduledFiles())) {
+            $file->_file->setDbIsScheduled($p_status)->save();
+            $updateIsScheduled = true;
+        }
+
+        return $updateIsScheduled;
     }
 }
 

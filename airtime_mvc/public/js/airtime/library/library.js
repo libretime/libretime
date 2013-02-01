@@ -439,7 +439,8 @@ var AIRTIME = (function(AIRTIME) {
               /* ftype */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
               /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
               /* Type */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
-              /* Status */  { "sTitle" : $.i18n._("Status")              , "mDataProp" : "status"        , "bSearchable" : false                 , "sWidth"      : "60px"                  , "sClass" : "library_status" , "iDataSort" : 0                  }  ,
+              /* Is Scheduled */  { "sTitle" : $.i18n._("Scheduled")              , "mDataProp" : "is_scheduled"        , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
+              /* Is Playlist */  { "sTitle" : $.i18n._("Playlist")              , "mDataProp" : "is_playlist"        , "bSearchable" : false                 , "sWidth"      : "70px"                  , "sClass" : "library_is_playlist"}  ,
               /* Title */  { "sTitle" : $.i18n._("Title")         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
               /* Creator */  { "sTitle" : $.i18n._("Creator")       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
               /* Album */  { "sTitle" : $.i18n._("Album")         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
@@ -580,8 +581,15 @@ var AIRTIME = (function(AIRTIME) {
                     $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Webstream preview")+'" src="'+baseUrl+'css/images/icon_webstream.png">');
                 }
 
-                if (aData.status_in_use !== null && aData.status_in_use) {
-                    $(nRow).find("td.library_status").html('<span class="small-icon media-item-in-use"></span>');
+                if (aData.is_scheduled) {
+                    $(nRow).find("td.library_is_scheduled").html('<span class="small-icon media-item-in-use"></span>');
+                } else if (!aData.is_scheduled) {
+                    $(nRow).find("td.library_is_scheduled").html('');
+                }
+                if (aData.is_playlist) {
+                    $(nRow).find("td.library_is_playlist").html('<span class="small-icon media-item-in-use"></span>');
+                } else if (!aData.is_playlist) {
+                    $(nRow).find("td.library_is_playlist").html('');
                 }
 
                 // add the play function to the library_type td
@@ -633,7 +641,7 @@ var AIRTIME = (function(AIRTIME) {
                     return false;
                 });
 
-                $(nRow).find(".media-item-in-use").qtip({
+                /*$(nRow).find(".media-item-in-use").qtip({
                     content: {
                         text: aData.status_msg
                     },
@@ -652,7 +660,7 @@ var AIRTIME = (function(AIRTIME) {
                         my: "left bottom",
                         at: "right center"
                     },
-                });
+                });*/
 
                 // add a tool tip to appear when the user clicks on the type
                 // icon.

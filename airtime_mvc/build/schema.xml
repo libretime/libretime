@@ -80,6 +80,8 @@
     <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="silan_check" phpName="DbSilanCheck" type="BOOLEAN" defaultValue="false"/>
     <column name="hidden" phpName="DbHidden" type="BOOLEAN" defaultValue="false"/>
+    <column name="is_scheduled" phpName="DbIsScheduled" type="BOOLEAN" defaultValue="false"/>
+    <column name="is_playlist" phpName="DbIsPlaylist" type="BOOLEAN" defaultValue="false"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>

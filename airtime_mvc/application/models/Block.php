@@ -476,10 +476,19 @@ SQL;
                 try {
                     if (is_array($ac) && $ac[1] == 'audioclip') {
                         $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
+
+                        // update is_playlist flag in cc_files to indicate the
+                        // file belongs to a playlist or block (in this case a block)
+                        $db_file = CcFilesQuery::create()->findPk($ac[0], $this->con);
+                        $db_file->setDbIsPlaylist(true)->save($this->con);
+
                         $pos = $pos + 1;
                     } elseif (!is_array($ac)) {
                         $res = $this->insertBlockElement($this->buildEntry($ac, $pos));
                         $pos = $pos + 1;
+
+                        $db_file = CcFilesQuery::create()->findPk($ac, $this->con);
+                        $db_file->setDbIsPlaylist(true)->save($this->con);
                     }
                 } catch (Exception $e) {
                     Logging::info($e->getMessage());
@@ -592,9 +601,20 @@ SQL;
 
         try {
 
+            // we need to get the file id of the item we are deleting
+            // before the item gets deleted from the block
+            $itemsToDelete = CcBlockcontentsQuery::create()
+                ->filterByPrimaryKeys($p_items)
+                ->filterByDbFileId(null, Criteria::NOT_EQUAL)
+                ->find($this->con);
+
             CcBlockcontentsQuery::create()
             ->findPKs($p_items)
             ->delete($this->con);
+
+            // now that the items have been deleted we can update the
+            // is_playlist flag in cc_files
+            Application_Model_StoredFile::setIsPlaylist($itemsToDelete, 'block', false);
 
             $contents = CcBlockcontentsQuery::create()
             ->filterByDbBlockId($this->id)
@@ -965,16 +985,36 @@ SQL;
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
+        // get only the files from the blocks
+        // we are about to delete
+        $itemsToDelete = CcBlockcontentsQuery::create()
+            ->filterByDbBlockId($p_ids)
+            ->filterByDbFileId(null, Criteria::NOT_EQUAL)
+            ->find();
+
+        $updateIsPlaylistFlag = false;
+
         if (!$isAdminOrPM) {
             $leftOver = self::blocksNotOwnedByUser($p_ids, $p_userId);
 
             if (count($leftOver) == 0) {
                 CcBlockQuery::create()->findPKs($p_ids)->delete();
+                $updateIsPlaylistFlag = true;
             } else {
                 throw new BlockNoPermissionException;
             }
         } else {
             CcBlockQuery::create()->findPKs($p_ids)->delete();
+            $updateIsPlaylistFlag = true;
+        }
+        
+        if ($updateIsPlaylistFlag) {
+            // update is_playlist flag in cc_files
+            Application_Model_StoredFile::setIsPlaylist(
+                $itemsToDelete,
+                'block',
+                false
+            );
         }
     }
 
@@ -1000,7 +1040,22 @@ SQL;
     */
     public function deleteAllFilesFromBlock()
     {
+        // get only the files from the playlist
+        // we are about to clear out
+        $itemsToDelete = CcBlockcontentsQuery::create()
+            ->filterByDbBlockId($this->id)
+            ->filterByDbFileId(null, Criteria::NOT_EQUAL)
+            ->find();
+
         CcBlockcontentsQuery::create()->findByDbBlockId($this->id)->delete();
+
+        // update is_playlist flag in cc_files
+        Application_Model_StoredFile::setIsPlaylist(
+            $itemsToDelete,
+            'block',
+            false
+        );
+
         //$this->block->reload();
         $this->block->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
         $this->block->save($this->con);
@@ -1437,7 +1492,7 @@ SQL;
         
         return $output;
     }
-    public static function getAllBlockContent()
+    public static function getAllBlockFiles()
     {
         $con = Propel::getConnection();
         $sql = <<<SQL
