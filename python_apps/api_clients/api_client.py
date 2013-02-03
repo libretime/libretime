@@ -80,23 +80,19 @@ class ApiRequest(object):
         if logger is None: self.logger = logging
         else: self.logger = logger
     def __call__(self,_post_data=None, **kwargs):
-        # TODO : get rid of god damn urllib and replace everything with
-        # grequests or requests at least
         final_url = self.url.params(**kwargs).url()
         if _post_data is not None: _post_data = urllib.urlencode(_post_data)
         try:
             req = urllib2.Request(final_url, _post_data)
             response  = urllib2.urlopen(req).read()
         except Exception, e:
-            self.logger.error('Exception: %s', e)
             import traceback
-            top = traceback.format_exc()
-            self.logger.error("traceback: %s", top)
-            response = ""
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", traceback.format_exc())
+            raise
         # Ghetto hack for now because we don't the content type we are getting
         # (Pointless to look at mime since it's not being set correctly always)
-        try: return json.loads(response)
-        except ValueError: return response
+        return json.loads(response)
 
     def req(self, *args, **kwargs):
         self.__req = lambda : self(*args, **kwargs)
@@ -182,13 +178,20 @@ class AirtimeApiClient(object):
         except: return (False, None)
 
     def notify_liquidsoap_started(self):
-        return self.services.notify_liquidsoap_started()
+        try:
+            self.services.notify_liquidsoap_started()
+        except Exception, e:
+            self.logger.error(str(e))
 
     def notify_media_item_start_playing(self, media_id):
         """ This is a callback from liquidsoap, we use this to notify
         about the currently playing *song*. We get passed a JSON string
         which we handed to liquidsoap in get_liquidsoap_data(). """
-        return self.services.update_start_playing_url(media_id=media_id)
+        try:
+            return self.services.update_start_playing_url(media_id=media_id)
+        except Exception, e:
+            self.logger.error(str(e))
+            return None
 
     # TODO : get this routine out of here it doesn't belong at all here
     def get_liquidsoap_data(self, pkey, schedule):
@@ -199,7 +202,11 @@ class AirtimeApiClient(object):
         return data
 
     def get_shows_to_record(self):
-        return self.services.show_schedule_url()
+        try:
+            return self.services.show_schedule_url()
+        except Exception, e:
+            self.logger.error(str(e))
+            return None
 
     def upload_recorded_show(self, data, headers):
         logger = self.logger
@@ -235,8 +242,12 @@ class AirtimeApiClient(object):
         return response
 
     def check_live_stream_auth(self, username, password, dj_type):
-        return self.services.check_live_stream_auth(
-            username=username, password=password, djtype=dj_type)
+        try:
+            return self.services.check_live_stream_auth(
+                username=username, password=password, djtype=dj_type)
+        except Exception, e:
+            self.logger.error(str(e))
+            return {}
 
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""
@@ -249,7 +260,11 @@ class AirtimeApiClient(object):
         return url
 
     def setup_media_monitor(self):
-        return self.services.media_setup_url()
+        try:
+            return self.services.media_setup_url()
+        except Exception, e:
+            #TODO
+            self.logger.info(str(e))
 
     def send_media_monitor_requests(self, action_list, dry=False):
         """
@@ -310,13 +325,25 @@ class AirtimeApiClient(object):
             return []
 
     def list_all_watched_dirs(self):
-        return self.services.list_all_watched_dirs()
+        try:
+            return self.services.list_all_watched_dirs()
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def add_watched_dir(self, path):
-        return self.services.add_watched_dir(path=base64.b64encode(path))
+        try:
+            return self.services.add_watched_dir(path=base64.b64encode(path))
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def remove_watched_dir(self, path):
-        return self.services.remove_watched_dir(path=base64.b64encode(path))
+        try:
+            return self.services.remove_watched_dir(path=base64.b64encode(path))
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def set_storage_dir(self, path):
         return self.services.set_storage_dir(path=base64.b64encode(path))
@@ -334,7 +361,11 @@ class AirtimeApiClient(object):
         (component = media-monitor, pypo etc.) ip address, and later use it
         to query monit via monit's http service, or download log files via a
         http server. """
-        return self.services.register_component(component=component)
+        try:
+            return self.services.register_component(component=component)
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
@@ -343,6 +374,7 @@ class AirtimeApiClient(object):
             self.services.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
                                           boot_time=time).retry(5)
         except Exception, e:
+            #TODO
             logger.error("Exception: %s", e)
 
     def notify_source_status(self, sourcename, status):
@@ -351,11 +383,16 @@ class AirtimeApiClient(object):
             return self.services.update_source_status.req(sourcename=sourcename,
                                                       status=status).retry(5)
         except Exception, e:
+            #TODO
             logger.error("Exception: %s", e)
 
     def get_bootstrap_info(self):
-        """ Retrive infomations needed on bootstrap time """
-        return self.services.get_bootstrap_info()
+        """ Retrieve infomations needed on bootstrap time """
+        try:
+            return self.services.get_bootstrap_info()
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def get_files_without_replay_gain_value(self, dir_id):
         """
@@ -364,7 +401,11 @@ class AirtimeApiClient(object):
         to this file is the return value.
         """
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
-        return self.services.get_files_without_replay_gain(dir_id=dir_id)
+        try:
+            return self.services.get_files_without_replay_gain(dir_id=dir_id)
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def get_files_without_silan_value(self):
         """
@@ -372,22 +413,35 @@ class AirtimeApiClient(object):
         calculated. This list of files is downloaded into a file and the path
         to this file is the return value.
         """
-        return self.services.get_files_without_silan_value()
+        try:
+            return self.services.get_files_without_silan_value()
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def update_replay_gain_values(self, pairs):
         """
         'pairs' is a list of pairs in (x, y), where x is the file's database
         row id and y is the file's replay_gain value in dB
         """
-        self.logger.debug(self.services.update_replay_gain_value(
-            _post_data={'data': json.dumps(pairs)}))
+        try:
+            self.logger.debug(self.services.update_replay_gain_value(
+                _post_data={'data': json.dumps(pairs)}))
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
+
 
     def update_cue_values_by_silan(self, pairs):
         """
         'pairs' is a list of pairs in (x, y), where x is the file's database
         row id and y is the file's cue values in dB
         """
-        print self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
+        try:
+            print self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
 
     def notify_webstream_data(self, data, media_id):
@@ -395,19 +449,35 @@ class AirtimeApiClient(object):
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        self.logger.info( self.services.notify_webstream_data.req(
-            _post_data={'data':data}, media_id=str(media_id)).retry(5))
+        try:
+            self.logger.info( self.services.notify_webstream_data.req(
+                _post_data={'data':data}, media_id=str(media_id)).retry(5))
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def get_stream_parameters(self):
-        response = self.services.get_stream_parameters()
-        self.logger.debug(response)
-        return response
+        try:
+            response = self.services.get_stream_parameters()
+            self.logger.debug(response)
+            return response
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def push_stream_stats(self, data):
         # TODO : users of this method should do their own error handling
-        response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
-        return response
+        try:
+            response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
+            return response
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
 
     def update_stream_setting_table(self, data):
-        response = self.services.update_stream_setting_table(_post_data={'data': json.dumps(data)})
-        return response
+        try:
+            response = self.services.update_stream_setting_table(_post_data={'data': json.dumps(data)})
+            return response
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))
