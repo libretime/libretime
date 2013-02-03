@@ -1310,6 +1310,14 @@ SQL;
 
         return $updateIsScheduled;
     }
+
+    public function getRealClipLength($p_cuein, $p_cueout) {
+        $sql = "SELECT :cueout::INTERVAL - :cuein::INTERVAL";
+
+        return Application_Common_Database::prepareAndExecute($sql, array(
+            ':cueout' => $p_cueout,
+            ':cuein' => $p_cuein), 'column');
+    }
 }
 
 class DeleteScheduledFileException extends Exception {}

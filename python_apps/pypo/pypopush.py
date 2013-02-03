@@ -9,6 +9,7 @@ import logging.config
 import telnetlib
 import calendar
 import math
+import os
 from pypofetch import PypoFetch
 
 from Queue import Empty
@@ -21,7 +22,8 @@ from configobj import ConfigObj
 
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+logging_cfg = os.path.join(os.path.dirname(__file__), "logging.cfg")
+logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
@@ -249,7 +251,7 @@ class PypoPush(Thread):
                         self.start_web_stream_buffer(current_item)
                     self.start_web_stream(current_item)
                 if is_file(current_item):
-                    self.modify_cue_point(file_chain[0])
+                    file_chain = self.modify_first_link_cue_point(file_chain)
                     self.push_to_liquidsoap(file_chain)
                     #we've changed the queue, so let's refetch it
                     liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
@@ -279,7 +281,7 @@ class PypoPush(Thread):
 
                 chain_to_push = file_chain[problem_at_iteration:]
                 if len(chain_to_push) > 0:
-                    self.modify_cue_point(chain_to_push[0])
+                    chain_to_push = self.modify_first_link_cue_point(chain_to_push)
                     self.push_to_liquidsoap(chain_to_push)
 
 
@@ -362,6 +364,18 @@ class PypoPush(Thread):
             self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_sec)
             original_cue_in_td = timedelta(seconds=float(link['cue_in']))
             link['cue_in'] = self.date_interval_to_seconds(original_cue_in_td) + diff_sec
+
+    def modify_first_link_cue_point(self, chain):
+        if not len(chain):
+            return []
+
+        first_link = chain[0]
+
+        self.modify_cue_point(first_link)
+        if float(first_link['cue_in']) >= float(first_link['cue_out']):
+            chain = chain [1:]
+
+        return chain
 
     """
     Returns two chains, original chain and current_chain. current_chain is a subset of

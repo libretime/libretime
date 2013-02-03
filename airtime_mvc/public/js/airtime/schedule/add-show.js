@@ -37,7 +37,7 @@ function createDateInput(el, onSelect) {
         dayNamesMin: i18n_days_short,
         closeText: $.i18n._('Close'),
         //showButtonPanel: true,
-        firstDay: weekStart
+        firstDay: calendarPref.weekStart
 		});
 }
 
@@ -324,7 +324,7 @@ function setAddShowEvents() {
         dayNamesMin: i18n_days_short,
         closeText: 'Close',
         showButtonPanel: true,
-        firstDay: weekStart
+        firstDay: calendarPref.weekStart
 	});
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],

@@ -274,6 +274,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::setReplayGainModifier($values["replayGainModifier"]);
                     $md = array('schedule' => Application_Model_Schedule::getSchedule());
                     Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
+                    //Application_Model_RabbitMq::PushSchedule();
                 }
 
                 if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {

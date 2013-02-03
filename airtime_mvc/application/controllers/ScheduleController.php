@@ -9,6 +9,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
+                    ->addActionContext('event-feed-preload', 'json')
                     ->addActionContext('make-context-menu', 'json')
                     ->addActionContext('add-show-dialog', 'json')
                     ->addActionContext('add-show', 'json')
@@ -89,15 +90,23 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
         //End Show builder JS/CSS requirements
 
+
         Application_Model_Schedule::createNewFormSections($this->view);
-
         $user = Application_Model_User::getCurrentUser();
-
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $this->view->preloadShowForm = true;
         }
 
-        $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
+        $this->view->headScript()->appendScript(
+            "var calendarPref = {};\n".
+            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "calendarPref.timestamp = ".time().";\n".
+            "calendarPref.timezoneOffset = ".date("Z").";\n".
+            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
+            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
+            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "var calendarEvents = null;"
+        );
     }
 
     public function eventFeedAction()
@@ -109,10 +118,28 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $editable = true;
+        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
+        $this->view->events = $events;
+    }
+
+    public function eventFeedPreloadAction()
+    {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
+        Logging::info($calendar_interval);
+        if ($calendar_interval == "agendaDay") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentDayView();
+        } else if ($calendar_interval == "agendaWeek") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentWeekView();
+        } else if ($calendar_interval == "month") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
         } else {
-            $editable = false;
+            Logging::error("Invalid Calendar Interval '$calendar_interval'");
         }
 
         $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);

@@ -136,13 +136,17 @@ class Application_Model_Scheduler
 
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
+            $storedFile = new Application_Model_StoredFile($file->getDbId());
 
             if (is_null($file) || !$file->visible()) {
                 throw new Exception(_("A selected File does not exist!"));
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
-                $data["cliplength"] = $file->getDbLength();
+                $data["cliplength"] = $storedFile->getRealClipLength(
+                    $file->getDbCuein(),
+                    $file->getDbCueout());
+
                 $data["cuein"] = $file->getDbCuein();
                 $data["cueout"] = $file->getDbCueout();
 
@@ -438,7 +442,6 @@ class Application_Model_Scheduler
                 }
 
                 foreach ($schedFiles as $file) {
-
                     $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
