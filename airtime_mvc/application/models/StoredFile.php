@@ -300,7 +300,7 @@ class Application_Model_StoredFile
                 if (isset($dbmd_copy[$value])) {
                     $propelColumn  = $dbmd_copy[$value];
                     $method        = "get$propelColumn";
-                    $md[$constant] = htmlspecialchars($this->_file->$method());
+                    $md[$constant] = $this->_file->$method();
                 }
             }
         }
