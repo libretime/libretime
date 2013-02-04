@@ -269,7 +269,7 @@ class Application_Model_StoredFile
         $md = array();
         foreach ($this->_dbMD as $dbColumn => $propelColumn) {
             $method = "get$propelColumn";
-            $md[$dbColumn] = $this->_file->$method();
+            $md[$dbColumn] = htmlspecialchars($this->_file->$method());
         }
 
         return $md;
@@ -300,7 +300,7 @@ class Application_Model_StoredFile
                 if (isset($dbmd_copy[$value])) {
                     $propelColumn  = $dbmd_copy[$value];
                     $method        = "get$propelColumn";
-                    $md[$constant] = $this->_file->$method();
+                    $md[$constant] = htmlspecialchars($this->_file->$method());
                 }
             }
         }
