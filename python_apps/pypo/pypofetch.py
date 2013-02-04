@@ -18,7 +18,8 @@ from std_err_override import LogWriter
 from configobj import ConfigObj
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+logging_cfg = os.path.join(os.path.dirname(__file__), "logging.cfg")
+logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
@@ -135,7 +136,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
-            self.logger.info(command)
+            logger.info(command)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()

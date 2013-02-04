@@ -176,7 +176,7 @@ if __name__ == '__main__':
         sys.exit()
 
     api_client = api_client.AirtimeApiClient()
-    
+
     ReplayGainUpdater.start_reply_gain(api_client)
 
     api_client.register_component("pypo")

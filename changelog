@@ -1,6 +1,7 @@
 2.3.0 - Jan 21st, 2013
   * New features
-    * Localization (Brazilian, Chinese, Czech, English, French, German, Italian, Korean, Portugese, Russian, Spanish)
+    * Localization (Chinese, Czech, English, French, German, Italian, Korean,
+	Portuguese, Russian, Spanish)
     * User management page for non-admin users
     * Listener statistics (Icecast/Shoutcast) 
     * Airtime no longer requires Apache document root
