@@ -8,6 +8,7 @@ if ($item['type'] == 2) {
     $bl= new Application_Model_Block($item['item_id']);
     $staticBlock = $bl->isStatic();
 }
+$item["track_title"] = $this->escape($item["track_title"]);
 ?>
     <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["id"]; ?>">
         <div class="list-item-container">
