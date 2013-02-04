@@ -189,8 +189,16 @@ class Recorder(Thread):
         self.server_timezone = ''
         self.queue           = q
         self.loops           = 0
-        self.api_client.register_component("show-recorder")
         self.logger.info("RecorderFetch: init complete")
+
+        success = False
+        while not success:
+            try:
+                self.api_client.register_component('show-recorder')
+                success = True
+            except Exception, e:
+                self.logger.error(str(e))
+                time.sleep(10)
 
     def handle_message(self):
         if not self.queue.empty():

@@ -26,13 +26,10 @@ def generate_liquidsoap_config(ss):
 
 logging.basicConfig(format='%(message)s')
 ac = AirtimeApiClient(logging.getLogger())
-ss = ac.get_stream_setting()
-
-if ss is not None:
-    try:
-        generate_liquidsoap_config(ss)
-    except Exception, e:
-        logging.error(e)
-else:
+try:
+    ss = ac.get_stream_setting()
+    generate_liquidsoap_config(ss)
+except Exception, e:
+    logging.error(str(e))
     print "Unable to connect to the Airtime server."
     sys.exit(1)

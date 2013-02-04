@@ -116,7 +116,6 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction()
     {
-
     }
 
     public function streamSettingAction()
