@@ -269,7 +269,7 @@ class Application_Model_StoredFile
         $md = array();
         foreach ($this->_dbMD as $dbColumn => $propelColumn) {
             $method = "get$propelColumn";
-            $md[$dbColumn] = htmlspecialchars($this->_file->$method());
+            $md[$dbColumn] = $this->_file->$method();
         }
 
         return $md;
