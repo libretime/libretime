@@ -19,31 +19,35 @@ class AirtimeDB(Loggable):
 
         saas = user().root_path
 
-        # dirs_setup is a dict with keys:
-        # u'watched_dirs' and u'stor' which point to lists of corresponding
-        # dirs
-        dirs_setup = self.apc.setup_media_monitor()
-        dirs_setup[u'stor'] = normpath( join(saas, dirs_setup[u'stor'] ) )
-        dirs_setup[u'watched_dirs'] = map(lambda p: normpath(join(saas,p)),
-            dirs_setup[u'watched_dirs'])
-        dirs_with_id = dict([ (k,normpath(v)) for k,v in
-            self.apc.list_all_watched_dirs()['dirs'].iteritems() ])
+        try:
+            # dirs_setup is a dict with keys:
+            # u'watched_dirs' and u'stor' which point to lists of corresponding
+            # dirs
+            dirs_setup = self.apc.setup_media_monitor()
+            dirs_setup[u'stor'] = normpath( join(saas, dirs_setup[u'stor'] ) )
+            dirs_setup[u'watched_dirs'] = map(lambda p: normpath(join(saas,p)),
+                dirs_setup[u'watched_dirs'])
+            dirs_with_id = dict([ (k,normpath(v)) for k,v in
+                self.apc.list_all_watched_dirs()['dirs'].iteritems() ])
 
-        self.id_to_dir = dirs_with_id
-        self.dir_to_id = dict([ (v,k) for k,v in dirs_with_id.iteritems() ])
+            self.id_to_dir = dirs_with_id
+            self.dir_to_id = dict([ (v,k) for k,v in dirs_with_id.iteritems() ])
 
-        self.base_storage = dirs_setup[u'stor']
-        self.storage_paths = mmp.expand_storage( self.base_storage )
-        self.base_id = self.dir_to_id[self.base_storage]
+            self.base_storage = dirs_setup[u'stor']
+            self.storage_paths = mmp.expand_storage( self.base_storage )
+            self.base_id = self.dir_to_id[self.base_storage]
 
-        # hack to get around annoying schema of airtime db
-        self.dir_to_id[ self.recorded_path() ] = self.base_id
-        self.dir_to_id[ self.import_path() ] = self.base_id
+            # hack to get around annoying schema of airtime db
+            self.dir_to_id[ self.recorded_path() ] = self.base_id
+            self.dir_to_id[ self.import_path() ] = self.base_id
 
-        # We don't know from the x_to_y dict which directory is watched or
-        # store...
-        self.watched_directories = set([ os.path.normpath(p) for p in
-            dirs_setup[u'watched_dirs'] ])
+            # We don't know from the x_to_y dict which directory is watched or
+            # store...
+            self.watched_directories = set([ os.path.normpath(p) for p in
+                dirs_setup[u'watched_dirs'] ])
+        except Exception, e:
+            self.logger.info(str(e))
+
 
     def to_id(self, directory):
         """ directory path -> id """

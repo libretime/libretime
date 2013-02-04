@@ -206,23 +206,25 @@ class PypoFetch(Thread):
     """
     def set_bootstrap_variables(self):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
-        info = self.api_client.get_bootstrap_info()
-        if info is None:
+        try:
+            info = self.api_client.get_bootstrap_info()
+        except Exception, e:
             self.logger.error('Unable to get bootstrap info.. Exiting pypo...')
-        else:
-            self.logger.debug('info:%s', info)
-            commands = []
-            for k, v in info['switch_status'].iteritems():
-                commands.append(self.switch_source_temp(k, v))
+            self.logger.error(str(e))
 
-            stream_format = info['stream_label']
-            station_name = info['station_name']
-            fade = info['transition_fade']
+        self.logger.debug('info:%s', info)
+        commands = []
+        for k, v in info['switch_status'].iteritems():
+            commands.append(self.switch_source_temp(k, v))
 
-            commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
-            commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
-            commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
-            PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
+        stream_format = info['stream_label']
+        station_name = info['station_name']
+        fade = info['transition_fade']
+
+        commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
+        commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
+        commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
+        PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
 
     def restart_liquidsoap(self):
 
