@@ -68,7 +68,7 @@ try:
         subtotal += total
         total = 0
         try:
-            api_client.update_cue_values_by_silan(processed_data)
+            print api_client.update_cue_values_by_silan(processed_data)
         except Exception ,e:
             print e
             print traceback.format_exc()

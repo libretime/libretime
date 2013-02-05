@@ -146,7 +146,6 @@ class AirtimeApiClient(object):
             sys.exit(1)
 
     def __get_airtime_version(self):
-        # TODO : maybe fix this function to drop an exception?
         try: return self.services.version_url()[u'version']
         except Exception: return -1
 
@@ -154,18 +153,18 @@ class AirtimeApiClient(object):
         logger = self.logger
         version = self.__get_airtime_version()
         # logger.info('Airtime version found: ' + str(version))
-        if (version == -1):
+        if version == -1:
             if (verbose):
                 logger.info('Unable to get Airtime version number.\n')
             return False
-        elif (version[0:3] != AIRTIME_VERSION[0:3]):
-            if (verbose):
+        elif version[0:3] != AIRTIME_VERSION[0:3]:
+            if verbose:
                 logger.info('Airtime version found: ' + str(version))
                 logger.info('pypo is at version ' + AIRTIME_VERSION +
                     ' and is not compatible with this version of Airtime.\n')
             return False
         else:
-            if (verbose):
+            if verbose:
                 logger.info('Airtime version: ' + str(version))
                 logger.info('pypo is at version ' + AIRTIME_VERSION + ' and is compatible with this version of Airtime.')
             return True
@@ -192,14 +191,6 @@ class AirtimeApiClient(object):
         except Exception, e:
             self.logger.error(str(e))
             return None
-
-    # TODO : get this routine out of here it doesn't belong at all here
-    def get_liquidsoap_data(self, pkey, schedule):
-        playlist = schedule[pkey]
-        data = dict()
-        try: data["schedule_id"] = playlist['id']
-        except Exception: data["schedule_id"] = 0
-        return data
 
     def get_shows_to_record(self):
         try:
@@ -259,12 +250,12 @@ class AirtimeApiClient(object):
         url = url.replace("%%api_key%%", self.config["api_key"])
         return url
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def setup_media_monitor(self):
-        try:
-            return self.services.media_setup_url()
-        except Exception, e:
-            #TODO
-            self.logger.info(str(e))
+        return self.services.media_setup_url()
 
     def send_media_monitor_requests(self, action_list, dry=False):
         """
@@ -323,37 +314,40 @@ class AirtimeApiClient(object):
             self.logger.error("Could not find index 'files' in dictionary: %s",
                     str(response))
             return []
-
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def list_all_watched_dirs(self):
-        try:
-            return self.services.list_all_watched_dirs()
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        return self.services.list_all_watched_dirs()
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def add_watched_dir(self, path):
-        try:
-            return self.services.add_watched_dir(path=base64.b64encode(path))
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        return self.services.add_watched_dir(path=base64.b64encode(path))
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def remove_watched_dir(self, path):
-        try:
-            return self.services.remove_watched_dir(path=base64.b64encode(path))
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        return self.services.remove_watched_dir(path=base64.b64encode(path))
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def set_storage_dir(self, path):
         return self.services.set_storage_dir(path=base64.b64encode(path))
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def get_stream_setting(self):
-        logger = self.logger
-        try: return self.services.get_stream_setting()
-        except Exception, e:
-            logger.error("Exception: %s", e)
-            return None
+        return self.services.get_stream_setting()
 
     def register_component(self, component):
         """ Purpose of this method is to contact the server with a "Hey its
@@ -361,11 +355,7 @@ class AirtimeApiClient(object):
         (component = media-monitor, pypo etc.) ip address, and later use it
         to query monit via monit's http service, or download log files via a
         http server. """
-        try:
-            return self.services.register_component(component=component)
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        return self.services.register_component(component=component)
 
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
@@ -388,11 +378,7 @@ class AirtimeApiClient(object):
 
     def get_bootstrap_info(self):
         """ Retrieve infomations needed on bootstrap time """
-        try:
-            return self.services.get_bootstrap_info()
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        return self.services.get_bootstrap_info()
 
     def get_files_without_replay_gain_value(self, dir_id):
         """
@@ -404,8 +390,8 @@ class AirtimeApiClient(object):
         try:
             return self.services.get_files_without_replay_gain(dir_id=dir_id)
         except Exception, e:
-            #TODO
             self.logger.error(str(e))
+            return []
 
     def get_files_without_silan_value(self):
         """
@@ -416,20 +402,16 @@ class AirtimeApiClient(object):
         try:
             return self.services.get_files_without_silan_value()
         except Exception, e:
-            #TODO
             self.logger.error(str(e))
+            return []
 
     def update_replay_gain_values(self, pairs):
         """
         'pairs' is a list of pairs in (x, y), where x is the file's database
         row id and y is the file's replay_gain value in dB
         """
-        try:
-            self.logger.debug(self.services.update_replay_gain_value(
-                _post_data={'data': json.dumps(pairs)}))
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        self.logger.debug(self.services.update_replay_gain_value(
+            _post_data={'data': json.dumps(pairs)}))
 
 
     def update_cue_values_by_silan(self, pairs):
@@ -437,11 +419,7 @@ class AirtimeApiClient(object):
         'pairs' is a list of pairs in (x, y), where x is the file's database
         row id and y is the file's cue values in dB
         """
-        try:
-            print self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        return self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
 
 
     def notify_webstream_data(self, data, media_id):
@@ -449,30 +427,18 @@ class AirtimeApiClient(object):
         Update the server with the latest metadata we've received from the
         external webstream
         """
-        try:
-            self.logger.info( self.services.notify_webstream_data.req(
-                _post_data={'data':data}, media_id=str(media_id)).retry(5))
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        self.logger.info( self.services.notify_webstream_data.req(
+            _post_data={'data':data}, media_id=str(media_id)).retry(5))
 
     def get_stream_parameters(self):
-        try:
-            response = self.services.get_stream_parameters()
-            self.logger.debug(response)
-            return response
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        response = self.services.get_stream_parameters()
+        self.logger.debug(response)
+        return response
 
     def push_stream_stats(self, data):
         # TODO : users of this method should do their own error handling
-        try:
-            response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
-            return response
-        except Exception, e:
-            #TODO
-            self.logger.error(str(e))
+        response = self.services.push_stream_stats(_post_data={'data': json.dumps(data)})
+        return response
 
     def update_stream_setting_table(self, data):
         try:

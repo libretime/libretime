@@ -103,7 +103,10 @@ class ListenerStat(Thread):
                     self.update_listener_stat_error(v["mount"], 'OK')
                 except Exception, e:
                     self.logger.error('Exception: %s', e)
-                    self.update_listener_stat_error(v["mount"], str(e))
+                    try:
+                        self.update_listener_stat_error(v["mount"], str(e))
+                    except Exception, e:
+                        self.logger.error('Exception: %s', e)
 
         return stats
 
