@@ -257,6 +257,10 @@ SQL;
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
+
+            // XSS exploit prevention
+            $row["track_title"] = htmlspecialchars($row["track_title"]);
+            $row["creator"] = htmlspecialchars($row["creator"]);
         }
 
         return $rows;
@@ -1241,7 +1245,7 @@ SQL;
         foreach ($out as $crit) {
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
-            $value = $crit->getDbValue();
+            $value = htmlspecialchars($crit->getDbValue());
             $extra = $crit->getDbExtra();
 
             if ($criteria == "limit") {

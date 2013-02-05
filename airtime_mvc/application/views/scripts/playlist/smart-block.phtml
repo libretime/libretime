@@ -39,7 +39,7 @@ if (isset($this->obj)) {
             <a id="playlist_name_display" contenteditable="true">
             <?php
                 if (isset($this->unsavedName)) echo $this->unsavedName;
-                else echo $this->obj->getName();
+                else echo $this->escape($this->obj->getName());
             ?>
             </a>
         </h3>
