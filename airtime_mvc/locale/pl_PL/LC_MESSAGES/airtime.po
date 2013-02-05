@@ -8,9 +8,10 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-02-03 20:34+0100\n"
-"Last-Translator: \n"
-"Language-Team: SEMATpl & PallottiFM + radioaktywne.pl <serwer@pallotti.fm>\n"
+"PO-Revision-Date: 2013-02-05 20:02+0100\n"
+"Last-Translator: Sebastian Matuszewski <sematuszewski@gmail.com>\n"
+"Language-Team: SEMATpl (licencjonuj.eu) & PallottiFM (pallotti.fm) + "
+"radioaktywne.pl <serwer@pallotti.fm>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -94,7 +95,6 @@ msgstr "Informacje"
 
 #: airtime_mvc/application/layouts/scripts/bare.phtml:5
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
-#, fuzzy
 msgid "Live stream"
 msgstr "Transmisja na żywo"
 
@@ -237,7 +237,7 @@ msgstr "Wartość cue-out nie może być mniejsza od cue-in."
 
 #: airtime_mvc/application/models/Show.php:180
 msgid "Shows can have a max length of 24 hours."
-msgstr "Programy mogą mieć maksymalną długość 24 godzin."
+msgstr "Audycje mogą mieć maksymalną długość 24 godzin."
 
 #: airtime_mvc/application/models/Show.php:211
 #: airtime_mvc/application/forms/AddShowWhen.php:120
@@ -249,9 +249,8 @@ msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
-"Nie można planować programów nakładających się na siebie.\n"
-"Uwaga: zmiana programu powoduje automatyczną zmianę wszystkich jego "
-"powtórzeń."
+"Nie można planować audycji nakładających się na siebie.\n"
+"Uwaga: zmiana audycji powoduje automatyczną zmianę wszystkich jej powtórzeń."
 
 #: airtime_mvc/application/models/Webstream.php:157
 msgid "Length needs to be greater than 0 minutes"
@@ -300,15 +299,15 @@ msgstr "Nie rozpoznano typu strumienia: %s"
 
 #: airtime_mvc/application/models/ShowInstance.php:245
 msgid "Can't drag and drop repeating shows"
-msgstr "Nie można użyć metody 'przeciągnij i upuść' dla powtórek programów."
+msgstr "Nie można użyć metody 'przeciągnij i upuść' dla powtórek audycji."
 
 #: airtime_mvc/application/models/ShowInstance.php:253
 msgid "Can't move a past show"
-msgstr "Nie można przenieść programu archiwalnego"
+msgstr "Nie można przenieść audycji archiwalnej"
 
 #: airtime_mvc/application/models/ShowInstance.php:270
 msgid "Can't move show into past"
-msgstr "Nie można przenieść programu w przeszłość"
+msgstr "Nie można przenieść audycji w przeszłość"
 
 #: airtime_mvc/application/models/ShowInstance.php:276
 #: airtime_mvc/application/forms/AddShowWhen.php:254
@@ -317,17 +316,17 @@ msgstr "Nie można przenieść programu w przeszłość"
 #: airtime_mvc/application/forms/AddShowWhen.php:297
 #: airtime_mvc/application/forms/AddShowWhen.php:302
 msgid "Cannot schedule overlapping shows"
-msgstr "Nie można planować nakładających się programów"
+msgstr "Nie można planować nakładających się audycji"
 
 #: airtime_mvc/application/models/ShowInstance.php:290
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
 msgstr ""
-"Nagrywany program nie może zostać przeniesiony na mniej niż 1h przed jego "
+"Nagrywana audycja nie może zostać przeniesiona na mniej niż 1h przed jej "
 "powtórką."
 
 #: airtime_mvc/application/models/ShowInstance.php:303
 msgid "Show was deleted because recorded show does not exist!"
-msgstr "Program został usunięty, ponieważ nagranie nie istnieje!"
+msgstr "Audycja została usunięta, ponieważ nagranie nie istnieje!"
 
 #: airtime_mvc/application/models/ShowInstance.php:310
 msgid "Must wait 1 hour to rebroadcast."
@@ -335,11 +334,11 @@ msgstr "Należy odczekać 1 godzinę przed ponownym odtworzeniem."
 
 #: airtime_mvc/application/models/ShowInstance.php:342
 msgid "can't resize a past show"
-msgstr "nie można zmienić rozmiaru przeszłego programu"
+msgstr "nie można zmienić rozmiaru przeszłej audycji"
 
 #: airtime_mvc/application/models/ShowInstance.php:364
 msgid "Should not overlap shows"
-msgstr "Programy nie powinny nakładać się."
+msgstr "Audycje nie powinny nakładać się."
 
 #: airtime_mvc/application/models/Auth.php:33
 #, php-format
@@ -376,22 +375,22 @@ msgstr "Harmonogram, który przeglądasz jest nieaktualny!"
 #: airtime_mvc/application/models/Scheduler.php:105
 #, php-format
 msgid "You are not allowed to schedule show %s."
-msgstr "Nie posiadasz uprawnień, aby zaplanować program %s."
+msgstr "Nie posiadasz uprawnień, aby zaplanować audycję %s."
 
 #: airtime_mvc/application/models/Scheduler.php:109
 msgid "You cannot add files to recording shows."
-msgstr "Nie można dodawać plików do nagrywanych programów."
+msgstr "Nie można dodawać plików do nagrywanych audycji."
 
 #: airtime_mvc/application/models/Scheduler.php:115
 #, php-format
 msgid "The show %s is over and cannot be scheduled."
 msgstr ""
-"Program %s przekracza dopuszczalną długość i nie może zostać zaplanowany."
+"Audycja %s przekracza dopuszczalną długość i nie może zostać zaplanowana."
 
 #: airtime_mvc/application/models/Scheduler.php:122
 #, php-format
 msgid "The show %s has been previously updated!"
-msgstr "Program %s został zaktualizowany wcześniej!"
+msgstr "Audycja %s została zaktualizowana wcześniej!"
 
 #: airtime_mvc/application/models/Scheduler.php:141
 #: airtime_mvc/application/models/Scheduler.php:223
@@ -821,7 +820,7 @@ msgstr "Adres URL do źródła nadrzędnego"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:78
 msgid "Show Source Connection URL"
-msgstr "Adres URL dostępu do źródła programu"
+msgstr "Adres URL dostępu do źródła audycji"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:87
 msgid "Master Source Port"
@@ -839,11 +838,11 @@ msgstr "Nadrzędny punkt montowania źródła"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:106
 msgid "Show Source Port"
-msgstr "Port źródłowy programu"
+msgstr "Port źródłowy audycji"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:115
 msgid "Show Source Mount Point"
-msgstr "Źródłowy punkt montowania programu"
+msgstr "Źródłowy punkt montowania audycji"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:153
 msgid "You cannot use same port as Master DJ port."
@@ -1105,7 +1104,7 @@ msgstr "Nazwa:"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
-msgstr "Program bez nazwy"
+msgstr "Audycja bez nazwy"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:36
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:131
@@ -1154,11 +1153,11 @@ msgstr "Artysta - Tytuł"
 
 #: airtime_mvc/application/forms/StreamSetting.php:56
 msgid "Show - Artist - Title"
-msgstr "Program - Artysta -Tytuł"
+msgstr "Audycja - Artysta -Tytuł"
 
 #: airtime_mvc/application/forms/StreamSetting.php:57
 msgid "Station name - Show name"
-msgstr "Nazwa stacji - Nazwa programu"
+msgstr "Nazwa stacji - Nazwa audycji"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
@@ -1208,11 +1207,11 @@ msgstr "Powtarzanie?"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:103
 msgid "Cannot create show in the past"
-msgstr "Nie można utworzyć programu w przeszłości"
+msgstr "Nie można utworzyć audycji w przeszłości"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:111
 msgid "Cannot modify start date/time of the show that is already started"
-msgstr "Nie mozna zmienić daty/czasu programu, który się już rozpoczął"
+msgstr "Nie mozna zmienić daty/czasu audycji, która się już rozpoczęła"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:130
 msgid "Cannot have duration 00h 00m"
@@ -1467,11 +1466,11 @@ msgstr "Wartość nie może być pusta"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:72
 msgid "Show:"
-msgstr "Program:"
+msgstr "Audycja:"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:80
 msgid "All My Shows:"
-msgstr "Wszystkie moje programy:"
+msgstr "Wszystkie moje audycje:"
 
 #: airtime_mvc/application/forms/EditUser.php:118
 msgid "Timezone:"
@@ -1575,7 +1574,7 @@ msgstr "Sobota"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:16
 msgid "Automatically Upload Recorded Shows"
-msgstr "Automatycznie dodawaj nagrane programy"
+msgstr "Automatycznie dodawaj nagrane audycje"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:26
 msgid "Enable SoundCloud Upload"
@@ -1790,7 +1789,7 @@ msgstr "Nic nie zaplanowano"
 
 #: airtime_mvc/application/controllers/LocaleController.php:40
 msgid "Current Show:"
-msgstr "Aktualny program:"
+msgstr "Aktualna audycja:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:41
 msgid "Current"
@@ -1854,7 +1853,7 @@ msgstr "Edytuj Metadane."
 
 #: airtime_mvc/application/controllers/LocaleController.php:62
 msgid "Add to selected show"
-msgstr "Dodaj do wybranego programu"
+msgstr "Dodaj do wybranej audycji"
 
 #: airtime_mvc/application/controllers/LocaleController.php:63
 msgid "Select"
@@ -2034,7 +2033,7 @@ msgid ""
 "adding it to a show."
 msgstr ""
 "Statyczny smart block będzie zapisywał kryteria i zawartość bezpośrednio, co "
-"umożliwia edycję i wyświetlanie go w bibliotece, przed dodaniem do programu."
+"umożliwia edycję i wyświetlanie go w bibliotece, przed dodaniem do audycji."
 
 #: airtime_mvc/application/controllers/LocaleController.php:135
 msgid ""
@@ -2043,7 +2042,7 @@ msgid ""
 "edit the content in the Library."
 msgstr ""
 "Dynamiczny smart block zapisuje tylko kryteria. Jego zawartość będzie "
-"generowana automatycznie po dodaniu go do programu. Nie będzie można go "
+"generowana automatycznie po dodaniu go do audycji. Nie będzie można go "
 "wyświetlać i edytować w zawartości biblioteki."
 
 #: airtime_mvc/application/controllers/LocaleController.php:137
@@ -2174,15 +2173,15 @@ msgid ""
 "Check this box to automatically switch off Master/Show source upon source "
 "disconnection."
 msgstr ""
-"To pole służy do automatycznego wyłączenia źródła nadrzędnego/źródła "
-"programu po jego odłączeniu."
+"To pole służy do automatycznego wyłączenia źródła nadrzędnego/źródła audycji "
+"po jego odłączeniu."
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid ""
 "Check this box to automatically switch on Master/Show source upon source "
 "connection."
 msgstr ""
-"To pole służy automatycznego uruchomienia źródła nadrzędnego/źródła programu "
+"To pole służy automatycznego uruchomienia źródła nadrzędnego/źródła audycji "
 "na połączeniu źródłowym"
 
 #: airtime_mvc/application/controllers/LocaleController.php:182
@@ -2241,7 +2240,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:192
 msgid "Specify custom authentication which will work only for this show."
-msgstr "Ustal własne uwierzytelnienie tylko dla tego programu."
+msgstr "Ustal własne uwierzytelnienie tylko dla tej audycji."
 
 #: airtime_mvc/application/controllers/LocaleController.php:194
 msgid "The show instance doesn't exist anymore!"
@@ -2249,11 +2248,11 @@ msgstr "Instancja audycji już nie istnieje."
 
 #: airtime_mvc/application/controllers/LocaleController.php:198
 msgid "Show"
-msgstr "Program"
+msgstr "Audycja"
 
 #: airtime_mvc/application/controllers/LocaleController.php:199
 msgid "Show is empty"
-msgstr "Program jest pusty"
+msgstr "Audycja jest pusta"
 
 #: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "1m"
@@ -2285,7 +2284,7 @@ msgstr "Odbieranie danych z serwera"
 
 #: airtime_mvc/application/controllers/LocaleController.php:213
 msgid "This show has no scheduled content."
-msgstr "Ten program nie ma zawartości"
+msgstr "Ta audycja nie ma zawartości"
 
 #: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "This show is not completely filled with content."
@@ -2404,7 +2403,7 @@ msgstr "miesiąć"
 msgid ""
 "Shows longer than their scheduled time will be cut off by a following show."
 msgstr ""
-"Programy o czasie dłuższym niż zaplanowany będą przerywane przez następne ."
+"Audycje o czasie dłuższym niż zaplanowany będą przerywane przez następne ."
 
 #: airtime_mvc/application/controllers/LocaleController.php:261
 msgid "Cancel Current Show?"
@@ -2462,7 +2461,7 @@ msgstr "Wyciszanie [Fade out]"
 
 #: airtime_mvc/application/controllers/LocaleController.php:282
 msgid "Show Empty"
-msgstr "Program jest pusty"
+msgstr "Audycja jest pusta"
 
 #: airtime_mvc/application/controllers/LocaleController.php:283
 msgid "Recording From Line In"
@@ -2470,7 +2469,7 @@ msgstr "Nagrywaanie z wejścia liniowego"
 
 #: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Cannot schedule outside a show."
-msgstr "Nie ma możliwości planowania poza programem"
+msgstr "Nie ma możliwości planowania poza audycją."
 
 #: airtime_mvc/application/controllers/LocaleController.php:289
 msgid "Moving 1 Item"
@@ -2491,7 +2490,7 @@ msgstr "Odznacz wszystkie"
 
 #: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Remove overbooked tracks"
-msgstr "Usuń utwory niemieszczące się w ramach czasowych programu"
+msgstr "Usuń utwory niemieszczące się w ramach czasowych audycji"
 
 #: airtime_mvc/application/controllers/LocaleController.php:296
 msgid "Remove selected scheduled items"
@@ -2503,7 +2502,7 @@ msgstr "Przejdź do obecnie odtwarzanej ściezki"
 
 #: airtime_mvc/application/controllers/LocaleController.php:298
 msgid "Cancel current show"
-msgstr "Skasuj obecny program"
+msgstr "Skasuj obecną audycję"
 
 #: airtime_mvc/application/controllers/LocaleController.php:303
 msgid "Open library to add or remove content"
@@ -2541,7 +2540,7 @@ msgstr "Przeglądanie harmonogramu"
 
 #: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "View show content"
-msgstr "Przeglądanie zawartości programów"
+msgstr "Przeglądanie zawartości audycji"
 
 #: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "DJs can do the following:"
@@ -2549,7 +2548,7 @@ msgstr "Prowadzący ma możliwość:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Manage assigned show content"
-msgstr "Zarządzać przypisaną sobie zawartością programu"
+msgstr "Zarządzać przypisaną sobie zawartością audycji"
 
 #: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Import media files"
@@ -2573,7 +2572,7 @@ msgstr "Przeglądać i zarządzać zawartością audycji"
 
 #: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Schedule shows"
-msgstr "Planować programy"
+msgstr "Planować audycję"
 
 #: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Manage all library content"
@@ -2800,7 +2799,7 @@ msgstr "Usuń"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:212
 msgid "show does not exist"
-msgstr "program nie istnieje"
+msgstr "audycja nie istnieje"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
 msgid ""
@@ -2949,17 +2948,17 @@ msgstr "Usuń całą zawartość"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:271
 msgid "Show Content"
-msgstr "Zawartość programu"
+msgstr "Zawartość audycji"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:295
 #: airtime_mvc/application/controllers/ScheduleController.php:302
 msgid "Cancel Current Show"
-msgstr "Skasuj obecny program"
+msgstr "Skasuj obecną audycję"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:299
 #: airtime_mvc/application/controllers/ScheduleController.php:309
 msgid "Edit Show"
-msgstr "Edytuj program"
+msgstr "Edytuj audycję"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:317
 msgid "Delete This Instance"
@@ -2972,7 +2971,7 @@ msgstr "Usuń ten i wszystkie inne instancje"
 #: airtime_mvc/application/controllers/ScheduleController.php:445
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
-msgstr "Retransmisja programu %sfrom%sat%s"
+msgstr "Retransmisja audycji %s z %s o %s"
 
 #: airtime_mvc/application/controllers/WebstreamController.php:29
 #: airtime_mvc/application/controllers/WebstreamController.php:33
@@ -3009,7 +3008,7 @@ msgstr "Źródło Nadrzędne"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:38
 msgid "Show Source"
-msgstr "Źródło Programu"
+msgstr "Źródło audycji"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
@@ -3123,9 +3122,9 @@ msgid ""
 "'+ Show' icon. This can be either a one-time or repeating show. Only admins "
 "and program managers can add shows."
 msgstr ""
-"Utwórz program przechodząc do '\"kalendarza\" w pasku \"menu\" a następnie "
-"klikając w ikonę \"+ Program\". Można utworzyć program do jednorazowego bądź "
-"wielokrotnego odtwarzania. Jedynie administratorzy i zarządzający programami "
+"Utwórz audycję przechodząc do '\"kalendarza\" w pasku \"menu\" a następnie "
+"klikając w ikonę \"+ Audycja\". Można utworzyć audycję do jednorazowego bądź "
+"wielokrotnego odtwarzania. Jedynie administratorzy i zarządzający audycjami "
 "mogą  je dodawać."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
@@ -3133,7 +3132,7 @@ msgid ""
 "Add media to the show by going to your show in the Schedule calendar, left-"
 "clicking on it and selecting 'Add / Remove Content'"
 msgstr ""
-"Dodaj media do programu przez przejście do programu z kalendarza, kliknij na "
+"Dodaj media do audycji przez przejście do audycji w kalendarzu, kliknij na "
 "niego lewym przyciskiem myszki wybierając opcję 'dodaj/usuń zawartość'"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
@@ -3141,8 +3140,7 @@ msgid ""
 "Select your media from the left pane and drag them to your show in the right "
 "pane."
 msgstr ""
-"Wybierz media z lewego okna i przeciągnij do utworzonego programu w prawym "
-"oknie"
+"Wybierz media z lewego okna i przeciągnij do utworzonej audyji w prawym oknie"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:12
 msgid "Then you're good to go!"
@@ -3259,12 +3257,12 @@ msgstr "Oryginalna długość:"
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
 msgid "Add this show"
-msgstr "Dodaj program"
+msgstr "Dodaj audycję"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
 msgid "Update show"
-msgstr "Aktualizuj program"
+msgstr "Aktualizuj audycję"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:10
 msgid "What"
@@ -3577,7 +3575,7 @@ msgstr "RESETUJ"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "Adres URL połączenia dla Żródła Programu"
+msgstr "Adres URL połączenia dla Żródła audycji"
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #, php-format
