@@ -325,6 +325,8 @@ class Application_Model_Scheduler
             $filler->setDbStarts($DT)
                 ->setDbEnds($this->nowDT)
                 ->setDbClipLength($cliplength)
+                ->setDbCueIn('00:00:00')
+                ->setDbCueOut('00:00:00')
                 ->setDbPlayoutStatus(-1)
                 ->setDbInstanceId($instance->getDbId())
                 ->save($this->con);
