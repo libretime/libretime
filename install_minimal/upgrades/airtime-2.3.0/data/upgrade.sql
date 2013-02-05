@@ -17,6 +17,8 @@ UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id
 
 UPDATE cc_files SET cueout = length where cueout = '00:00:00';
 
+UPDATE cc_schedule SET cue_out = clip_length WHERE cue_out = '00:00:00';
+
 INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
 INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
