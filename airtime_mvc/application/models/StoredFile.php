@@ -775,6 +775,9 @@ SQL;
                 $fromTable = $unionTable;
         }
 
+        // update is_scheduled to false for tracks that
+        // have already played out
+        self::updatePastFilesIsScheduled();
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         foreach ($results['aaData'] as &$row) {
@@ -1298,8 +1301,12 @@ SQL;
         }
     }
     
-    public static function setIsScheduled($p_scheduleItem, $p_status) {
-        $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
+    public static function setIsScheduled($p_scheduleItem, $p_status, $p_fileId=null) {
+        if (is_null($p_fileId)) {
+            $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
+        } else {
+            $fileId = $p_fileId;
+        }
         $file = self::Recall($fileId);
         $updateIsScheduled = false;
 
@@ -1309,6 +1316,22 @@ SQL;
         }
 
         return $updateIsScheduled;
+    }
+
+    public static function updatePastFilesIsScheduled()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT file_id FROM cc_schedule
+WHERE ends < now() at time zone 'UTC'
+SQL;
+        $files = $con->query($sql)->fetchAll();
+        foreach ($files as $file) {
+            if (!is_null($file['file_id'])) {
+                self::setIsScheduled(null, false, $file['file_id']);
+            }
+        }
+
     }
 
     public function getRealClipLength($p_cuein, $p_cueout) {
