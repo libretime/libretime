@@ -332,7 +332,7 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', '한국어');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pl_PL', 'Polish');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pl_PL', 'Polski');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pt_BR', 'Português Brasileiro');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
