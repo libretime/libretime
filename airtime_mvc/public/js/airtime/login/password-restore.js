@@ -1,3 +1,3 @@
 function redirectToLogin(){
-    window.location = baseUrl+"/Login"
+    window.location = baseUrl+"Login"
 }
