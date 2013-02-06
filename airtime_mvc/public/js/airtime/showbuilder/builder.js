@@ -89,7 +89,7 @@ var AIRTIME = (function(AIRTIME){
         $.post(baseUrl+"schedule/update-future-is-scheduled", 
                 {"format": "json", "schedId": schedId}, function(json) {
                     var data = $.parseJSON(json);
-                    if (data.redrawLibTable) {
+                    if (data.redrawLibTable !== undefined && data.redrawLibTable) {
                         $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
                     }
                 });
