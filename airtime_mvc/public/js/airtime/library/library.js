@@ -702,8 +702,19 @@ var AIRTIME = (function(AIRTIME) {
                 $simpleSearch.addClass("sp-invisible");
             }
             else {
-                //clear the advanced search fields and reset datatable
-                $(".filter_column input").val("").keyup();
+                // clear the advanced search fields
+                var divs = $("div#advanced_search").children(':visible');
+                $.each(divs, function(i, div){
+                    fields = $(div).children().find('input');
+                    $.each(fields, function(i, field){
+                        if ($(field).val() !== "") {
+                            $(field).val("");
+                            // we need to reset the results when removing
+                            // an advanced search field
+                            $(field).keyup();
+                        }
+                    });
+                });
                 
                 //reset datatable with previous simple search results (if any)
                 $(".dataTables_filter input").val(simpleSearchText).keyup();
