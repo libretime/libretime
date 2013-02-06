@@ -573,7 +573,10 @@ class ScheduleController extends Zend_Controller_Action
             return;
         }
 
-        if ($isDJ) {
+        // in case a user was once a dj and had been assigned to a show
+        // but was then changed to an admin user we need to allow
+        // the user to edit the show as an admin (CC-4925)
+        if ($isDJ && !$isAdminOrPM) {
             $this->view->action = "dj-edit-show";
         }
 
