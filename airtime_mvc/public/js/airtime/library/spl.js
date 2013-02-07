@@ -734,7 +734,7 @@ var AIRTIME = (function(AIRTIME){
                         }
                         setModified(json.modified);
                         if (obj_type == "block") {
-        	                callback(data, "save");
+        	                callback(json, "save");
                         } else {
                             $('.success').text($.i18n._('Playlist saved'));
                             $('.success').show();
