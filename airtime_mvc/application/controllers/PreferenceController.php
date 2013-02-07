@@ -479,7 +479,6 @@ class PreferenceController extends Zend_Controller_Action
 
     public function getAdminPasswordStatusAction()
     {
-        Logging::info("11111111111");
         $out = array();
         for ($i=1; $i<=3; $i++) {
             if (Application_Model_StreamSetting::getAdminPass('s'.$i)=='') {
