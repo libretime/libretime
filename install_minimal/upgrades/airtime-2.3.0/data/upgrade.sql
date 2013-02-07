@@ -41,3 +41,4 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pl_PL', 'Polski');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pt_BR', 'Português Brasileiro');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('el_GR', 'Ελληνικά');
