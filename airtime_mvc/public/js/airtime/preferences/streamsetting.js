@@ -77,8 +77,7 @@ function showForIcecast(ele){
 function checkLiquidsoapStatus(){
     var url = baseUrl+'Preference/get-liquidsoap-status/format/json';
     var id = $(this).attr("id");
-    $.post(url, function(json){
-        var json_obj = jQuery.parseJSON(json);
+    $.post(url, function(json_obj){
         for(var i=0;i<json_obj.length;i++){
             var obj = json_obj[i];
             var id;
@@ -441,8 +440,7 @@ $(document).ready(function() {
             var data = $('#stream_form').serialize();
             var url = baseUrl+'Preference/stream-setting';
 
-            $.post(url, {format:"json", data: data}, function(data){
-                var json = $.parseJSON(data);
+            $.post(url, {format:"json", data: data}, function(json){
                 $('#content').empty().append(json.html);
                 setupEventListeners();
                 setSliderForReplayGain();

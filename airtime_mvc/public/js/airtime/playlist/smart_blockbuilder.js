@@ -480,9 +480,8 @@ function getCriteriaOptionType(e) {
     return criteriaTypes[criteria];
 }
 
-function callback(data, type) {
-    var json = $.parseJSON(data),
-        dt = $('table[id="library_display"]').dataTable();
+function callback(json, type) {
+    var dt = $('table[id="library_display"]').dataTable();
 
     if (type == 'shuffle' || type == 'generate') {
         if (json.error !== undefined) {

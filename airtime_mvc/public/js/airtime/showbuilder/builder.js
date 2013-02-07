@@ -87,8 +87,7 @@ var AIRTIME = (function(AIRTIME){
         // once a track plays out we need to check if we can update
         // the is_scheduled flag in cc_files
         $.post(baseUrl+"schedule/update-future-is-scheduled", 
-                {"format": "json", "schedId": schedId}, function(json) {
-                    var data = $.parseJSON(json);
+                {"format": "json", "schedId": schedId}, function(data) {
                     if (data.redrawLibTable !== undefined && data.redrawLibTable) {
                         $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
                     }

@@ -411,7 +411,9 @@ class ApiController extends Zend_Controller_Action
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
 
         if (!is_null($result)) {
-            $this->_helper->json->sendJson('{"jsonrpc" : "2.0", "error" : {"code": '.$result['code'].', "message" : "'.$result['message'].'"}}');
+            $this->_helper->json->sendJson(
+                array("jsonrpc" => "2.0", "error" => array("code" => $result['code'], "message" => $result['message']))
+            );
         }
     }
 
@@ -600,7 +602,7 @@ class ApiController extends Zend_Controller_Action
             $response['key'] = $k;
             array_push($responses, $response);
         }
-        $this->_helper->json->sendJson( json_encode($responses) );
+        $this->_helper->json->sendJson($responses);
     }
 
     public function listAllFilesAction()

@@ -70,10 +70,10 @@ class PreferenceController extends Zend_Controller_Action
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
-                $this->_helper->json->sendJson(json_encode(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml'))));
+                $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
             } else {
                 $this->view->form = $form;
-                $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml'))));
+                $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
             }
         }
         $this->view->form = $form;
@@ -323,19 +323,19 @@ class PreferenceController extends Zend_Controller_Action
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
                 $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
-                $this->_helper->json->sendJson(json_encode(array(
+                $this->_helper->json->sendJson(array(
                     "valid"=>"true",
                     "html"=>$this->view->render('preference/stream-setting.phtml'),
                     "s1_set_admin_pass"=>$s1_set_admin_pass,
                     "s2_set_admin_pass"=>$s2_set_admin_pass,
                     "s3_set_admin_pass"=>$s3_set_admin_pass,
-                )));
+                ));
             } else {
                 $live_stream_subform->updateVariables();
                 $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
                 $this->view->form = $form;
                 $this->view->num_stream = $num_of_stream;
-                $this->_helper->json->sendJson(json_encode(array("valid"=>"false", "html"=>$this->view->render('preference/stream-setting.phtml'))));
+                $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/stream-setting.phtml')));
             }
         }
 
@@ -441,7 +441,7 @@ class PreferenceController extends Zend_Controller_Action
         if (Application_Model_Preference::GetImportTimestamp()+10 > $now) {
             $res = true;
         }
-        $this->_helper->json->sendJson(json_encode($res));
+        $this->_helper->json->sendJson($res);
     }
 
     public function getLiquidsoapStatusAction()
@@ -456,7 +456,7 @@ class PreferenceController extends Zend_Controller_Action
             }
             $out[] = array("id"=>$i, "status"=>$status);
         }
-        $this->_helper->json->sendJson(json_encode($out));
+        $this->_helper->json->sendJson($out);
     }
 
     public function setSourceConnectionUrlAction()
@@ -479,6 +479,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function getAdminPasswordStatusAction()
     {
+        Logging::info("11111111111");
         $out = array();
         for ($i=1; $i<=3; $i++) {
             if (Application_Model_StreamSetting::getAdminPass('s'.$i)=='') {
@@ -487,6 +488,6 @@ class PreferenceController extends Zend_Controller_Action
                 $out["s".$i] = true;
             }
         }
-        $this->_helper->json->sendJson(json_encode($out));
+        $this->_helper->json->sendJson($out);
     }
 }

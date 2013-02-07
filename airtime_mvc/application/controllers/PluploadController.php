@@ -43,8 +43,8 @@ class PluploadController extends Zend_Controller_Action
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir,
             $filename, $tempname);
         if (!is_null($result))
-           $this->_helper->json->sendJson('{"jsonrpc" : "2.0", "error" : '.json_encode($result).'}');
+           $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "error" => $result));
 
-        $this->_helper->json->sendJson('{"jsonrpc" : "2.0"}');
+        $this->_helper->json->sendJson(array("jsonrpc" => "2.0"));
     }
 }

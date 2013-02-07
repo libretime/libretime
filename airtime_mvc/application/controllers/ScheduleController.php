@@ -925,7 +925,7 @@ class ScheduleController extends Zend_Controller_Action
                             'title' => _('Download'));
 
         //returns format jjmenu is looking for.
-        $this->_helper->json->sendJson(json_encode($menu));
+        $this->_helper->json->sendJson($menu);
     }
 
     /**
@@ -983,6 +983,6 @@ class ScheduleController extends Zend_Controller_Action
     {
         $schedId = $this->_getParam('schedId');
         $redrawLibTable = Application_Model_StoredFile::setIsScheduled($schedId, false);
-        $this->_helper->json->sendJson(json_encode(array("redrawLibTable" => $redrawLibTable)));
+        $this->_helper->json->sendJson(array("redrawLibTable" => $redrawLibTable));
     }
 }

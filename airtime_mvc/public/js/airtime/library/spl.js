@@ -450,9 +450,8 @@ var AIRTIME = (function(AIRTIME){
 		            if ($(this).hasClass('close')) {
                         var sUrl = baseUrl+"playlist/get-block-info";
                         mod.disableUI();
-                        $.post(sUrl, {format:"json", id:blockId}, function(json){
+                        $.post(sUrl, {format:"json", id:blockId}, function(data){
                             $html = "";
-                            var data = $.parseJSON(json);
                             var isStatic = data.isStatic;
                             delete data.type;
                             if (isStatic) {
@@ -643,8 +642,7 @@ var AIRTIME = (function(AIRTIME){
 	        obj_id = $('input[id="obj_id"]').val();
 	        url = baseUrl+"Playlist/shuffle";
     	    enableLoadingIcon();
-    	    $.post(url, {format: "json", obj_id: obj_id}, function(data){
-    	        var json = $.parseJSON(data)
+    	    $.post(url, {format: "json", obj_id: obj_id}, function(json){
 
     	        if (json.error !== undefined) {
     	            alert(json.error);
@@ -727,8 +725,7 @@ var AIRTIME = (function(AIRTIME){
             enableLoadingIcon();
             $.post(save_action,
                     {format: "json", data: criteria, name: block_name, description: block_desc, obj_id: obj_id, type: obj_type, modified: lastMod},
-                    function(data){
-                        var json = $.parseJSON(data);
+                    function(json){
                         if (json.error !== undefined) {
                             alert(json.error);
                         }
