@@ -398,6 +398,7 @@ SQL;
                 $entry               = $this->plItem;
                 $entry["id"]         = $obj->getDbId();
                 $entry["pos"]        = $pos;
+                $entry["cliplength"] = $obj->getDbLength();
                 if ($obj instanceof CcFiles && $obj) {
                     $entry["cuein"]      = $obj->getDbCuein();
                     $entry["cueout"]     = $obj->getDbCueout();
@@ -409,7 +410,6 @@ SQL;
                     $entry["cuein"] = "00:00:00";
                     $entry["cueout"] = $entry["cliplength"];
                 }
-                $entry["cliplength"] = $obj->getDbLength();
                 $entry["ftype"]      = $objType;
             }
 
