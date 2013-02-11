@@ -402,6 +402,9 @@ SQL;
                 if ($obj instanceof CcFiles && $obj) {
                     $entry["cuein"]      = $obj->getDbCuein();
                     $entry["cueout"]     = $obj->getDbCueout();
+                } elseif ($obj instanceof CcWebstream && $obj) {
+                    $entry["cuein"] = "00:00:00";
+                    $entry["cueout"] = $entry["cliplength"];
                 }
                 $entry["ftype"]      = $objType;
             }
