@@ -405,7 +405,7 @@ SQL;
 
                     $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
                     $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
-                    $entry["cliplength"] = $cue_out-$cue_in;
+                    $entry["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
                 } elseif ($obj instanceof CcWebstream && $obj) {
                     $entry["cuein"] = "00:00:00";
                     $entry["cueout"] = $entry["cliplength"];
