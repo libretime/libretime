@@ -398,14 +398,18 @@ SQL;
                 $entry               = $this->plItem;
                 $entry["id"]         = $obj->getDbId();
                 $entry["pos"]        = $pos;
-                $entry["cliplength"] = $obj->getDbLength();
                 if ($obj instanceof CcFiles && $obj) {
                     $entry["cuein"]      = $obj->getDbCuein();
                     $entry["cueout"]     = $obj->getDbCueout();
+
+                    $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                    $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                    $entry["cliplength"] = $cue_out-$cue_in;
                 } elseif ($obj instanceof CcWebstream && $obj) {
                     $entry["cuein"] = "00:00:00";
                     $entry["cueout"] = $entry["cliplength"];
                 }
+                $entry["cliplength"] = $obj->getDbLength();
                 $entry["ftype"]      = $objType;
             }
 

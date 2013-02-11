@@ -403,9 +403,12 @@ SQL;
             $entry               = $this->blockItem;
             $entry["id"]         = $file->getDbId();
             $entry["pos"]        = $pos;
-            $entry["cliplength"] = $file->getDbLength();
             $entry["cueout"]     = $file->getDbCueout();
             $entry["cuein"]     = $file->getDbCuein();
+
+            $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+            $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+            $entry["cliplength"] = $cue_out-$cue_in;
 
             return $entry;
         } else {
