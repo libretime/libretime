@@ -816,6 +816,7 @@ SQL;
             $row['checkbox'] = "";
             $row['image'] = "";
 
+            $type = substr($row['ftype'], 0, 2);
             $row['tr_id'] = "{$type}_{$row['id']}";
         }
 
