@@ -67,15 +67,15 @@ class ReplayGainUpdater(Thread):
                 self.logger.error(e)
                 self.logger.debug(traceback.format_exc())
     def run(self):
-        try:
-            while True:
-                self.logger.info("Runnning replaygain updater")
+        while True:
+            try:
+                self.logger.info("Running replaygain updater")
                 self.main()
                 # Sleep for 5 minutes in case new files have been added
-                time.sleep(60 * 5)
-        except Exception, e:
-            self.logger.error('ReplayGainUpdater Exception: %s', traceback.format_exc())
-            self.logger.error(e)
+            except Exception, e:
+                self.logger.error('ReplayGainUpdater Exception: %s', traceback.format_exc())
+                self.logger.error(e)
+            time.sleep(60 * 5)
 
 if __name__ == "__main__":
     rgu = ReplayGainUpdater()

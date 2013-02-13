@@ -139,17 +139,13 @@ class PreferenceController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
 
-        if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
-            
-            $baseUrl = Application_Common_OsPath::getBaseDir();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
 
-            $this->view->headScript()->appendFile($baseUrl.'js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-            $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
-
-            $this->view->form = $watched_dirs_pref;
-        }
+        $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
+        $this->view->form = $watched_dirs_pref;
     }
 
     public function streamSettingAction()

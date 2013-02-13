@@ -203,9 +203,12 @@ class Application_Model_Scheduler
                             $file = CcFilesQuery::create()->findPk($fileId);
                             if (isset($file) && $file->visible()) {
                                 $data["id"] = $file->getDbId();
-                                $data["cliplength"] = $file->getDbLength();
-                                $data["cuein"] = "00:00:00";
-                                $data["cueout"] = $file->getDbLength();
+                                $data["cuein"] = $file->getDbCuein();
+                                $data["cueout"] = $file->getDbCueout();
+
+                                $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
+                                $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
+                                $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
                                 $defaultFade = Application_Model_Preference::GetDefaultFade();
                                 if (isset($defaultFade)) {
                                     //fade is in format SS.uuuuuu
@@ -261,9 +264,12 @@ class Application_Model_Scheduler
                     $file = CcFilesQuery::create()->findPk($fileId);
                     if (isset($file) && $file->visible()) {
                         $data["id"] = $file->getDbId();
-                        $data["cliplength"] = $file->getDbLength();
-                        $data["cuein"] = "00:00:00";
-                        $data["cueout"] = $file->getDbLength();
+                        $data["cuein"] = $file->getDbCuein();
+                        $data["cueout"] = $file->getDbCueout();
+
+                        $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
+                        $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
+                        $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
                         $defaultFade = Application_Model_Preference::GetDefaultFade();
                         if (isset($defaultFade)) {
                             //fade is in format SS.uuuuuu
@@ -325,6 +331,8 @@ class Application_Model_Scheduler
             $filler->setDbStarts($DT)
                 ->setDbEnds($this->nowDT)
                 ->setDbClipLength($cliplength)
+                ->setDbCueIn('00:00:00')
+                ->setDbCueOut('00:00:00')
                 ->setDbPlayoutStatus(-1)
                 ->setDbInstanceId($instance->getDbId())
                 ->save($this->con);

@@ -316,8 +316,8 @@
     <column name="clip_length" phpName="DbClipLength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="fade_in" phpName="DbFadeIn" type="TIME" required="false" defaultValue="00:00:00"/>
     <column name="fade_out" phpName="DbFadeOut" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="cue_in" phpName="DbCueIn" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="cue_out" phpName="DbCueOut" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
+    <column name="cue_in" phpName="DbCueIn" type="VARCHAR" sqlType="interval" required="true"/>
+    <column name="cue_out" phpName="DbCueOut" type="VARCHAR" sqlType="interval" required="true"/>
     <column name="media_item_played" phpName="DbMediaItemPlayed" type="BOOLEAN" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
     <column name="playout_status" phpName="DbPlayoutStatus" type="SMALLINT" required="true" defaultValue="1"/>

@@ -257,6 +257,10 @@ SQL;
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
+
+            // XSS exploit prevention
+            $row["track_title"] = htmlspecialchars($row["track_title"]);
+            $row["creator"] = htmlspecialchars($row["creator"]);
         }
 
         return $rows;
@@ -399,9 +403,12 @@ SQL;
             $entry               = $this->blockItem;
             $entry["id"]         = $file->getDbId();
             $entry["pos"]        = $pos;
-            $entry["cliplength"] = $file->getDbLength();
             $entry["cueout"]     = $file->getDbCueout();
             $entry["cuein"]     = $file->getDbCuein();
+
+            $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+            $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+            $entry["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
 
             return $entry;
         } else {
@@ -1299,7 +1306,7 @@ SQL;
         foreach ($out as $crit) {
             $criteria = $crit->getDbCriteria();
             $modifier = $crit->getDbModifier();
-            $value = $crit->getDbValue();
+            $value = htmlspecialchars($crit->getDbValue());
             $extra = $crit->getDbExtra();
 
             if ($criteria == "limit") {

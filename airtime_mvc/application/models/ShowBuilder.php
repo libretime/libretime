@@ -275,9 +275,9 @@ class Application_Model_ShowBuilder
             $formatter       = new LengthFormatter(Application_Common_DateHelper::ConvertMSToHHMMSSmm($run_time*1000));
             $row['runtime']  = $formatter->format();
 
-            $row["title"]    = $p_item["file_track_title"];
-            $row["creator"]  = $p_item["file_artist_name"];
-            $row["album"]    = $p_item["file_album_title"];
+            $row["title"]    = htmlspecialchars($p_item["file_track_title"]);
+            $row["creator"]  = htmlspecialchars($p_item["file_artist_name"]);
+            $row["album"]    = htmlspecialchars($p_item["file_album_title"]);
 
             $row["cuein"]    = $p_item["cue_in"];
             $row["cueout"]   = $p_item["cue_out"];
