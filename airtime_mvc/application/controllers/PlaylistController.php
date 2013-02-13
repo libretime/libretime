@@ -14,6 +14,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('new', 'json')
                     ->addActionContext('edit', 'json')
                     ->addActionContext('delete', 'json')
+                    ->addActionContext('close-playlist', 'json')
                     ->addActionContext('play', 'json')
                     ->addActionContext('set-playlist-fades', 'json')
                     ->addActionContext('get-playlist-fades', 'json')
@@ -244,6 +245,13 @@ class PlaylistController extends Zend_Controller_Action
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
+    }
+
+    public function closePlaylistAction() {
+        $type = $this->_getParam('type');
+        $obj = null;
+        Application_Model_Library::changePlaylist($obj, $type);
+        $this->createFullResponse($obj);
     }
 
     public function addItemsAction()

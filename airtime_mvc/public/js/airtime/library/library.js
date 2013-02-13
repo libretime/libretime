@@ -322,22 +322,40 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.fnDeleteSelectedItems = function() {
-    	if (confirm($.i18n._('Are you sure you want to delete the selected item(s)?'))) {
-	        var aData = AIRTIME.library.getSelectedData(),
-	            item,
-	            temp,
-	            aMedia = [];
-	        
-	        // process selected files/playlists.
-	        for (item in aData) {
-	            temp = aData[item];
-	            if (temp !== null && temp.hasOwnProperty('id') ) {
-	                aMedia.push({"id": temp.id, "type": temp.ftype});
-	            }   
-	        }
-	    
-	        AIRTIME.library.fnDeleteItems(aMedia);
-    	}
+        if (confirm($.i18n._('Are you sure you want to delete the selected item(s)?'))) {
+            var aData = AIRTIME.library.getSelectedData(),
+                item,
+                temp,
+                aMedia = [],
+                currentObjId = $("#side_playlist").find("#obj_id").val(),
+                currentObjType = $("#side_playlist").find("#obj_type").val(),
+                closeObj = false;
+
+            // process selected files/playlists.
+            for (item in aData) {
+                temp = aData[item];
+                if (temp !== null && temp.hasOwnProperty('id') ) {
+                    aMedia.push({"id": temp.id, "type": temp.ftype});
+                    if ( (temp.id == currentObjId && temp.ftype === currentObjType) ||
+                            temp.id == currentObjId && temp.ftype === "stream" && currentObjType === "webstream") {
+                        closeObj = true;
+                    }
+                }
+            }
+
+            AIRTIME.library.fnDeleteItems(aMedia);
+
+            // close the object (playlist/block/webstream)
+            // on the right side if it was just deleted
+            // from the library
+            if (closeObj) {
+                $.post(baseUrl+"playlist/close-playlist",
+                    {"format": "json", "type": currentObjType},
+                    function(json) {
+                        $("#side_playlist").empty().append(json.html);
+                    });
+            }
+        }
     };
     
     libraryInit = function() {
