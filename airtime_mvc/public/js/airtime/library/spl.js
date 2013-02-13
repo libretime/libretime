@@ -12,6 +12,7 @@ var AIRTIME = (function(AIRTIME){
 		viewport,
 		$lib,
 		$pl,
+		$togglePl = $("<a id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open playlist")+"'>"+$.i18n._("Open Playlist")+"</a>"),
 		widgetHeight,
 		resizeTimeout,
 		width;
@@ -363,6 +364,13 @@ var AIRTIME = (function(AIRTIME){
         removeButtonCheck();
 	}
     
+    function openPlaylistPanel() {
+        var screenWidth = Math.floor(viewport.width - 40);
+        $lib.width(Math.floor(screenWidth * 0.53));
+        $pl.show().width(Math.floor(screenWidth * 0.44));
+        $("#pl_edit").hide();
+    }
+
     //Purpose of this function is to iterate over all playlist elements
     //and verify whether they can be previewed by the browser or not. If not
     //then the playlist element is greyed out
@@ -709,7 +717,17 @@ var AIRTIME = (function(AIRTIME){
         
         
         });
-		
+
+        $lib.on("click", "#pl_edit", function() {
+            openPlaylistPanel();
+        });
+
+        $pl.on("click", "#lib_pl_close", function() {
+            var screenWidth = Math.floor(viewport.width - 40);
+            $pl.hide();
+            $lib.width(screenWidth).find("#library_display_length").append($togglePl.show());
+        });
+
         $('#save_button').live("click", function(event){
             /* Smart blocks: get name, description, and criteria
              * Playlists: get name, description
@@ -746,7 +764,7 @@ var AIRTIME = (function(AIRTIME){
                     }
             );
         });
-        
+
         $("#pl-bl-clear-content").live("click", function(event) {
             var sUrl = baseUrl+"playlist/empty-content",
                 oData = {};
@@ -887,7 +905,9 @@ var AIRTIME = (function(AIRTIME){
     };
 	
 	mod.fnEdit = function(id, type, url) {
-		
+		if ($pl.is(":hidden")) {
+		    openPlaylistPanel();
+		}
 		stopAudioPreview();	
 		
 		$.post(url, 
