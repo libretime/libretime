@@ -627,7 +627,11 @@ class ScheduleController extends Zend_Controller_Action
             if (!$showInstance->getShow()->isRepeating()) {
                 $formWhen->disableStartDateAndTime();
             } else {
-                $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+                $nextFutureRepeatShow = $show->getNextFutureRepeatShowTime();
+                $formWhen->getElement('add_show_start_date')->setValue($nextFutureRepeatShow["starts"]->format("Y-m-d"));
+                $formWhen->getElement('add_show_start_time')->setValue($nextFutureRepeatShow["starts"]->format("H:i"));
+                $formWhen->getElement('add_show_end_date_no_repeat')->setValue($nextFutureRepeatShow["ends"]->format("Y-m-d"));
+                $formWhen->getElement('add_show_end_time')->setValue($nextFutureRepeatShow["ends"]->format("H:i"));
             }
         }
 
@@ -802,10 +806,16 @@ class ScheduleController extends Zend_Controller_Action
         }
         $data['add_show_record'] = $show->isRecorded();
 
-        $origianlShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
+        if ($show->isRepeating()) {
+             $nextFutureRepeatShow = $show->getNextFutureRepeatShowTime();
+             $originalShowStartDateTime = $nextFutureRepeatShow["starts"];
+        } else {
+            $originalShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime(
+                $show->getStartDateAndTime());
+        }
 
         $success = Application_Model_Schedule::addUpdateShow($data, $this,
-            $validateStartDate, $origianlShowStartDateTime, true,
+            $validateStartDate, $originalShowStartDateTime, true,
             $data['add_show_instance_id']);
 
         if ($success) {
