@@ -1076,6 +1076,7 @@ var AIRTIME = (function(AIRTIME){
                             url: url,
                             data: {format: "json", id: data.instance},
                             success: function(data){
+                                $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
                                 var oTable = $sbTable.dataTable();
                                 oTable.fnDraw();
                             }

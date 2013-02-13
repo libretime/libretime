@@ -895,6 +895,7 @@ class ScheduleController extends Zend_Controller_Action
             try {
                 $scheduler = new Application_Model_Scheduler();
                 $scheduler->cancelShow($id);
+                Application_Model_StoredFile::updatePastFilesIsScheduled();
                 // send kick out source stream signal to pypo
                 $data = array("sourcename"=>"live_dj");
                 Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
