@@ -1380,5 +1380,11 @@ $(document).ready(function() {
     $('#editmdcancel').live("click", function() {
         $("#edit-md-dialog").dialog().remove();
     });
+
+    $('#edit-md-dialog').live("keyup", function(event) {
+        if (event.keyCode === 13) {
+            $('#editmdsave').click();
+        }
+    });
 });
 
