@@ -1072,20 +1072,28 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	function setWidgetSize() {
-		viewport = AIRTIME.utilities.findViewportDimensions();
-		widgetHeight = viewport.height - 185;
-		width = Math.floor(viewport.width - 80);
-		
-		var libTableHeight = widgetHeight - 130;
+        viewport = AIRTIME.utilities.findViewportDimensions();
+        widgetHeight = viewport.height - 185;
+        width = Math.floor(viewport.width - 80);
 
-		$lib.height(widgetHeight)
-			.find(".dataTables_scrolling")
-    			.css("max-height", libTableHeight)
-    			.end()
-			.width(Math.floor(width * 0.55));
-			
-		$pl.height(widgetHeight)
-			.width(Math.floor(width * 0.45));	
+        var libTableHeight = widgetHeight - 130;
+
+        if (!$pl.is(':hidden')) {
+            $lib.height(widgetHeight)
+                .find(".dataTables_scrolling")
+                .css("max-height", libTableHeight)
+                .end()
+                .width(Math.floor(width * 0.55));
+
+            $pl.height(widgetHeight)
+                .width(Math.floor(width * 0.45));
+        } else {
+            $lib.height(widgetHeight)
+                .find(".dataTables_scrolling")
+                .css("max-height", libTableHeight)
+                .end()
+                .width(width + 40);
+        }
 	}
 	
 	mod.onReady = function() {
