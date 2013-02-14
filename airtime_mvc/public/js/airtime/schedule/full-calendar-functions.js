@@ -372,6 +372,7 @@ function checkSCUploadStatus(){
             }else if(json.sc_id == "-3"){
                 $("span[id="+id+"]:not(.recording)").removeClass("progress").addClass("sc-error");
             }
+            setTimeout(checkSCUploadStatus, 5000);
         });
     });
 }
@@ -424,6 +425,7 @@ function getCurrentShow(){
                     $(this).remove("span[small-icon now-playing]");	
                 }    	
             });
+        setTimeout(getCurrentShow, 5000);
     }); 	
 }
 
@@ -564,8 +566,8 @@ function alertShowErrorAndReload(){
 
 preloadEventFeed();
 $(document).ready(function(){
-    setInterval( "checkSCUploadStatus()", 5000 );
-    setInterval( "getCurrentShow()", 5000 );
+    checkSCUploadStatus();
+    getCurrentShow();
 });
 
 var view_name;
