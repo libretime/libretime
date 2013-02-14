@@ -768,8 +768,7 @@ var AIRTIME = (function(AIRTIME) {
         });
        
         checkImportStatus();
-        setInterval(checkImportStatus, 5000);
-        setInterval(checkLibrarySCUploadStatus, 5000);
+        checkLibrarySCUploadStatus();
         
         addQtipToSCIcons();
        
@@ -997,6 +996,7 @@ function checkImportStatus() {
             }
             div.hide();
         }
+        setTimeout(checkImportStatus, 5000);
     });
 }
     
@@ -1030,6 +1030,7 @@ function checkLibrarySCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
+        setTimeout(checkLibrarySCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
