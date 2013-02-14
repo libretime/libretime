@@ -1368,7 +1368,12 @@ $(document).ready(function() {
             data = $("#edit-md-dialog form").serializeArray();
         $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
             $("#edit-md-dialog").dialog().remove();
-            oTable.fnStandingRedraw();
+
+            // don't redraw the library table if we are on calendar page
+            // we would be on calendar if viewing recorded file metadata
+            if ($("#schedule_calendar").length === 0) {
+                oTable.fnStandingRedraw();
+            }
         });
     });
     
