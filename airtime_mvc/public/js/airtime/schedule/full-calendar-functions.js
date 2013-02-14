@@ -28,7 +28,11 @@ function openAddShowForm() {
             var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
             var widthPercent = parseInt(calendarWidth)+"%";
             $("#schedule_calendar").css("width", widthPercent);
-            $("#schedule_calendar").fullCalendar('render');
+
+            // 200 px for top dashboard and 50 for padding on main content
+            // this calculation was copied from schedule.js line 326
+            var mainHeight = document.documentElement.clientHeight - 200 - 50;
+            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
