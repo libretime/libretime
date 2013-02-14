@@ -86,7 +86,7 @@ AIRTIME = (function(AIRTIME) {
                     .end();
             
             oTable = $('#show_builder_table').dataTable();
-            oTable.fnDraw();
+            //oTable.fnDraw();
         }   
     }
     
