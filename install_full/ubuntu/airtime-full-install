@@ -80,6 +80,7 @@ fi
 #Install Sourcefabric's custom Liquidsoap debian package
 apt-get -y --force-yes install sourcefabric-keyring
 apt-get -y --force-yes install liquidsoap
+apt-get -y --force-yes install silan
 
 
 # Apache Config File
