@@ -520,6 +520,8 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iLength = parseInt(oData.iLength, 10);
                 oData.iStart = parseInt(oData.iStart, 10);
                 oData.iCreate = parseInt(oData.iCreate, 10);
+
+                return false;
             },
             
             "sAjaxSource": baseUrl+"Library/contents-feed",

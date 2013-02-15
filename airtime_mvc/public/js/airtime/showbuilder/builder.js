@@ -451,6 +451,8 @@ var AIRTIME = (function(AIRTIME){
                 }
                
                 oData.iCreate = parseInt(oData.iCreate, 10);
+
+                return false;
             },
             
             "fnServerData": mod.fnServerData,
