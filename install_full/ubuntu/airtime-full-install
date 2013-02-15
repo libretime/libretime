@@ -2,6 +2,9 @@
 #
 # Auto install script for airtime on Ubuntu
 #
+# NGINX changes are contributed by Eugene MechanisM
+# Link to the post:
+# http://forum.sourcefabric.org/discussion/13563/first-step-to-run-airtime-via-nginx-based-on-airtime-2.0-beta-files
 
 exec > >(tee install_log.txt)
 exec 2>&1
@@ -10,6 +13,8 @@ if [ "$(id -u)" != "0" ]; then
     echo "Please run as root user."
     exit 1
 fi
+
+server="$1"
 
 #Current dir
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
@@ -60,7 +65,6 @@ pwgen libfaad2
 #of Debian, where these packages are unauthorized)
 apt-get -y --force-yes install libmp3lame-dev lame icecast2
 
-
 #Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
 #Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
 #1.10 and zend-framework is 1.11 
@@ -70,31 +74,58 @@ else
     apt-get -y --force-yes install libzend-framework-php
 fi
 
+#get the "timeout" unix command
 if [ "$code" = "lucid" ]; then
     apt-get -y --force-yes install timeout 
 else
     apt-get -y --force-yes install coreutils
 fi
 
-
 #Install Sourcefabric's custom Liquidsoap debian package
 apt-get -y --force-yes install sourcefabric-keyring
 apt-get -y --force-yes install liquidsoap
+apt-get -y --force-yes install silan
 
+if [ "$server" = "nginx" ]; then
+    # NGINX Config File
+    echo "----------------------------------------------------"
+    echo "2.1 NGINX Config File"
+    echo "----------------------------------------------------"
+    if [ ! -f /etc/nginx/sites-available/airtime ]; then
+        cp $SCRIPTPATH/../nginx/airtime-vhost /etc/nginx/sites-available/airtime 
+        ln -s /etc/nginx/sites-available/airtime /etc/nginx/sites-enabled/airtime
+        service nginx reload
+    else
+        echo "NGINX config for Airtime already exists..."
+    fi
 
-# Apache Config File
-echo "----------------------------------------------------"
-echo "2. Apache Config File"
-echo "----------------------------------------------------"
-if [ ! -f /etc/apache2/sites-available/airtime ]; then
-    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
-    a2dissite default
-    a2ensite airtime
-    a2enmod rewrite php5
-    service apache2 restart
+    # php-fpm Airtime pool file
+    echo "----------------------------------------------------"
+    echo "2.2 Airtime php pool file"
+    echo "----------------------------------------------------"
+    if [ ! -f /etc/php5/fpm/pool.d/airtime.conf ]; then
+        cp $SCRIPTPATH/../php5-fpm/airtime.conf /etc/php5/fpm/pool.d/airtime.conf 
+        service php5-fpm reload
+    else
+        echo "Airtime php pool file already exists..."
+    fi
 else
-    echo "Apache config for Airtime already exists..."
+    # Apache Config File
+    echo "----------------------------------------------------"
+    echo "2. Apache Config File"
+    echo "----------------------------------------------------"
+    if [ ! -f /etc/apache2/sites-available/airtime ]; then
+        cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
+        a2dissite default
+        a2ensite airtime
+        a2enmod rewrite php5
+        service apache2 restart
+    else
+        echo "Apache config for Airtime already exists..."
+    fi
 fi
+
+
 
 # Enable Icecast
 echo "----------------------------------------------------"

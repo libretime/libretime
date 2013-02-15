@@ -102,6 +102,8 @@ function checkLiquidsoapStatus(){
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }
+
+        setTimeout(checkLiquidsoapStatus, 2000);
     });
 }
 
@@ -241,10 +243,10 @@ function setupEventListeners() {
         return false;
     })
     
-    setLiveSourceConnectionOverrideListener()
+    setLiveSourceConnectionOverrideListener();
     
-    showErrorSections()
-    setInterval('checkLiquidsoapStatus()', 1000)
+    showErrorSections();
+    checkLiquidsoapStatus();
     
     // qtip for help text
     $(".override_help_icon").qtip({

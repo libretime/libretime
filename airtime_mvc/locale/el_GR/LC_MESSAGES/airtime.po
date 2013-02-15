@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: <contact@sourcefabric.org>\n"
 "POT-Creation-Date: 2013-02-07 16:22-0500\n"
-"PO-Revision-Date: 2013-02-08 11:13+0100\n"
+"PO-Revision-Date: 2013-02-14 17:18+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Greek Localization <contact@sourcefabric.org>\n"
 "Language: el_GR\n"
@@ -2867,7 +2867,7 @@ msgstr "Εμφάνιση Πηγής "
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
-msgstr "Προγραμματισμένη Αναπαραγωγή"
+msgstr "Πρόγραμμα"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:54
 msgid "ON AIR"
