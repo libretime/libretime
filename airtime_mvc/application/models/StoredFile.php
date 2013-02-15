@@ -269,7 +269,7 @@ class Application_Model_StoredFile
         $md = array();
         foreach ($this->_dbMD as $dbColumn => $propelColumn) {
             $method = "get$propelColumn";
-            $md[$dbColumn] = htmlspecialchars($this->_file->$method());
+            $md[$dbColumn] = $this->_file->$method();
         }
 
         return $md;
@@ -300,7 +300,7 @@ class Application_Model_StoredFile
                 if (isset($dbmd_copy[$value])) {
                     $propelColumn  = $dbmd_copy[$value];
                     $method        = "get$propelColumn";
-                    $md[$constant] = htmlspecialchars($this->_file->$method());
+                    $md[$constant] = $this->_file->$method();
                 }
             }
         }
@@ -1026,8 +1026,10 @@ SQL;
         $LIQUIDSOAP_ERRORS = array('TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.');
 
         // Ask Liquidsoap if file is playable
-        $command = sprintf("/usr/bin/airtime-liquidsoap -c 'output.dummy(audio_to_stereo(single(\"%s\")))' 2>&1", $audio_file);
+        $ls_command = sprintf('/usr/bin/airtime-liquidsoap -v -c "output.dummy(audio_to_stereo(single(%s)))" 2>&1', 
+            escapeshellarg($audio_file));
 
+        $command = "export PATH=/usr/local/bin:/usr/bin:/bin/usr/bin/ && $ls_command";
         exec($command, $output, $rv);
 
         $isError = count($output) > 0 && in_array($output[0], $LIQUIDSOAP_ERRORS);

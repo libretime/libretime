@@ -85,7 +85,15 @@ class MM2(InstanceThread, Loggable):
         ToucherThread(path=user().touch_file_path(),
                 interval=int(config['touch_interval']))
 
-        apiclient.register_component('media-monitor')
+        success = False
+        while not success:
+            try:
+                apiclient.register_component('media-monitor')
+                success = True
+            except Exception, e:
+                self.logger.error(str(e))
+                import time
+                time.sleep(10)
 
         manager.loop()
 

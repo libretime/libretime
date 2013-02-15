@@ -179,7 +179,14 @@ if __name__ == '__main__':
 
     ReplayGainUpdater.start_reply_gain(api_client)
 
-    api_client.register_component("pypo")
+    success = False
+    while not success:
+        try:
+            api_client.register_component('pypo')
+            success = True
+        except Exception, e:
+            logger.error(str(e))
+            time.sleep(10)
 
     pypoFetch_q = Queue()
     recorder_q = Queue()

@@ -86,7 +86,7 @@ AIRTIME = (function(AIRTIME) {
                     .end();
             
             oTable = $('#show_builder_table').dataTable();
-            oTable.fnDraw();
+            //oTable.fnDraw();
         }   
     }
     
@@ -277,12 +277,13 @@ AIRTIME = (function(AIRTIME) {
                     if (json.update === true) {
                         oTable.fnDraw();
                     }
+                    setTimeout(checkScheduleUpdates, 5000);
                 }
             });
         }
 
         //check if the timeline view needs updating.
-        setInterval(checkScheduleUpdates, 5 * 1000); //need refresh in milliseconds
+        checkScheduleUpdates();
     };
 
     mod.onResize = function() {

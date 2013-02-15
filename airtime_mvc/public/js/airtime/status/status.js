@@ -66,6 +66,7 @@ function success(data, textStatus, jqXHR){
     if (data.status.partitions){
         generatePartitions(data.status.partitions);
     }
+    setTimeout(function(){updateStatus(false);}, 5000);
 }
 
 function updateStatus(getDiskInfo){
@@ -75,5 +76,4 @@ function updateStatus(getDiskInfo){
 
 $(document).ready(function() {
     updateStatus(true);
-    setInterval(function(){updateStatus(false);}, 5000);
 });

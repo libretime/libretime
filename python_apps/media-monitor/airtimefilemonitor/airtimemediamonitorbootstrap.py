@@ -58,18 +58,18 @@ class AirtimeMediaMonitorBootstrap():
     """
     returns the path and its corresponding database row idfor all watched directories. Also
     returns the Stor directory, which can be identified by its row id (always has value of "1")
-    
+
     Return type is a dictionary similar to:
     {"1":"/srv/airtime/stor/"}
     """
     def get_list_of_watched_dirs(self):
         json = self.api_client.list_all_watched_dirs()
-        
+
         try:
             return json["dirs"]
         except KeyError as e:
             self.logger.error("Could not find index 'dirs' in dictionary: %s", str(json))
-            self.logger.error(e)
+            self.logger.error(str(e))
             return {}
 
     """
@@ -94,7 +94,7 @@ class AirtimeMediaMonitorBootstrap():
 
         db_known_files_set = set()
         files = self.list_db_files(dir_id)
-        
+
         for f in files:
             db_known_files_set.add(f)
 

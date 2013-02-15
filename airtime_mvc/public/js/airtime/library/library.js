@@ -491,9 +491,11 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-library');
-                
-                if (settings !== "") {
+               
+                try {
                     return JSON.parse(settings);
+                } catch (e) {
+                    return null;
                 }
             },
             "fnStateLoadParams": function (oSettings, oData) {
@@ -501,18 +503,22 @@ var AIRTIME = (function(AIRTIME) {
                     length,
                     a = oData.abVisCols;
                 
-                // putting serialized data back into the correct js type to make
-                // sure everything works properly.
-                for (i = 0, length = a.length; i < length; i++) {
-                    if (typeof(a[i]) === "string") {
-                        a[i] = (a[i] === "true") ? true : false;
-                    } 
+                if (a) {
+                    // putting serialized data back into the correct js type to make
+                    // sure everything works properly.
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = (a[i] === "true") ? true : false;
+                        } 
+                    }
                 }
-                
+                    
                 a = oData.ColReorder;
-                for (i = 0, length = a.length; i < length; i++) {
-                    if (typeof(a[i]) === "string") {
-                        a[i] = parseInt(a[i], 10);
+                if (a) {
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = parseInt(a[i], 10);
+                        }
                     }
                 }
                 
@@ -520,6 +526,8 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iLength = parseInt(oData.iLength, 10);
                 oData.iStart = parseInt(oData.iStart, 10);
                 oData.iCreate = parseInt(oData.iCreate, 10);
+
+                return false;
             },
             
             "sAjaxSource": baseUrl+"Library/contents-feed",
@@ -702,8 +710,19 @@ var AIRTIME = (function(AIRTIME) {
                 $simpleSearch.addClass("sp-invisible");
             }
             else {
-                //clear the advanced search fields and reset datatable
-                $(".filter_column input").val("").keyup();
+                // clear the advanced search fields
+                var divs = $("div#advanced_search").children(':visible');
+                $.each(divs, function(i, div){
+                    fields = $(div).children().find('input');
+                    $.each(fields, function(i, field){
+                        if ($(field).val() !== "") {
+                            $(field).val("");
+                            // we need to reset the results when removing
+                            // an advanced search field
+                            $(field).keyup();
+                        }
+                    });
+                });
                 
                 //reset datatable with previous simple search results (if any)
                 $(".dataTables_filter input").val(simpleSearchText).keyup();
@@ -757,8 +776,7 @@ var AIRTIME = (function(AIRTIME) {
         });
        
         checkImportStatus();
-        setInterval(checkImportStatus, 5000);
-        setInterval(checkLibrarySCUploadStatus, 5000);
+        checkLibrarySCUploadStatus();
         
         addQtipToSCIcons();
        
@@ -986,6 +1004,7 @@ function checkImportStatus() {
             }
             div.hide();
         }
+        setTimeout(checkImportStatus, 5000);
     });
 }
     
@@ -1019,6 +1038,7 @@ function checkLibrarySCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
+        setTimeout(checkLibrarySCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {

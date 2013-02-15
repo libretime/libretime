@@ -1,3 +1,9 @@
+<?php 
+//XSS exploit prevention
+foreach ($this->md as $key => &$value) {
+    $value = $this->escape($value);
+}
+?>
 <?php if($this->type == "audioclip") : ?>
 <table class='library-track-md'>
 <tr><td><? echo _("Title:"); ?></td><td><?php echo ($this->md["MDATA_KEY_TITLE"]);?></td></tr>
@@ -41,9 +47,18 @@
 <span class='static'>o</span> <span><? echo _("Static Smart Block"); ?></span><br />
 <span>o</span> <span><? echo _("Audio Track"); ?></span>
 </div>
+
 <?php } ?>
 
     <?php if ($this->type == "playlist" || ($this->type == "block" && $this->blType == "Static")) {?>
+        <?php
+        //XSS exploit prevention
+        /*foreach ($this->contents as &$item) {
+            foreach ($item as $key => &$value) {
+                $value = $this->escape($value);
+            }
+        }*/
+        ?>
         <?php if ($this->type == "playlist") { ?>
             <div class='file-md-qtip-left'><span><? echo _("Playlist Contents: "); ?></span></div>
         <?php } else { ?>
@@ -88,9 +103,13 @@
     <?php } elseif ($this->blType == "Dynamic") { ?>
         <div class='file-md-qtip-left'><span><? echo _("Dynamic Smart Block Criteria: "); ?></span></div>
         <table class='library-get-file-md table-small'>
-        <?php foreach ($this->contents["crit"] as $criterias) : ?>
-            <?php foreach ($criterias as $crit ) : ?>
+        <?php foreach ($this->contents["crit"] as &$criterias) : ?>
+            <?php foreach ($criterias as &$crit ) : ?>
                 <?php
+                // XSS exploit prevention
+                //$crit["value"] = htmlspecialchars($crit["value"]);
+                //$crit["extra"] = htmlspecialchars($crit["extra"]);
+
                 $valMaxStrLen = 25;
                 if (strlen($crit["value"]) > $valMaxStrLen) {
                     $crit["value"] = substr($crit["value"], 0, 24)."...";
