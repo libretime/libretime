@@ -58,7 +58,9 @@ class ReplayGainUpdater(Thread):
 
                     try:
                         self.api_client.update_replay_gain_values(processed_data)
-                    except Exception as e: self.unexpected_exception(e)
+                    except Exception as e:
+                        self.logger.error(e)
+                        self.logger.debug(traceback.format_exc())
 
                     if len(files) == 0: break
                 self.logger.info("Processed: %d songs" % total)
