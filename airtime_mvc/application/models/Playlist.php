@@ -269,6 +269,10 @@ SQL;
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
+
+            // XSS exploit prevention
+            $row["track_title"] = htmlspecialchars($row["track_title"]);
+            $row["creator"] = htmlspecialchars($row["creator"]);
         }
 
         return $rows;
@@ -398,6 +402,13 @@ SQL;
                 if ($obj instanceof CcFiles && $obj) {
                     $entry["cuein"]      = $obj->getDbCuein();
                     $entry["cueout"]     = $obj->getDbCueout();
+
+                    $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                    $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                    $entry["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
+                } elseif ($obj instanceof CcWebstream && $obj) {
+                    $entry["cuein"] = "00:00:00";
+                    $entry["cueout"] = $entry["cliplength"];
                 }
                 $entry["ftype"]      = $objType;
             }

@@ -28,7 +28,11 @@ function openAddShowForm() {
             var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
             var widthPercent = parseInt(calendarWidth)+"%";
             $("#schedule_calendar").css("width", widthPercent);
-            $("#schedule_calendar").fullCalendar('render');
+
+            // 200 px for top dashboard and 50 for padding on main content
+            // this calculation was copied from schedule.js line 326
+            var mainHeight = document.documentElement.clientHeight - 200 - 50;
+            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
@@ -233,55 +237,61 @@ function eventRender(event, element, view) {
     }
 
     //add the record/rebroadcast/soundcloud icons if needed
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -1) {
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span>');
-    } else if ((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id > 0) {
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon soundcloud"></span>');
-    } else if ((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -2) {
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon progress"></span>');
-    } else if ((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.record === 1 && event.soundcloud_id === -3) {
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
-    }
-
-    if(view.name === 'month' && event.record === 1 && event.soundcloud_id === -1) {
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span>');
-    } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id > 0) {
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon soundcloud"></span>');
-    } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -2) {
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon progress"></span>');
-    } else if (view.name === 'month' && event.record === 1 && event.soundcloud_id === -3) {
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
-    }
-
-    if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
-        if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
-            $(element)
-                .find(".fc-event-time")
-                .before('<span id="'+event.id+'" class="small-icon show-empty"></span>');
-        } else if (event.show_partial_filled === true) {
-            $(element)
-                .find(".fc-event-time")
-                .before('<span id="'+event.id+'" class="small-icon show-partial-filled"></span>');
+    if (event.record === 1) {
+        if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+            if (event.soundcloud_id === -1) {
+                $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span>');
+            } else if ( event.soundcloud_id > 0) {
+                $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon soundcloud"></span>');
+            } else if (event.soundcloud_id === -2) {
+                $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon progress"></span>');
+            } else if (event.soundcloud_id === -3) {
+                $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
+            }
+        } else if (view.name === 'month') {
+            if(event.soundcloud_id === -1) {
+                $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span>');
+            } else if (event.soundcloud_id > 0) {
+                $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon soundcloud"></span>');
+            } else if (event.soundcloud_id === -2) {
+                $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon progress"></span>');
+            } else if (event.soundcloud_id === -3) {
+                $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon recording"></span><span id="'+event.id+'" class="small-icon sc-error"></span>');
+            }
         }
-    } else if (view.name === 'month') {
-        if (event.show_empty === 1 && event.record === 0 && event.rebroadcast === 0) {
-            $(element)
-                .find(".fc-event-title")
-                .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
-        } else if (event.show_partial_filled === true) {
-            $(element)
-                .find(".fc-event-title")
-                .after('<span id="'+event.id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+    }
+
+    if (event.record === 0 && event.rebroadcast === 0) {
+        if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+            if (event.show_empty === 1) {
+                $(element)
+                    .find(".fc-event-time")
+                    .before('<span id="'+event.id+'" class="small-icon show-empty"></span>');
+            } else if (event.show_partial_filled === true) {
+                $(element)
+                    .find(".fc-event-time")
+                    .before('<span id="'+event.id+'" class="small-icon show-partial-filled"></span>');
+            }
+        } else if (view.name === 'month') {
+            if (event.show_empty === 1) {
+                $(element)
+                    .find(".fc-event-title")
+                    .after('<span id="'+event.id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+            } else if (event.show_partial_filled === true) {
+                $(element)
+                    .find(".fc-event-title")
+                    .after('<span id="'+event.id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+            }
         }
     }
 
     //rebroadcast icon
-    if((view.name === 'agendaDay' || view.name === 'agendaWeek') && event.rebroadcast === 1) {
-        $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
-    }
-    
-    if(view.name === 'month' && event.rebroadcast === 1) {
-        $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
+    if (event.rebroadcast === 1) {
+        if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
+            $(element).find(".fc-event-time").before('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
+        } else if (view.name === 'month') {
+            $(element).find(".fc-event-title").after('<span id="'+event.id+'" class="small-icon rebroadcast"></span>');
+        }
     }
 }
 
@@ -366,6 +376,7 @@ function checkSCUploadStatus(){
             }else if(json.sc_id == "-3"){
                 $("span[id="+id+"]:not(.recording)").removeClass("progress").addClass("sc-error");
             }
+            setTimeout(checkSCUploadStatus, 5000);
         });
     });
 }
@@ -418,6 +429,7 @@ function getCurrentShow(){
                     $(this).remove("span[small-icon now-playing]");	
                 }    	
             });
+        setTimeout(getCurrentShow, 5000);
     }); 	
 }
 
@@ -558,8 +570,8 @@ function alertShowErrorAndReload(){
 
 preloadEventFeed();
 $(document).ready(function(){
-    setInterval( "checkSCUploadStatus()", 5000 );
-    setInterval( "getCurrentShow()", 5000 );
+    checkSCUploadStatus();
+    getCurrentShow();
 });
 
 var view_name;

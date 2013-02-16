@@ -360,13 +360,15 @@ function controlSwitchLight(){
 }
 
 function getScheduleFromServer(){
-    $.ajax({ url: baseUrl+"Schedule/get-current-playlist/format/json", dataType:"json", success:function(data){
+    $.ajax({ url: baseUrl+"Schedule/get-current-playlist/format/json", 
+                    dataType:"json", 
+                    success:function(data){
                 parseItems(data.entries);
                 parseSourceStatus(data.source_status);
                 parseSwitchStatus(data.switch_status);
                 showName = data.show_name;
+                setTimeout(getScheduleFromServer, serverUpdateInterval);
           }, error:function(jqXHR, textStatus, errorThrown){}});
-    setTimeout(getScheduleFromServer, serverUpdateInterval);
 }
 
 function setupQtip(){
