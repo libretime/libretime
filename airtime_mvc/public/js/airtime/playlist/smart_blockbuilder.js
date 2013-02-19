@@ -559,7 +559,9 @@ function enableLoadingIcon() {
 function disableLoadingIcon() {
     $("#side_playlist").unblock()
 }
-
+// We need to know if the criteria value will be a string
+// or numeric value in order to populate the modifier
+// select list
 var criteriaTypes = {
     0              : "",
     "album_title"  : "s",
@@ -568,6 +570,8 @@ var criteriaTypes = {
     "composer"     : "s",
     "conductor"    : "s",
     "copyright"    : "s",
+    "cuein"        : "n",
+    "cueout"       : "n",
     "artist_name"  : "s",
     "encoded_by"   : "s",
     "utime"        : "n",

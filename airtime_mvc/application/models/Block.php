@@ -63,6 +63,8 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "composer"     => "DbComposer",
             "conductor"    => "DbConductor",
             "copyright"    => "DbCopyright",
+            "cuein"        => "DbCuein",
+            "cueout"       => "DbCueout",
             "encoded_by"   => "DbEncodedBy",
             "utime"        => "DbUtime",
             "mtime"        => "DbMtime",
@@ -1278,6 +1280,8 @@ SQL;
             "composer"     => _("Composer"),
             "conductor"    => _("Conductor"),
             "copyright"    => _("Copyright"),
+            "cuein"        => _("Cue In"),
+            "cueout"       => _("Cue Out"),
             "artist_name"  => _("Creator"),
             "encoded_by"   => _("Encoded By"),
             "genre"        => _("Genre"),
@@ -1370,7 +1374,7 @@ SQL;
                      * user only sees the rounded version (i.e. 4:02.7 is 4:02.761625
                      * in the database)
                      */
-                    } elseif ($spCriteria == 'length' && $spCriteriaModifier == "is") {
+                    } elseif (in_array($spCriteria, array('length', 'cuein', 'cueout')) && $spCriteriaModifier == "is") {
                         $spCriteriaModifier = "starts with";
                         $spCriteria = $spCriteria.'::text';
                         $spCriteriaValue = $criteria['value'];
