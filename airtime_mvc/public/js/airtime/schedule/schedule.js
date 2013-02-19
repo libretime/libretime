@@ -93,6 +93,8 @@ function checkCalendarSCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
+
+        setTimeout(checkCalendarSCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
@@ -328,7 +330,7 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
-    setInterval(checkCalendarSCUploadStatus, 5000);
+    checkCalendarSCUploadStatus();
     
     $.contextMenu({
         selector: 'div.fc-event',

@@ -511,9 +511,11 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-library');
-                
-                if (settings !== "") {
+               
+                try {
                     return JSON.parse(settings);
+                } catch (e) {
+                    return null;
                 }
             },
             "fnStateLoadParams": function (oSettings, oData) {
@@ -521,18 +523,22 @@ var AIRTIME = (function(AIRTIME) {
                     length,
                     a = oData.abVisCols;
                 
-                // putting serialized data back into the correct js type to make
-                // sure everything works properly.
-                for (i = 0, length = a.length; i < length; i++) {
-                    if (typeof(a[i]) === "string") {
-                        a[i] = (a[i] === "true") ? true : false;
-                    } 
+                if (a) {
+                    // putting serialized data back into the correct js type to make
+                    // sure everything works properly.
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = (a[i] === "true") ? true : false;
+                        } 
+                    }
                 }
-                
+                    
                 a = oData.ColReorder;
-                for (i = 0, length = a.length; i < length; i++) {
-                    if (typeof(a[i]) === "string") {
-                        a[i] = parseInt(a[i], 10);
+                if (a) {
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = parseInt(a[i], 10);
+                        }
                     }
                 }
                 
@@ -842,8 +848,7 @@ var AIRTIME = (function(AIRTIME) {
         });
        
         checkImportStatus();
-        setInterval(checkImportStatus, 5000);
-        setInterval(checkLibrarySCUploadStatus, 5000);
+        checkLibrarySCUploadStatus();
         
         addQtipToSCIcons();
        
@@ -1071,6 +1076,7 @@ function checkImportStatus() {
             }
             div.hide();
         }
+        setTimeout(checkImportStatus, 5000);
     });
 }
     
@@ -1104,6 +1110,7 @@ function checkLibrarySCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
+        setTimeout(checkLibrarySCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
