@@ -366,8 +366,12 @@ var AIRTIME = (function(AIRTIME){
     
     function openPlaylistPanel() {
         var screenWidth = Math.floor(viewport.width - 40);
+        viewport = AIRTIME.utilities.findViewportDimensions();
+        widgetHeight = viewport.height - 185;
+
         $lib.width(Math.floor(screenWidth * 0.53));
         $pl.show().width(Math.floor(screenWidth * 0.44));
+        $pl.height(widgetHeight);
         $("#pl_edit").hide();
     }
 
