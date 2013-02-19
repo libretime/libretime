@@ -7,8 +7,13 @@ var AIRTIME = (function(AIRTIME) {
         LIB_SELECTED_CLASS = "lib-selected",
         chosenItems = {},
         visibleChosenItems = {};
-    
-    var criteriaTypes = {
+
+    // we need to know whether the criteria value is string or
+    // numeric in order to provide a single textbox or range textboxes
+    // in the advanced search
+    // s => string
+    // n => numberic
+    var libraryColumnTypes = {
         0             : "",
         "album_title" : "s",
         "artist_name" : "s",
@@ -18,6 +23,8 @@ var AIRTIME = (function(AIRTIME) {
         "composer"    : "s",
         "conductor"   : "s",
         "copyright"   : "s",
+        "cuein"       : "n",
+        "cueout"      : "n",
         "utime"       : "n",
         "mtime"       : "n",
         "lptime"      : "n",
@@ -399,7 +406,7 @@ var AIRTIME = (function(AIRTIME) {
                     
                     var inputClass = 'filter_column filter_number_text'; 
                     var labelStyle = "style='margin-right:35px;'";
-                    if (criteriaTypes[ele.mDataProp] != "s") {
+                    if (libraryColumnTypes[ele.mDataProp] != "s") {
                         inputClass = 'filterColumn filter_number_range';
                         labelStyle = "";
                     }
@@ -418,7 +425,7 @@ var AIRTIME = (function(AIRTIME) {
                             "</div>");
                     }
                     
-                    if (criteriaTypes[ele.mDataProp] == "s") {
+                    if (libraryColumnTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
                     } else {
                         var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
