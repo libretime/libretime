@@ -645,7 +645,8 @@ SQL;
         "track_number", "mood", "bpm", "composer", "info_url",
         "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label",
         "copyright", "mime", "language", "filepath", "owner_id",
-        "conductor", "replay_gain", "lptime", "is_playlist", "is_scheduled" );
+        "conductor", "replay_gain", "lptime", "is_playlist", "is_scheduled",
+        "cuein", "cueout" );
     }
 
     public static function searchLibraryFiles($datatables)
@@ -702,6 +703,11 @@ SQL;
                 $blSelect[]     = "NULL::boolean AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::boolean AS ".$key;
+            } elseif ($key === "cuein" || $key === "cueout") {
+                $plSelect[]     = "NULL::INTERVAL AS ".$key;
+                $blSelect[]     = "NULL::INTERVAL AS ".$key;
+                $fileSelect[]   = $key;
+                $streamSelect[] = "NULL::INTERVAL AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
@@ -783,8 +789,14 @@ SQL;
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
-            $formatter = new LengthFormatter($row['length']);
-            $row['length'] = $formatter->format();
+            $len_formatter = new LengthFormatter($row['length']);
+            $row['length'] = $len_formatter->format();
+
+            $cuein_formatter = new LengthFormatter($row["cuein"]);
+            $row["cuein"] = $cuein_formatter->format();
+
+            $cueout_formatter = new LengthFormatter($row["cueout"]);
+            $row["cueout"] = $cueout_formatter->format();
 
             if ($row['ftype'] === "audioclip") {
                 $formatter = new SamplerateFormatter($row['sample_rate']);
