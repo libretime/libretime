@@ -460,6 +460,9 @@ var AIRTIME = (function(AIRTIME) {
             
             // put hidden columns at the top to insure they can never be visible
             // on the table through column reordering.
+            
+            //IMPORTANT: WHEN ADDING A NEW COLUMN PLEASE CONSULT WITH THE WIKI
+            // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
             "aoColumns": [
               /* ftype */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
               /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
