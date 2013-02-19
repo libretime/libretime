@@ -86,9 +86,7 @@ class LibraryController extends Zend_Controller_Action
             // or show the playlist editor
             $showPlaylist = false;
             $data = Application_Model_Preference::getLibraryScreenSettings();
-            Logging::info($data);
             if (!is_null($data)) {
-                Logging::info($data);
                 if ($data["playlist"] == "true") {
                     $showPlaylist = true;
                 }
