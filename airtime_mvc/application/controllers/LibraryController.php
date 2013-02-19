@@ -77,21 +77,23 @@ class LibraryController extends Zend_Controller_Action
                     }
                 }
 
-                //get user settings and determine if we need to hide
-                // or show the playlist editor
-                $showPlaylist = false;
-                $data = Application_Model_Preference::getLibraryScreenSettings();
-                if (!is_null($data)) {
-                    if ($data["playlist"] == "true") {
-                        $showLib = true;
-                    }
-                }
-                $this->view->showPlaylist = $showPlaylist;
-
                 $formatter = new LengthFormatter($obj->getLength());
                 $this->view->length = $formatter->format();
                 $this->view->type = $obj_sess->type;
             }
+
+            //get user settings and determine if we need to hide
+            // or show the playlist editor
+            $showPlaylist = false;
+            $data = Application_Model_Preference::getLibraryScreenSettings();
+            Logging::info($data);
+            if (!is_null($data)) {
+                Logging::info($data);
+                if ($data["playlist"] == "true") {
+                    $showPlaylist = true;
+                }
+            }
+            $this->view->showPlaylist = $showPlaylist;
         } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_sess->type);
         } catch (Exception $e) {
