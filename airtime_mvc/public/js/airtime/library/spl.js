@@ -12,7 +12,7 @@ var AIRTIME = (function(AIRTIME){
 		viewport,
 		$lib,
 		$pl,
-		$togglePl = $("<a id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open playlist")+"'>"+$.i18n._("Open Playlist")+"</a>"),
+		$togglePl = $("<button id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open Playlist Editor")+"'>"+$.i18n._("Open Playlist Editor")+"</button>"),
 		widgetHeight,
 		resizeTimeout,
 		width;
@@ -720,12 +720,35 @@ var AIRTIME = (function(AIRTIME){
 
         $lib.on("click", "#pl_edit", function() {
             openPlaylistPanel();
+            $.ajax( {
+                url : baseUrl+"usersettings/set-library-screen-settings",
+                type : "POST",
+                data : {
+                    settings : {
+                        playlist : true
+                    },
+                    format : "json"
+                },
+                dataType : "json"
+            });
         });
 
         $pl.on("click", "#lib_pl_close", function() {
             var screenWidth = Math.floor(viewport.width - 40);
             $pl.hide();
             $lib.width(screenWidth).find("#library_display_length").append($togglePl.show());
+
+            $.ajax( {
+                url : baseUrl+"usersettings/set-library-screen-settings",
+                type : "POST",
+                data : {
+                    settings : {
+                        playlist : false
+                    },
+                    format : "json"
+                },
+                dataType : "json"
+            });
         });
 
         $('#save_button').live("click", function(event){
@@ -1099,12 +1122,18 @@ var AIRTIME = (function(AIRTIME){
 	mod.onReady = function() {
 		$lib = $("#library_content");
 		$pl = $("#side_playlist");
+
+		
 		
 		setWidgetSize();
 		
 		AIRTIME.library.libraryInit();
 		AIRTIME.playlist.init();
-		
+
+        if ($pl.is(':hidden')) {
+            $lib.find("#library_display_length").append($togglePl.show());
+        }
+
 		$pl.find(".ui-icon-alert").qtip({
 	        content: {
 	            text: $.i18n._("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore.")

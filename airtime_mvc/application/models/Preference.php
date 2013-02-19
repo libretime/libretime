@@ -1262,7 +1262,19 @@ class Application_Model_Preference
         $data = self::getValue("nowplaying_screen", true);
         return ($data != "") ? unserialize($data) : null;
     }
-    
+
+    public static function setLibraryScreenSettings($settings)
+    {
+        $data = serialize($settings);
+        self::setValue("library_screen", $data, true);
+    }
+
+    public static function getLibraryScreenSettings()
+    {
+        $data = self::getValue("library_screen", true);
+        return ($data != "") ? unserialize($data) : null;
+    }
+
     public static function SetEnableReplayGain($value) {
         self::setValue("enable_replay_gain", $value, false);
     }
