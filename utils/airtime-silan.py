@@ -52,7 +52,7 @@ try:
             try:
                 command = ['silan', '-f', 'JSON', full_path]
                 proc = subprocess.Popen(command, stdout=subprocess.PIPE)
-                out = proc.stdout.read()
+                out = proc.communicate()[0].strip('\r\n')
                 info = json.loads(out)
                 data = {}
                 data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
