@@ -17,6 +17,15 @@ UPDATE cc_files SET filepath = substring(filepath from 2) where id in (select id
 
 UPDATE cc_files SET cueout = length where cueout = '00:00:00';
 
+UPDATE cc_schedule SET cue_out = clip_length WHERE cue_out = '00:00:00';
+
+UPDATE cc_schedule SET fade_out = '00:00:59.9' WHERE fade_out > '00:00:59.9';
+UPDATE cc_schedule SET fade_in = '00:00:59.9' WHERE fade_in > '00:00:59.9';
+UPDATE cc_playlistcontents SET fadeout = '00:00:59.9' WHERE fadeout > '00:00:59.9';
+UPDATE cc_playlistcontents SET fadein = '00:00:59.9' WHERE fadein > '00:00:59.9';
+UPDATE cc_blockcontents SET fadeout = '00:00:59.9' WHERE fadeout > '00:00:59.9';
+UPDATE cc_blockcontents SET fadein = '00:00:59.9' WHERE fadein > '00:00:59.9';
+
 INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
 INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
@@ -28,6 +37,8 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', '한국어');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pl_PL', 'Polski');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pt_BR', 'Português Brasileiro');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('el_GR', 'Ελληνικά');

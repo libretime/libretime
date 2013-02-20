@@ -1,3 +1,4 @@
+
 CREATE SEQUENCE cc_listener_count_id_seq
 	START WITH 1
 	INCREMENT BY 1
@@ -55,6 +56,24 @@ ALTER TABLE cc_files
 	ADD COLUMN silan_check boolean DEFAULT false,
 	ADD COLUMN hidden boolean DEFAULT false;
 
+ALTER TABLE cc_schedule
+	ALTER COLUMN cue_in DROP DEFAULT,
+	ALTER COLUMN cue_in SET NOT NULL,
+	ALTER COLUMN cue_out DROP DEFAULT,
+	ALTER COLUMN cue_out SET NOT NULL;
+
+ALTER SEQUENCE cc_listener_count_id_seq
+	OWNED BY cc_listener_count.id;
+
+ALTER SEQUENCE cc_locale_id_seq
+	OWNED BY cc_locale.id;
+
+ALTER SEQUENCE cc_mount_name_id_seq
+	OWNED BY cc_mount_name.id;
+
+ALTER SEQUENCE cc_timestamp_id_seq
+	OWNED BY cc_timestamp.id;
+
 ALTER TABLE cc_listener_count
 	ADD CONSTRAINT cc_listener_count_pkey PRIMARY KEY (id);
 
@@ -72,5 +91,3 @@ ALTER TABLE cc_listener_count
 
 ALTER TABLE cc_listener_count
 	ADD CONSTRAINT cc_timestamp_inst_fkey FOREIGN KEY (timestamp_id) REFERENCES cc_timestamp(id) ON DELETE CASCADE;
-
-

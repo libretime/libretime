@@ -406,10 +406,9 @@ function setAddShowEvents() {
             event.stopPropagation();
             event.preventDefault();
 
-            $("#schedule_calendar").removeAttr("style")
-                .fullCalendar('render');
-
 			$("#add-show-form").hide();
+            windowResize();
+
             $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                 $("#add-show-form")
                     .empty()
@@ -652,13 +651,14 @@ function windowResize() {
         var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
         var widthPercent = parseInt(calendarWidth)+"%";
         $("#schedule_calendar").css("width", widthPercent);
+	} else {
+        $("#schedule_calendar").css("width", 98.5+"%");
 	}
 	
 	// 200 px for top dashboard and 50 for padding on main content
 	// this calculation was copied from schedule.js line 326
 	var mainHeight = document.documentElement.clientHeight - 200 - 50;
-	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight)
-	$("#schedule_calendar").fullCalendar('render');
+	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
 	
 }
 

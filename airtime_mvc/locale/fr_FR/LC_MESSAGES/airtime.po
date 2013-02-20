@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-01-15 10:36-0500\n"
-"PO-Revision-Date: 2013-01-15 17:03-0500\n"
+"PO-Revision-Date: 2013-02-05 11:14-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: French Localization <contact@sourcefabric.org>\n"
 "MIME-Version: 1.0\n"
@@ -1124,7 +1124,7 @@ msgstr "Nom de la Station - Nom de l'Emission"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
-msgstr "Métadonnées Hors Entenne"
+msgstr "Métadonnées Hors Antenne"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
 msgid "Enable Replay Gain"
@@ -1745,7 +1745,7 @@ msgstr "Emission en Cours:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:41
 msgid "Current"
-msgstr "Courant"
+msgstr "En ce moment"
 
 #: airtime_mvc/application/controllers/LocaleController.php:43
 msgid "You are running the latest version"

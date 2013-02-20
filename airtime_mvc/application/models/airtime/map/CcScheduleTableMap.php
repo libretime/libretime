@@ -46,8 +46,8 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('FADE_IN', 'DbFadeIn', 'TIME', false, null, '00:00:00');
 		$this->addColumn('FADE_OUT', 'DbFadeOut', 'TIME', false, null, '00:00:00');
-		$this->addColumn('CUE_IN', 'DbCueIn', 'VARCHAR', false, null, '00:00:00');
-		$this->addColumn('CUE_OUT', 'DbCueOut', 'VARCHAR', false, null, '00:00:00');
+		$this->addColumn('CUE_IN', 'DbCueIn', 'VARCHAR', true, null, null);
+		$this->addColumn('CUE_OUT', 'DbCueOut', 'VARCHAR', true, null, null);
 		$this->addColumn('MEDIA_ITEM_PLAYED', 'DbMediaItemPlayed', 'BOOLEAN', false, null, false);
 		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', true, null, null);
 		$this->addColumn('PLAYOUT_STATUS', 'DbPlayoutStatus', 'SMALLINT', true, null, 1);

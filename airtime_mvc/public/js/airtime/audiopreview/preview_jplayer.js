@@ -24,7 +24,7 @@ $(document).ready(function(){
         cssSelectorAncestor: "#jp_container_1"
     },[], //array of songs will be filled with below's json call
     {
-        swfPath: "/js/jplayer",
+        swfPath: baseUrl+"js/jplayer",
         supplied:"oga, mp3, m4v, m4a, wav",
         size: {
             width: "0px",

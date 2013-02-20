@@ -77,14 +77,12 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the cue_in field.
-	 * Note: this column has a database default value of: '00:00:00'
 	 * @var        string
 	 */
 	protected $cue_in;
 
 	/**
 	 * The value for the cue_out field.
-	 * Note: this column has a database default value of: '00:00:00'
 	 * @var        string
 	 */
 	protected $cue_out;
@@ -161,8 +159,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 		$this->clip_length = '00:00:00';
 		$this->fade_in = '00:00:00';
 		$this->fade_out = '00:00:00';
-		$this->cue_in = '00:00:00';
-		$this->cue_out = '00:00:00';
 		$this->media_item_played = false;
 		$this->playout_status = 1;
 		$this->broadcasted = 0;
@@ -708,7 +704,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$v = (string) $v;
 		}
 
-		if ($this->cue_in !== $v || $this->isNew()) {
+		if ($this->cue_in !== $v) {
 			$this->cue_in = $v;
 			$this->modifiedColumns[] = CcSchedulePeer::CUE_IN;
 		}
@@ -728,7 +724,7 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			$v = (string) $v;
 		}
 
-		if ($this->cue_out !== $v || $this->isNew()) {
+		if ($this->cue_out !== $v) {
 			$this->cue_out = $v;
 			$this->modifiedColumns[] = CcSchedulePeer::CUE_OUT;
 		}
@@ -839,14 +835,6 @@ abstract class BaseCcSchedule extends BaseObject  implements Persistent
 			}
 
 			if ($this->fade_out !== '00:00:00') {
-				return false;
-			}
-
-			if ($this->cue_in !== '00:00:00') {
-				return false;
-			}
-
-			if ($this->cue_out !== '00:00:00') {
 				return false;
 			}
 
