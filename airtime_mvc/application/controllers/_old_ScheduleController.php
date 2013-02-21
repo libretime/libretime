@@ -5,8 +5,6 @@ class ScheduleController extends Zend_Controller_Action
 
     protected $sched_sess = null;
 
-    private $service_schedule;
-
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
@@ -40,8 +38,6 @@ class ScheduleController extends Zend_Controller_Action
                     ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
-
-        $this->service_schedule = new Application_Service_ScheduleService();
     }
 
     public function indexAction()
@@ -94,27 +90,13 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
         //End Show builder JS/CSS requirements
 
-        $forms = $this->service_schedule->createShowForms();
-        // populate forms with default values
-        $this->service_schedule->populateNewShowForms(
-            $forms["what"], $forms["when"], $forms["repeats"]);
 
-        $this->view->what = $forms["what"];
-        $this->view->when = $forms["when"];
-        $this->view->repeats = $forms["repeats"];
-        $this->view->live = $forms["live"];
-        $this->view->rr = $forms["record"];
-        $this->view->absoluteRebroadcast = $forms["abs_record"];
-        $this->view->rebroadcast = $forms["rebroadcast"];
-        $this->view->who = $forms["who"];
-        $this->view->style = $forms["style"];
-
+        Application_Model_Schedule::createNewFormSections($this->view);
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $this->view->preloadShowForm = true;
         }
 
-        $this->view->addNewShow = true;
         $this->view->headScript()->appendScript(
             "var calendarPref = {};\n".
             "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
