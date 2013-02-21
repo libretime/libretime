@@ -960,7 +960,7 @@ SQL;
         Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
-    /*public static function createNewFormSections($p_view)
+    public static function createNewFormSections($p_view)
     {
         $formWhat    = new Application_Form_AddShowWhat();
         $formWho     = new Application_Form_AddShowWho();
@@ -1005,7 +1005,7 @@ SQL;
             $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
             $p_view->rebroadcast = $formRebroadcast;
         $p_view->addNewShow = true;
-    }*/
+    }
 
     /* This function is responsible for handling the case where an individual
      * show instance in a repeating show was edited (via the context menu in the Calendar).
@@ -1140,13 +1140,13 @@ SQL;
 
         $data["add_show_duration"] = $hValue.":".$mValue;
 
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+            $formRecord = new Application_Form_AddShowRR();
+            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
-        $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
+            $formRecord->removeDecorator('DtDdWrapper');
+            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+            $formRebroadcast->removeDecorator('DtDdWrapper');
 
 
             $record = $formRecord->isValid($data);
@@ -1156,18 +1156,18 @@ SQL;
             if ($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
-            $formAbsoluteRebroadcast->reset();
-            //make it valid, results don't matter anyways.
-            $rebroadAb = 1;
+                $formAbsoluteRebroadcast->reset();
+                //make it valid, results don't matter anyways.
+                $rebroadAb = 1;
 
-            if ($data["add_show_rebroadcast"]) {
-                $rebroad = $formRebroadcast->isValid($data);
-                if ($rebroad) {
-                    $rebroad = $formRebroadcast->checkReliantFields($data);
+                if ($data["add_show_rebroadcast"]) {
+                    $rebroad = $formRebroadcast->isValid($data);
+                    if ($rebroad) {
+                        $rebroad = $formRebroadcast->checkReliantFields($data);
+                    }
+                } else {
+                    $rebroad = 1;
                 }
-            } else {
-                $rebroad = 1;
-            }
         } else {
             $repeats = 1;
                 $formRebroadcast->reset();
