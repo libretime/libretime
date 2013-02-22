@@ -166,8 +166,9 @@ def walk_supported(directory, clean_empties=False):
 
 
 def file_locked(path):
-    f = Popen(["lsof", path], stdout=PIPE).stdout
-    return bool(f.readlines())
+    proc = Popen(["lsof", path], stdout=PIPE)
+    out = proc.communicate()[0].strip('\r\n')
+    return bool(out)
 
 def magic_move(old, new, after_dir_make=lambda : None):
     """ Moves path old to new and constructs the necessary to
