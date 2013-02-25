@@ -87,6 +87,14 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
     }
 
+    public function isWhenFormValid($formData, $validateStartDate) {
+        if (parent::isValid($formData)) {
+            return self::checkReliantFields($formData, $validateStartDate);
+        } else {
+            return false;
+        }
+    }
+
     public function checkReliantFields($formData, $validateStartDate, $originalStartDate=null, $update=false, $instanceId=null)
     {
         $valid = true;

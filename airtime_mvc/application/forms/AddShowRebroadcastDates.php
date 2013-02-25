@@ -45,6 +45,14 @@ class Application_Form_AddShowRebroadcastDates extends Zend_Form_SubForm
         }
     }
 
+    public function isValid($formData) {
+        if (parent::isValid($formData)) {
+             return $this->checkReliantFields($formData);
+        } else {
+            return false;
+        }
+    }
+
     public function checkReliantFields($formData)
     {
         $noError = true;

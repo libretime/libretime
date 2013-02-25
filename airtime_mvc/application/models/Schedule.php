@@ -1088,7 +1088,7 @@ SQL;
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate,
+    /*public static function addUpdateShow($data, $controller, $validateStartDate,
         $originalStartDate=null, $update=false, $instanceId=null)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -1227,7 +1227,7 @@ SQL;
             //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
             return false;
         }
-    }
+    }*/
 
     public static function checkOverlappingShows($show_start, $show_end,
         $update=false, $instanceId=null, $showId=null)
