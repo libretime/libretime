@@ -170,7 +170,7 @@ def normalize_mutagen(path):
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
     md['path']        = normpath(path)
 
-    # silence detect(set default queue in and out)
+    # silence detect(set default cue in and out)
     try:
         command = ['silan', '-f', 'JSON', md['path']]
         proc = subprocess.Popen(command, stdout=subprocess.PIPE)
