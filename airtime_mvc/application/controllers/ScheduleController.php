@@ -104,7 +104,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->repeats = $forms["repeats"];
         $this->view->live = $forms["live"];
         $this->view->rr = $forms["record"];
-        $this->view->absoluteRebroadcast = $forms["abs_record"];
+        $this->view->absoluteRebroadcast = $forms["abs_rebroadcast"];
         $this->view->rebroadcast = $forms["rebroadcast"];
         $this->view->who = $forms["who"];
         $this->view->style = $forms["style"];
@@ -879,19 +879,26 @@ class ScheduleController extends Zend_Controller_Action
             $data['add_show_day_check'] = null;
         }
 
-        $validateStartDate = true;
-        $success = Application_Model_Schedule::addUpdateShow($data, $this,
-            $validateStartDate);
+        $forms = $this->service_schedule->createShowForms();
 
-        if ($success) {
-            $this->view->addNewShow = true;
-            $this->view->newForm = $this->view->render(
-                'schedule/add-show-form.phtml');
+        $this->view->what = $forms["what"];
+        $this->view->when = $forms["when"];
+        $this->view->repeats = $forms["repeats"];
+        $this->view->live = $forms["live"];
+        $this->view->rr = $forms["record"];
+        $this->view->absoluteRebroadcast = $forms["abs_rebroadcast"];
+        $this->view->rebroadcast = $forms["rebroadcast"];
+        $this->view->who = $forms["who"];
+        $this->view->style = $forms["style"];
+
+        $this->view->addNewShow = true;
+
+        if ($this->service_schedule->validateShowForms($forms, $data)) {
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+            $this->service_schedule->createShow($data);
             Logging::debug("Show creation succeeded");
         } else {
-            $this->view->addNewShow = true;
-            $this->view->form = $this->view->render(
-                'schedule/add-show-form.phtml');
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
             Logging::debug("Show creation failed");
         }
     }

@@ -43,7 +43,7 @@ class Application_Service_ScheduleService
         $forms["style"] = $formStyle;
         $forms["live"] = $formLive;
         $forms["record"] = $formRecord;
-        $forms["abs_record"] = $formAbsoluteRebroadcast;
+        $forms["abs_rebroadcast"] = $formAbsoluteRebroadcast;
         $forms["rebroadcast"] = $formRebroadcast;
 
         return $forms;
@@ -79,21 +79,113 @@ class Application_Service_ScheduleService
      * 
      * Validates show forms
      * 
-     * @return array of booleans
+     * @return boolean
      */
-    public function validateShowForms($forms)
+    public function validateShowForms($forms, $formData, $validateStartDate = true)
     {
-        
+        $what = $forms["what"]->isValid($formData);
+        $live = $forms["live"]->isValid($formData);
+        $record = $forms["record"]->isValid($formData);
+        $who = $forms["who"]->isValid($formData);
+        $style = $forms["style"]->isValid($formData);
+        $when = $forms["when"]->isWhenFormValid($formData, $validateStartDate);
+
+        $repeats = true;
+        if ($formData["add_show_repeats"]) {
+            $repeats = $forms["repeats"]->isValid($formData);
+
+            /*
+             * Make the absolute rebroadcast form valid since
+             * it does not get used if the show is repeating
+             */
+            $forms["abs_rebroadcast"]->reset();
+            $absRebroadcast = true;
+
+            $rebroadcast = true;
+            if ($formData["add_show_rebroadcast"]) {
+                $formData["add_show_duration"] = $this->formatShowDuration(
+                    $formData["add_show_duration"]);
+                $rebroadcast = $forms["rebroadcast"]->isValid($formData);
+            }
+        } else {
+            /*
+             * Make the rebroadcast form valid since it does
+             * not get used if the show is not repeating.
+             * Instead, we use the absolute rebroadcast form
+             */
+            $forms["rebroadcast"]->reset();
+            $rebroadcast = true;
+
+            $absRebroadcast = true;
+            if ($formData["add_show_rebroadcast"]) {
+                $formData["add_show_duration"] = $this->formatShowDuration(
+                    $formData["add_show_duration"]);
+                $absRebroadcast = $forms["abs_rebroadcast"]->isValid($formData);
+            }
+        }
+
+        if ($what && $live && $record && $who && $style && $when &&
+            $repeats && $absRebroadcast && $rebroadcast) {
+            return true;
+        } else {
+            return false;
+        }
     }
 /*
  * Form stuff ends
  */
+
+    public function formatShowDuration($duration) {
+        $hPos = strpos($duration, 'h');
+        $mPos = strpos($duration, 'm');
+
+        $hValue = 0;
+        $mValue = 0;
+
+        if ($hPos !== false) {
+            $hValue = trim(substr($duration, 0, $hPos));
+        }
+        if ($mPos !== false) {
+            $hPos = $hPos === false ? 0 : $hPos+1;
+            $mValue = trim(substr($duration, $hPos, -1 ));
+        }
+
+        return $hValue.":".$mValue;
+    }
+
     /**
      * 
      * Creates a new show if form data is valid
      */
-    public function createShow()
+    public function createShow($showData)
     {
-        
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        $repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
+        $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
+
+        $showData["add_show_duration"] = $this->formatShowDuration(
+            $showData["add_show_duration"]);
+
+        if ($isAdminOrPM) {
+            $service_show = new Application_Service_ShowService();
+
+            //create ccShow
+            $ccShow = new CcShow();
+            $ccShow = $service_show->setShow($ccShow, $showData);
+
+            //create ccShowDay
+            $service_show->createShowDays(
+                $showData, $ccShow->getDbId(), $user->getId(), $repeatType, $isRecorded);
+
+            //create ccShowHosts
+            
+            //create ccShowRebroadcast
+            
+            //populate ccShowInstances
+        }
     }
+
 }
