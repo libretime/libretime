@@ -1220,10 +1220,9 @@ SQL;
             $controller->view->who     = $formWho;
             $controller->view->style   = $formStyle;
             $controller->view->live    = $formLive;
-
-                $controller->view->rr = $formRecord;
-                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                $controller->view->rebroadcast = $formRebroadcast;
+            $controller->view->rr = $formRecord;
+            $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+            $controller->view->rebroadcast = $formRebroadcast;
             //$controller->view->addNewShow = !$editShow;
             //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
             return false;

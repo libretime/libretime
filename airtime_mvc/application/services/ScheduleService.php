@@ -2,6 +2,13 @@
 
 class Application_Service_ScheduleService
 {
+/*
+ * Form stuff begins here
+ * Typically I would keep form creation and validation
+ * in the controller but since shows require 9 forms,
+ * the controller will become too fat.
+ * Maybe we should create a special form show service?
+ */
     /**
      * 
      * @return array of schedule forms
@@ -78,7 +85,9 @@ class Application_Service_ScheduleService
     {
         
     }
-
+/*
+ * Form stuff ends
+ */
     /**
      * 
      * Creates a new show if form data is valid
