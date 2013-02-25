@@ -871,6 +871,7 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
+        // TODO: move this to js
         $data['add_show_hosts']     = $this->_getParam('hosts');
         $data['add_show_day_check'] = $this->_getParam('days');
 
