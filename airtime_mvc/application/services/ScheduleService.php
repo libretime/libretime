@@ -175,15 +175,18 @@ class Application_Service_ScheduleService
             //create ccShow
             $ccShow = new CcShow();
             $ccShow = $service_show->setShow($ccShow, $showData);
+            $showId = $ccShow->getDbId();
 
             //create ccShowDay
             $service_show->createShowDays(
-                $showData, $ccShow->getDbId(), $user->getId(), $repeatType, $isRecorded);
+                $showData, $showId, $user->getId(), $repeatType, $isRecorded);
+
+            //create ccShowRebroadcast
+            $service_show->createShowRebroadcast($showData, $showId, $repeatType, $isRecorded);
 
             //create ccShowHosts
-            
-            //create ccShowRebroadcast
-            
+            $service_show->createShowHosts($showData, $showId);
+
             //populate ccShowInstances
         }
     }
