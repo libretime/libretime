@@ -1113,13 +1113,11 @@ SQL;
      */
     public static function create($data)
     {
-        /*$startDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);*/
-        
-        // these are not used
-        /*$utcStartDateTime = clone $startDateTime;
-        $utcStartDateTime->setTimezone(new DateTimeZone('UTC'));*/
+        $startDateTime = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time']);
+        $utcStartDateTime = clone $startDateTime;
+        $utcStartDateTime->setTimezone(new DateTimeZone('UTC'));
 
-        /*if ($data['add_show_no_end']) {
+        if ($data['add_show_no_end']) {
             $endDate = NULL;
         } elseif ($data['add_show_repeats']) {
             $endDateTime = new DateTime($data['add_show_end_date']);
@@ -1131,28 +1129,28 @@ SQL;
             //$endDateTime->setTimezone(new DateTimeZone('UTC'));
             $endDateTime->add(new DateInterval("P1D"));
             $endDate = $endDateTime->format("Y-m-d");
-        }*/
+        }
 
         //What we are doing here is checking if the show repeats or if
         //any repeating days have been checked. If not, then by default
         //the "selected" DOW is the initial day.
         //DOW in local time.
-        /*$startDow = date("w", $startDateTime->getTimestamp());
+        $startDow = date("w", $startDateTime->getTimestamp());
         if (!$data['add_show_repeats']) {
             $data['add_show_day_check'] = array($startDow);
         } elseif ($data['add_show_repeats'] && $data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = array($startDow);
-        }*/
+        }
 
         //find repeat type or set to a non repeating show.
-        /*$repeatType = ($data['add_show_repeats']) ? $data['add_show_repeat_type'] : -1;*/
+        $repeatType = ($data['add_show_repeats']) ? $data['add_show_repeat_type'] : -1;
 
         if ($data['add_show_id'] == -1) {
-            /*$ccShow = new CcShow();*/
+            $ccShow = new CcShow();
         } else {
             $ccShow = CcShowQuery::create()->findPK($data['add_show_id']);
         }
-        /*$ccShow->setDbName($data['add_show_name']);
+        $ccShow->setDbName($data['add_show_name']);
         $ccShow->setDbDescription($data['add_show_description']);
         $ccShow->setDbUrl($data['add_show_url']);
         $ccShow->setDbGenre($data['add_show_genre']);
@@ -1162,11 +1160,11 @@ SQL;
         $ccShow->setDbLiveStreamUsingCustomAuth($data['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($data['custom_username']);
         $ccShow->setDbLiveStreamPass($data['custom_password']);
-        $ccShow->save();*/
+        $ccShow->save();
 
-        /*$showId = $ccShow->getDbId();*/
+        $showId = $ccShow->getDbId();
 
-        /*$isRecorded = (isset($data['add_show_record']) && $data['add_show_record']) ? 1 : 0;*/
+        $isRecorded = (isset($data['add_show_record']) && $data['add_show_record']) ? 1 : 0;
 
         if ($data['add_show_id'] != -1) {
             $show = new Application_Model_Show($showId);
@@ -1180,7 +1178,7 @@ SQL;
         }
 
         //don't set day for monthly repeat type, it's invalid.
-        /*if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2) {
+        if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2) {
             $showDay = new CcShowDays();
             $showDay->setDbFirstShow($startDateTime->format("Y-m-d"));
             $showDay->setDbLastShow($endDate);
@@ -1217,7 +1215,7 @@ SQL;
                     $showDay->save();
                 }
             }
-        }*/
+        }
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's future show_rebroadcast information first.
@@ -1229,7 +1227,7 @@ SQL;
         //adding rows to cc_show_rebroadcast
         /* TODO: Document magic constant 10 and define it properly somewhere
             --RG */
-        /*if (($isRecorded && $data['add_show_rebroadcast']) && ($repeatType != -1)) {
+        if (($isRecorded && $data['add_show_rebroadcast']) && ($repeatType != -1)) {
             for ($i=1; $i<=10; $i++) {
                 if ($data['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
@@ -1266,14 +1264,14 @@ SQL;
                     $showRebroad->save();
                 }
             }
-        }*/
+        }
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's show_rebroadcast information first.
         if ($data['add_show_id'] != -1) {
             CcShowHostsQuery::create()->filterByDbShow($data['add_show_id'])->delete();
         }
-        /*if (is_array($data['add_show_hosts'])) {
+        if (is_array($data['add_show_hosts'])) {
             //add selected hosts to cc_show_hosts table.
             foreach ($data['add_show_hosts'] as $host) {
                 $showHost = new CcShowHosts();
@@ -1281,7 +1279,7 @@ SQL;
                 $showHost->setDbHost($host);
                 $showHost->save();
             }
-        }*/
+        }
 
         if ($data['add_show_id'] != -1) {
             $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
