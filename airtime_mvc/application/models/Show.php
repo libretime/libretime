@@ -1310,7 +1310,7 @@ SQL;
             }
         }
 
-        Application_Model_Show::populateShowUntil($showId);
+        /*Application_Model_Show::populateShowUntil($showId);*/
         Application_Model_RabbitMq::PushSchedule();
 
         return $showId;
@@ -1323,7 +1323,7 @@ SQL;
      *
      * @param int $p_showId
      */
-    public static function populateShowUntil($p_showId)
+    /*public static function populateShowUntil($p_showId)
     {
         $con = Propel::getConnection();
         $date = Application_Model_Preference::GetShowsPopulatedUntil();
@@ -1344,7 +1344,7 @@ SQL;
         foreach ($res as $showDaysRow) {
             Application_Model_Show::populateShow($showDaysRow, $p_populateUntilDateTime);
         }
-    }
+    }*/
 
     /**
      * We are going to use cc_show_days as a template, to generate Show Instances. This function
@@ -1357,7 +1357,7 @@ SQL;
      * @param DateTime $p_populateUntilDateTime
      *        DateTime object in UTC time.
      */
-    private static function populateShow($p_showDaysRow, $p_populateUntilDateTime)
+    /*private static function populateShow($p_showDaysRow, $p_populateUntilDateTime)
     {
         // TODO : use constants instead of int values here? or maybe php will
         // get enum types by the time somebody gets around to fix this. -- RG
@@ -1371,7 +1371,7 @@ SQL;
             Application_Model_Show::populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, 'P1M');
         }
         Application_Model_RabbitMq::PushSchedule();
-    }
+    }*/
 
     /**
      * Creates a single show instance. If the show is recorded, it may have multiple

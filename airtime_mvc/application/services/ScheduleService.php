@@ -2,6 +2,14 @@
 
 class Application_Service_ScheduleService
 {
+    private $service_show;
+    private $service_showInstances;
+
+    public function __construct()
+    {
+        $this->service_show = new Application_Service_ShowService();
+        $this->service_showInstances = new Application_Service_ShowInstanceService();
+    }
 /*
  * Form stuff begins here
  * Typically I would keep form creation and validation
@@ -170,27 +178,23 @@ class Application_Service_ScheduleService
             $showData["add_show_duration"]);
 
         if ($isAdminOrPM) {
-            $service_show = new Application_Service_ShowService();
-            $service_showInstances = new Application_Service_ShowInstanceService();
-
             //create ccShow
             $ccShow = new CcShow();
-            $ccShow = $service_show->setShow($ccShow, $showData);
+            $ccShow = $this->service_show->setShow($ccShow, $showData);
             $showId = $ccShow->getDbId();
 
-            //create ccShowDay
-            $service_show->createShowDays(
+            //create ccShowDays
+            $this->service_show->createShowDays(
                 $showData, $showId, $user->getId(), $repeatType, $isRecorded);
 
-            //create ccShowRebroadcast
-            $service_show->createShowRebroadcast($showData, $showId, $repeatType, $isRecorded);
+            //create ccShowRebroadcasts
+            $this->service_show->createShowRebroadcasts($showData, $showId, $repeatType, $isRecorded);
 
             //create ccShowHosts
-            $service_show->createShowHosts($showData, $showId);
+            $this->service_show->createShowHosts($showData, $showId);
 
-            $populateShowsUntil = $service_show->getPopulateShowUntilDateTIme();
             //create ccShowInstances
-            $service_showInstances->createShowInstances($showId, $populateShowsUntil);
+            $this->service_showInstances->createShowInstances($showId);
         }
     }
 
