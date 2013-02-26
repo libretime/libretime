@@ -2,8 +2,13 @@
 
 class Application_Service_ShowService
 {
+    const MAX_REBROADCAST_DATES = 10;
+
     /**
-     * Sets a cc_show entry
+     * 
+     * Enter description here ...
+     * @param $ccShow
+     * @param $showData
      */
     public function setShow($ccShow, $showData)
     {
@@ -23,7 +28,13 @@ class Application_Service_ShowService
     }
 
     /**
-     * Creates new cc_show_days entries
+     * 
+     * Enter description here ...
+     * @param $showData
+     * @param $showId
+     * @param $userId
+     * @param $repeatType
+     * @param $isRecorded
      */
     public function createShowDays($showData, $showId, $userId, $repeatType, $isRecorded)
     {
@@ -95,14 +106,17 @@ class Application_Service_ShowService
     }
 
     /**
-     * Creates new cc_show_rebroadcast entries
+     * 
+     * Enter description here ...
+     * @param $showData
+     * @param $showId
+     * @param $repeatType
+     * @param $isRecorded
      */
-    public function createShowRebroadcast($showData, $showId, $repeatType, $isRecorded)
+    public function createShowRebroadcasts($showData, $showId, $repeatType, $isRecorded)
     {
-        define("MAX_REBROADCAST_DATES", 10);
-
         if (($isRecorded && $showData['add_show_rebroadcast']) && ($repeatType != -1)) {
-            for ($i=1; $i<=MAX_REBROADCAST_DATES; $i++) {
+            for ($i=1; $i<=self::MAX_REBROADCAST_DATES; $i++) {
                 if ($showData['add_show_rebroadcast_date_'.$i]) {
                     $showRebroad = new CcShowRebroadcast();
                     $showRebroad->setDbDayOffset($showData['add_show_rebroadcast_date_'.$i]);
@@ -112,7 +126,7 @@ class Application_Service_ShowService
                 }
             }
         } elseif ($isRecorded && $showData['add_show_rebroadcast'] && ($repeatType == -1)) {
-            for ($i=1; $i<=MAX_REBROADCAST_DATES; $i++) {
+            for ($i=1; $i<=self::MAX_REBROADCAST_DATES; $i++) {
                 if ($showData['add_show_rebroadcast_date_absolute_'.$i]) {
                     $rebroadcastDate = new DateTime($showData["add_show_rebroadcast_date_absolute_$i"]);
                     $startDate = new DateTime($showData['add_show_start_date']);
@@ -129,7 +143,10 @@ class Application_Service_ShowService
     }
 
     /**
-     * Creates cc_show_hosts entries
+     * 
+     * Enter description here ...
+     * @param $showData
+     * @param $showId
      */
     public function createShowHosts($showData, $showId)
     {
@@ -173,5 +190,40 @@ class Application_Service_ShowService
 
         return Application_Common_Database::prepareAndExecute(
             $sql, array(":show_id" => $showId), 'all');
+    }
+
+    /**
+     * 
+     * Enter description here ...
+     * @param $localStart timestring format "Y-m-d H:i:s" (not UTC)
+     * @param $duration string time interval (h)h:(m)m(:ss)
+     * @param $timezone string "Europe/Prague"
+     * @param $offset array (days, hours, mins) used for rebroadcast shows
+     * 
+     * @return array of 2 DateTime objects, start/end time of the show in UTC
+     */
+    public function createUTCStartEndDateTime($localStart, $duration, $timezone=null, $offset=null)
+    {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        if (!isset($timezone)) {
+            $timezone = Application_Model_Preference::GetUserTimezone($user->getId());
+        }
+
+        $startDateTime = new DateTime($localStart, new DateTimeZone($timezone));
+        if (isset($offset)) {
+            $startDateTime->add(new DateInterval("P{$offset["days"]}DT{$offset["hours"]}H{$offset["mins"]}M"));
+        }
+        //convert time to UTC
+        $startDateTime->setTimezone(new DateTimeZone('UTC'));
+
+        $endDateTime = clone $startDateTime;
+        $duration = explode(":", $duration);
+        list($hours, $mins) = array_slice($duration, 0, 2);
+        $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
+
+        return array($startDateTime, $endDateTime);
     }
 }
