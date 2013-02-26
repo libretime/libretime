@@ -142,4 +142,36 @@ class Application_Service_ShowService
             }
         }
     }
+
+    /**
+     * 
+     * Gets the date and time shows (particularly repeating shows)
+     * can be populated until.
+     * 
+     * @return DateTime object
+     */
+    public function getPopulateShowUntilDateTIme()
+    {
+        $populateUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        if (is_null($populateUntil)) {
+            $populateUntil = new DateTime("now", new DateTimeZone('UTC'));
+            Application_Model_Preference::SetShowsPopulatedUntil($populateUntil);
+        }
+        return $populateUntil;
+    }
+
+    /**
+     * 
+     * Gets the cc_show_days entries for a specific show
+     * 
+     * @return array of ccShowDays objects
+     */
+    public function getShowDays($showId)
+    {
+        $sql = "SELECT * FROM cc_show_days WHERE show_id = :show_id";
+
+        return Application_Common_Database::prepareAndExecute(
+            $sql, array(":show_id" => $showId), 'all');
+    }
 }

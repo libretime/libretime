@@ -171,6 +171,7 @@ class Application_Service_ScheduleService
 
         if ($isAdminOrPM) {
             $service_show = new Application_Service_ShowService();
+            $service_showInstances = new Application_Service_ShowInstanceService();
 
             //create ccShow
             $ccShow = new CcShow();
@@ -187,7 +188,9 @@ class Application_Service_ScheduleService
             //create ccShowHosts
             $service_show->createShowHosts($showData, $showId);
 
-            //populate ccShowInstances
+            $populateShowsUntil = $service_show->getPopulateShowUntilDateTIme();
+            //create ccShowInstances
+            $service_showInstances->createShowInstances($showId, $populateShowsUntil);
         }
     }
 
