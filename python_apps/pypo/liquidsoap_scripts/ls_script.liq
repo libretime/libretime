@@ -33,8 +33,6 @@ s2_namespace = ref ''
 s3_namespace = ref ''
 just_switched = ref false
 
-#stream_harbor_pass = list.hd(get_process_lines('pwgen -s -N 1 -n 20'))
-
 %include "ls_lib.liq"
 
 queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
@@ -235,7 +233,7 @@ def append_dj_inputs(master_harbor_input_port,
             transitions=[transition, transition, transition], 
             [({!master_dj_enabled},master_dj), 
             ({!live_dj_enabled},dj_live), 
-            ({true}, s)])
+            ({!scheduled_play_enabled}, s)])
 
     elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
         master_dj = mksafe(
@@ -253,7 +251,7 @@ def append_dj_inputs(master_harbor_input_port,
         switch(id="master_dj_switch", 
             track_sensitive=false, 
             transitions=[transition, transition], 
-            [({!master_dj_enabled},master_dj), ({true}, s)])
+            [({!master_dj_enabled},master_dj), ({!scheduled_play_enabled}, s)])
 
     elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
         dj_live = mksafe(
@@ -271,18 +269,21 @@ def append_dj_inputs(master_harbor_input_port,
         switch(id="live_dj_switch", 
             track_sensitive=false, 
             transitions=[transition, transition], 
-            [({!live_dj_enabled},dj_live), ({true}, s)])
+            [({!live_dj_enabled},dj_live), ({!scheduled_play_enabled}, s)])
     else
         s
     end
 end
 
-s = switch(id="default_switch", track_sensitive=false,
-    transitions=[transition_default, transition],
-    [({!scheduled_play_enabled}, stream_queue),({true},default)])
+
 
 s = append_dj_inputs(master_live_stream_port, master_live_stream_mp,
-    dj_live_stream_port, dj_live_stream_mp, s)
+    dj_live_stream_port, dj_live_stream_mp, stream_queue)
+
+s = fallback(id="default_fallback", 
+    track_sensitive=false,
+    transitions=[transition_default, transition],
+    [s, default])
 
 # Attach a skip command to the source s:
 
