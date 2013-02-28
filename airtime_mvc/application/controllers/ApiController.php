@@ -947,6 +947,10 @@ class ApiController extends Zend_Controller_Action
 
     public function updateReplayGainValueAction()
     {
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
 
