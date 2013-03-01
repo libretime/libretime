@@ -67,7 +67,7 @@ try:
                 break
         print "Processed: %d songs" % total
         subtotal += total
-        total = 0
+
         try:
             print api_client.update_cue_values_by_silan(processed_data)
         except Exception ,e:

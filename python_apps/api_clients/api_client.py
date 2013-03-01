@@ -92,7 +92,11 @@ class ApiRequest(object):
             raise
         # Ghetto hack for now because we don't the content type we are getting
         # (Pointless to look at mime since it's not being set correctly always)
-        return json.loads(response)
+        try:
+            return json.loads(response)
+        except Exception:
+            self.logger.error(response)
+            raise
 
     def req(self, *args, **kwargs):
         self.__req = lambda : self(*args, **kwargs)

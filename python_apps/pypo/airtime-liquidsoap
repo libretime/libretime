@@ -6,7 +6,7 @@ virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 ls_user="pypo"
 export HOME="/var/tmp/airtime/pypo/"
 api_client_path="/usr/lib/airtime/"
-ls_path="/usr/bin/airtime-liquidsoap --verbose -f"
+ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
 exec 2>&1

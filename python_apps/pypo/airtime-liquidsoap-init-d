@@ -20,8 +20,11 @@ start () {
         chown pypo:pypo /var/log/airtime/pypo
         chown pypo:pypo /var/log/airtime/pypo-liquidsoap
 
-        start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
-        --nicelevel -15 --make-pidfile --pidfile $PIDFILE --startas $DAEMON
+        touch /var/run/airtime-liquidsoap.pid
+        chown pypo:pypo /var/run/airtime-liquidsoap.pid
+
+        start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
+        --pidfile /var/run/airtime-liquidsoap.pid --nicelevel -15 --startas $DAEMON
         
         monit monitor airtime-liquidsoap >/dev/null 2>&1
 }

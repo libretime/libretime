@@ -166,7 +166,8 @@ def walk_supported(directory, clean_empties=False):
 
 
 def file_locked(path):
-    proc = Popen(["lsof", path], stdout=PIPE)
+    #Capture stderr to avoid polluting py-interpreter.log
+    proc = Popen(["lsof", path], stdout=PIPE, stderr=PIPE)
     out = proc.communicate()[0].strip('\r\n')
     return bool(out)
 

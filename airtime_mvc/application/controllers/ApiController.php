@@ -45,6 +45,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('push-stream-stats'             , 'json')
                 ->addActionContext('update-stream-setting-table'   , 'json')
                 ->addActionContext('update-replay-gain-value'      , 'json')
+                ->addActionContext('update-cue-values-by-silan'    , 'json')
                 ->initContext();
     }
 
@@ -968,6 +969,10 @@ class ApiController extends Zend_Controller_Action
 
     public function updateReplayGainValueAction()
     {
+        // disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
 
@@ -984,13 +989,13 @@ class ApiController extends Zend_Controller_Action
     
     public function updateCueValuesBySilanAction()
     {
-        // disable layout
+        // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-    
+
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
-    Logging::info($data);
+
         foreach ($data as $pair) {
             list($id, $info) = $pair;
             // TODO : move this code into model -- RG
@@ -1002,6 +1007,8 @@ class ApiController extends Zend_Controller_Action
             $file->setDbSilanCheck(true);
             $file->save();
         }
+
+        echo json_encode(array());
     }
 
     public function notifyWebstreamDataAction()

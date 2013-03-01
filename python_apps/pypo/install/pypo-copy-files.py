@@ -6,6 +6,7 @@ import sys
 import subprocess
 import random
 import string
+import re
 from configobj import ConfigObj
 
 if os.geteuid() != 0:
@@ -36,6 +37,30 @@ def get_rand_string(length=10):
 def get_rand_string(length=10):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(length))
 
+def get_monit_version():
+    version = 0
+    try:
+        p = subprocess.Popen(['monit', '-V'], stdout=subprocess.PIPE)
+        out = p.communicate()[0].strip()
+        search = re.search(r'This is Monit version (.*)\n', out, re.IGNORECASE)
+
+        if search:
+            matches = search.groups()
+            if len(matches) == 1:
+                version = matches[0]
+    except Exception:
+        print "Could not get monit version"
+
+    return version
+
+#return 1 if version1 > version2
+#return 0 if version1 == version2
+#return -1 if version1 < version2
+def version_compare(version1, version2):
+    def normalize(v):
+        return [int(x) for x in re.sub(r'(\.0+)*$','', v).split(".")]
+    return cmp(normalize(version1), normalize(version2))
+
 PATH_INI_FILE = '/etc/airtime/pypo.cfg'
 
 try:
@@ -65,7 +90,14 @@ try:
     subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True)
     shutil.copy('%s/../../monit/monit-airtime-rabbitmq-server.cfg'%current_script_dir, '/etc/monit/conf.d/')
 
-    shutil.copy('%s/../monit-airtime-liquidsoap.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    monit_version = get_monit_version()
+    if version_compare(monit_version, "5.3.0") >= 0:
+        shutil.copy('%s/../monit-airtime-liquidsoap.cfg' % current_script_dir, \
+                    '/etc/monit/conf.d/monit-airtime-liquidsoap.cfg')
+    else:
+        shutil.copy('%s/../monit-pre530-airtime-liquidsoap.cfg' % current_script_dir, \
+                    '/etc/monit/conf.d/monit-airtime-liquidsoap.cfg')
+
     shutil.copy('%s/../monit-airtime-playout.cfg'%current_script_dir, '/etc/monit/conf.d/')
 
     #create pypo log dir

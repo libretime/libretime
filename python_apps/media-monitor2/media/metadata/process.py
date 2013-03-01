@@ -170,15 +170,15 @@ def normalize_mutagen(path):
     md['mime']        = m.mime[0] if len(m.mime) > 0 else u''
     md['path']        = normpath(path)
 
-    # silence detect(set default queue in and out)
+    # silence detect(set default cue in and out)
     try:
-        command = ['silan', '-f', 'JSON', md['path']]
+        command = ['silan', "-b", '-f', 'JSON', md['path']]
         proc = subprocess.Popen(command, stdout=subprocess.PIPE)
         out = proc.communicate()[0].strip('\r\n')
 
         info = json.loads(out)
         md['cuein'] = info['sound'][0][0]
-        md['cueout'] = info['sound'][-1][1]
+        md['cueout'] = info['sound'][0][1]
     except Exception:
         logger = logging.getLogger()
         logger.info('silan is missing')

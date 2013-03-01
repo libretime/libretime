@@ -75,7 +75,7 @@ class MM2(InstanceThread, Loggable):
                 airtime_receiver.new_watch({ 'directory':watch_dir }, restart=True)
             else: self.logger.info("Failed to add watch on %s" % str(watch_dir))
 
-        EventDrainer(airtime_notifier.connection,
+        EventDrainer(airtime_notifier,
                 interval=float(config['rmq_event_wait']))
 
         # Launch the toucher that updates the last time when the script was
