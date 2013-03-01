@@ -4,7 +4,7 @@ set("log.file.path", log_file)
 set("log.stdout", true)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
-set("init.daemon.pidfile.path", "/var/run/airtime-liquidsoap.pid") 
+set("init.daemon.pidfile.path", "/var/run/airtime-liquidsoap.pid")
 
 %include "library/pervasives.liq"
 
@@ -78,8 +78,8 @@ server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='start',
                 "output_start",
-                fun (s) -> begin log("dynamic_source.output_start") 
-                    notify([("schedule_table_id", !current_dyn_id)]) 
+                fun (s) -> begin log("dynamic_source.output_start")
+                    notify([("schedule_table_id", !current_dyn_id)])
                     webstream_enabled := true "enabled" end)
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
@@ -195,103 +195,56 @@ def check_dj_client(user,password) =
     hd == "True"
 end
 
-def append_dj_inputs(master_harbor_input_port,
-         master_harbor_input_mount_point, 
-        dj_harbor_input_port,
-        dj_harbor_input_mount_point, 
-        s) =
-    if master_harbor_input_port != 0 
-            and master_harbor_input_mount_point != "" 
-            and dj_harbor_input_port != 0 
-            and dj_harbor_input_mount_point != "" then
+s = switch(id="schedule_noise_switch",
+            track_sensitive=false,
+            transitions=[transition_default, transition],
+            [({!scheduled_play_enabled}, stream_queue), ({true}, default)]
+    )
 
-        master_dj = mksafe(
-                        audio_to_stereo(
-                            input.harbor(id="master_harbor", 
-                                        master_harbor_input_mount_point, 
-                                        port=master_harbor_input_port, 
-                                        auth=check_master_dj_client,
-                                        max=40., 
-                                        on_connect=master_dj_connect, 
-                                        on_disconnect=master_dj_disconnect)))
+s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
+    dj_live = mksafe(
+        audio_to_stereo(
+            input.harbor(id="live_dj_harbor",
+                dj_live_stream_mp,
+                port=dj_live_stream_port,
+                auth=check_dj_client,
+                max=40.,
+                on_connect=live_dj_connect,
+                on_disconnect=live_dj_disconnect)))
 
-        dj_live = mksafe(
-                        audio_to_stereo(
-                            input.harbor(id="live_dj_harbor", 
-                                        dj_harbor_input_mount_point, 
-                                        port=dj_harbor_input_port, 
-                                        auth=check_dj_client,
-                                        max=40., 
-                                        on_connect=live_dj_connect, 
-                                        on_disconnect=live_dj_disconnect)))
+    ignore(output.dummy(dj_live, fallible=true))
 
-        ignore(output.dummy(master_dj, fallible=true))
-        ignore(output.dummy(dj_live, fallible=true))
-
-        ([transition, transition, transition],
-            [
-                ({!master_dj_enabled},master_dj), 
-                ({!live_dj_enabled},dj_live), 
-                ({true}, s),
-            ])
-
-    elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
-        master_dj = mksafe(
-                        audio_to_stereo(
-                            input.harbor(id="master_harbor", 
-                                master_harbor_input_mount_point, 
-                                port=master_harbor_input_port, 
-                                auth=check_master_dj_client,
-                                max=40., 
-                                on_connect=master_dj_connect, 
-                                on_disconnect=master_dj_disconnect)))
-
-        ignore(output.dummy(master_dj, fallible=true))
-        
-        ([transition, transition], 
-            [
-                ({!master_dj_enabled},master_dj),
-                ({true}, s), 
-            ])
-
-    elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        dj_live = mksafe(
-            audio_to_stereo(
-                input.harbor(id="live_dj_harbor", 
-                    dj_harbor_input_mount_point, 
-                    port=dj_harbor_input_port, 
-                    auth=check_dj_client,
-                    max=40., 
-                    on_connect=live_dj_connect, 
-                    on_disconnect=live_dj_disconnect)))
-
-        ignore(output.dummy(dj_live, fallible=true))
-
-        ([transition, transition],
-            [
-                ({!live_dj_enabled},dj_live), 
-                ({true}, s),
-            ])
-    else
-        ([transition], [
-                ({true}, s),
-            ])
-    end
+    switch(id="show_schedule_noise_switch",
+            track_sensitive=false,
+            transitions=[transition, transition],
+            [({!live_dj_enabled}, dj_live), ({true}, s)]
+        )
+else
+    s
 end
 
-s = switch(id="default_switch", 
-    track_sensitive=false,
-    transitions=[transition_default, transition],
-    [({!scheduled_play_enabled}, stream_queue), ({true}, default)])
+s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
+    master_dj = mksafe(
+                    audio_to_stereo(
+                        input.harbor(id="master_harbor",
+                            master_live_stream_mp,
+                            port=master_live_stream_port,
+                            auth=check_master_dj_client,
+                            max=40.,
+                            on_connect=master_dj_connect,
+                            on_disconnect=master_dj_disconnect)))
 
-pair = append_dj_inputs(master_live_stream_port, master_live_stream_mp,
-    dj_live_stream_port, dj_live_stream_mp, s)
+    ignore(output.dummy(master_dj, fallible=true))
 
-s = switch(id="master_switch", 
-    track_sensitive=false, 
-    transitions=fst(pair), 
-    snd(pair)
-)
+    switch(id="master_show_schedule_noise_switch",
+            track_sensitive=false,
+            transitions=[transition, transition],
+            [({!master_dj_enabled}, master_dj), ({true}, s)]
+        )
+else
+    s
+end
+
 
 # Attach a skip command to the source s:
 add_skip_command(s)
