@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import traceback
 import sys
 from configobj import ConfigObj
 from threading import Thread
@@ -112,10 +113,8 @@ class PypoMessageHandler(Thread):
                 # ACK the message to take it off the queue
                 message.ack()
             except (IOError, AttributeError), e:
-                import traceback
-                top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", top)
+                self.logger.error("traceback: %s", traceback.format_exc())
                 while not self.init_rabbit_mq():
                     self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
                     time.sleep(5)
