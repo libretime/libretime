@@ -123,7 +123,7 @@ $(document).ready(function() {
         sourceDomain:"http://$host",
         updatePeriod: 600 //seconds
     });
-}
+});
 </script>
 CODE;
 
