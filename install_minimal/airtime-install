@@ -217,7 +217,9 @@ if [ "$python_service" -eq "0" ]; then
     echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
     sleep 15
 
+    set +e
     airtime-check-system --no-color
+    set -e
 fi
 
 echo -e "\n******************************* Install Complete *******************************"
