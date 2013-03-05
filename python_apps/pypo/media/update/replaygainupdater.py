@@ -55,6 +55,7 @@ class ReplayGainUpdater(Thread):
                     for f in files:
                         full_path = os.path.join(dir_path, f['fp'])
                         processed_data.append((f['id'], replaygain.calculate_replay_gain(full_path)))
+                        total += 1
 
                     try:
                         self.api_client.update_replay_gain_values(processed_data)

@@ -50,7 +50,7 @@ try:
             full_path = f['fp']
             # silence detect(set default queue in and out)
             try:
-                command = ['silan', '-f', 'JSON', full_path]
+                command = ['silan', '-b' '-f', 'JSON', full_path]
                 proc = subprocess.Popen(command, stdout=subprocess.PIPE)
                 out = proc.communicate()[0].strip('\r\n')
                 info = json.loads(out)
@@ -64,10 +64,9 @@ try:
             except Exception, e:
                 print e
                 print traceback.format_exc()
-                break
         print "Processed: %d songs" % total
         subtotal += total
-        total = 0
+
         try:
             print api_client.update_cue_values_by_silan(processed_data)
         except Exception ,e:

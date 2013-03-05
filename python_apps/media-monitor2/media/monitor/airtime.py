@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from kombu.messaging  import Exchange, Queue, Consumer
 from kombu.connection import BrokerConnection
+from kombu.simple import SimpleQueue
 from os.path          import normpath
 
 import json
@@ -24,35 +25,43 @@ class AirtimeNotifier(Loggable):
     """
     def __init__(self, cfg, message_receiver):
         self.cfg = cfg
+        self.handler = message_receiver
+        while not self.init_rabbit_mq():
+            self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+            time.sleep(5)
+
+    def init_rabbit_mq(self):
         try:
-            self.handler = message_receiver
             self.logger.info("Initializing RabbitMQ message consumer...")
             schedule_exchange = Exchange("airtime-media-monitor", "direct",
                     durable=True, auto_delete=True)
             schedule_queue = Queue("media-monitor", exchange=schedule_exchange,
                     key="filesystem")
-            self.connection = BrokerConnection(cfg["rabbitmq_host"],
-                    cfg["rabbitmq_user"], cfg["rabbitmq_password"],
-                    cfg["rabbitmq_vhost"])
+            self.connection = BrokerConnection(self.cfg["rabbitmq_host"],
+                    self.cfg["rabbitmq_user"], self.cfg["rabbitmq_password"],
+                    self.cfg["rabbitmq_vhost"])
             channel  = self.connection.channel()
-            consumer = Consumer(channel, schedule_queue)
-            consumer.register_callback(self.handle_message)
-            consumer.consume()
+
+            self.simple_queue = SimpleQueue(channel, schedule_queue)
+
             self.logger.info("Initialized RabbitMQ consumer.")
         except Exception as e:
             self.logger.info("Failed to initialize RabbitMQ consumer")
             self.logger.error(e)
+            return False
 
-    def handle_message(self, body, message):
+        return True
+
+
+    def handle_message(self, message):
         """
         Messages received from RabbitMQ are handled here. These messages
         instruct media-monitor of events such as a new directory being watched,
         file metadata has been changed, or any other changes to the config of
         media-monitor via the web UI.
         """
-        message.ack()
-        self.logger.info("Received md from RabbitMQ: %s" % str(body))
-        m = json.loads(message.body)
+        self.logger.info("Received md from RabbitMQ: %s" % str(message))
+        m = json.loads(message)
         # TODO : normalize any other keys that could be used to pass
         # directories
         if 'directory' in m: m['directory'] = normpath(m['directory'])

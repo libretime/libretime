@@ -49,7 +49,7 @@ Depends: apache2,
  vorbis-tools,
  zendframework | libzend-framework-php,
  ${misc:Depends}
-Recommends: icecast2
+Recommends: icecast2, php-apc
 Suggests: airtime-audio-samples,
  alsa-utils
 Description: open radio software for scheduling and remote station management.

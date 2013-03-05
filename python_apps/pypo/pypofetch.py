@@ -14,6 +14,7 @@ from Queue import Empty
 
 from api_clients import api_client
 from std_err_override import LogWriter
+from subprocess import Popen, PIPE
 
 from configobj import ConfigObj
 
@@ -501,6 +502,12 @@ class PypoFetch(Thread):
         try: self.cache_cleanup(media)
         except Exception, e: self.logger.error("%s", e)
 
+    def is_file_opened(self, path):
+        #Capture stderr to avoid polluting py-interpreter.log
+        proc = Popen(["lsof", path], stdout=PIPE, stderr=PIPE)
+        out = proc.communicate()[0].strip()
+        return bool(out)
+
     def cache_cleanup(self, media):
         """
         Get list of all files in the cache dir and remove them if they aren't being used anymore.
@@ -521,8 +528,14 @@ class PypoFetch(Thread):
         self.logger.debug("Files to remove " + str(expired_files))
         for f in expired_files:
             try:
-                self.logger.debug("Removing %s" % os.path.join(self.cache_dir, f))
-                os.remove(os.path.join(self.cache_dir, f))
+                path = os.path.join(self.cache_dir, f)
+                self.logger.debug("Removing %s" % path)
+
+                #check if this file is opened (sometimes Liquidsoap is still
+                #playing the file due to our knowledge of the track length
+                #being incorrect!)
+                if not self.is_file_opened():
+                    os.remove(path)
             except Exception, e:
                 self.logger.error(e)
 

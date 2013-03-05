@@ -368,7 +368,12 @@ SQL;
 
         if (file_exists($filepath) && $type == "stor") {
             $data = array("filepath" => $filepath, "delete" => 1);
-            Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+            try {
+                Application_Model_RabbitMq::SendMessageToMediaMonitor("file_delete", $data);
+            } catch (Exception $e) {
+                Logging::error($e->getMessage());
+                return;
+            }
         }
 
 

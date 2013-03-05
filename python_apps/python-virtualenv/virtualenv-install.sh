@@ -50,18 +50,3 @@ fi
 
 echo -e "\n*** Installing Python Libraries ***"
 /usr/lib/airtime/airtime_virtualenv/bin/pip install ${SCRIPTPATH}/airtime_virtual_env.pybundle || exit 1
-
-PYTHON_VERSION=$(python -c "import sys; print 'python%s.%s' % (sys.version_info[0], sys.version_info[1])")
-
-echo -e "\n*** Patching Python Libraries ***"
-echo " * Patching virtualenv libraries in /usr/lib/airtime/airtime_virtualenv/lib/$PYTHON_VERSION"
-PATCHES=${SCRIPTPATH}/patches/*
-for file in $(find $PATCHES -print); do
-if [ -d $file ]; then
-    DIRNAME=$(basename $file)
-    echo -e "\n   ---Applying Patches for $DIRNAME---"
-else
-    patch -N -p7 -i $file -d /usr/lib/airtime/airtime_virtualenv/lib/$PYTHON_VERSION
-fi
-done
-exit 0
