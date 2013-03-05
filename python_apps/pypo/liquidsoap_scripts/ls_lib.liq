@@ -1,6 +1,6 @@
 def notify(m)
   #current_media_id := string_of(m['schedule_table_id'])
-  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &"
+  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
 end
@@ -78,14 +78,16 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
     source = ref s
     def on_error(msg)
         connected := "false"
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &")
-        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &")
+        command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
+        system(command)
+        log(command)
         5.
     end
     def on_connect()
         connected := "true"
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &")
-        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &")
+        command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &"
+        system(command)
+        log(command)
     end
 
     stereo = (channels == "stereo")
