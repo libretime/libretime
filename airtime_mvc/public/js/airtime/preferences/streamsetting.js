@@ -71,7 +71,7 @@ function showForIcecast(ele){
     div.find("#outputMountpoint-element").show()
     div.find("#outputUser-label").show()
     div.find("#outputUser-element").show()
-    div.find("select[id$=data-type]").find("option[value='ogg']").attr("disabled","");
+    div.find("select[id$=data-type]").find("option[value='ogg']").removeAttr("disabled");
 }
 
 function checkLiquidsoapStatus(){
