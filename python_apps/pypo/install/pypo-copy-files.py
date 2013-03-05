@@ -88,7 +88,6 @@ try:
     #copy monit files
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
     subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True)
-    shutil.copy('%s/../../monit/monit-airtime-rabbitmq-server.cfg'%current_script_dir, '/etc/monit/conf.d/')
 
     monit_version = get_monit_version()
     if version_compare(monit_version, "5.3.0") >= 0:
