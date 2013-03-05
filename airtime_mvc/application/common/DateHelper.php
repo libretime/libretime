@@ -229,7 +229,7 @@ class Application_Common_DateHelper
     public static function calculateLengthInSeconds($p_time){
 
         if (2 !== substr_count($p_time, ":")){
-            return FALSE;
+            return false;
         }
         
         if (1 === substr_count($p_time, ".")){
@@ -241,12 +241,8 @@ class Application_Common_DateHelper
 
         list($hours, $minutes, $seconds) = explode(":", $hhmmss);
         
-        // keep ms in 3 digits
-        $ms = substr($ms, 0, 3);
-        
-        $totalSeconds = $hours*3600 + $minutes*60 + $seconds + $ms/1000;
-
-        return $totalSeconds;
+        $totalSeconds = ($hours*3600 + $minutes*60 + $seconds).".$ms";
+        return round($totalSeconds, 3);
     }
 
     public static function ConvertToUtcDateTime($p_dateString, $timezone=null){

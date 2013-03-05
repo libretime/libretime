@@ -22,6 +22,11 @@ class Application_Model_RabbitMq
                                          $CC_CONFIG["rabbitmq"]["user"],
                                          $CC_CONFIG["rabbitmq"]["password"],
                                          $CC_CONFIG["rabbitmq"]["vhost"]);
+
+        if (!isset($conn)) {
+            throw new Exception("Cannot connect to RabbitMQ server");
+        }
+
         $channel = $conn->channel();
         $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
             true, true);

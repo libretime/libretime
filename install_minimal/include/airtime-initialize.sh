@@ -45,7 +45,6 @@ chmod 600 /etc/monit/conf.d/monit-airtime-liquidsoap.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-media-monitor.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-playout.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-liquidsoap.cfg
-chmod 600 /etc/monit/conf.d/monit-airtime-rabbitmq-server.cfg
 
 # Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is
