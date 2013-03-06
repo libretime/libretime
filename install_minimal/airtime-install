@@ -208,8 +208,6 @@ if [ "$mediamonitor" = "t" -o "$pypo" = "t" ]; then
 fi
 
 
-/usr/lib/airtime/utils/rabbitmq-update-pid.sh > /dev/null
-
 touch /usr/share/airtime/public/index.php
 
 if [ "$python_service" -eq "0" ]; then
