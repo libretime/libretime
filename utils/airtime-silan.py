@@ -3,8 +3,6 @@ from api_clients import api_client as apc
 
 import logging
 import json
-import shutil
-import commands
 import os
 import sys
 import subprocess
