@@ -15,7 +15,7 @@ import json
 import base64
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.3.0"
+AIRTIME_VERSION = "2.3.1"
 
 
 # TODO : Place these functions in some common module. Right now, media

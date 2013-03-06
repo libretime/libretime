@@ -208,14 +208,12 @@ if [ "$mediamonitor" = "t" -o "$pypo" = "t" ]; then
 fi
 
 
-/usr/lib/airtime/utils/rabbitmq-update-pid.sh > /dev/null
-
 touch /usr/share/airtime/public/index.php
 
 if [ "$python_service" -eq "0" ]; then
     #only run airtime-check-system if all components were installed
     echo -e "\n*** Verifying your system environment, running airtime-check-system ***"
-    sleep 15
+    sleep 10
 
     set +e
     airtime-check-system --no-color

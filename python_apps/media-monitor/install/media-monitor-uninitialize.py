@@ -13,5 +13,7 @@ try:
         print "OK"
     else:
         print "Wasn't running"
+
+    subprocess.call("update-rc.d -f airtime-media-monitor remove".split(" "))
 except Exception, e:
     print e

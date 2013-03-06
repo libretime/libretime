@@ -57,7 +57,6 @@ invoke-rc.d monit restart
 sleep 1
 
 set +e
-
 if [ "$mediamonitor" = "t" ]; then
     monit monitor airtime-media-monitor
 fi
@@ -65,6 +64,4 @@ if [ "$pypo" = "t" ]; then
     monit monitor airtime-playout
     monit monitor airtime-liquidsoap
 fi
-
-monit monitor rabbitmq-server
 set -e

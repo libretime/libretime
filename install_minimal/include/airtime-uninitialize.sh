@@ -19,7 +19,6 @@ set +e
 monit unmonitor airtime-media-monitor >/dev/null 2>&1
 monit unmonitor airtime-liquidsoap >/dev/null 2>&1
 monit unmonitor airtime-playout >/dev/null 2>&1
-monit unmonitor rabbitmq-server
 set -e
 
 #virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
