@@ -1,6 +1,4 @@
 #!/bin/bash
-#-e Causes bash script to exit if any of the installers
-#return with a non-zero return value.
 
 if [[ $EUID -ne 0 ]]; then
     echo "Please run as root user."
@@ -20,17 +18,9 @@ SCRIPTPATH=`dirname $SCRIPT`
 
 AIRTIMEROOT=$SCRIPTPATH/../../
 
-#rm -f /etc/airtime/airtime.conf
-#rm -f /etc/airtime/api_client.cfg
-#rm -f /etc/airtime/recorder.cfg
-#rm -f /etc/airtime/media-monitor.cfg
-#rm -f /etc/airtime/pypo.cfg
-#rm -f /etc/airtime/liquidsoap.cfg
-
 rm -f /etc/cron.d/airtime-crons
-
-#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-#. ${virtualenv_bin}activate
+rm -f /etc/monit/conf.d/monit-airtime*
+rm -f /etc/logrotate.d/airtime-php
 
 echo "* API Client"
 python $AIRTIMEROOT/python_apps/api_clients/install/api_client_uninstall.py
@@ -38,8 +28,6 @@ echo "* Pypo"
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-remove-files.py
 echo "* Media-Monitor"
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-remove-files.py
-#echo "* Show-Recorder"
-#python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-remove-files.py
 
 #remove symlinks
 rm -f /usr/bin/airtime-import
@@ -48,6 +36,7 @@ rm -f /usr/bin/airtime-check-system
 rm -f /usr/bin/airtime-log
 rm -f /usr/bin/airtime-test-soundcard
 rm -f /usr/bin/airtime-test-stream
+rm -f /usr/bin/airtime-silan
 
 rm -rf /usr/lib/airtime
 rm -rf /usr/share/airtime
