@@ -48,6 +48,7 @@ rm -f /usr/bin/airtime-check-system
 rm -f /usr/bin/airtime-log
 rm -f /usr/bin/airtime-test-soundcard
 rm -f /usr/bin/airtime-test-stream
+rm -f /usr/bin/airtime-silan
 
 rm -rf /usr/lib/airtime
 rm -rf /usr/share/airtime
