@@ -696,7 +696,6 @@ class ApiController extends Zend_Controller_Action
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
             "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
             "services"=>array(
-                "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
                 "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
                 "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
@@ -994,7 +993,6 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $data = $request->getParam("data");
         $media_id = $request->getParam("media_id");
-
         $data_arr = json_decode($data);
 
         if (!is_null($media_id)) {

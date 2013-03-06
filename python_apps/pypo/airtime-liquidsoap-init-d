@@ -17,15 +17,7 @@ DAEMON=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE=/var/run/airtime-liquidsoap.pid
 
 start () {
-        chown pypo:pypo /var/log/airtime/pypo
-        chown pypo:pypo /var/log/airtime/pypo-liquidsoap
-
-        touch /var/run/airtime-liquidsoap.pid
-        chown pypo:pypo /var/run/airtime-liquidsoap.pid
-
-        start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
-        --pidfile /var/run/airtime-liquidsoap.pid --nicelevel -15 --startas $DAEMON
-        
+        start_no_monit
         monit monitor airtime-liquidsoap >/dev/null 2>&1
 }
 
@@ -39,7 +31,14 @@ stop () {
 }
 
 start_no_monit() {
-        start-stop-daemon --start --background --quiet --chuid $USERID:$USERID --make-pidfile --pidfile $PIDFILE --startas $DAEMON        
+        chown pypo:pypo /var/log/airtime/pypo
+        chown pypo:pypo /var/log/airtime/pypo-liquidsoap
+
+        touch /var/run/airtime-liquidsoap.pid
+        chown pypo:pypo /var/run/airtime-liquidsoap.pid
+
+        start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
+            --pidfile /var/run/airtime-liquidsoap.pid --nicelevel -15 --startas $DAEMON
 }
 
 
