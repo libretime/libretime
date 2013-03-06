@@ -25,6 +25,7 @@ from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
 
 from media.update.replaygainupdater import ReplayGainUpdater
+from media.update.silananalyzer import SilanAnalyzer
 
 from configobj import ConfigObj
 
@@ -126,21 +127,21 @@ def keyboardInterruptHandler(signum, frame):
 
 def liquidsoap_running_test(telnet_lock, host, port, logger):
     logger.debug("Checking to see if Liquidsoap is running")
-    success = True
     try:
         telnet_lock.acquire()
         tn = telnetlib.Telnet(host, port)
         msg = "version\n"
         tn.write(msg)
         tn.write("exit\n")
-        logger.info("Found: %s", tn.read_all())
+        response = tn.read_all()
+        logger.info("Found: %s", response)
     except Exception, e:
         logger.error(str(e))
-        success = False
+        return False
     finally:
         telnet_lock.release()
 
-    return success
+    return "Liquidsoap" in response
 
 
 if __name__ == '__main__':
@@ -178,6 +179,7 @@ if __name__ == '__main__':
     api_client = api_client.AirtimeApiClient()
 
     ReplayGainUpdater.start_reply_gain(api_client)
+    SilanAnalyzer.start_silan(api_client, logger)
 
     success = False
     while not success:
