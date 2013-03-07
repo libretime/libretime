@@ -14,14 +14,14 @@ def get_process_output(command):
     Run subprocess and return stdout
     """
     logger.debug(command)
-    p = Popen(command, shell=True, stdout=PIPE)
+    p = Popen(command, stdout=PIPE, stderr=PIPE)
     return p.communicate()[0].strip()
 
 def run_process(command):
     """
     Run subprocess and return "return code"
     """
-    p = Popen(command, shell=True)
+    p = Popen(command)
     return os.waitpid(p.pid, 0)[1]
 
 def get_mime_type(file_path):
@@ -31,7 +31,8 @@ def get_mime_type(file_path):
     for files which do not have a mp3/ogg/flac extension.
     """
 
-    return get_process_output("timeout 5 file -b --mime-type %s" % file_path)
+    command = ['timeout', '5', 'file', '-b', '--mime-type', file_path]
+    return get_process_output(command)
 
 def duplicate_file(file_path):
     """
@@ -89,41 +90,37 @@ def calculate_replay_gain(file_path):
         temp_file_path = duplicate_file(file_path)
 
         file_type = get_file_type(file_path)
-        nice_level = '15'
+        nice_level = '19'
 
         if file_type:
             if file_type == 'mp3':
-                if run_process("which mp3gain > /dev/null") == 0:
-                    command = 'nice -n %s mp3gain -q "%s" 2> /dev/null' \
-                            % (nice_level, temp_file_path)
+                if run_process(['which', 'mp3gain']) == 0:
+                    command = ['nice', '-n', nice_level, 'mp3gain', '-q', temp_file_path]
                     out = get_process_output(command)
                     search = re.search(r'Recommended "Track" dB change: (.*)', \
                                        out)
                 else:
                     logger.warn("mp3gain not found")
             elif file_type == 'vorbis':
-                command = "which vorbisgain > /dev/null  && which ogginfo > \
-                        /dev/null"
-                if run_process(command) == 0:
-                    command = 'nice -n %s vorbisgain -q -f "%s" 2>/dev/null \
-                                >/dev/null' % (nice_level,temp_file_path)
+                if run_process(['which', 'ogginfo']) == 0 and \
+                        run_process(['which', 'vorbisgain']) == 0:
+                    command = ['nice', '-n', nice_level, 'vorbisgain', '-q', '-f', temp_file_path]
                     run_process(command)
 
-                    out = get_process_output('ogginfo "%s"' % temp_file_path)
+                    out = get_process_output(['ogginfo', temp_file_path])
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else:
                     logger.warn("vorbisgain/ogginfo not found")
             elif file_type == 'flac':
-                if run_process("which metaflac > /dev/null") == 0:
+                if run_process(['which', 'metaflac']) == 0:
 
-                    command = 'nice -n %s metaflac --add-replay-gain "%s"' \
-                            % (nice_level, temp_file_path)
+                    command = ['nice', '-n', nice_level, 'metaflac', \
+                               '--add-replay-gain', temp_file_path]
                     run_process(command)
 
-                    command = 'nice -n %s metaflac \
-                            --show-tag=REPLAYGAIN_TRACK_GAIN "%s"' \
-                            % (nice_level, temp_file_path)
-
+                    command = ['nice', '-n', nice_level, 'metaflac', \
+                               '--show-tag=REPLAYGAIN_TRACK_GAIN', \
+                               temp_file_path]
                     out = get_process_output(command)
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else: logger.warn("metaflac not found")
