@@ -173,6 +173,7 @@ class Application_Service_ScheduleService
 
         $repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
         $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
+        $isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
 
         $showData["add_show_duration"] = $this->formatShowDuration(
             $showData["add_show_duration"]);
@@ -194,7 +195,7 @@ class Application_Service_ScheduleService
             $this->service_show->createShowHosts($showData, $showId);
 
             //create ccShowInstances
-            $this->service_showInstances->createShowInstances($showId);
+            $this->service_showInstances->delegateShowInstanceCreation($showId, $isRebroadcast);
         }
     }
 

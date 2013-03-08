@@ -6,7 +6,7 @@ class Application_Service_ShowService
 
     /**
      * 
-     * Enter description here ...
+     * Sets the fields for a cc_show table row
      * @param $ccShow
      * @param $showData
      */
@@ -29,7 +29,7 @@ class Application_Service_ShowService
 
     /**
      * 
-     * Enter description here ...
+     * Sets the fields for a cc_show_days table row
      * @param $showData
      * @param $showId
      * @param $userId
@@ -107,7 +107,7 @@ class Application_Service_ShowService
 
     /**
      * 
-     * Enter description here ...
+     * Sets the fields for a cc_show_rebroadcast table row
      * @param $showData
      * @param $showId
      * @param $repeatType
@@ -144,7 +144,7 @@ class Application_Service_ShowService
 
     /**
      * 
-     * Enter description here ...
+     * Sets the fields for a cc_show_hosts table row
      * @param $showData
      * @param $showId
      */
