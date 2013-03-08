@@ -18,7 +18,6 @@ class SilanAnalyzer(Thread):
     def start_silan(apc, logger):
         me = SilanAnalyzer(apc, logger)
         me.start()
-        me.join()
 
     def __init__(self, apc, logger):
         Thread.__init__(self)

@@ -21,7 +21,7 @@ def run_process(command):
     """
     Run subprocess and return "return code"
     """
-    p = Popen(command)
+    p = Popen(command, stdout=PIPE, stderr=PIPE)
     return os.waitpid(p.pid, 0)[1]
 
 def get_mime_type(file_path):
