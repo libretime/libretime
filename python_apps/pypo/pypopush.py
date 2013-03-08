@@ -372,7 +372,17 @@ class PypoPush(Thread):
         first_link = chain[0]
 
         self.modify_cue_point(first_link)
-        if float(first_link['cue_in']) >= float(first_link['cue_out']):
+
+        #ATM, we should never have an exception here. However in the future, it
+        #would be nice to allow cue_out to be None which would then allow us to
+        #fallback to the length of the track as the end point.
+        try:
+            end = first_link['cue_out']
+        except TypeError:
+            #cue_out is type None
+            end = first_link['length']
+
+        if float(first_link['cue_in']) >= float(end):
             chain = chain [1:]
 
         return chain
