@@ -103,8 +103,7 @@ class Application_Service_ShowInstanceService
 
         /*
          * Create a DatePeriod object in the user's local time
-         * It will get converted to UTC right before the show instance
-         * gets created
+         * It will get converted to UTC before the show instance gets created
          */
         $period = new DatePeriod(new DateTime($start, new DateTimeZone($timezone)),
             new DateInterval($repeatInterval), $populateUntil);
@@ -114,6 +113,8 @@ class Application_Service_ShowInstanceService
         $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         foreach ($period as $date) {
+            list($utcStartDateTime, $utcEndDateTime) = $this->service_show->createUTCStartEndDateTime(
+                $date->format("Y-m-d H:i:s"), $duration, $timezone);
             /*
              * Make sure start date is less than populate until date AND
              * last show date is null OR start date is less than last show date
@@ -121,19 +122,16 @@ class Application_Service_ShowInstanceService
             if ($utcStartDateTime->getTimestamp() <= $populateUntil->getTimestamp() &&
                 is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) {
 
-                list($utcStartDateTime, $utcEndDateTime) = $this->service_show->createUTCStartEndDateTime(
-                    $date->format("Y-m-d H:i:s"), $duration, $timezone);
-
                 $ccShowInstance = new CcShowInstances();
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($utcStartDateTime);
                 $ccShowInstance->setDbEnds($utcEndDateTime);
                 $ccShowInstance->setDbRecord($record);
                 $ccShowInstance->save();
-            }
 
-            if ($isRebroadcast) {
-                self::createRebroadcastShowInstances($showDay, $date->format("Y-m-d"), $ccShowInstance->getDbId());
+                if ($isRebroadcast) {
+                    self::createRebroadcastShowInstances($showDay, $date->format("Y-m-d"), $ccShowInstance->getDbId());
+                }
             }
         }
     }
