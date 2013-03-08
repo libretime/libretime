@@ -508,6 +508,11 @@ class PypoPush(Thread):
             self.logger.debug(msg)
             tn.write(msg)
 
+            show_name = media_item['show_name']
+            msg = 'vars.show_name %s\n' % show_name.encode('utf-8')
+            tn.write(msg)
+            self.logger.debug(msg)
+
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
