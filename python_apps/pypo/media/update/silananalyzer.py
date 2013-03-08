@@ -18,7 +18,6 @@ class SilanAnalyzer(Thread):
     def start_silan(apc, logger):
         me = SilanAnalyzer(apc, logger)
         me.start()
-        me.join()
 
     def __init__(self, apc, logger):
         Thread.__init__(self)
@@ -42,7 +41,7 @@ class SilanAnalyzer(Thread):
                 full_path = f['fp']
                 # silence detect(set default queue in and out)
                 try:
-                    command = ['silan', '-b', '-f', 'JSON', full_path]
+                    command = ['nice', '-n', '19', 'silan', '-b', '-f', 'JSON', full_path]
                     proc = subprocess.Popen(command, stdout=subprocess.PIPE)
                     out = proc.communicate()[0].strip('\r\n')
                     info = json.loads(out)
