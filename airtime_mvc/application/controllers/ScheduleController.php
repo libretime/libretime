@@ -94,20 +94,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
         //End Show builder JS/CSS requirements
 
-        $forms = $this->service_schedule->createShowForms();
-        // populate forms with default values
-        $this->service_schedule->populateNewShowForms(
-            $forms["what"], $forms["when"], $forms["repeats"]);
-
-        $this->view->what = $forms["what"];
-        $this->view->when = $forms["when"];
-        $this->view->repeats = $forms["repeats"];
-        $this->view->live = $forms["live"];
-        $this->view->rr = $forms["record"];
-        $this->view->absoluteRebroadcast = $forms["abs_rebroadcast"];
-        $this->view->rebroadcast = $forms["rebroadcast"];
-        $this->view->who = $forms["who"];
-        $this->view->style = $forms["style"];
+        $this->createShowFormAction(true);
 
         $user = Application_Model_User::getCurrentUser();
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
@@ -746,7 +733,8 @@ class ScheduleController extends Zend_Controller_Action
         $user = Application_Model_User::getCurrentUser();
 
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            Application_Model_Schedule::createNewFormSections($this->view);
+            //Application_Model_Schedule::createNewFormSections($this->view);
+            $this->createShowFormAction(true);
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
     }
@@ -879,7 +867,31 @@ class ScheduleController extends Zend_Controller_Action
             $data['add_show_day_check'] = null;
         }
 
+        $forms = $this->createShowFormAction();
+
+        $this->view->addNewShow = true;
+
+        if ($this->service_schedule->validateShowForms($forms, $data)) {
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
+            $this->service_schedule->createShow($data);
+
+            //send new show forms to the user
+            $this->createShowFormAction(true);
+            Logging::debug("Show creation succeeded");
+        } else {
+            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+            Logging::debug("Show creation failed");
+        }
+    }
+
+    public function createShowFormAction($populate=false)
+    {
         $forms = $this->service_schedule->createShowForms();
+
+        // populate forms with default values
+        if ($populate) {
+            $this->populateNewShowFormsAction($forms);
+        }
 
         $this->view->what = $forms["what"];
         $this->view->when = $forms["when"];
@@ -891,16 +903,13 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->who = $forms["who"];
         $this->view->style = $forms["style"];
 
-        $this->view->addNewShow = true;
+        return $forms;
+    }
 
-        if ($this->service_schedule->validateShowForms($forms, $data)) {
-            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-            $this->service_schedule->createShow($data);
-            Logging::debug("Show creation succeeded");
-        } else {
-            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
-            Logging::debug("Show creation failed");
-        }
+    public function populateNewShowFormsAction($forms)
+    {
+        $this->service_schedule->populateNewShowForms(
+            $forms["what"], $forms["when"], $forms["repeats"]);
     }
 
     public function cancelShowAction()

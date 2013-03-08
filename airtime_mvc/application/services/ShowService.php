@@ -227,7 +227,18 @@ class Application_Service_ShowService
         return array($startDateTime, $endDateTime);
     }
 
-    public function setNextPopulateUntilDate($nextDate, $showId, $day)
+    /**
+     * 
+     * Show instances for repeating shows only get created up
+     * until what is visible on the calendar. We need to set the
+     * date for when the next repeating show instance should be created
+     * as the user browses the calendar further.
+     * 
+     * @param $nextDate
+     * @param $showId
+     * @param $day
+     */
+    public function setNextRepeatingShowDate($nextDate, $showId, $day)
     {
         $nextInfo = explode(" ", $nextDate);
 

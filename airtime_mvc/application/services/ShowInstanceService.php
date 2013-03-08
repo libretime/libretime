@@ -67,7 +67,7 @@ class Application_Service_ShowInstanceService
             $ccShowInstance->save();
 
             if ($isRebroadcast) {
-                self::createRebroadcastShowInstances($showDay, $start, $ccShowInstance->getDbId());
+                $this->createRebroadcastShowInstances($showDay, $start, $ccShowInstance->getDbId());
             }
         }
     }
@@ -101,17 +101,14 @@ class Application_Service_ShowInstanceService
             $start = $first_show." ".$start_time;
         }
 
-        /*
-         * Create a DatePeriod object in the user's local time
-         * It will get converted to UTC before the show instance gets created
-         */
-        $period = new DatePeriod(new DateTime($start, new DateTimeZone($timezone)),
-            new DateInterval($repeatInterval), $populateUntil);
+        $period = $this->getDatePeriod($start, $timezone, $last_show,
+            $repeatInterval, $populateUntil);
 
         $utcStartDateTime = Application_Common_DateHelper::ConvertToUtcDateTime($start, $timezone);
-        //convert $last_show into a UTC DateTime object, or null if there is no last show.
-        $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
+        $utcLastShowDateTime = $last_show ?
+            Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
+        $utcEndDateTime = null;
         foreach ($period as $date) {
             list($utcStartDateTime, $utcEndDateTime) = $this->service_show->createUTCStartEndDateTime(
                 $date->format("Y-m-d H:i:s"), $duration, $timezone);
@@ -120,7 +117,8 @@ class Application_Service_ShowInstanceService
              * last show date is null OR start date is less than last show date
              */
             if ($utcStartDateTime->getTimestamp() <= $populateUntil->getTimestamp() &&
-                is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) {
+               ( is_null($utcLastShowDateTime) ||
+                 $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
 
                 $ccShowInstance = new CcShowInstances();
                 $ccShowInstance->setDbShowId($show_id);
@@ -130,11 +128,12 @@ class Application_Service_ShowInstanceService
                 $ccShowInstance->save();
 
                 if ($isRebroadcast) {
-                    self::createRebroadcastShowInstances($showDay, $date->format("Y-m-d"), $ccShowInstance->getDbId());
+                    $this->createRebroadcastShowInstances($showDay, $date->format("Y-m-d"), $ccShowInstance->getDbId());
                 }
             }
         }
-        $this->service_show->setNextPopulateUntilDate($nextDate, $show_id, $day);
+        $nextDate = $utcEndDateTime->add(new DateInterval($repeatInterval));
+        $this->service_show->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $show_id, $day);
     }
 
     /**
@@ -175,5 +174,22 @@ class Application_Service_ShowInstanceService
     private function deleteRebroadcastShowInstances()
     {
 
+    }
+
+    /**
+     * 
+     * Create a DatePeriod object in the user's local time
+     * It will get converted to UTC before the show instance gets created
+     */
+    private function getDatePeriod($start, $timezone, $lastShow, $repeatInterval, $populateUntil)
+    {
+        if (isset($lastShow)) {
+            $endDatePeriod = new DateTime($lastShow, new DateTimeZone($timezone));
+        } else {
+            $endDatePeriod = $populateUntil;
+        }
+
+        return new DatePeriod(new DateTime($start, new DateTimeZone($timezone)),
+            new DateInterval($repeatInterval), $endDatePeriod);
     }
 }
