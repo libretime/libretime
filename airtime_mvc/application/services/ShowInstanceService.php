@@ -134,6 +134,7 @@ class Application_Service_ShowInstanceService
                 }
             }
         }
+        $this->service_show->setNextPopulateUntilDate($nextDate, $show_id, $day);
     }
 
     /**

@@ -226,4 +226,17 @@ class Application_Service_ShowService
 
         return array($startDateTime, $endDateTime);
     }
+
+    public function setNextPopulateUntilDate($nextDate, $showId, $day)
+    {
+        $nextInfo = explode(" ", $nextDate);
+
+        $repeatInfo = CcShowDaysQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbDay($day)
+            ->findOne();
+
+        $repeatInfo->setDbNextPopDate($nextInfo[0])
+            ->save();
+    }
 }
