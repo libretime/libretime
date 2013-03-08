@@ -779,7 +779,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function editShowAction()
     {
-        //1) Get add_show_start_date since it might not have been sent
         $js = $this->_getParam('data');
         $data = array();
 
@@ -788,6 +787,7 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
+        //TODO: move this to js
         $data['add_show_hosts'] =  $this->_getParam('hosts');
         $data['add_show_day_check'] =  $this->_getParam('days');
 
@@ -795,9 +795,10 @@ class ScheduleController extends Zend_Controller_Action
             $data['add_show_day_check'] = null;
         }
 
-        $show = new Application_Model_Show($data['add_show_id']);
+        /*$show = new Application_Model_Show($data['add_show_id']);*/
 
-        $validateStartDate = true;
+        //------- PRE EDIT SHOW CHECK ---------------//
+        /*$validateStartDate = true;
         $validateStartTime = true;
         if (!array_key_exists('add_show_start_date', $data)) {
             //Changing the start date was disabled, since the
@@ -812,15 +813,18 @@ class ScheduleController extends Zend_Controller_Action
             }
             $validateStartDate = false;
         }
-        $data['add_show_record'] = $show->isRecorded();
+        $data['add_show_record'] = $show->isRecorded();*/
+        // -------------------------------------------//
 
-        if ($show->isRepeating()) {
+        //-------- ADJUST ORIGINAL START DATE -------//
+        /*if ($show->isRepeating()) {
              $nextFutureRepeatShow = $show->getNextFutureRepeatShowTime();
              $originalShowStartDateTime = $nextFutureRepeatShow["starts"];
         } else {
             $originalShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime(
                 $show->getStartDateAndTime());
-        }
+        }*/
+        //-----------------------------------------//
 
         $success = Application_Model_Schedule::addUpdateShow($data, $this,
             $validateStartDate, $originalShowStartDateTime, true,
@@ -871,11 +875,12 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->addNewShow = true;
 
         if ($this->service_schedule->validateShowForms($forms, $data)) {
-            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             $this->service_schedule->createShow($data);
 
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             //send new show forms to the user
             $this->createShowFormAction(true);
+
             Logging::debug("Show creation succeeded");
         } else {
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
