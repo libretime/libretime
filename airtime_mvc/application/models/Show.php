@@ -1170,6 +1170,7 @@ SQL;
 
         if ($data['add_show_id'] != -1) {
             $show = new Application_Model_Show($showId);
+            //CC-4150 CULPRIT
             $show->deletePossiblyInvalidInstances($data, $endDate, $isRecorded, $repeatType);
         }
 
@@ -1310,8 +1311,8 @@ SQL;
             }
         }
 
-        /*Application_Model_Show::populateShowUntil($showId);*/
-        Application_Model_RabbitMq::PushSchedule();
+        /*Application_Model_Show::populateShowUntil($showId);
+        Application_Model_RabbitMq::PushSchedule();*/
 
         return $showId;
     }
@@ -1384,7 +1385,7 @@ SQL;
      */
     private static function populateNonRepeatingShow($p_showRow, $p_populateUntilDateTime)
     {
-        $show_id    = $p_showRow["show_id"];
+        /*$show_id    = $p_showRow["show_id"];
         $first_show = $p_showRow["first_show"]; //non-UTC
         $start_time = $p_showRow["start_time"]; //non-UTC
         $duration   = $p_showRow["duration"];
@@ -1395,16 +1396,16 @@ SQL;
         //start & end UTC DateTimes for the show.
         list($utcStartDateTime, $utcEndDateTime) = Application_Model_Show::createUTCStartEndDateTime($start, $duration, $timezone);
         if ($utcStartDateTime->getTimestamp() < $p_populateUntilDateTime->getTimestamp()) {
-            $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
+            $currentUtcTimestamp = gmdate("Y-m-d H:i:s");*/
 
             $show = new Application_Model_Show($show_id);
             if ($show->hasInstance()) {
                 $ccShowInstance = $show->getInstance();
                 $newInstance = false;
-            } else {
+            } /*else {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
-            }
+            }*/
 
             if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp) {
                 $ccShowInstance->setDbShowId($show_id);
@@ -1421,15 +1422,16 @@ SQL;
                 $showInstance->correctScheduleStartTimes();
             }
 
-            $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
+            /*$sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
             $rebroadcasts = Application_Common_Database::prepareAndExecute($sql,
-                array( ':show_id' => $show_id ), 'all');
+                array( ':show_id' => $show_id ), 'all');*/
 
             if ($showInstance->isRecorded()) {
+                //only do this for editing
                 $showInstance->deleteRebroadcasts();
                 self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
             }
-        }
+        /*}*/
     }
 
     /**
@@ -1446,7 +1448,7 @@ SQL;
      */
     private static function populateRepeatingShow($p_showDaysRow, $p_populateUntilDateTime, $p_interval)
     {
-        $show_id       = $p_showDaysRow["show_id"];
+        /*$show_id       = $p_showDaysRow["show_id"];
         $next_pop_date = $p_showDaysRow["next_pop_date"];
         $first_show    = $p_showDaysRow["first_show"]; //non-UTC
         $last_show     = $p_showDaysRow["last_show"]; //non-UTC
@@ -1466,7 +1468,7 @@ SQL;
 
         $utcStartDateTime = Application_Common_DateHelper::ConvertToUtcDateTime($start, $timezone);
         //convert $last_show into a UTC DateTime object, or null if there is no last show.
-        $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
+        $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;*/
 
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
 
@@ -1480,6 +1482,8 @@ SQL;
 
             list($utcStartDateTime, $utcEndDateTime) = self::createUTCStartEndDateTime($start, $duration, $timezone);
 
+            //determine if we are adding a new show
+            //or editing a show
             if ($show->hasInstanceOnDate($utcStartDateTime)) {
                 $ccShowInstance = $show->getInstanceOnDate($utcStartDateTime);
 
