@@ -175,6 +175,6 @@ class Application_Service_ShowInstanceService
 
     private function deleteRebroadcastShowInstances()
     {
-        
+
     }
 }
