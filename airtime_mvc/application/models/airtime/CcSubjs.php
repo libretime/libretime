@@ -15,4 +15,8 @@
  */
 class CcSubjs extends BaseCcSubjs {
 
+    public function isAdminOrPM()
+    {
+        return $this->type === UTYPE_ADMIN || $this->type === UTYPE_PROGRAM_MANAGER;
+    }
 } // CcSubjs

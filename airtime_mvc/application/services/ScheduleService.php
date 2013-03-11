@@ -3,12 +3,15 @@
 class Application_Service_ScheduleService
 {
     private $service_show;
+    private $service_showDays;
     private $service_showInstances;
+    private $service_user;
 
     public function __construct()
     {
         $this->service_show = new Application_Service_ShowService();
         $this->service_showInstances = new Application_Service_ShowInstanceService();
+        $this->service_user = new Application_Service_UserService();
     }
 /*
  * Form stuff begins here
@@ -89,14 +92,16 @@ class Application_Service_ScheduleService
      * 
      * @return boolean
      */
-    public function validateShowForms($forms, $formData, $validateStartDate = true)
+    public function validateShowForms($forms, $formData, $validateStartDate = true,
+        $originalStartDate=null, $editShow=false, $instanceId=null)
     {
         $what = $forms["what"]->isValid($formData);
         $live = $forms["live"]->isValid($formData);
         $record = $forms["record"]->isValid($formData);
         $who = $forms["who"]->isValid($formData);
         $style = $forms["style"]->isValid($formData);
-        $when = $forms["when"]->isWhenFormValid($formData, $validateStartDate);
+        $when = $forms["when"]->isWhenFormValid($formData, $validateStartDate,
+            $originalStartDate, $editShow, $instanceId);
 
         $repeats = true;
         if ($formData["add_show_repeats"]) {
@@ -163,13 +168,18 @@ class Application_Service_ScheduleService
 
     /**
      * 
-     * Creates a new show if form data is valid
+     * Creates a new show, which entails creating entries in
+     * the following tables:
+     * cc_show
+     * cc_show_days
+     * cc_show_hosts
+     * cc_show_rebroadcast
+     * cc_show_instances
      */
     public function createShow($showData)
     {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        //CcSubj object
+        $currentUser = $this->service_user->getCurrentUser();
 
         $repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
         $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
@@ -178,15 +188,16 @@ class Application_Service_ScheduleService
         $showData["add_show_duration"] = $this->formatShowDuration(
             $showData["add_show_duration"]);
 
-        if ($isAdminOrPM) {
+        if ($currentUser->isAdminOrPM()) {
             //create ccShow
             $ccShow = new CcShow();
             $ccShow = $this->service_show->setShow($ccShow, $showData);
             $showId = $ccShow->getDbId();
 
             //create ccShowDays
-            $this->service_show->createShowDays(
-                $showData, $showId, $user->getId(), $repeatType, $isRecorded);
+            $this->service_showDays = new Application_Service_ShowDaysService($showId);
+            $this->service_showDays->createShowDays(
+                $showData, $currentUser->getDbId(), $repeatType, $isRecorded);
 
             //create ccShowRebroadcasts
             $this->service_show->createShowRebroadcasts($showData, $showId, $repeatType, $isRecorded);
@@ -197,6 +208,63 @@ class Application_Service_ScheduleService
             //create ccShowInstances
             $this->service_showInstances->delegateShowInstanceCreation($showId, $isRebroadcast);
         }
+    }
+
+    public function editShow($formData)
+    {
+        //CcSubj object
+        $currentUser = $this->service_user->getCurrentUser();
+    }
+
+    /**
+     * 
+     * Before we send the form data in for validation, there
+     * are a few fields we may need to adjust first
+     * @param $formData
+     */
+    public function preEditShowValidationCheck($formData) {
+        $validateStartDate = true;
+        $validateStartTime = true;
+        $this->service_showDays = new Application_Service_ShowDaysService(
+            $formData["add_show_id"]);
+
+        //CcShowDays object of the show currently being edited
+        $currentShowDay = $this->service_showDays->getCurrentShowDay();
+
+        if (!array_key_exists('add_show_start_date', $formData)) {
+            //Changing the start date was disabled, since the
+            //array key does not exist. We need to repopulate this entry from the db.
+            //The start date will be returned in UTC time, so lets convert it to local time.
+            $dt = Application_Common_DateHelper::ConvertToLocalDateTime(
+                $this->service_showDays->getStartDateAndTime());
+            $formData['add_show_start_date'] = $dt->format("Y-m-d");
+
+            if (!array_key_exists('add_show_start_time', $formData)) {
+                $formData['add_show_start_time'] = $dt->format("H:i");
+                $validateStartTime = false;
+            }
+            $validateStartDate = false;
+        }
+        $formData['add_show_record'] = $currentShowDay->getDbRecord();
+
+        //if the show is repeating, set the start date to the next
+        //repeating instance in the future
+        if ($currentShowDay->getDbRepeatType() != -1) {
+             $nextFutureRepeatShow = $this->service_showInstances
+                 ->getNextFutureRepeatShowTime($formData["add_show_id"]);
+             $originalShowStartDateTime = $nextFutureRepeatShow["starts"];
+        } else {
+            $originalShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime(
+                $this->service_showDays->getStartDateAndTime());
+        }
+
+        return array($formData, $validateStartDate, $validateStartTime, $originalShowStartDateTime);
+    }
+
+    public function editShow($showData)
+    {
+        //CcSubj object
+        $currentUser = $this->service_user->getCurrentUser();
     }
 
 }

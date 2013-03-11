@@ -795,42 +795,14 @@ class ScheduleController extends Zend_Controller_Action
             $data['add_show_day_check'] = null;
         }
 
-        /*$show = new Application_Model_Show($data['add_show_id']);*/
+        $forms = $this->createShowFormAction();
 
-        //------- PRE EDIT SHOW CHECK ---------------//
-        /*$validateStartDate = true;
-        $validateStartTime = true;
-        if (!array_key_exists('add_show_start_date', $data)) {
-            //Changing the start date was disabled, since the
-            //array key does not exist. We need to repopulate this entry from the db.
-            //The start date will be returned in UTC time, so lets convert it to local time.
-            $dt = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
-            $data['add_show_start_date'] = $dt->format("Y-m-d");
+        list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
+            $this->service_schedule->preEditShowValidationCheck($data);
 
-            if (!array_key_exists('add_show_start_time', $data)) {
-                $data['add_show_start_time'] = $dt->format("H:i");
-                $validateStartTime = false;
-            }
-            $validateStartDate = false;
-        }
-        $data['add_show_record'] = $show->isRecorded();*/
-        // -------------------------------------------//
+        if ($this->service_schedule->validateShowForms($forms, $data, $validateStartDate,
+                $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
-        //-------- ADJUST ORIGINAL START DATE -------//
-        /*if ($show->isRepeating()) {
-             $nextFutureRepeatShow = $show->getNextFutureRepeatShowTime();
-             $originalShowStartDateTime = $nextFutureRepeatShow["starts"];
-        } else {
-            $originalShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime(
-                $show->getStartDateAndTime());
-        }*/
-        //-----------------------------------------//
-
-        $success = Application_Model_Schedule::addUpdateShow($data, $this,
-            $validateStartDate, $originalShowStartDateTime, true,
-            $data['add_show_instance_id']);
-
-        if ($success) {
             $scheduler = new Application_Model_Scheduler();
             $showInstances = CcShowInstancesQuery::create()->filterByDbShowId($data['add_show_id'])->find();
             foreach ($showInstances as $si) {

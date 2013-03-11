@@ -2,6 +2,9 @@
 class Application_Service_ShowInstanceService
 {
     private $service_show;
+    private $service_showDays;
+    private $service_user;
+
     const NO_REPEAT = -1;
     const REPEAT_WEEKLY = 0;
     const REPEAT_BI_WEEKLY = 1;
@@ -11,6 +14,7 @@ class Application_Service_ShowInstanceService
     public function __construct()
     {
         $this->service_show = new Application_Service_ShowService();
+        $this->service_user = new Application_Service_UserService();
     }
 
     /**
@@ -22,7 +26,9 @@ class Application_Service_ShowInstanceService
     {
         $populateUntil = $this->service_show->getPopulateShowUntilDateTIme();
 
-        $showDays = $this->service_show->getShowDays($showId);
+        $this->service_showDays = new Application_Service_ShowDaysService($showId);
+        $showDays = $this->service_showDays->getShowDays();
+
         foreach ($showDays as $day) {
             switch ($day["repeat_type"]) {
                 case self::NO_REPEAT:
@@ -191,5 +197,36 @@ class Application_Service_ShowInstanceService
 
         return new DatePeriod(new DateTime($start, new DateTimeZone($timezone)),
             new DateInterval($repeatInterval), $endDatePeriod);
+    }
+
+    /**
+     * 
+     * Returns 2 DateTime objects, in the user's local time,
+     * of the next future repeat show instance start and end time
+     */
+    public function getNextFutureRepeatShowTime($showId)
+    {
+        $sql = <<<SQL
+SELECT starts, ends FROM cc_show_instances
+WHERE ends > now() at time zone 'UTC'
+AND show_id = :showId
+ORDER BY starts
+LIMIT 1
+SQL;
+        $result = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'showId' => $showId ), 'all' );
+        
+        foreach ($result as $r) {
+            $show["starts"] = new DateTime($r["starts"], new DateTimeZone('UTC'));
+            $show["ends"] = new DateTime($r["ends"], new DateTimeZone('UTC'));
+        }
+
+        $userTimezone = Application_Model_Preference::GetUserTimezone(
+            $this->service_user->getCurrentUser()->getDbId());
+
+        $show["starts"]->setTimezone(new DateTimeZone($userTimezone));
+        $show["ends"]->setTimezone(new DateTimeZone($userTimezone));
+
+        return $show;
     }
 }
