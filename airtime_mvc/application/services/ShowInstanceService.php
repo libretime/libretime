@@ -1,15 +1,15 @@
-<?php 
+<?php
+define("NO_REPEAT", -1);
+define("REPEAT_WEEKLY", 0);
+define("REPEAT_BI_WEEKLY", 1);
+define("REPEAT_MONTHLY_MONTHLY", 2);
+define("REPEAT_MONTHLY_WEEKLY", 3);
+
 class Application_Service_ShowInstanceService
 {
     private $service_show;
     private $service_showDays;
     private $service_user;
-
-    const NO_REPEAT = -1;
-    const REPEAT_WEEKLY = 0;
-    const REPEAT_BI_WEEKLY = 1;
-    const REPEAT_MONTHLY_MONTHLY = 2;
-    const REPEAT_MONTHLY_WEEKLY = 3;
 
     public function __construct()
     {
@@ -31,19 +31,19 @@ class Application_Service_ShowInstanceService
 
         foreach ($showDays as $day) {
             switch ($day["repeat_type"]) {
-                case self::NO_REPEAT:
+                case NO_REPEAT:
                     $this->createNonRepeatingShowInstance($day, $populateUntil, $isRebroadcast);
                     break;
-                case self::REPEAT_WEEKLY:
+                case REPEAT_WEEKLY:
                     $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P7D", $isRebroadcast);
                     break;
-                case self::REPEAT_BI_WEEKLY:
+                case REPEAT_BI_WEEKLY:
                     $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P14D", $isRebroadcast);
                     break;
-                case self::REPEAT_MONTHLY_MONTHLY:
+                case REPEAT_MONTHLY_MONTHLY:
                     $this->createMonthlyRepeatingShowInstances($day, $populateUntil, "P1M", $isRebroadcast);
                     break;
-                case self::REPEAT_MONTHLY_WEEKLY:
+                case REPEAT_MONTHLY_WEEKLY:
                     // do something here
                     break;
             }
