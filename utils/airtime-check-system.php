@@ -99,9 +99,9 @@ class AirtimeCheck {
     {
         $headerInfo = get_headers("http://$p_baseUrl:$p_basePort",1);
         
-        if (!isset($headerInfo['Server'][0]))
+        if (!isset($headerInfo['Server'][0])) {
             return self::UNKNOWN;
-        else if (is_array($headerInfo['Server'])) {
+        } else if (is_array($headerInfo['Server'])) {
             return $headerInfo['Server'][0];
         } else {
             return $headerInfo['Server'];
