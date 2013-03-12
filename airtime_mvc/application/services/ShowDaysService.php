@@ -17,7 +17,7 @@ class Application_Service_ShowDaysService
      * @param $repeatType
      * @param $isRecorded
      */
-    public function createShowDays($showData, $userId, $repeatType, $isRecorded)
+    public function setShowDays($showData, $userId, $repeatType, $isRecorded)
     {
         $startDateTime = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time']);
 

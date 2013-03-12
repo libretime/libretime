@@ -10,8 +10,14 @@ class Application_Service_ShowService
      * @param $ccShow
      * @param $showData
      */
-    public function setShow($ccShow, $showData)
+    public function setShow($showData, $isNewShow)
     {
+        if ($isNewShow) {
+            $ccShow = new CcShow();
+        } else {
+            $ccShow = CcShowQuery::create()->findPk($showData["add_show_id"]);
+        }
+
         $ccShow->setDbName($showData['add_show_name']);
         $ccShow->setDbDescription($showData['add_show_description']);
         $ccShow->setDbUrl($showData['add_show_url']);
@@ -35,7 +41,7 @@ class Application_Service_ShowService
      * @param $repeatType
      * @param $isRecorded
      */
-    public function createShowRebroadcasts($showData, $showId, $repeatType, $isRecorded)
+    public function setShowRebroadcasts($showData, $showId, $repeatType, $isRecorded)
     {
         if (($isRecorded && $showData['add_show_rebroadcast']) && ($repeatType != -1)) {
             for ($i=1; $i<=self::MAX_REBROADCAST_DATES; $i++) {
@@ -70,7 +76,7 @@ class Application_Service_ShowService
      * @param $showData
      * @param $showId
      */
-    public function createShowHosts($showData, $showId)
+    public function setShowHosts($showData, $showId)
     {
         if (is_array($showData['add_show_hosts'])) {
             foreach ($showData['add_show_hosts'] as $host) {

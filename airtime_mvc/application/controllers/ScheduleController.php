@@ -803,6 +803,8 @@ class ScheduleController extends Zend_Controller_Action
         if ($this->service_schedule->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
+            $this->service_schedule->editShow($data);
+
             $scheduler = new Application_Model_Scheduler();
             $showInstances = CcShowInstancesQuery::create()->filterByDbShowId($data['add_show_id'])->find();
             foreach ($showInstances as $si) {

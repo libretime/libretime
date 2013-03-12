@@ -1147,11 +1147,12 @@ SQL;
         //find repeat type or set to a non repeating show.
         /*$repeatType = ($data['add_show_repeats']) ? $data['add_show_repeat_type'] : -1;*/
 
-        if ($data['add_show_id'] == -1) {
-            /*$ccShow = new CcShow();*/
+        /*if ($data['add_show_id'] == -1) {
+            $ccShow = new CcShow();
         } else {
             $ccShow = CcShowQuery::create()->findPK($data['add_show_id']);
-        }
+        }*/
+
         /*$ccShow->setDbName($data['add_show_name']);
         $ccShow->setDbDescription($data['add_show_description']);
         $ccShow->setDbUrl($data['add_show_url']);

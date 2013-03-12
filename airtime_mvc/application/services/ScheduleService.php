@@ -190,30 +190,40 @@ class Application_Service_ScheduleService
 
         if ($currentUser->isAdminOrPM()) {
             //create ccShow
-            $ccShow = new CcShow();
-            $ccShow = $this->service_show->setShow($ccShow, $showData);
+            $ccShow = $this->service_show->setShow($showData, true);
             $showId = $ccShow->getDbId();
 
             //create ccShowDays
             $this->service_showDays = new Application_Service_ShowDaysService($showId);
-            $this->service_showDays->createShowDays(
+            $this->service_showDays->setShowDays(
                 $showData, $currentUser->getDbId(), $repeatType, $isRecorded);
 
             //create ccShowRebroadcasts
-            $this->service_show->createShowRebroadcasts($showData, $showId, $repeatType, $isRecorded);
+            $this->service_show->setShowRebroadcasts($showData, $showId, $repeatType, $isRecorded);
 
             //create ccShowHosts
-            $this->service_show->createShowHosts($showData, $showId);
+            $this->service_show->setShowHosts($showData, $showId);
 
             //create ccShowInstances
             $this->service_showInstances->delegateShowInstanceCreation($showId, $isRebroadcast);
         }
     }
 
-    public function editShow($formData)
+    public function editShow($showData)
     {
         //CcSubj object
         $currentUser = $this->service_user->getCurrentUser();
+
+        $repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
+        $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
+        $isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
+
+        $showData["add_show_duration"] = $this->formatShowDuration(
+            $showData["add_show_duration"]);
+
+        if ($currentUser->isAdminOrPM()) {
+            $ccShow = $this->service_show->setShow($showData, false);
+        }
     }
 
     /**
@@ -259,12 +269,6 @@ class Application_Service_ScheduleService
         }
 
         return array($formData, $validateStartDate, $validateStartTime, $originalShowStartDateTime);
-    }
-
-    public function editShow($showData)
-    {
-        //CcSubj object
-        $currentUser = $this->service_user->getCurrentUser();
     }
 
 }
