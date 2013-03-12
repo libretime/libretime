@@ -223,6 +223,8 @@ class Application_Service_ScheduleService
 
         if ($currentUser->isAdminOrPM()) {
             $ccShow = $this->service_show->setShow($showData, false);
+
+            $this->service_showInstances->updateShowInstances($showData, $isRecorded, $repeatType);
         }
     }
 
@@ -259,7 +261,7 @@ class Application_Service_ScheduleService
 
         //if the show is repeating, set the start date to the next
         //repeating instance in the future
-        if ($currentShowDay->getDbRepeatType() != -1) {
+        if ($currentShowDay->isRepeating()) {
              $nextFutureRepeatShow = $this->service_showInstances
                  ->getNextFutureRepeatShowTime($formData["add_show_id"]);
              $originalShowStartDateTime = $nextFutureRepeatShow["starts"];

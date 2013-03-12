@@ -8,6 +8,24 @@ class Application_Service_ShowDaysService
     {
         $this->showId = $id;
     }
+
+    public function calculateEndDate($showData)
+    {
+        if ($showData['add_show_no_end']) {
+            $endDate = NULL;
+        } elseif ($showData['add_show_repeats']) {
+            $endDateTime = new DateTime($showData['add_show_end_date']);
+            $endDateTime->add(new DateInterval("P1D"));
+            $endDate = $endDateTime->format("Y-m-d");
+        } else {
+            $endDateTime = new DateTime($showData['add_show_start_date']);
+            $endDateTime->add(new DateInterval("P1D"));
+            $endDate = $endDateTime->format("Y-m-d");
+        }
+
+        return $endDate;
+    }
+
     /**
      * 
      * Sets the fields for a cc_show_days table row
@@ -21,17 +39,7 @@ class Application_Service_ShowDaysService
     {
         $startDateTime = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time']);
 
-        if ($showData['add_show_no_end']) {
-            $endDate = NULL;
-        } elseif ($showData['add_show_repeats']) {
-            $endDateTime = new DateTime($showData['add_show_end_date']);
-            $endDateTime->add(new DateInterval("P1D"));
-            $endDate = $endDateTime->format("Y-m-d");
-        } else {
-            $endDateTime = new DateTime($showData['add_show_start_date']);
-            $endDateTime->add(new DateInterval("P1D"));
-            $endDate = $endDateTime->format("Y-m-d");
-        }
+        $endDate = $this->calculateEndDate($showData);
 
         /* What we are doing here is checking if the show repeats or if
          * any repeating days have been checked. If not, then by default
@@ -94,10 +102,12 @@ class Application_Service_ShowDaysService
      */
     public function getShowDays()
     {
-        $sql = "SELECT * FROM cc_show_days WHERE show_id = :show_id";
+        /*$sql = "SELECT * FROM cc_show_days WHERE show_id = :show_id";
 
         return Application_Common_Database::prepareAndExecute(
-            $sql, array(":show_id" => $this->showId), 'all');
+            $sql, array(":show_id" => $this->showId), 'all');*/
+        return CcShowDaysQuery::create()->filterByDbShowId(
+            $this->showId)->find();
     }
 
     public function getStartDateAndTime()

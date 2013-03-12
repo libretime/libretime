@@ -15,4 +15,29 @@
  */
 class CcShowDays extends BaseCcShowDays {
 
+    public function isRepeating()
+    {
+        return $this->getDbRepeatType() != -1;
+    }
+
+    public function getUTCStartDateAndTime()
+    {
+        $dt = new DateTime(
+            "{$this->getDbFirstShow()} {$this->getDbStartTime()}",
+            new DateTimeZone($this->getDbTimezone())
+        );
+        $dt->setTimezone(new DateTimeZone("UTC"));
+
+        return $dt;
+    }
+
+    public function getLocalStartDateAndTime()
+    {
+        $dt = new DateTime(
+            "{$this->getDbFirstShow()} {$this->getDbStartTime()}",
+            new DateTimeZone($this->getDbTimezone())
+        );
+
+        return $dt;
+    }
 } // CcShowDays
