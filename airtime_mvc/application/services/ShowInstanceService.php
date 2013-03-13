@@ -275,7 +275,7 @@ SQL;
                 $showData["add_show_start_date"] != $localShowStart->format("Y-m-d")) {
 
                 //Start date has changed when repeat type is bi-weekly or monthly.
-                //This screws up the repeating positions of show instances, so lets
+                //This screws up the repeating positions of show instances, so
                 //we need to delete them (CC-2351)
                 $this->deleteAllInstances($showId);
             }
@@ -286,11 +286,13 @@ SQL;
             } else {
                 //repeat type is the same, check if the days of the week are the same
                 $repeatingDaysChanged = false;
+
                 $ccShowDays = $this->service_showDays->getShowDays();
                 $showDays = array();
                 foreach ($ccShowDays as $day) {
                     $showDays[] = $day->getDbDay();
                 }
+
                 if (count($showData['add_show_day_check']) == count($showDays)) {
                     //same number of days checked, lets see if they are the same numbers
                     $intersect = array_intersect($showData['add_show_day_check'], $showDays);
@@ -315,12 +317,13 @@ SQL;
                 if ($showData['add_show_start_date'] != $localShowStart->format("Y-m-d")
                     || $showData['add_show_start_time'] != $localShowStart->format("H:i:s")){
 
-                    //start date/time has changed
+                    //start date has been pushed forward so we need to delete
+                    //any instances of this show scheduled before the new start date
                     if ($showData['add_show_start_date'] > $localShowStart->format("Y-m-d")) {
                         $this->deleteInstancesBeforeDate($showData['add_show_start_date'], $showId);
                     }
 
-                    /*$this->updateStartDateTime($showData, $p_endDate);*/
+                    $this->updateStartDateAndTime($showData, $currentShowDay);
                 }
             }
 /*
@@ -343,6 +346,47 @@ SQL;
                 }
             }*/
         }
+    }
+
+    /**
+     * 
+     * Updates the start date and time for cc_show_instances
+     * and entries in cc_schedule
+     * 
+     * @param $showData edit show form data
+     */
+    public function updateStartDateAndTime($showData, $currentShowDay)
+    {
+        $date = new Application_Common_DateHelper();
+        //current time in UTC
+        $timestamp = $date->getTimestamp();
+
+        $dtOld = $currentShowDay->getUTCStartDateAndTime();
+        $dtNew = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time'],
+            new DateTimeZone(date_default_timezone_get()));
+        $diff = $dtOld->getTimestamp() - $dtNew->getTimestamp();
+        $sql = <<<SQL
+UPDATE cc_show_instances
+SET starts = starts + :diff1::INTERVAL,
+    ends = ends + :diff2::INTERVAL
+WHERE show_id = :showId
+  AND starts > :timestamp
+SQL;
+
+        Application_Common_Database::prepareAndExecute($sql,
+            array(':diff1' => $diff, ':diff2' => $diff, 
+                ':showId' => $showData["add_show_id"], ':timestamp' => $timestamp),
+            'execute');
+
+        /*$showInstanceIds = $this->getAllFutureInstanceIds();
+        if (count($showInstanceIds) > 0 && $diff != 0) {
+            $showIdsImploded = implode(",", $showInstanceIds);
+            $sql = "UPDATE cc_schedule "
+                    ."SET starts = starts + INTERVAL '$diff sec', "
+                    ."ends = ends + INTERVAL '$diff sec' "
+                    ."WHERE instance_id IN ($showIdsImploded)";
+            $con->exec($sql);
+        }*/
     }
 
     public function deleteAllRepeatInstances($currentShowDay, $showId)
@@ -378,9 +422,10 @@ SQL;
     /**
      * 
      * Enter description here ...
-     * @param $daysRemoved array of days removed
-     *     (
-     * @param $showDays
+     * @param $daysRemoved array of days (days of the week) removed
+     *     (days of the week are represented numerically
+     *      0=>sunday, 1=>monday, 2=>tuesday, etc.)
+     * @param $showDays array of ccShowDays objects
      * @param $showId
      */
     public function deleteRemovedShowDayInstances($daysRemoved, $showDays, $showId)

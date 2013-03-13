@@ -9,6 +9,14 @@ class Application_Service_ShowDaysService
         $this->showId = $id;
     }
 
+    /**
+     * 
+     * Determines what the show end date should be based on
+     * the form data
+     * 
+     * @param $showData add/edit show form data
+     * @return DateTime object in user's local timezone
+     */
     public function calculateEndDate($showData)
     {
         if ($showData['add_show_no_end']) {
