@@ -71,15 +71,15 @@ class PypoPush(Thread):
                 LS_PORT\
                 )
 
-        liq_queue_tracker = {
+        self.liq_queue_tracker = {
                 "s0": None,
                 "s1": None,
                 "s2": None,
                 "s3": None,
                 }
 
-        self.pypoLiq_q = Queue()
-        self.plq = PypoLiqQueue(self.pypoLiq_q, \
+        self.future_scheduled_queue = Queue()
+        self.plq = PypoLiqQueue(self.future_scheduled_queue, \
                 telnet_lock, \
                 liq_queue_tracker, \
                 self.telnet_liquidsoap)
@@ -130,8 +130,6 @@ class PypoPush(Thread):
                 self.verify_correct_present_media(currently_playing)
 
                 self.future_scheduled_queue.put(scheduled_for_future)
-
-                self.pypoLiq_q.put(scheduled_for_future)
 
                 """
                 #queue.get timeout never had a chance to expire. Instead a new
@@ -193,7 +191,7 @@ class PypoPush(Thread):
     def separate_present_future(self, media_schedule):
         tnow = datetime.utcnow()
 
-        present = {}
+        present = []
         future = {}
 
         sorted_keys = sorted(media_schedule.keys())
@@ -205,13 +203,13 @@ class PypoPush(Thread):
             diff_sec = self.date_interval_to_seconds(diff_td)
 
             if diff_sec >= 0:
-                present[media_item['start']] = media_item
+                present.append(media_item)
             else:
                 future[media_item['start']] = media_item
 
         return present, future
 
-    def verify_correct_present_media(self, currently_playing):
+    def verify_correct_present_media(self, scheduled_now):
         #verify whether Liquidsoap is currently playing the correct items.
         #if we find an item that Liquidsoap is not playing, then push it
         #into one of Liquidsoap's queues. If Liquidsoap is already playing
@@ -221,10 +219,38 @@ class PypoPush(Thread):
         #Check for Liquidsoap media we should source.skip
         #get liquidsoap items for each queue. Since each queue can only have one
         #item, we should have a max of 8 items.
-        #TODO
 
-        #Check for media Liquidsoap should start playing
-        #TODO
+        schedule_ids = set()
+        for i in scheduled_now:
+            schedule_ids.add(i["row_id"])
+
+        liq_queue_ids = set()
+        for i in self.liq_queue_tracker:
+            mi = self.liq_queue_tracker[i]
+            if not self.plq.is_media_item_finished(mi):
+                liq_queue_ids.add(mi["row_id"])
+
+        to_be_added = schedule_ids - liq_queue_ids
+        to_be_removed = liq_queue_ids - schedule_ids
+
+        if len(to_be_removed):
+            self.logger.info("Need to remove items from Liquidsoap: %s" % \
+                    to_be_removed)
+
+            for i in self.liq_queue_tracker:
+                mi = self.liq_queue_tracker[i]
+                if mi["row_id"] in to_be_removed:
+                    self.telnet_liquidsoap.queue_remove(i)
+
+
+        if len(to_be_added):
+            self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
+                    to_be_added)
+
+            for i in scheduled_now:
+                if i["row_id"] in to_be_added:
+                    queue_id = self.plq.find_available_queue()
+                    self.telnet_liquidsoap.queue_push(queue_id)
 
     def get_current_stream_id_from_liquidsoap(self):
         response = "-1"

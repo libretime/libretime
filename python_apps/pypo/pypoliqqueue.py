@@ -43,6 +43,8 @@ class PypoLiqQueue(Thread):
                     time_until_next_play = \
                             self.date_interval_to_seconds(
                                     schedule_deque[0]['start'] - datetime.utcnow())
+                    if time_until_next_play < 0:
+                        time_until_next_play = 0
                 else:
                     time_until_next_play = None
             else:
@@ -59,13 +61,7 @@ class PypoLiqQueue(Thread):
     def is_media_item_finished(self, media_item):
         return datetime.utcnow() > media_item['end']
 
-    def telnet_to_liquidsoap(self, media_item):
-        """
-        telnets to liquidsoap and pushes the media_item to its queue. Push the
-        show name of every media_item as well, just to keep Liquidsoap up-to-date
-        about which show is playing.
-        """
-        
+    def find_available_queue(self):
         available_queue = None
         for i in self.liq_queue_tracker:
             mi = self.liq_queue_tracker[i]
@@ -75,6 +71,17 @@ class PypoLiqQueue(Thread):
 
         if available_queue == None:
             raise NoQueueAvailableException()
+
+        return available_queue
+
+    def telnet_to_liquidsoap(self, media_item):
+        """
+        telnets to liquidsoap and pushes the media_item to its queue. Push the
+        show name of every media_item as well, just to keep Liquidsoap up-to-date
+        about which show is playing.
+        """
+        
+        available_queue = self.find_available_queue()
 
         try:
             self.telnet_liquidsoap.queue_push(available_queue, media_item)

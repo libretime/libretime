@@ -19,6 +19,21 @@ class TelnetLiquidsoap:
     def __is_empty(self, tn, queue_id):
         return True
 
+    def queue_remove(self, queue_id):
+        try:
+            self.telnet_lock.acquire()
+            tn = self.__connect()
+
+
+            #TODO: Need a source.skip for each queue
+
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+        except Exception:
+            raise
+        finally:
+            self.telnet_lock.release()
+
 
     def queue_push(self, queue_id, media_item):
         try:
