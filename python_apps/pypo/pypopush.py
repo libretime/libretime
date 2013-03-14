@@ -9,9 +9,15 @@ import logging.config
 import telnetlib
 import calendar
 import math
+import traceback
 import os
-from pypofetch import PypoFetch
 
+from pypofetch import PypoFetch
+from telnetliquidsoap import TelnetLiquidsoap
+from pypoliqqueue import PypoLiqQueue
+
+
+import Queue
 from Queue import Empty
 
 from threading import Thread
@@ -58,6 +64,27 @@ class PypoPush(Thread):
         self.pushed_objects = {}
         self.logger = logging.getLogger('push')
         self.current_prebuffering_stream_id = None
+        self.queue_id = 0
+        self.telnet_liquidsoap = TelnetLiquidsoap(telnet_lock, \
+                self.logger,\
+                LS_HOST,\
+                LS_PORT\
+                )
+
+        liq_queue_tracker = {
+                "s0": None,
+                "s1": None,
+                "s2": None,
+                "s3": None,
+                }
+
+        self.pypoLiq_q = Queue()
+        self.plq = PypoLiqQueue(self.pypoLiq_q, \
+                telnet_lock, \
+                liq_queue_tracker, \
+                self.telnet_liquidsoap)
+        plq.daemon = True
+        plq.start()
 
     def main(self):
         loops = 0
@@ -74,50 +101,9 @@ class PypoPush(Thread):
                     media_schedule = self.queue.get(block=True)
                 else:
                     media_schedule = self.queue.get(block=True, timeout=time_until_next_play)
-
-                chains = self.get_all_chains(media_schedule)
-
-                #We get to the following lines only if a schedule was received.
-                liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
-                liquidsoap_stream_id = self.get_current_stream_id_from_liquidsoap()
-
-                tnow = datetime.utcnow()
-                current_event_chain, original_chain = self.get_current_chain(chains, tnow)
-
-                if len(current_event_chain) > 0:
-                    try:
-                        chains.remove(original_chain)
-                    except ValueError, e:
-                        self.logger.error(str(e))
-
-                #At this point we know that Liquidsoap is playing something, and that something
-                #is scheduled. We need to verify whether the schedule we just received matches
-                #what Liquidsoap is playing, and if not, correct it.
-
-                self.handle_new_schedule(media_schedule, liquidsoap_queue_approx, liquidsoap_stream_id, current_event_chain)
-
-
-                #At this point everything in the present has been taken care of and Liquidsoap
-                #is playing whatever is scheduled.
-                #Now we need to prepare ourselves for future scheduled events.
-                #
-                next_media_item_chain = self.get_next_schedule_chain(chains, tnow)
-
-                self.logger.debug("Next schedule chain: %s", next_media_item_chain)
-                if next_media_item_chain is not None:
-                    try:
-                        chains.remove(next_media_item_chain)
-                    except ValueError, e:
-                        self.logger.error(str(e))
-
-                    chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
-                    time_until_next_play = self.date_interval_to_seconds(chain_start - datetime.utcnow())
-                    self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
-                else:
-                    self.logger.debug("Blocking indefinitely since no show scheduled")
-                    time_until_next_play = None
             except Empty, e:
                 #We only get here when a new chain of tracks are ready to be played.
+                #"timeout" has parameter has been reached.
                 self.push_to_liquidsoap(next_media_item_chain)
 
                 next_media_item_chain = self.get_next_schedule_chain(chains, datetime.utcnow())
@@ -126,7 +112,8 @@ class PypoPush(Thread):
                         chains.remove(next_media_item_chain)
                     except ValueError, e:
                         self.logger.error(str(e))
-                    chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
+
+                    chain_start = next_media_item_chain[0]['start']
                     time_until_next_play = self.date_interval_to_seconds(chain_start - datetime.utcnow())
                     self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
                 else:
@@ -134,11 +121,110 @@ class PypoPush(Thread):
                     time_until_next_play = None
             except Exception, e:
                 self.logger.error(str(e))
+            else:
+                #separate media_schedule list into currently_playing and
+                #scheduled_for_future lists
+                currently_playing, scheduled_for_future = \
+                        self.separate_present_future(media_schedule)
+
+                self.verify_correct_present_media(currently_playing)
+
+                self.future_scheduled_queue.put(scheduled_for_future)
+
+                self.pypoLiq_q.put(scheduled_for_future)
+
+                """
+                #queue.get timeout never had a chance to expire. Instead a new
+                #schedule was received. Let's parse this schedule and generate
+                #a new timeout.
+                try:
+                    chains = self.get_all_chains(media_schedule)
+
+                    #We get to the following lines only if a schedule was received.
+                    liquidsoap_queue_approx = self.get_queue_items_from_liquidsoap()
+                    liquidsoap_stream_id = self.get_current_stream_id_from_liquidsoap()
+
+                    tnow = datetime.utcnow()
+                    current_event_chain, original_chain = \
+                            self.get_current_chain(chains, tnow)
+
+                    if len(current_event_chain) > 0:
+                        try:
+                            chains.remove(original_chain)
+                        except ValueError, e:
+                            self.logger.error(str(e))
+
+                    #At this point we know that Liquidsoap is playing something, and that something
+                    #is scheduled. We need to verify whether the schedule we just received matches
+                    #what Liquidsoap is playing, and if not, correct it.
+                    self.handle_new_schedule(media_schedule, \
+                                             liquidsoap_queue_approx, \
+                                             liquidsoap_stream_id, \
+                                             current_event_chain)
+
+                    #At this point everything in the present has been taken care of and Liquidsoap
+                    #is playing whatever is scheduled.
+                    #Now we need to prepare ourselves for future scheduled events.
+                    next_media_item_chain = self.get_next_schedule_chain(chains, tnow)
+
+                    self.logger.debug("Next schedule chain: %s", next_media_item_chain)
+                    if next_media_item_chain is not None:
+                        try:
+                            chains.remove(next_media_item_chain)
+                        except ValueError, e:
+                            self.logger.error(str(e))
+
+                        chain_start = datetime.strptime(next_media_item_chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
+                        time_until_next_play = self.date_interval_to_seconds(chain_start - datetime.utcnow())
+                        self.logger.debug("Blocking %s seconds until show start", time_until_next_play)
+                    else:
+                        self.logger.debug("Blocking indefinitely since no show scheduled")
+                        time_until_next_play = None
+                except Exception, e:
+                    self.logger.error(str(e))
+                """
 
             if loops % heartbeat_period == 0:
                 self.logger.info("heartbeat")
                 loops = 0
             loops += 1
+
+
+    def separate_present_future(self, media_schedule):
+        tnow = datetime.utcnow()
+
+        present = {}
+        future = {}
+
+        sorted_keys = sorted(media_schedule.keys())
+        for mkey in sorted_keys:
+            media_item = media_schedule[mkey]
+
+            media_item_start = media_item['start']
+            diff_td = tnow - media_item_start
+            diff_sec = self.date_interval_to_seconds(diff_td)
+
+            if diff_sec >= 0:
+                present[media_item['start']] = media_item
+            else:
+                future[media_item['start']] = media_item
+
+        return present, future
+
+    def verify_correct_present_media(self, currently_playing):
+        #verify whether Liquidsoap is currently playing the correct items.
+        #if we find an item that Liquidsoap is not playing, then push it
+        #into one of Liquidsoap's queues. If Liquidsoap is already playing
+        #it do nothing. If Liquidsoap is playing a track that isn't in
+        #currently_playing then stop it.
+
+        #Check for Liquidsoap media we should source.skip
+        #get liquidsoap items for each queue. Since each queue can only have one
+        #item, we should have a max of 8 items.
+        #TODO
+
+        #Check for media Liquidsoap should start playing
+        #TODO
 
     def get_current_stream_id_from_liquidsoap(self):
         response = "-1"
@@ -167,7 +253,7 @@ class PypoPush(Thread):
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
-            msg = 'queue.queue\n'
+            msg = 's0.queue\n'
             tn.write(msg)
             response = tn.read_until("\r\n").strip(" \r\n")
             tn.write('exit\n')
@@ -355,7 +441,7 @@ class PypoPush(Thread):
     def modify_cue_point(self, link):
         tnow = datetime.utcnow()
 
-        link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
+        link_start = link['start']
 
         diff_td = tnow - link_start
         diff_sec = self.date_interval_to_seconds(diff_td)
@@ -399,8 +485,8 @@ class PypoPush(Thread):
         for chain in chains:
             iteration = 0
             for link in chain:
-                link_start = datetime.strptime(link['start'], "%Y-%m-%d-%H-%M-%S")
-                link_end = datetime.strptime(link['end'], "%Y-%m-%d-%H-%M-%S")
+                link_start = link['start']
+                link_end = link['end']
 
                 self.logger.debug("tnow %s, chain_start %s", tnow, link_start)
                 if link_start <= tnow and tnow < link_end:
@@ -423,10 +509,12 @@ class PypoPush(Thread):
         closest_start = None
         closest_chain = None
         for chain in chains:
-            chain_start = datetime.strptime(chain[0]['start'], "%Y-%m-%d-%H-%M-%S")
-            chain_end = datetime.strptime(chain[-1]['end'], "%Y-%m-%d-%H-%M-%S")
+            chain_start = chain[0]['start']
+            chain_end = chain[-1]['end']
             self.logger.debug("tnow %s, chain_start %s", tnow, chain_start)
-            if (closest_start == None or chain_start < closest_start) and (chain_start > tnow or (chain_start < tnow and chain_end > tnow)):
+            if (closest_start == None or chain_start < closest_start) and \
+                    (chain_start > tnow or \
+                    (chain_start < tnow and chain_end > tnow)):
                 closest_start = chain_start
                 closest_chain = chain
 
@@ -482,6 +570,8 @@ class PypoPush(Thread):
                     self.stop_web_stream_output(media_item)
         except Exception, e:
             self.logger.error('Pypo Push Exception: %s', e)
+        finally:
+            self.queue_id = (self.queue_id + 1) % 8
 
 
     def start_web_stream_buffer(self, media_item):
@@ -640,7 +730,7 @@ class PypoPush(Thread):
                         self.logger.debug(msg)
                         tn.write(msg)
 
-            msg = "queue.queue\n"
+            msg = "s0.queue\n"
             self.logger.debug(msg)
             tn.write(msg)
 
@@ -687,10 +777,8 @@ class PypoPush(Thread):
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(LS_HOST, LS_PORT)
 
-            #tn.write(("vars.pypo_data %s\n"%liquidsoap_data["schedule_id"]).encode('utf-8'))
-
             annotation = self.create_liquidsoap_annotation(media_item)
-            msg = 'queue.push %s\n' % annotation.encode('utf-8')
+            msg = 's%s.push %s\n' % (self.queue_id, annotation.encode('utf-8'))
             self.logger.debug(msg)
             tn.write(msg)
             queue_id = tn.read_until("\r\n").strip("\r\n")
@@ -722,7 +810,6 @@ class PypoPush(Thread):
     def run(self):
         try: self.main()
         except Exception, e:
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Pypo Push Exception: %s', top)
 

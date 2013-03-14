@@ -13,11 +13,12 @@ import signal
 import logging
 import locale
 import os
-from Queue import Queue
 
+from Queue import Queue
 from threading import Lock
 
 from pypopush import PypoPush
+from pypoliqqueue import PypoLiqQueue
 from pypofetch import PypoFetch
 from pypofile import PypoFile
 from recorder import Recorder
@@ -63,7 +64,7 @@ try:
     LogWriter.override_std_err(logger)
 except Exception, e:
     print "Couldn't configure logging"
-    sys.exit()
+    sys.exit(1)
 
 def configure_locale():
     logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
@@ -228,8 +229,16 @@ if __name__ == '__main__':
     stat.daemon = True
     stat.start()
 
+    pypoLiq_q = Queue()
+    liq_queue_tracker = dict()
+    telnet_liquidsoap = TelnetLiquidsoap()
+    plq = PypoLiqQueue(pypoLiq_q, telnet_lock, logger, liq_queue_tracker, \
+            telnet_liquidsoap)
+    plq.daemon = True
+    plq.start()
+
     # all join() are commented out because we want to exit entire pypo
-    # if pypofetch is exiting
+    # if pypofetch terminates
     #pmh.join()
     #recorder.join()
     #pp.join()

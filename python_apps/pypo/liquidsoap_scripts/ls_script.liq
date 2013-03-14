@@ -35,7 +35,27 @@ just_switched = ref false
 
 %include "ls_lib.liq"
 
-queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
+sources = ref []
+source_id = ref 0
+
+def create_source()
+    sources := list.append([request.equeue(id="s#{!source_id}", length=0.5)], !sources)
+    source_id := !source_id + 1
+end
+
+create_source()
+create_source()
+create_source()
+create_source()
+
+create_source()
+create_source()
+create_source()
+create_source()
+
+queue = add(!sources)
+
+queue = audio_to_stereo(id="queue_src", queue)
 queue = cue_cut(queue)
 queue = amplify(1., override="replay_gain", queue)
 
