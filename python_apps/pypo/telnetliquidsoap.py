@@ -135,7 +135,6 @@ class TelnetLiquidsoap:
             self.logger.debug(msg)
             tn.write(msg)
 
-            #msg = 'dynamic_source.read_start %s\n' % media_item['uri'].encode('latin-1')
             msg = 'http.restart %s\n' % media_item['uri'].encode('latin-1')
             self.logger.debug(msg)
             tn.write(msg)

@@ -168,6 +168,8 @@ class PypoPush(Thread):
                     self.telnet_liquidsoap.queue_remove(i)
                     self.liq_queue_tracker[i] = None
 
+                    #liquidsoap.stop_play(mi)
+
 
         if len(to_be_added):
             self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
@@ -179,6 +181,8 @@ class PypoPush(Thread):
                     queue_id = self.plq.find_available_queue()
                     self.telnet_liquidsoap.queue_push(queue_id, i)
                     self.liq_queue_tracker[queue_id] = i
+
+                    #liquidsoap.start_play(i)
 
     def get_current_stream_id_from_liquidsoap(self):
         response = "-1"
