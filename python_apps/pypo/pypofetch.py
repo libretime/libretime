@@ -8,7 +8,7 @@ import json
 import telnetlib
 import copy
 import subprocess
-import datetime
+from datetime import datetime
 
 from Queue import Empty
 from threading import Thread

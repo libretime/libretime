@@ -229,13 +229,13 @@ if __name__ == '__main__':
     stat.daemon = True
     stat.start()
 
-    pypoLiq_q = Queue()
-    liq_queue_tracker = dict()
-    telnet_liquidsoap = TelnetLiquidsoap()
-    plq = PypoLiqQueue(pypoLiq_q, telnet_lock, logger, liq_queue_tracker, \
-            telnet_liquidsoap)
-    plq.daemon = True
-    plq.start()
+    #pypoLiq_q = Queue()
+    #liq_queue_tracker = dict()
+    #telnet_liquidsoap = TelnetLiquidsoap()
+    #plq = PypoLiqQueue(pypoLiq_q, telnet_lock, logger, liq_queue_tracker, \
+            #telnet_liquidsoap)
+    #plq.daemon = True
+    #plq.start()
 
     # all join() are commented out because we want to exit entire pypo
     # if pypofetch terminates

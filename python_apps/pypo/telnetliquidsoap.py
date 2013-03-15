@@ -24,9 +24,10 @@ class TelnetLiquidsoap:
             self.telnet_lock.acquire()
             tn = self.__connect()
 
-
-            #TODO: Need a source.skip for each queue
-
+            msg = 'queues.%s_skip\n' % queue_id
+            self.logger.debug(msg)
+            tn.write(msg)
+            
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
         except Exception:
@@ -80,6 +81,19 @@ class DummyTelnetLiquidsoap:
 
             annotation = create_liquidsoap_annotation(media_item)
             self.liquidsoap_mock_queues[queue_id].append(annotation)
+        except Exception:
+            raise
+        finally:
+            self.telnet_lock.release()
+
+    def queue_remove(self, queue_id):
+        try:
+            self.telnet_lock.acquire()
+
+            self.logger.info("Purging queue %s" % queue_id)
+            from datetime import datetime
+            print "Time now: %s" % datetime.utcnow()
+
         except Exception:
             raise
         finally:

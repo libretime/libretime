@@ -354,28 +354,32 @@ end
 # Add a skip function to a source
 # when it does not have one
 # by default
-def add_skip_command(s)
- # A command to skip
-  def skip(_)
-    # get playing (active) queue and flush it
-    l = list.hd(server.execute("queue.secondary_queue"))
-    l = string.split(separator=" ",l)
-    list.iter(fun (rid) -> ignore(server.execute("queue.remove #{rid}")), l)
+#def add_skip_command(s)
+# # A command to skip
+#  def skip(_)
+#    # get playing (active) queue and flush it
+#    l = list.hd(server.execute("queue.secondary_queue"))
+#    l = string.split(separator=" ",l)
+#    list.iter(fun (rid) -> ignore(server.execute("queue.remove #{rid}")), l)
+#
+#    l = list.hd(server.execute("queue.primary_queue"))
+#    l = string.split(separator=" ", l)
+#    if list.length(l) > 0 then
+#      source.skip(s)
+#      "Skipped"
+#    else
+#      "Not skipped"
+#    end
+#  end
+# # Register the command:
+# server.register(namespace="source",
+#                 usage="skip",
+#                 description="Skip the current song.",
+#                 "skip",fun(s) -> begin log("source.skip") skip(s) end)
+#end
 
-    l = list.hd(server.execute("queue.primary_queue"))
-    l = string.split(separator=" ", l)
-    if list.length(l) > 0 then
-      source.skip(s)
-      "Skipped"
-    else
-      "Not skipped"
-    end
-  end
- # Register the command:
- server.register(namespace="source",
-                 usage="skip",
-                 description="Skip the current song.",
-                 "skip",fun(s) -> begin log("source.skip") skip(s) end)
+def clear_queue(s)
+    source.skip(s)
 end
 
 def set_dynamic_source_id(id) =

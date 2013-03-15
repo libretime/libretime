@@ -32,9 +32,13 @@ class PypoLiqQueue(Thread):
         while True:
             try:
                 if time_until_next_play is None:
+                    self.logger.info("waiting indefinitely for schedule")
                     media_schedule = self.queue.get(block=True)
                 else:
-                    media_schedule = self.queue.get(block=True, timeout=time_until_next_play)
+                    self.logger.info("waiting %ss until next scheduled item" % \
+                            time_until_next_play)
+                    media_schedule = self.queue.get(block=True, \
+                            timeout=time_until_next_play)
             except Empty, e:
                 #Time to push a scheduled item.
                 media_item = schedule_deque.popleft()
@@ -55,11 +59,15 @@ class PypoLiqQueue(Thread):
                 for i in keys:
                     schedule_deque.append(media_schedule[i])
 
-                time_until_next_play = self.date_interval_to_seconds(\
-                        keys[0] - datetime.utcnow())
+                if len(keys):
+                    time_until_next_play = self.date_interval_to_seconds(\
+                            keys[0] - datetime.utcnow())
 
     def is_media_item_finished(self, media_item):
-        return datetime.utcnow() > media_item['end']
+        if media_item is None:
+            return True
+        else:
+            return datetime.utcnow() > media_item['end']
 
     def find_available_queue(self):
         available_queue = None

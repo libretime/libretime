@@ -17,8 +17,7 @@ from telnetliquidsoap import TelnetLiquidsoap
 from pypoliqqueue import PypoLiqQueue
 
 
-import Queue
-from Queue import Empty
+from Queue import Empty, Queue
 
 from threading import Thread
 
@@ -81,10 +80,11 @@ class PypoPush(Thread):
         self.future_scheduled_queue = Queue()
         self.plq = PypoLiqQueue(self.future_scheduled_queue, \
                 telnet_lock, \
-                liq_queue_tracker, \
+                self.logger, \
+                self.liq_queue_tracker, \
                 self.telnet_liquidsoap)
-        plq.daemon = True
-        plq.start()
+        self.plq.daemon = True
+        self.plq.start()
 
     def main(self):
         loops = 0
@@ -198,8 +198,7 @@ class PypoPush(Thread):
         for mkey in sorted_keys:
             media_item = media_schedule[mkey]
 
-            media_item_start = media_item['start']
-            diff_td = tnow - media_item_start
+            diff_td = tnow - media_item['start']
             diff_sec = self.date_interval_to_seconds(diff_td)
 
             if diff_sec >= 0:
@@ -230,8 +229,8 @@ class PypoPush(Thread):
             if not self.plq.is_media_item_finished(mi):
                 liq_queue_ids.add(mi["row_id"])
 
-        to_be_added = schedule_ids - liq_queue_ids
         to_be_removed = liq_queue_ids - schedule_ids
+        to_be_added = schedule_ids - liq_queue_ids
 
         if len(to_be_removed):
             self.logger.info("Need to remove items from Liquidsoap: %s" % \
@@ -239,8 +238,9 @@ class PypoPush(Thread):
 
             for i in self.liq_queue_tracker:
                 mi = self.liq_queue_tracker[i]
-                if mi["row_id"] in to_be_removed:
+                if mi is not None and mi["row_id"] in to_be_removed:
                     self.telnet_liquidsoap.queue_remove(i)
+                    self.liq_queue_tracker[i] = None
 
 
         if len(to_be_added):
@@ -249,8 +249,10 @@ class PypoPush(Thread):
 
             for i in scheduled_now:
                 if i["row_id"] in to_be_added:
+                    self.modify_cue_point(i)
                     queue_id = self.plq.find_available_queue()
-                    self.telnet_liquidsoap.queue_push(queue_id)
+                    self.telnet_liquidsoap.queue_push(queue_id, i)
+                    self.liq_queue_tracker[queue_id] = i
 
     def get_current_stream_id_from_liquidsoap(self):
         response = "-1"
@@ -554,7 +556,6 @@ class PypoPush(Thread):
         """
         seconds = (interval.microseconds + \
                    (interval.seconds + interval.days * 24 * 3600) * 10 ** 6) / float(10 ** 6)
-        if seconds < 0: seconds = 0
 
         return seconds
 

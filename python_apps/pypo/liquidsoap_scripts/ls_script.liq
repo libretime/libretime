@@ -39,7 +39,14 @@ sources = ref []
 source_id = ref 0
 
 def create_source()
-    sources := list.append([request.equeue(id="s#{!source_id}", length=0.5)], !sources)
+    l = request.equeue(id="s#{!source_id}", length=0.5)
+    sources := list.append([l], !sources)
+    server.register(namespace="queues",
+                "s#{!source_id}_skip",
+                fun (s) -> begin log("queues.s#{!source_id}_skip") 
+                    clear_queue(l) 
+                    "Done" 
+                end)
     source_id := !source_id + 1
 end
 
@@ -268,7 +275,7 @@ end
 
 
 # Attach a skip command to the source s:
-add_skip_command(s)
+#add_skip_command(s)
 
 server.register(namespace="streams",
     description="Stop Master DJ source.",
