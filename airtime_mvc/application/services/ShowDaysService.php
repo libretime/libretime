@@ -11,6 +11,17 @@ class Application_Service_ShowDaysService
 
     /**
      * 
+     * Deletes all the cc_show_days entries for a specific show
+     * that is currently being edited. They will get recreated with
+     * the new show day specs
+     */
+    public function deleteShowDays()
+    {
+        CcShowDaysQuery::create()->filterByDbShowId($this->showId)->delete();
+    }
+
+    /**
+     * 
      * Determines what the show end date should be based on
      * the form data
      * 
@@ -22,13 +33,11 @@ class Application_Service_ShowDaysService
         if ($showData['add_show_no_end']) {
             $endDate = NULL;
         } elseif ($showData['add_show_repeats']) {
-            $endDateTime = new DateTime($showData['add_show_end_date']);
-            $endDateTime->add(new DateInterval("P1D"));
-            $endDate = $endDateTime->format("Y-m-d");
+            $endDate = new DateTime($showData['add_show_end_date']);
+            $endDate->add(new DateInterval("P1D"));
         } else {
-            $endDateTime = new DateTime($showData['add_show_start_date']);
-            $endDateTime->add(new DateInterval("P1D"));
-            $endDate = $endDateTime->format("Y-m-d");
+            $endDate = new DateTime($showData['add_show_start_date']);
+            $endDate->add(new DateInterval("P1D"));
         }
 
         return $endDate;
@@ -42,12 +51,18 @@ class Application_Service_ShowDaysService
      * @param $userId
      * @param $repeatType
      * @param $isRecorded
+     * @param $showDay ccShowDay object we are setting values on
      */
-    public function setShowDays($showData, $userId, $repeatType, $isRecorded)
+    public function setShowDays($showData, $repeatType, $isRecorded)
     {
         $startDateTime = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time']);
 
-        $endDate = $this->calculateEndDate($showData);
+        $endDateTime = $this->calculateEndDate($showData);
+        if (!is_null($endDateTime)) {
+            $endDate = $endDateTime->format("Y-m-d");
+        } else {
+            $endDate = $endDateTime;
+        }
 
         /* What we are doing here is checking if the show repeats or if
          * any repeating days have been checked. If not, then by default
@@ -67,7 +82,7 @@ class Application_Service_ShowDaysService
             $showDay->setDbFirstShow($startDateTime->format("Y-m-d"));
             $showDay->setDbLastShow($endDate);
             $showDay->setDbStartTime($startDateTime->format("H:i:s"));
-            $showDay->setDbTimezone(Application_Model_Preference::GetUserTimezone($userId));
+            $showDay->setDbTimezone(Application_Model_Preference::GetTimezone());
             $showDay->setDbDuration($showData['add_show_duration']);
             $showDay->setDbRepeatType($repeatType);
             $showDay->setDbShowId($this->showId);
@@ -90,7 +105,7 @@ class Application_Service_ShowDaysService
                     $showDay->setDbFirstShow($startDateTimeClone->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);
                     $showDay->setDbStartTime($startDateTimeClone->format("H:i"));
-                    $showDay->setDbTimezone(Application_Model_Preference::GetUserTimezone($userId));
+                    $showDay->setDbTimezone(Application_Model_Preference::GetTimezone());
                     $showDay->setDbDuration($showData['add_show_duration']);
                     $showDay->setDbDay($day);
                     $showDay->setDbRepeatType($repeatType);
@@ -110,10 +125,6 @@ class Application_Service_ShowDaysService
      */
     public function getShowDays()
     {
-        /*$sql = "SELECT * FROM cc_show_days WHERE show_id = :show_id";
-
-        return Application_Common_Database::prepareAndExecute(
-            $sql, array(":show_id" => $this->showId), 'all');*/
         return CcShowDaysQuery::create()->filterByDbShowId(
             $this->showId)->find();
     }
@@ -139,5 +150,32 @@ class Application_Service_ShowDaysService
     {
         return CcShowDaysQuery::create()->filterByDbShowId($this->showId)
             ->findOne();
+    }
+
+    public function getRepeatingEndDate()
+    {
+        $sql = <<<SQL
+SELECT last_show
+FROM cc_show_days
+WHERE show_id = :showId
+ORDER BY last_show DESC
+SQL;
+
+        $query = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'showId' => $this->showId ), 'column' );
+
+        return ($query !== false) ? $query : false;
+    }
+
+    public function getNextStartDateTime($showDay)
+    {
+        $nextPopDate = $showDay->getDbNextPopDate();
+        $startTime = $showDay->getDbStartTime();
+
+        if (isset($nextPopDate)) {
+            return $nextPopDate." ".$startTime;
+        } else {
+            return $showDay->getDbFirstShow()." ".$startTime;
+        }
     }
 }

@@ -22,7 +22,7 @@ class Application_Service_ShowInstanceService
      * Receives a cc_show id and determines whether to create a 
      * single show instance or repeating show instances
      */
-    public function delegateShowInstanceCreation($showId, $isRebroadcast)
+    public function delegateShowInstanceCreation($showId, $isRebroadcast, $isUpdate)
     {
         $populateUntil = $this->service_show->getPopulateShowUntilDateTIme();
 
@@ -32,10 +32,10 @@ class Application_Service_ShowInstanceService
         foreach ($showDays as $day) {
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
-                    $this->createNonRepeatingShowInstance($day, $populateUntil, $isRebroadcast);
+                    $this->createNonRepeatingShowInstance($day, $populateUntil, $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_WEEKLY:
-                    $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P7D", $isRebroadcast);
+                    $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P7D", $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_BI_WEEKLY:
                     $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P14D", $isRebroadcast);
@@ -57,7 +57,7 @@ class Application_Service_ShowInstanceService
      * @param $showDay
      * @param $populateUntil
      */
-    private function createNonRepeatingShowInstance($showDay, $populateUntil, $isRebroadcast)
+    private function createNonRepeatingShowInstance($showDay, $populateUntil, $isRebroadcast, $isUpdate)
     {
         $start = $showDay->getDbFirstShow()." ".$showDay->getDbStartTime();
 
@@ -66,6 +66,15 @@ class Application_Service_ShowInstanceService
 
         if ($utcStartDateTime->getTimestamp() < $populateUntil->getTimestamp()) {
             $ccShowInstance = new CcShowInstances();
+            if ($isUpdate) {
+                $ccShowInstance = $this->getInstance($utcStartDateTime, $showDay->getDbShowId());
+                //update schedule start times
+                //ccShowDays object of the show being edited
+                $currentShowDay = $this->service_showDays->getCurrentShowDay();
+                $diff = $this->calculateShowStartDiff($utcStartDateTime,
+                        $currentShowDay->getUTCStartDateAndTime());
+                Application_Service_ScheduleService::updateScheduleStartTime(array($ccShowInstance->getDbId()), $diff);
+            }
             $ccShowInstance->setDbShowId($showDay->getDbShowId());
             $ccShowInstance->setDbStarts($utcStartDateTime);
             $ccShowInstance->setDbEnds($utcEndDateTime);
@@ -87,35 +96,26 @@ class Application_Service_ShowInstanceService
      * @param unknown_type $isRebroadcast
      */
     private function createWeeklyRepeatingShowInstances($showDay, $populateUntil,
-        $repeatInterval, $isRebroadcast)
+        $repeatInterval, $isRebroadcast, $isUpdate)
     {
         $show_id       = $showDay->getDbShowId();
-        $next_pop_date = $showDay->getDbNextPopDate();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
         $last_show     = $showDay->getDbLastShow(); //non-UTC
-        $start_time    = $showDay->getDbStartTime(); //non-UTC
         $duration      = $showDay->getDbDuration();
         $day           = $showDay->getDbDay();
         $record        = $showDay->getDbRecord();
         $timezone      = $showDay->getDbTimezone();
 
-        $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
+        $start = $this->service_showDays->getNextStartDateTime($showDay);
 
-        if (isset($next_pop_date)) {
-            $start = $next_pop_date." ".$start_time;
-        } else {
-            $start = $first_show." ".$start_time;
-        }
-
-        $period = $this->getDatePeriod($start, $timezone, $last_show,
+        $datePeriod = $this->getDatePeriod($start, $timezone, $last_show,
             $repeatInterval, $populateUntil);
 
-        $utcStartDateTime = Application_Common_DateHelper::ConvertToUtcDateTime($start, $timezone);
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $utcEndDateTime = null;
-        foreach ($period as $date) {
+        foreach ($datePeriod as $date) {
             list($utcStartDateTime, $utcEndDateTime) = $this->service_show->createUTCStartEndDateTime(
                 $date->format("Y-m-d H:i:s"), $duration, $timezone);
             /*
@@ -127,14 +127,23 @@ class Application_Service_ShowInstanceService
                  $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
 
                 $ccShowInstance = new CcShowInstances();
-                $ccShowInstance->setDbShowId($show_id);
-                $ccShowInstance->setDbStarts($utcStartDateTime);
-                $ccShowInstance->setDbEnds($utcEndDateTime);
-                $ccShowInstance->setDbRecord($record);
-                $ccShowInstance->save();
+                if ($isUpdate) {
+                    $ccShowInstance = $this->getInstance($utcStartDateTime, $show_id);
+                }
+
+                /* When editing the start/end time of a repeating show, we don't want to
+                 * change shows that started in the past. So check the start time.
+                 */
+                if (!$isUpdate || $ccShowInstance->getDbStarts() > gmdate("Y-m-d H:i:s")) {
+                    $ccShowInstance->setDbShowId($show_id);
+                    $ccShowInstance->setDbStarts($utcStartDateTime);
+                    $ccShowInstance->setDbEnds($utcEndDateTime);
+                    $ccShowInstance->setDbRecord($record);
+                    $ccShowInstance->save();
+                }
 
                 if ($isRebroadcast) {
-                    $this->createRebroadcastShowInstances($showDay, $date->format("Y-m-d"), $ccShowInstance->getDbId());
+                    $this->createRebroadcastInstances($showDay, $date->format("Y-m-d"), $ccShowInstance->getDbId());
                 }
             }
         }
@@ -147,10 +156,10 @@ class Application_Service_ShowInstanceService
      * Enter description here ...
      * @param $showDay
      */
-    private function createRebroadcastShowInstances($showDay, $showStartDate, $instanceId)
+    private function createRebroadcastInstances($showDay, $showStartDate, $instanceId)
     {
         $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
-        $showId = $showDay["show_id"];
+        $showId = $showDay->getDbShowId();
 
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
         $rebroadcasts = Application_Common_Database::prepareAndExecute($sql,
@@ -162,7 +171,7 @@ class Application_Service_ShowInstanceService
             $offset = array("days"=>$days[0], "hours"=>$time[0], "mins"=>$time[1]);
 
             list($utcStartDateTime, $utcEndDateTime) = $this->service_show->createUTCStartEndDateTime(
-                $showStartDate, $showDay["duration"], $showDay["timezone"], $offset);
+                $showStartDate, $showDay->getDbDuration(), $showDay->getDbTimezone(), $offset);
 
             if ($utcStartDateTime->format("Y-m-d H:i:s") > $currentUtcTimestamp) {
                 $ccShowInstance = new CcShowInstances();
@@ -177,9 +186,30 @@ class Application_Service_ShowInstanceService
         }
     }
 
-    private function deleteRebroadcastShowInstances()
+    public function updateScheduleStatus($showId)
     {
+        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $instances = CcShowInstancesQuery::create()
+            ->filterByDbEnds(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->filterByDbShowId($showId)
+            ->find();
 
+        foreach ($instances as $instance) {
+            $instance->updateScheduleStatus($con);
+        }
+    }
+
+    public function deleteRebroadcastInstances($showId)
+    {
+        $sql = <<<SQL
+DELETE FROM cc_show_instances
+WHERE starts > :timestamp::TIMESTAMP
+AND show_id = :showId
+AND rebroadcast = 1;
+SQL;
+        Application_Common_Database::prepareAndExecute( $sql, array(
+            ':showId' => $showId,
+            ':timestamp'  => gmdate("Y-m-d H:i:s")), 'execute');
     }
 
     /**
@@ -231,7 +261,80 @@ SQL;
     }
 
     /**
-     * This function is messy. But sometimes there is no easy way to do it.
+     * 
+     * Returns all the show instances of the show currently
+     * being edited.
+     * @param $showId
+     */
+    public function getCurrentInstances($showId)
+    {
+        return CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbModifiedInstance(false)
+            ->orderBy("starts");
+    }
+
+    /**
+     * 
+     * Attempts to retrieve the cc_show_instance belonging to a cc_show
+     * that starts at $starts. We have to pass in the start
+     * time in case the show is repeating
+     * 
+     * Returns the instance if one was found (one that is not a recording
+     * and modified instance is false (has not been deleted))
+     */
+    public function getInstance($starts, $showId)
+    {
+        $ccShowInstance = CcShowInstancesQuery::create()
+            ->filterByDbStarts($starts->format("Y-m-d H:i:s"), Criteria::EQUAL)
+            ->filterByDbShowId($showId, Criteria::EQUAL)
+            ->filterByDbModifiedInstance(false, Criteria::EQUAL)
+            ->filterByDbRebroadcast(0, Criteria::EQUAL)
+            ->limit(1)
+            ->find();
+
+        if ($ccShowInstance->isEmpty()) {
+            throw new Exception("Show instance not found");
+        }
+
+        return $ccShowInstance[0];
+    }
+
+    public function getAllFutureInstanceIds($showId)
+    {
+        $sql = <<<SQL
+SELECT id
+FROM cc_show_instances
+WHERE show_id = :showId
+  AND starts > :timestamp::TIMESTAMP
+  AND modified_instance != TRUE
+SQL;
+        $rows = Application_Common_Database::prepareAndExecute($sql,
+            array( ':showId'    => $showId,
+                   ':timestamp' => gmdate("Y-m-d H:i:s")), "all");
+
+        $ids = array();
+        foreach ($ids as $id) {
+            $ids[] = $id['id'];
+        }
+        return $ids;
+    }
+
+    /**
+     * 
+     * Returns the difference in seconds between a show's new and
+     * old start time
+     * 
+     * @param $newStartDateTime DateTime object
+     * @param $oldStartDateTime DateTime object
+     */
+    public function calculateShowStartDiff($newStartDateTime, $oldStartDateTime)
+    {
+        return $newStartDateTime->getTimestamp() - $oldStartDateTime->getTimestamp();
+    }
+
+    /**
+     * TODO: This function is messy. Needs refactoring
      * 
      * When editing a show we may need to perform some actions to reflect the new specs:
      * - Delete some show instances
@@ -242,7 +345,7 @@ SQL;
      * @param $isRecorded value computed from the edit show form
      * @param $repeatType value computed from the edit show form
      */
-    public function updateShowInstances($showData, $isRecorded, $repeatType)
+    public function deleteInvalidInstances($showData, $isRecorded, $repeatType)
     {
         $showId = $showData["add_show_id"];
 
@@ -250,7 +353,13 @@ SQL;
         //ccShowDays object of the show being edited
         $currentShowDay = $this->service_showDays->getCurrentShowDay();
 
-        $endDate = $this->service_showDays->calculateEndDate($showData);
+        //new end date in users' local time
+        $endDateTime = $this->service_showDays->calculateEndDate($showData);
+        if (!is_null($endDateTime)) {
+            $endDate = $endDateTime->format("Y-m-d");
+        } else {
+            $endDate = $endDateTime;
+        }
 
         //repeat option was toggled
         if ($showData['add_show_repeats'] != $currentShowDay->isRepeating()) {
@@ -258,9 +367,9 @@ SQL;
         }
 
         //duration has changed
-        if ($showData['add_show_duration'] != $currentShowDay->getDbDuration()) {
-            $this->updateDuration($showData);
-        }
+        /*if ($showData['add_show_duration'] != $currentShowDay->getDbDuration()) {
+            $this->updateInstanceDuration($showData);
+        }*/
 
         if ($showData['add_show_repeats']) {
 
@@ -315,7 +424,7 @@ SQL;
                 }
 
                 if ($showData['add_show_start_date'] != $localShowStart->format("Y-m-d")
-                    || $showData['add_show_start_time'] != $localShowStart->format("H:i:s")){
+                    || $showData['add_show_start_time'] != $localShowStart->format("H:i")) {
 
                     //start date has been pushed forward so we need to delete
                     //any instances of this show scheduled before the new start date
@@ -323,70 +432,65 @@ SQL;
                         $this->deleteInstancesBeforeDate($showData['add_show_start_date'], $showId);
                     }
 
-                    $this->updateStartDateAndTime($showData, $currentShowDay);
+                    
                 }
             }
-/*
-            //Check if end date for the repeat option has changed. If so, need to take care
-            //of deleting possible invalid Show Instances.
-            if ((strlen($this->getRepeatingEndDate()) == 0) == $showData['add_show_no_end']) {
-                //show "Never Ends" option was toggled.
-                if ($showData['add_show_no_end']) {
-                } else {
-                    $this->removeAllInstancesFromDate($p_endDate);
-                }
-            }
-            if ($this->getRepeatingEndDate() != $showData['add_show_end_date']) {
-                //end date was changed.
 
-                $newDate = strtotime($showData['add_show_end_date']);
-                $oldDate = strtotime($this->getRepeatingEndDate());
-                if ($newDate < $oldDate) {
-                    $this->removeAllInstancesFromDate($p_endDate);
+            $currentShowEndDate = $this->service_showDays->getRepeatingEndDate();
+            //check if "no end" option has changed
+            if ($currentShowEndDate != $showData['add_show_no_end']) {
+                //show "No End" option was toggled
+                if (!$showData['add_show_no_end']) {
+                    //"No End" option was unchecked so we need to delete the
+                    //repeat instances that are scheduled after the new end date
+                    $this->deleteInstancesFromDate($endDate, $showId);
                 }
-            }*/
-        }
+            }
+
+            if ($currentShowEndDate != $showData['add_show_end_date']) {
+                //end date was changed
+                $newEndDate = strtotime($showData['add_show_end_date']);
+                $oldEndDate = strtotime($currentShowEndDate);
+                if ($newEndDate < $oldEndDate) {
+                    //end date was pushed back so we have to delete any
+                    //instances of this show scheduled after the new end date
+                    $this->deleteInstancesFromDate($endDate, $showId);
+                }
+            }
+        }//if repeats
+
+        /*$newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
+            $showData["add_show_start_time"],
+            new DateTimeZone(Application_Model_Preference::GetTimezone()));
+
+        $diff = $this->calculateShowStartDiff($newStartDateTime,
+            $currentShowDay->getLocalStartDateAndTime());
+
+        $this->updateInstanceStartEndTime($showId, $diff);
+        $instanceIds = $this->getAllFutureInstanceIds($showId);
+        Application_Service_ScheduleService::updateScheduleStartTime($instanceIds, $diff);*/
     }
 
     /**
      * 
-     * Updates the start date and time for cc_show_instances
-     * and entries in cc_schedule
+     * Updates the start and end time for cc_show_instances
      * 
      * @param $showData edit show form data
      */
-    public function updateStartDateAndTime($showData, $currentShowDay)
+    public function updateInstanceStartEndTime($showId, $diff)
     {
-        $date = new Application_Common_DateHelper();
-        //current time in UTC
-        $timestamp = $date->getTimestamp();
-
-        $dtOld = $currentShowDay->getUTCStartDateAndTime();
-        $dtNew = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time'],
-            new DateTimeZone(date_default_timezone_get()));
-        $diff = $dtOld->getTimestamp() - $dtNew->getTimestamp();
         $sql = <<<SQL
 UPDATE cc_show_instances
 SET starts = starts + :diff1::INTERVAL,
     ends = ends + :diff2::INTERVAL
 WHERE show_id = :showId
-  AND starts > :timestamp
+  AND starts > :timestamp::TIMESTAMP
 SQL;
 
         Application_Common_Database::prepareAndExecute($sql,
             array(':diff1' => $diff, ':diff2' => $diff, 
-                ':showId' => $showData["add_show_id"], ':timestamp' => $timestamp),
+                ':showId' => $showId, ':timestamp' => gmdate("Y-m-d H:i:s")),
             'execute');
-
-        /*$showInstanceIds = $this->getAllFutureInstanceIds();
-        if (count($showInstanceIds) > 0 && $diff != 0) {
-            $showIdsImploded = implode(",", $showInstanceIds);
-            $sql = "UPDATE cc_schedule "
-                    ."SET starts = starts + INTERVAL '$diff sec', "
-                    ."ends = ends + INTERVAL '$diff sec' "
-                    ."WHERE instance_id IN ($showIdsImploded)";
-            $con->exec($sql);
-        }*/
     }
 
     public function deleteAllRepeatInstances($currentShowDay, $showId)
@@ -451,11 +555,9 @@ WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDays)
   AND show_id = :showId
 SQL;
 
-        Application_Common_Database::prepareAndExecute( $sql,
-            array(
-                ":timestamp" => gmdate("Y-m-d H:i:s"),
-                ":showId"    => $showId,
-            ), "execute");
+        Application_Common_Database::prepareAndExecute( $sql, array(
+            ":timestamp" => gmdate("Y-m-d H:i:s"), ":showId"    => $showId),
+            "execute");
     }
 
     public function deleteInstancesBeforeDate($newStartDate, $showId)
@@ -473,21 +575,31 @@ SQL;
             ":showId" => $showId), "execute");
     }
 
-    public function updateDuration($showData)
+    public function deleteInstancesFromDate($endDate, $showId)
     {
-        $date = new Application_Common_DateHelper;
-        $timestamp = $date->getUtcTimestamp();
+        $sql = <<<SQL
+DELETE FROM cc_show_instances
+WHERE date(starts) >= :endDate::DATE
+  AND starts > :timestamp::TIMESTAMP
+  AND show_id = :showId
+SQL;
+        Application_Common_Database::prepareAndExecute($sql, array(
+            ':endDate' => $endDate, ':timestamp' => gmdate("Y-m-d H:i:s"),
+            ':showId' => $showId), 'execute');
+    }
 
+/*    public function updateInstanceDuration($showData)
+    {
         $sql = <<<SQL
 UPDATE cc_show_instances
 SET ends = starts + :add_show_duration::INTERVAL
 WHERE show_id = :show_id
   AND ends > :timestamp::TIMESTAMP
 SQL;
-        
+
         Application_Common_Database::prepareAndExecute( $sql, array(
             ':add_show_duration' => $showData['add_show_duration'],
             ':show_id' => $showData['add_show_id'],
-            ':timestamp' => $timestamp), "execute");
-    }
+            ':timestamp' => gmdate("Y-m-d H:i:s")), "execute");
+    }*/
 }

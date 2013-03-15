@@ -1169,17 +1169,17 @@ SQL;
 
         /*$isRecorded = (isset($data['add_show_record']) && $data['add_show_record']) ? 1 : 0;*/
 
-        if ($data['add_show_id'] != -1) {
+        /*if ($data['add_show_id'] != -1) {
             $show = new Application_Model_Show($showId);
             //CC-4150 CULPRIT
             $show->deletePossiblyInvalidInstances($data, $endDate, $isRecorded, $repeatType);
-        }
+        }*/
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's show_days information first.
-        if ($data['add_show_id'] != -1) {
+        /*if ($data['add_show_id'] != -1) {
             CcShowDaysQuery::create()->filterByDbShowId($data['add_show_id'])->delete();
-        }
+        }*/
 
         //don't set day for monthly repeat type, it's invalid.
         /*if ($data['add_show_repeats'] && $data['add_show_repeat_type'] == 2) {
@@ -1223,11 +1223,11 @@ SQL;
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's future show_rebroadcast information first.
-        if (($data['add_show_id'] != -1) && isset($data['add_show_rebroadcast']) && $data['add_show_rebroadcast']) {
+        /*if (($data['add_show_id'] != -1) && isset($data['add_show_rebroadcast']) && $data['add_show_rebroadcast']) {
             CcShowRebroadcastQuery::create()
                 ->filterByDbShowId($data['add_show_id'])
                 ->delete();
-        }
+        }*/
         //adding rows to cc_show_rebroadcast
         /* TODO: Document magic constant 10 and define it properly somewhere
             --RG */
@@ -1272,9 +1272,9 @@ SQL;
 
         //check if we are adding or updating a show, and if updating
         //erase all the show's show_rebroadcast information first.
-        if ($data['add_show_id'] != -1) {
+        /*if ($data['add_show_id'] != -1) {
             CcShowHostsQuery::create()->filterByDbShow($data['add_show_id'])->delete();
-        }
+        }*/
         /*if (is_array($data['add_show_hosts'])) {
             //add selected hosts to cc_show_hosts table.
             foreach ($data['add_show_hosts'] as $host) {
@@ -1285,7 +1285,7 @@ SQL;
             }
         }*/
 
-        if ($data['add_show_id'] != -1) {
+        /*if ($data['add_show_id'] != -1) {
             $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
             $con->beginTransaction();
             
@@ -1310,12 +1310,12 @@ SQL;
                 Logging::info("Couldn't update schedule status.");
                 Logging::info($e->getMessage());
             }
-        }
+        }*/
 
         /*Application_Model_Show::populateShowUntil($showId);
         Application_Model_RabbitMq::PushSchedule();*/
 
-        return $showId;
+        /*return $showId;*/
     }
 
     /**
@@ -1399,39 +1399,39 @@ SQL;
         if ($utcStartDateTime->getTimestamp() < $p_populateUntilDateTime->getTimestamp()) {
             $currentUtcTimestamp = gmdate("Y-m-d H:i:s");*/
 
-            $show = new Application_Model_Show($show_id);
+            /*$show = new Application_Model_Show($show_id);
             if ($show->hasInstance()) {
                 $ccShowInstance = $show->getInstance();
                 $newInstance = false;
-            } /*else {
+            }*/ /*else {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
             }*/
 
-            if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp) {
+            /*if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp) {
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($utcStartDateTime);
                 $ccShowInstance->setDbEnds($utcEndDateTime);
                 $ccShowInstance->setDbRecord($record);
                 $ccShowInstance->save();
-            }
+            }*/
 
-            $show_instance_id = $ccShowInstance->getDbId();
-            $showInstance = new Application_Model_ShowInstance($show_instance_id);
+           /* $show_instance_id = $ccShowInstance->getDbId();
+            $showInstance = new Application_Model_ShowInstance($show_instance_id);*/
 
-            if (!$newInstance) {
+            /*if (!$newInstance) {
                 $showInstance->correctScheduleStartTimes();
-            }
+            }*/
 
             /*$sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
             $rebroadcasts = Application_Common_Database::prepareAndExecute($sql,
                 array( ':show_id' => $show_id ), 'all');*/
 
-            if ($showInstance->isRecorded()) {
+            /*if ($showInstance->isRecorded()) {
                 //only do this for editing
                 $showInstance->deleteRebroadcasts();
                 self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            }
+            }*/
         /*}*/
     }
 
@@ -1471,21 +1471,21 @@ SQL;
         //convert $last_show into a UTC DateTime object, or null if there is no last show.
         $utcLastShowDateTime = $last_show ? Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;*/
 
-        $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
+        /*$sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
 
         $rebroadcasts = Application_Common_Database::prepareAndExecute( $sql,
             array( ':show_id' => $show_id ), 'all');
 
-        $show = new Application_Model_Show($show_id);
+        $show = new Application_Model_Show($show_id);*/
 
-        while ($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
-                && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){
+        /*while ($utcStartDateTime->getTimestamp() <= $p_populateUntilDateTime->getTimestamp()
+                && (is_null($utcLastShowDateTime) || $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp())){*/
 
-            list($utcStartDateTime, $utcEndDateTime) = self::createUTCStartEndDateTime($start, $duration, $timezone);
+            /*list($utcStartDateTime, $utcEndDateTime) = self::createUTCStartEndDateTime($start, $duration, $timezone);*/
 
             //determine if we are adding a new show
             //or editing a show
-            if ($show->hasInstanceOnDate($utcStartDateTime)) {
+           /* if ($show->hasInstanceOnDate($utcStartDateTime)) {
                 $ccShowInstance = $show->getInstanceOnDate($utcStartDateTime);
 
                 if ($ccShowInstance->getDbModifiedInstance()) {
@@ -1498,12 +1498,12 @@ SQL;
             } else {
                 $ccShowInstance = new CcShowInstances();
                 $newInstance = true;
-            }
+            }*/
 
             /* When editing the start/end time of a repeating show, we don't want to
              * change shows that started in the past. So check the start time.
              */
-            if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp) {
+            /*if ($newInstance || $ccShowInstance->getDbStarts() > $currentUtcTimestamp) {
                 $ccShowInstance->setDbShowId($show_id);
                 $ccShowInstance->setDbStarts($utcStartDateTime);
                 $ccShowInstance->setDbEnds($utcEndDateTime);
@@ -1513,21 +1513,22 @@ SQL;
 
 
             $show_instance_id = $ccShowInstance->getDbId();
-            $showInstance = new Application_Model_ShowInstance($show_instance_id);
+            $showInstance = new Application_Model_ShowInstance($show_instance_id);*/
 
             /* If we are updating a show then make sure that the scheduled content within
              * the show is updated to the correct time. */
-            if (!$newInstance) {
+            // don't we already do this in deletePossiblyInvalidInstances???
+            /*if (!$newInstance) {
                 $showInstance->correctScheduleStartTimes();
-            }
+            }*/
 
-            $showInstance->deleteRebroadcasts();
+            /*$showInstance->deleteRebroadcasts();
             self::createRebroadcastInstances($rebroadcasts, $currentUtcTimestamp, $show_id, $show_instance_id, $start, $duration, $timezone);
-            list($start, $utcStartDateTime) = self::advanceRepeatingDate($p_interval, $start, $timezone);
+            list($start, $utcStartDateTime) = self::advanceRepeatingDate($p_interval, $start, $timezone);*/
 
-        }
+        /*}*/
 
-        Application_Model_Show::setNextPop($start, $show_id, $day);
+        /*Application_Model_Show::setNextPop($start, $show_id, $day);*/
     }
 
     private static function advanceRepeatingDate($p_interval, $start, $timezone)
@@ -1581,7 +1582,7 @@ SQL;
      */
     private static function createUTCStartEndDateTime($p_start, $p_duration, $p_timezone=null, $p_offset=null)
     {
-        $timezone = $p_timezone ? $p_timezone : date_default_timezone_get();
+        /*$timezone = $p_timezone ? $p_timezone : date_default_timezone_get();
 
         $startDateTime = new DateTime($p_start, new DateTimeZone($timezone));
         if (isset($p_offset)) {
@@ -1595,7 +1596,7 @@ SQL;
         list($hours, $mins) = array_slice($duration, 0, 2);
         $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
 
-        return array($startDateTime, $endDateTime);
+        return array($startDateTime, $endDateTime);*/
     }
 
     /*  Create rebroadcast instances for a created show marked for recording
@@ -1621,7 +1622,7 @@ SQL;
     {
         //Y-m-d
         //use only the date part of the show start time stamp for the offsets to work properly.
-        $date = explode(" ", $p_startTime);
+        /*$date = explode(" ", $p_startTime);
         $start_date = $date[0];
 
         foreach ($p_rebroadcasts as $rebroadcast) {
@@ -1643,7 +1644,7 @@ SQL;
                 $newRebroadcastInstance->setDbOriginalShow($p_showInstanceId);
                 $newRebroadcastInstance->save();
             }
-        }
+        }*/
     }
 
     /**

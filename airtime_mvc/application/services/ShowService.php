@@ -10,9 +10,9 @@ class Application_Service_ShowService
      * @param $ccShow
      * @param $showData
      */
-    public function setShow($showData, $isNewShow)
+    public function setShow($showData, $isUpdate)
     {
-        if ($isNewShow) {
+        if (!$isUpdate) {
             $ccShow = new CcShow();
         } else {
             $ccShow = CcShowQuery::create()->findPk($showData["add_show_id"]);
@@ -31,6 +31,17 @@ class Application_Service_ShowService
 
         $ccShow->save();
         return $ccShow;
+    }
+
+    /**
+     * 
+     * Deletes all the cc_show_rebroadcast entries for a specific show
+     * that is currently being edited. They will get recreated with
+     * the new show specs
+     */
+    public function deleteShowRebroadcasts($showId)
+    {
+        CcShowRebroadcastQuery::create()->filterByDbShowId($showId)>delete();
     }
 
     /**
@@ -68,6 +79,17 @@ class Application_Service_ShowService
                 }
             }
         }
+    }
+
+    /**
+     * 
+     * Deletes all the cc_show_hosts entries for a specific show
+     * that is currently being edited. They will get recreated with
+     * the new show specs
+     */
+    public function deleteShowHosts($showId)
+    {
+        CcShowHostsQuery::create()->filterByDbShow($showId)->delete();
     }
 
     /**

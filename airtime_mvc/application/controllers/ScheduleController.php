@@ -5,7 +5,7 @@ class ScheduleController extends Zend_Controller_Action
 
     protected $sched_sess = null;
 
-    private $service_schedule;
+    private $service_calendar;
 
     public function init()
     {
@@ -41,7 +41,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
 
-        $this->service_schedule = new Application_Service_ScheduleService();
+        $this->service_calendar = new Application_Service_CalendarService();
     }
 
     public function indexAction()
@@ -798,12 +798,13 @@ class ScheduleController extends Zend_Controller_Action
         $forms = $this->createShowFormAction();
 
         list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
-            $this->service_schedule->preEditShowValidationCheck($data);
+            $this->service_calendar->preEditShowValidationCheck($data);
 
-        if ($this->service_schedule->validateShowForms($forms, $data, $validateStartDate,
+        if ($this->service_calendar->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
-            $this->service_schedule->editShow($data);
+            //pass in true to indicate we are updating a show
+            $this->service_calendar->addUpdateShow($data, true);
 
             $scheduler = new Application_Model_Scheduler();
             $showInstances = CcShowInstancesQuery::create()->filterByDbShowId($data['add_show_id'])->find();
@@ -848,8 +849,8 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->view->addNewShow = true;
 
-        if ($this->service_schedule->validateShowForms($forms, $data)) {
-            $this->service_schedule->createShow($data);
+        if ($this->service_calendar->validateShowForms($forms, $data)) {
+            $this->service_calendar->addUpdateShow($data);
 
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             //send new show forms to the user
@@ -864,7 +865,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function createShowFormAction($populate=false)
     {
-        $forms = $this->service_schedule->createShowForms();
+        $forms = $this->service_calendar->createShowForms();
 
         // populate forms with default values
         if ($populate) {
@@ -886,7 +887,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function populateNewShowFormsAction($forms)
     {
-        $this->service_schedule->populateNewShowForms(
+        $this->service_calendar->populateNewShowForms(
             $forms["what"], $forms["when"], $forms["repeats"]);
     }
 
