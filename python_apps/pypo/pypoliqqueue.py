@@ -1,9 +1,13 @@
 from threading import Thread
 from collections import deque
 from datetime import datetime
+from pypofetch import PypoFetch
+
+import eventtypes
 
 import traceback
 import sys
+import time
 
 from Queue import Empty
 
@@ -52,6 +56,8 @@ class PypoLiqQueue(Thread):
                 else:
                     time_until_next_play = None
             else:
+                self.logger.info("New schedule received: %s", media_schedule)
+
                 #new schedule received. Replace old one with this.
                 schedule_deque.clear()
 
@@ -62,6 +68,8 @@ class PypoLiqQueue(Thread):
                 if len(keys):
                     time_until_next_play = self.date_interval_to_seconds(\
                             keys[0] - datetime.utcnow())
+                else:
+                    time_until_next_play = None
 
     def is_media_item_finished(self, media_item):
         if media_item is None:
@@ -88,15 +96,53 @@ class PypoLiqQueue(Thread):
         show name of every media_item as well, just to keep Liquidsoap up-to-date
         about which show is playing.
         """
-        
-        available_queue = self.find_available_queue()
 
-        try:
-            self.telnet_liquidsoap.queue_push(available_queue, media_item)
-            self.liq_queue_tracker[available_queue] = media_item
-        except Exception as e:
-            self.logger.error(e)
-            raise
+        if media_item["type"] == eventtypes.FILE:
+            self.handle_file_type(media_item)
+        elif media_item["type"] == eventtypes.EVENT:
+            self.handle_event_type(media_item)
+        elif media_item["type"] == eventtypes.STREAM_BUFFER_START:
+            self.telnet_liquidsoap.start_web_stream_buffer(media_item)
+        elif media_item["type"] == eventtypes.STREAM_OUTPUT_START:
+            if media_item['row_id'] != self.telnet_liquidsoap.current_prebuffering_stream_id:
+                #this is called if the stream wasn't scheduled sufficiently ahead of time
+                #so that the prebuffering stage could take effect. Let's do the prebuffering now.
+                self.telnet_liquidsoap.start_web_stream_buffer(media_item)
+            self.telnet_liquidsoap.start_web_stream(media_item)
+        elif media_item['type'] == eventtypes.STREAM_BUFFER_END:
+            self.telnet_liquidsoap.stop_web_stream_buffer(media_item)
+        elif media_item['type'] == eventtypes.STREAM_OUTPUT_END:
+            self.telnet_liquidsoap.stop_web_stream_output(media_item)
+        else: raise UnknownMediaItemType(str(media_item))
+
+    def handle_event_type(self, media_item):
+        if media_item['event_type'] == "kick_out":
+            PypoFetch.disconnect_source(self.logger, self.telnet_lock, "live_dj")
+        elif media_item['event_type'] == "switch_off":
+            PypoFetch.switch_source(self.logger, self.telnet_lock, "live_dj", "off")
+
+
+    def handle_file_type(self, media_item):
+        """
+        Wait maximum 5 seconds (50 iterations) for file to become ready, 
+        otherwise give up on it.
+        """
+        iter_num = 0
+        while not media_item['file_ready'] and iter_num < 50:
+            time.sleep(0.1)
+            iter_num += 1
+
+        if media_item['file_ready']:
+            available_queue = self.find_available_queue()
+
+            try:
+                self.telnet_liquidsoap.queue_push(available_queue, media_item)
+                self.liq_queue_tracker[available_queue] = media_item
+            except Exception as e:
+                self.logger.error(e)
+                raise
+        else:
+            self.logger.warn("File %s did not become ready in less than 5 seconds. Skipping...", media_item['dst'])
 
     def date_interval_to_seconds(self, interval):
         """
@@ -116,4 +162,7 @@ class PypoLiqQueue(Thread):
             self.logger.error('PypoLiqQueue Exception: %s', traceback.format_exc())
 
 class NoQueueAvailableException(Exception):
+    pass
+
+class UnknownMediaItemType(Exception):
     pass
