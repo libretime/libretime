@@ -68,12 +68,6 @@ class Application_Service_ShowInstanceService
             $ccShowInstance = new CcShowInstances();
             if ($isUpdate) {
                 $ccShowInstance = $this->getInstance($utcStartDateTime, $showDay->getDbShowId());
-                //update schedule start times
-                //ccShowDays object of the show being edited
-                $currentShowDay = $this->service_showDays->getCurrentShowDay();
-                $diff = $this->calculateShowStartDiff($utcStartDateTime,
-                        $currentShowDay->getUTCStartDateAndTime());
-                Application_Service_ScheduleService::updateScheduleStartTime(array($ccShowInstance->getDbId()), $diff);
             }
             $ccShowInstance->setDbShowId($showDay->getDbShowId());
             $ccShowInstance->setDbStarts($utcStartDateTime);
@@ -126,15 +120,22 @@ class Application_Service_ShowInstanceService
                ( is_null($utcLastShowDateTime) ||
                  $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
 
-                $ccShowInstance = new CcShowInstances();
-                if ($isUpdate) {
+                /* There may not always be an instance when editing a show
+                 * This will be the case when we are adding a new show day to
+                 * a repeating show
+                 */
+                if ($isUpdate && $this->hasInstance($utcStartDateTime, $show_id)) {
                     $ccShowInstance = $this->getInstance($utcStartDateTime, $show_id);
+                    $newInstance = false;
+                } else {
+                    $newInstance = true;
+                    $ccShowInstance = new CcShowInstances();
                 }
 
                 /* When editing the start/end time of a repeating show, we don't want to
                  * change shows that started in the past. So check the start time.
                  */
-                if (!$isUpdate || $ccShowInstance->getDbStarts() > gmdate("Y-m-d H:i:s")) {
+                if ($newInstance || $ccShowInstance->getDbStarts() > gmdate("Y-m-d H:i:s")) {
                     $ccShowInstance->setDbShowId($show_id);
                     $ccShowInstance->setDbStarts($utcStartDateTime);
                     $ccShowInstance->setDbEnds($utcEndDateTime);
@@ -294,10 +295,15 @@ SQL;
             ->find();
 
         if ($ccShowInstance->isEmpty()) {
-            throw new Exception("Show instance not found");
+            return false;
+        } else {
+            return $ccShowInstance[0];
         }
+    }
 
-        return $ccShowInstance[0];
+    public function hasInstance($starts, $showId)
+    {
+        return $this->getInstance($starts, $showId) ? true : false;
     }
 
     public function getAllFutureInstanceIds($showId)
@@ -458,9 +464,14 @@ SQL;
                 }
             }
         }//if repeats
+    }
 
-        /*$newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
-            $showData["add_show_start_time"],
+    public function applyShowStartEndDifference($showData, $showId)
+    {
+        $currentShowDay = $this->service_showDays->getCurrentShowDay();
+
+        $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
+        $showData["add_show_start_time"],
             new DateTimeZone(Application_Model_Preference::GetTimezone()));
 
         $diff = $this->calculateShowStartDiff($newStartDateTime,
@@ -468,7 +479,7 @@ SQL;
 
         $this->updateInstanceStartEndTime($showId, $diff);
         $instanceIds = $this->getAllFutureInstanceIds($showId);
-        Application_Service_ScheduleService::updateScheduleStartTime($instanceIds, $diff);*/
+        Application_Service_ScheduleService::updateScheduleStartTime($instanceIds, $diff);
     }
 
     /**

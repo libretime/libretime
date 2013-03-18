@@ -190,7 +190,9 @@ class Application_Service_CalendarService
 
             if ($isUpdate) {
                 $this->service_showInstances->deleteInvalidInstances($showData, $isRecorded, $repeatType);
-                $this->service_showInstances->updateScheduleStatus($showId);
+                // updates cc_show_instances start/end times, and updates
+                // schedule start/end times
+                $this->service_showInstances->applyShowStartEndDifference($showData, $showId);
                 $this->service_showInstances->deleteRebroadcastInstances($showId);
                 $this->service_showDays->deleteShowDays();
                 $this->service_show->deleteShowHosts($showId);
@@ -212,6 +214,12 @@ class Application_Service_CalendarService
 
             //create new ccShowInstances
             $this->service_showInstances->delegateShowInstanceCreation($showId, $isRebroadcast, $isUpdate);
+
+            //after all instances have been deleted/updated, we need to update
+            //the schedule playout status
+            if ($isUpdate) {
+                $this->service_showInstances->updateScheduleStatus($showId);
+            }
 
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
