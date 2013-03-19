@@ -372,11 +372,6 @@ SQL;
             $this->deleteAllRepeatInstances($currentShowDay, $showId);
         }
 
-        //duration has changed
-        /*if ($showData['add_show_duration'] != $currentShowDay->getDbDuration()) {
-            $this->updateInstanceDuration($showData);
-        }*/
-
         if ($showData['add_show_repeats']) {
 
             $localShowStart = $currentShowDay->getLocalStartDateAndTime();
@@ -395,7 +390,10 @@ SQL;
                 $this->deleteAllInstances($showId);
             }
 
-            if ($repeatType != $currentShowDay->getDbRepeatType()) {
+            $currentRepeatType = $currentShowDay->getDbRepeatType();
+            //only delete instances if the show being edited was already repeating
+            //and the repeat type changed
+            if ($currentRepeatType != -1 && $repeatType != $currentRepeatType) {
                 //repeat type changed
                 $this->deleteAllInstances($showId);
             } else {
@@ -513,12 +511,12 @@ DELETE
 FROM cc_show_instances
 WHERE starts > :timestamp::TIMESTAMP
   AND show_id = :showId
-  AND date(starts) != :firstShow
+  AND starts != :firstShow
 SQL;
         Application_Common_Database::prepareAndExecute( $sql,
             array( ':timestamp' => gmdate("Y-m-d H:i:s"),
                    ':showId'    => $showId,
-                   ':firstShow' => $firstShow->format("Y-m-d")), 'execute');
+                   ':firstShow' => $firstShow->format("Y-m-d H:i:s")), 'execute');
     }
 
     public function deleteAllInstances($showId)

@@ -6,6 +6,7 @@ class ScheduleController extends Zend_Controller_Action
     protected $sched_sess = null;
 
     private $service_calendar;
+    private $currentUser;
 
     public function init()
     {
@@ -42,6 +43,9 @@ class ScheduleController extends Zend_Controller_Action
         $this->sched_sess = new Zend_Session_Namespace("schedule");
 
         $this->service_calendar = new Application_Service_CalendarService();
+
+        $service_user = new Application_Service_UserService();
+        $this->currentUser = $service_user->getCurrentUser();
     }
 
     public function indexAction()
@@ -121,11 +125,9 @@ class ScheduleController extends Zend_Controller_Action
         $end = new DateTime($this->_getParam('end', null));
         $end->setTimezone(new DateTimeZone("UTC"));
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $events = &Application_Model_Show::getFullCalendarEvents($start, $end,
+            $this->currentUser->isAdminOrPM());
 
-        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
         $this->view->events = $events;
     }
 
@@ -421,32 +423,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->show_name = isset($show[0])?$show[0]["name"]:"";
     }
 
-    public function removeGroupAction()
-    {
-        $showInstanceId = $this->sched_sess->showInstanceId;
-        $group_id = $this->_getParam('groupId');
-
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        try {
-            $show = new Application_Model_ShowInstance($showInstanceId);
-        } catch (Exception $e) {
-            $this->view->show_error = true;
-
-            return false;
-        }
-
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)) || $user->isHostOfShow($show->getShowId())) {
-            $show->removeGroupFromShow($group_id);
-        }
-
-        $this->view->showContent = $show->getShowContent();
-        $this->view->timeFilled = $show->getTimeScheduled();
-        $this->view->percentFilled = $show->getPercentScheduled();
-        $this->view->chosen = $this->view->render('schedule/scheduled-content.phtml');
-        unset($this->view->showContent);
-    }
-
     public function showContentDialogAction()
     {
         $showInstanceId = $this->_getParam('id');
@@ -730,9 +706,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getFormAction()
     {
-        $user = Application_Model_User::getCurrentUser();
-
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($this->currentUser->isAdminOrPM()) {
             $this->createShowFormAction(true);
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
@@ -931,29 +905,6 @@ class ScheduleController extends Zend_Controller_Action
                 Logging::info($e->getMessage());
             }
         }
-    }
-
-    public function contentContextMenuAction()
-    {
-        $id = $this->_getParam('id');
-
-        $params = '/format/json/id/#id#/';
-
-        $paramsPop = str_replace('#id#', $id, $params);
-
-        // added for downlaod
-        $id = $this->_getParam('id');
-
-        $file_id = $this->_getParam('id', null);
-        $file = Application_Model_StoredFile::Recall($file_id);
-
-        $baseUrl = $this->getRequest()->getBaseUrl();
-        $url = $file->getRelativeFileUrl($baseUrl).'download/true';
-        $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
-                            'title' => _('Download'));
-
-        //returns format jjmenu is looking for.
-        $this->_helper->json->sendJson($menu);
     }
 
     /**
