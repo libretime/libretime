@@ -5,7 +5,6 @@ class ScheduleController extends Zend_Controller_Action
 
     protected $sched_sess = null;
 
-    private $service_calendar;
     private $currentUser;
 
     public function init()
@@ -41,8 +40,6 @@ class ScheduleController extends Zend_Controller_Action
                     ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
-
-        $this->service_calendar = new Application_Service_CalendarService();
 
         $service_user = new Application_Service_UserService();
         $this->currentUser = $service_user->getCurrentUser();
@@ -534,65 +531,35 @@ class ScheduleController extends Zend_Controller_Action
 
     public function populateShowFormAction()
     {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-
-        $showInstanceId = $this->_getParam('id');
+        $showId = $this->_getParam('showId');
+        $instanceId = $this->_getParam('instanceId');
+        $service_showForm = new Application_Service_ShowFormService($showId, $instanceId);
 
         $this->view->action = "edit-show";
-        try {
-            $showInstance = new Application_Model_ShowInstance($showInstanceId);
-        } catch (Exception $e) {
-            $this->view->show_error = true;
 
-            return false;
-        }
-
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHostOfShow($showInstance->getShowId());
-
-        if (!($isAdminOrPM || $isDJ)) {
-            return;
-        }
-
+        $isAdminOrPM = $this->currentUser->isAdminOrPM();
+        $isHostOfShow = $this->currentUser->isHostOfShow($showId);
         // in case a user was once a dj and had been assigned to a show
         // but was then changed to an admin user we need to allow
         // the user to edit the show as an admin (CC-4925)
-        if ($isDJ && !$isAdminOrPM) {
+        if ($isHostOfShow && !$isAdminOrPM) {
             $this->view->action = "dj-edit-show";
         }
 
-        $formWhat = new Application_Form_AddShowWhat();
-        $formWho = new Application_Form_AddShowWho();
-        $formWhen = new Application_Form_AddShowWhen();
-        $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle = new Application_Form_AddShowStyle();
-        $formLive = new Application_Form_AddShowLiveStream();
+        $forms = $this->createShowFormAction();
 
-        $formWhat->removeDecorator('DtDdWrapper');
-        $formWho->removeDecorator('DtDdWrapper');
-        $formWhen->removeDecorator('DtDdWrapper');
-        $formRepeats->removeDecorator('DtDdWrapper');
-        $formStyle->removeDecorator('DtDdWrapper');
+        $service_showForm->delegateFormPopulation($forms);
 
-        $this->view->what = $formWhat;
-        $this->view->when = $formWhen;
-        $this->view->repeats = $formRepeats;
-        $this->view->who = $formWho;
-        $this->view->style = $formStyle;
-        $this->view->live = $formLive;
-        $this->view->addNewShow = false;
-
-        $show = new Application_Model_Show($showInstance->getShowId());
+        /*$show = new Application_Model_Show($showInstance->getShowId());
 
         $formWhat->populate(array('add_show_id' => $show->getId(),
                     'add_show_instance_id' => $showInstanceId,
                     'add_show_name' => $show->getName(),
                     'add_show_url' => $show->getUrl(),
                     'add_show_genre' => $show->getGenre(),
-                    'add_show_description' => $show->getDescription()));
+                    'add_show_description' => $show->getDescription()));*/
 
-        $startsDateTime = new DateTime($show->getStartDate()." ".$show->getStartTime(), new DateTimeZone("UTC"));
+        /*$startsDateTime = new DateTime($show->getStartDate()." ".$show->getStartTime(), new DateTimeZone("UTC"));
         $endsDateTime = new DateTime($show->getEndDate()." ".$show->getEndTime(), new DateTimeZone("UTC"));
 
         $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
@@ -617,10 +584,10 @@ class ScheduleController extends Zend_Controller_Action
                 $formWhen->getElement('add_show_end_date_no_repeat')->setValue($nextFutureRepeatShow["ends"]->format("Y-m-d"));
                 $formWhen->getElement('add_show_end_time')->setValue($nextFutureRepeatShow["ends"]->format("H:i"));
             }
-        }
+        }*/
 
         //need to get the days of the week in the php timezone (for the front end).
-        $days = array();
+        /*$days = array();
         $showDays = CcShowDaysQuery::create()->filterByDbShowId($showInstance->getShowId())->find();
         foreach ($showDays as $showDay) {
             $showStartDay = new DateTime($showDay->getDbFirstShow(), new DateTimeZone($showDay->getDbTimezone()));
@@ -635,70 +602,53 @@ class ScheduleController extends Zend_Controller_Action
         $formRepeats->populate(array('add_show_repeat_type' => $show->getRepeatType(),
                                     'add_show_day_check' => $days,
                                     'add_show_end_date' => $displayedEndDate->format("Y-m-d"),
-                                    'add_show_no_end' => ($show->getRepeatingEndDate() == '')));
+                                    'add_show_no_end' => ($show->getRepeatingEndDate() == '')));*/
 
-        $hosts = array();
+        /*$hosts = array();
         $showHosts = CcShowHostsQuery::create()->filterByDbShow($showInstance->getShowId())->find();
         foreach ($showHosts as $showHost) {
             array_push($hosts, $showHost->getDbHost());
         }
-        $formWho->populate(array('add_show_hosts' => $hosts));
-        $formStyle->populate(array('add_show_background_color' => $show->getBackgroundColor(),
+        $formWho->populate(array('add_show_hosts' => $hosts));*/
+        
+        
+        /*$formStyle->populate(array('add_show_background_color' => $show->getBackgroundColor(),
                                     'add_show_color' => $show->getColor()));
 
         $formLive->populate($show->getLiveStreamInfo());
 
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+        $formRecord->populate(array('add_show_record' => $show->isRecorded(),
+                            'add_show_rebroadcast' => $show->isRebroadcast()));
 
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-
-            $this->view->rr = $formRecord;
-            $this->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-            $this->view->rebroadcast = $formRebroadcast;
-
-            $formRecord->populate(array('add_show_record' => $show->isRecorded(),
-                                'add_show_rebroadcast' => $show->isRebroadcast()));
-
-            $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));
+        $formRecord->getElement('add_show_record')->setOptions(array('disabled' => true));*/
 
 
 
-            $rebroadcastsRelative = $show->getRebroadcastsRelative();
-            $rebroadcastFormValues = array();
-            $i = 1;
-            foreach ($rebroadcastsRelative as $rebroadcast) {
-                $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
-                $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Application_Common_DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
-                $i++;
-            }
-            $formRebroadcast->populate($rebroadcastFormValues);
-
-            $rebroadcastsAbsolute = $show->getRebroadcastsAbsolute();
-            $rebroadcastAbsoluteFormValues = array();
-            $i = 1;
-            foreach ($rebroadcastsAbsolute as $rebroadcast) {
-                $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
-                $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = $rebroadcast['start_time'];
-                $i++;
-            }
-            $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
-            if (!$isAdminOrPM) {
-                $formRecord->disable();
-                $formAbsoluteRebroadcast->disable();
-                $formRebroadcast->disable();
-            }
+        /*$rebroadcastsRelative = $show->getRebroadcastsRelative();
+        $rebroadcastFormValues = array();
+        $i = 1;
+        foreach ($rebroadcastsRelative as $rebroadcast) {
+            $rebroadcastFormValues["add_show_rebroadcast_date_$i"] = $rebroadcast['day_offset'];
+            $rebroadcastFormValues["add_show_rebroadcast_time_$i"] = Application_Common_DateHelper::removeSecondsFromTime($rebroadcast['start_time']);
+            $i++;
+        }
+        $formRebroadcast->populate($rebroadcastFormValues);*/
+/*
+        $rebroadcastsAbsolute = $show->getRebroadcastsAbsolute();
+        $rebroadcastAbsoluteFormValues = array();
+        $i = 1;
+        foreach ($rebroadcastsAbsolute as $rebroadcast) {
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_date_absolute_$i"] = $rebroadcast['start_date'];
+            $rebroadcastAbsoluteFormValues["add_show_rebroadcast_time_absolute_$i"] = $rebroadcast['start_time'];
+            $i++;
+        }
+        $formAbsoluteRebroadcast->populate($rebroadcastAbsoluteFormValues);
 
         if (!$isAdminOrPM) {
-            $formWhat->disable();
-            $formWho->disable();
-            $formWhen->disable();
-            $formRepeats->disable();
-            $formStyle->disable();
-        }
+            foreach ($forms as $form) {
+                $form->disable();
+            }
+        }*/
 
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         $this->view->entries = 5;
@@ -761,6 +711,10 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
+        $service_showForm = new Application_Service_ShowFormService(
+            $data["add_show_id"]);
+        $service_show = new Application_Service_ShowService();
+
         //TODO: move this to js
         $data['add_show_hosts'] =  $this->_getParam('hosts');
         $data['add_show_day_check'] =  $this->_getParam('days');
@@ -772,13 +726,13 @@ class ScheduleController extends Zend_Controller_Action
         $forms = $this->createShowFormAction();
 
         list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
-            $this->service_calendar->preEditShowValidationCheck($data);
+            $service_showForm->preEditShowValidationCheck($data);
 
-        if ($this->service_calendar->validateShowForms($forms, $data, $validateStartDate,
+        if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
             //pass in true to indicate we are updating a show
-            $this->service_calendar->addUpdateShow($data, true);
+            $service_show->addUpdateShow($data, true);
 
             $scheduler = new Application_Model_Scheduler();
             $showInstances = CcShowInstancesQuery::create()->filterByDbShowId($data['add_show_id'])->find();
@@ -803,6 +757,9 @@ class ScheduleController extends Zend_Controller_Action
 
     public function addShowAction()
     {
+        $service_showForm = new Application_Service_ShowFormService(null);
+        $service_show = new Application_Service_ShowService();
+
         $js = $this->_getParam('data');
         $data = array();
 
@@ -823,8 +780,8 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->view->addNewShow = true;
 
-        if ($this->service_calendar->validateShowForms($forms, $data)) {
-            $this->service_calendar->addUpdateShow($data);
+        if ($service_showForm->validateShowForms($forms, $data)) {
+            $service_show->addUpdateShow($data);
 
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             //send new show forms to the user
@@ -837,13 +794,16 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function createShowFormAction($populate=false)
+    public function createShowFormAction($populateDefaults=false)
     {
-        $forms = $this->service_calendar->createShowForms();
+        $service_showForm = new Application_Service_ShowFormService();
+
+        $forms = $service_showForm->createShowForms();
 
         // populate forms with default values
-        if ($populate) {
-            $this->populateNewShowFormsAction($forms);
+        if ($populateDefaults) {
+            $service_showForm->populateNewShowForms(
+                $forms["what"], $forms["when"], $forms["repeats"]);
         }
 
         $this->view->what = $forms["what"];
@@ -857,12 +817,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->style = $forms["style"];
 
         return $forms;
-    }
-
-    public function populateNewShowFormsAction($forms)
-    {
-        $this->service_calendar->populateNewShowForms(
-            $forms["what"], $forms["when"], $forms["repeats"]);
     }
 
     public function cancelShowAction()

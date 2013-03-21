@@ -40,4 +40,28 @@ class CcShowDays extends BaseCcShowDays {
 
         return $dt;
     }
+
+    /**
+     * 
+     * Enter description here ...
+     * @param DateTime $startDateTime first show in user's local time
+     */
+    public function getLocalEndDateAndTime($startDateTime)
+    {
+        $duration = explode(":", $this->getDbDuration());
+
+        return $startDateTime->add(new DateInterval('PT'.$duration[0].'H'.$duration[1].'M'));
+    }
+
+    public function isShowStartInPast()
+    {
+        return $this->getUTCStartDateAndTime() > gmdate("Y-m-d H:i:s");
+    }
+
+    public function formatDuration()
+    {
+        $info = explode(':',$this->getDbDuration());
+
+        return str_pad(intval($info[0]),2,'0',STR_PAD_LEFT).'h '.str_pad(intval($info[1]),2,'0',STR_PAD_LEFT).'m';
+    }
 } // CcShowDays

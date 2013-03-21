@@ -387,14 +387,14 @@ $(document).ready(function() {
                         
                         //edit this instance and all
                         callback = function() {
-                            $.get(edit.all.url, {format: "json", id: data.id, type: "all"}, function(json){
+                            $.get(edit.all.url, {format: "json", showId: data.showId, instanceId: data.id, type: "all"}, function(json){
                                 beginEditShow(json);
                             });
                         };
                         edit.all.callback = callback;
                     }else{
                         callback = function() {
-                            $.get(oItems.edit.url, {format: "json", id: data.id, type: oItems.edit._type}, function(json){
+                            $.get(oItems.edit.url, {format: "json", showId: data.showId, instanceId: data.id, type: oItems.edit._type}, function(json){
                                 beginEditShow(json);
                             });
                         };
