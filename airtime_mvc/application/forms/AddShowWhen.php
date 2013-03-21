@@ -295,7 +295,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                         $rebroadcastShowStart->setTimezone(new DateTimeZone('UTC'));
                         $rebroadcastShowEnd = clone $rebroadcastShowStart;
                         $rebroadcastShowEnd->add(new DateInterval($durationToAdd));
-                        $overlapping = Application_Model_Schedule::checkOverlappingShows($rebroadcastShowStart, $rebroadcastShowEnd, $update, $instanceId);
+                        $overlapping = Application_Model_Schedule::checkOverlappingShows($rebroadcastShowStart,
+                            $rebroadcastShowEnd, $update, null, $formData["add_show_id"]);
                         if ($overlapping) {
                             $valid = false;
                             $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));

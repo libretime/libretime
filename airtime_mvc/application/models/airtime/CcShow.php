@@ -54,41 +54,40 @@ class CcShow extends BaseCcShow {
         return $this->collCcShowDayss[0];
     }
 
-/**
-	 * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcShow is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
-	 * @throws     PropelException
-	 */
-	public function getFutureCcShowInstancess($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collCcShowInstancess || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowInstancess) {
-				// return empty collection
-				$this->initCcShowInstancess();
-			} else {
-
-				$collCcShowInstancess = CcShowInstancesQuery::create(null, $criteria)
-					->filterByCcShow($this)
-					->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
-					->filterByDbModifiedInstance(false)
-					->find($con);
-				if (null !== $criteria) {
-					return $collCcShowInstancess;
-				}
-				$this->collCcShowInstancess = $collCcShowInstancess;
-			}
-		}
-		return $this->collCcShowInstancess;
-	}
+    /**
+     * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcShow is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param      Criteria $criteria optional Criteria object to narrow the query
+     * @param      PropelPDO $con optional connection object
+     * @return     PropelCollection|array CcShowInstances[] List of CcShowInstances objects
+     * @throws     PropelException
+     */
+    public function getFutureCcShowInstancess($criteria = null, PropelPDO $con = null)
+    {
+        if(null === $this->collCcShowInstancess || null !== $criteria) {
+            if ($this->isNew() && null === $this->collCcShowInstancess) {
+                // return empty collection
+                $this->initCcShowInstancess();
+            } else {
+                $collCcShowInstancess = CcShowInstancesQuery::create(null, $criteria)
+                    ->filterByCcShow($this)
+                    ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+                    ->filterByDbModifiedInstance(false)
+                    ->find($con);
+                if (null !== $criteria) {
+                    return $collCcShowInstancess;
+                }
+                $this->collCcShowInstancess = $collCcShowInstancess;
+            }
+        }
+        return $this->collCcShowInstancess;
+    }
 
     public function isRecorded()
     {
@@ -117,6 +116,16 @@ class CcShow extends BaseCcShow {
         return CcShowRebroadcastQuery::create()
             ->filterByDbShowId($this->getDbId())
             ->orderByDbDayOffset()
+            ->find();
+    }
+
+    public function getRebroadcastsAbsolute()
+    {
+        return CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->getDbId())
+            ->filterByDbRebroadcast(1)
+            ->filterByDbModifiedInstance(false)
+            ->orderByDbStarts()
             ->find();
     }
 } // CcShow

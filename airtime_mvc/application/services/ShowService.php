@@ -65,6 +65,11 @@ class Application_Service_ShowService
             //create new ccShowInstances
             $this->delegateInstanceCreation($isRebroadcast, $isUpdate);
 
+            if ($isUpdate) {
+                $service_scheduler = new Application_Service_SchedulerService();
+                $service_scheduler->removeGaps($this->ccShow->getDbId());
+            }
+
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
         } catch (Exception $e) {
@@ -89,16 +94,16 @@ class Application_Service_ShowService
         foreach ($ccShowDays as $day) {
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
-                    $this->createNonRepeatingShowInstance($day, $populateUntil, $isRebroadcast, $isUpdate);
+                    $this->createNonRepeatingInstance($day, $populateUntil, $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_WEEKLY:
-                    $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P7D", $isRebroadcast, $isUpdate);
+                    $this->createRepeatingInstances($day, $populateUntil, "P7D", $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_BI_WEEKLY:
-                    $this->createWeeklyRepeatingShowInstances($day, $populateUntil, "P14D", $isRebroadcast, $isUpdate);
+                    $this->createRepeatingInstances($day, $populateUntil, "P14D", $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
-                    $this->createMonthlyRepeatingShowInstances($day, $populateUntil, "P1M", $isRebroadcast);
+                    $this->createRepeatingInstances($day, $populateUntil, "P1M", $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
                     // do something here
@@ -426,7 +431,7 @@ SQL;
         foreach ($ccShowInstances as $ccShowInstance) {
             array_push($instanceIds, $ccShowInstance->getDbId());
         }
-        Application_Service_ScheduleService::updateScheduleStartTime($instanceIds, $diff);
+        Application_Service_SchedulerService::updateScheduleStartTime($instanceIds, $diff);
     }
 
     /**
@@ -507,7 +512,7 @@ SQL;
      * @param $showDay
      * @param $populateUntil
      */
-    private function createNonRepeatingShowInstance($showDay, $populateUntil, $isRebroadcast, $isUpdate)
+    private function createNonRepeatingInstance($showDay, $populateUntil, $isRebroadcast, $isUpdate)
     {
         //DateTime object
         $start = $showDay->getLocalStartDateAndTime();
@@ -545,7 +550,7 @@ SQL;
      * @param unknown_type $repeatInterval
      * @param unknown_type $isRebroadcast
      */
-    private function createWeeklyRepeatingShowInstances($showDay, $populateUntil,
+    private function createRepeatingInstances($showDay, $populateUntil,
         $repeatInterval, $isRebroadcast, $isUpdate)
     {
         $show_id       = $showDay->getDbShowId();
@@ -615,6 +620,12 @@ SQL;
         }
         $nextDate = $utcEndDateTime->add(new DateInterval($repeatInterval));
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day);
+    }
+
+    private function createMonthlyRepeatingInstances($showDay, $populateUntil,
+        $repeatInterval, $isRebroadcast, $isUpdate)
+    {
+        
     }
 
     private function getNextRepeatingPopulateStartDateTime($showDay)
@@ -882,17 +893,23 @@ SQL;
     /**
      * 
      * Enter description here ...
-     * @param DateTime $startDateTime user's local time
+     * @param DateTime $showStart user's local time
      * @param string $duration time interval (h)h:(m)m(:ss)
      * @param string $timezone "Europe/Prague"
      * @param array $offset (days, hours, mins) used for rebroadcast shows
      * 
      * @return array of 2 DateTime objects, start/end time of the show in UTC
      */
-    private function createUTCStartEndDateTime($startDateTime, $duration, $offset=null)
+    private function createUTCStartEndDateTime($showStart, $duration, $offset=null)
     {
+        $startDateTime = clone $showStart;
+
         if (isset($offset)) {
-            $startDateTime->add(new DateInterval("P{$offset["days"]}DT{$offset["hours"]}H{$offset["mins"]}M"));
+            //$offset["hours"] and $offset["mins"] represents the start time
+            //of a rebroadcast show
+            $startDateTime = new DateTime($startDateTime->format("Y-m-d")." ".
+                $offset["hours"].":".$offset["mins"]);
+            $startDateTime->add(new DateInterval("P{$offset["days"]}D"));
         }
         //convert time to UTC
         $startDateTime->setTimezone(new DateTimeZone('UTC'));

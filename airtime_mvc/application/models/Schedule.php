@@ -1256,19 +1256,19 @@ WHERE (ends <= :show_end1
   AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
   AND modified_instance = FALSE
 SQL;
-        if (is_null($showId)) {
-            $sql .= <<<SQL
+            if (is_null($showId)) {
+                $sql .= <<<SQL
   AND id != :instanceId
 ORDER BY ends
 SQL;
-            $params[':instanceId'] = $instanceId;
-        } else {
-            $sql .= <<<SQL
+                $params[':instanceId'] = $instanceId;
+            } else {
+                $sql .= <<<SQL
   AND show_id != :showId
 ORDER BY ends
 SQL;
-            $params[':showId'] = $showId;
-        }
+                $params[':showId'] = $showId;
+            }
             $rows = Application_Common_Database::prepareAndExecute($sql, $params, 'all');
         } else {
             $sql = <<<SQL

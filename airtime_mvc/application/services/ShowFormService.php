@@ -89,6 +89,7 @@ class Application_Service_ShowFormService
         $this->populateFormStyle($forms["style"]);
         $this->populateFormRecord($forms["record"]);
         $this->populateFormRebroadcastRelative($forms["rebroadcast"]);
+        $this->populateFormRebroadcastAbsolute($forms["abs_rebroadcast"]);
     }
 
     private function populateFormWhat($form)
@@ -186,7 +187,7 @@ class Application_Service_ShowFormService
         $form->getElement('add_show_record')->setOptions(array('disabled' => true));
     }
 
-    public function populateFormRebroadcastRelative($form)
+    private function populateFormRebroadcastRelative($form)
     {
         $relativeRebroadcasts = $this->ccShow->getRebroadcastsRelative();
 
@@ -196,6 +197,24 @@ class Application_Service_ShowFormService
             $formValues["add_show_rebroadcast_date_$i"] = $rr->getDbDayOffset();
             $formValues["add_show_rebroadcast_time_$i"] = Application_Common_DateHelper::removeSecondsFromTime(
                 $rr->getDbStartTime());
+            $i++;
+        }
+
+        $form->populate($formValues);
+    }
+
+    private function populateFormRebroadcastAbsolute($form)
+    {
+        $absolutRebroadcasts = $this->ccShow->getRebroadcastsAbsolute();
+
+        $formValues = array();
+        $i = 1;
+        foreach ($absolutRebroadcasts as $ar) {
+            //convert dates to user's local time
+            $start = new DateTime($ar->getDbStarts(), new DateTimeZone("UTC"));
+            $start->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $formValues["add_show_rebroadcast_date_absolute_$i"] = $start->format("Y-m-d");
+            $formValues["add_show_rebroadcast_time_absolute_$i"] = $start->format("H:i");
             $i++;
         }
 

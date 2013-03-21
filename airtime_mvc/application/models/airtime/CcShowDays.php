@@ -46,8 +46,9 @@ class CcShowDays extends BaseCcShowDays {
      * Enter description here ...
      * @param DateTime $startDateTime first show in user's local time
      */
-    public function getLocalEndDateAndTime($startDateTime)
+    public function getLocalEndDateAndTime($showStart)
     {
+        $startDateTime = clone $showStart;
         $duration = explode(":", $this->getDbDuration());
 
         return $startDateTime->add(new DateInterval('PT'.$duration[0].'H'.$duration[1].'M'));
@@ -55,7 +56,7 @@ class CcShowDays extends BaseCcShowDays {
 
     public function isShowStartInPast()
     {
-        return $this->getUTCStartDateAndTime() > gmdate("Y-m-d H:i:s");
+        return $this->getUTCStartDateAndTime()->format("Y-m-d H:i:s") < gmdate("Y-m-d H:i:s");
     }
 
     public function formatDuration()
