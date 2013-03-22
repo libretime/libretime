@@ -99,10 +99,13 @@ class AirtimeCheck {
     {
         $headerInfo = get_headers("http://$p_baseUrl:$p_basePort",1);
         
-        if (!isset($headerInfo['Server'][0]))
+        if (!isset($headerInfo['Server'][0])) {
             return self::UNKNOWN;
-        else
+        } else if (is_array($headerInfo['Server'])) {
             return $headerInfo['Server'][0];
+        } else {
+            return $headerInfo['Server'];
+        }
     }
 
     public static function GetStatus($p_baseUrl, $p_basePort, $p_baseDir, $p_apiKey){

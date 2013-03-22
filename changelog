@@ -1,3 +1,16 @@
+2.3.1 - March 19th, 2013
+  * Bug fixes
+    * Security fixes with running unescaped shell commands
+	* Fix backend services not coming back online if RabbitMQ crashed and
+	then restarted
+	* Fix uninstall not properly cleaning system
+	* Improved Services watchdog (test whether Services are running and
+	responding, not just running)
+	* Much faster library import (Silan analyzer runs in background)
+	* Fixed zombie process sometimes being created
+  * Other
+    * Upgrade to Mutagen (tag reader) 1.21 
+
 2.3.0 - Jan 21st, 2013
   * New features
     * Localization (Chinese, Czech, English, French, German, Italian, Korean,
