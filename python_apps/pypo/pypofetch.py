@@ -7,22 +7,29 @@ import logging.config
 import json
 import telnetlib
 import copy
-from threading import Thread
 import subprocess
+import signal
+from datetime import datetime
 
 from Queue import Empty
+from threading import Thread
+from subprocess import Popen, PIPE
+from configobj import ConfigObj
 
 from api_clients import api_client
 from std_err_override import LogWriter
-from subprocess import Popen, PIPE
-
-from configobj import ConfigObj
 
 # configure logging
 logging_cfg = os.path.join(os.path.dirname(__file__), "logging.cfg")
 logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
+
+def keyboardInterruptHandler(signum, frame):
+    logger = logging.getLogger()
+    logger.info('\nKeyboard Interrupt\n')
+    sys.exit(0)
+signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
@@ -34,8 +41,6 @@ try:
     LS_PORT = config['ls_port']
     #POLL_INTERVAL = int(config['poll_interval'])
     POLL_INTERVAL = 1800
-
-
 except Exception, e:
     logger.error('Error loading config file: %s', e)
     sys.exit()
@@ -481,6 +486,7 @@ class PypoFetch(Thread):
             except Exception, e:
                 pass
 
+            media_copy = {}
             for key in media:
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
@@ -490,12 +496,17 @@ class PypoFetch(Thread):
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
+                media_item['start'] = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
+                media_item['end'] = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
+                media_copy[media_item['start']] = media_item
+
+
             self.media_prepare_queue.put(copy.copy(media_filtered))
         except Exception, e: self.logger.error("%s", e)
 
         # Send the data to pypo-push
         self.logger.debug("Pushing to pypo-push")
-        self.push_queue.put(media)
+        self.push_queue.put(media_copy)
 
 
         # cleanup

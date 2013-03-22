@@ -303,8 +303,6 @@ class Recorder(Thread):
             heartbeat_period = math.floor(30 / PUSH_INTERVAL)
 
             while True:
-                if self.loops % heartbeat_period == 0:
-                    self.logger.info("heartbeat")
                 if self.loops * PUSH_INTERVAL > 3600:
                     self.loops = 0
                     """
