@@ -97,16 +97,19 @@ class Application_Service_ShowService
                     $this->createNonRepeatingInstance($day, $populateUntil, $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, "P7D", $isRebroadcast, $isUpdate);
+                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_WEEKLY,
+                        new DateInterval("P7D"), $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_BI_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, "P14D", $isRebroadcast, $isUpdate);
+                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                        new DateInterval("P14D"), $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
-                    $this->createRepeatingInstances($day, $populateUntil, "P1M", $isRebroadcast, $isUpdate);
+                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil, $isRebroadcast, $isUpdate);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
-                    // do something here
+                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
+                        null, $isRebroadcast, $isUpdate);
                     break;
             }
         }
@@ -551,7 +554,7 @@ SQL;
      * @param unknown_type $isRebroadcast
      */
     private function createRepeatingInstances($showDay, $populateUntil,
-        $repeatInterval, $isRebroadcast, $isUpdate)
+        $repeatType, $repeatInterval, $isRebroadcast, $isUpdate)
     {
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
@@ -561,8 +564,12 @@ SQL;
         $record        = $showDay->getDbRecord();
         $timezone      = $showDay->getDbTimezone();
 
-        //string
+        //DateTime local
         $start = $this->getNextRepeatingPopulateStartDateTime($showDay);
+
+        if (is_null($repeatInterval)&& $repeatType == REPEAT_MONTHLY_WEEKLY) {
+            $repeatInterval = $this->getMonthlyWeeklyRepeatInterval($start, $timezone);
+        }
 
         //DatePeriod in user's local time
         $datePeriod = $this->getDatePeriod($start, $timezone, $last_show,
@@ -618,14 +625,144 @@ SQL;
                 }
             }
         }
-        $nextDate = $utcEndDateTime->add(new DateInterval($repeatInterval));
+        $nextDate = $utcEndDateTime->add($repeatInterval);
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day);
     }
 
-    private function createMonthlyRepeatingInstances($showDay, $populateUntil,
-        $repeatInterval, $isRebroadcast, $isUpdate)
+    private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil,
+        $isRebroadcast, $isUpdate)
     {
-        
+        $show_id       = $showDay->getDbShowId();
+        $first_show    = $showDay->getDbFirstShow(); //non-UTC
+        $last_show     = $showDay->getDbLastShow(); //non-UTC
+        $duration      = $showDay->getDbDuration();
+        $day           = $showDay->getDbDay();
+        $record        = $showDay->getDbRecord();
+        $timezone      = $showDay->getDbTimezone();
+
+        //DateTime local
+        $start = $this->getNextRepeatingPopulateStartDateTime($showDay);
+        if (isset($last_how)) {
+            $end = new DateTime($last_show, new DateTimeZone($timezone));
+        } else {
+            $end = $populateUntil;
+        }
+
+        $utcLastShowDateTime = $last_show ?
+            Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
+
+        while ($start->getTimestamp() < $end->getTimestamp()) {
+            list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
+                $start, $duration);
+            /*
+             * Make sure start date is less than populate until date AND
+             * last show date is null OR start date is less than last show date
+             */
+            if ($utcStartDateTime->getTimestamp() <= $populateUntil->getTimestamp() &&
+               ( is_null($utcLastShowDateTime) ||
+                 $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
+
+                /* There may not always be an instance when editing a show
+                 * This will be the case when we are adding a new show day to
+                 * a repeating show
+                 */
+                if ($isUpdate && $this->hasInstance($utcStartDateTime)) {
+                    $ccShowInstance = $this->getInstance($utcStartDateTime);
+                    $newInstance = false;
+                    $updateScheduleStatus = true;
+                } else {
+                    $newInstance = true;
+                    $ccShowInstance = new CcShowInstances();
+                    $updateScheduleStatus = false;
+                }
+
+                /* When editing the start/end time of a repeating show, we don't want to
+                 * change shows that started in the past. So check the start time.
+                 */
+                if ($newInstance || $ccShowInstance->getDbStarts() > gmdate("Y-m-d H:i:s")) {
+                    $ccShowInstance->setDbShowId($show_id);
+                    $ccShowInstance->setDbStarts($utcStartDateTime);
+                    $ccShowInstance->setDbEnds($utcEndDateTime);
+                    $ccShowInstance->setDbRecord($record);
+                    $ccShowInstance->save();
+
+                    if ($updateScheduleStatus) {
+                        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+                        $ccShowInstance->updateScheduleStatus($con);
+                    }
+                }
+
+                if ($isRebroadcast) {
+                    $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
+                }
+            }
+            $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone);
+        }
+        $this->setNextRepeatingShowDate($start->format("Y-m-d"), $day);
+    }
+
+    /**
+     * 
+     * i.e. last thursday of each month
+     * i.e. second monday of each month
+     * 
+     * @param string $showStart
+     * @param string $timezone user's local timezone
+     */
+    private function getMonthlyWeeklyRepeatInterval($showStart, $timezone)
+    {
+        $start = new DateTime($showStart, new DateTimeZone($timezone));
+
+        $dayOfMonth = $start->format("j");
+        $dayOfWeek = $start->format("l");
+        $yearAndMonth = $start->format("Y-m");
+        $firstDayOfWeek = strtotime($dayOfWeek." ".$yearAndMonth);
+        // if $dayOfWeek is Friday, what number of the month does
+        // the first Friday fall on
+        $numberOfFirstDayOfWeek = date("j", $firstDayOfWeek);
+
+        $weekCount = 0;
+        while ($dayOfMonth >= $numberOfFirstDayOfWeek) {
+            $weekCount++;
+            $dayOfMonth -= 7;
+        }
+
+        switch ($weekCount) {
+            case 1:
+                $weekNumberOfMonth = "first";
+                break;
+            case 2:
+                $weekNumberOfMonth = "second";
+                break;
+            case 3:
+                $weekNumberOfMonth = "third";
+                break;
+            case 4:
+                $weekNumberOfMonth = "fourth";
+                break;
+            case 5:
+                $weekNumberOfMonth = "last";
+                break;
+        }
+
+        return DateInterval::createFromDateString(
+            $weekNumberOfMonth." ".$dayOfWeek." of next month");
+    }
+
+    /**
+     * 
+     * Enter description here ...
+     * @param $start
+     */
+    private function getNextMonthlyMonthlyRepeatDate($start, $timezone)
+    {
+        $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
+        do {
+            $dt->add(new DateInterval("P1M"));
+        } while (!checkdate($dt->format("m"), $start->format("d"), $dt->format("Y")));
+
+        $dt->setDate($dt->format("Y"), $dt->format("m"), $start->format("d"));
+        return $dt;
     }
 
     private function getNextRepeatingPopulateStartDateTime($showDay)
@@ -634,9 +771,9 @@ SQL;
         $startTime = $showDay->getDbStartTime();
 
         if (isset($nextPopDate)) {
-            return $nextPopDate." ".$startTime;
+            return new DateTime($nextPopDate." ".$startTime, new DateTimeZone($showDay->getDbTimezone()));
         } else {
-            return $showDay->getDbFirstShow()." ".$startTime;
+            return new DateTime($showDay->getDbFirstShow()." ".$startTime, new DateTimeZone($showDay->getDbTimezone()));
         }
     }
 
@@ -653,8 +790,7 @@ SQL;
             $endDatePeriod = $populateUntil;
         }
 
-        return new DatePeriod(new DateTime($start, new DateTimeZone($timezone)),
-            new DateInterval($repeatInterval), $endDatePeriod);
+        return new DatePeriod($start, $repeatInterval, $endDatePeriod);
     }
 
     private function hasInstance($starts)
