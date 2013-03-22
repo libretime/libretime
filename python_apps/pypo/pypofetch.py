@@ -534,7 +534,7 @@ class PypoFetch(Thread):
                 #check if this file is opened (sometimes Liquidsoap is still
                 #playing the file due to our knowledge of the track length
                 #being incorrect!)
-                if not self.is_file_opened():
+                if not self.is_file_opened(path):
                     os.remove(path)
             except Exception, e:
                 self.logger.error(e)

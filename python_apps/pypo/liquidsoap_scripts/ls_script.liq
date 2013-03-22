@@ -42,13 +42,13 @@ queue = amplify(1., override="replay_gain", queue)
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
 queue = on_metadata(notify, queue)
-queue = map_metadata(update=false, append_title, queue)
 output.dummy(fallible=true, queue)
 
 http = input.http_restart(id="http")
 http = cross_http(http_input_id="http",http)
 output.dummy(fallible=true, http)
 stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
+stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 

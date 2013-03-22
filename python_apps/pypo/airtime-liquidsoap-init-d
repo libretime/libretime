@@ -28,6 +28,7 @@ stop () {
         # Send TERM after 5 seconds, wait at most 30 seconds.
         start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
         rm -f $PIDFILE
+        sleep 4
 }
 
 start_no_monit() {
