@@ -247,12 +247,9 @@ class PreferenceController extends Zend_Controller_Action
                 /* If the admin password values are empty then we should not
                  * set the pseudo password ('xxxxxx') on the front-end
                  */
-                $s1_set_admin_pass = true;
-                $s2_set_admin_pass = true;
-                $s3_set_admin_pass = true;
-                if (empty($values["s1_data"]["admin_pass"])) $s1_set_admin_pass = false;
-                if (empty($values["s2_data"]["admin_pass"])) $s2_set_admin_pass = false;
-                if (empty($values["s3_data"]["admin_pass"])) $s3_set_admin_pass = false;
+                $s1_set_admin_pass = !empty($values["s1_data"]["admin_pass"]);
+                $s2_set_admin_pass = !empty($values["s2_data"]["admin_pass"]);
+                $s3_set_admin_pass = !empty($values["s3_data"]["admin_pass"]);
 
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
