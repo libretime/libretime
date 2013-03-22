@@ -35,6 +35,15 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
                 ),
          ));
 
+         $repeatMonthlyType = new Zend_Form_Element_Radio("add_show_monthly_repeat_type");
+         $repeatMonthlyType
+             ->setLabel(_("Repeat By:"))
+             ->setRequired(true)
+             ->setMultiOptions(
+                 array(2 => _("day of the month"), 3 => _("day of the week")))
+             ->setValue(2);
+         $this->addElement($repeatMonthlyType);
+
         // Add end date element
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => _('Date End:'),

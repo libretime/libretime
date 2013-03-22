@@ -23,7 +23,15 @@ class Application_Service_ShowService
 
     public function addUpdateShow($showData, $isUpdate=false)
     {
-        $repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
+        if ($showData["add_show_repeats"]) {
+            $repeatType = $showData["add_show_repeat_type"];
+            if ($showData["add_show_repeat_type"] == 2) {
+                $repeatType = $showData["add_show_monthly_repeat_type"];
+            }
+        } else {
+            $repeatType = -1;
+        }
+        //$repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
         $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
         $isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
 
@@ -709,9 +717,9 @@ SQL;
      * @param string $showStart
      * @param string $timezone user's local timezone
      */
-    private function getMonthlyWeeklyRepeatInterval($showStart, $timezone)
+    private function getMonthlyWeeklyRepeatInterval($showStart)
     {
-        $start = new DateTime($showStart, new DateTimeZone($timezone));
+        $start = clone $showStart;
 
         $dayOfMonth = $start->format("j");
         $dayOfWeek = $start->format("l");
