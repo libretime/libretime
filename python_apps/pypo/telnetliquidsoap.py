@@ -147,8 +147,8 @@ class TelnetLiquidsoap:
         finally:
             self.telnet_lock.release()
 
-    def get_current_stream_id():
-         try:
+    def get_current_stream_id(self):
+        try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
 

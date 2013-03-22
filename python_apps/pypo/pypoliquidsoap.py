@@ -23,7 +23,7 @@ class PypoLiquidsoap():
                 port)
 
 
-    def push_item(self, media_item):
+    def play(self, media_item):
         if media_item["type"] == eventtypes.FILE:
             self.handle_file_type(media_item)
         elif media_item["type"] == eventtypes.EVENT:
@@ -128,7 +128,7 @@ class PypoLiquidsoap():
                 filter(lambda x: x["type"] == eventtypes.STREAM_OUTPUT_START, \
                         scheduled_now)
 
-        schedule_ids = set(map(lambda x: i["row_id"], scheduled_now_files))
+        schedule_ids = set(map(lambda x: x["row_id"], scheduled_now_files))
 
 
         liq_queue_ids = set()
@@ -150,10 +150,7 @@ class PypoLiquidsoap():
                 if mi is not None and mi["row_id"] in to_be_removed:
                     self.stop(i)
 
-            #stop any webstreams
-            if self.telnet_liquidsoap.get_current_stream_id() in to_be_removed:
-                self.telnet_liquidsoap.stop_web_stream_buffer()
-                self.telnet_liquidsoap.stop_web_stream_output()
+
 
         if len(to_be_added):
             self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
@@ -165,12 +162,13 @@ class PypoLiquidsoap():
                     self.play(i)
 
         current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
-        #if len(scheduled_now_webstream):
-            #if current_stream_id != scheduled_now_webstream[0]:
-                #self.play(scheduled_now_webstream[0])
-
-    def play(self, media_item):
-           self.telnet_liquidsoap.push_item(media_item)
+        if len(scheduled_now_webstream):
+            if current_stream_id != scheduled_now_webstream[0]:
+                self.play(scheduled_now_webstream[0])
+        elif current_stream_id != "-1":
+            #something is playing and it shouldn't be.
+            self.telnet_liquidsoap.stop_web_stream_buffer()
+            self.telnet_liquidsoap.stop_web_stream_output()
 
     def stop(self, queue):
         self.telnet_liquidsoap.queue_remove(queue)
