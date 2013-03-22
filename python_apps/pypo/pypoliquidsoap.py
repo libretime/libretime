@@ -106,8 +106,6 @@ class PypoLiquidsoap():
         #item, we should have a max of 8 items.
 
         #TODO: Verify start, end, replay_gain is the same
-        #TODO: Verify this is a file or webstream and also handle webstreams
-        #TODO: Do webstreams span a time or do they have an instantaneous point?
 
         #2013-03-21-22-56-00_0: {
         #id: 1,
@@ -130,15 +128,36 @@ class PypoLiquidsoap():
 
         schedule_ids = set(map(lambda x: x["row_id"], scheduled_now_files))
 
-
+        row_id_map = {}
         liq_queue_ids = set()
         for i in self.liq_queue_tracker:
             mi = self.liq_queue_tracker[i]
             if not self.is_media_item_finished(mi):
                 liq_queue_ids.add(mi["row_id"])
+                row_id_map[mi["row_id"]] = mi
 
-        to_be_removed = liq_queue_ids - schedule_ids
-        to_be_added = schedule_ids - liq_queue_ids
+        to_be_removed = set()
+        to_be_added = set()
+
+        #Iterate over the new files, and compare them to currently scheduled
+        #tracks. If already in liquidsoap queue still need to make sure they don't
+        #have different attributes such replay_gain etc.
+        for i in scheduled_now_files:
+            if i["row_id"] in row_id_map:
+                mi = row_id_map[i["row_id"]]
+                correct = mi['start'] == i['start'] and \
+                        mi['end'] == i['end'] and \
+                        mi['replay_gain'] == i['replay_gain']
+
+                if not correct:
+                    #need to re-add
+                    self.logger.info("Track %s found to have new attr." % i)
+                    to_be_removed.add(i["row_id"])
+                    to_be_added.add(i["row_id"])
+
+
+        to_be_removed.update(liq_queue_ids - schedule_ids)
+        to_be_added.update(schedule_ids - liq_queue_ids)
 
         if len(to_be_removed):
             self.logger.info("Need to remove items from Liquidsoap: %s" % \
@@ -150,8 +169,6 @@ class PypoLiquidsoap():
                 if mi is not None and mi["row_id"] in to_be_removed:
                     self.stop(i)
 
-
-
         if len(to_be_added):
             self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
                     to_be_added)
@@ -161,6 +178,7 @@ class PypoLiquidsoap():
                     self.modify_cue_point(i)
                     self.play(i)
 
+        #handle webstreams
         current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
         if len(scheduled_now_webstream):
             if current_stream_id != scheduled_now_webstream[0]:

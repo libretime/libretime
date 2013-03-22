@@ -40,6 +40,7 @@ source_id = ref 0
 
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
+    l = cue_cut(l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
@@ -63,7 +64,6 @@ create_source()
 queue = add(!sources)
 
 queue = audio_to_stereo(id="queue_src", queue)
-queue = cue_cut(queue)
 queue = amplify(1., override="replay_gain", queue)
 
 # the crossfade function controls fade in/out
