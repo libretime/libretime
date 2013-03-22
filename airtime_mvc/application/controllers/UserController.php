@@ -49,8 +49,7 @@ class UserController extends Zend_Controller_Action
             if ($form->isValid($formData)) {
 
                 if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1
-                        && $formData['login'] == 'admin'
-                        && $formData['user_id'] != 0) {
+                        && $formData['login'] == 'admin') {
                     $this->view->form = $form;
                     $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
                     $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml')));
