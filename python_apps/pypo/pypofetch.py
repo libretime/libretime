@@ -8,6 +8,7 @@ import json
 import telnetlib
 import copy
 import subprocess
+import signal
 from datetime import datetime
 
 from Queue import Empty
@@ -24,6 +25,12 @@ logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
+def keyboardInterruptHandler(signum, frame):
+    logger = logging.getLogger()
+    logger.info('\nKeyboard Interrupt\n')
+    sys.exit(0)
+signal.signal(signal.SIGINT, keyboardInterruptHandler)
+
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
@@ -34,8 +41,6 @@ try:
     LS_PORT = config['ls_port']
     #POLL_INTERVAL = int(config['poll_interval'])
     POLL_INTERVAL = 1800
-
-
 except Exception, e:
     logger.error('Error loading config file: %s', e)
     sys.exit()

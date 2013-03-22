@@ -13,8 +13,8 @@ import traceback
 import os
 
 from pypofetch import PypoFetch
-from telnetliquidsoap import TelnetLiquidsoap
 from pypoliqqueue import PypoLiqQueue
+from pypoliquidsoap import PypoLiquidsoap
 
 from Queue import Empty, Queue
 
@@ -62,27 +62,17 @@ class PypoPush(Thread):
         self.logger = logging.getLogger('push')
         self.current_prebuffering_stream_id = None
         self.queue_id = 0
-        self.telnet_liquidsoap = TelnetLiquidsoap(telnet_lock, \
-                self.logger,\
-                LS_HOST,\
-                LS_PORT\
-                )
-
-        self.liq_queue_tracker = {
-                "s0": None,
-                "s1": None,
-                "s2": None,
-                "s3": None,
-                }
 
         self.future_scheduled_queue = Queue()
+        self.pypo_liquidsoap = PypoLiquidsoap(self.logger, telnet_lock,\
+                LS_HOST, LS_PORT)
+
         self.plq = PypoLiqQueue(self.future_scheduled_queue, \
-                telnet_lock, \
-                self.logger, \
-                self.liq_queue_tracker, \
-                self.telnet_liquidsoap)
+                self.pypo_liquidsoap, \
+                self.logger)
         self.plq.daemon = True
         self.plq.start()
+
 
     def main(self):
         loops = 0
@@ -97,12 +87,13 @@ class PypoPush(Thread):
                 self.logger.error(str(e))
                 raise
             else:
+                self.logger.debug(media_schedule)
                 #separate media_schedule list into currently_playing and
                 #scheduled_for_future lists
                 currently_playing, scheduled_for_future = \
                         self.separate_present_future(media_schedule)
 
-                self.verify_correct_present_media(currently_playing)
+                self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
                 self.future_scheduled_queue.put(scheduled_for_future)
 
             if loops % heartbeat_period == 0:
@@ -130,59 +121,6 @@ class PypoPush(Thread):
                 future[media_item['start']] = media_item
 
         return present, future
-
-    def verify_correct_present_media(self, scheduled_now):
-        #verify whether Liquidsoap is currently playing the correct files.
-        #if we find an item that Liquidsoap is not playing, then push it
-        #into one of Liquidsoap's queues. If Liquidsoap is already playing
-        #it do nothing. If Liquidsoap is playing a track that isn't in
-        #currently_playing then stop it.
-
-        #Check for Liquidsoap media we should source.skip
-        #get liquidsoap items for each queue. Since each queue can only have one
-        #item, we should have a max of 8 items.
-
-        #TODO: Verify start, end, replay_gain is the same
-        #TODO: Verify this is a file or webstream and also handle webstreams
-
-        schedule_ids = set()
-        for i in scheduled_now:
-            schedule_ids.add(i["row_id"])
-
-        liq_queue_ids = set()
-        for i in self.liq_queue_tracker:
-            mi = self.liq_queue_tracker[i]
-            if not self.plq.is_media_item_finished(mi):
-                liq_queue_ids.add(mi["row_id"])
-
-        to_be_removed = liq_queue_ids - schedule_ids
-        to_be_added = schedule_ids - liq_queue_ids
-
-        if len(to_be_removed):
-            self.logger.info("Need to remove items from Liquidsoap: %s" % \
-                    to_be_removed)
-
-            for i in self.liq_queue_tracker:
-                mi = self.liq_queue_tracker[i]
-                if mi is not None and mi["row_id"] in to_be_removed:
-                    self.telnet_liquidsoap.queue_remove(i)
-                    self.liq_queue_tracker[i] = None
-
-                    #liquidsoap.stop_play(mi)
-
-
-        if len(to_be_added):
-            self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
-                    to_be_added)
-
-            for i in scheduled_now:
-                if i["row_id"] in to_be_added:
-                    self.modify_cue_point(i)
-                    queue_id = self.plq.find_available_queue()
-                    self.telnet_liquidsoap.queue_push(queue_id, i)
-                    self.liq_queue_tracker[queue_id] = i
-
-                    #liquidsoap.start_play(i)
 
     def get_current_stream_id_from_liquidsoap(self):
         response = "-1"
@@ -221,20 +159,6 @@ class PypoPush(Thread):
 
         #self.logger.debug("Is current item correct?: %s", str(correct))
         #return correct
-
-    def modify_cue_point(self, link):
-        tnow = datetime.utcnow()
-
-        link_start = link['start']
-
-        diff_td = tnow - link_start
-        diff_sec = self.date_interval_to_seconds(diff_td)
-
-        if diff_sec > 0:
-            self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_sec)
-            original_cue_in_td = timedelta(seconds=float(link['cue_in']))
-            link['cue_in'] = self.date_interval_to_seconds(original_cue_in_td) + diff_sec
-
 
     def date_interval_to_seconds(self, interval):
         """

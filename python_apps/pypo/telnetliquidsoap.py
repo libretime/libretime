@@ -63,13 +63,12 @@ class TelnetLiquidsoap:
             self.telnet_lock.release()
 
 
-    def stop_web_stream_buffer(self, media_item):
+    def stop_web_stream_buffer(self):
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
             #dynamic_source.stop http://87.230.101.24:80/top100station.mp3
 
-            #msg = 'dynamic_source.read_stop %s\n' % media_item['row_id']
             msg = 'http.stop\n'
             self.logger.debug(msg)
             tn.write(msg)
@@ -86,7 +85,7 @@ class TelnetLiquidsoap:
         finally:
             self.telnet_lock.release()
 
-    def stop_web_stream_output(self, media_item):
+    def stop_web_stream_output(self):
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.ls_host, self.ls_port)
@@ -142,13 +141,30 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
-            #TODO..
             self.current_prebuffering_stream_id = media_item['row_id']
         except Exception, e:
             self.logger.error(str(e))
         finally:
             self.telnet_lock.release()
- 
+
+    def get_current_stream_id():
+         try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+
+            msg = 'dynamic_source.get_id\n'
+            self.logger.debug(msg)
+            tn.write(msg)
+
+            tn.write("exit\n")
+            stream_id = tn.read_all().splitlines()[0]
+            self.logger.debug("stream_id: %s" % stream_id)
+
+            return stream_id
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
 
 class DummyTelnetLiquidsoap:
 
