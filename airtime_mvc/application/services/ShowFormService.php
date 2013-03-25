@@ -149,12 +149,22 @@ class Application_Service_ShowFormService
         //subtract one day
         $repeatEndDate->sub(new DateInterval("P1D"));
 
+        $repeatType = $ccShowDays[0]->getDbRepeatType();
+        if ($repeatType == REPEAT_MONTHLY_WEEKLY) {
+            $monthlyRepeatType = $repeatType;
+            //a repeat type of 2 means the show is repeating monthly
+            $repeatType = 2;
+        } elseif ($repeatType == REPEAT_MONTHLY_MONTHLY) {
+            $monthlyRepeatType = $repeatType;
+        }
+
         $form->populate(
             array(
-                'add_show_repeat_type' => $ccShowDays[0]->getDbRepeatType(),
+                'add_show_repeat_type' => $repeatType,
                 'add_show_day_check' => $days,
                 'add_show_end_date' => $repeatEndDate->format("Y-m-d"),
-                'add_show_no_end' => (!$service_show->getRepeatingEndDate())));
+                'add_show_no_end' => (!$service_show->getRepeatingEndDate()),
+                'add_show_monthly_repeat_type' => $monthlyRepeatType));
     }
 
     private function populateFormWho($form)
