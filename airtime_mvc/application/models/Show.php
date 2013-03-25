@@ -1664,7 +1664,9 @@ SQL;
         $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
         //if application is requesting shows past our previous populated until date, generate shows up until this point.
         if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $end_timestamp->getTimestamp()) {
-            Application_Model_Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
+            //Application_Model_Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
+            $service_show = new Application_Service_ShowService();
+            $service_show->delegateInstanceCreation(null, false, $end_timestamp);
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 

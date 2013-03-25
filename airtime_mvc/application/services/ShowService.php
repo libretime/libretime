@@ -93,11 +93,15 @@ class Application_Service_ShowService
      * Receives a cc_show id and determines whether to create a 
      * single show instance or repeating show instances
      */
-    private function delegateInstanceCreation($isRebroadcast, $isUpdate)
+    public function delegateInstanceCreation($isRebroadcast=null, $isUpdate=false, $end=null)
     {
         $populateUntil = $this->getPopulateShowUntilDateTIme();
 
-        $ccShowDays = $this->ccShow->getCcShowDays();
+        if (is_null($this->ccShow)) {
+            $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
+        } else {
+            $ccShowDays = $this->ccShow->getCcShowDays();
+        }
 
         foreach ($ccShowDays as $day) {
             switch ($day->getDbRepeatType()) {
@@ -121,6 +125,32 @@ class Application_Service_ShowService
                     break;
             }
         }
+    }
+
+    private function getShowDaysInRange($start, $end)
+    {
+        $endTimeString = $end->format("Y-m-d H:i:s");
+        if (!is_null($start)) {
+            $startTimeString = $start->format("Y-m-d H:i:s");
+        } else {
+            $today_timestamp = new DateTime("now", new DateTimeZone("UTC"));
+            $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
+        }
+
+        return CcShowDaysQuery::create()
+            ->add("last_show", null, "=")
+            ->addOr("first_show", $endTimeString, "<")
+            ->add("last_show", $startTimeString, ">")
+            ->find();
+        /*$sql = <<< SQL
+SELECT * FROM cc_show_days
+WHERE last_show IS NULL
+   OR first_show < :endTimeString
+  AND last_show > :startTimeString
+SQL;
+
+        return Application_Common_Database::prepareAndExecute($sql,
+            array( ':endTimeString' => $endTimeString, ':startTimeString' => $startTimeString ), 'all');*/
     }
 
     public static function formatShowDuration($duration)
@@ -650,7 +680,7 @@ SQL;
 
         //DateTime local
         $start = $this->getNextRepeatingPopulateStartDateTime($showDay);
-        if (isset($last_how)) {
+        if (isset($last_show)) {
             $end = new DateTime($last_show, new DateTimeZone($timezone));
         } else {
             $end = $populateUntil;
@@ -1023,7 +1053,7 @@ SQL;
      * 
      * @return DateTime object
      */
-    private function getPopulateShowUntilDateTIme()
+    private static function getPopulateShowUntilDateTIme()
     {
         $populateUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
