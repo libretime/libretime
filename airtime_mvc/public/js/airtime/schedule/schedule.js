@@ -379,7 +379,7 @@ $(document).ready(function() {
                         
                         //edit a single instance
                         callback = function() {
-                            $.get(edit.instance.url, {format: "json", id: data.id, type: "instance"}, function(json){
+                            $.get(edit.instance.url, {format: "json", showId: data.showId, instanceId: data.id, type: "instance"}, function(json){
                                 beginEditShow(json);
                             });
                         };
@@ -497,11 +497,11 @@ $(document).ready(function() {
             
                 items = oItems;
             }
-            
+
             $.ajax({
               url: baseUrl+"schedule/make-context-menu",
               type: "GET",
-              data: {id : data.id, format: "json"},
+              data: {instanceId : data.id, showId: data.showId, format: "json"},
               dataType: "json",
               async: false,
               success: function(json){

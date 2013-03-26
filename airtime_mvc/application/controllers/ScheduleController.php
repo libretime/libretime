@@ -255,107 +255,12 @@ class ScheduleController extends Zend_Controller_Action
 
     public function makeContextMenuAction()
     {
-        $id = $this->_getParam('id');
-        $menu = array();
-        $epochNow = time();
-        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $instanceId = $this->_getParam('instanceId');
+        $showId = $this->_getParam('showId');
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        try {
-            $instance = new Application_Model_ShowInstance($id);
-        } catch (Exception $e) {
-            $this->view->show_error = true;
+        $service_calendar = new Application_Service_CalendarService($instanceId);
 
-            return false;
-        }
-
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        $isDJ = $user->isHostOfShow($instance->getShowId());
-
-        $showStartLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceStart());
-        $showEndLocalDT = Application_Common_DateHelper::ConvertToLocalDateTime($instance->getShowInstanceEnd());
-
-        if ($instance->isRecorded() && $epochNow > $showEndLocalDT->getTimestamp()) {
-
-            $file = $instance->getRecordedFile();
-            $fileId = $file->getId();
-
-            $menu["view_recorded"] = array("name" => _("View Recorded File Metadata"), "icon" => "overview",
-                    "url" => $baseUrl."library/edit-file-md/id/".$fileId);
-        }
-
-        if ($epochNow < $showStartLocalDT->getTimestamp()) {
-            if ( ($isAdminOrPM || $isDJ)
-                && !$instance->isRecorded()
-                && !$instance->isRebroadcast()) {
-
-                $menu["schedule"] = array("name"=> _("Add / Remove Content"), "icon" => "add-remove-content",
-                    "url" => $baseUrl."showbuilder/builder-dialog/");
-
-                $menu["clear"] = array("name"=> _("Remove All Content"), "icon" => "remove-all-content",
-                    "url" => $baseUrl."schedule/clear-show");
-            }
-        }
-
-        if (!$instance->isRecorded()) {
-
-            $menu["content"] = array("name"=> _("Show Content"), "icon" => "overview", "url" => $baseUrl."schedule/show-content-dialog");
-        }
-
-        if ($showEndLocalDT->getTimestamp() <= $epochNow
-            && $instance->isRecorded()
-            && Application_Model_Preference::GetUploadToSoundcloudOption()) {
-
-            $file = $instance->getRecordedFile();
-            $fileId = $file->getId();
-            $scid = $instance->getSoundCloudFileId();
-
-            if ($scid > 0) {
-                $url = $file->getSoundCloudLinkToFile();
-                $menu["soundcloud_view"] = array("name" => _("View on Soundcloud"), "icon" => "soundcloud", "url" => $url);
-            }
-
-            $text = is_null($scid) ? _('Upload to SoundCloud') : _('Re-upload to SoundCloud');
-            $menu["soundcloud_upload"] = array("name"=> $text, "icon" => "soundcloud");
-        }
-
-        if ($showStartLocalDT->getTimestamp() <= $epochNow &&
-                $epochNow < $showEndLocalDT->getTimestamp() && $isAdminOrPM) {
-
-            if ($instance->isRecorded()) {
-                $menu["cancel_recorded"] = array("name"=> _("Cancel Current Show"), "icon" => "delete");
-            } else {
-
-                if (!$instance->isRebroadcast()) {
-                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."Schedule/populate-show-form");
-                }
-
-                $menu["cancel"] = array("name"=> _("Cancel Current Show"), "icon" => "delete");
-            }
-        }
-
-        if ($epochNow < $showStartLocalDT->getTimestamp()) {
-
-                if (!$instance->isRebroadcast() && $isAdminOrPM) {
-                    $menu["edit"] = array("name"=> _("Edit Show"), "icon" => "edit", "_type"=>"all", "url" => $baseUrl."Schedule/populate-show-form");
-                }
-
-                if ($instance->getShow()->isRepeating() && $isAdminOrPM) {
-
-                    //create delete sub menu.
-                    $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "items" => array());
-
-                    $menu["del"]["items"]["single"] = array("name"=> _("Delete This Instance"), "icon" => "delete", "url" => $baseUrl."schedule/delete-show");
-
-                    $menu["del"]["items"]["following"] = array("name"=> _("Delete This Instance and All Following"), "icon" => "delete", "url" => $baseUrl."schedule/cancel-show");
-                } elseif ($isAdminOrPM) {
-
-                    $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."schedule/delete-show");
-                }
-        }
-
-        $this->view->items = $menu;
+        $this->view->items = $service_calendar->makeContextMenu();
     }
 
     public function clearShowAction()
@@ -462,9 +367,7 @@ class ScheduleController extends Zend_Controller_Action
         unset($this->view->showContent);
     }
 
-    // we removed edit show instance option in menu item
-    // this feature is disabled in 2.1 and should be back in 2.2
-    /*public function populateShowInstanceFormAction(){
+    public function populateShowInstanceFormAction(){
         $formWhat = new Application_Form_AddShowWhat();
         $formWho = new Application_Form_AddShowWho();
         $formWhen = new Application_Form_AddShowWhen();
@@ -527,7 +430,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->view->action = "edit-show-instance";
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-    }*/
+    }
 
     public function populateShowFormAction()
     {
@@ -538,13 +441,13 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->action = "edit-show";
 
         $isAdminOrPM = $this->currentUser->isAdminOrPM();
-        $isHostOfShow = $this->currentUser->isHostOfShow($showId);
+        /*$isHostOfShow = $this->currentUser->isHostOfShow($showId);
         // in case a user was once a dj and had been assigned to a show
         // but was then changed to an admin user we need to allow
         // the user to edit the show as an admin (CC-4925)
         if ($isHostOfShow && !$isAdminOrPM) {
             $this->view->action = "dj-edit-show";
-        }
+        }*/
 
         $forms = $this->createShowFormAction();
 
@@ -568,7 +471,7 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function djEditShowAction()
+    /*public function djEditShowAction()
     {
         $js = $this->_getParam('data');
         $data = array();
@@ -586,7 +489,7 @@ class ScheduleController extends Zend_Controller_Action
         $show->setCustomPassword($data["custom_password"]);
 
         $this->view->edit = true;
-    }
+    }*/
 
     /*public function editShowInstanceAction(){
         $js = $this->_getParam('data');
@@ -782,32 +685,9 @@ class ScheduleController extends Zend_Controller_Action
 
     public function calculateDurationAction()
     {
-        $startParam = $this->_getParam('startTime');
-        $endParam = $this->_getParam('endTime');
-
-        try {
-            $startDateTime = new DateTime($startParam);
-            $endDateTime = new DateTime($endParam);
-
-            $UTCStartDateTime = $startDateTime->setTimezone(new DateTimeZone('UTC'));
-            $UTCEndDateTime = $endDateTime->setTimezone(new DateTimeZone('UTC'));
-
-            $duration = $UTCEndDateTime->diff($UTCStartDateTime);
-
-            $day = intval($duration->format('%d'));
-            if ($day > 0) {
-                $hour = intval($duration->format('%h'));
-                $min = intval($duration->format('%i'));
-                $hour += $day * 24;
-                $hour = min($hour, 99);
-                $sign = $duration->format('%r');
-                $result = sprintf('%s%02dh %02dm', $sign, $hour, $min);
-            } else {
-                $result = $duration->format('%r%Hh %Im');
-            }
-        } catch (Exception $e) {
-            $result = "Invalid Date";
-        }
+        $service_showForm = new Application_Service_ShowFormService();
+        $result = $service_showForm->calculateDuration($this->_getParam('startTime'),
+            $this->_getParam('endTime'));
 
         echo Zend_Json::encode($result);
         exit();

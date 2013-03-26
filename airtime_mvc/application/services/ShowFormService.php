@@ -149,6 +149,8 @@ class Application_Service_ShowFormService
         //subtract one day
         $repeatEndDate->sub(new DateInterval("P1D"));
 
+        //default monthly repeat type
+        $monthlyRepeatType = 2;
         $repeatType = $ccShowDays[0]->getDbRepeatType();
         if ($repeatType == REPEAT_MONTHLY_WEEKLY) {
             $monthlyRepeatType = $repeatType;
@@ -358,6 +360,33 @@ SQL;
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function calculateDuration($start, $end)
+    {
+        try {
+            $startDateTime = new DateTime($start);
+            $endDateTime = new DateTime($end);
+
+            $UTCStartDateTime = $startDateTime->setTimezone(new DateTimeZone('UTC'));
+            $UTCEndDateTime = $endDateTime->setTimezone(new DateTimeZone('UTC'));
+
+            $duration = $UTCEndDateTime->diff($UTCStartDateTime);
+
+            $day = intval($duration->format('%d'));
+            if ($day > 0) {
+                $hour = intval($duration->format('%h'));
+                $min = intval($duration->format('%i'));
+                $hour += $day * 24;
+                $hour = min($hour, 99);
+                $sign = $duration->format('%r');
+                return sprintf('%s%02dh %02dm', $sign, $hour, $min);
+            } else {
+                return $duration->format('%r%Hh %Im');
+            }
+        } catch (Exception $e) {
+            return "Invalid Date";
         }
     }
 }
