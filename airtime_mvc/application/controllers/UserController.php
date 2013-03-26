@@ -198,6 +198,11 @@ class UserController extends Zend_Controller_Action
 
         $user = new Application_Model_User($delId);
 
+        if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1
+            && $user->getLogin() == 'admin') {
+                return;
+        }
+
         # Take care of the user's files by either assigning them to somebody
         # or deleting them all
         if ($files_action == "delete_cascade") {
