@@ -48,12 +48,7 @@ class UserController extends Zend_Controller_Action
 
             if ($form->isValid($formData)) {
 
-                if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1
-                        && $formData['login'] == 'admin') {
-                    $this->view->form = $form;
-                    $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
-                    $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml')));
-                } elseif ($form->validateLogin($formData)) {
+                if ($form->validateLogin($formData)) {
                     $user = new Application_Model_User($formData['user_id']);
                     if (empty($formData['user_id'])) {
                         $user->setLogin($formData['login']);
@@ -130,12 +125,7 @@ class UserController extends Zend_Controller_Action
         if ($request->isPost()) {
             $formData = $request->getPost();
             
-            if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1
-                    && $formData['cu_login'] == 'admin') {
-                $this->view->form = $form;
-                $this->view->successMessage = "<div class='errors'>"._("Specific action is not allowed in demo version!")."</div>";
-                $this->_helper->json->sendJson(array("html"=>$this->view->render('user/edit-user.phtml')));
-            } else if ($form->isValid($formData) &&
+            if ($form->isValid($formData) &&
                        $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
                 $user = new Application_Model_User($formData['cu_user_id']);
                 $user->setFirstName($formData['cu_first_name']);
