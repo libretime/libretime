@@ -103,6 +103,10 @@ class Application_Service_ShowService
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
 
+        if (!is_null($end)) {
+            $populateUntil = $end;
+        }
+
         foreach ($ccShowDays as $day) {
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
@@ -137,20 +141,12 @@ class Application_Service_ShowService
             $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
         }
 
-        return CcShowDaysQuery::create()
-            ->add("last_show", null, "=")
-            ->addOr("first_show", $endTimeString, "<")
-            ->add("last_show", $startTimeString, ">")
-            ->find();
-        /*$sql = <<< SQL
-SELECT * FROM cc_show_days
-WHERE last_show IS NULL
-   OR first_show < :endTimeString
-  AND last_show > :startTimeString
-SQL;
+        $c = new Criteria();
+        $c->add(CcShowDaysPeer::FIRST_SHOW, $endTimeString, Criteria::LESS_THAN);
+        $c->addAnd(CcShowDaysPeer::LAST_SHOW, $startTimeString, Criteria::GREATER_THAN);
+        $c->addOr(CcShowDaysPeer::LAST_SHOW, null, Criteria::ISNULL);
 
-        return Application_Common_Database::prepareAndExecute($sql,
-            array( ':endTimeString' => $endTimeString, ':startTimeString' => $startTimeString ), 'all');*/
+        return CcShowDaysPeer::doSelect($c);
     }
 
     public static function formatShowDuration($duration)
@@ -664,7 +660,7 @@ SQL;
             }
         }
         $nextDate = $utcEndDateTime->add($repeatInterval);
-        $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day);
+        $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
     }
 
     private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil,
@@ -736,7 +732,7 @@ SQL;
             }
             $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone);
         }
-        $this->setNextRepeatingShowDate($start->format("Y-m-d"), $day);
+        $this->setNextRepeatingShowDate($start->format("Y-m-d"), $day, $show_id);
     }
 
     /**
@@ -1107,12 +1103,12 @@ SQL;
      * @param $showId
      * @param $day
      */
-    private function setNextRepeatingShowDate($nextDate, $day)
+    private function setNextRepeatingShowDate($nextDate, $day, $showId)
     {
         $nextInfo = explode(" ", $nextDate);
 
         $repeatInfo = CcShowDaysQuery::create()
-            ->filterByDbShowId($this->ccShow->getDbId())
+            ->filterByDbShowId($showId)
             ->filterByDbDay($day)
             ->findOne();
 
