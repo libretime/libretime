@@ -35,12 +35,14 @@ stop () {
 start_no_monit() {
         chown pypo:pypo /var/log/airtime/pypo
         chown pypo:pypo /var/log/airtime/pypo-liquidsoap
+        chown pypo:pypo /etc/airtime/liquidsoap.cfg
 
-        touch /var/run/airtime-liquidsoap.pid
-        chown pypo:pypo /var/run/airtime-liquidsoap.pid
+        rm -f $PIDFILE
+        touch $PIDFILE
+        chown pypo:pypo $PIDFILE 
 
         start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
-            --pidfile /var/run/airtime-liquidsoap.pid --nicelevel -15 --startas $DAEMON
+            --pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
 }
 
 
@@ -64,8 +66,8 @@ case "${1:-''}" in
         ;;
 
   'status')
-        if [ -f "/var/run/airtime-liquidsoap.pid" ]; then
-            pid=`cat /var/run/airtime-liquidsoap.pid`
+        if [ -f "$PIDFILE" ]; then
+            pid=`cat $PIDFILE`
             if [ -d "/proc/$pid" ]; then
                 echo "Liquidsoap is running"
                 exit 0
