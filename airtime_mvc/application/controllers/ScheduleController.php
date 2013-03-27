@@ -22,7 +22,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('get-current-playlist', 'json')
                     ->addActionContext('remove-group', 'json')
                     ->addActionContext('populate-show-form', 'json')
-                    ->addActionContext('populate-show-instance-form', 'json')
+                    ->addActionContext('populate-repeating-show-instance-form', 'json')
                     ->addActionContext('cancel-show', 'json')
                     ->addActionContext('cancel-current-show', 'json')
                     ->addActionContext('get-form', 'json')
@@ -30,7 +30,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('content-context-menu', 'json')
                     ->addActionContext('set-time-scale', 'json')
                     ->addActionContext('set-time-interval', 'json')
-                    ->addActionContext('edit-show-instance', 'json')
+                    ->addActionContext('edit-repeating-show-instance', 'json')
                     ->addActionContext('dj-edit-show', 'json')
                     ->addActionContext('calculate-duration', 'json')
                     ->addActionContext('get-current-show', 'json')
@@ -365,7 +365,7 @@ class ScheduleController extends Zend_Controller_Action
         unset($this->view->showContent);
     }
 
-    public function populateShowInstanceFormAction()
+    public function populateRepeatingShowInstanceFormAction()
     {
         $showId = $this->_getParam('showId');
         $instanceId = $this->_getParam('instanceId');
@@ -376,7 +376,7 @@ class ScheduleController extends Zend_Controller_Action
         $service_showForm->delegateShowInstanceFormPopulation($forms);
 
         $this->view->addNewShow = false;
-        $this->view->action = "edit-show-instance";
+        $this->view->action = "edit-repeating-show-instance";
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
     }
 
@@ -444,7 +444,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->edit = true;
     }*/
 
-    /*public function editShowInstanceAction(){
+    public function editRepeatingShowInstanceAction(){
         $js = $this->_getParam('data');
         $data = array();
 
@@ -453,15 +453,39 @@ class ScheduleController extends Zend_Controller_Action
             $data[$j["name"]] = $j["value"];
         }
 
-        $success = Application_Model_Schedule::updateShowInstance($data, $this);
-        if ($success) {
+        $data['add_show_hosts'] =  $this->_getParam('hosts');
+
+        $service_showForm = new Application_Service_ShowFormService(
+            $data["add_show_id"], $data["add_show_instance_id"]);
+        $service_show = new Application_Service_ShowService();
+
+        $forms = $this->createShowFormAction();
+
+        list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
+            $service_showForm->preEditShowValidationCheck($data);
+
+        if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
+                $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
+
+            //treat repeating instance has a new and separate show
+            $service_show->deleteRepeatingInstance($data["add_show_instance_id"]);
+            $service_show->addUpdateShow($data);
+
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         } else {
+            if (!$validateStartDate) {
+                $this->view->when->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+            }
+            if (!$validateStartTime) {
+                $this->view->when->getElement('add_show_start_time')->setOptions(array('disabled' => true));
+            }
+            $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
             $this->view->addNewShow = false;
+            $this->view->action = "edit-show";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
-    }*/
+    }
 
     public function editShowAction()
     {

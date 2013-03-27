@@ -8,9 +8,10 @@ class Application_Service_SchedulerService
      */
     public static function updateScheduleStartTime($instanceIds, $diff)
     {
+        $con = Propel::getConnection();
         if (count($instanceIds) > 0 && $diff != 0) {
             $showIdList = implode(",", $instanceIds);
-            $sql = <<<SQL
+            /*$sql = <<<SQL
 UPDATE cc_schedule
 SET starts = starts + :diff1::INTERVAL,
     ends = ends + :diff2::INTERVAL
@@ -20,7 +21,12 @@ SQL;
             Application_Common_Database::prepareAndExecute($sql,
                 array(':diff1' => $diff, ':diff2' => $diff, 
                     ':showIds' => $showIdList),
-                'execute');
+                'execute');*/
+        $sql = "UPDATE cc_schedule "
+                    ."SET starts = starts + INTERVAL '$diff sec', "
+                    ."ends = ends + INTERVAL '$diff sec' "
+                    ."WHERE instance_id IN ($showIdList)";
+            $con->exec($sql);
         }
     }
 

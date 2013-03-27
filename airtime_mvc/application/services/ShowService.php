@@ -17,6 +17,19 @@ class Application_Service_ShowService
         }
     }
 
+    /**
+     * 
+     * When the user is editing a single instance of a repeating show
+     * we want to treat it as a completely new show so we need to delete
+     * the instance first
+     * 
+     * @param $instanceId
+     */
+    public function deleteRepeatingInstance($instanceId)
+    {
+        CcShowInstancesQuery::create()->findPk($instanceId)->delete();
+    }
+
     public function addUpdateShow($showData, $isUpdate=false)
     {
         $service_user = new Application_Service_UserService();
@@ -30,7 +43,6 @@ class Application_Service_ShowService
         } else {
             $repeatType = -1;
         }
-        //$repeatType = ($showData['add_show_repeats']) ? $showData['add_show_repeat_type'] : -1;
         $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
         $isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
 
@@ -40,7 +52,7 @@ class Application_Service_ShowService
         $con = Propel::getConnection();
         $con->beginTransaction();
         try {
-            if (!$this->currentUser->isAdminOrPM()) {
+            if (!$currentUser->isAdminOrPM()) {
                 throw new Exception("Permission denied");
             }
             //update ccShow
@@ -52,7 +64,7 @@ class Application_Service_ShowService
                 // schedule start/end times
                 $this->applyShowStartEndDifference($showData);
                 $this->deleteRebroadcastInstances();
-                $this->deleteCcShowDays();
+                //$this->deleteCcShowDays();
                 $this->deleteCcShowHosts();
                 if ($isRebroadcast) {
                     //delete entry in cc_show_rebroadcast
@@ -105,7 +117,7 @@ class Application_Service_ShowService
         if (!is_null($end)) {
             $populateUntil = $end;
         }
-
+Logging::info($ccShowDays);
         foreach ($ccShowDays as $day) {
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
@@ -379,6 +391,14 @@ SQL;
             }
         }
 
+        foreach ($daysRemoved as $day) {
+            //delete the cc_show_day entries as well
+            CcShowDaysQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbDay($day)
+                ->delete();
+        }
+
         $uncheckedDays = pg_escape_string(implode(",", $daysRemovedUTC));
 
         $sql = <<<SQL
@@ -392,6 +412,7 @@ SQL;
         Application_Common_Database::prepareAndExecute( $sql, array(
             ":timestamp" => gmdate("Y-m-d H:i:s"), ":showId"    => $showId),
             "execute");
+
     }
 
     private function deleteAllInstances($showId)
@@ -857,6 +878,27 @@ SQL;
         }
     }
 
+    private function hasCcShowDay($repeatType, $day)
+    {
+        return $this->getCcShowDay($repeatType, $day) ? true : false;
+    }
+
+    private function getCcShowDay($repeatType, $day)
+    {
+        $ccShowDay = CcShowDaysQuery::create()
+            ->filterByDbShowId($this->ccShow->getDbId())
+            ->filterByDbDay($day)
+            ->filterByDbRepeatType($repeatType)
+            ->limit(1)
+            ->find();
+
+        if ($ccShowDay->isEmpty()) {
+            return false;
+        } else {
+            return $ccShowDay[0];
+        }
+    }
+
     /**
      * 
      * Sets the fields for a cc_show table row
@@ -923,7 +965,11 @@ SQL;
 
         // Don't set day for monthly repeat type, it's invalid
         if ($showData['add_show_repeats'] && $showData['add_show_repeat_type'] == 2) {
-            $showDay = new CcShowDays();
+            if ($this->hasCcShowDay($repeatType, null)) {
+                $showDay = $this->getCcShowDay($repeatType, null);
+            } else {
+                $showDay = new CcShowDays();
+            }
             $showDay->setDbFirstShow($startDateTime->format("Y-m-d"));
             $showDay->setDbLastShow($endDate);
             $showDay->setDbStartTime($startDateTime->format("H:i:s"));
@@ -932,6 +978,9 @@ SQL;
             $showDay->setDbRepeatType($repeatType);
             $showDay->setDbShowId($showId);
             $showDay->setDbRecord($isRecorded);
+            //in case we are editing a show we need to set this to the first show
+            //so when editing, the date period iterator will start from the beginning
+            $showDay->setDbNextPopDate($startDateTime->format("Y-m-d"));
             $showDay->save();
         } else {
             foreach ($showData['add_show_day_check'] as $day) {
@@ -946,7 +995,11 @@ SQL;
                     $startDateTimeClone->add(new DateInterval("P".$daysAdd."D"));
                 }
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
-                    $showDay = new CcShowDays();
+                    if ($this->hasCcShowDay($repeatType, $day)) {
+                        $showDay = $this->getCcShowDay($repeatType, $day);
+                    } else {
+                        $showDay = new CcShowDays();
+                    }
                     $showDay->setDbFirstShow($startDateTimeClone->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);
                     $showDay->setDbStartTime($startDateTimeClone->format("H:i"));
@@ -956,6 +1009,9 @@ SQL;
                     $showDay->setDbRepeatType($repeatType);
                     $showDay->setDbShowId($showId);
                     $showDay->setDbRecord($isRecorded);
+                    //in case we are editing a show we need to set this to the first show
+                    //so when editing, the date period iterator will start from the beginning
+                    $showDay->setDbNextPopDate($startDateTimeClone->format("Y-m-d"));
                     $showDay->save();
                 }
             }

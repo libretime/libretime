@@ -30,10 +30,8 @@ class Application_Service_CalendarService
         $isHostOfShow = $this->currentUser->isHostOfShow($this->showId);
 
         //DateTime objects in UTC
-        $startDT = new DateTime($this->ccShowInstance->getDbStarts(),
-        new DateTimeZone("UTC"));
-        $endDT = new DateTime($this->ccShowInstance->getDbEnds(),
-        new DateTimeZone("UTC"));
+        $startDT = $this->ccShowInstance->getDbStarts(null);
+        $endDT = $this->ccShowInstance->getDbEnds(null);
 
         //timestamps
         $start = $startDT->getTimestamp();
@@ -126,7 +124,7 @@ class Application_Service_CalendarService
                     $menu["edit"]["items"]["instance"] = array(
                         "name" => _("Edit This Instance"),
                         "icon" => "edit",
-                        "url" => $baseUrl."Schedule/populate-show-instance-form");
+                        "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
                 } else {
                     $menu["edit"] = array(
                         "name"=> _("Edit Show"),
@@ -141,7 +139,6 @@ class Application_Service_CalendarService
                 //show is repeating so give user the option to delete all
                 //repeating instances or just the one
                 if ($isRepeating) {
-                    //create delete sub menu.
                     $menu["del"] = array(
                         "name"=> _("Delete"),
                         "icon" => "delete",

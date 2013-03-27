@@ -76,6 +76,17 @@ class Application_Service_ShowFormService
     public function delegateShowInstanceFormPopulation($forms)
     {
         $this->populateFormWhat($forms["what"]);
+        $this->populateInstanceFormWhen($forms["when"]);
+        $this->populateFormWho($forms["who"]);
+        $this->populateFormLive($forms["live"]);
+        $this->populateFormStyle($forms["style"]);
+
+        //no need to populate these forms since the user won't
+        //be able to see them
+        $forms["repeats"]->disable();
+        $forms["record"]->disable();
+        $forms["rebroadcast"]->disable();
+        $forms["abs_rebroadcast"]->disable();
     }
 
     /**
@@ -92,6 +103,7 @@ class Application_Service_ShowFormService
         $this->populateFormRepeats($forms["repeats"]);
         $this->populateFormWho($forms["who"]);
         $this->populateFormStyle($forms["style"]);
+        $this->populateFormLive($forms["live"]);
         $this->populateFormRecord($forms["record"]);
         $this->populateFormRebroadcastRelative($forms["rebroadcast"]);
         $this->populateFormRebroadcastAbsolute($forms["abs_rebroadcast"]);
@@ -135,6 +147,36 @@ class Application_Service_ShowFormService
                 'add_show_end_time'    => $showEnd->format("H:i"),
                 'add_show_duration' => $ccShowDay->formatDuration(true),
                 'add_show_repeats' => $ccShowDay->isRepeating() ? 1 : 0));
+    }
+
+    private function populateInstanceFormWhen($form)
+    {
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
+
+        $timezone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+        //DateTime object in UTC
+        $showStart = $ccShowInstance->getDbStarts(null);
+        $showStart->setTimezone($timezone);
+
+        $showEnd = $ccShowInstance->getDbEnds(null);
+        $showEnd->setTimezone($timezone);
+
+        //if the show has started, do not allow editing on the start time
+        if ($showStart->getTimestamp() <= time()) {
+            $form->disableStartDateAndTime();
+        }
+
+        $form->populate(
+            array(
+                'add_show_start_date' => $showStart->format("Y-m-d"),
+                'add_show_start_time' => $showStart->format("H:i"),
+                'add_show_end_date_no_repeat' => $showEnd->format("Y-m-d"),
+                'add_show_end_time' => $showEnd->format("H:i"),
+                'add_show_duration' => $this->calculateDuration(
+                    $showStart->format("Y-m-d H:i:s"), $showEnd->format("Y-m-d H:i:s")),
+                'add_show_repeats' => 0));
+
+        $form->getElement('add_show_repeats')->setOptions(array("disabled" => true));
     }
 
     private function populateFormRepeats($form)
@@ -192,6 +234,16 @@ class Application_Service_ShowFormService
             array(
                 'add_show_background_color' => $this->ccShow->getDbBackgroundColor(),
                 'add_show_color' => $this->ccShow->getDbColor()));
+    }
+
+    private function populateFormLive($form)
+    {
+        $form->populate(
+            array(
+                "cb_airtime_auth" => $this->ccShow->getDbLiveStreamUsingAirtimeAuth(),
+                "cb_custom_auth" => $this->ccShow->getDbLiveStreamUsingCustomAuth(),
+                "custom_username" => $this->ccShow->getDbLiveStreamUser(),
+                "custom_password" => $this->ccShow->getDbLiveStreamPass()));
     }
 
     private function populateFormRecord($form)
@@ -388,7 +440,7 @@ SQL;
                 $sign = $duration->format('%r');
                 return sprintf('%s%02dh %02dm', $sign, $hour, $min);
             } else {
-                return $duration->format('%r%Hh %Im');
+                return $duration->format('%Hh %Im');
             }
         } catch (Exception $e) {
             return "Invalid Date";
