@@ -24,21 +24,25 @@ start () {
 stop () {
         monit unmonitor airtime-liquidsoap >/dev/null 2>&1
         #send term signal after 10 seconds
-        timeout 10 /usr/lib/airtime/airtime_virtualenv/bin/python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
+        timeout -k 5 10 /usr/lib/airtime/airtime_virtualenv/bin/python \
+            /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
         # Send TERM after 5 seconds, wait at most 30 seconds.
         start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
         rm -f $PIDFILE
+        sleep 3
 }
 
 start_no_monit() {
         chown pypo:pypo /var/log/airtime/pypo
         chown pypo:pypo /var/log/airtime/pypo-liquidsoap
+        chown pypo:pypo /etc/airtime/liquidsoap.cfg
 
-        touch /var/run/airtime-liquidsoap.pid
-        chown pypo:pypo /var/run/airtime-liquidsoap.pid
+        rm -f $PIDFILE
+        touch $PIDFILE
+        chown pypo:pypo $PIDFILE 
 
         start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
-            --pidfile /var/run/airtime-liquidsoap.pid --nicelevel -15 --startas $DAEMON
+            --pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
 }
 
 
@@ -62,8 +66,8 @@ case "${1:-''}" in
         ;;
 
   'status')
-        if [ -f "/var/run/airtime-liquidsoap.pid" ]; then
-            pid=`cat /var/run/airtime-liquidsoap.pid`
+        if [ -f "$PIDFILE" ]; then
+            pid=`cat $PIDFILE`
             if [ -d "/proc/$pid" ]; then
                 echo "Liquidsoap is running"
                 exit 0
