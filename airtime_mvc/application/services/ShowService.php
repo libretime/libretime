@@ -9,20 +9,19 @@ define("REPEAT_MONTHLY_WEEKLY", 3);
 class Application_Service_ShowService
 {
     private $ccShow;
-    private $currentUser;
 
     public function __construct($showId=null)
     {
         if (!is_null($showId)) {
             $this->ccShow = CcShowQuery::create()->findPk($showId);
         }
-
-        $service_user = new Application_Service_UserService();
-        $this->currentUser = $service_user->getCurrentUser();
     }
 
     public function addUpdateShow($showData, $isUpdate=false)
     {
+        $service_user = new Application_Service_UserService();
+        $currentUser = $service_user->getCurrentUser();
+
         if ($showData["add_show_repeats"]) {
             $repeatType = $showData["add_show_repeat_type"];
             if ($showData["add_show_repeat_type"] == 2) {

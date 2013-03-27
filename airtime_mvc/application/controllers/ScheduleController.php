@@ -5,8 +5,6 @@ class ScheduleController extends Zend_Controller_Action
 
     protected $sched_sess = null;
 
-    private $currentUser;
-
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
@@ -40,9 +38,6 @@ class ScheduleController extends Zend_Controller_Action
                     ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
-
-        $service_user = new Application_Service_UserService();
-        $this->currentUser = $service_user->getCurrentUser();
     }
 
     public function indexAction()
@@ -117,13 +112,16 @@ class ScheduleController extends Zend_Controller_Action
 
     public function eventFeedAction()
     {
+        $service_user = new Application_Service_UserService();
+        $currentUser = $service_user->getCurrentUser();
+
         $start = new DateTime($this->_getParam('start', null));
         $start->setTimezone(new DateTimeZone("UTC"));
         $end = new DateTime($this->_getParam('end', null));
         $end->setTimezone(new DateTimeZone("UTC"));
 
         $events = &Application_Model_Show::getFullCalendarEvents($start, $end,
-            $this->currentUser->isAdminOrPM());
+            $currentUser->isAdminOrPM());
 
         $this->view->events = $events;
     }
@@ -367,81 +365,32 @@ class ScheduleController extends Zend_Controller_Action
         unset($this->view->showContent);
     }
 
-    public function populateShowInstanceFormAction(){
-        $formWhat = new Application_Form_AddShowWhat();
-        $formWho = new Application_Form_AddShowWho();
-        $formWhen = new Application_Form_AddShowWhen();
-        $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle = new Application_Form_AddShowStyle();
-        $formLive = new Application_Form_AddShowLiveStream();
+    public function populateShowInstanceFormAction()
+    {
+        $showId = $this->_getParam('showId');
+        $instanceId = $this->_getParam('instanceId');
+        $service_showForm = new Application_Service_ShowFormService($showId, $instanceId);
 
-        $formWhat->removeDecorator('DtDdWrapper');
-        $formWho->removeDecorator('DtDdWrapper');
-        $formWhen->removeDecorator('DtDdWrapper');
-        $formRepeats->removeDecorator('DtDdWrapper');
-        $formStyle->removeDecorator('DtDdWrapper');
+        $forms = $this->createShowFormAction();
 
-        $this->view->what = $formWhat;
-        $this->view->when = $formWhen;
-        $this->view->repeats = $formRepeats;
-        $this->view->who = $formWho;
-        $this->view->style = $formStyle;
-        $this->view->live = $formLive;
+        $service_showForm->delegateShowInstanceFormPopulation($forms);
+
         $this->view->addNewShow = false;
-
-        $showInstanceId = $this->_getParam('id');
-
-        $show_instance = CcShowInstancesQuery::create()->findPK($showInstanceId);
-        $show = new Application_Model_Show($show_instance->getDbShowId());
-
-        $starts_string = $show_instance->getDbStarts();
-        $ends_string = $show_instance->getDbEnds();
-
-        $starts_datetime = new DateTime($starts_string, new DateTimeZone("UTC"));
-        $ends_datetime = new DateTime($ends_string, new DateTimeZone("UTC"));
-
-        $starts_datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        $ends_datetime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
-        $instance_duration = $starts_datetime->diff($ends_datetime);
-
-        $formWhat->populate(array('add_show_id' => $show->getId(),
-                    'add_show_instance_id' => $showInstanceId,
-                    'add_show_name' => $show->getName(),
-                    'add_show_url' => $show->getUrl(),
-                    'add_show_genre' => $show->getGenre(),
-                    'add_show_description' => $show->getDescription()));
-
-        $formWhen->populate(array('add_show_start_date' => $starts_datetime->format("Y-m-d"),
-                                  'add_show_start_time' => $starts_datetime->format("H:i"),
-                                  'add_show_end_date_no_repeat' => $ends_datetime->format("Y-m-d"),
-                                  'add_show_end_time'    => $ends_datetime->format("H:i"),
-                                  'add_show_duration' => $instance_duration->format("%h")));
-
-        $formWhat->disable();
-        $formWho->disable();
-        $formWhen->disableRepeatCheckbox();
-        $formRepeats->disable();
-        $formStyle->disable();
-
-        //$formRecord->disable();
-        //$formAbsoluteRebroadcast->disable();
-        //$formRebroadcast->disable();
-
         $this->view->action = "edit-show-instance";
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
     }
 
     public function populateShowFormAction()
     {
+        $service_user = new Application_Service_UserService();
+        $currentUser = $service_user->getCurrentUser();
+
         $showId = $this->_getParam('showId');
         $instanceId = $this->_getParam('instanceId');
         $service_showForm = new Application_Service_ShowFormService($showId, $instanceId);
 
-        $this->view->action = "edit-show";
-
-        $isAdminOrPM = $this->currentUser->isAdminOrPM();
-        /*$isHostOfShow = $this->currentUser->isHostOfShow($showId);
+        $isAdminOrPM = $currentUser->isAdminOrPM();
+        /*$isHostOfShow = $currentUser->isHostOfShow($showId);
         // in case a user was once a dj and had been assigned to a show
         // but was then changed to an admin user we need to allow
         // the user to edit the show as an admin (CC-4925)
@@ -451,7 +400,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $forms = $this->createShowFormAction();
 
-        $service_showForm->delegateFormPopulation($forms);
+        $service_showForm->delegateShowFormPopulation($forms);
 
         if (!$isAdminOrPM) {
             foreach ($forms as $form) {
@@ -459,13 +408,17 @@ class ScheduleController extends Zend_Controller_Action
             }
         }
 
+        $this->view->action = "edit-show";
         $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         $this->view->entries = 5;
     }
 
     public function getFormAction()
     {
-        if ($this->currentUser->isAdminOrPM()) {
+        $service_user = new Application_Service_UserService();
+        $currentUser = $service_user->getCurrentUser();
+
+        if ($currentUser->isAdminOrPM()) {
             $this->createShowFormAction(true);
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }

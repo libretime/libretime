@@ -73,6 +73,11 @@ class Application_Service_ShowFormService
         $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
     }
 
+    public function delegateShowInstanceFormPopulation($forms)
+    {
+        $this->populateFormWhat($forms["what"]);
+    }
+
     /**
      * 
      * Delegates populating each show form with the appropriate
@@ -80,7 +85,7 @@ class Application_Service_ShowFormService
      * 
      * @param $forms
      */
-    public function delegateFormPopulation($forms)
+    public function delegateShowFormPopulation($forms)
     {
         $this->populateFormWhat($forms["what"]);
         $this->populateFormWhen($forms["when"]);
