@@ -64,7 +64,7 @@ class Application_Service_ShowService
                 // schedule start/end times
                 $this->applyShowStartEndDifference($showData);
                 $this->deleteRebroadcastInstances();
-                //$this->deleteCcShowDays();
+                $this->deleteCcShowDays();
                 $this->deleteCcShowHosts();
                 if ($isRebroadcast) {
                     //delete entry in cc_show_rebroadcast
@@ -73,7 +73,7 @@ class Application_Service_ShowService
             }
 
             //update ccShowDays
-            $this->setCcShowDays($showData, $repeatType, $isRecorded, $isRebroadcast, $isUpdate);
+            $this->setCcShowDays($showData, $repeatType, $isRecorded);
 
             //update ccShowRebroadcasts
             $this->setCcShowRebroadcasts($showData, $repeatType, $isRecorded);
@@ -104,14 +104,12 @@ class Application_Service_ShowService
      * Receives a cc_show id and determines whether to create a 
      * single show instance or repeating show instances
      */
-    public function delegateInstanceCreation($isRebroadcast=null, $isUpdate=false, $end=null, $ccShowDay=null)
+    public function delegateInstanceCreation($isRebroadcast=null, $isUpdate=false, $end=null)
     {
         $populateUntil = $this->getPopulateShowUntilDateTIme();
 
         if (is_null($this->ccShow)) {
             $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
-        } elseif ($isUpdate && !is_null($ccShowDay)) {
-            $ccShowDays = array(0 => $ccShowDay);
         } else {
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
@@ -681,10 +679,8 @@ SQL;
                 }
             }
         }
-        if (!$isUpdate) {
-            $nextDate = $utcEndDateTime->add($repeatInterval);
-            $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
-        }
+        $nextDate = $utcEndDateTime->add($repeatInterval);
+        $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
     }
 
     private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil,
@@ -943,7 +939,7 @@ SQL;
      * @param $isRecorded
      * @param $showDay ccShowDay object we are setting values on
      */
-    private function setCcShowDays($showData, $repeatType, $isRecorded, $isRebroadcast, $isUpdate)
+    private function setCcShowDays($showData, $repeatType, $isRecorded)
     {
         $showId = $this->ccShow->getDbId();
 
@@ -970,13 +966,7 @@ SQL;
 
         // Don't set day for monthly repeat type, it's invalid
         if ($showData['add_show_repeats'] && $showData['add_show_repeat_type'] == 2) {
-            if ($this->hasCcShowDay($repeatType, null)) {
-                $showDay = $this->getCcShowDay($repeatType, null);
-                $newShowDay = false;
-            } else {
-                $showDay = new CcShowDays();
-                $newShowDay = true;
-            }
+            $showDay = new CcShowDays();
             $showDay->setDbFirstShow($startDateTime->format("Y-m-d"));
             $showDay->setDbLastShow($endDate);
             $showDay->setDbStartTime($startDateTime->format("H:i:s"));
@@ -989,9 +979,6 @@ SQL;
             //so when editing, the date period iterator will start from the beginning
             $showDay->setDbNextPopDate($startDateTime->format("Y-m-d"));
             $showDay->save();
-            if ($newShowDay && $isUpdate) {
-                $this->delegateInstanceCreation($isRebroadcast, $isUpdate, $endDateTime, $showDay);
-            }
         } else {
             foreach ($showData['add_show_day_check'] as $day) {
                 $daysAdd=0;
@@ -1005,13 +992,7 @@ SQL;
                     $startDateTimeClone->add(new DateInterval("P".$daysAdd."D"));
                 }
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
-                    if ($this->hasCcShowDay($repeatType, $day)) {
-                        $showDay = $this->getCcShowDay($repeatType, $day);
-                        $newShowDay = false;
-                    } else {
-                        $showDay = new CcShowDays();
-                        $newShowDay = true;
-                    }
+                    $showDay = new CcShowDays();
                     $showDay->setDbFirstShow($startDateTimeClone->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);
                     $showDay->setDbStartTime($startDateTimeClone->format("H:i"));
@@ -1025,9 +1006,6 @@ SQL;
                     //so when editing, the date period iterator will start from the beginning
                     $showDay->setDbNextPopDate($startDateTimeClone->format("Y-m-d"));
                     $showDay->save();
-                    if ($newShowDay && $isUpdate) {
-                        $this->delegateInstanceCreation($isRebroadcast, $isUpdate, $endDateTime, $showDay);
-                    }
                 }
             }
         }
