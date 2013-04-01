@@ -74,6 +74,8 @@
  * @method     CcFilesQuery orderByDbCueout($order = Criteria::ASC) Order by the cueout column
  * @method     CcFilesQuery orderByDbSilanCheck($order = Criteria::ASC) Order by the silan_check column
  * @method     CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
+ * @method     CcFilesQuery orderByDbIsScheduled($order = Criteria::ASC) Order by the is_scheduled column
+ * @method     CcFilesQuery orderByDbIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbName() Group by the name column
@@ -143,6 +145,8 @@
  * @method     CcFilesQuery groupByDbCueout() Group by the cueout column
  * @method     CcFilesQuery groupByDbSilanCheck() Group by the silan_check column
  * @method     CcFilesQuery groupByDbHidden() Group by the hidden column
+ * @method     CcFilesQuery groupByDbIsScheduled() Group by the is_scheduled column
+ * @method     CcFilesQuery groupByDbIsPlaylist() Group by the is_playlist column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -247,6 +251,8 @@
  * @method     CcFiles findOneByDbCueout(string $cueout) Return the first CcFiles filtered by the cueout column
  * @method     CcFiles findOneByDbSilanCheck(boolean $silan_check) Return the first CcFiles filtered by the silan_check column
  * @method     CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
+ * @method     CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
+ * @method     CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -316,6 +322,8 @@
  * @method     array findByDbCueout(string $cueout) Return CcFiles objects filtered by the cueout column
  * @method     array findByDbSilanCheck(boolean $silan_check) Return CcFiles objects filtered by the silan_check column
  * @method     array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
+ * @method     array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
+ * @method     array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
  *
  * @package    propel.generator.airtime.om
  */
@@ -2043,6 +2051,40 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			$hidden = in_array(strtolower($dbHidden), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
 		return $this->addUsingAlias(CcFilesPeer::HIDDEN, $dbHidden, $comparison);
+	}
+
+	/**
+	 * Filter the query on the is_scheduled column
+	 * 
+	 * @param     boolean|string $dbIsScheduled The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbIsScheduled($dbIsScheduled = null, $comparison = null)
+	{
+		if (is_string($dbIsScheduled)) {
+			$is_scheduled = in_array(strtolower($dbIsScheduled), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcFilesPeer::IS_SCHEDULED, $dbIsScheduled, $comparison);
+	}
+
+	/**
+	 * Filter the query on the is_playlist column
+	 * 
+	 * @param     boolean|string $dbIsPlaylist The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbIsPlaylist($dbIsPlaylist = null, $comparison = null)
+	{
+		if (is_string($dbIsPlaylist)) {
+			$is_playlist = in_array(strtolower($dbIsPlaylist), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcFilesPeer::IS_PLAYLIST, $dbIsPlaylist, $comparison);
 	}
 
 	/**

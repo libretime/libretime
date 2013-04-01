@@ -55,10 +55,13 @@ class ReplayGainUpdater(Thread):
                     for f in files:
                         full_path = os.path.join(dir_path, f['fp'])
                         processed_data.append((f['id'], replaygain.calculate_replay_gain(full_path)))
+                        total += 1
 
                     try:
                         self.api_client.update_replay_gain_values(processed_data)
-                    except Exception as e: self.unexpected_exception(e)
+                    except Exception as e:
+                        self.logger.error(e)
+                        self.logger.debug(traceback.format_exc())
 
                     if len(files) == 0: break
                 self.logger.info("Processed: %d songs" % total)
@@ -67,15 +70,15 @@ class ReplayGainUpdater(Thread):
                 self.logger.error(e)
                 self.logger.debug(traceback.format_exc())
     def run(self):
-        try:
-            while True:
-                self.logger.info("Runnning replaygain updater")
+        while True:
+            try:
+                self.logger.info("Running replaygain updater")
                 self.main()
                 # Sleep for 5 minutes in case new files have been added
-                time.sleep(60 * 5)
-        except Exception, e:
-            self.logger.error('ReplayGainUpdater Exception: %s', traceback.format_exc())
-            self.logger.error(e)
+            except Exception, e:
+                self.logger.error('ReplayGainUpdater Exception: %s', traceback.format_exc())
+                self.logger.error(e)
+            time.sleep(60 * 5)
 
 if __name__ == "__main__":
     rgu = ReplayGainUpdater()

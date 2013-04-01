@@ -15,7 +15,7 @@ import json
 import base64
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.3.0"
+AIRTIME_VERSION = "2.3.1"
 
 
 # TODO : Place these functions in some common module. Right now, media
@@ -73,21 +73,30 @@ class ApcUrl(object):
         else: return self.base_url
 
 class ApiRequest(object):
-    def __init__(self, name, url):
+    def __init__(self, name, url, logger=None):
         self.name = name
         self.url  = url
         self.__req = None
+        if logger is None: self.logger = logging
+        else: self.logger = logger
     def __call__(self,_post_data=None, **kwargs):
-        # TODO : get rid of god damn urllib and replace everything with
-        # grequests or requests at least
         final_url = self.url.params(**kwargs).url()
         if _post_data is not None: _post_data = urllib.urlencode(_post_data)
-        req = urllib2.Request(final_url, _post_data)
-        response  = urllib2.urlopen(req).read()
+        try:
+            req = urllib2.Request(final_url, _post_data)
+            response  = urllib2.urlopen(req).read()
+        except Exception, e:
+            import traceback
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", traceback.format_exc())
+            raise
         # Ghetto hack for now because we don't the content type we are getting
         # (Pointless to look at mime since it's not being set correctly always)
-        try: return json.loads(response)
-        except ValueError: return response
+        try:
+            return json.loads(response)
+        except Exception:
+            self.logger.error(response)
+            raise
 
     def req(self, *args, **kwargs):
         self.__req = lambda : self(*args, **kwargs)
@@ -107,7 +116,9 @@ class RequestProvider(object):
     def __init__(self, cfg):
         self.config = cfg
         self.requests = {}
-        self.url = ApcUrl("http://%s:%s/%s/%s/%s" \
+        if self.config["base_dir"].startswith("/"):
+            self.config["base_dir"] = self.config["base_dir"][1:]
+        self.url = ApcUrl("http://%s:%s/%s%s/%s" \
             % (self.config["host"], str(self.config["base_port"]),
                self.config["base_dir"], self.config["api_base"],
                '%%action%%'))
@@ -141,7 +152,6 @@ class AirtimeApiClient(object):
             sys.exit(1)
 
     def __get_airtime_version(self):
-        # TODO : maybe fix this function to drop an exception?
         try: return self.services.version_url()[u'version']
         except Exception: return -1
 
@@ -149,18 +159,18 @@ class AirtimeApiClient(object):
         logger = self.logger
         version = self.__get_airtime_version()
         # logger.info('Airtime version found: ' + str(version))
-        if (version == -1):
+        if version == -1:
             if (verbose):
                 logger.info('Unable to get Airtime version number.\n')
             return False
-        elif (version[0:3] != AIRTIME_VERSION[0:3]):
-            if (verbose):
+        elif version[0:3] != AIRTIME_VERSION[0:3]:
+            if verbose:
                 logger.info('Airtime version found: ' + str(version))
                 logger.info('pypo is at version ' + AIRTIME_VERSION +
                     ' and is not compatible with this version of Airtime.\n')
             return False
         else:
-            if (verbose):
+            if verbose:
                 logger.info('Airtime version: ' + str(version))
                 logger.info('pypo is at version ' + AIRTIME_VERSION + ' and is compatible with this version of Airtime.')
             return True
@@ -168,29 +178,32 @@ class AirtimeApiClient(object):
 
     def get_schedule(self):
         # TODO : properly refactor this routine
-        # For now thre return type is a little fucked for compatibility reasons
+        # For now the return type is a little fucked for compatibility reasons
         try: return (True, self.services.export_url())
-        except: (False, "")
+        except: return (False, None)
 
     def notify_liquidsoap_started(self):
-        return self.services.notify_liquidsoap_started()
+        try:
+            self.services.notify_liquidsoap_started()
+        except Exception, e:
+            self.logger.error(str(e))
 
     def notify_media_item_start_playing(self, media_id):
         """ This is a callback from liquidsoap, we use this to notify
         about the currently playing *song*. We get passed a JSON string
         which we handed to liquidsoap in get_liquidsoap_data(). """
-        return self.services.update_start_playing_url(media_id=media_id)
-
-    # TODO : get this routine out of here it doesn't belong at all here
-    def get_liquidsoap_data(self, pkey, schedule):
-        playlist = schedule[pkey]
-        data = dict()
-        try: data["schedule_id"] = playlist['id']
-        except Exception: data["schedule_id"] = 0
-        return data
+        try:
+            return self.services.update_start_playing_url(media_id=media_id)
+        except Exception, e:
+            self.logger.error(str(e))
+            return None
 
     def get_shows_to_record(self):
-        return self.services.show_schedule_url()
+        try:
+            return self.services.show_schedule_url()
+        except Exception, e:
+            self.logger.error(str(e))
+            return None
 
     def upload_recorded_show(self, data, headers):
         logger = self.logger
@@ -226,19 +239,29 @@ class AirtimeApiClient(object):
         return response
 
     def check_live_stream_auth(self, username, password, dj_type):
-        return self.services.check_live_stream_auth(
-            username=username, password=password, djtype=dj_type)
+        try:
+            return self.services.check_live_stream_auth(
+                username=username, password=password, djtype=dj_type)
+        except Exception, e:
+            self.logger.error(str(e))
+            return {}
 
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""
         # TODO : Make other methods in this class use this this method.
-        url = "http://%s:%s/%s/%s/%s" %  \
+        if self.config["base_dir"].startswith("/"):
+            self.config["base_dir"] = self.config["base_dir"][1:]
+        url = "http://%s:%s/%s%s/%s" %  \
             (self.config["host"], str(self.config["base_port"]),
              self.config["base_dir"], self.config["api_base"],
              self.config[config_action_key])
         url = url.replace("%%api_key%%", self.config["api_key"])
         return url
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def setup_media_monitor(self):
         return self.services.media_setup_url()
 
@@ -299,25 +322,40 @@ class AirtimeApiClient(object):
             self.logger.error("Could not find index 'files' in dictionary: %s",
                     str(response))
             return []
-
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def list_all_watched_dirs(self):
         return self.services.list_all_watched_dirs()
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def add_watched_dir(self, path):
         return self.services.add_watched_dir(path=base64.b64encode(path))
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def remove_watched_dir(self, path):
         return self.services.remove_watched_dir(path=base64.b64encode(path))
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def set_storage_dir(self, path):
         return self.services.set_storage_dir(path=base64.b64encode(path))
 
+    """
+    Caller of this method needs to catch any exceptions such as
+    ValueError thrown by json.loads or URLError by urllib2.urlopen
+    """
     def get_stream_setting(self):
-        logger = self.logger
-        try: return self.services.get_stream_setting()
-        except Exception, e:
-            logger.error("Exception: %s", e)
-            return None
+        return self.services.get_stream_setting()
 
     def register_component(self, component):
         """ Purpose of this method is to contact the server with a "Hey its
@@ -334,6 +372,7 @@ class AirtimeApiClient(object):
             self.services.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
                                           boot_time=time).retry(5)
         except Exception, e:
+            #TODO
             logger.error("Exception: %s", e)
 
     def notify_source_status(self, sourcename, status):
@@ -342,10 +381,11 @@ class AirtimeApiClient(object):
             return self.services.update_source_status.req(sourcename=sourcename,
                                                       status=status).retry(5)
         except Exception, e:
+            #TODO
             logger.error("Exception: %s", e)
 
     def get_bootstrap_info(self):
-        """ Retrive infomations needed on bootstrap time """
+        """ Retrieve infomations needed on bootstrap time """
         return self.services.get_bootstrap_info()
 
     def get_files_without_replay_gain_value(self, dir_id):
@@ -355,15 +395,23 @@ class AirtimeApiClient(object):
         to this file is the return value.
         """
         #http://localhost/api/get-files-without-replay-gain/dir_id/1
-        return self.services.get_files_without_replay_gain(dir_id=dir_id)
-    
+        try:
+            return self.services.get_files_without_replay_gain(dir_id=dir_id)
+        except Exception, e:
+            self.logger.error(str(e))
+            return []
+
     def get_files_without_silan_value(self):
         """
         Download a list of files that need to have their cue in/out value
         calculated. This list of files is downloaded into a file and the path
         to this file is the return value.
         """
-        return self.services.get_files_without_silan_value()
+        try:
+            return self.services.get_files_without_silan_value()
+        except Exception, e:
+            self.logger.error(str(e))
+            return []
 
     def update_replay_gain_values(self, pairs):
         """
@@ -372,13 +420,14 @@ class AirtimeApiClient(object):
         """
         self.logger.debug(self.services.update_replay_gain_value(
             _post_data={'data': json.dumps(pairs)}))
-        
+
+
     def update_cue_values_by_silan(self, pairs):
         """
         'pairs' is a list of pairs in (x, y), where x is the file's database
         row id and y is the file's cue values in dB
         """
-        print self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
+        return self.services.update_cue_values_by_silan(_post_data={'data': json.dumps(pairs)})
 
 
     def notify_webstream_data(self, data, media_id):
@@ -400,5 +449,9 @@ class AirtimeApiClient(object):
         return response
 
     def update_stream_setting_table(self, data):
-        response = self.services.update_stream_setting_table(_post_data={'data': json.dumps(data)})
-        return response
+        try:
+            response = self.services.update_stream_setting_table(_post_data={'data': json.dumps(data)})
+            return response
+        except Exception, e:
+            #TODO
+            self.logger.error(str(e))

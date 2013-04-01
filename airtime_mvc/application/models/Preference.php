@@ -1223,9 +1223,9 @@ class Application_Model_Preference
         $num_columns = count(Application_Model_StoredFile::getLibraryColumns());
         $new_columns_num = count($settings['abVisCols']);
 
-        if ($num_columns != $new_columns_num) {
+        /*if ($num_columns != $new_columns_num) {
             throw new Exception("Trying to write a user column preference with incorrect number of columns!");
-        }
+        }*/
 
         $data = serialize($settings);
         $v = self::setValue("library_datatable", $data, true);
@@ -1262,7 +1262,19 @@ class Application_Model_Preference
         $data = self::getValue("nowplaying_screen", true);
         return ($data != "") ? unserialize($data) : null;
     }
-    
+
+    public static function setLibraryScreenSettings($settings)
+    {
+        $data = serialize($settings);
+        self::setValue("library_screen", $data, true);
+    }
+
+    public static function getLibraryScreenSettings()
+    {
+        $data = self::getValue("library_screen", true);
+        return ($data != "") ? unserialize($data) : null;
+    }
+
     public static function SetEnableReplayGain($value) {
         self::setValue("enable_replay_gain", $value, false);
     }

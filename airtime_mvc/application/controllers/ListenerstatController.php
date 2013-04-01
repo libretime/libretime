@@ -76,6 +76,6 @@ class ListenerstatController extends Zend_Controller_Action
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
         
         $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format("Y-m-d H:i:s"), $endsDT->format("Y-m-d H:i:s"), $mountName);
-        die(json_encode($data));
+        $this->_helper->json->sendJson($data); 
     }
 }

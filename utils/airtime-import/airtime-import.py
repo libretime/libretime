@@ -75,15 +75,16 @@ def format_dir_string(path):
     return path
 
 def helper_get_stor_dir():
-    res = api_client.list_all_watched_dirs()
-    if(res is None):
+    try:
+        res = api_client.list_all_watched_dirs()
+    except Exception, e:
         return res
+
+    if(res['dirs']['1'][-1] != '/'):
+        out = res['dirs']['1']+'/'
+        return out
     else:
-        if(res['dirs']['1'][-1] != '/'):
-            out = res['dirs']['1']+'/'
-            return out
-        else:
-            return res['dirs']['1']
+        return res['dirs']['1']
 
 def checkOtherOption(args):
     for i in args:
@@ -162,14 +163,17 @@ def WatchAddAction(option, opt, value, parser):
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
         #os.chmod(path, 0765)
-        res = api_client.add_watched_dir(path)
-        if(res is None):
+        try:
+            res = api_client.add_watched_dir(path)
+        except Exception, e:
             exit("Unable to connect to the server.")
         # sucess
         if(res['msg']['code'] == 0):
             print "%s added to watched folder list successfully" % path
         else:
             print "Adding a watched folder failed: %s" % res['msg']['error']
+            print "This error most likely caused by wrong permissions"
+            print "Try fixing this error by chmodding the parent directory(ies)"
     else:
         print "Given path is not a directory: %s" % path
 
@@ -177,8 +181,9 @@ def WatchListAction(option, opt, value, parser):
     errorIfMultipleOption(parser.rargs)
     if(len(parser.rargs) > 0):
         raise OptionValueError("This option doesn't take any arguments.")
-    res = api_client.list_all_watched_dirs()
-    if(res is None):
+    try:
+        res = api_client.list_all_watched_dirs()
+    except Exception, e:
         exit("Unable to connect to the Airtime server.")
     dirs = res["dirs"].items()
     # there will be always 1 which is storage folder
@@ -202,8 +207,9 @@ def WatchRemoveAction(option, opt, value, parser):
         path = currentDir+path
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
-        res = api_client.remove_watched_dir(path)
-        if(res is None):
+        try:
+            res = api_client.remove_watched_dir(path)
+        except Exception, e:
             exit("Unable to connect to the Airtime server.")
         # sucess
         if(res['msg']['code'] == 0):
@@ -247,10 +253,11 @@ def StorageSetAction(option, opt, value, parser):
         path = currentDir+path
     path = apc.encode_to(path, 'utf-8')
     if(os.path.isdir(path)):
-        res = api_client.set_storage_dir(path)
-        if(res is None):
+        try:
+            res = api_client.set_storage_dir(path)
+        except Exception, e:
             exit("Unable to connect to the Airtime server.")
-        # sucess
+        # success
         if(res['msg']['code'] == 0):
             print "Successfully set storage folder to %s" % path
         else:

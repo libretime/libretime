@@ -1,10 +1,12 @@
-%include "library/pervasives.liq"
 %include "/etc/airtime/liquidsoap.cfg"
 
 set("log.file.path", log_file)
 set("log.stdout", true)
 set("server.telnet", true)
 set("server.telnet.port", 1234)
+set("init.daemon.pidfile.path", "/var/run/airtime-liquidsoap.pid")
+
+%include "library/pervasives.liq"
 
 #Dynamic source list
 #dyn_sources = ref []
@@ -31,24 +33,49 @@ s2_namespace = ref ''
 s3_namespace = ref ''
 just_switched = ref false
 
-#stream_harbor_pass = list.hd(get_process_lines('pwgen -s -N 1 -n 20'))
-
 %include "ls_lib.liq"
 
-queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
-queue = cue_cut(queue)
+sources = ref []
+source_id = ref 0
+
+def create_source()
+    l = request.equeue(id="s#{!source_id}", length=0.5)
+    l = cue_cut(l)
+    sources := list.append([l], !sources)
+    server.register(namespace="queues",
+                "s#{!source_id}_skip",
+                fun (s) -> begin log("queues.s#{!source_id}_skip") 
+                    clear_queue(l) 
+                    "Done" 
+                end)
+    source_id := !source_id + 1
+end
+
+create_source()
+create_source()
+create_source()
+create_source()
+
+create_source()
+create_source()
+create_source()
+create_source()
+
+queue = add(!sources)
+
+queue = audio_to_stereo(id="queue_src", queue)
 queue = amplify(1., override="replay_gain", queue)
 
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
 queue = on_metadata(notify, queue)
-queue = map_metadata(update=false, append_title, queue)
 output.dummy(fallible=true, queue)
 
 http = input.http_restart(id="http")
 http = cross_http(http_input_id="http",http)
 output.dummy(fallible=true, http)
 stream_queue = http_fallback(http_input_id="http", http=http, default=queue)
+stream_queue = map_metadata(update=false, append_title, stream_queue)
 
 ignore(output.dummy(stream_queue, fallible=true))
 
@@ -78,8 +105,8 @@ server.register(namespace="dynamic_source",
                 description="Enable webstream output",
                 usage='start',
                 "output_start",
-                fun (s) -> begin log("dynamic_source.output_start") 
-                    notify([("schedule_table_id", !current_dyn_id)]) 
+                fun (s) -> begin log("dynamic_source.output_start")
+                    notify([("schedule_table_id", !current_dyn_id)])
                     webstream_enabled := true "enabled" end)
 server.register(namespace="dynamic_source",
                 description="Enable webstream output",
@@ -154,8 +181,9 @@ def make_scheduled_play_unavailable()
 end
 
 def update_source_status(sourcename, status) =
-    system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &")
-    log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &")
+    command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --source-name=#{sourcename} --source-status=#{status} &"
+    system(command)
+    log(command)
 end
 
 def live_dj_connect(header) =
@@ -195,43 +223,59 @@ def check_dj_client(user,password) =
     hd == "True"
 end
 
-def append_dj_inputs(master_harbor_input_port, master_harbor_input_mount_point, dj_harbor_input_port, dj_harbor_input_mount_point, s) =
-    if master_harbor_input_port != 0 and master_harbor_input_mount_point != "" and dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        master_dj = mksafe(audio_to_stereo(input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
-                    max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)))
-        dj_live = mksafe(audio_to_stereo(input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)))
+s = switch(id="schedule_noise_switch",
+            track_sensitive=false,
+            transitions=[transition_default, transition],
+            [({!scheduled_play_enabled}, stream_queue), ({true}, default)]
+    )
 
-        ignore(output.dummy(master_dj, fallible=true))
-        ignore(output.dummy(dj_live, fallible=true))
-        switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition, transition], [({!master_dj_enabled},master_dj), ({!live_dj_enabled},dj_live), ({true}, s)])
-    elsif master_harbor_input_port != 0 and master_harbor_input_mount_point != "" then
-        master_dj = mksafe(audio_to_stereo(input.harbor(id="master_harbor", master_harbor_input_mount_point, port=master_harbor_input_port, auth=check_master_dj_client,
-                     max=40., on_connect=master_dj_connect, on_disconnect=master_dj_disconnect)))
-        ignore(output.dummy(master_dj, fallible=true))
-        
-        switch(id="master_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!master_dj_enabled},master_dj), ({true}, s)])
-    elsif dj_harbor_input_port != 0 and dj_harbor_input_mount_point != "" then
-        dj_live = mksafe(audio_to_stereo(input.harbor(id="live_dj_harbor", dj_harbor_input_mount_point, port=dj_harbor_input_port, auth=check_dj_client,
-                    max=40., on_connect=live_dj_connect, on_disconnect=live_dj_disconnect)))
+s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
+    dj_live = mksafe(
+        audio_to_stereo(
+            input.harbor(id="live_dj_harbor",
+                dj_live_stream_mp,
+                port=dj_live_stream_port,
+                auth=check_dj_client,
+                max=40.,
+                on_connect=live_dj_connect,
+                on_disconnect=live_dj_disconnect)))
 
-        ignore(output.dummy(dj_live, fallible=true))
-        switch(id="live_dj_switch", track_sensitive=false, transitions=[transition, transition], [({!live_dj_enabled},dj_live), ({true}, s)])
-    else
-        s
-    end
+    ignore(output.dummy(dj_live, fallible=true))
+
+    switch(id="show_schedule_noise_switch",
+            track_sensitive=false,
+            transitions=[transition, transition],
+            [({!live_dj_enabled}, dj_live), ({true}, s)]
+        )
+else
+    s
 end
 
-s = switch(id="default_switch", track_sensitive=false,
-    transitions=[transition_default, transition],
-    [({!scheduled_play_enabled}, stream_queue),({true},default)])
+s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
+    master_dj = mksafe(
+                    audio_to_stereo(
+                        input.harbor(id="master_harbor",
+                            master_live_stream_mp,
+                            port=master_live_stream_port,
+                            auth=check_master_dj_client,
+                            max=40.,
+                            on_connect=master_dj_connect,
+                            on_disconnect=master_dj_disconnect)))
 
-s = append_dj_inputs(master_live_stream_port, master_live_stream_mp,
-    dj_live_stream_port, dj_live_stream_mp, s)
+    ignore(output.dummy(master_dj, fallible=true))
+
+    switch(id="master_show_schedule_noise_switch",
+            track_sensitive=false,
+            transitions=[transition, transition],
+            [({!master_dj_enabled}, master_dj), ({true}, s)]
+        )
+else
+    s
+end
+
 
 # Attach a skip command to the source s:
-
-add_skip_command(s)
+#add_skip_command(s)
 
 server.register(namespace="streams",
     description="Stop Master DJ source.",

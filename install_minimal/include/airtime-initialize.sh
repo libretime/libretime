@@ -45,7 +45,6 @@ chmod 600 /etc/monit/conf.d/monit-airtime-liquidsoap.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-media-monitor.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-playout.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-liquidsoap.cfg
-chmod 600 /etc/monit/conf.d/monit-airtime-rabbitmq-server.cfg
 
 # Start monit if it is not running, or restart if it is.
 # Need to ensure monit is running before Airtime daemons are run. This is
@@ -58,7 +57,6 @@ invoke-rc.d monit restart
 sleep 1
 
 set +e
-
 if [ "$mediamonitor" = "t" ]; then
     monit monitor airtime-media-monitor
 fi
@@ -66,6 +64,4 @@ if [ "$pypo" = "t" ]; then
     monit monitor airtime-playout
     monit monitor airtime-liquidsoap
 fi
-
-monit monitor rabbitmq-server
 set -e

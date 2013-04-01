@@ -30,8 +30,7 @@ $(document).ready(function() {
 		    var tempFileName = j.tempfilepath;
 		    $.get(baseUrl+'Plupload/copyfile/format/json/name/'+
 		          encodeURIComponent(file.name)+'/tempname/' +
-		          encodeURIComponent(tempFileName), function(json){
-		        var jr = jQuery.parseJSON(json);
+		          encodeURIComponent(tempFileName), function(jr){
 		        if(jr.error !== undefined) {
 		            var row = $("<tr/>")
 		                .append('<td>' + file.name +'</td>')

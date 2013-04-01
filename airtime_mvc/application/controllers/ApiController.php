@@ -42,8 +42,10 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('reload-metadata-group'         , 'json')
                 ->addActionContext('notify-webstream-data'         , 'json')
                 ->addActionContext('get-stream-parameters'         , 'json')
-                ->addActionContext('push-stream-stats'         , 'json')
-                ->addActionContext('update-stream-setting-table'         , 'json')
+                ->addActionContext('push-stream-stats'             , 'json')
+                ->addActionContext('update-stream-setting-table'   , 'json')
+                ->addActionContext('update-replay-gain-value'      , 'json')
+                ->addActionContext('update-cue-values-by-silan'    , 'json')
                 ->initContext();
     }
 
@@ -261,13 +263,31 @@ class ApiController extends Zend_Controller_Action
                                 "currentShow"=>Application_Model_Show::getCurrentShow($utcTimeNow),
                                 "nextShow"=>Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
                             );
-
+                // XSS exploit prevention
+                foreach ($result["currentShow"] as &$current) {
+                    $current["name"] = htmlspecialchars($current["name"]);
+                }
+                foreach ($result["nextShow"] as &$next) {
+                    $next["name"] = htmlspecialchars($next["name"]);
+                }
+                
                 Application_Model_Show::convertToLocalTimeZone($result["currentShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
                 Application_Model_Show::convertToLocalTimeZone($result["nextShow"],
                         array("starts", "ends", "start_timestamp", "end_timestamp"));
             } else {
                 $result = Application_Model_Schedule::GetPlayOrderRange();
+
+                // XSS exploit prevention
+                $result["previous"]["name"] = htmlspecialchars($result["previous"]["name"]);
+                $result["current"]["name"] = htmlspecialchars($result["current"]["name"]);
+                $result["next"]["name"] = htmlspecialchars($result["next"]["name"]);
+                foreach ($result["currentShow"] as &$current) {
+                    $current["name"] = htmlspecialchars($current["name"]);
+                }
+                foreach ($result["nextShow"] as &$next) {
+                    $next["name"] = htmlspecialchars($next["name"]);
+                }
 
                 //Convert from UTC to localtime for Web Browser.
                 Application_Model_Show::ConvertToLocalTimeZone($result["currentShow"],
@@ -315,7 +335,15 @@ class ApiController extends Zend_Controller_Action
 
                 $result[$dow[$i]] = $shows;
             }
-            
+
+            // XSS exploit prevention
+            foreach ($dow as $d) {
+                foreach ($result[$d] as &$show) {
+                    $show["name"] = htmlspecialchars($show["name"]);
+                    $show["url"] = htmlspecialchars($show["url"]);
+                }
+            }
+
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
             header("Content-type: text/javascript");
@@ -411,7 +439,9 @@ class ApiController extends Zend_Controller_Action
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir, $fileName, $tempFileName);
 
         if (!is_null($result)) {
-            die('{"jsonrpc" : "2.0", "error" : {"code": '.$result['code'].', "message" : "'.$result['message'].'"}}');
+            $this->_helper->json->sendJson(
+                array("jsonrpc" => "2.0", "error" => array("code" => $result['code'], "message" => $result['message']))
+            );
         }
     }
 
@@ -600,7 +630,7 @@ class ApiController extends Zend_Controller_Action
             $response['key'] = $k;
             array_push($responses, $response);
         }
-        die( json_encode($responses) );
+        $this->_helper->json->sendJson($responses);
     }
 
     public function listAllFilesAction()
@@ -668,7 +698,6 @@ class ApiController extends Zend_Controller_Action
             "platform"=>Application_Model_Systemstatus::GetPlatformInfo(),
             "airtime_version"=>Application_Model_Preference::GetAirtimeVersion(),
             "services"=>array(
-                "rabbitmq"=>Application_Model_Systemstatus::GetRabbitMqStatus(),
                 "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
                 "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
                 "media_monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus()
@@ -919,7 +948,7 @@ class ApiController extends Zend_Controller_Action
 
     public function updateReplayGainValueAction()
     {
-        // disable layout
+        // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
@@ -933,17 +962,19 @@ class ApiController extends Zend_Controller_Action
             $file->setDbReplayGain($gain);
             $file->save();
         }
+
+        $this->view->msg = "OK";
     }
     
     public function updateCueValuesBySilanAction()
     {
-        // disable layout
+        // disable the view and the layout
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-    
+
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
-    Logging::info($data);
+
         foreach ($data as $pair) {
             list($id, $info) = $pair;
             // TODO : move this code into model -- RG
@@ -955,6 +986,8 @@ class ApiController extends Zend_Controller_Action
             $file->setDbSilanCheck(true);
             $file->save();
         }
+
+        echo json_encode(array());
     }
 
     public function notifyWebstreamDataAction()
@@ -962,7 +995,6 @@ class ApiController extends Zend_Controller_Action
         $request = $this->getRequest();
         $data = $request->getParam("data");
         $media_id = $request->getParam("media_id");
-
         $data_arr = json_decode($data);
 
         if (!is_null($media_id)) {

@@ -13,9 +13,9 @@
 <?php foreach($this->showContent as $row): ?>
     <tr id="au_<?php echo $row["item_id"] ?>" class="<?php if($i&1){echo "even";}else{echo "odd";}?>">
         <td><?php echo $row["starts"] ?></td>
-        <td><?php echo $row["track_title"] ?></td>
-        <td><?php echo $row["creator"] ?></td>
-        <td><?php echo $row["album"] ?></td>
+        <td><?php echo $this->escape($row["track_title"]) ?></td>
+        <td><?php echo $this->escape($row["creator"]) ?></td>
+        <td><?php echo $this->escape($row["album"]) ?></td>
         <td class="library_length"><?php echo $row["length"] ?></td>
         <td><?php echo $row["genre"] ?></td>
     </tr>

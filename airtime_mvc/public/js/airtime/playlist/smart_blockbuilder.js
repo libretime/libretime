@@ -351,7 +351,7 @@ function setupUI() {
      * It is only active if playlist is not empty
      */
     var plContents = $('#spl_sortable').children();
-    var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"]');
+    var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"], button[id="pl-bl-clear-content"]');
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {
@@ -480,9 +480,8 @@ function getCriteriaOptionType(e) {
     return criteriaTypes[criteria];
 }
 
-function callback(data, type) {
-    var json = $.parseJSON(data),
-        dt = $('table[id="library_display"]').dataTable();
+function callback(json, type) {
+    var dt = $('table[id="library_display"]').dataTable();
 
     if (type == 'shuffle' || type == 'generate') {
         if (json.error !== undefined) {
@@ -560,7 +559,9 @@ function enableLoadingIcon() {
 function disableLoadingIcon() {
     $("#side_playlist").unblock()
 }
-
+// We need to know if the criteria value will be a string
+// or numeric value in order to populate the modifier
+// select list
 var criteriaTypes = {
     0              : "",
     "album_title"  : "s",
@@ -569,6 +570,8 @@ var criteriaTypes = {
     "composer"     : "s",
     "conductor"    : "s",
     "copyright"    : "s",
+    "cuein"        : "n",
+    "cueout"       : "n",
     "artist_name"  : "s",
     "encoded_by"   : "s",
     "utime"        : "n",

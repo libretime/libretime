@@ -7,6 +7,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
     {
 
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
+        $rangeValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(0, 59.9);
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_general.phtml'))
         ));
@@ -34,9 +35,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'label'      => _('Default Fade (s):'),
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'validators' => array(array($notEmptyValidator, 'regex', false,
-                array('/^[0-9]{1,2}(\.\d{1})?$/',
-                'messages' => _('enter a time in seconds 0{.0}')))),
+            'validators' => array(
+                array(
+                    $rangeValidator,
+                    $notEmptyValidator,
+                    'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
+                )
+            ),
             'value' => $defaultFade,
             'decorators' => array(
                 'ViewHelper'

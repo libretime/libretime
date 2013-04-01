@@ -9,6 +9,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('event-feed', 'json')
+                    ->addActionContext('event-feed-preload', 'json')
                     ->addActionContext('make-context-menu', 'json')
                     ->addActionContext('add-show-dialog', 'json')
                     ->addActionContext('add-show', 'json')
@@ -33,6 +34,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('dj-edit-show', 'json')
                     ->addActionContext('calculate-duration', 'json')
                     ->addActionContext('get-current-show', 'json')
+                    ->addActionContext('update-future-is-scheduled', 'json')
                     ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -88,15 +90,23 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
         //End Show builder JS/CSS requirements
 
+
         Application_Model_Schedule::createNewFormSections($this->view);
-
         $user = Application_Model_User::getCurrentUser();
-
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $this->view->preloadShowForm = true;
         }
 
-        $this->view->headScript()->appendScript("var weekStart = ".Application_Model_Preference::GetWeekStartDay().";");
+        $this->view->headScript()->appendScript(
+            "var calendarPref = {};\n".
+            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "calendarPref.timestamp = ".time().";\n".
+            "calendarPref.timezoneOffset = ".date("Z").";\n".
+            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
+            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
+            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "var calendarEvents = null;"
+        );
     }
 
     public function eventFeedAction()
@@ -108,10 +118,28 @@ class ScheduleController extends Zend_Controller_Action
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $editable = true;
+        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
+        $this->view->events = $events;
+    }
+
+    public function eventFeedPreloadAction()
+    {
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
+        Logging::info($calendar_interval);
+        if ($calendar_interval == "agendaDay") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentDayView();
+        } else if ($calendar_interval == "agendaWeek") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentWeekView();
+        } else if ($calendar_interval == "month") {
+            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
         } else {
-            $editable = false;
+            Logging::error("Invalid Calendar Interval '$calendar_interval'");
         }
 
         $events = &Application_Model_Show::getFullCalendarEvents($start, $end, $editable);
@@ -218,7 +246,7 @@ class ScheduleController extends Zend_Controller_Action
         $id = $file->getId();
         Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
-        die();
+        $this->_helper->json->sendJson(null);
     }
 
     public function makeContextMenuAction()
@@ -452,7 +480,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->percentFilled = $show->getPercentScheduled();
         $this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
-        $this->view->showTitle = $show->getName();
+        $this->view->showTitle = htmlspecialchars($show->getName());
         unset($this->view->showContent);
     }
 
@@ -546,7 +574,10 @@ class ScheduleController extends Zend_Controller_Action
             return;
         }
 
-        if ($isDJ) {
+        // in case a user was once a dj and had been assigned to a show
+        // but was then changed to an admin user we need to allow
+        // the user to edit the show as an admin (CC-4925)
+        if ($isDJ && !$isAdminOrPM) {
             $this->view->action = "dj-edit-show";
         }
 
@@ -599,7 +630,11 @@ class ScheduleController extends Zend_Controller_Action
             if (!$showInstance->getShow()->isRepeating()) {
                 $formWhen->disableStartDateAndTime();
             } else {
-                $formWhen->getElement('add_show_start_date')->setOptions(array('disabled' => true));
+                $nextFutureRepeatShow = $show->getNextFutureRepeatShowTime();
+                $formWhen->getElement('add_show_start_date')->setValue($nextFutureRepeatShow["starts"]->format("Y-m-d"));
+                $formWhen->getElement('add_show_start_time')->setValue($nextFutureRepeatShow["starts"]->format("H:i"));
+                $formWhen->getElement('add_show_end_date_no_repeat')->setValue($nextFutureRepeatShow["ends"]->format("Y-m-d"));
+                $formWhen->getElement('add_show_end_time')->setValue($nextFutureRepeatShow["ends"]->format("H:i"));
             }
         }
 
@@ -774,10 +809,16 @@ class ScheduleController extends Zend_Controller_Action
         }
         $data['add_show_record'] = $show->isRecorded();
 
-        $origianlShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime($show->getStartDateAndTime());
+        if ($show->isRepeating()) {
+             $nextFutureRepeatShow = $show->getNextFutureRepeatShowTime();
+             $originalShowStartDateTime = $nextFutureRepeatShow["starts"];
+        } else {
+            $originalShowStartDateTime = Application_Common_DateHelper::ConvertToLocalDateTime(
+                $show->getStartDateAndTime());
+        }
 
         $success = Application_Model_Schedule::addUpdateShow($data, $this,
-            $validateStartDate, $origianlShowStartDateTime, true,
+            $validateStartDate, $originalShowStartDateTime, true,
             $data['add_show_instance_id']);
 
         if ($success) {
@@ -867,6 +908,7 @@ class ScheduleController extends Zend_Controller_Action
             try {
                 $scheduler = new Application_Model_Scheduler();
                 $scheduler->cancelShow($id);
+                Application_Model_StoredFile::updatePastFilesIsScheduled();
                 // send kick out source stream signal to pypo
                 $data = array("sourcename"=>"live_dj");
                 Application_Model_RabbitMq::SendMessageToPypo("disconnect_source", $data);
@@ -897,7 +939,7 @@ class ScheduleController extends Zend_Controller_Action
                             'title' => _('Download'));
 
         //returns format jjmenu is looking for.
-        die(json_encode($menu));
+        $this->_helper->json->sendJson($menu);
     }
 
     /**
@@ -949,5 +991,12 @@ class ScheduleController extends Zend_Controller_Action
 
         echo Zend_Json::encode($result);
         exit();
+    }
+
+    public function updateFutureIsScheduledAction()
+    {
+        $schedId = $this->_getParam('schedId');
+        $redrawLibTable = Application_Model_StoredFile::setIsScheduled($schedId, false);
+        $this->_helper->json->sendJson(array("redrawLibTable" => $redrawLibTable));
     }
 }

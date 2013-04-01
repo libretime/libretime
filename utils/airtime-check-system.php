@@ -99,10 +99,13 @@ class AirtimeCheck {
     {
         $headerInfo = get_headers("http://$p_baseUrl:$p_basePort",1);
         
-        if (!isset($headerInfo['Server'][0]))
+        if (!isset($headerInfo['Server'][0])) {
             return self::UNKNOWN;
-        else
+        } else if (is_array($headerInfo['Server'])) {
             return $headerInfo['Server'][0];
+        } else {
+            return $headerInfo['Server'];
+        }
     }
 
     public static function GetStatus($p_baseUrl, $p_basePort, $p_baseDir, $p_apiKey){
@@ -204,17 +207,6 @@ class AirtimeCheck {
                 self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
                 $log = "/var/log/airtime/media-monitor/media-monitor.log";
                 self::show_log_file($log);
-            }
-            if (isset($services->rabbitmq)) {
-                self::output_status("RABBITMQ_PROCESS_ID", $data->services->rabbitmq->process_id);
-                self::output_status("RABBITMQ_RUNNING_SECONDS", $data->services->rabbitmq->uptime_seconds);
-                self::output_status("RABBITMQ_MEM_PERC", $data->services->rabbitmq->memory_perc);
-                self::output_status("RABBITMQ_CPU_PERC", $data->services->rabbitmq->cpu_perc);
-            } else {
-                self::output_status("RABBITMQ_PROCESS_ID", "FAILED");
-                self::output_status("RABBITMQ_RUNNING_SECONDS", "0");
-                self::output_status("RABBITMQ_MEM_PERC", "0%");
-                self::output_status("RABBITMQ_CPU_PERC", "0%");
             }
         }
 

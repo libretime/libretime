@@ -214,35 +214,22 @@ class Application_Model_Systemstatus
     {
         $partions = array();
 
-        if (isset($_SERVER['AIRTIME_SRV'])) {
-            //connect to DB and find how much total space user has allocated.
-            $totalSpace = Application_Model_Preference::GetDiskQuota();
+        /* First lets get all the watched directories. Then we can group them
+        * into the same partitions by comparing the partition sizes. */
+        $musicDirs = Application_Model_MusicDir::getWatchedDirs();
+        $musicDirs[] = Application_Model_MusicDir::getStorDir();
 
-            $storPath = Application_Model_MusicDir::getStorDir()->getDirectory();
+        foreach ($musicDirs as $md) {
+            $totalSpace = disk_total_space($md->getDirectory());
 
-            list($usedSpace,) = preg_split("/[\s]+/", exec("du -bs $storPath"));
+            if (!isset($partitions[$totalSpace])) {
+                $partitions[$totalSpace] = new StdClass;
+                $partitions[$totalSpace]->totalSpace = $totalSpace;
+                $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
 
-            $partitions[$totalSpace]->totalSpace = $totalSpace;
-            $partitions[$totalSpace]->totalFreeSpace = $totalSpace - $usedSpace;
-            Logging::info($partitions[$totalSpace]->totalFreeSpace);
-        } else {
-            /* First lets get all the watched directories. Then we can group them
-            * into the same partitions by comparing the partition sizes. */
-            $musicDirs = Application_Model_MusicDir::getWatchedDirs();
-            $musicDirs[] = Application_Model_MusicDir::getStorDir();
-
-            foreach ($musicDirs as $md) {
-                $totalSpace = disk_total_space($md->getDirectory());
-
-                if (!isset($partitions[$totalSpace])) {
-                    $partitions[$totalSpace] = new StdClass;
-                    $partitions[$totalSpace]->totalSpace = $totalSpace;
-                    $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
-
-                }
-
-                $partitions[$totalSpace]->dirs[] = $md->getDirectory();
             }
+
+            $partitions[$totalSpace]->dirs[] = $md->getDirectory();
         }
 
         return array_values($partitions);

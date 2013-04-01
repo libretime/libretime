@@ -60,8 +60,10 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->view->uri             = $uri;
         $this->view->mime            = $mime;
         $this->view->audioFileID     = $audioFileID;
-        $this->view->audioFileArtist = $audioFileArtist;
-        $this->view->audioFileTitle  = $audioFileTitle;
+        // We need to decode artist and title because it gets
+        // encoded twice in js
+        $this->view->audioFileArtist = htmlspecialchars(urldecode($audioFileArtist));
+        $this->view->audioFileTitle  = htmlspecialchars(urldecode($audioFileTitle));
         $this->view->type            = $type;
 
         $this->_helper->viewRenderer->setRender('audio-preview');

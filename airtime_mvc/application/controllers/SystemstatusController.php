@@ -17,7 +17,6 @@ class SystemstatusController extends Zend_Controller_Action
             "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
             "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
             "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus(),
-            "rabbitmq-server"=>Application_Model_Systemstatus::GetRabbitMqStatus()
         );
 
         $partitions = Application_Model_Systemstatus::GetDiskInfo();

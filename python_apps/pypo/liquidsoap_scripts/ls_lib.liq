@@ -1,6 +1,6 @@
 def notify(m)
   #current_media_id := string_of(m['schedule_table_id'])
-  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --data='#{!pypo_data}' --media-id=#{m['schedule_table_id']} &"
+  command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
 end
@@ -78,14 +78,16 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
     source = ref s
     def on_error(msg)
         connected := "false"
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &")
-        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &")
+        command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
+        system(command)
+        log(command)
         5.
     end
     def on_connect()
         connected := "true"
-        system("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &")
-        log("/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &")
+        command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --connect --stream-id=#{stream} --time=#{!time} &"
+        system(command)
+        log(command)
     end
 
     stereo = (channels == "stereo")
@@ -352,28 +354,32 @@ end
 # Add a skip function to a source
 # when it does not have one
 # by default
-def add_skip_command(s)
- # A command to skip
-  def skip(_)
-    # get playing (active) queue and flush it
-    l = list.hd(server.execute("queue.secondary_queue"))
-    l = string.split(separator=" ",l)
-    list.iter(fun (rid) -> ignore(server.execute("queue.remove #{rid}")), l)
+#def add_skip_command(s)
+# # A command to skip
+#  def skip(_)
+#    # get playing (active) queue and flush it
+#    l = list.hd(server.execute("queue.secondary_queue"))
+#    l = string.split(separator=" ",l)
+#    list.iter(fun (rid) -> ignore(server.execute("queue.remove #{rid}")), l)
+#
+#    l = list.hd(server.execute("queue.primary_queue"))
+#    l = string.split(separator=" ", l)
+#    if list.length(l) > 0 then
+#      source.skip(s)
+#      "Skipped"
+#    else
+#      "Not skipped"
+#    end
+#  end
+# # Register the command:
+# server.register(namespace="source",
+#                 usage="skip",
+#                 description="Skip the current song.",
+#                 "skip",fun(s) -> begin log("source.skip") skip(s) end)
+#end
 
-    l = list.hd(server.execute("queue.primary_queue"))
-    l = string.split(separator=" ", l)
-    if list.length(l) > 0 then
-      source.skip(s)
-      "Skipped"
-    else
-      "Not skipped"
-    end
-  end
- # Register the command:
- server.register(namespace="source",
-                 usage="skip",
-                 description="Skip the current song.",
-                 "skip",fun(s) -> begin log("source.skip") skip(s) end)
+def clear_queue(s)
+    source.skip(s)
 end
 
 def set_dynamic_source_id(id) =

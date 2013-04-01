@@ -189,8 +189,7 @@ $(document).ready(function() {
         var data = $('#user_form').serialize();
         var url = baseUrl+'User/add-user';
         
-        $.post(url, {format: "json", data: data}, function(data){
-            var json = $.parseJSON(data);
+        $.post(url, {format: "json", data: data}, function(json){
             if (json.valid === "true") {
                 $('#content').empty().append(json.html);
                 populateUserTable();

@@ -187,7 +187,7 @@
                 label = $.i18n._("kbps");
             } else if (th.attr('id') == "utime" || th.attr('id') == "mtime" || th.attr('id') == "lptime") {
                 label = $.i18n._("yyyy-mm-dd");
-            } else if (th.attr('id') == "length") {
+            } else if (th.attr('id') == "length" || th.attr('id') == "cuein" || th.attr('id') == "cueout") {
                 label = $.i18n._("hh:mm:ss.t");
             } else if (th.attr('id') == "sample_rate") {
                 label = $.i18n._("kHz");

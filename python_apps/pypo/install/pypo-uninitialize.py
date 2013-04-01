@@ -6,7 +6,7 @@ if os.geteuid() != 0:
     print "Please run this as root."
     sys.exit(1)
 
-try:      
+try:
     #stop pypo and liquidsoap processes
     print "Waiting for Pypo process to stop...",
     try:
@@ -18,12 +18,16 @@ try:
         print "OK"
     else:
         print "Wasn't running"
-        
+
     print "Waiting for Liquidsoap process to stop...",
     if (os.path.exists('/etc/init.d/airtime-liquidsoap')):
         subprocess.call("invoke-rc.d airtime-liquidsoap stop", shell=True)
         print "OK"
     else:
         print "Wasn't running"
+
+    subprocess.call("update-rc.d -f airtime-playout remove".split(" "))
+    subprocess.call("update-rc.d -f airtime-liquidsoap remove".split(" "))
+
 except Exception, e:
     print e

@@ -166,8 +166,10 @@ def walk_supported(directory, clean_empties=False):
 
 
 def file_locked(path):
-    f = Popen(["lsof", path], stdout=PIPE).stdout
-    return bool(f.readlines())
+    #Capture stderr to avoid polluting py-interpreter.log
+    proc = Popen(["lsof", path], stdout=PIPE, stderr=PIPE)
+    out = proc.communicate()[0].strip('\r\n')
+    return bool(out)
 
 def magic_move(old, new, after_dir_make=lambda : None):
     """ Moves path old to new and constructs the necessary to
@@ -413,6 +415,7 @@ def file_playable(pathname):
     """ Returns True if 'pathname' is playable by liquidsoap. False
     otherwise. """
 
+    #currently disabled because this confuses inotify....
     return True
     #remove all write permissions. This is due to stupid taglib library bug
     #where all files are opened in write mode. The only way around this is to

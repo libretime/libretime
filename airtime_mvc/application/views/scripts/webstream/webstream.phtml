@@ -1,3 +1,4 @@
+<a href="#" class="close-round" id="lib_pl_close"></a>
 <div class="btn-toolbar spl-no-top-margin clearfix">
     <div class="btn-group pull-left">
         <button id="ws_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
@@ -29,7 +30,7 @@
     <div class="playlist_title">
         <div id="name-error" class="errors" style="display:none;"></div>
         <h3 id="ws_name">
-            <a id="playlist_name_display" contenteditable="true"><?php echo $this->obj->getName(); ?></a>
+            <a id="playlist_name_display" contenteditable="true"><?php echo $this->escape($this->obj->getName()); ?></a>
         </h3>
         <h4 id="ws_length"><?php echo $this->obj->getDefaultLength(); ?></h4>
     </div>

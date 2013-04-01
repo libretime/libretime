@@ -81,6 +81,17 @@ class LibraryController extends Zend_Controller_Action
                 $this->view->length = $formatter->format();
                 $this->view->type = $obj_sess->type;
             }
+
+            //get user settings and determine if we need to hide
+            // or show the playlist editor
+            $showPlaylist = false;
+            $data = Application_Model_Preference::getLibraryScreenSettings();
+            if (!is_null($data)) {
+                if ($data["playlist"] == "true") {
+                    $showPlaylist = true;
+                }
+            }
+            $this->view->showPlaylist = $showPlaylist;
         } catch (PlaylistNotFoundException $e) {
             $this->playlistNotFound($obj_sess->type);
         } catch (Exception $e) {
@@ -382,23 +393,6 @@ class LibraryController extends Zend_Controller_Action
         # terrible name for the method below. it does not only search files.
         $r = Application_Model_StoredFile::searchLibraryFiles($params);
 
-        //TODO move this to the datatables row callback.
-        foreach ($r["aaData"] as &$data) {
-
-            if ($data['ftype'] == 'audioclip') {
-                $file = Application_Model_StoredFile::Recall($data['id']);
-                $scid = $file->getSoundCloudId();
-
-                if ($scid == "-2") {
-                    $data['track_title'] .= '<span class="small-icon progress"/>';
-                } elseif ($scid == "-3") {
-                    $data['track_title'] .= '<span class="small-icon sc-error"/>';
-                } elseif (!is_null($scid)) {
-                    $data['track_title'] .= '<span class="small-icon soundcloud"/>';
-                }
-            }
-        }
-
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
         $this->view->iTotalRecords = $r["iTotalRecords"];
@@ -524,7 +518,7 @@ class LibraryController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
-        die();
+        $this->_helper->json->sendJson(null); 
     }
 
     public function getUploadToSoundcloudStatusAction()

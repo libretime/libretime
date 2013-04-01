@@ -1,9 +1,13 @@
 #!/bin/bash
 #postinst script for airtime
 
-set -x
+set -e
 
 . /usr/share/debconf/confmodule
+
+if [ "$DPKG_DEBUG" = "developer" ]; then
+    set -x
+fi
 
 wwwdir="/usr/share/airtime"
 tmpdir="/var/lib/airtime/tmp"
@@ -12,7 +16,7 @@ includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
-NEWVERSION="2.3.0"
+NEWVERSION="2.4.0"
 
 case "$1" in
   configure|reconfigure)
@@ -20,39 +24,30 @@ case "$1" in
     webserver="apache2"
     php="php5"
 
-    #  clean up previous configurations
-    if [ -L /etc/$webserver/conf.d/airtime.conf ]; then
-      rm -f /etc/$webserver/conf.d/airtime.conf
-    fi
-
-    if [ -f /etc/$webserver/sites-available/airtime-vhost ]; then
-      a2dissite airtime-vhost
-    fi
-
     # this file in 1.8.2 is a directory path in 1.9.3
     if [ -f /var/www/airtime/utils/airtime-import ]; then
       rm -f /var/www/airtime/utils/airtime-import
     fi
 
-    # APACHE config
-    echo "Setting up apache2..."
-
-    # create the document root if it doesn't exist
-    if [ ! -d $wwwdir/public/ ]; then
-      install -d -m755 $wwwdir/public/
-    fi
-
-    # set up the virtual host
+    # do we set up a virtual host?
     db_get airtime/apache-setup
-    if [ "$RET" == "system-wide (all vhosts)" ]; then
-      if [ ! -d /etc/$webserver/conf.d/ ]; then
-        install -d -m755 /etc/$webserver/conf.d/
-      fi
-      if [ ! -e /etc/$webserver/conf.d/airtime.conf ]; then
-        ln -s ${includefile} /etc/$webserver/conf.d/airtime.conf
+    APACHESETUP=$RET
+    if [ "${APACHESETUP}" == "no thanks" ]; then
+    echo "Not setting up ${webserver} and ${php}..."
+
+     elif [ "${APACHESETUP}" == "dedicated v-host" ]; then
+     echo "Setting up ${webserver}..."
+
+      # create the document root if it doesn't exist
+      if [ ! -d $wwwdir/public/ ]; then
+        install -d -m755 $wwwdir/public/
       fi
 
-    elif [ "$RET" == "dedicated v-host" ]; then
+      # temporarily disable an existing virtual host
+      if [ -f /etc/$webserver/sites-available/airtime-vhost ]; then
+        a2dissite airtime-vhost
+      fi
+
       db_get airtime/apache-servername
       SN=$RET
       db_get airtime/apache-serveradmin
@@ -69,30 +64,49 @@ case "$1" in
       if [ $RETVAL -eq 0 ]; then
       a2ensite airtime-vhost
       fi
-    fi
 
-    # enable the rewrite module
-    command -v a2enmod > /dev/null
-    RETVAL=$?
-    if [ $RETVAL -eq 0 ]; then
-      a2enmod rewrite
-    fi
+      # insert a specific hostname, if provided, into API configuration
+      if [ "${SN}" != "localhost" ]; then
 
-    # remove the default site, if requested to
-    db_get airtime/apache-deldefault
-    if [ "$RET" == "remove default" ]; then
-      if [ -f /etc/apache2/sites-available/default ]; then
-      a2dissite default
+        # new installs
+        if [ -f /var/lib/airtime/tmp/airtime_mvc/build/airtime.conf -a -f /var/lib/airtime/tmp/python_apps/api_clients/api_client.cfg ]; then
+        sed -i "s/base_url = localhost/base_url = ${SN}/" /var/lib/airtime/tmp/airtime_mvc/build/airtime.conf
+        sed -i "s/host = 'localhost'/host = '${SN}'/" /var/lib/airtime/tmp/python_apps/api_clients/api_client.cfg
+        fi
+
+        # upgrades
+        if [ -f /etc/airtime/airtime.conf -a -f /etc/airtime/api_client.cfg ]; then
+        sed -i "s/base_url = localhost/base_url = ${SN}/" /etc/airtime/airtime.conf
+        sed -i "s/host = 'localhost'/host = '${SN}'/" /etc/airtime/api_client.cfg
+        fi
       fi
-    fi
 
-    # PHP config
-    echo "Configuring php5..."
-    if [ ! -d /etc/$php/conf.d/ ]; then
-      install -d -m755 /etc/$php/conf.d/
-    fi
-    if [ ! -e /etc/$php/conf.d/airtime.ini ]; then
-      ln -s ${phpinifile} /etc/$php/conf.d/airtime.ini
+      # enable the rewrite module
+      command -v a2enmod > /dev/null
+      RETVAL=$?
+      if [ $RETVAL -eq 0 ]; then
+        a2enmod rewrite
+      fi
+
+      # remove the default site, if requested to
+      db_get airtime/apache-deldefault
+      if [ "$RET" == "remove default" ]; then
+        if [ -f /etc/apache2/sites-available/default ]; then
+        a2dissite default
+        fi
+      fi
+
+      # PHP config
+      echo "Configuring php5..."
+      if [ ! -d /etc/$php/conf.d/ ]; then
+        install -d -m755 /etc/$php/conf.d/
+      fi
+      if [ ! -e /etc/$php/conf.d/airtime.ini ]; then
+        ln -s ${phpinifile} /etc/$php/conf.d/airtime.ini
+      fi
+
+      # restart apache
+      invoke-rc.d apache2 restart
     fi
 
     # XXX ICECAST XXX
@@ -186,9 +200,6 @@ case "$1" in
      echo "The rabbitmq-server package does not appear to be installed on this server."
     fi
 
-    # restart apache
-    invoke-rc.d apache2 restart
-
     # fix the Liquidsoap symlink if it doesn't point to standard location
     if [ -h /usr/bin/airtime-liquidsoap ]; then
       SYMLINK_TARGET=`readlink /usr/bin/airtime-liquidsoap`
@@ -214,8 +225,12 @@ case "$1" in
       echo "Reconfiguration complete."
     else
 
-      if [ -n "$OLDVERSION" ] && [[ "${OLDVERSION:0:3}" < "1.9" ]]; then
-        echo "Upgrades from Airtime versions before 1.9.0 are not supported. Please back up your files and perform a clean install."
+      if [ -n "$OLDVERSION" ] && [[ "${OLDVERSION:0:3}" < "2.1" ]]; then
+        echo "Upgrades from Airtime versions before 2.1.0 are not supported. Please back up your files and perform a clean install."
+
+      elif [ "${APACHESETUP}" == "no thanks" ]; then
+        echo "Please run the ${tmpdir}/install_minimal/airtime-install script after you have set up the web server."
+
       else
 
         mkdir -p /var/log/airtime

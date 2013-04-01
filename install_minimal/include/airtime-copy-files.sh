@@ -84,6 +84,7 @@ ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
 ln -sf /usr/lib/airtime/utils/airtime-test-soundcard /usr/bin/airtime-test-soundcard
 ln -sf /usr/lib/airtime/utils/airtime-test-stream /usr/bin/airtime-test-stream
+ln -sf /usr/lib/airtime/utils/airtime-silan /usr/bin/airtime-silan
 
 echo "* Creating /var/log/airtime"
 mkdir -p /var/log/airtime

@@ -136,13 +136,17 @@ class Application_Model_Scheduler
 
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
+            $storedFile = new Application_Model_StoredFile($file->getDbId());
 
             if (is_null($file) || !$file->visible()) {
                 throw new Exception(_("A selected File does not exist!"));
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
-                $data["cliplength"] = $file->getDbLength();
+                $data["cliplength"] = $storedFile->getRealClipLength(
+                    $file->getDbCuein(),
+                    $file->getDbCueout());
+
                 $data["cuein"] = $file->getDbCuein();
                 $data["cueout"] = $file->getDbCueout();
 
@@ -199,9 +203,12 @@ class Application_Model_Scheduler
                             $file = CcFilesQuery::create()->findPk($fileId);
                             if (isset($file) && $file->visible()) {
                                 $data["id"] = $file->getDbId();
-                                $data["cliplength"] = $file->getDbLength();
-                                $data["cuein"] = "00:00:00";
-                                $data["cueout"] = $file->getDbLength();
+                                $data["cuein"] = $file->getDbCuein();
+                                $data["cueout"] = $file->getDbCueout();
+
+                                $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
+                                $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
+                                $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
                                 $defaultFade = Application_Model_Preference::GetDefaultFade();
                                 if (isset($defaultFade)) {
                                     //fade is in format SS.uuuuuu
@@ -257,9 +264,12 @@ class Application_Model_Scheduler
                     $file = CcFilesQuery::create()->findPk($fileId);
                     if (isset($file) && $file->visible()) {
                         $data["id"] = $file->getDbId();
-                        $data["cliplength"] = $file->getDbLength();
-                        $data["cuein"] = "00:00:00";
-                        $data["cueout"] = $file->getDbLength();
+                        $data["cuein"] = $file->getDbCuein();
+                        $data["cueout"] = $file->getDbCueout();
+
+                        $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
+                        $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
+                        $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
                         $defaultFade = Application_Model_Preference::GetDefaultFade();
                         if (isset($defaultFade)) {
                             //fade is in format SS.uuuuuu
@@ -321,6 +331,8 @@ class Application_Model_Scheduler
             $filler->setDbStarts($DT)
                 ->setDbEnds($this->nowDT)
                 ->setDbClipLength($cliplength)
+                ->setDbCueIn('00:00:00')
+                ->setDbCueOut('00:00:00')
                 ->setDbPlayoutStatus(-1)
                 ->setDbInstanceId($instance->getDbId())
                 ->save($this->con);
@@ -438,7 +450,6 @@ class Application_Model_Scheduler
                 }
 
                 foreach ($schedFiles as $file) {
-
                     $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
@@ -512,6 +523,13 @@ class Application_Model_Scheduler
 
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
+            }
+
+            // update is_scheduled flag for each cc_file
+            foreach ($schedFiles as $file) {
+                $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
+                $db_file->setDbIsScheduled(true);
+                $db_file->save($this->con);
             }
 
             $endProfile = microtime(true);
@@ -717,6 +735,16 @@ class Application_Model_Scheduler
                         ->save($this->con);
                 } else {
                     $removedItem->delete($this->con);
+                }
+                
+                // update is_scheduled in cc_files but only if
+                // the file is not scheduled somewhere else
+                $fileId = $removedItem->getDbFileId();
+                // check if the removed item is scheduled somewhere else
+                $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
+                if (!is_null($fileId) && !in_array($fileId, $futureScheduledFiles)) {
+                     $db_file = CcFilesQuery::create()->findPk($fileId, $this->con);
+                     $db_file->setDbIsScheduled(false)->save($this->con);
                 }
             }
 

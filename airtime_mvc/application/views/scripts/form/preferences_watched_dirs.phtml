@@ -11,7 +11,7 @@
             <?php if($this->element->getElement('storageFolder')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('storageFolder')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
+                        <li><?php echo $this->escape($error); ?></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
@@ -29,7 +29,7 @@
             <?php if($this->element->getElement('watchedFolder')->hasErrors()) : ?>
                 <ul class='errors'>
                     <?php foreach($this->element->getElement('watchedFolder')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
+                        <li><?php echo $this->escape($error); ?></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
@@ -39,7 +39,7 @@
         <?php if (count($watched_dirs) > 0): ?>
             <?php foreach($watched_dirs as $watched_dir): ?>
                 <dd class="block-display selected-item">
-                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath" style="display:block; width:350px"><?php echo $watched_dir->getDirectory();?></span></span>
+                    <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath" style="display:block; width:350px"><?php echo htmlspecialchars($watched_dir->getDirectory());?></span></span>
                     <span title="<?php echo _("Rescan watched directory (This is useful if it is network mount and may be out of sync with Airtime)")?>" class="ui-icon ui-icon-refresh"></span>
                     <span title="<?php echo _("Remove watched directory")?>" class="ui-icon ui-icon-close"></span>
                     

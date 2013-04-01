@@ -17,15 +17,12 @@ require_once "Timezone.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
-
-
 date_default_timezone_set('UTC');
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 Config::setAirtimeVersion();
-$CC_CONFIG = Config::getConfig();
 require_once __DIR__."/configs/navigation.php";
 
 Zend_Validate::setDefaultNamespaces("Zend");

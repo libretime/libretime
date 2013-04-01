@@ -13,8 +13,8 @@ import signal
 import logging
 import locale
 import os
-from Queue import Queue
 
+from Queue import Queue
 from threading import Lock
 
 from pypopush import PypoPush
@@ -25,6 +25,7 @@ from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
 
 from media.update.replaygainupdater import ReplayGainUpdater
+from media.update.silananalyzer import SilanAnalyzer
 
 from configobj import ConfigObj
 
@@ -62,7 +63,7 @@ try:
     LogWriter.override_std_err(logger)
 except Exception, e:
     print "Couldn't configure logging"
-    sys.exit()
+    sys.exit(1)
 
 def configure_locale():
     logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
@@ -126,21 +127,21 @@ def keyboardInterruptHandler(signum, frame):
 
 def liquidsoap_running_test(telnet_lock, host, port, logger):
     logger.debug("Checking to see if Liquidsoap is running")
-    success = True
     try:
         telnet_lock.acquire()
         tn = telnetlib.Telnet(host, port)
         msg = "version\n"
         tn.write(msg)
         tn.write("exit\n")
-        logger.info("Found: %s", tn.read_all())
+        response = tn.read_all()
+        logger.info("Found: %s", response)
     except Exception, e:
         logger.error(str(e))
-        success = False
+        return False
     finally:
         telnet_lock.release()
 
-    return success
+    return "Liquidsoap" in response
 
 
 if __name__ == '__main__':
@@ -176,10 +177,18 @@ if __name__ == '__main__':
         sys.exit()
 
     api_client = api_client.AirtimeApiClient()
-    
-    ReplayGainUpdater.start_reply_gain(api_client)
 
-    api_client.register_component("pypo")
+    ReplayGainUpdater.start_reply_gain(api_client)
+    SilanAnalyzer.start_silan(api_client, logger)
+
+    success = False
+    while not success:
+        try:
+            api_client.register_component('pypo')
+            success = True
+        except Exception, e:
+            logger.error(str(e))
+            time.sleep(10)
 
     pypoFetch_q = Queue()
     recorder_q = Queue()
@@ -220,7 +229,7 @@ if __name__ == '__main__':
     stat.start()
 
     # all join() are commented out because we want to exit entire pypo
-    # if pypofetch is exiting
+    # if pypofetch terminates
     #pmh.join()
     #recorder.join()
     #pp.join()

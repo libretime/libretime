@@ -28,7 +28,7 @@ function rebuildStreamURL(ele){
     }else{
         streamurl = "http://"+host+":"+port+"/"
     }
-    div.find("#stream_url").html(streamurl)
+    div.find("#stream_url").text(streamurl)
 }
 function restrictOggBitrate(ele, on){
     var div = ele.closest("div")
@@ -71,14 +71,13 @@ function showForIcecast(ele){
     div.find("#outputMountpoint-element").show()
     div.find("#outputUser-label").show()
     div.find("#outputUser-element").show()
-    div.find("select[id$=data-type]").find("option[value='ogg']").attr("disabled","");
+    div.find("select[id$=data-type]").find("option[value='ogg']").removeAttr("disabled");
 }
 
 function checkLiquidsoapStatus(){
     var url = baseUrl+'Preference/get-liquidsoap-status/format/json';
     var id = $(this).attr("id");
-    $.post(url, function(json){
-        var json_obj = jQuery.parseJSON(json);
+    $.post(url, function(json_obj){
         for(var i=0;i<json_obj.length;i++){
             var obj = json_obj[i];
             var id;
@@ -103,6 +102,8 @@ function checkLiquidsoapStatus(){
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }
+
+        setTimeout(checkLiquidsoapStatus, 2000);
     });
 }
 
@@ -242,10 +243,10 @@ function setupEventListeners() {
         return false;
     })
     
-    setLiveSourceConnectionOverrideListener()
+    setLiveSourceConnectionOverrideListener();
     
-    showErrorSections()
-    setInterval('checkLiquidsoapStatus()', 1000)
+    showErrorSections();
+    checkLiquidsoapStatus();
     
     // qtip for help text
     $(".override_help_icon").qtip({
@@ -441,8 +442,7 @@ $(document).ready(function() {
             var data = $('#stream_form').serialize();
             var url = baseUrl+'Preference/stream-setting';
 
-            $.post(url, {format:"json", data: data}, function(data){
-                var json = $.parseJSON(data);
+            $.post(url, {format:"json", data: data}, function(json){
                 $('#content').empty().append(json.html);
                 setupEventListeners();
                 setSliderForReplayGain();

@@ -102,8 +102,10 @@ class ListenerStat(Thread):
                         stats.append(self.get_shoutcast_stats(v))
                     self.update_listener_stat_error(v["mount"], 'OK')
                 except Exception, e:
-                    self.logger.error('Exception: %s', e)
-                    self.update_listener_stat_error(v["mount"], str(e))
+                    try:
+                        self.update_listener_stat_error(v["mount"], str(e))
+                    except Exception, e:
+                        self.logger.error('Exception: %s', e)
 
         return stats
 
@@ -123,13 +125,9 @@ class ListenerStat(Thread):
         while True:
             try:
                 stream_parameters = self.get_stream_parameters()
-
                 stats = self.get_stream_stats(stream_parameters["stream_params"])
-                self.logger.debug(stats)
 
-                if not stats:
-                    self.logger.error("Not able to get listener stats")
-                else:
+                if stats:
                     self.push_stream_stats(stats)
             except Exception, e:
                 self.logger.error('Exception: %s', e)

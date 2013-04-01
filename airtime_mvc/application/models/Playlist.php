@@ -269,6 +269,10 @@ SQL;
             //format original length
             $formatter = new LengthFormatter($row['orig_length']);
             $row['orig_length'] = $formatter->format();
+
+            // XSS exploit prevention
+            $row["track_title"] = htmlspecialchars($row["track_title"]);
+            $row["creator"] = htmlspecialchars($row["creator"]);
         }
 
         return $rows;
@@ -398,6 +402,13 @@ SQL;
                 if ($obj instanceof CcFiles && $obj) {
                     $entry["cuein"]      = $obj->getDbCuein();
                     $entry["cueout"]     = $obj->getDbCueout();
+
+                    $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                    $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                    $entry["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
+                } elseif ($obj instanceof CcWebstream && $obj) {
+                    $entry["cuein"] = "00:00:00";
+                    $entry["cueout"] = $entry["cliplength"];
                 }
                 $entry["ftype"]      = $objType;
             }
@@ -466,6 +477,12 @@ SQL;
 
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
+
+                // update is_playlist flag in cc_files to indicate the
+                // file belongs to a playlist or block (in this case a playlist)
+                $db_file = CcFilesQuery::create()->findPk($ac[0], $this->con);
+                $db_file->setDbIsPlaylist(true)->save($this->con);
+                
                 $pos = $pos + 1;
                 Logging::info("Adding $ac[1] $ac[0]");
 
@@ -574,10 +591,21 @@ SQL;
 
         try {
 
+            // we need to get the file id of the item we are deleting
+            // before the item gets deleted from the playlist
+            $itemsToDelete = CcPlaylistcontentsQuery::create()
+                ->filterByPrimaryKeys($p_items)
+                ->filterByDbFileId(null, Criteria::NOT_EQUAL)
+                ->find($this->con);
+
             CcPlaylistcontentsQuery::create()
                 ->findPKs($p_items)
                 ->delete($this->con);
 
+            // now that the items have been deleted we can update the
+            // is_playlist flag in cc_files
+            Application_Model_StoredFile::setIsPlaylist($itemsToDelete, 'playlist', false);
+            
             $contents = CcPlaylistcontentsQuery::create()
                 ->filterByDbPlaylistId($this->id)
                 ->orderByDbPosition()
@@ -892,15 +920,36 @@ SQL;
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
+        // get only the files from the playlists
+        // we are about to delete
+        $itemsToDelete = CcPlaylistcontentsQuery::create()
+            ->filterByDbPlaylistId($p_ids)
+            ->filterByDbFileId(null, Criteria::NOT_EQUAL)
+            ->find();
+
+        $updateIsPlaylistFlag = false;
+
         if (!$isAdminOrPM) {
             $leftOver = self::playlistsNotOwnedByUser($p_ids, $p_userId);
             if (count($leftOver) == 0) {
                 CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+                $updateIsPlaylistFlag = true;
+                
             } else {
                 throw new PlaylistNoPermissionException;
             }
         } else {
             CcPlaylistQuery::create()->findPKs($p_ids)->delete();
+            $updateIsPlaylistFlag = true;
+        }
+        
+        if ($updateIsPlaylistFlag) {
+            // update is_playlist flag in cc_files
+            Application_Model_StoredFile::setIsPlaylist(
+                $itemsToDelete,
+                'playlist',
+                false
+            );
         }
     }
 
@@ -927,7 +976,25 @@ SQL;
      */
     public function deleteAllFilesFromPlaylist()
     {
+        // get only the files from the playlist
+        // we are about to clear out
+        $itemsToDelete = CcPlaylistcontentsQuery::create()
+            ->filterByDbPlaylistId($this->id)
+            ->filterByDbFileId(null, Criteria::NOT_EQUAL)
+            ->find();
+
         CcPlaylistcontentsQuery::create()->findByDbPlaylistId($this->id)->delete();
+
+        // update is_playlist flag in cc_files
+        Application_Model_StoredFile::setIsPlaylist(
+            $itemsToDelete,
+            'playlist',
+            false
+        );
+
+        $this->pl->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
+        $this->pl->save($this->con);
+        $this->con->commit();
     }
     
     public function shuffle()
@@ -951,6 +1018,38 @@ SQL;
         Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
         $result['result'] = 0;
         return $result;
+    }
+
+    public static function getAllPlaylistFiles()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(file_id)
+FROM cc_playlistcontents
+WHERE file_id is not null
+SQL;
+        $files = $con->query($sql)->fetchAll();
+        $real_files = array();
+        foreach ($files as $f) {
+            $real_files[] = $f['file_id'];
+        }
+        return $real_files;
+    }
+
+    public static function getAllPlaylistStreams()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT distinct(stream_id)
+FROM cc_playlistcontents
+WHERE stream_id is not null
+SQL;
+        $streams = $con->query($sql)->fetchAll();
+        $real_streams = array();
+        foreach ($streams as $s) {
+            $real_streams[] = $s['stream_id'];
+        }
+        return $real_streams;
     }
 
 } // class Playlist

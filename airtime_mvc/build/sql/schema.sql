@@ -98,6 +98,8 @@ CREATE TABLE "cc_files"
 	"cueout" interval default '00:00:00',
 	"silan_check" BOOLEAN default 'f',
 	"hidden" BOOLEAN default 'f',
+	"is_scheduled" BOOLEAN default 'f',
+	"is_playlist" BOOLEAN default 'f',
 	PRIMARY KEY ("id")
 );
 
@@ -418,8 +420,8 @@ CREATE TABLE "cc_schedule"
 	"clip_length" interval default '00:00:00',
 	"fade_in" TIME default '00:00:00',
 	"fade_out" TIME default '00:00:00',
-	"cue_in" interval default '00:00:00',
-	"cue_out" interval default '00:00:00',
+	"cue_in" interval  NOT NULL,
+	"cue_out" interval  NOT NULL,
 	"media_item_played" BOOLEAN default 'f',
 	"instance_id" INTEGER  NOT NULL,
 	"playout_status" INT2 default 1 NOT NULL,

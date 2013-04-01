@@ -7,8 +7,13 @@ var AIRTIME = (function(AIRTIME) {
         LIB_SELECTED_CLASS = "lib-selected",
         chosenItems = {},
         visibleChosenItems = {};
-    
-    var criteriaTypes = {
+
+    // we need to know whether the criteria value is string or
+    // numeric in order to provide a single textbox or range textboxes
+    // in the advanced search
+    // s => string
+    // n => numberic
+    var libraryColumnTypes = {
         0             : "",
         "album_title" : "s",
         "artist_name" : "s",
@@ -18,6 +23,8 @@ var AIRTIME = (function(AIRTIME) {
         "composer"    : "s",
         "conductor"   : "s",
         "copyright"   : "s",
+        "cuein"       : "n",
+        "cueout"      : "n",
         "utime"       : "n",
         "mtime"       : "n",
         "lptime"      : "n",
@@ -322,22 +329,40 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.fnDeleteSelectedItems = function() {
-    	if (confirm($.i18n._('Are you sure you want to delete the selected item(s)?'))) {
-	        var aData = AIRTIME.library.getSelectedData(),
-	            item,
-	            temp,
-	            aMedia = [];
-	        
-	        // process selected files/playlists.
-	        for (item in aData) {
-	            temp = aData[item];
-	            if (temp !== null && temp.hasOwnProperty('id') ) {
-	                aMedia.push({"id": temp.id, "type": temp.ftype});
-	            }   
-	        }
-	    
-	        AIRTIME.library.fnDeleteItems(aMedia);
-    	}
+        if (confirm($.i18n._('Are you sure you want to delete the selected item(s)?'))) {
+            var aData = AIRTIME.library.getSelectedData(),
+                item,
+                temp,
+                aMedia = [],
+                currentObjId = $("#side_playlist").find("#obj_id").val(),
+                currentObjType = $("#side_playlist").find("#obj_type").val(),
+                closeObj = false;
+
+            // process selected files/playlists.
+            for (item in aData) {
+                temp = aData[item];
+                if (temp !== null && temp.hasOwnProperty('id') ) {
+                    aMedia.push({"id": temp.id, "type": temp.ftype});
+                    if ( (temp.id == currentObjId && temp.ftype === currentObjType) ||
+                            temp.id == currentObjId && temp.ftype === "stream" && currentObjType === "webstream") {
+                        closeObj = true;
+                    }
+                }
+            }
+
+            AIRTIME.library.fnDeleteItems(aMedia);
+
+            // close the object (playlist/block/webstream)
+            // on the right side if it was just deleted
+            // from the library
+            if (closeObj) {
+                $.post(baseUrl+"playlist/close-playlist",
+                    {"format": "json", "type": currentObjType},
+                    function(json) {
+                        $("#side_playlist").empty().append(json.html);
+                    });
+            }
+        }
     };
     
     libraryInit = function() {
@@ -381,7 +406,7 @@ var AIRTIME = (function(AIRTIME) {
                     
                     var inputClass = 'filter_column filter_number_text'; 
                     var labelStyle = "style='margin-right:35px;'";
-                    if (criteriaTypes[ele.mDataProp] != "s") {
+                    if (libraryColumnTypes[ele.mDataProp] != "s") {
                         inputClass = 'filterColumn filter_number_range';
                         labelStyle = "";
                     }
@@ -400,7 +425,7 @@ var AIRTIME = (function(AIRTIME) {
                             "</div>");
                     }
                     
-                    if (criteriaTypes[ele.mDataProp] == "s") {
+                    if (libraryColumnTypes[ele.mDataProp] == "s") {
                         var obj = { sSelector: "#"+ele.mDataProp }
                     } else {
                         var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
@@ -435,10 +460,15 @@ var AIRTIME = (function(AIRTIME) {
             
             // put hidden columns at the top to insure they can never be visible
             // on the table through column reordering.
+            
+            //IMPORTANT: WHEN ADDING A NEW COLUMN PLEASE CONSULT WITH THE WIKI
+            // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
             "aoColumns": [
               /* ftype */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          , 
               /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
               /* Type */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
+              /* Is Scheduled */  { "sTitle" : $.i18n._("Scheduled")              , "mDataProp" : "is_scheduled"        , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
+              /* Is Playlist */  { "sTitle" : $.i18n._("Playlist")              , "mDataProp" : "is_playlist"        , "bSearchable" : false                 , "sWidth"      : "70px"                  , "sClass" : "library_is_playlist"}  ,
               /* Title */  { "sTitle" : $.i18n._("Title")         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
               /* Creator */  { "sTitle" : $.i18n._("Creator")       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
               /* Album */  { "sTitle" : $.i18n._("Album")         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
@@ -447,6 +477,8 @@ var AIRTIME = (function(AIRTIME) {
               /* Composer */  { "sTitle" : $.i18n._("Composer")      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        }, 
               /* Conductor */  { "sTitle" : $.i18n._("Conductor")     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
               /* Copyright */  { "sTitle" : $.i18n._("Copyright")     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
+              /* Cue In */  { "sTitle" : $.i18n._("Cue In")     , "mDataProp" : "cuein"    , "bVisible"    : false                 , "sClass"      : "library_length"     , "sWidth" : "80px"        },
+              /* Cue Out */  { "sTitle" : $.i18n._("Cue Out")     , "mDataProp" : "cueout"    , "bVisible"    : false                 , "sClass"      : "library_length"     , "sWidth" : "80px"        },
               /* Encoded */  { "sTitle" : $.i18n._("Encoded By")    , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        }, 
               /* Genre */  { "sTitle" : $.i18n._("Genre")         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        }, 
               /* ISRC Number */  { "sTitle" : $.i18n._("ISRC")          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        }, 
@@ -491,9 +523,11 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-library');
-                
-                if (settings !== "") {
+               
+                try {
                     return JSON.parse(settings);
+                } catch (e) {
+                    return null;
                 }
             },
             "fnStateLoadParams": function (oSettings, oData) {
@@ -501,18 +535,22 @@ var AIRTIME = (function(AIRTIME) {
                     length,
                     a = oData.abVisCols;
                 
-                // putting serialized data back into the correct js type to make
-                // sure everything works properly.
-                for (i = 0, length = a.length; i < length; i++) {
-                    if (typeof(a[i]) === "string") {
-                        a[i] = (a[i] === "true") ? true : false;
-                    } 
+                if (a) {
+                    // putting serialized data back into the correct js type to make
+                    // sure everything works properly.
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = (a[i] === "true") ? true : false;
+                        } 
+                    }
                 }
-                
+                    
                 a = oData.ColReorder;
-                for (i = 0, length = a.length; i < length; i++) {
-                    if (typeof(a[i]) === "string") {
-                        a[i] = parseInt(a[i], 10);
+                if (a) {
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = parseInt(a[i], 10);
+                        }
                     }
                 }
                 
@@ -554,12 +592,46 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                
+                //add soundcloud icon
+                if (aData.soundcloud_status !== undefined) {
+                    if (aData.soundcloud_status === "-2") {
+                        $(nRow).find("td.library_title").append('<span class="small-icon progress"/>');
+                    } else if (aData.soundcloud_status === "-3") {
+                        $(nRow).find("td.library_title").append('<span class="small-icon sc-error"/>');
+                    } else if (aData.soundcloud_status !== null) {
+                        $(nRow).find("td.library_title").append('<span class="small-icon soundcloud"/>');
+                    }
+                }
+
+                // add checkbox
+                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
+
+                // add audio preview image/button
+                if (aData.ftype === "audioclip") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
+                } else if (aData.ftype === "playlist") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Playlist preview")+'" src="'+baseUrl+'css/images/icon_playlist.png">');
+                } else if (aData.ftype === "block") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Smart Block")+'" src="'+baseUrl+'css/images/icon_smart-block.png">');
+                } else if (aData.ftype === "stream") {
+                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Webstream preview")+'" src="'+baseUrl+'css/images/icon_webstream.png">');
+                }
+
+                if (aData.is_scheduled) {
+                    $(nRow).find("td.library_is_scheduled").html('<span class="small-icon media-item-in-use"></span>');
+                } else if (!aData.is_scheduled) {
+                    $(nRow).find("td.library_is_scheduled").html('');
+                }
+                if (aData.is_playlist) {
+                    $(nRow).find("td.library_is_playlist").html('<span class="small-icon media-item-in-use"></span>');
+                } else if (!aData.is_playlist) {
+                    $(nRow).find("td.library_is_playlist").html('');
+                }
+
                 // add the play function to the library_type td
                 $(nRow).find('td.library_type').click(function(){
                     if (aData.ftype === 'playlist' && aData.length !== '0.0'){
-                        playlistIndex = $(this).parent().attr('id').substring(3);
-                        open_playlist_preview(playlistIndex, 0);
+                        open_playlist_preview(aData.audioFile, 0);
                     } else if (aData.ftype === 'audioclip') {
                         if (isAudioSupported(aData.mime)) {
                             open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
@@ -569,8 +641,7 @@ var AIRTIME = (function(AIRTIME) {
                             open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
                         }
                     } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
-                        blockIndex = $(this).parent().attr('id').substring(3);
-                        open_block_preview(blockIndex, 0);
+                        open_block_preview(aData.audioFile, 0);
                     }
                     return false;
                 });
@@ -605,7 +676,28 @@ var AIRTIME = (function(AIRTIME) {
                     }
                     return false;
                 });
-                
+
+                /*$(nRow).find(".media-item-in-use").qtip({
+                    content: {
+                        text: aData.status_msg
+                    },
+                    hide: {
+                        delay: 500,
+                        fixed: true
+                    },
+                    style: {
+                        border: {
+                            width: 0,
+                            radius: 4
+                        },
+                        classes: "ui-tooltip-dark ui-tooltip-rounded"
+                    },
+                    position: {
+                        my: "left bottom",
+                        at: "right center"
+                    },
+                });*/
+
                 // add a tool tip to appear when the user clicks on the type
                 // icon.
                 $(nRow).find("td:not(.library_checkbox, .library_type)").qtip({
@@ -702,8 +794,19 @@ var AIRTIME = (function(AIRTIME) {
                 $simpleSearch.addClass("sp-invisible");
             }
             else {
-                //clear the advanced search fields and reset datatable
-                $(".filter_column input").val("").keyup();
+                // clear the advanced search fields
+                var divs = $("div#advanced_search").children(':visible');
+                $.each(divs, function(i, div){
+                    fields = $(div).children().find('input');
+                    $.each(fields, function(i, field){
+                        if ($(field).val() !== "") {
+                            $(field).val("");
+                            // we need to reset the results when removing
+                            // an advanced search field
+                            $(field).keyup();
+                        }
+                    });
+                });
                 
                 //reset datatable with previous simple search results (if any)
                 $(".dataTables_filter input").val(simpleSearchText).keyup();
@@ -757,8 +860,7 @@ var AIRTIME = (function(AIRTIME) {
         });
        
         checkImportStatus();
-        setInterval(checkImportStatus, 5000);
-        setInterval(checkLibrarySCUploadStatus, 5000);
+        checkLibrarySCUploadStatus();
         
         addQtipToSCIcons();
        
@@ -986,6 +1088,7 @@ function checkImportStatus() {
             }
             div.hide();
         }
+        setTimeout(checkImportStatus, 5000);
     });
 }
     
@@ -1019,6 +1122,7 @@ function checkLibrarySCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
+        setTimeout(checkLibrarySCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
@@ -1252,6 +1356,8 @@ var validationTypes = {
     "composer" : "s",
     "conductor" : "s",
     "copyright" : "s",
+    "cuein" : "l",
+    "cueout" : "l",
     "encoded_by" : "s",
     "utime" : "t",
     "mtime" : "t",
@@ -1283,12 +1389,23 @@ $(document).ready(function() {
             data = $("#edit-md-dialog form").serializeArray();
         $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
             $("#edit-md-dialog").dialog().remove();
-            oTable.fnStandingRedraw();
+
+            // don't redraw the library table if we are on calendar page
+            // we would be on calendar if viewing recorded file metadata
+            if ($("#schedule_calendar").length === 0) {
+                oTable.fnStandingRedraw();
+            }
         });
     });
     
     $('#editmdcancel').live("click", function() {
         $("#edit-md-dialog").dialog().remove();
+    });
+
+    $('#edit-md-dialog').live("keyup", function(event) {
+        if (event.keyCode === 13) {
+            $('#editmdsave').click();
+        }
     });
 });
 
