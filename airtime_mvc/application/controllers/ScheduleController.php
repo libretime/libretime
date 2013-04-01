@@ -467,9 +467,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
-            //treat repeating instance has a new and separate show
-            $service_show->deleteRepeatingInstance($data["add_show_instance_id"]);
-            $service_show->addUpdateShow($data);
+            $service_show->createShowFromRepeatingInstance($data);
 
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');

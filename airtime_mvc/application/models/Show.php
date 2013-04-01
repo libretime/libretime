@@ -1666,7 +1666,7 @@ SQL;
         if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $end_timestamp->getTimestamp()) {
             //Application_Model_Show::populateAllShowsInRange($showsPopUntil, $end_timestamp);
             $service_show = new Application_Service_ShowService();
-            $service_show->delegateInstanceCreation(null, false, $end_timestamp);
+            $service_show->delegateInstanceCreation(null, false, null, $end_timestamp);
             Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
         }
 
