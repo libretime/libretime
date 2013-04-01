@@ -601,8 +601,6 @@ SQL;
 
     public function getFadeInfo($pos)
     {
-        Logging::info("Getting fade info for pos {$pos}");
-
         $row = CcPlaylistcontentsQuery::create()
             ->joinWith(CcFilesPeer::OM_CLASS)
             ->filterByDbPlaylistId($this->id)
