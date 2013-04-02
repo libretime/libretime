@@ -16,7 +16,7 @@ includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
-NEWVERSION="2.3.0"
+NEWVERSION="2.3.1"
 
 case "$1" in
   configure|reconfigure)
@@ -229,7 +229,7 @@ case "$1" in
         echo "Upgrades from Airtime versions before 2.1.0 are not supported. Please back up your files and perform a clean install."
 
       elif [ "${APACHESETUP}" == "no thanks" ]; then
-        echo "Please run the ${tmpdir}/install_minimal/airtime-install script after you have set up the web server."
+        echo "Please run the ${tmpdir}/install_minimal/airtime-install script with the -d option after you have set up the web server."
 
       else
 

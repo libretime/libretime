@@ -16,6 +16,6 @@ try:
     #Start media-monitor daemon
     if "airtime_service_start" in os.environ and os.environ["airtime_service_start"] == "t":
         print "* Waiting for media-monitor processes to start..."
-        subprocess.call("invoke-rc.d airtime-media-monitor start-no-monit", shell=True)
+        subprocess.call("invoke-rc.d airtime-media-monitor start", shell=True)
 except Exception, e:
     print e

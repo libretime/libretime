@@ -17,22 +17,6 @@ DAEMON=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE=/var/run/airtime-liquidsoap.pid
 
 start () {
-        start_no_monit
-        monit monitor airtime-liquidsoap >/dev/null 2>&1
-}
-
-stop () {
-        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
-        #send term signal after 10 seconds
-        timeout -k 5 10 /usr/lib/airtime/airtime_virtualenv/bin/python \
-            /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
-        # Send TERM after 5 seconds, wait at most 30 seconds.
-        start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
-        rm -f $PIDFILE
-        sleep 3
-}
-
-start_no_monit() {
         chown pypo:pypo /var/log/airtime/pypo
         chown pypo:pypo /var/log/airtime/pypo-liquidsoap
         chown pypo:pypo /etc/airtime/liquidsoap.cfg
@@ -45,21 +29,43 @@ start_no_monit() {
             --pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
 }
 
+stop () {
+        #send term signal after 10 seconds
+        timeout -k 5 10 /usr/lib/airtime/airtime_virtualenv/bin/python \
+            /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
+        # Send TERM after 5 seconds, wait at most 30 seconds.
+        start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
+        rm -f $PIDFILE
+        sleep 3
+}
+
+start_with_monit () {
+        start
+        monit monitor airtime-liquidsoap >/dev/null 2>&1
+}
+
+stop_with_monit() {
+        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
+        stop
+}
+
+
+
 
 case "${1:-''}" in
   'stop')
-           echo -n "Stopping Liquidsoap: "
+           echo -n "Stopping $NAME: "
            stop
            echo "Done."
         ;;
   'start')
-           echo -n "Starting Liquidsoap: "
+           echo -n "Starting $NAME: "
            start
            echo "Done."
         ;;
   'restart')
            # restart commands here
-           echo -n "Restarting Liquidsoap: "
+           echo -n "Restarting $NAME: "
            stop
            start
            echo "Done."
@@ -69,22 +75,28 @@ case "${1:-''}" in
         if [ -f "$PIDFILE" ]; then
             pid=`cat $PIDFILE`
             if [ -d "/proc/$pid" ]; then
-                echo "Liquidsoap is running"
+                echo "$NAME is running"
                 exit 0
             fi
         fi
-        echo "Liquidsoap is not running"
+        echo "$NAME is not running"
         exit 1
         ;;
-  'start-no-monit')
+  'start-with-monit')
            # restart commands here
            echo -n "Starting $NAME: "
-           start_no_monit
+           start_with_monit
+           echo "Done."
+        ;;
+  'stop-with-monit')
+           # restart commands here
+           echo -n "Stopping $NAME: "
+           stop_with_monit
            echo "Done."
         ;;
 
   *)      # no parameter specified
-        echo "Usage: $SELF start|stop|restart"
+        echo "Usage: $SELF start|stop|restart|status"
         exit 1
         ;;
 
