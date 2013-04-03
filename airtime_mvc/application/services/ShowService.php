@@ -73,7 +73,10 @@ class Application_Service_ShowService
             }
 
             //delete the edited instance from the repeating sequence
-            CcShowInstancesQuery::create()->findPk($showData["add_show_instance_id"])->delete();
+            CcShowInstancesQuery::create()
+                ->findPk($showData["add_show_instance_id"])
+                ->setDbModifiedInstance(true)
+                ->save();
 
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
@@ -482,6 +485,124 @@ SQL;
             ":timestamp" => gmdate("Y-m-d H:i:s"), ":showId"    => $showId),
             "execute");
 
+    }
+
+    public function deleteShow($instanceId, $singleInstance=false)
+    {
+        $service_user = new Application_Service_UserService();
+        $currentUser = $service_user->getCurrentUser();
+
+        $con = Propel::getConnection();
+        $con->beginTransaction();
+        try {
+            if (!$currentUser->isAdminOrPM()) {
+                throw new Exception("Permission denied");
+            }
+
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->findPk($instanceId);
+            if (!$ccShowInstance) {
+                throw new Exception("Could not find show instance");
+            }
+
+            $showId = $ccShowInstance->getDbShowId();
+            if ($singleInstance) {
+                $ccShowInstances = CcShowInstancesQuery::create()
+                    ->filterByDbShowId($showId)
+                    ->filterByDbStarts($ccShowInstance->getDbStarts(), Criteria::GREATER_EQUAL)
+                    ->filterByDbEnds($ccShowInstance->getDbEnds(), Criteria::LESS_EQUAL)
+                    ->find();
+            } else {
+                $ccShowInstances = CcShowInstancesQuery::create()
+                    ->filterByDbShowId($showId)
+                    ->filterByDbStarts($ccShowInstance->getDbStarts(), Criteria::GREATER_EQUAL)
+                    ->find();
+            }
+
+            if (gmdate("Y-m-d H:i:s") <= $ccShowInstance->getDbEnds()) {
+                $this->deleteShowInstances($ccShowInstances, $ccShowInstance->getDbShowId());
+            }
+
+            Application_Model_RabbitMq::PushSchedule();
+
+            $con->commit();
+            return $showId;
+        } catch (Exception $e) {
+            $con->rollback();
+            Logging::info("Delete show instance failed");
+            Logging::info($e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteShowInstances($ccShowInstances, $showId)
+    {
+        foreach ($ccShowInstances as $ccShowInstance) {
+            $instanceId = $ccShowInstance->getDbId();
+
+            $ccShowInstance
+                ->setDbModifiedInstance(true)
+                ->save();
+
+            //delete the rebroadcasts of the removed recorded show
+            if ($ccShowInstance->isRecorded()) {
+                CcShowInstancesQuery::create()
+                    ->filterByDbOriginalShow($instanceId)
+                    ->delete();
+            }
+
+            //delete all files scheduled in cc_schedules table
+            CcScheduleQuery::create()
+                ->filterByDbInstanceId($instanceId)
+                ->delete();
+        }
+
+        if ($this->checkToDeleteCcShow($showId)) {
+            CcShowQuery::create()
+                ->filterByDbId($showId)
+                ->delete();
+        }
+    }
+
+    private function checkToDeleteCcShow($showId)
+    {
+        // check if there are any non deleted show instances remaining.
+        $ccShowInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbModifiedInstance(false)
+            ->filterByDbRebroadcast(0)
+            ->find();
+
+        if ($ccShowInstances->isEmpty()) {
+            return true;
+        }
+        //only 1 show instance left of the show, make it non repeating.
+        else if (count($ccShowInstances) === 1) {
+            $ccShowInstance = $ccShowInstances[0];
+
+            $ccShowDay = CcShowDaysQuery::create()
+                ->filterByDbShowId($showId)
+                ->findOne();
+            $tz = $ccShowDay->getDbTimezone();
+
+            $startDate = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
+            $startDate->setTimeZone(new DateTimeZone($tz));
+            $endDate = Application_Service_CalendarService::addDeltas($startDate, 1, 0);
+
+            $ccShowDay->setDbFirstShow($startDate->format("Y-m-d"));
+            $ccShowDay->setDbLastShow($endDate->format("Y-m-d"));
+            $ccShowDay->setDbStartTime($startDate->format("H:i:s"));
+            $ccShowDay->setDbRepeatType(-1);
+            $ccShowDay->save();
+
+            //remove the old repeating deleted instances.
+            CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbModifiedInstance(true)
+                ->delete();
+        }
+
+        return false;
     }
 
     private function deleteAllInstances($showId)

@@ -147,12 +147,12 @@ class Application_Service_CalendarService
                     $menu["del"]["items"]["single"] = array(
                         "name"=> _("Delete This Instance"),
                         "icon" => "delete",
-                        "url" => $baseUrl."schedule/delete-show");
+                        "url" => $baseUrl."schedule/delete-show-instance");
 
                     $menu["del"]["items"]["following"] = array(
                         "name"=> _("Delete This Instance and All Following"),
                         "icon" => "delete",
-                        "url" => $baseUrl."schedule/cancel-show");
+                        "url" => $baseUrl."schedule/delete-show");
                 } else {
                     $menu["del"] = array(
                         "name"=> _("Delete"),
@@ -162,6 +162,44 @@ class Application_Service_CalendarService
             }
         }
         return $menu;
+    }
+
+    /*
+     * @param $dateTime
+     *      php Datetime object to add deltas to
+     *
+     * @param $deltaDay
+     *      php int, delta days show moved
+     *
+     * @param $deltaMin
+     *      php int, delta mins show moved
+     *
+     * @return $newDateTime
+     *      php DateTime, $dateTime with the added time deltas.
+     */
+    public static function addDeltas($dateTime, $deltaDay, $deltaMin)
+    {
+        $newDateTime = clone $dateTime;
+
+        $days = abs($deltaDay);
+        $mins = abs($deltaMin);
+
+        $dayInterval = new DateInterval("P{$days}D");
+        $minInterval = new DateInterval("PT{$mins}M");
+
+        if ($deltaDay > 0) {
+            $newDateTime->add($dayInterval);
+        } elseif ($deltaDay < 0) {
+            $newDateTime->sub($dayInterval);
+        }
+
+        if ($deltaMin > 0) {
+            $newDateTime->add($minInterval);
+        } elseif ($deltaMin < 0) {
+            $newDateTime->sub($minInterval);
+        }
+
+        return $newDateTime;
     }
 
 }

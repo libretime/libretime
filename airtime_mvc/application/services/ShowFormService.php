@@ -342,6 +342,7 @@ class Application_Service_ShowFormService
 SELECT starts, ends FROM cc_show_instances
 WHERE ends > now() at time zone 'UTC'
 AND show_id = :showId
+AND modified_instance = FALSE
 ORDER BY starts
 LIMIT 1
 SQL;

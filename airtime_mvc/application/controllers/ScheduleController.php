@@ -16,14 +16,14 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('edit-show', 'json')
                     ->addActionContext('move-show', 'json')
                     ->addActionContext('resize-show', 'json')
-                    ->addActionContext('delete-show', 'json')
+                    ->addActionContext('delete-show-instance', 'json')
                     ->addActionContext('show-content-dialog', 'json')
                     ->addActionContext('clear-show', 'json')
                     ->addActionContext('get-current-playlist', 'json')
                     ->addActionContext('remove-group', 'json')
                     ->addActionContext('populate-show-form', 'json')
                     ->addActionContext('populate-repeating-show-instance-form', 'json')
-                    ->addActionContext('cancel-show', 'json')
+                    ->addActionContext('delete-show', 'json')
                     ->addActionContext('cancel-current-show', 'json')
                     ->addActionContext('get-form', 'json')
                     ->addActionContext('upload-to-sound-cloud', 'json')
@@ -209,28 +209,17 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
-    public function deleteShowAction()
+    public function deleteShowInstanceAction()
     {
-        $showInstanceId = $this->_getParam('id');
+        $instanceId = $this->_getParam('id');
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
+        $service_show = new Application_Service_ShowService();
+        $showId = $service_show->deleteShow($instanceId, true);
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-
-            try {
-                $showInstance = new Application_Model_ShowInstance($showInstanceId);
-            } catch (Exception $e) {
-                Logging::info($e->getMessage());
-                $this->view->show_error = true;
-
-                return false;
-            }
-
-            $showInstance->delete();
-
-            $this->view->show_id = $showInstance->getShowId();
+        if (!$showId) {
+            $this->view->show_error = true;
         }
+        $this->view->show_id = $showId;
     }
 
     public function uploadToSoundCloudAction()
@@ -254,7 +243,6 @@ class ScheduleController extends Zend_Controller_Action
     public function makeContextMenuAction()
     {
         $instanceId = $this->_getParam('instanceId');
-        $showId = $this->_getParam('showId');
 
         $service_calendar = new Application_Service_CalendarService($instanceId);
 
@@ -598,25 +586,17 @@ class ScheduleController extends Zend_Controller_Action
         return $forms;
     }
 
-    public function cancelShowAction()
+    public function deleteShowAction()
     {
-        $user = Application_Model_User::getCurrentUser();
+        $instanceId = $this->_getParam('id');
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            $showInstanceId = $this->_getParam('id');
+        $service_show = new Application_Service_ShowService();
+        $showId = $service_show->deleteShow($instanceId);
 
-            try {
-                $showInstance = new Application_Model_ShowInstance($showInstanceId);
-            } catch (Exception $e) {
-                $this->view->show_error = true;
-
-                return false;
-            }
-            $show = new Application_Model_Show($showInstance->getShowId());
-
-            $show->cancelShow($showInstance->getShowInstanceStart());
-            $this->view->show_id = $showInstance->getShowId();
+        if (!$showId) {
+            $this->view->show_error = true;
         }
+        $this->view->show_id = $showId;
     }
 
     public function cancelCurrentShowAction()
