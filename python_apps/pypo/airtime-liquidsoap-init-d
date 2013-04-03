@@ -21,7 +21,6 @@ start () {
         chown pypo:pypo /var/log/airtime/pypo-liquidsoap
         chown pypo:pypo /etc/airtime/liquidsoap.cfg
 
-        rm -f $PIDFILE
         touch $PIDFILE
         chown pypo:pypo $PIDFILE 
 
