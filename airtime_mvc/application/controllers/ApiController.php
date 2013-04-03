@@ -961,7 +961,7 @@ class ApiController extends Zend_Controller_Action
             $file->save();
         }
 
-        $this->view->msg = "OK";
+        echo json_encode(array());
     }
     
     public function updateCueValuesBySilanAction()
