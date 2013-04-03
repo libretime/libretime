@@ -9,14 +9,11 @@ api_client_path="/usr/lib/airtime/"
 ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
-exec 2>&1
 export PYTHONPATH=${api_client_path}
 
 rm -f /etc/airtime/liquidsoap.cfg
-
 cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
 python generate_liquidsoap_cfg.py
 
-exec ${ls_path} ${ls_param}
-
+exec ${ls_path} ${ls_param} 2>&1
 # EOF
