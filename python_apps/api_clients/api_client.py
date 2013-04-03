@@ -13,6 +13,7 @@ import urllib2
 import logging
 import json
 import base64
+import traceback
 from configobj import ConfigObj
 
 AIRTIME_VERSION = "2.3.1"
@@ -86,7 +87,6 @@ class ApiRequest(object):
             req = urllib2.Request(final_url, _post_data)
             response  = urllib2.urlopen(req).read()
         except Exception, e:
-            import traceback
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", traceback.format_exc())
             raise
@@ -364,9 +364,10 @@ class AirtimeApiClient(object):
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
         try:
-            encoded_msg = urllib.quote(msg, '')
-            self.services.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
-                                          boot_time=time).retry(5)
+            post_data = {"msg": msg}
+            self.services.update_liquidsoap_status.req(post_data,
+                                            stream_id=stream_id,
+                                            boot_time=time).retry(5)
         except Exception, e:
             #TODO
             logger.error("Exception: %s", e)
