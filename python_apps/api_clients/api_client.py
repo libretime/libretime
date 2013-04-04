@@ -364,8 +364,12 @@ class AirtimeApiClient(object):
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
         try:
-            post_data = {"msg": msg}
+            post_data = {"msg_post": msg}
+
+            #encoded_msg is no longer used server_side!!
+            encoded_msg = urllib.quote('dummy')
             self.services.update_liquidsoap_status.req(post_data,
+                                            msg=encoded_msg,
                                             stream_id=stream_id,
                                             boot_time=time).retry(5)
         except Exception, e:
