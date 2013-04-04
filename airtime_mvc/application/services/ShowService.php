@@ -1123,6 +1123,7 @@ SQL;
         $ccShow->setDbLiveStreamUsingCustomAuth($showData['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($showData['custom_username']);
         $ccShow->setDbLiveStreamPass($showData['custom_password']);
+        $ccShow->setDbLinked($showData["add_show_linked"]);
 
         $ccShow->save();
         $this->ccShow = $ccShow;

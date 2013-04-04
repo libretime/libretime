@@ -55,6 +55,7 @@ class CcPlaylistTableMap extends TableMap {
 	{
     $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('creator_id' => 'id', ), 'CASCADE', null);
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'playlist_id', ), 'CASCADE', null);
+    $this->addRelation('CcShowStamp', 'CcShowStamp', RelationMap::ONE_TO_MANY, array('id' => 'playlist_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 	/**

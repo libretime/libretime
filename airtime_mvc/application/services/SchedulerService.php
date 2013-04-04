@@ -1,6 +1,44 @@
 <?php
 class Application_Service_SchedulerService
 {
+    private $con;
+    private $fileInfo = array(
+            "id" => "",
+            "cliplength" => "",
+            "cuein" => "00:00:00",
+            "cueout" => "00:00:00",
+            "fadein" => "00:00:00",
+            "fadeout" => "00:00:00",
+            "sched_id" => null,
+            "type" => 0 //default type of '0' to represent files. type '1' represents a webstream
+        );
+
+    private $epochNow;
+    private $nowDT;
+    private $user;
+    private $checkUserPermissions = true;
+
+    public function __construct()
+    {
+        $this->con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+
+        //subtracting one because sometimes when we cancel a track, we set its end time
+        //to epochNow and then send the new schedule to pypo. Sometimes the currently cancelled
+        //track can still be included in the new schedule because it may have a few ms left to play.
+        //subtracting 1 second from epochNow resolves this issue.
+        $this->epochNow = microtime(true)-1;
+        $this->nowDT = DateTime::createFromFormat("U.u", $this->epochNow, new DateTimeZone("UTC"));
+
+        if ($this->nowDT === false) {
+            // DateTime::createFromFormat does not support millisecond string formatting in PHP 5.3.2 (Ubuntu 10.04).
+            // In PHP 5.3.3 (Ubuntu 10.10), this has been fixed.
+            $this->nowDT = DateTime::createFromFormat("U", time(), new DateTimeZone("UTC"));
+        }
+
+        $user_service = new Application_Service_UserService();
+        $this->user = $user_service->getCurrentUser();
+    }
+
     /**
      * 
      * Enter description here ...

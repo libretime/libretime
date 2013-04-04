@@ -5,6 +5,11 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 
     public function init()
     {
+
+        $linked = new Zend_Form_Element_Checkbox("add_show_linked");
+        $linked->setLabel(_("Link:"));
+        $this->addElement($linked);
+
         //Add type select
         $this->addElement('select', 'add_show_repeat_type', array(
             'required' => true,

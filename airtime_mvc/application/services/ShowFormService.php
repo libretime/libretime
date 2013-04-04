@@ -209,6 +209,7 @@ class Application_Service_ShowFormService
 
         $form->populate(
             array(
+                'add_show_linked' => $this->ccShow->getDbLinked(),
                 'add_show_repeat_type' => $repeatType,
                 'add_show_day_check' => $days,
                 'add_show_end_date' => $repeatEndDate->format("Y-m-d"),

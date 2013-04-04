@@ -49,6 +49,7 @@ class CcShowTableMap extends TableMap {
 		$this->addColumn('LIVE_STREAM_USING_CUSTOM_AUTH', 'DbLiveStreamUsingCustomAuth', 'BOOLEAN', false, null, false);
 		$this->addColumn('LIVE_STREAM_USER', 'DbLiveStreamUser', 'VARCHAR', false, 255, null);
 		$this->addColumn('LIVE_STREAM_PASS', 'DbLiveStreamPass', 'VARCHAR', false, 255, null);
+		$this->addColumn('LINKED', 'DbLinked', 'BOOLEAN', true, null, false);
 		// validators
 	} // initialize()
 
@@ -61,6 +62,7 @@ class CcShowTableMap extends TableMap {
     $this->addRelation('CcShowDays', 'CcShowDays', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
     $this->addRelation('CcShowRebroadcast', 'CcShowRebroadcast', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
     $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
+    $this->addRelation('CcShowStamp', 'CcShowStamp', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcShowTableMap

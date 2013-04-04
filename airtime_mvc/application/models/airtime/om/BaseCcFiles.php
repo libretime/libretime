@@ -494,6 +494,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $collCcSchedules;
 
 	/**
+	 * @var        array CcShowStamp[] Collection to store aggregation of CcShowStamp objects.
+	 */
+	protected $collCcShowStamps;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -3109,6 +3114,8 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 			$this->collCcSchedules = null;
 
+			$this->collCcShowStamps = null;
+
 		} // if (deep)
 	}
 
@@ -3300,6 +3307,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcShowStamps !== null) {
+				foreach ($this->collCcShowStamps as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -3421,6 +3436,14 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 				if ($this->collCcSchedules !== null) {
 					foreach ($this->collCcSchedules as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcShowStamps !== null) {
+					foreach ($this->collCcShowStamps as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -4351,6 +4374,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				}
 			}
 
+			foreach ($this->getCcShowStamps() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowStamp($relObj->copy($deepCopy));
+				}
+			}
+
 		} // if ($deepCopy)
 
 
@@ -5155,6 +5184,240 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcShowStamps collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowStamps()
+	 */
+	public function clearCcShowStamps()
+	{
+		$this->collCcShowStamps = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowStamps collection.
+	 *
+	 * By default this just sets the collCcShowStamps collection to an empty array (like clearcollCcShowStamps());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowStamps()
+	{
+		$this->collCcShowStamps = new PropelObjectCollection();
+		$this->collCcShowStamps->setModel('CcShowStamp');
+	}
+
+	/**
+	 * Gets an array of CcShowStamp objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcFiles is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowStamps($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowStamps || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowStamps) {
+				// return empty collection
+				$this->initCcShowStamps();
+			} else {
+				$collCcShowStamps = CcShowStampQuery::create(null, $criteria)
+					->filterByCcFiles($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowStamps;
+				}
+				$this->collCcShowStamps = $collCcShowStamps;
+			}
+		}
+		return $this->collCcShowStamps;
+	}
+
+	/**
+	 * Returns the number of related CcShowStamp objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowStamp objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowStamps(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowStamps || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowStamps) {
+				return 0;
+			} else {
+				$query = CcShowStampQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcFiles($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowStamps);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowStamp object to this object
+	 * through the CcShowStamp foreign key attribute.
+	 *
+	 * @param      CcShowStamp $l CcShowStamp
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowStamp(CcShowStamp $l)
+	{
+		if ($this->collCcShowStamps === null) {
+			$this->initCcShowStamps();
+		}
+		if (!$this->collCcShowStamps->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowStamps[]= $l;
+			$l->setCcFiles($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcShow', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcShowInstances($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcShowInstances', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcWebstream($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcWebstream', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcBlock', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcPlaylist($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcPlaylist', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -5270,12 +5533,18 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcShowStamps) {
+				foreach ((array) $this->collCcShowStamps as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
 		$this->collCcShowInstancess = null;
 		$this->collCcPlaylistcontentss = null;
 		$this->collCcBlockcontentss = null;
 		$this->collCcSchedules = null;
+		$this->collCcShowStamps = null;
 		$this->aFkOwner = null;
 		$this->aCcSubjsRelatedByDbEditedby = null;
 		$this->aCcMusicDirs = null;

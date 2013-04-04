@@ -34,6 +34,10 @@
  * @method     CcPlaylistQuery rightJoinCcPlaylistcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcPlaylistQuery innerJoinCcPlaylistcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
  *
+ * @method     CcPlaylistQuery leftJoinCcShowStamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowStamp relation
+ * @method     CcPlaylistQuery rightJoinCcShowStamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowStamp relation
+ * @method     CcPlaylistQuery innerJoinCcShowStamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowStamp relation
+ *
  * @method     CcPlaylist findOne(PropelPDO $con = null) Return the first CcPlaylist matching the query
  * @method     CcPlaylist findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylist matching the query, or a new CcPlaylist object populated from the query conditions when no match is found
  *
@@ -463,6 +467,70 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 		return $this
 			->joinCcPlaylistcontents($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlaylistcontents', 'CcPlaylistcontentsQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowStamp object
+	 *
+	 * @param     CcShowStamp $ccShowStamp  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowStamp($ccShowStamp, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcPlaylistPeer::ID, $ccShowStamp->getDbPlaylistId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowStamp relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcPlaylistQuery The current query, for fluid interface
+	 */
+	public function joinCcShowStamp($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowStamp');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowStamp');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowStamp relation CcShowStamp object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowStampQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowStampQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcShowStamp($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowStamp', 'CcShowStampQuery');
 	}
 
 	/**

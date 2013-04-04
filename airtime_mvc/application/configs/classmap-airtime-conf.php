@@ -204,4 +204,11 @@ return array (
   'BaseCcLocalePeer' => 'airtime/om/BaseCcLocalePeer.php',
   'BaseCcLocale' => 'airtime/om/BaseCcLocale.php',
   'BaseCcLocaleQuery' => 'airtime/om/BaseCcLocaleQuery.php',
+  'CcShowStampTableMap' => 'airtime/map/CcShowStampTableMap.php',
+  'CcShowStampPeer' => 'airtime/CcShowStampPeer.php',
+  'CcShowStamp' => 'airtime/CcShowStamp.php',
+  'CcShowStampQuery' => 'airtime/CcShowStampQuery.php',
+  'BaseCcShowStampPeer' => 'airtime/om/BaseCcShowStampPeer.php',
+  'BaseCcShowStamp' => 'airtime/om/BaseCcShowStamp.php',
+  'BaseCcShowStampQuery' => 'airtime/om/BaseCcShowStampQuery.php',
 );

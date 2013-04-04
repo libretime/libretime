@@ -59,9 +59,12 @@ class Application_Model_Scheduler
 
             //could be added to the beginning of a show, which sends id = 0;
             if ($id > 0) {
+                //schedule_id of where we are inserting after?
                 $schedInfo[$id] = $items[$i]["instance"];
             }
 
+            //what is timestamp for?
+            //format is instance_id => timestamp
             $instanceInfo[$items[$i]["instance"]] = $items[$i]["timestamp"];
         }
 
@@ -380,19 +383,24 @@ class Application_Model_Scheduler
         $schedule->save($this->con);
     }
 
-    /*
-     * @param array $scheduledIds
-     * @param array $fileIds
-     * @param array $playlistIds
+    /**
+     * 
+     * Enter description here ...
+     * @param $scheduleItems
+     *     cc_schedule items, where the items get inserted after
+     * @param $filesToInsert
+     *     array of schedule item info, what gets inserted into cc_schedule
+     * @param $adjustSched
      */
-    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true, $mediaItems = null)
+    private function insertAfter($scheduleItems, $filesToInsert, $adjustSched = true)
     {
         try {
             $affectedShowInstances = array();
-            
-            //dont want to recalculate times for moved items.
+
+            //dont want to recalculate times for moved items
+            //only moved items have a sched_id
             $excludeIds = array();
-            foreach ($schedFiles as $file) {
+            foreach ($filesToInsert as $file) {
                 if (isset($file["sched_id"])) {
                     $excludeIds[] = intval($file["sched_id"]);
                 }
@@ -402,17 +410,7 @@ class Application_Model_Scheduler
 
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
-                
-                // if mediaItmes is passed in, we want to create contents
-                // at the time of insert. This is for dyanmic blocks or
-                // playlist that contains dynamic blocks
-                if ($mediaItems != null) {
-                    $schedFiles = array();
-                    foreach ($mediaItems as $media) {
-                        $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
-                    }
-                }
-                
+
                 if ($id !== 0) {
                     $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
                     $instance = $schedItem->getCcShowInstances($this->con);
@@ -433,6 +431,10 @@ class Application_Model_Scheduler
                     $affectedShowInstances[] = $instance->getDbId();
                 }
 
+                /*
+                 * $adjustSched is true if there are schedule items
+                 * following the item just inserted, per show instance
+                 */
                 if ($adjustSched === true) {
 
                     $pstart = microtime(true);
@@ -449,7 +451,7 @@ class Application_Model_Scheduler
                     Logging::debug(floatval($pend) - floatval($pstart));
                 }
 
-                foreach ($schedFiles as $file) {
+                foreach ($filesToInsert as $file) {
                     $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
@@ -487,7 +489,7 @@ class Application_Model_Scheduler
                     $sched->save($this->con);
 
                     $nextStartDT = $endTimeDT;
-                }
+                }//all files have been inserted/moved
 
                 if ($adjustSched === true) {
 
@@ -526,7 +528,7 @@ class Application_Model_Scheduler
             }
 
             // update is_scheduled flag for each cc_file
-            foreach ($schedFiles as $file) {
+            foreach ($filesToInsert as $file) {
                 $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
                 $db_file->setDbIsScheduled(true);
                 $db_file->save($this->con);
@@ -553,45 +555,46 @@ class Application_Model_Scheduler
     }
 
     /*
-     * @param array $scheduleItems
-     * @param array $mediaItems
+     * @param array $scheduleItems (schedule_id and instance_id it belongs to)
+     * @param array $mediaItems (file|block|playlist|webstream)
      */
     public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true)
     {
         $this->con->beginTransaction();
 
-        $schedFiles = array();
+        $filesToInsert = array();
 
         try {
-
             $this->validateRequest($scheduleItems);
 
-            $requireDynamicContentCreation = false;
-            
+            /*
+             * create array of arrays
+             * array of schedule item info
+             * (sched_id is the cc_schedule id and is set if an item is being
+             *  moved because it is already in cc_schedule)
+             * [0] = Array(
+             *     id => 1,
+             *     cliplength => 00:04:32,
+             *     cuein => 00:00:00,
+             *     cueout => 00:04:32,
+             *     fadein => 00.5,
+             *     fadeout => 00.5,
+             *     sched_id => ,
+             *     type => 0)
+             * [1] = Array(
+             *     id => 2,
+             *     cliplength => 00:05:07,
+             *     cuein => 00:00:00,
+             *     cueout => 00:05:07,
+             *     fadein => 00.5,
+             *     fadeout => 00.5,
+             *     sched_id => ,
+             *     type => 0)
+             */
             foreach ($mediaItems as $media) {
-                if ($media['type'] == "playlist") {
-                    $pl = new Application_Model_Playlist($media['id']);
-                    if ($pl->hasDynamicBlock()) {
-                        $requireDynamicContentCreation = true;
-                        break;
-                    }
-                } else if ($media['type'] == "block") {
-                    $bl = new Application_Model_Block($media['id']);
-                    if (!$bl->isStatic()) {
-                        $requireDynamicContentCreation = true;
-                        break;
-                    }
-                }
+                $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
             }
-            
-            if ($requireDynamicContentCreation) {
-                $this->insertAfter($scheduleItems, $schedFiles, $adjustSched, $mediaItems);
-            } else {
-                foreach ($mediaItems as $media) {
-                    $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
-                }
-                $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
-            }
+            $this->insertAfter($scheduleItems, $filesToInsert, $adjustSched);
 
             $this->con->commit();
 

@@ -156,6 +156,7 @@ CREATE TABLE "cc_show"
 	"live_stream_using_custom_auth" BOOLEAN default 'f',
 	"live_stream_user" VARCHAR(255),
 	"live_stream_pass" VARCHAR(255),
+	"linked" BOOLEAN default 'f' NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -426,6 +427,7 @@ CREATE TABLE "cc_schedule"
 	"instance_id" INTEGER  NOT NULL,
 	"playout_status" INT2 default 1 NOT NULL,
 	"broadcasted" INT2 default 0 NOT NULL,
+	"stamp_id" INTEGER default 0 NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -748,6 +750,35 @@ COMMENT ON TABLE "cc_locale" IS '';
 
 
 SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_show_stamp
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_show_stamp" CASCADE;
+
+
+CREATE TABLE "cc_show_stamp"
+(
+	"id" serial  NOT NULL,
+	"show_id" INTEGER  NOT NULL,
+	"instance_id" INTEGER,
+	"file_id" INTEGER,
+	"stream_id" INTEGER,
+	"block_id" INTEGER,
+	"playlist_id" INTEGER,
+	"position" INTEGER  NOT NULL,
+	"clip_length" interval default '00:00:00',
+	"cue_in" interval default '00:00:00',
+	"cue_out" interval default '00:00:00',
+	"fade_in" interval default '00:00:00',
+	"fade_out" interval default '00:00:00',
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_show_stamp" IS '';
+
+
+SET search_path TO public;
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey" FOREIGN KEY ("owner_id") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
@@ -803,3 +834,15 @@ ALTER TABLE "cc_webstream_metadata" ADD CONSTRAINT "cc_schedule_inst_fkey" FOREI
 ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_timestamp_inst_fkey" FOREIGN KEY ("timestamp_id") REFERENCES "cc_timestamp" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_mount_name_inst_fkey" FOREIGN KEY ("mount_name_id") REFERENCES "cc_mount_name" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_show_id_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_instance_id_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_stream_id_fkey" FOREIGN KEY ("stream_id") REFERENCES "cc_webstream" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;

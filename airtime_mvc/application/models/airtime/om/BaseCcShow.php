@@ -96,6 +96,13 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $live_stream_pass;
 
 	/**
+	 * The value for the linked field.
+	 * Note: this column has a database default value of: false
+	 * @var        boolean
+	 */
+	protected $linked;
+
+	/**
 	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
 	 */
 	protected $collCcShowInstancess;
@@ -114,6 +121,11 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	 * @var        array CcShowHosts[] Collection to store aggregation of CcShowHosts objects.
 	 */
 	protected $collCcShowHostss;
+
+	/**
+	 * @var        array CcShowStamp[] Collection to store aggregation of CcShowStamp objects.
+	 */
+	protected $collCcShowStamps;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -142,6 +154,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->genre = '';
 		$this->live_stream_using_airtime_auth = false;
 		$this->live_stream_using_custom_auth = false;
+		$this->linked = false;
 	}
 
 	/**
@@ -262,6 +275,16 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function getDbLiveStreamPass()
 	{
 		return $this->live_stream_pass;
+	}
+
+	/**
+	 * Get the [linked] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbLinked()
+	{
+		return $this->linked;
 	}
 
 	/**
@@ -485,6 +508,26 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	} // setDbLiveStreamPass()
 
 	/**
+	 * Set the value of [linked] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbLinked($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->linked !== $v || $this->isNew()) {
+			$this->linked = $v;
+			$this->modifiedColumns[] = CcShowPeer::LINKED;
+		}
+
+		return $this;
+	} // setDbLinked()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -511,6 +554,10 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			}
 
 			if ($this->live_stream_using_custom_auth !== false) {
+				return false;
+			}
+
+			if ($this->linked !== false) {
 				return false;
 			}
 
@@ -547,6 +594,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$this->live_stream_using_custom_auth = ($row[$startcol + 8] !== null) ? (boolean) $row[$startcol + 8] : null;
 			$this->live_stream_user = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->live_stream_pass = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+			$this->linked = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -555,7 +603,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 11; // 11 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 12; // 12 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShow object", $e);
@@ -624,6 +672,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$this->collCcShowRebroadcasts = null;
 
 			$this->collCcShowHostss = null;
+
+			$this->collCcShowStamps = null;
 
 		} // if (deep)
 	}
@@ -790,6 +840,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcShowStamps !== null) {
+				foreach ($this->collCcShowStamps as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -893,6 +951,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 					}
 				}
 
+				if ($this->collCcShowStamps !== null) {
+					foreach ($this->collCcShowStamps as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
 
 			$this->alreadyInValidation = false;
 		}
@@ -959,6 +1025,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 10:
 				return $this->getDbLiveStreamPass();
 				break;
+			case 11:
+				return $this->getDbLinked();
+				break;
 			default:
 				return null;
 				break;
@@ -993,6 +1062,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$keys[8] => $this->getDbLiveStreamUsingCustomAuth(),
 			$keys[9] => $this->getDbLiveStreamUser(),
 			$keys[10] => $this->getDbLiveStreamPass(),
+			$keys[11] => $this->getDbLinked(),
 		);
 		return $result;
 	}
@@ -1057,6 +1127,9 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 10:
 				$this->setDbLiveStreamPass($value);
 				break;
+			case 11:
+				$this->setDbLinked($value);
+				break;
 		} // switch()
 	}
 
@@ -1092,6 +1165,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if (array_key_exists($keys[8], $arr)) $this->setDbLiveStreamUsingCustomAuth($arr[$keys[8]]);
 		if (array_key_exists($keys[9], $arr)) $this->setDbLiveStreamUser($arr[$keys[9]]);
 		if (array_key_exists($keys[10], $arr)) $this->setDbLiveStreamPass($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbLinked($arr[$keys[11]]);
 	}
 
 	/**
@@ -1114,6 +1188,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH)) $criteria->add(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, $this->live_stream_using_custom_auth);
 		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USER)) $criteria->add(CcShowPeer::LIVE_STREAM_USER, $this->live_stream_user);
 		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_PASS)) $criteria->add(CcShowPeer::LIVE_STREAM_PASS, $this->live_stream_pass);
+		if ($this->isColumnModified(CcShowPeer::LINKED)) $criteria->add(CcShowPeer::LINKED, $this->linked);
 
 		return $criteria;
 	}
@@ -1185,6 +1260,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$copyObj->setDbLiveStreamUsingCustomAuth($this->live_stream_using_custom_auth);
 		$copyObj->setDbLiveStreamUser($this->live_stream_user);
 		$copyObj->setDbLiveStreamPass($this->live_stream_pass);
+		$copyObj->setDbLinked($this->linked);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1212,6 +1288,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			foreach ($this->getCcShowHostss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcShowHosts($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcShowStamps() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcShowStamp($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1772,6 +1854,240 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcShowStamps collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcShowStamps()
+	 */
+	public function clearCcShowStamps()
+	{
+		$this->collCcShowStamps = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcShowStamps collection.
+	 *
+	 * By default this just sets the collCcShowStamps collection to an empty array (like clearcollCcShowStamps());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcShowStamps()
+	{
+		$this->collCcShowStamps = new PropelObjectCollection();
+		$this->collCcShowStamps->setModel('CcShowStamp');
+	}
+
+	/**
+	 * Gets an array of CcShowStamp objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcShow is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @throws     PropelException
+	 */
+	public function getCcShowStamps($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowStamps || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowStamps) {
+				// return empty collection
+				$this->initCcShowStamps();
+			} else {
+				$collCcShowStamps = CcShowStampQuery::create(null, $criteria)
+					->filterByCcShow($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcShowStamps;
+				}
+				$this->collCcShowStamps = $collCcShowStamps;
+			}
+		}
+		return $this->collCcShowStamps;
+	}
+
+	/**
+	 * Returns the number of related CcShowStamp objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcShowStamp objects.
+	 * @throws     PropelException
+	 */
+	public function countCcShowStamps(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcShowStamps || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcShowStamps) {
+				return 0;
+			} else {
+				$query = CcShowStampQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcShow($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcShowStamps);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcShowStamp object to this object
+	 * through the CcShowStamp foreign key attribute.
+	 *
+	 * @param      CcShowStamp $l CcShowStamp
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcShowStamp(CcShowStamp $l)
+	{
+		if ($this->collCcShowStamps === null) {
+			$this->initCcShowStamps();
+		}
+		if (!$this->collCcShowStamps->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcShowStamps[]= $l;
+			$l->setCcShow($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcShowInstances($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcShowInstances', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcFiles', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcWebstream($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcWebstream', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcBlock', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcShow is new, it will return
+	 * an empty collection; or if this CcShow has previously
+	 * been saved, it will retrieve related CcShowStamps from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcShow.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 */
+	public function getCcShowStampsJoinCcPlaylist($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcShowStampQuery::create(null, $criteria);
+		$query->joinWith('CcPlaylist', $join_behavior);
+
+		return $this->getCcShowStamps($query, $con);
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -1787,6 +2103,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->live_stream_using_custom_auth = null;
 		$this->live_stream_user = null;
 		$this->live_stream_pass = null;
+		$this->linked = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
@@ -1828,12 +2145,18 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcShowStamps) {
+				foreach ((array) $this->collCcShowStamps as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
 		$this->collCcShowInstancess = null;
 		$this->collCcShowDayss = null;
 		$this->collCcShowRebroadcasts = null;
 		$this->collCcShowHostss = null;
+		$this->collCcShowStamps = null;
 	}
 
 	/**
