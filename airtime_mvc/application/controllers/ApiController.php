@@ -724,7 +724,7 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 
-        $msg = $request->getParam('msg');
+        $msg = $request->getParam('msg_post');
         $stream_id = $request->getParam('stream_id');
         $boot_time = $request->getParam('boot_time');
 
