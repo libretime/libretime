@@ -30,7 +30,7 @@ start () {
 
 stop () {
         #send term signal after 10 seconds
-        timeout 10s -s 9 /usr/lib/airtime/airtime_virtualenv/bin/python \
+        timeout -s9 10s /usr/lib/airtime/airtime_virtualenv/bin/python \
             /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
         # Send TERM after 5 seconds, wait at most 30 seconds.
         start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
