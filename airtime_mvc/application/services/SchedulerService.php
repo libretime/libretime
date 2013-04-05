@@ -44,27 +44,32 @@ class Application_Service_SchedulerService
      * Enter description here ...
      * @param array $instanceIds
      */
-    public static function updateScheduleStartTime($instanceIds, $diff)
+    public static function updateScheduleStartTime($instanceIds, $diff=null, $newStart=null)
     {
         $con = Propel::getConnection();
-        if (count($instanceIds) > 0 && $diff != 0) {
+        if (count($instanceIds) > 0) {
             $showIdList = implode(",", $instanceIds);
-            /*$sql = <<<SQL
-UPDATE cc_schedule
-SET starts = starts + :diff1::INTERVAL,
-    ends = ends + :diff2::INTERVAL
-WHERE instance_id IN (:showIds)
-SQL;
 
-            Application_Common_Database::prepareAndExecute($sql,
-                array(':diff1' => $diff, ':diff2' => $diff, 
-                    ':showIds' => $showIdList),
-                'execute');*/
-        $sql = "UPDATE cc_schedule "
-                    ."SET starts = starts + INTERVAL '$diff sec', "
-                    ."ends = ends + INTERVAL '$diff sec' "
-                    ."WHERE instance_id IN ($showIdList)";
-            $con->exec($sql);
+            if (is_null($diff)) {
+                $ccSchedule = CcScheduleQuery::create()
+                    ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                    ->orderByDbStarts()
+                    ->limit(1)
+                    ->findOne();
+
+                if (!is_null($ccSchedule)) {
+                    $scheduleStartsEpoch = strtotime($ccSchedule->getDbStarts());
+                    $showStartsEpoch     = strtotime($newStart->format("Y-m-d H:i:s"));
+
+                    $diff = $showStartsEpoch - $scheduleStartsEpoch;
+                }
+
+                $sql = "UPDATE cc_schedule "
+                        ."SET starts = starts + INTERVAL '$diff sec', "
+                        ."ends = ends + INTERVAL '$diff sec' "
+                        ."WHERE instance_id IN ($showIdList)";
+                $con->exec($sql);
+            }
         }
     }
 

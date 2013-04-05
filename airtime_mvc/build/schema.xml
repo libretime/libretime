@@ -341,9 +341,9 @@
     <foreign-key foreignTable="cc_webstream" name="cc_show_stream_fkey" onDelete="CASCADE">
       <reference local="stream_id" foreign="id"/>
     </foreign-key>
-    <foreign-key foreignTable="cc_show_stamp" name="cc_schedule_stamp_id_fkey" onDelete="CASCADE">
+    <!-- <foreign-key foreignTable="cc_show_stamp" name="cc_schedule_stamp_id_fkey" onDelete="CASCADE">
       <reference local="stamp_id" foreign="id" />
-    </foreign-key>
+    </foreign-key> -->
     <index name="cc_schedule_instance_id_idx">
       <index-column name="instance_id"/>
     </index>

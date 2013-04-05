@@ -163,22 +163,16 @@ class ScheduleController extends Zend_Controller_Action
     {
         $deltaDay = $this->_getParam('day');
         $deltaMin = $this->_getParam('min');
-        $showInstanceId = $this->_getParam('showInstanceId');
 
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
-            try {
-                $showInstance = new Application_Model_ShowInstance($showInstanceId);
-            } catch (Exception $e) {
-                $this->view->show_error = true;
-
-                return false;
-            }
-            $error = $showInstance->moveShow($deltaDay, $deltaMin);
+        try {
+            $service_calendar = new Application_Service_CalendarService(
+                $this->_getParam('showInstanceId'));
+        } catch (Exception $e) {
+            $this->view->show_error = true;
+            return false;
         }
 
+        $error = $service_calendar->moveShow($deltaDay, $deltaMin);
         if (isset($error)) {
             $this->view->error = $error;
         }

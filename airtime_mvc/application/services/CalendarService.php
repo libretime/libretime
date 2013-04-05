@@ -4,13 +4,16 @@ class Application_Service_CalendarService
 {
     private $currentUser;
     private $ccShowInstance;
-    private $showId;
+    private $ccShow;
 
     public function __construct($instanceId = null)
     {
         if (!is_null($instanceId)) {
             $this->ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
-            $this->showId = $this->ccShowInstance->getDbShowId();
+            if (is_null($this->ccShowInstance)) {
+                throw new Exception("Instance does not exist");
+            }
+            $this->ccShow = $this->ccShowInstance->getCcShow();
         }
 
         $service_user = new Application_Service_UserService();
@@ -27,7 +30,7 @@ class Application_Service_CalendarService
         $now = time();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $isAdminOrPM = $this->currentUser->isAdminOrPM();
-        $isHostOfShow = $this->currentUser->isHostOfShow($this->showId);
+        $isHostOfShow = $this->currentUser->isHostOfShow($this->ccShow->getDbId());
 
         //DateTime objects in UTC
         $startDT = $this->ccShowInstance->getDbStarts(null);
@@ -108,7 +111,7 @@ class Application_Service_CalendarService
                 }
             }
 
-            $isRepeating = $this->ccShowInstance->getCcShow()->getFirstCcShowDay()->isRepeating();
+            $isRepeating = $this->ccShow->getFirstCcShowDay()->isRepeating();
             if (!$this->ccShowInstance->isRebroadcast()) {
                 if ($isRepeating) {
                     $menu["edit"] = array(
@@ -164,18 +167,12 @@ class Application_Service_CalendarService
         return $menu;
     }
 
-    /*
-     * @param $dateTime
-     *      php Datetime object to add deltas to
-     *
-     * @param $deltaDay
-     *      php int, delta days show moved
-     *
-     * @param $deltaMin
-     *      php int, delta mins show moved
-     *
-     * @return $newDateTime
-     *      php DateTime, $dateTime with the added time deltas.
+    /**
+     * 
+     * Enter description here ...
+     * @param DateTime $dateTime object to add deltas to
+     * @param int $deltaDay delta days show moved
+     * @param int $deltaMin delta minutes show moved
      */
     public static function addDeltas($dateTime, $deltaDay, $deltaMin)
     {
@@ -200,6 +197,130 @@ class Application_Service_CalendarService
         }
 
         return $newDateTime;
+    }
+
+    private function validateShowMove($deltaDay, $deltaMin)
+    {
+        if (!$this->currentUser->isAdminOrPM()) {
+            throw new Exception(_("Permission denied"));
+        }
+
+        if ($this->ccShow->getFirstCcShowDay()->isRepeating()) {
+            throw new Exception(_("Can't drag and drop repeating shows"));
+        }
+
+        $today_timestamp = time();
+
+        $startsDateTime = new DateTime($this->ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
+        $endsDateTime = new DateTime($this->ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
+
+        if ($today_timestamp > $startsDateTime->getTimestamp()) {
+            throw new Exception(_("Can't move a past show"));
+        }
+
+        //the user is moving the show on the calendar from the perspective of local time.
+        //incase a show is moved across a time change border offsets should be added to the localtime
+        //stamp and then converted back to UTC to avoid show time changes!
+        $localTimezone = Application_Model_Preference::GetTimezone();
+        $startsDateTime->setTimezone(new DateTimeZone($localTimezone));
+        $endsDateTime->setTimezone(new DateTimeZone($localTimezone));
+
+        $newStartsDateTime = self::addDeltas($startsDateTime, $deltaDay, $deltaMin);
+        $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin);
+
+        //convert our new starts/ends to UTC.
+        $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
+        $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
+
+        if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
+            throw new Exception(_("Can't move show into past"));
+        }
+
+        //check if show is overlapping
+        $overlapping = Application_Model_Schedule::checkOverlappingShows(
+            $newStartsDateTime, $newEndsDateTime, true, $this->ccShowInstance->getDbId());
+        if ($overlapping) {
+            throw new Exception(_("Cannot schedule overlapping shows"));
+        }
+
+        if ($this->ccShow->isRecorded()) {
+            //rebroadcasts should start at max 1 hour after a recorded show has ended.
+            $minRebroadcastStart = self::addDeltas($newEndsDateTime, 0, 60);
+            //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
+            $rebroadcasts = CcShowInstancesQuery::create()
+                ->filterByDbOriginalShow($this->_instanceId)
+                ->filterByDbStarts($minRebroadcastStart->format('Y-m-d H:i:s'), Criteria::LESS_THAN)
+                ->find();
+
+            if (count($rebroadcasts) > 0) {
+                throw new Exception(_("Can't move a recorded show less than 1 hour before its rebroadcasts."));
+            }
+        }
+
+        if ($this->ccShow->isRebroadcast()) {
+            $recordedShow = CcShowInstancesQuery::create()->findPk(
+                $this->ccShowInstance->getDbOriginalShow());
+            if (is_null($recordedShow)) {
+                $this->ccShowInstance->delete();
+                throw new Exception(_("Show was deleted because recorded show does not exist!"));
+            }
+
+            $recordEndDateTime = new DateTime($recordedShow->getDbEnds(), new DateTimeZone("UTC"));
+            $newRecordEndDateTime = self::addDeltas($recordEndDateTime, 0, 60);
+
+            if ($newStartsDateTime->getTimestamp() < $newRecordEndDateTime->getTimestamp()) {
+                throw new Exception(_("Must wait 1 hour to rebroadcast."));
+            }
+        }
+        return array($newStartsDateTime, $newEndsDateTime);
+    }
+
+    public function moveShow($deltaDay, $deltaMin)
+    {
+        try {
+            $con = Propel::getConnection();
+            $con->beginTransaction();
+
+            list($newStartsDateTime, $newEndsDateTime) = $this->validateShowMove(
+                $deltaDay, $deltaMin);
+
+            $this->ccShowInstance
+                ->setDbStarts($newStartsDateTime)
+                ->setDbEnds($newEndsDateTime)
+                ->save();
+
+            if (!$this->ccShowInstance->getCcShow()->isRebroadcast()) {
+                //we can get the first show day because we know the show is
+                //not repeating, and therefore will only have one show day entry
+                $ccShowDay = $this->ccShow->getFirstCcShowDay();
+                $ccShowDay
+                    ->setDbFirstShow($newStartsDateTime)
+                    ->setDbLastShow($newEndsDateTime)
+                    ->save();
+            }
+
+            Application_Service_SchedulerService::updateScheduleStartTime(
+                array($this->ccShowInstance->getDbId()), null, $newStartsDateTime);
+
+            $con->commit();
+            Application_Model_RabbitMq::PushSchedule();
+        } catch (Exception $e) {
+            $con->rollback();
+            return $e->getMessage();
+        }
+    }
+
+    public function resizeShow($deltaDay, $deltaMin)
+    {
+        try {
+            $con = Propel::getConnection();
+            $con->beginTransaction();
+
+            $con->commit();
+            Application_Model_RabbitMq::PushSchedule();
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
     }
 
 }
