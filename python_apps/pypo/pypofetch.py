@@ -10,6 +10,7 @@ import copy
 import subprocess
 import signal
 from datetime import datetime
+import traceback
 
 from Queue import Empty
 from threading import Thread
@@ -124,7 +125,6 @@ class PypoFetch(Thread):
                     self.listener_timeout = 0
             self.logger.info("New timeout: %s" % self.listener_timeout)
         except Exception, e:
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -547,8 +547,12 @@ class PypoFetch(Thread):
                 #being incorrect!)
                 if not self.is_file_opened(path):
                     os.remove(path)
+                    self.logger.info("File '%s' removed" % path)
+                else:
+                    self.logger.info("File '%s' not removed. Still busy!" % path)
             except Exception, e:
-                self.logger.error(e)
+                self.logger.error("Problem removing file '%s'" % f)
+                self.logger.error(traceback.format_exc())
 
     def manual_schedule_fetch(self):
         success, self.schedule_data = self.api_client.get_schedule()
@@ -599,7 +603,6 @@ class PypoFetch(Thread):
                 self.logger.info("Queue timeout. Fetching schedule manually")
                 self.persistent_manual_schedule_fetch(max_attempts=5)
             except Exception, e:
-                import traceback
                 top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)
                 self.logger.error("traceback: %s", top)
