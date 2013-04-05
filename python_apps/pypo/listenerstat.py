@@ -51,7 +51,7 @@ class ListenerStat(Thread):
         dom = xml.dom.minidom.parseString(document)
         sources = dom.getElementsByTagName("source")
 
-        mount_stats = {}
+        mount_stats = None
         for s in sources:
             #drop the leading '/' character
             mount_name = s.getAttribute("mount")[1:]
@@ -97,7 +97,8 @@ class ListenerStat(Thread):
             if v["enable"] == 'true':
                 try:
                     if v["output"] == "icecast":
-                        stats.append(self.get_icecast_stats(v))
+                        mount_stats = self.get_icecast_stats(v)
+                        if mount_stats: stats.append(mount_stats)
                     else:
                         stats.append(self.get_shoutcast_stats(v))
                     self.update_listener_stat_error(v["mount"], 'OK')
