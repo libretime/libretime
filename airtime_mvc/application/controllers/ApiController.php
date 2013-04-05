@@ -971,14 +971,14 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
 
         $request = $this->getRequest();
-        $data = json_decode($request->getParam('data'));
+        $data = json_decode($request->getParam('data'), $assoc = true);
 
         foreach ($data as $pair) {
             list($id, $info) = $pair;
             // TODO : move this code into model -- RG
-            $cuein = $info->cuein;
-            $cueout = $info->cueout;
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
+            $cueout = isset($info['cueout']) ? $info['cueout'] : $file->getDbLength();
             $file->setDbCuein($cuein);
             $file->setDbCueout($cueout);
             $file->setDbSilanCheck(true);

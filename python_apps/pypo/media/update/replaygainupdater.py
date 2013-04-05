@@ -58,7 +58,8 @@ class ReplayGainUpdater(Thread):
                         total += 1
 
                     try:
-                        self.api_client.update_replay_gain_values(processed_data)
+                        if len(processed_data):
+                            self.api_client.update_replay_gain_values(processed_data)
                     except Exception as e:
                         self.logger.error(e)
                         self.logger.debug(traceback.format_exc())
