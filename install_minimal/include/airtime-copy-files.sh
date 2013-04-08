@@ -72,7 +72,6 @@ if [ "$python_service" -eq "0" ]; then
     fi
 fi
 
-mkdir -p /usr/lib/airtime
 cp -R $AIRTIMEROOT/utils /usr/lib/airtime
 cp -R $AIRTIMEROOT/python_apps/std_err_override /usr/lib/airtime
 
