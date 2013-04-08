@@ -143,6 +143,11 @@ fi
 #We don't want any of our python services running if we are doing an upgrade/reinstall.
 #They will be automatically restarted later on.
 echo "* Temporarily stopping any previous running services"
+set +e
+monit unmonitor airtime-media-monitor >/dev/null 2>&1
+monit unmonitor airtime-liquidsoap >/dev/null 2>&1
+monit unmonitor airtime-playout >/dev/null 2>&1
+set -e
 if [ -e /etc/init.d/airtime-media-monitor ]; then
     invoke-rc.d airtime-media-monitor stop > /dev/null 2>&1
 fi
@@ -172,6 +177,8 @@ set -e
 
 echo -e "\n******************************** Install Begin *********************************"
 rm -rf "/usr/lib/airtime"
+mkdir -p /usr/lib/airtime
+
 if [ "$python_service" -eq "0" ]; then
     $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
 
@@ -208,6 +215,7 @@ if [ "$mediamonitor" = "t" -o "$pypo" = "t" ]; then
 fi
 
 
+#An attempt to force apache to realize that files are updated on upgrade...
 touch /usr/share/airtime/public/index.php
 
 if [ "$python_service" -eq "0" ]; then

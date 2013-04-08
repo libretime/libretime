@@ -13,7 +13,7 @@ require_once(__DIR__.'/airtime-constants.php');
 // -------------------------------------------------------------------------
 
 $iniExists = file_exists("/etc/airtime/airtime.conf");
-if ($iniExists){
+if ($iniExists) {
     //reinstall, Will ask if we should rewrite config files.
     require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
     $CC_CONFIG = Config::getConfig();
