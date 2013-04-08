@@ -172,6 +172,8 @@ set -e
 
 echo -e "\n******************************** Install Begin *********************************"
 rm -rf "/usr/lib/airtime"
+mkdir -p /usr/lib/airtime
+
 if [ "$python_service" -eq "0" ]; then
     $AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh
 
@@ -208,6 +210,7 @@ if [ "$mediamonitor" = "t" -o "$pypo" = "t" ]; then
 fi
 
 
+#An attempt to force apache to realize that files are updated on upgrade...
 touch /usr/share/airtime/public/index.php
 
 if [ "$python_service" -eq "0" ]; then

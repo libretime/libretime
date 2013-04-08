@@ -142,7 +142,7 @@ class PypoFetch(Thread):
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             lock.release()
 

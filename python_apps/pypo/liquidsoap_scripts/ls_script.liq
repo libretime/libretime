@@ -192,6 +192,7 @@ def check_dj_client(user,password) =
     ret = get_process_lines("python /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_auth.py --dj #{user} #{password}")
     #ret has now the value of the live client (dj1,dj2, or djx), or "ERROR"/"unknown" ...
     hd = list.hd(ret)
+    log("Live DJ authenticated: #{hd}")
     hd == "True"
 end
 
