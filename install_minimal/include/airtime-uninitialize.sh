@@ -21,13 +21,9 @@ monit unmonitor airtime-liquidsoap >/dev/null 2>&1
 monit unmonitor airtime-playout >/dev/null 2>&1
 set -e
 
-#virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-#. ${virtualenv_bin}activate
-
 #uninitialize Airtime services
 python $AIRTIMEROOT/python_apps/pypo/install/pypo-uninitialize.py
 python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-uninitialize.py
-#python $AIRTIMEROOT/python_apps/show-recorder/install/recorder-uninitialize.py
 
 if [ "$purge" = "t" ]; then
 #call Airtime uninstall script

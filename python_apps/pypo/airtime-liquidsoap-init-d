@@ -15,6 +15,7 @@ NAME="Liquidsoap Playout Engine"
 
 DAEMON=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
 PIDFILE=/var/run/airtime-liquidsoap.pid
+EXEC='/usr/bin/airtime-liquidsoap'
 
 start () {
         chown pypo:pypo /var/log/airtime/pypo
@@ -24,8 +25,10 @@ start () {
         touch $PIDFILE
         chown pypo:pypo $PIDFILE 
 
+        #start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
+            #--pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
         start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
-            --pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
+             --nicelevel -15 --startas $DAEMON --exec $EXEC
 }
 
 stop () {
@@ -33,9 +36,11 @@ stop () {
         timeout -s9 10s /usr/lib/airtime/airtime_virtualenv/bin/python \
             /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
         # Send TERM after 5 seconds, wait at most 30 seconds.
-        start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
+        #start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --pidfile $PIDFILE
+        start-stop-daemon --stop --oknodo --retry=TERM/10/KILL/5 --quiet --exec $EXEC
+
         rm -f $PIDFILE
-        sleep 3
+        sleep 2
 }
 
 start_with_monit () {
