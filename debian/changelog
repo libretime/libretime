@@ -1,3 +1,9 @@
+airtime (2.4.0-1) unstable; urgency=low
+
+  * Nightly development snapshot of Airtime 2.4.x series
+
+ -- Daniel James <daniel@64studio.com>  Tue, 19 Mar 2013 16:39:23 +0000
+
 airtime (2.3.0-2) unstable; urgency=low
 
   * Don't run the airtime-install script if the user has chosen not to

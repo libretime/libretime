@@ -12,6 +12,7 @@ var AIRTIME = (function(AIRTIME){
 		viewport,
 		$lib,
 		$pl,
+		$togglePl = $("<button id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open Playlist Editor")+"'>"+$.i18n._("Open Playlist Editor")+"</button>"),
 		widgetHeight,
 		resizeTimeout,
 		width;
@@ -363,6 +364,17 @@ var AIRTIME = (function(AIRTIME){
         removeButtonCheck();
 	}
     
+    function openPlaylistPanel() {
+        var screenWidth = Math.floor(viewport.width - 40);
+        viewport = AIRTIME.utilities.findViewportDimensions();
+        widgetHeight = viewport.height - 185;
+
+        $lib.width(Math.floor(screenWidth * 0.53));
+        $pl.show().width(Math.floor(screenWidth * 0.44));
+        $pl.height(widgetHeight);
+        $("#pl_edit").hide();
+    }
+
     //Purpose of this function is to iterate over all playlist elements
     //and verify whether they can be previewed by the browser or not. If not
     //then the playlist element is greyed out
@@ -450,9 +462,8 @@ var AIRTIME = (function(AIRTIME){
 		            if ($(this).hasClass('close')) {
                         var sUrl = baseUrl+"playlist/get-block-info";
                         mod.disableUI();
-                        $.post(sUrl, {format:"json", id:blockId}, function(json){
+                        $.post(sUrl, {format:"json", id:blockId}, function(data){
                             $html = "";
-                            var data = $.parseJSON(json);
                             var isStatic = data.isStatic;
                             delete data.type;
                             if (isStatic) {
@@ -643,8 +654,7 @@ var AIRTIME = (function(AIRTIME){
 	        obj_id = $('input[id="obj_id"]').val();
 	        url = baseUrl+"Playlist/shuffle";
     	    enableLoadingIcon();
-    	    $.post(url, {format: "json", obj_id: obj_id}, function(data){
-    	        var json = $.parseJSON(data)
+    	    $.post(url, {format: "json", obj_id: obj_id}, function(json){
 
     	        if (json.error !== undefined) {
     	            alert(json.error);
@@ -711,7 +721,40 @@ var AIRTIME = (function(AIRTIME){
         
         
         });
-		
+
+        $lib.on("click", "#pl_edit", function() {
+            openPlaylistPanel();
+            $.ajax( {
+                url : baseUrl+"usersettings/set-library-screen-settings",
+                type : "POST",
+                data : {
+                    settings : {
+                        playlist : true
+                    },
+                    format : "json"
+                },
+                dataType : "json"
+            });
+        });
+
+        $pl.on("click", "#lib_pl_close", function() {
+            var screenWidth = Math.floor(viewport.width - 40);
+            $pl.hide();
+            $lib.width(screenWidth).find("#library_display_length").append($togglePl.show());
+
+            $.ajax( {
+                url : baseUrl+"usersettings/set-library-screen-settings",
+                type : "POST",
+                data : {
+                    settings : {
+                        playlist : false
+                    },
+                    format : "json"
+                },
+                dataType : "json"
+            });
+        });
+
         $('#save_button').live("click", function(event){
             /* Smart blocks: get name, description, and criteria
              * Playlists: get name, description
@@ -727,8 +770,7 @@ var AIRTIME = (function(AIRTIME){
             enableLoadingIcon();
             $.post(save_action,
                     {format: "json", data: criteria, name: block_name, description: block_desc, obj_id: obj_id, type: obj_type, modified: lastMod},
-                    function(data){
-                        var json = $.parseJSON(data);
+                    function(json){
                         if (json.error !== undefined) {
                             alert(json.error);
                         }
@@ -737,7 +779,7 @@ var AIRTIME = (function(AIRTIME){
                         }
                         setModified(json.modified);
                         if (obj_type == "block") {
-        	                callback(data, "save");
+        	                callback(json, "save");
                         } else {
                             $('.success').text($.i18n._('Playlist saved'));
                             $('.success').show();
@@ -748,6 +790,12 @@ var AIRTIME = (function(AIRTIME){
                         disableLoadingIcon();
                     }
             );
+        });
+
+        $("#pl-bl-clear-content").live("click", function(event) {
+            var sUrl = baseUrl+"playlist/empty-content",
+                oData = {};
+            playlistRequest(sUrl, oData);
         });
 	}
 	
@@ -884,7 +932,9 @@ var AIRTIME = (function(AIRTIME){
     };
 	
 	mod.fnEdit = function(id, type, url) {
-		
+		if ($pl.is(":hidden")) {
+		    openPlaylistPanel();
+		}
 		stopAudioPreview();	
 		
 		$.post(url, 
@@ -1049,31 +1099,45 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	function setWidgetSize() {
-		viewport = AIRTIME.utilities.findViewportDimensions();
-		widgetHeight = viewport.height - 185;
-		width = Math.floor(viewport.width - 80);
-		
-		var libTableHeight = widgetHeight - 130;
+        viewport = AIRTIME.utilities.findViewportDimensions();
+        widgetHeight = viewport.height - 185;
+        width = Math.floor(viewport.width - 80);
 
-		$lib.height(widgetHeight)
-			.find(".dataTables_scrolling")
-    			.css("max-height", libTableHeight)
-    			.end()
-			.width(Math.floor(width * 0.55));
-			
-		$pl.height(widgetHeight)
-			.width(Math.floor(width * 0.45));	
+        var libTableHeight = widgetHeight - 130;
+
+        if (!$pl.is(':hidden')) {
+            $lib.height(widgetHeight)
+                .find(".dataTables_scrolling")
+                .css("max-height", libTableHeight)
+                .end()
+                .width(Math.floor(width * 0.55));
+
+            $pl.height(widgetHeight)
+                .width(Math.floor(width * 0.45));
+        } else {
+            $lib.height(widgetHeight)
+                .find(".dataTables_scrolling")
+                .css("max-height", libTableHeight)
+                .end()
+                .width(width + 40);
+        }
 	}
 	
 	mod.onReady = function() {
 		$lib = $("#library_content");
 		$pl = $("#side_playlist");
+
+		
 		
 		setWidgetSize();
 		
 		AIRTIME.library.libraryInit();
 		AIRTIME.playlist.init();
-		
+
+        if ($pl.is(':hidden')) {
+            $lib.find("#library_display_length").append($togglePl.show());
+        }
+
 		$pl.find(".ui-icon-alert").qtip({
 	        content: {
 	            text: $.i18n._("Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore.")

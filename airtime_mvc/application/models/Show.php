@@ -663,6 +663,30 @@ SQL;
         $con->exec($sql);
     }
 
+    public function getNextFutureRepeatShowTime()
+    {
+        $sql = <<<SQL
+SELECT starts, ends FROM cc_show_instances
+WHERE ends > now() at time zone 'UTC'
+AND show_id = :showId
+ORDER BY starts
+LIMIT 1
+SQL;
+        $result = Application_Common_Database::prepareAndExecute( $sql,
+            array( 'showId' => $this->getId() ), 'all' );
+        
+        foreach ($result as $r) {
+            $show["starts"] = new DateTime($r["starts"], new DateTimeZone('UTC'));
+            $show["ends"] = new DateTime($r["ends"], new DateTimeZone('UTC'));
+        }
+        $currentUser = Application_Model_User::getCurrentUser();
+        $currentUserId = $currentUser->getId();
+        $userTimezone = Application_Model_Preference::GetUserTimezone($currentUserId);
+        $show["starts"]->setTimezone(new DateTimeZone($userTimezone));
+        $show["ends"]->setTimezone(new DateTimeZone($userTimezone));
+        return $show;
+    }
+
     /**
      * Get the start date of the current show in UTC timezone.
      *

@@ -34,8 +34,35 @@ just_switched = ref false
 
 %include "ls_lib.liq"
 
-queue = audio_to_stereo(id="queue_src", request.equeue(id="queue", length=0.5))
-queue = cue_cut(queue)
+sources = ref []
+source_id = ref 0
+
+def create_source()
+    l = request.equeue(id="s#{!source_id}", length=0.5)
+    l = cue_cut(l)
+    sources := list.append([l], !sources)
+    server.register(namespace="queues",
+                "s#{!source_id}_skip",
+                fun (s) -> begin log("queues.s#{!source_id}_skip") 
+                    clear_queue(l) 
+                    "Done" 
+                end)
+    source_id := !source_id + 1
+end
+
+create_source()
+create_source()
+create_source()
+create_source()
+
+create_source()
+create_source()
+create_source()
+create_source()
+
+queue = add(!sources)
+
+queue = audio_to_stereo(id="queue_src", queue)
 queue = amplify(1., override="replay_gain", queue)
 
 # the crossfade function controls fade in/out
@@ -247,7 +274,7 @@ end
 
 
 # Attach a skip command to the source s:
-add_skip_command(s)
+#add_skip_command(s)
 
 server.register(namespace="streams",
     description="Stop Master DJ source.",

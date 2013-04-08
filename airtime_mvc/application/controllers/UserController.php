@@ -83,14 +83,14 @@ class UserController extends Zend_Controller_Action
                         $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
                     }
                     
-                    die(json_encode(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml'))));
+                    $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml')));
                 } else {
                     $this->view->form = $form;
-                    die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
+                    $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml')));
                 }
             } else {
                 $this->view->form = $form;
-                die(json_encode(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml'))));
+                $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('user/add-user.phtml')));
             }
         }
 

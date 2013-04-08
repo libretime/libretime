@@ -650,7 +650,8 @@ SQL;
         "track_number", "mood", "bpm", "composer", "info_url",
         "bit_rate", "sample_rate", "isrc_number", "encoded_by", "label",
         "copyright", "mime", "language", "filepath", "owner_id",
-        "conductor", "replay_gain", "lptime" );
+        "conductor", "replay_gain", "lptime", "is_playlist", "is_scheduled",
+        "cuein", "cueout" );
     }
 
     public static function searchLibraryFiles($datatables)
@@ -702,6 +703,16 @@ SQL;
                 $blSelect[]     = "NULL::TIMESTAMP AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
+            } elseif ($key === "is_scheduled" || $key === "is_playlist") {
+                $plSelect[]     = "NULL::boolean AS ".$key;
+                $blSelect[]     = "NULL::boolean AS ".$key;
+                $fileSelect[]   = $key;
+                $streamSelect[] = "NULL::boolean AS ".$key;
+            } elseif ($key === "cuein" || $key === "cueout") {
+                $plSelect[]     = "NULL::INTERVAL AS ".$key;
+                $blSelect[]     = "NULL::INTERVAL AS ".$key;
+                $fileSelect[]   = $key;
+                $streamSelect[] = "NULL::INTERVAL AS ".$key;
             }
             //same columns in each table.
             else if (in_array($key, array("length", "utime", "mtime"))) {
@@ -775,14 +786,22 @@ SQL;
                 $fromTable = $unionTable;
         }
 
+        // update is_scheduled to false for tracks that
+        // have already played out
+        self::updatePastFilesIsScheduled();
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
-        //Used by the audio preview functionality in the library.
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
-            $formatter = new LengthFormatter($row['length']);
-            $row['length'] = $formatter->format();
+            $len_formatter = new LengthFormatter($row['length']);
+            $row['length'] = $len_formatter->format();
+
+            $cuein_formatter = new LengthFormatter($row["cuein"]);
+            $row["cuein"] = $cuein_formatter->format();
+
+            $cueout_formatter = new LengthFormatter($row["cueout"]);
+            $row["cueout"] = $cueout_formatter->format();
 
             if ($row['ftype'] === "audioclip") {
                 $formatter = new SamplerateFormatter($row['sample_rate']);
@@ -790,6 +809,15 @@ SQL;
 
                 $formatter = new BitrateFormatter($row['bit_rate']);
                 $row['bit_rate'] = $formatter->format();
+
+                //soundcloud status
+                $file = Application_Model_StoredFile::Recall($row['id']);
+                $row['soundcloud_status'] = $file->getSoundCloudId();
+
+                // for audio preview
+                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
+            } else {
+                $row['audioFile'] = $row['id'];
             }
 
             //convert mtime and utime to localtime
@@ -800,31 +828,13 @@ SQL;
             $row['utime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
             $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
 
-            // add checkbox row
-            $row['checkbox'] = "<input type='checkbox' name='cb_".$row['id']."'>";
+            // we need to initalize the checkbox and image row because we do not retrieve
+            // any data from the db for these and datatables will complain
+            $row['checkbox'] = "";
+            $row['image'] = "";
 
             $type = substr($row['ftype'], 0, 2);
-
             $row['tr_id'] = "{$type}_{$row['id']}";
-
-            //TODO url like this to work on both playlist/showbuilder
-            //screens. datatable stuff really needs to be pulled out and
-            //generalized within the project access to zend view methods
-            //to access url helpers is needed.
-
-            // TODO : why is there inline html here? breaks abstraction and is
-            // ugly
-            if ($type == "au") {
-                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-                $row['image'] = '<img title="'._("Track preview").'" src="'.$baseUrl.'css/images/icon_audioclip.png">';
-            } elseif ($type == "pl") {
-                $row['image'] = '<img title="'._("Playlist preview").'" src="'.$baseUrl.'css/images/icon_playlist.png">';
-            } elseif ($type == "st") {
-                $row['audioFile'] = $row['id'];
-                $row['image'] = '<img title="'._("Webstream preview").'" src="'.$baseUrl.'css/images/icon_webstream.png">';
-            } elseif ($type == "bl") {
-                $row['image'] = '<img title="'._("Smart Block").'" src="'.$baseUrl.'css/images/icon_smart-block.png">';
-            }
         }
 
         return $results;
@@ -1293,6 +1303,57 @@ SQL;
         }
     }
     
+    public static function setIsPlaylist($p_playlistItems, $p_type, $p_status) {
+        foreach ($p_playlistItems as $item) {
+            $file = self::Recall($item->getDbFileId());
+            $fileId = $file->_file->getDbId();
+            if ($p_type == 'playlist') {
+                // we have to check if the file is in another playlist before
+                // we can update
+                if (!is_null($fileId) && !in_array($fileId, Application_Model_Playlist::getAllPlaylistFiles())) {
+                    $file->_file->setDbIsPlaylist($p_status)->save();
+                }
+            } elseif ($p_type == 'block') {
+                if (!is_null($fileId) && !in_array($fileId, Application_Model_Block::getAllBlockFiles())) {
+                    $file->_file->setDbIsPlaylist($p_status)->save();
+                }
+            }
+        }
+    }
+    
+    public static function setIsScheduled($p_scheduleItem, $p_status, $p_fileId=null) {
+        if (is_null($p_fileId)) {
+            $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
+        } else {
+            $fileId = $p_fileId;
+        }
+        $file = self::Recall($fileId);
+        $updateIsScheduled = false;
+
+        if (!is_null($fileId) && !in_array($fileId, Application_Model_Schedule::getAllFutureScheduledFiles())) {
+            $file->_file->setDbIsScheduled($p_status)->save();
+            $updateIsScheduled = true;
+        }
+
+        return $updateIsScheduled;
+    }
+
+    public static function updatePastFilesIsScheduled()
+    {
+        $con = Propel::getConnection();
+        $sql = <<<SQL
+SELECT file_id FROM cc_schedule
+WHERE ends < now() at time zone 'UTC'
+SQL;
+        $files = $con->query($sql)->fetchAll();
+        foreach ($files as $file) {
+            if (!is_null($file['file_id'])) {
+                self::setIsScheduled(null, false, $file['file_id']);
+            }
+        }
+
+    }
+
     public function getRealClipLength($p_cuein, $p_cueout) {
         $sql = "SELECT :cueout::INTERVAL - :cuein::INTERVAL";
 

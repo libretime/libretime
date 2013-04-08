@@ -401,7 +401,7 @@ $(document).ready(function() {
                         oItems.edit.callback = callback;
                     }
                 }
-                
+
                 //define a content callback.
                 if (oItems.content !== undefined) {
                     
@@ -442,9 +442,11 @@ $(document).ready(function() {
                 
                 //define a view recorded callback.
                 if (oItems.view_recorded !== undefined) {
-                    
                     callback = function() {
-                        document.location.href = oItems.view_recorded.url;
+                        $.get(oItems.view_recorded.url, {format: "json"}, function(json){
+                            //in library.js
+                            buildEditMetadataDialog(json);
+                        });
                     };
                     oItems.view_recorded.callback = callback;
                 }

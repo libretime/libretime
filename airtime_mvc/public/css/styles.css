@@ -1999,7 +1999,7 @@ span.errors.sp-errors{
 .small-icon.show-empty {
     background:url(images/icon_alert_cal_alt.png) no-repeat 0 0;
 }
-.small-icon.show-partial-filled {
+.small-icon.show-partial-filled, .small-icon.media-item-in-use {
     background:url(images/icon_alert_cal_alt2.png) no-repeat 0 0;
 }
 .medium-icon {

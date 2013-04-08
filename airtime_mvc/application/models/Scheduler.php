@@ -525,6 +525,13 @@ class Application_Model_Scheduler
                 $instance->updateScheduleStatus($this->con);
             }
 
+            // update is_scheduled flag for each cc_file
+            foreach ($schedFiles as $file) {
+                $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
+                $db_file->setDbIsScheduled(true);
+                $db_file->save($this->con);
+            }
+
             $endProfile = microtime(true);
             Logging::debug("updating show instances status.");
             Logging::debug(floatval($endProfile) - floatval($startProfile));
@@ -728,6 +735,16 @@ class Application_Model_Scheduler
                         ->save($this->con);
                 } else {
                     $removedItem->delete($this->con);
+                }
+                
+                // update is_scheduled in cc_files but only if
+                // the file is not scheduled somewhere else
+                $fileId = $removedItem->getDbFileId();
+                // check if the removed item is scheduled somewhere else
+                $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
+                if (!is_null($fileId) && !in_array($fileId, $futureScheduledFiles)) {
+                     $db_file = CcFilesQuery::create()->findPk($fileId, $this->con);
+                     $db_file->setDbIsScheduled(false)->save($this->con);
                 }
             }
 

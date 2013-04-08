@@ -5,6 +5,11 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     private $stringCriteriaOptions;
     private $numericCriteriaOptions;
     private $limitOptions;
+    
+    /* We need to know if the criteria value will be a string
+     * or numeric value in order to populate the modifier
+     * select list
+     */
     private $criteriaTypes = array(
         0              => "",
         "album_title"  => "s",
@@ -13,6 +18,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         "composer"     => "s",
         "conductor"    => "s",
         "copyright"    => "s",
+        "cuein"        => "n",
+        "cueout"       => "n",
         "artist_name"  => "s",
         "encoded_by"   => "s",
         "utime"        => "n",
@@ -45,6 +52,8 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "composer"     => _("Composer"),
                 "conductor"    => _("Conductor"),
                 "copyright"    => _("Copyright"),
+                "cuein"        => _("Cue In"),
+                "cueout"       => _("Cue Out"),
                 "artist_name"  => _("Creator"),
                 "encoded_by"   => _("Encoded By"),
                 "genre"        => _("Genre"),
@@ -416,32 +425,34 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $isValid = true;
         $data = $this->preValidation($params);
         $criteria2PeerMap = array(
-                0 => "Select criteria",
-                "album_title" => "DbAlbumTitle",
-                "artist_name" => "DbArtistName",
-                "bit_rate" => "DbBitRate",
-                "bpm" => "DbBpm",
-                "composer" => "DbComposer",
-                "conductor" => "DbConductor",
-                "copyright" => "DbCopyright",
-                "encoded_by" => "DbEncodedBy",
-                "utime" => "DbUtime",
-                "mtime" => "DbMtime",
-                "lptime" => "DbLPtime",
-                "genre" => "DbGenre",
-                "info_url" => "DbInfoUrl",
-                "isrc_number" => "DbIsrcNumber",
-                "label" => "DbLabel",
-                "language" => "DbLanguage",
-                "length" => "DbLength",
-                "mime" => "DbMime",
-                "mood" => "DbMood",
-                "owner_id" => "DbOwnerId",
-                "replay_gain" => "DbReplayGain",
-                "sample_rate" => "DbSampleRate",
-                "track_title" => "DbTrackTitle",
-                "track_number" => "DbTrackNumber",
-                "year" => "DbYear"
+            0 => "Select criteria",
+            "album_title" => "DbAlbumTitle",
+            "artist_name" => "DbArtistName",
+            "bit_rate" => "DbBitRate",
+            "bpm" => "DbBpm",
+            "composer" => "DbComposer",
+            "conductor" => "DbConductor",
+            "copyright" => "DbCopyright",
+            "cuein" => "DbCuein",
+            "cueout" => "DbCueout",
+            "encoded_by" => "DbEncodedBy",
+            "utime" => "DbUtime",
+            "mtime" => "DbMtime",
+            "lptime" => "DbLPtime",
+            "genre" => "DbGenre",
+            "info_url" => "DbInfoUrl",
+            "isrc_number" => "DbIsrcNumber",
+            "label" => "DbLabel",
+            "language" => "DbLanguage",
+            "length" => "DbLength",
+            "mime" => "DbMime",
+            "mood" => "DbMood",
+            "owner_id" => "DbOwnerId",
+            "replay_gain" => "DbReplayGain",
+            "sample_rate" => "DbSampleRate",
+            "track_title" => "DbTrackTitle",
+            "track_number" => "DbTrackNumber",
+            "year" => "DbYear"
         );
 
         // things we need to check
@@ -492,7 +503,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                     } else {
                         $column = CcFilesPeer::getTableMap()->getColumnByPhpName($criteria2PeerMap[$d['sp_criteria_field']]);
                         // validation on type of column
-                        if ($d['sp_criteria_field'] == 'length') {
+                        if (in_array($d['sp_criteria_field'], array('length', 'cuein', 'cueout'))) {
                             if (!preg_match("/^(\d{2}):(\d{2}):(\d{2})/", $d['sp_criteria_value'])) {
                                 $element->addError(_("'Length' should be in '00:00:00' format"));
                                 $isValid = false;

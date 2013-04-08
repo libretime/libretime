@@ -32,7 +32,7 @@ class PluploadController extends Zend_Controller_Action
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
         $tempFileName = basename($tempFilePath);
 
-        die('{"jsonrpc" : "2.0", "tempfilepath" : "'.$tempFileName.'" }');
+        $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
     }
 
     public function copyfileAction()
@@ -43,8 +43,8 @@ class PluploadController extends Zend_Controller_Action
         $result = Application_Model_StoredFile::copyFileToStor($upload_dir,
             $filename, $tempname);
         if (!is_null($result))
-           die('{"jsonrpc" : "2.0", "error" : '.json_encode($result).'}');
+           $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "error" => $result));
 
-        die('{"jsonrpc" : "2.0"}');
+        $this->_helper->json->sendJson(array("jsonrpc" => "2.0"));
     }
 }

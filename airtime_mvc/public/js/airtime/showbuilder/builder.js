@@ -81,9 +81,20 @@ var AIRTIME = (function(AIRTIME){
         return mod.showInstances;
     };
     
-    mod.refresh = function() {
+    mod.refresh = function(schedId) {
         mod.resetTimestamp();
-        oSchedTable.fnDraw();
+
+        // once a track plays out we need to check if we can update
+        // the is_scheduled flag in cc_files
+        if (schedId > 0) {
+            $.post(baseUrl+"schedule/update-future-is-scheduled", 
+                    {"format": "json", "schedId": schedId}, function(data) {
+                        if (data.redrawLibTable !== undefined && data.redrawLibTable) {
+                            $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
+                        }
+                    });
+            oSchedTable.fnDraw();
+        }
     };
     
     mod.checkSelectButton = function() {
@@ -251,10 +262,11 @@ var AIRTIME = (function(AIRTIME){
     mod.fnItemCallback = function(json) {
         checkError(json);
 
-        mod.getSelectedCursors(); 
+        mod.getSelectedCursors();
         oSchedTable.fnDraw();
-        
+
         mod.enableUI();
+        $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
     };
     
     mod.getSelectedCursors = function() {
@@ -796,7 +808,7 @@ var AIRTIME = (function(AIRTIME){
 						if(refreshInterval > maxRefreshInterval){
 							refreshInterval = maxRefreshInterval;
 						}
-						mod.timeout = setTimeout(mod.refresh, refreshInterval); //need refresh in milliseconds
+						mod.timeout = setTimeout(function() {mod.refresh(aData.id)}, refreshInterval); //need refresh in milliseconds
                         break;
                     }
                 }
@@ -1066,6 +1078,7 @@ var AIRTIME = (function(AIRTIME){
                             url: url,
                             data: {format: "json", id: data.instance},
                             success: function(data){
+                                $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
                                 var oTable = $sbTable.dataTable();
                                 oTable.fnDraw();
                             }

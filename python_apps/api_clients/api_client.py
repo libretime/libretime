@@ -116,7 +116,9 @@ class RequestProvider(object):
     def __init__(self, cfg):
         self.config = cfg
         self.requests = {}
-        self.url = ApcUrl("http://%s:%s/%s/%s/%s" \
+        if self.config["base_dir"].startswith("/"):
+            self.config["base_dir"] = self.config["base_dir"][1:]
+        self.url = ApcUrl("http://%s:%s/%s%s/%s" \
             % (self.config["host"], str(self.config["base_port"]),
                self.config["base_dir"], self.config["api_base"],
                '%%action%%'))
@@ -247,7 +249,9 @@ class AirtimeApiClient(object):
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""
         # TODO : Make other methods in this class use this this method.
-        url = "http://%s:%s/%s/%s/%s" %  \
+        if self.config["base_dir"].startswith("/"):
+            self.config["base_dir"] = self.config["base_dir"][1:]
+        url = "http://%s:%s/%s%s/%s" %  \
             (self.config["host"], str(self.config["base_port"]),
              self.config["base_dir"], self.config["api_base"],
              self.config[config_action_key])

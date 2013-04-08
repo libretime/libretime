@@ -15,6 +15,7 @@ class UsersettingsController extends Zend_Controller_Action
                     ->addActionContext('remindme', 'json')
                     ->addActionContext('remindme-never', 'json')
                     ->addActionContext('donotshowregistrationpopup', 'json')
+                    ->addActionContext('set-library-screen-settings', 'json')
                     ->initContext();
     }
 
@@ -54,6 +55,7 @@ class UsersettingsController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
+
         Application_Model_Preference::setTimelineDatatableSetting($settings);
     }
 
@@ -90,5 +92,12 @@ class UsersettingsController extends Zend_Controller_Action
     {
         // unset session
         Zend_Session::namespaceUnset('referrer');
+    }
+
+    public function setLibraryScreenSettingsAction()
+    {
+        $request = $this->getRequest();
+        $settings = $request->getParam("settings");
+        Application_Model_Preference::setLibraryScreenSettings($settings);
     }
 }
