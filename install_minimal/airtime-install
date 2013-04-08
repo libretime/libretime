@@ -143,6 +143,11 @@ fi
 #We don't want any of our python services running if we are doing an upgrade/reinstall.
 #They will be automatically restarted later on.
 echo "* Temporarily stopping any previous running services"
+set +e
+monit unmonitor airtime-media-monitor >/dev/null 2>&1
+monit unmonitor airtime-liquidsoap >/dev/null 2>&1
+monit unmonitor airtime-playout >/dev/null 2>&1
+set -e
 if [ -e /etc/init.d/airtime-media-monitor ]; then
     invoke-rc.d airtime-media-monitor stop > /dev/null 2>&1
 fi
