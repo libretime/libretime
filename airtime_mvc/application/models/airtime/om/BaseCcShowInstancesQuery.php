@@ -56,9 +56,9 @@
  * @method     CcShowInstancesQuery rightJoinCcSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method     CcShowInstancesQuery innerJoinCcSchedule($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
- * @method     CcShowInstancesQuery leftJoinCcShowStamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowStamp relation
- * @method     CcShowInstancesQuery rightJoinCcShowStamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowStamp relation
- * @method     CcShowInstancesQuery innerJoinCcShowStamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowStamp relation
+ * @method     CcShowInstancesQuery leftJoinCcStamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcStamp relation
+ * @method     CcShowInstancesQuery rightJoinCcStamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcStamp relation
+ * @method     CcShowInstancesQuery innerJoinCcStamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcStamp relation
  *
  * @method     CcShowInstances findOne(PropelPDO $con = null) Return the first CcShowInstances matching the query
  * @method     CcShowInstances findOneOrCreate(PropelPDO $con = null) Return the first CcShowInstances matching the query, or a new CcShowInstances object populated from the query conditions when no match is found
@@ -853,31 +853,31 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related CcShowStamp object
+	 * Filter the query by a related CcStamp object
 	 *
-	 * @param     CcShowStamp $ccShowStamp  the related object to use as filter
+	 * @param     CcStamp $ccStamp  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcShowInstancesQuery The current query, for fluid interface
 	 */
-	public function filterByCcShowStamp($ccShowStamp, $comparison = null)
+	public function filterByCcStamp($ccStamp, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcShowInstancesPeer::ID, $ccShowStamp->getDbInstanceId(), $comparison);
+			->addUsingAlias(CcShowInstancesPeer::ID, $ccStamp->getDbInstanceId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcShowStamp relation
+	 * Adds a JOIN clause to the query using the CcStamp relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcShowInstancesQuery The current query, for fluid interface
 	 */
-	public function joinCcShowStamp($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function joinCcStamp($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowStamp');
+		$relationMap = $tableMap->getRelation('CcStamp');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -892,14 +892,14 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcShowStamp');
+			$this->addJoinObject($join, 'CcStamp');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcShowStamp relation CcShowStamp object
+	 * Use the CcStamp relation CcStamp object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -907,13 +907,13 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    CcShowStampQuery A secondary query class using the current class as primary query
+	 * @return    CcStampQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcShowStampQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function useCcStampQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
-			->joinCcShowStamp($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowStamp', 'CcShowStampQuery');
+			->joinCcStamp($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcStamp', 'CcStampQuery');
 	}
 
 	/**

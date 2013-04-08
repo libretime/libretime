@@ -180,9 +180,9 @@
  * @method     CcFilesQuery rightJoinCcSchedule($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method     CcFilesQuery innerJoinCcSchedule($relationAlias = '') Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
- * @method     CcFilesQuery leftJoinCcShowStamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowStamp relation
- * @method     CcFilesQuery rightJoinCcShowStamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowStamp relation
- * @method     CcFilesQuery innerJoinCcShowStamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowStamp relation
+ * @method     CcFilesQuery leftJoinCcStampContents($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcStampContents relation
+ * @method     CcFilesQuery rightJoinCcStampContents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcStampContents relation
+ * @method     CcFilesQuery innerJoinCcStampContents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcStampContents relation
  *
  * @method     CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
  * @method     CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
@@ -2540,31 +2540,31 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related CcShowStamp object
+	 * Filter the query by a related CcStampContents object
 	 *
-	 * @param     CcShowStamp $ccShowStamp  the related object to use as filter
+	 * @param     CcStampContents $ccStampContents  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByCcShowStamp($ccShowStamp, $comparison = null)
+	public function filterByCcStampContents($ccStampContents, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcFilesPeer::ID, $ccShowStamp->getDbFileId(), $comparison);
+			->addUsingAlias(CcFilesPeer::ID, $ccStampContents->getDbFileId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcShowStamp relation
+	 * Adds a JOIN clause to the query using the CcStampContents relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function joinCcShowStamp($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function joinCcStampContents($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowStamp');
+		$relationMap = $tableMap->getRelation('CcStampContents');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -2579,14 +2579,14 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcShowStamp');
+			$this->addJoinObject($join, 'CcStampContents');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcShowStamp relation CcShowStamp object
+	 * Use the CcStampContents relation CcStampContents object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -2594,13 +2594,13 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    CcShowStampQuery A secondary query class using the current class as primary query
+	 * @return    CcStampContentsQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcShowStampQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function useCcStampContentsQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
-			->joinCcShowStamp($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowStamp', 'CcShowStampQuery');
+			->joinCcStampContents($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcStampContents', 'CcStampContentsQuery');
 	}
 
 	/**

@@ -63,7 +63,7 @@ class CcShowInstancesTableMap extends TableMap {
     $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
     $this->addRelation('CcShowInstancesRelatedByDbId', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
-    $this->addRelation('CcShowStamp', 'CcShowStamp', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
+    $this->addRelation('CcStamp', 'CcStamp', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcShowInstancesTableMap

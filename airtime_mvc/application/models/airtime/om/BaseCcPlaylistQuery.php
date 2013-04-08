@@ -34,9 +34,9 @@
  * @method     CcPlaylistQuery rightJoinCcPlaylistcontents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlaylistcontents relation
  * @method     CcPlaylistQuery innerJoinCcPlaylistcontents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlaylistcontents relation
  *
- * @method     CcPlaylistQuery leftJoinCcShowStamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowStamp relation
- * @method     CcPlaylistQuery rightJoinCcShowStamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowStamp relation
- * @method     CcPlaylistQuery innerJoinCcShowStamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowStamp relation
+ * @method     CcPlaylistQuery leftJoinCcStampContents($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcStampContents relation
+ * @method     CcPlaylistQuery rightJoinCcStampContents($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcStampContents relation
+ * @method     CcPlaylistQuery innerJoinCcStampContents($relationAlias = '') Adds a INNER JOIN clause to the query using the CcStampContents relation
  *
  * @method     CcPlaylist findOne(PropelPDO $con = null) Return the first CcPlaylist matching the query
  * @method     CcPlaylist findOneOrCreate(PropelPDO $con = null) Return the first CcPlaylist matching the query, or a new CcPlaylist object populated from the query conditions when no match is found
@@ -470,31 +470,31 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related CcShowStamp object
+	 * Filter the query by a related CcStampContents object
 	 *
-	 * @param     CcShowStamp $ccShowStamp  the related object to use as filter
+	 * @param     CcStampContents $ccStampContents  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlaylistQuery The current query, for fluid interface
 	 */
-	public function filterByCcShowStamp($ccShowStamp, $comparison = null)
+	public function filterByCcStampContents($ccStampContents, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPlaylistPeer::ID, $ccShowStamp->getDbPlaylistId(), $comparison);
+			->addUsingAlias(CcPlaylistPeer::ID, $ccStampContents->getDbPlaylistId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcShowStamp relation
+	 * Adds a JOIN clause to the query using the CcStampContents relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcPlaylistQuery The current query, for fluid interface
 	 */
-	public function joinCcShowStamp($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function joinCcStampContents($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowStamp');
+		$relationMap = $tableMap->getRelation('CcStampContents');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -509,14 +509,14 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcShowStamp');
+			$this->addJoinObject($join, 'CcStampContents');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcShowStamp relation CcShowStamp object
+	 * Use the CcStampContents relation CcStampContents object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -524,13 +524,13 @@ abstract class BaseCcPlaylistQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    CcShowStampQuery A secondary query class using the current class as primary query
+	 * @return    CcStampContentsQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcShowStampQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	public function useCcStampContentsQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
 	{
 		return $this
-			->joinCcShowStamp($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowStamp', 'CcShowStampQuery');
+			->joinCcStampContents($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcStampContents', 'CcStampContentsQuery');
 	}
 
 	/**

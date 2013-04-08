@@ -79,9 +79,9 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	protected $collCcPlaylistcontentss;
 
 	/**
-	 * @var        array CcShowStamp[] Collection to store aggregation of CcShowStamp objects.
+	 * @var        array CcStampContents[] Collection to store aggregation of CcStampContents objects.
 	 */
-	protected $collCcShowStamps;
+	protected $collCcStampContentss;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -560,7 +560,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 			$this->aCcSubjs = null;
 			$this->collCcPlaylistcontentss = null;
 
-			$this->collCcShowStamps = null;
+			$this->collCcStampContentss = null;
 
 		} // if (deep)
 	}
@@ -715,8 +715,8 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				}
 			}
 
-			if ($this->collCcShowStamps !== null) {
-				foreach ($this->collCcShowStamps as $referrerFK) {
+			if ($this->collCcStampContentss !== null) {
+				foreach ($this->collCcStampContentss as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
 						$affectedRows += $referrerFK->save($con);
 					}
@@ -814,8 +814,8 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 					}
 				}
 
-				if ($this->collCcShowStamps !== null) {
-					foreach ($this->collCcShowStamps as $referrerFK) {
+				if ($this->collCcStampContentss !== null) {
+					foreach ($this->collCcStampContentss as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1092,9 +1092,9 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 				}
 			}
 
-			foreach ($this->getCcShowStamps() as $relObj) {
+			foreach ($this->getCcStampContentss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcShowStamp($relObj->copy($deepCopy));
+					$copyObj->addCcStampContents($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1352,36 +1352,36 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Clears out the collCcShowStamps collection
+	 * Clears out the collCcStampContentss collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
 	 * them to be refetched by subsequent calls to accessor method.
 	 *
 	 * @return     void
-	 * @see        addCcShowStamps()
+	 * @see        addCcStampContentss()
 	 */
-	public function clearCcShowStamps()
+	public function clearCcStampContentss()
 	{
-		$this->collCcShowStamps = null; // important to set this to NULL since that means it is uninitialized
+		$this->collCcStampContentss = null; // important to set this to NULL since that means it is uninitialized
 	}
 
 	/**
-	 * Initializes the collCcShowStamps collection.
+	 * Initializes the collCcStampContentss collection.
 	 *
-	 * By default this just sets the collCcShowStamps collection to an empty array (like clearcollCcShowStamps());
+	 * By default this just sets the collCcStampContentss collection to an empty array (like clearcollCcStampContentss());
 	 * however, you may wish to override this method in your stub class to provide setting appropriate
 	 * to your application -- for example, setting the initial array to the values stored in database.
 	 *
 	 * @return     void
 	 */
-	public function initCcShowStamps()
+	public function initCcStampContentss()
 	{
-		$this->collCcShowStamps = new PropelObjectCollection();
-		$this->collCcShowStamps->setModel('CcShowStamp');
+		$this->collCcStampContentss = new PropelObjectCollection();
+		$this->collCcStampContentss->setModel('CcStampContents');
 	}
 
 	/**
-	 * Gets an array of CcShowStamp objects which contain a foreign key that references this object.
+	 * Gets an array of CcStampContents objects which contain a foreign key that references this object.
 	 *
 	 * If the $criteria is not null, it is used to always fetch the results from the database.
 	 * Otherwise the results are fetched from the database the first time, then cached.
@@ -1391,44 +1391,44 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 *
 	 * @param      Criteria $criteria optional Criteria object to narrow the query
 	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @return     PropelCollection|array CcStampContents[] List of CcStampContents objects
 	 * @throws     PropelException
 	 */
-	public function getCcShowStamps($criteria = null, PropelPDO $con = null)
+	public function getCcStampContentss($criteria = null, PropelPDO $con = null)
 	{
-		if(null === $this->collCcShowStamps || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowStamps) {
+		if(null === $this->collCcStampContentss || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcStampContentss) {
 				// return empty collection
-				$this->initCcShowStamps();
+				$this->initCcStampContentss();
 			} else {
-				$collCcShowStamps = CcShowStampQuery::create(null, $criteria)
+				$collCcStampContentss = CcStampContentsQuery::create(null, $criteria)
 					->filterByCcPlaylist($this)
 					->find($con);
 				if (null !== $criteria) {
-					return $collCcShowStamps;
+					return $collCcStampContentss;
 				}
-				$this->collCcShowStamps = $collCcShowStamps;
+				$this->collCcStampContentss = $collCcStampContentss;
 			}
 		}
-		return $this->collCcShowStamps;
+		return $this->collCcStampContentss;
 	}
 
 	/**
-	 * Returns the number of related CcShowStamp objects.
+	 * Returns the number of related CcStampContents objects.
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct
 	 * @param      PropelPDO $con
-	 * @return     int Count of related CcShowStamp objects.
+	 * @return     int Count of related CcStampContents objects.
 	 * @throws     PropelException
 	 */
-	public function countCcShowStamps(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	public function countCcStampContentss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
 	{
-		if(null === $this->collCcShowStamps || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcShowStamps) {
+		if(null === $this->collCcStampContentss || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcStampContentss) {
 				return 0;
 			} else {
-				$query = CcShowStampQuery::create(null, $criteria);
+				$query = CcStampContentsQuery::create(null, $criteria);
 				if($distinct) {
 					$query->distinct();
 				}
@@ -1437,25 +1437,25 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 					->count($con);
 			}
 		} else {
-			return count($this->collCcShowStamps);
+			return count($this->collCcStampContentss);
 		}
 	}
 
 	/**
-	 * Method called to associate a CcShowStamp object to this object
-	 * through the CcShowStamp foreign key attribute.
+	 * Method called to associate a CcStampContents object to this object
+	 * through the CcStampContents foreign key attribute.
 	 *
-	 * @param      CcShowStamp $l CcShowStamp
+	 * @param      CcStampContents $l CcStampContents
 	 * @return     void
 	 * @throws     PropelException
 	 */
-	public function addCcShowStamp(CcShowStamp $l)
+	public function addCcStampContents(CcStampContents $l)
 	{
-		if ($this->collCcShowStamps === null) {
-			$this->initCcShowStamps();
+		if ($this->collCcStampContentss === null) {
+			$this->initCcStampContentss();
 		}
-		if (!$this->collCcShowStamps->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcShowStamps[]= $l;
+		if (!$this->collCcStampContentss->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcStampContentss[]= $l;
 			$l->setCcPlaylist($this);
 		}
 	}
@@ -1466,7 +1466,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * an identical criteria, it returns the collection.
 	 * Otherwise if this CcPlaylist is new, it will return
 	 * an empty collection; or if this CcPlaylist has previously
-	 * been saved, it will retrieve related CcShowStamps from storage.
+	 * been saved, it will retrieve related CcStampContentss from storage.
 	 *
 	 * This method is protected by default in order to keep the public
 	 * api reasonable.  You can provide public methods for those you
@@ -1475,14 +1475,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      Criteria $criteria optional Criteria object to narrow the query
 	 * @param      PropelPDO $con optional connection object
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @return     PropelCollection|array CcStampContents[] List of CcStampContents objects
 	 */
-	public function getCcShowStampsJoinCcShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcStampContentssJoinCcStamp($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
-		$query = CcShowStampQuery::create(null, $criteria);
-		$query->joinWith('CcShow', $join_behavior);
+		$query = CcStampContentsQuery::create(null, $criteria);
+		$query->joinWith('CcStamp', $join_behavior);
 
-		return $this->getCcShowStamps($query, $con);
+		return $this->getCcStampContentss($query, $con);
 	}
 
 
@@ -1491,7 +1491,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * an identical criteria, it returns the collection.
 	 * Otherwise if this CcPlaylist is new, it will return
 	 * an empty collection; or if this CcPlaylist has previously
-	 * been saved, it will retrieve related CcShowStamps from storage.
+	 * been saved, it will retrieve related CcStampContentss from storage.
 	 *
 	 * This method is protected by default in order to keep the public
 	 * api reasonable.  You can provide public methods for those you
@@ -1500,39 +1500,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      Criteria $criteria optional Criteria object to narrow the query
 	 * @param      PropelPDO $con optional connection object
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @return     PropelCollection|array CcStampContents[] List of CcStampContents objects
 	 */
-	public function getCcShowStampsJoinCcShowInstances($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcStampContentssJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
-		$query = CcShowStampQuery::create(null, $criteria);
-		$query->joinWith('CcShowInstances', $join_behavior);
-
-		return $this->getCcShowStamps($query, $con);
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this CcPlaylist is new, it will return
-	 * an empty collection; or if this CcPlaylist has previously
-	 * been saved, it will retrieve related CcShowStamps from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in CcPlaylist.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
-	 */
-	public function getCcShowStampsJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = CcShowStampQuery::create(null, $criteria);
+		$query = CcStampContentsQuery::create(null, $criteria);
 		$query->joinWith('CcFiles', $join_behavior);
 
-		return $this->getCcShowStamps($query, $con);
+		return $this->getCcStampContentss($query, $con);
 	}
 
 
@@ -1541,7 +1516,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * an identical criteria, it returns the collection.
 	 * Otherwise if this CcPlaylist is new, it will return
 	 * an empty collection; or if this CcPlaylist has previously
-	 * been saved, it will retrieve related CcShowStamps from storage.
+	 * been saved, it will retrieve related CcStampContentss from storage.
 	 *
 	 * This method is protected by default in order to keep the public
 	 * api reasonable.  You can provide public methods for those you
@@ -1550,14 +1525,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      Criteria $criteria optional Criteria object to narrow the query
 	 * @param      PropelPDO $con optional connection object
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @return     PropelCollection|array CcStampContents[] List of CcStampContents objects
 	 */
-	public function getCcShowStampsJoinCcWebstream($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcStampContentssJoinCcWebstream($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
-		$query = CcShowStampQuery::create(null, $criteria);
+		$query = CcStampContentsQuery::create(null, $criteria);
 		$query->joinWith('CcWebstream', $join_behavior);
 
-		return $this->getCcShowStamps($query, $con);
+		return $this->getCcStampContentss($query, $con);
 	}
 
 
@@ -1566,7 +1541,7 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * an identical criteria, it returns the collection.
 	 * Otherwise if this CcPlaylist is new, it will return
 	 * an empty collection; or if this CcPlaylist has previously
-	 * been saved, it will retrieve related CcShowStamps from storage.
+	 * been saved, it will retrieve related CcStampContentss from storage.
 	 *
 	 * This method is protected by default in order to keep the public
 	 * api reasonable.  You can provide public methods for those you
@@ -1575,14 +1550,14 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 	 * @param      Criteria $criteria optional Criteria object to narrow the query
 	 * @param      PropelPDO $con optional connection object
 	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcShowStamp[] List of CcShowStamp objects
+	 * @return     PropelCollection|array CcStampContents[] List of CcStampContents objects
 	 */
-	public function getCcShowStampsJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public function getCcStampContentssJoinCcBlock($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
-		$query = CcShowStampQuery::create(null, $criteria);
+		$query = CcStampContentsQuery::create(null, $criteria);
 		$query->joinWith('CcBlock', $join_behavior);
 
-		return $this->getCcShowStamps($query, $con);
+		return $this->getCcStampContentss($query, $con);
 	}
 
 	/**
@@ -1623,15 +1598,15 @@ abstract class BaseCcPlaylist extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
-			if ($this->collCcShowStamps) {
-				foreach ((array) $this->collCcShowStamps as $o) {
+			if ($this->collCcStampContentss) {
+				foreach ((array) $this->collCcStampContentss as $o) {
 					$o->clearAllReferences($deep);
 				}
 			}
 		} // if ($deep)
 
 		$this->collCcPlaylistcontentss = null;
-		$this->collCcShowStamps = null;
+		$this->collCcStampContentss = null;
 		$this->aCcSubjs = null;
 	}
 

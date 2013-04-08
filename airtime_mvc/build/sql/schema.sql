@@ -751,17 +751,16 @@ COMMENT ON TABLE "cc_locale" IS '';
 
 SET search_path TO public;
 -----------------------------------------------------------------------------
--- cc_show_stamp
+-- cc_stamp_contents
 -----------------------------------------------------------------------------
 
-DROP TABLE "cc_show_stamp" CASCADE;
+DROP TABLE "cc_stamp_contents" CASCADE;
 
 
-CREATE TABLE "cc_show_stamp"
+CREATE TABLE "cc_stamp_contents"
 (
 	"id" serial  NOT NULL,
-	"show_id" INTEGER  NOT NULL,
-	"instance_id" INTEGER,
+	"stamp_id" INTEGER  NOT NULL,
 	"file_id" INTEGER,
 	"stream_id" INTEGER,
 	"block_id" INTEGER,
@@ -775,7 +774,26 @@ CREATE TABLE "cc_show_stamp"
 	PRIMARY KEY ("id")
 );
 
-COMMENT ON TABLE "cc_show_stamp" IS '';
+COMMENT ON TABLE "cc_stamp_contents" IS '';
+
+
+SET search_path TO public;
+-----------------------------------------------------------------------------
+-- cc_stamp
+-----------------------------------------------------------------------------
+
+DROP TABLE "cc_stamp" CASCADE;
+
+
+CREATE TABLE "cc_stamp"
+(
+	"id" serial  NOT NULL,
+	"show_id" INTEGER  NOT NULL,
+	"instance_id" INTEGER,
+	PRIMARY KEY ("id")
+);
+
+COMMENT ON TABLE "cc_stamp" IS '';
 
 
 SET search_path TO public;
@@ -835,14 +853,16 @@ ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_timestamp_inst_fkey" FOREIGN 
 
 ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_mount_name_inst_fkey" FOREIGN KEY ("mount_name_id") REFERENCES "cc_mount_name" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_show_id_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_stamp_contents" ADD CONSTRAINT "cc_stamp_contents_stamp_id_fkey" FOREIGN KEY ("stamp_id") REFERENCES "cc_stamp" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_instance_id_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_stamp_contents" ADD CONSTRAINT "cc_stamp_contents_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_file_id_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_stamp_contents" ADD CONSTRAINT "cc_stamp_contents_stream_id_fkey" FOREIGN KEY ("stream_id") REFERENCES "cc_webstream" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_stream_id_fkey" FOREIGN KEY ("stream_id") REFERENCES "cc_webstream" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_stamp_contents" ADD CONSTRAINT "cc_stamp_contents_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_block_id_fkey" FOREIGN KEY ("block_id") REFERENCES "cc_block" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_stamp_contents" ADD CONSTRAINT "cc_stamp_contents_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_show_stamp" ADD CONSTRAINT "cc_show_stamp_playlist_id_fkey" FOREIGN KEY ("playlist_id") REFERENCES "cc_playlist" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_stamp" ADD CONSTRAINT "cc_stamp_show_id_fkey" FOREIGN KEY ("show_id") REFERENCES "cc_show" ("id") ON DELETE CASCADE;
+
+ALTER TABLE "cc_stamp" ADD CONSTRAINT "cc_stamp_instance_id_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
