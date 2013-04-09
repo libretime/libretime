@@ -9,10 +9,12 @@
  * @method     CcStampQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcStampQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
  * @method     CcStampQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
+ * @method     CcStampQuery orderByDbLinked($order = Criteria::ASC) Order by the linked column
  *
  * @method     CcStampQuery groupByDbId() Group by the id column
  * @method     CcStampQuery groupByDbShowId() Group by the show_id column
  * @method     CcStampQuery groupByDbInstanceId() Group by the instance_id column
+ * @method     CcStampQuery groupByDbLinked() Group by the linked column
  *
  * @method     CcStampQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcStampQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -36,10 +38,12 @@
  * @method     CcStamp findOneByDbId(int $id) Return the first CcStamp filtered by the id column
  * @method     CcStamp findOneByDbShowId(int $show_id) Return the first CcStamp filtered by the show_id column
  * @method     CcStamp findOneByDbInstanceId(int $instance_id) Return the first CcStamp filtered by the instance_id column
+ * @method     CcStamp findOneByDbLinked(boolean $linked) Return the first CcStamp filtered by the linked column
  *
  * @method     array findByDbId(int $id) Return CcStamp objects filtered by the id column
  * @method     array findByDbShowId(int $show_id) Return CcStamp objects filtered by the show_id column
  * @method     array findByDbInstanceId(int $instance_id) Return CcStamp objects filtered by the instance_id column
+ * @method     array findByDbLinked(boolean $linked) Return CcStamp objects filtered by the linked column
  *
  * @package    propel.generator.airtime.om
  */
@@ -226,6 +230,23 @@ abstract class BaseCcStampQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcStampPeer::INSTANCE_ID, $dbInstanceId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the linked column
+	 * 
+	 * @param     boolean|string $dbLinked The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcStampQuery The current query, for fluid interface
+	 */
+	public function filterByDbLinked($dbLinked = null, $comparison = null)
+	{
+		if (is_string($dbLinked)) {
+			$linked = in_array(strtolower($dbLinked), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcStampPeer::LINKED, $dbLinked, $comparison);
 	}
 
 	/**

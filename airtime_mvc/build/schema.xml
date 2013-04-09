@@ -328,6 +328,7 @@
          broadcasted = 1)
     -->
     <column name="stamp_id" phpName="DbStampId" type="INTEGER" required="true" default="0" />
+    <column name="stamp_content_id" phpName="DbStampContentId" type="INTEGER" required="true" default="0" />
     <!-- This foreign key is still useful even though it may seem we don't ever delete cc_show_instances anymore.
         We will do delete them in some cases (when editing a show and changing the repeating days of the week
         for example. \
@@ -484,7 +485,7 @@
     <column name="stream_id" phpName="DbStreamId" type="INTEGER" required="false" />
     <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false" />
     <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false" />
-    <column name="position" phpName="DbPosition" type="INTEGER" required="true" />
+    <column name="position" phpName="DbPosition" type="INTEGER" required="false" />
     <column name="clip_length" phpName="DbClipLength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00" />
     <column name="cue_in" phpName="DbCueIn" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00" />
     <column name="cue_out" phpName="DbCueOut" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00" />
@@ -510,6 +511,7 @@
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="show_id" phpName="DbShowId" type="INTEGER" required="true" />
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="false" />
+    <column name="linked" phpName="DbLinked" type="BOOLEAN" required="true" />
     <foreign-key foreignTable="cc_show" name="cc_stamp_show_id_fkey" onDelete="CASCADE">
       <reference local="show_id" foreign="id" />
     </foreign-key>

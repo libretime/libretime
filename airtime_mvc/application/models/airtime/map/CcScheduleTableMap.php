@@ -53,6 +53,7 @@ class CcScheduleTableMap extends TableMap {
 		$this->addColumn('PLAYOUT_STATUS', 'DbPlayoutStatus', 'SMALLINT', true, null, 1);
 		$this->addColumn('BROADCASTED', 'DbBroadcasted', 'SMALLINT', true, null, 0);
 		$this->addColumn('STAMP_ID', 'DbStampId', 'INTEGER', true, null, 0);
+		$this->addColumn('STAMP_CONTENT_ID', 'DbStampContentId', 'INTEGER', true, null, 0);
 		// validators
 	} // initialize()
 

@@ -43,6 +43,12 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 	protected $instance_id;
 
 	/**
+	 * The value for the linked field.
+	 * @var        boolean
+	 */
+	protected $linked;
+
+	/**
 	 * @var        CcShow
 	 */
 	protected $aCcShow;
@@ -99,6 +105,16 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 	public function getDbInstanceId()
 	{
 		return $this->instance_id;
+	}
+
+	/**
+	 * Get the [linked] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbLinked()
+	{
+		return $this->linked;
 	}
 
 	/**
@@ -170,6 +186,26 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 	} // setDbInstanceId()
 
 	/**
+	 * Set the value of [linked] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcStamp The current object (for fluent API support)
+	 */
+	public function setDbLinked($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->linked !== $v) {
+			$this->linked = $v;
+			$this->modifiedColumns[] = CcStampPeer::LINKED;
+		}
+
+		return $this;
+	} // setDbLinked()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -204,6 +240,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->show_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->instance_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+			$this->linked = ($row[$startcol + 3] !== null) ? (boolean) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -212,7 +249,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 3; // 3 = CcStampPeer::NUM_COLUMNS - CcStampPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = CcStampPeer::NUM_COLUMNS - CcStampPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcStamp object", $e);
@@ -583,6 +620,9 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 			case 2:
 				return $this->getDbInstanceId();
 				break;
+			case 3:
+				return $this->getDbLinked();
+				break;
 			default:
 				return null;
 				break;
@@ -610,6 +650,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbShowId(),
 			$keys[2] => $this->getDbInstanceId(),
+			$keys[3] => $this->getDbLinked(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -658,6 +699,9 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 			case 2:
 				$this->setDbInstanceId($value);
 				break;
+			case 3:
+				$this->setDbLinked($value);
+				break;
 		} // switch()
 	}
 
@@ -685,6 +729,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbShowId($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbInstanceId($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbLinked($arr[$keys[3]]);
 	}
 
 	/**
@@ -699,6 +744,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcStampPeer::ID)) $criteria->add(CcStampPeer::ID, $this->id);
 		if ($this->isColumnModified(CcStampPeer::SHOW_ID)) $criteria->add(CcStampPeer::SHOW_ID, $this->show_id);
 		if ($this->isColumnModified(CcStampPeer::INSTANCE_ID)) $criteria->add(CcStampPeer::INSTANCE_ID, $this->instance_id);
+		if ($this->isColumnModified(CcStampPeer::LINKED)) $criteria->add(CcStampPeer::LINKED, $this->linked);
 
 		return $criteria;
 	}
@@ -762,6 +808,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 	{
 		$copyObj->setDbShowId($this->show_id);
 		$copyObj->setDbInstanceId($this->instance_id);
+		$copyObj->setDbLinked($this->linked);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1134,6 +1181,7 @@ abstract class BaseCcStamp extends BaseObject  implements Persistent
 		$this->id = null;
 		$this->show_id = null;
 		$this->instance_id = null;
+		$this->linked = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

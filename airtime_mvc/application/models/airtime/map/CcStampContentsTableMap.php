@@ -44,7 +44,7 @@ class CcStampContentsTableMap extends TableMap {
 		$this->addForeignKey('STREAM_ID', 'DbStreamId', 'INTEGER', 'cc_webstream', 'ID', false, null, null);
 		$this->addForeignKey('BLOCK_ID', 'DbBlockId', 'INTEGER', 'cc_block', 'ID', false, null, null);
 		$this->addForeignKey('PLAYLIST_ID', 'DbPlaylistId', 'INTEGER', 'cc_playlist', 'ID', false, null, null);
-		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', true, null, null);
+		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
 		$this->addColumn('CLIP_LENGTH', 'DbClipLength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUE_IN', 'DbCueIn', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUE_OUT', 'DbCueOut', 'VARCHAR', false, null, '00:00:00');

@@ -428,6 +428,7 @@ CREATE TABLE "cc_schedule"
 	"playout_status" INT2 default 1 NOT NULL,
 	"broadcasted" INT2 default 0 NOT NULL,
 	"stamp_id" INTEGER default 0 NOT NULL,
+	"stamp_content_id" INTEGER default 0 NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -765,7 +766,7 @@ CREATE TABLE "cc_stamp_contents"
 	"stream_id" INTEGER,
 	"block_id" INTEGER,
 	"playlist_id" INTEGER,
-	"position" INTEGER  NOT NULL,
+	"position" INTEGER,
 	"clip_length" interval default '00:00:00',
 	"cue_in" interval default '00:00:00',
 	"cue_out" interval default '00:00:00',
@@ -790,6 +791,7 @@ CREATE TABLE "cc_stamp"
 	"id" serial  NOT NULL,
 	"show_id" INTEGER  NOT NULL,
 	"instance_id" INTEGER,
+	"linked" BOOLEAN  NOT NULL,
 	PRIMARY KEY ("id")
 );
 

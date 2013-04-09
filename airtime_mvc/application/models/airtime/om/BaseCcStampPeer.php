@@ -26,7 +26,7 @@ abstract class BaseCcStampPeer {
 	const TM_CLASS = 'CcStampTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 3;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -39,6 +39,9 @@ abstract class BaseCcStampPeer {
 
 	/** the column name for the INSTANCE_ID field */
 	const INSTANCE_ID = 'cc_stamp.INSTANCE_ID';
+
+	/** the column name for the LINKED field */
+	const LINKED = 'cc_stamp.LINKED';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcStamp objects.
@@ -56,12 +59,12 @@ abstract class BaseCcStampPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbShowId', 'DbInstanceId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbShowId', 'dbInstanceId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::SHOW_ID, self::INSTANCE_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SHOW_ID', 'INSTANCE_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'show_id', 'instance_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbShowId', 'DbInstanceId', 'DbLinked', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbShowId', 'dbInstanceId', 'dbLinked', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::SHOW_ID, self::INSTANCE_ID, self::LINKED, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SHOW_ID', 'INSTANCE_ID', 'LINKED', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'show_id', 'instance_id', 'linked', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -71,12 +74,12 @@ abstract class BaseCcStampPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbShowId' => 1, 'DbInstanceId' => 2, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbShowId' => 1, 'dbInstanceId' => 2, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::SHOW_ID => 1, self::INSTANCE_ID => 2, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SHOW_ID' => 1, 'INSTANCE_ID' => 2, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'show_id' => 1, 'instance_id' => 2, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbShowId' => 1, 'DbInstanceId' => 2, 'DbLinked' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbShowId' => 1, 'dbInstanceId' => 2, 'dbLinked' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::SHOW_ID => 1, self::INSTANCE_ID => 2, self::LINKED => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SHOW_ID' => 1, 'INSTANCE_ID' => 2, 'LINKED' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'show_id' => 1, 'instance_id' => 2, 'linked' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -151,10 +154,12 @@ abstract class BaseCcStampPeer {
 			$criteria->addSelectColumn(CcStampPeer::ID);
 			$criteria->addSelectColumn(CcStampPeer::SHOW_ID);
 			$criteria->addSelectColumn(CcStampPeer::INSTANCE_ID);
+			$criteria->addSelectColumn(CcStampPeer::LINKED);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.SHOW_ID');
 			$criteria->addSelectColumn($alias . '.INSTANCE_ID');
+			$criteria->addSelectColumn($alias . '.LINKED');
 		}
 	}
 

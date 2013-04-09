@@ -128,4 +128,9 @@ class CcShow extends BaseCcShow {
             ->orderByDbStarts()
             ->find();
     }
+
+    public function isLinked()
+    {
+        return $this->getDbLinked();
+    }
 } // CcShow

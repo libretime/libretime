@@ -41,6 +41,7 @@ class CcStampTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
 		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
+		$this->addColumn('LINKED', 'DbLinked', 'BOOLEAN', true, null, null);
 		// validators
 	} // initialize()
 
