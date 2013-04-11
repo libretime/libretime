@@ -42,7 +42,9 @@ var AIRTIME = (function(AIRTIME){
     mod.updateCalendarStatusIcon = function(json) {
 
 
-        if (window.location.pathname.toLowerCase() != baseUrl+"schedule") {
+        //make sure we are only executing this code on the calendar view, not
+        //the Now Playing view.
+        if (window.location.pathname.toLowerCase().indexOf("schedule") >= 0) {
             return;
         }
 
