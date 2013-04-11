@@ -44,7 +44,7 @@ var AIRTIME = (function(AIRTIME){
 
         //make sure we are only executing this code on the calendar view, not
         //the Now Playing view.
-        if (window.location.pathname.toLowerCase().indexOf("schedule") >= 0) {
+        if (window.location.pathname.toLowerCase().indexOf("schedule") < 0) {
             return;
         }
 
