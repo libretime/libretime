@@ -45,6 +45,21 @@ class Application_Model_Scheduler
         $this->checkUserPermissions = $value;
     }
 
+    private function validateItemMove($itemsToMove, $afterItem)
+    {
+        $afterInstanceId = $afterItem["instance"];
+
+        foreach ($itemsToMove as $itemToMove) {
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->findPk($itemToMove["instance"]);
+            $linked = $ccShowInstance->getCcShow()->isLinked();
+
+            if ($linked && $itemToMove["instance"] != $afterInstanceId) {
+                throw new Exception(_("Linked items can only be moved within its own show"));
+            }
+        }
+    }
+
     /*
      * make sure any incoming requests for scheduling are ligit.
     *
@@ -394,6 +409,9 @@ class Application_Model_Scheduler
      */
     private function insertAfter($scheduleItems, $filesToInsert, $adjustSched = true)
     {
+        Logging::info($scheduleItems);
+        //Logging::info($filesToInsert);
+
         try {
             $affectedShowInstances = array();
 
@@ -408,23 +426,71 @@ class Application_Model_Scheduler
 
             $startProfile = microtime(true);
 
+            /*
+             * We need to prevent items getting added to linked shows more
+             * than once. This can happen if a cursor is selected in the same
+             * position on 2 or more linked shows
+             */
+            $temp = array();
+            $instance = null;
+            $pos = 0;
+
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
 
+                if ($id != 0) {
+                    $ccSchedule = CcScheduleQuery::create()->findPk($schedule["id"]);
+                    $ccShowInstance = CcShowInstancesQuery::create()->findPk($ccSchedule->getDbInstanceId());
+                    $ccShow = $ccShowInstance->getCcShow();
+                    if ($ccShow->isLinked()) {
+                        $unique = $ccShow->getDbId() . $ccSchedule->getDbPosition();
+                        if (!in_array($unique, $temp)) {
+                            $temp[] = $unique;
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    $ccShowInstance = CcShowInstancesQuery::create()->findPk($schedule["instance"]);
+                    $ccShow = $ccShowInstance->getccShow();
+                    if ($ccShow->isLinked()) {
+                        $unique = $ccShow->getDbId() . "a";
+                        if (!in_array($unique, $temp)) {
+                            $temp[] = $unique;
+                        } else {
+                            continue;
+                        }
+                    }
+                }
+
+                $instances = $this->getInstances($schedule["instance"]);
+                foreach($instances as $instance) {
+
+                    Logging::info($instance->getDbId());
                 if ($id !== 0) {
                     $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
-                    $instance = $schedItem->getCcShowInstances($this->con);
+                    $pos = $schedItem->getDbPosition();
 
-                    $schedItemEndDT = $schedItem->getDbEnds(null);
+                    $ccSchedule = CcScheduleQuery::create()
+                        ->filterByDbInstanceId($instance->getDbId())
+                        ->filterByDbPosition($pos)
+                        ->findOne();
+
+                    //$schedItemEndDT = $schedItem->getDbEnds(null);
+                    $schedItemEndDT = $ccSchedule->getDbEnds(null);
                     $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
+
+                    $pos++;
                 }
                 //selected empty row to add after
                 else {
 
-                    $instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
+                    //$instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
 
                     $showStartDT = $instance->getDbStarts(null);
                     $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
+                    //show is empty so start position counter at 0
+                    $pos = 0;
                 }
 
                 if (!in_array($instance->getDbId(), $affectedShowInstances)) {
@@ -452,6 +518,7 @@ class Application_Model_Scheduler
                 }
 
                 foreach ($filesToInsert as $file) {
+                    Logging::info("INSERTING FILE ----- ".$instance->getDbId());
                     $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
 
                     //item existed previously and is being moved.
@@ -466,7 +533,7 @@ class Application_Model_Scheduler
                     // we need to convert to '00:00:00' format
                     $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
                     $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
-                    
+
                     $sched->setDbStarts($nextStartDT)
                         ->setDbEnds($endTimeDT)
                         ->setDbCueIn($file['cuein'])
@@ -474,6 +541,7 @@ class Application_Model_Scheduler
                         ->setDbFadeIn($file['fadein'])
                         ->setDbFadeOut($file['fadeout'])
                         ->setDbClipLength($file['cliplength'])
+                        ->setDbPosition($pos)
                         ->setDbInstanceId($instance->getDbId());
 
                     switch ($file["type"]) {
@@ -489,6 +557,7 @@ class Application_Model_Scheduler
                     $sched->save($this->con);
 
                     $nextStartDT = $endTimeDT;
+                    $pos++;
                 }//all files have been inserted/moved
 
                 if ($adjustSched === true) {
@@ -497,20 +566,23 @@ class Application_Model_Scheduler
 
                     //recalculate the start/end times after the inserted items.
                     foreach ($followingSchedItems as $item) {
-
                         $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
 
                         $item->setDbStarts($nextStartDT);
                         $item->setDbEnds($endTimeDT);
+                        $item->setDbPosition($pos);
                         $item->save($this->con);
                         $nextStartDT = $endTimeDT;
+                        $pos++;
                     }
 
                     $pend = microtime(true);
                     Logging::debug("adjusting all following items.");
                     Logging::debug(floatval($pend) - floatval($pstart));
                 }
-            }
+            }//for each instance
+                
+            }//for each schedule location
 
             $endProfile = microtime(true);
             Logging::debug("finished adding scheduled items.");
@@ -551,6 +623,17 @@ class Application_Model_Scheduler
         } catch (Exception $e) {
             Logging::debug($e->getMessage());
             throw $e;
+        }
+    }
+
+    private function getInstances($instanceId)
+    {
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
+        $ccShow = $ccShowInstance->getCcShow();
+        if ($ccShow->isLinked()) {
+            return $ccShow->getCcShowInstancess();
+        } else {
+            return array($ccShowInstance);
         }
     }
 
@@ -611,6 +694,9 @@ class Application_Model_Scheduler
      */
     public function moveItem($selectedItems, $afterItems, $adjustSched = true)
     {
+        //Logging::info($selectedItems);
+        //Logging::info($afterItems);
+
         $startProfile = microtime(true);
 
         $this->con->beginTransaction();
@@ -618,6 +704,7 @@ class Application_Model_Scheduler
 
         try {
 
+            $this->validateItemMove($selectedItems, $afterItems[0]);
             $this->validateRequest($selectedItems);
             $this->validateRequest($afterItems);
 
@@ -657,7 +744,7 @@ class Application_Model_Scheduler
                     $modifiedMap[$showInstanceId] = array($schedId);
                 }
             }
-
+Logging::info($movedData);
             //calculate times excluding the to be moved items.
             foreach ($modifiedMap as $instance => $schedIds) {
                 $startProfile = microtime(true);
@@ -715,6 +802,31 @@ class Application_Model_Scheduler
             foreach ($removedItems as $removedItem) {
 
                 $instance = $removedItem->getCcShowInstances($this->con);
+
+                //check if instance is linked and if so get the schedule items
+                //for all linked instances so we can delete them too
+                if ($instance->getCcShow()->isLinked()) {
+                    //returns all linked instances if linked
+                    $ccShowInstances = $this->getInstances($instance->getDbId());
+                    $instanceIds = array();
+                    foreach ($ccShowInstances as $ccShowInstance) {
+                        $instanceIds[] = $ccShowInstance->getDbId();
+                    }
+                    /*
+                     * Find all the schedule items that are in the same position
+                     * as the selected item by the user.
+                     * The position of each track is the same across each linked instance
+                     */
+                    $itemsToDelete = CcScheduleQuery::create()
+                        ->filterByDbPosition($removedItem->getDbPosition())
+                        ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                        ->find();
+                    foreach ($itemsToDelete as $item) {
+                        if (!$removedItems->contains($item)) {
+                            $removedItems->append($item);
+                        }
+                    }
+                }
 
                 //check to truncate the currently playing item instead of deleting it.
                 if ($removedItem->isCurrentItem($this->epochNow)) {
