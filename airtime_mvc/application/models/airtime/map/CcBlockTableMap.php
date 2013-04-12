@@ -58,7 +58,6 @@ class CcBlockTableMap extends TableMap {
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
     $this->addRelation('CcBlockcontents', 'CcBlockcontents', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
     $this->addRelation('CcBlockcriteria', 'CcBlockcriteria', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
-    $this->addRelation('CcStampContents', 'CcStampContents', RelationMap::ONE_TO_MANY, array('id' => 'block_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 	/**

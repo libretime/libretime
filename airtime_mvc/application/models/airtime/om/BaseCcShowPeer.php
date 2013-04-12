@@ -405,9 +405,6 @@ abstract class BaseCcShowPeer {
 		// Invalidate objects in CcShowHostsPeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcShowHostsPeer::clearInstancePool();
-		// Invalidate objects in CcStampPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcStampPeer::clearInstancePool();
 	}
 
 	/**

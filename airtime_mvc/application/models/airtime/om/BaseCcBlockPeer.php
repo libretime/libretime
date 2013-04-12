@@ -382,9 +382,6 @@ abstract class BaseCcBlockPeer {
 		// Invalidate objects in CcBlockcriteriaPeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcBlockcriteriaPeer::clearInstancePool();
-		// Invalidate objects in CcStampContentsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcStampContentsPeer::clearInstancePool();
 	}
 
 	/**

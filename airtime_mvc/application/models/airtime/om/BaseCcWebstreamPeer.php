@@ -386,9 +386,6 @@ abstract class BaseCcWebstreamPeer {
 		// Invalidate objects in CcSchedulePeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcSchedulePeer::clearInstancePool();
-		// Invalidate objects in CcStampContentsPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcStampContentsPeer::clearInstancePool();
 	}
 
 	/**

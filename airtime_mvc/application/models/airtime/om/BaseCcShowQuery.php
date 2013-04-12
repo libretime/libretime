@@ -52,10 +52,6 @@
  * @method     CcShowQuery rightJoinCcShowHosts($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
  * @method     CcShowQuery innerJoinCcShowHosts($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowHosts relation
  *
- * @method     CcShowQuery leftJoinCcStamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcStamp relation
- * @method     CcShowQuery rightJoinCcStamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcStamp relation
- * @method     CcShowQuery innerJoinCcStamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcStamp relation
- *
  * @method     CcShow findOne(PropelPDO $con = null) Return the first CcShow matching the query
  * @method     CcShow findOneOrCreate(PropelPDO $con = null) Return the first CcShow matching the query, or a new CcShow object populated from the query conditions when no match is found
  *
@@ -691,70 +687,6 @@ abstract class BaseCcShowQuery extends ModelCriteria
 		return $this
 			->joinCcShowHosts($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcShowHosts', 'CcShowHostsQuery');
-	}
-
-	/**
-	 * Filter the query by a related CcStamp object
-	 *
-	 * @param     CcStamp $ccStamp  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByCcStamp($ccStamp, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcShowPeer::ID, $ccStamp->getDbShowId(), $comparison);
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the CcStamp relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function joinCcStamp($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcStamp');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcStamp');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the CcStamp relation CcStamp object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcStampQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcStampQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcStamp($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcStamp', 'CcStampQuery');
 	}
 
 	/**

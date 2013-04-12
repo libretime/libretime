@@ -123,11 +123,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $collCcShowHostss;
 
 	/**
-	 * @var        array CcStamp[] Collection to store aggregation of CcStamp objects.
-	 */
-	protected $collCcStamps;
-
-	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -673,8 +668,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 			$this->collCcShowHostss = null;
 
-			$this->collCcStamps = null;
-
 		} // if (deep)
 	}
 
@@ -840,14 +833,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				}
 			}
 
-			if ($this->collCcStamps !== null) {
-				foreach ($this->collCcStamps as $referrerFK) {
-					if (!$referrerFK->isDeleted()) {
-						$affectedRows += $referrerFK->save($con);
-					}
-				}
-			}
-
 			$this->alreadyInSave = false;
 
 		}
@@ -945,14 +930,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 
 				if ($this->collCcShowHostss !== null) {
 					foreach ($this->collCcShowHostss as $referrerFK) {
-						if (!$referrerFK->validate($columns)) {
-							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-						}
-					}
-				}
-
-				if ($this->collCcStamps !== null) {
-					foreach ($this->collCcStamps as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -1288,12 +1265,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			foreach ($this->getCcShowHostss() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcShowHosts($relObj->copy($deepCopy));
-				}
-			}
-
-			foreach ($this->getCcStamps() as $relObj) {
-				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-					$copyObj->addCcStamp($relObj->copy($deepCopy));
 				}
 			}
 
@@ -1854,140 +1825,6 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Clears out the collCcStamps collection
-	 *
-	 * This does not modify the database; however, it will remove any associated objects, causing
-	 * them to be refetched by subsequent calls to accessor method.
-	 *
-	 * @return     void
-	 * @see        addCcStamps()
-	 */
-	public function clearCcStamps()
-	{
-		$this->collCcStamps = null; // important to set this to NULL since that means it is uninitialized
-	}
-
-	/**
-	 * Initializes the collCcStamps collection.
-	 *
-	 * By default this just sets the collCcStamps collection to an empty array (like clearcollCcStamps());
-	 * however, you may wish to override this method in your stub class to provide setting appropriate
-	 * to your application -- for example, setting the initial array to the values stored in database.
-	 *
-	 * @return     void
-	 */
-	public function initCcStamps()
-	{
-		$this->collCcStamps = new PropelObjectCollection();
-		$this->collCcStamps->setModel('CcStamp');
-	}
-
-	/**
-	 * Gets an array of CcStamp objects which contain a foreign key that references this object.
-	 *
-	 * If the $criteria is not null, it is used to always fetch the results from the database.
-	 * Otherwise the results are fetched from the database the first time, then cached.
-	 * Next time the same method is called without $criteria, the cached collection is returned.
-	 * If this CcShow is new, it will return
-	 * an empty collection or the current collection; the criteria is ignored on a new object.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @return     PropelCollection|array CcStamp[] List of CcStamp objects
-	 * @throws     PropelException
-	 */
-	public function getCcStamps($criteria = null, PropelPDO $con = null)
-	{
-		if(null === $this->collCcStamps || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcStamps) {
-				// return empty collection
-				$this->initCcStamps();
-			} else {
-				$collCcStamps = CcStampQuery::create(null, $criteria)
-					->filterByCcShow($this)
-					->find($con);
-				if (null !== $criteria) {
-					return $collCcStamps;
-				}
-				$this->collCcStamps = $collCcStamps;
-			}
-		}
-		return $this->collCcStamps;
-	}
-
-	/**
-	 * Returns the number of related CcStamp objects.
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct
-	 * @param      PropelPDO $con
-	 * @return     int Count of related CcStamp objects.
-	 * @throws     PropelException
-	 */
-	public function countCcStamps(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-	{
-		if(null === $this->collCcStamps || null !== $criteria) {
-			if ($this->isNew() && null === $this->collCcStamps) {
-				return 0;
-			} else {
-				$query = CcStampQuery::create(null, $criteria);
-				if($distinct) {
-					$query->distinct();
-				}
-				return $query
-					->filterByCcShow($this)
-					->count($con);
-			}
-		} else {
-			return count($this->collCcStamps);
-		}
-	}
-
-	/**
-	 * Method called to associate a CcStamp object to this object
-	 * through the CcStamp foreign key attribute.
-	 *
-	 * @param      CcStamp $l CcStamp
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function addCcStamp(CcStamp $l)
-	{
-		if ($this->collCcStamps === null) {
-			$this->initCcStamps();
-		}
-		if (!$this->collCcStamps->contains($l)) { // only add it if the **same** object is not already associated
-			$this->collCcStamps[]= $l;
-			$l->setCcShow($this);
-		}
-	}
-
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this CcShow is new, it will return
-	 * an empty collection; or if this CcShow has previously
-	 * been saved, it will retrieve related CcStamps from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in CcShow.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcStamp[] List of CcStamp objects
-	 */
-	public function getCcStampsJoinCcShowInstances($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = CcStampQuery::create(null, $criteria);
-		$query->joinWith('CcShowInstances', $join_behavior);
-
-		return $this->getCcStamps($query, $con);
-	}
-
-	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -2045,18 +1882,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
-			if ($this->collCcStamps) {
-				foreach ((array) $this->collCcStamps as $o) {
-					$o->clearAllReferences($deep);
-				}
-			}
 		} // if ($deep)
 
 		$this->collCcShowInstancess = null;
 		$this->collCcShowDayss = null;
 		$this->collCcShowRebroadcasts = null;
 		$this->collCcShowHostss = null;
-		$this->collCcStamps = null;
 	}
 
 	/**

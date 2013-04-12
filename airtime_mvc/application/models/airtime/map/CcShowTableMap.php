@@ -62,7 +62,6 @@ class CcShowTableMap extends TableMap {
     $this->addRelation('CcShowDays', 'CcShowDays', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
     $this->addRelation('CcShowRebroadcast', 'CcShowRebroadcast', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
     $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
-    $this->addRelation('CcStamp', 'CcStamp', RelationMap::ONE_TO_MANY, array('id' => 'show_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcShowTableMap

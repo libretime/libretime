@@ -57,7 +57,6 @@ class CcWebstreamTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'stream_id', ), 'CASCADE', null);
-    $this->addRelation('CcStampContents', 'CcStampContents', RelationMap::ONE_TO_MANY, array('id' => 'stream_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcWebstreamTableMap
