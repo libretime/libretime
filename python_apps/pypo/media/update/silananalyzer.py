@@ -45,10 +45,13 @@ class SilanAnalyzer(Thread):
                     command = ['nice', '-n', '19', 'silan', '-b', '-f', 'JSON', full_path]
                     try:
                         proc = subprocess.Popen(command, stdout=subprocess.PIPE)
-                        out = proc.communicate()[0].strip('\r\n')
-                        info = json.loads(out)
-                        data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
-                        data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
+                        comm = proc.communicate()
+                        if len(comm):
+                            out = comm[0].strip('\r\n')
+                            info = json.loads(out)
+                            if len(info['sound']) >= 2:
+                                data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
+                                data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
                     except Exception, e:
                         self.logger.error(str(command))
                         self.logger.error(e)
