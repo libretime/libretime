@@ -1061,6 +1061,93 @@ var AIRTIME = (function(AIRTIME){
 		playlistRequest(sUrl, oData);
 	};
 	
+	mod.showFadesWaveform = function(e) {
+		var $el = $(e.target),
+			$parent = $el.parent(),
+			trackEditor = new TrackEditor(),
+			audioControls = new AudioControls(),
+			trackElem,
+			config,
+			$html = $($("#tmpl-pl-fades").html()),
+			tracks = [
+			    {
+			    	src: $parent.data("fadeout")
+				},
+				{
+			    	src: $parent.data("fadein")
+				}
+			];
+		
+		//$el.replaceWith(html);
+		
+		$html.dialog({
+            modal: true,
+            title: "Fade Editor",
+            show: 'clip',
+            hide: 'clip',
+            width: 900,
+            height: 300,
+            buttons: [
+                //{text: "Submit", click: function() {doSomething()}},
+                {text: "Cancel", click: function() {$(this).dialog("close");}}
+            ]
+        });
+		
+		config = new Config({
+			resolution: 15000,
+			state: "shift",
+	        mono: true,
+	        waveHeight: 80,
+	        container: $html[0],
+	        UITheme: "jQueryUI"
+	    });
+		
+		var playlistEditor = new PlaylistEditor();
+	    playlistEditor.setConfig(config);
+	    playlistEditor.init(tracks);
+	};
+	
+	mod.showCuesWaveform = function(e) {
+		var $el = $(e.target),
+			$parent = $el.parent(),
+			uri = $parent.data("uri"),
+			trackEditor = new TrackEditor(),
+			audioControls = new AudioControls(),
+			trackElem,
+			config,
+			$html = $($("#tmpl-pl-cues").html()),
+			tracks = [{
+				src: uri
+			}];
+		
+		//$el.replaceWith(html);
+		
+		$html.dialog({
+            modal: true,
+            title: "Cue Editor",
+            show: 'clip',
+            hide: 'clip',
+            width: 900,
+            height: 300,
+            buttons: [
+                //{text: "Submit", click: function() {doSomething()}},
+                {text: "Cancel", click: function() {$(this).dialog("close");}}
+            ]
+        });
+		
+		config = new Config({
+			resolution: 15000,
+	        mono: true,
+	        waveHeight: 80,
+	        container: $html[0],
+	        UITheme: "jQueryUI"
+	    });
+		
+		var playlistEditor = new PlaylistEditor();
+	    playlistEditor.setConfig(config);
+	    playlistEditor.init(tracks);
+	};
+	
 	mod.init = function() {
 	    /*
 	    $.contextMenu({
@@ -1087,6 +1174,14 @@ var AIRTIME = (function(AIRTIME){
         
 		$pl.delegate("#ws_delete", {"click": function(ev){
             AIRTIME.playlist.fnWsDelete();
+		}});
+		
+		$pl.delegate(".pl-waveform-cues-btn", {"click": function(ev){
+            AIRTIME.playlist.showCuesWaveform(ev);
+		}});
+		
+		$pl.delegate(".pl-waveform-fades-btn", {"click": function(ev){
+            AIRTIME.playlist.showFadesWaveform(ev);
 		}});
 		
 		setPlaylistEntryEvents();

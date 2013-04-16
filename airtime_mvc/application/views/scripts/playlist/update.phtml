@@ -8,6 +8,15 @@ if ($item['type'] == 2) {
     $bl= new Application_Model_Block($item['item_id']);
     $staticBlock = $bl->isStatic();
 }
+else if ($item['type'] == 0) {
+	$audiofile = Application_Model_StoredFile::Recall($item['item_id']);
+	$fileUrl = $audiofile->getFileUrl();
+}
+
+if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
+	$nextAudiofile = Application_Model_StoredFile::Recall($items[$i+1]['item_id']);
+	$nextFileUrl = $nextAudiofile->getFileUrl();	
+}
 ?>
     <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["id"]; ?>">
         <div class="list-item-container">
@@ -65,6 +74,7 @@ if ($item['type'] == 2) {
                 'id' => $item["id"],
                 'cueIn' => $item['cuein'],
                 'cueOut' => $item['cueout'],
+            	'uri' => $fileUrl,
                 'origLength' => $item['orig_length'])); ?>
         </div>
         <?php }?>
@@ -80,6 +90,8 @@ if ($item['type'] == 2) {
                 'item2' => $items[$i+1]['id'],
                 'item1Type' => $items[$i]['type'],
                 'item2Type' => $items[$i+1]['type'],
+                'item1Url' => $fileUrl,
+            	'item2Url' => $nextFileUrl,
                 'fadeOut' => $items[$i]['fadeout'],
                 'fadeIn' => $items[$i+1]['fadein'])); ?>
         </div>

@@ -28,7 +28,7 @@
     height: 28px;
     margin: 0 7px 20px 0;
 }*/
-#side_playlist input,#side_playlist textarea {
+#side_playlist textarea {
     width: 200px;
 }
 
@@ -584,4 +584,23 @@ li.spl_empty {
 }
 .expand-block-separate {
     border-top: 1px solid #5B5B5B;
+}
+
+.channel-wrapper {
+  position: relative;
+}
+
+.channel {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+}
+
+.state-select {
+	cursor: text;
+}
+
+.playlist-tracks {
+  overflow-x: auto;
+  overflow-y: hidden;
 }

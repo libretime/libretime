@@ -33,5 +33,31 @@
 </div>
 
 <div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
+
+<script id="tmpl-pl-cues" type="text/template">
+<div class="waveform-cues">
+  <div class="playlist-tracks"></div>
+  <form class="form-inline">
+    <span class="btn_play ui-state-default">Play</span>
+    <span class="btn_stop ui-state-default">Stop</span>
+    <select class="time_format">
+      <option value="seconds">seconds</option>
+      <option value="thousandths">thousandths</option>
+      <option value="hh:mm:ss">hh:mm:ss</option>
+      <option value="hh:mm:ss.uu">hh:mm:ss + hundredths</option>
+      <option value="hh:mm:ss.uuu">hh:mm:ss + milliseconds</option>
+    </select>
+    <input type="text" class="audio_start input-small">
+    <input type="text" class="audio_end input-small">
+    <input type="text" class="audio_pos input-small">
+  </form>
+</div>
+</script>
+
+<script id="tmpl-pl-fades" type="text/template">
+<div class="waveform-fades">
+  <div class="playlist-tracks"></div>
+</div>
+</script>
 </body>
 </html>

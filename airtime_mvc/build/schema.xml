@@ -227,6 +227,7 @@
     -->
     <column name="type" phpName="DbType" type="SMALLINT" required="true" default="0"/>
     <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
+    <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
