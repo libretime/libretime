@@ -202,10 +202,10 @@ AudioControls.prototype.init = function(config) {
     container = this.config.getContainer();
     state = this.config.getState();
 
-    tmpBtn = document.getElementById("btn_"+state);
+    tmpBtn = document.getElementsByClassName("btn_"+state)[0];
 
     if (tmpBtn) {
-        tmpBtn.className = this.classes["btn-state-active"];
+        this.activateButton(tmpBtn);
     }
 
     for (className in events) {
@@ -388,18 +388,27 @@ AudioControls.prototype.stopAudio = function() {
     this.fire('stopaudio', this);
 };
 
-AudioControls.prototype.setButtonState = function(el, classname) {
-    el && el.className = this.classes[classname];
+AudioControls.prototype.activateButton = function(el) {
+    if (el) {
+        el.classList.remove(this.classes["disabled"]);
+        el.classList.add(this.classes["active"]);
+    }
+};
+
+AudioControls.prototype.disableButton = function(el) {
+    if (el) {
+        el.classList.add(this.classes["disabled"]);
+        el.classList.remove(this.classes["active"]);
+    }
 };
 
 AudioControls.prototype.changeState = function(e) {
     var el = e.currentTarget,
+        prevEl = el.parentElement.getElementsByClassName('active')[0],
         state = el.dataset.state;
 
-    this.el.getElementsByClassName('active')[0].className = classes["btn-state-default"];
-
-    this.setButtonState("btn-state-default");
-    this.setButtonState(el, "btn-state-active");
+    this.disableButton(prevEl);
+    this.activateButton(el);
 
     this.config.setState(state);
     this.fire('changestate', this);

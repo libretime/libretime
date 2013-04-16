@@ -1064,10 +1064,6 @@ var AIRTIME = (function(AIRTIME){
 	mod.showFadesWaveform = function(e) {
 		var $el = $(e.target),
 			$parent = $el.parent(),
-			trackEditor = new TrackEditor(),
-			audioControls = new AudioControls(),
-			trackElem,
-			config,
 			$html = $($("#tmpl-pl-fades").html()),
 			tracks = [
 			    {
@@ -1077,8 +1073,6 @@ var AIRTIME = (function(AIRTIME){
 			    	src: $parent.data("fadein")
 				}
 			];
-		
-		//$el.replaceWith(html);
 		
 		$html.dialog({
             modal: true,
@@ -1090,37 +1084,33 @@ var AIRTIME = (function(AIRTIME){
             buttons: [
                 //{text: "Submit", click: function() {doSomething()}},
                 {text: "Cancel", click: function() {$(this).dialog("close");}}
-            ]
-        });
-		
-		config = new Config({
-			resolution: 15000,
-			state: "shift",
-	        mono: true,
-	        waveHeight: 80,
-	        container: $html[0],
-	        UITheme: "jQueryUI"
-	    });
-		
-		var playlistEditor = new PlaylistEditor();
-	    playlistEditor.setConfig(config);
-	    playlistEditor.init(tracks);
+            ],
+            open: function (event, ui) {
+            	
+            	var config = new Config({
+        			resolution: 15000,
+        			state: "shift",
+        	        mono: true,
+        	        waveHeight: 80,
+        	        container: $html[0],
+        	        UITheme: "jQueryUI"
+        	    });
+        		
+        		var playlistEditor = new PlaylistEditor();
+        	    playlistEditor.setConfig(config);
+        	    playlistEditor.init(tracks);
+            }
+        });		
 	};
 	
 	mod.showCuesWaveform = function(e) {
 		var $el = $(e.target),
 			$parent = $el.parent(),
 			uri = $parent.data("uri"),
-			trackEditor = new TrackEditor(),
-			audioControls = new AudioControls(),
-			trackElem,
-			config,
 			$html = $($("#tmpl-pl-cues").html()),
 			tracks = [{
 				src: uri
 			}];
-		
-		//$el.replaceWith(html);
 		
 		$html.dialog({
             modal: true,
@@ -1132,20 +1122,22 @@ var AIRTIME = (function(AIRTIME){
             buttons: [
                 //{text: "Submit", click: function() {doSomething()}},
                 {text: "Cancel", click: function() {$(this).dialog("close");}}
-            ]
-        });
-		
-		config = new Config({
-			resolution: 15000,
-	        mono: true,
-	        waveHeight: 80,
-	        container: $html[0],
-	        UITheme: "jQueryUI"
-	    });
-		
-		var playlistEditor = new PlaylistEditor();
-	    playlistEditor.setConfig(config);
-	    playlistEditor.init(tracks);
+            ],
+            open: function (event, ui) {
+            	
+            	var config = new Config({
+        			resolution: 15000,
+        	        mono: true,
+        	        waveHeight: 80,
+        	        container: $html[0],
+        	        UITheme: "jQueryUI"
+        	    });
+        		
+        		var playlistEditor = new PlaylistEditor();
+        	    playlistEditor.setConfig(config);
+        	    playlistEditor.init(tracks);	
+            }
+        });	
 	};
 	
 	mod.init = function() {
