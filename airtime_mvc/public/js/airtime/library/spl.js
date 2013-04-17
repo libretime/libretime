@@ -1154,13 +1154,19 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.showCuesWaveform = function(e) {
 		var $el = $(e.target),
-			id = $el.parents("li").attr("unqid"),
+			$li = $el.parents("li"), 
+			id = $li.attr("unqid"),
 			$parent = $el.parent(),
 			uri = $parent.data("uri"),
 			$html = $($("#tmpl-pl-cues").html()),
 			tracks = [{
 				src: uri
-			}];
+			}],
+			cueIn = $li.find('.spl_cue_in').data("cueIn"),
+			cueOut = $li.find('.spl_cue_out').data("cueOut");
+		
+		$html.find('.editor-cue-in').val(cueIn);
+		$html.find('.editor-cue-out').val(cueOut);
 		
 		$html.on("click", ".set-cue-in", function(e) {
 			var cueIn = $html.find('.audio_start').val();
