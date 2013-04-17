@@ -137,6 +137,54 @@ var AIRTIME = (function(AIRTIME){
                 highlightActive(li.find('.spl_cue'));
             });
         }
+    
+    /* used from waveform pop-up */
+    function changeCues($el, id, cueIn, cueOut) {
+        
+        var url = baseUrl+"Playlist/set-cue",
+            lastMod = getModified(),
+            type = $('#obj_type').val(),
+            li;
+        
+        if (!isTimeValid(cueIn)){
+            $el.find('.cue-in-error').val($.i18n._("please put in a time '00:00:00 (.0)'")).show();
+            return;
+        }
+        else {
+        	$el.find('.cue-in-error').hide();
+        }
+        
+        if (!isTimeValid(cueOut)){
+        	$el.find('.cue-out-error').val($.i18n._("please put in a time '00:00:00 (.0)'")).show();
+            return;
+        }
+        else {
+        	$el.find('.cue-out-error').hide();
+        }
+        
+        $.post(url, 
+            {format: "json", cueIn: cueIn, cueOut: cueOut, id: id, modified: lastMod, type: type}, 
+            function(json){
+            	
+            	$el.dialog('close');
+
+                if (json.error !== undefined){
+                    playlistError(json);
+	            	return;
+                }
+                if (json.cue_error !== undefined) {
+                    showError(span, json.cue_error);
+                    return;
+                }
+
+                setPlaylistContent(json);
+
+                li = $('#side_playlist li[unqid='+id+']');
+                li.find(".cue-edit").toggle();
+                highlightActive(li);
+                highlightActive(li.find('.spl_cue'));
+            });
+    }
 
     function changeFadeIn(event) {
         event.preventDefault();
@@ -1093,7 +1141,8 @@ var AIRTIME = (function(AIRTIME){
         	        mono: true,
         	        waveHeight: 80,
         	        container: $html[0],
-        	        UITheme: "jQueryUI"
+        	        UITheme: "jQueryUI",
+        	        timeFormat: 'hh:mm:ss.u'
         	    });
         		
         		var playlistEditor = new PlaylistEditor();
@@ -1105,12 +1154,25 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.showCuesWaveform = function(e) {
 		var $el = $(e.target),
+			id = $el.parents("li").attr("unqid"),
 			$parent = $el.parent(),
 			uri = $parent.data("uri"),
 			$html = $($("#tmpl-pl-cues").html()),
 			tracks = [{
 				src: uri
 			}];
+		
+		$html.on("click", ".set-cue-in", function(e) {
+			var cueIn = $html.find('.audio_start').val();
+			
+			$html.find('.editor-cue-in').val(cueIn);
+		});
+		
+		$html.on("click", ".set-cue-out", function(e) {
+			var cueOut = $html.find('.audio_end').val();
+			
+			$html.find('.editor-cue-out').val(cueOut);
+		});
 		
 		$html.dialog({
             modal: true,
@@ -1120,8 +1182,15 @@ var AIRTIME = (function(AIRTIME){
             width: 900,
             height: 300,
             buttons: [
-                //{text: "Submit", click: function() {doSomething()}},
-                {text: "Cancel", click: function() {$(this).dialog("close");}}
+                {text: "Save", click: function() {
+                	var cueIn = $html.find('.editor-cue-in').val(),
+                		cueOut = $html.find('.editor-cue-out').val();
+                	
+                	changeCues($html, id, cueIn, cueOut);
+                }},
+                {text: "Cancel", click: function() {
+                	$(this).dialog("close");
+                }}
             ],
             open: function (event, ui) {
             	
@@ -1130,7 +1199,8 @@ var AIRTIME = (function(AIRTIME){
         	        mono: true,
         	        waveHeight: 80,
         	        container: $html[0],
-        	        UITheme: "jQueryUI"
+        	        UITheme: "jQueryUI",
+        	        timeFormat: 'hh:mm:ss.u'
         	    });
         		
         		var playlistEditor = new PlaylistEditor();

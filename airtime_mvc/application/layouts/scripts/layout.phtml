@@ -37,20 +37,25 @@
 <script id="tmpl-pl-cues" type="text/template">
 <div class="waveform-cues">
   <div class="playlist-tracks"></div>
-  <form class="form-inline">
+  <div class="playlist-controls">
     <span class="btn_play ui-state-default">Play</span>
     <span class="btn_stop ui-state-default">Stop</span>
-    <select class="time_format">
-      <option value="seconds">seconds</option>
-      <option value="thousandths">thousandths</option>
-      <option value="hh:mm:ss">hh:mm:ss</option>
-      <option value="hh:mm:ss.uu">hh:mm:ss + hundredths</option>
-      <option value="hh:mm:ss.uuu">hh:mm:ss + milliseconds</option>
-    </select>
-    <input type="text" class="audio_start input-small">
-    <input type="text" class="audio_end input-small">
-    <input type="text" class="audio_pos input-small">
-  </form>
+  </div>
+  <div>
+    <input type="text" class="audio_start">
+	<input type="button" class="set-cue-in" value="Set Cue In">
+    <input type="text" class="audio_end">
+    <input type="button" class="set-cue-out" value="Set Cue Out">
+    <input type="text" class="audio_pos">
+  </div>
+  <div>
+	<label for="editor-cue-in">Cue In</label>
+    <input type="text" id="editor-cue-in" class="editor-cue-in">
+	<span style="display:none" class="cue-in-error"></span>
+    <label for="editor-cue-out">Cue Out</label>
+    <input type="text" id="editor-cue-out" class="editor-cue-out">
+    <span style="display:none" class="cue-out-error"></span>
+  </div>
 </div>
 </script>
 

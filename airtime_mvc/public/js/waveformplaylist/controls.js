@@ -85,6 +85,8 @@ AudioControls.prototype.validateCue = function(value) {
 
         "hh:mm:ss": /^[0-9]{2,}:[0-5][0-9]:[0-5][0-9]$/,
 
+        "hh:mm:ss.u": /^[0-9]{2,}:[0-5][0-9]:[0-5][0-9]\.\d{1}$/,
+
         "hh:mm:ss.uu": /^[0-9]{2,}:[0-5][0-9]:[0-5][0-9]\.\d{2}$/,
 
         "hh:mm:ss.uuu": /^[0-9]{2,}:[0-5][0-9]:[0-5][0-9]\.\d{3}$/
@@ -123,6 +125,10 @@ AudioControls.prototype.cueToSeconds = function(value) {
         },
 
         "hh:mm:ss": function(value) {
+            return clockConverter(value);
+        },
+
+        "hh:mm:ss.u": function(value) {
             return clockConverter(value);
         },
 
@@ -170,6 +176,10 @@ AudioControls.prototype.cueFormatters = function(format) {
 
         "hh:mm:ss": function (seconds) {
             return clockFormat(seconds, 0);   
+        },
+
+        "hh:mm:ss.u": function (seconds) {
+            return clockFormat(seconds, 1);   
         },
 
         "hh:mm:ss.uu": function (seconds) {
