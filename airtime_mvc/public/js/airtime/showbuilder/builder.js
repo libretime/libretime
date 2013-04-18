@@ -170,7 +170,6 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkToolBarIcons = function() {
-        
         AIRTIME.library.checkAddButton();
         mod.checkSelectButton();
         mod.checkTrimButton();
@@ -297,7 +296,6 @@ var AIRTIME = (function(AIRTIME){
     };
         
     mod.fnAdd = function(aMediaIds, aSchedIds) {
-        
         mod.disableUI();
         
         $.post(baseUrl+"showbuilder/schedule-add", 
@@ -644,7 +642,7 @@ var AIRTIME = (function(AIRTIME){
                 
                 //save some info for reordering purposes.
                 $nRow.data({"aData": aData});
-                
+
                 if (aData.scheduled === 1) {
                     $nRow.addClass(NOW_PLAYING_CLASS);
                 }
@@ -655,7 +653,7 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true) {
+                if (aData.allowed !== true || aData.linked_allowed === false) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {
