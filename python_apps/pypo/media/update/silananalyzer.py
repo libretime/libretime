@@ -49,9 +49,12 @@ class SilanAnalyzer(Thread):
                         if len(comm):
                             out = comm[0].strip('\r\n')
                             info = json.loads(out)
-                            if len(info['sound']) >= 2:
-                                data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
-                                data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
+                            try: data['length'] = str('{0:f}'.format(info['file duration']))
+                            except: pass
+                            try: data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
+                            except: pass
+                            try: data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
+                            except: pass
                     except Exception, e:
                         self.logger.error(str(command))
                         self.logger.error(e)

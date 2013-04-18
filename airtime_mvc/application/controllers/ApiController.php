@@ -979,8 +979,24 @@ class ApiController extends Zend_Controller_Action
             list($id, $info) = $pair;
             // TODO : move this code into model -- RG
             $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+
+            //What we are doing here is setting a more accurate length that was
+            //calculated with silan by actually scanning the entire file. This
+            //process takes a really long time, and so we only do it in the background
+            //after the file has already been imported -MK
+            $length = $file->getDbLength();
+            if (isset($info['length'])) {
+                $length = $info['length'];
+                //length decimal number in seconds. Need to convert it to format
+                //HH:mm:ss to get around silly PHP limitations.
+                $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
+
+                $file->setDbLength($length);
+            }
+
             $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
-            $cueout = isset($info['cueout']) ? $info['cueout'] : $file->getDbLength();
+            $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
+
             $file->setDbCuein($cuein);
             $file->setDbCueout($cueout);
             $file->setDbSilanCheck(true);

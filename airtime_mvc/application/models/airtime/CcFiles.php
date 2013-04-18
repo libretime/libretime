@@ -20,6 +20,8 @@ class CcFiles extends BaseCcFiles {
 
     public function setDbLength($v)
     {
+        //we are using DateTime instead of DateInterval because the latter doesn't
+        //support subseconds :(
         if ($v instanceof DateTime) {
             $dt = $v;
         }
