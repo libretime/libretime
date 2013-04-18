@@ -71,6 +71,7 @@ class ApiController extends Zend_Controller_Action
         $jsonStr = json_encode( array(
             "version" => Application_Model_Preference::GetAirtimeVersion()));
         echo $jsonStr;
+        die();
     }
 
     /**
@@ -365,6 +366,7 @@ class ApiController extends Zend_Controller_Action
         $data = Application_Model_Schedule::getSchedule();
         header("Content-Type: application/json");
         echo json_encode($data, JSON_FORCE_OBJECT);
+        die();
     }
 
     public function notifyMediaItemStartPlayAction()
@@ -403,6 +405,7 @@ class ApiController extends Zend_Controller_Action
         }
 
         echo json_encode(array("status"=>1, "message"=>""));
+        die();
     }
 
     public function recordedShowsAction()
@@ -932,6 +935,7 @@ class ApiController extends Zend_Controller_Action
         $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
 
         echo json_encode($rows);
+        die();
     }
     
     public function getFilesWithoutSilanValueAction()
@@ -944,6 +948,7 @@ class ApiController extends Zend_Controller_Action
         $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
     
         echo json_encode($rows);
+        die();
     }
 
     public function updateReplayGainValueAction()
@@ -964,6 +969,7 @@ class ApiController extends Zend_Controller_Action
         }
 
         echo json_encode(array());
+        die();
     }
     
     public function updateCueValuesBySilanAction()
@@ -1004,6 +1010,7 @@ class ApiController extends Zend_Controller_Action
         }
 
         echo json_encode(array());
+        die();
     }
 
     public function notifyWebstreamDataAction()
