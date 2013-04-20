@@ -613,7 +613,6 @@ class ApiController extends Zend_Controller_Action
             $info_json = json_decode($raw_json, $assoc = true);
 
             Logging::info($info_json);
-            //$info_json['MDATA_KEY_TRACKNUMBER'] = '4294967295';
 
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
