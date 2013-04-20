@@ -582,8 +582,9 @@ SQL;
         return $storedFile;
     }
 
+    /* TODO: Callers of this function should use a Propel transaction. Start
+     * by creating $con outside the function with beingTransaction() */
     public static function RecallById($p_id=null, $con=null) {
-
         //TODO
         if (is_null($con)) {
             $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
