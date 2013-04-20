@@ -136,7 +136,7 @@ class Application_Model_Scheduler
 
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
-            $storedFile = new Application_Model_StoredFile($file->getDbId());
+            $storedFile = new Application_Model_StoredFile($file, $this->con);
 
             if (is_null($file) || !$file->visible()) {
                 throw new Exception(_("A selected File does not exist!"));

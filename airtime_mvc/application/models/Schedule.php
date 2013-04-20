@@ -838,6 +838,7 @@ SQL;
     {
         $utcTimeZone = new DateTimeZone("UTC");
         $items = self::getItems($range_start, $range_end);
+
         foreach ($items as $item) {
             $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
 

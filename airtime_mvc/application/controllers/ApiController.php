@@ -511,81 +511,88 @@ class ApiController extends Zend_Controller_Action
     {
         $return_hash = array();
         Application_Model_Preference::SetImportTimestamp();
-        //Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
-        //Logging::info( $md );
 
-        // create also modifies the file if it exists
-        if ($mode == "create") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = Application_Common_OsPath::normpath($filepath);
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-            if (is_null($file)) {
-                $file = Application_Model_StoredFile::Insert($md);
-            } else {
-                // If the file already exists we will update and make sure that
-                // it's marked as 'exists'.
-                $file->setFileExistsFlag(true);
-                $file->setFileHiddenFlag(false);
-                $file->setMetadata($md);
-            }
-            if ($md['is_record'] != 0) {
-                $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
-            }
-            
-        } elseif ($mode == "modify") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $con->beginTransaction();
+        try {
+            // create also modifies the file if it exists
+            if ($mode == "create") {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $filepath = Application_Common_OsPath::normpath($filepath);
+                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
+                if (is_null($file)) {
+                    $file = Application_Model_StoredFile::Insert($md, $con);
+                } else {
+                    // If the file already exists we will update and make sure that
+                    // it's marked as 'exists'.
+                    $file->setFileExistsFlag(true);
+                    $file->setFileHiddenFlag(false);
+                    $file->setMetadata($md);
+                }
+                if ($md['is_record'] != 0) {
+                    $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
+                }
+                
+            } elseif ($mode == "modify") {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
 
-            //File is not in database anymore.
-            if (is_null($file)) {
-                $return_hash['error'] = _("File does not exist in Airtime.");
+                //File is not in database anymore.
+                if (is_null($file)) {
+                    $return_hash['error'] = _("File does not exist in Airtime.");
 
-                return $return_hash;
-            }
-            //Updating a metadata change.
-            else {
-                $file->setMetadata($md);
-            }
-        } elseif ($mode == "moved") {
-            $file = Application_Model_StoredFile::RecallByFilepath(
-                $md['MDATA_KEY_ORIGINAL_PATH']);
+                    return $return_hash;
+                }
+                //Updating a metadata change.
+                else {
+                    $file->setMetadata($md);
+                }
+            } elseif ($mode == "moved") {
+                $file = Application_Model_StoredFile::RecallByFilepath(
+                    $md['MDATA_KEY_ORIGINAL_PATH'], $con);
 
-            if (is_null($file)) {
-                $return_hash['error'] = _('File does not exist in Airtime');
-            } else {
+                if (is_null($file)) {
+                    $return_hash['error'] = _('File does not exist in Airtime');
+                } else {
+                    $filepath = $md['MDATA_KEY_FILEPATH'];
+                    //$filepath = str_replace("\\", "", $filepath);
+                    $file->setFilePath($filepath);
+                }
+            } elseif ($mode == "delete") {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $filepath = str_replace("\\", "", $filepath);
+                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
+
+                if (is_null($file)) {
+                    $return_hash['error'] = _("File doesn't exist in Airtime.");
+                    Logging::warn("Attempt to delete file that doesn't exist.
+                        Path: '$filepath'");
+
+                    return $return_hash;
+                } else {
+                    $file->deleteByMediaMonitor();
+                }
+            } elseif ($mode == "delete_dir") {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
-                $file->setFilePath($filepath);
-            }
-        } elseif ($mode == "delete") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+                $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath, $con);
 
-            if (is_null($file)) {
-                $return_hash['error'] = _("File doesn't exist in Airtime.");
-                Logging::warn("Attempt to delete file that doesn't exist.
-                    Path: '$filepath'");
+                foreach ($files as $file) {
+                    $file->deleteByMediaMonitor();
+                }
+                $return_hash['success'] = 1;
 
                 return $return_hash;
-            } else {
-                $file->deleteByMediaMonitor();
             }
-        } elseif ($mode == "delete_dir") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            //$filepath = str_replace("\\", "", $filepath);
-            $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
 
-            foreach ($files as $file) {
-                $file->deleteByMediaMonitor();
-            }
-            $return_hash['success'] = 1;
-
-            return $return_hash;
+            $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
+            $con->commit();
+        } catch (Exception $e) {
+            Logging::warn("rolling back");
+            Logging::warn($e->getMessage());
+            $con->rollback();
+            $return_hash['error'] = $e->getMessage();
         }
-
-        $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
-
         return $return_hash;
     }
 
@@ -604,6 +611,10 @@ class ApiController extends Zend_Controller_Action
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
+
+            Logging::info($info_json);
+            //$info_json['MDATA_KEY_TRACKNUMBER'] = '4294967295';
+
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
@@ -627,7 +638,12 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadata($info_json, $mode);
+            try {
+                $response = $this->dispatchMetadata($info_json, $mode);
+            } catch (Exception $e) {
+                Logging::warn($e->getMessage());
+                Logging::warn(gettype($e));
+            } 
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
