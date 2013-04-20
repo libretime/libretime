@@ -113,7 +113,7 @@ class ApiController extends Zend_Controller_Action
 
         $fileId = $this->_getParam("file");
 
-        $media = Application_Model_StoredFile::Recall($fileId);
+        $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media != null) {
 
             $filepath = $media->getFilePath();
@@ -387,7 +387,7 @@ class ApiController extends Zend_Controller_Action
                 $file_id = Application_Model_Schedule::GetFileId($media_id);
                 if (!is_null($file_id)) {
                     //we are dealing with a file not a stream
-                    $file = Application_Model_StoredFile::Recall($file_id);
+                    $file = Application_Model_StoredFile::RecallById($file_id);
                     $now = new DateTime("now", new DateTimeZone("UTC"));
                     $file->setLastPlayedTime($now);
                 }
@@ -463,7 +463,7 @@ class ApiController extends Zend_Controller_Action
     public function uploadRecordedActionParam($show_instance_id, $file_id)
     {
         $showCanceled = false;
-        $file = Application_Model_StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::RecallById($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
         try {
@@ -979,7 +979,7 @@ class ApiController extends Zend_Controller_Action
         foreach ($data as $pair) {
             list($id, $gain) = $pair;
             // TODO : move this code into model -- RG
-            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
             $file->setDbReplayGain($gain);
             $file->save();
         }
@@ -1000,7 +1000,7 @@ class ApiController extends Zend_Controller_Action
         foreach ($data as $pair) {
             list($id, $info) = $pair;
             // TODO : move this code into model -- RG
-            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
 
             //What we are doing here is setting a more accurate length that was
             //calculated with silan by actually scanning the entire file. This

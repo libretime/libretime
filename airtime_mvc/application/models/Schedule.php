@@ -860,7 +860,7 @@ SQL;
             if (!is_null($item['file_id'])) {
                 //row is from "file"
                 $media_id = $item['file_id'];
-                $storedFile = Application_Model_StoredFile::Recall($media_id);
+                $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $uri = $storedFile->getFilePath();
                 self::createFileScheduleEvent($data, $item, $media_id, $uri);
             } elseif (!is_null($item['stream_id'])) {

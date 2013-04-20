@@ -931,7 +931,7 @@ class ScheduleController extends Zend_Controller_Action
         $id = $this->_getParam('id');
 
         $file_id = $this->_getParam('id', null);
-        $file = Application_Model_StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::RecallById($file_id);
 
         $baseUrl = $this->getRequest()->getBaseUrl();
         $url = $file->getRelativeFileUrl($baseUrl).'download/true';

@@ -202,8 +202,7 @@ class Application_Model_ShowBuilder
             // at the time of creating on show, the recorded file is not in the DB yet.
             // therefore, 'si_file_id' is null. So we need to check it.
             if (Application_Model_Preference::GetUploadToSoundcloudOption() && isset($p_item['si_file_id'])) {
-                $file = Application_Model_StoredFile::Recall(
-                    $p_item['si_file_id']);
+                $file = Application_Model_StoredFile::RecallById($p_item['si_file_id']);
                 if (isset($file)) {
                     $sid = $file->getSoundCloudId();
                     $row['soundcloud_id'] = $sid;

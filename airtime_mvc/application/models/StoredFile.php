@@ -343,7 +343,7 @@ SQL;
 
         if (is_array($ids) && count($ids) > 0) {
             return array_map( function ($id) {
-                return Application_Model_Playlist::Recall($id);
+                return Application_Model_Playlist::RecallById($id);
             }, $ids);
         } else {
             return array();
@@ -582,8 +582,7 @@ SQL;
         return $storedFile;
     }
 
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null,
-        $p_filepath=null, $con=null) {
+    public static function RecallById($p_id=null, $con=null) {
 
         //TODO
         if (is_null($con)) {
@@ -593,14 +592,8 @@ SQL;
         if (isset($p_id)) {
             $f =  CcFilesQuery::create()->findPK(intval($p_id), $con);
             return is_null($f) ? null : self::createWithFile($f, $con);
-        } elseif ( isset($p_gunid) ) {
-            throw new Exception("You should never use gunid ($gunid) anymore");
-        } elseif ( isset($p_md5sum) ) {
-            throw new Exception("Searching by md5($p_md5sum) is disabled");
-        } elseif ( isset($p_filepath) ) {
-            return is_null($f) ? null : Application_Model_StoredFile::RecallByFilepath($p_filepath, $con);
         } else {
-            throw new Exception("No arguments passed to Recall");
+            throw new Exception("No arguments passed to RecallById");
         }
     }
 
@@ -823,7 +816,7 @@ SQL;
                 $row['bit_rate'] = $formatter->format();
 
                 //soundcloud status
-                $file = Application_Model_StoredFile::Recall($row['id']);
+                $file = Application_Model_StoredFile::RecallById($row['id']);
                 $row['soundcloud_status'] = $file->getSoundCloudId();
 
                 // for audio preview
@@ -1317,7 +1310,7 @@ SQL;
     
     public static function setIsPlaylist($p_playlistItems, $p_type, $p_status) {
         foreach ($p_playlistItems as $item) {
-            $file = self::Recall($item->getDbFileId());
+            $file = self::RecallById($item->getDbFileId());
             $fileId = $file->_file->getDbId();
             if ($p_type == 'playlist') {
                 // we have to check if the file is in another playlist before
@@ -1339,7 +1332,7 @@ SQL;
         } else {
             $fileId = $p_fileId;
         }
-        $file = self::Recall($fileId);
+        $file = self::RecallById($fileId);
         $updateIsScheduled = false;
 
         if (!is_null($fileId) && !in_array($fileId, Application_Model_Schedule::getAllFutureScheduledFiles())) {
