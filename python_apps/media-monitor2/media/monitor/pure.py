@@ -465,6 +465,14 @@ def truncate_to_length(item, length):
         if len(item) > length: return item[0:length]
         else: return item
 
+def truncate_to_value(item, value):
+    """ Truncates 'item' to 'value' """
+    if isinstance(item, basestring): item = int(item)
+    if isinstance(item, int):
+        item = abs(item)
+        if item > value: item = value
+    return str(item)
+
 def format_length(mutagen_length):
     """ Convert mutagen length to airtime length """
     t = float(mutagen_length)
