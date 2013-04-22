@@ -41,7 +41,7 @@ class PypoLiqQueue(Thread):
             except Empty, e:
                 #Time to push a scheduled item.
                 media_item = schedule_deque.popleft()
-                self.pypo_liquidsoap.push_item(media_item)
+                self.pypo_liquidsoap.play(media_item)
                 if len(schedule_deque):
                     time_until_next_play = \
                             self.date_interval_to_seconds(
