@@ -47,7 +47,7 @@ except Exception, e:
     sys.exit()
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
@@ -58,7 +58,9 @@ class PypoFetch(Thread):
 
         self.telnet_lock = telnet_lock
 
-        self.logger = logging.getLogger();
+        self.logger = logging.getLogger()
+
+        self.pypo_liquidsoap = pypo_liquidsoap
 
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
         self.logger.debug("Cache dir %s", self.cache_dir)
@@ -574,6 +576,14 @@ class PypoFetch(Thread):
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates.
         success = self.persistent_manual_schedule_fetch(max_attempts=5)
+
+        #Make sure all Liquidsoap queues are empty. This is important in the
+        #case where we've just restarted the pypo scheduler, but Liquidsoap still
+        #is playing tracks. In this case let's just restart everything from scratch
+        #so that we can repopulate our dictionary that keeps track of what 
+        #Liquidsoap is playing much more easily.
+        self.pypo_liquidsoap.clear_all_queues()
+
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.set_bootstrap_variables()

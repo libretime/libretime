@@ -51,7 +51,7 @@ def is_file(media_item):
     return media_item['type'] == 'file'
 
 class PypoPush(Thread):
-    def __init__(self, q, telnet_lock):
+    def __init__(self, q, telnet_lock, pypo_liquidsoap):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.queue = q
@@ -64,8 +64,10 @@ class PypoPush(Thread):
         self.queue_id = 0
 
         self.future_scheduled_queue = Queue()
-        self.pypo_liquidsoap = PypoLiquidsoap(self.logger, telnet_lock,\
-                LS_HOST, LS_PORT)
+
+        #self.pypo_liquidsoap = PypoLiquidsoap(self.logger, telnet_lock,\
+                #LS_HOST, LS_PORT)
+        self.pypo_liquidsoap = pypo_liquidsoap
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, \
                 self.pypo_liquidsoap, \
