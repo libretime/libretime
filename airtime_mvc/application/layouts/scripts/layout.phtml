@@ -67,8 +67,24 @@
     <span class="btn_stop ui-state-default">Stop</span>
   </div>
   <div>
-    <span class="btn_select ui-state-default" data-state="select">Select</span>
+	<span class="btn_select ui-state-default" data-state="cursor">Cursor</span>
+    <span class="btn_fadein ui-state-default" data-state="fadein">Fade In</span>
+	<span class="btn_fadeout ui-state-default" data-state="fadeout">Fade Out</span>
     <span class="btn_shift ui-state-default" data-state="shift">Shift</span>
+  </div>
+  <div id="btns_fade" class="btns_fade">
+    <div class="fade-in-ctrls">
+      <a class="disabled" data-type="FadeIn" data-shape="linear">Linear</a>
+      <a class="disabled" data-type="FadeIn" data-shape="logarithmic">Logarithmic</a>
+      <a class="disabled" data-type="FadeIn" data-shape="sCurve">S-Curve</a>
+      <a class="disabled" data-type="FadeIn" data-shape="exponential">Exponential</a>
+    </div>
+    <div class="fade-out-ctrls">
+      <a class="disabled" data-type="FadeOut" data-shape="linear">Linear</a>
+      <a class="disabled" data-type="FadeOut" data-shape="logarithmic">Logarithmic</a>
+      <a class="disabled" data-type="FadeOut" data-shape="sCurve">S-Curve</a>
+      <a class="disabled" data-type="FadeOut" data-shape="exponential">Exponential</a>
+    </div>
   </div>
 </div>
 </script>

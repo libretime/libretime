@@ -1120,15 +1120,16 @@ var AIRTIME = (function(AIRTIME){
 				{
 			    	src: $parent.data("fadein")
 				}
-			];
+			],
+			dim = AIRTIME.utilities.findViewportDimensions();
 		
 		$html.dialog({
             modal: true,
             title: "Fade Editor",
             show: 'clip',
             hide: 'clip',
-            width: 900,
-            height: 300,
+            width: dim.width - 100,
+            height: dim.height - 100,
             buttons: [
                 //{text: "Submit", click: function() {doSomething()}},
                 {text: "Cancel", click: function() {$(this).dialog("close");}}
@@ -1163,7 +1164,8 @@ var AIRTIME = (function(AIRTIME){
 				src: uri
 			}],
 			cueIn = $li.find('.spl_cue_in').data("cueIn"),
-			cueOut = $li.find('.spl_cue_out').data("cueOut");
+			cueOut = $li.find('.spl_cue_out').data("cueOut"),
+			dim = AIRTIME.utilities.findViewportDimensions();
 		
 		$html.find('.editor-cue-in').val(cueIn);
 		$html.find('.editor-cue-out').val(cueOut);
@@ -1185,8 +1187,8 @@ var AIRTIME = (function(AIRTIME){
             title: "Cue Editor",
             show: 'clip',
             hide: 'clip',
-            width: 900,
-            height: 300,
+            width: dim.width - 100,
+            height: dim.height - 100,
             buttons: [
                 {text: "Save", click: function() {
                 	var cueIn = $html.find('.editor-cue-in').val(),

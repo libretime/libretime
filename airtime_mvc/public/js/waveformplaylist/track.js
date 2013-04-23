@@ -5,9 +5,39 @@ var TrackEditor = function() {
 };
 
 TrackEditor.prototype.states = {
+    cursor: {
+        events: {
+            mousedown: "selectCursorPos"
+        },
+
+        classes: [
+            "state-select"
+        ]
+    },
+
     select: {
         events: {
             mousedown: "selectStart"
+        },
+
+        classes: [
+            "state-select"
+        ]
+    },
+
+    fadein: {
+        events: {
+            mousedown: "selectFadeIn"
+        },
+
+        classes: [
+            "state-select"
+        ]
+    },
+
+    fadeout: {
+        events: {
+            mousedown: "selectFadeOut"
         },
 
         classes: [
@@ -218,7 +248,7 @@ TrackEditor.prototype.timeShift = function(e) {
         scroll = this.config.getTrackScroll(),
         scrollX = scroll.left;
 
-    origX = editor.leftOffset/res;
+    origX = editor.leftOffset / res;
     
     //dynamically put an event on the element.
     el.onmousemove = function(e) {
@@ -232,7 +262,7 @@ TrackEditor.prototype.timeShift = function(e) {
     el.onmouseup = function() {
         var delta;
 
-        el.onmousemove = document.body.onmouseup = null;
+        el.onmousemove = el.onmouseup = null;
         editor.leftOffset = editor.pixelsToSamples(updatedX);
         delta = editor.pixelsToSeconds(diffX);
 
@@ -299,7 +329,10 @@ TrackEditor.prototype.setSelectedArea = function(start, end, shiftKey) {
     var left, 
         right,
         currentStart,
-        currentEnd;
+        currentEnd,
+        sampLeft,
+        sampRight,
+        buffer = this.getBuffer();
 
     //extending selected area since shift is pressed.
     if (shiftKey && (end - start === 0) && (this.prevSelectedArea !== undefined)) {
@@ -332,8 +365,11 @@ TrackEditor.prototype.setSelectedArea = function(start, end, shiftKey) {
         right = end;
     }
 
+    sampLeft = left === undefined ? 0 : this.pixelsToSamples(left);
+    sampRight = right === undefined ? buffer.length - 1 : this.pixelsToSamples(right);
+
     this.prevSelectedArea = this.selectedArea;
-    this.selectedArea = this.adjustSelectedArea(this.pixelsToSamples(left), this.pixelsToSamples(right));
+    this.selectedArea = this.adjustSelectedArea(sampLeft, sampRight);
 };
 
 TrackEditor.prototype.activateAudioSelection = function() {
@@ -398,9 +434,7 @@ TrackEditor.prototype.selectStart = function(e) {
     };
     el.onmouseup = function(e) {
         var endX = e.layerX || e.offsetX,
-            //endX = scrollX + (e.layerX || e.offsetX),
             minX, maxX,
-            cursorPos,
             startTime, endTime;
 
         minX = Math.min(startX, endX);
@@ -411,7 +445,7 @@ TrackEditor.prototype.selectStart = function(e) {
         minX = editor.samplesToPixels(offset + editor.selectedArea.start);
         maxX = editor.samplesToPixels(offset + editor.selectedArea.end);
 
-        el.onmousemove = document.body.onmouseup = null;
+        el.onmousemove = el.onmouseup = null;
         
         //if more than one pixel is selected, listen to possible fade events.
         if (Math.abs(minX - maxX)) {
@@ -421,13 +455,77 @@ TrackEditor.prototype.selectStart = function(e) {
             editor.deactivateAudioSelection();
         }
 
-        cursorPos = startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
+        startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
         endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
 
         editor.updateEditor(-1, undefined, undefined, true);
-        editor.config.setCursorPos(cursorPos);
+        editor.config.setCursorPos(startTime);
         editor.notifySelectUpdate(startTime, endTime);    
     };
+};
+
+TrackEditor.prototype.selectCursorPos = function(e) {
+    var editor = this,
+        startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
+        offset = this.leftOffset,
+        startTime, 
+        endTime;
+
+    if (e.target.tagName !== "CANVAS") {
+        return;
+    }
+
+    editor.setSelectedArea(startX, startX);
+    startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
+    endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
+
+    editor.updateEditor(-1, undefined, undefined, true);
+    editor.config.setCursorPos(startTime);
+    editor.notifySelectUpdate(startTime, endTime);
+
+    editor.deactivateAudioSelection();
+};
+
+TrackEditor.prototype.selectFadeIn = function(e) {
+    var editor = this,
+        startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
+        offset = this.leftOffset,
+        startTime, 
+        endTime;
+
+    if (e.target.tagName !== "CANVAS") {
+        return;
+    }
+
+    editor.setSelectedArea(undefined, startX);
+    startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
+    endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
+
+    editor.updateEditor(-1, undefined, undefined, true);
+    editor.notifySelectUpdate(startTime, endTime);
+
+    editor.activateAudioSelection();
+};
+
+TrackEditor.prototype.selectFadeOut = function(e) {
+    var editor = this,
+        startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
+        offset = this.leftOffset,
+        startTime,
+        endTime;
+
+    if (e.target.tagName !== "CANVAS") {
+        return;
+    }
+
+    editor.setSelectedArea(startX, undefined);
+    startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
+    endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
+
+    editor.updateEditor(-1, undefined, undefined, true);
+    editor.notifySelectUpdate(startTime, endTime);
+
+    editor.activateAudioSelection();
 };
 
 /* end of state methods */

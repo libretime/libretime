@@ -604,3 +604,9 @@ li.spl_empty {
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+.playlist-fade {
+  position: absolute;
+  background-color: rgba(0,0,0,0.1);
+  z-index: 1000;
+}
