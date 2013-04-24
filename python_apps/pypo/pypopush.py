@@ -14,7 +14,6 @@ import os
 
 from pypofetch import PypoFetch
 from pypoliqqueue import PypoLiqQueue
-from pypoliquidsoap import PypoLiquidsoap
 
 from Queue import Empty, Queue
 
