@@ -239,6 +239,11 @@ SQL;
         $offset = 0;
         foreach ($rows as &$row) {
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
+            $row['trackSec'] = $clipSec;
+            
+            $row['cueInSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cuein']);
+            $row['cueOutSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cueout']);
+            
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 

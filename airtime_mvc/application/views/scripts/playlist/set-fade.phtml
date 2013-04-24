@@ -1,17 +1,21 @@
-<div data-fadeout="<?php echo $this->item1Url; ?>" data-fadein="<?php echo $this->item2Url; ?>"><input type="button" class="pl-waveform-fades-btn" value="Show Waveform"></input></div>
 <dl id="spl_editor" class="inline-list">
+	<dd>
+	  <input type="button" class="pl-waveform-fades-btn" value="Show Waveform"></input>
+	</dd>
     <?php if ($this->item1Type == 0) {?>
     <dt><? echo _("Fade out: "); ?><span class='spl_cue_hint'><? echo _("(ss.t)")?></span></dt>
-    <dd id="spl_fade_out_<?php echo $this->item1; ?>" class="spl_fade_out">
+    <dd id="spl_fade_out_<?php echo $this->item1; ?>" class="spl_fade_out" data-fadeout="<?php echo $this->item1Url; ?>"
+    	data-cuein="<?php echo $this->cueIn1; ?>" data-cueout="<?php echo $this->cueOut1; ?>">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeOut; ?></span>
     </dd>
     <dd class="edit-error"></dd>
     <?php }
     if ($this->item2Type == 0) {?>
     <dt><? echo _("Fade in: "); ?><span class='spl_cue_hint'><? echo _("(ss.t)")?></span></dt>
-    <dd id="spl_fade_in_<?php echo $this->item2; ?>" class="spl_fade_in">
+    <dd id="spl_fade_in_<?php echo $this->item2; ?>" class="spl_fade_in" data-fadein="<?php echo $this->item2Url; ?>" data-offset="<?php echo $this->offset; ?>"
+    	data-cuein="<?php echo $this->cueIn2; ?>" data-cueout="<?php echo $this->cueOut2; ?>">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeIn; ?></span>
     </dd>
-     <dd class="edit-error"></dd>
+    <dd class="edit-error"></dd>
     <?php }?>
 </dl>

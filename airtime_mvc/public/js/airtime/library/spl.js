@@ -1111,14 +1111,21 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.showFadesWaveform = function(e) {
 		var $el = $(e.target),
-			$parent = $el.parent(),
+			$parent = $el.parents("dl"),
+			$fadeOut = $parent.find(".spl_fade_out"),
+			$fadeIn = $parent.find(".spl_fade_in"),
 			$html = $($("#tmpl-pl-fades").html()),
 			tracks = [
 			    {
-			    	src: $parent.data("fadeout")
+			    	src: $fadeOut.data("fadeout"),
+			    	cuein: $fadeOut.data("cuein"),
+			    	cueout: $fadeOut.data("cueout")
 				},
 				{
-			    	src: $parent.data("fadein")
+			    	src: $fadeIn.data("fadein"),
+			    	start: $fadeIn.data("offset"),
+			    	cuein: $fadeIn.data("cuein"),
+			    	cueout: $fadeIn.data("cueout")
 				}
 			],
 			dim = AIRTIME.utilities.findViewportDimensions();

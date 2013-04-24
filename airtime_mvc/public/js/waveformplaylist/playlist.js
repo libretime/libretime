@@ -304,6 +304,22 @@ PlaylistEditor.prototype.updateEditor = function() {
     } 
 };
 
+PlaylistEditor.prototype.getJson = function() {
+    var editors = this.trackEditors,
+        i,
+        len,
+        info = [],
+        json;
+
+    for (i = 0, len = editors.length; i < len; i++) {
+        info.push(editors[i].getTrackDetails());
+    }
+
+    json = JSON.stringify(info);
+
+    return info;
+};
+
 PlaylistEditor.prototype.save = function() {
      var editors = this.trackEditors,
         i,
