@@ -90,10 +90,6 @@ class DashboardController extends Zend_Controller_Action
         }
     }
 
-    public function switchOffSource()
-    {
-    }
-
     public function streamPlayerAction()
     {
         $CC_CONFIG = Config::getConfig();
