@@ -64,7 +64,7 @@ TrackEditor.prototype.setWidth = function(width) {
     this.width = width;
 };
 
-TrackEditor.prototype.init = function(src, start, end, fades, cues) {
+TrackEditor.prototype.init = function(src, start, end, fades, cues, moveable) {
    
     makePublisher(this);
 
@@ -97,9 +97,14 @@ TrackEditor.prototype.init = function(src, start, end, fades, cues) {
     
     this.selectedArea = undefined; //selected area of track stored as inclusive buffer indices to the audio buffer.
     this.active = false;
+    this.canShift = moveable !== undefined ? moveable : true;
 
     this.container.classList.add("channel-wrapper");
     this.container.style.left = this.leftOffset;
+
+    if (this.canShift === false) {
+        this.container.style.position = "static";
+    }
 
     this.drawer.drawLoading();
 
@@ -132,7 +137,8 @@ TrackEditor.prototype.loadTrack = function(track) {
         {
             cuein: track.cuein,
             cueout: track.cueout
-        }
+        },
+        track.moveable
     );
     this.loadBuffer(track.src);
 
@@ -247,6 +253,10 @@ TrackEditor.prototype.timeShift = function(e) {
         res = editor.resolution,
         scroll = this.config.getTrackScroll(),
         scrollX = scroll.left;
+
+    if (this.canShift === false) {
+        return; //setting the 'left' css property has no effect, but don't want internal variable leftOffset to update.
+    }
 
     origX = editor.leftOffset / res;
     

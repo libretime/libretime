@@ -1119,7 +1119,8 @@ var AIRTIME = (function(AIRTIME){
 			    {
 			    	src: $fadeOut.data("fadeout"),
 			    	cuein: $fadeOut.data("cuein"),
-			    	cueout: $fadeOut.data("cueout")
+			    	cueout: $fadeOut.data("cueout"),
+			    	moveable: false
 				},
 				{
 			    	src: $fadeIn.data("fadein"),
