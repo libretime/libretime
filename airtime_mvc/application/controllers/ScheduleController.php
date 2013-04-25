@@ -439,7 +439,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $service_showForm = new Application_Service_ShowFormService(
             $data["add_show_id"], $data["add_show_instance_id"]);
-        $service_show = new Application_Service_ShowService();
+        $service_show = new Application_Service_ShowService(null, $data);
 
         $forms = $this->createShowFormAction();
 
@@ -479,7 +479,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $service_showForm = new Application_Service_ShowFormService(
             $data["add_show_id"]);
-        $service_show = new Application_Service_ShowService();
+        $service_show = new Application_Service_ShowService(null, $data, true);
 
         //TODO: move this to js
         $data['add_show_hosts'] =  $this->_getParam('hosts');
@@ -497,8 +497,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
-            //pass in true to indicate we are updating a show
-            $service_show->addUpdateShow($data, true);
+            $service_show->addUpdateShow($data);
 
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
@@ -519,7 +518,7 @@ class ScheduleController extends Zend_Controller_Action
     public function addShowAction()
     {
         $service_showForm = new Application_Service_ShowFormService(null);
-        $service_show = new Application_Service_ShowService();
+        //$service_show = new Application_Service_ShowService();
 
         $js = $this->_getParam('data');
         $data = array();
@@ -528,6 +527,8 @@ class ScheduleController extends Zend_Controller_Action
         foreach ($js as $j) {
             $data[$j["name"]] = $j["value"];
         }
+
+        $service_show = new Application_Service_ShowService(null, $data);
 
         // TODO: move this to js
         $data['add_show_hosts']     = $this->_getParam('hosts');

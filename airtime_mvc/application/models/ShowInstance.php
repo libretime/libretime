@@ -391,7 +391,7 @@ SQL;
      * @param int $plId
      *         Playlist ID.
      */
-    public function addPlaylistToShow($pl_id, $checkUserPerm = true)
+    /*public function addPlaylistToShow($pl_id, $checkUserPerm = true)
     {
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
@@ -401,7 +401,7 @@ SQL;
             array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
-    }
+    }*/
 
     /**
      * Add a media file as the last item in the show.
@@ -427,12 +427,12 @@ SQL;
      * @param array $plIds
      *         An array of playlist IDs.
      */
-    public function scheduleShow($plIds)
+    /*public function scheduleShow($plIds)
     {
         foreach ($plIds as $plId) {
             $this->addPlaylistToShow($plId);
         }
-    }
+    }*/
 
     public function clearShow()
     {

@@ -168,4 +168,12 @@ class CcShow extends BaseCcShow {
         }
         return $this->collCcShowInstancess;
     }
+
+    public function getInstanceIds() {
+        $instanceIds = array();
+        foreach ($this->getCcShowInstancess() as $ccShowInstance) {
+            $instanceIds[] = $ccShowInstance->getDbId();
+        }
+        return $instanceIds;
+    }
 } // CcShow

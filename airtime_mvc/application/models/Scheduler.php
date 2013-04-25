@@ -432,7 +432,7 @@ class Application_Model_Scheduler
      *     array of schedule item info, what gets inserted into cc_schedule
      * @param $adjustSched
      */
-    private function insertAfter($scheduleItems, $filesToInsert, $adjustSched = true)
+    private function insertAfter($scheduleItems, $mediaItems, $filesToInsert=null, $adjustSched=true)
     {
         try {
             $affectedShowInstances = array();
@@ -440,11 +440,6 @@ class Application_Model_Scheduler
             //dont want to recalculate times for moved items
             //only moved items have a sched_id
             $excludeIds = array();
-            /*foreach ($filesToInsert as $file) {
-                if (isset($file["sched_id"])) {
-                    $excludeIds[] = intval($file["sched_id"]);
-                }
-            }*/
 
             $startProfile = microtime(true);
 
@@ -517,9 +512,6 @@ class Application_Model_Scheduler
                     }
                     //selected empty row to add after
                     else {
-
-                        //$instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
-
                         $showStartDT = $instance->getDbStarts(null);
                         $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
 
@@ -552,15 +544,17 @@ class Application_Model_Scheduler
                         Logging::debug(floatval($pend) - floatval($pstart));
                     }
 
+                    if (is_null($filesToInsert)) {
+                        $filesToInsert = array();
+                        foreach ($mediaItems as $media) {
+                            $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
+                        }
+                    }
                     foreach ($filesToInsert as $file) {
-                        Logging::info("INSERTING AT POSITION --- ".$pos);
-                        //$endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
-
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
 
-                            //$sched = CcScheduleQuery::create()->findPK($file['sched_id'], $this->con);
                             $sched = CcScheduleQuery::create()
                                 ->filterByDbInstanceId($instance->getDbId())
                                 ->filterByDbFileId($file["id"])
@@ -607,7 +601,19 @@ class Application_Model_Scheduler
 
                         $nextStartDT = $endTimeDT;
                         $pos++;
+
                     }//all files have been inserted/moved
+
+                    // update is_scheduled flag for each cc_file
+                    foreach ($filesToInsert as $file) {
+                        $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
+                        $db_file->setDbIsScheduled(true);
+                        $db_file->save($this->con);
+                    }
+                    /* Reset files to insert so we can get a new set of files. We have
+                     * to do this in case we are inserting a dynamic block
+                     */
+                    $filesToInsert = null;
 
                     /* If we are adjusting start and end times for items
                      * after the insert location, we need to exclude the
@@ -661,11 +667,11 @@ class Application_Model_Scheduler
             }
 
             // update is_scheduled flag for each cc_file
-            foreach ($filesToInsert as $file) {
+            /*foreach ($filesToInsert as $file) {
                 $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
                 $db_file->setDbIsScheduled(true);
                 $db_file->save($this->con);
-            }
+            }*/
 
             $endProfile = microtime(true);
             Logging::debug("updating show instances status.");
@@ -706,8 +712,6 @@ class Application_Model_Scheduler
     {
         $this->con->beginTransaction();
 
-        $filesToInsert = array();
-
         try {
             $this->validateRequest($scheduleItems, true);
 
@@ -735,10 +739,7 @@ class Application_Model_Scheduler
              *     sched_id => ,
              *     type => 0)
              */
-            foreach ($mediaItems as $media) {
-                $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
-            }
-            $this->insertAfter($scheduleItems, $filesToInsert, $adjustSched);
+            $this->insertAfter($scheduleItems, $mediaItems, null, $adjustSched);
 
             $this->con->commit();
 
@@ -755,9 +756,6 @@ class Application_Model_Scheduler
      */
     public function moveItem($selectedItems, $afterItems, $adjustSched = true)
     {
-        //Logging::info($selectedItems);
-        //Logging::info($afterItems);
-
         $startProfile = microtime(true);
 
         $this->con->beginTransaction();
@@ -805,7 +803,7 @@ class Application_Model_Scheduler
                     $modifiedMap[$showInstanceId] = array($schedId);
                 }
             }
-//Logging::info($movedData);
+
             //calculate times excluding the to be moved items.
             foreach ($modifiedMap as $instance => $schedIds) {
                 $startProfile = microtime(true);
@@ -819,7 +817,7 @@ class Application_Model_Scheduler
 
             $startProfile = microtime(true);
 
-            $this->insertAfter($afterItems, $movedData, $adjustSched);
+            $this->insertAfter($afterItems, null, $movedData, $adjustSched);
 
             $endProfile = microtime(true);
             Logging::debug("inserting after removing gaps.");

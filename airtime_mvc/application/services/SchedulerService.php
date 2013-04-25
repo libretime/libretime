@@ -117,7 +117,7 @@ class Application_Service_SchedulerService
      * @param DateTime $instanceStart
      * @param string $clipLength
      */
-    private function findEndTime($instanceStart, $clipLength)
+    private static function findEndTime($instanceStart, $clipLength)
     {
         $startEpoch = $instanceStart->format("U.u");
         $durationSeconds = Application_Common_DateHelper::playlistTimeToSeconds($clipLength);
@@ -139,264 +139,68 @@ class Application_Service_SchedulerService
     /**
      * 
      * Enter description here ...
-     * @param array $scheduleItems (schedule_id and instance_id it belongs to)
-     * @param array $mediaItems (file|block|playlist|webstream)
-     * @param $adjustSched
+     * @param $nextStartDT
+     * @param $showStamp array of ccSchedule objects
      */
-    public function scheduleAdd($scheduleItems, $mediaItems, $adjustSched=true)
+    private static function insertItems($showStamp, $ccShow)
     {
-        $this->con->beginTransaction();
-
-        $filesToInsert = array();
-
-        try {
-            $this->validateRequest($scheduleItems);
-
-            /*
-             * create array of arrays
-             * array of schedule item info
-             * (sched_id is the cc_schedule id and is set if an item is being
-             *  moved because it is already in cc_schedule)
-             * [0] = Array(
-             *     id => 1,
-             *     cliplength => 00:04:32,
-             *     cuein => 00:00:00,
-             *     cueout => 00:04:32,
-             *     fadein => 00.5,
-             *     fadeout => 00.5,
-             *     sched_id => ,
-             *     type => 0)
-             * [1] = Array(
-             *     id => 2,
-             *     cliplength => 00:05:07,
-             *     cuein => 00:00:00,
-             *     cueout => 00:05:07,
-             *     fadein => 00.5,
-             *     fadeout => 00.5,
-             *     sched_id => ,
-             *     type => 0)
-             */
-            foreach ($mediaItems as $media) {
-                $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
-            }
-
-            //$this->insertAfter($scheduleItems, $filesToInsert, $adjustSched);
-            $ccStamp = $this->prepareStamp($scheduleItems, $mediaItems, $adjustSched);
-
-            $this->insertStamp($ccStamp);
-
-            //keep track of which shows had their schedule change
-            //dont forget about the linked shows
-
-            $this->con->commit();
-
-            Application_Model_RabbitMq::PushSchedule();
-        } catch (Exception $e) {
-            $this->con->rollback();
-            throw $e;
-        }
+        
     }
 
-    private function setCcStamp($ccStamp, $instanceId)
+    public static function fillLinkedShows($ccShow)
     {
-        $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
-        $ccShow = $ccShowInstance->getCcShow();
         if ($ccShow->isLinked()) {
-            $ccStamp
-                ->setDbLinked(true)
-                ->setDbShowId($ccShow->getDbId())
-                ->save();
-        } else {
-            $ccStamp
-                ->setDbLinked(false)
-                ->setDbInstanceId($ccShowInstance->getDbId())
-                ->save();
-        }
-    }
-
-    /**
-     * 
-     * Enter description here ...
-     * @param $scheduleItems
-     *     cc_schedule items, where the items get inserted after
-     * @param $filesToInsert
-     *     array of schedule item info, what gets inserted into cc_schedule
-     * @param $adjustSched
-     */
-    private function prepareStamp($scheduleItems, $itemsToInsert, $adjustSched = true)
-    {
-        try {
-
-            foreach ($scheduleItems as $schedule) {
-                $id = intval($schedule["id"]);
-
-                if ($id == 0) {
-                    //if we get here, we know the show is empty and therefore
-                    //need to create a new stamp
-                    $pos = 0;
-                    $ccStamp = new CcStamp();
-                    $this->setCcStamp($ccStamp, $schedule["instance"]);
-                } else {
-                    $ccStamp = $this->getStamp($id);
-                    //get the cc_stamp_contents item of the scheduleItem($schedule)
-                    //this is where we are inserting after so we have to start the
-                    //position counter after it
-                    $ccStampContent = $this->getCurrentStampItem($id);
-                    $pos = $ccStampContent->getDbPosition() + 1;
-
-                    //clear the positions of stamp items after the current
-                    //item so we know we have to reassign their positions
-                    //after inserting the new items
-                    CcStampContentsQuery::create()
-                        ->filterByDbStampId($ccStamp->getDbId())
-                        ->filterByDbPosition($pos, Criteria::GREATER_EQUAL)
-                        ->setDbPosition(null)
-                        ->save();
-                }
-
-                $stampId = $ccStamp->getDbId();
-                foreach ($itemsToInsert as $item) {
-                    $ccStampContent = new CcStampContents();
-                    $ccStampContent
-                        ->setDbStampId($stampId)
-                        ->setDbPosition($pos)
-                        ->save();
-                    switch ($item["type"]) {
-                        case "playlist":
-                            $ccStampContent->setDbPlaylistId($item["id"])->save();
-                            break;
-                        case "audioclip":
-                            $ccStampContent->setDbFileId($item["id"])->save();
-
-                            //update is_scheduled flag in cc_files
-                            $ccFile = CcFilesQuery::create()->findPk($item['id']);
-                            $ccFile->setDbIsScheduled(true)->save();
-                            break;
-                        case "block":
-                            $ccStampContent->setDbBlockId($item["id"])->save();
-                            break;
-                        case "stream":
-                            $ccStampContent->setDbStreamId($item["id"])->save();
-                            break;
-                    }
-                    $pos++;
-                }
-
-                //reassign positions
-                $ccStampContents = CcStampContentsQuery::create()
-                    ->filterByDbStampId($stampId)
-                    ->filterByDbPosition(null)
+            /* First check if any linked instances have content
+             * If all instances are empty then we don't need to fill
+             * any other instances with content
+             */
+            $instanceIds = $ccShow->getInstanceIds();
+            $ccSchedules = CcScheduleQuery::create()
+                ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                ->find();
+            if (!$ccSchedules->isEmpty()) {
+                /* Find the show contents of just one of the instances. It doesn't
+                 * matter which instance we use since all the content is the same
+                 */
+                $ccSchedule = $ccSchedules->getFirst();
+                $showStamp = CcScheduleQuery::create()
+                    ->filterByDbInstanceId($ccSchedule->getDbInstanceId())
+                    ->orderByDbStarts()
                     ->find();
-                foreach ($ccStampContents as $ccStampContent) {
-                    $ccStampContent->setDbPosition($pos)->save();
-                    $pos++;
+            } else {
+                break;
+            }
+
+            //need to find out which linked instances are empty
+            foreach ($ccShow->getCcShowInstancess() as $ccShowInstance) {
+                $ccSchedules = CcScheduleQuery::create()
+                    ->filterByDbInstanceId($ccShowInstance->getDbId())
+                    ->find();
+                if ($ccSchedules->isEmpty()) {
+                    $nextStartDT = $ccShowInstance->getDbStarts(null);
+
+                    foreach ($showStamp as $item) {
+                        $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
+
+                        $ccSchedule = new CcSchedule();
+                        $ccSchedule
+                            ->setDbStarts($nextStartDT)
+                            ->setDbEnds($endTimeDT)
+                            ->setDbFileId($item->getDbFileId())
+                            ->setDbStreamId($item->getDbStreamId())
+                            ->setDbClipLength($item->getDbClipLength())
+                            ->setDbFadeIn($item->getDbFadeIn())
+                            ->setDbFadeOut($item->getDbFadeOut())
+                            ->setDbCuein($item->getDbCueIn())
+                            ->setDbCueOut($item->getDbCueOut())
+                            ->setDbInstanceId($ccShowInstance->getDbId())
+                            ->setDbPosition($item->getDbPosition())
+                            ->save();
+
+                        $nextStartDT = $endTimeDT;
+                    } //foreach show item
                 }
-
-                return $ccStamp;
-            }
-        } catch (Exception $e) {
-            Logging::debug($e->getMessage());
-            throw $e;
-        }
-    }
-
-    private function insertStamp($ccStamp)
-    {
-        //delete cc_schedule entries
-        //CcScheduleQuery::create()->filterByDbStampId($ccStamp->getDbId())->delete();
-    }
-
-    private function getStamp($scheduleId)
-    {
-        $ccSchedule = CcScheduleQuery::create()->findPk($scheduleId);
-        return CcStamp::create()->findPk($ccSchedule->getDbStampId());
-    }
-
-    private function getCurrentStampItem($scheduleId)
-    {
-        $ccSchedule = CcScheduleQuery::create()->findPk($scheduleId);
-        return CcStampContents::create()->findPk($ccSchedule->getDbStampContentsId());
-    }
-
-    /**
-     * 
-     * Enter description here ...
-     * @param array $items (schedule_id and instance_id it belongs to)
-     */
-    private function validateRequest($items)
-    {
-        $nowEpoch = floatval($this->nowDT->format("U.u"));
-
-        for ($i = 0; $i < count($items); $i++) {
-            $id = $items[$i]["id"];
-
-            //could be added to the beginning of a show, which sends id = 0;
-            if ($id > 0) {
-                //schedule_id of where we are inserting after?
-                $schedInfo[$id] = $items[$i]["instance"];
-            }
-
-            //what is timestamp for?
-            //format is instance_id => timestamp
-            $instanceInfo[$items[$i]["instance"]] = $items[$i]["timestamp"];
-        }
-
-        if (count($instanceInfo) === 0) {
-            throw new Exception("Invalid Request.");
-        }
-
-        $schedIds = array();
-        if (isset($schedInfo)) {
-            $schedIds = array_keys($schedInfo);
-        }
-        $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
-        $instanceIds = array_keys($instanceInfo);
-        $showInstances = CcShowInstancesQuery::create()->findPKs($instanceIds, $this->con);
-
-        //an item has been deleted
-        if (count($schedIds) !== count($schedItems)) {
-            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (sched mismatch)"));
-        }
-
-        //a show has been deleted
-        if (count($instanceIds) !== count($showInstances)) {
-            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (instance mismatch)"));
-        }
-
-        foreach ($schedItems as $schedItem) {
-            $id = $schedItem->getDbId();
-            $instance = $schedItem->getCcShowInstances($this->con);
-
-            if (intval($schedInfo[$id]) !== $instance->getDbId()) {
-                throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
-            }
-        }
-
-        foreach ($showInstances as $instance) {
-
-            $id = $instance->getDbId();
-            $show = $instance->getCcShow($this->con);
-
-            if ($this->checkUserPermissions && $this->user->canSchedule($show->getDbId()) === false) {
-                throw new Exception(sprintf(_("You are not allowed to schedule show %s."), $show->getDbName()));
-            }
-            
-            if ($instance->getDbRecord()) {
-                throw new Exception(_("You cannot add files to recording shows."));
-            }
-
-            $showEndEpoch = floatval($instance->getDbEnds("U.u"));
-
-            if ($showEndEpoch < $nowEpoch) {
-                throw new OutDatedScheduleException(sprintf(_("The show %s is over and cannot be scheduled."), $show->getDbName()));
-            }
-
-            $ts = intval($instanceInfo[$id]);
-            $lastSchedTs = intval($instance->getDbLastScheduled("U")) ? : 0;
-            if ($ts < $lastSchedTs) {
-                Logging::info("ts {$ts} last sched {$lastSchedTs}");
-                throw new OutDatedScheduleException(sprintf(_("The show %s has been previously updated!"), $show->getDbName()));
-            }
+            } //foreach linked instance
         }
     }
 }
