@@ -1158,7 +1158,7 @@ var AIRTIME = (function(AIRTIME){
                 	var x;
                 }},
                 {text: "Cancel", click: function() {
-                	$(this).dialog("close");
+                	$(this).dialog("destroy");
                 }}
             ],
             open: function (event, ui) {
@@ -1224,7 +1224,7 @@ var AIRTIME = (function(AIRTIME){
                 	changeCues($html, id, cueIn, cueOut);
                 }},
                 {text: "Cancel", click: function() {
-                	$(this).dialog("close");
+                	$(this).dialog("destroy");
                 }}
             ],
             open: function (event, ui) {
