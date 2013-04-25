@@ -289,7 +289,7 @@ PlaylistEditor.prototype.updateEditor = function() {
             playbackSec = cursorPos + elapsed;
             cursorPixel = Math.ceil(playbackSec * this.sampleRate / res);
             
-            for(i = 0, len = editors.length; i < len; i++) {
+            for (i = 0, len = editors.length; i < len; i++) {
                 editors[i].updateEditor(cursorPixel, start, end, highlighted);
             }
 
@@ -301,6 +301,10 @@ PlaylistEditor.prototype.updateEditor = function() {
     }
     else {
         clearInterval(this.interval);
+
+        for (i = 0, len = editors.length; i < len; i++) {
+            editors[i].updateEditor(-1, undefined, undefined, true);
+        }
     } 
 };
 

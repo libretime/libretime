@@ -1120,16 +1120,29 @@ var AIRTIME = (function(AIRTIME){
 			    	src: $fadeOut.data("fadeout"),
 			    	cuein: $fadeOut.data("cuein"),
 			    	cueout: $fadeOut.data("cueout"),
-			    	moveable: false
+			    	moveable: false,
+			    	fades: [{
+			    	    shape: $fadeOut.data("type"),
+			    	    type: "FadeOut",
+			    	    end: $fadeOut.data("cueout") - $fadeOut.data("cuein"),
+			    	    start: $fadeOut.data("cueout") - $fadeOut.data("cuein") - $fadeOut.data("length")
+			    	}]
 				},
 				{
 			    	src: $fadeIn.data("fadein"),
 			    	start: $fadeIn.data("offset"),
 			    	cuein: $fadeIn.data("cuein"),
-			    	cueout: $fadeIn.data("cueout")
+			    	cueout: $fadeIn.data("cueout"),
+			    	fades: [{
+			    	    shape: $fadeIn.data("type"),
+			    	    type: "FadeIn",
+			    	    end: $fadeIn.data("length"),
+			    	    start: 0
+			    	}]
 				}
 			],
-			dim = AIRTIME.utilities.findViewportDimensions();
+			dim = AIRTIME.utilities.findViewportDimensions(),
+			playlistEditor;
 		
 		$html.dialog({
             modal: true,
@@ -1139,8 +1152,14 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                //{text: "Submit", click: function() {doSomething()}},
-                {text: "Cancel", click: function() {$(this).dialog("close");}}
+                {text: "Save", click: function() {
+                	var json = playlistEditor.getJson();
+                	
+                	var x;
+                }},
+                {text: "Cancel", click: function() {
+                	$(this).dialog("close");
+                }}
             ],
             open: function (event, ui) {
             	
@@ -1154,7 +1173,7 @@ var AIRTIME = (function(AIRTIME){
         	        timeFormat: 'hh:mm:ss.u'
         	    });
         		
-        		var playlistEditor = new PlaylistEditor();
+        		playlistEditor = new PlaylistEditor();
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);
             }
