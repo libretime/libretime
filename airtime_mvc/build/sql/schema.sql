@@ -157,6 +157,7 @@ CREATE TABLE "cc_show"
 	"live_stream_user" VARCHAR(255),
 	"live_stream_pass" VARCHAR(255),
 	"linked" BOOLEAN default 'f' NOT NULL,
+	"is_linkable" BOOLEAN default 't' NOT NULL,
 	PRIMARY KEY ("id")
 );
 

@@ -18,6 +18,7 @@
  * @method     CcShowQuery orderByDbLiveStreamUser($order = Criteria::ASC) Order by the live_stream_user column
  * @method     CcShowQuery orderByDbLiveStreamPass($order = Criteria::ASC) Order by the live_stream_pass column
  * @method     CcShowQuery orderByDbLinked($order = Criteria::ASC) Order by the linked column
+ * @method     CcShowQuery orderByDbIsLinkable($order = Criteria::ASC) Order by the is_linkable column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
@@ -31,6 +32,7 @@
  * @method     CcShowQuery groupByDbLiveStreamUser() Group by the live_stream_user column
  * @method     CcShowQuery groupByDbLiveStreamPass() Group by the live_stream_pass column
  * @method     CcShowQuery groupByDbLinked() Group by the linked column
+ * @method     CcShowQuery groupByDbIsLinkable() Group by the is_linkable column
  *
  * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -67,6 +69,7 @@
  * @method     CcShow findOneByDbLiveStreamUser(string $live_stream_user) Return the first CcShow filtered by the live_stream_user column
  * @method     CcShow findOneByDbLiveStreamPass(string $live_stream_pass) Return the first CcShow filtered by the live_stream_pass column
  * @method     CcShow findOneByDbLinked(boolean $linked) Return the first CcShow filtered by the linked column
+ * @method     CcShow findOneByDbIsLinkable(boolean $is_linkable) Return the first CcShow filtered by the is_linkable column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
@@ -80,6 +83,7 @@
  * @method     array findByDbLiveStreamUser(string $live_stream_user) Return CcShow objects filtered by the live_stream_user column
  * @method     array findByDbLiveStreamPass(string $live_stream_pass) Return CcShow objects filtered by the live_stream_pass column
  * @method     array findByDbLinked(boolean $linked) Return CcShow objects filtered by the linked column
+ * @method     array findByDbIsLinkable(boolean $is_linkable) Return CcShow objects filtered by the is_linkable column
  *
  * @package    propel.generator.airtime.om
  */
@@ -431,6 +435,23 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			$linked = in_array(strtolower($dbLinked), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
 		return $this->addUsingAlias(CcShowPeer::LINKED, $dbLinked, $comparison);
+	}
+
+	/**
+	 * Filter the query on the is_linkable column
+	 * 
+	 * @param     boolean|string $dbIsLinkable The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbIsLinkable($dbIsLinkable = null, $comparison = null)
+	{
+		if (is_string($dbIsLinkable)) {
+			$is_linkable = in_array(strtolower($dbIsLinkable), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcShowPeer::IS_LINKABLE, $dbIsLinkable, $comparison);
 	}
 
 	/**

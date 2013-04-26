@@ -215,6 +215,10 @@ class Application_Service_ShowFormService
                 'add_show_end_date' => $repeatEndDate->format("Y-m-d"),
                 'add_show_no_end' => (!$service_show->getRepeatingEndDate()),
                 'add_show_monthly_repeat_type' => $monthlyRepeatType));
+
+        if (!$this->ccShow->isLinkable()) {
+            $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
+        }
     }
 
     private function populateFormWho($form)
@@ -337,7 +341,7 @@ class Application_Service_ShowFormService
      * Returns 2 DateTime objects, in the user's local time,
      * of the next future repeat show instance start and end time
      */
-    private function getNextFutureRepeatShowTime()
+    public function getNextFutureRepeatShowTime()
     {
         $sql = <<<SQL
 SELECT starts, ends FROM cc_show_instances

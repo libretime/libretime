@@ -134,6 +134,11 @@ class CcShow extends BaseCcShow {
         return $this->getDbLinked();
     }
 
+    public function isLinkable()
+    {
+        return $this->getDbIsLinkable();
+    }
+
     /**
      * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
      *

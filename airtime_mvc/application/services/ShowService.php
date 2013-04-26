@@ -94,6 +94,13 @@ class Application_Service_ShowService
                 ->setDbModifiedInstance(true)
                 ->save();
 
+            $service_showForm = new Application_Service_ShowFormService($showData["add_show_id"]);
+            list($start, $end) = $service_showForm->getNextFutureRepeatShowTime();
+            $oldCcShowDay = $oldCcShow->getFirstCcShowDay();
+            $oldCcShowDay
+                ->setDbFirstShow($start->setTimezone(new DateTimeZone("UTC"))->format("Y-m-d"))
+                ->save();
+
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
         } catch (Exception $e) {
@@ -107,17 +114,6 @@ class Application_Service_ShowService
     {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
-
-        /*if ($showData["add_show_repeats"]) {
-            $repeatType = $showData["add_show_repeat_type"];
-            if ($showData["add_show_repeat_type"] == 2) {
-                $repeatType = $showData["add_show_monthly_repeat_type"];
-            }
-        } else {
-            $repeatType = -1;
-        }
-        $isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
-        $isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;*/
 
         $showData["add_show_duration"] = $this->formatShowDuration(
             $showData["add_show_duration"]);
@@ -860,14 +856,10 @@ SQL;
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
                         $newInstance = false;
                         $updateScheduleStatus = true;
-                    } elseif (in_array($day, $daysAdded)) {
+                    } else {
                         $newInstance = true;
                         $ccShowInstance = new CcShowInstances();
                         $updateScheduleStatus = false;
-                    } else {
-                        //if we get here, an instance was edited on it's own and
-                        //thus became it's own show so there is nothing to update
-                        break 1;
                     }
                 }  else {
                     $newInstance = true;
@@ -1149,6 +1141,11 @@ SQL;
         $ccShow->setDbLiveStreamUsingCustomAuth($showData['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($showData['custom_username']);
         $ccShow->setDbLiveStreamPass($showData['custom_password']);
+
+        // Once a show is unlinked it cannot be linked again
+        if ($ccShow->getDbLinked() && !$showData["add_show_linked"]) {
+            $ccShow->setDbIsLinkable(false);
+        }
         $ccShow->setDbLinked($showData["add_show_linked"]);
 
         $ccShow->save();

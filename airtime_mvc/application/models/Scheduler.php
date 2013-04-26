@@ -432,7 +432,7 @@ class Application_Model_Scheduler
      *     array of schedule item info, what gets inserted into cc_schedule
      * @param $adjustSched
      */
-    private function insertAfter($scheduleItems, $mediaItems, $filesToInsert=null, $adjustSched=true)
+    private function insertAfter($scheduleItems, $mediaItems, $filesToInsert=null, $adjustSched=true, $moveAction=false)
     {
         try {
             $affectedShowInstances = array();
@@ -613,7 +613,9 @@ class Application_Model_Scheduler
                     /* Reset files to insert so we can get a new set of files. We have
                      * to do this in case we are inserting a dynamic block
                      */
-                    $filesToInsert = null;
+                    if (!$moveAction) {
+                        $filesToInsert = null;
+                    }
 
                     /* If we are adjusting start and end times for items
                      * after the insert location, we need to exclude the
@@ -817,7 +819,7 @@ class Application_Model_Scheduler
 
             $startProfile = microtime(true);
 
-            $this->insertAfter($afterItems, null, $movedData, $adjustSched);
+            $this->insertAfter($afterItems, null, $movedData, $adjustSched, true);
 
             $endProfile = microtime(true);
             Logging::debug("inserting after removing gaps.");

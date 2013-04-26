@@ -26,7 +26,7 @@ abstract class BaseCcShowPeer {
 	const TM_CLASS = 'CcShowTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 12;
+	const NUM_COLUMNS = 13;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -67,6 +67,9 @@ abstract class BaseCcShowPeer {
 	/** the column name for the LINKED field */
 	const LINKED = 'cc_show.LINKED';
 
+	/** the column name for the IS_LINKABLE field */
+	const IS_LINKABLE = 'cc_show.IS_LINKABLE';
+
 	/**
 	 * An identiy map to hold any loaded instances of CcShow objects.
 	 * This must be public so that other peer classes can access this when hydrating from JOIN
@@ -83,12 +86,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', 'DbLinked', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', 'dbLinked', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::URL, self::GENRE, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, self::LIVE_STREAM_USING_AIRTIME_AUTH, self::LIVE_STREAM_USING_CUSTOM_AUTH, self::LIVE_STREAM_USER, self::LIVE_STREAM_PASS, self::LINKED, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', 'LINKED', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', 'linked', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbUrl', 'DbGenre', 'DbDescription', 'DbColor', 'DbBackgroundColor', 'DbLiveStreamUsingAirtimeAuth', 'DbLiveStreamUsingCustomAuth', 'DbLiveStreamUser', 'DbLiveStreamPass', 'DbLinked', 'DbIsLinkable', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbUrl', 'dbGenre', 'dbDescription', 'dbColor', 'dbBackgroundColor', 'dbLiveStreamUsingAirtimeAuth', 'dbLiveStreamUsingCustomAuth', 'dbLiveStreamUser', 'dbLiveStreamPass', 'dbLinked', 'dbIsLinkable', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::URL, self::GENRE, self::DESCRIPTION, self::COLOR, self::BACKGROUND_COLOR, self::LIVE_STREAM_USING_AIRTIME_AUTH, self::LIVE_STREAM_USING_CUSTOM_AUTH, self::LIVE_STREAM_USER, self::LIVE_STREAM_PASS, self::LINKED, self::IS_LINKABLE, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'URL', 'GENRE', 'DESCRIPTION', 'COLOR', 'BACKGROUND_COLOR', 'LIVE_STREAM_USING_AIRTIME_AUTH', 'LIVE_STREAM_USING_CUSTOM_AUTH', 'LIVE_STREAM_USER', 'LIVE_STREAM_PASS', 'LINKED', 'IS_LINKABLE', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'url', 'genre', 'description', 'color', 'background_color', 'live_stream_using_airtime_auth', 'live_stream_using_custom_auth', 'live_stream_user', 'live_stream_pass', 'linked', 'is_linkable', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
 	);
 
 	/**
@@ -98,12 +101,12 @@ abstract class BaseCcShowPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, 'DbLiveStreamUsingAirtimeAuth' => 7, 'DbLiveStreamUsingCustomAuth' => 8, 'DbLiveStreamUser' => 9, 'DbLiveStreamPass' => 10, 'DbLinked' => 11, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, 'dbLiveStreamUsingAirtimeAuth' => 7, 'dbLiveStreamUsingCustomAuth' => 8, 'dbLiveStreamUser' => 9, 'dbLiveStreamPass' => 10, 'dbLinked' => 11, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::URL => 2, self::GENRE => 3, self::DESCRIPTION => 4, self::COLOR => 5, self::BACKGROUND_COLOR => 6, self::LIVE_STREAM_USING_AIRTIME_AUTH => 7, self::LIVE_STREAM_USING_CUSTOM_AUTH => 8, self::LIVE_STREAM_USER => 9, self::LIVE_STREAM_PASS => 10, self::LINKED => 11, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, 'LINKED' => 11, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, 'linked' => 11, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbUrl' => 2, 'DbGenre' => 3, 'DbDescription' => 4, 'DbColor' => 5, 'DbBackgroundColor' => 6, 'DbLiveStreamUsingAirtimeAuth' => 7, 'DbLiveStreamUsingCustomAuth' => 8, 'DbLiveStreamUser' => 9, 'DbLiveStreamPass' => 10, 'DbLinked' => 11, 'DbIsLinkable' => 12, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbUrl' => 2, 'dbGenre' => 3, 'dbDescription' => 4, 'dbColor' => 5, 'dbBackgroundColor' => 6, 'dbLiveStreamUsingAirtimeAuth' => 7, 'dbLiveStreamUsingCustomAuth' => 8, 'dbLiveStreamUser' => 9, 'dbLiveStreamPass' => 10, 'dbLinked' => 11, 'dbIsLinkable' => 12, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::URL => 2, self::GENRE => 3, self::DESCRIPTION => 4, self::COLOR => 5, self::BACKGROUND_COLOR => 6, self::LIVE_STREAM_USING_AIRTIME_AUTH => 7, self::LIVE_STREAM_USING_CUSTOM_AUTH => 8, self::LIVE_STREAM_USER => 9, self::LIVE_STREAM_PASS => 10, self::LINKED => 11, self::IS_LINKABLE => 12, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'URL' => 2, 'GENRE' => 3, 'DESCRIPTION' => 4, 'COLOR' => 5, 'BACKGROUND_COLOR' => 6, 'LIVE_STREAM_USING_AIRTIME_AUTH' => 7, 'LIVE_STREAM_USING_CUSTOM_AUTH' => 8, 'LIVE_STREAM_USER' => 9, 'LIVE_STREAM_PASS' => 10, 'LINKED' => 11, 'IS_LINKABLE' => 12, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'url' => 2, 'genre' => 3, 'description' => 4, 'color' => 5, 'background_color' => 6, 'live_stream_using_airtime_auth' => 7, 'live_stream_using_custom_auth' => 8, 'live_stream_user' => 9, 'live_stream_pass' => 10, 'linked' => 11, 'is_linkable' => 12, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
 	);
 
 	/**
@@ -187,6 +190,7 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn(CcShowPeer::LIVE_STREAM_USER);
 			$criteria->addSelectColumn(CcShowPeer::LIVE_STREAM_PASS);
 			$criteria->addSelectColumn(CcShowPeer::LINKED);
+			$criteria->addSelectColumn(CcShowPeer::IS_LINKABLE);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.NAME');
@@ -200,6 +204,7 @@ abstract class BaseCcShowPeer {
 			$criteria->addSelectColumn($alias . '.LIVE_STREAM_USER');
 			$criteria->addSelectColumn($alias . '.LIVE_STREAM_PASS');
 			$criteria->addSelectColumn($alias . '.LINKED');
+			$criteria->addSelectColumn($alias . '.IS_LINKABLE');
 		}
 	}
 

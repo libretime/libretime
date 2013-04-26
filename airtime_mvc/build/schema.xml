@@ -133,6 +133,9 @@
 	<column name="live_stream_user" phpName="DbLiveStreamUser" type="VARCHAR" size="255" required="false"/>
 	<column name="live_stream_pass" phpName="DbLiveStreamPass" type="VARCHAR" size="255" required="false"/>
 	<column name="linked" phpName="DbLinked" type="BOOLEAN" required="true" defaultValue="false" />
+	<column name="is_linkable" phpName="DbIsLinkable" type="BOOLEAN" required="true" defaultValue="true" />
+	<!-- A show is_linkable if it has never been linked before. Once a show becomes unlinked
+         it can not be linked again -->
   </table>
   <table name="cc_show_instances" phpName="CcShowInstances">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
