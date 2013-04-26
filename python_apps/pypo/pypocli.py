@@ -245,7 +245,7 @@ if __name__ == '__main__':
     pf.daemon = True
     pf.start()
 
-    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap)
+    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap, config)
     pp.daemon = True
     pp.start()
 
