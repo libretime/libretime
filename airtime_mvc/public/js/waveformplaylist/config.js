@@ -15,6 +15,7 @@ var Config = function(params) {
             resolution: 4096, //resolution - samples per pixel to draw.
             timeFormat: 'hh:mm:ss.uuu',
             mono: true, //whether to draw multiple channels or combine them.
+            fadeType: 'logarithmic',
 
             timescale: false, //whether or not to include the time measure.
 
@@ -62,6 +63,10 @@ var Config = function(params) {
 
         that.isTimeScaleEnabled = function isTimeScaleEnabled() {
             return params.timescale;
+        };
+
+        that.getFadeType = function getFadeType() {
+            return params.fadeType;
         };
 
         that.isDisplayMono = function isDisplayMono() {
@@ -139,6 +144,10 @@ var Config = function(params) {
 
         that.setTimeFormat = function setTimeFormat(format) {
             params.timeFormat = format;
+        };
+
+        that.setFadeType = function setFadeType(type) {
+            params.fadeType = type;
         };
 
         that.setDisplayMono = function setDisplayMono(bool) {

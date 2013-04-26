@@ -49,7 +49,6 @@ PlaylistEditor.prototype.init = function(tracks) {
         this.trackEditors.push(trackEditor);
         fragment.appendChild(trackElem);
 
-        audioControls.on("changestate", "onStateChange", trackEditor);
         audioControls.on("trackedit", "onTrackEdit", trackEditor);
         audioControls.on("changeresolution", "onResolutionChange", trackEditor);
 
@@ -127,10 +126,12 @@ PlaylistEditor.prototype.onStateChange = function() {
         editors = this.trackEditors,
         i,
         len,
-        editor;
+        editor,
+        state = this.config.getState();
 
     for(i = 0, len = editors.length; i < len; i++) {
         editors[i].deactivate();
+        editors[i].setState(state);
     }
 };
 

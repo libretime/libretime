@@ -1126,7 +1126,10 @@ var AIRTIME = (function(AIRTIME){
 			    	    type: "FadeOut",
 			    	    end: $fadeOut.data("cueout") - $fadeOut.data("cuein"),
 			    	    start: $fadeOut.data("cueout") - $fadeOut.data("cuein") - $fadeOut.data("length")
-			    	}]
+			    	}],
+			    	states: {
+		                'fadein': false
+		            }
 				},
 				{
 			    	src: $fadeIn.data("fadein"),
@@ -1138,7 +1141,10 @@ var AIRTIME = (function(AIRTIME){
 			    	    type: "FadeIn",
 			    	    end: $fadeIn.data("length"),
 			    	    start: 0
-			    	}]
+			    	}],
+			    	states: {
+		                'fadeout': false
+		            }
 				}
 			],
 			dim = AIRTIME.utilities.findViewportDimensions(),

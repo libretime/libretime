@@ -367,6 +367,22 @@ WaveformDrawer.prototype.drawFadeCurve = function(ctx, shape, type, width) {
     ctx.stroke();
 };
 
+WaveformDrawer.prototype.removeFade = function(id) {
+    var fadeClass = "playlist-fade-"+id,
+        el, els,
+        i,len;
+
+    els = this.container.getElementsByClassName(fadeClass);
+    len = els.length;
+
+    //DOM NodeList is live, use a decrementing counter.
+    if (len > 0) {
+        for (i = len-1; i >= 0; i--) {
+            el = els[i];
+            el.parentNode.removeChild(el);
+        }    
+    }
+};
 
 WaveformDrawer.prototype.drawFade = function(id, type, shape, start, end) {
     var div,
