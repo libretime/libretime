@@ -192,6 +192,10 @@ TrackEditor.prototype.onTrackLoad = function(buffer) {
     if (this.cues === undefined) {
         this.setCuePoints(0, buffer.length - 1);
     }
+    //adjust if the length was inaccurate and cueout is set to a higher sample than we actually have.
+    else if (this.cues.cueout > (buffer.length - 1)) {
+        this.cues.cueout = buffer.length - 1;
+    }
 
     if (this.width !== undefined) {
         res = Math.ceil(buffer.length / this.width);
