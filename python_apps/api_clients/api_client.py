@@ -127,24 +127,31 @@ class ApiRequest(object):
         self.__req = None
         if logger is None: self.logger = logging
         else: self.logger = logger
+
     def __call__(self,_post_data=None, **kwargs):
         final_url = self.url.params(**kwargs).url()
         if _post_data is not None: _post_data = urllib.urlencode(_post_data)
+        self.logger.debug(final_url)
         try:
             req = urllib2.Request(final_url, _post_data)
-            response  = urllib2.urlopen(req).read()
+            f = urllib2.urlopen(req)
+            content_type = f.info().getheader('Content-Type')
+            response = f.read()
         except Exception, e:
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", traceback.format_exc())
             raise
-        # Ghetto hack for now because we don't the content type we are getting
-        # (Pointless to look at mime since it's not being set correctly always)
+
         try:
-            data = json.loads(response)
-            self.logger.debug(data)
-            return data
+            if content_type == 'application/json':
+                data = json.loads(response)
+                self.logger.debug(data)
+                return data
+            else:
+                raise InvalidContentType()
         except Exception:
             self.logger.error(response)
+            self.logger.error("traceback: %s", traceback.format_exc())
             raise
 
     def req(self, *args, **kwargs):
@@ -510,3 +517,7 @@ class AirtimeApiClient(object):
         except Exception, e:
             #TODO
             self.logger.error(str(e))
+
+
+class InvalidContentType(Exception):
+    pass
