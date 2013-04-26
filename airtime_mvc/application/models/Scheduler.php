@@ -45,20 +45,25 @@ class Application_Model_Scheduler
         $this->checkUserPermissions = $value;
     }
 
-    private function validateItemMove($itemsToMove, $afterItem)
+    private function validateItemMove($itemsToMove, $destination)
     {
-        $afterInstanceId = $afterItem["instance"];
+        $destinationInstanceId = $destination["instance"];
+        $destinationCcShowInstance = CcShowInstancesQuery::create()
+            ->findPk($destinationInstanceId);
+        $isDestinationLinked = $destinationCcShowInstance->getCcShow()->isLinked();
 
         foreach ($itemsToMove as $itemToMove) {
             $ccShowInstance = CcShowInstancesQuery::create()
                 ->findPk($itemToMove["instance"]);
 
             //does the item being moved belong to a linked show
-            $linked = $ccShowInstance->getCcShow()->isLinked();
+            $isSourceLinked = $ccShowInstance->getCcShow()->isLinked();
 
-            if ($linked && $itemToMove["instance"] != $afterInstanceId) {
+            if ($isSourceLinked && $itemToMove["instance"] != $destinationInstanceId) {
                 throw new Exception(_("Linked items can only be moved within its own show"));
-            }
+            } /*elseif ($isDestinationLinked && $isSourceLinked) {
+                throw new Exception(_("Items can only be moved to and from unlinked shows"));
+            }*/
         }
     }
 
@@ -555,11 +560,12 @@ class Application_Model_Scheduler
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
 
-                            $sched = CcScheduleQuery::create()
+                            /*$sched = CcScheduleQuery::create()
                                 ->filterByDbInstanceId($instance->getDbId())
                                 ->filterByDbFileId($file["id"])
-                                ->findOne();
-                            
+                                ->findOne();*/
+                            $sched = CcScheduleQuery::create()->findPk($file["sched_id"]);
+
                             $excludeIds[] = intval($sched->getDbId());
 
                             $file["cliplength"] = $sched->getDbClipLength();
