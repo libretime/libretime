@@ -23,6 +23,7 @@ from pypofile import PypoFile
 from recorder import Recorder
 from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
+from pypoliquidsoap import PypoLiquidsoap
 
 from media.update.replaygainupdater import ReplayGainUpdater
 from media.update.silananalyzer import SilanAnalyzer
@@ -221,6 +222,9 @@ if __name__ == '__main__':
     recorder_q = Queue()
     pypoPush_q = Queue()
 
+    pypo_liquidsoap = PypoLiquidsoap(logger, telnet_lock,\
+            ls_host, ls_port)
+
     """
     This queue is shared between pypo-fetch and pypo-file, where pypo-file
     is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
@@ -237,11 +241,11 @@ if __name__ == '__main__':
     pfile.daemon = True
     pfile.start()
 
-    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock, config)
+    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config)
     pf.daemon = True
     pf.start()
 
-    pp = PypoPush(pypoPush_q, telnet_lock)
+    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap)
     pp.daemon = True
     pp.start()
 

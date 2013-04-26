@@ -14,7 +14,6 @@ import os
 
 from pypofetch import PypoFetch
 from pypoliqqueue import PypoLiqQueue
-from pypoliquidsoap import PypoLiquidsoap
 
 from Queue import Empty, Queue
 
@@ -44,7 +43,7 @@ def is_file(media_item):
     return media_item['type'] == 'file'
 
 class PypoPush(Thread):
-    def __init__(self, q, telnet_lock, config):
+    def __init__(self, q, telnet_lock, pypo_liquidsoap, config):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.queue = q

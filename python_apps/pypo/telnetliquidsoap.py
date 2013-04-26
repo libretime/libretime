@@ -7,11 +7,12 @@ def create_liquidsoap_annotation(media):
 
 class TelnetLiquidsoap:
 
-    def __init__(self, telnet_lock, logger, ls_host, ls_port):
+    def __init__(self, telnet_lock, logger, ls_host, ls_port, queues):
         self.telnet_lock = telnet_lock
         self.ls_host = ls_host
         self.ls_port = ls_port
         self.logger = logger
+        self.queues = queues
         self.current_prebuffering_stream_id = None
 
     def __connect(self):
@@ -19,6 +20,23 @@ class TelnetLiquidsoap:
 
     def __is_empty(self, tn, queue_id):
         return True
+
+    def queue_clear_all(self):
+        try:
+            self.telnet_lock.acquire()
+            tn = self.__connect()
+
+            for i in self.queues:
+                msg = 'queues.%s_skip\n' % i
+                self.logger.debug(msg)
+                tn.write(msg)
+            
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+        except Exception:
+            raise
+        finally:
+            self.telnet_lock.release()
 
     def queue_remove(self, queue_id):
         try:

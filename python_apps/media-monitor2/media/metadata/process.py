@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from contextlib import contextmanager
-from media.monitor.pure import truncate_to_length, toposort
+from media.monitor.pure import truncate_to_value, truncate_to_length, toposort
 from os.path import normpath
 from media.monitor.exceptions import BadSongFile
 from media.monitor.log import Loggable
@@ -43,10 +43,14 @@ class MetadataElement(Loggable):
         self.__default       = None
         self.__is_normalized = lambda _ : True
         self.__max_length    = -1
+        self.__max_value     = -1
         self.__translator    = None
 
     def max_length(self,l):
         self.__max_length = l
+
+    def max_value(self,v):
+        self.__max_value = v
 
     def optional(self, setting):
         self.__optional = setting
@@ -143,6 +147,8 @@ class MetadataElement(Loggable):
         r = self.__normalizer( self.__translator(full_deps) )
         if self.__max_length != -1:
             r = truncate_to_length(r, self.__max_length)
+        if self.__max_value != -1:
+            r = truncate_to_value(r, self.__max_value)
         return r
 
 def normalize_mutagen(path):
