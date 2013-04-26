@@ -395,26 +395,30 @@ WaveformDrawer.prototype.drawFade = function(id, type, shape, start, end) {
         ctx,
         tmpCtx;
 
-        width = ~~(end - start + 1);
-        left = start;
+    if ((end - start) === 0) {
+        return;
+    } 
 
-        div = document.createElement("div");
-        div.classList.add("playlist-fade");
-        div.classList.add("playlist-fade-"+id);
-        div.style.width = width+"px";
-        div.style.height = this.height+"px";
-        div.style.top = 0;
-        div.style.left = left+"px";
+    width = ~~(end - start + 1);
+    left = start;
 
-        canv = document.createElement("canvas");
-        canv.setAttribute('width', width);
-        canv.setAttribute('height', this.height);
-        ctx = canv.getContext('2d');
+    div = document.createElement("div");
+    div.classList.add("playlist-fade");
+    div.classList.add("playlist-fade-"+id);
+    div.style.width = width+"px";
+    div.style.height = this.height+"px";
+    div.style.top = 0;
+    div.style.left = left+"px";
 
-        this.drawFadeCurve(ctx, shape, type, width);
+    canv = document.createElement("canvas");
+    canv.setAttribute('width', width);
+    canv.setAttribute('height', this.height);
+    ctx = canv.getContext('2d');
 
-        div.appendChild(canv);
-        fragment.appendChild(div);   
+    this.drawFadeCurve(ctx, shape, type, width);
+
+    div.appendChild(canv);
+    fragment.appendChild(div);   
       
     for (i = 0, len = this.channels.length; i < len; i++) {
         dup = fragment.cloneNode(true);
