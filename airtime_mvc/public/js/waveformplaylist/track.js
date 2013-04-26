@@ -154,7 +154,7 @@ TrackEditor.prototype.loadTrack = function(track) {
             cuein: track.cuein,
             cueout: track.cueout
         },
-        track.states
+        track.states || {}
     );
     this.loadBuffer(track.src);
 
