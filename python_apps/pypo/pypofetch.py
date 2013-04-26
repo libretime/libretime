@@ -200,8 +200,7 @@ class PypoFetch(Thread):
         return command
 
     """
-        grabs some information that are needed to be set on bootstrap time
-        and configures them
+    Initialize Liquidsoap environment
     """
     def set_bootstrap_variables(self):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
@@ -226,7 +225,6 @@ class PypoFetch(Thread):
         PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
 
     def restart_liquidsoap(self):
-
         try:
             self.telnet_lock.acquire()
             self.logger.info("Restarting Liquidsoap")
@@ -258,9 +256,11 @@ class PypoFetch(Thread):
         except Exception, e:
             self.logger.error(str(e))
 
+    """
+    TODO: This function needs to be way shorter, and refactored :/ - MK
+    """
     def regenerate_liquidsoap_conf(self, setting):
         existing = {}
-        # create a temp file
 
         setting = sorted(setting.items())
         try:
