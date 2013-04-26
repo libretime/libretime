@@ -143,6 +143,7 @@ class PypoLiquidsoap():
                 mi = row_id_map[i["row_id"]]
                 correct = mi['start'] == i['start'] and \
                         mi['end'] == i['end'] and \
+                        mi['row_id'] == i['row_id'] and \
                         mi['replay_gain'] == i['replay_gain']
 
                 if not correct:
