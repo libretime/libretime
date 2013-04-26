@@ -57,8 +57,7 @@ class PypoPush(Thread):
         self.queue_id = 0
 
         self.future_scheduled_queue = Queue()
-        self.pypo_liquidsoap = PypoLiquidsoap(self.logger, telnet_lock,\
-                config['ls_host'], config['ls_port'])
+        self.pypo_liquidsoap = pypo_liquidsoap
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, \
                 self.pypo_liquidsoap, \
