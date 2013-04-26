@@ -140,7 +140,9 @@ class ApiRequest(object):
         # Ghetto hack for now because we don't the content type we are getting
         # (Pointless to look at mime since it's not being set correctly always)
         try:
-            return json.loads(response)
+            data = json.loads(response)
+            self.logger.debug(data)
+            return data
         except Exception:
             self.logger.error(response)
             raise
