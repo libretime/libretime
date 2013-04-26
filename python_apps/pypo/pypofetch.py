@@ -281,7 +281,7 @@ class PypoFetch(Thread):
 
             line = line.strip()
 
-            if not len(line) or line[0] == "#"
+            if not len(line) or line[0] == "#":
                 continue
 
             try:
