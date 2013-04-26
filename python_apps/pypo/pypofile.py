@@ -2,7 +2,6 @@
 
 from threading import Thread
 from Queue import Empty
-from configobj import ConfigObj
 
 import logging
 import shutil
@@ -20,21 +19,10 @@ LogWriter.override_std_err(logger)
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
-# loading config file
-try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
-    POLL_INTERVAL = int(config['poll_interval'])
-
-except Exception, e:
-    logger.error('Error loading config file: %s', e)
-    sys.exit(1)
-
 
 class PypoFile(Thread):
 
-    def __init__(self, schedule_queue):
+    def __init__(self, schedule_queue, config):
         Thread.__init__(self)
         self.logger = logging.getLogger()
         self.media_queue = schedule_queue

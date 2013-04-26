@@ -15,7 +15,6 @@ import traceback
 from Queue import Empty
 from threading import Thread
 from subprocess import Popen, PIPE
-from configobj import ConfigObj
 
 from api_clients import api_client
 from std_err_override import LogWriter
@@ -35,25 +34,17 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
-# loading config file
-try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
-    #POLL_INTERVAL = int(config['poll_interval'])
-    POLL_INTERVAL = 1800
-except Exception, e:
-    logger.error('Error loading config file: %s', e)
-    sys.exit()
+POLL_INTERVAL = 1800
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, config):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
+        self.config = config
         self.listener_timeout = POLL_INTERVAL
 
         self.telnet_lock = telnet_lock
@@ -141,7 +132,7 @@ class PypoFetch(Thread):
 
         try:
             lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             logger.info(command)
             tn.write(command)
             tn.write('exit\n')
@@ -156,7 +147,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
 
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             for i in commands:
                 logger.info(i)
                 tn.write(i)
@@ -243,7 +234,7 @@ class PypoFetch(Thread):
             self.logger.info("Waiting for Liquidsoap to start")
             while True:
                 try:
-                    tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                    tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
                     tn.write("exit\n")
                     tn.read_all()
                     self.logger.info("Liquidsoap is up and running")
@@ -368,7 +359,7 @@ class PypoFetch(Thread):
 
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
             # we are manually adjusting the bootup time variable so the status msg will get
             # updated.
@@ -411,7 +402,7 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
@@ -427,7 +418,7 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
@@ -442,12 +433,9 @@ class PypoFetch(Thread):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            self.logger.info(LS_HOST)
-            self.logger.info(LS_PORT)
-
             try:
                 self.telnet_lock.acquire()
-                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
                 command = ('vars.station_name %s\n' % station_name).encode('utf-8')
                 self.logger.info(command)
                 tn.write(command)

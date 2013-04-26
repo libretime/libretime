@@ -3,7 +3,6 @@
 import logging
 import traceback
 import sys
-from configobj import ConfigObj
 from threading import Thread
 import time
 # For RabbitMQ
@@ -23,30 +22,25 @@ LogWriter.override_std_err(logger)
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
-# loading config file
-try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
-    POLL_INTERVAL = int(config['poll_interval'])
-
-except Exception, e:
-    logger.error('Error loading config file: %s', e)
-    sys.exit()
 
 class PypoMessageHandler(Thread):
-    def __init__(self, pq, rq):
+    def __init__(self, pq, rq, config):
         Thread.__init__(self)
         self.logger = logging.getLogger('message_h')
         self.pypo_queue = pq
         self.recorder_queue = rq
+        self.config = config
 
     def init_rabbit_mq(self):
         self.logger.info("Initializing RabbitMQ stuff")
         try:
             schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            connection = BrokerConnection(config["rabbitmq_host"], config["rabbitmq_user"], config["rabbitmq_password"], config["rabbitmq_vhost"])
+            connection = BrokerConnection(self.config["rabbitmq_host"], \
+                    self.config["rabbitmq_user"], \
+                    self.config["rabbitmq_password"], \
+                    self.config["rabbitmq_vhost"])
+
             channel = connection.channel()
             self.simple_queue = SimpleQueue(channel, schedule_queue)
         except Exception, e:

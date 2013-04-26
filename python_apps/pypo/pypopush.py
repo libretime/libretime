@@ -34,15 +34,8 @@ LogWriter.override_std_err(logger)
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
-# loading config file
-try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
-    PUSH_INTERVAL = 2
-except Exception, e:
-    logger.error('Error loading config file %s', e)
-    sys.exit()
+PUSH_INTERVAL = 2
+
 
 def is_stream(media_item):
     return media_item['type'] == 'stream_output_start'
@@ -51,12 +44,13 @@ def is_file(media_item):
     return media_item['type'] == 'file'
 
 class PypoPush(Thread):
-    def __init__(self, q, telnet_lock):
+    def __init__(self, q, telnet_lock, config):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.queue = q
 
         self.telnet_lock = telnet_lock
+        self.config = config
 
         self.pushed_objects = {}
         self.logger = logging.getLogger('push')
@@ -65,7 +59,7 @@ class PypoPush(Thread):
 
         self.future_scheduled_queue = Queue()
         self.pypo_liquidsoap = PypoLiquidsoap(self.logger, telnet_lock,\
-                LS_HOST, LS_PORT)
+                config['ls_host'], config['ls_port'])
 
         self.plq = PypoLiqQueue(self.future_scheduled_queue, \
                 self.pypo_liquidsoap, \
@@ -126,7 +120,7 @@ class PypoPush(Thread):
         response = "-1"
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
 
             msg = 'dynamic_source.get_id\n'
             tn.write(msg)
@@ -173,7 +167,7 @@ class PypoPush(Thread):
     def stop_web_stream_all(self):
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['LS_HOST'], self.config['LS_PORT'])
 
             #msg = 'dynamic_source.read_stop_all xxx\n'
             msg = 'http.stop\n'
