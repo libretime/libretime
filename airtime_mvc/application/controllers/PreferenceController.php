@@ -164,16 +164,25 @@ class PreferenceController extends Zend_Controller_Action
         foreach ($temp as $t) {
             $setting[$t['keyname']] = $t['value'];
         }
+
+        $name_map = array('ogg' => 'Ogg Vorbis',
+                'aacplus' => 'AAC+',
+                'aac' => 'AAC',
+                'opus' => 'Opus',
+                'mp3' => 'MP3'
+        );
+
         // get predefined type and bitrate from pref table
         $temp_types = Application_Model_Preference::GetStreamType();
         $stream_types = array();
         foreach ($temp_types as $type) {
-            if (trim($type) == "ogg") {
-                $temp = "OGG/VORBIS";
+            $type = strtolower(trim($type));
+            if (isset($name_map[$type])) {
+                $name = $name_map[$type];
             } else {
-                $temp = strtoupper(trim($type));
+                $name = $type;
             }
-            $stream_types[trim($type)] = $temp;
+            $stream_types[$type] = $name;
         }
 
         $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
