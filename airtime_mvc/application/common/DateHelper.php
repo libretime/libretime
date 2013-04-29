@@ -266,7 +266,7 @@ class Application_Common_DateHelper
 
     public static function ConvertToLocalDateTime($p_dateString){
         $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
-        $dateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $dateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
 
         return $dateTime;
     }

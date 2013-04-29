@@ -45,13 +45,40 @@ class Application_Model_Scheduler
         $this->checkUserPermissions = $value;
     }
 
+    private function validateItemMove($itemsToMove, $destination)
+    {
+        $destinationInstanceId = $destination["instance"];
+        $destinationCcShowInstance = CcShowInstancesQuery::create()
+            ->findPk($destinationInstanceId);
+        $isDestinationLinked = $destinationCcShowInstance->getCcShow()->isLinked();
+
+        foreach ($itemsToMove as $itemToMove) {
+            $sourceInstanceId = $itemToMove["instance"];
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->findPk($sourceInstanceId);
+
+            //does the item being moved belong to a linked show
+            $isSourceLinked = $ccShowInstance->getCcShow()->isLinked();
+
+            if ($isDestinationLinked && !$isSourceLinked) {
+                throw new Exception("Cannot move items into linked shows");
+            } elseif (!$isDestinationLinked && $isSourceLinked) {
+                throw new Exception("Cannot move items out of linked shows");
+            } elseif ($isSourceLinked && $sourceInstanceId != $destinationInstanceId) {
+                throw new Exception(_("Cannot move items out of linked shows"));
+            }
+        }
+    }
+
     /*
      * make sure any incoming requests for scheduling are ligit.
     *
     * @param array $items, an array containing pks of cc_schedule items.
     */
-    private function validateRequest($items)
+    private function validateRequest($items, $addAction=false)
     {
+        //$items is where tracks get inserted (they are schedule locations)
+
         $nowEpoch = floatval($this->nowDT->format("U.u"));
 
         for ($i = 0; $i < count($items); $i++) {
@@ -59,9 +86,11 @@ class Application_Model_Scheduler
 
             //could be added to the beginning of a show, which sends id = 0;
             if ($id > 0) {
+                //schedule_id of where we are inserting after?
                 $schedInfo[$id] = $items[$i]["instance"];
             }
 
+            //format is instance_id => timestamp
             $instanceInfo[$items[$i]["instance"]] = $items[$i]["timestamp"];
         }
 
@@ -104,7 +133,7 @@ class Application_Model_Scheduler
             if ($this->checkUserPermissions && $this->user->canSchedule($show->getDbId()) === false) {
                 throw new Exception(sprintf(_("You are not allowed to schedule show %s."), $show->getDbName()));
             }
-            
+
             if ($instance->getDbRecord()) {
                 throw new Exception(_("You cannot add files to recording shows."));
             }
@@ -120,6 +149,28 @@ class Application_Model_Scheduler
             if ($ts < $lastSchedTs) {
                 Logging::info("ts {$ts} last sched {$lastSchedTs}");
                 throw new OutDatedScheduleException(sprintf(_("The show %s has been previously updated!"), $show->getDbName()));
+            }
+
+            /*
+             * Does the afterItem belong to a show that is linked AND
+             * currently playing?
+             * If yes, throw an exception
+             */
+            if ($addAction) {
+                $ccShow = $instance->getCcShow();
+                if ($ccShow->isLinked()) {
+                    //get all the linked shows instances and check if
+                    //any of them are currently playing
+                    $ccShowInstances = $ccShow->getCcShowInstancess();
+                    $timeNowUTC = gmdate("Y-m-d H:i:s");
+                    foreach ($ccShowInstances as $ccShowInstance) {
+
+                        if ($ccShowInstance->getDbStarts() <= $timeNowUTC &&
+                            $ccShowInstance->getDbEnds() > $timeNowUTC) {
+                            throw new Exception(_("Content in linked shows must be scheduled before or after any one is broadcasted"));
+                        }
+                    }
+                }
             }
         }
     }
@@ -380,135 +431,230 @@ class Application_Model_Scheduler
         $schedule->save($this->con);
     }
 
-    /*
-     * @param array $scheduledIds
-     * @param array $fileIds
-     * @param array $playlistIds
+    /**
+     * 
+     * Enter description here ...
+     * @param $scheduleItems
+     *     cc_schedule items, where the items get inserted after
+     * @param $filesToInsert
+     *     array of schedule item info, what gets inserted into cc_schedule
+     * @param $adjustSched
      */
-    private function insertAfter($scheduleItems, $schedFiles, $adjustSched = true, $mediaItems = null)
+    private function insertAfter($scheduleItems, $mediaItems, $filesToInsert=null, $adjustSched=true, $moveAction=false)
     {
         try {
             $affectedShowInstances = array();
-            
-            //dont want to recalculate times for moved items.
+
+            //dont want to recalculate times for moved items
+            //only moved items have a sched_id
             $excludeIds = array();
-            foreach ($schedFiles as $file) {
-                if (isset($file["sched_id"])) {
-                    $excludeIds[] = intval($file["sched_id"]);
-                }
-            }
 
             $startProfile = microtime(true);
 
+            $temp = array();
+            $instance = null;
+            /* Items in shows are ordered by position number. We need to know
+             * the position when adding/moving items in linked shows so they are
+             * added or moved in the correct position
+             */
+            $pos = 0;
+
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
-                
-                // if mediaItmes is passed in, we want to create contents
-                // at the time of insert. This is for dyanmic blocks or
-                // playlist that contains dynamic blocks
-                if ($mediaItems != null) {
-                    $schedFiles = array();
-                    foreach ($mediaItems as $media) {
-                        $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
+
+                /* Find out if the show where the cursor position (where an item will
+                 * be inserted) is located is linked or not. If the show is linked,
+                 * we need to make sure there isn't another cursor selection in one of it's
+                 * linked shows. If there is that will cause a duplication, in the least,
+                 * of inserted items
+                 */
+                if ($id != 0) {
+                    $ccSchedule = CcScheduleQuery::create()->findPk($schedule["id"]);
+                    $ccShowInstance = CcShowInstancesQuery::create()->findPk($ccSchedule->getDbInstanceId());
+                    $ccShow = $ccShowInstance->getCcShow();
+                    if ($ccShow->isLinked()) {
+                        $unique = $ccShow->getDbId() . $ccSchedule->getDbPosition();
+                        if (!in_array($unique, $temp)) {
+                            $temp[] = $unique;
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    $ccShowInstance = CcShowInstancesQuery::create()->findPk($schedule["instance"]);
+                    $ccShow = $ccShowInstance->getccShow();
+                    if ($ccShow->isLinked()) {
+                        $unique = $ccShow->getDbId() . "a";
+                        if (!in_array($unique, $temp)) {
+                            $temp[] = $unique;
+                        } else {
+                            continue;
+                        }
                     }
                 }
-                
-                if ($id !== 0) {
-                    $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
-                    $instance = $schedItem->getCcShowInstances($this->con);
 
-                    $schedItemEndDT = $schedItem->getDbEnds(null);
-                    $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
-                }
-                //selected empty row to add after
-                else {
+                /* If the show where the cursor position is located is linked
+                 * we need to insert the items for each linked instance belonging
+                 * to that show
+                 */
+                $instances = $this->getInstances($schedule["instance"]);
+                foreach($instances as $instance) {
+                    if ($id !== 0) {
+                        $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
+                        /* We use the selected cursor's position to find the same
+                         * positions in every other linked instance
+                         */
+                        $pos = $schedItem->getDbPosition();
 
-                    $instance = CcShowInstancesQuery::create()->findPK($schedule["instance"], $this->con);
+                        $ccSchedule = CcScheduleQuery::create()
+                            ->filterByDbInstanceId($instance->getDbId())
+                            ->filterByDbPosition($pos)
+                            ->findOne();
 
-                    $showStartDT = $instance->getDbStarts(null);
-                    $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
-                }
+                        //$schedItemEndDT = $schedItem->getDbEnds(null);
+                        $schedItemEndDT = $ccSchedule->getDbEnds(null);
+                        $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
 
-                if (!in_array($instance->getDbId(), $affectedShowInstances)) {
-                    $affectedShowInstances[] = $instance->getDbId();
-                }
+                        $pos++;
+                    }
+                    //selected empty row to add after
+                    else {
+                        $showStartDT = $instance->getDbStarts(null);
+                        $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
 
-                if ($adjustSched === true) {
-
-                    $pstart = microtime(true);
-
-                    $followingSchedItems = CcScheduleQuery::create()
-                        ->filterByDBStarts($nextStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
-                        ->filterByDbInstanceId($instance->getDbId())
-                        ->filterByDbId($excludeIds, Criteria::NOT_IN)
-                        ->orderByDbStarts()
-                        ->find($this->con);
-
-                    $pend = microtime(true);
-                    Logging::debug("finding all following items.");
-                    Logging::debug(floatval($pend) - floatval($pstart));
-                }
-
-                foreach ($schedFiles as $file) {
-                    $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
-
-                    //item existed previously and is being moved.
-                    //need to keep same id for resources if we want REST.
-                    if (isset($file['sched_id'])) {
-                        $sched = CcScheduleQuery::create()->findPK($file['sched_id'], $this->con);
-                    } else {
-                        $sched = new CcSchedule();
+                        //show is empty so start position counter at 0
+                        $pos = 0;
                     }
 
-                    // default fades are in seconds
-                    // we need to convert to '00:00:00' format
-                    $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
-                    $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
-                    
-                    $sched->setDbStarts($nextStartDT)
-                        ->setDbEnds($endTimeDT)
-                        ->setDbCueIn($file['cuein'])
-                        ->setDbCueOut($file['cueout'])
-                        ->setDbFadeIn($file['fadein'])
-                        ->setDbFadeOut($file['fadeout'])
-                        ->setDbClipLength($file['cliplength'])
-                        ->setDbInstanceId($instance->getDbId());
-
-                    switch ($file["type"]) {
-                        case 0:
-                            $sched->setDbFileId($file['id']);
-                            break;
-                        case 1:
-                            $sched->setDbStreamId($file['id']);
-                            break;
-                        default: break;
+                    if (!in_array($instance->getDbId(), $affectedShowInstances)) {
+                        $affectedShowInstances[] = $instance->getDbId();
                     }
 
-                    $sched->save($this->con);
+                    /*
+                     * $adjustSched is true if there are schedule items
+                     * following the item just inserted, per show instance
+                     */
+                    if ($adjustSched === true) {
 
-                    $nextStartDT = $endTimeDT;
-                }
+                        $pstart = microtime(true);
 
-                if ($adjustSched === true) {
+                        $initalStartDT = clone $nextStartDT;
 
-                    $pstart = microtime(true);
+                        $pend = microtime(true);
+                        Logging::debug("finding all following items.");
+                        Logging::debug(floatval($pend) - floatval($pstart));
+                    }
 
-                    //recalculate the start/end times after the inserted items.
-                    foreach ($followingSchedItems as $item) {
+                    if (is_null($filesToInsert)) {
+                        $filesToInsert = array();
+                        foreach ($mediaItems as $media) {
+                            $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
+                        }
+                    }
+                    foreach ($filesToInsert as $file) {
+                        //item existed previously and is being moved.
+                        //need to keep same id for resources if we want REST.
+                        if (isset($file['sched_id'])) {
+                            $sched = CcScheduleQuery::create()->findPk($file["sched_id"]);
 
-                        $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
+                            $excludeIds[] = intval($sched->getDbId());
 
-                        $item->setDbStarts($nextStartDT);
-                        $item->setDbEnds($endTimeDT);
-                        $item->save($this->con);
+                            $file["cliplength"] = $sched->getDbClipLength();
+                            $file["cuein"] = $sched->getDbCueIn();
+                            $file["cueout"] = $sched->getDbCueOut();
+                            $file["fadein"] = $sched->getDbFadeIn();
+                            $file["fadeout"] = $sched->getDbFadeOut();
+                        } else {
+                            $sched = new CcSchedule();
+                        }
+
+                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                        // default fades are in seconds
+                        // we need to convert to '00:00:00' format
+                        $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
+                        $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
+
+                        $sched->setDbStarts($nextStartDT)
+                            ->setDbEnds($endTimeDT)
+                            ->setDbCueIn($file['cuein'])
+                            ->setDbCueOut($file['cueout'])
+                            ->setDbFadeIn($file['fadein'])
+                            ->setDbFadeOut($file['fadeout'])
+                            ->setDbClipLength($file['cliplength'])
+                            ->setDbPosition($pos);
+                            //->setDbInstanceId($instance->getDbId());
+                        if (!$moveAction) {
+                            $sched->setDbInstanceId($instance->getDbId());
+                        }
+
+                        switch ($file["type"]) {
+                            case 0:
+                                $sched->setDbFileId($file['id']);
+                                break;
+                            case 1:
+                                $sched->setDbStreamId($file['id']);
+                                break;
+                            default: break;
+                        }
+
+                        $sched->save($this->con);
+
                         $nextStartDT = $endTimeDT;
+                        $pos++;
+
+                    }//all files have been inserted/moved
+
+                    // update is_scheduled flag for each cc_file
+                    foreach ($filesToInsert as $file) {
+                        $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
+                        $db_file->setDbIsScheduled(true);
+                        $db_file->save($this->con);
+                    }
+                    /* Reset files to insert so we can get a new set of files. We have
+                     * to do this in case we are inserting a dynamic block
+                     */
+                    if (!$moveAction) {
+                        $filesToInsert = null;
                     }
 
-                    $pend = microtime(true);
-                    Logging::debug("adjusting all following items.");
-                    Logging::debug(floatval($pend) - floatval($pstart));
-                }
-            }
+                    /* If we are adjusting start and end times for items
+                     * after the insert location, we need to exclude the
+                     * schedule item we just inserted because it has correct
+                     * start and end times*/
+                    $excludeIds[] = $sched->getDbId();
+
+                    if ($adjustSched === true) {
+                        $followingSchedItems = CcScheduleQuery::create()
+                            ->filterByDBStarts($initalStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
+                            ->filterByDbInstanceId($instance->getDbId())
+                            ->filterByDbId($excludeIds, Criteria::NOT_IN)
+                            ->orderByDbStarts()
+                            ->find($this->con);
+
+                        $pstart = microtime(true);
+
+                        //recalculate the start/end times after the inserted items.
+                        Logging::info($excludeIds);
+                        Logging::info($initalStartDT);
+                        foreach ($followingSchedItems as $item) {
+                            Logging::info($item);
+                            $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
+
+                            $item->setDbStarts($nextStartDT);
+                            $item->setDbEnds($endTimeDT);
+                            $item->setDbPosition($pos);
+                            $item->save($this->con);
+                            $nextStartDT = $endTimeDT;
+                            $pos++;
+                        }
+
+                        $pend = microtime(true);
+                        Logging::debug("adjusting all following items.");
+                        Logging::debug(floatval($pend) - floatval($pstart));
+                    }
+                }//for each instance
+                
+            }//for each schedule location
 
             $endProfile = microtime(true);
             Logging::debug("finished adding scheduled items.");
@@ -523,13 +669,6 @@ class Application_Model_Scheduler
 
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
-            }
-
-            // update is_scheduled flag for each cc_file
-            foreach ($schedFiles as $file) {
-                $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
-                $db_file->setDbIsScheduled(true);
-                $db_file->save($this->con);
             }
 
             $endProfile = microtime(true);
@@ -552,46 +691,53 @@ class Application_Model_Scheduler
         }
     }
 
+    private function getInstances($instanceId)
+    {
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
+        $ccShow = $ccShowInstance->getCcShow();
+        if ($ccShow->isLinked()) {
+            return $ccShow->getCcShowInstancess();
+        } else {
+            return array($ccShowInstance);
+        }
+    }
+
     /*
-     * @param array $scheduleItems
-     * @param array $mediaItems
+     * @param array $scheduleItems (schedule_id and instance_id it belongs to)
+     * @param array $mediaItems (file|block|playlist|webstream)
      */
     public function scheduleAfter($scheduleItems, $mediaItems, $adjustSched = true)
     {
         $this->con->beginTransaction();
 
-        $schedFiles = array();
-
         try {
+            $this->validateRequest($scheduleItems, true);
 
-            $this->validateRequest($scheduleItems);
-
-            $requireDynamicContentCreation = false;
-            
-            foreach ($mediaItems as $media) {
-                if ($media['type'] == "playlist") {
-                    $pl = new Application_Model_Playlist($media['id']);
-                    if ($pl->hasDynamicBlock()) {
-                        $requireDynamicContentCreation = true;
-                        break;
-                    }
-                } else if ($media['type'] == "block") {
-                    $bl = new Application_Model_Block($media['id']);
-                    if (!$bl->isStatic()) {
-                        $requireDynamicContentCreation = true;
-                        break;
-                    }
-                }
-            }
-            
-            if ($requireDynamicContentCreation) {
-                $this->insertAfter($scheduleItems, $schedFiles, $adjustSched, $mediaItems);
-            } else {
-                foreach ($mediaItems as $media) {
-                    $schedFiles = array_merge($schedFiles, $this->retrieveMediaFiles($media["id"], $media["type"]));
-                }
-                $this->insertAfter($scheduleItems, $schedFiles, $adjustSched);
-            }
+            /*
+             * create array of arrays
+             * array of schedule item info
+             * (sched_id is the cc_schedule id and is set if an item is being
+             *  moved because it is already in cc_schedule)
+             * [0] = Array(
+             *     id => 1,
+             *     cliplength => 00:04:32,
+             *     cuein => 00:00:00,
+             *     cueout => 00:04:32,
+             *     fadein => 00.5,
+             *     fadeout => 00.5,
+             *     sched_id => ,
+             *     type => 0)
+             * [1] = Array(
+             *     id => 2,
+             *     cliplength => 00:05:07,
+             *     cuein => 00:00:00,
+             *     cueout => 00:05:07,
+             *     fadein => 00.5,
+             *     fadeout => 00.5,
+             *     sched_id => ,
+             *     type => 0)
+             */
+            $this->insertAfter($scheduleItems, $mediaItems, null, $adjustSched);
 
             $this->con->commit();
 
@@ -615,6 +761,7 @@ class Application_Model_Scheduler
 
         try {
 
+            $this->validateItemMove($selectedItems, $afterItems[0]);
             $this->validateRequest($selectedItems);
             $this->validateRequest($afterItems);
 
@@ -668,7 +815,7 @@ class Application_Model_Scheduler
 
             $startProfile = microtime(true);
 
-            $this->insertAfter($afterItems, $movedData, $adjustSched);
+            $this->insertAfter($afterItems, null, $movedData, $adjustSched, true);
 
             $endProfile = microtime(true);
             Logging::debug("inserting after removing gaps.");
@@ -692,7 +839,7 @@ class Application_Model_Scheduler
         }
     }
 
-    public function removeItems($scheduledItems, $adjustSched = true)
+    public function removeItems($scheduledItems, $adjustSched = true, $cancelShow=false)
     {
         $showInstances = array();
         $this->con->beginTransaction();
@@ -712,6 +859,31 @@ class Application_Model_Scheduler
             foreach ($removedItems as $removedItem) {
 
                 $instance = $removedItem->getCcShowInstances($this->con);
+
+                //check if instance is linked and if so get the schedule items
+                //for all linked instances so we can delete them too
+                if (!$cancelShow && $instance->getCcShow()->isLinked()) {
+                    //returns all linked instances if linked
+                    $ccShowInstances = $this->getInstances($instance->getDbId());
+                    $instanceIds = array();
+                    foreach ($ccShowInstances as $ccShowInstance) {
+                        $instanceIds[] = $ccShowInstance->getDbId();
+                    }
+                    /*
+                     * Find all the schedule items that are in the same position
+                     * as the selected item by the user.
+                     * The position of each track is the same across each linked instance
+                     */
+                    $itemsToDelete = CcScheduleQuery::create()
+                        ->filterByDbPosition($removedItem->getDbPosition())
+                        ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                        ->find();
+                    foreach ($itemsToDelete as $item) {
+                        if (!$removedItems->contains($item)) {
+                            $removedItems->append($item);
+                        }
+                    }
+                }
 
                 //check to truncate the currently playing item instead of deleting it.
                 if ($removedItem->isCurrentItem($this->epochNow)) {
@@ -816,7 +988,7 @@ class Application_Model_Scheduler
                         $remove[$i]["id"] = $items[$i]->getDbId();
                     }
 
-                    $this->removeItems($remove, false);
+                    $this->removeItems($remove, false, true);
                 }
             } else {
                 $rebroadcasts = $instance->getCcShowInstancessRelatedByDbId(null, $this->con);

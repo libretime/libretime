@@ -156,6 +156,8 @@ CREATE TABLE "cc_show"
 	"live_stream_using_custom_auth" BOOLEAN default 'f',
 	"live_stream_user" VARCHAR(255),
 	"live_stream_pass" VARCHAR(255),
+	"linked" BOOLEAN default 'f' NOT NULL,
+	"is_linkable" BOOLEAN default 't' NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -426,6 +428,7 @@ CREATE TABLE "cc_schedule"
 	"instance_id" INTEGER  NOT NULL,
 	"playout_status" INT2 default 1 NOT NULL,
 	"broadcasted" INT2 default 0 NOT NULL,
+	"position" INTEGER default 0 NOT NULL,
 	PRIMARY KEY ("id")
 );
 

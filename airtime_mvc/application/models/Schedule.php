@@ -385,6 +385,7 @@ SELECT showt.name AS show_name,
        showt.color AS show_color,
        showt.background_color AS show_background_color,
        showt.id AS show_id,
+       showt.linked AS linked,
        si.starts AS si_starts,
        si.ends AS si_ends,
        si.time_filled AS si_time_filled,
@@ -961,7 +962,7 @@ SQL;
         Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
-    public static function createNewFormSections($p_view)
+    /*public static function createNewFormSections($p_view)
     {
         $formWhat    = new Application_Form_AddShowWhat();
         $formWho     = new Application_Form_AddShowWho();
@@ -1006,7 +1007,7 @@ SQL;
             $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
             $p_view->rebroadcast = $formRebroadcast;
         $p_view->addNewShow = true;
-    }
+    }*/
 
     /* This function is responsible for handling the case where an individual
      * show instance in a repeating show was edited (via the context menu in the Calendar).
@@ -1089,7 +1090,7 @@ SQL;
      * Another clean-up is to move all the form manipulation to the proper form class.....
      * -Martin
      */
-    public static function addUpdateShow($data, $controller, $validateStartDate,
+    /*public static function addUpdateShow($data, $controller, $validateStartDate,
         $originalStartDate=null, $update=false, $instanceId=null)
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -1141,13 +1142,13 @@ SQL;
 
         $data["add_show_duration"] = $hValue.":".$mValue;
 
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
+        $formRecord = new Application_Form_AddShowRR();
+        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
+        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
 
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
+        $formRecord->removeDecorator('DtDdWrapper');
+        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
+        $formRebroadcast->removeDecorator('DtDdWrapper');
 
 
             $record = $formRecord->isValid($data);
@@ -1157,18 +1158,18 @@ SQL;
             if ($repeats) {
                 $repeats = $formRepeats->checkReliantFields($data);
             }
-                $formAbsoluteRebroadcast->reset();
-                //make it valid, results don't matter anyways.
-                $rebroadAb = 1;
+            $formAbsoluteRebroadcast->reset();
+            //make it valid, results don't matter anyways.
+            $rebroadAb = 1;
 
-                if ($data["add_show_rebroadcast"]) {
-                    $rebroad = $formRebroadcast->isValid($data);
-                    if ($rebroad) {
-                        $rebroad = $formRebroadcast->checkReliantFields($data);
-                    }
-                } else {
-                    $rebroad = 1;
+            if ($data["add_show_rebroadcast"]) {
+                $rebroad = $formRebroadcast->isValid($data);
+                if ($rebroad) {
+                    $rebroad = $formRebroadcast->checkReliantFields($data);
                 }
+            } else {
+                $rebroad = 1;
+            }
         } else {
             $repeats = 1;
                 $formRebroadcast->reset();
@@ -1221,15 +1222,14 @@ SQL;
             $controller->view->who     = $formWho;
             $controller->view->style   = $formStyle;
             $controller->view->live    = $formLive;
-
-                $controller->view->rr = $formRecord;
-                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                $controller->view->rebroadcast = $formRebroadcast;
+            $controller->view->rr = $formRecord;
+            $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
+            $controller->view->rebroadcast = $formRebroadcast;
             //$controller->view->addNewShow = !$editShow;
             //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
             return false;
         }
-    }
+    }*/
 
     public static function checkOverlappingShows($show_start, $show_end,
         $update=false, $instanceId=null, $showId=null)
@@ -1258,19 +1258,19 @@ WHERE (ends <= :show_end1
   AND date(starts) >= (date(:show_end3) - INTERVAL '2 days')
   AND modified_instance = FALSE
 SQL;
-        if (is_null($showId)) {
-            $sql .= <<<SQL
+            if (is_null($showId)) {
+                $sql .= <<<SQL
   AND id != :instanceId
 ORDER BY ends
 SQL;
-            $params[':instanceId'] = $instanceId;
-        } else {
-            $sql .= <<<SQL
+                $params[':instanceId'] = $instanceId;
+            } else {
+                $sql .= <<<SQL
   AND show_id != :showId
 ORDER BY ends
 SQL;
-            $params[':showId'] = $showId;
-        }
+                $params[':showId'] = $showId;
+            }
             $rows = Application_Common_Database::prepareAndExecute($sql, $params, 'all');
         } else {
             $sql = <<<SQL
