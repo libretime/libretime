@@ -206,7 +206,7 @@ class Application_Service_ShowService
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
-                        null, $fillInstances);
+                        null, $daysAdded, $fillInstances);
                     break;
             }
         }
@@ -838,8 +838,6 @@ SQL;
 
         $utcStartDateTime = new DateTime("now");
         foreach ($datePeriod as $date) {
-            Logging::info($date);
-            Logging::info($duration);
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*
