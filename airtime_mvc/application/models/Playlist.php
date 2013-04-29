@@ -60,13 +60,8 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
             $this->pl->save();
         }
 
-        $defaultFade = Application_Model_Preference::GetDefaultFade();
-        if ($defaultFade !== "") {
-            //fade is in format SS.uuuuuu
-
-            $this->plItem["fadein"] = $defaultFade;
-            $this->plItem["fadeout"] = $defaultFade;
-        }
+        $this->plItem["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+        $this->plItem["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
         $this->id = $this->pl->getDbId();

@@ -1115,40 +1115,49 @@ var AIRTIME = (function(AIRTIME){
 			$fadeOut = $parent.find(".spl_fade_out"),
 			$fadeIn = $parent.find(".spl_fade_in"),
 			$html = $($("#tmpl-pl-fades").html()),
-			tracks = [
-			    {
-			    	src: $fadeOut.data("fadeout"),
-			    	cuein: $fadeOut.data("cuein"),
-			    	cueout: $fadeOut.data("cueout"),
-			    	moveable: false,
-			    	fades: [{
-			    	    shape: $fadeOut.data("type"),
-			    	    type: "FadeOut",
-			    	    end: $fadeOut.data("cueout") - $fadeOut.data("cuein"),
-			    	    start: $fadeOut.data("cueout") - $fadeOut.data("cuein") - $fadeOut.data("length")
-			    	}],
-			    	states: {
-		                'fadein': false
-		            }
-				},
-				{
-			    	src: $fadeIn.data("fadein"),
-			    	start: $fadeIn.data("offset"),
-			    	cuein: $fadeIn.data("cuein"),
-			    	cueout: $fadeIn.data("cueout"),
-			    	fades: [{
-			    	    shape: $fadeIn.data("type"),
-			    	    type: "FadeIn",
-			    	    end: $fadeIn.data("length"),
-			    	    start: 0
-			    	}],
-			    	states: {
-		                'fadeout': false
-		            }
-				}
-			],
+			tracks = [],
 			dim = AIRTIME.utilities.findViewportDimensions(),
 			playlistEditor;
+		
+		if ($fadeOut.length > 0) {
+			
+			tracks.push({
+		    	src: $fadeOut.data("fadeout"),
+		    	cuein: $fadeOut.data("cuein"),
+		    	cueout: $fadeOut.data("cueout"),
+		    	fades: [{
+		    	    shape: $fadeOut.data("type"),
+		    	    type: "FadeOut",
+		    	    end: $fadeOut.data("cueout") - $fadeOut.data("cuein"),
+		    	    start: $fadeOut.data("cueout") - $fadeOut.data("cuein") - $fadeOut.data("length")
+		    	}],
+		    	states: {
+	                'fadein': false
+	            }
+			});
+		}
+
+		if ($fadeIn.length > 0) {
+			
+			tracks.push({
+		    	src: $fadeIn.data("fadein"),
+		    	start: $fadeIn.data("offset"),
+		    	cuein: $fadeIn.data("cuein"),
+		    	cueout: $fadeIn.data("cueout"),
+		    	fades: [{
+		    	    shape: $fadeIn.data("type"),
+		    	    type: "FadeIn",
+		    	    end: $fadeIn.data("length"),
+		    	    start: 0
+		    	}],
+		    	states: {
+	                'fadeout': false
+	            }
+			});
+		}
+		
+		//set the first track to not be moveable (might only be one track depending on what follows)
+		tracks[0].states["shift"] = false;
 		
 		$html.dialog({
             modal: true,
@@ -1158,13 +1167,13 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
+                {text: "Cancel", click: function() {
+                	$(this).dialog("destroy");
+                }},
                 {text: "Save", click: function() {
                 	var json = playlistEditor.getJson();
                 	
                 	var x;
-                }},
-                {text: "Cancel", click: function() {
-                	$(this).dialog("destroy");
                 }}
             ],
             open: function (event, ui) {
@@ -1223,14 +1232,14 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
+                {text: "Cancel", click: function() {
+                	$(this).dialog("destroy");
+                }},
                 {text: "Save", click: function() {
                 	var cueIn = $html.find('.editor-cue-in').val(),
                 		cueOut = $html.find('.editor-cue-out').val();
                 	
                 	changeCues($html, id, cueIn, cueOut);
-                }},
-                {text: "Cancel", click: function() {
-                	$(this).dialog("destroy");
                 }}
             ],
             open: function (event, ui) {

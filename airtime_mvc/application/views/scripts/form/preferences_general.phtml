@@ -14,14 +14,27 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dt id="stationDefaultFade-label" class="block-display">
-            <label class="optional" for="stationDefaultFade"><?php echo $this->element->getElement('stationDefaultFade')->getLabel() ?></label>
+        <dt id="stationDefaultFadeIn-label" class="block-display">
+            <label class="optional" for="stationDefaultFadeIn"><?php echo $this->element->getElement('stationDefaultFadeIn')->getLabel() ?></label>
         </dt>
-        <dd id="stationDefaultFade-element" class="block-display">
-            <?php echo $this->element->getElement('stationDefaultFade') ?>
-            <?php if($this->element->getElement('stationDefaultFade')->hasErrors()) : ?>
+        <dd id="stationDefaultFadeIn-element" class="block-display">
+            <?php echo $this->element->getElement('stationDefaultFadeIn') ?>
+            <?php if($this->element->getElement('stationDefaultFadeIn')->hasErrors()) : ?>
                 <ul class='errors'>
-                    <?php foreach($this->element->getElement('stationDefaultFade')->getMessages() as $error): ?>
+                    <?php foreach($this->element->getElement('stationDefaultFadeIn')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
+        <dt id="stationDefaultFadeOut-label" class="block-display">
+            <label class="optional" for="stationDefaultFadeOut"><?php echo $this->element->getElement('stationDefaultFadeOut')->getLabel() ?></label>
+        </dt>
+        <dd id="stationDefaultFadeOut-element" class="block-display">
+            <?php echo $this->element->getElement('stationDefaultFadeOut') ?>
+            <?php if($this->element->getElement('stationDefaultFadeOut')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('stationDefaultFadeOut')->getMessages() as $error): ?>
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>

@@ -13,7 +13,7 @@
     <?php }
     if ($this->item2Type == 0) {?>
     <dt><? echo _("Fade in: "); ?><span class='spl_cue_hint'><? echo _("(ss.t)")?></span></dt>
-    <dd id="spl_fade_in_<?php echo $this->item2; ?>" class="spl_fade_in" data-fadein="<?php echo $this->item2Url; ?>" data-offset="<?php echo $this->offset; ?>"
+    <dd id="spl_fade_in_<?php echo $this->item2; ?>" class="spl_fade_in" data-fadein="<?php echo $this->item2Url; ?>" data-offset="<?php if ($this->item1Type == 0) { echo $this->offset; } else { echo 0; } ?>"
     	data-cuein="<?php echo $this->cueIn2; ?>" data-cueout="<?php echo $this->cueOut2; ?>" data-length="<?php echo $this->fadeIn; ?>"
     	data-type="logarithmic">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->fadeIn; ?></span>

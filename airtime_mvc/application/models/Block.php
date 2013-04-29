@@ -99,13 +99,8 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             $this->block->save();
         }
 
-        $defaultFade = Application_Model_Preference::GetDefaultFade();
-        if ($defaultFade !== "") {
-            //fade is in format SS.uuuuuu
-
-            $this->blockItem["fadein"] = $defaultFade;
-            $this->blockItem["fadeout"] = $defaultFade;
-        }
+        $this->blockItem["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+        $this->blockItem["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcBlockPeer::DATABASE_NAME);
         $this->id = $this->block->getDbId();
@@ -234,6 +229,12 @@ SQL;
         foreach ($rows as &$row) {
 
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
+            
+            $row['trackSec'] = $clipSec;
+            
+            $row['cueInSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cuein']);
+            $row['cueOutSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cueout']);
+            
             $offset += $clipSec;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 

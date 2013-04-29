@@ -194,6 +194,40 @@ class Application_Model_Preference
             return new DateTime($date, new DateTimeZone("UTC"));
         }
     }
+    
+    public static function SetDefaultFadeIn($fade)
+    {
+    	self::setValue("default_fade_in", $fade);
+    }
+    
+    public static function GetDefaultFadeIn()
+    {
+    	$fade = self::getValue("default_fade_in");
+    
+    	if ($fade === "") {
+    		// the default value of the fade is 00.5
+    		return "00.5";
+    	}
+    
+    	return $fade;
+    }
+    
+    public static function SetDefaultFadeOut($fade)
+    {
+    	self::setValue("default_fade_out", $fade);
+    }
+    
+    public static function GetDefaultFadeOut()
+    {
+    	$fade = self::getValue("default_fade_out");
+    
+    	if ($fade === "") {
+    		// the default value of the fade is 00.5
+    		return "00.5";
+    	}
+    
+    	return $fade;
+    }
 
     public static function SetDefaultFade($fade)
     {
