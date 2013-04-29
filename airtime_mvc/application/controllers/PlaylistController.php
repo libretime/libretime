@@ -417,6 +417,33 @@ class PlaylistController extends Zend_Controller_Action
             $this->playlistUnknownError($e);
         }
     }
+    
+    public function setCrossFadeAction()
+    {
+    	$id = $this->_getParam('id');
+    	$fadeIn = $this->_getParam('fadeIn', 0);
+    	$fadeOut = $this->_getParam('fadeOut', 0);
+    	$type = $this->_getParam('type');
+    	$offset = $this->_getParam('offset', 0);
+    
+    	try {
+    		$obj = $this->getPlaylist($type);
+    		$response = $obj->changeFadeInfo($id, $fadeIn, $fadeOut);
+    
+    		if (!isset($response["error"])) {
+    			$this->createUpdateResponse($obj);
+    			$this->view->response = $response;
+    		} else {
+    			$this->view->fade_error = $response["error"];
+    		}
+    	} catch (PlaylistOutDatedException $e) {
+    		$this->playlistOutdated($e);
+    	} catch (PlaylistNotFoundException $e) {
+    		$this->playlistNotFound($type);
+    	} catch (Exception $e) {
+    		$this->playlistUnknownError($e);
+    	}
+    }
 
     public function getPlaylistFadesAction()
     {

@@ -645,12 +645,39 @@ SQL;
 
         return array($fadeIn, $fadeOut);
     }
+    
+    /*
+     * create a crossfade from item in cc_playlist_contents with $id1 to item $id2.
+     * 
+     * $fadeOut length of fade out in seconds if $id1
+     * $fadeIn length of fade in in seconds of $id2
+     * $offset time in seconds from end of $id1 that $id2 will begin to play.
+     */
+    public function createCrossfade($id1, $id2, $fadeIn, $fadeOut, $offset)
+    {
+    	$this->con->beginTransaction();
+    	
+    	try {
+    		$this->changeFadeInfo($id1, null, $fadeOut);
+    		$this->changeFadeInfo($id2, $fadeIn, null);
+    		
+    		$item = CcPlaylistcontentsQuery::create()->findPK($id2);
+    		$item->setDbOffset($offset);
+    		$item->save($this->con);
+    		
+    		$this->con->commit();
+    		
+    	} catch (Exception $e) {
+            $this->con->rollback();
+            throw $e;
+        }	
+    }
 
     /**
      * Change fadeIn and fadeOut values for playlist Element
      *
-     * @param int $pos
-     *         position of audioclip in playlist
+     * @param int $id
+     *         id of audioclip in playlist contents table.
      * @param string $fadeIn
      *         new value in ss.ssssss or extent format
      * @param string $fadeOut
