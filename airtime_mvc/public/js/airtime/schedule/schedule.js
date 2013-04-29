@@ -137,7 +137,7 @@ function findViewportDimensions() {
     };
 }
 
-function buildScheduleDialog (json) {
+function buildScheduleDialog (json, instance_id) {
     var dialog = $(json.dialog),
         viewport = findViewportDimensions(),
         height = Math.floor(viewport.height * 0.96),
@@ -179,6 +179,8 @@ function buildScheduleDialog (json) {
     //set the start end times so the builder datatables knows its time range.
     fnServer.start = json.start;
     fnServer.end = json.end;
+    fnServer.ops = {};
+    fnServer.ops.showFilter = instance_id;
     
     AIRTIME.library.libraryInit();
     AIRTIME.showbuilder.builderDataTable();
@@ -352,7 +354,7 @@ $(document).ready(function() {
                     callback = function() {
                         
                         $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
-                            buildScheduleDialog(json);
+                            buildScheduleDialog(json, data.id);
                         });
                     };
                     
