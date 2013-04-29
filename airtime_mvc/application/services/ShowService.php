@@ -836,7 +836,10 @@ SQL;
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
+        $utcStartDateTime = new DateTime("now");
         foreach ($datePeriod as $date) {
+            Logging::info($date);
+            Logging::info($duration);
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*

@@ -53,17 +53,20 @@ class Application_Model_Scheduler
         $isDestinationLinked = $destinationCcShowInstance->getCcShow()->isLinked();
 
         foreach ($itemsToMove as $itemToMove) {
+            $sourceInstanceId = $itemToMove["instance"];
             $ccShowInstance = CcShowInstancesQuery::create()
-                ->findPk($itemToMove["instance"]);
+                ->findPk($sourceInstanceId);
 
             //does the item being moved belong to a linked show
             $isSourceLinked = $ccShowInstance->getCcShow()->isLinked();
 
-            if ($isSourceLinked && $itemToMove["instance"] != $destinationInstanceId) {
-                throw new Exception(_("Linked items can only be moved within its own show"));
-            } /*elseif ($isDestinationLinked && $isSourceLinked) {
-                throw new Exception(_("Items can only be moved to and from unlinked shows"));
-            }*/
+            if ($isDestinationLinked && !$isSourceLinked) {
+                throw new Exception("Cannot move items into linked shows");
+            } elseif (!$isDestinationLinked && $isSourceLinked) {
+                throw new Exception("Cannot move items out of linked shows");
+            } elseif ($isSourceLinked && $sourceInstanceId != $destinationInstanceId) {
+                throw new Exception(_("Cannot move items out of linked shows"));
+            }
         }
     }
 
@@ -496,7 +499,6 @@ class Application_Model_Scheduler
                  */
                 $instances = $this->getInstances($schedule["instance"]);
                 foreach($instances as $instance) {
-
                     if ($id !== 0) {
                         $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
                         /* We use the selected cursor's position to find the same
@@ -537,12 +539,6 @@ class Application_Model_Scheduler
                         $pstart = microtime(true);
 
                         $initalStartDT = clone $nextStartDT;
-                        /*$followingSchedItems = CcScheduleQuery::create()
-                            ->filterByDBStarts($nextStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
-                            ->filterByDbInstanceId($instance->getDbId())
-                            ->filterByDbId($excludeIds, Criteria::NOT_IN)
-                            ->orderByDbStarts()
-                            ->find($this->con);*/
 
                         $pend = microtime(true);
                         Logging::debug("finding all following items.");
@@ -559,11 +555,6 @@ class Application_Model_Scheduler
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
-
-                            /*$sched = CcScheduleQuery::create()
-                                ->filterByDbInstanceId($instance->getDbId())
-                                ->filterByDbFileId($file["id"])
-                                ->findOne();*/
                             $sched = CcScheduleQuery::create()->findPk($file["sched_id"]);
 
                             $excludeIds[] = intval($sched->getDbId());
@@ -590,8 +581,11 @@ class Application_Model_Scheduler
                             ->setDbFadeIn($file['fadein'])
                             ->setDbFadeOut($file['fadeout'])
                             ->setDbClipLength($file['cliplength'])
-                            ->setDbPosition($pos)
-                            ->setDbInstanceId($instance->getDbId());
+                            ->setDbPosition($pos);
+                            //->setDbInstanceId($instance->getDbId());
+                        if (!$moveAction) {
+                            $sched->setDbInstanceId($instance->getDbId());
+                        }
 
                         switch ($file["type"]) {
                             case 0:
@@ -640,7 +634,10 @@ class Application_Model_Scheduler
                         $pstart = microtime(true);
 
                         //recalculate the start/end times after the inserted items.
+                        Logging::info($excludeIds);
+                        Logging::info($initalStartDT);
                         foreach ($followingSchedItems as $item) {
+                            Logging::info($item);
                             $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
 
                             $item->setDbStarts($nextStartDT);
@@ -673,13 +670,6 @@ class Application_Model_Scheduler
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
             }
-
-            // update is_scheduled flag for each cc_file
-            /*foreach ($filesToInsert as $file) {
-                $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
-                $db_file->setDbIsScheduled(true);
-                $db_file->save($this->con);
-            }*/
 
             $endProfile = microtime(true);
             Logging::debug("updating show instances status.");
@@ -849,7 +839,7 @@ class Application_Model_Scheduler
         }
     }
 
-    public function removeItems($scheduledItems, $adjustSched = true)
+    public function removeItems($scheduledItems, $adjustSched = true, $cancelShow=false)
     {
         $showInstances = array();
         $this->con->beginTransaction();
@@ -872,7 +862,7 @@ class Application_Model_Scheduler
 
                 //check if instance is linked and if so get the schedule items
                 //for all linked instances so we can delete them too
-                if ($instance->getCcShow()->isLinked()) {
+                if (!$cancelShow && $instance->getCcShow()->isLinked()) {
                     //returns all linked instances if linked
                     $ccShowInstances = $this->getInstances($instance->getDbId());
                     $instanceIds = array();
@@ -998,7 +988,7 @@ class Application_Model_Scheduler
                         $remove[$i]["id"] = $items[$i]->getDbId();
                     }
 
-                    $this->removeItems($remove, false);
+                    $this->removeItems($remove, false, true);
                 }
             } else {
                 $rebroadcasts = $instance->getCcShowInstancessRelatedByDbId(null, $this->con);
