@@ -343,22 +343,16 @@ class Application_Service_ShowFormService
      */
     public function getNextFutureRepeatShowTime()
     {
-        $sql = <<<SQL
-SELECT starts, ends FROM cc_show_instances
-WHERE ends > now() at time zone 'UTC'
-AND show_id = :showId
-AND modified_instance = FALSE
-ORDER BY starts
-LIMIT 1
-SQL;
-        $result = Application_Common_Database::prepareAndExecute( $sql,
-            array( 'showId' => $this->ccShow->getDbId() ), 'all' );
-        
-        foreach ($result as $r) {
-            $starts = new DateTime($r["starts"], new DateTimeZone('UTC'));
-            $ends = new DateTime($r["ends"], new DateTimeZone('UTC'));
-        }
+        $ccShowInstance = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->ccShow->getDbId())
+            ->filterByDbModifiedInstance(false)
+            ->filterByDbEnds(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->orderByDbStarts()
+            ->limit(1)
+            ->findOne();
 
+        $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
+        $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
         $userTimezone = Application_Model_Preference::GetTimezone();
 
         $starts->setTimezone(new DateTimeZone($userTimezone));

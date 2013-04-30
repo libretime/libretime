@@ -91,6 +91,9 @@ class Application_Service_ShowService
                 $ccSchedule->save();
             }
 
+            $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+            $ccShowInstance->updateDbTimeFilled($con);
+
             //delete the edited instance from the repeating sequence
             $ccShowInstanceOrig->setDbModifiedInstance(true)->save();
 
