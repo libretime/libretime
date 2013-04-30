@@ -264,6 +264,7 @@ class ShowbuilderController extends Zend_Controller_Action
         //default ends is 24 hours after starts.
         $ends_epoch  = $request->getParam("end", $current_time + (60*60*24));
         $show_filter = intval($request->getParam("showFilter", 0));
+        $show_instance_filter = intval($request->getParam("showInstanceFilter", 0));
         $my_shows    = intval($request->getParam("myShows", 0));
 
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
@@ -271,7 +272,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $opts = array("myShows" => $my_shows, 
                 "showFilter" => $show_filter, 
-                "showInstanceFilter" => $show_filter);
+                "showInstanceFilter" => $show_instance_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         $data = $showBuilder->getItems();
