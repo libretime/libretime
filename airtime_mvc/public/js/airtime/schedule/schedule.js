@@ -181,6 +181,7 @@ function buildScheduleDialog (json, instance_id) {
     fnServer.end = json.end;
     fnServer.ops = {};
     fnServer.ops.showFilter = instance_id;
+    fnServer.ops.myShows = 0;
     
     AIRTIME.library.libraryInit();
     AIRTIME.showbuilder.builderDataTable();
