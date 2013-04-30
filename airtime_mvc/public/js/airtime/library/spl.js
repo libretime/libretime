@@ -166,7 +166,7 @@ var AIRTIME = (function(AIRTIME){
             {format: "json", cueIn: cueIn, cueOut: cueOut, id: id, modified: lastMod, type: type}, 
             function(json){
             	
-            	$el.dialog('close');
+            	$el.dialog('destroy');
 
                 if (json.error !== undefined){
                     playlistError(json);
@@ -183,6 +183,34 @@ var AIRTIME = (function(AIRTIME){
                 li.find(".cue-edit").toggle();
                 highlightActive(li);
                 highlightActive(li.find('.spl_cue'));
+            });
+    }
+    
+    /* used from waveform pop-up */
+    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset) {
+        
+        var url = baseUrl+"Playlist/set-crossfade",
+            lastMod = getModified(),
+            type = $('#obj_type').val(),
+            li, id;
+        
+        $.post(url, 
+            {format: "json", fadeIn: fadeIn, fadeOut: fadeOut, id1: id1, id2: id2, offset: offset, modified: lastMod, type: type}, 
+            function(json){
+            	
+            	$el.dialog('destroy');
+
+                if (json.error !== undefined){
+                    playlistError(json);
+	            	return;
+                }
+                
+                setPlaylistContent(json);
+
+                id = id1 === undefined ? id2 : id1;
+                li = $('#side_playlist li[unqid='+id+']');
+                li.find('.crossfade').toggle();
+                highlightActive(li.find('.spl_fade_control'));
             });
     }
 
@@ -1117,7 +1145,8 @@ var AIRTIME = (function(AIRTIME){
 			$html = $($("#tmpl-pl-fades").html()),
 			tracks = [],
 			dim = AIRTIME.utilities.findViewportDimensions(),
-			playlistEditor;
+			playlistEditor,
+			id1, id2;
 		
 		if ($fadeOut.length > 0) {
 			
@@ -1135,6 +1164,8 @@ var AIRTIME = (function(AIRTIME){
 	                'fadein': false
 	            }
 			});
+			
+			id1 = $fadeOut.data("item");
 		}
 
 		if ($fadeIn.length > 0) {
@@ -1154,6 +1185,8 @@ var AIRTIME = (function(AIRTIME){
 	                'fadeout': false
 	            }
 			});
+			
+			id2 = $fadeIn.data("item");
 		}
 		
 		//set the first track to not be moveable (might only be one track depending on what follows)
@@ -1171,9 +1204,34 @@ var AIRTIME = (function(AIRTIME){
                 	$(this).dialog("destroy");
                 }},
                 {text: "Save", click: function() {
-                	var json = playlistEditor.getJson();
+                	var json = playlistEditor.getJson(),
+                		offset, 
+                		fadeIn, fadeOut,
+                		fade;
                 	
-                	var x;
+                	if (json.length === 1) {
+                		
+                		fade = json[0]["fades"][0];
+                		
+                		if (fade["type"] === "FadeOut") {
+                			fadeOut = fade["end"] - fade["start"];
+                		}
+                		else {
+                			fadeIn = fade["end"] - fade["start"];
+                		}
+                	}
+                	else {
+                		
+                		offset = json[0]["end"] - json[1]["start"];
+                		
+                		fade = json[0]["fades"][0];
+                		fadeOut = fade["end"] - fade["start"];
+                		
+                		fade = json[1]["fades"][0];
+                		fadeIn = fade["end"] - fade["start"];
+                	}
+                	
+                	changeCrossfade($html, id1, id2, fadeIn.toFixed(1), fadeOut.toFixed(1), offset);
                 }}
             ],
             open: function (event, ui) {

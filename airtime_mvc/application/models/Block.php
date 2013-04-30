@@ -669,6 +669,29 @@ SQL;
 
         return array($fadeIn, $fadeOut);
     }
+    
+    /*
+     * create a crossfade from item in cc_playlist_contents with $id1 to item $id2.
+    *
+    * $fadeOut length of fade out in seconds if $id1
+    * $fadeIn length of fade in in seconds of $id2
+    * $offset time in seconds from end of $id1 that $id2 will begin to play.
+    */
+    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset)
+    {
+    	$this->con->beginTransaction();
+    	 
+    	try {
+    		$this->changeFadeInfo($id1, null, $fadeOut);
+    		$this->changeFadeInfo($id2, $fadeIn, null, $offset);
+    
+    		$this->con->commit();
+    
+    	} catch (Exception $e) {
+    		$this->con->rollback();
+    		throw $e;
+    	}
+    }
 
     /**
     * Change fadeIn and fadeOut values for block Element
@@ -681,7 +704,7 @@ SQL;
     *         new value in ss.ssssss or extent format
     * @return boolean
     */
-    public function changeFadeInfo($id, $fadeIn, $fadeOut)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset=null)
     {
         //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
@@ -714,6 +737,12 @@ SQL;
                     $fadeIn = $clipLength;
                 }
                 $row->setDbFadein($fadeIn);
+                
+                if (!is_null($offset)) {
+                	$row->setDbTrackOffset($offset);
+                	Logging::info("Setting offset {$offset} on item {$id}");
+                	$row->save($this->con);
+                }
                 
             }
             if (!is_null($fadeOut)) {

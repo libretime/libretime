@@ -45,7 +45,7 @@ class CcPlaylistcontentsTableMap extends TableMap {
 		$this->addColumn('STREAM_ID', 'DbStreamId', 'INTEGER', false, null, null);
 		$this->addColumn('TYPE', 'DbType', 'SMALLINT', true, null, 0);
 		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
-		$this->addColumn('OFFSET', 'DbOffset', 'REAL', true, null, 0);
+		$this->addColumn('TRACKOFFSET', 'DbTrackOffset', 'REAL', true, null, 0);
 		$this->addColumn('CLIPLENGTH', 'DbCliplength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEIN', 'DbCuein', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEOUT', 'DbCueout', 'VARCHAR', false, null, '00:00:00');

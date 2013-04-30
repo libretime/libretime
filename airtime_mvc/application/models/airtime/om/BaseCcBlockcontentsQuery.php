@@ -10,6 +10,7 @@
  * @method     CcBlockcontentsQuery orderByDbBlockId($order = Criteria::ASC) Order by the block_id column
  * @method     CcBlockcontentsQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
  * @method     CcBlockcontentsQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
+ * @method     CcBlockcontentsQuery orderByDbTrackOffset($order = Criteria::ASC) Order by the trackoffset column
  * @method     CcBlockcontentsQuery orderByDbCliplength($order = Criteria::ASC) Order by the cliplength column
  * @method     CcBlockcontentsQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
  * @method     CcBlockcontentsQuery orderByDbCueout($order = Criteria::ASC) Order by the cueout column
@@ -20,6 +21,7 @@
  * @method     CcBlockcontentsQuery groupByDbBlockId() Group by the block_id column
  * @method     CcBlockcontentsQuery groupByDbFileId() Group by the file_id column
  * @method     CcBlockcontentsQuery groupByDbPosition() Group by the position column
+ * @method     CcBlockcontentsQuery groupByDbTrackOffset() Group by the trackoffset column
  * @method     CcBlockcontentsQuery groupByDbCliplength() Group by the cliplength column
  * @method     CcBlockcontentsQuery groupByDbCuein() Group by the cuein column
  * @method     CcBlockcontentsQuery groupByDbCueout() Group by the cueout column
@@ -45,6 +47,7 @@
  * @method     CcBlockcontents findOneByDbBlockId(int $block_id) Return the first CcBlockcontents filtered by the block_id column
  * @method     CcBlockcontents findOneByDbFileId(int $file_id) Return the first CcBlockcontents filtered by the file_id column
  * @method     CcBlockcontents findOneByDbPosition(int $position) Return the first CcBlockcontents filtered by the position column
+ * @method     CcBlockcontents findOneByDbTrackOffset(double $trackoffset) Return the first CcBlockcontents filtered by the trackoffset column
  * @method     CcBlockcontents findOneByDbCliplength(string $cliplength) Return the first CcBlockcontents filtered by the cliplength column
  * @method     CcBlockcontents findOneByDbCuein(string $cuein) Return the first CcBlockcontents filtered by the cuein column
  * @method     CcBlockcontents findOneByDbCueout(string $cueout) Return the first CcBlockcontents filtered by the cueout column
@@ -55,6 +58,7 @@
  * @method     array findByDbBlockId(int $block_id) Return CcBlockcontents objects filtered by the block_id column
  * @method     array findByDbFileId(int $file_id) Return CcBlockcontents objects filtered by the file_id column
  * @method     array findByDbPosition(int $position) Return CcBlockcontents objects filtered by the position column
+ * @method     array findByDbTrackOffset(double $trackoffset) Return CcBlockcontents objects filtered by the trackoffset column
  * @method     array findByDbCliplength(string $cliplength) Return CcBlockcontents objects filtered by the cliplength column
  * @method     array findByDbCuein(string $cuein) Return CcBlockcontents objects filtered by the cuein column
  * @method     array findByDbCueout(string $cueout) Return CcBlockcontents objects filtered by the cueout column
@@ -277,6 +281,37 @@ abstract class BaseCcBlockcontentsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcBlockcontentsPeer::POSITION, $dbPosition, $comparison);
+	}
+
+	/**
+	 * Filter the query on the trackoffset column
+	 * 
+	 * @param     double|array $dbTrackOffset The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcBlockcontentsQuery The current query, for fluid interface
+	 */
+	public function filterByDbTrackOffset($dbTrackOffset = null, $comparison = null)
+	{
+		if (is_array($dbTrackOffset)) {
+			$useMinMax = false;
+			if (isset($dbTrackOffset['min'])) {
+				$this->addUsingAlias(CcBlockcontentsPeer::TRACKOFFSET, $dbTrackOffset['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbTrackOffset['max'])) {
+				$this->addUsingAlias(CcBlockcontentsPeer::TRACKOFFSET, $dbTrackOffset['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcBlockcontentsPeer::TRACKOFFSET, $dbTrackOffset, $comparison);
 	}
 
 	/**

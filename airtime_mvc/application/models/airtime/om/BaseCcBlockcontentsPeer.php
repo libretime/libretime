@@ -26,7 +26,7 @@ abstract class BaseCcBlockcontentsPeer {
 	const TM_CLASS = 'CcBlockcontentsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 9;
+	const NUM_COLUMNS = 10;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -42,6 +42,9 @@ abstract class BaseCcBlockcontentsPeer {
 
 	/** the column name for the POSITION field */
 	const POSITION = 'cc_blockcontents.POSITION';
+
+	/** the column name for the TRACKOFFSET field */
+	const TRACKOFFSET = 'cc_blockcontents.TRACKOFFSET';
 
 	/** the column name for the CLIPLENGTH field */
 	const CLIPLENGTH = 'cc_blockcontents.CLIPLENGTH';
@@ -74,12 +77,12 @@ abstract class BaseCcBlockcontentsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbBlockId', 'DbFileId', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbBlockId', 'dbFileId', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::BLOCK_ID, self::FILE_ID, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'BLOCK_ID', 'FILE_ID', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'block_id', 'file_id', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbBlockId', 'DbFileId', 'DbPosition', 'DbTrackOffset', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbBlockId', 'dbFileId', 'dbPosition', 'dbTrackOffset', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::BLOCK_ID, self::FILE_ID, self::POSITION, self::TRACKOFFSET, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'BLOCK_ID', 'FILE_ID', 'POSITION', 'TRACKOFFSET', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'block_id', 'file_id', 'position', 'trackoffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -89,12 +92,12 @@ abstract class BaseCcBlockcontentsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbBlockId' => 1, 'DbFileId' => 2, 'DbPosition' => 3, 'DbCliplength' => 4, 'DbCuein' => 5, 'DbCueout' => 6, 'DbFadein' => 7, 'DbFadeout' => 8, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbBlockId' => 1, 'dbFileId' => 2, 'dbPosition' => 3, 'dbCliplength' => 4, 'dbCuein' => 5, 'dbCueout' => 6, 'dbFadein' => 7, 'dbFadeout' => 8, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::BLOCK_ID => 1, self::FILE_ID => 2, self::POSITION => 3, self::CLIPLENGTH => 4, self::CUEIN => 5, self::CUEOUT => 6, self::FADEIN => 7, self::FADEOUT => 8, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'BLOCK_ID' => 1, 'FILE_ID' => 2, 'POSITION' => 3, 'CLIPLENGTH' => 4, 'CUEIN' => 5, 'CUEOUT' => 6, 'FADEIN' => 7, 'FADEOUT' => 8, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'block_id' => 1, 'file_id' => 2, 'position' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbBlockId' => 1, 'DbFileId' => 2, 'DbPosition' => 3, 'DbTrackOffset' => 4, 'DbCliplength' => 5, 'DbCuein' => 6, 'DbCueout' => 7, 'DbFadein' => 8, 'DbFadeout' => 9, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbBlockId' => 1, 'dbFileId' => 2, 'dbPosition' => 3, 'dbTrackOffset' => 4, 'dbCliplength' => 5, 'dbCuein' => 6, 'dbCueout' => 7, 'dbFadein' => 8, 'dbFadeout' => 9, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::BLOCK_ID => 1, self::FILE_ID => 2, self::POSITION => 3, self::TRACKOFFSET => 4, self::CLIPLENGTH => 5, self::CUEIN => 6, self::CUEOUT => 7, self::FADEIN => 8, self::FADEOUT => 9, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'BLOCK_ID' => 1, 'FILE_ID' => 2, 'POSITION' => 3, 'TRACKOFFSET' => 4, 'CLIPLENGTH' => 5, 'CUEIN' => 6, 'CUEOUT' => 7, 'FADEIN' => 8, 'FADEOUT' => 9, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'block_id' => 1, 'file_id' => 2, 'position' => 3, 'trackoffset' => 4, 'cliplength' => 5, 'cuein' => 6, 'cueout' => 7, 'fadein' => 8, 'fadeout' => 9, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
 	);
 
 	/**
@@ -170,6 +173,7 @@ abstract class BaseCcBlockcontentsPeer {
 			$criteria->addSelectColumn(CcBlockcontentsPeer::BLOCK_ID);
 			$criteria->addSelectColumn(CcBlockcontentsPeer::FILE_ID);
 			$criteria->addSelectColumn(CcBlockcontentsPeer::POSITION);
+			$criteria->addSelectColumn(CcBlockcontentsPeer::TRACKOFFSET);
 			$criteria->addSelectColumn(CcBlockcontentsPeer::CLIPLENGTH);
 			$criteria->addSelectColumn(CcBlockcontentsPeer::CUEIN);
 			$criteria->addSelectColumn(CcBlockcontentsPeer::CUEOUT);
@@ -180,6 +184,7 @@ abstract class BaseCcBlockcontentsPeer {
 			$criteria->addSelectColumn($alias . '.BLOCK_ID');
 			$criteria->addSelectColumn($alias . '.FILE_ID');
 			$criteria->addSelectColumn($alias . '.POSITION');
+			$criteria->addSelectColumn($alias . '.TRACKOFFSET');
 			$criteria->addSelectColumn($alias . '.CLIPLENGTH');
 			$criteria->addSelectColumn($alias . '.CUEIN');
 			$criteria->addSelectColumn($alias . '.CUEOUT');

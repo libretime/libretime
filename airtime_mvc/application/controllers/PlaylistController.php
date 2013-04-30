@@ -10,6 +10,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('move-items', 'json')
                     ->addActionContext('delete-items', 'json')
                     ->addActionContext('set-fade', 'json')
+                    ->addActionContext('set-crossfade', 'json')
                     ->addActionContext('set-cue', 'json')
                     ->addActionContext('new', 'json')
                     ->addActionContext('edit', 'json')
@@ -418,23 +419,23 @@ class PlaylistController extends Zend_Controller_Action
         }
     }
     
-    public function setCrossFadeAction()
+    public function setCrossfadeAction()
     {
-    	$id = $this->_getParam('id');
+    	$id1 = $this->_getParam('id1');
+    	$id2 = $this->_getParam('id2');
+    	$type = $this->_getParam('type');
     	$fadeIn = $this->_getParam('fadeIn', 0);
     	$fadeOut = $this->_getParam('fadeOut', 0);
-    	$type = $this->_getParam('type');
     	$offset = $this->_getParam('offset', 0);
     
     	try {
     		$obj = $this->getPlaylist($type);
-    		$response = $obj->changeFadeInfo($id, $fadeIn, $fadeOut);
+    		$response = $obj->createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset);
     
     		if (!isset($response["error"])) {
     			$this->createUpdateResponse($obj);
-    			$this->view->response = $response;
     		} else {
-    			$this->view->fade_error = $response["error"];
+    			$this->view->error = $response["error"];
     		}
     	} catch (PlaylistOutDatedException $e) {
     		$this->playlistOutdated($e);
