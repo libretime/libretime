@@ -423,7 +423,7 @@ SQL;
             $showPredicate = " AND show_id IN (".implode(",", $params).")";
             $paramMap = $paramMap + $map;
         } else if (count($p_show_instances) > 0) {
-            $showPredicate = " AND si_id IN (".implode(",", $p_show_instances).")";
+            $showPredicate = " AND si.id IN (".implode(",", $p_show_instances).")";
         }
 
         $sql = <<<SQL
