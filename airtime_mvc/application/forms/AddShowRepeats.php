@@ -5,6 +5,11 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
 
     public function init()
     {
+
+        $linked = new Zend_Form_Element_Checkbox("add_show_linked");
+        $linked->setLabel(_("Link:"));
+        $this->addElement($linked);
+
         //Add type select
         $this->addElement('select', 'add_show_repeat_type', array(
             'required' => true,
@@ -35,6 +40,15 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
                 ),
          ));
 
+         $repeatMonthlyType = new Zend_Form_Element_Radio("add_show_monthly_repeat_type");
+         $repeatMonthlyType
+             ->setLabel(_("Repeat By:"))
+             ->setRequired(true)
+             ->setMultiOptions(
+                 array(2 => _("day of the month"), 3 => _("day of the week")))
+             ->setValue(2);
+         $this->addElement($repeatMonthlyType);
+
         // Add end date element
         $this->addElement('text', 'add_show_end_date', array(
             'label'      => _('Date End:'),
@@ -63,6 +77,14 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             if ($element->getType() != 'Zend_Form_Element_Hidden') {
                 $element->setAttrib('disabled','disabled');
             }
+        }
+    }
+
+    public function isValid($formData) {
+        if (parent::isValid($formData)) {
+             return $this->checkReliantFields($formData);
+        } else {
+            return false;
         }
     }
 

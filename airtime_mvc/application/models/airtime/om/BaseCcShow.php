@@ -96,6 +96,20 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	protected $live_stream_pass;
 
 	/**
+	 * The value for the linked field.
+	 * Note: this column has a database default value of: false
+	 * @var        boolean
+	 */
+	protected $linked;
+
+	/**
+	 * The value for the is_linkable field.
+	 * Note: this column has a database default value of: true
+	 * @var        boolean
+	 */
+	protected $is_linkable;
+
+	/**
 	 * @var        array CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
 	 */
 	protected $collCcShowInstancess;
@@ -142,6 +156,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->genre = '';
 		$this->live_stream_using_airtime_auth = false;
 		$this->live_stream_using_custom_auth = false;
+		$this->linked = false;
+		$this->is_linkable = true;
 	}
 
 	/**
@@ -262,6 +278,26 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	public function getDbLiveStreamPass()
 	{
 		return $this->live_stream_pass;
+	}
+
+	/**
+	 * Get the [linked] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbLinked()
+	{
+		return $this->linked;
+	}
+
+	/**
+	 * Get the [is_linkable] column value.
+	 * 
+	 * @return     boolean
+	 */
+	public function getDbIsLinkable()
+	{
+		return $this->is_linkable;
 	}
 
 	/**
@@ -485,6 +521,46 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 	} // setDbLiveStreamPass()
 
 	/**
+	 * Set the value of [linked] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbLinked($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->linked !== $v || $this->isNew()) {
+			$this->linked = $v;
+			$this->modifiedColumns[] = CcShowPeer::LINKED;
+		}
+
+		return $this;
+	} // setDbLinked()
+
+	/**
+	 * Set the value of [is_linkable] column.
+	 * 
+	 * @param      boolean $v new value
+	 * @return     CcShow The current object (for fluent API support)
+	 */
+	public function setDbIsLinkable($v)
+	{
+		if ($v !== null) {
+			$v = (boolean) $v;
+		}
+
+		if ($this->is_linkable !== $v || $this->isNew()) {
+			$this->is_linkable = $v;
+			$this->modifiedColumns[] = CcShowPeer::IS_LINKABLE;
+		}
+
+		return $this;
+	} // setDbIsLinkable()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -511,6 +587,14 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			}
 
 			if ($this->live_stream_using_custom_auth !== false) {
+				return false;
+			}
+
+			if ($this->linked !== false) {
+				return false;
+			}
+
+			if ($this->is_linkable !== true) {
 				return false;
 			}
 
@@ -547,6 +631,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$this->live_stream_using_custom_auth = ($row[$startcol + 8] !== null) ? (boolean) $row[$startcol + 8] : null;
 			$this->live_stream_user = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->live_stream_pass = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+			$this->linked = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
+			$this->is_linkable = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -555,7 +641,7 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 11; // 11 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 13; // 13 = CcShowPeer::NUM_COLUMNS - CcShowPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShow object", $e);
@@ -959,6 +1045,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 10:
 				return $this->getDbLiveStreamPass();
 				break;
+			case 11:
+				return $this->getDbLinked();
+				break;
+			case 12:
+				return $this->getDbIsLinkable();
+				break;
 			default:
 				return null;
 				break;
@@ -993,6 +1085,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			$keys[8] => $this->getDbLiveStreamUsingCustomAuth(),
 			$keys[9] => $this->getDbLiveStreamUser(),
 			$keys[10] => $this->getDbLiveStreamPass(),
+			$keys[11] => $this->getDbLinked(),
+			$keys[12] => $this->getDbIsLinkable(),
 		);
 		return $result;
 	}
@@ -1057,6 +1151,12 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 			case 10:
 				$this->setDbLiveStreamPass($value);
 				break;
+			case 11:
+				$this->setDbLinked($value);
+				break;
+			case 12:
+				$this->setDbIsLinkable($value);
+				break;
 		} // switch()
 	}
 
@@ -1092,6 +1192,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if (array_key_exists($keys[8], $arr)) $this->setDbLiveStreamUsingCustomAuth($arr[$keys[8]]);
 		if (array_key_exists($keys[9], $arr)) $this->setDbLiveStreamUser($arr[$keys[9]]);
 		if (array_key_exists($keys[10], $arr)) $this->setDbLiveStreamPass($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbLinked($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setDbIsLinkable($arr[$keys[12]]);
 	}
 
 	/**
@@ -1114,6 +1216,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH)) $criteria->add(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, $this->live_stream_using_custom_auth);
 		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_USER)) $criteria->add(CcShowPeer::LIVE_STREAM_USER, $this->live_stream_user);
 		if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_PASS)) $criteria->add(CcShowPeer::LIVE_STREAM_PASS, $this->live_stream_pass);
+		if ($this->isColumnModified(CcShowPeer::LINKED)) $criteria->add(CcShowPeer::LINKED, $this->linked);
+		if ($this->isColumnModified(CcShowPeer::IS_LINKABLE)) $criteria->add(CcShowPeer::IS_LINKABLE, $this->is_linkable);
 
 		return $criteria;
 	}
@@ -1185,6 +1289,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$copyObj->setDbLiveStreamUsingCustomAuth($this->live_stream_using_custom_auth);
 		$copyObj->setDbLiveStreamUser($this->live_stream_user);
 		$copyObj->setDbLiveStreamPass($this->live_stream_pass);
+		$copyObj->setDbLinked($this->linked);
+		$copyObj->setDbIsLinkable($this->is_linkable);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -1787,6 +1893,8 @@ abstract class BaseCcShow extends BaseObject  implements Persistent
 		$this->live_stream_using_custom_auth = null;
 		$this->live_stream_user = null;
 		$this->live_stream_pass = null;
+		$this->linked = null;
+		$this->is_linkable = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

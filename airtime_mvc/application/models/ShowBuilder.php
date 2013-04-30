@@ -19,6 +19,7 @@ class Application_Model_ShowBuilder
     private $contentDT;
     private $epoch_now;
     private $currentShow;
+    private $currentShowId;
 
     private $showInstances = array();
 
@@ -27,6 +28,7 @@ class Application_Model_ShowBuilder
         "footer"          => false,
         "empty"           => false,
         "allowed"         => false,
+        "linked_allowed"  => true,
         "id"              => 0,
         "instance"        => "",
         "starts"          => "",
@@ -83,6 +85,18 @@ class Application_Model_ShowBuilder
         //cannot schedule in a recorded show.
         if (intval($p_item["si_record"]) === 1) {
             return;
+        }
+
+        if ($this->currentShow) {
+            $this->currentShowId = $p_item["show_id"];
+        }
+
+        /* If any linked show instance is currently playing
+         * we have to disable editing, or else the times
+         * will not make sense for shows scheduled in the future
+         */
+        if ($p_item["linked"] && $p_item["show_id"] == $this->currentShowId) {
+            $row["linked_allowed"] = false;
         }
 
         if ($this->user->canSchedule($p_item["show_id"]) == true) {
@@ -174,7 +188,7 @@ class Application_Model_ShowBuilder
     private function makeHeaderRow($p_item)
     {
         $row = $this->defaultRowArray;
-        $this->isAllowed($p_item, $row);
+        //$this->isAllowed($p_item, $row);
         $this->getRowTimestamp($p_item, $row);
         $this->getItemColor($p_item, $row);
 
@@ -216,6 +230,8 @@ class Application_Model_ShowBuilder
         } else {
             $this->currentShow = false;
         }
+
+        $this->isAllowed($p_item, $row);
 
         $row["header"]    = true;
         $row["starts"]    = $showStartDT->format("Y-m-d H:i");
