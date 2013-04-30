@@ -354,8 +354,8 @@ $(document).ready(function() {
                     
                     callback = function() {
                         
-                        $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
-                            buildScheduleDialog(json, data.id);
+                        $.post(oItems.schedule.url, {format: "json", id: data.showId}, function(json){
+                            buildScheduleDialog(json, data.showId);
                         });
                     };
                     
