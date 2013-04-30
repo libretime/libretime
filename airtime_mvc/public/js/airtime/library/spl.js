@@ -1150,6 +1150,13 @@ var AIRTIME = (function(AIRTIME){
 			playlistEditor,
 			id1, id2;
 		
+		function removeDialog() {
+			playlistEditor.stop();
+			
+        	$html.dialog("destroy");
+        	$html.remove();
+        }
+		
 		if ($fadeOut.length > 0) {
 			
 			tracks.push({
@@ -1202,14 +1209,14 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                {text: "Cancel", click: function() {
-                	$(this).dialog("destroy");
-                }},
+                {text: "Cancel", click: removeDialog},
                 {text: "Save", click: function() {
                 	var json = playlistEditor.getJson(),
                 		offset, 
                 		fadeIn, fadeOut,
                 		fade;
+                	
+                	playlistEditor.stop();
                 	
                 	if (json.length === 1) {
                 		
@@ -1251,7 +1258,8 @@ var AIRTIME = (function(AIRTIME){
         		playlistEditor = new PlaylistEditor();
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);
-            }
+            },
+        	close: removeDialog
         });		
 	};
 	
@@ -1267,7 +1275,15 @@ var AIRTIME = (function(AIRTIME){
 			}],
 			cueIn = $li.find('.spl_cue_in').data("cueIn"),
 			cueOut = $li.find('.spl_cue_out').data("cueOut"),
-			dim = AIRTIME.utilities.findViewportDimensions();
+			dim = AIRTIME.utilities.findViewportDimensions(),
+			playlistEditor;
+		
+		function removeDialog() {
+			playlistEditor.stop();
+			
+        	$html.dialog("destroy");
+        	$html.remove();
+        }
 		
 		$html.find('.editor-cue-in').val(cueIn);
 		$html.find('.editor-cue-out').val(cueOut);
@@ -1292,12 +1308,12 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                {text: "Cancel", click: function() {
-                	$(this).dialog("destroy");
-                }},
+                {text: "Cancel", click: removeDialog},
                 {text: "Save", click: function() {
                 	var cueIn = $html.find('.editor-cue-in').val(),
                 		cueOut = $html.find('.editor-cue-out').val();
+                	
+                	playlistEditor.stop();
                 	
                 	changeCues($html, id, cueIn, cueOut);
                 }}
@@ -1313,10 +1329,11 @@ var AIRTIME = (function(AIRTIME){
         	        timeFormat: 'hh:mm:ss.u'
         	    });
         		
-        		var playlistEditor = new PlaylistEditor();
+        		playlistEditor = new PlaylistEditor();
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);	
-            }
+            },
+            close: removeDialog
         });	
 	};
 	
