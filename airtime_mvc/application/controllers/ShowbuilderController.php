@@ -269,7 +269,9 @@ class ShowbuilderController extends Zend_Controller_Action
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT   = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
-        $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
+        $opts = array("myShows" => $my_shows, 
+                "showFilter" => $show_filter, 
+                "showInstanceFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
         $data = $showBuilder->getItems();

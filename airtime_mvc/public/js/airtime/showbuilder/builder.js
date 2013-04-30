@@ -359,6 +359,7 @@ var AIRTIME = (function(AIRTIME){
         if (mod.fnServerData.hasOwnProperty("ops")) {
             aoData.push( { name: "myShows", value: mod.fnServerData.ops.myShows} );
             aoData.push( { name: "showFilter", value: mod.fnServerData.ops.showFilter} );
+            aoData.push( { name: "showInstanceFilter", value: mod.fnServerData.ops.showInstanceFilter} );
         }
         
         $.ajax({

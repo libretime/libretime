@@ -180,7 +180,8 @@ function buildScheduleDialog (json, instance_id) {
     fnServer.start = json.start;
     fnServer.end = json.end;
     fnServer.ops = {};
-    fnServer.ops.showFilter = instance_id;
+    fnServer.ops.showFilter = 0;
+    fnServer.ops.showInstanceFilter = instance_id;
     fnServer.ops.myShows = 0;
     
     AIRTIME.library.libraryInit();
@@ -354,8 +355,8 @@ $(document).ready(function() {
                     
                     callback = function() {
                         
-                        $.post(oItems.schedule.url, {format: "json", id: data.showId}, function(json){
-                            buildScheduleDialog(json, data.showId);
+                        $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
+                            buildScheduleDialog(json, data.id);
                         });
                     };
                     

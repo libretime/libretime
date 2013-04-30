@@ -309,12 +309,10 @@ SQL;
      * @return array $scheduledItems
      *
      */
-    public static function GetScheduleDetailItems($p_start, $p_end, $p_shows)
+    public static function GetScheduleDetailItems($p_start, $p_end, $p_shows, $p_show_instances)
     {
         $p_start_str = $p_start->format("Y-m-d H:i:s");
         $p_end_str = $p_end->format("Y-m-d H:i:s");
-
-       	$paramMap = array();
 
         //We need to search 24 hours before and after the show times so that that we
         //capture all of the show's contents.
@@ -355,7 +353,7 @@ SQL;
                AND sched.ends >= :fj_ts_6))
         )
 SQL;
-        $map = array(
+        $paramMap = array(
         	":fj_ts_1" => $p_track_start,
         	":fj_ts_2" => $p_track_end,
         	":fj_ts_3" => $p_track_start,
@@ -363,8 +361,6 @@ SQL;
         	":fj_ts_5" => $p_track_start,
         	":fj_ts_6" => $p_track_end,
         );
-        $paramMap = $paramMap + $map;
-
 
         $filesSql = str_replace("%%columns%%",
             $filesColumns,
@@ -426,6 +422,8 @@ SQL;
             
             $showPredicate = " AND show_id IN (".implode(",", $params).")";
             $paramMap = $paramMap + $map;
+        } else if (count($p_show_instances) > 0) {
+            $showPredicate = " AND si_id IN (".implode(",", $p_show_instances).")";
         }
 
         $sql = <<<SQL
