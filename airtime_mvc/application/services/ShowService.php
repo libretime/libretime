@@ -52,18 +52,21 @@ class Application_Service_ShowService
             //so we can get the original start date and time
             $oldCcShow = CcShowQuery::create()
                 ->findPk($showData["add_show_id"]);
-            $currentShowDay = $oldCcShow->getFirstCcShowDay();
 
             //DateTime in user's local time
             $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
             $showData["add_show_start_time"],
                 new DateTimeZone(Application_Model_Preference::GetTimezone()));
 
+            $ccShowInstanceOrig = CcShowInstancesQuery::create()
+                ->findPk($showData["add_show_instance_id"]);
             $diff = $this->calculateShowStartDiff($newStartDateTime,
-                $currentShowDay->getLocalStartDateAndTime());
+                $ccShowInstanceOrig->getLocalStartDateTime());
 
-            Application_Service_SchedulerService::updateScheduleStartTime(
-                array($showData["add_show_instance_id"]), $diff);
+            if ($diff > 0) {
+                Application_Service_SchedulerService::updateScheduleStartTime(
+                    array($showData["add_show_instance_id"]), $diff);
+            }
             /****** UPDATE SCHEDULE START TIME ENDS******/
 
             $this->setCcShow($showData);
@@ -89,10 +92,7 @@ class Application_Service_ShowService
             }
 
             //delete the edited instance from the repeating sequence
-            CcShowInstancesQuery::create()
-                ->findPk($showData["add_show_instance_id"])
-                ->setDbModifiedInstance(true)
-                ->save();
+            $ccShowInstanceOrig->setDbModifiedInstance(true)->save();
 
             $service_showForm = new Application_Service_ShowFormService($showData["add_show_id"]);
             list($start, $end) = $service_showForm->getNextFutureRepeatShowTime();

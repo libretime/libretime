@@ -69,9 +69,14 @@ class Application_Service_SchedulerService
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
                 ->find();
             foreach ($ccSchedules as $ccSchedule) {
+                $interval = new DateInterval("PT".$diff."S");
+                $start = new DateTime($ccSchedule->getDbStarts());
+                $newStart = $start->add($interval);
+                $end = new DateTime($ccSchedule->getDbEnds());
+                $newEnd = $end->add($interval);
                 $ccSchedule
-                    ->setDbStarts($ccSchedule->getDbStarts() + $diff)
-                    ->setDbEnds($ccSchedule->getDbEnds() + $diff)
+                    ->setDbStarts($newStart->format("Y-m-d H:i:s"))
+                    ->setDbEnds($newEnd->format("Y-m-d H:i:s"))
                     ->save();
             }
         }

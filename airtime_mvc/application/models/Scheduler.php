@@ -634,10 +634,7 @@ class Application_Model_Scheduler
                         $pstart = microtime(true);
 
                         //recalculate the start/end times after the inserted items.
-                        Logging::info($excludeIds);
-                        Logging::info($initalStartDT);
                         foreach ($followingSchedItems as $item) {
-                            Logging::info($item);
                             $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
 
                             $item->setDbStarts($nextStartDT);
