@@ -167,6 +167,7 @@ var AIRTIME = (function(AIRTIME){
             function(json){
             	
             	$el.dialog('destroy');
+            	$el.remove();
 
                 if (json.error !== undefined){
                     playlistError(json);
@@ -199,6 +200,7 @@ var AIRTIME = (function(AIRTIME){
             function(json){
             	
             	$el.dialog('destroy');
+            	$el.remove();
 
                 if (json.error !== undefined){
                     playlistError(json);

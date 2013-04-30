@@ -161,6 +161,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                    pc.cueout,
                    pc.fadein,
                    pc.fadeout,
+                   pc.trackoffset,
                    f.id AS item_id,
                    f.track_title,
                    f.artist_name AS creator,
@@ -188,6 +189,7 @@ SQL;
                             pc.cueout,
                             pc.fadein,
                             pc.fadeout,
+                            pc.trackoffset,
                             ws.id AS item_id,
                             (ws.name || ': ' || ws.url) AS title,
                             sub.login AS creator,
@@ -208,6 +210,7 @@ SQL;
                             pc.cueout,
                             pc.fadein,
                             pc.fadeout,
+                            pc.trackoffset,
                             bl.id AS item_id,
                             bl.name AS title,
                             sbj.login AS creator,
@@ -222,6 +225,7 @@ SQL;
               AND pc.TYPE = 2)) AS temp
    ORDER BY temp.position;
 SQL;
+        //Logging::info($sql);
 
         $params = array(
             ':playlist_id1'=>$this->id, ':playlist_id2'=>$this->id, ':playlist_id3'=>$this->id);
@@ -233,13 +237,18 @@ SQL;
 
         $offset = 0;
         foreach ($rows as &$row) {
+        	
+        	//Logging::info($row);
+        	
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
             $row['trackSec'] = $clipSec;
             
             $row['cueInSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cuein']);
             $row['cueOutSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cueout']);
             
+            $trackoffset = $row['trackoffset'];
             $offset += $clipSec;
+            $offset -= $trackoffset;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 
             //format the length for UI.

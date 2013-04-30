@@ -195,6 +195,7 @@ SELECT pc.id AS id,
        pc.cueout,
        pc.fadein,
        pc.fadeout,
+       pc.trackoffset,
        bl.type,
        f.LENGTH AS orig_length,
        f.id AS item_id,
@@ -235,7 +236,9 @@ SQL;
             $row['cueInSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cuein']);
             $row['cueOutSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cueout']);
             
+            $trackoffset = $row['trackoffset'];
             $offset += $clipSec;
+            $offset -= $trackoffset;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 
             //format the length for UI.

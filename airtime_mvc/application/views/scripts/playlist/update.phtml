@@ -94,7 +94,7 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             	'item2Url' => $nextFileUrl,
                 'fadeOut' => $items[$i]['fadeout'],
                 'fadeIn' => $items[$i+1]['fadein'],
-            	'offset' => $items[$i]['trackSec'],
+            	'offset' => $items[$i]['trackSec'] - $items[$i+1]['trackoffset'],
                 'cueIn1' => $items[$i]['cueInSec'],
             	'cueOut1' => $items[$i]['cueOutSec'],
             	'cueIn2' => $items[$i+1]['cueInSec'],
