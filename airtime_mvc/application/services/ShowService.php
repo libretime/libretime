@@ -781,7 +781,7 @@ SQL;
         if (isset($this->ccShow)) {
             $showId = $this->ccShow->getDbId();
         } else {
-            $showId = $showDay["show_id"];
+            $showId = $showDay->getDbShowId();
         }
 
         //DateTime object
