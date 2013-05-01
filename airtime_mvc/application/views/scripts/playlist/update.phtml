@@ -9,12 +9,12 @@ if ($item['type'] == 2) {
     $staticBlock = $bl->isStatic();
 }
 else if ($item['type'] == 0) {
-	$audiofile = Application_Model_StoredFile::Recall($item['item_id']);
+	$audiofile = Application_Model_StoredFile::RecallById($item['item_id']);
 	$fileUrl = $audiofile->getFileUrl();
 }
 
 if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
-	$nextAudiofile = Application_Model_StoredFile::Recall($items[$i+1]['item_id']);
+	$nextAudiofile = Application_Model_StoredFile::RecallById($items[$i+1]['item_id']);
 	$nextFileUrl = $nextAudiofile->getFileUrl();	
 }
 ?>
