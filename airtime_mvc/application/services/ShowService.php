@@ -778,6 +778,12 @@ SQL;
      */
     private function createNonRepeatingInstance($showDay, $populateUntil)
     {
+        if (isset($this->ccShow)) {
+            $showId = $this->ccShow->getDbId();
+        } else {
+            $showId = $showDay["show_id"];
+        }
+
         //DateTime object
         $start = $showDay->getLocalStartDateAndTime();
 
@@ -789,7 +795,7 @@ SQL;
             if ($this->isUpdate) {
                 $ccShowInstance = $this->getInstance($utcStartDateTime);
             }
-            $ccShowInstance->setDbShowId($this->ccShow->getDbId());
+            $ccShowInstance->setDbShowId($showId);
             $ccShowInstance->setDbStarts($utcStartDateTime);
             $ccShowInstance->setDbEnds($utcEndDateTime);
             $ccShowInstance->setDbRecord($showDay->getDbRecord());
