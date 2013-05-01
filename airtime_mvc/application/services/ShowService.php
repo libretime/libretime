@@ -230,6 +230,7 @@ class Application_Service_ShowService
         $c = new Criteria();
         $c->add(CcShowDaysPeer::FIRST_SHOW, $endTimeString, Criteria::LESS_THAN);
         $c->addAnd(CcShowDaysPeer::LAST_SHOW, $startTimeString, Criteria::GREATER_THAN);
+        $c->addAnd(CcShowDaysPeer::REPEAT_TYPE, -1, Criteria::NOT_EQUAL);
         $c->addOr(CcShowDaysPeer::LAST_SHOW, null, Criteria::ISNULL);
 
         return CcShowDaysPeer::doSelect($c);
@@ -778,12 +779,6 @@ SQL;
      */
     private function createNonRepeatingInstance($showDay, $populateUntil)
     {
-        if (isset($this->ccShow)) {
-            $showId = $this->ccShow->getDbId();
-        } else {
-            $showId = $showDay->getDbShowId();
-        }
-
         //DateTime object
         $start = $showDay->getLocalStartDateAndTime();
 
@@ -795,7 +790,8 @@ SQL;
             if ($this->isUpdate) {
                 $ccShowInstance = $this->getInstance($utcStartDateTime);
             }
-            $ccShowInstance->setDbShowId($showId);
+
+            $ccShowInstance->setDbShowId($this->ccShow->getDbId());
             $ccShowInstance->setDbStarts($utcStartDateTime);
             $ccShowInstance->setDbEnds($utcEndDateTime);
             $ccShowInstance->setDbRecord($showDay->getDbRecord());
