@@ -2,9 +2,9 @@ import telnetlib
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
-    return 'annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",' + \
+    return ('annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",' + \
             'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",' + \
-            'schedule_table_id="%s",replay_gain="%s dB":%s' % \
+            'schedule_table_id="%s",replay_gain="%s dB":%s') % \
             (media['id'], 
                     float(media['fade_in']) / 1000, 
                     float(media['fade_out']) / 1000, 

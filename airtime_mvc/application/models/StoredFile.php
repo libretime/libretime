@@ -1017,6 +1017,9 @@ SQL;
             Logging::info("Successfully written identification file for
                 uploaded '$audio_stor'");
         }
+        //if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
+        //encoding is ISO-8859-1
+        $audio_stor = mb_detect_encoding($audio_stor, "UTF-8") == "UTF-8" ? $audio_stor : utf8_encode($audio_stor);
         Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
         // Martin K.: changed to rename: Much less load + quicker since this is
         // an atomic operation

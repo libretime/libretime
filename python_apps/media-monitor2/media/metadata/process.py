@@ -148,7 +148,8 @@ class MetadataElement(Loggable):
         if self.__max_length != -1:
             r = truncate_to_length(r, self.__max_length)
         if self.__max_value != -1:
-            r = truncate_to_value(r, self.__max_value)
+            try: r = truncate_to_value(r, self.__max_value)
+            except ValueError, e: r = ''
         return r
 
 def normalize_mutagen(path):

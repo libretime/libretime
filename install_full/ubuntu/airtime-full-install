@@ -82,10 +82,11 @@ else
     apt-get -y --force-yes install coreutils
 fi
 
-#Install Sourcefabric's custom Liquidsoap debian package
+#Install packages back-ported by Sourcefabric
 apt-get -y --force-yes install sourcefabric-keyring
 apt-get -y --force-yes install liquidsoap
 apt-get -y --force-yes install silan
+apt-get -y --force-yes install libopus0
 
 if [ "$server" = "nginx" ]; then
     apt-get -y --force-yes install nginx php5-fpm

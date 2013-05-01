@@ -64,14 +64,8 @@ class ApiController extends Zend_Controller_Action
 
     public function versionAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $jsonStr = json_encode( array(
+        $this->_helper->json->sendJson( array(
             "version" => Application_Model_Preference::GetAirtimeVersion()));
-        echo $jsonStr;
-        die();
     }
 
     /**
@@ -80,9 +74,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function calendarInitAction()
     {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         if (is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource.');
@@ -97,6 +88,8 @@ class ApiController extends Zend_Controller_Action
             "timeInterval"   => Application_Model_Preference::GetCalendarTimeInterval(),
             "weekStartDay"   => Application_Model_Preference::GetWeekStartDay()
         );
+
+        $this->_helper->json->sendJson(array());
     }
 
     /**
@@ -107,10 +100,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $fileId = $this->_getParam("file");
 
         $media = Application_Model_StoredFile::RecallById($fileId);
@@ -151,7 +140,7 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
-        return;
+        $this->_helper->json->sendJson(array());
     }
 
     /**
@@ -359,22 +348,15 @@ class ApiController extends Zend_Controller_Action
 
     public function scheduleAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $data = Application_Model_Schedule::getSchedule();
         header("Content-Type: application/json");
+
         echo json_encode($data, JSON_FORCE_OBJECT);
-        die();
+        $this->_helper->json->sendJson($data, false, true);
     }
 
     public function notifyMediaItemStartPlayAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
         Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
@@ -404,8 +386,7 @@ class ApiController extends Zend_Controller_Action
             Logging::info($e);
         }
 
-        echo json_encode(array("status"=>1, "message"=>""));
-        die();
+        $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }
 
     public function recordedShowsAction()
@@ -493,10 +474,6 @@ class ApiController extends Zend_Controller_Action
 
     public function mediaMonitorSetupAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
 
         $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
@@ -611,8 +588,6 @@ class ApiController extends Zend_Controller_Action
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
-
-            Logging::info($info_json);
 
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
@@ -940,38 +915,24 @@ class ApiController extends Zend_Controller_Action
      * out a message to pypo that a potential change has been made. */
     public function getFilesWithoutReplayGainAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $dir_id = $this->_getParam('dir_id');
 
         //connect to db and get get sql
         $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
 
-        echo json_encode($rows);
-        die();
+        $this->_helper->json->sendJson($rows);
     }
     
     public function getFilesWithoutSilanValueAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-    
         //connect to db and get get sql
         $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
     
-        echo json_encode($rows);
-        die();
+        $this->_helper->json->sendJson($rows);
     }
 
     public function updateReplayGainValueAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
 
@@ -983,16 +944,11 @@ class ApiController extends Zend_Controller_Action
             $file->save();
         }
 
-        echo json_encode(array());
-        die();
+        $this->_helper->json->sendJson(array());
     }
     
     public function updateCueValuesBySilanAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'), $assoc = true);
 
@@ -1024,8 +980,7 @@ class ApiController extends Zend_Controller_Action
             $file->save();
         }
 
-        echo json_encode(array());
-        die();
+        $this->_helper->json->sendJson(array());
     }
 
     public function notifyWebstreamDataAction()
@@ -1094,5 +1049,4 @@ class ApiController extends Zend_Controller_Action
             Application_Model_StreamSetting::SetListenerStatError($k, $v);
         }
     }
-
 }
