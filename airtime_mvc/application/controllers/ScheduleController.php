@@ -245,19 +245,14 @@ class ScheduleController extends Zend_Controller_Action
 
     public function clearShowAction()
     {
-        $showInstanceId = $this->_getParam('id');
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        try {
-            $show = new Application_Model_ShowInstance($showInstanceId);
-        } catch (Exception $e) {
-            $this->view->show_error = true;
+        $instanceId = $this->_getParam('id');
 
+        $service_scheduler = new Application_Service_SchedulerService();
+
+        if (!$service_scheduler->emptyShowContent($instanceId)) {
+            $this->view->show_error = true;
             return false;
         }
-
-        if($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER)) || $user->isHostOfShow($show->getShowId()))
-            $show->clearShow();
     }
 
     public function getCurrentPlaylistAction()

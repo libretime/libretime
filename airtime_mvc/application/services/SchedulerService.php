@@ -204,4 +204,40 @@ class Application_Service_SchedulerService
             } //if at least one linked instance has content
         }
     }
+
+    public function emptyShowContent($instanceId)
+    {
+        try {
+            $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
+
+            $instances = array();
+
+            if ($ccShowInstance->getCcShow()->isLinked()) {
+                $instanceIds = array();
+                foreach ($ccShowInstance->getCcShow()->getCcShowInstancess() as $instance) {
+                    $instanceIds[] = $instance->getDbId();
+                    $instances[] = $instance;
+                }
+                CcScheduleQuery::create()
+                    ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                    ->delete();
+            } else {
+                $instances[] = $ccShowInstance;
+                CcScheduleQuery::create()
+                    ->filterByDbInstanceId($ccShowInstance->getDbId())
+                    ->delete();
+            }
+
+            Application_Model_RabbitMq::PushSchedule();
+            $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
+            foreach ($instances as $instance) {
+                $instance->updateDbTimeFilled($con);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            Logging::info($e->getMessage());
+            return false;
+        }
+    }
 }
