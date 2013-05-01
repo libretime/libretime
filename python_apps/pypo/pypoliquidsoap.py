@@ -20,7 +20,8 @@ class PypoLiquidsoap():
         self.telnet_liquidsoap = TelnetLiquidsoap(telnet_lock, \
                 logger,\
                 host,\
-                port)
+                port,\
+                self.liq_queue_tracker.keys())
 
 
     def play(self, media_item):
@@ -90,9 +91,6 @@ class PypoLiquidsoap():
 
         return available_queue
 
-    def get_queues():
-        return self.liq_queue_tracker
-
 
     def verify_correct_present_media(self, scheduled_now):
         #verify whether Liquidsoap is currently playing the correct files.
@@ -104,8 +102,6 @@ class PypoLiquidsoap():
         #Check for Liquidsoap media we should source.skip
         #get liquidsoap items for each queue. Since each queue can only have one
         #item, we should have a max of 8 items.
-
-        #TODO: Verify start, end, replay_gain is the same
 
         #2013-03-21-22-56-00_0: {
         #id: 1,
@@ -147,6 +143,7 @@ class PypoLiquidsoap():
                 mi = row_id_map[i["row_id"]]
                 correct = mi['start'] == i['start'] and \
                         mi['end'] == i['end'] and \
+                        mi['row_id'] == i['row_id'] and \
                         mi['replay_gain'] == i['replay_gain']
 
                 if not correct:
@@ -221,6 +218,9 @@ class PypoLiquidsoap():
         if seconds < 0: seconds = 0
 
         return seconds
+
+    def clear_all_queues(self):
+        self.telnet_liquidsoap.queue_clear_all()
 
 
 class UnknownMediaItemType(Exception):

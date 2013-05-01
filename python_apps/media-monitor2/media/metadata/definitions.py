@@ -7,6 +7,8 @@ from media.monitor.pure import format_length, file_md5, is_airtime_recorded, \
 
 defs_loaded = False
 
+MAX_SIGNED_INT = 2**31-1
+
 def is_defs_loaded():
     global defs_loaded
     return defs_loaded
@@ -37,11 +39,13 @@ def load_definitions():
         t.default(u'')
         t.depends('bitrate')
         t.translate(lambda k: k['bitrate'])
+        t.max_value(MAX_SIGNED_INT)
 
     with md.metadata('MDATA_KEY_SAMPLERATE') as t:
         t.default(u'0')
         t.depends('sample_rate')
         t.translate(lambda k: k['sample_rate'])
+        t.max_value(MAX_SIGNED_INT)
 
     with md.metadata('MDATA_KEY_FTYPE') as t:
         t.depends('ftype') # i don't think this field even exists
@@ -69,10 +73,11 @@ def load_definitions():
 
     with md.metadata("MDATA_KEY_TRACKNUMBER") as t:
         t.depends("tracknumber")
+        t.max_value(MAX_SIGNED_INT)
 
     with md.metadata("MDATA_KEY_BPM") as t:
         t.depends("bpm")
-        t.max_length(8)
+        t.max_value(MAX_SIGNED_INT)
 
     with md.metadata("MDATA_KEY_LABEL") as t:
         t.depends("organization")

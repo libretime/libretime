@@ -195,7 +195,7 @@ class LibraryController extends Zend_Controller_Action
 
         if ($type === "audioclip") {
 
-            $file = Application_Model_StoredFile::Recall($id);
+            $file = Application_Model_StoredFile::RecallById($id);
 
             $menu["play"]["mime"] = $file->getPropelOrm()->getDbMime();
 
@@ -353,7 +353,7 @@ class LibraryController extends Zend_Controller_Action
 
         foreach ($files as $id) {
 
-            $file = Application_Model_StoredFile::Recall($id);
+            $file = Application_Model_StoredFile::RecallById($id);
 
             if (isset($file)) {
                 try {
@@ -425,7 +425,7 @@ class LibraryController extends Zend_Controller_Action
         $request = $this->getRequest();
 
         $file_id = $this->_getParam('id', null);
-        $file = Application_Model_StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::RecallById($file_id);
 
         if (!$isAdminOrPM && $file->getFileOwnerId() != $user->getId()) {
             return;
@@ -467,7 +467,7 @@ class LibraryController extends Zend_Controller_Action
 
         try {
             if ($type == "audioclip") {
-                $file = Application_Model_StoredFile::Recall($id);
+                $file = Application_Model_StoredFile::RecallById($id);
                 $this->view->type = $type;
                 $md = $file->getMetadata();
 
@@ -551,7 +551,7 @@ class LibraryController extends Zend_Controller_Action
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg = $file->getSoundCloudErrorMsg();
         } elseif ($type == "file") {
-            $file                   = Application_Model_StoredFile::Recall($id);
+            $file                   = Application_Model_StoredFile::RecallById($id);
             $this->view->sc_id      = $file->getSoundCloudId();
             $this->view->error_code = $file->getSoundCloudErrorCode();
             $this->view->error_msg  = $file->getSoundCloudErrorMsg();

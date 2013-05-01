@@ -64,41 +64,9 @@ $version = substr($version, 0, 5);
 
 $SCRIPTPATH = __DIR__;
 
-if (strcmp($version, "2.0.0") < 0) {
-    echo "Unsupported Airtime version. You must upgrade from at least Airtime 2.0.0.".PHP_EOL;
-    exit(1);
-}
-if (strcmp($version, "2.0.1") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.1/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.0.2") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.2/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.0.3") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.0.3/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.1.0") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.0/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.1.1") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.1/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.1.2") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.2/airtime-upgrade.php");
-    pause();
-}
-if (strcmp($version, "2.1.3") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.1.3/airtime-upgrade.php");
-    pause();
-}
 if (strcmp($version, "2.2.0") < 0) {
-    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.2.0/airtime-upgrade.php");
-    pause();
+    echo "Unsupported Airtime version. You must upgrade from at least Airtime 2.2.0.".PHP_EOL;
+    exit(1);
 }
 if (strcmp($version, "2.2.1") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.2.1/airtime-upgrade.php");
@@ -110,6 +78,10 @@ if (strcmp($version, "2.3.0") < 0) {
 }
 if (strcmp($version, "2.3.1") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.3.1/airtime-upgrade.php");
+    pause();
+}
+if (strcmp($version, "2.4.0") < 0) {
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.4.0/airtime-upgrade.php");
     pause();
 }
 echo "******************************* Upgrade Complete *******************************".PHP_EOL;

@@ -13,9 +13,10 @@ import urllib2
 import logging
 import json
 import base64
+import traceback
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.3.1"
+AIRTIME_VERSION = "2.4.0"
 
 
 # TODO : Place these functions in some common module. Right now, media
@@ -36,6 +37,53 @@ def encode_to(obj, encoding='utf-8'):
 def convert_dict_value_to_utf8(md):
     #list comprehension to convert all values of md to utf-8
     return dict([(item[0], encode_to(item[1], "utf-8")) for item in md.items()])
+
+
+api_config = {}
+
+# URL to get the version number of the server API
+api_config['version_url'] = 'version/api_key/%%api_key%%'
+#URL to register a components IP Address with the central web server
+api_config['register_component'] = 'register-component/format/json/api_key/%%api_key%%/component/%%component%%'
+
+#media-monitor
+api_config['media_setup_url'] = 'media-monitor-setup/format/json/api_key/%%api_key%%'
+api_config['upload_recorded'] = 'upload-recorded/format/json/api_key/%%api_key%%/fileid/%%fileid%%/showinstanceid/%%showinstanceid%%'
+api_config['update_media_url'] = 'reload-metadata/format/json/api_key/%%api_key%%/mode/%%mode%%'
+api_config['list_all_db_files'] = 'list-all-files/format/json/api_key/%%api_key%%/dir_id/%%dir_id%%/all/%%all%%'
+api_config['list_all_watched_dirs'] = 'list-all-watched-dirs/format/json/api_key/%%api_key%%'
+api_config['add_watched_dir'] = 'add-watched-dir/format/json/api_key/%%api_key%%/path/%%path%%'
+api_config['remove_watched_dir'] = 'remove-watched-dir/format/json/api_key/%%api_key%%/path/%%path%%'
+api_config['set_storage_dir'] = 'set-storage-dir/format/json/api_key/%%api_key%%/path/%%path%%'
+api_config['update_fs_mount'] = 'update-file-system-mount/format/json/api_key/%%api_key%%'
+api_config['reload_metadata_group'] = 'reload-metadata-group/format/json/api_key/%%api_key%%'
+api_config['handle_watched_dir_missing'] = 'handle-watched-dir-missing/format/json/api_key/%%api_key%%/dir/%%dir%%'
+#show-recorder
+api_config['show_schedule_url'] = 'recorded-shows/format/json/api_key/%%api_key%%'
+api_config['upload_file_url'] = 'upload-file/format/json/api_key/%%api_key%%'
+api_config['upload_retries'] = '3'
+api_config['upload_wait'] = '60'
+#pypo
+api_config['export_url'] = 'schedule/api_key/%%api_key%%'
+api_config['get_media_url'] = 'get-media/file/%%file%%/api_key/%%api_key%%'
+api_config['update_item_url'] = 'notify-schedule-group-play/api_key/%%api_key%%/schedule_id/%%schedule_id%%'
+api_config['update_start_playing_url'] = 'notify-media-item-start-play/api_key/%%api_key%%/media_id/%%media_id%%/'
+api_config['get_stream_setting'] = 'get-stream-setting/format/json/api_key/%%api_key%%/'
+api_config['update_liquidsoap_status'] = 'update-liquidsoap-status/format/json/api_key/%%api_key%%/msg/%%msg%%/stream_id/%%stream_id%%/boot_time/%%boot_time%%'
+api_config['update_source_status'] = 'update-source-status/format/json/api_key/%%api_key%%/sourcename/%%sourcename%%/status/%%status%%'
+api_config['check_live_stream_auth'] = 'check-live-stream-auth/format/json/api_key/%%api_key%%/username/%%username%%/password/%%password%%/djtype/%%djtype%%'
+api_config['get_bootstrap_info'] = 'get-bootstrap-info/format/json/api_key/%%api_key%%'
+api_config['get_files_without_replay_gain'] = 'get-files-without-replay-gain/api_key/%%api_key%%/dir_id/%%dir_id%%'
+api_config['update_replay_gain_value'] = 'update-replay-gain-value/format/json/api_key/%%api_key%%'
+api_config['notify_webstream_data'] = 'notify-webstream-data/api_key/%%api_key%%/media_id/%%media_id%%/format/json'
+api_config['notify_liquidsoap_started'] = 'rabbitmq-do-push/api_key/%%api_key%%/format/json'
+api_config['get_stream_parameters'] = 'get-stream-parameters/api_key/%%api_key%%/format/json'
+api_config['push_stream_stats'] = 'push-stream-stats/api_key/%%api_key%%/format/json'
+api_config['update_stream_setting_table'] = 'update-stream-setting-table/api_key/%%api_key%%/format/json'
+api_config['get_files_without_silan_value'] = 'get-files-without-silan-value/api_key/%%api_key%%'
+api_config['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/%%api_key%%'
+
+
 
 ################################################################################
 # Airtime API Client
@@ -79,23 +127,31 @@ class ApiRequest(object):
         self.__req = None
         if logger is None: self.logger = logging
         else: self.logger = logger
+
     def __call__(self,_post_data=None, **kwargs):
         final_url = self.url.params(**kwargs).url()
         if _post_data is not None: _post_data = urllib.urlencode(_post_data)
+        self.logger.debug(final_url)
         try:
             req = urllib2.Request(final_url, _post_data)
-            response  = urllib2.urlopen(req).read()
+            f = urllib2.urlopen(req)
+            content_type = f.info().getheader('Content-Type')
+            response = f.read()
         except Exception, e:
-            import traceback
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", traceback.format_exc())
             raise
-        # Ghetto hack for now because we don't the content type we are getting
-        # (Pointless to look at mime since it's not being set correctly always)
+
         try:
-            return json.loads(response)
+            if content_type == 'application/json':
+                data = json.loads(response)
+                self.logger.debug(data)
+                return data
+            else:
+                raise InvalidContentType()
         except Exception:
             self.logger.error(response)
+            self.logger.error("traceback: %s", traceback.format_exc())
             raise
 
     def req(self, *args, **kwargs):
@@ -145,10 +201,11 @@ class AirtimeApiClient(object):
         # loading config file
         try:
             self.config = ConfigObj(config_path)
+            self.config.update(api_config)
             self.services = RequestProvider(self.config)
         except Exception, e:
             self.logger.error('Error loading config file: %s', config_path)
-            self.logger.error('Exception: %s', str(e))
+            self.logger.error("traceback: %s", traceback.format_exc())
             sys.exit(1)
 
     def __get_airtime_version(self):
@@ -368,9 +425,14 @@ class AirtimeApiClient(object):
     def notify_liquidsoap_status(self, msg, stream_id, time):
         logger = self.logger
         try:
-            encoded_msg = urllib.quote(msg, '')
-            self.services.update_liquidsoap_status.req(msg=encoded_msg, stream_id=stream_id,
-                                          boot_time=time).retry(5)
+            post_data = {"msg_post": msg}
+
+            #encoded_msg is no longer used server_side!!
+            encoded_msg = urllib.quote('dummy')
+            self.services.update_liquidsoap_status.req(post_data,
+                                            msg=encoded_msg,
+                                            stream_id=stream_id,
+                                            boot_time=time).retry(5)
         except Exception, e:
             #TODO
             logger.error("Exception: %s", e)
@@ -455,3 +517,7 @@ class AirtimeApiClient(object):
         except Exception, e:
             #TODO
             self.logger.error(str(e))
+
+
+class InvalidContentType(Exception):
+    pass

@@ -113,13 +113,13 @@ SQL;
 
     public function setSoundCloudFileId($p_soundcloud_id)
     {
-        $file = Application_Model_StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+        $file = Application_Model_StoredFile::RecallById($this->_showInstance->getDbRecordedFile());
         $file->setSoundCloudFileId($p_soundcloud_id);
     }
 
     public function getSoundCloudFileId()
     {
-        $file = Application_Model_StoredFile::Recall($this->_showInstance->getDbRecordedFile());
+        $file = Application_Model_StoredFile::RecallById($this->_showInstance->getDbRecordedFile());
 
         return $file->getSoundCloudId();
     }
@@ -129,7 +129,7 @@ SQL;
         $file_id =  $this->_showInstance->getDbRecordedFile();
 
         if (isset($file_id)) {
-            $file =  Application_Model_StoredFile::Recall($file_id);
+            $file =  Application_Model_StoredFile::RecallById($file_id);
 
             if (isset($file) && file_exists($file->getFilePath())) {
                 return $file;
@@ -391,7 +391,7 @@ SQL;
      * @param int $plId
      *         Playlist ID.
      */
-    public function addPlaylistToShow($pl_id, $checkUserPerm = true)
+    /*public function addPlaylistToShow($pl_id, $checkUserPerm = true)
     {
         $ts = intval($this->_showInstance->getDbLastScheduled("U")) ? : 0;
         $id = $this->_showInstance->getDbId();
@@ -401,7 +401,7 @@ SQL;
             array(array("id" => 0, "instance"  => $id, "timestamp" => $ts)),
             array(array("id" => $pl_id, "type" => "playlist"))
         );
-    }
+    }*/
 
     /**
      * Add a media file as the last item in the show.
@@ -427,12 +427,12 @@ SQL;
      * @param array $plIds
      *         An array of playlist IDs.
      */
-    public function scheduleShow($plIds)
+    /*public function scheduleShow($plIds)
     {
         foreach ($plIds as $plId) {
             $this->addPlaylistToShow($plId);
         }
-    }
+    }*/
 
     public function clearShow()
     {

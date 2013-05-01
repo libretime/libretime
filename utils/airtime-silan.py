@@ -55,6 +55,7 @@ try:
                 data = {}
                 data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
                 data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
+                data['length'] = str('{0:f}'.format(info['file duration']))
                 processed_data.append((f['id'], data))
                 total += 1
                 if total % 5 == 0:

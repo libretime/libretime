@@ -23,6 +23,7 @@ from pypofile import PypoFile
 from recorder import Recorder
 from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
+from pypoliquidsoap import PypoLiquidsoap
 
 from media.update.replaygainupdater import ReplayGainUpdater
 from media.update.silananalyzer import SilanAnalyzer
@@ -33,8 +34,6 @@ from configobj import ConfigObj
 from api_clients import api_client
 from std_err_override import LogWriter
 
-PYPO_VERSION = '1.1'
-
 # Set up command-line options
 parser = OptionParser()
 
@@ -43,11 +42,31 @@ usage = "%prog [options]" + " - python playout system"
 parser = OptionParser(usage=usage)
 
 # Options
-parser.add_option("-v", "--compat", help="Check compatibility with server API version", default=False, action="store_true", dest="check_compat")
+parser.add_option("-v", "--compat",
+        help="Check compatibility with server API version",
+        default=False,
+        action="store_true",
+        dest="check_compat")
 
-parser.add_option("-t", "--test", help="Do a test to make sure everything is working properly.", default=False, action="store_true", dest="test")
-parser.add_option("-b", "--cleanup", help="Cleanup", default=False, action="store_true", dest="cleanup")
-parser.add_option("-c", "--check", help="Check the cached schedule and exit", default=False, action="store_true", dest="check")
+parser.add_option("-t", "--test",
+        help="Do a test to make sure everything is working properly.",
+        default=False,
+        action="store_true",
+        dest="test")
+
+parser.add_option("-b",
+        "--cleanup",
+        help="Cleanup",
+        default=False,
+        action="store_true",
+        dest="cleanup")
+
+parser.add_option("-c",
+        "--check",
+        help="Check the cached schedule and exit",
+        default=False,
+        action="store_true",
+        dest="check")
 
 # parse options
 (options, args) = parser.parse_args()
@@ -66,6 +85,13 @@ except Exception, e:
     sys.exit(1)
 
 def configure_locale():
+    """
+    Silly hacks to force Python 2.x to run in UTF-8 mode. Not portable at all,
+    however serves our purpose at the moment.
+
+    More information available here:
+    http://stackoverflow.com/questions/3828723/why-we-need-sys-setdefaultencodingutf-8-in-a-py-script
+    """
     logger.debug("Before %s", locale.nl_langinfo(locale.CODESET))
     current_locale = locale.getlocale()
 
@@ -74,20 +100,21 @@ def configure_locale():
         default_locale = locale.getdefaultlocale()
 
         if default_locale[1] is None:
-            logger.debug("No default locale exists. Let's try loading from /etc/default/locale")
+            logger.debug("No default locale exists. Let's try loading from \
+                    /etc/default/locale")
             if os.path.exists("/etc/default/locale"):
                 locale_config = ConfigObj('/etc/default/locale')
                 lang = locale_config.get('LANG')
                 new_locale = lang
             else:
-                logger.error("/etc/default/locale could not be found! Please run 'sudo update-locale' from command-line.")
+                logger.error("/etc/default/locale could not be found! Please \
+                        run 'sudo update-locale' from command-line.")
                 sys.exit(1)
         else:
             new_locale = default_locale
 
-        logger.info("New locale set to: %s", locale.setlocale(locale.LC_ALL, new_locale))
-
-
+        logger.info("New locale set to: %s", \
+                locale.setlocale(locale.LC_ALL, new_locale))
 
     reload(sys)
     sys.setdefaultencoding("UTF-8")
@@ -96,7 +123,8 @@ def configure_locale():
     logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
 
     if current_locale_encoding not in ['utf-8', 'utf8']:
-        logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % current_locale_encoding)
+        logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % \
+                current_locale_encoding)
         sys.exit(1)
 
 
@@ -107,7 +135,7 @@ try:
     config = ConfigObj('/etc/airtime/pypo.cfg')
 except Exception, e:
     logger.error('Error loading config file: %s', e)
-    sys.exit()
+    sys.exit(1)
 
 class Global:
     def __init__(self):
@@ -174,7 +202,7 @@ if __name__ == '__main__':
 
     if options.test:
         g.test_api()
-        sys.exit()
+        sys.exit(0)
 
     api_client = api_client.AirtimeApiClient()
 
@@ -194,29 +222,30 @@ if __name__ == '__main__':
     recorder_q = Queue()
     pypoPush_q = Queue()
 
-
+    pypo_liquidsoap = PypoLiquidsoap(logger, telnet_lock,\
+            ls_host, ls_port)
 
     """
     This queue is shared between pypo-fetch and pypo-file, where pypo-file
-    is the receiver. Pypo-fetch will send every schedule it gets to pypo-file
+    is the consumer. Pypo-fetch will send every schedule it gets to pypo-file
     and pypo will parse this schedule to determine which file has the highest
-    priority, and will retrieve it.
+    priority, and retrieve it.
     """
     media_q = Queue()
 
-    pmh = PypoMessageHandler(pypoFetch_q, recorder_q)
+    pmh = PypoMessageHandler(pypoFetch_q, recorder_q, config)
     pmh.daemon = True
     pmh.start()
 
-    pfile = PypoFile(media_q)
+    pfile = PypoFile(media_q, config)
     pfile.daemon = True
     pfile.start()
 
-    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock)
+    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config)
     pf.daemon = True
     pf.start()
 
-    pp = PypoPush(pypoPush_q, telnet_lock)
+    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap, config)
     pp.daemon = True
     pp.start()
 
@@ -228,12 +257,6 @@ if __name__ == '__main__':
     stat.daemon = True
     stat.start()
 
-    # all join() are commented out because we want to exit entire pypo
-    # if pypofetch terminates
-    #pmh.join()
-    #recorder.join()
-    #pp.join()
     pf.join()
 
-    logger.info("pypo fetch exit")
-    sys.exit()
+    logger.info("System exit")

@@ -21,6 +21,11 @@ class Application_Model_StoredFile
     private $_file;
 
     /**
+     * @holds PDO object reference
+     */
+    private $_con;
+
+    /**
      * array of db metadata -> propel
      */
     private $_dbMD = array (
@@ -52,6 +57,11 @@ class Application_Model_StoredFile
         "cuein"        => "DbCueIn",
         "cueout"       => "DbCueOut",
     );
+
+    function __construct($file, $con) {
+        $this->_file = $file;
+        $this->_con = $con;
+    }
 
     public function getId()
     {
@@ -86,9 +96,8 @@ class Application_Model_StoredFile
         $this->_file->save();
     }
 
-    public static function createWithFile($f) {
-        $storedFile        = new Application_Model_StoredFile();
-        $storedFile->_file = $f;
+    public static function createWithFile($f, $con) {
+        $storedFile        = new Application_Model_StoredFile($f, $con);
         return $storedFile;
     }
 
@@ -218,7 +227,7 @@ class Application_Model_StoredFile
         }
 
         $this->_file->setDbMtime(new DateTime("now", new DateTimeZone("UTC")));
-        $this->_file->save();
+        $this->_file->save($this->_con);
     }
 
     /**
@@ -334,7 +343,7 @@ SQL;
 
         if (is_array($ids) && count($ids) > 0) {
             return array_map( function ($id) {
-                return Application_Model_Playlist::Recall($id);
+                return Application_Model_Playlist::RecallById($id);
             }, $ids);
         } else {
             return array();
@@ -491,7 +500,7 @@ SQL;
 
         $this->_file->setDbDirectory($musicDir->getId());
         $this->_file->setDbFilepath($path_info[1]);
-        $this->_file->save();
+        $this->_file->save($this->_con);
     }
 
     /**
@@ -544,7 +553,7 @@ SQL;
         return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 
-    public static function Insert($md)
+    public static function Insert($md, $con)
     {
         // save some work by checking if filepath is given right away
         if ( !isset($md['MDATA_KEY_FILEPATH']) ) {
@@ -556,8 +565,7 @@ SQL;
         $file->setDbUtime($now);
         $file->setDbMtime($now);
 
-        $storedFile = new Application_Model_StoredFile();
-        $storedFile->_file = $file;
+        $storedFile = new Application_Model_StoredFile($file, $con);
 
         // removed "//" in the path. Always use '/' for path separator
         // TODO : it might be better to just call OsPath::normpath on the file
@@ -574,20 +582,19 @@ SQL;
         return $storedFile;
     }
 
-    public static function Recall($p_id=null, $p_gunid=null, $p_md5sum=null,
-        $p_filepath=null) {
-        if( isset($p_id ) ) {
-           $f =  CcFilesQuery::create()->findPK(intval($p_id));
-           return is_null($f) ? null : self::createWithFile($f);
-        } elseif ( isset($p_gunid) ) {
-            throw new Exception("You should never use gunid ($gunid) anymore");
-        } elseif ( isset($p_md5sum) ) {
-            throw new Exception("Searching by md5($p_md5sum) is disabled");
-        } elseif ( isset($p_filepath) ) {
-            return is_null($f) ? null : self::createWithFile(
-                Application_Model_StoredFile::RecallByFilepath($p_filepath));
+    /* TODO: Callers of this function should use a Propel transaction. Start
+     * by creating $con outside the function with beingTransaction() */
+    public static function RecallById($p_id=null, $con=null) {
+        //TODO
+        if (is_null($con)) {
+            $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        }
+
+        if (isset($p_id)) {
+            $f =  CcFilesQuery::create()->findPK(intval($p_id), $con);
+            return is_null($f) ? null : self::createWithFile($f, $con);
         } else {
-            throw new Exception("No arguments passsed to Recall");
+            throw new Exception("No arguments passed to RecallById");
         }
     }
 
@@ -603,7 +610,7 @@ SQL;
      * @param  string  $p_filepath path of file stored in Airtime.
      * @return Application_Model_StoredFile|NULL
      */
-    public static function RecallByFilepath($p_filepath)
+    public static function RecallByFilepath($p_filepath, $con)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($p_filepath);
 
@@ -615,11 +622,11 @@ SQL;
         $file = CcFilesQuery::create()
                         ->filterByDbDirectory($music_dir->getId())
                         ->filterByDbFilepath($path_info[1])
-                        ->findOne();
-        return is_null($file) ? null : self::createWithFile($file);
+                        ->findOne($con);
+        return is_null($file) ? null : self::createWithFile($file, $con);
     }
 
-    public static function RecallByPartialFilepath($partial_path)
+    public static function RecallByPartialFilepath($partial_path, $con)
     {
         $path_info = Application_Model_MusicDir::splitFilePath($partial_path);
 
@@ -631,11 +638,10 @@ SQL;
         $files = CcFilesQuery::create()
                         ->filterByDbDirectory($music_dir->getId())
                         ->filterByDbFilepath("$path_info[1]%")
-                        ->find();
+                        ->find($con);
         $res = array();
         foreach ($files as $file) {
-            $storedFile        = new Application_Model_StoredFile();
-            $storedFile->_file = $file;
+            $storedFile        = new Application_Model_StoredFile($file, $con);
             $res[]             = $storedFile;
         }
 
@@ -811,7 +817,7 @@ SQL;
                 $row['bit_rate'] = $formatter->format();
 
                 //soundcloud status
-                $file = Application_Model_StoredFile::Recall($row['id']);
+                $file = Application_Model_StoredFile::RecallById($row['id']);
                 $row['soundcloud_status'] = $file->getSoundCloudId();
 
                 // for audio preview
@@ -1011,6 +1017,9 @@ SQL;
             Logging::info("Successfully written identification file for
                 uploaded '$audio_stor'");
         }
+        //if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
+        //encoding is ISO-8859-1
+        $audio_stor = mb_detect_encoding($audio_stor, "UTF-8") == "UTF-8" ? $audio_stor : utf8_encode($audio_stor);
         Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
         // Martin K.: changed to rename: Much less load + quicker since this is
         // an atomic operation
@@ -1305,7 +1314,7 @@ SQL;
     
     public static function setIsPlaylist($p_playlistItems, $p_type, $p_status) {
         foreach ($p_playlistItems as $item) {
-            $file = self::Recall($item->getDbFileId());
+            $file = self::RecallById($item->getDbFileId());
             $fileId = $file->_file->getDbId();
             if ($p_type == 'playlist') {
                 // we have to check if the file is in another playlist before
@@ -1327,7 +1336,7 @@ SQL;
         } else {
             $fileId = $p_fileId;
         }
-        $file = self::Recall($fileId);
+        $file = self::RecallById($fileId);
         $updateIsScheduled = false;
 
         if (!is_null($fileId) && !in_array($fileId, Application_Model_Schedule::getAllFutureScheduledFiles())) {

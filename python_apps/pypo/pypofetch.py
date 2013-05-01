@@ -10,11 +10,11 @@ import copy
 import subprocess
 import signal
 from datetime import datetime
+import traceback
 
 from Queue import Empty
 from threading import Thread
 from subprocess import Popen, PIPE
-from configobj import ConfigObj
 
 from api_clients import api_client
 from std_err_override import LogWriter
@@ -34,30 +34,24 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
-# loading config file
-try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
-    #POLL_INTERVAL = int(config['poll_interval'])
-    POLL_INTERVAL = 1800
-except Exception, e:
-    logger.error('Error loading config file: %s', e)
-    sys.exit()
+POLL_INTERVAL = 1800
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
+        self.config = config
         self.listener_timeout = POLL_INTERVAL
 
         self.telnet_lock = telnet_lock
 
-        self.logger = logging.getLogger();
+        self.logger = logging.getLogger()
+
+        self.pypo_liquidsoap = pypo_liquidsoap
 
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
         self.logger.debug("Cache dir %s", self.cache_dir)
@@ -124,7 +118,6 @@ class PypoFetch(Thread):
                     self.listener_timeout = 0
             self.logger.info("New timeout: %s" % self.listener_timeout)
         except Exception, e:
-            import traceback
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
@@ -141,13 +134,13 @@ class PypoFetch(Thread):
 
         try:
             lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             logger.info(command)
             tn.write(command)
             tn.write('exit\n')
             tn.read_all()
         except Exception, e:
-            logger.error(str(e))
+            logger.error(traceback.format_exc())
         finally:
             lock.release()
 
@@ -156,7 +149,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
 
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             for i in commands:
                 logger.info(i)
                 tn.write(i)
@@ -207,8 +200,7 @@ class PypoFetch(Thread):
         return command
 
     """
-        grabs some information that are needed to be set on bootstrap time
-        and configures them
+    Initialize Liquidsoap environment
     """
     def set_bootstrap_variables(self):
         self.logger.debug('Getting information needed on bootstrap from Airtime')
@@ -233,7 +225,6 @@ class PypoFetch(Thread):
         PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
 
     def restart_liquidsoap(self):
-
         try:
             self.telnet_lock.acquire()
             self.logger.info("Restarting Liquidsoap")
@@ -243,7 +234,7 @@ class PypoFetch(Thread):
             self.logger.info("Waiting for Liquidsoap to start")
             while True:
                 try:
-                    tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                    tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
                     tn.write("exit\n")
                     tn.read_all()
                     self.logger.info("Liquidsoap is up and running")
@@ -265,9 +256,11 @@ class PypoFetch(Thread):
         except Exception, e:
             self.logger.error(str(e))
 
+    """
+    TODO: This function needs to be way shorter, and refactored :/ - MK
+    """
     def regenerate_liquidsoap_conf(self, setting):
         existing = {}
-        # create a temp file
 
         setting = sorted(setting.items())
         try:
@@ -288,7 +281,7 @@ class PypoFetch(Thread):
 
             line = line.strip()
 
-            if line[0] == "#":
+            if not len(line) or line[0] == "#":
                 continue
 
             try:
@@ -368,7 +361,7 @@ class PypoFetch(Thread):
 
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
             # we are manually adjusting the bootup time variable so the status msg will get
             # updated.
@@ -411,7 +404,7 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
@@ -427,7 +420,7 @@ class PypoFetch(Thread):
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
             self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
             command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
@@ -442,12 +435,9 @@ class PypoFetch(Thread):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
         try:
-            self.logger.info(LS_HOST)
-            self.logger.info(LS_PORT)
-
             try:
                 self.telnet_lock.acquire()
-                tn = telnetlib.Telnet(LS_HOST, LS_PORT)
+                tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
                 command = ('vars.station_name %s\n' % station_name).encode('utf-8')
                 self.logger.info(command)
                 tn.write(command)
@@ -547,8 +537,12 @@ class PypoFetch(Thread):
                 #being incorrect!)
                 if not self.is_file_opened(path):
                     os.remove(path)
+                    self.logger.info("File '%s' removed" % path)
+                else:
+                    self.logger.info("File '%s' not removed. Still busy!" % path)
             except Exception, e:
-                self.logger.error(e)
+                self.logger.error("Problem removing file '%s'" % f)
+                self.logger.error(traceback.format_exc())
 
     def manual_schedule_fetch(self):
         success, self.schedule_data = self.api_client.get_schedule()
@@ -570,6 +564,14 @@ class PypoFetch(Thread):
         # Bootstrap: since we are just starting up, we need to grab the
         # most recent schedule.  After that we can just wait for updates.
         success = self.persistent_manual_schedule_fetch(max_attempts=5)
+
+        #Make sure all Liquidsoap queues are empty. This is important in the
+        #case where we've just restarted the pypo scheduler, but Liquidsoap still
+        #is playing tracks. In this case let's just restart everything from scratch
+        #so that we can repopulate our dictionary that keeps track of what 
+        #Liquidsoap is playing much more easily.
+        self.pypo_liquidsoap.clear_all_queues()
+
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
             self.set_bootstrap_variables()
@@ -599,7 +601,6 @@ class PypoFetch(Thread):
                 self.logger.info("Queue timeout. Fetching schedule manually")
                 self.persistent_manual_schedule_fetch(max_attempts=5)
             except Exception, e:
-                import traceback
                 top = traceback.format_exc()
                 self.logger.error('Exception: %s', e)
                 self.logger.error("traceback: %s", top)

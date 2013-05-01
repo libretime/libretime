@@ -11,7 +11,7 @@ INSERT INTO cc_live_log("state", "start_time") VALUES('S', now() at time zone 'U
 -- end of added in 2.1
 
 -- added in 2.0.0
-INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_type', 'ogg, mp3');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_type', 'ogg, mp3, opus, aac');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_bitrate', '24, 32, 48, 64, 96, 128, 160, 192, 224, 256, 320');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('num_of_streams', '3');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('max_bitrate', '320');
@@ -325,9 +325,12 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('locale', 'en_CA');
 
 INSERT INTO cc_pref("subjid", "keystr", "valstr") VALUES(1, 'user_locale', 'en_CA');
 
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_CA', 'English (Canada)');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_GB', 'English (Britain)');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English (USA)');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('cs_CZ', 'Český');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_AT', 'Österreichisches Deutsch');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');

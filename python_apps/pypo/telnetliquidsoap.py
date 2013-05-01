@@ -2,16 +2,26 @@ import telnetlib
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
-    return 'annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",schedule_table_id="%s",replay_gain="%s dB":%s' \
-        % (media['id'], float(media['fade_in']) / 1000, float(media['fade_out']) / 1000, float(media['cue_in']), float(media['cue_out']), media['row_id'], media['replay_gain'], media['dst'])
+    return ('annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",' + \
+            'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",' + \
+            'schedule_table_id="%s",replay_gain="%s dB":%s') % \
+            (media['id'], 
+                    float(media['fade_in']) / 1000, 
+                    float(media['fade_out']) / 1000, 
+                    float(media['cue_in']), 
+                    float(media['cue_out']), 
+                    media['row_id'], 
+                    media['replay_gain'], 
+                    media['dst'])
 
 class TelnetLiquidsoap:
 
-    def __init__(self, telnet_lock, logger, ls_host, ls_port):
+    def __init__(self, telnet_lock, logger, ls_host, ls_port, queues):
         self.telnet_lock = telnet_lock
         self.ls_host = ls_host
         self.ls_port = ls_port
         self.logger = logger
+        self.queues = queues
         self.current_prebuffering_stream_id = None
 
     def __connect(self):
@@ -19,6 +29,23 @@ class TelnetLiquidsoap:
 
     def __is_empty(self, tn, queue_id):
         return True
+
+    def queue_clear_all(self):
+        try:
+            self.telnet_lock.acquire()
+            tn = self.__connect()
+
+            for i in self.queues:
+                msg = 'queues.%s_skip\n' % i
+                self.logger.debug(msg)
+                tn.write(msg)
+            
+            tn.write("exit\n")
+            self.logger.debug(tn.read_all())
+        except Exception:
+            raise
+        finally:
+            self.telnet_lock.release()
 
     def queue_remove(self, queue_id):
         try:

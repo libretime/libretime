@@ -69,6 +69,22 @@ class Logging {
         $logger->warn("[$file : $function() : line $line] - "
             . self::toString($p_msg));
     }
+
+    public static function error($p_msg)
+    {
+        $bt = debug_backtrace();
+
+        $caller = array_shift($bt);
+        $file = basename($caller['file']);
+        $line = $caller['line'];
+        
+        $caller = array_shift($bt);
+        $function = $caller['function'];
+       
+        $logger = self::getLogger();
+        $logger->err("[$file : $function() : line $line] - "
+            . self::toString($p_msg));
+    }
     
     public static function debug($p_msg)
     {

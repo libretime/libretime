@@ -64,13 +64,8 @@ class ApiController extends Zend_Controller_Action
 
     public function versionAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $jsonStr = json_encode( array(
+        $this->_helper->json->sendJson( array(
             "version" => Application_Model_Preference::GetAirtimeVersion()));
-        echo $jsonStr;
     }
 
     /**
@@ -79,9 +74,6 @@ class ApiController extends Zend_Controller_Action
      */
     public function calendarInitAction()
     {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         if (is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource.');
@@ -96,6 +88,8 @@ class ApiController extends Zend_Controller_Action
             "timeInterval"   => Application_Model_Preference::GetCalendarTimeInterval(),
             "weekStartDay"   => Application_Model_Preference::GetWeekStartDay()
         );
+
+        $this->_helper->json->sendJson(array());
     }
 
     /**
@@ -106,13 +100,9 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $fileId = $this->_getParam("file");
 
-        $media = Application_Model_StoredFile::Recall($fileId);
+        $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media != null) {
 
             $filepath = $media->getFilePath();
@@ -150,7 +140,7 @@ class ApiController extends Zend_Controller_Action
             }
         }
 
-        return;
+        $this->_helper->json->sendJson(array());
     }
 
     /**
@@ -358,21 +348,15 @@ class ApiController extends Zend_Controller_Action
 
     public function scheduleAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $data = Application_Model_Schedule::getSchedule();
         header("Content-Type: application/json");
+
         echo json_encode($data, JSON_FORCE_OBJECT);
+        $this->_helper->json->sendJson($data, false, true);
     }
 
     public function notifyMediaItemStartPlayAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
         Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
@@ -385,7 +369,7 @@ class ApiController extends Zend_Controller_Action
                 $file_id = Application_Model_Schedule::GetFileId($media_id);
                 if (!is_null($file_id)) {
                     //we are dealing with a file not a stream
-                    $file = Application_Model_StoredFile::Recall($file_id);
+                    $file = Application_Model_StoredFile::RecallById($file_id);
                     $now = new DateTime("now", new DateTimeZone("UTC"));
                     $file->setLastPlayedTime($now);
                 }
@@ -402,7 +386,7 @@ class ApiController extends Zend_Controller_Action
             Logging::info($e);
         }
 
-        echo json_encode(array("status"=>1, "message"=>""));
+        $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }
 
     public function recordedShowsAction()
@@ -460,7 +444,7 @@ class ApiController extends Zend_Controller_Action
     public function uploadRecordedActionParam($show_instance_id, $file_id)
     {
         $showCanceled = false;
-        $file = Application_Model_StoredFile::Recall($file_id);
+        $file = Application_Model_StoredFile::RecallById($file_id);
         //$show_instance  = $this->_getParam('show_instance');
 
         try {
@@ -490,10 +474,6 @@ class ApiController extends Zend_Controller_Action
 
     public function mediaMonitorSetupAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $this->view->stor = Application_Model_MusicDir::getStorDir()->getDirectory();
 
         $watchedDirs = Application_Model_MusicDir::getWatchedDirs();
@@ -508,81 +488,88 @@ class ApiController extends Zend_Controller_Action
     {
         $return_hash = array();
         Application_Model_Preference::SetImportTimestamp();
-        //Logging::info("--->Mode: $mode || file: {$md['MDATA_KEY_FILEPATH']} ");
-        //Logging::info( $md );
 
-        // create also modifies the file if it exists
-        if ($mode == "create") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = Application_Common_OsPath::normpath($filepath);
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
-            if (is_null($file)) {
-                $file = Application_Model_StoredFile::Insert($md);
-            } else {
-                // If the file already exists we will update and make sure that
-                // it's marked as 'exists'.
-                $file->setFileExistsFlag(true);
-                $file->setFileHiddenFlag(false);
-                $file->setMetadata($md);
-            }
-            if ($md['is_record'] != 0) {
-                $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
-            }
-            
-        } elseif ($mode == "modify") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $con->beginTransaction();
+        try {
+            // create also modifies the file if it exists
+            if ($mode == "create") {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $filepath = Application_Common_OsPath::normpath($filepath);
+                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
+                if (is_null($file)) {
+                    $file = Application_Model_StoredFile::Insert($md, $con);
+                } else {
+                    // If the file already exists we will update and make sure that
+                    // it's marked as 'exists'.
+                    $file->setFileExistsFlag(true);
+                    $file->setFileHiddenFlag(false);
+                    $file->setMetadata($md);
+                }
+                if ($md['is_record'] != 0) {
+                    $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
+                }
+                
+            } elseif ($mode == "modify") {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
 
-            //File is not in database anymore.
-            if (is_null($file)) {
-                $return_hash['error'] = _("File does not exist in Airtime.");
+                //File is not in database anymore.
+                if (is_null($file)) {
+                    $return_hash['error'] = _("File does not exist in Airtime.");
 
-                return $return_hash;
-            }
-            //Updating a metadata change.
-            else {
-                $file->setMetadata($md);
-            }
-        } elseif ($mode == "moved") {
-            $file = Application_Model_StoredFile::RecallByFilepath(
-                $md['MDATA_KEY_ORIGINAL_PATH']);
+                    return $return_hash;
+                }
+                //Updating a metadata change.
+                else {
+                    $file->setMetadata($md);
+                }
+            } elseif ($mode == "moved") {
+                $file = Application_Model_StoredFile::RecallByFilepath(
+                    $md['MDATA_KEY_ORIGINAL_PATH'], $con);
 
-            if (is_null($file)) {
-                $return_hash['error'] = _('File does not exist in Airtime');
-            } else {
+                if (is_null($file)) {
+                    $return_hash['error'] = _('File does not exist in Airtime');
+                } else {
+                    $filepath = $md['MDATA_KEY_FILEPATH'];
+                    //$filepath = str_replace("\\", "", $filepath);
+                    $file->setFilePath($filepath);
+                }
+            } elseif ($mode == "delete") {
+                $filepath = $md['MDATA_KEY_FILEPATH'];
+                $filepath = str_replace("\\", "", $filepath);
+                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
+
+                if (is_null($file)) {
+                    $return_hash['error'] = _("File doesn't exist in Airtime.");
+                    Logging::warn("Attempt to delete file that doesn't exist.
+                        Path: '$filepath'");
+
+                    return $return_hash;
+                } else {
+                    $file->deleteByMediaMonitor();
+                }
+            } elseif ($mode == "delete_dir") {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 //$filepath = str_replace("\\", "", $filepath);
-                $file->setFilePath($filepath);
-            }
-        } elseif ($mode == "delete") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            $filepath = str_replace("\\", "", $filepath);
-            $file = Application_Model_StoredFile::RecallByFilepath($filepath);
+                $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath, $con);
 
-            if (is_null($file)) {
-                $return_hash['error'] = _("File doesn't exist in Airtime.");
-                Logging::warn("Attempt to delete file that doesn't exist.
-                    Path: '$filepath'");
+                foreach ($files as $file) {
+                    $file->deleteByMediaMonitor();
+                }
+                $return_hash['success'] = 1;
 
                 return $return_hash;
-            } else {
-                $file->deleteByMediaMonitor();
             }
-        } elseif ($mode == "delete_dir") {
-            $filepath = $md['MDATA_KEY_FILEPATH'];
-            //$filepath = str_replace("\\", "", $filepath);
-            $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath);
 
-            foreach ($files as $file) {
-                $file->deleteByMediaMonitor();
-            }
-            $return_hash['success'] = 1;
-
-            return $return_hash;
+            $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
+            $con->commit();
+        } catch (Exception $e) {
+            Logging::warn("rolling back");
+            Logging::warn($e->getMessage());
+            $con->rollback();
+            $return_hash['error'] = $e->getMessage();
         }
-
-        $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
-
         return $return_hash;
     }
 
@@ -601,6 +588,7 @@ class ApiController extends Zend_Controller_Action
             // least 1 digit
             if ( !preg_match('/^md\d+$/', $k) ) { continue; }
             $info_json = json_decode($raw_json, $assoc = true);
+
             // Log invalid requests
             if ( !array_key_exists('mode', $info_json) ) {
                 Logging::info("Received bad request(key=$k), no 'mode' parameter. Bad request is:");
@@ -624,7 +612,12 @@ class ApiController extends Zend_Controller_Action
             // Removing 'mode' key from $info_json might not be necessary...
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
-            $response = $this->dispatchMetadata($info_json, $mode);
+            try {
+                $response = $this->dispatchMetadata($info_json, $mode);
+            } catch (Exception $e) {
+                Logging::warn($e->getMessage());
+                Logging::warn(gettype($e));
+            } 
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
@@ -726,7 +719,7 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
 
-        $msg = $request->getParam('msg');
+        $msg = $request->getParam('msg_post');
         $stream_id = $request->getParam('stream_id');
         $boot_time = $request->getParam('boot_time');
 
@@ -922,72 +915,72 @@ class ApiController extends Zend_Controller_Action
      * out a message to pypo that a potential change has been made. */
     public function getFilesWithoutReplayGainAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $dir_id = $this->_getParam('dir_id');
 
         //connect to db and get get sql
         $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
 
-        echo json_encode($rows);
+        $this->_helper->json->sendJson($rows);
     }
     
     public function getFilesWithoutSilanValueAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-    
         //connect to db and get get sql
         $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
     
-        echo json_encode($rows);
+        $this->_helper->json->sendJson($rows);
     }
 
     public function updateReplayGainValueAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
 
         foreach ($data as $pair) {
             list($id, $gain) = $pair;
             // TODO : move this code into model -- RG
-            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
             $file->setDbReplayGain($gain);
             $file->save();
         }
 
-        $this->view->msg = "OK";
+        $this->_helper->json->sendJson(array());
     }
     
     public function updateCueValuesBySilanAction()
     {
-        // disable the view and the layout
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
         $request = $this->getRequest();
-        $data = json_decode($request->getParam('data'));
+        $data = json_decode($request->getParam('data'), $assoc = true);
 
         foreach ($data as $pair) {
             list($id, $info) = $pair;
             // TODO : move this code into model -- RG
-            $cuein = $info->cuein;
-            $cueout = $info->cueout;
-            $file = Application_Model_StoredFile::Recall($p_id = $id)->getPropelOrm();
+            $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
+
+            //What we are doing here is setting a more accurate length that was
+            //calculated with silan by actually scanning the entire file. This
+            //process takes a really long time, and so we only do it in the background
+            //after the file has already been imported -MK
+            $length = $file->getDbLength();
+            if (isset($info['length'])) {
+                $length = $info['length'];
+                //length decimal number in seconds. Need to convert it to format
+                //HH:mm:ss to get around silly PHP limitations.
+                $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
+
+                $file->setDbLength($length);
+            }
+
+            $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
+            $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
+
             $file->setDbCuein($cuein);
             $file->setDbCueout($cueout);
             $file->setDbSilanCheck(true);
             $file->save();
         }
 
-        echo json_encode(array());
+        $this->_helper->json->sendJson(array());
     }
 
     public function notifyWebstreamDataAction()
@@ -1056,5 +1049,4 @@ class ApiController extends Zend_Controller_Action
             Application_Model_StreamSetting::SetListenerStatError($k, $v);
         }
     }
-
 }

@@ -2390,13 +2390,13 @@ dd .info-text-small {
 	margin-bottom:0px;
 }
 .stream-config dd select {
-	width:160px;
+	width:180px;
 	line-height:140%;
 }
 
-.stream-config input[type="text"] {
+.stream-config input[type="text"], .stream-config input[type="password"] {
     /*width:98.5%;*/
-	min-width:152px;
+	min-width:172px;
 }
 .stream-config .display_field dd input[type="text"], .stream-config .display_field dd input[type="password"], .stream-config .display_field dd textarea {
 	min-width:99%;

@@ -214,13 +214,28 @@ function setAddShowEvents() {
     });
 
     form.find("#add_show_repeat_type").change(function(){
-        if($(this).val() == 2) {
+        toggleRepeatDays();
+        toggleMonthlyRepeatType();
+    });
+    toggleMonthlyRepeatType();
+    toggleRepeatDays();
+    function toggleRepeatDays() {
+        if(form.find("#add_show_repeat_type").val() >= 2) {
             form.find("#add_show_day_check-label, #add_show_day_check-element").hide();
+            //form.find("#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element").show();
         }
         else {
             form.find("#add_show_day_check-label, #add_show_day_check-element").show();
+            //form.find("#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element").hide();
         }
-    });
+    }
+    function toggleMonthlyRepeatType() {
+        if (form.find("#add_show_repeat_type").val() == 2) {
+            form.find("#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element").show();
+        } else {
+            form.find("#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element").hide();
+        }
+    }
 
     form.find("#add_show_day_check-label").addClass("block-display");
     form.find("#add_show_day_check-element").addClass("block-display clearfix");
