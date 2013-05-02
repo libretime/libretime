@@ -193,6 +193,60 @@ class TelnetLiquidsoap:
         finally:
             self.telnet_lock.release()
 
+    def disconnect_source(self, sourcename):
+        self.logger.debug('Disconnecting source: %s', sourcename)
+        command = ""
+        if(sourcename == "master_dj"):
+            command += "master_harbor.kick\n"
+        elif(sourcename == "live_dj"):
+            command += "live_dj_harbor.kick\n"
+
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            self.logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error(traceback.format_exc())
+        finally:
+            self.telnet_lock.release()
+
+    def telnet_send(self, commands):
+        try:
+            self.telnet_lock.acquire()
+
+            tn = telnetlib.Telnet(self.ls_host, self.ls_port)
+            for i in commands:
+                self.logger.info(i)
+                tn.write(i)
+
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+
+    def switch_source(self, sourcename, status):
+        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        command = "streams."
+        if sourcename == "master_dj":
+            command += "master_dj_"
+        elif sourcename == "live_dj":
+            command += "live_dj_"
+        elif sourcename == "scheduled_play":
+            command += "scheduled_play_"
+
+        if status == "on":
+            command += "start\n"
+        else:
+            command += "stop\n"
+
+        self.telnet_send([command])
+
 class DummyTelnetLiquidsoap:
 
     def __init__(self, telnet_lock, logger):
