@@ -183,6 +183,9 @@ class Application_Service_ShowService
 
         if (is_null($this->ccShow)) {
             $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
+            if (count($ccShowDays) > 0) {
+                $this->ccShow = $ccShowDays[0]->getCcShow();
+            }
         } else {
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
@@ -214,6 +217,10 @@ class Application_Service_ShowService
             }
         }
 
+        if (isset($this->ccShow) && $fillInstances) {
+            Application_Service_SchedulerService::fillLinkedShows(
+                $this->ccShow);
+        }
         return $this->ccShow;
     }
 
@@ -901,11 +908,6 @@ SQL;
         $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
         $nextDate = $utcStartDateTime->add($repeatInterval);
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
-
-        if ($fillInstances) {
-            Application_Service_SchedulerService::fillLinkedShows(
-                $showDay->getCcShow());
-        }
     }
 
     private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil)
