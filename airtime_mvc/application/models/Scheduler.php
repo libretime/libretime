@@ -660,6 +660,12 @@ class Application_Model_Scheduler
                         $nextStartDT = $endTimeDT;
                         $pos++;
 
+                        /* If we are adjusting start and end times for items
+                         * after the insert location, we need to exclude the
+                         * schedule item we just inserted because it has correct
+                         * start and end times*/
+                        $excludeIds[] = $sched->getDbId();
+
                     }//all files have been inserted/moved
 
                     // update is_scheduled flag for each cc_file
@@ -674,12 +680,6 @@ class Application_Model_Scheduler
                     if (!$moveAction) {
                         $filesToInsert = null;
                     }
-
-                    /* If we are adjusting start and end times for items
-                     * after the insert location, we need to exclude the
-                     * schedule item we just inserted because it has correct
-                     * start and end times*/
-                    $excludeIds[] = $sched->getDbId();
 
                     if ($adjustSched === true) {
                         $followingSchedItems = CcScheduleQuery::create()

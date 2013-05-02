@@ -155,7 +155,14 @@ class CcShow extends BaseCcShow {
      */
     public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
     {
-        if(null === $this->collCcShowInstancess || null !== $criteria) {
+        return CcShowInstancesQuery::create(null, $criteria)
+                    ->filterByCcShow($this)
+                    ->filterByDbModifiedInstance(false)
+                    ->filterByDbEnds(gmdate("Y-m-d H:i:s"), criteria::GREATER_THAN)
+                    ->orderByDbId()
+                    ->find($con);
+
+        /*if(null === $this->collCcShowInstancess || null !== $criteria) {
             if ($this->isNew() && null === $this->collCcShowInstancess) {
                 // return empty collection
                 $this->initCcShowInstancess();
@@ -172,7 +179,7 @@ class CcShow extends BaseCcShow {
                 $this->collCcShowInstancess = $collCcShowInstancess;
             }
         }
-        return $this->collCcShowInstancess;
+        return $this->collCcShowInstancess;*/
     }
 
     public function getInstanceIds() {
