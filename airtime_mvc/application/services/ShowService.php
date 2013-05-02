@@ -201,23 +201,23 @@ class Application_Service_ShowService
                     break;
                 case REPEAT_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_WEEKLY,
-                        new DateInterval("P7D"), $daysAdded, $fillInstances);
+                        new DateInterval("P7D"), $daysAdded);
                     break;
                 case REPEAT_BI_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
-                        new DateInterval("P14D"), $daysAdded, $fillInstances);
+                        new DateInterval("P14D"), $daysAdded);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
-                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil, $fillInstances);
+                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
-                        null, $daysAdded, $fillInstances);
+                        null, $daysAdded);
                     break;
             }
         }
 
-        if (isset($this->ccShow) && $fillInstances) {
+        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances)) {
             Application_Service_SchedulerService::fillLinkedShows(
                 $this->ccShow);
         }
@@ -824,7 +824,7 @@ SQL;
      * @param unknown_type $isRebroadcast
      */
     private function createRepeatingInstances($showDay, $populateUntil,
-        $repeatType, $repeatInterval, $daysAdded=null, $fillInstances)
+        $repeatType, $repeatInterval, $daysAdded=null)
     {
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
