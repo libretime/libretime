@@ -36,15 +36,20 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 POLL_INTERVAL = 1800
 
+config_static = None
+
 class PypoFetch(Thread):
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config):
         Thread.__init__(self)
+        global config_static
+
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
         self.config = config
+        config_static = config
         self.listener_timeout = POLL_INTERVAL
 
         self.telnet_lock = telnet_lock
@@ -134,7 +139,7 @@ class PypoFetch(Thread):
 
         try:
             lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
+            tn = telnetlib.Telnet(config_static['ls_host'], config_static['ls_port'])
             logger.info(command)
             tn.write(command)
             tn.write('exit\n')
@@ -149,7 +154,7 @@ class PypoFetch(Thread):
         try:
             lock.acquire()
 
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
+            tn = telnetlib.Telnet(config_static['ls_host'], config_static['ls_port'])
             for i in commands:
                 logger.info(i)
                 tn.write(i)
