@@ -183,6 +183,9 @@ class Application_Service_ShowService
 
         if (is_null($this->ccShow)) {
             $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
+            if (count($ccShowDays) > 0) {
+                $this->ccShow = $ccShowDays[0]->getCcShow();
+            }
         } else {
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
@@ -198,22 +201,26 @@ class Application_Service_ShowService
                     break;
                 case REPEAT_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_WEEKLY,
-                        new DateInterval("P7D"), $daysAdded, $fillInstances);
+                        new DateInterval("P7D"), $daysAdded);
                     break;
                 case REPEAT_BI_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
-                        new DateInterval("P14D"), $daysAdded, $fillInstances);
+                        new DateInterval("P14D"), $daysAdded);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
-                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil, $fillInstances);
+                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
                     $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
-                        null, $daysAdded, $fillInstances);
+                        null, $daysAdded);
                     break;
             }
         }
 
+        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances)) {
+            Application_Service_SchedulerService::fillLinkedShows(
+                $this->ccShow);
+        }
         return $this->ccShow;
     }
 
@@ -230,6 +237,7 @@ class Application_Service_ShowService
         $c = new Criteria();
         $c->add(CcShowDaysPeer::FIRST_SHOW, $endTimeString, Criteria::LESS_THAN);
         $c->addAnd(CcShowDaysPeer::LAST_SHOW, $startTimeString, Criteria::GREATER_THAN);
+        $c->addAnd(CcShowDaysPeer::REPEAT_TYPE, -1, Criteria::NOT_EQUAL);
         $c->addOr(CcShowDaysPeer::LAST_SHOW, null, Criteria::ISNULL);
 
         return CcShowDaysPeer::doSelect($c);
@@ -789,6 +797,7 @@ SQL;
             if ($this->isUpdate) {
                 $ccShowInstance = $this->getInstance($utcStartDateTime);
             }
+
             $ccShowInstance->setDbShowId($this->ccShow->getDbId());
             $ccShowInstance->setDbStarts($utcStartDateTime);
             $ccShowInstance->setDbEnds($utcEndDateTime);
@@ -815,7 +824,7 @@ SQL;
      * @param unknown_type $isRebroadcast
      */
     private function createRepeatingInstances($showDay, $populateUntil,
-        $repeatType, $repeatInterval, $daysAdded=null, $fillInstances)
+        $repeatType, $repeatInterval, $daysAdded=null)
     {
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
@@ -899,11 +908,6 @@ SQL;
         $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
         $nextDate = $utcStartDateTime->add($repeatInterval);
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
-
-        if ($fillInstances) {
-            Application_Service_SchedulerService::fillLinkedShows(
-                $showDay->getCcShow());
-        }
     }
 
     private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil)
