@@ -195,6 +195,23 @@ class Application_Model_Preference
         }
     }
     
+    public static function SetDefaultCrossfadeDuration($duration)
+    {
+    	self::setValue("default_crossfade_duration", $duration);
+    }
+    
+    public static function GetDefaultCrossfadeDuration()
+    {
+    	$duration = self::getValue("default_crossfade_duration");
+    
+    	if ($duration === "") {
+    		// the default value of the fade is 00.5
+    		return "0";
+    	}
+    
+    	return $duration;
+    }
+    
     public static function SetDefaultFadeIn($fade)
     {
     	self::setValue("default_fade_in", $fade);

@@ -26,6 +26,25 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                 'ViewHelper'
             )
         ));
+        
+        //Default station fade in
+        $this->addElement('text', 'stationDefaultCrossfadeDuration', array(
+        		'class'      => 'input_text',
+        		'label'      => _('Default Crossfade Duration (s):'),
+        		'required'   => true,
+        		'filters'    => array('StringTrim'),
+        		'validators' => array(
+        				array(
+        						$rangeValidator,
+        						$notEmptyValidator,
+        						'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
+        				)
+        		),
+        		'value' => Application_Model_Preference::GetDefaultCrossfadeDuration(),
+        		'decorators' => array(
+        				'ViewHelper'
+        		)
+        ));
 
         //Default station fade in
         $this->addElement('text', 'stationDefaultFadeIn', array(

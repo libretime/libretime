@@ -17,6 +17,8 @@ class Application_Model_Scheduler
     private $epochNow;
     private $nowDT;
     private $user;
+    
+    private $crossfadeDuration;
 
     private $checkUserPermissions = true;
 
@@ -38,6 +40,8 @@ class Application_Model_Scheduler
         }
 
         $this->user = Application_Model_User::getCurrentUser();
+        
+        $this->crossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
     }
 
     public function setCheckUserPermissions($value)
@@ -201,12 +205,9 @@ class Application_Model_Scheduler
                 $data["cuein"] = $file->getDbCuein();
                 $data["cueout"] = $file->getDbCueout();
 
-                $defaultFade = Application_Model_Preference::GetDefaultFade();
-                if (isset($defaultFade)) {
-                    //fade is in format SS.uuuuuu
-                    $data["fadein"] = $defaultFade;
-                    $data["fadeout"] = $defaultFade;
-                }
+                //fade is in format SS.uuuuuu
+                $data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+                $data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
 
                 $files[] = $data;
             }
@@ -260,12 +261,11 @@ class Application_Model_Scheduler
                                 $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
                                 $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
                                 $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-                                $defaultFade = Application_Model_Preference::GetDefaultFade();
-                                if (isset($defaultFade)) {
-                                    //fade is in format SS.uuuuuu
-                                    $data["fadein"] = $defaultFade;
-                                    $data["fadeout"] = $defaultFade;
-                                }
+                                
+                                //fade is in format SS.uuuuuu
+                                $data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+                                $data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+                                
                                 $data["type"] = 0;
                                 $files[] = $data;
                             }
@@ -286,12 +286,9 @@ class Application_Model_Scheduler
                 $data["cueout"] = $stream->getDbLength();
                 $data["type"] = 1;
 
-                $defaultFade = Application_Model_Preference::GetDefaultFade();
-                if (isset($defaultFade)) {
-                    //fade is in format SS.uuuuuu
-                    $data["fadein"] = $defaultFade;
-                    $data["fadeout"] = $defaultFade;
-                }
+                //fade is in format SS.uuuuuu
+                $data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+                $data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
 
                 $files[] = $data;
             }
@@ -321,12 +318,11 @@ class Application_Model_Scheduler
                         $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
                         $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
                         $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-                        $defaultFade = Application_Model_Preference::GetDefaultFade();
-                        if (isset($defaultFade)) {
-                            //fade is in format SS.uuuuuu
-                            $data["fadein"] = $defaultFade;
-                            $data["fadeout"] = $defaultFade;
-                        }
+                        
+                        //fade is in format SS.uuuuuu
+                		$data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+                		$data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+                		
                         $data["type"] = 0;
                         $files[] = $data;
                     }
@@ -335,6 +331,31 @@ class Application_Model_Scheduler
         }
 
         return $files;
+    }
+    
+    /*
+     * @param DateTime startDT in UTC
+    *  @param string duration
+    *      in format H:i:s.u (could be more that 24 hours)
+    *
+    * @return DateTime endDT in UTC
+    */
+    private function findTimeDifference($p_startDT, $p_seconds)
+    {
+    	$startEpoch = $p_startDT->format("U.u");
+    	
+    	//add two float numbers to 6 subsecond precision
+    	//DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+    	$newEpoch = bcsub($startEpoch , (string) $p_seconds, 6);
+    
+    	$dt = DateTime::createFromFormat("U.u", $newEpoch, new DateTimeZone("UTC"));
+    
+    	if ($dt === false) {
+    		//PHP 5.3.2 problem
+    		$dt = DateTime::createFromFormat("U", intval($newEpoch), new DateTimeZone("UTC"));
+    	}
+    
+    	return $dt;
     }
 
     /*
@@ -392,6 +413,43 @@ class Application_Model_Scheduler
         }
 
         return $nextDT;
+    }
+    
+    /*
+     * @param int $showInstance
+     *   This function recalculates the start/end times of items in a gapless show to
+     *   account for crossfade durations.
+     */
+    private function calculateCrossfades($showInstance)
+    {
+    	Logging::info("adjusting start, end times of scheduled items to account for crossfades show instance #".$showInstance);
+    
+    	$instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
+    	if (is_null($instance)) {
+    		throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
+    	}
+    
+    	$itemStartDT = $instance->getDbStarts(null);
+    	$itemEndDT = null;
+    
+    	$schedule = CcScheduleQuery::create()
+    		->filterByDbInstanceId($showInstance)
+    		->orderByDbStarts()
+    		->find($this->con);
+    
+    	foreach ($schedule as $item) {
+    
+    		$itemEndDT = $item->getDbEnds(null);
+    		
+    		$item
+    			->setDbStarts($itemStartDT)
+    			->setDbEnds($itemEndDT);
+    
+    		$itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
+    		$itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+    	}
+    
+    	$schedule->save($this->con);
     }
 
     /*
@@ -648,6 +706,8 @@ class Application_Model_Scheduler
                         $pend = microtime(true);
                         Logging::debug("adjusting all following items.");
                         Logging::debug(floatval($pend) - floatval($pstart));
+                        
+                        $this->calculateCrossfades($instance->getDbId());
                     }
                 }//for each instance
                 
@@ -929,6 +989,7 @@ class Application_Model_Scheduler
 
                 foreach ($showInstances as $instance) {
                     $this->removeGaps($instance);
+                    $this->calculateCrossfades($instance);
                 }
             }
 

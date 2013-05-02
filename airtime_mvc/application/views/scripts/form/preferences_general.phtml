@@ -40,6 +40,19 @@
                 </ul>
             <?php endif; ?>
         </dd>
+        <dt id="stationDefaultCrossfadeDuration-label" class="block-display">
+            <label class="optional" for="stationDefaultCrossfadeDuration"><?php echo $this->element->getElement('stationDefaultCrossfadeDuration')->getLabel() ?></label>
+        </dt>
+        <dd id="stationDefaultCrossfadeDuration-element" class="block-display">
+            <?php echo $this->element->getElement('stationDefaultCrossfadeDuration') ?>
+            <?php if($this->element->getElement('stationDefaultCrossfadeDuration')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('stationDefaultCrossfadeDuration')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
         <dt id="thirdPartyApi-label" class="block-display">
             <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
         </dt>

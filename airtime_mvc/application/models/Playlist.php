@@ -36,6 +36,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
         "cueout" => "00:00:00",
         "fadein" => "0.0",
         "fadeout" => "0.0",
+    	"crossfadeDuration" => 0
     );
 
     //using propel's phpNames.
@@ -62,6 +63,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
 
         $this->plItem["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
         $this->plItem["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+        $this->plItem["crossfadeDuration"] = Application_Model_Preference::GetDefaultCrossfadeDuration();
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
         $this->id = $this->pl->getDbId();
