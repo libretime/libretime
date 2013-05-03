@@ -23,6 +23,9 @@ class PypoLiquidsoap():
                 port,\
                 self.liq_queue_tracker.keys())
 
+    def get_telnet_dispatcher(self):
+        return self.telnet_liquidsoap
+
 
     def play(self, media_item):
         if media_item["type"] == eventtypes.FILE:
@@ -67,9 +70,9 @@ class PypoLiquidsoap():
 
     def handle_event_type(self, media_item):
         if media_item['event_type'] == "kick_out":
-            PypoFetch.disconnect_source(self.logger, self.telnet_lock, "live_dj")
+            self.telnet_liquidsoap.disconnect_source("live_dj")
         elif media_item['event_type'] == "switch_off":
-            PypoFetch.switch_source(self.logger, self.telnet_lock, "live_dj", "off")
+            self.telnet_liquidsoap.switch_source("live_dj", "off")
 
 
     def is_media_item_finished(self, media_item):

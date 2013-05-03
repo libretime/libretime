@@ -11,7 +11,7 @@ class ReplayGainUpdater(Thread):
     """
     The purpose of the class is to query the server for a list of files which
     do not have a ReplayGain value calculated. This class will iterate over the
-    list calculate the values, update the server and repeat the process until
+    list, calculate the values, update the server and repeat the process until
     the server reports there are no files left.
 
     This class will see heavy activity right after a 2.1->2.2 upgrade since 2.2

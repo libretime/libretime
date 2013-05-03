@@ -126,12 +126,12 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "mp3.liq"
         elsif type == "ogg" then
             %include "ogg.liq"
-        elsif type == "opus" then
-            %include "opus.liq"
-        elsif type == "aac" then
-            %include "aac.liq"
-        else
-            %include "aacplus.liq"
+        #elsif type == "opus" then
+        #    %include "opus.liq"
+        #elsif type == "aac" then
+        #    %include "aac.liq"
+        #else
+        #    %include "aacplus.liq"
         end
     else
         user_ref = ref user
@@ -165,10 +165,10 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
 
         if type == "mp3" then
             %include "mp3.liq"
-        elsif type == "aac" then
-            %include "aac.liq"
-        else
-            %include "aacplus.liq"
+        #elsif type == "aac" then
+        #    %include "aac.liq"
+        #else
+        #    %include "aacplus.liq"
         end
     end
 end

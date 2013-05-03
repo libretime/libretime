@@ -36,15 +36,20 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 POLL_INTERVAL = 1800
 
+config_static = None
+
 class PypoFetch(Thread):
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config):
         Thread.__init__(self)
+        global config_static
+
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
         self.push_queue = pypoPush_q
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
         self.config = config
+        config_static = config
         self.listener_timeout = POLL_INTERVAL
 
         self.telnet_lock = telnet_lock
@@ -102,10 +107,13 @@ class PypoFetch(Thread):
                 self.update_liquidsoap_transition_fade(m['transition_fade'])
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
-                self.switch_source(self.logger, self.telnet_lock, m['sourcename'], m['status'])
+                self.pypo_liquidsoap.\
+                        get_telnet_dispatcher().\
+                        switch_source(m['sourcename'], m['status'])
             elif command == 'disconnect_source':
                 self.logger.info("disconnect_on_source show command received...")
-                self.disconnect_source(self.logger, self.telnet_lock, m['sourcename'])
+                self.pypo_liquidsoap.get_telnet_dispatcher().\
+                        disconnect_source(m['sourcename'])
             else:
                 self.logger.info("Unknown command: %s" % command)
 
@@ -123,65 +131,7 @@ class PypoFetch(Thread):
             self.logger.error("traceback: %s", top)
             self.logger.error("Exception in handling Message Handler message: %s", e)
 
-    @staticmethod
-    def disconnect_source(logger, lock, sourcename):
-        logger.debug('Disconnecting source: %s', sourcename)
-        command = ""
-        if(sourcename == "master_dj"):
-            command += "master_harbor.kick\n"
-        elif(sourcename == "live_dj"):
-            command += "live_dj_harbor.kick\n"
 
-        try:
-            lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-            logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error(traceback.format_exc())
-        finally:
-            lock.release()
-
-    @staticmethod
-    def telnet_send(logger, lock, commands):
-        try:
-            lock.acquire()
-
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-            for i in commands:
-                logger.info(i)
-                tn.write(i)
-
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            logger.error(str(e))
-        finally:
-            lock.release()
-
-
-    @staticmethod
-    def switch_source(logger, lock, sourcename, status):
-        logger.debug('Switching source: %s to "%s" status', sourcename, status)
-        command = "streams."
-        if sourcename == "master_dj":
-            command += "master_dj_"
-        elif sourcename == "live_dj":
-            command += "live_dj_"
-        elif sourcename == "scheduled_play":
-            command += "scheduled_play_"
-
-        if status == "on":
-            command += "start\n"
-        else:
-            command += "stop\n"
-
-        PypoFetch.telnet_send(logger, lock, [command])
-
-
-    #TODO: Merge this with switch_source
     def switch_source_temp(self, sourcename, status):
         self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
         command = "streams."
@@ -222,7 +172,7 @@ class PypoFetch(Thread):
         commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
         commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
         commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
-        PypoFetch.telnet_send(self.logger, self.telnet_lock, commands)
+        self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
 
     def restart_liquidsoap(self):
         try:
