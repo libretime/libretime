@@ -36,6 +36,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
         "cueout" => "00:00:00",
         "fadein" => "0.0",
         "fadeout" => "0.0",
+    	"crossfadeDuration" => 0
     );
 
     //using propel's phpNames.
@@ -60,13 +61,9 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
             $this->pl->save();
         }
 
-        $defaultFade = Application_Model_Preference::GetDefaultFade();
-        if ($defaultFade !== "") {
-            //fade is in format SS.uuuuuu
-
-            $this->plItem["fadein"] = $defaultFade;
-            $this->plItem["fadeout"] = $defaultFade;
-        }
+        $this->plItem["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
+        $this->plItem["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+        $this->plItem["crossfadeDuration"] = Application_Model_Preference::GetDefaultCrossfadeDuration();
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcPlaylistPeer::DATABASE_NAME);
         $this->id = $this->pl->getDbId();
@@ -166,6 +163,7 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
                    pc.cueout,
                    pc.fadein,
                    pc.fadeout,
+                   pc.trackoffset,
                    f.id AS item_id,
                    f.track_title,
                    f.artist_name AS creator,
@@ -193,6 +191,7 @@ SQL;
                             pc.cueout,
                             pc.fadein,
                             pc.fadeout,
+                            pc.trackoffset,
                             ws.id AS item_id,
                             (ws.name || ': ' || ws.url) AS title,
                             sub.login AS creator,
@@ -213,6 +212,7 @@ SQL;
                             pc.cueout,
                             pc.fadein,
                             pc.fadeout,
+                            pc.trackoffset,
                             bl.id AS item_id,
                             bl.name AS title,
                             sbj.login AS creator,
@@ -227,6 +227,7 @@ SQL;
               AND pc.TYPE = 2)) AS temp
    ORDER BY temp.position;
 SQL;
+        //Logging::info($sql);
 
         $params = array(
             ':playlist_id1'=>$this->id, ':playlist_id2'=>$this->id, ':playlist_id3'=>$this->id);
@@ -238,8 +239,18 @@ SQL;
 
         $offset = 0;
         foreach ($rows as &$row) {
+        	
+        	//Logging::info($row);
+        	
             $clipSec = Application_Common_DateHelper::playlistTimeToSeconds($row['length']);
+            $row['trackSec'] = $clipSec;
+            
+            $row['cueInSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cuein']);
+            $row['cueOutSec'] = Application_Common_DateHelper::playlistTimeToSeconds($row['cueout']);
+            
+            $trackoffset = $row['trackoffset'];
             $offset += $clipSec;
+            $offset -= $trackoffset;
             $offset_cliplength = Application_Common_DateHelper::secondsToPlaylistTime($offset);
 
             //format the length for UI.
@@ -356,6 +367,7 @@ SQL;
         $row->setDbFadeout(Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]));
         if ($info["ftype"] == "audioclip") {
             $row->setDbFileId($info["id"]);
+            $row->setDbTrackOffset($info["crossfadeDuration"]);
             $type = 0;
         } elseif ($info["ftype"] == "stream") {
             $row->setDbStreamId($info["id"]);
@@ -645,19 +657,42 @@ SQL;
 
         return array($fadeIn, $fadeOut);
     }
+    
+    /*
+     * create a crossfade from item in cc_playlist_contents with $id1 to item $id2.
+     * 
+     * $fadeOut length of fade out in seconds if $id1
+     * $fadeIn length of fade in in seconds of $id2
+     * $offset time in seconds from end of $id1 that $id2 will begin to play.
+     */
+    public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset)
+    {
+    	$this->con->beginTransaction();
+    	
+    	try {
+    		$this->changeFadeInfo($id1, null, $fadeOut);
+    		$this->changeFadeInfo($id2, $fadeIn, null, $offset);
+    		
+    		$this->con->commit();
+    		
+    	} catch (Exception $e) {
+            $this->con->rollback();
+            throw $e;
+        }	
+    }
 
     /**
      * Change fadeIn and fadeOut values for playlist Element
      *
-     * @param int $pos
-     *         position of audioclip in playlist
+     * @param int $id
+     *         id of audioclip in playlist contents table.
      * @param string $fadeIn
      *         new value in ss.ssssss or extent format
      * @param string $fadeOut
      *         new value in ss.ssssss or extent format
      * @return boolean
      */
-    public function changeFadeInfo($id, $fadeIn, $fadeOut)
+    public function changeFadeInfo($id, $fadeIn, $fadeOut, $offset=null)
     {
         //See issue CC-2065, pad the fadeIn and fadeOut so that it is TIME compatable with the DB schema
         //For the top level PlayList either fadeIn or fadeOut will sometimes be Null so need a gaurd against
@@ -683,6 +718,12 @@ SQL;
                     $fadeIn = $clipLength;
                 }
                 $row->setDbFadein($fadeIn);
+                
+                if (!is_null($offset)) {
+                	$row->setDbTrackOffset($offset);
+                	Logging::info("Setting offset {$offset} on item {$id}");
+                	$row->save($this->con);
+                }
             }
             if (!is_null($fadeOut)) {
 

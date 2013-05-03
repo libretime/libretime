@@ -137,6 +137,84 @@ var AIRTIME = (function(AIRTIME){
                 highlightActive(li.find('.spl_cue'));
             });
         }
+    
+    /* used from waveform pop-up */
+    function changeCues($el, id, cueIn, cueOut) {
+        
+        var url = baseUrl+"Playlist/set-cue",
+            lastMod = getModified(),
+            type = $('#obj_type').val(),
+            li;
+        
+        if (!isTimeValid(cueIn)){
+            $el.find('.cue-in-error').val($.i18n._("please put in a time '00:00:00 (.0)'")).show();
+            return;
+        }
+        else {
+        	$el.find('.cue-in-error').hide();
+        }
+        
+        if (!isTimeValid(cueOut)){
+        	$el.find('.cue-out-error').val($.i18n._("please put in a time '00:00:00 (.0)'")).show();
+            return;
+        }
+        else {
+        	$el.find('.cue-out-error').hide();
+        }
+        
+        $.post(url, 
+            {format: "json", cueIn: cueIn, cueOut: cueOut, id: id, modified: lastMod, type: type}, 
+            function(json){
+            	
+            	$el.dialog('destroy');
+            	$el.remove();
+
+                if (json.error !== undefined){
+                    playlistError(json);
+	            	return;
+                }
+                if (json.cue_error !== undefined) {
+                    showError(span, json.cue_error);
+                    return;
+                }
+
+                setPlaylistContent(json);
+
+                li = $('#side_playlist li[unqid='+id+']');
+                li.find(".cue-edit").toggle();
+                highlightActive(li);
+                highlightActive(li.find('.spl_cue'));
+            });
+    }
+    
+    /* used from waveform pop-up */
+    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset) {
+        
+        var url = baseUrl+"Playlist/set-crossfade",
+            lastMod = getModified(),
+            type = $('#obj_type').val(),
+            li, id;
+        
+        $.post(url, 
+            {format: "json", fadeIn: fadeIn, fadeOut: fadeOut, id1: id1, id2: id2, offset: offset, modified: lastMod, type: type}, 
+            function(json){
+            	
+            	$el.dialog('destroy');
+            	$el.remove();
+
+                if (json.error !== undefined){
+                    playlistError(json);
+	            	return;
+                }
+                
+                setPlaylistContent(json);
+
+                id = id1 === undefined ? id2 : id1;
+                li = $('#side_playlist li[unqid='+id+']');
+                li.find('.crossfade').toggle();
+                highlightActive(li.find('.spl_fade_control'));
+            });
+    }
 
     function changeFadeIn(event) {
         event.preventDefault();
@@ -292,6 +370,8 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function setPlaylistContent(json) {
+		var $html = $(json.html);
+		
 		$('#spl_name > a')
 			.empty()
 			.append(json.name);
@@ -305,7 +385,7 @@ var AIRTIME = (function(AIRTIME){
 	    $('#spl_sortable').off('focusout keydown');
 	    $('#spl_sortable')
         .empty()
-        .append(json.html);
+        .append($html);
 	    setCueEvents();
 	    setFadeEvents();
 		setModified(json.modified);
@@ -515,6 +595,11 @@ var AIRTIME = (function(AIRTIME){
 	    
 	    temp.on("focusout", ".spl_cue_out span", changeCueOut);
 	    temp.on("keydown", ".spl_cue_out span", submitOnEnter);
+	    
+	    //remove show waveform buttons since web audio api is not supported.
+	    if (!(window.AudioContext || window.webkitAudioContext)) {
+	    	temp.find('.pl-waveform-cues-btn').parent().remove();
+	    }
 	}
 	
 	//sets events dynamically for the fade editor.
@@ -525,6 +610,11 @@ var AIRTIME = (function(AIRTIME){
         
         temp.on("focusout", ".spl_fade_out span", changeFadeOut);
         temp.on("keydown", ".spl_fade_out span", submitOnEnter);
+        
+      //remove show waveform buttons since web audio api is not supported.
+	    if (!(window.AudioContext || window.webkitAudioContext)) {
+	    	temp.find('.pl-waveform-fades-btn').parent().remove();
+	    }
 	}
 	
 	function initialEvents() {	
@@ -1061,6 +1151,206 @@ var AIRTIME = (function(AIRTIME){
 		playlistRequest(sUrl, oData);
 	};
 	
+	mod.showFadesWaveform = function(e) {
+		var $el = $(e.target),
+			$parent = $el.parents("dl"),
+			$fadeOut = $parent.find(".spl_fade_out"),
+			$fadeIn = $parent.find(".spl_fade_in"),
+			$html = $($("#tmpl-pl-fades").html()),
+			tracks = [],
+			dim = AIRTIME.utilities.findViewportDimensions(),
+			playlistEditor,
+			id1, id2;
+		
+		function removeDialog() {
+			playlistEditor.stop();
+			
+        	$html.dialog("destroy");
+        	$html.remove();
+        }
+		
+		if ($fadeOut.length > 0) {
+			
+			tracks.push({
+		    	src: $fadeOut.data("fadeout"),
+		    	cuein: $fadeOut.data("cuein"),
+		    	cueout: $fadeOut.data("cueout"),
+		    	fades: [{
+		    	    shape: $fadeOut.data("type"),
+		    	    type: "FadeOut",
+		    	    end: $fadeOut.data("cueout") - $fadeOut.data("cuein"),
+		    	    start: $fadeOut.data("cueout") - $fadeOut.data("cuein") - $fadeOut.data("length")
+		    	}],
+		    	states: {
+	                'fadein': false,
+	                'shift': false
+	            }
+			});
+			
+			id1 = $fadeOut.data("item");
+		}
+
+		if ($fadeIn.length > 0) {
+			
+			tracks.push({
+		    	src: $fadeIn.data("fadein"),
+		    	start: $fadeIn.data("offset"),
+		    	cuein: $fadeIn.data("cuein"),
+		    	cueout: $fadeIn.data("cueout"),
+		    	fades: [{
+		    	    shape: $fadeIn.data("type"),
+		    	    type: "FadeIn",
+		    	    end: $fadeIn.data("length"),
+		    	    start: 0
+		    	}],
+		    	states: {
+	                'fadeout': false,
+	                'shift': false
+	            }
+			});
+			
+			id2 = $fadeIn.data("item");
+		}
+		
+		//set the first track to not be moveable (might only be one track depending on what follows)
+		//tracks[0].states["shift"] = false;
+		
+		$html.dialog({
+            modal: true,
+            title: "Fade Editor",
+            show: 'clip',
+            hide: 'clip',
+            width: dim.width - 100,
+            height: dim.height - 100,
+            buttons: [
+                {text: "Cancel", click: removeDialog},
+                {text: "Save", click: function() {
+                	var json = playlistEditor.getJson(),
+                		offset, 
+                		fadeIn, fadeOut,
+                		fade;
+                	
+                	playlistEditor.stop();
+                	
+                	if (json.length === 1) {
+                		
+                		fade = json[0]["fades"][0];
+                		
+                		if (fade["type"] === "FadeOut") {
+                			fadeOut = fade["end"] - fade["start"];
+                		}
+                		else {
+                			fadeIn = fade["end"] - fade["start"];
+                		}
+                	}
+                	else {
+                		
+                		offset = json[0]["end"] - json[1]["start"];
+                		
+                		fade = json[0]["fades"][0];
+                		fadeOut = fade["end"] - fade["start"];
+                		
+                		fade = json[1]["fades"][0];
+                		fadeIn = fade["end"] - fade["start"];
+                	}
+                	
+                	changeCrossfade($html, id1, id2, fadeIn.toFixed(1), fadeOut.toFixed(1), offset);
+                }}
+            ],
+            open: function (event, ui) {
+            	
+            	var config = new Config({
+        			resolution: 15000,
+        			state: "shift",
+        	        mono: true,
+        	        waveHeight: 80,
+        	        container: $html[0],
+        	        UITheme: "jQueryUI",
+        	        timeFormat: 'hh:mm:ss.u'
+        	    });
+        		
+        		playlistEditor = new PlaylistEditor();
+        	    playlistEditor.setConfig(config);
+        	    playlistEditor.init(tracks);
+            },
+        	close: removeDialog
+        });		
+	};
+	
+	mod.showCuesWaveform = function(e) {
+		var $el = $(e.target),
+			$li = $el.parents("li"), 
+			id = $li.attr("unqid"),
+			$parent = $el.parent(),
+			uri = $parent.data("uri"),
+			$html = $($("#tmpl-pl-cues").html()),
+			tracks = [{
+				src: uri
+			}],
+			cueIn = $li.find('.spl_cue_in').data("cueIn"),
+			cueOut = $li.find('.spl_cue_out').data("cueOut"),
+			dim = AIRTIME.utilities.findViewportDimensions(),
+			playlistEditor;
+		
+		function removeDialog() {
+			playlistEditor.stop();
+			
+        	$html.dialog("destroy");
+        	$html.remove();
+        }
+		
+		$html.find('.editor-cue-in').val(cueIn);
+		$html.find('.editor-cue-out').val(cueOut);
+		
+		$html.on("click", ".set-cue-in", function(e) {
+			var cueIn = $html.find('.audio_start').val();
+			
+			$html.find('.editor-cue-in').val(cueIn);
+		});
+		
+		$html.on("click", ".set-cue-out", function(e) {
+			var cueOut = $html.find('.audio_end').val();
+			
+			$html.find('.editor-cue-out').val(cueOut);
+		});
+		
+		$html.dialog({
+            modal: true,
+            title: "Cue Editor",
+            show: 'clip',
+            hide: 'clip',
+            width: dim.width - 100,
+            height: dim.height - 100,
+            buttons: [
+                {text: "Cancel", click: removeDialog},
+                {text: "Save", click: function() {
+                	var cueIn = $html.find('.editor-cue-in').val(),
+                		cueOut = $html.find('.editor-cue-out').val();
+                	
+                	playlistEditor.stop();
+                	
+                	changeCues($html, id, cueIn, cueOut);
+                }}
+            ],
+            open: function (event, ui) {
+            	
+            	var config = new Config({
+        			resolution: 15000,
+        	        mono: true,
+        	        waveHeight: 80,
+        	        container: $html[0],
+        	        UITheme: "jQueryUI",
+        	        timeFormat: 'hh:mm:ss.u'
+        	    });
+        		
+        		playlistEditor = new PlaylistEditor();
+        	    playlistEditor.setConfig(config);
+        	    playlistEditor.init(tracks);	
+            },
+            close: removeDialog
+        });	
+	};
+	
 	mod.init = function() {
 	    /*
 	    $.contextMenu({
@@ -1087,6 +1377,14 @@ var AIRTIME = (function(AIRTIME){
         
 		$pl.delegate("#ws_delete", {"click": function(ev){
             AIRTIME.playlist.fnWsDelete();
+		}});
+		
+		$pl.delegate(".pl-waveform-cues-btn", {"click": function(ev){
+            AIRTIME.playlist.showCuesWaveform(ev);
+		}});
+		
+		$pl.delegate(".pl-waveform-fades-btn", {"click": function(ev){
+            AIRTIME.playlist.showFadesWaveform(ev);
 		}});
 		
 		setPlaylistEntryEvents();

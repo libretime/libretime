@@ -42,6 +42,7 @@ class CcBlockcontentsTableMap extends TableMap {
 		$this->addForeignKey('BLOCK_ID', 'DbBlockId', 'INTEGER', 'cc_block', 'ID', false, null, null);
 		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', false, null, null);
+		$this->addColumn('TRACKOFFSET', 'DbTrackOffset', 'REAL', true, null, 0);
 		$this->addColumn('CLIPLENGTH', 'DbCliplength', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEIN', 'DbCuein', 'VARCHAR', false, null, '00:00:00');
 		$this->addColumn('CUEOUT', 'DbCueout', 'VARCHAR', false, null, '00:00:00');

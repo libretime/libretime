@@ -13,6 +13,7 @@
  * @method     CcPlaylistcontentsQuery orderByDbStreamId($order = Criteria::ASC) Order by the stream_id column
  * @method     CcPlaylistcontentsQuery orderByDbType($order = Criteria::ASC) Order by the type column
  * @method     CcPlaylistcontentsQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
+ * @method     CcPlaylistcontentsQuery orderByDbTrackOffset($order = Criteria::ASC) Order by the trackoffset column
  * @method     CcPlaylistcontentsQuery orderByDbCliplength($order = Criteria::ASC) Order by the cliplength column
  * @method     CcPlaylistcontentsQuery orderByDbCuein($order = Criteria::ASC) Order by the cuein column
  * @method     CcPlaylistcontentsQuery orderByDbCueout($order = Criteria::ASC) Order by the cueout column
@@ -26,6 +27,7 @@
  * @method     CcPlaylistcontentsQuery groupByDbStreamId() Group by the stream_id column
  * @method     CcPlaylistcontentsQuery groupByDbType() Group by the type column
  * @method     CcPlaylistcontentsQuery groupByDbPosition() Group by the position column
+ * @method     CcPlaylistcontentsQuery groupByDbTrackOffset() Group by the trackoffset column
  * @method     CcPlaylistcontentsQuery groupByDbCliplength() Group by the cliplength column
  * @method     CcPlaylistcontentsQuery groupByDbCuein() Group by the cuein column
  * @method     CcPlaylistcontentsQuery groupByDbCueout() Group by the cueout column
@@ -58,6 +60,7 @@
  * @method     CcPlaylistcontents findOneByDbStreamId(int $stream_id) Return the first CcPlaylistcontents filtered by the stream_id column
  * @method     CcPlaylistcontents findOneByDbType(int $type) Return the first CcPlaylistcontents filtered by the type column
  * @method     CcPlaylistcontents findOneByDbPosition(int $position) Return the first CcPlaylistcontents filtered by the position column
+ * @method     CcPlaylistcontents findOneByDbTrackOffset(double $trackoffset) Return the first CcPlaylistcontents filtered by the trackoffset column
  * @method     CcPlaylistcontents findOneByDbCliplength(string $cliplength) Return the first CcPlaylistcontents filtered by the cliplength column
  * @method     CcPlaylistcontents findOneByDbCuein(string $cuein) Return the first CcPlaylistcontents filtered by the cuein column
  * @method     CcPlaylistcontents findOneByDbCueout(string $cueout) Return the first CcPlaylistcontents filtered by the cueout column
@@ -71,6 +74,7 @@
  * @method     array findByDbStreamId(int $stream_id) Return CcPlaylistcontents objects filtered by the stream_id column
  * @method     array findByDbType(int $type) Return CcPlaylistcontents objects filtered by the type column
  * @method     array findByDbPosition(int $position) Return CcPlaylistcontents objects filtered by the position column
+ * @method     array findByDbTrackOffset(double $trackoffset) Return CcPlaylistcontents objects filtered by the trackoffset column
  * @method     array findByDbCliplength(string $cliplength) Return CcPlaylistcontents objects filtered by the cliplength column
  * @method     array findByDbCuein(string $cuein) Return CcPlaylistcontents objects filtered by the cuein column
  * @method     array findByDbCueout(string $cueout) Return CcPlaylistcontents objects filtered by the cueout column
@@ -386,6 +390,37 @@ abstract class BaseCcPlaylistcontentsQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlaylistcontentsPeer::POSITION, $dbPosition, $comparison);
+	}
+
+	/**
+	 * Filter the query on the trackoffset column
+	 * 
+	 * @param     double|array $dbTrackOffset The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlaylistcontentsQuery The current query, for fluid interface
+	 */
+	public function filterByDbTrackOffset($dbTrackOffset = null, $comparison = null)
+	{
+		if (is_array($dbTrackOffset)) {
+			$useMinMax = false;
+			if (isset($dbTrackOffset['min'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::TRACKOFFSET, $dbTrackOffset['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbTrackOffset['max'])) {
+				$this->addUsingAlias(CcPlaylistcontentsPeer::TRACKOFFSET, $dbTrackOffset['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcPlaylistcontentsPeer::TRACKOFFSET, $dbTrackOffset, $comparison);
 	}
 
 	/**
