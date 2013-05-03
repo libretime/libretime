@@ -1182,7 +1182,8 @@ var AIRTIME = (function(AIRTIME){
 		    	    start: $fadeOut.data("cueout") - $fadeOut.data("cuein") - $fadeOut.data("length")
 		    	}],
 		    	states: {
-	                'fadein': false
+	                'fadein': false,
+	                'shift': false
 	            }
 			});
 			
@@ -1203,7 +1204,8 @@ var AIRTIME = (function(AIRTIME){
 		    	    start: 0
 		    	}],
 		    	states: {
-	                'fadeout': false
+	                'fadeout': false,
+	                'shift': false
 	            }
 			});
 			
@@ -1211,7 +1213,7 @@ var AIRTIME = (function(AIRTIME){
 		}
 		
 		//set the first track to not be moveable (might only be one track depending on what follows)
-		tracks[0].states["shift"] = false;
+		//tracks[0].states["shift"] = false;
 		
 		$html.dialog({
             modal: true,
