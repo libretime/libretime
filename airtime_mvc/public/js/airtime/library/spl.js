@@ -370,6 +370,8 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function setPlaylistContent(json) {
+		var $html = $(json.html);
+		
 		$('#spl_name > a')
 			.empty()
 			.append(json.name);
@@ -383,7 +385,7 @@ var AIRTIME = (function(AIRTIME){
 	    $('#spl_sortable').off('focusout keydown');
 	    $('#spl_sortable')
         .empty()
-        .append(json.html);
+        .append($html);
 	    setCueEvents();
 	    setFadeEvents();
 		setModified(json.modified);
@@ -593,6 +595,11 @@ var AIRTIME = (function(AIRTIME){
 	    
 	    temp.on("focusout", ".spl_cue_out span", changeCueOut);
 	    temp.on("keydown", ".spl_cue_out span", submitOnEnter);
+	    
+	    //remove show waveform buttons since web audio api is not supported.
+	    if (!(window.AudioContext || window.webkitAudioContext)) {
+	    	temp.find('.pl-waveform-cues-btn').parent().remove();
+	    }
 	}
 	
 	//sets events dynamically for the fade editor.
@@ -603,6 +610,11 @@ var AIRTIME = (function(AIRTIME){
         
         temp.on("focusout", ".spl_fade_out span", changeFadeOut);
         temp.on("keydown", ".spl_fade_out span", submitOnEnter);
+        
+      //remove show waveform buttons since web audio api is not supported.
+	    if (!(window.AudioContext || window.webkitAudioContext)) {
+	    	temp.find('.pl-waveform-fades-btn').parent().remove();
+	    }
 	}
 	
 	function initialEvents() {	

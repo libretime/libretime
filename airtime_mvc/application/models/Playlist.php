@@ -367,6 +367,7 @@ SQL;
         $row->setDbFadeout(Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]));
         if ($info["ftype"] == "audioclip") {
             $row->setDbFileId($info["id"]);
+            $row->setDbTrackOffset($info["crossfadeDuration"]);
             $type = 0;
         } elseif ($info["ftype"] == "stream") {
             $row->setDbStreamId($info["id"]);
