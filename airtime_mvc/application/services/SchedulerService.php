@@ -170,7 +170,11 @@ class Application_Service_SchedulerService
                     $ccSchedules = CcScheduleQuery::create()
                         ->filterByDbInstanceId($ccShowInstance->getDbId())
                         ->find();
-                    if ($ccSchedules->isEmpty()) {
+                    /* If the show instance is empty OR it has different content than
+                     * the first instance, we cant to fill/replace with the show stamp
+                     * (The show stamp is taken from the first show instance's content)
+                     */
+                    if ($ccSchedules->isEmpty() || self::replaceInstanceContentCheck($ccShowInstance, $showStamp)) {
                         $nextStartDT = $ccShowInstance->getDbStarts(null);
 
                         foreach ($showStamp as $item) {
@@ -203,6 +207,30 @@ class Application_Service_SchedulerService
                 } //foreach linked instance
             } //if at least one linked instance has content
         }
+    }
+
+    private static function replaceInstanceContentCheck($ccShowInstance, $showStamp)
+    {
+        $currentShowStamp = CcScheduleQuery::create()
+            ->filterByDbInstanceId($ccShowInstance->getDbId())
+            ->orderByDbStarts()
+            ->find();
+
+        $counter = 0;
+        foreach ($showStamp as $item) {
+            if ($item->getDbFileId() != $currentShowStamp[$counter]->getDbFileId() ||
+                $item->getDbStreamId() != $currentShowStamp[$counter]->getDbStreamId()) {
+                    CcScheduleQuery::create()
+                        ->filterByDbInstanceId($ccShowInstance->getDbId())
+                        ->delete();
+                    return true;
+                }
+        }
+
+        /* If we get here, the content in the show instance is the same
+         * as what we want to replace it with, so we can leave as is
+         */
+        return false;
     }
 
     public function emptyShowContent($instanceId)

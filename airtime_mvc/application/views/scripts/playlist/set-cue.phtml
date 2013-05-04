@@ -1,11 +1,14 @@
 <dl id="spl_cue_editor" class="inline-list">
+	<dd data-uri="<?php echo $this->uri; ?>">
+	  <input type="button" class="pl-waveform-cues-btn" value="Show Waveform"></input>
+	</dd>
     <dt><? echo _("Cue In: "); ?><span class='spl_cue_hint'><? echo _("(hh:mm:ss.t)")?></span></dt>
-    <dd id="spl_cue_in_<?php echo $this->id; ?>" class="spl_cue_in">
+    <dd id="spl_cue_in_<?php echo $this->id; ?>" class="spl_cue_in" data-cue-in="<?php echo $this->cueIn; ?>">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->cueIn; ?></span>
     </dd>
     <dd class="edit-error"></dd>
     <dt><? echo _("Cue Out: "); ?><span class='spl_cue_hint'><? echo _("(hh:mm:ss.t)")?></span></dt>
-    <dd id="spl_cue_out_<?php echo $this->id; ?>" class="spl_cue_out">
+    <dd id="spl_cue_out_<?php echo $this->id; ?>" class="spl_cue_out" data-cue-out="<?php echo $this->cueOut; ?>">
         <span contenteditable="true" class="spl_text_input"><?php echo $this->cueOut; ?></span>
     </dd>
     <dd class="edit-error"></dd>

@@ -33,5 +33,46 @@
 </div>
 
 <div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
+
+<script id="tmpl-pl-cues" type="text/template">
+<div class="waveform-cues">
+  <div class="playlist-tracks"></div>
+  <div class="playlist-controls">
+    <span class="btn_play ui-state-default">Play</span>
+    <span class="btn_stop ui-state-default">Stop</span>
+  </div>
+  <div>
+    <input type="text" class="audio_start">
+	<input type="button" class="set-cue-in" value="Set Cue In">
+    <input type="text" class="audio_end">
+    <input type="button" class="set-cue-out" value="Set Cue Out">
+    <input type="text" class="audio_pos">
+  </div>
+  <div>
+	<label for="editor-cue-in">Cue In</label>
+    <input type="text" id="editor-cue-in" class="editor-cue-in">
+	<span style="display:none" class="cue-in-error"></span>
+    <label for="editor-cue-out">Cue Out</label>
+    <input type="text" id="editor-cue-out" class="editor-cue-out">
+    <span style="display:none" class="cue-out-error"></span>
+  </div>
+</div>
+</script>
+
+<script id="tmpl-pl-fades" type="text/template">
+<div class="waveform-fades">
+  <div class="playlist-tracks"></div>
+  <div>
+    <span class="btn_play ui-state-default">Play</span>
+    <span class="btn_stop ui-state-default">Stop</span>
+  </div>
+  <div>
+	<span class="btn_select ui-state-default" data-state="cursor">Cursor</span>
+    <span class="btn_fadein ui-state-default" data-state="fadein">Fade In</span>
+	<span class="btn_fadeout ui-state-default" data-state="fadeout">Fade Out</span>
+    <span class="btn_shift ui-state-default" data-state="shift">Shift</span>
+  </div>
+</div>
+</script>
 </body>
 </html>

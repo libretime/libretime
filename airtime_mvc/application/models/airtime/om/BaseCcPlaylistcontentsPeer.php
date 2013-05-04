@@ -26,7 +26,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 	const TM_CLASS = 'CcPlaylistcontentsTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 12;
+	const NUM_COLUMNS = 13;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -51,6 +51,9 @@ abstract class BaseCcPlaylistcontentsPeer {
 
 	/** the column name for the POSITION field */
 	const POSITION = 'cc_playlistcontents.POSITION';
+
+	/** the column name for the TRACKOFFSET field */
+	const TRACKOFFSET = 'cc_playlistcontents.TRACKOFFSET';
 
 	/** the column name for the CLIPLENGTH field */
 	const CLIPLENGTH = 'cc_playlistcontents.CLIPLENGTH';
@@ -83,12 +86,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPlaylistId', 'DbFileId', 'DbBlockId', 'DbStreamId', 'DbType', 'DbPosition', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPlaylistId', 'dbFileId', 'dbBlockId', 'dbStreamId', 'dbType', 'dbPosition', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::PLAYLIST_ID, self::FILE_ID, self::BLOCK_ID, self::STREAM_ID, self::TYPE, self::POSITION, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'FILE_ID', 'BLOCK_ID', 'STREAM_ID', 'TYPE', 'POSITION', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'file_id', 'block_id', 'stream_id', 'type', 'position', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPlaylistId', 'DbFileId', 'DbBlockId', 'DbStreamId', 'DbType', 'DbPosition', 'DbTrackOffset', 'DbCliplength', 'DbCuein', 'DbCueout', 'DbFadein', 'DbFadeout', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPlaylistId', 'dbFileId', 'dbBlockId', 'dbStreamId', 'dbType', 'dbPosition', 'dbTrackOffset', 'dbCliplength', 'dbCuein', 'dbCueout', 'dbFadein', 'dbFadeout', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::PLAYLIST_ID, self::FILE_ID, self::BLOCK_ID, self::STREAM_ID, self::TYPE, self::POSITION, self::TRACKOFFSET, self::CLIPLENGTH, self::CUEIN, self::CUEOUT, self::FADEIN, self::FADEOUT, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'FILE_ID', 'BLOCK_ID', 'STREAM_ID', 'TYPE', 'POSITION', 'TRACKOFFSET', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'file_id', 'block_id', 'stream_id', 'type', 'position', 'trackoffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
 	);
 
 	/**
@@ -98,12 +101,12 @@ abstract class BaseCcPlaylistcontentsPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPlaylistId' => 1, 'DbFileId' => 2, 'DbBlockId' => 3, 'DbStreamId' => 4, 'DbType' => 5, 'DbPosition' => 6, 'DbCliplength' => 7, 'DbCuein' => 8, 'DbCueout' => 9, 'DbFadein' => 10, 'DbFadeout' => 11, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPlaylistId' => 1, 'dbFileId' => 2, 'dbBlockId' => 3, 'dbStreamId' => 4, 'dbType' => 5, 'dbPosition' => 6, 'dbCliplength' => 7, 'dbCuein' => 8, 'dbCueout' => 9, 'dbFadein' => 10, 'dbFadeout' => 11, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::PLAYLIST_ID => 1, self::FILE_ID => 2, self::BLOCK_ID => 3, self::STREAM_ID => 4, self::TYPE => 5, self::POSITION => 6, self::CLIPLENGTH => 7, self::CUEIN => 8, self::CUEOUT => 9, self::FADEIN => 10, self::FADEOUT => 11, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'FILE_ID' => 2, 'BLOCK_ID' => 3, 'STREAM_ID' => 4, 'TYPE' => 5, 'POSITION' => 6, 'CLIPLENGTH' => 7, 'CUEIN' => 8, 'CUEOUT' => 9, 'FADEIN' => 10, 'FADEOUT' => 11, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'file_id' => 2, 'block_id' => 3, 'stream_id' => 4, 'type' => 5, 'position' => 6, 'cliplength' => 7, 'cuein' => 8, 'cueout' => 9, 'fadein' => 10, 'fadeout' => 11, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPlaylistId' => 1, 'DbFileId' => 2, 'DbBlockId' => 3, 'DbStreamId' => 4, 'DbType' => 5, 'DbPosition' => 6, 'DbTrackOffset' => 7, 'DbCliplength' => 8, 'DbCuein' => 9, 'DbCueout' => 10, 'DbFadein' => 11, 'DbFadeout' => 12, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPlaylistId' => 1, 'dbFileId' => 2, 'dbBlockId' => 3, 'dbStreamId' => 4, 'dbType' => 5, 'dbPosition' => 6, 'dbTrackOffset' => 7, 'dbCliplength' => 8, 'dbCuein' => 9, 'dbCueout' => 10, 'dbFadein' => 11, 'dbFadeout' => 12, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::PLAYLIST_ID => 1, self::FILE_ID => 2, self::BLOCK_ID => 3, self::STREAM_ID => 4, self::TYPE => 5, self::POSITION => 6, self::TRACKOFFSET => 7, self::CLIPLENGTH => 8, self::CUEIN => 9, self::CUEOUT => 10, self::FADEIN => 11, self::FADEOUT => 12, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'FILE_ID' => 2, 'BLOCK_ID' => 3, 'STREAM_ID' => 4, 'TYPE' => 5, 'POSITION' => 6, 'TRACKOFFSET' => 7, 'CLIPLENGTH' => 8, 'CUEIN' => 9, 'CUEOUT' => 10, 'FADEIN' => 11, 'FADEOUT' => 12, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'file_id' => 2, 'block_id' => 3, 'stream_id' => 4, 'type' => 5, 'position' => 6, 'trackoffset' => 7, 'cliplength' => 8, 'cuein' => 9, 'cueout' => 10, 'fadein' => 11, 'fadeout' => 12, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
 	);
 
 	/**
@@ -182,6 +185,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::STREAM_ID);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::TYPE);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::POSITION);
+			$criteria->addSelectColumn(CcPlaylistcontentsPeer::TRACKOFFSET);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CLIPLENGTH);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CUEIN);
 			$criteria->addSelectColumn(CcPlaylistcontentsPeer::CUEOUT);
@@ -195,6 +199,7 @@ abstract class BaseCcPlaylistcontentsPeer {
 			$criteria->addSelectColumn($alias . '.STREAM_ID');
 			$criteria->addSelectColumn($alias . '.TYPE');
 			$criteria->addSelectColumn($alias . '.POSITION');
+			$criteria->addSelectColumn($alias . '.TRACKOFFSET');
 			$criteria->addSelectColumn($alias . '.CLIPLENGTH');
 			$criteria->addSelectColumn($alias . '.CUEIN');
 			$criteria->addSelectColumn($alias . '.CUEOUT');

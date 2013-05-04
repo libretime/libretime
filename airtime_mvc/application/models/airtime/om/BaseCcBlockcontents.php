@@ -49,6 +49,13 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 	protected $position;
 
 	/**
+	 * The value for the trackoffset field.
+	 * Note: this column has a database default value of: 0
+	 * @var        double
+	 */
+	protected $trackoffset;
+
+	/**
 	 * The value for the cliplength field.
 	 * Note: this column has a database default value of: '00:00:00'
 	 * @var        string
@@ -118,6 +125,7 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 	 */
 	public function applyDefaultValues()
 	{
+		$this->trackoffset = 0;
 		$this->cliplength = '00:00:00';
 		$this->cuein = '00:00:00';
 		$this->cueout = '00:00:00';
@@ -173,6 +181,16 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 	public function getDbPosition()
 	{
 		return $this->position;
+	}
+
+	/**
+	 * Get the [trackoffset] column value.
+	 * 
+	 * @return     double
+	 */
+	public function getDbTrackOffset()
+	{
+		return $this->trackoffset;
 	}
 
 	/**
@@ -360,6 +378,26 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 	} // setDbPosition()
 
 	/**
+	 * Set the value of [trackoffset] column.
+	 * 
+	 * @param      double $v new value
+	 * @return     CcBlockcontents The current object (for fluent API support)
+	 */
+	public function setDbTrackOffset($v)
+	{
+		if ($v !== null) {
+			$v = (double) $v;
+		}
+
+		if ($this->trackoffset !== $v || $this->isNew()) {
+			$this->trackoffset = $v;
+			$this->modifiedColumns[] = CcBlockcontentsPeer::TRACKOFFSET;
+		}
+
+		return $this;
+	} // setDbTrackOffset()
+
+	/**
 	 * Set the value of [cliplength] column.
 	 * 
 	 * @param      string $v new value
@@ -529,6 +567,10 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
+			if ($this->trackoffset !== 0) {
+				return false;
+			}
+
 			if ($this->cliplength !== '00:00:00') {
 				return false;
 			}
@@ -575,11 +617,12 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 			$this->block_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->file_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
 			$this->position = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-			$this->cliplength = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-			$this->cuein = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->cueout = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-			$this->fadein = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-			$this->fadeout = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->trackoffset = ($row[$startcol + 4] !== null) ? (double) $row[$startcol + 4] : null;
+			$this->cliplength = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+			$this->cuein = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->cueout = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+			$this->fadein = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+			$this->fadeout = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -588,7 +631,7 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 9; // 9 = CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 10; // 10 = CcBlockcontentsPeer::NUM_COLUMNS - CcBlockcontentsPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcBlockcontents object", $e);
@@ -947,18 +990,21 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 				return $this->getDbPosition();
 				break;
 			case 4:
-				return $this->getDbCliplength();
+				return $this->getDbTrackOffset();
 				break;
 			case 5:
-				return $this->getDbCuein();
+				return $this->getDbCliplength();
 				break;
 			case 6:
-				return $this->getDbCueout();
+				return $this->getDbCuein();
 				break;
 			case 7:
-				return $this->getDbFadein();
+				return $this->getDbCueout();
 				break;
 			case 8:
+				return $this->getDbFadein();
+				break;
+			case 9:
 				return $this->getDbFadeout();
 				break;
 			default:
@@ -989,11 +1035,12 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 			$keys[1] => $this->getDbBlockId(),
 			$keys[2] => $this->getDbFileId(),
 			$keys[3] => $this->getDbPosition(),
-			$keys[4] => $this->getDbCliplength(),
-			$keys[5] => $this->getDbCuein(),
-			$keys[6] => $this->getDbCueout(),
-			$keys[7] => $this->getDbFadein(),
-			$keys[8] => $this->getDbFadeout(),
+			$keys[4] => $this->getDbTrackOffset(),
+			$keys[5] => $this->getDbCliplength(),
+			$keys[6] => $this->getDbCuein(),
+			$keys[7] => $this->getDbCueout(),
+			$keys[8] => $this->getDbFadein(),
+			$keys[9] => $this->getDbFadeout(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcFiles) {
@@ -1046,18 +1093,21 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 				$this->setDbPosition($value);
 				break;
 			case 4:
-				$this->setDbCliplength($value);
+				$this->setDbTrackOffset($value);
 				break;
 			case 5:
-				$this->setDbCuein($value);
+				$this->setDbCliplength($value);
 				break;
 			case 6:
-				$this->setDbCueout($value);
+				$this->setDbCuein($value);
 				break;
 			case 7:
-				$this->setDbFadein($value);
+				$this->setDbCueout($value);
 				break;
 			case 8:
+				$this->setDbFadein($value);
+				break;
+			case 9:
 				$this->setDbFadeout($value);
 				break;
 		} // switch()
@@ -1088,11 +1138,12 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 		if (array_key_exists($keys[1], $arr)) $this->setDbBlockId($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbFileId($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbPosition($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbCliplength($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbCuein($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbCueout($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbFadein($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setDbFadeout($arr[$keys[8]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbTrackOffset($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbCliplength($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbCuein($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbCueout($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbFadein($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbFadeout($arr[$keys[9]]);
 	}
 
 	/**
@@ -1108,6 +1159,7 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcBlockcontentsPeer::BLOCK_ID)) $criteria->add(CcBlockcontentsPeer::BLOCK_ID, $this->block_id);
 		if ($this->isColumnModified(CcBlockcontentsPeer::FILE_ID)) $criteria->add(CcBlockcontentsPeer::FILE_ID, $this->file_id);
 		if ($this->isColumnModified(CcBlockcontentsPeer::POSITION)) $criteria->add(CcBlockcontentsPeer::POSITION, $this->position);
+		if ($this->isColumnModified(CcBlockcontentsPeer::TRACKOFFSET)) $criteria->add(CcBlockcontentsPeer::TRACKOFFSET, $this->trackoffset);
 		if ($this->isColumnModified(CcBlockcontentsPeer::CLIPLENGTH)) $criteria->add(CcBlockcontentsPeer::CLIPLENGTH, $this->cliplength);
 		if ($this->isColumnModified(CcBlockcontentsPeer::CUEIN)) $criteria->add(CcBlockcontentsPeer::CUEIN, $this->cuein);
 		if ($this->isColumnModified(CcBlockcontentsPeer::CUEOUT)) $criteria->add(CcBlockcontentsPeer::CUEOUT, $this->cueout);
@@ -1177,6 +1229,7 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 		$copyObj->setDbBlockId($this->block_id);
 		$copyObj->setDbFileId($this->file_id);
 		$copyObj->setDbPosition($this->position);
+		$copyObj->setDbTrackOffset($this->trackoffset);
 		$copyObj->setDbCliplength($this->cliplength);
 		$copyObj->setDbCuein($this->cuein);
 		$copyObj->setDbCueout($this->cueout);
@@ -1336,6 +1389,7 @@ abstract class BaseCcBlockcontents extends BaseObject  implements Persistent
 		$this->block_id = null;
 		$this->file_id = null;
 		$this->position = null;
+		$this->trackoffset = null;
 		$this->cliplength = null;
 		$this->cuein = null;
 		$this->cueout = null;

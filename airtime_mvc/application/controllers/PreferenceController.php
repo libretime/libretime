@@ -43,7 +43,9 @@ class PreferenceController extends Zend_Controller_Action
             if ($form->isValid($values)) {
 
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
-                Application_Model_Preference::SetDefaultFade($values["stationDefaultFade"]);
+                Application_Model_Preference::SetDefaultCrossfadeDuration($values["stationDefaultCrossfadeDuration"]);
+                Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
+                Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
                 Application_Model_Preference::SetAllow3rdPartyApi($values["thirdPartyApi"]);
                 Application_Model_Preference::SetDefaultLocale($values["locale"]);
                 Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
