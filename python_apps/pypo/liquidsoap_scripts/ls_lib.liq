@@ -129,19 +129,19 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "ogg.liq"
         end
 
-        %ifdef_encoder %opus
+        %ifencoder %opus
         if type == "opus" then
             %include "opus.liq"
         end
         %endif
 
-        %ifdef_encoder %aac
+        %ifencoder %aac
         if type == "aac" then
             %include "aac.liq"
         end
         %endif
 
-        %ifdef_encoder %aacplus
+        %ifencoder %aacplus
         if type == "aacplus" then
             %include "aacplus.liq"
         end
@@ -180,13 +180,13 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "mp3.liq"
         end
 
-        %ifdef_encoder %aac
+        %ifencoder %aac
         if type == "aac" then
             %include "aac.liq"
         end
         %endif
         
-        %ifdef_encoder %aacplus
+        %ifencoder %aacplus
         if type == "aacplus" then
             %include "aacplus.liq"
         end
