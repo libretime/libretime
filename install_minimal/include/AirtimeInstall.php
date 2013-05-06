@@ -115,7 +115,7 @@ class AirtimeInstall
 
     public static function DropSequence($p_sequenceName)
     {
-        AirtimeInstall::InstallQuery("DROP SEQUENCE IF EXISTS $p_sequenceName");
+        AirtimeInstall::InstallQuery("DROP SEQUENCE IF EXISTS $p_sequenceName", false);
     }
 
     /**
