@@ -51,10 +51,10 @@ $command = "su postgres -c \"dropdb ".$CC_CONFIG["dsn"]["database"]."\"";
 // We do this if dropping the database fails above.
 //------------------------------------------------------------------------
 if ($dbDeleteFailed) {
-    echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
     $connected = AirtimeInstall::DbConnect(false);
 
     if ($connected) {
+        echo " * Couldn't delete the database, so deleting all the DB tables...".PHP_EOL;
         $con = Propel::getConnection();
         $sql = "select * from pg_tables where tableowner = 'airtime'";
         try {
@@ -67,11 +67,27 @@ if ($dbDeleteFailed) {
             $tablename = $row["tablename"];
             echo "   * Removing database table $tablename...";
 
-            if (AirtimeInstall::DbTableExists($tablename)) {
-                $sql = "DROP TABLE $tablename CASCADE";
-                AirtimeInstall::InstallQuery($sql, false);
-                AirtimeInstall::DropSequence($tablename."_id");
-            }
+            $sql = "DROP TABLE $tablename CASCADE";
+            AirtimeInstall::InstallQuery($sql, false);
+            AirtimeInstall::DropSequence($tablename."_id");
+            echo "done.".PHP_EOL;
+        }
+
+
+        echo " * Deleting database sequences...".PHP_EOL;
+        $sql = "SELECT c.relname FROM pg_class c WHERE c.relkind = 'S';";
+        try {
+            $rows = $con->query($sql)->fetchAll();
+        } catch (Exception $e) {
+            $rows = array();
+        }
+
+        foreach ($rows as $row) {
+            $sequence = $row["relname"];
+            echo "   * Removing database sequence $sequence...";
+
+            $sql = "DROP SEQUENCE $sequence CASCADE";
+            AirtimeInstall::InstallQuery($sql, false);
             echo "done.".PHP_EOL;
         }
     }
