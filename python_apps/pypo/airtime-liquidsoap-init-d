@@ -18,12 +18,17 @@ PIDFILE=/var/run/airtime-liquidsoap.pid
 EXEC='/usr/bin/airtime-liquidsoap'
 
 start () {
-        chown pypo:pypo /var/log/airtime/pypo
-        chown pypo:pypo /var/log/airtime/pypo-liquidsoap
-        chown pypo:pypo /etc/airtime/liquidsoap.cfg
+        mkdir -p /var/log/airtime/pypo
+        chown $USERID:$GROUPID /var/log/airtime/pypo
+
+        mkdir -p /var/log/airtime/pypo-liquidsoap
+        chown $USERID:$GROUPID /var/log/airtime/pypo-liquidsoap
+
+        touch /etc/airtime/liquidsoap.cfg
+        chown $USERID:$GROUPID /etc/airtime/liquidsoap.cfg
 
         touch $PIDFILE
-        chown pypo:pypo $PIDFILE 
+        chown $USERID:$GROUPID $PIDFILE 
 
         #start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
             #--pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
