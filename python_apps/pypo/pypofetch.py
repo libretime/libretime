@@ -174,6 +174,8 @@ class PypoFetch(Thread):
         commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
         self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
 
+        self.pypo_liquidsoap.clear_queue_tracker()
+
     def restart_liquidsoap(self):
         try:
             self.telnet_lock.acquire()

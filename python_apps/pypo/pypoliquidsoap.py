@@ -195,6 +195,10 @@ class PypoLiquidsoap():
     def is_file(self, media_item):
         return media_item["type"] == eventtypes.FILE
 
+    def clear_queue_tracker(self):
+        for i in self.liq_queue_tracker.keys():
+            self.liq_queue_tracker[i] = None
+
     def modify_cue_point(self, link):
         if not self.is_file(link):
             return
