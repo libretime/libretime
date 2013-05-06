@@ -1261,7 +1261,7 @@ var AIRTIME = (function(AIRTIME){
             	
             	var config = new Config({
         			resolution: 15000,
-        			state: "shift",
+        			state: "cursor",
         	        mono: true,
         	        waveHeight: 80,
         	        container: $html[0],
