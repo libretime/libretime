@@ -16,8 +16,8 @@ DAEMON=/usr/lib/airtime/pypo/bin/airtime-playout
 PIDFILE=/var/run/airtime-playout.pid
 
 start () {
-        chown pypo:pypo /etc/airtime
-        chown pypo:pypo /etc/airtime/liquidsoap.cfg
+        mkdir -p /var/log/airtime/pypo
+
         start-stop-daemon --start --background --quiet --chuid $USERID:$USERID \
             --make-pidfile --pidfile $PIDFILE --startas $DAEMON
 }

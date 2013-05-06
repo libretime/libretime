@@ -18,12 +18,11 @@ PIDFILE=/var/run/airtime-liquidsoap.pid
 EXEC='/usr/bin/airtime-liquidsoap'
 
 start () {
-        mkdir -p /var/log/airtime/pypo
-        chown $USERID:$GROUPID /var/log/airtime/pypo
 
         mkdir -p /var/log/airtime/pypo-liquidsoap
         chown $USERID:$GROUPID /var/log/airtime/pypo-liquidsoap
 
+        chown $USERID:$GROUPID /etc/airtime
         touch /etc/airtime/liquidsoap.cfg
         chown $USERID:$GROUPID /etc/airtime/liquidsoap.cfg
 
