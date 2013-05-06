@@ -138,11 +138,10 @@ except Exception, e:
     sys.exit(1)
 
 class Global:
-    def __init__(self):
-        self.api_client = api_client.AirtimeApiClient()
+    def __init__(self, api_client):
+        self.api_client = api_client
 
     def selfcheck(self):
-        self.api_client = api_client.AirtimeApiClient()
         return self.api_client.is_server_compatible()
 
     def test_api(self):
@@ -186,11 +185,20 @@ if __name__ == '__main__':
 
     signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-    # initialize
-    g = Global()
+    api_client = api_client.AirtimeApiClient()
+    g = Global(api_client)
 
     while not g.selfcheck():
         time.sleep(5)
+
+    success = False
+    while not success:
+        try:
+            api_client.register_component('pypo')
+            success = True
+        except Exception, e:
+            logger.error(str(e))
+            time.sleep(10)
 
     telnet_lock = Lock()
 
@@ -204,19 +212,9 @@ if __name__ == '__main__':
         g.test_api()
         sys.exit(0)
 
-    api_client = api_client.AirtimeApiClient()
 
     ReplayGainUpdater.start_reply_gain(api_client)
     SilanAnalyzer.start_silan(api_client, logger)
-
-    success = False
-    while not success:
-        try:
-            api_client.register_component('pypo')
-            success = True
-        except Exception, e:
-            logger.error(str(e))
-            time.sleep(10)
 
     pypoFetch_q = Queue()
     recorder_q = Queue()
