@@ -38,7 +38,11 @@ class Application_Model_Preference
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
 
             $paramMap = array();
-            if ($result == 1) {
+            if ($result > 1) {
+                //this case should not happen.
+                throw new Exception("Invalid number of results returned. Should be ".
+                    "0 or 1, but is '$result' instead");
+            } elseif ($result == 1) {
                 // result found
                 if (is_null($id) || !$isUserValue) {
                     // system pref
@@ -80,7 +84,7 @@ class Application_Model_Preference
 
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::info("Could not connect to database: ".$e->getMessage());
+            Logging::info("Database error: ".$e->getMessage());
             exit;
         }
 
