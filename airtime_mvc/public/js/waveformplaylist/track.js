@@ -116,8 +116,8 @@ TrackEditor.prototype.init = function(src, start, end, fades, cues, stateConfig)
         this.setCuePoints(this.secondsToSamples(cues.cuein), this.secondsToSamples(cues.cueout));
     }
     
-    this.selectedArea = undefined; //selected area of track stored as inclusive buffer indices to the audio buffer.
     this.active = false;
+    this.selectedArea = undefined; //selected area of track stored as inclusive buffer indices to the audio buffer.
     
     this.container.classList.add("channel-wrapper");
     this.container.style.left = this.leftOffset;
@@ -156,6 +156,14 @@ TrackEditor.prototype.loadTrack = function(track) {
         },
         track.states || {}
     );
+
+    if (track.selected !== undefined) {
+        this.selectedArea = {
+            start: this.secondsToSamples(track.selected.start),
+            end: this.secondsToSamples(track.selected.end)
+        };
+    }
+
     this.loadBuffer(track.src);
 
     return el;
@@ -201,7 +209,9 @@ TrackEditor.prototype.drawTrack = function(buffer) {
 };
 
 TrackEditor.prototype.onTrackLoad = function(buffer) {
-    var res;
+    var res,
+        startTime,
+        endTime;
 
     if (this.cues === undefined) {
         this.setCuePoints(0, buffer.length - 1);
@@ -219,6 +229,14 @@ TrackEditor.prototype.onTrackLoad = function(buffer) {
     }
    
     this.drawTrack(buffer);
+
+    if (this.selectedArea !== undefined) {
+        startTime = this.samplesToSeconds(this.selectedArea.start);
+        endTime = this.samplesToSeconds(this.selectedArea.end);
+
+        this.config.setCursorPos(startTime);
+        this.notifySelectUpdate(startTime, endTime);
+    }
 };
 
 TrackEditor.prototype.samplesToSeconds = function(samples) {
@@ -302,6 +320,8 @@ TrackEditor.prototype.timeShift = function(e) {
     startTime, endTime in seconds.
 */
 TrackEditor.prototype.notifySelectUpdate = function(startTime, endTime) {
+
+    this.updateEditor(-1, undefined, undefined, true);
    
     this.fire('changecursor', {
         start: startTime,
@@ -451,7 +471,6 @@ TrackEditor.prototype.selectStart = function(e) {
     editor.setSelectedArea(startX, startX);
     startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
 
-    editor.updateEditor(-1, undefined, undefined, true);
     editor.notifySelectUpdate(startTime, startTime);
 
     //dynamically put an event on the element.
@@ -477,7 +496,6 @@ TrackEditor.prototype.selectStart = function(e) {
         endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
 
         editor.setSelectedArea(selectStart, selectEnd);
-        editor.updateEditor(-1, undefined, undefined, true);
         editor.notifySelectUpdate(startTime, endTime);
         prevX = currentX;
     };
@@ -507,7 +525,6 @@ TrackEditor.prototype.selectStart = function(e) {
         startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
         endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
 
-        editor.updateEditor(-1, undefined, undefined, true);
         editor.config.setCursorPos(startTime);
         editor.notifySelectUpdate(startTime, endTime);    
     };
@@ -531,7 +548,6 @@ TrackEditor.prototype.selectCursorPos = function(e) {
     startTime = editor.samplesToSeconds(offset + editor.selectedArea.start);
     endTime = editor.samplesToSeconds(offset + editor.selectedArea.end);
 
-    editor.updateEditor(-1, undefined, undefined, true);
     editor.config.setCursorPos(startTime);
     editor.notifySelectUpdate(startTime, endTime);
 
