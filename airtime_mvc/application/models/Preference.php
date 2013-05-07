@@ -11,6 +11,9 @@ class Application_Model_Preference
     private static function setValue($key, $value, $isUserValue = false, $userId = null)
     {
         try {
+            $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
+            $con->beginTransaction();
+
             //called from a daemon process
             if (!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
                 $id = NULL;
@@ -35,7 +38,11 @@ class Application_Model_Preference
                 $paramMap[':id'] = $userId;
             }
 
-            $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
+            $result = Application_Common_Database::prepareAndExecute($sql, 
+                    $paramMap, 
+                    'column', 
+                    PDO::FETCH_ASSOC, 
+                    $con);
 
             $paramMap = array();
             if ($result > 1) {
@@ -80,9 +87,15 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             $paramMap[':value'] = $value;
 
-            Application_Common_Database::prepareAndExecute($sql, $paramMap, 'execute');
+            Application_Common_Database::prepareAndExecute($sql, 
+                    $paramMap, 
+                    'execute', 
+                    PDO::FETCH_ASSOC, 
+                    $con);
 
+            $con->commit();
         } catch (Exception $e) {
+            $con->rollback();
             header('HTTP/1.0 503 Service Unavailable');
             Logging::info("Database error: ".$e->getMessage());
             exit;
