@@ -1284,11 +1284,17 @@ var AIRTIME = (function(AIRTIME){
 			$parent = $el.parent(),
 			uri = $parent.data("uri"),
 			$html = $($("#tmpl-pl-cues").html()),
-			tracks = [{
-				src: uri
-			}],
 			cueIn = $li.find('.spl_cue_in').data("cueIn"),
 			cueOut = $li.find('.spl_cue_out').data("cueOut"),
+			cueInSec = $li.find('.spl_cue_in').data("cueSec"),
+			cueOutSec = $li.find('.spl_cue_out').data("cueSec"),
+			tracks = [{
+				src: uri,
+				selected: {
+					start: cueInSec,
+					end: cueOutSec
+				}
+			}],
 			dim = AIRTIME.utilities.findViewportDimensions(),
 			playlistEditor;
 		
