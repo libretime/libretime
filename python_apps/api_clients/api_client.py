@@ -145,7 +145,6 @@ class ApiRequest(object):
         try:
             if content_type == 'application/json':
                 data = json.loads(response)
-                self.logger.debug(data)
                 return data
             else:
                 raise InvalidContentType()
