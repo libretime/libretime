@@ -557,6 +557,7 @@ class Application_Model_Scheduler
                  */
                 $instances = $this->getInstances($schedule["instance"]);
                 foreach($instances as $instance) {
+                    $linked = $instance->getCcShow()->isLinked();
                     if ($id !== 0) {
                         $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
                         /* We use the selected cursor's position to find the same
@@ -609,12 +610,31 @@ class Application_Model_Scheduler
                             $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
                         }
                     }
+
                     foreach ($filesToInsert as $file) {
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
                             $sched = CcScheduleQuery::create()->findPk($file["sched_id"]);
 
+                            /* We need to keep a record of the original positon a track
+                             * is being moved from so we can use it to retrieve the correct
+                             * items in linked instances
+                             */
+                            if (!isset($originalPosition)) {
+                                $originalPosition = $sched->getDbPosition();
+                            }
+
+                            /* If we are moving an item in a linked show we need to get
+                             * the relative item to move in each instance. We know what the
+                             * relative item is by its position
+                             */
+                            if ($linked && $moveAction) {
+                                $sched = CcScheduleQuery::create()
+                                    ->filterByDbInstanceId($instance->getDbId())
+                                    ->filterByDbPosition($originalPosition)
+                                    ->findOne();
+                            }
                             $excludeIds[] = intval($sched->getDbId());
 
                             $file["cliplength"] = $sched->getDbClipLength();
@@ -694,7 +714,6 @@ class Application_Model_Scheduler
                         //recalculate the start/end times after the inserted items.
                         foreach ($followingSchedItems as $item) {
                             $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
-
                             $item->setDbStarts($nextStartDT);
                             $item->setDbEnds($endTimeDT);
                             $item->setDbPosition($pos);
