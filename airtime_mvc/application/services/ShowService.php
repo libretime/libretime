@@ -976,7 +976,7 @@ SQL;
                     $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
                 }
             }
-            $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone);
+            $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone, $showDay->getDbStartTime());
         }
         $this->setNextRepeatingShowDate($start->format("Y-m-d"), $day, $show_id);
     }
@@ -1034,7 +1034,7 @@ SQL;
      * Enter description here ...
      * @param $start
      */
-    private function getNextMonthlyMonthlyRepeatDate($start, $timezone)
+    private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime)
     {
         $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
         do {
@@ -1042,6 +1042,12 @@ SQL;
         } while (!checkdate($dt->format("m"), $start->format("d"), $dt->format("Y")));
 
         $dt->setDate($dt->format("Y"), $dt->format("m"), $start->format("d"));
+
+        $startTime = explode(":", $startTime);
+        $hours = isset($startTime[0]) ? $startTime[0] : "00";
+        $minutes = isset($startTime[1]) ? $startTime[1] : "00";
+        $seconds = isset($startTime[2]) ? $startTime[2] : "00";
+        $dt->setTime($hours, $minutes, $seconds);
         return $dt;
     }
 
