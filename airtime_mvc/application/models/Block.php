@@ -488,7 +488,7 @@ SQL;
             }
             
             foreach ($p_items as $ac) {
-                Logging::info("Adding audio file {$ac[0]}");
+                //Logging::info("Adding audio file {$ac[0]}");
                 try {
                     if (is_array($ac) && $ac[1] == 'audioclip') {
                         $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
@@ -658,7 +658,7 @@ SQL;
 
     public function getFadeInfo($pos)
     {
-        Logging::info("Getting fade info for pos {$pos}");
+        //Logging::info("Getting fade info for pos {$pos}");
 
         $row = CcBlockcontentsQuery::create()
         ->joinWith(CcFilesPeer::OM_CLASS)
@@ -1275,8 +1275,10 @@ SQL;
         $isBlockFull = false;
         
         while ($iterator->valid()) {
+        	
             $id = $iterator->current()->getDbId();
-            $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
+            $fileLength = $iterator->current()->getCueLength();
+            $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
             $insertList[] = array('id'=>$id, 'length'=>$length);
             $totalTime += $length;
             $totalItems++;
@@ -1291,8 +1293,11 @@ SQL;
         
         $sizeOfInsert = count($insertList);
         
-        // if block is not full and reapeat_track is check, fill up more
+        // if block is not full and repeat_track is check, fill up more
         while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
+        	Logging::debug("adding repeated tracks.");
+        	Logging::debug("total time = " . $totalTime);
+        	
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
             $insertList[] = $insertList[$randomEleKey];
             $totalTime += $insertList[$randomEleKey]['length'];

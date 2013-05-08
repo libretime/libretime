@@ -12,6 +12,20 @@
  * @package    propel.generator.campcaster
  */
 class CcFiles extends BaseCcFiles {
+	
+	public function getCueLength()
+	{
+		$cuein = $this->getDbCuein();
+		$cueout = $this->getDbCueout();
+		
+		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
+		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
+		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
+		
+		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
+		
+		return $length;
+	}
 
     public function getDbLength($format = "H:i:s.u")
     {
