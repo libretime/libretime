@@ -1,5 +1,6 @@
 import logging
 import sys
+import time
 from api_clients.api_client import AirtimeApiClient
 
 def generate_liquidsoap_config(ss):
@@ -26,10 +27,19 @@ def generate_liquidsoap_config(ss):
 
 logging.basicConfig(format='%(message)s')
 ac = AirtimeApiClient(logging.getLogger())
-try:
-    ss = ac.get_stream_setting()
-    generate_liquidsoap_config(ss)
-except Exception, e:
-    logging.error(str(e))
-    print "Unable to connect to the Airtime server."
-    sys.exit(1)
+attempts = 0
+max_attempts = 5
+
+while True:
+    try:
+        ss = ac.get_stream_setting()
+        generate_liquidsoap_config(ss)
+        break
+    except Exception, e:
+        if attempts == max_attempts:
+            print "Unable to connect to the Airtime server."
+            logging.error(str(e))
+            sys.exit(1)
+        else:
+            time.sleep(3)
+    attempts += 1
