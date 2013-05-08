@@ -10,7 +10,11 @@ ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
 export PYTHONPATH=${api_client_path}
 
-cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+SCRIPTPATH=`dirname $SCRIPT`
+
+cd $SCRIPTPATH/liquidsoap_scripts
 python generate_liquidsoap_cfg.py
 
 exec ${ls_path} ${ls_param} 2>&1
