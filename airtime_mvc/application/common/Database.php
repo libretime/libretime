@@ -2,9 +2,11 @@
 class Application_Common_Database
 {
     public static function prepareAndExecute($sql, array $paramValueMap,
-        $type='all', $fetchType=PDO::FETCH_ASSOC)
+        $type='all', $fetchType=PDO::FETCH_ASSOC, $con=null)
     {
-        $con = Propel::getConnection();
+        if (is_null($con)) {
+            $con = Propel::getConnection();
+        }
         $stmt = $con->prepare($sql);
         foreach ($paramValueMap as $param => $v) {
             $stmt->bindValue($param, $v);
