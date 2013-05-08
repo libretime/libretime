@@ -216,7 +216,7 @@ class Application_Service_ShowFormService
                 'add_show_no_end' => (!$service_show->getRepeatingEndDate()),
                 'add_show_monthly_repeat_type' => $monthlyRepeatType));
 
-        if (!$this->ccShow->isLinkable()) {
+        if (!$this->ccShow->isLinkable() || $this->ccShow->isRecorded()) {
             $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
         }
     }
