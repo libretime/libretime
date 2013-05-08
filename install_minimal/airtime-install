@@ -27,8 +27,13 @@ rabbitmq_install () {
     RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' /etc/airtime/airtime.conf)
     EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
-    rabbitmqctl delete_vhost $RABBITMQ_VHOST
-    rabbitmqctl delete_user $RABBITMQ_USER
+    rabbitmqctl list_vhosts | grep $RABBITMQ_VHOST
+    RESULT="$?"
+
+    if [ $RESULT = "0" ]; then
+        rabbitmqctl delete_vhost $RABBITMQ_VHOST
+        rabbitmqctl delete_user $RABBITMQ_USER
+    fi
 
     rabbitmqctl add_vhost $RABBITMQ_VHOST
     rabbitmqctl add_user $RABBITMQ_USER $RABBITMQ_PASSWORD
@@ -216,10 +221,11 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
         echo "There was an error during install. Exit code $result"
         exit 1
     fi
-
-    rabbitmq_install
 fi
+
+rabbitmq_install
 set -e
+
 
 export airtime_service_start='t'
 $SCRIPTPATH/include/airtime-copy-files.sh
