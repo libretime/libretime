@@ -44,6 +44,10 @@ try:
     # load config file
     try:
         config = ConfigObj(PATH_INI_FILE)
+        config['rabbitmq_user'] = os.environ['RABBITMQ_USER']
+        config['rabbitmq_password'] = os.environ['RABBITMQ_PASSWORD'] 
+        config['rabbitmq_vhost'] = os.environ['RABBITMQ_VHOST'] 
+        config.write()
     except Exception, e:
         print 'Error loading config file: ', e
         sys.exit(1)

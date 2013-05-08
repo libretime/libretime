@@ -33,6 +33,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "cueout"     => "00:00:00",
             "fadein"     => "0.0",
             "fadeout"    => "0.0",
+    		"crossfadeDuration" => 0
     );
 
     //using propel's phpNames.
@@ -101,6 +102,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
 
         $this->blockItem["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
         $this->blockItem["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+        $this->blockItem["crossfadeDuration"] = Application_Model_Preference::GetDefaultCrossfadeDuration();
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcBlockPeer::DATABASE_NAME);
         $this->id = $this->block->getDbId();
@@ -390,6 +392,7 @@ SQL;
         $row->setDbCueout($info["cueout"]);
         $row->setDbFadein(Application_Common_DateHelper::secondsToPlaylistTime($info["fadein"]));
         $row->setDbFadeout(Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]));
+        $row->setDbTrackOffset($info["crossfadeDuration"]);
         $row->save($this->con);
         // above save result update on cc_block table on length column.
         // but $this->block doesn't get updated automatically
@@ -485,7 +488,7 @@ SQL;
             }
             
             foreach ($p_items as $ac) {
-                Logging::info("Adding audio file {$ac[0]}");
+                //Logging::info("Adding audio file {$ac[0]}");
                 try {
                     if (is_array($ac) && $ac[1] == 'audioclip') {
                         $res = $this->insertBlockElement($this->buildEntry($ac[0], $pos));
@@ -655,7 +658,7 @@ SQL;
 
     public function getFadeInfo($pos)
     {
-        Logging::info("Getting fade info for pos {$pos}");
+        //Logging::info("Getting fade info for pos {$pos}");
 
         $row = CcBlockcontentsQuery::create()
         ->joinWith(CcFilesPeer::OM_CLASS)
@@ -1272,8 +1275,10 @@ SQL;
         $isBlockFull = false;
         
         while ($iterator->valid()) {
+        	
             $id = $iterator->current()->getDbId();
-            $length = Application_Common_DateHelper::calculateLengthInSeconds($iterator->current()->getDbLength());
+            $fileLength = $iterator->current()->getCueLength();
+            $length = Application_Common_DateHelper::calculateLengthInSeconds($fileLength);
             $insertList[] = array('id'=>$id, 'length'=>$length);
             $totalTime += $length;
             $totalItems++;
@@ -1288,8 +1293,11 @@ SQL;
         
         $sizeOfInsert = count($insertList);
         
-        // if block is not full and reapeat_track is check, fill up more
+        // if block is not full and repeat_track is check, fill up more
         while (!$isBlockFull && $repeat == 1 && $sizeOfInsert > 0) {
+        	Logging::debug("adding repeated tracks.");
+        	Logging::debug("total time = " . $totalTime);
+        	
             $randomEleKey = array_rand(array_slice($insertList, 0, $sizeOfInsert));
             $insertList[] = $insertList[$randomEleKey];
             $totalTime += $insertList[$randomEleKey]['length'];

@@ -21,6 +21,24 @@ showhelp () {
     exit 0
 }
 
+rabbitmq_install () {
+    RABBITMQ_VHOST="/airtime"
+    RABBITMQ_USER="airtime"
+    RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' /etc/airtime/airtime.conf)
+    EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
+
+    rabbitmqctl delete_vhost $RABBITMQ_VHOST
+    rabbitmqctl delete_user $RABBITMQ_USER
+
+    rabbitmqctl add_vhost $RABBITMQ_VHOST
+    rabbitmqctl add_user $RABBITMQ_USER $RABBITMQ_PASSWORD
+    rabbitmqctl set_permissions -p $RABBITMQ_VHOST $RABBITMQ_USER "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"
+
+    export RABBITMQ_USER
+    export RABBITMQ_PASSWORD
+    export RABBITMQ_VHOST
+}
+
 overwrite="f"
 preserve="f"
 nodb="f"
@@ -198,6 +216,8 @@ if [ "$DO_UPGRADE" -eq "0" ]; then
         echo "There was an error during install. Exit code $result"
         exit 1
     fi
+
+    rabbitmq_install
 fi
 set -e
 

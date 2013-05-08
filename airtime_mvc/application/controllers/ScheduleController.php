@@ -367,13 +367,6 @@ class ScheduleController extends Zend_Controller_Action
         $service_showForm = new Application_Service_ShowFormService($showId, $instanceId);
 
         $isAdminOrPM = $currentUser->isAdminOrPM();
-        /*$isHostOfShow = $currentUser->isHostOfShow($showId);
-        // in case a user was once a dj and had been assigned to a show
-        // but was then changed to an admin user we need to allow
-        // the user to edit the show as an admin (CC-4925)
-        if ($isHostOfShow && !$isAdminOrPM) {
-            $this->view->action = "dj-edit-show";
-        }*/
 
         $forms = $this->createShowFormAction();
 
@@ -397,29 +390,10 @@ class ScheduleController extends Zend_Controller_Action
 
         if ($currentUser->isAdminOrPM()) {
             $this->createShowFormAction(true);
+            $this->view->addNewShow = true;
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
     }
-
-    /*public function djEditShowAction()
-    {
-        $js = $this->_getParam('data');
-        $data = array();
-
-        //need to convert from serialized jQuery array.
-        foreach ($js as $j) {
-            $data[$j["name"]] = $j["value"];
-        }
-
-        //update cc_show
-        $show = new Application_Model_Show($data["add_show_id"]);
-        $show->setAirtimeAuthFlag($data["cb_airtime_auth"]);
-        $show->setCustomAuthFlag($data["cb_custom_auth"]);
-        $show->setCustomUsername($data["custom_username"]);
-        $show->setCustomPassword($data["custom_password"]);
-
-        $this->view->edit = true;
-    }*/
 
     public function editRepeatingShowInstanceAction(){
         $js = $this->_getParam('data');

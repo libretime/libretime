@@ -432,6 +432,7 @@ class PypoFetch(Thread):
             for key in media:
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
+                    self.sanity_check_media_item(media_item)
                     fileExt = os.path.splitext(media_item['uri'])[1]
                     dst = os.path.join(download_dir, unicode(media_item['id']) + fileExt)
                     media_item['dst'] = dst
@@ -454,6 +455,20 @@ class PypoFetch(Thread):
         # cleanup
         try: self.cache_cleanup(media)
         except Exception, e: self.logger.error("%s", e)
+
+    #do basic validation of file parameters. Useful for debugging
+    #purposes
+    def sanity_check_media_item(self, media_item):
+        start = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
+        end = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
+
+        length1 = (end - start).total_seconds()
+        length2 = media_item['cue_out'] - media_item['cue_in']
+
+        if abs(length2 - length1) > 1:
+            self.logger.error("end - start length: %s", length1)
+            self.logger.error("cue_out - cue_in length: %s", length2)
+            self.logger.error("Two lengths are not equal!!!")
 
     def is_file_opened(self, path):
         #Capture stderr to avoid polluting py-interpreter.log

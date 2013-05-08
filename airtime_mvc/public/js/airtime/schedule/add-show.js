@@ -191,6 +191,12 @@ function setAddShowEvents() {
         $(this).blur();
         form.find("#add_show_rebroadcast").toggle();
 
+        if (form.find("#add_show_record").attr("checked")) {
+            form.find("#add_show_linked").attr("checked", false).attr("disabled", true);
+        } else {
+            form.find("#add_show_linked").attr("disabled", false);
+        }
+
         //uncheck rebroadcast checkbox
         form.find("#add_show_rebroadcast").attr('checked', false);
 

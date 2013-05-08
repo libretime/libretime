@@ -67,6 +67,11 @@ class Application_Service_CalendarService
                         "name"=> $text,
                         "icon" => "soundcloud");
                 }
+            } else {
+                $menu["content"] = array(
+                    "name"=> _("Show Content"),
+                    "icon" => "overview",
+                    "url" => $baseUrl."schedule/show-content-dialog");
             }
         } else {
             //Show content can be modified from the calendar if:
