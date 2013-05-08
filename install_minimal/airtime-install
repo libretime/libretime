@@ -22,7 +22,6 @@ showhelp () {
 }
 
 rabbitmq_install () {
-    echo "RABBIT!!!"
     RABBITMQ_VHOST="/airtime"
     RABBITMQ_USER="airtime"
     RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' /etc/airtime/airtime.conf)
@@ -38,7 +37,6 @@ rabbitmq_install () {
     export RABBITMQ_USER
     export RABBITMQ_PASSWORD
     export RABBITMQ_VHOST
-
 }
 
 overwrite="f"
