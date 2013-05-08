@@ -33,6 +33,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "cueout"     => "00:00:00",
             "fadein"     => "0.0",
             "fadeout"    => "0.0",
+    		"crossfadeDuration" => 0
     );
 
     //using propel's phpNames.
@@ -101,6 +102,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
 
         $this->blockItem["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
         $this->blockItem["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+        $this->blockItem["crossfadeDuration"] = Application_Model_Preference::GetDefaultCrossfadeDuration();
 
         $this->con = isset($con) ? $con : Propel::getConnection(CcBlockPeer::DATABASE_NAME);
         $this->id = $this->block->getDbId();
@@ -390,6 +392,7 @@ SQL;
         $row->setDbCueout($info["cueout"]);
         $row->setDbFadein(Application_Common_DateHelper::secondsToPlaylistTime($info["fadein"]));
         $row->setDbFadeout(Application_Common_DateHelper::secondsToPlaylistTime($info["fadeout"]));
+        $row->setDbTrackOffset($info["crossfadeDuration"]);
         $row->save($this->con);
         // above save result update on cc_block table on length column.
         // but $this->block doesn't get updated automatically
