@@ -68,8 +68,12 @@ class Application_Service_SchedulerService
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
                 ->find();
+
+            $interval = new DateInterval("PT".abs($diff)."S");
+            if ($diff < 0) {
+                $interval->invert = 1;
+            }
             foreach ($ccSchedules as $ccSchedule) {
-                $interval = new DateInterval("PT".$diff."S");
                 $start = new DateTime($ccSchedule->getDbStarts());
                 $newStart = $start->add($interval);
                 $end = new DateTime($ccSchedule->getDbEnds());
