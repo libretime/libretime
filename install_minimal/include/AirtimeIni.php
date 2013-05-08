@@ -214,6 +214,57 @@ class AirtimeIni
         fclose($fp);
     }
 
+    //stupid hack found on http://stackoverflow.com/a/1268642/276949
+    //with some modifications: 1) Spaces are inserted in between sections and
+    //2) numeric values are not quoted.
+    public static function write_ini_file($assoc_arr, $path, $has_sections = false) {
+        $content = "";
+
+        if ($has_sections) {
+            $first_line = true;
+            foreach ($assoc_arr as $key=>$elem) {
+                if ($first_line) {
+                    $content .= "[".$key."]\n";
+                    $first_line = false;
+                } else {
+                    $content .= "\n[".$key."]\n";
+                }
+                foreach ($elem as $key2=>$elem2) {
+                    if(is_array($elem2))
+                    {
+                        for($i=0;$i<count($elem2);$i++)
+                        {
+                            $content .= $key2."[] = \"".$elem2[$i]."\"\n";
+                        }
+                    }
+                    else if($elem2=="") $content .= $key2." = \n";
+                    else $content .= $key2." = ".$elem2."\n";
+                }
+            }
+        } else { 
+            foreach ($assoc_arr as $key=>$elem) { 
+                if(is_array($elem)) 
+                { 
+                    for($i=0;$i<count($elem);$i++) 
+                    { 
+                        $content .= $key."[] = \"".$elem[$i]."\"\n"; 
+                    } 
+                } 
+                else if($elem=="") $content .= $key." = \n"; 
+                else $content .= $key." = ".$elem."\n"; 
+            } 
+        } 
+
+        if (!$handle = fopen($path, 'w')) {
+            return false;
+        }
+        if (!fwrite($handle, $content)) {
+            return false;
+        }
+        fclose($handle);
+        return true;
+    }
+
     /**
      * After the configuration files have been copied to /etc/airtime,
      * this function will update them to values unique to this
@@ -223,10 +274,17 @@ class AirtimeIni
     {
         $api_key = AirtimeIni::GenerateRandomString();
         if (getenv("web") == "t"){
-            AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'api_key', $api_key);
-            AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
+            $ini = parse_ini_file(AirtimeIni::CONF_FILE_AIRTIME, true);
+
+            $ini['general']['api_key'] = $api_key;
+            $ini['general']['airtime_dir'] = AirtimeInstall::CONF_DIR_WWW; 
+
+            AirtimeIni::write_ini_file($ini, AirtimeIni::CONF_FILE_AIRTIME, true);
         }
-        AirtimeIni::UpdateIniValue(AirtimeIni::CONF_FILE_API_CLIENT, 'api_key', "'$api_key'");
+
+        $ini = parse_ini_file(AirtimeIni::CONF_FILE_API_CLIENT);
+        $ini['api_key'] = "'$api_key'";
+        AirtimeIni::write_ini_file($ini, AirtimeIni::CONF_FILE_API_CLIENT, false);
     }
 
     public static function ReadPythonConfig($p_filename)
