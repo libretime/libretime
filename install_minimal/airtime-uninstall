@@ -28,12 +28,22 @@ done
 #Make 'purge' env variable available to sub bash script
 export purge
 
+rabbitmq_uninstall () {
+    RABBITMQ_VHOST="/airtime"
+    RABBITMQ_USER="airtime"
+
+    rabbitmqctl delete_vhost $RABBITMQ_VHOST
+    rabbitmqctl delete_user $RABBITMQ_USER
+}
+
 echo -e "\n******************************* Uninstall Begin ********************************"
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=`readlink -f $0`
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=`dirname $SCRIPT`
+
+rabbitmq_uninstall
 
 virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
 . ${virtualenv_bin}activate
