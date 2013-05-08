@@ -82,7 +82,9 @@ AudioPlayout.prototype.loadData = function (audioData, cb) {
             that.buffer = buffer;
             cb(buffer);
         },
-        Error
+        function(err) { 
+            console.log("err(decodeAudioData): "+err); 
+        }
     );
 };
 
