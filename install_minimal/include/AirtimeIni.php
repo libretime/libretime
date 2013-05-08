@@ -37,11 +37,11 @@ class AirtimeIni
 
     public static function IniFilesExist()
     {
-        $configFiles = array(AirtimeIni::CONF_FILE_AIRTIME,
-                             AirtimeIni::CONF_FILE_PYPO,
-                             AirtimeIni::CONF_FILE_RECORDER,
-                             AirtimeIni::CONF_FILE_LIQUIDSOAP,
-                             AirtimeIni::CONF_FILE_MEDIAMONITOR);
+        $configFiles = array(self::CONF_FILE_AIRTIME,
+                             self::CONF_FILE_PYPO,
+                             self::CONF_FILE_RECORDER,
+                             self::CONF_FILE_LIQUIDSOAP,
+                             self::CONF_FILE_MEDIAMONITOR);
         $exist = false;
         foreach ($configFiles as $conf) {
             if (file_exists($conf)) {
@@ -65,46 +65,46 @@ class AirtimeIni
             }
         }
 
-        if (!copy(AirtimeInstall::GetAirtimeSrcDir()."/build/airtime.conf", AirtimeIni::CONF_FILE_AIRTIME)){
+        if (!copy(AirtimeInstall::GetAirtimeSrcDir()."/build/airtime.conf", self::CONF_FILE_AIRTIME)){
             echo "Could not copy airtime.conf to /etc/airtime/. Exiting.";
             exit(1);
-        } else if (!self::ChangeFileOwnerGroupMod(AirtimeIni::CONF_FILE_AIRTIME, self::CONF_WWW_DATA_GRP)){
+        } else if (!self::ChangeFileOwnerGroupMod(self::CONF_FILE_AIRTIME, self::CONF_WWW_DATA_GRP)){
             echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
             exit(1);
         }
         
         
         if (getenv("python_service") == "0"){
-            if (!copy(__DIR__."/../../python_apps/api_clients/api_client.cfg", AirtimeIni::CONF_FILE_API_CLIENT)){
+            if (!copy(__DIR__."/../../python_apps/api_clients/api_client.cfg", self::CONF_FILE_API_CLIENT)){
                 echo "Could not copy api_client.cfg to /etc/airtime/. Exiting.";
                 exit(1);
-            } else if (!self::ChangeFileOwnerGroupMod(AirtimeIni::CONF_FILE_API_CLIENT, self::CONF_PYPO_GRP)){
+            } else if (!self::ChangeFileOwnerGroupMod(self::CONF_FILE_API_CLIENT, self::CONF_PYPO_GRP)){
                 echo "Could not set ownership of api_client.cfg to 'pypo'. Exiting.";
                 exit(1);
             }
                     
-            if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", AirtimeIni::CONF_FILE_PYPO)){
+            if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", self::CONF_FILE_PYPO)){
                 echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
                 exit(1);
-            } else if (!self::ChangeFileOwnerGroupMod(AirtimeIni::CONF_FILE_PYPO, self::CONF_PYPO_GRP)){
+            } else if (!self::ChangeFileOwnerGroupMod(self::CONF_FILE_PYPO, self::CONF_PYPO_GRP)){
                 echo "Could not set ownership of pypo.cfg to 'pypo'. Exiting.";
                 exit(1);
             }
             
             /*
-            if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", AirtimeIni::CONF_FILE_LIQUIDSOAP)){
+            if (!copy(__DIR__."/../../python_apps/pypo/liquidsoap_scripts/liquidsoap.cfg", self::CONF_FILE_LIQUIDSOAP)){
                 echo "Could not copy liquidsoap.cfg to /etc/airtime/. Exiting.";
                 exit(1);
-            } else if (!self::ChangeFileOwnerGroupMod(AirtimeIni::CONF_FILE_LIQUIDSOAP, self::CONF_PYPO_GRP)){
+            } else if (!self::ChangeFileOwnerGroupMod(self::CONF_FILE_LIQUIDSOAP, self::CONF_PYPO_GRP)){
                 echo "Could not set ownership of liquidsoap.cfg to 'pypo'. Exiting.";
                 exit(1);
             }
             * */
                             
-            if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", AirtimeIni::CONF_FILE_MEDIAMONITOR)){
+            if (!copy(__DIR__."/../../python_apps/media-monitor/media-monitor.cfg", self::CONF_FILE_MEDIAMONITOR)){
                 echo "Could not copy media-monitor.cfg to /etc/airtime/. Exiting.";
                 exit(1);
-            } else if (!self::ChangeFileOwnerGroupMod(AirtimeIni::CONF_FILE_MEDIAMONITOR, self::CONF_PYPO_GRP)){
+            } else if (!self::ChangeFileOwnerGroupMod(self::CONF_FILE_MEDIAMONITOR, self::CONF_PYPO_GRP)){
                 echo "Could not set ownership of media-monitor.cfg to 'pypo'. Exiting.";
                 exit(1);
             }
@@ -127,25 +127,25 @@ class AirtimeIni
      */
     public static function RemoveIniFiles()
     {
-        if (file_exists(AirtimeIni::CONF_FILE_AIRTIME)){
-            unlink(AirtimeIni::CONF_FILE_AIRTIME);
+        if (file_exists(self::CONF_FILE_AIRTIME)){
+            unlink(self::CONF_FILE_AIRTIME);
         }
 
-        if (file_exists(AirtimeIni::CONF_FILE_PYPO)){
-            unlink(AirtimeIni::CONF_FILE_PYPO);
+        if (file_exists(self::CONF_FILE_PYPO)){
+            unlink(self::CONF_FILE_PYPO);
         }
 
-        if (file_exists(AirtimeIni::CONF_FILE_RECORDER)){
-            unlink(AirtimeIni::CONF_FILE_RECORDER);
+        if (file_exists(self::CONF_FILE_RECORDER)){
+            unlink(self::CONF_FILE_RECORDER);
         }
 
-        if (file_exists(AirtimeIni::CONF_FILE_LIQUIDSOAP)){
-            unlink(AirtimeIni::CONF_FILE_LIQUIDSOAP);
+        if (file_exists(self::CONF_FILE_LIQUIDSOAP)){
+            unlink(self::CONF_FILE_LIQUIDSOAP);
         }
 
         //wait until Airtime 1.9.0
-        if (file_exists(AirtimeIni::CONF_FILE_MEDIAMONITOR)){
-            unlink(AirtimeIni::CONF_FILE_MEDIAMONITOR);
+        if (file_exists(self::CONF_FILE_MEDIAMONITOR)){
+            unlink(self::CONF_FILE_MEDIAMONITOR);
         }
 
         if (file_exists("etc/airtime")){
@@ -216,7 +216,7 @@ class AirtimeIni
 
     //stupid hack found on http://stackoverflow.com/a/1268642/276949
     //with some modifications: 1) Spaces are inserted in between sections and
-    //2) numeric values are not quoted.
+    //2) values are not quoted.
     public static function write_ini_file($assoc_arr, $path, $has_sections = false) {
         $content = "";
 
@@ -272,19 +272,28 @@ class AirtimeIni
      */
     public static function UpdateIniFiles()
     {
-        $api_key = AirtimeIni::GenerateRandomString();
+        $api_key = self::GenerateRandomString();
         if (getenv("web") == "t"){
-            $ini = parse_ini_file(AirtimeIni::CONF_FILE_AIRTIME, true);
+            //self::UpdateIniValue(self::CONF_FILE_AIRTIME, 'api_key', $api_key);
+            //self::UpdateIniValue(self::CONF_FILE_AIRTIME, 'airtime_dir', AirtimeInstall::CONF_DIR_WWW);
+            //self::UpdateIniValue(self::CONF_FILE_AIRTIME, 'password', self::GenerateRandomString());
+            $ini = parse_ini_file(self::CONF_FILE_AIRTIME, true);
 
             $ini['general']['api_key'] = $api_key;
             $ini['general']['airtime_dir'] = AirtimeInstall::CONF_DIR_WWW; 
 
-            AirtimeIni::write_ini_file($ini, AirtimeIni::CONF_FILE_AIRTIME, true);
-        }
 
-        $ini = parse_ini_file(AirtimeIni::CONF_FILE_API_CLIENT);
+            $ini['rabbitmq']['vhost'] = 'airtime'; 
+            $ini['rabbitmq']['user'] = 'airtime'; 
+            $ini['rabbitmq']['password'] = self::GenerateRandomString(); 
+
+            self::write_ini_file($ini, self::CONF_FILE_AIRTIME, true);
+        }
+        //self::UpdateIniValue(self::CONF_FILE_API_CLIENT, 'api_key', "'$api_key'");
+
+        $ini = parse_ini_file(self::CONF_FILE_API_CLIENT);
         $ini['api_key'] = "'$api_key'";
-        AirtimeIni::write_ini_file($ini, AirtimeIni::CONF_FILE_API_CLIENT, false);
+        self::write_ini_file($ini, self::CONF_FILE_API_CLIENT);
     }
 
     public static function ReadPythonConfig($p_filename)
@@ -313,8 +322,8 @@ class AirtimeIni
                     $oldSettings = parse_ini_file("$conf$suffix.bak", true);
                 }
                 else {
-                    $newSettings = AirtimeIni::ReadPythonConfig($conf);
-                    $oldSettings = AirtimeIni::ReadPythonConfig("$conf$suffix.bak");
+                    $newSettings = self::ReadPythonConfig($conf);
+                    $oldSettings = self::ReadPythonConfig("$conf$suffix.bak");
                 }
 
                 $settings = array_keys($newSettings);
@@ -325,12 +334,12 @@ class AirtimeIni
                             $sectionKeys = array_keys($newSettings[$section]);
                             foreach($sectionKeys as $sectionKey) {
                                 if(isset($oldSettings[$section][$sectionKey])) {
-                                    AirtimeIni::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
+                                    self::UpdateIniValue($conf, $sectionKey, $oldSettings[$section][$sectionKey]);
                                 }
                             }
                         }
                         else {
-                            AirtimeIni::UpdateIniValue($conf, $section, $oldSettings[$section]);
+                            self::UpdateIniValue($conf, $section, $oldSettings[$section]);
                         }
                     }
                 }
