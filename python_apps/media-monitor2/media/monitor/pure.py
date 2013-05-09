@@ -24,7 +24,7 @@ from configobj import ConfigObj
 from media.monitor.exceptions import FailedToSetLocale, FailedToCreateDir
 
 supported_extensions = [u"mp3", u"ogg", u"oga", u"flac", u"wav",
-                        u'm4a', u'mp4']
+                        u'm4a', u'mp4', 'opus']
 
 unicode_unknown = u'unknown'
 
