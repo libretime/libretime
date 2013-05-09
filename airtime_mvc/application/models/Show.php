@@ -602,8 +602,6 @@ SQL;
         Application_Common_Database::prepareAndExecute( $sql,
             array( ':showId' => $this->getId(),
                    ':timestamp' => gmdate("Y-m-d H:i:s")), 'execute');
-
-        $con->exec($sql);
     }
 
     /**
@@ -617,8 +615,6 @@ SQL;
      */
     public function removeAllInstancesFromDate($p_date=null)
     {
-        $con = Propel::getConnection();
-
         $timestamp = gmdate("Y-m-d H:i:s");
 
         if (is_null($p_date)) {
@@ -628,12 +624,16 @@ SQL;
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "
-                ." WHERE date(starts) >= DATE '$p_date'"
-                ." AND starts > TIMESTAMP '$timestamp'"
-                ." AND show_id = $showId";
+                ." WHERE date(starts) >= :date::date"
+                ." AND starts > :timestamp::timestamp"
+                ." AND show_id = :showId";
 
-        $con->exec($sql);
+        $map = array(":date"=>$p_date,
+            ':timestamp'=>$timestamp,
+            ':showId'=>$showId);
 
+        $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+            Application_Common_Database::EXECUTE);
     }
 
     /**
@@ -650,17 +650,20 @@ SQL;
      */
     public function removeAllInstancesBeforeDate($p_date)
     {
-        $con = Propel::getConnection();
-
         $timestamp = gmdate("Y-m-d H:i:s");
 
         $showId = $this->getId();
         $sql = "DELETE FROM cc_show_instances "
-                ." WHERE date(starts) < DATE '$p_date'"
-                ." AND starts > TIMESTAMP '$timestamp'"
-                ." AND show_id = $showId";
+                ." WHERE date(starts) < :date::date"
+                ." AND starts > :timestamp::timestamp"
+                ." AND show_id = :showId";
 
-        $con->exec($sql);
+        $map = array(":date"=>$p_date,
+            ":timestamp"=>$timestamp,
+            ":showId"=>$showId);
+
+        $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+            Application_Common_Database::EXECUTE);
     }
 
     public function getNextFutureRepeatShowTime()
@@ -870,43 +873,62 @@ SQL;
 
     private function updateStartDateTime($p_data, $p_endDate)
     {
-        //need to update cc_schedule, cc_show_instances, cc_show_days
-        $con = Propel::getConnection();
-
         $date = new Application_Common_DateHelper;
         $timestamp = $date->getTimestamp();
 
         //TODO fix this from overwriting info.
         $sql = "UPDATE cc_show_days "
-                ."SET start_time = TIME '$p_data[add_show_start_time]', "
-                ."first_show = DATE '$p_data[add_show_start_date]', ";
+                ."SET start_time = :start_time::time, "
+                ."first_show = :start_date::date, ";
         if (strlen ($p_endDate) == 0) {
             $sql .= "last_show = NULL ";
         } else {
-            $sql .= "last_show = DATE '$p_endDate' ";
+            $sql .= "last_show = :end_date::date";
         }
-        $sql .= "WHERE show_id = $p_data[add_show_id]";
-        $con->exec($sql);
+        $sql .= "WHERE show_id = :show_id";
+
+        $map = array(":start_time" => $p_data['add_show_start_time'],
+            ':start_date' => $p_data['add_show_start_date'],
+            ':end_date' => $p_endDate,
+            ':show_id' => $p_data['add_show_id'],
+        );
+
+        $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+            Application_Common_Database::EXECUTE);
 
         $dtOld = new DateTime($this->getStartDate()." ".$this->getStartTime(), new DateTimeZone("UTC"));
-        $dtNew = new DateTime($p_data['add_show_start_date']." ".$p_data['add_show_start_time'], new DateTimeZone(date_default_timezone_get()));
+        $dtNew = new DateTime($p_data['add_show_start_date']." ".$p_data['add_show_start_time'], 
+                new DateTimeZone(date_default_timezone_get()));
         $diff = $dtOld->getTimestamp() - $dtNew->getTimestamp();
 
         $sql = "UPDATE cc_show_instances "
-                ."SET starts = starts + INTERVAL '$diff sec', "
-                ."ends = ends + INTERVAL '$diff sec' "
-                ."WHERE show_id = $p_data[add_show_id] "
-                ."AND starts > TIMESTAMP '$timestamp'";
-        $con->exec($sql);
+                ."SET starts = starts + :diff1::interval, "
+                ."ends = ends + :diff2::interval "
+                ."WHERE show_id = :show_id "
+                ."AND starts > :timestamp::timestamp";
+        $map = array(
+            ":diff1"=>"$diff sec",
+            ":diff2"=>"$diff sec",
+            ":show_id"=>$p_data['add_show_id'],
+            ":timestamp"=>$timestamp,
+        );
+        $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+            Application_Common_Database::EXECUTE);
 
         $showInstanceIds = $this->getAllFutureInstanceIds();
         if (count($showInstanceIds) > 0 && $diff != 0) {
             $showIdsImploded = implode(",", $showInstanceIds);
             $sql = "UPDATE cc_schedule "
-                    ."SET starts = starts + INTERVAL '$diff sec', "
-                    ."ends = ends + INTERVAL '$diff sec' "
-                    ."WHERE instance_id IN ($showIdsImploded)";
-            $con->exec($sql);
+                    ."SET starts = starts + :diff1::interval, "
+                    ."ends = ends + :diff2::interval "
+                    ."WHERE instance_id IN (:show_ids)";
+            $map = array(
+                ":diff1"=>"$diff sec",
+                ":diff2"=>"$diff sec",
+                ":show_ids"=>$showIdsImploded,           
+            );
+            $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+                Application_Common_Database::EXECUTE);
         }
     }
 

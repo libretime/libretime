@@ -418,7 +418,6 @@ SQL;
 
     public static function UpdateMediaPlayedStatus($p_id)
     {
-        $con = Propel::getConnection();
         $sql = "UPDATE cc_schedule"
                 ." SET media_item_played=TRUE";
         // we need to update 'broadcasted' column as well
@@ -431,11 +430,11 @@ SQL;
             $sql .= ", broadcasted=1";
         }
 
-        $sql .= " WHERE id=$p_id";
+        $sql .= " WHERE id=:pid";
+        $map = array(":pid" => $p_id);
 
-        $retVal = $con->exec($sql);
-
-        return $retVal;
+        Application_Common_Database::prepareAndExecute($sql, $map, 
+            Application_Common_Database::EXECUTE);
     }
 
     public static function UpdateBrodcastedStatus($dateTime, $value)
@@ -952,8 +951,9 @@ SQL;
 
     public static function deleteAll()
     {
-        $con = Propel::getConnection();
-        $con->exec("TRUNCATE TABLE cc_schedule");
+        $sql = "TRUNCATE TABLE cc_schedule";
+        Application_Common_Database::prepareAndExecute($sql, array(), 
+            Application_Common_Database::EXECUTE);
     }
 
     public static function deleteWithFileId($fileId)
