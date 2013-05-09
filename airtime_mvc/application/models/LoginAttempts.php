@@ -29,7 +29,7 @@ class Application_Model_LoginAttempts
     public static function resetAttempts($ip)
     {
         $sql = "select count(*) from cc_login_attempts WHERE ip= :ip";
-        $res = Application_Common_Database::prepareAndExecute($sql, array(':ip'=>$ip), Application_Common_Database::ALL);
+        $res = Application_Common_Database::prepareAndExecute($sql, array(':ip'=>$ip), Application_Common_Database::COLUMN);
         if ($res > 0) {
             $sql = "DELETE FROM cc_login_attempts WHERE ip= :ip";
             Application_Common_Database::prepareAndExecute($sql, array(':ip'=>$ip), Application_Common_Database::EXECUTE);
