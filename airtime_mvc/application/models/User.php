@@ -297,10 +297,10 @@ class Application_Model_User
 
     public static function getUserCount()
     {
-        $con = Propel::getConnection();
         $sql_gen = "SELECT count(*) AS cnt FROM cc_subjs";
 
-        $query = $con->query($sql_gen)->fetchColumn(0);
+        $query = Application_Common_Database::prepareAndExecute($sql_gen, array(), 
+            Application_Common_Database::COLUMN);
 
         return ($query !== false) ? $query : null;
     }

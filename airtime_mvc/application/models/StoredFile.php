@@ -1063,9 +1063,9 @@ SQL;
 
     public static function getFileCount()
     {
-        $con = Propel::getConnection();
         $sql = "SELECT count(*) as cnt FROM cc_files WHERE file_exists";
-        return $con->query($sql)->fetchColumn(0);
+        return Application_Common_Database::prepareAndExecute($sql, array(),
+            Application_Common_Database::COLUMN);
     }
 
     /**
@@ -1167,7 +1167,6 @@ SQL;
     public static function getSoundCloudUploads()
     {
         try {
-            $con = Propel::getConnection();
 
             $sql = <<<SQL
 SELECT soundcloud_id AS id,
@@ -1178,7 +1177,12 @@ WHERE (id != -2
   AND (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))
 SQL;
 
-            $rows = $con->query($sql)->fetchAll();
+            $params = array(
+                ':id1' => -2,
+                ':id2' => -3
+            );
+            $rows = Application_Common_Database::prepareAndExecute($sql, $params,
+                Application_Common_Database::ALL);
 
             return count($rows);
         } catch (Exception $e) {
@@ -1349,12 +1353,12 @@ SQL;
 
     public static function updatePastFilesIsScheduled()
     {
-        $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT file_id FROM cc_schedule
 WHERE ends < now() at time zone 'UTC'
 SQL;
-        $files = $con->query($sql)->fetchAll();
+        $files = Application_Common_Database::prepareAndExecute($sql);
+
         foreach ($files as $file) {
             if (!is_null($file['file_id'])) {
                 self::setIsScheduled(null, false, $file['file_id']);

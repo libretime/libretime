@@ -6,14 +6,13 @@ class Application_Model_LiveLog
     public static function GetLiveShowDuration($p_keepData=false)
     {
         try {
-            $con = Propel::getConnection();
 
             $sql = "SELECT * FROM CC_LIVE_LOG"
-            ." WHERE state = 'L'"
+            ." WHERE state = :state"
             ." and (start_time >= (now() - INTERVAL '1 day'))"
             ." ORDER BY id";
-
-            $rows = $con->query($sql)->fetchAll();
+            $rows = Application_Common_Database::prepareAndExecute($sql, array(':state'=>'L'),
+                Application_Common_Database::ALL);
 
             /* Check if last log has end time.
              * If not, set end time to current time
@@ -24,17 +23,19 @@ class Application_Model_LiveLog
                 $skip = false;
             } else {
                 $sql = "SELECT * FROM CC_LIVE_LOG"
-                    ." WHERE state = 'L'"
+                    ." WHERE state = :state"
                     ." ORDER BY id";
-                $rows = $con->query($sql)->fetchAll();
+                $rows = Application_Common_Database::prepareAndExecute($sql, array(':state'=>'L'),
+                    Application_Common_Database::ALL);
 
                 if ($rows != null) {
                     $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                     array_push($rows, $last_row);
                     foreach ($rows as $row) {
                         $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                                    ." WHERE id = '{$row['id']}'";
-                        $con->exec($sql_delete);
+                                    ." WHERE id = :id";
+                        Application_Common_Database::prepareAndExecute($sql_delete, array(':id'=>$row['id']),
+                            Application_Common_Database::EXECUTE);
                     }
                 }
                 $skip = true;
@@ -80,8 +81,9 @@ class Application_Model_LiveLog
                     if (!$p_keepData) {
                         // Delete data we just used to start a new log history
                         $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                        ." WHERE id = '{$row['id']}'";
-                        $con->exec($sql_delete);
+                        ." WHERE id = :id";
+                        Application_Common_Database::prepareAndExecute($sql_delete, array(':id'=>$row['id']),
+                            Application_Common_Database::EXECUTE);
                     }
                 }
                 //Trim milliseconds
@@ -104,14 +106,14 @@ class Application_Model_LiveLog
     public static function GetScheduledDuration($p_keepData=false)
     {
         try {
-            $con = Propel::getConnection();
 
             $sql_get_logs = "SELECT * FROM CC_LIVE_LOG"
-            ." WHERE state = 'S'"
+            ." WHERE state = :state"
             ." and (start_time >= (now() - INTERVAL '1 day'))"
             ." ORDER BY id";
 
-            $rows = $con->query($sql_get_logs)->fetchAll();
+            $rows = Application_Common_Database::prepareAndExecute($sql_get_logs, array(':state'=>'S'),
+                Application_Common_Database::ALL);
 
             /* Check if last log has end time.
              * If not, set end time to current time
@@ -122,17 +124,19 @@ class Application_Model_LiveLog
                 $skip = false;
             } else {
                 $sql = "SELECT * FROM CC_LIVE_LOG"
-                    ." WHERE state = 'S'"
+                    ." WHERE state = :state"
                     ." ORDER BY id";
-                    $rows = $con->query($sql)->fetchAll();
+                    $rows = Application_Common_Database::prepareAndExecute($sql, array(':state'=>'S'),
+                        Application_Common_Database::ALL);
 
                 if ($rows != null) {
                     $last_row = self::UpdateLastLogEndTime(array_pop($rows));
                     array_push($rows, $last_row);
                     foreach ($rows as $row) {
                         $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                                    ." WHERE id = '{$row['id']}'";
-                        $con->exec($sql_delete);
+                                    ." WHERE id = :id";
+                        Application_Common_Database::prepareAndExecute($sql_delete, array(':id'=>$row['id']),
+                            Application_Common_Database::EXECUTE);
                     }
                 }
                 $skip = true;
@@ -148,11 +152,17 @@ class Application_Model_LiveLog
                  */
                 foreach ($rows as $row) {
                     $sql_get_tracks = "SELECT * FROM cc_schedule"
-                    ." WHERE starts >= '{$row['start_time']}'"
-                    ." AND starts < '{$row['end_time']}'"
+                    ." WHERE starts >= :starts1"
+                    ." AND starts < :starts2"
                     ." AND file_id IS NOT NULL"
                     ." AND media_item_played IS TRUE";
-                    $tracks = $con->query($sql_get_tracks)->fetchAll();
+                    $params = array(
+                        ':starts1'=>$row['start_time'],
+                        ':starts2'=>$row['end_time']
+                    );
+                    $tracks = Application_Common_Database::prepareAndExecute($sql_get_tracks, $params,
+                        Application_Common_Database::ALL);
+
                     foreach ($tracks as $track) {
                         if ($track['ends'] > $row['end_time']) {
                             $scheduled_ends = new DateTime($row['end_time']);
@@ -237,8 +247,9 @@ class Application_Model_LiveLog
                     if (!$p_keepData) {
                         //Delete row because we do not need data anymore
                         $sql_delete = "DELETE FROM CC_LIVE_LOG"
-                                    ." WHERE id = '{$row['id']}'";
-                        $con->exec($sql_delete);
+                                    ." WHERE id = :id";
+                        Application_Common_Database::prepareAndExecute($sql_delete, array(':id'=>$row['id']),
+                            Application_Common_Database::EXECUTE);
                     }
                 }
 
@@ -275,7 +286,6 @@ class Application_Model_LiveLog
     public static function SetNewLogTime($state, $dateTime)
     {
         try {
-            $con = Propel::getConnection();
 
             $scheduled = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play');
             if ($state == 'L' && $scheduled == 'on') {
@@ -286,13 +296,23 @@ class Application_Model_LiveLog
              * has ended
              */
             $sql_select = "SELECT max(id) from CC_LIVE_LOG"
-            ." WHERE (state='L' and end_time is NULL) or (state='S' and end_time is NULL)";
-            $id = $con->query($sql_select)->fetchColumn(0);
+            ." WHERE (state= :state1 and end_time is NULL) or (state= :state2 and end_time is NULL)";
+            $params = array(
+                ":state1"=> 'L',
+                ":state2"=> 'S'
+            );
+            $id = Application_Common_Database::prepareAndExecute($sql_select, $params,
+                Application_Common_Database::COLUMN);
 
             if ($id == null) {
                 $sql_insert = "INSERT INTO CC_LIVE_LOG (state, start_time)"
-                ." VALUES ('$state', '{$dateTime->format("Y-m-d H:i:s")}')";
-                $con->exec($sql_insert);
+                ." VALUES (:state, :start)";
+                $params = array(
+                    ':state'=>$state,
+                    ':start'=>$dateTime->format("Y-m-d H:i:s")
+                );
+                Application_Common_Database::prepareAndExecute($sql_insert, $params,
+                    Application_Common_Database::EXECUTE);
                 if ($state == "S") {
                     // if scheduled play source is getting broadcasted
                     Application_Model_Schedule::UpdateBrodcastedStatus($dateTime, 1);
@@ -309,24 +329,28 @@ class Application_Model_LiveLog
     public static function SetEndTime($state, $dateTime, $override=false)
     {
         try {
-            $con = Propel::getConnection();
-
             $dj_live = Application_Model_Preference::GetSourceSwitchStatus('live_dj');
             $master_live = Application_Model_Preference::GetSourceSwitchStatus('master_dj');
 
             if (($dj_live=='off' && $master_live=='off') || $state == 'S' || $override) {
                 $sql = "SELECT id, state from cc_live_log"
                 ." where id in (select max(id) from cc_live_log)";
-                $row = $con->query($sql)->fetch();
+                $row = Application_Common_Database::prepareAndExecute($sql, array(),
+                    Application_Common_Database::SINGLE);
 
                 /* Only set end time if state recevied ($state)
                  * is the last row in cc_live_log
                  */
                 if ($row['state'] == $state) {
                     $update_sql = "UPDATE CC_LIVE_LOG"
-                    ." SET end_time = '{$dateTime->format("Y-m-d H:i:s")}'"
-                    ." WHERE id = '{$row['id']}'";
-                    $con->exec($update_sql);
+                    ." SET end_time = :end"
+                    ." WHERE id = :id";
+                    $params = array(
+                        ':end'=>$dateTime->format("Y-m-d H:i:s"),
+                        ':id'=>$row['id']
+                    );
+                    Application_Common_Database::prepareAndExecute($update_sql, $params,
+                        Application_Common_Database::EXECUTE);
                 }
 
                 //If live broadcasting is off, turn scheduled play on
