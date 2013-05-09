@@ -1,6 +1,11 @@
 <?php
 class Application_Common_Database
 {
+    const SINGLE = 'single';
+    const COLUMN = 'column';
+    const ALL = 'all';
+    const EXECUTE = 'execute';
+
     public static function prepareAndExecute($sql, array $paramValueMap,
         $type='all', $fetchType=PDO::FETCH_ASSOC, $con=null)
     {
@@ -13,13 +18,13 @@ class Application_Common_Database
         }
         $rows = array();
         if ($stmt->execute()) {
-            if ($type == 'single') {
+            if ($type == self::SINGLE) {
                 $rows = $stmt->fetch($fetchType);
-            } else if ($type == 'column'){
+            } else if ($type == self::COLUMN){
                 $rows = $stmt->fetchColumn();
-            } else if ($type == 'all') {
+            } else if ($type == self::ALL) {
                 $rows = $stmt->fetchAll($fetchType);
-            } else if ($type == 'execute') {
+            } else if ($type == self::EXECUTE) {
                 $rows = null;
             } else {
                 $msg = "bad type passed: type($type)";
