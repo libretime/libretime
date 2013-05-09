@@ -1177,12 +1177,7 @@ WHERE (id != -2
   AND (soundcloud_upload_time >= (now() - (INTERVAL '1 day')))
 SQL;
 
-            $params = array(
-                ':id1' => -2,
-                ':id2' => -3
-            );
-            $rows = Application_Common_Database::prepareAndExecute($sql, $params,
-                Application_Common_Database::ALL);
+            $rows = Application_Common_Database::prepareAndExecute($sql);
 
             return count($rows);
         } catch (Exception $e) {
