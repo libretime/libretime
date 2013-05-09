@@ -283,7 +283,7 @@ class AirtimeIni
             $ini['general']['airtime_dir'] = AirtimeInstall::CONF_DIR_WWW; 
 
 
-            $ini['rabbitmq']['vhost'] = 'airtime'; 
+            $ini['rabbitmq']['vhost'] = '/airtime'; 
             $ini['rabbitmq']['user'] = 'airtime'; 
             $ini['rabbitmq']['password'] = self::GenerateRandomString(); 
 
