@@ -5,9 +5,13 @@ class Application_Common_Database
     const COLUMN = 'column';
     const ALL = 'all';
     const EXECUTE = 'execute';
+    const ROW_COUNT = 'row_count';
 
-    public static function prepareAndExecute($sql, array $paramValueMap,
-        $type='all', $fetchType=PDO::FETCH_ASSOC, $con=null)
+    public static function prepareAndExecute($sql, 
+        array $paramValueMap = array(),
+        $type=self::ALL, 
+        $fetchType=PDO::FETCH_ASSOC, 
+        $con=null)
     {
         if (is_null($con)) {
             $con = Propel::getConnection();
@@ -26,6 +30,8 @@ class Application_Common_Database
                 $rows = $stmt->fetchAll($fetchType);
             } else if ($type == self::EXECUTE) {
                 $rows = null;
+            } else if ($type == self::ROW_COUNT) {
+                $rows = $stmt->rowCount();
             } else {
                 $msg = "bad type passed: type($type)";
                 throw new Exception("Error: $msg");
