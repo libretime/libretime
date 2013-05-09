@@ -72,14 +72,14 @@ class Application_Model_StreamSetting
                 ."WHERE keyname LIKE '%_enable' "
                 ."AND value='true'";
 
-        $rows = $con->query($sql)->fetchAll();
         $ids = array();
+        
+        $rows = Application_Common_Database::prepareAndExecute($sql, array(), 'all');
 
         foreach ($rows as $row) {
             $ids[] = substr($row["keyname"], 0, strpos($row["keyname"], "_"));
         }
 
-        //Logging::info(print_r($ids, true));
         return $ids;
     }
 
@@ -91,7 +91,8 @@ class Application_Model_StreamSetting
             ."FROM cc_stream_setting "
             ."WHERE keyname IN ('output_sound_device', 'icecast_vorbis_metadata')";
 
-        $rows = $con->query($sql)->fetchAll();
+        $rows = Application_Common_Database::prepareAndExecute($sql, array(), 'all');
+        
         $data = array();
 
         foreach ($rows as $row) {
@@ -165,7 +166,7 @@ class Application_Model_StreamSetting
                 ." FROM cc_stream_setting"
                 ." WHERE keyname not like '%_error' AND keyname not like '%_admin_%'";
 
-        $rows = $con->query($sql)->fetchAll();
+        $rows = Application_Common_Database::prepareAndExecute($sql, array(), 'all');
 
         $exists = array();
 
@@ -466,6 +467,9 @@ class Application_Model_StreamSetting
     }
     
     public static function GetAllListenerStatErrors(){
+    	$sql = "SELECT * FROM cc_stream_setting WHERE keyname like :p1";
+    	$mounts =  Application_Common_Database::prepareAndExecute($sql, array(':p1'=>'%_mount'));
+    	
         $sql = "SELECT * FROM cc_stream_setting WHERE keyname like :p1";
         return Application_Common_Database::prepareAndExecute($sql, array(':p1'=>'%_listener_stat_error'));
     }

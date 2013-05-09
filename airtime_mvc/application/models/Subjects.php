@@ -21,9 +21,15 @@ class Application_Model_Subjects
     public static function increaseLoginAttempts($login)
     {
         $con = Propel::getConnection();
-        $sql = "UPDATE cc_subjs SET login_attempts = login_attempts+1"
-            ." WHERE login='$login'";
-        $res = $con->exec($sql);
+        //$sql = "UPDATE cc_subjs SET login_attempts = login_attempts+1"
+        //    ." WHERE login='$login'";
+        //$res = $con->exec($sql);
+        
+        $sql = "UPDATE cc_subjs SET login_attempts = login_attempts + 1 WHERE login = :login";
+        
+        $paramMap[':login'] = $login;
+        
+        Application_Common_Database::prepareAndExecute($sql, $paramMap, 'execute');
 
         return (intval($res) > 0);
     }
