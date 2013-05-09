@@ -1680,6 +1680,7 @@ SELECT si1.starts            AS starts,
        show.name             AS name,
        show.color            AS color,
        show.background_color AS background_color,
+       show.linked           AS linked,
        si1.file_id           AS file_id,
        si1.id                AS instance_id,
        si1.created           AS created,
@@ -1835,6 +1836,7 @@ SQL;
             $event["end"]           = $endsDT->format("Y-m-d H:i:s");
             $event["allDay"]        = false;
             $event["showId"]        = intval($show["show_id"]);
+            $event["linked"]        = intval($show["linked"]);
             $event["record"]        = intval($show["record"]);
             $event["rebroadcast"]   = intval($show["rebroadcast"]);
             $event["soundcloud_id"] = is_null($show["soundcloud_id"])
