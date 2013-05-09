@@ -520,8 +520,6 @@ class ApiController extends Zend_Controller_Action
                 //File is not in database anymore.
                 if (is_null($file)) {
                     $return_hash['error'] = _("File does not exist in Airtime.");
-
-                    return $return_hash;
                 }
                 //Updating a metadata change.
                 else {
@@ -547,8 +545,6 @@ class ApiController extends Zend_Controller_Action
                     $return_hash['error'] = _("File doesn't exist in Airtime.");
                     Logging::warn("Attempt to delete file that doesn't exist.
                         Path: '$filepath'");
-
-                    return $return_hash;
                 } else {
                     $file->deleteByMediaMonitor();
                 }
@@ -561,11 +557,11 @@ class ApiController extends Zend_Controller_Action
                     $file->deleteByMediaMonitor();
                 }
                 $return_hash['success'] = 1;
-
-                return $return_hash;
             }
 
-            $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
+            if (!isset($return_hash['error'])) {
+                $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
+            }
             $con->commit();
         } catch (Exception $e) {
             Logging::warn("rolling back");
