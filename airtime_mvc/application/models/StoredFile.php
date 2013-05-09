@@ -151,9 +151,6 @@ class Application_Model_StoredFile
                     }
                     $dbMd[constant($mdConst)] = $mdValue;
                     
-                } else {
-                    Logging::warn("using metadata that is not defined.
-                        [$mdConst] => [$mdValue]");
                 }
             }
             $this->setDbColMetadata($dbMd);
