@@ -11,3 +11,7 @@ WHERE id IN (SELECT DISTINCT(file_id) FROM cc_schedule WHERE playout_status != -
 UPDATE cc_files
 SET is_playlist = true
 WHERE id IN (SELECT DISTINCT(file_id) FROM cc_playlistcontents);
+
+UPDATE cc_files
+SET is_playlist = true
+WHERE id IN (SELECT DISTINCT(file_id) FROM cc_blockcontents);
