@@ -38,6 +38,9 @@ class CcShowDays extends BaseCcShowDays {
             new DateTimeZone($this->getDbTimezone())
         );
 
+        //make timezone current user specific
+        $dt->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+
         return $dt;
     }
 
