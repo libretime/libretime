@@ -22,14 +22,15 @@ SQL;
 
     public static function getAllFutureScheduledFiles()
     {
-        $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT distinct(file_id)
 FROM cc_schedule
 WHERE ends > now() AT TIME ZONE 'UTC'
 AND file_id is not null
 SQL;
-        $files = $con->query($sql)->fetchAll();
+
+        $files = Application_Common_Database::prepareAndExecute( $sql, array());
+        
         $real_files = array();
         foreach ($files as $f) {
             $real_files[] = $f['file_id'];
@@ -40,14 +41,14 @@ SQL;
 
     public static function getAllFutureScheduledWebstreams()
     {
-        $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT distinct(stream_id)
 FROM cc_schedule
 WHERE ends > now() AT TIME ZONE 'UTC'
 AND stream_id is not null
 SQL;
-        $streams = $con->query($sql)->fetchAll();
+        $streams = Application_Common_Database::prepareAndExecute( $sql, array());
+        
         $real_streams = array();
         foreach ($streams as $s) {
             $real_streams[] = $s['stream_id'];
@@ -292,11 +293,10 @@ SQL;
      */
     public static function GetScheduleDetailItems($p_start, $p_end, $p_shows)
     {
-        $con = Propel::getConnection();
-
         $p_start_str = $p_start->format("Y-m-d H:i:s");
         $p_end_str = $p_end->format("Y-m-d H:i:s");
 
+       	$paramMap = array();
 
         //We need to search 24 hours before and after the show times so that that we
         //capture all of the show's contents.
@@ -329,14 +329,23 @@ SQL;
         $filesJoin = <<<SQL
        cc_schedule AS sched
        JOIN cc_files AS ft ON (sched.file_id = ft.id
-           AND ((sched.starts >= '{$p_track_start}'
-               AND sched.starts < '{$p_track_end}')
-               OR (sched.ends > '{$p_track_start}'
-               AND sched.ends <= '{$p_track_end}')
-               OR (sched.starts <= '{$p_track_start}'
-               AND sched.ends >= '{$p_track_end}'))
+           AND ((sched.starts >= :fj_ts_1
+               AND sched.starts < :fj_ts_2)
+               OR (sched.ends > :fj_ts_3
+               AND sched.ends <= :fj_ts_4)
+               OR (sched.starts <= :fj_ts_5
+               AND sched.ends >= :fj_ts_6))
         )
 SQL;
+        $map = array(
+        	":fj_ts_1" => $p_track_start,
+        	":fj_ts_2" => $p_track_end,
+        	":fj_ts_3" => $p_track_start,
+        	":fj_ts_4" => $p_track_end,
+        	":fj_ts_5" => $p_track_start,
+        	":fj_ts_6" => $p_track_end,
+        );
+        $paramMap = $paramMap + $map;
 
 
         $filesSql = str_replace("%%columns%%",
@@ -357,15 +366,24 @@ SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched
       JOIN cc_webstream AS ws ON (sched.stream_id = ws.id
-          AND ((sched.starts >= '{$p_track_start}'
-               AND sched.starts < '{$p_track_end}')
-               OR (sched.ends > '{$p_track_start}'
-               AND sched.ends <= '{$p_track_end}')
-               OR (sched.starts <= '{$p_track_start}'
-               AND sched.ends >= '{$p_track_end}'))
+          AND ((sched.starts >= :sj_ts_1
+               AND sched.starts < :sj_ts_2)
+               OR (sched.ends > :sj_ts_3
+               AND sched.ends <= :sj_ts_4)
+               OR (sched.starts <= :sj_ts_5
+               AND sched.ends >= :sj_ts_6))
       )
       LEFT JOIN cc_subjs AS sub ON (ws.creator_id = sub.id)
 SQL;
+        $map = array(
+        	":sj_ts_1" => $p_track_start,
+        	":sj_ts_2" => $p_track_end,
+        	":sj_ts_3" => $p_track_start,
+        	":sj_ts_4" => $p_track_end,
+        	":sj_ts_5" => $p_track_start,
+        	":sj_ts_6" => $p_track_end,
+        );
+        $paramMap = $paramMap + $map;
 
         $streamSql = str_replace("%%columns%%",
             $streamColumns,
@@ -377,7 +395,19 @@ SQL;
 
         $showPredicate = "";
         if (count($p_shows) > 0) {
-            $showPredicate = " AND show_id IN (".implode(",", $p_shows).")";
+            
+            $params = array();
+            $map = array();
+            
+            for ($i = 0, $len = count($p_shows); $i < $len; $i++) {
+            	$holder = "show_".$i;
+            	
+            	$params[] = $holder;
+            	$map[$holder] = $p_shows[$i];
+            }
+            
+            $showPredicate = " AND show_id IN (".implode(",", $params).")";
+            $paramMap = $paramMap + $map;
         }
 
         $sql = <<<SQL
@@ -401,18 +431,32 @@ SELECT showt.name AS show_name,
 JOIN cc_show AS showt ON (showt.id = si.show_id)
 WHERE si.modified_instance = FALSE
   $showPredicate
-  AND ((si.starts >= '{$p_start_str}'
-       AND si.starts < '{$p_end_str}')
-  OR (si.ends > '{$p_start_str}'
-      AND si.ends <= '{$p_end_str}')
-  OR (si.starts <= '{$p_start_str}'
-      AND si.ends >= '{$p_end_str}'))
+  AND ((si.starts >= :ts_1
+       AND si.starts < :ts_2)
+  OR (si.ends > :ts_3
+      AND si.ends <= :ts_4)
+  OR (si.starts <= :ts_5
+      AND si.ends >= :ts_6))
 ORDER BY si_starts,
          sched_starts;
 SQL;
 
-        $rows = $con->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
+        $map = array(
+        	":ts_1" => $p_track_start,
+        	":ts_2" => $p_track_end,
+        	":ts_3" => $p_track_start,
+        	":ts_4" => $p_track_end,
+        	":ts_5" => $p_track_start,
+        	":ts_6" => $p_track_end,
+        );
+        $paramMap = $paramMap + $map;
+        
+        $rows = Application_Common_Database::prepareAndExecute(
+        	$sql,
+        	$paramMap,
+        	Application_Common_Database::ALL
+        );
+        		
         return $rows;
     }
 
@@ -457,10 +501,12 @@ SQL;
 
     public static function getSchduledPlaylistCount()
     {
-        $con = Propel::getConnection();
         $sql = "SELECT count(*) as cnt FROM cc_schedule";
 
-        return $con->query($sql)->fetchColumn(0);
+        $res = Application_Common_Database::prepareAndExecute($sql, array(), 
+        		Application_Common_Database::COLUMN);
+        
+        return $res;
     }
 
     /**
