@@ -1071,7 +1071,7 @@ SQL;
      * @param $dir_id - if this is not provided, it returns all files with full
      * path constructed.
      */
-    public static function listAllFiles($dir_id=null, $all)
+    public static function listAllFiles($dir_id=null, $all=true)
     {
         $con = Propel::getConnection();
 
@@ -1081,10 +1081,6 @@ FROM CC_FILES AS f
 WHERE f.directory = :dir_id
 SQL;
 
-        # TODO : the option $all is deprecated now and is always true.
-        # refactor code where it's still being passed
-        $all = true;
-                
         if (!$all) {
             $sql .= " AND f.file_exists = 'TRUE'";
         }
