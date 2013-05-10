@@ -145,71 +145,114 @@ class Application_Service_SchedulerService
         return $dt;
     }
 
-    public static function fillLinkedShows($ccShow)
+    public static function fillNewLinkedInstances($ccShow)
     {
-        if ($ccShow->isLinked()) {
-            /* First check if any linked instances have content
-             * If all instances are empty then we don't need to fill
-             * any other instances with content
+        /* First check if any linked instances have content
+         * If all instances are empty then we don't need to fill
+         * any other instances with content
+         */
+        $instanceIds = $ccShow->getInstanceIds();
+        $ccSchedules = CcScheduleQuery::create()
+            ->filterByDbInstanceId($instanceIds, Criteria::IN)
+            ->find();
+        if (!$ccSchedules->isEmpty()) {
+            /* Find the show contents of just one of the instances. It doesn't
+             * matter which instance we use since all the content is the same
              */
-            $instanceIds = $ccShow->getInstanceIds();
-            $ccSchedules = CcScheduleQuery::create()
-                ->filterByDbInstanceId($instanceIds, Criteria::IN)
+            $ccSchedule = $ccSchedules->getFirst();
+            $showStamp = CcScheduleQuery::create()
+                ->filterByDbInstanceId($ccSchedule->getDbInstanceId())
+                ->orderByDbStarts()
                 ->find();
-            if (!$ccSchedules->isEmpty()) {
-                /* Find the show contents of just one of the instances. It doesn't
-                 * matter which instance we use since all the content is the same
-                 */
-                $ccSchedule = $ccSchedules->getFirst();
-                $showStamp = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($ccSchedule->getDbInstanceId())
-                    ->orderByDbStarts()
+
+            //get time_filled so we can update cc_show_instances
+            $timeFilled = $ccSchedule->getCcShowInstances()->getDbTimeFilled();
+
+            //need to find out which linked instances are empty
+            foreach ($ccShow->getCcShowInstancess() as $ccShowInstance) {
+                $ccSchedules = CcScheduleQuery::create()
+                    ->filterByDbInstanceId($ccShowInstance->getDbId())
                     ->find();
+                /* If the show instance is empty OR it has different content than
+                 * the first instance, we cant to fill/replace with the show stamp
+                 * (The show stamp is taken from the first show instance's content)
+                 */
+                if ($ccSchedules->isEmpty() ||
+                    self::replaceInstanceContentCheck($ccShowInstance, $showStamp)) {
 
-                //get time_filled so we can update cc_show_instances
-                $timeFilled = $ccSchedule->getCcShowInstances()->getDbTimeFilled();
+                    $nextStartDT = $ccShowInstance->getDbStarts(null);
 
-                //need to find out which linked instances are empty
-                foreach ($ccShow->getCcShowInstancess() as $ccShowInstance) {
-                    $ccSchedules = CcScheduleQuery::create()
-                        ->filterByDbInstanceId($ccShowInstance->getDbId())
-                        ->find();
-                    /* If the show instance is empty OR it has different content than
-                     * the first instance, we cant to fill/replace with the show stamp
-                     * (The show stamp is taken from the first show instance's content)
-                     */
-                    if ($ccSchedules->isEmpty() || self::replaceInstanceContentCheck($ccShowInstance, $showStamp)) {
-                        $nextStartDT = $ccShowInstance->getDbStarts(null);
+                    foreach ($showStamp as $item) {
+                        $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
 
-                        foreach ($showStamp as $item) {
-                            $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
-
-                            $ccSchedule = new CcSchedule();
-                            $ccSchedule
-                                ->setDbStarts($nextStartDT)
-                                ->setDbEnds($endTimeDT)
-                                ->setDbFileId($item->getDbFileId())
-                                ->setDbStreamId($item->getDbStreamId())
-                                ->setDbClipLength($item->getDbClipLength())
-                                ->setDbFadeIn($item->getDbFadeIn())
-                                ->setDbFadeOut($item->getDbFadeOut())
-                                ->setDbCuein($item->getDbCueIn())
-                                ->setDbCueOut($item->getDbCueOut())
-                                ->setDbInstanceId($ccShowInstance->getDbId())
-                                ->setDbPosition($item->getDbPosition())
-                                ->save();
-
-                            $nextStartDT = $endTimeDT;
-                        } //foreach show item
-
-                        //update time_filled in cc_show_instances
-                        $ccShowInstance
-                            ->setDbTimeFilled($timeFilled)
-                            ->setDbLastScheduled(gmdate("Y-m-d H:i:s"))
+                        $ccSchedule = new CcSchedule();
+                        $ccSchedule
+                            ->setDbStarts($nextStartDT)
+                            ->setDbEnds($endTimeDT)
+                            ->setDbFileId($item->getDbFileId())
+                            ->setDbStreamId($item->getDbStreamId())
+                            ->setDbClipLength($item->getDbClipLength())
+                            ->setDbFadeIn($item->getDbFadeIn())
+                            ->setDbFadeOut($item->getDbFadeOut())
+                            ->setDbCuein($item->getDbCueIn())
+                            ->setDbCueOut($item->getDbCueOut())
+                            ->setDbInstanceId($ccShowInstance->getDbId())
+                            ->setDbPosition($item->getDbPosition())
                             ->save();
-                    }
-                } //foreach linked instance
-            } //if at least one linked instance has content
+
+                        $nextStartDT = $endTimeDT;
+                    } //foreach show item
+
+                    //update time_filled in cc_show_instances
+                    $ccShowInstance
+                        ->setDbTimeFilled($timeFilled)
+                        ->setDbLastScheduled(gmdate("Y-m-d H:i:s"))
+                        ->save();
+                }
+            } //foreach linked instance
+        } //if at least one linked instance has content
+    }
+
+    public static function fillPreservedLinkedShowContent($ccShow, $showStamp)
+    {
+        $item = $showStamp->getFirst();
+        $timeFilled = $item->getCcShowInstances()->getDbTimeFilled();
+
+        foreach ($ccShow->getCcShowInstancess() as $ccShowInstance) {
+            $ccSchedules = CcScheduleQuery::create()
+                ->filterByDbInstanceId($ccShowInstance->getDbId())
+                ->find();
+
+            if ($ccSchedules->isEmpty()) {
+
+                $nextStartDT = $ccShowInstance->getDbStarts(null);
+
+                foreach ($showStamp as $item) {
+                    $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
+
+                    $ccSchedule = new CcSchedule();
+                    $ccSchedule
+                        ->setDbStarts($nextStartDT)
+                        ->setDbEnds($endTimeDT)
+                        ->setDbFileId($item->getDbFileId())
+                        ->setDbStreamId($item->getDbStreamId())
+                        ->setDbClipLength($item->getDbClipLength())
+                        ->setDbFadeIn($item->getDbFadeIn())
+                        ->setDbFadeOut($item->getDbFadeOut())
+                        ->setDbCuein($item->getDbCueIn())
+                        ->setDbCueOut($item->getDbCueOut())
+                        ->setDbInstanceId($ccShowInstance->getDbId())
+                        ->setDbPosition($item->getDbPosition())
+                        ->save();
+
+                    $nextStartDT = $endTimeDT;
+                } //foreach show item
+
+                $ccShowInstance
+                    ->setDbTimeFilled($timeFilled)
+                    ->setDbLastScheduled(gmdate("Y-m-d H:i:s"))
+                    ->save();
+            }
         }
     }
 

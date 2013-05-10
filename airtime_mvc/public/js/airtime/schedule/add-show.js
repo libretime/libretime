@@ -187,6 +187,13 @@ function setAddShowEvents() {
         }
     });
 
+    form.find("#add_show_linked").click(function(){
+        if (!$(this).attr("checked")) {
+            $(this).parent().after("<ul class='errors'><li>Warning: Shows cannot be re-linked</li></ul>");
+        }
+    });
+    
+
     form.find("#add_show_record").click(function(){
         $(this).blur();
         form.find("#add_show_rebroadcast").toggle();

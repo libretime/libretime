@@ -13,6 +13,7 @@ class Application_Service_ShowService
     private $isRebroadcast;
     private $repeatType;
     private $isUpdate;
+    private $linkedShowContent;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -217,10 +218,16 @@ class Application_Service_ShowService
             }
         }
 
-        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances)) {
-            Application_Service_SchedulerService::fillLinkedShows(
-                $this->ccShow);
+        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances) &&
+            $this->ccShow->isLinked()) {
+            Application_Service_SchedulerService::fillNewLinkedInstances($this->ccShow);
         }
+
+        if (isset($this->linkedShowContent)) {
+            Application_Service_SchedulerService::fillPreservedLinkedShowContent(
+                $this->ccShow, $this->linkedShowContent);
+        }
+
         return $this->ccShow;
     }
 
@@ -379,6 +386,9 @@ SQL;
                     if (count($daysRemoved) > 0) {
                         //delete repeating show instances for the repeating
                         //days that were removed
+                        if ($this->ccShow->isLinked()) {
+                            $this->preserveLinkedShowContent();
+                        }
                         $this->deleteRemovedShowDayInstances($daysRemoved,
                             $ccShowDays, $showId);
                     }
@@ -421,6 +431,22 @@ SQL;
         }//if repeats
 
         return $daysAdded;
+    }
+
+    private function preserveLinkedShowContent()
+    {
+        /* Get show content from any linekd instance. It doesn't
+         * matter which instance since content is the same in all.
+         */
+        $ccShowInstance = $this->ccShow->getCcShowInstancess()->getFirst();
+
+        $ccSchedules = CcScheduleQuery::create()
+            ->filterByDbInstanceId($ccShowInstance->getDbId())
+            ->find();
+
+       if (!$ccSchedules->isEmpty()) {
+           $this->linkedShowContent = $ccSchedules;
+       }
     }
 
     public function getRepeatingEndDate()
