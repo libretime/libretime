@@ -195,7 +195,7 @@ SQL;
 
         $exist_dir = self::getDirByPath($p_path);
 
-        if ($exist_dir == NULL) {
+        if (is_null($exist_dir)) {
             $temp_dir = new CcMusicDirs();
             $dir = new Application_Model_MusicDir($temp_dir);
         } else {
@@ -228,7 +228,12 @@ SQL;
             return array("code"=>1, "error"=>"$msg");
         } catch (Exception $e) {
             return array("code"=>1,
-                         "error"=>sprintf(_("%s is already set as the current storage dir or in the watched folders list"), $p_path));
+                "error" => sprintf(
+                    _("%s is already set as the current storage dir or in the".
+                        " watched folders list"), 
+                    $p_path
+                )
+            );
         }
 
     }
