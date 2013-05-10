@@ -284,6 +284,7 @@ class Application_Model_StreamSetting
         $con = Propel::getConnection();
 
         $update_time = Application_Model_Preference::GetStreamUpdateTimestemp();
+        
         if ($boot_time == null || $boot_time > $update_time) {
             $keyname = "s".$stream_id."_liquidsoap_error";
             $sql = "SELECT COUNT(*) FROM cc_stream_setting"
@@ -311,7 +312,7 @@ class Application_Model_StreamSetting
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':keyname', $keyname);
             $stmt->bindParam(':msg', $msg);
-
+            
             if ($stmt->execute()) {
                 //do nothing
             } else {
@@ -467,8 +468,19 @@ class Application_Model_StreamSetting
     }
     
     public static function GetAllListenerStatErrors(){
-        $sql = "SELECT * FROM cc_stream_setting WHERE keyname like :p1";
-        return Application_Common_Database::prepareAndExecute($sql, array(':p1'=>'%_listener_stat_error'));
+    	$sql = "SELECT * FROM cc_stream_setting WHERE keyname like :p1";
+    	$mounts =  Application_Common_Database::prepareAndExecute($sql, array(':p1'=>'%_mount'));
+    	
+    	$mps = array();
+    	
+    	foreach($mounts as $mount) {
+    		$mps[] = "'" .$mount["value"] . "_listener_stat_error'";
+    	}
+    	
+    	$in = implode(",", $mps);
+    	
+        $sql = "SELECT * FROM cc_stream_setting WHERE keyname IN ( $in )";
+        return Application_Common_Database::prepareAndExecute($sql, array());
     }
     
     public static function SetListenerStatError($key, $v) {
