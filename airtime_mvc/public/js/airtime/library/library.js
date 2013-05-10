@@ -773,6 +773,9 @@ var AIRTIME = (function(AIRTIME) {
             
         });
 
+        //sort by title, by default
+        oTable.fnSort( [ [5, 'asc'] ] );
+
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
 

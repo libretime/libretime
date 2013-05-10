@@ -438,15 +438,12 @@ class Application_Model_Scheduler
     		->find($this->con);
     
     	foreach ($schedule as $item) {
-    
-    		$itemEndDT = $item->getDbEnds(null);
-    		
-    		$item
-    			->setDbStarts($itemStartDT)
-    			->setDbEnds($itemEndDT);
-    
-    		$itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
     		$itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+
+    		$item->setDbStarts($itemStartDT)
+    			 ->setDbEnds($itemEndDT);
+
+    		$itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
     	}
     
     	$schedule->save($this->con);

@@ -283,6 +283,12 @@ function eventRender(event, element, view) {
                         .find(".fc-event-time")
                         .before('<span id="'+event.id+'" class="small-icon show-partial-filled"></span>');
                 }
+            } else {
+                if (event.linked) {
+                    $(element)
+                        .find(".fc-event-time")
+                        .before('<span id="'+event.id+'" class="small-icon linked"></span>');
+                }
             }
         } else if (view.name === 'month') {
             if (event.show_empty === 1) {
@@ -304,6 +310,12 @@ function eventRender(event, element, view) {
                     $(element)
                         .find(".fc-event-title")
                         .after('<span id="'+event.id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+                }
+            } else {
+                if (event.linked) {
+                    $(element)
+                        .find(".fc-event-title")
+                        .after('<span id="'+event.id+'" class="small-icon linked"></span>');
                 }
             }
         }

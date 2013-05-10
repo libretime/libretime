@@ -113,6 +113,9 @@ $(document).ready(function() {
             $.cookie("default_airtime_locale", $('#locale').val(), {path: '/'});
             setTimeout(removeSuccessMsg, 5000);
             showErrorSections();
+            setMailServerInputReadonly();
+            setConfigureMailServerListener();
+            setEnableSystemEmailsListener();
         });
     });
 
