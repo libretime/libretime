@@ -6,7 +6,7 @@ class Application_Model_Locale
     {
         $con = Propel::getConnection();
         $sql = "SELECT * FROM cc_locale";
-        $res =  $con->query($sql)->fetchAll();
+        $res =  Application_Common_Database::prepareAndExecute($sql);
         $out = array();
         foreach ($res as $r) {
             $out[$r["locale_code"]] = $r["locale_lang"];

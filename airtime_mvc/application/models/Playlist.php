@@ -936,10 +936,10 @@ SQL;
 
     public static function getPlaylistCount()
     {
-        $con = Propel::getConnection();
         $sql = 'SELECT count(*) as cnt FROM cc_playlist';
 
-        return $con->query($sql)->fetchColumn(0);
+        return Application_Common_Database::prepareAndExecute($sql, array(),
+            Application_Common_Database::COLUMN);
     }
 
     /**
@@ -1063,13 +1063,12 @@ SQL;
 
     public static function getAllPlaylistFiles()
     {
-        $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT distinct(file_id)
 FROM cc_playlistcontents
 WHERE file_id is not null
 SQL;
-        $files = $con->query($sql)->fetchAll();
+        $files = Application_Common_Database::prepareAndExecute($sql);
         $real_files = array();
         foreach ($files as $f) {
             $real_files[] = $f['file_id'];
@@ -1079,13 +1078,12 @@ SQL;
 
     public static function getAllPlaylistStreams()
     {
-        $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT distinct(stream_id)
 FROM cc_playlistcontents
 WHERE stream_id is not null
 SQL;
-        $streams = $con->query($sql)->fetchAll();
+        $streams = Application_Common_Database::prepareAndExecute($sql);
         $real_streams = array();
         foreach ($streams as $s) {
             $real_streams[] = $s['stream_id'];

@@ -265,11 +265,12 @@ class Application_Model_StreamSetting
      */
     public static function setIndividualStreamSetting($data)
     {
-        $con = Propel::getConnection();
-
         foreach ($data as $keyname => $v) {
-            $sql = "UPDATE cc_stream_setting SET value='$v' WHERE keyname='$keyname'";
-            $con->exec($sql);
+            $sql = "UPDATE cc_stream_setting SET value=:v WHERE keyname=:keyname";
+            $map = array(":v" => $v, ":keyname"=>$keyname);
+
+            $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+                Application_Common_Database::EXECUTE);
         }
     }
 

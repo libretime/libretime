@@ -1,8 +1,17 @@
 <?php
 class Application_Common_Database
 {
-    public static function prepareAndExecute($sql, array $paramValueMap,
-        $type='all', $fetchType=PDO::FETCH_ASSOC, $con=null)
+    const SINGLE = 'single';
+    const COLUMN = 'column';
+    const ALL = 'all';
+    const EXECUTE = 'execute';
+    const ROW_COUNT = 'row_count';
+
+    public static function prepareAndExecute($sql, 
+        array $paramValueMap = array(),
+        $type=self::ALL, 
+        $fetchType=PDO::FETCH_ASSOC, 
+        $con=null)
     {
         if (is_null($con)) {
             $con = Propel::getConnection();
@@ -13,14 +22,16 @@ class Application_Common_Database
         }
         $rows = array();
         if ($stmt->execute()) {
-            if ($type == 'single') {
+            if ($type == self::SINGLE) {
                 $rows = $stmt->fetch($fetchType);
-            } else if ($type == 'column'){
+            } else if ($type == self::COLUMN){
                 $rows = $stmt->fetchColumn();
-            } else if ($type == 'all') {
+            } else if ($type == self::ALL) {
                 $rows = $stmt->fetchAll($fetchType);
-            } else if ($type == 'execute') {
+            } else if ($type == self::EXECUTE) {
                 $rows = null;
+            } else if ($type == self::ROW_COUNT) {
+                $rows = $stmt->rowCount();
             } else {
                 $msg = "bad type passed: type($type)";
                 throw new Exception("Error: $msg");
