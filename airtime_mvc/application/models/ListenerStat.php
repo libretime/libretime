@@ -46,7 +46,25 @@ SQL;
                 $out[$r['mount_name']][] = $r;
             }
         }
-        return $out;
+        
+        $enabledStreamIds = Application_Model_StreamSetting::getEnabledStreamIds();
+        $enabledOut = array();
+        
+        foreach ($enabledStreamIds as $sId) {
+        	
+        	$sql = "SELECT value FROM cc_stream_setting"
+        	." WHERE keyname = :key";
+        	
+        	$result = Application_Common_Database::prepareAndExecute($sql, array('key' => $sId."_mount"), "single");
+        	
+        	$enabledMountPoint = $result["value"];
+        	
+        	if (isset($out[$enabledMountPoint])) {
+        		$enabledOut[$enabledMountPoint] = $out[$enabledMountPoint];
+        	}
+        }
+        
+        return $enabledOut;
     }
 
     public static function insertDataPoints($p_dataPoints) {
