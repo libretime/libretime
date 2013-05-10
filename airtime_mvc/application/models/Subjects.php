@@ -45,9 +45,11 @@ class Application_Model_Subjects
 
     public static function getLoginAttempts($login)
     {
-        $con = Propel::getConnection();
-        $sql = "SELECT login_attempts FROM cc_subjs WHERE login='$login'";
-        $res = $con->query($sql)->fetchColumn(0);
+        $sql = "SELECT login_attempts FROM cc_subjs WHERE login=:login";
+        $map = array(":login" => $login);
+        
+        $res = Application_Common_Database::prepareAndExecute($sql, $map,
+        		Application_Common_Database::COLUMN);
 
         return ($res !== false) ? $res : 0;
     }
