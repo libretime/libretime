@@ -1254,7 +1254,10 @@ var AIRTIME = (function(AIRTIME){
                 		fadeIn = fade["end"] - fade["start"];
                 	}
                 	
-                	changeCrossfade($html, id1, id2, fadeIn.toFixed(1), fadeOut.toFixed(1), offset);
+                	fadeIn = (fadeIn === undefined) ? undefined : fadeIn.toFixed(1);
+                	fadeOut = (fadeOut === undefined) ? undefined : fadeOut.toFixed(1);
+                	
+                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset);
                 }}
             ],
             open: function (event, ui) {
