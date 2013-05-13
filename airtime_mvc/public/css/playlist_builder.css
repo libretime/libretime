@@ -585,28 +585,3 @@ li.spl_empty {
 .expand-block-separate {
     border-top: 1px solid #5B5B5B;
 }
-
-.channel-wrapper {
-  position: relative;
-}
-
-.channel {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-}
-
-.state-select {
-	cursor: text;
-}
-
-.playlist-tracks {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.playlist-fade {
-  position: absolute;
-  background-color: rgba(0,0,0,0.1);
-  z-index: 1000;
-}

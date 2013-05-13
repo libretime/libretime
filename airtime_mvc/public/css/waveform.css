@@ -1,0 +1,74 @@
+.ui-dialog .ui-dialog-content {
+	padding: 0px;
+}
+.ui-dialog .ui-dialog-buttonpane {
+	padding: 0.3em 0.2em 0 0.4em;
+	margin: 0 -0.4em 0;
+}
+.btn-small [class^="icon-"] {
+	margin: 1px 5px 0 -3px;
+}
+.btn {
+	margin-right: 3px;
+}
+.btn-small {
+	/*line-height: 20px;*/
+}
+.playlist-tracks {
+	margin: 8px 0;
+}
+.playlist-controls {
+    margin: 0 0 16px 0;
+}
+
+.channel-wrapper {
+  position: relative;
+}
+
+.channel {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  background: #3e3e3e;
+}
+
+.state-select {
+	cursor: text;
+}
+
+.playlist-tracks {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.playlist-fade {
+  position: absolute;
+  background-color: rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+.set-cue {
+	margin: 12px 0 16px 0;
+}
+.set-fade {
+	margin: 0 0 0 30px;
+}
+.set-cue input[type="text"] {
+	vertical-align: middle;
+	padding: 5px 3px 4px 3px;
+}
+.set-cue input[type="button"] {
+	min-width: 100px;
+	margin-top: 0px; 
+	margin-left: 4px;
+}
+label {
+	color:#333;
+	padding: 0 5px 0 6px;
+	display: inline-block;
+	min-width: 50px;
+	text-align: right;
+}
+label.audio {
+	font-weight:bold;
+	vertical-align: middle;
+}
