@@ -60,7 +60,7 @@ create_source()
 create_source()
 create_source()
 
-queue = add(!sources)
+queue = add(!sources, normalize=false)
 
 queue = audio_to_stereo(id="queue_src", queue)
 queue = amplify(1., override="replay_gain", queue)

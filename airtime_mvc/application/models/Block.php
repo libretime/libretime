@@ -1005,10 +1005,12 @@ SQL;
 
     public static function getBlockCount()
     {
-         $con = Propel::getConnection();
          $sql = 'SELECT count(*) as cnt FROM cc_playlist';
+         
+         $res = Application_Common_Database::prepareAndExecute($sql, array(), 
+         		Application_Common_Database::COLUMN);
 
-         return $con->query($sql)->fetchColumn(0);
+         return $res;
      }
 
     /**
@@ -1546,12 +1548,13 @@ SQL;
     }
     public static function getAllBlockFiles()
     {
-        $con = Propel::getConnection();
         $sql = <<<SQL
 SELECT distinct(file_id)
 FROM cc_blockcontents
 SQL;
-        $files = $con->query($sql)->fetchAll();
+       
+        $files = Application_Common_Database::prepareAndExecute($sql, array());
+        
         $real_files = array();
         foreach ($files as $f) {
             $real_files[] = $f['file_id'];
