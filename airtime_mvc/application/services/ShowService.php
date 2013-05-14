@@ -158,11 +158,6 @@ class Application_Service_ShowService
             //create new ccShowInstances
             $this->delegateInstanceCreation($daysAdded);
 
-            if ($this->isUpdate) {
-                $service_scheduler = new Application_Service_SchedulerService();
-                $service_scheduler->removeGaps($this->ccShow->getDbId());
-            }
-
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
         } catch (Exception $e) {
