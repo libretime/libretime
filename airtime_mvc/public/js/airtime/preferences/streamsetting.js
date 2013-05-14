@@ -66,11 +66,11 @@ function validate(ele,evt) {
 
 
 function showForIcecast(ele){
-    var div = ele.closest("div")
-    div.find("#outputMountpoint-label").show()
-    div.find("#outputMountpoint-element").show()
-    div.find("#outputUser-label").show()
-    div.find("#outputUser-element").show()
+    var div = ele.closest("div");
+    div.find("#outputMountpoint-label").show();
+    div.find("#outputMountpoint-element").show();
+    div.find("#outputUser-label").show();
+    div.find("#outputUser-element").show();
     div.find("select[id$=data-type]").find("option[value='ogg']").removeAttr("disabled");
 }
 
@@ -109,128 +109,128 @@ function checkLiquidsoapStatus(){
 
 function setLiveSourceConnectionOverrideListener(){
     $("[id=connection_url_override]").click(function(event){
-        var url_input = $(this).parent().find("#stream_url").children()
-        url_input.removeAttr("readonly")
+        var url_input = $(this).parent().find("#stream_url").children();
+        url_input.removeAttr("readonly");
 		
-        $(this).parent().find("div[id$='_dj_connection_url_actions']").show()
-        event.preventDefault()
-    })
+        $(this).parent().find("div[id$='_dj_connection_url_actions']").show();
+        event.preventDefault();
+    });
     
     // set action for "OK" and "X"
-    var live_dj_actions = $("#live_dj_connection_url_actions")
-    var live_dj_input = live_dj_actions.parent().find("#stream_url").children()
-    var master_dj_actions = $("#master_dj_connection_url_actions")
-    var master_dj_input = master_dj_actions.parent().find("#stream_url").children()
+    var live_dj_actions = $("#live_dj_connection_url_actions");
+    var live_dj_input = live_dj_actions.parent().find("#stream_url").children();
+    var master_dj_actions = $("#master_dj_connection_url_actions");
+    var master_dj_input = master_dj_actions.parent().find("#stream_url").children();
     
     live_dj_actions.find("#ok").click(function(event){
-    	event.preventDefault()
-        var url = live_dj_input.val()
-        live_dj_input.val(url)
-        live_dj_input.attr("readonly", "readonly")
-        live_dj_actions.hide()
+    	event.preventDefault();
+        var url = live_dj_input.val();
+        live_dj_input.val(url);
+        live_dj_input.attr("readonly", "readonly");
+        live_dj_actions.hide();
         $.get(baseUrl+"Preference/set-source-connection-url/", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 1});
-    	event.preventDefault()
-    })
+    	event.preventDefault();
+    });
     
     live_dj_actions.find("#reset").click(function(event){
-    	event.preventDefault()
-        var port = $("#dj_harbor_input_port").val()
-        var mount = $("#dj_harbor_input_mount_point").val()
-        var url = "http://"+location.hostname+":"+port+"/"+mount
+    	event.preventDefault();
+        var port = $("#dj_harbor_input_port").val();
+        var mount = $("#dj_harbor_input_mount_point").val();
+        var url = "http://"+location.hostname+":"+port+"/"+mount;
         if (port == '' || mount == '') {
-            url = 'N/A'
+            url = 'N/A';
         }
-        live_dj_input.val(url)
-        live_dj_input.attr("readonly", "readonly")
-        live_dj_actions.hide()
+        live_dj_input.val(url);
+        live_dj_input.attr("readonly", "readonly");
+        live_dj_actions.hide();
         $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "livedj", url:encodeURIComponent(url), override: 0});
-    	event.preventDefault()
-    })
+    	event.preventDefault();
+    });
     
     master_dj_actions.find("#ok").click(function(event){
-        var url = master_dj_input.val()
-        master_dj_input.val(url)
-        master_dj_input.attr("readonly", "readonly")
-        master_dj_actions.hide()
-        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1})
-        event.preventDefault()
-    })
+        var url = master_dj_input.val();
+        master_dj_input.val(url);
+        master_dj_input.attr("readonly", "readonly");
+        master_dj_actions.hide();
+        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 1});
+        event.preventDefault();
+    });
     
     master_dj_actions.find("#reset").click(function(event){
-        var port = $("#master_harbor_input_port").val()
-        var mount = $("#master_harbor_input_mount_point").val()
-        var url = "http://"+location.hostname+":"+port+"/"+mount
+        var port = $("#master_harbor_input_port").val();
+        var mount = $("#master_harbor_input_mount_point").val();
+        var url = "http://"+location.hostname+":"+port+"/"+mount;
         if (port == '' || mount == '') {
-            url = 'N/A'
+            url = 'N/A';
         }
-        master_dj_input.val(url)
-        master_dj_input.attr("readonly", "readonly")
-        master_dj_actions.hide()
-        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0})
-        event.preventDefault()
-    })
+        master_dj_input.val(url);
+        master_dj_input.attr("readonly", "readonly");
+        master_dj_actions.hide();
+        $.get(baseUrl+"Preference/set-source-connection-url", {format: "json", type: "masterdj", url:encodeURIComponent(url), override: 0});
+        event.preventDefault();
+    });
 }
 
 
 function setupEventListeners() {
     // initial stream url
     $("dd[id=outputStreamURL-element]").each(function(){
-        rebuildStreamURL($(this))
+        rebuildStreamURL($(this));
     })
     
     $("input:[id$=-host], input:[id$=-port], input:[id$=-mount]").keyup(function(){
-        rebuildStreamURL($(this))
-    })
+        rebuildStreamURL($(this));
+    });
     
     $("input:[id$=-port]").keypress(function(e){
-        validate($(this),e)
-    })
+        validate($(this),e);
+    });
     
     $("select:[id$=-output]").change(function(){
-        rebuildStreamURL($(this))
-    })
+        rebuildStreamURL($(this));
+    });
     
     if(!$("#output_sound_device").is(':checked')){
-        $("select[id=output_sound_device_type]").attr('disabled', 'disabled')
+        $("select[id=output_sound_device_type]").attr('disabled', 'disabled');
     }else{
-        $("select[id=output_sound_device_type]").removeAttr('disabled')
+        $("select[id=output_sound_device_type]").removeAttr('disabled');
     }
     
     $("#output_sound_device").change(function(){
         if($(this).is(':checked')){
-        	$("select[id=output_sound_device_type]").removeAttr('disabled')
+        	$("select[id=output_sound_device_type]").removeAttr('disabled');
         }else{
-        	$("select[id=output_sound_device_type]").attr('disabled', 'disabled')
+        	$("select[id=output_sound_device_type]").attr('disabled', 'disabled');
         }
-    })
+    });
     
     $("select[id$=data-type]").change(function(){
         if($(this).val() == 'ogg'){
-            restrictOggBitrate($(this), true)
+            restrictOggBitrate($(this), true);
         }else{
-            restrictOggBitrate($(this), false)
+            restrictOggBitrate($(this), false);
         }
-    })
-    
+    });
+
     $("select[id$=data-type]").each(function(){
         if($(this).val() == 'ogg'){
-            restrictOggBitrate($(this), true)
+            restrictOggBitrate($(this), true);
         }
-    })
+    });
     
     $("select[id$=data-output]").change(function(){
         if($(this).val() == 'shoutcast'){
-            hideForShoutcast($(this))
+            hideForShoutcast($(this));
         }else{
-            showForIcecast($(this))
+            showForIcecast($(this));
         }
-    })
+    });
     
     $("select[id$=data-output]").each(function(){
         if($(this).val() == 'shoutcast'){
-            hideForShoutcast($(this))
+            hideForShoutcast($(this));
         }
-    })
+    });
     
     $('.toggle legend').click(function() {
         $(this).parent().toggleClass('closed');
@@ -241,7 +241,7 @@ function setupEventListeners() {
         $(this).next().toggle('fast');
         $(this).toggleClass("closed");
         return false;
-    })
+    });
     
     setLiveSourceConnectionOverrideListener();
     
@@ -270,7 +270,7 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
     
     $(".icecast_metadata_help_icon").qtip({
         content: {
@@ -291,7 +291,7 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
     
     $("#auto_transition_help").qtip({
         content: {
@@ -312,7 +312,7 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
     
     $("#auto_switch_help").qtip({
         content: {
@@ -333,7 +333,7 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
     
     $(".stream_username_help_icon").qtip({
         content: {
@@ -354,7 +354,7 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
     
     $(".admin_username_help_icon").qtip({
         content: {
@@ -375,7 +375,7 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
     
     $(".master_username_help_icon").qtip({
         content: {
@@ -396,7 +396,33 @@ function setupEventListeners() {
             my: "left bottom",
             at: "right center"
         },
-    })
+    });
+    
+    $(".stream_type_help_icon").qtip({
+    	content: {
+            text: sprintf(
+                	$.i18n._("Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."), 
+                    "<a target='_blank' href='https://wiki.sourcefabric.org/pages/viewpage.action?pageId=13632310'>", 
+                    "</a>",
+                    "<a target='_blank' href='https://wiki.sourcefabric.org/pages/viewpage.action?pageId=13632310'>", 
+                    "</a>")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        },
+    });
 }
 
 function setSliderForReplayGain(){
