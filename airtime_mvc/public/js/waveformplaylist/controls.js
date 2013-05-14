@@ -556,7 +556,7 @@ AudioControls.prototype.onCursorSelection = function(args) {
 */
 AudioControls.prototype.onAudioUpdate = function(args) {
     if (this.ctrls["audio_pos"]) {
-        this.ctrls["audio_pos"].value = this.cueFormatters(this.timeFormat)(args.seconds);
+        this.ctrls["audio_pos"].innerHTML = this.cueFormatters(this.timeFormat)(args.seconds);
     } 
 };
 

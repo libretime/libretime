@@ -670,8 +670,12 @@ SQL;
     	$this->con->beginTransaction();
     	
     	try {
-    		$this->changeFadeInfo($id1, null, $fadeOut);
-    		$this->changeFadeInfo($id2, $fadeIn, null, $offset);
+    		if (isset($id1)) {
+    			$this->changeFadeInfo($id1, null, $fadeOut);
+    		}
+    		if (isset($id2)) {
+    			$this->changeFadeInfo($id2, $fadeIn, null, $offset);
+    		}
     		
     		$this->con->commit();
     		

@@ -4,6 +4,7 @@ if (count($items)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) :
 $staticBlock = null;
+$nextFileUrl = null;
 if ($item['type'] == 2) {
     $bl= new Application_Model_Block($item['item_id']);
     $staticBlock = $bl->isStatic();
@@ -87,21 +88,33 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             if(($i < count($items) -1) && !($items[$i]['type'] == 2 && $items[$i+1]['type'])):
         ?>
         <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none">
-            <?php echo $this->partial('playlist/set-fade.phtml', array(
+            <?php 
+            
+            $vars = array(
                 'item1' => $items[$i]['id'],
-                'item2' => $items[$i+1]['id'],
+            	'fadeOut' => $items[$i]['fadeout'],
+            	'fadeIn' => $items[$i+1]['fadein'],
                 'item1Type' => $items[$i]['type'],
-                'item2Type' => $items[$i+1]['type'],
-                'item1Url' => $fileUrl,
-            	'item2Url' => $nextFileUrl,
-                'fadeOut' => $items[$i]['fadeout'],
-                'fadeIn' => $items[$i+1]['fadein'],
-            	'offset' => $items[$i]['trackSec'] - $items[$i+1]['trackoffset'],
-                'cueIn1' => $items[$i]['cueInSec'],
+            	'cueIn1' => $items[$i]['cueInSec'],
             	'cueOut1' => $items[$i]['cueOutSec'],
+                'item1Url' => $fileUrl
+            );
+            
+            $item2 = array(
+            	'item2Url' => $nextFileUrl,
+            	'item2' => $items[$i+1]['id'],
+            	'item2Type' => $items[$i+1]['type'],
+            	'offset' => $items[$i]['trackSec'] - $items[$i+1]['trackoffset'],
             	'cueIn2' => $items[$i+1]['cueInSec'],
-            	'cueOut2' => $items[$i+1]['cueOutSec'])
-            ); ?>
+            	'cueOut2' => $items[$i+1]['cueOutSec']
+            );
+            
+            if (isset($nextFileUrl)) {
+            	$vars = $vars + $item2;
+            }
+            
+            echo $this->partial('playlist/set-fade.phtml', $vars); 
+            ?>
         </div>
         <?php endif; ?>
         <?php if ($item['type'] == 2) {?>

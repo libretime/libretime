@@ -284,6 +284,11 @@ class LocaleController extends Zend_Controller_Action
             "Cannot schedule outside a show." => _("Cannot schedule outside a show."),
             "Moving 1 Item" => _("Moving 1 Item"),
             "Moving %s Items" => _("Moving %s Items"),
+        	"Save" => _("Save"),
+        	"Cancel" => _("Cancel"),
+        	"Fade Editor" => _("Fade Editor"),
+        	"Cue Editor" => _("Cue Editor"),
+        	"Waveform features are available in a browser supporting the Web Audio API" => _("Waveform features are available in a browser supporting the Web Audio API"),
             //already in library/library.js
             //"Select" => _("Select"),
             "Select all" => _("Select all"),

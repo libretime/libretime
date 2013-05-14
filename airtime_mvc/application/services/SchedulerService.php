@@ -41,8 +41,11 @@ class Application_Service_SchedulerService
 
     /**
      * 
-     * Enter description here ...
-     * @param array $instanceIds
+     * Applies the show start difference to any scheduled items
+     * 
+     * @param $instanceIds
+     * @param $diff
+     * @param $newStart
      */
     public static function updateScheduleStartTime($instanceIds, $diff=null, $newStart=null)
     {

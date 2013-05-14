@@ -421,8 +421,8 @@ class PlaylistController extends Zend_Controller_Action
     
     public function setCrossfadeAction()
     {
-    	$id1 = $this->_getParam('id1');
-    	$id2 = $this->_getParam('id2');
+    	$id1 = $this->_getParam('id1', null);
+    	$id2 = $this->_getParam('id2', null);
     	$type = $this->_getParam('type');
     	$fadeIn = $this->_getParam('fadeIn', 0);
     	$fadeOut = $this->_getParam('fadeOut', 0);

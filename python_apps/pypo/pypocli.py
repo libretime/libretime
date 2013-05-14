@@ -13,6 +13,7 @@ import signal
 import logging
 import locale
 import os
+import re
 
 from Queue import Queue
 from threading import Lock
@@ -33,6 +34,7 @@ from configobj import ConfigObj
 # custom imports
 from api_clients import api_client
 from std_err_override import LogWriter
+import pure
 
 # Set up command-line options
 parser = OptionParser()
@@ -70,6 +72,8 @@ parser.add_option("-c",
 
 # parse options
 (options, args) = parser.parse_args()
+
+LIQUIDSOAP_MIN_VERSION = "1.1.1"
 
 
 #need to wait for Python 2.7 for this..
@@ -152,7 +156,7 @@ def keyboardInterruptHandler(signum, frame):
     logger.info('\nKeyboard Interrupt\n')
     sys.exit(0)
 
-def liquidsoap_running_test(telnet_lock, host, port, logger):
+def liquidsoap_get_info(telnet_lock, host, port, logger):
     logger.debug("Checking to see if Liquidsoap is running")
     try:
         telnet_lock.acquire()
@@ -161,14 +165,47 @@ def liquidsoap_running_test(telnet_lock, host, port, logger):
         tn.write(msg)
         tn.write("exit\n")
         response = tn.read_all()
-        logger.info("Found: %s", response)
     except Exception, e:
         logger.error(str(e))
-        return False
+        return None
     finally:
         telnet_lock.release()
 
-    return "Liquidsoap" in response
+    return get_liquidsoap_version(response)
+
+def get_liquidsoap_version(version_string):
+    m = re.match(r"Liquidsoap (\d+.\d+.\d+)", "Liquidsoap 1.1.1")
+
+    if m:
+        return m.group(1)
+    else:
+        return None
+
+
+    if m:
+        current_version = m.group(1)
+        return pure.version_cmp(current_version, LIQUIDSOAP_MIN_VERSION) >= 0
+    return False
+
+def liquidsoap_startup_test():
+
+    liquidsoap_version_string = \
+            liquidsoap_get_info(telnet_lock, ls_host, ls_port, logger)
+    while not liquidsoap_version_string:
+        logger.warning("Liquidsoap doesn't appear to be running!, " + \
+               "Sleeping and trying again")
+        time.sleep(1)
+        liquidsoap_version_string = \
+                liquidsoap_get_info(telnet_lock, ls_host, ls_port, logger)
+
+    while pure.version_cmp(liquidsoap_version_string, LIQUIDSOAP_MIN_VERSION) < 0:
+        logger.warning("Liquidsoap is running but in incorrect version! " + \
+                "Make sure you have at least Liquidsoap %s installed" % LIQUIDSOAP_MIN_VERSION)
+        time.sleep(1)
+        liquidsoap_version_string = \
+                liquidsoap_get_info(telnet_lock, ls_host, ls_port, logger)
+
+    logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
 
 
 if __name__ == '__main__':
@@ -204,9 +241,8 @@ if __name__ == '__main__':
 
     ls_host = config['ls_host']
     ls_port = config['ls_port']
-    while not liquidsoap_running_test(telnet_lock, ls_host, ls_port, logger):
-        logger.warning("Liquidsoap not started yet. Sleeping one second and trying again")
-        time.sleep(1)
+
+    liquidsoap_startup_test()
 
     if options.test:
         g.test_api()
