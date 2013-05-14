@@ -108,6 +108,9 @@ class LoginController extends Zend_Controller_Action
         
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
+        $request = $this->getRequest();
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+
         if (!Application_Model_Preference::GetEnableSystemEmail()) {
             $this->_redirect('login');
         } else {
@@ -149,6 +152,9 @@ class LoginController extends Zend_Controller_Action
 
     public function passwordRestoreAfterAction()
     {
+        $request = $this->getRequest();
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+
         //uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
     }
@@ -165,6 +171,8 @@ class LoginController extends Zend_Controller_Action
         $form = new Application_Form_PasswordChange();
         $auth = new Application_Model_Auth();
         $user = CcSubjsQuery::create()->findPK($user_id);
+
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
 
         //check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {
