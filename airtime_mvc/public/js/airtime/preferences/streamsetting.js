@@ -51,6 +51,7 @@ function hideForShoutcast(ele){
     div.find("#outputUser-element").hide()
     div.find("select[id$=data-type]").find("option[value='mp3']").attr('selected','selected');
     div.find("select[id$=data-type]").find("option[value='ogg']").attr("disabled","disabled");
+    div.find("select[id$=data-type]").find("option[value='opus']").attr("disabled","disabled");
     
     restrictOggBitrate(ele, false)
 }
@@ -72,6 +73,7 @@ function showForIcecast(ele){
     div.find("#outputUser-label").show()
     div.find("#outputUser-element").show()
     div.find("select[id$=data-type]").find("option[value='ogg']").removeAttr("disabled");
+    div.find("select[id$=data-type]").find("option[value='opus']").removeAttr("disabled");
 }
 
 function checkLiquidsoapStatus(){
