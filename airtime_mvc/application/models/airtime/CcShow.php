@@ -189,4 +189,12 @@ class CcShow extends BaseCcShow {
         }
         return $instanceIds;
     }
+
+    public function getOtherInstances($instanceId)
+    {
+        return CcShowInstancesQuery::create()
+            ->filterByCcShow($this)
+            ->filterByDbId($instanceId, Criteria::NOT_IN)
+            ->find();
+    }
 } // CcShow
