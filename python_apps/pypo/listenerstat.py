@@ -30,10 +30,16 @@ class ListenerStat(Thread):
         return self.api_client.get_stream_parameters()
 
 
-    def get_stream_server_xml(self, ip, url):
+    def get_stream_server_xml(self, ip, url, is_shoutcast=False):
         encoded = base64.b64encode("%(admin_user)s:%(admin_pass)s" % ip)
 
         header = {"Authorization":"Basic %s" % encoded}
+
+        if is_shoutcast:
+            #user agent is required for shoutcast auth, otherwise it returns 404.
+            user_agent = "Mozilla/5.0 (Linux; rv:22.0) Gecko/20130405 Firefox/22.0"
+            header["User-Agent"] = user_agent
+
         req = urllib2.Request(
             #assuming that the icecast stats path is /admin/stats.xml
             #need to fix this
@@ -70,7 +76,7 @@ class ListenerStat(Thread):
 
     def get_shoutcast_stats(self, ip):
         url = 'http://%(host)s:%(port)s/admin.cgi?sid=1&mode=viewxml' % ip
-        document = self.get_stream_server_xml(ip, url)
+        document = self.get_stream_server_xml(ip, url, is_shoutcast=True)
         dom = xml.dom.minidom.parseString(document)
         current_listeners = dom.getElementsByTagName("CURRENTLISTENERS")
 

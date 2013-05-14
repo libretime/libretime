@@ -231,7 +231,6 @@ s = switch(id="schedule_noise_switch",
 
 s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
     dj_live = mksafe(
-        id="dj_live_mksafe",
         audio_to_stereo(
             input.harbor(id="live_dj_harbor",
                 dj_live_stream_mp,
@@ -254,7 +253,6 @@ end
 
 s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
     master_dj = mksafe(
-        id="master_dj_mksafe",
         audio_to_stereo(
             input.harbor(id="master_harbor",
                 master_live_stream_mp,
