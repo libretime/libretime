@@ -166,6 +166,7 @@ class LocaleController extends Zend_Controller_Action
             "Are you sure you want to remove the watched folder?" => _("Are you sure you want to remove the watched folder?"),
             "This path is currently not accessible." => _("This path is currently not accessible."),
             //preferences/streamsetting.js
+        	"Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided." => _("Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."),
             "Connected to the streaming server" => _("Connected to the streaming server"),
             "The stream is disabled" => _("The stream is disabled"),
             "Getting information from the server..." => _("Getting information from the server..."),

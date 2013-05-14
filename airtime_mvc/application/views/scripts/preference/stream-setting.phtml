@@ -1,15 +1,15 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
-    <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>><? echo _("Stream Settings") ?></h2>
+    <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>><?php echo _("Stream Settings") ?></h2>
     <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
     <?php if($this->enable_stream_conf == "true"){?>
     <form method="post" id="stream_form" enctype="application/x-www-form-urlencoded">
-    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><? echo _("Save") ?></button>
+    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
     <div style="clear:both"></div>
     <?php }?>
   <?php echo $this->statusMsg;?>
   <div style="float: left; margin-right: 10px; width: 490px; overflow: auto;">
     <fieldset class="padded stream-setting-global">
-        <legend><? echo _("Global Settings") ?></legend>
+        <legend><?php echo _("Global Settings") ?></legend>
         <dl class="zend_form">
         <?php if($this->form->getElement('output_sound_device') != null){?>
             <dt id="hardwareOut-label">
@@ -32,8 +32,7 @@
             <dt id="vorbisMetadata-label">
                 <label class="required">
                     <?php echo $this->form->getElement('icecast_vorbis_metadata')->getLabel() ?> :
-                    <span class='icecast_metadata_help_icon'>
-                    </span>
+                    <span class='icecast_metadata_help_icon'></span>
                 </label>
             </dt>
             <dd id="vorbisMetadata-element">
@@ -104,7 +103,7 @@
   </div>
   <div style="float: left; width: 600px;">
     <fieldset class="padded">
-    <legend><? echo _("Output Stream Settings") ?></legend>
+    <legend><?php echo _("Output Stream Settings") ?></legend>
     <?php
         for($i=1;$i<=$this->num_stream;$i++){
             echo $this->form->getSubform("s".$i."_subform");
@@ -113,7 +112,7 @@
     </fieldset>
     <?php if($this->enable_stream_conf == "true"){?>
     <br />
-    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><? echo _("Save") ?></button>
+    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
     <?php }?>
   </div>
     </form>
