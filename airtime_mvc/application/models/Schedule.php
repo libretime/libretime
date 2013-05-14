@@ -460,12 +460,12 @@ ORDER BY si_starts,
 SQL;
 
         $map = array(
-        	":ts_1" => $p_track_start,
-        	":ts_2" => $p_track_end,
-        	":ts_3" => $p_track_start,
-        	":ts_4" => $p_track_end,
-        	":ts_5" => $p_track_start,
-        	":ts_6" => $p_track_end,
+        	":ts_1" => $p_start_str,
+        	":ts_2" => $p_end_str,
+        	":ts_3" => $p_start_str,
+        	":ts_4" => $p_end_str,
+        	":ts_5" => $p_start_str,
+        	":ts_6" => $p_end_str,
         );
         $paramMap = $paramMap + $map;
         
