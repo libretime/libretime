@@ -38,22 +38,22 @@
 <div class="waveform-cues">
   <div class="playlist-tracks"></div>
   <div class="playlist-controls">
-    <span class="btn_play ui-state-default">Play</span>
-    <span class="btn_stop ui-state-default">Stop</span>
+	<a class="btn btn-small btn_play"><i class="icon-play icon-white"></i>Play</a>
+    <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i>Stop</a>
+	<label class="audio audio_pos">00:00:00.0</label>
   </div>
-  <div>
-    <input type="text" class="audio_start">
-	<input type="button" class="set-cue-in" value="Set Cue In">
-    <input type="text" class="audio_end">
-    <input type="button" class="set-cue-out" value="Set Cue Out">
-    <input type="text" class="audio_pos">
-  </div>
-  <div>
+  <div class="set-cue">
 	<label for="editor-cue-in">Cue In</label>
-    <input type="text" id="editor-cue-in" class="editor-cue-in">
-	<span style="display:none" class="cue-in-error"></span>
+    <input type="text" class="audio_start">
+    <input type="button" class="btn btn-small set-cue-in" value="Set Cue In">
+    <label class="audio editor-cue-in">00:00:00.0</label>
+    <span style="display:none" class="cue-in-error"></span>
+  </div>
+  <div class="set-cue">
     <label for="editor-cue-out">Cue Out</label>
-    <input type="text" id="editor-cue-out" class="editor-cue-out">
+    <input type="text" class="audio_end">
+    <input type="button" class="btn btn-small set-cue-out" value="Set Cue Out">
+    <label class="audio editor-cue-out">00:00:00.0</label>
     <span style="display:none" class="cue-out-error"></span>
   </div>
 </div>
@@ -62,14 +62,14 @@
 <script id="tmpl-pl-fades" type="text/template">
 <div class="waveform-fades">
   <div class="playlist-tracks"></div>
-  <div>
-    <span class="btn_play ui-state-default">Play</span>
-    <span class="btn_stop ui-state-default">Stop</span>
+  <div class="playlist-controls left-floated">
+    <a class="btn btn-small btn_play"><i class="icon-play icon-white"></i>Play</a>
+    <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i>Stop</a>
   </div>
-  <div>
-	<span class="btn_select ui-state-default" data-state="cursor">Cursor</span>
-    <span class="btn_fadein ui-state-default" data-state="fadein">Fade In</span>
-	<span class="btn_fadeout ui-state-default" data-state="fadeout">Fade Out</span>
+  <div class="set-fade left-floated">
+     <a type="button" class="btn btn-small btn_cursor" data-state="cursor">Cursor</a>
+     <a type="button" class="btn btn-small btn_fadein" data-state="fadein">Fade In</a>
+     <a type="button" class="btn btn-small btn_fadeout" data-state="fadeout">Fade Out</a>
   </div>
 </div>
 </script>

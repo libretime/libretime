@@ -1223,8 +1223,8 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                {text: "Cancel", click: removeDialog},
-                {text: "Save", click: function() {
+                {text: "Cancel", class: "btn btn-small", click: removeDialog},
+                {text: "Save", class: "btn btn-small btn-inverse", click: function() {
                 	var json = playlistEditor.getJson(),
                 		offset, 
                 		fadeIn, fadeOut,
@@ -1254,7 +1254,10 @@ var AIRTIME = (function(AIRTIME){
                 		fadeIn = fade["end"] - fade["start"];
                 	}
                 	
-                	changeCrossfade($html, id1, id2, fadeIn.toFixed(1), fadeOut.toFixed(1), offset);
+                	fadeIn = (fadeIn === undefined) ? undefined : fadeIn.toFixed(1);
+                	fadeOut = (fadeOut === undefined) ? undefined : fadeOut.toFixed(1);
+                	
+                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset);
                 }}
             ],
             open: function (event, ui) {
@@ -1305,19 +1308,19 @@ var AIRTIME = (function(AIRTIME){
         	$html.remove();
         }
 		
-		$html.find('.editor-cue-in').val(cueIn);
-		$html.find('.editor-cue-out').val(cueOut);
+		$html.find('.editor-cue-in').html(cueIn);
+		$html.find('.editor-cue-out').html(cueOut);
 		
 		$html.on("click", ".set-cue-in", function(e) {
 			var cueIn = $html.find('.audio_start').val();
 			
-			$html.find('.editor-cue-in').val(cueIn);
+			$html.find('.editor-cue-in').html(cueIn);
 		});
 		
 		$html.on("click", ".set-cue-out", function(e) {
 			var cueOut = $html.find('.audio_end').val();
 			
-			$html.find('.editor-cue-out').val(cueOut);
+			$html.find('.editor-cue-out').html(cueOut);
 		});
 		
 		$html.dialog({
@@ -1328,10 +1331,10 @@ var AIRTIME = (function(AIRTIME){
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                {text: "Cancel", click: removeDialog},
-                {text: "Save", click: function() {
-                	var cueIn = $html.find('.editor-cue-in').val(),
-                		cueOut = $html.find('.editor-cue-out').val();
+                {text: "Cancel", class: "btn btn-small", click: removeDialog},
+                {text: "Save",  class: "btn btn-small btn-inverse", click: function() {
+                	var cueIn = $html.find('.editor-cue-in').html(),
+                		cueOut = $html.find('.editor-cue-out').html();
                 	
                 	playlistEditor.stop();
                 	

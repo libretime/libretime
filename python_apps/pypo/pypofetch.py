@@ -528,16 +528,16 @@ class PypoFetch(Thread):
 
 
     def main(self):
-        # Bootstrap: since we are just starting up, we need to grab the
-        # most recent schedule.  After that we can just wait for updates.
-        success = self.persistent_manual_schedule_fetch(max_attempts=5)
-
         #Make sure all Liquidsoap queues are empty. This is important in the
         #case where we've just restarted the pypo scheduler, but Liquidsoap still
         #is playing tracks. In this case let's just restart everything from scratch
         #so that we can repopulate our dictionary that keeps track of what 
         #Liquidsoap is playing much more easily.
         self.pypo_liquidsoap.clear_all_queues()
+
+        # Bootstrap: since we are just starting up, we need to grab the
+        # most recent schedule.  After that we can just wait for updates.
+        success = self.persistent_manual_schedule_fetch(max_attempts=5)
 
         if success:
             self.logger.info("Bootstrap schedule received: %s", self.schedule_data)

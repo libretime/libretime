@@ -106,43 +106,44 @@ class Application_Model_Preference
     private static function getValue($key, $isUserValue = false)
     {
         try {
-            $con = Propel::getConnection();
-
+           
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
-            ." WHERE keystr = '$key'";
-            /*." WHERE keystr = :key";
+            ." WHERE keystr = :key";
+            
             $paramMap = array();
-            $paramMap[':key'] = $key;*/
+            $paramMap[':key'] = $key;
+            
             //For user specific preference, check if id matches as well
             if ($isUserValue) {
                 $auth = Zend_Auth::getInstance();
                 if ($auth->hasIdentity()) {
                     $id = $auth->getIdentity()->id;
-                    $sql .= " AND subjid = '$id'";
-                    /*$sql .= " AND subjid = :id";
-                    $paramMap[':id'] = $id;*/
+                    
+                    $sql .= " AND subjid = :id";
+                    $paramMap[':id'] = $id;
                 }
             }
-            $result = $con->query($sql)->fetchColumn(0);
-            //$result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
+            
+            $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
+            
             if ($result == 0) {
                 return "";
-            } else {
+            } 
+            else {
                 $sql = "SELECT valstr FROM cc_pref"
-                ." WHERE keystr = '$key'";
-                /*." WHERE keystr = :key";
+                ." WHERE keystr = :key";
+                
                 $paramMap = array();
-                $paramMap[':key'] = $key;*/
+                $paramMap[':key'] = $key;
 
                 //For user specific preference, check if id matches as well
                 if ($isUserValue && $auth->hasIdentity()) {
-                    $sql .= " AND subjid = '$id'";
-                    /*$sql .= " AND subjid = :id";
-                    $paramMap[':id'] = $id;*/
+                    $sql .= " AND subjid = :id";
+                    $paramMap[':id'] = $id;
                 }
-                $result = $con->query($sql)->fetchColumn(0);
-                //$result = Application_Common_Database::prepareAndExecute($sql, $paramMap, 'column');
+                
+                $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
 
                 return ($result !== false) ? $result : "";
             }
@@ -609,9 +610,10 @@ class Application_Model_Preference
 
     public static function GetCountryList()
     {
-        $con = Propel::getConnection();
         $sql = "SELECT * FROM cc_country";
-        $res =  $con->query($sql)->fetchAll();
+        
+        $res = Application_Common_Database::prepareAndExecute($sql, array());
+
         $out = array();
         $out[""] = _("Select Country");
         foreach ($res as $r) {
