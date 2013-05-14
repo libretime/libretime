@@ -598,7 +598,9 @@ var AIRTIME = (function(AIRTIME){
 	    
 	    //remove show waveform buttons since web audio api is not supported.
 	    if (!(window.AudioContext || window.webkitAudioContext)) {
-	    	temp.find('.pl-waveform-cues-btn').parent().remove();
+	    	temp.find('.pl-waveform-cues-btn')
+	    		.parent()
+	    		.html($.i18n._("Waveform features are available in a browser supporting the Web Audio API"));
 	    }
 	}
 	
@@ -613,7 +615,9 @@ var AIRTIME = (function(AIRTIME){
         
       //remove show waveform buttons since web audio api is not supported.
 	    if (!(window.AudioContext || window.webkitAudioContext)) {
-	    	temp.find('.pl-waveform-fades-btn').parent().remove();
+	    	temp.find('.pl-waveform-fades-btn')
+	    		.parent()
+	    		.html($.i18n._("Waveform features are available in a browser supporting the Web Audio API"));
 	    }
 	}
 	
@@ -1217,14 +1221,14 @@ var AIRTIME = (function(AIRTIME){
 		
 		$html.dialog({
             modal: true,
-            title: "Fade Editor",
+            title: $.i18n._("Fade Editor"),
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                {text: "Cancel", class: "btn btn-small", click: removeDialog},
-                {text: "Save", class: "btn btn-small btn-inverse", click: function() {
+                {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+                {text: $.i18n._("Save"), class: "btn btn-small btn-inverse", click: function() {
                 	var json = playlistEditor.getJson(),
                 		offset, 
                 		fadeIn, fadeOut,
@@ -1325,14 +1329,14 @@ var AIRTIME = (function(AIRTIME){
 		
 		$html.dialog({
             modal: true,
-            title: "Cue Editor",
+            title: $.i18n._("Cue Editor"),
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
             height: dim.height - 100,
             buttons: [
-                {text: "Cancel", class: "btn btn-small", click: removeDialog},
-                {text: "Save",  class: "btn btn-small btn-inverse", click: function() {
+                {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+                {text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: function() {
                 	var cueIn = $html.find('.editor-cue-in').html(),
                 		cueOut = $html.find('.editor-cue-out').html();
                 	

@@ -38,21 +38,21 @@
 <div class="waveform-cues">
   <div class="playlist-tracks"></div>
   <div class="playlist-controls">
-	<a class="btn btn-small btn_play"><i class="icon-play icon-white"></i>Play</a>
-    <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i>Stop</a>
+	<a class="btn btn-small btn_play"><i class="icon-play icon-white"></i><?php echo _("Play"); ?></a>
+    <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i><?php echo _("Stop"); ?></a>
 	<label class="audio audio_pos">00:00:00.0</label>
   </div>
   <div class="set-cue">
-	<label for="editor-cue-in">Cue In</label>
+	<label for="editor-cue-in"><?php echo _("Cue In"); ?></label>
     <input type="text" class="audio_start">
-    <input type="button" class="btn btn-small set-cue-in" value="Set Cue In">
+    <input type="button" class="btn btn-small set-cue-in" value="<?php echo _("Set Cue In"); ?>">
     <label class="audio editor-cue-in">00:00:00.0</label>
     <span style="display:none" class="cue-in-error"></span>
   </div>
   <div class="set-cue">
-    <label for="editor-cue-out">Cue Out</label>
+    <label for="editor-cue-out"><?php echo _("Cue Out"); ?></label>
     <input type="text" class="audio_end">
-    <input type="button" class="btn btn-small set-cue-out" value="Set Cue Out">
+    <input type="button" class="btn btn-small set-cue-out" value="<?php echo _("Set Cue Out"); ?>">
     <label class="audio editor-cue-out">00:00:00.0</label>
     <span style="display:none" class="cue-out-error"></span>
   </div>
@@ -63,13 +63,13 @@
 <div class="waveform-fades">
   <div class="playlist-tracks"></div>
   <div class="playlist-controls left-floated">
-    <a class="btn btn-small btn_play"><i class="icon-play icon-white"></i>Play</a>
-    <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i>Stop</a>
+    <a class="btn btn-small btn_play"><i class="icon-play icon-white"></i><?php echo _("Play"); ?></a>
+    <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i><?php echo _("Stop"); ?></a>
   </div>
   <div class="set-fade left-floated">
-     <a type="button" class="btn btn-small btn_cursor" data-state="cursor">Cursor</a>
-     <a type="button" class="btn btn-small btn_fadein" data-state="fadein">Fade In</a>
-     <a type="button" class="btn btn-small btn_fadeout" data-state="fadeout">Fade Out</a>
+     <a type="button" class="btn btn-small btn_cursor" data-state="cursor"><?php echo _("Cursor"); ?></a>
+     <a type="button" class="btn btn-small btn_fadein" data-state="fadein"><?php echo _("Fade In"); ?></a>
+     <a type="button" class="btn btn-small btn_fadeout" data-state="fadeout"><?php echo _("Fade Out"); ?></a>
   </div>
 </div>
 </script>
