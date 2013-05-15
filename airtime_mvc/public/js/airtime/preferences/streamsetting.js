@@ -406,7 +406,7 @@ function setupEventListeners() {
                 	$.i18n._("Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."), 
                     "<a target='_blank' href='https://wiki.sourcefabric.org/pages/viewpage.action?pageId=13632310'>", 
                     "</a>",
-                    "<a target='_blank' href='https://wiki.sourcefabric.org/pages/viewpage.action?pageId=13632310'>", 
+                    "<a target='_blank' href='https://wiki.sourcefabric.org/display/CC/Airtime+Opus+Support'>", 
                     "</a>")
         },
         hide: {
