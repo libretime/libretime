@@ -183,8 +183,8 @@ function updatePlaybar(){
 
         /* Get rid of the millisecond accuracy so that the second counters for both
          * show and song change at the same time. */
-        var songStartRoughly = parseInt(Math.round(currentSong.songStartPosixTime/1000))*1000;
-        var songEndRoughly = parseInt(Math.round(currentSong.songEndPosixTime/1000))*1000;
+        var songStartRoughly = parseInt(Math.round(currentSong.songStartPosixTime/1000), 10)*1000;
+        var songEndRoughly = parseInt(Math.round(currentSong.songEndPosixTime/1000), 10)*1000;
 
         $('#time-elapsed').text(convertToHHMMSS(approximateServerTime - songStartRoughly));
         $('#time-remaining').text(convertToHHMMSS(songEndRoughly - approximateServerTime));
