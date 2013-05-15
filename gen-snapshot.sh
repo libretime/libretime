@@ -2,7 +2,7 @@
 # Script for generating nightly Airtime snapshot packages
 # Run from the directory containg the files checked out from git
 
-VERSION=2.3.0~$(date "+%Y%m%d")
+VERSION=2.4.0~$(date "+%Y%m%d")
 BUILDDEST=/tmp/airtime-${VERSION}/
 DEBDIR=`pwd`/debian
 
@@ -23,7 +23,7 @@ cd ${BUILDDEST} || exit
 
 # Set the version of the snapshot package
 
-sed -i "1s:(2.3.0-1):(${VERSION}):g" debian/changelog
+sed -i "1s:(2.4.0-1):(${VERSION}):g" debian/changelog
 
 # FIXES for 2.3.0 #############
 
