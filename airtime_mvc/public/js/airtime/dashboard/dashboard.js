@@ -81,7 +81,7 @@ function updateProgressBarValue(){
         songElapsedTime = estimatedSchedulePosixTime - currentSong.songStartPosixTime;
         if (songPercentDone < 0 || songPercentDone > 100){
             songPercentDone = 0;        
-            currentSong = null;
+            //currentSong = null;
         } else {
             if ((currentSong.media_item_played == true && currentShow.length > 0) || (songElapsedTime < 5000 && currentShow[0].record != 1)) {
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
@@ -95,7 +95,7 @@ function updateProgressBarValue(){
             }
             $('#progress-show').attr("class", "progress-show");
         }
-    } else {
+    } else if (nextSong == null) {
         scheduled_play_source = false;
         scheduled_play_line_to_switch.attr("class", "line-to-switch off");
         scheduled_play_div.removeClass("ready");
@@ -159,7 +159,7 @@ function updatePlaybar(){
             } else {
                 $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Live Stream")+"</span>");
             }
-        } else {
+        } else if (nextSong == null) {
             $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Nothing Scheduled")+"</span>");
         }
     }
