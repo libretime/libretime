@@ -437,15 +437,18 @@ class Application_Model_ShowBuilder
         $display_items = array();
 
         $shows = array();
+        $showInstance = array();
         if ($this->opts["myShows"] === 1) {
 
             $shows = $this->getUsersShows();
         } elseif ($this->opts["showFilter"] !== 0) {
             $shows[] = $this->opts["showFilter"];
+        } elseif ($this->opts["showInstanceFilter"] !== 0) {
+            $showInstance[] = $this->opts["showInstanceFilter"];
         }
 
         $scheduled_items = Application_Model_Schedule::GetScheduleDetailItems(
-            $this->startDT, $this->endDT, $shows);
+            $this->startDT, $this->endDT, $shows, $showInstance);
 
         for ($i = 0, $rows = count($scheduled_items); $i < $rows; $i++) {
 

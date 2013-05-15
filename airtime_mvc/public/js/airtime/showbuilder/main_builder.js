@@ -266,6 +266,7 @@ AIRTIME = (function(AIRTIME) {
             if (fn.hasOwnProperty("ops")) {
                 data["myShows"] = fn.ops.myShows;
                 data["showFilter"] = fn.ops.showFilter;
+                data["showFilter"] = fn.ops.showInstanceFilter;
             }
 
             $.ajax( {

@@ -289,22 +289,52 @@ class Application_Service_SchedulerService
             $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
 
             $instances = array();
+            $instanceIds = array();
 
             if ($ccShowInstance->getCcShow()->isLinked()) {
-                $instanceIds = array();
                 foreach ($ccShowInstance->getCcShow()->getCcShowInstancess() as $instance) {
                     $instanceIds[] = $instance->getDbId();
                     $instances[] = $instance;
                 }
-                CcScheduleQuery::create()
-                    ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                    ->delete();
             } else {
+                $instanceIds[] = $ccShowInstance->getDbId();
                 $instances[] = $ccShowInstance;
-                CcScheduleQuery::create()
-                    ->filterByDbInstanceId($ccShowInstance->getDbId())
-                    ->delete();
             }
+
+            /* Get the file ids of the tracks we are about to delete
+             * from cc_schedule. We need these so we can update the
+             * is_scheduled flag in cc_files
+             */
+            $ccSchedules = CcScheduleQuery::create()
+                ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                ->setDistinct(CcSchedulePeer::FILE_ID)
+                ->find();
+            $fileIds = array();
+            foreach ($ccSchedules as $ccSchedule) {
+                $fileIds[] = $ccSchedule->getDbFileId();
+            }
+
+            /* Clear out the schedule */
+            CcScheduleQuery::create()
+                ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                ->delete();
+
+            /* Now that the schedule has been cleared we need to make
+             * sure we do not update the is_scheduled flag for tracks
+             * that are scheduled in other shows
+             */
+            $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
+            foreach ($fileIds as $k => $v) {
+                if (in_array($v, $futureScheduledFiles)) {
+                    unset($fileIds[$k]);
+                }
+            }
+
+            $selectCriteria = new Criteria();
+            $selectCriteria->add(CcFilesPeer::ID, $fileIds, Criteria::IN);
+            $updateCriteria = new Criteria();
+            $updateCriteria->add(CcFilesPeer::IS_SCHEDULED, false);
+            BasePeer::doUpdate($selectCriteria, $updateCriteria, Propel::getConnection());
 
             Application_Model_RabbitMq::PushSchedule();
             $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
