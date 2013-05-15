@@ -289,22 +289,38 @@ class Application_Service_SchedulerService
             $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
 
             $instances = array();
+            $instanceIds = array();
 
             if ($ccShowInstance->getCcShow()->isLinked()) {
-                $instanceIds = array();
                 foreach ($ccShowInstance->getCcShow()->getCcShowInstancess() as $instance) {
                     $instanceIds[] = $instance->getDbId();
                     $instances[] = $instance;
                 }
-                CcScheduleQuery::create()
-                    ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                    ->delete();
             } else {
+                $instanceIds[] = $ccShowInstance->getDbId();
                 $instances[] = $ccShowInstance;
-                CcScheduleQuery::create()
-                    ->filterByDbInstanceId($ccShowInstance->getDbId())
-                    ->delete();
             }
+
+            /* Update the is_scheduled flag in cc_files to false
+             * We need to do this before we delete the scheduled items
+             */
+            $ccSchedules = CcScheduleQuery::create()
+                ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                ->find();
+            $fileIds = array();
+            foreach ($ccSchedules as $ccSchedule) {
+                $fileIds[] = $ccSchedule->getDbFileId();
+            }
+            $selectCriteria = new Criteria();
+            $selectCriteria->add(CcFilesPeer::ID, $fileIds, Criteria::IN);
+            $updateCriteria = new Criteria();
+            $updateCriteria->add(CcFilesPeer::IS_SCHEDULED, false);
+            BasePeer::doUpdate($selectCriteria, $updateCriteria, Propel::getConnection());
+
+            /* Clear out the schedule */
+            CcScheduleQuery::create()
+                ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                ->delete();
 
             Application_Model_RabbitMq::PushSchedule();
             $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
