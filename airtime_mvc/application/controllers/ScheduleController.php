@@ -514,9 +514,9 @@ class ScheduleController extends Zend_Controller_Action
         if ($service_showForm->validateShowForms($forms, $data)) {
             $service_show->addUpdateShow($data);
 
-            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
             //send new show forms to the user
             $this->createShowFormAction(true);
+            $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
 
             Logging::debug("Show creation succeeded");
         } else {
