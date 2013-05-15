@@ -249,6 +249,8 @@ class Application_Model_Scheduler
                             $files[] = $data;
                         }
                     } else {
+                        $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
+                        $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
                         $dynamicFiles = $bl->getListOfFilesUnderLimit();
                         foreach ($dynamicFiles as $f) {
                             $fileId = $f['id'];
@@ -263,8 +265,8 @@ class Application_Model_Scheduler
                                 $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
                                 
                                 //fade is in format SS.uuuuuu
-                                $data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
-                                $data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+                                $data["fadein"] = $defaultFadeIn;
+                                $data["fadeout"] = $defaultFadeOut;
                                 
                                 $data["type"] = 0;
                                 $files[] = $data;
@@ -306,6 +308,8 @@ class Application_Model_Scheduler
                     $files[] = $data;
                 }
             } else {
+                $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
+                $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
                 $dynamicFiles = $bl->getListOfFilesUnderLimit();
                 foreach ($dynamicFiles as $f) {
                     $fileId = $f['id'];
@@ -320,8 +324,8 @@ class Application_Model_Scheduler
                         $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
                         
                         //fade is in format SS.uuuuuu
-                		$data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
-                		$data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
+                		$data["fadein"] = $defaultFadeIn;
+                		$data["fadeout"] = $defaultFadeOut;
                 		
                         $data["type"] = 0;
                         $files[] = $data;
@@ -508,11 +512,14 @@ class Application_Model_Scheduler
 
             $temp = array();
             $instance = null;
+
             /* Items in shows are ordered by position number. We need to know
              * the position when adding/moving items in linked shows so they are
              * added or moved in the correct position
              */
             $pos = 0;
+
+            $linked = false;
 
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
@@ -524,10 +531,11 @@ class Application_Model_Scheduler
                  * of inserted items
                  */
                 if ($id != 0) {
-                    $ccSchedule = CcScheduleQuery::create()->findPk($schedule["id"]);
+                    $ccSchedule = CcScheduleQuery::create()->findPk($id);
                     $ccShowInstance = CcShowInstancesQuery::create()->findPk($ccSchedule->getDbInstanceId());
                     $ccShow = $ccShowInstance->getCcShow();
-                    if ($ccShow->isLinked()) {
+                    $linked = $ccShow->isLinked();
+                    if ($linked) {
                         $unique = $ccShow->getDbId() . $ccSchedule->getDbPosition();
                         if (!in_array($unique, $temp)) {
                             $temp[] = $unique;
@@ -538,7 +546,8 @@ class Application_Model_Scheduler
                 } else {
                     $ccShowInstance = CcShowInstancesQuery::create()->findPk($schedule["instance"]);
                     $ccShow = $ccShowInstance->getccShow();
-                    if ($ccShow->isLinked()) {
+                    $linked = $ccShow->isLinked();
+                    if ($linked) {
                         $unique = $ccShow->getDbId() . "a";
                         if (!in_array($unique, $temp)) {
                             $temp[] = $unique;
@@ -552,23 +561,25 @@ class Application_Model_Scheduler
                  * we need to insert the items for each linked instance belonging
                  * to that show
                  */
-                $instances = $this->getInstances($schedule["instance"]);
-                foreach($instances as $instance) {
-                    $linked = $instance->getCcShow()->isLinked();
+                if ($linked) {
+                    $instances = $ccShow->getCcShowInstancess();
+                } else {
+                    $instances = array($ccShowInstance);
+                }
+                foreach($instances as &$instance) {
+                    $instanceId = $instance->getDbId();
                     if ($id !== 0) {
-                        $schedItem = CcScheduleQuery::create()->findPK($id, $this->con);
                         /* We use the selected cursor's position to find the same
                          * positions in every other linked instance
                          */
-                        $pos = $schedItem->getDbPosition();
+                        $pos = $ccSchedule->getDbPosition();
 
-                        $ccSchedule = CcScheduleQuery::create()
-                            ->filterByDbInstanceId($instance->getDbId())
+                        $linkCcSchedule = CcScheduleQuery::create()
+                            ->filterByDbInstanceId($instanceId)
                             ->filterByDbPosition($pos)
                             ->findOne();
 
-                        //$schedItemEndDT = $schedItem->getDbEnds(null);
-                        $schedItemEndDT = $ccSchedule->getDbEnds(null);
+                        $schedItemEndDT = $linkCcSchedule->getDbEnds(null);
                         $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
 
                         $pos++;
@@ -583,7 +594,7 @@ class Application_Model_Scheduler
                     }
 
                     if (!in_array($instance->getDbId(), $affectedShowInstances)) {
-                        $affectedShowInstances[] = $instance->getDbId();
+                        $affectedShowInstances[] = $instanceId;
                     }
 
                     /*
@@ -604,11 +615,12 @@ class Application_Model_Scheduler
                     if (is_null($filesToInsert)) {
                         $filesToInsert = array();
                         foreach ($mediaItems as $media) {
-                            $filesToInsert = array_merge($filesToInsert, $this->retrieveMediaFiles($media["id"], $media["type"]));
+                            $filesToInsert = array_merge($filesToInsert,
+                                $this->retrieveMediaFiles($media["id"], $media["type"]));
                         }
                     }
 
-                    foreach ($filesToInsert as $file) {
+                    foreach ($filesToInsert as &$file) {
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
@@ -628,7 +640,7 @@ class Application_Model_Scheduler
                              */
                             if ($linked && $moveAction) {
                                 $sched = CcScheduleQuery::create()
-                                    ->filterByDbInstanceId($instance->getDbId())
+                                    ->filterByDbInstanceId($instanceId)
                                     ->filterByDbPosition($originalPosition)
                                     ->findOne();
                             }
@@ -657,9 +669,9 @@ class Application_Model_Scheduler
                             ->setDbFadeOut($file['fadeout'])
                             ->setDbClipLength($file['cliplength'])
                             ->setDbPosition($pos);
-                            //->setDbInstanceId($instance->getDbId());
+
                         if (!$moveAction) {
-                            $sched->setDbInstanceId($instance->getDbId());
+                            $sched->setDbInstanceId($instanceId);
                         }
 
                         switch ($file["type"]) {
@@ -686,11 +698,17 @@ class Application_Model_Scheduler
                     }//all files have been inserted/moved
 
                     // update is_scheduled flag for each cc_file
-                    foreach ($filesToInsert as $file) {
-                        $db_file = CcFilesQuery::create()->findPk($file['id'], $this->con);
-                        $db_file->setDbIsScheduled(true);
-                        $db_file->save($this->con);
+                    $fileIds = array();
+                    foreach ($filesToInsert as &$file) {
+                        $fileIds[] = $file["id"];
                     }
+                    $selectCriteria = new Criteria();
+                    $selectCriteria->add(CcFilesPeer::ID, $fileIds, Criteria::IN);
+                    $selectCriteria->addAnd(CcFilesPeer::IS_SCHEDULED, false);
+                    $updateCriteria = new Criteria();
+                    $updateCriteria->add(CcFilesPeer::IS_SCHEDULED, true);
+                    BasePeer::doUpdate($selectCriteria, $updateCriteria, $this->con);
+
                     /* Reset files to insert so we can get a new set of files. We have
                      * to do this in case we are inserting a dynamic block
                      */
