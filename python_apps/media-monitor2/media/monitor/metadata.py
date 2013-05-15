@@ -49,6 +49,8 @@ airtime2mutagen = {
     "MDATA_KEY_CUE_OUT"     : "cueout",
 }
 
+#doesn't make sense for us to write these values to a track's metadata
+mutagen_do_not_write = ["MDATA_KEY_CUE_IN", "MDATA_KEY_CUE_OUT"]
 
 # Some airtime attributes are special because they must use the mutagen object
 # itself to calculate the value that they need. The lambda associated with each
@@ -113,7 +115,8 @@ class Metadata(Loggable):
         song_file = mutagen.File(path, easy=True)
         exceptions = [] # for bad keys
         for airtime_k, airtime_v in md.iteritems():
-            if airtime_k in airtime2mutagen:
+            if airtime_k in airtime2mutagen and \
+                    airtime_k not in mutagen_do_not_write:
                 # The unicode cast here is mostly for integers that need to be
                 # strings
                 if airtime_v is None: continue
