@@ -159,7 +159,7 @@ class PypoLiquidsoap():
         to_be_removed.update(liq_queue_ids - schedule_ids)
         to_be_added.update(schedule_ids - liq_queue_ids)
 
-        if len(to_be_removed):
+        if to_be_removed:
             self.logger.info("Need to remove items from Liquidsoap: %s" % \
                     to_be_removed)
 
@@ -169,7 +169,7 @@ class PypoLiquidsoap():
                 if mi is not None and mi["row_id"] in to_be_removed:
                     self.stop(i)
 
-        if len(to_be_added):
+        if to_be_added:
             self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
                     to_be_added)
 
@@ -180,7 +180,7 @@ class PypoLiquidsoap():
 
         #handle webstreams
         current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
-        if len(scheduled_now_webstream):
+        if scheduled_now_webstream:
             if current_stream_id != scheduled_now_webstream[0]:
                 self.play(scheduled_now_webstream[0])
         elif current_stream_id != "-1":
