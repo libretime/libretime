@@ -301,26 +301,40 @@ class Application_Service_SchedulerService
                 $instances[] = $ccShowInstance;
             }
 
-            /* Update the is_scheduled flag in cc_files to false
-             * We need to do this before we delete the scheduled items
+            /* Get the file ids of the tracks we are about to delete
+             * from cc_schedule. We need these so we can update the
+             * is_scheduled flag in cc_files
              */
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
+                ->setDistinct(CcSchedulePeer::FILE_ID)
                 ->find();
             $fileIds = array();
             foreach ($ccSchedules as $ccSchedule) {
                 $fileIds[] = $ccSchedule->getDbFileId();
             }
-            $selectCriteria = new Criteria();
-            $selectCriteria->add(CcFilesPeer::ID, $fileIds, Criteria::IN);
-            $updateCriteria = new Criteria();
-            $updateCriteria->add(CcFilesPeer::IS_SCHEDULED, false);
-            BasePeer::doUpdate($selectCriteria, $updateCriteria, Propel::getConnection());
 
             /* Clear out the schedule */
             CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
                 ->delete();
+
+            /* Now that the schedule has been cleared we need to make
+             * sure we do not update the is_scheduled flag for tracks
+             * that are scheduled in other shows
+             */
+            $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
+            foreach ($fileIds as $k => $v) {
+                if (in_array($v, $futureScheduledFiles)) {
+                    unset($fileIds[$k]);
+                }
+            }
+
+            $selectCriteria = new Criteria();
+            $selectCriteria->add(CcFilesPeer::ID, $fileIds, Criteria::IN);
+            $updateCriteria = new Criteria();
+            $updateCriteria->add(CcFilesPeer::IS_SCHEDULED, false);
+            BasePeer::doUpdate($selectCriteria, $updateCriteria, Propel::getConnection());
 
             Application_Model_RabbitMq::PushSchedule();
             $con = Propel::getConnection(CcShowInstancesPeer::DATABASE_NAME);
