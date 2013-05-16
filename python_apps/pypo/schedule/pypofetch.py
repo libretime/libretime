@@ -1,25 +1,41 @@
 # -*- coding: utf-8 -*-
+"""
+    schedule.pypofetch
+    ~~~~~~~~~
+
+    The purpose of this module is to parse schedule data received from the
+    server and perform various tasks based on this schedule such as pre-cache
+    tracks that are scheduled, do sanity checks on the schedule sent, perform
+    cache clean-up etc.
+
+    The schedule for the immediate future is pushed via RabbitMQ when a user is 
+    editing the schedule, however a pull for this schedule is also initiated at 
+    a specified interval in order to keep current when there is no user 
+    activity.
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
 
 import os
 import sys
 import time
 import logging.config
 import json
-import telnetlib
 import copy
 import subprocess
 import signal
-from datetime import datetime
 import traceback
-from schedule import pure
 
 from Queue import Empty
+from datetime import datetime
 from threading import Thread
 from subprocess import Popen, PIPE
 
 from api_clients import api_client
 from std_err_override import LogWriter
 
+import pure
 
 # configure logging
 logging_cfg = os.path.join(os.path.dirname(__file__), "../configs/logging.cfg")
@@ -33,17 +49,11 @@ def keyboardInterruptHandler(signum, frame):
     sys.exit(0)
 signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
-#need to wait for Python 2.7 for this..
-#logging.captureWarnings(True)
-
 POLL_INTERVAL = 1800
 
-config_static = None
-
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap, config):
         Thread.__init__(self)
-        global config_static
 
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
@@ -51,13 +61,9 @@ class PypoFetch(Thread):
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
         self.config = config
-        config_static = config
         self.listener_timeout = POLL_INTERVAL
 
-        self.telnet_lock = telnet_lock
-
         self.logger = logging.getLogger()
-
         self.pypo_liquidsoap = pypo_liquidsoap
 
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
@@ -100,13 +106,19 @@ class PypoFetch(Thread):
                 self.regenerate_liquidsoap_conf(m['setting'])
             elif command == 'update_stream_format':
                 self.logger.info("Updating stream format...")
-                self.update_liquidsoap_stream_format(m['stream_format'])
+                self.telnetliquidsoap.\
+                        get_telnet_dispatcher().\
+                        update_liquidsoap_stream_format(m['stream_format'])
             elif command == 'update_station_name':
                 self.logger.info("Updating station name...")
-                self.update_liquidsoap_station_name(m['station_name'])
+                self.pypo_liquidsoap.\
+                        get_telnet_dispatcher().\
+                        update_liquidsoap_station_name(m['station_name'])
             elif command == 'update_transition_fade':
                 self.logger.info("Updating transition_fade...")
-                self.update_liquidsoap_transition_fade(m['transition_fade'])
+                self.pypo_liquidsoap.\
+                        get_telnet_dispatcher().\
+                        update_liquidsoap_transition_fade(m['transition_fade'])
             elif command == 'switch_source':
                 self.logger.info("switch_on_source show command received...")
                 self.pypo_liquidsoap.\
@@ -179,28 +191,12 @@ class PypoFetch(Thread):
         self.pypo_liquidsoap.clear_queue_tracker()
 
     def restart_liquidsoap(self):
-        try:
-            self.telnet_lock.acquire()
-            self.logger.info("Restarting Liquidsoap")
-            subprocess.call('/etc/init.d/airtime-liquidsoap restart', shell=True)
+        self.logger.info("Restarting Liquidsoap")
+        subprocess.call(['/etc/init.d/airtime-liquidsoap', 'restart'])
 
-            #Wait here and poll Liquidsoap until it has started up
-            self.logger.info("Waiting for Liquidsoap to start")
-            while True:
-                try:
-                    tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-                    tn.write("exit\n")
-                    tn.read_all()
-                    self.logger.info("Liquidsoap is up and running")
-                    break
-                except Exception, e:
-                    #sleep 0.5 seconds and try again
-                    time.sleep(0.5)
-
-        except Exception, e:
-            self.logger.error(e)
-        finally:
-            self.telnet_lock.release()
+        #Wait here and poll Liquidsoap until it has started up
+        self.logger.info("Waiting for Liquidsoap to start")
+        self.telnetliquidsoap.liquidsoap_startup_test()
 
         try:
             self.set_bootstrap_variables()
@@ -313,28 +309,9 @@ class PypoFetch(Thread):
         This function updates the bootup time variable in Liquidsoap script
         """
 
-        try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
-            # we are manually adjusting the bootup time variable so the status msg will get
-            # updated.
-            current_time = time.time()
-            boot_up_time_command = "vars.bootup_time " + str(current_time) + "\n"
-            self.logger.info(boot_up_time_command)
-            tn.write(boot_up_time_command)
-
-            connection_status = "streams.connection_status\n"
-            self.logger.info(connection_status)
-            tn.write(connection_status)
-
-            tn.write('exit\n')
-
-            output = tn.read_all()
-        except Exception, e:
-            self.logger.error(str(e))
-        finally:
-            self.telnet_lock.release()
+        output = self.telnetliquidsoap.\
+                get_telnet_dispatcher().\
+                get_liquidsoap_connection_status(time.time())
 
         output_list = output.split("\r\n")
         stream_info = output_list[2]
@@ -353,56 +330,11 @@ class PypoFetch(Thread):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
 
 
-    def update_liquidsoap_stream_format(self, stream_format):
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
-        try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
-            self.logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            self.logger.error("Exception %s", e)
-        finally:
-            self.telnet_lock.release()
 
-    def update_liquidsoap_transition_fade(self, fade):
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
-        try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-            command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
-            self.logger.info(command)
-            tn.write(command)
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            self.logger.error("Exception %s", e)
-        finally:
-            self.telnet_lock.release()
 
-    def update_liquidsoap_station_name(self, station_name):
-        # Push stream metadata to liquidsoap
-        # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
-        try:
-            try:
-                self.telnet_lock.acquire()
-                tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-                command = ('vars.station_name %s\n' % station_name).encode('utf-8')
-                self.logger.info(command)
-                tn.write(command)
-                tn.write('exit\n')
-                tn.read_all()
-            except Exception, e:
-                self.logger.error(str(e))
-            finally:
-                self.telnet_lock.release()
-        except Exception, e:
-            self.logger.error("Exception %s", e)
+
+
+
 
     """
     Process the schedule

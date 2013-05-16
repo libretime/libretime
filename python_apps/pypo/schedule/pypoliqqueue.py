@@ -1,6 +1,19 @@
+"""
+    schedule.pypoliqqueue
+    ~~~~~~~~~
+
+    This module takes a collection of media_items scheduled in the near future
+    and fires off a start event when the item's start time begins.
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
+
 from threading import Thread
 from collections import deque
 from datetime import datetime
+
+from schedule import pure
 
 import traceback
 import sys
@@ -44,7 +57,7 @@ class PypoLiqQueue(Thread):
                 self.pypo_liquidsoap.play(media_item)
                 if len(schedule_deque):
                     time_until_next_play = \
-                            self.date_interval_to_seconds(
+                            pure.date_interval_to_seconds(
                                     schedule_deque[0]['start'] - datetime.utcnow())
                     if time_until_next_play < 0:
                         time_until_next_play = 0
@@ -61,22 +74,10 @@ class PypoLiqQueue(Thread):
                     schedule_deque.append(media_schedule[i])
 
                 if len(keys):
-                    time_until_next_play = self.date_interval_to_seconds(\
+                    time_until_next_play = pure.date_interval_to_seconds(\
                             keys[0] - datetime.utcnow())
                 else:
                     time_until_next_play = None
-
-
-    def date_interval_to_seconds(self, interval):
-        """
-        Convert timedelta object into int representing the number of seconds. If
-        number of seconds is less than 0, then return 0.
-        """
-        seconds = (interval.microseconds + \
-                   (interval.seconds + interval.days * 24 * 3600) * 10 ** 6) / float(10 ** 6)
-        if seconds < 0: seconds = 0
-
-        return seconds
 
     def run(self):
         try: self.main()

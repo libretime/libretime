@@ -1,9 +1,9 @@
 #!/bin/bash
 
 which py.test
-pytest_exist=$?
+pytest_exist="$?"
 
-if [ "$pytest_exist" != "0" ]; then
+if [ $pytest_exist != "0" ]; then
     echo "Need to have py.test installed. Exiting..."
     exit 1
 fi

@@ -1,3 +1,16 @@
+"""
+    schedule.listenerstat
+    ~~~~~~~~~
+
+    This module exports a set of functions to help communicate with both
+    icecast and shoutcast servers. Its function is to parse the output XML
+    provided and return the current number of clients listening.
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
+
+
 from threading import Thread
 import urllib2
 import xml.dom.minidom

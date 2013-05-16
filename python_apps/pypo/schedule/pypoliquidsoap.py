@@ -1,14 +1,30 @@
+"""
+    schedule.pypoliquidsoap
+    ~~~~~~~~~
+
+    An attempt to abstract the various different ways we need to start/stop 
+    files and webstreams into one unified interface with play() and stop()
+    methods instead.
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
+
 from pypofetch import PypoFetch
 from telnetliquidsoap import TelnetLiquidsoap
+from schedule import pure
 
 from datetime import datetime
 from datetime import timedelta
 
 import eventtypes
+import constants 
+
 import time
+import re
 
 class PypoLiquidsoap():
-    def __init__(self, logger, telnet_lock, host, port):
+    def __init__(self, logger, host, port):
         self.logger = logger
         self.liq_queue_tracker = {
                 "s0": None,
@@ -17,7 +33,7 @@ class PypoLiquidsoap():
                 "s3": None,
                 }
 
-        self.telnet_liquidsoap = TelnetLiquidsoap(telnet_lock, \
+        self.telnet_liquidsoap = TelnetLiquidsoap(
                 logger,\
                 host,\
                 port,\
@@ -208,26 +224,42 @@ class PypoLiquidsoap():
         link_start = link['start']
 
         diff_td = tnow - link_start
-        diff_sec = self.date_interval_to_seconds(diff_td)
+        diff_sec = pure.date_interval_to_seconds(diff_td)
 
         if diff_sec > 0:
             self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_sec)
             original_cue_in_td = timedelta(seconds=float(link['cue_in']))
-            link['cue_in'] = self.date_interval_to_seconds(original_cue_in_td) + diff_sec
-
-    def date_interval_to_seconds(self, interval):
-        """
-        Convert timedelta object into int representing the number of seconds. If
-        number of seconds is less than 0, then return 0.
-        """
-        seconds = (interval.microseconds + \
-                   (interval.seconds + interval.days * 24 * 3600) * 10 ** 6) / float(10 ** 6)
-        if seconds < 0: seconds = 0
-
-        return seconds
+            link['cue_in'] = pure.date_interval_to_seconds(original_cue_in_td) + diff_sec
 
     def clear_all_queues(self):
         self.telnet_liquidsoap.queue_clear_all()
+
+    def get_liquidsoap_version(self, version_string):
+        m = re.match(r"Liquidsoap (\d+.\d+.\d+)", "Liquidsoap 1.1.1")
+        if m:
+            return m.group(1)
+        else:
+            return None
+
+    def liquidsoap_startup_test(self):
+        liquidsoap_version_string = \
+                self.get_liquidsoap_version(self.telnet_liquidsoap.liquidsoap_get_info())
+        while not liquidsoap_version_string:
+            self.logger.warning("Liquidsoap doesn't appear to be running!, " +
+                   "Sleeping and trying again")
+            time.sleep(1)
+            liquidsoap_version_string = \
+                self.get_liquidsoap_version(self.telnet_liquidsoap.liquidsoap_get_info())
+
+        while pure.version_cmp(liquidsoap_version_string, constants.LIQUIDSOAP_MIN_VERSION) < 0:
+            self.logger.warning("Liquidsoap is running but in incorrect version! " +
+                    "Make sure you have at least Liquidsoap %s installed" %
+                    constants.LIQUIDSOAP_MIN_VERSION)
+            time.sleep(1)
+            liquidsoap_version_string = \
+                self.get_liquidsoap_version(self.telnet_liquidsoap.liquidsoap_get_info())
+            
+        self.logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
 
 
 class UnknownMediaItemType(Exception):

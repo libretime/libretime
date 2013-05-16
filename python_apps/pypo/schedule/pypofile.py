@@ -1,4 +1,14 @@
 # -*- coding: utf-8 -*-
+"""
+    schedule.pypofile
+    ~~~~~~~~~
+
+    This module is directly responsible for pre-caching a list of files 
+    scheduled in the near future. 
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
 
 from threading import Thread
 from Queue import Empty

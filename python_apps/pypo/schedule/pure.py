@@ -1,5 +1,15 @@
-import re
+"""
+    schedule.pure
+    ~~~~~~~~~
 
+    This module exports a set of 'pure' common functions with no side-effects 
+    that may be used by various parts of the pypo scheduler.
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
+
+import re
 
 def version_cmp(version1, version2):
     def normalize(v):

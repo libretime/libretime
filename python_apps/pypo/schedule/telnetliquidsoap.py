@@ -1,4 +1,14 @@
+"""
+    schedule.telnetliquidsoap
+    ~~~~~~~~~
+
+    Module exposing API to directly communicate with Liquidsoap via telnet.
+
+    :author: (c) 2012 by Martin Konecny.
+    :license: GPLv3, see LICENSE for more details.
+"""
 import telnetlib
+from threading import Lock
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
@@ -16,8 +26,8 @@ def create_liquidsoap_annotation(media):
 
 class TelnetLiquidsoap:
 
-    def __init__(self, telnet_lock, logger, ls_host, ls_port, queues):
-        self.telnet_lock = telnet_lock
+    def __init__(self, logger, ls_host, ls_port, queues):
+        self.telnet_lock = Lock()
         self.ls_host = ls_host
         self.ls_port = ls_port
         self.logger = logger
@@ -247,6 +257,95 @@ class TelnetLiquidsoap:
 
         self.telnet_send([command])
 
+    def liquidsoap_get_info(self):
+        self.logger.debug("Checking to see if Liquidsoap is running")
+        response = ""
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(self.host, self.port)
+            msg = "version\n"
+            tn.write(msg)
+            tn.write("exit\n")
+            response = tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+            return None
+        finally:
+            self.telnet_lock.release()
+
+        return response
+
+    def update_liquidsoap_station_name(self, station_name):
+        try:
+            try:
+                self.telnet_lock.acquire()
+                tn = telnetlib.Telnet(self.host, self.port)
+                command = ('vars.station_name %s\n' % station_name).encode('utf-8')
+                self.logger.info(command)
+                tn.write(command)
+                tn.write('exit\n')
+                tn.read_all()
+            except Exception, e:
+                self.logger.error(str(e))
+            finally:
+                self.telnet_lock.release()
+        except Exception, e:
+            self.logger.error("Exception %s", e)
+
+    def get_liquidsoap_connection_status(self, current_time):
+        output = None
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(self.host, self.port)
+            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
+            # we are manually adjusting the bootup time variable so the status msg will get
+            # updated.
+            boot_up_time_command = "vars.bootup_time %s\n" % str(current_time)
+            self.logger.info(boot_up_time_command)
+            tn.write(boot_up_time_command)
+
+            connection_status = "streams.connection_status\n"
+            self.logger.info(connection_status)
+            tn.write(connection_status)
+
+            tn.write('exit\n')
+
+            output = tn.read_all()
+        except Exception, e:
+            self.logger.error(str(e))
+        finally:
+            self.telnet_lock.release()
+
+        return None
+
+    def update_liquidsoap_stream_format(self, stream_format):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(self.host, self.port)
+            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+            self.logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error("Exception %s", e)
+        finally:
+            self.telnet_lock.release()
+
+    def update_liquidsoap_transition_fade(self, fade):
+        try:
+            self.telnet_lock.acquire()
+            tn = telnetlib.Telnet(self.host, self.port)
+            command = ('vars.default_dj_fade %s\n' % fade).encode('utf-8')
+            self.logger.info(command)
+            tn.write(command)
+            tn.write('exit\n')
+            tn.read_all()
+        except Exception, e:
+            self.logger.error("Exception %s", e)
+        finally:
+            self.telnet_lock.release()
+
 class DummyTelnetLiquidsoap:
 
     def __init__(self, telnet_lock, logger):
@@ -284,6 +383,8 @@ class DummyTelnetLiquidsoap:
             raise
         finally:
             self.telnet_lock.release()
+
+
 
 class QueueNotEmptyException(Exception):
     pass
