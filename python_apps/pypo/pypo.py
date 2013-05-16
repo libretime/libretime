@@ -21,6 +21,7 @@ from threading import Lock
 from schedule.pypopush import PypoPush
 from schedule.pypofetch import PypoFetch
 from schedule.pypofile import PypoFile
+from schedule import pure
 from recorder.recorder import Recorder
 from schedule.listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
@@ -34,7 +35,6 @@ from configobj import ConfigObj
 # custom imports
 from api_clients import api_client
 from std_err_override import LogWriter
-import pure
 
 # Set up command-line options
 parser = OptionParser()
@@ -81,7 +81,7 @@ LIQUIDSOAP_MIN_VERSION = "1.1.1"
 
 # configure logging
 try:
-    logging.config.fileConfig("logging.cfg")
+    logging.config.fileConfig("configs/logging.cfg")
     logger = logging.getLogger()
     LogWriter.override_std_err(logger)
 except Exception, e:

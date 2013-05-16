@@ -50,7 +50,7 @@ parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started"
 (options, args) = parser.parse_args()
 
 # configure logging
-logging.config.fileConfig("notify_logging.cfg")
+logging.config.fileConfig("configs/notify_logging.cfg")
 logger = logging.getLogger('notify')
 LogWriter.override_std_err(logger)
 

@@ -15,7 +15,7 @@ import json
 from std_err_override import LogWriter
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+logging.config.fileConfig("configs/logging.cfg")
 logger = logging.getLogger('message_h')
 LogWriter.override_std_err(logger)
 

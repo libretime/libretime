@@ -25,7 +25,7 @@ from configobj import ConfigObj
 
 
 # configure logging
-logging_cfg = os.path.join(os.path.dirname(__file__), "../logging.cfg")
+logging_cfg = os.path.join(os.path.dirname(__file__), "../configs/logging.cfg")
 logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)

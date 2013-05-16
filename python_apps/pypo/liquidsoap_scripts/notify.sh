@@ -10,5 +10,5 @@ SCRIPT=`readlink -f $0`
 # Absolute path this script is in
 SCRIPTPATH=`dirname $SCRIPT`
 
-cd ${SCRIPTPATH}/../ 
+cd ${SCRIPTPATH}
 timeout 45 python pyponotify.py "$@"

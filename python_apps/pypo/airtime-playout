@@ -9,7 +9,7 @@ SCRIPT=`readlink -f $0`
 pypo_path=`dirname $SCRIPT`
 
 api_client_path="/usr/lib/airtime/"
-pypo_script="pypocli.py"
+pypo_script="pypo.py"
 cd ${pypo_path}
 
 set +e
