@@ -42,18 +42,23 @@ class SilanAnalyzer(Thread):
                 # silence detect(set default queue in and out)
                 try:
                     data = {}
-                    command = ['nice', '-n', '19', 'silan', '-b', '-f', 'JSON', full_path]
+                    command = ['nice', '-n', '19', 'silan', '-b', '-f', 'JSON', 
+                            full_path]
                     try:
-                        proc = subprocess.Popen(command, stdout=subprocess.PIPE)
+                        proc = subprocess.Popen(command, 
+                                stdout=subprocess.PIPE)
                         comm = proc.communicate()
                         if len(comm):
                             out = comm[0].strip('\r\n')
                             info = json.loads(out)
-                            try: data['length'] = str('{0:f}'.format(info['file duration']))
+                            try: data['length'] = \
+                                    str('{0:f}'.format(info['file duration']))
                             except: pass
-                            try: data['cuein'] = str('{0:f}'.format(info['sound'][0][0]))
+                            try: data['cuein'] = \
+                                    str('{0:f}'.format(info['sound'][0][0]))
                             except: pass
-                            try: data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
+                            try: data['cueout'] = \
+                                    str('{0:f}'.format(info['sound'][-1][1]))
                             except: pass
                     except Exception, e:
                         self.logger.error(str(command))
@@ -61,7 +66,9 @@ class SilanAnalyzer(Thread):
                     processed_data.append((f['id'], data))
                     total += 1
                     if total % 5 == 0:
-                        self.logger.info("Total %s / %s files has been processed.." % (total, total_files))
+                        self.logger.info("Total %s / %s files has been" +
+                                "processed..", 
+                                total, total_files)
                 except Exception, e:
                     self.logger.error(e)
                     self.logger.error(traceback.format_exc())
@@ -80,7 +87,8 @@ class SilanAnalyzer(Thread):
                 self.logger.info("Running Silan analyzer")
                 self.main()
             except Exception, e:
-                self.logger.error('Silan Analyzer Exception: %s', traceback.format_exc())
+                self.logger.error('Silan Analyzer Exception: %s', 
+                        traceback.format_exc())
                 self.logger.error(e)
             self.logger.info("Sleeping for 5...")
             time.sleep(60 * 5)

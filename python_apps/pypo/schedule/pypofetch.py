@@ -52,7 +52,8 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 POLL_INTERVAL = 1800
 
 class PypoFetch(Thread):
-    def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap, config):
+    def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap, 
+            config):
         Thread.__init__(self)
 
         self.api_client = api_client.AirtimeApiClient()
@@ -90,7 +91,8 @@ class PypoFetch(Thread):
     """
     def handle_message(self, message):
         try:
-            self.logger.info("Received event from Pypo Message Handler: %s" % message)
+            self.logger.info("Received event from Pypo Message Handler: %s", 
+                    message)
 
             m = json.loads(message)
             command = m['event_type']
@@ -135,7 +137,10 @@ class PypoFetch(Thread):
             if command == 'update_schedule':
                 self.listener_timeout = POLL_INTERVAL
             else:
-                self.listener_timeout = self.last_update_schedule_timestamp - time.time() + POLL_INTERVAL
+                self.listener_timeout = \
+                        (self.last_update_schedule_timestamp - 
+                                time.time() + 
+                                POLL_INTERVAL)
                 if self.listener_timeout < 0:
                     self.listener_timeout = 0
             self.logger.info("New timeout: %s" % self.listener_timeout)
@@ -143,11 +148,12 @@ class PypoFetch(Thread):
             top = traceback.format_exc()
             self.logger.error('Exception: %s', e)
             self.logger.error("traceback: %s", top)
-            self.logger.error("Exception in handling Message Handler message: %s", e)
 
 
     def switch_source_temp(self, sourcename, status):
-        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        self.logger.debug('Setting source %s to "%s" status', sourcename, 
+                status)
+
         command = "streams."
         if sourcename == "master_dj":
             command += "master_dj_"
@@ -167,7 +173,7 @@ class PypoFetch(Thread):
     Initialize Liquidsoap environment
     """
     def set_bootstrap_variables(self):
-        self.logger.debug('Getting information needed on bootstrap from Airtime')
+        self.logger.debug('Getting information needed on bootstrap from DB')
         try:
             info = self.api_client.get_bootstrap_info()
         except Exception, e:
@@ -183,8 +189,12 @@ class PypoFetch(Thread):
         station_name = info['station_name']
         fade = info['transition_fade']
 
-        commands.append(('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8'))
-        commands.append(('vars.station_name %s\n' % station_name).encode('utf-8'))
+        commands.append(('vars.stream_metadata_type %s\n' % stream_format).\
+                encode('utf-8'))
+
+        commands.append(('vars.station_name %s\n' % station_name).\
+                encode('utf-8'))
+
         commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
         self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
 
@@ -288,7 +298,8 @@ class PypoFetch(Thread):
                         change[stream] = True
 
         # set flag change for sound_device alway True
-        self.logger.info("Change:%s, State_Change:%s...", change, state_change_restart)
+        self.logger.info("Change:%s, State_Change:%s...", change, 
+                state_change_restart)
 
         for k, v in state_change_restart.items():
             if k == "sound_device" and v:
@@ -327,7 +338,8 @@ class PypoFetch(Thread):
             stream_id = info[0]
             status = info[1]
             if(status == "true"):
-                self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
+                self.api_client.notify_liquidsoap_status("OK", stream_id, 
+                        str(fake_time))
 
 
 
@@ -338,10 +350,11 @@ class PypoFetch(Thread):
 
     """
     Process the schedule
-     - Reads the scheduled entries of a given range (actual time +/- "prepare_ahead" / "cache_for")
-     - Saves a serialized file of the schedule
-     - playlists are prepared. (brought to liquidsoap format) and, if not mounted via nsf, files are copied
-       to the cache dir (Folder-structure: cache/YYYY-MM-DD-hh-mm-ss)
+     - Reads the scheduled entries of a given range (actual time +/- 
+        "prepare_ahead" / "cache_for")
+     - playlists are prepared. (brought to liquidsoap format) and, if not 
+        mounted via nsf, files are copied to the cache dir (Folder-structure: 
+        cache/YYYY-MM-DD-hh-mm-ss)
      - runs the cleanup routine, to get rid of unused cached files
     """
     def process_schedule(self, schedule_data):
@@ -350,9 +363,7 @@ class PypoFetch(Thread):
         media = schedule_data["media"]
         media_filtered = {}
 
-        # Download all the media and put playlists in liquidsoap "annotate" format
         try:
-
             """
             Make sure cache_dir exists
             """
@@ -368,15 +379,17 @@ class PypoFetch(Thread):
                 if (media_item['type'] == 'file'):
                     self.sanity_check_media_item(media_item)
                     fileExt = os.path.splitext(media_item['uri'])[1]
-                    dst = os.path.join(download_dir, unicode(media_item['id']) + fileExt)
+                    dst = os.path.join(download_dir, 
+                            unicode(media_item['id']) + fileExt)
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
-                media_item['start'] = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
-                media_item['end'] = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
+                media_item['start'] = datetime.strptime(media_item['start'],
+                        "%Y-%m-%d-%H-%M-%S")
+                media_item['end'] = datetime.strptime(media_item['end'], 
+                        "%Y-%m-%d-%H-%M-%S")
                 media_copy[media_item['start']] = media_item
-
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
         except Exception, e: self.logger.error("%s", e)
@@ -411,11 +424,10 @@ class PypoFetch(Thread):
         return bool(out)
 
     def cache_cleanup(self, media):
-        """
-        Get list of all files in the cache dir and remove them if they aren't being used anymore.
-        Input dict() media, lists all files that are scheduled or currently playing. Not being in this
-        dict() means the file is safe to remove.
-        """
+        """Get list of all files in the cache dir and remove them if they aren't 
+        being used anymore. Input dict() media, lists all files that are 
+        scheduled or currently playing. Not being in this dict() means the 
+        file is safe to remove."""
         cached_file_set = set(os.listdir(self.cache_dir))
         scheduled_file_set = set()
 
@@ -440,7 +452,8 @@ class PypoFetch(Thread):
                     os.remove(path)
                     self.logger.info("File '%s' removed" % path)
                 else:
-                    self.logger.info("File '%s' not removed. Still busy!" % path)
+                    self.logger.info("File '%s' not removed. Still busy!", 
+                            path)
             except Exception, e:
                 self.logger.error("Problem removing file '%s'" % f)
                 self.logger.error(traceback.format_exc())
@@ -462,11 +475,11 @@ class PypoFetch(Thread):
 
 
     def main(self):
-        #Make sure all Liquidsoap queues are empty. This is important in the
-        #case where we've just restarted the pypo scheduler, but Liquidsoap still
-        #is playing tracks. In this case let's just restart everything from scratch
-        #so that we can repopulate our dictionary that keeps track of what 
-        #Liquidsoap is playing much more easily.
+        """Make sure all Liquidsoap queues are empty. This is important in the
+        case where we've just restarted the pypo scheduler, but Liquidsoap 
+        still is playing tracks. In this case let's just restart everything 
+        from scratch so that we can repopulate our dictionary that keeps track 
+        of what Liquidsoap is playing much more easily."""
         self.pypo_liquidsoap.clear_all_queues()
 
         self.set_bootstrap_variables()
@@ -476,7 +489,8 @@ class PypoFetch(Thread):
         success = self.persistent_manual_schedule_fetch(max_attempts=5)
 
         if success:
-            self.logger.info("Bootstrap schedule received: %s", self.schedule_data)
+            self.logger.info("Bootstrap schedule received: %s", 
+                    self.schedule_data)
 
         loops = 1
         while True:
@@ -489,15 +503,16 @@ class PypoFetch(Thread):
                 get schedule updates via RabbitMq if the user was constantly
                 using the Airtime interface.
 
-                If the user is not using the interface, RabbitMq messages are not
-                sent, and we will have very stale (or non-existent!) data about the
-                schedule.
+                If the user is not using the interface, RabbitMq messages are 
+                not sent, and we will have very stale (or non-existent!) data 
+                about the schedule.
 
-                Currently we are checking every POLL_INTERVAL seconds
+                Currently we are checking every POLL_INTERVAL seconds.
                 """
 
 
-                message = self.fetch_queue.get(block=True, timeout=self.listener_timeout)
+                message = self.fetch_queue.get(block=True, 
+                        timeout=self.listener_timeout)
                 self.handle_message(message)
             except Empty, e:
                 self.logger.info("Queue timeout. Fetching schedule manually")
@@ -510,7 +525,4 @@ class PypoFetch(Thread):
             loops += 1
 
     def run(self):
-        """
-        Entry point of the thread
-        """
         self.main()

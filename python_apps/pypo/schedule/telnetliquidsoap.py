@@ -11,7 +11,8 @@ import telnetlib
 from threading import Lock
 
 def create_liquidsoap_annotation(media):
-    # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
+    # We need liq_start_next value in the annotate. That is the value that 
+    # controls overlap duration of crossfade.
     return ('annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",' + \
             'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",' + \
             'schedule_table_id="%s",replay_gain="%s dB":%s') % \
@@ -241,7 +242,8 @@ class TelnetLiquidsoap:
 
 
     def switch_source(self, sourcename, status):
-        self.logger.debug('Switching source: %s to "%s" status', sourcename, status)
+        self.logger.debug('Switching source: %s to "%s" status', sourcename, 
+                status)
         command = "streams."
         if sourcename == "master_dj":
             command += "master_dj_"
@@ -280,7 +282,8 @@ class TelnetLiquidsoap:
             try:
                 self.telnet_lock.acquire()
                 tn = telnetlib.Telnet(self.host, self.port)
-                command = ('vars.station_name %s\n' % station_name).encode('utf-8')
+                command = ('vars.station_name %s\n' % 
+                        station_name).encode('utf-8')
                 self.logger.info(command)
                 tn.write(command)
                 tn.write('exit\n')
@@ -297,9 +300,9 @@ class TelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.host, self.port)
-            # update the boot up time of Liquidsoap. Since Liquidsoap is not restarting,
-            # we are manually adjusting the bootup time variable so the status msg will get
-            # updated.
+            # update the boot up time of Liquidsoap. Since Liquidsoap is not 
+            # restarting, we are manually adjusting the bootup time variable 
+            # so the status msg will get updated.
             boot_up_time_command = "vars.bootup_time %s\n" % str(current_time)
             self.logger.info(boot_up_time_command)
             tn.write(boot_up_time_command)
@@ -322,7 +325,8 @@ class TelnetLiquidsoap:
         try:
             self.telnet_lock.acquire()
             tn = telnetlib.Telnet(self.host, self.port)
-            command = ('vars.stream_metadata_type %s\n' % stream_format).encode('utf-8')
+            command = ('vars.stream_metadata_type %s\n' % 
+                    stream_format).encode('utf-8')
             self.logger.info(command)
             tn.write(command)
             tn.write('exit\n')
@@ -383,8 +387,6 @@ class DummyTelnetLiquidsoap:
             raise
         finally:
             self.telnet_lock.release()
-
-
 
 class QueueNotEmptyException(Exception):
     pass

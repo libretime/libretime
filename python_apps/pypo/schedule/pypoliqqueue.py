@@ -47,7 +47,7 @@ class PypoLiqQueue(Thread):
                     self.logger.info("waiting indefinitely for schedule")
                     media_schedule = self.queue.get(block=True)
                 else:
-                    self.logger.info("waiting %ss until next scheduled item" % \
+                    self.logger.info("waiting %ss until next scheduled item" %
                             time_until_next_play)
                     media_schedule = self.queue.get(block=True, \
                             timeout=time_until_next_play)
@@ -58,7 +58,7 @@ class PypoLiqQueue(Thread):
                 if len(schedule_deque):
                     time_until_next_play = \
                             pure.date_interval_to_seconds(
-                                    schedule_deque[0]['start'] - datetime.utcnow())
+                                schedule_deque[0]['start'] - datetime.utcnow())
                     if time_until_next_play < 0:
                         time_until_next_play = 0
                 else:
@@ -82,7 +82,8 @@ class PypoLiqQueue(Thread):
     def run(self):
         try: self.main()
         except Exception, e:
-            self.logger.error('PypoLiqQueue Exception: %s', traceback.format_exc())
+            self.logger.error('PypoLiqQueue Exception: %s', 
+                    traceback.format_exc())
 
 
 

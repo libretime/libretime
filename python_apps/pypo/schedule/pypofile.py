@@ -18,6 +18,7 @@ import shutil
 import os
 import sys
 import stat
+import traceback
 
 from std_err_override import LogWriter
 
@@ -64,7 +65,8 @@ class PypoFile(Thread):
             if src_size != dst_size:
                 do_copy = True
             else:
-                self.logger.debug("file %s already exists in local cache as %s, skipping copying..." % (src, dst))
+                self.logger.debug("file %s already exists in local cache as " + 
+                        "%s, skipping copying...", src, dst)
         else:
             do_copy = True
 
@@ -75,10 +77,10 @@ class PypoFile(Thread):
             try:
 
                 """
-                List file as "ready" before it starts copying because by the time
-                Liquidsoap is ready to play this file, it should have at least started
-                copying (and can continue copying while Liquidsoap reads from the beginning
-                of the file)
+                List file as "ready" before it starts copying because by the 
+                time Liquidsoap is ready to play this file, it should have at 
+                least started copying (and can continue copying while 
+                Liquidsoap reads from the beginning of the file)
                 """
                 media_item['file_ready'] = True
 
@@ -117,7 +119,8 @@ class PypoFile(Thread):
         anymore. If on the next iteration we have received a new schedule,
         it is very possible we will have to deal with the same media_items 
         again. In this situation, the worst possible case is that we try to
-        copy the file again and realize we already have it (thus aborting the copy). 
+        copy the file again and realize we already have it (thus aborting the 
+        copy). 
         """
         del schedule[highest_priority]
 
@@ -137,8 +140,9 @@ class PypoFile(Thread):
                     """
                     We have a schedule we need to process, but we also want
                     to check if a newer schedule is available. In this case
-                    do a non-blocking queue.get and in either case (we get something
-                    or we don't), get back to work on preparing getting files.
+                    do a non-blocking queue.get and in either case (we get 
+                    something or we don't), get back to work on preparing 
+                    getting files.
                     """
                     try:
                         self.media = self.media_queue.get_nowait()
@@ -150,14 +154,10 @@ class PypoFile(Thread):
                 if media_item is not None:
                     self.copy_file(media_item)
             except Exception, e:
-                import traceback
                 top = traceback.format_exc()
-                self.logger.error(str(e))
                 self.logger.error(top)
+                self.logger.error(str(e))
                 raise
 
     def run(self):
-        """
-        Entry point of the thread
-        """
         self.main()

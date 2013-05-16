@@ -68,7 +68,8 @@ class PypoPush(Thread):
                 currently_playing, scheduled_for_future = \
                         self.separate_present_future(media_schedule)
 
-                self.pypo_liquidsoap.verify_correct_present_media(currently_playing)
+                self.pypo_liquidsoap.verify_correct_present_media(
+                        currently_playing)
                 self.future_scheduled_queue.put(scheduled_for_future)
 
     def separate_present_future(self, media_schedule):

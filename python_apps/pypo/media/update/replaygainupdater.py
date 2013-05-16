@@ -50,16 +50,19 @@ class ReplayGainUpdater(Thread):
                     # return a list of pairs where the first value is the
                     # file's database row id and the second value is the
                     # filepath
-                    files = self.api_client.get_files_without_replay_gain_value(dir_id)
+                    files = self.api_client.\
+                            get_files_without_replay_gain_value(dir_id)
                     processed_data = []
                     for f in files:
                         full_path = os.path.join(dir_path, f['fp'])
-                        processed_data.append((f['id'], replaygain.calculate_replay_gain(full_path)))
+                        processed_data.append((f['id'], 
+                            replaygain.calculate_replay_gain(full_path)))
                         total += 1
 
                     try:
                         if len(processed_data):
-                            self.api_client.update_replay_gain_values(processed_data)
+                            self.api_client.\
+                                    update_replay_gain_values(processed_data)
                     except Exception as e:
                         self.logger.error(e)
                         self.logger.debug(traceback.format_exc())
@@ -77,7 +80,8 @@ class ReplayGainUpdater(Thread):
                 self.main()
                 # Sleep for 5 minutes in case new files have been added
             except Exception, e:
-                self.logger.error('ReplayGainUpdater Exception: %s', traceback.format_exc())
+                self.logger.error('ReplayGainUpdater Exception: %s', 
+                        traceback.format_exc())
                 self.logger.error(e)
             time.sleep(60 * 5)
 

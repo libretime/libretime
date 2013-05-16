@@ -51,9 +51,11 @@ class PypoLiquidsoap():
         elif media_item["type"] == eventtypes.STREAM_BUFFER_START:
             self.telnet_liquidsoap.start_web_stream_buffer(media_item)
         elif media_item["type"] == eventtypes.STREAM_OUTPUT_START:
-            if media_item['row_id'] != self.telnet_liquidsoap.current_prebuffering_stream_id:
-                #this is called if the stream wasn't scheduled sufficiently ahead of time
-                #so that the prebuffering stage could take effect. Let's do the prebuffering now.
+            if media_item['row_id'] != \
+                    self.telnet_liquidsoap.current_prebuffering_stream_id:
+                #this is called if the stream wasn't scheduled sufficiently 
+                #ahead of time so that the prebuffering stage could take 
+                #effect. Let's do the prebuffering now.
                 self.telnet_liquidsoap.start_web_stream_buffer(media_item)
             self.telnet_liquidsoap.start_web_stream(media_item)
         elif media_item['type'] == eventtypes.STREAM_BUFFER_END:
@@ -82,7 +84,8 @@ class PypoLiquidsoap():
                 self.logger.error(e)
                 raise
         else:
-            self.logger.warn("File %s did not become ready in less than 5 seconds. Skipping...", media_item['dst'])
+            self.logger.warn("File %s did not become ready in less than 5 " + 
+                    "seconds. Skipping...", media_item['dst'])
 
     def handle_event_type(self, media_item):
         if media_item['event_type'] == "kick_out":
@@ -119,8 +122,8 @@ class PypoLiquidsoap():
         #currently_playing then stop it.
 
         #Check for Liquidsoap media we should source.skip
-        #get liquidsoap items for each queue. Since each queue can only have one
-        #item, we should have a max of 8 items.
+        #get liquidsoap items for each queue. Since each queue can only have 
+        #one item, we should have a max of 8 items.
 
         #2013-03-21-22-56-00_0: {
         #id: 1,
@@ -138,7 +141,7 @@ class PypoLiquidsoap():
                 filter(lambda x: x["type"] == eventtypes.FILE, scheduled_now)
 
         scheduled_now_webstream = \
-                filter(lambda x: x["type"] == eventtypes.STREAM_OUTPUT_START, \
+                filter(lambda x: x["type"] == eventtypes.STREAM_OUTPUT_START, 
                         scheduled_now)
 
         schedule_ids = set(map(lambda x: x["row_id"], scheduled_now_files))
@@ -155,8 +158,8 @@ class PypoLiquidsoap():
         to_be_added = set()
 
         #Iterate over the new files, and compare them to currently scheduled
-        #tracks. If already in liquidsoap queue still need to make sure they don't
-        #have different attributes such replay_gain etc.
+        #tracks. If already in liquidsoap queue still need to make sure they 
+        #don't have different attributes such replay_gain etc.
         for i in scheduled_now_files:
             if i["row_id"] in row_id_map:
                 mi = row_id_map[i["row_id"]]
@@ -176,7 +179,7 @@ class PypoLiquidsoap():
         to_be_added.update(schedule_ids - liq_queue_ids)
 
         if to_be_removed:
-            self.logger.info("Need to remove items from Liquidsoap: %s" % \
+            self.logger.info("Need to remove items from Liquidsoap: %s" %
                     to_be_removed)
 
             #remove files from Liquidsoap's queue
@@ -186,7 +189,7 @@ class PypoLiquidsoap():
                     self.stop(i)
 
         if to_be_added:
-            self.logger.info("Need to add items to Liquidsoap *now*: %s" % \
+            self.logger.info("Need to add items to Liquidsoap *now*: %s" %
                     to_be_added)
 
             for i in scheduled_now:
@@ -227,9 +230,11 @@ class PypoLiquidsoap():
         diff_sec = pure.date_interval_to_seconds(diff_td)
 
         if diff_sec > 0:
-            self.logger.debug("media item was supposed to start %s ago. Preparing to start..", diff_sec)
+            self.logger.debug("media item was supposed to start %s ago. " + 
+                    "Preparing to start..", diff_sec)
             original_cue_in_td = timedelta(seconds=float(link['cue_in']))
-            link['cue_in'] = pure.date_interval_to_seconds(original_cue_in_td) + diff_sec
+            link['cue_in'] = \
+                pure.date_interval_to_seconds(original_cue_in_td) + diff_sec
 
     def clear_all_queues(self):
         self.telnet_liquidsoap.queue_clear_all()
@@ -243,23 +248,30 @@ class PypoLiquidsoap():
 
     def liquidsoap_startup_test(self):
         liquidsoap_version_string = \
-                self.get_liquidsoap_version(self.telnet_liquidsoap.liquidsoap_get_info())
+                self.get_liquidsoap_version(
+                        self.telnet_liquidsoap.liquidsoap_get_info())
         while not liquidsoap_version_string:
             self.logger.warning("Liquidsoap doesn't appear to be running!, " +
                    "Sleeping and trying again")
             time.sleep(1)
             liquidsoap_version_string = \
-                self.get_liquidsoap_version(self.telnet_liquidsoap.liquidsoap_get_info())
+                self.get_liquidsoap_version(
+                        self.telnet_liquidsoap.liquidsoap_get_info())
 
-        while pure.version_cmp(liquidsoap_version_string, constants.LIQUIDSOAP_MIN_VERSION) < 0:
-            self.logger.warning("Liquidsoap is running but in incorrect version! " +
-                    "Make sure you have at least Liquidsoap %s installed" %
+        while pure.version_cmp(
+                liquidsoap_version_string, 
+                constants.LIQUIDSOAP_MIN_VERSION) < 0:
+            self.logger.warning("Liquidsoap is running but in incorrect " + 
+                    "version! Make sure you have at least Liquidsoap %s " + 
+                    "installed",
                     constants.LIQUIDSOAP_MIN_VERSION)
             time.sleep(1)
             liquidsoap_version_string = \
-                self.get_liquidsoap_version(self.telnet_liquidsoap.liquidsoap_get_info())
+                self.get_liquidsoap_version(
+                        self.telnet_liquidsoap.liquidsoap_get_info())
             
-        self.logger.info("Liquidsoap version string found %s" % liquidsoap_version_string)
+        self.logger.info("Liquidsoap version string found %s",
+                liquidsoap_version_string)
 
 
 class UnknownMediaItemType(Exception):
