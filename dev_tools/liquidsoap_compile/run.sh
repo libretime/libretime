@@ -10,8 +10,8 @@ if [ "$UID" -ne "$ROOT_UID" ] ; then
         exit 1
 fi
 
-rm -rf ./liquidsoap_compile_logs
-mkdir -p ./liquidsoap_compile_logs
+rm -rf ./liquidsoap-compile_logs
+mkdir -p ./liquidsoap-compile_logs
 
 showhelp () {
     echo "Usage: run.sh [options] [parameters]
@@ -77,19 +77,19 @@ compile_liq () {
     echo "complie_liq $1"
     #exec > >(tee ./liquidsoap_compile_logs/compile_liq_$1.log)
     binfilename=`echo $1 | sed -e 's/ubuntu/liquidsoap/g' -e 's/debian/liquidsoap/g' -e 's/32/i386/g' -e 's/64/amd64/g'`
-    rm -f /srv/chroot/$1/liquidsoap_compile.sh
+    rm -f /srv/chroot/$1/liquidsoap-compile.sh
     rm -f /srv/chroot/$1/liquidsoap
-    cp liquidsoap_compile.sh /srv/chroot/$1/
-    schroot -c $1 -u root -d / -- /liquidsoap_compile.sh
+    cp liquidsoap-compile.sh /srv/chroot/$1/
+    schroot -c $1 -u root -d / -- /liquidsoap-compile.sh
     cp /srv/chroot/$1/liquidsoap ./$binfilename
-    if [ $? -ne 0 ];then
+    if [ $? = 0 ];then
         echo "$binfilename is generated successfully"
     else
-        mv ./liquidsoap_compile_logs/compile_liq_$1.log ./liquidsoap_compile_logs/fail_to_compile_liq_$1.log
+        mv ./liquidsoap-compile_logs/compile_liq_$1.log ./liquidsoap-compile_logs/fail_to_compile_liq_$1.log
     fi
 }  
 
-os_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_oneiric_32" "ubuntu_oneiric_64" "ubuntu_precise_32" "ubuntu_precise_64" "ubuntu_quantal_32" "ubuntu_quantal_64" "debian_squeeze_32" "debian_squeeze_64" "debian_wheezy_32" "debian_wheezy_64")
+os_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_precise_32" "ubuntu_precise_64" "ubuntu_quantal_32" "ubuntu_quantal_64" "ubuntu_raring_32" "ubuntu_raring_64" "debian_squeeze_32" "debian_squeeze_64" "debian_wheezy_32" "debian_wheezy_64")
 
 num=${#os_versions[@]}
 flag=
@@ -106,9 +106,9 @@ do
         b)
 	    if [ "$OPTARG" = "all" ];then
 	        echo "Building all platforms on server..."
-                for i in $(seq 0 $(($num -1)))
+                for i in $(seq 0 $(($num -1)));
                 do
-		    build_env ${os_versions[$i]} | tee ./liquidsoap_compile_logs/build_env_${os_versions[$i]}.log
+		    build_env ${os_versions[$i]} | tee ./liquidsoap-compile_logs/build_env_${os_versions[$i]}.log
 		done
 	    else
 	        flag=1
@@ -116,7 +116,7 @@ do
 		do
 		    if [ "$OPTARG" = ${os_versions[$i]} ];then
 		        echo "Building platform: $OPTARG ..."
-                        build_env ${os_versions[$i]} | tee ./liquidsoap_compile_logs/build_env_${os_versions[$i]}.log
+                        build_env ${os_versions[$i]} | tee ./liquidsoap-compile_logs/build_env_${os_versions[$i]}.log
                         flag=0
 		    fi
 		done
@@ -135,7 +135,7 @@ do
                  echo "Compiling liquidsoap for all platforms on server..."
                  for i in $(seq 0 $(($num -1)))
                  do
-                     compile_liq ${os_versions[$i]} | tee ./liquidsoap_compile_logs/compile_liq_${os_versions[$i]}.log
+                     compile_liq ${os_versions[$i]} | tee ./liquidsoap-compile_logs/compile_liq_${os_versions[$i]}.log
                  done
 
              else
@@ -144,7 +144,7 @@ do
                  do
                      if [ "$OPTARG" = ${os_versions[$i]} ];then
                          echo "Compiling liquidsoap for platform: $OPTARG ..."
-                         compile_liq ${os_versions[$i]} | tee ./liquidsoap_compile_logs/compile_liq_${os_versions[$i]}.log
+                         compile_liq ${os_versions[$i]} | tee ./liquidsoap-compile_logs/compile_liq_${os_versions[$i]}.log
                          flag=0
                      fi
                  done    
