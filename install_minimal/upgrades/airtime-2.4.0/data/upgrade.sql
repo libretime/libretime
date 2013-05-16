@@ -15,3 +15,5 @@ WHERE id IN (SELECT DISTINCT(file_id) FROM cc_playlistcontents);
 UPDATE cc_files
 SET is_playlist = true
 WHERE id IN (SELECT DISTINCT(file_id) FROM cc_blockcontents);
+
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('hu_HU', 'hʌŋɡəri');
