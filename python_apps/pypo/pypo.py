@@ -8,7 +8,6 @@ from Queue import Queue
 
 import time
 import sys
-import signal
 import logging
 import locale
 import os
@@ -16,7 +15,6 @@ import os
 from schedule.pypopush import PypoPush
 from schedule.pypofetch import PypoFetch
 from schedule.pypofile import PypoFile
-from schedule import pure
 from recorder.recorder import Recorder
 from schedule.listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
@@ -29,14 +27,7 @@ from media.update.silananalyzer import SilanAnalyzer
 from api_clients import api_client
 from std_err_override import LogWriter
 
-# configure logging
-try:
-    logging.config.fileConfig("configs/logging.cfg")
-    logger = logging.getLogger()
-    LogWriter.override_std_err(logger)
-except Exception, e:
-    print "Couldn't configure logging"
-    sys.exit(1)
+
 
 def configure_locale():
     """
@@ -77,23 +68,20 @@ def configure_locale():
     logger.debug("After %s", locale.nl_langinfo(locale.CODESET))
 
     if current_locale_encoding not in ['utf-8', 'utf8']:
-        logger.error("Need a UTF-8 locale. Currently '%s'. Exiting..." % \
+        logger.error("Need a UTF-8 locale. Currently '%s'. Exiting...", 
                 current_locale_encoding)
         sys.exit(1)
 
-class Global:
-    def __init__(self, api_client):
-        self.api_client = api_client
-
-    def selfcheck(self):
-        return self.api_client.is_server_compatible()
-
-def keyboardInterruptHandler(signum, frame):
-    logger = logging.getLogger()
-    logger.info('\nKeyboard Interrupt\n')
-    sys.exit(0)
-
 if __name__ == '__main__':
+    # configure logging
+    try:
+        logging.config.fileConfig("configs/logging.cfg")
+        logger = logging.getLogger()
+        LogWriter.override_std_err(logger)
+    except Exception, e:
+        print "Couldn't configure logging"
+        sys.exit(1)
+
     configure_locale()
 
     # loading config file
@@ -108,18 +96,15 @@ if __name__ == '__main__':
     logger.info('#   Liquidsoap Scheduled Playout System   #')
     logger.info('###########################################')
 
-    #Although all of our calculations are in UTC, it is useful to know what timezone
-    #the local machine is, so that we have a reference for what time the actual
-    #log entries were made
+    #Although all of our calculations are in UTC, it is useful to know what 
+    #timezone the local machine is, so that we have a reference for what time 
+    #the actual log entries were made
     logger.info("Timezone: %s" % str(time.tzname))
     logger.info("UTC time: %s" % str(datetime.utcnow()))
 
-    signal.signal(signal.SIGINT, keyboardInterruptHandler)
-
     api_client = api_client.AirtimeApiClient()
-    g = Global(api_client)
 
-    while not g.selfcheck():
+    while not self.api_client.is_server_compatible():
         time.sleep(5)
 
     success = False
