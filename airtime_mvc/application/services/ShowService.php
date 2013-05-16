@@ -569,6 +569,8 @@ SQL;
                 $this->deleteShowInstances($ccShowInstances, $ccShowInstance->getDbShowId());
             }
 
+            Application_Model_StoredFile::updatePastFilesIsScheduled();
+
             Application_Model_RabbitMq::PushSchedule();
 
             $con->commit();
