@@ -330,6 +330,7 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_GB', 'English (Brit
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English (USA)');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('cs_CZ', 'Český');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('hu_HU', 'hʌŋɡəri');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_AT', 'Österreichisches Deutsch');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
