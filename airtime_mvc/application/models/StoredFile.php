@@ -1323,7 +1323,7 @@ SQL;
     }
     
     public static function setIsScheduled($p_scheduleItem, $p_status,
-        $p_fileId=null, $instanceId=null) {
+        $p_fileId=null) {
 
         if (is_null($p_fileId)) {
             $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
@@ -1334,7 +1334,7 @@ SQL;
         $updateIsScheduled = false;
 
         if (!is_null($fileId) && !in_array($fileId,
-            Application_Model_Schedule::getAllFutureScheduledFiles($instanceId))) {
+            Application_Model_Schedule::getAllFutureScheduledFiles())) {
             $file->_file->setDbIsScheduled($p_status)->save();
             $updateIsScheduled = true;
         }
@@ -1344,26 +1344,25 @@ SQL;
 
     public static function updatePastFilesIsScheduled()
     {
-        /* Retrieve files that are scheduled in the past OR that belong
-         * to a show that has ended. We need to check if the show has
-         * ended incase a track is overbooked, since that alone will
-         * indicate the show is still scheduled in the future
+        /* Set the is_scheduled flag to false where it was true in the
+         * past, and where tracks are not scheduled in the future and do
+         * not belong to a show that has not ended yet. We need to check
+         * for show end times in case a track is overbooked, which would
+         * indicate it is still scheduled in the future
          */
         $sql = <<<SQL
-SELECT s.file_id, s.instance_id FROM cc_schedule AS s
-LEFT JOIN cc_show_instances AS i
-ON s.instance_id = i.id
-WHERE s.ends < now() at time zone 'UTC'
-OR i.ends < now() at time zone 'UTC'
+UPDATE cc_files SET is_scheduled = false
+WHERE is_scheduled = true
+AND id NOT IN (
+  SELECT s.file_id FROM cc_schedule AS s
+  LEFT JOIN cc_show_instances AS i
+  ON s.instance_id = i.id
+  WHERE s.ends > now() at time zone 'UTC'
+  AND i.ends > now() at time zone 'UTC'
+)
 SQL;
-        $files = Application_Common_Database::prepareAndExecute($sql);
-
-        foreach ($files as $file) {
-            if (!is_null($file['file_id'])) {
-                self::setIsScheduled(null, false, $file['file_id'], $file['instance_id']);
-            }
-        }
-
+        Application_Common_Database::prepareAndExecute($sql, array(),
+            Application_Common_Database::EXECUTE);
     }
 
     public function getRealClipLength($p_cuein, $p_cueout) {
