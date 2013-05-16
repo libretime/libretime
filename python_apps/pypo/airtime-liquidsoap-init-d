@@ -62,11 +62,16 @@ stop_with_monit() {
 
 case "${1:-''}" in
   'stop')
+           echo "* Stopping Liquidsoap without notifying Monit process watchdog. If Monit is 
+* running it will automatically bring the Liquidsoap back up. You probably want 
+* 'stop-with-monit' instead of 'stop'."
            echo -n "Stopping $NAME: "
            stop
            echo "Done."
         ;;
   'start')
+           echo "* Starting $NAME without Monit process watchdog. To make sure Monit is watching 
+* Liquidsoap, use 'start-with-monit' instead of 'start'."
            echo -n "Starting $NAME: "
            start
            echo "Done."
