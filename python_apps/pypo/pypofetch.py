@@ -11,6 +11,7 @@ import subprocess
 import signal
 from datetime import datetime
 import traceback
+import pure
 
 from Queue import Empty
 from threading import Thread
@@ -18,6 +19,7 @@ from subprocess import Popen, PIPE
 
 from api_clients import api_client
 from std_err_override import LogWriter
+
 
 # configure logging
 logging_cfg = os.path.join(os.path.dirname(__file__), "logging.cfg")
@@ -462,7 +464,7 @@ class PypoFetch(Thread):
         start = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
         end = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
 
-        length1 = (end - start).total_seconds()
+        length1 = pure.date_interval_to_seconds(end - start)
         length2 = media_item['cue_out'] - media_item['cue_in']
 
         if abs(length2 - length1) > 1:
