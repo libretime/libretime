@@ -18,13 +18,13 @@ import re
 from Queue import Queue
 from threading import Lock
 
-from pypopush import PypoPush
-from pypofetch import PypoFetch
-from pypofile import PypoFile
-from recorder import Recorder
-from listenerstat import ListenerStat
+from schedule.pypopush import PypoPush
+from schedule.pypofetch import PypoFetch
+from schedule.pypofile import PypoFile
+from recorder.recorder import Recorder
+from schedule.listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
-from pypoliquidsoap import PypoLiquidsoap
+from schedule.pypoliquidsoap import PypoLiquidsoap
 
 from media.update.replaygainupdater import ReplayGainUpdater
 from media.update.silananalyzer import SilanAnalyzer

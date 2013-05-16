@@ -68,7 +68,7 @@ try:
     current_script_dir = get_current_script_dir()
 
     if not os.path.exists(PATH_INI_FILE):
-        shutil.copy('%s/../pypo.cfg'%current_script_dir, PATH_INI_FILE)
+        shutil.copy('%s/pypo.cfg'%current_script_dir, PATH_INI_FILE)
 
     try:
         os.remove("/etc/airtime/liquidsoap.cfg")
@@ -95,13 +95,13 @@ try:
 
     monit_version = get_monit_version()
     if version_compare(monit_version, "5.3.0") >= 0:
-        shutil.copy('%s/../monit-airtime-liquidsoap.cfg' % current_script_dir, \
+        shutil.copy('%s/monit-airtime-liquidsoap.cfg' % current_script_dir, \
                     '/etc/monit/conf.d/monit-airtime-liquidsoap.cfg')
     else:
-        shutil.copy('%s/../monit-pre530-airtime-liquidsoap.cfg' % current_script_dir, \
+        shutil.copy('%s/monit-pre530-airtime-liquidsoap.cfg' % current_script_dir, \
                     '/etc/monit/conf.d/monit-airtime-liquidsoap.cfg')
 
-    shutil.copy('%s/../monit-airtime-playout.cfg'%current_script_dir, '/etc/monit/conf.d/')
+    shutil.copy('%s/monit-airtime-playout.cfg'%current_script_dir, '/etc/monit/conf.d/')
 
     #create pypo log dir
     create_dir(config['pypo_log_dir'])
@@ -132,8 +132,8 @@ try:
     os.system("chown -R pypo:pypo "+config["base_recorded_files"])
 
     #copy init.d script
-    shutil.copy(config["bin_dir"]+"/bin/airtime-playout-init-d", "/etc/init.d/airtime-playout")
-    shutil.copy(config["bin_dir"]+"/bin/airtime-liquidsoap-init-d", "/etc/init.d/airtime-liquidsoap")
+    shutil.copy(config["bin_dir"]+"/bin/install/airtime-playout-init-d", "/etc/init.d/airtime-playout")
+    shutil.copy(config["bin_dir"]+"/bin/install/airtime-liquidsoap-init-d", "/etc/init.d/airtime-liquidsoap")
 
     #copy log rotate script
     shutil.copy(config["bin_dir"]+"/bin/liquidsoap_scripts/airtime-liquidsoap.logrotate", "/etc/logrotate.d/airtime-liquidsoap")
