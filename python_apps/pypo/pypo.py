@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     api_client = api_client.AirtimeApiClient()
 
-    while not self.api_client.is_server_compatible():
+    while not api_client.is_server_compatible():
         time.sleep(5)
 
     success = False
