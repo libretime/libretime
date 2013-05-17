@@ -188,8 +188,8 @@ function setAddShowEvents() {
     });
 
     form.find("#add_show_linked").click(function(){
-        if (!$(this).attr("checked")) {
-            $(this).parent().after("<ul class='errors'><li>Warning: Shows cannot be re-linked</li></ul>");
+        if (!$(this).attr("checked") && $("#show-link-warning").length === 0) {
+            $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: Shows cannot be re-linked")+"</li></ul>");
         }
     });
     

@@ -191,6 +191,7 @@ class LocaleController extends Zend_Controller_Action
             "Specify custom authentication which will work only for this show." => _("Specify custom authentication which will work only for this show."),
             "If your live streaming client does not ask for a username, this field should be 'source'." => _("If your live streaming client does not ask for a username, this field should be 'source'."),
             "The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
+            "Warning: Shows cannot be re-linked" => _("Warning: Shows cannot be re-linked"),
             //schedule/full-calendar-functions
             //already in schedule/add-show.js
             //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-17 11:38-0400\n"
-"PO-Revision-Date: 2013-05-17 11:40-0500\n"
+"POT-Creation-Date: 2013-05-17 14:42-0400\n"
+"PO-Revision-Date: 2013-05-17 14:44-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: Canadian Localization <contact@sourcefabric.org>\n"
 "Language: en_CA\n"
@@ -42,7 +42,7 @@ msgid "Show Content"
 msgstr "Show Content"
 
 #: airtime_mvc/application/services/CalendarService.php:85
-#: airtime_mvc/application/controllers/LocaleController.php:308
+#: airtime_mvc/application/controllers/LocaleController.php:309
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
 msgstr "Add / Remove Content"
@@ -178,8 +178,8 @@ msgid "Support Feedback"
 msgstr "Support Feedback"
 
 #: airtime_mvc/application/configs/navigation.php:76
-#: airtime_mvc/application/controllers/LocaleController.php:368
 #: airtime_mvc/application/controllers/LocaleController.php:369
+#: airtime_mvc/application/controllers/LocaleController.php:370
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:8
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
 msgid "Status"
@@ -238,7 +238,7 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:46
 #: airtime_mvc/application/models/Block.php:1330
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
-#: airtime_mvc/application/controllers/LocaleController.php:277
+#: airtime_mvc/application/controllers/LocaleController.php:278
 msgid "Cue In"
 msgstr "Cue In"
 
@@ -249,7 +249,7 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:53
 #: airtime_mvc/application/models/Block.php:1331
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
-#: airtime_mvc/application/controllers/LocaleController.php:278
+#: airtime_mvc/application/controllers/LocaleController.php:279
 msgid "Cue Out"
 msgstr "Cue Out"
 
@@ -262,12 +262,12 @@ msgid "Cursor"
 msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:71
-#: airtime_mvc/application/controllers/LocaleController.php:279
+#: airtime_mvc/application/controllers/LocaleController.php:280
 msgid "Fade In"
 msgstr "Fade In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:72
-#: airtime_mvc/application/controllers/LocaleController.php:280
+#: airtime_mvc/application/controllers/LocaleController.php:281
 msgid "Fade Out"
 msgstr "Fade Out"
 
@@ -752,7 +752,7 @@ msgstr "Station Logo:"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:112
-#: airtime_mvc/application/controllers/LocaleController.php:337
+#: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Send support feedback"
 msgstr "Send support feedback"
 
@@ -1001,29 +1001,29 @@ msgid "User Type:"
 msgstr "User Type:"
 
 #: airtime_mvc/application/forms/AddUser.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:320
+#: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Guest"
 msgstr "Guest"
 
 #: airtime_mvc/application/forms/AddUser.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:318
+#: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "DJ"
 msgstr "DJ"
 
 #: airtime_mvc/application/forms/AddUser.php:94
-#: airtime_mvc/application/controllers/LocaleController.php:319
+#: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "Program Manager"
 msgstr "Program Manager"
 
 #: airtime_mvc/application/forms/AddUser.php:95
-#: airtime_mvc/application/controllers/LocaleController.php:317
+#: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "Admin"
 msgstr "Admin"
 
 #: airtime_mvc/application/forms/AddUser.php:103
 #: airtime_mvc/application/forms/SupportSettings.php:158
 #: airtime_mvc/application/forms/EditAudioMD.php:134
-#: airtime_mvc/application/controllers/LocaleController.php:290
+#: airtime_mvc/application/controllers/LocaleController.php:291
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:27
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:24
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:16
@@ -1148,37 +1148,37 @@ msgid "Select Days:"
 msgstr "Select Days:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:33
-#: airtime_mvc/application/controllers/LocaleController.php:252
+#: airtime_mvc/application/controllers/LocaleController.php:253
 msgid "Sun"
 msgstr "Sun"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:34
-#: airtime_mvc/application/controllers/LocaleController.php:253
+#: airtime_mvc/application/controllers/LocaleController.php:254
 msgid "Mon"
 msgstr "Mon"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
-#: airtime_mvc/application/controllers/LocaleController.php:254
+#: airtime_mvc/application/controllers/LocaleController.php:255
 msgid "Tue"
 msgstr "Tue"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
-#: airtime_mvc/application/controllers/LocaleController.php:255
+#: airtime_mvc/application/controllers/LocaleController.php:256
 msgid "Wed"
 msgstr "Wed"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
-#: airtime_mvc/application/controllers/LocaleController.php:256
+#: airtime_mvc/application/controllers/LocaleController.php:257
 msgid "Thu"
 msgstr "Thu"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
-#: airtime_mvc/application/controllers/LocaleController.php:257
+#: airtime_mvc/application/controllers/LocaleController.php:258
 msgid "Fri"
 msgstr "Fri"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
-#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:259
 msgid "Sat"
 msgstr "Sat"
 
@@ -1287,8 +1287,8 @@ msgstr "Restore password"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 #: airtime_mvc/application/forms/EditAudioMD.php:144
-#: airtime_mvc/application/controllers/LocaleController.php:291
-#: airtime_mvc/application/controllers/LocaleController.php:314
+#: airtime_mvc/application/controllers/LocaleController.php:292
+#: airtime_mvc/application/controllers/LocaleController.php:315
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -1646,37 +1646,37 @@ msgid "Week Starts On"
 msgstr "Week Starts On"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
-#: airtime_mvc/application/controllers/LocaleController.php:245
+#: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "Sunday"
 msgstr "Sunday"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:124
-#: airtime_mvc/application/controllers/LocaleController.php:246
+#: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Monday"
 msgstr "Monday"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
-#: airtime_mvc/application/controllers/LocaleController.php:247
+#: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Tuesday"
 msgstr "Tuesday"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-#: airtime_mvc/application/controllers/LocaleController.php:248
+#: airtime_mvc/application/controllers/LocaleController.php:249
 msgid "Wednesday"
 msgstr "Wednesday"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
-#: airtime_mvc/application/controllers/LocaleController.php:249
+#: airtime_mvc/application/controllers/LocaleController.php:250
 msgid "Thursday"
 msgstr "Thursday"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:250
+#: airtime_mvc/application/controllers/LocaleController.php:251
 msgid "Friday"
 msgstr "Friday"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
-#: airtime_mvc/application/controllers/LocaleController.php:251
+#: airtime_mvc/application/controllers/LocaleController.php:252
 msgid "Saturday"
 msgstr "Saturday"
 
@@ -2023,7 +2023,7 @@ msgid "Are you sure you want to delete the selected item?"
 msgstr "Are you sure you want to delete the selected item?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:99
-#: airtime_mvc/application/controllers/LocaleController.php:205
+#: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "Uploading in progress..."
 msgstr "Uploading in progress..."
 
@@ -2264,521 +2264,525 @@ msgstr "Specify custom authentication which will work only for this show."
 msgid "The show instance doesn't exist anymore!"
 msgstr "The show instance doesn't exist anymore!"
 
-#: airtime_mvc/application/controllers/LocaleController.php:197
+#: airtime_mvc/application/controllers/LocaleController.php:194
+msgid "Warning: Shows cannot be re-linked"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:198
 msgid "Show"
 msgstr "Show"
 
-#: airtime_mvc/application/controllers/LocaleController.php:198
+#: airtime_mvc/application/controllers/LocaleController.php:199
 msgid "Show is empty"
 msgstr "Show is empty"
 
-#: airtime_mvc/application/controllers/LocaleController.php:199
+#: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "1m"
 msgstr "1m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:200
+#: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "5m"
 msgstr "5m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:201
+#: airtime_mvc/application/controllers/LocaleController.php:202
 msgid "10m"
 msgstr "10m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:202
+#: airtime_mvc/application/controllers/LocaleController.php:203
 msgid "15m"
 msgstr "15m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:203
+#: airtime_mvc/application/controllers/LocaleController.php:204
 msgid "30m"
 msgstr "30m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:204
+#: airtime_mvc/application/controllers/LocaleController.php:205
 msgid "60m"
 msgstr "60m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:206
+#: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "Retreiving data from the server..."
 msgstr "Retrieving data from the server..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:212
+#: airtime_mvc/application/controllers/LocaleController.php:213
 msgid "This show has no scheduled content."
 msgstr "This show has no scheduled content."
 
-#: airtime_mvc/application/controllers/LocaleController.php:213
+#: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "This show is not completely filled with content."
 msgstr "This show is not completely filled with content."
 
-#: airtime_mvc/application/controllers/LocaleController.php:217
+#: airtime_mvc/application/controllers/LocaleController.php:218
 msgid "January"
 msgstr "January"
 
-#: airtime_mvc/application/controllers/LocaleController.php:218
+#: airtime_mvc/application/controllers/LocaleController.php:219
 msgid "February"
 msgstr "February"
 
-#: airtime_mvc/application/controllers/LocaleController.php:219
+#: airtime_mvc/application/controllers/LocaleController.php:220
 msgid "March"
 msgstr "March"
 
-#: airtime_mvc/application/controllers/LocaleController.php:220
+#: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "April"
 msgstr "April"
 
-#: airtime_mvc/application/controllers/LocaleController.php:221
-#: airtime_mvc/application/controllers/LocaleController.php:233
+#: airtime_mvc/application/controllers/LocaleController.php:222
+#: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "May"
 msgstr "May"
 
-#: airtime_mvc/application/controllers/LocaleController.php:222
+#: airtime_mvc/application/controllers/LocaleController.php:223
 msgid "June"
 msgstr "June"
 
-#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:224
 msgid "July"
 msgstr "July"
 
-#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:225
 msgid "August"
 msgstr "August"
 
-#: airtime_mvc/application/controllers/LocaleController.php:225
+#: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "September"
 msgstr "September"
 
-#: airtime_mvc/application/controllers/LocaleController.php:226
+#: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "October"
 msgstr "October"
 
-#: airtime_mvc/application/controllers/LocaleController.php:227
+#: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "November"
 msgstr "November"
 
-#: airtime_mvc/application/controllers/LocaleController.php:228
+#: airtime_mvc/application/controllers/LocaleController.php:229
 msgid "December"
 msgstr "December"
 
-#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "Jan"
 msgstr "Jan"
 
-#: airtime_mvc/application/controllers/LocaleController.php:230
+#: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "Feb"
 msgstr "Feb"
 
-#: airtime_mvc/application/controllers/LocaleController.php:231
+#: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "Mar"
 msgstr "Mar"
 
-#: airtime_mvc/application/controllers/LocaleController.php:232
+#: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "Apr"
 msgstr "Apr"
 
-#: airtime_mvc/application/controllers/LocaleController.php:234
+#: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "Jun"
 msgstr "Jun"
 
-#: airtime_mvc/application/controllers/LocaleController.php:235
+#: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "Jul"
 msgstr "Jul"
 
-#: airtime_mvc/application/controllers/LocaleController.php:236
+#: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "Aug"
 msgstr "Aug"
 
-#: airtime_mvc/application/controllers/LocaleController.php:237
+#: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Sep"
 msgstr "Sep"
 
-#: airtime_mvc/application/controllers/LocaleController.php:238
+#: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Oct"
 msgstr "Oct"
 
-#: airtime_mvc/application/controllers/LocaleController.php:239
+#: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Nov"
 msgstr "Nov"
 
-#: airtime_mvc/application/controllers/LocaleController.php:240
+#: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Dec"
 msgstr "Dec"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
+#: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "today"
 msgstr "today"
 
-#: airtime_mvc/application/controllers/LocaleController.php:242
+#: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "day"
 msgstr "day"
 
-#: airtime_mvc/application/controllers/LocaleController.php:243
+#: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "week"
 msgstr "week"
 
-#: airtime_mvc/application/controllers/LocaleController.php:244
+#: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "month"
 msgstr "month"
 
-#: airtime_mvc/application/controllers/LocaleController.php:259
+#: airtime_mvc/application/controllers/LocaleController.php:260
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "Shows longer than their scheduled time will be cut off by a following show."
 
-#: airtime_mvc/application/controllers/LocaleController.php:260
+#: airtime_mvc/application/controllers/LocaleController.php:261
 msgid "Cancel Current Show?"
 msgstr "Cancel Current Show?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:261
-#: airtime_mvc/application/controllers/LocaleController.php:305
+#: airtime_mvc/application/controllers/LocaleController.php:262
+#: airtime_mvc/application/controllers/LocaleController.php:306
 msgid "Stop recording current show?"
 msgstr "Stop recording current show?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:262
+#: airtime_mvc/application/controllers/LocaleController.php:263
 msgid "Ok"
 msgstr "Ok"
 
-#: airtime_mvc/application/controllers/LocaleController.php:263
+#: airtime_mvc/application/controllers/LocaleController.php:264
 msgid "Contents of Show"
 msgstr "Contents of Show"
 
-#: airtime_mvc/application/controllers/LocaleController.php:266
+#: airtime_mvc/application/controllers/LocaleController.php:267
 msgid "Remove all content?"
 msgstr "Remove all content?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:268
+#: airtime_mvc/application/controllers/LocaleController.php:269
 msgid "Delete selected item(s)?"
 msgstr "Delete selected item(s)?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:269
+#: airtime_mvc/application/controllers/LocaleController.php:270
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
 msgstr "Start"
 
-#: airtime_mvc/application/controllers/LocaleController.php:270
+#: airtime_mvc/application/controllers/LocaleController.php:271
 msgid "End"
 msgstr "End"
 
-#: airtime_mvc/application/controllers/LocaleController.php:271
+#: airtime_mvc/application/controllers/LocaleController.php:272
 msgid "Duration"
 msgstr "Duration"
 
-#: airtime_mvc/application/controllers/LocaleController.php:281
+#: airtime_mvc/application/controllers/LocaleController.php:282
 msgid "Show Empty"
 msgstr "Show Empty"
 
-#: airtime_mvc/application/controllers/LocaleController.php:282
+#: airtime_mvc/application/controllers/LocaleController.php:283
 msgid "Recording From Line In"
 msgstr "Recording From Line In"
 
-#: airtime_mvc/application/controllers/LocaleController.php:283
+#: airtime_mvc/application/controllers/LocaleController.php:284
 msgid "Track preview"
 msgstr "Track preview"
 
-#: airtime_mvc/application/controllers/LocaleController.php:287
+#: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Cannot schedule outside a show."
 msgstr "Cannot schedule outside a show."
 
-#: airtime_mvc/application/controllers/LocaleController.php:288
+#: airtime_mvc/application/controllers/LocaleController.php:289
 msgid "Moving 1 Item"
 msgstr "Moving 1 Item"
 
-#: airtime_mvc/application/controllers/LocaleController.php:289
+#: airtime_mvc/application/controllers/LocaleController.php:290
 #, php-format
 msgid "Moving %s Items"
 msgstr "Moving %s Items"
 
-#: airtime_mvc/application/controllers/LocaleController.php:292
+#: airtime_mvc/application/controllers/LocaleController.php:293
 msgid "Fade Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Cue Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:294
+#: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:297
+#: airtime_mvc/application/controllers/LocaleController.php:298
 msgid "Select all"
 msgstr "Select all"
 
-#: airtime_mvc/application/controllers/LocaleController.php:298
+#: airtime_mvc/application/controllers/LocaleController.php:299
 msgid "Select none"
 msgstr "Select none"
 
-#: airtime_mvc/application/controllers/LocaleController.php:299
+#: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Remove overbooked tracks"
 msgstr "Remove overbooked tracks"
 
-#: airtime_mvc/application/controllers/LocaleController.php:300
+#: airtime_mvc/application/controllers/LocaleController.php:301
 msgid "Remove selected scheduled items"
 msgstr "Remove selected scheduled items"
 
-#: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/controllers/LocaleController.php:302
 msgid "Jump to the current playing track"
 msgstr "Jump to the current playing track"
 
-#: airtime_mvc/application/controllers/LocaleController.php:302
+#: airtime_mvc/application/controllers/LocaleController.php:303
 msgid "Cancel current show"
 msgstr "Cancel current show"
 
-#: airtime_mvc/application/controllers/LocaleController.php:307
+#: airtime_mvc/application/controllers/LocaleController.php:308
 msgid "Open library to add or remove content"
 msgstr "Open library to add or remove content"
 
-#: airtime_mvc/application/controllers/LocaleController.php:310
+#: airtime_mvc/application/controllers/LocaleController.php:311
 msgid "in use"
 msgstr "in use"
 
-#: airtime_mvc/application/controllers/LocaleController.php:311
+#: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "Disk"
 msgstr "Disk"
 
-#: airtime_mvc/application/controllers/LocaleController.php:313
+#: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Look in"
 msgstr "Look in"
 
-#: airtime_mvc/application/controllers/LocaleController.php:315
+#: airtime_mvc/application/controllers/LocaleController.php:316
 msgid "Open"
 msgstr "Open"
 
-#: airtime_mvc/application/controllers/LocaleController.php:321
+#: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Guests can do the following:"
 msgstr "Guests can do the following:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:322
+#: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "View schedule"
 msgstr "View schedule"
 
-#: airtime_mvc/application/controllers/LocaleController.php:323
+#: airtime_mvc/application/controllers/LocaleController.php:324
 msgid "View show content"
 msgstr "View show content"
 
-#: airtime_mvc/application/controllers/LocaleController.php:324
+#: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "DJs can do the following:"
 msgstr "DJs can do the following:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:325
+#: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "Manage assigned show content"
 msgstr "Manage assigned show content"
 
-#: airtime_mvc/application/controllers/LocaleController.php:326
+#: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Import media files"
 msgstr "Import media files"
 
-#: airtime_mvc/application/controllers/LocaleController.php:327
+#: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Create playlists, smart blocks, and webstreams"
 msgstr "Create playlists, smart blocks, and webstreams"
 
-#: airtime_mvc/application/controllers/LocaleController.php:328
+#: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Manage their own library content"
 msgstr "Manage their own library content"
 
-#: airtime_mvc/application/controllers/LocaleController.php:329
+#: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Progam Managers can do the following:"
 msgstr "Progam Managers can do the following:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:330
+#: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "View and manage show content"
 msgstr "View and manage show content"
 
-#: airtime_mvc/application/controllers/LocaleController.php:331
+#: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "Schedule shows"
 msgstr "Schedule shows"
 
-#: airtime_mvc/application/controllers/LocaleController.php:332
+#: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "Manage all library content"
 msgstr "Manage all library content"
 
-#: airtime_mvc/application/controllers/LocaleController.php:333
+#: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Admins can do the following:"
 msgstr "Admins can do the following:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:334
+#: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Manage preferences"
 msgstr "Manage preferences"
 
-#: airtime_mvc/application/controllers/LocaleController.php:335
+#: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "Manage users"
 msgstr "Manage users"
 
-#: airtime_mvc/application/controllers/LocaleController.php:336
+#: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "Manage watched folders"
 msgstr "Manage watched folders"
 
-#: airtime_mvc/application/controllers/LocaleController.php:338
+#: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "View system status"
 msgstr "View system status"
 
-#: airtime_mvc/application/controllers/LocaleController.php:339
+#: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "Access playout history"
 msgstr "Access playout history"
 
-#: airtime_mvc/application/controllers/LocaleController.php:340
+#: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "View listener stats"
 msgstr "View listener stats"
 
-#: airtime_mvc/application/controllers/LocaleController.php:342
+#: airtime_mvc/application/controllers/LocaleController.php:343
 msgid "Show / hide columns"
 msgstr "Show / hide columns"
 
-#: airtime_mvc/application/controllers/LocaleController.php:344
+#: airtime_mvc/application/controllers/LocaleController.php:345
 msgid "From {from} to {to}"
 msgstr "From {from} to {to}"
 
-#: airtime_mvc/application/controllers/LocaleController.php:345
+#: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "kbps"
 msgstr "kbps"
 
-#: airtime_mvc/application/controllers/LocaleController.php:346
+#: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "yyyy-mm-dd"
 msgstr "yyyy-mm-dd"
 
-#: airtime_mvc/application/controllers/LocaleController.php:347
+#: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "hh:mm:ss.t"
 msgstr "hh:mm:ss.t"
 
-#: airtime_mvc/application/controllers/LocaleController.php:348
+#: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "kHz"
 msgstr "kHz"
 
-#: airtime_mvc/application/controllers/LocaleController.php:351
+#: airtime_mvc/application/controllers/LocaleController.php:352
 msgid "Su"
 msgstr "Su"
 
-#: airtime_mvc/application/controllers/LocaleController.php:352
+#: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "Mo"
 msgstr "Mo"
 
-#: airtime_mvc/application/controllers/LocaleController.php:353
+#: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Tu"
 msgstr "Tu"
 
-#: airtime_mvc/application/controllers/LocaleController.php:354
+#: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "We"
 msgstr "We"
 
-#: airtime_mvc/application/controllers/LocaleController.php:355
+#: airtime_mvc/application/controllers/LocaleController.php:356
 msgid "Th"
 msgstr "Th"
 
-#: airtime_mvc/application/controllers/LocaleController.php:356
+#: airtime_mvc/application/controllers/LocaleController.php:357
 msgid "Fr"
 msgstr "Fr"
 
-#: airtime_mvc/application/controllers/LocaleController.php:357
+#: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Sa"
 msgstr "Sa"
 
-#: airtime_mvc/application/controllers/LocaleController.php:358
-#: airtime_mvc/application/controllers/LocaleController.php:386
+#: airtime_mvc/application/controllers/LocaleController.php:359
+#: airtime_mvc/application/controllers/LocaleController.php:387
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
 msgstr "Close"
 
-#: airtime_mvc/application/controllers/LocaleController.php:360
+#: airtime_mvc/application/controllers/LocaleController.php:361
 msgid "Hour"
 msgstr "Hour"
 
-#: airtime_mvc/application/controllers/LocaleController.php:361
+#: airtime_mvc/application/controllers/LocaleController.php:362
 msgid "Minute"
 msgstr "Minute"
 
-#: airtime_mvc/application/controllers/LocaleController.php:362
+#: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Done"
 msgstr "Done"
 
-#: airtime_mvc/application/controllers/LocaleController.php:365
+#: airtime_mvc/application/controllers/LocaleController.php:366
 msgid "Select files"
 msgstr "Select files"
 
-#: airtime_mvc/application/controllers/LocaleController.php:366
 #: airtime_mvc/application/controllers/LocaleController.php:367
+#: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Add files to the upload queue and click the start button."
 msgstr "Add files to the upload queue and click the start button."
 
-#: airtime_mvc/application/controllers/LocaleController.php:370
+#: airtime_mvc/application/controllers/LocaleController.php:371
 msgid "Add Files"
 msgstr "Add Files"
 
-#: airtime_mvc/application/controllers/LocaleController.php:371
+#: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Stop Upload"
 msgstr "Stop Upload"
 
-#: airtime_mvc/application/controllers/LocaleController.php:372
+#: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "Start upload"
 msgstr "Start upload"
 
-#: airtime_mvc/application/controllers/LocaleController.php:373
+#: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Add files"
 msgstr "Add files"
 
-#: airtime_mvc/application/controllers/LocaleController.php:374
+#: airtime_mvc/application/controllers/LocaleController.php:375
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "Uploaded %d/%d files"
 
-#: airtime_mvc/application/controllers/LocaleController.php:375
+#: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "N/A"
 msgstr "N/A"
 
-#: airtime_mvc/application/controllers/LocaleController.php:376
+#: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "Drag files here."
 msgstr "Drag files here."
 
-#: airtime_mvc/application/controllers/LocaleController.php:377
+#: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "File extension error."
 msgstr "File extension error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:378
+#: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "File size error."
 msgstr "File size error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:379
+#: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "File count error."
 msgstr "File count error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:380
+#: airtime_mvc/application/controllers/LocaleController.php:381
 msgid "Init error."
 msgstr "Init error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:381
+#: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "HTTP Error."
 msgstr "HTTP Error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:382
+#: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "Security error."
 msgstr "Security error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:383
+#: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "Generic error."
 msgstr "Generic error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:384
+#: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "IO error."
 msgstr "IO error."
 
-#: airtime_mvc/application/controllers/LocaleController.php:385
+#: airtime_mvc/application/controllers/LocaleController.php:386
 #, php-format
 msgid "File: %s"
 msgstr "File: %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:387
+#: airtime_mvc/application/controllers/LocaleController.php:388
 #, php-format
 msgid "%d files queued"
 msgstr "%d files queued"
 
-#: airtime_mvc/application/controllers/LocaleController.php:388
+#: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "File: %f, size: %s, max file size: %m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:389
+#: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "Upload URL might be wrong or doesn't exist"
 
-#: airtime_mvc/application/controllers/LocaleController.php:390
+#: airtime_mvc/application/controllers/LocaleController.php:391
 msgid "Error: File too large: "
 msgstr "Error: File too large: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:391
+#: airtime_mvc/application/controllers/LocaleController.php:392
 msgid "Error: Invalid file extension: "
 msgstr "Error: Invalid file extension: "
 
