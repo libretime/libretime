@@ -174,7 +174,7 @@ def liquidsoap_get_info(telnet_lock, host, port, logger):
     return get_liquidsoap_version(response)
 
 def get_liquidsoap_version(version_string):
-    m = re.match(r"Liquidsoap (\d+.\d+.\d+)", "Liquidsoap 1.1.1")
+    m = re.match(r"Liquidsoap (\d+.\d+.\d+)", version_string)
 
     if m:
         return m.group(1)
