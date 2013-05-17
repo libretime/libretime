@@ -240,7 +240,7 @@ class PypoLiquidsoap():
         self.telnet_liquidsoap.queue_clear_all()
 
     def get_liquidsoap_version(self, version_string):
-        m = re.match(r"Liquidsoap (\d+.\d+.\d+)", "Liquidsoap 1.1.1")
+        m = re.match(r"Liquidsoap (\d+.\d+.\d+)", version_string)
         if m:
             return m.group(1)
         else:
