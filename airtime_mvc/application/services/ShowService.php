@@ -878,10 +878,13 @@ SQL;
             /*
              * Make sure start date is less than populate until date AND
              * last show date is null OR start date is less than last show date
+             * 
+             * (NOTE: We cannot call getTimestamp() to compare the dates because of
+             * a PHP 5.3.3 bug with DatePeriod objects - See CC-5159 for more details)
              */
-            if ($utcStartDateTime->getTimestamp() <= $populateUntil->getTimestamp() &&
+            if ($utcStartDateTime->format("Y-m-d H:i:s") <= $populateUntil->format("Y-m-d H:i:s") &&
                ( is_null($utcLastShowDateTime) ||
-                 $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
+                 $utcStartDateTime->format("Y-m-d H:i:s") < $utcLastShowDateTime->format("Y-m-d H:i:s")) ) {
 
                 /* There may not always be an instance when editing a show
                  * This will be the case when we are adding a new show day to
