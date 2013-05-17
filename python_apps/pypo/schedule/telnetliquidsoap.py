@@ -36,7 +36,7 @@ class TelnetLiquidsoap:
         self.current_prebuffering_stream_id = None
 
     def __connect(self):
-        return self.__connect()
+        return telnetlib.Telnet(self.ls_host, self.ls_port)
 
     def __is_empty(self, queue_id):
         tn = self.__connect()
