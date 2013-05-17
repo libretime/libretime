@@ -29,24 +29,6 @@ WHERE ends > now() AT TIME ZONE 'UTC'
 AND file_id is not null
 SQL;
 
-        /* If an instance id gets passed into this function we need to check
-         * if it is a repeating show. If it is a repeating show, we need to
-         * check for any files scheduled in the future in the linked instances
-         * as well
-         */
-        if (!is_null($instanceId)) {
-            $excludeIds = array();
-            $ccShow = CcShowInstancesQuery::create()
-                ->findPk($instanceId)
-                ->getCcShow();
-            if ($ccShow->isLinked()) {
-                foreach ($ccShow->getOtherInstances($instanceId) as $instance) {
-                    $excludeIds[] = $instance->getDbId();
-                }
-                $sql .= " AND instance_id IN (".implode(",", $excludeIds).")";
-            }
-        }
-
         $files = Application_Common_Database::prepareAndExecute( $sql, array());
         
         $real_files = array();

@@ -194,7 +194,7 @@ class CcShow extends BaseCcShow {
     {
         return CcShowInstancesQuery::create()
             ->filterByCcShow($this)
-            ->filterByDbId($instanceId, Criteria::NOT_IN)
+            ->filterByDbId($instanceId, Criteria::NOT_EQUAL)
             ->find();
     }
 } // CcShow

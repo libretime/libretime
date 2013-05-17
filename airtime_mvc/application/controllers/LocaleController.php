@@ -62,7 +62,7 @@ class LocaleController extends Zend_Controller_Action
             "Deselect all" => _("Deselect all"),
             "Are you sure you want to delete the selected item(s)?" => _("Are you sure you want to delete the selected item(s)?"),
             "Scheduled" => _("Scheduled"),
-            "Playlist" => _("Playlist"),
+            "Playlist" => _("Playlist / Block"),
             "Title" => _("Title"),
             "Creator" => _("Creator"),
             "Album" => _("Album"),
