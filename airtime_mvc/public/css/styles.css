@@ -2006,6 +2006,14 @@ span.errors.sp-errors{
 .small-icon.show-partial-filled, .small-icon.media-item-in-use {
     background:url(images/icon_alert_cal_alt2.png) no-repeat 0 0;
 }
+.small-icon.is_scheduled {
+    background:url(images/is_scheduled.png) no-repeat 0 0;
+    height: 16px !important;
+}
+.small-icon.is_playlist {
+    background:url(images/is_playlist.png) no-repeat 0 0;
+    height: 16px !important;
+}
 .medium-icon {
 	display:block;
 	width:25px;

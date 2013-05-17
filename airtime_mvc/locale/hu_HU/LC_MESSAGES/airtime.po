@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-16 12:46-0400\n"
-"PO-Revision-Date: 2013-05-16 12:46-0500\n"
+"POT-Creation-Date: 2013-05-17 11:38-0400\n"
+"PO-Revision-Date: 2013-05-17 11:38-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: Hungarian Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -1977,7 +1977,7 @@ msgid "Scheduled"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
-msgid "Playlist"
+msgid "Playlist / Block"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:69
