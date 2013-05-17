@@ -510,7 +510,6 @@ class PypoFetch(Thread):
                 Currently we are checking every POLL_INTERVAL seconds.
                 """
 
-
                 message = self.fetch_queue.get(block=True, 
                         timeout=self.listener_timeout)
                 self.handle_message(message)
