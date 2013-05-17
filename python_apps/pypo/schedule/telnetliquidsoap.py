@@ -38,8 +38,15 @@ class TelnetLiquidsoap:
     def __connect(self):
         return self.__connect()
 
-    def __is_empty(self, tn, queue_id):
-        return True
+    def __is_empty(self, queue_id):
+        tn = self.__connect()
+        msg = '%s.queue\nexit\n' % queue_id
+        tn.write(msg)
+        output = tn.read_all().splitlines()
+        if len(output) == 3:
+            return len(output[0]) == 0
+        else:
+            raise Exception("Unexpected list length returned: %s" % output)
 
     def queue_clear_all(self):
         with self.telnet_lock:
@@ -66,10 +73,11 @@ class TelnetLiquidsoap:
 
     def queue_push(self, queue_id, media_item):
         with self.telnet_lock:
-            tn = self.__connect()
 
-            if not self.__is_empty(tn, queue_id):
+            if not self.__is_empty(queue_id):
                 raise QueueNotEmptyException()
+
+            tn = self.__connect()
 
             annotation = create_liquidsoap_annotation(media_item)
             msg = '%s.push %s\n' % (queue_id, annotation.encode('utf-8'))
