@@ -206,7 +206,7 @@ class PypoFetch(Thread):
 
         #Wait here and poll Liquidsoap until it has started up
         self.logger.info("Waiting for Liquidsoap to start")
-        self.telnetliquidsoap.liquidsoap_startup_test()
+        self.pypo_liquidsoap.liquidsoap_startup_test()
 
         try:
             self.set_bootstrap_variables()
@@ -320,7 +320,7 @@ class PypoFetch(Thread):
         This function updates the bootup time variable in Liquidsoap script
         """
 
-        output = self.telnetliquidsoap.\
+        output = self.pypo_liquidsoap.\
                 get_telnet_dispatcher().\
                 get_liquidsoap_connection_status(time.time())
 
@@ -340,13 +340,6 @@ class PypoFetch(Thread):
             if(status == "true"):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, 
                         str(fake_time))
-
-
-
-
-
-
-
 
     """
     Process the schedule
