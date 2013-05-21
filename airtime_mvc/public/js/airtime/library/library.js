@@ -413,7 +413,7 @@ var AIRTIME = (function(AIRTIME) {
                     
                     if (ele.bVisible) {
                         advanceSearchDiv.append(
-                            "<div id='advanced_search_col_"+currentColId+" class='control-group'>" +
+                            "<div id='advanced_search_col_"+currentColId+"' class='control-group'>" +
                                 "<label class='control-label'"+labelStyle+">"+ele.sTitle+" : </label>" +
                                 "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
                             "</div>");
@@ -447,14 +447,14 @@ var AIRTIME = (function(AIRTIME) {
         function setFilterElement(iColumn, bVisible){
             var actualId = colReorderMap[iColumn];
             var selector = "div#advanced_search_col_"+actualId;
+            var $el = $(selector);
+            
             if (bVisible) {
-                $(selector).show();
+                $el.show();
             } else {
-                $(selector).hide();
+                $el.hide();
             }
         }
-        
-        var currentColOrder = new Array();
         
         oTable = $libTable.dataTable( {
             
@@ -764,7 +764,8 @@ var AIRTIME = (function(AIRTIME) {
                 "sAlign": "right",
                 "aiExclude": [0, 1, 2],
                 "sSize": "css",
-                "fnStateChange": setFilterElement
+                "fnStateChange": setFilterElement,
+                "buttonText": $.i18n._("Show / hide columns")
             },
             
             "oColReorder": {
