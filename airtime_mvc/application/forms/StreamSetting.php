@@ -17,28 +17,6 @@ class Application_Form_StreamSetting extends Zend_Form
     public function startFrom()
     {
         $setting = $this->setting;
-        if (Application_Model_Preference::GetPlanLevel() == 'disabled') {
-            $output_sound_device = new Zend_Form_Element_Checkbox('output_sound_device');
-            $output_sound_device->setLabel(_('Hardware Audio Output'))
-                                ->setRequired(false)
-                                ->setValue(($setting['output_sound_device'] == "true")?1:0)
-                                ->setDecorators(array('ViewHelper'));
-            if (Application_Model_Preference::GetEnableStreamConf() == "false") {
-                $output_sound_device->setAttrib("readonly", true);
-            }
-            $this->addElement($output_sound_device);
-
-            $output_types = array("ALSA"=>"ALSA", "AO"=>"AO", "OSS"=>"OSS", "Portaudio"=>"Portaudio", "Pulseaudio"=>"Pulseaudio");
-            $output_type = new Zend_Form_Element_Select('output_sound_device_type');
-            $output_type->setLabel(_("Output Type"))
-                    ->setMultiOptions($output_types)
-                    ->setValue($setting['output_sound_device_type'])
-                    ->setDecorators(array('ViewHelper'));
-            if ($setting['output_sound_device'] != "true") {
-                $output_type->setAttrib("disabled", "disabled");
-            }
-            $this->addElement($output_type);
-        }
 
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
         $icecast_vorbis_metadata->setLabel(_('Icecast Vorbis Metadata'))

@@ -477,7 +477,7 @@ class ScheduleController extends Zend_Controller_Action
             if (!$validateStartTime) {
                 $this->view->when->getElement('add_show_start_time')->setOptions(array('disabled' => true));
             }
-            $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
+            //$this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
             $this->view->addNewShow = false;
             $this->view->action = "edit-show";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');

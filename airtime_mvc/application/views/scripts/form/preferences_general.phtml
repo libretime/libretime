@@ -54,12 +54,17 @@
             <?php endif; ?>
         </dd>
         <dt id="thirdPartyApi-label" class="block-display">
-            <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
+            <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?>
+                <span class="icecast_metadata_help_icon" id="thirdPartyApiInfo"></span>           
+            </label>
+            
         </dt>
+
         <dd id="thirdPartyApi-element" class="block-display  radio-inline-list">
             <?php $i=0;
                   $value = $this->element->getElement('thirdPartyApi')->getValue();
             ?>
+
             <?php foreach ($this->element->getElement('thirdPartyApi')->getMultiOptions() as $radio) : ?>
                 <label for="thirdPartyApi-<?php echo $i ?>">
                     <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?>>
@@ -77,6 +82,19 @@
             <?php endif; ?>
         </dd>
 
+        <dt id="widgetCode-label" style="display:none;" class="block-display">
+            <label class="optional" for="widgetCode"><?php echo $this->element->getElement('widgetCode')->getLabel() ?></label>
+        </dt>
+        <dd id="widgetCode-element" style="display:none;" class="block-display clearfix">
+            <?php echo $this->element->getElement('widgetCode') ?>
+            <?php if($this->element->getElement('widgetCode')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('widgetCode')->getMessages() as $error): ?>
+                          <li><?php echo $error; ?></li>
+                      <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </dd>
         <dt id="locale-label" class="block-display">
             <label class="required" for="locale"><?php echo $this->element->getElement('locale')->getLabel() ?>:
             </label>

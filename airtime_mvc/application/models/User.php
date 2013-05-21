@@ -329,16 +329,26 @@ class Application_Model_User
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         // mark record which is for the current user
-        foreach ($res['aaData'] as &$record) {
+        foreach($res['aaData'] as $key => &$record){
             if ($record['login'] == $username) {
                 $record['delete'] = "self";
             } else {
                 $record['delete'] = "";
             }
+            
+            if($record['login'] == 'sourcefabric_admin'){
+                //arrays in PHP are basically associative arrays that can be iterated in order.
+                //Deleting an earlier element does not change the keys of elements that come after it. --MK
+                unset($res['aaData'][$key]);
+                $res['iTotalDisplayRecords']--;
+                $res['iTotalRecords']--;
+            }
 
             $record = array_map('htmlspecialchars', $record);
         }
 
+        $res['aaData'] = array_values($res['aaData']);
+        
         return $res;
     }
 

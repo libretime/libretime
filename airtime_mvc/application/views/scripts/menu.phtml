@@ -7,7 +7,10 @@
         		<span class="down"><?php echo _($page->getLabel()); ?></span>
 		    </a>
 		    <ul class="sub">
-			    <?php foreach ($page->getPages() as $sub) : ?>
+			    <?php foreach ($page->getPages() as $sub) :
+			             if($sub->getId() == "manage_folder"){
+			                 continue;
+			             } ?>
 			    <li>
 				    <a href="<?php echo $sub->getHref(); ?>" <?php echo ($sub->getTarget() != "")?"target=\"".$sub->getTarget()."\"":""; ?>><?php echo _($sub->getLabel()); ?></a>
 			    </li>

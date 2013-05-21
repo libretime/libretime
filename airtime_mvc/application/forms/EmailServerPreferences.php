@@ -7,7 +7,6 @@ class Application_Form_EmailServerPreferences extends Zend_Form_SubForm
 
     public function init()
     {
-
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/preferences_email_server.phtml'))
         ));
