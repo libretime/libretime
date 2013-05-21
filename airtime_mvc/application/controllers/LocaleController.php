@@ -110,6 +110,7 @@ class LocaleController extends Zend_Controller_Action
             "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
                 => _("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),
             //library/spl.js
+            "Open Media Builder" => _("Open Media Builder"),
             "please put in a time '00:00:00 (.0)'" => _("please put in a time '00:00:00 (.0)'"),
             "please put in a time in seconds '00 (.0)'" => _("please put in a time in seconds '00 (.0)'"),
             "Your browser does not support playing this file type: " => _("Your browser does not support playing this file type: "),

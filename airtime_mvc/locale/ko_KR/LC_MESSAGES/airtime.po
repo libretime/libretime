@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-17 14:42-0400\n"
+"POT-Creation-Date: 2013-05-21 09:20-0400\n"
 "PO-Revision-Date: 2013-05-17 14:45-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: Korean Localization <contact@sourcefabric.org>\n"
@@ -41,7 +41,7 @@ msgid "Show Content"
 msgstr "쇼 내용 보기"
 
 #: airtime_mvc/application/services/CalendarService.php:85
-#: airtime_mvc/application/controllers/LocaleController.php:309
+#: airtime_mvc/application/controllers/LocaleController.php:310
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
 msgstr "내용 추가/제거"
@@ -177,8 +177,8 @@ msgid "Support Feedback"
 msgstr "사용자 피드백"
 
 #: airtime_mvc/application/configs/navigation.php:76
-#: airtime_mvc/application/controllers/LocaleController.php:369
 #: airtime_mvc/application/controllers/LocaleController.php:370
+#: airtime_mvc/application/controllers/LocaleController.php:371
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:8
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
 msgid "Status"
@@ -237,7 +237,7 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:46
 #: airtime_mvc/application/models/Block.php:1330
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
-#: airtime_mvc/application/controllers/LocaleController.php:278
+#: airtime_mvc/application/controllers/LocaleController.php:279
 msgid "Cue In"
 msgstr "큐 인"
 
@@ -248,7 +248,7 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:53
 #: airtime_mvc/application/models/Block.php:1331
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
-#: airtime_mvc/application/controllers/LocaleController.php:279
+#: airtime_mvc/application/controllers/LocaleController.php:280
 msgid "Cue Out"
 msgstr "큐 아웃"
 
@@ -261,12 +261,12 @@ msgid "Cursor"
 msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:71
-#: airtime_mvc/application/controllers/LocaleController.php:280
+#: airtime_mvc/application/controllers/LocaleController.php:281
 msgid "Fade In"
 msgstr "페이드 인"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:72
-#: airtime_mvc/application/controllers/LocaleController.php:281
+#: airtime_mvc/application/controllers/LocaleController.php:282
 msgid "Fade Out"
 msgstr "패이드 아웃"
 
@@ -517,7 +517,7 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1327
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:52
 #: airtime_mvc/application/controllers/LocaleController.php:71
-#: airtime_mvc/application/controllers/LocaleController.php:155
+#: airtime_mvc/application/controllers/LocaleController.php:156
 msgid "Composer"
 msgstr "작곡가"
 
@@ -530,14 +530,14 @@ msgstr "지휘자"
 #: airtime_mvc/application/models/Block.php:1329
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
 #: airtime_mvc/application/controllers/LocaleController.php:73
-#: airtime_mvc/application/controllers/LocaleController.php:156
+#: airtime_mvc/application/controllers/LocaleController.php:157
 msgid "Copyright"
 msgstr "저작권"
 
 #: airtime_mvc/application/models/Block.php:1332
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 #: airtime_mvc/application/controllers/LocaleController.php:67
-#: airtime_mvc/application/controllers/LocaleController.php:152
+#: airtime_mvc/application/controllers/LocaleController.php:153
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:7
 msgid "Creator"
 msgstr "제작자"
@@ -589,7 +589,7 @@ msgstr "마지막 방송일"
 #: airtime_mvc/application/models/Block.php:1340
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 #: airtime_mvc/application/controllers/LocaleController.php:81
-#: airtime_mvc/application/controllers/LocaleController.php:154
+#: airtime_mvc/application/controllers/LocaleController.php:155
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:9
 msgid "Length"
 msgstr "길이"
@@ -626,7 +626,7 @@ msgstr "샘플 레이트"
 #: airtime_mvc/application/models/Block.php:1346
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 #: airtime_mvc/application/controllers/LocaleController.php:66
-#: airtime_mvc/application/controllers/LocaleController.php:151
+#: airtime_mvc/application/controllers/LocaleController.php:152
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:6
 msgid "Title"
 msgstr "제목"
@@ -750,7 +750,7 @@ msgstr "방송국 로고"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:112
-#: airtime_mvc/application/controllers/LocaleController.php:338
+#: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "Send support feedback"
 msgstr "사용자 피드백을 보냄"
 
@@ -999,29 +999,29 @@ msgid "User Type:"
 msgstr "유저 타입"
 
 #: airtime_mvc/application/forms/AddUser.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:321
+#: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Guest"
 msgstr "손님"
 
 #: airtime_mvc/application/forms/AddUser.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:319
+#: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "DJ"
 msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:94
-#: airtime_mvc/application/controllers/LocaleController.php:320
+#: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Program Manager"
 msgstr "프로그램 매니저"
 
 #: airtime_mvc/application/forms/AddUser.php:95
-#: airtime_mvc/application/controllers/LocaleController.php:318
+#: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "Admin"
 msgstr "관리자"
 
 #: airtime_mvc/application/forms/AddUser.php:103
 #: airtime_mvc/application/forms/SupportSettings.php:158
 #: airtime_mvc/application/forms/EditAudioMD.php:134
-#: airtime_mvc/application/controllers/LocaleController.php:291
+#: airtime_mvc/application/controllers/LocaleController.php:292
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:27
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:24
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:16
@@ -1105,7 +1105,7 @@ msgid "Admin Password"
 msgstr "관리자 암호"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:218
-#: airtime_mvc/application/controllers/LocaleController.php:172
+#: airtime_mvc/application/controllers/LocaleController.php:173
 msgid "Getting information from the server..."
 msgstr "서버에서 정보를 받는중..."
 
@@ -1146,37 +1146,37 @@ msgid "Select Days:"
 msgstr "날짜 선택"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:33
-#: airtime_mvc/application/controllers/LocaleController.php:253
+#: airtime_mvc/application/controllers/LocaleController.php:254
 msgid "Sun"
 msgstr "일"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:34
-#: airtime_mvc/application/controllers/LocaleController.php:254
+#: airtime_mvc/application/controllers/LocaleController.php:255
 msgid "Mon"
 msgstr "월"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
-#: airtime_mvc/application/controllers/LocaleController.php:255
+#: airtime_mvc/application/controllers/LocaleController.php:256
 msgid "Tue"
 msgstr "화"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
-#: airtime_mvc/application/controllers/LocaleController.php:256
+#: airtime_mvc/application/controllers/LocaleController.php:257
 msgid "Wed"
 msgstr "수"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
-#: airtime_mvc/application/controllers/LocaleController.php:257
+#: airtime_mvc/application/controllers/LocaleController.php:258
 msgid "Thu"
 msgstr "목"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
-#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:259
 msgid "Fri"
 msgstr "금"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
-#: airtime_mvc/application/controllers/LocaleController.php:259
+#: airtime_mvc/application/controllers/LocaleController.php:260
 msgid "Sat"
 msgstr "토"
 
@@ -1285,8 +1285,8 @@ msgstr "암호 복원"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 #: airtime_mvc/application/forms/EditAudioMD.php:144
-#: airtime_mvc/application/controllers/LocaleController.php:292
-#: airtime_mvc/application/controllers/LocaleController.php:315
+#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:316
 msgid "Cancel"
 msgstr "취소"
 
@@ -1417,54 +1417,54 @@ msgstr "밑에 보이는 그림에 나온 문자를 입력하세요"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:223
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:338
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:376
-#: airtime_mvc/application/controllers/LocaleController.php:140
+#: airtime_mvc/application/controllers/LocaleController.php:141
 msgid "Select modifier"
 msgstr "모디파이어 선택"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:88
-#: airtime_mvc/application/controllers/LocaleController.php:141
+#: airtime_mvc/application/controllers/LocaleController.php:142
 msgid "contains"
 msgstr "다음을 포합"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:89
-#: airtime_mvc/application/controllers/LocaleController.php:142
+#: airtime_mvc/application/controllers/LocaleController.php:143
 msgid "does not contain"
 msgstr "다음을 포함하지 않는"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:104
-#: airtime_mvc/application/controllers/LocaleController.php:143
+#: airtime_mvc/application/controllers/LocaleController.php:144
 msgid "is"
 msgstr "다음과 같음"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:91
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:105
-#: airtime_mvc/application/controllers/LocaleController.php:144
+#: airtime_mvc/application/controllers/LocaleController.php:145
 msgid "is not"
 msgstr "다음과 같지 않음"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:145
+#: airtime_mvc/application/controllers/LocaleController.php:146
 msgid "starts with"
 msgstr "다음으로 시작"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:146
+#: airtime_mvc/application/controllers/LocaleController.php:147
 msgid "ends with"
 msgstr "다음으로 끝남"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:106
-#: airtime_mvc/application/controllers/LocaleController.php:147
+#: airtime_mvc/application/controllers/LocaleController.php:148
 msgid "is greater than"
 msgstr "다음 보다 큰"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:107
-#: airtime_mvc/application/controllers/LocaleController.php:148
+#: airtime_mvc/application/controllers/LocaleController.php:149
 msgid "is less than"
 msgstr "다음 보타 작은"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:108
-#: airtime_mvc/application/controllers/LocaleController.php:149
+#: airtime_mvc/application/controllers/LocaleController.php:150
 msgid "is in the range"
 msgstr "다음 범위 안에 있는 "
 
@@ -1644,37 +1644,37 @@ msgid "Week Starts On"
 msgstr "주 시작일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
-#: airtime_mvc/application/controllers/LocaleController.php:246
+#: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Sunday"
 msgstr "일요일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:124
-#: airtime_mvc/application/controllers/LocaleController.php:247
+#: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Monday"
 msgstr "월요일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
-#: airtime_mvc/application/controllers/LocaleController.php:248
+#: airtime_mvc/application/controllers/LocaleController.php:249
 msgid "Tuesday"
 msgstr "화요일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-#: airtime_mvc/application/controllers/LocaleController.php:249
+#: airtime_mvc/application/controllers/LocaleController.php:250
 msgid "Wednesday"
 msgstr "수요일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
-#: airtime_mvc/application/controllers/LocaleController.php:250
+#: airtime_mvc/application/controllers/LocaleController.php:251
 msgid "Thursday"
 msgstr "목요일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:251
+#: airtime_mvc/application/controllers/LocaleController.php:252
 msgid "Friday"
 msgstr "금요일"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
-#: airtime_mvc/application/controllers/LocaleController.php:252
+#: airtime_mvc/application/controllers/LocaleController.php:253
 msgid "Saturday"
 msgstr "토요일"
 
@@ -1992,7 +1992,7 @@ msgid "Loading..."
 msgstr "로딩..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:157
+#: airtime_mvc/application/controllers/LocaleController.php:158
 msgid "All"
 msgstr "전체"
 
@@ -2021,7 +2021,7 @@ msgid "Are you sure you want to delete the selected item?"
 msgstr "선택된 아이템을 모두 삭제 하시겠습니까?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:99
-#: airtime_mvc/application/controllers/LocaleController.php:206
+#: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "Uploading in progress..."
 msgstr "업로딩중..."
 
@@ -2067,718 +2067,722 @@ msgid "You are currently uploading files. %sGoing to another screen will cancel 
 msgstr "현재 파일이 업로드 중입니다. %s다른 화면으로 이동하면 현재까지 업로드한 프로세스가 취소됩니다. %s이동하겠습니까?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
+msgid "Open Media Builder"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
 msgstr "'00:00:00 (.0)' 형태로 입력해주세요"
 
-#: airtime_mvc/application/controllers/LocaleController.php:114
+#: airtime_mvc/application/controllers/LocaleController.php:115
 msgid "please put in a time in seconds '00 (.0)'"
 msgstr "초단위 '00 (.0)'로 입력해주세요"
 
-#: airtime_mvc/application/controllers/LocaleController.php:115
+#: airtime_mvc/application/controllers/LocaleController.php:116
 msgid "Your browser does not support playing this file type: "
 msgstr "현재 사용중인 브라우저에선 이 파일을 play할수 없습니다: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:116
+#: airtime_mvc/application/controllers/LocaleController.php:117
 msgid "Dynamic block is not previewable"
 msgstr "동적인 스마트 블록은 프리뷰 할수 없습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:117
+#: airtime_mvc/application/controllers/LocaleController.php:118
 msgid "Limit to: "
 msgstr "길이 제한: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:118
+#: airtime_mvc/application/controllers/LocaleController.php:119
 msgid "Playlist saved"
 msgstr "재생 목록이 저장 되었습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:119
+#: airtime_mvc/application/controllers/LocaleController.php:120
 msgid "Playlist shuffled"
 msgstr "플레이 리스트가 셔플 되었습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:121
+#: airtime_mvc/application/controllers/LocaleController.php:122
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
 msgstr "Airtime이 파일에 대해 정확히 알수 없습니다. 이 경우는 파일이 접근할수 없는 리모트 드라이브에 있거나, 파일이 있는 폴더가 더이상 모니터 되지 않을때 일어날수 있습니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:123
+#: airtime_mvc/application/controllers/LocaleController.php:124
 #, php-format
 msgid "Listener Count on %s: %s"
 msgstr "%s의청취자 숫자 : %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:125
+#: airtime_mvc/application/controllers/LocaleController.php:126
 msgid "Remind me in 1 week"
 msgstr "1주후에 다시 알림"
 
-#: airtime_mvc/application/controllers/LocaleController.php:126
+#: airtime_mvc/application/controllers/LocaleController.php:127
 msgid "Remind me never"
 msgstr "이 창을 다시 표시 하지 않음"
 
-#: airtime_mvc/application/controllers/LocaleController.php:127
+#: airtime_mvc/application/controllers/LocaleController.php:128
 msgid "Yes, help Airtime"
 msgstr "Airtime 도와주기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:187
+#: airtime_mvc/application/controllers/LocaleController.php:129
+#: airtime_mvc/application/controllers/LocaleController.php:188
 msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "허용된 이미지 파일 타입은 jpg, jpeg, png 또는 gif 입니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:131
+#: airtime_mvc/application/controllers/LocaleController.php:132
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
 msgstr "정적 스마트 블록은 크라이테리아를 저장하고 내용을 생성 합니다. 그러므로 쇼에 추가 하기전에 내용을 수정하실수 있습니다 "
 
-#: airtime_mvc/application/controllers/LocaleController.php:133
+#: airtime_mvc/application/controllers/LocaleController.php:134
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
 msgstr "동적 스마트 블록은 크라이테리아만 저장하고 내용은 쇼에 추가 할때까지 생성하지 않습니다. 이는 동적 스마트 블록을 쇼에 추가 할때마다 다른 내용을 추가하게 됩니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:135
+#: airtime_mvc/application/controllers/LocaleController.php:136
 msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
 msgstr "블록 생성시 충분한 파일을 찾지 못하면, 블록 길이가 원하는 길이보다 짧아 질수 있습니다. 이 옵션을 선택하시면,Airtime이 트랙을 반복적으로 사용하여 길이를 채웁니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:136
+#: airtime_mvc/application/controllers/LocaleController.php:137
 msgid "Smart block shuffled"
 msgstr "스마트 블록이 셔플 되었습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:137
+#: airtime_mvc/application/controllers/LocaleController.php:138
 msgid "Smart block generated and criteria saved"
 msgstr "스마트 블록이 생성 되고 크라이테리아가 저장 되었습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:138
+#: airtime_mvc/application/controllers/LocaleController.php:139
 msgid "Smart block saved"
 msgstr "스마트 블록이 저장 되었습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:139
+#: airtime_mvc/application/controllers/LocaleController.php:140
 msgid "Processing..."
 msgstr "진행중..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:153
+#: airtime_mvc/application/controllers/LocaleController.php:154
 msgid "Played"
 msgstr "방송됨"
 
-#: airtime_mvc/application/controllers/LocaleController.php:158
+#: airtime_mvc/application/controllers/LocaleController.php:159
 #, php-format
 msgid "Copied %s row%s to the clipboard"
 msgstr "%s row %s를 클립보드로 복사 하였습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:159
+#: airtime_mvc/application/controllers/LocaleController.php:160
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
 msgstr "%sPrint view%s프린트를 하려면 브라우저의 프린트 기능을 사용하여주세요. 종료를 원하시면 ESC키를 누르세요"
 
-#: airtime_mvc/application/controllers/LocaleController.php:161
+#: airtime_mvc/application/controllers/LocaleController.php:162
 msgid "Choose Storage Folder"
 msgstr "저장 폴더 선택"
 
-#: airtime_mvc/application/controllers/LocaleController.php:162
+#: airtime_mvc/application/controllers/LocaleController.php:163
 msgid "Choose Folder to Watch"
 msgstr "모니터 폴더 선택"
 
-#: airtime_mvc/application/controllers/LocaleController.php:164
+#: airtime_mvc/application/controllers/LocaleController.php:165
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
 msgstr "저장 폴더를 수정하길 원하십니까? 수정시 모든 파일이 라이브러리에서 사라집니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:165
+#: airtime_mvc/application/controllers/LocaleController.php:166
 #: airtime_mvc/application/views/scripts/preference/directory-config.phtml:2
 msgid "Manage Media Folders"
 msgstr "미디어 폴더 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:166
+#: airtime_mvc/application/controllers/LocaleController.php:167
 msgid "Are you sure you want to remove the watched folder?"
 msgstr "선택하신 폴더를 모니터 리스트에서 삭제 하시겠습ㄴ지까?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:167
+#: airtime_mvc/application/controllers/LocaleController.php:168
 msgid "This path is currently not accessible."
 msgstr "경로에 접근할수 없습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:169
+#: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
 msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:170
+#: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Connected to the streaming server"
 msgstr "스트리밍 서버에 접속됨"
 
-#: airtime_mvc/application/controllers/LocaleController.php:171
+#: airtime_mvc/application/controllers/LocaleController.php:172
 msgid "The stream is disabled"
 msgstr "스트림이 사용되지 않음"
 
-#: airtime_mvc/application/controllers/LocaleController.php:173
+#: airtime_mvc/application/controllers/LocaleController.php:174
 msgid "Can not connect to the streaming server"
 msgstr "스트리밍 서버에 접속 할수 없음"
 
-#: airtime_mvc/application/controllers/LocaleController.php:175
+#: airtime_mvc/application/controllers/LocaleController.php:176
 msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
 msgstr "Airtime이 방화벽 뒤에 설치 되었다면, 포트 포워딩을 설정해야 할수도 있습니다. 이 경우엔  자동으로 생성된 이 정보가 틀릴수 있습니다. 수동적으로 이 필드를 수정하여 DJ들이 접속해야 하는서버/마운트/포트 등을 공지 하십시오. 포트 범위는 1024~49151 입니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:176
+#: airtime_mvc/application/controllers/LocaleController.php:177
 #, php-format
 msgid "For more details, please read the %sAirtime Manual%s"
 msgstr "더 자세한 정보는 %sAirtime Manual%s에서 찾으실수 있습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:178
+#: airtime_mvc/application/controllers/LocaleController.php:179
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
 msgstr "OGG 스트림의 메타데이타를 사용하고 싶으시면, 이 옵션을 체크 해주세요. VLC나 mplayer 같은 플래이어들에서 버그가 발견되어 OGG 스트림을 메타데이타와 함꼐 사용시, 각 파일 종료시 스트림을 끊어버립니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:179
+#: airtime_mvc/application/controllers/LocaleController.php:180
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
 msgstr "마스터/쇼 소스가 끊어졌을때 자동으로 스위치를 끔."
 
-#: airtime_mvc/application/controllers/LocaleController.php:180
+#: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "Check this box to automatically switch on Master/Show source upon source connection."
 msgstr "마스터/쇼 소스가 접속 되었을때 자동으로 스위를 켬."
 
-#: airtime_mvc/application/controllers/LocaleController.php:181
+#: airtime_mvc/application/controllers/LocaleController.php:182
 msgid "If your Icecast server expects a username of 'source', this field can be left blank."
 msgstr "Icecast 서버 인증 아이디가 source로 설정이 되어있다면, 이 필드는 입렵 하실필요 없습니다."
 
-#: airtime_mvc/application/controllers/LocaleController.php:182
-#: airtime_mvc/application/controllers/LocaleController.php:192
+#: airtime_mvc/application/controllers/LocaleController.php:183
+#: airtime_mvc/application/controllers/LocaleController.php:193
 msgid "If your live streaming client does not ask for a username, this field should be 'source'."
 msgstr "현재 사용중이신 라이브 스트리밍 클라이언트에 사용자 필드가 없다면, 이 필드에 'source'라고 입력 해주세요."
 
-#: airtime_mvc/application/controllers/LocaleController.php:184
+#: airtime_mvc/application/controllers/LocaleController.php:185
 msgid "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
 msgstr "스트림 되고 있는 스트림에 아이디나 암호를 수정한다면, 플레이 아웃 엔진이 다시 시작되며, 청취자들이 5~10초 정도 정적이 들릴것입니다. 다음 필드들을 수정하는것은 엔진을 다시 시작 하지 않습니다:  (스트림 레이블, 스위치 페이딩, 마스터 마이디, 마스터 암호). Airtime이 현재 녹음 중이고 엔진이 재시작 되면 녹음이 중단 됩니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:185
+#: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
 msgstr "관리자 아이디/암호는 Icecast와 SHOUTcast에서 청취자 통계를 얻기 위해 필요합니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:189
+#: airtime_mvc/application/controllers/LocaleController.php:190
 msgid "No result found"
 msgstr "결과 없음"
 
-#: airtime_mvc/application/controllers/LocaleController.php:190
+#: airtime_mvc/application/controllers/LocaleController.php:191
 msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
 msgstr "쇼에 지정된 사람들만 접속 할수 있습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:191
+#: airtime_mvc/application/controllers/LocaleController.php:192
 msgid "Specify custom authentication which will work only for this show."
 msgstr "커스텁 인증을 설정하시면, 아무나 그걸 사용하여 해당 쇼에 접속 가능합니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:193
+#: airtime_mvc/application/controllers/LocaleController.php:194
 msgid "The show instance doesn't exist anymore!"
 msgstr "쇼 인스턴스가 존재 하지 않습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:194
+#: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Warning: Shows cannot be re-linked"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:198
+#: airtime_mvc/application/controllers/LocaleController.php:199
 msgid "Show"
 msgstr "쇼"
 
-#: airtime_mvc/application/controllers/LocaleController.php:199
+#: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "Show is empty"
 msgstr "쇼가 비어 있습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:200
+#: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "1m"
 msgstr "1분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:201
+#: airtime_mvc/application/controllers/LocaleController.php:202
 msgid "5m"
 msgstr "5분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:202
+#: airtime_mvc/application/controllers/LocaleController.php:203
 msgid "10m"
 msgstr "10분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:203
+#: airtime_mvc/application/controllers/LocaleController.php:204
 msgid "15m"
 msgstr "15분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:204
+#: airtime_mvc/application/controllers/LocaleController.php:205
 msgid "30m"
 msgstr "30분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:205
+#: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "60m"
 msgstr "60분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:207
+#: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "Retreiving data from the server..."
 msgstr "서버로부터 데이타를 불러오는중..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:213
+#: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "This show has no scheduled content."
 msgstr "내용이 없는 쇼입니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:214
+#: airtime_mvc/application/controllers/LocaleController.php:215
 msgid "This show is not completely filled with content."
 msgstr "쇼가 완전히 채워지지 않았습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:218
+#: airtime_mvc/application/controllers/LocaleController.php:219
 msgid "January"
 msgstr "1월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:219
+#: airtime_mvc/application/controllers/LocaleController.php:220
 msgid "February"
 msgstr "2월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:220
+#: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "March"
 msgstr "3월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:221
+#: airtime_mvc/application/controllers/LocaleController.php:222
 msgid "April"
 msgstr "4월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:222
-#: airtime_mvc/application/controllers/LocaleController.php:234
+#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "May"
 msgstr "5월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:224
 msgid "June"
 msgstr "6월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:225
 msgid "July"
 msgstr "7월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:225
+#: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "August"
 msgstr "8월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:226
+#: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "September"
 msgstr "9월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:227
+#: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "October"
 msgstr "10월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:228
+#: airtime_mvc/application/controllers/LocaleController.php:229
 msgid "November"
 msgstr "11월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "December"
 msgstr "12월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:230
+#: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "Jan"
 msgstr "1월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:231
+#: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "Feb"
 msgstr "2월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:232
+#: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "Mar"
 msgstr "3월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:233
+#: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "Apr"
 msgstr "4월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:235
+#: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "Jun"
 msgstr "6월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:236
+#: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "Jul"
 msgstr "7월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:237
+#: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Aug"
 msgstr "8월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:238
+#: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Sep"
 msgstr "9월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:239
+#: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Oct"
 msgstr "10월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:240
+#: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Nov"
 msgstr "11월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
+#: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Dec"
 msgstr "12월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:242
+#: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "today"
 msgstr "오늘"
 
-#: airtime_mvc/application/controllers/LocaleController.php:243
+#: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "day"
 msgstr "일별"
 
-#: airtime_mvc/application/controllers/LocaleController.php:244
+#: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "week"
 msgstr "주별"
 
-#: airtime_mvc/application/controllers/LocaleController.php:245
+#: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "month"
 msgstr "월별"
 
-#: airtime_mvc/application/controllers/LocaleController.php:260
+#: airtime_mvc/application/controllers/LocaleController.php:261
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "쇼가 자신의 길이보다 더 길게 스케쥴 되었다면, 쇼 길이에 맞게 짤라지며, 다음 쇼가 시작 됩니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:261
+#: airtime_mvc/application/controllers/LocaleController.php:262
 msgid "Cancel Current Show?"
 msgstr "현재 방송중인 쇼를 중단 하시겠습니까?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:262
-#: airtime_mvc/application/controllers/LocaleController.php:306
+#: airtime_mvc/application/controllers/LocaleController.php:263
+#: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Stop recording current show?"
 msgstr "현재 녹음 중인 쇼를 중단 하시겠습니까?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:263
+#: airtime_mvc/application/controllers/LocaleController.php:264
 msgid "Ok"
 msgstr "확인"
 
-#: airtime_mvc/application/controllers/LocaleController.php:264
+#: airtime_mvc/application/controllers/LocaleController.php:265
 msgid "Contents of Show"
 msgstr "쇼 내용"
 
-#: airtime_mvc/application/controllers/LocaleController.php:267
+#: airtime_mvc/application/controllers/LocaleController.php:268
 msgid "Remove all content?"
 msgstr "모든 내용물 삭제하시겠습까?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:269
+#: airtime_mvc/application/controllers/LocaleController.php:270
 msgid "Delete selected item(s)?"
 msgstr "선택한 아이템을 삭제 하시겠습니까?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:270
+#: airtime_mvc/application/controllers/LocaleController.php:271
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
 msgstr "시작"
 
-#: airtime_mvc/application/controllers/LocaleController.php:271
+#: airtime_mvc/application/controllers/LocaleController.php:272
 msgid "End"
 msgstr "종료"
 
-#: airtime_mvc/application/controllers/LocaleController.php:272
+#: airtime_mvc/application/controllers/LocaleController.php:273
 msgid "Duration"
 msgstr "길이"
 
-#: airtime_mvc/application/controllers/LocaleController.php:282
+#: airtime_mvc/application/controllers/LocaleController.php:283
 msgid "Show Empty"
 msgstr "내용 없음"
 
-#: airtime_mvc/application/controllers/LocaleController.php:283
+#: airtime_mvc/application/controllers/LocaleController.php:284
 msgid "Recording From Line In"
 msgstr "라인 인으로 부터 녹음"
 
-#: airtime_mvc/application/controllers/LocaleController.php:284
+#: airtime_mvc/application/controllers/LocaleController.php:285
 msgid "Track preview"
 msgstr "트랙 프리뷰"
 
-#: airtime_mvc/application/controllers/LocaleController.php:288
+#: airtime_mvc/application/controllers/LocaleController.php:289
 msgid "Cannot schedule outside a show."
 msgstr "쇼 범위 밖에 스케쥴 할수 없습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:289
+#: airtime_mvc/application/controllers/LocaleController.php:290
 msgid "Moving 1 Item"
 msgstr "아이템 1개 이동"
 
-#: airtime_mvc/application/controllers/LocaleController.php:290
+#: airtime_mvc/application/controllers/LocaleController.php:291
 #, php-format
 msgid "Moving %s Items"
 msgstr "아이템 %s개 이동"
 
-#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Fade Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:294
+#: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Cue Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:295
+#: airtime_mvc/application/controllers/LocaleController.php:296
 msgid "Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:298
+#: airtime_mvc/application/controllers/LocaleController.php:299
 msgid "Select all"
 msgstr "전체 선택"
 
-#: airtime_mvc/application/controllers/LocaleController.php:299
+#: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Select none"
 msgstr "전체 선택 취소"
 
-#: airtime_mvc/application/controllers/LocaleController.php:300
+#: airtime_mvc/application/controllers/LocaleController.php:301
 msgid "Remove overbooked tracks"
 msgstr "초과 예약된 트랙 제거"
 
-#: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/controllers/LocaleController.php:302
 msgid "Remove selected scheduled items"
 msgstr "선택된 아이템 제거"
 
-#: airtime_mvc/application/controllers/LocaleController.php:302
+#: airtime_mvc/application/controllers/LocaleController.php:303
 msgid "Jump to the current playing track"
 msgstr "현재 방송중인 트랙으로 가기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:303
+#: airtime_mvc/application/controllers/LocaleController.php:304
 msgid "Cancel current show"
 msgstr "현재 쇼 취소"
 
-#: airtime_mvc/application/controllers/LocaleController.php:308
+#: airtime_mvc/application/controllers/LocaleController.php:309
 msgid "Open library to add or remove content"
 msgstr "라이브러리 열기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:311
+#: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "in use"
 msgstr "사용중"
 
-#: airtime_mvc/application/controllers/LocaleController.php:312
+#: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "Disk"
 msgstr "디스크"
 
-#: airtime_mvc/application/controllers/LocaleController.php:314
+#: airtime_mvc/application/controllers/LocaleController.php:315
 msgid "Look in"
 msgstr "경로"
 
-#: airtime_mvc/application/controllers/LocaleController.php:316
+#: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "Open"
 msgstr "열기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:322
+#: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "Guests can do the following:"
 msgstr "손님의 권한:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:323
+#: airtime_mvc/application/controllers/LocaleController.php:324
 msgid "View schedule"
 msgstr "스케쥴 보기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:324
+#: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "View show content"
 msgstr "쇼 내용 보기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:325
+#: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "DJs can do the following:"
 msgstr "DJ의 권한:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:326
+#: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Manage assigned show content"
 msgstr "할당된 쇼의 내용 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:327
+#: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Import media files"
 msgstr "미디아 파일 추가"
 
-#: airtime_mvc/application/controllers/LocaleController.php:328
+#: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Create playlists, smart blocks, and webstreams"
 msgstr "플레이 리스트, 스마트 블록, 웹스트림 생성"
 
-#: airtime_mvc/application/controllers/LocaleController.php:329
+#: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Manage their own library content"
 msgstr "자신의 라이브러리 내용 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:330
+#: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "Progam Managers can do the following:"
 msgstr "프로그램 매니저의 권한:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:331
+#: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "View and manage show content"
 msgstr "쇼 내용 보기및 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:332
+#: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "Schedule shows"
 msgstr "쇼 스케쥴 하기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:333
+#: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Manage all library content"
 msgstr "모든 라이브러리 내용 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:334
+#: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Admins can do the following:"
 msgstr "관리자의 권한:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:335
+#: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "Manage preferences"
 msgstr "설정 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:336
+#: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "Manage users"
 msgstr "사용자 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:337
+#: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Manage watched folders"
 msgstr "모니터 폴터 관리"
 
-#: airtime_mvc/application/controllers/LocaleController.php:339
+#: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "View system status"
 msgstr "이시스템 상황 보기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:340
+#: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "Access playout history"
 msgstr "방송 기록 접근 권한"
 
-#: airtime_mvc/application/controllers/LocaleController.php:341
+#: airtime_mvc/application/controllers/LocaleController.php:342
 msgid "View listener stats"
 msgstr "청취자 통계 보기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:343
+#: airtime_mvc/application/controllers/LocaleController.php:344
 msgid "Show / hide columns"
 msgstr "컬럼 보이기/숨기기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:345
+#: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "From {from} to {to}"
 msgstr "<span style='display:inline-block;width:31px'>&nbsp;</span>{from}부터 {to}까지"
 
-#: airtime_mvc/application/controllers/LocaleController.php:346
+#: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "kbps"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:347
+#: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "yyyy-mm-dd"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:348
+#: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "hh:mm:ss.t"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:349
+#: airtime_mvc/application/controllers/LocaleController.php:350
 msgid "kHz"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:352
+#: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "Su"
 msgstr "일"
 
-#: airtime_mvc/application/controllers/LocaleController.php:353
+#: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Mo"
 msgstr "월"
 
-#: airtime_mvc/application/controllers/LocaleController.php:354
+#: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "Tu"
 msgstr "화"
 
-#: airtime_mvc/application/controllers/LocaleController.php:355
+#: airtime_mvc/application/controllers/LocaleController.php:356
 msgid "We"
 msgstr "수"
 
-#: airtime_mvc/application/controllers/LocaleController.php:356
+#: airtime_mvc/application/controllers/LocaleController.php:357
 msgid "Th"
 msgstr "목"
 
-#: airtime_mvc/application/controllers/LocaleController.php:357
+#: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Fr"
 msgstr "금"
 
-#: airtime_mvc/application/controllers/LocaleController.php:358
+#: airtime_mvc/application/controllers/LocaleController.php:359
 msgid "Sa"
 msgstr "토"
 
-#: airtime_mvc/application/controllers/LocaleController.php:359
-#: airtime_mvc/application/controllers/LocaleController.php:387
+#: airtime_mvc/application/controllers/LocaleController.php:360
+#: airtime_mvc/application/controllers/LocaleController.php:388
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
 msgstr "닫기"
 
-#: airtime_mvc/application/controllers/LocaleController.php:361
+#: airtime_mvc/application/controllers/LocaleController.php:362
 msgid "Hour"
 msgstr "시"
 
-#: airtime_mvc/application/controllers/LocaleController.php:362
+#: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Minute"
 msgstr "분"
 
-#: airtime_mvc/application/controllers/LocaleController.php:363
+#: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Done"
 msgstr "확인"
 
-#: airtime_mvc/application/controllers/LocaleController.php:366
+#: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "Select files"
 msgstr "파일 선택"
 
-#: airtime_mvc/application/controllers/LocaleController.php:367
 #: airtime_mvc/application/controllers/LocaleController.php:368
+#: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "Add files to the upload queue and click the start button."
 msgstr "업로드를 원하는 파일을 선택하신후 시작 버틑을 눌러주세요."
 
-#: airtime_mvc/application/controllers/LocaleController.php:371
+#: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Add Files"
 msgstr "파일 추가"
 
-#: airtime_mvc/application/controllers/LocaleController.php:372
+#: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "Stop Upload"
 msgstr "업로드 중지"
 
-#: airtime_mvc/application/controllers/LocaleController.php:373
+#: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Start upload"
 msgstr "업로드 시작"
 
-#: airtime_mvc/application/controllers/LocaleController.php:374
+#: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "Add files"
 msgstr "파일 추가"
 
-#: airtime_mvc/application/controllers/LocaleController.php:375
+#: airtime_mvc/application/controllers/LocaleController.php:376
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "%d/%d 파일이 업로드됨"
 
-#: airtime_mvc/application/controllers/LocaleController.php:376
+#: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "N/A"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:377
+#: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "Drag files here."
 msgstr "파일을 여기로 드래그 앤 드랍 하세요"
 
-#: airtime_mvc/application/controllers/LocaleController.php:378
+#: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "File extension error."
 msgstr "파일 확장자 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:379
+#: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "File size error."
 msgstr "파일 크기 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:380
+#: airtime_mvc/application/controllers/LocaleController.php:381
 msgid "File count error."
 msgstr "파일 갯수 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:381
+#: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "Init error."
 msgstr "초기화 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:382
+#: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "HTTP Error."
 msgstr "HTTP 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:383
+#: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "Security error."
 msgstr "보안 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:384
+#: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "Generic error."
 msgstr "일반적인 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:385
+#: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "IO error."
 msgstr "IO 에러."
 
-#: airtime_mvc/application/controllers/LocaleController.php:386
+#: airtime_mvc/application/controllers/LocaleController.php:387
 #, php-format
 msgid "File: %s"
 msgstr "파일: %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:388
+#: airtime_mvc/application/controllers/LocaleController.php:389
 #, php-format
 msgid "%d files queued"
 msgstr "%d개의 파일이 대기중"
 
-#: airtime_mvc/application/controllers/LocaleController.php:389
+#: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "파일: %f, 크기: %s, 최대 파일 크기: %m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:390
+#: airtime_mvc/application/controllers/LocaleController.php:391
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "업로드 URL이 맞지 않거나 존재 하지 않습니다"
 
-#: airtime_mvc/application/controllers/LocaleController.php:391
+#: airtime_mvc/application/controllers/LocaleController.php:392
 msgid "Error: File too large: "
 msgstr "에러: 파일이 너무 큽니다:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:392
+#: airtime_mvc/application/controllers/LocaleController.php:393
 msgid "Error: Invalid file extension: "
 msgstr "에러: 지원하지 않는 확장자:"
 

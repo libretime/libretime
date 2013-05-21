@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-17 14:42-0400\n"
+"POT-Creation-Date: 2013-05-21 09:20-0400\n"
 "PO-Revision-Date: 2013-05-17 14:44-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: Greek Localization <contact@sourcefabric.org>\n"
@@ -43,7 +43,7 @@ msgid "Show Content"
 msgstr "Εμφάνιση Περιεχομένου"
 
 #: airtime_mvc/application/services/CalendarService.php:85
-#: airtime_mvc/application/controllers/LocaleController.php:309
+#: airtime_mvc/application/controllers/LocaleController.php:310
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
 msgstr "Προσθήκη / Αφαίρεση Περιεχομένου"
@@ -179,8 +179,8 @@ msgid "Support Feedback"
 msgstr "Σχόλια Υποστήριξης"
 
 #: airtime_mvc/application/configs/navigation.php:76
-#: airtime_mvc/application/controllers/LocaleController.php:369
 #: airtime_mvc/application/controllers/LocaleController.php:370
+#: airtime_mvc/application/controllers/LocaleController.php:371
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:8
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
 msgid "Status"
@@ -239,7 +239,7 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:46
 #: airtime_mvc/application/models/Block.php:1330
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
-#: airtime_mvc/application/controllers/LocaleController.php:278
+#: airtime_mvc/application/controllers/LocaleController.php:279
 msgid "Cue In"
 msgstr "Cue In"
 
@@ -250,7 +250,7 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:53
 #: airtime_mvc/application/models/Block.php:1331
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
-#: airtime_mvc/application/controllers/LocaleController.php:279
+#: airtime_mvc/application/controllers/LocaleController.php:280
 msgid "Cue Out"
 msgstr "Cue Out"
 
@@ -263,12 +263,12 @@ msgid "Cursor"
 msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:71
-#: airtime_mvc/application/controllers/LocaleController.php:280
+#: airtime_mvc/application/controllers/LocaleController.php:281
 msgid "Fade In"
 msgstr "Fade In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:72
-#: airtime_mvc/application/controllers/LocaleController.php:281
+#: airtime_mvc/application/controllers/LocaleController.php:282
 msgid "Fade Out"
 msgstr "Fade Out"
 
@@ -520,7 +520,7 @@ msgstr "BPM"
 #: airtime_mvc/application/models/Block.php:1327
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:52
 #: airtime_mvc/application/controllers/LocaleController.php:71
-#: airtime_mvc/application/controllers/LocaleController.php:155
+#: airtime_mvc/application/controllers/LocaleController.php:156
 msgid "Composer"
 msgstr "Συνθέτης"
 
@@ -533,14 +533,14 @@ msgstr "Μαέστρος"
 #: airtime_mvc/application/models/Block.php:1329
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
 #: airtime_mvc/application/controllers/LocaleController.php:73
-#: airtime_mvc/application/controllers/LocaleController.php:156
+#: airtime_mvc/application/controllers/LocaleController.php:157
 msgid "Copyright"
 msgstr "Copyright"
 
 #: airtime_mvc/application/models/Block.php:1332
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 #: airtime_mvc/application/controllers/LocaleController.php:67
-#: airtime_mvc/application/controllers/LocaleController.php:152
+#: airtime_mvc/application/controllers/LocaleController.php:153
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:7
 msgid "Creator"
 msgstr "Δημιουργός"
@@ -592,7 +592,7 @@ msgstr "Τελευταία αναπαραγωγή"
 #: airtime_mvc/application/models/Block.php:1340
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 #: airtime_mvc/application/controllers/LocaleController.php:81
-#: airtime_mvc/application/controllers/LocaleController.php:154
+#: airtime_mvc/application/controllers/LocaleController.php:155
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:9
 msgid "Length"
 msgstr "Διάρκεια"
@@ -629,7 +629,7 @@ msgstr "Ρυθμός Δειγματοληψίας (kHz)"
 #: airtime_mvc/application/models/Block.php:1346
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 #: airtime_mvc/application/controllers/LocaleController.php:66
-#: airtime_mvc/application/controllers/LocaleController.php:151
+#: airtime_mvc/application/controllers/LocaleController.php:152
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:6
 msgid "Title"
 msgstr "Τίτλος"
@@ -753,7 +753,7 @@ msgstr "Λογότυπο Σταθμού:"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:112
-#: airtime_mvc/application/controllers/LocaleController.php:338
+#: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "Send support feedback"
 msgstr "Αποστολή Σχολίων Υποστήριξης"
 
@@ -1002,29 +1002,29 @@ msgid "User Type:"
 msgstr "Τύπος Χρήστη:"
 
 #: airtime_mvc/application/forms/AddUser.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:321
+#: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Guest"
 msgstr "Επισκέπτης"
 
 #: airtime_mvc/application/forms/AddUser.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:319
+#: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "DJ"
 msgstr "DJ"
 
 #: airtime_mvc/application/forms/AddUser.php:94
-#: airtime_mvc/application/controllers/LocaleController.php:320
+#: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Program Manager"
 msgstr "Διευθυντής Προγράμματος"
 
 #: airtime_mvc/application/forms/AddUser.php:95
-#: airtime_mvc/application/controllers/LocaleController.php:318
+#: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "Admin"
 msgstr "Διαχειριστής"
 
 #: airtime_mvc/application/forms/AddUser.php:103
 #: airtime_mvc/application/forms/SupportSettings.php:158
 #: airtime_mvc/application/forms/EditAudioMD.php:134
-#: airtime_mvc/application/controllers/LocaleController.php:291
+#: airtime_mvc/application/controllers/LocaleController.php:292
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:27
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:24
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:16
@@ -1108,7 +1108,7 @@ msgid "Admin Password"
 msgstr "Κωδικός πρόσβασης Διαχειριστή"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:218
-#: airtime_mvc/application/controllers/LocaleController.php:172
+#: airtime_mvc/application/controllers/LocaleController.php:173
 msgid "Getting information from the server..."
 msgstr "Λήψη πληροφοριών από το διακομιστή..."
 
@@ -1149,37 +1149,37 @@ msgid "Select Days:"
 msgstr "Επιλέξτε Ημέρες:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:33
-#: airtime_mvc/application/controllers/LocaleController.php:253
+#: airtime_mvc/application/controllers/LocaleController.php:254
 msgid "Sun"
 msgstr "Κυρ"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:34
-#: airtime_mvc/application/controllers/LocaleController.php:254
+#: airtime_mvc/application/controllers/LocaleController.php:255
 msgid "Mon"
 msgstr "Δευ"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
-#: airtime_mvc/application/controllers/LocaleController.php:255
+#: airtime_mvc/application/controllers/LocaleController.php:256
 msgid "Tue"
 msgstr "Τρι"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
-#: airtime_mvc/application/controllers/LocaleController.php:256
+#: airtime_mvc/application/controllers/LocaleController.php:257
 msgid "Wed"
 msgstr "Τετ"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
-#: airtime_mvc/application/controllers/LocaleController.php:257
+#: airtime_mvc/application/controllers/LocaleController.php:258
 msgid "Thu"
 msgstr "Πεμ"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
-#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:259
 msgid "Fri"
 msgstr "Παρ"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
-#: airtime_mvc/application/controllers/LocaleController.php:259
+#: airtime_mvc/application/controllers/LocaleController.php:260
 msgid "Sat"
 msgstr "Σαβ"
 
@@ -1288,8 +1288,8 @@ msgstr "Επαναφορά κωδικού πρόσβασης"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 #: airtime_mvc/application/forms/EditAudioMD.php:144
-#: airtime_mvc/application/controllers/LocaleController.php:292
-#: airtime_mvc/application/controllers/LocaleController.php:315
+#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:316
 msgid "Cancel"
 msgstr "Ακύρωση"
 
@@ -1420,54 +1420,54 @@ msgstr "Πληκτρολογήστε τους χαρακτήρες που βλέ
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:223
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:338
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:376
-#: airtime_mvc/application/controllers/LocaleController.php:140
+#: airtime_mvc/application/controllers/LocaleController.php:141
 msgid "Select modifier"
 msgstr "Επιλέξτε τροποποιητή"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:88
-#: airtime_mvc/application/controllers/LocaleController.php:141
+#: airtime_mvc/application/controllers/LocaleController.php:142
 msgid "contains"
 msgstr "περιέχει"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:89
-#: airtime_mvc/application/controllers/LocaleController.php:142
+#: airtime_mvc/application/controllers/LocaleController.php:143
 msgid "does not contain"
 msgstr "δεν περιέχει"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:104
-#: airtime_mvc/application/controllers/LocaleController.php:143
+#: airtime_mvc/application/controllers/LocaleController.php:144
 msgid "is"
 msgstr "είναι"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:91
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:105
-#: airtime_mvc/application/controllers/LocaleController.php:144
+#: airtime_mvc/application/controllers/LocaleController.php:145
 msgid "is not"
 msgstr "δεν είναι"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:145
+#: airtime_mvc/application/controllers/LocaleController.php:146
 msgid "starts with"
 msgstr "ξεκινά με"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:146
+#: airtime_mvc/application/controllers/LocaleController.php:147
 msgid "ends with"
 msgstr "τελειώνει με"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:106
-#: airtime_mvc/application/controllers/LocaleController.php:147
+#: airtime_mvc/application/controllers/LocaleController.php:148
 msgid "is greater than"
 msgstr "είναι μεγαλύτερος από"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:107
-#: airtime_mvc/application/controllers/LocaleController.php:148
+#: airtime_mvc/application/controllers/LocaleController.php:149
 msgid "is less than"
 msgstr "είναι μικρότερος από"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:108
-#: airtime_mvc/application/controllers/LocaleController.php:149
+#: airtime_mvc/application/controllers/LocaleController.php:150
 msgid "is in the range"
 msgstr "είναι στην κλίμακα"
 
@@ -1647,37 +1647,37 @@ msgid "Week Starts On"
 msgstr "Η Εβδομάδα αρχίζει "
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
-#: airtime_mvc/application/controllers/LocaleController.php:246
+#: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Sunday"
 msgstr "Κυριακή"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:124
-#: airtime_mvc/application/controllers/LocaleController.php:247
+#: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Monday"
 msgstr "Δευτέρα"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
-#: airtime_mvc/application/controllers/LocaleController.php:248
+#: airtime_mvc/application/controllers/LocaleController.php:249
 msgid "Tuesday"
 msgstr "Τρίτη"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-#: airtime_mvc/application/controllers/LocaleController.php:249
+#: airtime_mvc/application/controllers/LocaleController.php:250
 msgid "Wednesday"
 msgstr "Τετάρτη"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
-#: airtime_mvc/application/controllers/LocaleController.php:250
+#: airtime_mvc/application/controllers/LocaleController.php:251
 msgid "Thursday"
 msgstr "Πέμπτη"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:251
+#: airtime_mvc/application/controllers/LocaleController.php:252
 msgid "Friday"
 msgstr "Παρασκευή"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
-#: airtime_mvc/application/controllers/LocaleController.php:252
+#: airtime_mvc/application/controllers/LocaleController.php:253
 msgid "Saturday"
 msgstr "Σάββατο"
 
@@ -1995,7 +1995,7 @@ msgid "Loading..."
 msgstr "Φόρτωση..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:157
+#: airtime_mvc/application/controllers/LocaleController.php:158
 msgid "All"
 msgstr "Όλα"
 
@@ -2024,7 +2024,7 @@ msgid "Are you sure you want to delete the selected item?"
 msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε το επιλεγμένο στοιχείο;"
 
 #: airtime_mvc/application/controllers/LocaleController.php:99
-#: airtime_mvc/application/controllers/LocaleController.php:206
+#: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "Uploading in progress..."
 msgstr "Ανέβασμα σε εξέλιξη..."
 
@@ -2070,110 +2070,114 @@ msgid "You are currently uploading files. %sGoing to another screen will cancel 
 msgstr "Προς το παρόν ανεβάζετε αρχεία. %sΠηγαίνοντας σε μια άλλη οθόνη θα ακυρώσετε τη διαδικασία του ανεβάσματος.%sΕίστε σίγουροι ότι θέλετε να εγκαταλείψετε τη σελίδα;"
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
+msgid "Open Media Builder"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
 msgstr "παρακαλούμε εισάγετε τιμή ώρας '00:00:00 (.0)'"
 
-#: airtime_mvc/application/controllers/LocaleController.php:114
+#: airtime_mvc/application/controllers/LocaleController.php:115
 msgid "please put in a time in seconds '00 (.0)'"
 msgstr "παρακαλούμε εισάγετε τιμή ώρας σε δευτερόλεπτα '00 (0,0)'"
 
-#: airtime_mvc/application/controllers/LocaleController.php:115
+#: airtime_mvc/application/controllers/LocaleController.php:116
 msgid "Your browser does not support playing this file type: "
 msgstr "Ο περιηγητής ιστού σας δεν υποστηρίζει την αναπαραγωγή αρχείων αυτού του τύπου: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:116
+#: airtime_mvc/application/controllers/LocaleController.php:117
 msgid "Dynamic block is not previewable"
 msgstr "Αδύνατη η προεπισκόπιση του δυναμικού block"
 
-#: airtime_mvc/application/controllers/LocaleController.php:117
+#: airtime_mvc/application/controllers/LocaleController.php:118
 msgid "Limit to: "
 msgstr "Όριο για: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:118
+#: airtime_mvc/application/controllers/LocaleController.php:119
 msgid "Playlist saved"
 msgstr "Οι λίστες αναπαραγωγής αποθηκεύτηκαν"
 
-#: airtime_mvc/application/controllers/LocaleController.php:119
+#: airtime_mvc/application/controllers/LocaleController.php:120
 msgid "Playlist shuffled"
 msgstr "Ανασχηματισμός λίστας αναπαραγωγής"
 
-#: airtime_mvc/application/controllers/LocaleController.php:121
+#: airtime_mvc/application/controllers/LocaleController.php:122
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
 msgstr "To Airtime είναι αβέβαιο για την κατάσταση αυτού του αρχείου. Αυτό μπορεί να συμβεί όταν το αρχείο είναι σε μια απομακρυσμένη μονάδα δίσκου που είναι απροσπέλαστη ή το αρχείο είναι σε ευρετήριο που δεν «προβάλλεται» πια."
 
-#: airtime_mvc/application/controllers/LocaleController.php:123
+#: airtime_mvc/application/controllers/LocaleController.php:124
 #, php-format
 msgid "Listener Count on %s: %s"
 msgstr "Καταμέτρηση Ακροατών για %s : %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:125
+#: airtime_mvc/application/controllers/LocaleController.php:126
 msgid "Remind me in 1 week"
 msgstr "Υπενθύμιση σε 1 εβδομάδα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:126
+#: airtime_mvc/application/controllers/LocaleController.php:127
 msgid "Remind me never"
 msgstr "Καμία υπενθύμιση"
 
-#: airtime_mvc/application/controllers/LocaleController.php:127
+#: airtime_mvc/application/controllers/LocaleController.php:128
 msgid "Yes, help Airtime"
 msgstr "Ναι, βοηθώ το Airtime"
 
-#: airtime_mvc/application/controllers/LocaleController.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:187
+#: airtime_mvc/application/controllers/LocaleController.php:129
+#: airtime_mvc/application/controllers/LocaleController.php:188
 msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "Η εικόνα πρέπει να είναι jpg, jpeg, png ή gif "
 
-#: airtime_mvc/application/controllers/LocaleController.php:131
+#: airtime_mvc/application/controllers/LocaleController.php:132
 msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
 msgstr "Ένα στατικό smart block θα αποθηκεύσει τα κριτήρια και θα δημιουργήσει αμέσως το περιεχόμενο του block. Αυτό σας επιτρέπει να το επεξεργαστείτε και να το προβάλεται στη Βιβλιοθήκη πριν το προσθέσετε σε μια εκπομπή."
 
-#: airtime_mvc/application/controllers/LocaleController.php:133
+#: airtime_mvc/application/controllers/LocaleController.php:134
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
 msgstr "Ένα στατικό smart block θα αποθηκεύσει μόνο τα κριτήρια. Το περιεχόμενο του block θα δημιουργηθεί κατά την προσθήκη του σε μια εκπομπή. Δεν θα μπορείτε να δείτε και να επεξεργαστείτε το περιεχόμενο στη Βιβλιοθήκη."
 
-#: airtime_mvc/application/controllers/LocaleController.php:135
+#: airtime_mvc/application/controllers/LocaleController.php:136
 msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
 msgstr "Η επιθυμητή διάρκεια του block δεν θα επιτευχθεί αν το Airtime δεν μπορέσει να βρεί αρκετά μοναδικά κομμάτια που να ταιριάζουν στα κριτήριά σας. Ενεργοποιήστε αυτή την επιλογή αν θέλετε να επιτρέψετε την πολλαπλή προσθήκη κομματιών στο smart block."
 
-#: airtime_mvc/application/controllers/LocaleController.php:136
+#: airtime_mvc/application/controllers/LocaleController.php:137
 msgid "Smart block shuffled"
 msgstr "Smart block shuffled"
 
-#: airtime_mvc/application/controllers/LocaleController.php:137
+#: airtime_mvc/application/controllers/LocaleController.php:138
 msgid "Smart block generated and criteria saved"
 msgstr "Το Smart block δημιουργήθηκε και τα κριτήρια αποθηκεύτηκαν"
 
-#: airtime_mvc/application/controllers/LocaleController.php:138
+#: airtime_mvc/application/controllers/LocaleController.php:139
 msgid "Smart block saved"
 msgstr "Το Smart block αποθηκεύτηκε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:139
+#: airtime_mvc/application/controllers/LocaleController.php:140
 msgid "Processing..."
 msgstr "Επεξεργασία..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:153
+#: airtime_mvc/application/controllers/LocaleController.php:154
 msgid "Played"
 msgstr "Παίχτηκε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:158
+#: airtime_mvc/application/controllers/LocaleController.php:159
 #, php-format
 msgid "Copied %s row%s to the clipboard"
 msgstr "Αντιγράφηκαν %s σειρές%s στο πρόχειρο"
 
-#: airtime_mvc/application/controllers/LocaleController.php:159
+#: airtime_mvc/application/controllers/LocaleController.php:160
 #, php-format
 msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
 msgstr "%sΕκτύπωση προβολής%sΠαρακαλούμε να χρησιμοποιείσετε την λειτουργία εκτύπωσης του περιηγητή σας για να τυπώσετε τον πίνακα. Όταν τελειώσετε πατήστε escape"
 
-#: airtime_mvc/application/controllers/LocaleController.php:161
+#: airtime_mvc/application/controllers/LocaleController.php:162
 msgid "Choose Storage Folder"
 msgstr "Επιλογή Φακέλου Αποθήκευσης"
 
-#: airtime_mvc/application/controllers/LocaleController.php:162
+#: airtime_mvc/application/controllers/LocaleController.php:163
 msgid "Choose Folder to Watch"
 msgstr "Επιλογή Φακέλου για Προβολή"
 
-#: airtime_mvc/application/controllers/LocaleController.php:164
+#: airtime_mvc/application/controllers/LocaleController.php:165
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
@@ -2181,609 +2185,609 @@ msgstr ""
 "Είστε βέβαιοι ότι θέλετε να αλλάξετε το φάκελο αποθήκευσης;\n"
 "Αυτό θα αφαιρέσει τα αρχεία από τη βιβλιοθήκη του Airtime!"
 
-#: airtime_mvc/application/controllers/LocaleController.php:165
+#: airtime_mvc/application/controllers/LocaleController.php:166
 #: airtime_mvc/application/views/scripts/preference/directory-config.phtml:2
 msgid "Manage Media Folders"
 msgstr "Διαχείριση Φακέλων Πολυμέσων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:166
+#: airtime_mvc/application/controllers/LocaleController.php:167
 msgid "Are you sure you want to remove the watched folder?"
 msgstr "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε το φάκελο που προβάλλεται;"
 
-#: airtime_mvc/application/controllers/LocaleController.php:167
+#: airtime_mvc/application/controllers/LocaleController.php:168
 msgid "This path is currently not accessible."
 msgstr "Αυτή η διαδρομή δεν είναι προς το παρόν προσβάσιμη."
 
-#: airtime_mvc/application/controllers/LocaleController.php:169
+#: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
 msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:170
+#: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Connected to the streaming server"
 msgstr "Συνδέθηκε με τον διακομιστή streaming "
 
-#: airtime_mvc/application/controllers/LocaleController.php:171
+#: airtime_mvc/application/controllers/LocaleController.php:172
 msgid "The stream is disabled"
 msgstr "Το stream είναι απενεργοποιημένο"
 
-#: airtime_mvc/application/controllers/LocaleController.php:173
+#: airtime_mvc/application/controllers/LocaleController.php:174
 msgid "Can not connect to the streaming server"
 msgstr "Αδύνατη η σύνδεση με τον διακομιστή streaming "
 
-#: airtime_mvc/application/controllers/LocaleController.php:175
+#: airtime_mvc/application/controllers/LocaleController.php:176
 msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
 msgstr "Αν το Airtime είναι πίσω από ένα τείχος προστασίας ή router, ίσως χρειαστεί να ρυθμίσετε την προώθηση port και οι πληροφορίες πεδίου θα είναι λανθασμένες. Σε αυτή την περίπτωση θα πρέπει να ενημερώσετε αυτό το πεδίο, ώστε να δείχνει το σωστό host/port/mount που χρειάζονται οι DJ σας για να συνδεθούν. Το επιτρεπόμενο εύρος είναι μεταξύ 1024 και 49151."
 
-#: airtime_mvc/application/controllers/LocaleController.php:176
+#: airtime_mvc/application/controllers/LocaleController.php:177
 #, php-format
 msgid "For more details, please read the %sAirtime Manual%s"
 msgstr "Για περισσότερες λεπτομέρειες, παρακαλούμε διαβάστε το %sAirtime Εγχειρίδιο%s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:178
+#: airtime_mvc/application/controllers/LocaleController.php:179
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
 msgstr "Τσεκάρετε αυτή την επιλογή για να ενεργοποιήσετε τα μεταδεδομένα για OGG streams (τα stream μεταδεδομένα είναι ο τίτλος του κομματιού και του καλλιτέχνη, που εμφανίζονται σε ένα audio player). VLC και mplayer προκαλούν βλάβες κατά την αναπαραγωγή ενός OGG / Vorbis stream, το οποίο έχει ενεργοποιημένες τις πληροφορίες μεταδεδομένων: θα αποσυνδέονται από το stream μετά από κάθε κομμάτι. Εάν χρησιμοποιείτε ένα OGG stream και οι ακροατές σας δεν απαιτούν υποστήριξη για αυτές τις συσκευές αναπαραγωγής ήχου, τότε μπορείτε να ενεργοποιήσετε αυτή την επιλογή."
 
-#: airtime_mvc/application/controllers/LocaleController.php:179
+#: airtime_mvc/application/controllers/LocaleController.php:180
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
 msgstr "Επιλέξτε αυτό το πλαίσιο για να σβήσει αυτόματα η Κύρια/Εμφάνιση πηγής κατά την αποσύνδεση πηγής."
 
-#: airtime_mvc/application/controllers/LocaleController.php:180
+#: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "Check this box to automatically switch on Master/Show source upon source connection."
 msgstr "Επιλέξτε αυτό το πλαίσιο για να ενεργοποιηθεί αυτόματα η η Κύρια/Εμφάνιση πηγής κατά την σύνδεση πηγής."
 
-#: airtime_mvc/application/controllers/LocaleController.php:181
+#: airtime_mvc/application/controllers/LocaleController.php:182
 msgid "If your Icecast server expects a username of 'source', this field can be left blank."
 msgstr "Εάν ο διακομιστής Icecast περιμένει ένα όνομα χρήστη από την «πηγή», αυτό το πεδίο μπορεί να μείνει κενό."
 
-#: airtime_mvc/application/controllers/LocaleController.php:182
-#: airtime_mvc/application/controllers/LocaleController.php:192
+#: airtime_mvc/application/controllers/LocaleController.php:183
+#: airtime_mvc/application/controllers/LocaleController.php:193
 msgid "If your live streaming client does not ask for a username, this field should be 'source'."
 msgstr "Εάν ο live streaming πελάτη σας δεν ζητά ένα όνομα χρήστη, το πεδίο αυτό θα πρέπει να είναι η «πηγή»."
 
-#: airtime_mvc/application/controllers/LocaleController.php:184
+#: airtime_mvc/application/controllers/LocaleController.php:185
 msgid "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
 msgstr "Εάν αλλάξετε το όνομα χρήστη ή τον κωδικό πρόσβασης για ένα ενεργοποιημένο stream, η μηχανή playout θα πραγματοποιήσει επανεκκίνηση και οι ακροατές σας θα ακούσουν σιωπή για 5-10 δευτερόλεπτα. Με την αλλαγή των παρακάτω πεδίων ΔΕΝ θα προκληθεί επανεκκίνηση: Stream Label (Γενικές Ρυθμίσεις), και Εναλλαγή Fade(s) Μετάβασης, Κύριο Όνομα χρήστη  και Κύριος Κωδικός πρόσβασης (Ρυθμίσεις Stream Εισόδου). Αν το Airtime ηχογραφεί και αν η αλλαγή προκαλέσει επανεκκίνηση της μηχανής playout, η ηχογράφηση θα διακοπεί."
 
-#: airtime_mvc/application/controllers/LocaleController.php:185
+#: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
 msgstr "Αυτό είναι το Icecast/SHOUTcast όνομα χρήστη και ο κωδικός πρόσβασης διαχειριστή για τις στατιστικές ακροατών."
 
-#: airtime_mvc/application/controllers/LocaleController.php:189
+#: airtime_mvc/application/controllers/LocaleController.php:190
 msgid "No result found"
 msgstr "Δεν βρέθηκαν αποτελέσματα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:190
+#: airtime_mvc/application/controllers/LocaleController.php:191
 msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
 msgstr "Αυτό ακολουθεί το ίδιο πρότυπο ασφαλείας για τις εκπομπές: μόνο οι χρήστες της συγκεκριμένης εκπομπής μπορούν να συνδεθούν."
 
-#: airtime_mvc/application/controllers/LocaleController.php:191
+#: airtime_mvc/application/controllers/LocaleController.php:192
 msgid "Specify custom authentication which will work only for this show."
 msgstr "Καθορίστε την προσαρμόσιμη πιστοποίηση, η οποία θα λειτουργήσει μόνο για αυτή την εκπομπή."
 
-#: airtime_mvc/application/controllers/LocaleController.php:193
+#: airtime_mvc/application/controllers/LocaleController.php:194
 msgid "The show instance doesn't exist anymore!"
 msgstr "Η εκπομπή δεν υπάρχει πια!"
 
-#: airtime_mvc/application/controllers/LocaleController.php:194
+#: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Warning: Shows cannot be re-linked"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:198
+#: airtime_mvc/application/controllers/LocaleController.php:199
 msgid "Show"
 msgstr "Εκπομπή"
 
-#: airtime_mvc/application/controllers/LocaleController.php:199
+#: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "Show is empty"
 msgstr "Η εκπομπή είναι άδεια"
 
-#: airtime_mvc/application/controllers/LocaleController.php:200
+#: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "1m"
 msgstr "1λ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:201
+#: airtime_mvc/application/controllers/LocaleController.php:202
 msgid "5m"
 msgstr "5λ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:202
+#: airtime_mvc/application/controllers/LocaleController.php:203
 msgid "10m"
 msgstr "10λ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:203
+#: airtime_mvc/application/controllers/LocaleController.php:204
 msgid "15m"
 msgstr "15λ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:204
+#: airtime_mvc/application/controllers/LocaleController.php:205
 msgid "30m"
 msgstr "30λ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:205
+#: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "60m"
 msgstr "60λ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:207
+#: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "Retreiving data from the server..."
 msgstr "Ανάκτηση δεδομένων από το διακομιστή..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:213
+#: airtime_mvc/application/controllers/LocaleController.php:214
 msgid "This show has no scheduled content."
 msgstr "Αυτή η εκπομπή δεν έχει προγραμματισμένο περιεχόμενο."
 
-#: airtime_mvc/application/controllers/LocaleController.php:214
+#: airtime_mvc/application/controllers/LocaleController.php:215
 msgid "This show is not completely filled with content."
 msgstr "Η εκπομπή δεν εντελώς γεμάτη με περιεχόμενο "
 
-#: airtime_mvc/application/controllers/LocaleController.php:218
+#: airtime_mvc/application/controllers/LocaleController.php:219
 msgid "January"
 msgstr "Ιανουάριος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:219
+#: airtime_mvc/application/controllers/LocaleController.php:220
 msgid "February"
 msgstr "Φεβρουάριος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:220
+#: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "March"
 msgstr "Μάρτιος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:221
+#: airtime_mvc/application/controllers/LocaleController.php:222
 msgid "April"
 msgstr "Απρίλης"
 
-#: airtime_mvc/application/controllers/LocaleController.php:222
-#: airtime_mvc/application/controllers/LocaleController.php:234
+#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "May"
 msgstr "Μάιος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:223
+#: airtime_mvc/application/controllers/LocaleController.php:224
 msgid "June"
 msgstr "Ιούνιος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:225
 msgid "July"
 msgstr "Ιούλιος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:225
+#: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "August"
 msgstr "Αύγουστος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:226
+#: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "September"
 msgstr "Σεπτέμβριος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:227
+#: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "October"
 msgstr "Οκτώβριος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:228
+#: airtime_mvc/application/controllers/LocaleController.php:229
 msgid "November"
 msgstr "Νοέμβριος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "December"
 msgstr "Δεκέμβριος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:230
+#: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "Jan"
 msgstr "Ιαν"
 
-#: airtime_mvc/application/controllers/LocaleController.php:231
+#: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "Feb"
 msgstr "Φεβ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:232
+#: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "Mar"
 msgstr "Μαρ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:233
+#: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "Apr"
 msgstr "Απρ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:235
+#: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "Jun"
 msgstr "Ιουν"
 
-#: airtime_mvc/application/controllers/LocaleController.php:236
+#: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "Jul"
 msgstr "Ιουλ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:237
+#: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Aug"
 msgstr "Αυγ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:238
+#: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Sep"
 msgstr "Σεπ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:239
+#: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Oct"
 msgstr "Οκτ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:240
+#: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Nov"
 msgstr "Νοε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
+#: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Dec"
 msgstr "Δεκ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:242
+#: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "today"
 msgstr "σήμερα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:243
+#: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "day"
 msgstr "ημέρα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:244
+#: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "week"
 msgstr "εβδομάδα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:245
+#: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "month"
 msgstr "μήνας"
 
-#: airtime_mvc/application/controllers/LocaleController.php:260
+#: airtime_mvc/application/controllers/LocaleController.php:261
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "Εκπομπές μεγαλύτερες από την προγραμματισμένη διάρκειά τους θα διακόπτονται από την επόμενη εκπομπή."
 
-#: airtime_mvc/application/controllers/LocaleController.php:261
+#: airtime_mvc/application/controllers/LocaleController.php:262
 msgid "Cancel Current Show?"
 msgstr "Ακύρωση Τρέχουσας Εκπομπής;"
 
-#: airtime_mvc/application/controllers/LocaleController.php:262
-#: airtime_mvc/application/controllers/LocaleController.php:306
+#: airtime_mvc/application/controllers/LocaleController.php:263
+#: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Stop recording current show?"
 msgstr "Πάυση ηχογράφησης τρέχουσας εκπομπής;"
 
-#: airtime_mvc/application/controllers/LocaleController.php:263
+#: airtime_mvc/application/controllers/LocaleController.php:264
 msgid "Ok"
 msgstr "Οκ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:264
+#: airtime_mvc/application/controllers/LocaleController.php:265
 msgid "Contents of Show"
 msgstr "Περιεχόμενα Εκπομπής"
 
-#: airtime_mvc/application/controllers/LocaleController.php:267
+#: airtime_mvc/application/controllers/LocaleController.php:268
 msgid "Remove all content?"
 msgstr "Αφαίρεση όλου του περιεχομένου;"
 
-#: airtime_mvc/application/controllers/LocaleController.php:269
+#: airtime_mvc/application/controllers/LocaleController.php:270
 msgid "Delete selected item(s)?"
 msgstr "Διαγραφή επιλεγμένου στοιχείου/ων;"
 
-#: airtime_mvc/application/controllers/LocaleController.php:270
+#: airtime_mvc/application/controllers/LocaleController.php:271
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
 msgstr "Έναρξη"
 
-#: airtime_mvc/application/controllers/LocaleController.php:271
+#: airtime_mvc/application/controllers/LocaleController.php:272
 msgid "End"
 msgstr "Τέλος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:272
+#: airtime_mvc/application/controllers/LocaleController.php:273
 msgid "Duration"
 msgstr "Διάρκεια"
 
-#: airtime_mvc/application/controllers/LocaleController.php:282
+#: airtime_mvc/application/controllers/LocaleController.php:283
 msgid "Show Empty"
 msgstr "Η εκπομπή είναι άδεια"
 
-#: airtime_mvc/application/controllers/LocaleController.php:283
+#: airtime_mvc/application/controllers/LocaleController.php:284
 msgid "Recording From Line In"
 msgstr "Ηχογράφηση Από Line In"
 
-#: airtime_mvc/application/controllers/LocaleController.php:284
+#: airtime_mvc/application/controllers/LocaleController.php:285
 msgid "Track preview"
 msgstr "Προεπισκόπηση κομματιού"
 
-#: airtime_mvc/application/controllers/LocaleController.php:288
+#: airtime_mvc/application/controllers/LocaleController.php:289
 msgid "Cannot schedule outside a show."
 msgstr "Δεν είναι δυνατός ο προγραμματισμός εκτός εκπομπής."
 
-#: airtime_mvc/application/controllers/LocaleController.php:289
+#: airtime_mvc/application/controllers/LocaleController.php:290
 msgid "Moving 1 Item"
 msgstr "Μετακίνηση 1 Στοιχείου"
 
-#: airtime_mvc/application/controllers/LocaleController.php:290
+#: airtime_mvc/application/controllers/LocaleController.php:291
 #, php-format
 msgid "Moving %s Items"
 msgstr "Μετακίνηση Στοιχείων %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:293
+#: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Fade Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:294
+#: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Cue Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:295
+#: airtime_mvc/application/controllers/LocaleController.php:296
 msgid "Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:298
+#: airtime_mvc/application/controllers/LocaleController.php:299
 msgid "Select all"
 msgstr "Επιλογή όλων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:299
+#: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Select none"
 msgstr "Καμία Επιλογή"
 
-#: airtime_mvc/application/controllers/LocaleController.php:300
+#: airtime_mvc/application/controllers/LocaleController.php:301
 msgid "Remove overbooked tracks"
 msgstr "Αφαίρεση υπεράριθμων κρατήσεων κομματιών"
 
-#: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/controllers/LocaleController.php:302
 msgid "Remove selected scheduled items"
 msgstr "Αφαίρεση επιλεγμένων προγραμματισμένων στοιχείων "
 
-#: airtime_mvc/application/controllers/LocaleController.php:302
+#: airtime_mvc/application/controllers/LocaleController.php:303
 msgid "Jump to the current playing track"
 msgstr "Μετάβαση στο τρέχον κομμάτι "
 
-#: airtime_mvc/application/controllers/LocaleController.php:303
+#: airtime_mvc/application/controllers/LocaleController.php:304
 msgid "Cancel current show"
 msgstr "Ακύρωση τρέχουσας εκπομπής"
 
-#: airtime_mvc/application/controllers/LocaleController.php:308
+#: airtime_mvc/application/controllers/LocaleController.php:309
 msgid "Open library to add or remove content"
 msgstr "Άνοιγμα βιβλιοθήκης για προσθήκη ή αφαίρεση περιεχομένου"
 
-#: airtime_mvc/application/controllers/LocaleController.php:311
+#: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "in use"
 msgstr "σε χρήση"
 
-#: airtime_mvc/application/controllers/LocaleController.php:312
+#: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "Disk"
 msgstr "Δίσκος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:314
+#: airtime_mvc/application/controllers/LocaleController.php:315
 msgid "Look in"
 msgstr "Κοιτάξτε σε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:316
+#: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "Open"
 msgstr "Άνοιγμα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:322
+#: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "Guests can do the following:"
 msgstr "Οι επισκέπτες μπορούν να κάνουν τα παρακάτω"
 
-#: airtime_mvc/application/controllers/LocaleController.php:323
+#: airtime_mvc/application/controllers/LocaleController.php:324
 msgid "View schedule"
 msgstr "Προβολή Προγράμματος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:324
+#: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "View show content"
 msgstr "Προβολή περιεχομένου εκπομπής"
 
-#: airtime_mvc/application/controllers/LocaleController.php:325
+#: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "DJs can do the following:"
 msgstr "Οι DJ μπορούν να κάνουν τα παρακάτω"
 
-#: airtime_mvc/application/controllers/LocaleController.php:326
+#: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Manage assigned show content"
 msgstr "Διαχείριση ανατεθημένου περιεχομένου εκπομπής"
 
-#: airtime_mvc/application/controllers/LocaleController.php:327
+#: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Import media files"
 msgstr "Εισαγωγή αρχείων πολυμέσων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:328
+#: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Create playlists, smart blocks, and webstreams"
 msgstr "Δημιουργία λιστών αναπαραγωγής, smart blocks, και webstreams "
 
-#: airtime_mvc/application/controllers/LocaleController.php:329
+#: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Manage their own library content"
 msgstr "Διαχείριση δικού τους περιεχομένου βιβλιοθήκης"
 
-#: airtime_mvc/application/controllers/LocaleController.php:330
+#: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "Progam Managers can do the following:"
 msgstr "Οι Μάνατζερ Προγράμματος μπορούν να κάνουν τα παρακάτω:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:331
+#: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "View and manage show content"
 msgstr "Προβολή και διαχείριση περιεχομένου εκπομπής"
 
-#: airtime_mvc/application/controllers/LocaleController.php:332
+#: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "Schedule shows"
 msgstr "Πρόγραμμα εκπομπών"
 
-#: airtime_mvc/application/controllers/LocaleController.php:333
+#: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Manage all library content"
 msgstr "Διαχείριση όλου του περιεχομένου βιβλιοθήκης"
 
-#: airtime_mvc/application/controllers/LocaleController.php:334
+#: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Admins can do the following:"
 msgstr "ΟΙ Διαχειριστές μπορούν να κάνουν τα παρακάτω:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:335
+#: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "Manage preferences"
 msgstr "Διαχείριση προτιμήσεων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:336
+#: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "Manage users"
 msgstr "Διαχείριση Χρηστών"
 
-#: airtime_mvc/application/controllers/LocaleController.php:337
+#: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Manage watched folders"
 msgstr "Διαχείριση προβεβλημένων φακέλων "
 
-#: airtime_mvc/application/controllers/LocaleController.php:339
+#: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "View system status"
 msgstr "Προβολή κατάστασης συστήματος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:340
+#: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "Access playout history"
 msgstr "Πρόσβαση στην ιστορία playout"
 
-#: airtime_mvc/application/controllers/LocaleController.php:341
+#: airtime_mvc/application/controllers/LocaleController.php:342
 msgid "View listener stats"
 msgstr "Προβολή στατιστικών των ακροατών"
 
-#: airtime_mvc/application/controllers/LocaleController.php:343
+#: airtime_mvc/application/controllers/LocaleController.php:344
 msgid "Show / hide columns"
 msgstr "Εμφάνιση / απόκρυψη στηλών"
 
-#: airtime_mvc/application/controllers/LocaleController.php:345
+#: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "From {from} to {to}"
 msgstr "Από {από} σε {σε}"
 
-#: airtime_mvc/application/controllers/LocaleController.php:346
+#: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "kbps"
 msgstr "Kbps"
 
-#: airtime_mvc/application/controllers/LocaleController.php:347
+#: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "yyyy-mm-dd"
 msgstr "εεεε-μμ-ηη"
 
-#: airtime_mvc/application/controllers/LocaleController.php:348
+#: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "hh:mm:ss.t"
 msgstr "ωω:λλ:δδ.t"
 
-#: airtime_mvc/application/controllers/LocaleController.php:349
+#: airtime_mvc/application/controllers/LocaleController.php:350
 msgid "kHz"
 msgstr "kHz"
 
-#: airtime_mvc/application/controllers/LocaleController.php:352
+#: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "Su"
 msgstr "Κυ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:353
+#: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Mo"
 msgstr "Δε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:354
+#: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "Tu"
 msgstr "Τρ"
 
-#: airtime_mvc/application/controllers/LocaleController.php:355
+#: airtime_mvc/application/controllers/LocaleController.php:356
 msgid "We"
 msgstr "Τε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:356
+#: airtime_mvc/application/controllers/LocaleController.php:357
 msgid "Th"
 msgstr "Πε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:357
+#: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Fr"
 msgstr "Πα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:358
+#: airtime_mvc/application/controllers/LocaleController.php:359
 msgid "Sa"
 msgstr "Σα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:359
-#: airtime_mvc/application/controllers/LocaleController.php:387
+#: airtime_mvc/application/controllers/LocaleController.php:360
+#: airtime_mvc/application/controllers/LocaleController.php:388
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: airtime_mvc/application/controllers/LocaleController.php:361
+#: airtime_mvc/application/controllers/LocaleController.php:362
 msgid "Hour"
 msgstr "Ώρα"
 
-#: airtime_mvc/application/controllers/LocaleController.php:362
+#: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Minute"
 msgstr "Λεπτό"
 
-#: airtime_mvc/application/controllers/LocaleController.php:363
+#: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
-#: airtime_mvc/application/controllers/LocaleController.php:366
+#: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "Select files"
 msgstr "Επιλογή αρχείων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:367
 #: airtime_mvc/application/controllers/LocaleController.php:368
+#: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "Add files to the upload queue and click the start button."
 msgstr "Προσθέστε αρχεία στην ουρά ανεβάσματος και κάντε κλίκ στο κουμπί έναρξης"
 
-#: airtime_mvc/application/controllers/LocaleController.php:371
+#: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Add Files"
 msgstr "Προσθήκη Αρχείων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:372
+#: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "Stop Upload"
 msgstr "Στάση Ανεβάσματος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:373
+#: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Start upload"
 msgstr "Έναρξη ανεβάσματος"
 
-#: airtime_mvc/application/controllers/LocaleController.php:374
+#: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "Add files"
 msgstr "Προσθήκη αρχείων"
 
-#: airtime_mvc/application/controllers/LocaleController.php:375
+#: airtime_mvc/application/controllers/LocaleController.php:376
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "Ανέβηκαν %d/%d αρχεία"
 
-#: airtime_mvc/application/controllers/LocaleController.php:376
+#: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "N/A"
 msgstr "N/A"
 
-#: airtime_mvc/application/controllers/LocaleController.php:377
+#: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "Drag files here."
 msgstr "Σύρετε αρχεία εδώ."
 
-#: airtime_mvc/application/controllers/LocaleController.php:378
+#: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "File extension error."
 msgstr "Σφάλμα επέκτασης αρχείου."
 
-#: airtime_mvc/application/controllers/LocaleController.php:379
+#: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "File size error."
 msgstr "Σφάλμα μεγέθους αρχείου."
 
-#: airtime_mvc/application/controllers/LocaleController.php:380
+#: airtime_mvc/application/controllers/LocaleController.php:381
 msgid "File count error."
 msgstr "Σφάλμα μέτρησης αρχείων."
 
-#: airtime_mvc/application/controllers/LocaleController.php:381
+#: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "Init error."
 msgstr "Σφάλμα αρχικοποίησης."
 
-#: airtime_mvc/application/controllers/LocaleController.php:382
+#: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "HTTP Error."
 msgstr "Σφάλμα HTTP."
 
-#: airtime_mvc/application/controllers/LocaleController.php:383
+#: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "Security error."
 msgstr "Σφάλμα ασφάλειας."
 
-#: airtime_mvc/application/controllers/LocaleController.php:384
+#: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "Generic error."
 msgstr "Γενικό σφάλμα."
 
-#: airtime_mvc/application/controllers/LocaleController.php:385
+#: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "IO error."
 msgstr "Σφάλμα IO"
 
-#: airtime_mvc/application/controllers/LocaleController.php:386
+#: airtime_mvc/application/controllers/LocaleController.php:387
 #, php-format
 msgid "File: %s"
 msgstr "Αρχείο: %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:388
+#: airtime_mvc/application/controllers/LocaleController.php:389
 #, php-format
 msgid "%d files queued"
 msgstr "%d αρχεία σε αναμονή"
 
-#: airtime_mvc/application/controllers/LocaleController.php:389
+#: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "Αρχείο: %f, μέγεθος: %s, μέγιστο μέγεθος αρχείου: %m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:390
+#: airtime_mvc/application/controllers/LocaleController.php:391
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "Το URL είτε είναι λάθος ή δεν υφίσταται"
 
-#: airtime_mvc/application/controllers/LocaleController.php:391
+#: airtime_mvc/application/controllers/LocaleController.php:392
 msgid "Error: File too large: "
 msgstr "Σφάλμα: Πολύ μεγάλο αρχείο: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:392
+#: airtime_mvc/application/controllers/LocaleController.php:393
 msgid "Error: Invalid file extension: "
 msgstr "Σφάλμα: Μη έγκυρη προέκταση αρχείου: "
 
