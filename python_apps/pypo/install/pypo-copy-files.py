@@ -78,6 +78,13 @@ try:
     os.chown("/etc/airtime", -1, gid)
     os.chmod("/etc/airtime", stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR |     stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP |     stat.S_IROTH | stat.S_IXOTH)
 
+    # load config file
+    try:
+        config = ConfigObj(PATH_INI_FILE)
+    except Exception, e:
+        print 'Error loading config file: ', e
+        sys.exit(1)
+
     #copy monit files
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
     subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True)
