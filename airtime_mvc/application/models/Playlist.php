@@ -796,6 +796,7 @@ SQL;
         try {
             if (is_null($cueIn) && is_null($cueOut)) {
                 $errArray["error"] = _("Cue in and cue out are null.");
+                $errArray["type"] = self::CUE_ALL_ERROR;
 
                 return $errArray;
             }
@@ -826,6 +827,7 @@ SQL;
                 $sql = "SELECT :cueIn::INTERVAL > :cueOut::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':cueOut'=>$cueOut), 'column')) {
                     $errArray["error"] = _("Can't set cue in to be larger than cue out.");
+                    $errArray["type"] = self::CUE_IN_ERROR;
 
                     return $errArray;
                 }
@@ -833,6 +835,7 @@ SQL;
                 $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
                     $errArray["error"] = _("Can't set cue out to be greater than file length.");
+                    $errArray["type"] = self::CUE_OUT_ERROR;
 
                     return $errArray;
                 }
@@ -849,6 +852,7 @@ SQL;
                 $sql = "SELECT :cueIn::INTERVAL > :oldCueOut::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueIn'=>$cueIn, ':oldCueOut'=>$oldCueOut), 'column')) {
                     $errArray["error"] = _("Can't set cue in to be larger than cue out.");
+                    $errArray["type"] = self::CUE_IN_ERROR;
 
                     return $errArray;
                 }
@@ -867,6 +871,7 @@ SQL;
                 $sql = "SELECT :cueOut::INTERVAL < :oldCueIn::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':oldCueIn'=>$oldCueIn), 'column')) {
                     $errArray["error"] = _("Can't set cue out to be smaller than cue in.");
+                    $errArray["type"] = self::CUE_OUT_ERROR;
 
                     return $errArray;
                 }
@@ -874,6 +879,7 @@ SQL;
                 $sql = "SELECT :cueOut::INTERVAL > :origLength::INTERVAL";
                 if (Application_Common_Database::prepareAndExecute($sql, array(':cueOut'=>$cueOut, ':origLength'=>$origLength), 'column')) {
                     $errArray["error"] = _("Can't set cue out to be greater than file length.");
+                    $errArray["type"] = self::CUE_OUT_ERROR;
 
                     return $errArray;
                 }
