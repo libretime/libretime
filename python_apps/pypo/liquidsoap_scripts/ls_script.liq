@@ -70,6 +70,11 @@ create_source()
 
 queue = add(!sources, normalize=false)
 
+<<<<<<< HEAD
+=======
+# the crossfade function controls fade in/out
+
+>>>>>>> 551d65ebf04d877bdba009a92c62bfa4f08eea9c
 output.dummy(fallible=true, queue)
 
 http = input.http_restart(id="http")
