@@ -40,6 +40,7 @@ source_id = ref 0
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
     l = cue_cut(l)
+    l = on_metadata(notify, l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
@@ -67,7 +68,6 @@ queue = amplify(1., override="replay_gain", queue)
 
 # the crossfade function controls fade in/out
 queue = crossfade_airtime(queue)
-queue = on_metadata(notify, queue)
 output.dummy(fallible=true, queue)
 
 http = input.http_restart(id="http")
