@@ -383,6 +383,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->createUpdateResponse($obj);
             } else {
                 $this->view->cue_error = $response["error"];
+                $this->view->code = $response["type"];
             }
         } catch (PlaylistOutDatedException $e) {
             $this->playlistOutdated($e);
