@@ -501,44 +501,25 @@ SQL;
     }
 
     /**
-     * Get the URL to access this file using the server name/address that
-     * this PHP script was invoked through.
+     * Get the URL to access this file
      */
     public function getFileUrl()
     {
-        $serverName = $_SERVER['SERVER_NAME'];
-        $serverPort = $_SERVER['SERVER_PORT'];
-
-        return $this->constructGetFileUrl($serverName, $serverPort);
-    }
-
-    /**
-     * Get the URL to access this file using the server name/address that
-     * is specified in the airtime.conf config file. If either of these is
-     * not specified, then use values provided by the $_SERVER global variable.
-     */
-    public function getFileUrlUsingConfigAddress()
-    {
-        $CC_CONFIG = Config::getConfig();
-
-        if (isset($CC_CONFIG['baseUrl'])) {
-            $serverName = $CC_CONFIG['baseUrl'];
-        } else {
-            $serverName = $_SERVER['SERVER_NAME'];
-        }
-
-        if (isset($CC_CONFIG['basePort'])) {
-            $serverPort = $CC_CONFIG['basePort'];
-        } else {
-            $serverPort = $_SERVER['SERVER_PORT'];
-        }
-
-        return $this->constructGetFileUrl($serverName, $serverPort);
-    }
-
-    private function constructGetFileUrl($p_serverName, $p_serverPort)
-    {
-        return "http://$p_serverName:$p_serverPort/api/get-media/file/".$this->getId().".".$this->getFileExtension();
+    	$CC_CONFIG = Config::getConfig();
+    	
+    	$protocol = empty($_SERVER['HTTPS']) ? "http" : "https";
+    	
+    	$serverName = $_SERVER['SERVER_NAME'];
+    	$serverPort = $_SERVER['SERVER_PORT'];
+    	$subDir = $CC_CONFIG['baseDir'];
+    	
+    	if ($subDir[0] === "/") {
+    		$subDir = substr($subDir, 1, strlen($subDir) - 1);
+    	}
+    	
+    	$baseUrl = "{$protocol}://{$serverName}:{$serverPort}/{$subDir}";
+       
+        return $this->getRelativeFileUrl($baseUrl);
     }
 
     /**
@@ -547,6 +528,8 @@ SQL;
      */
     public function getRelativeFileUrl($baseUrl)
     {
+    	Logging::debug("Zend base url: $baseUrl");
+    	
         return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 

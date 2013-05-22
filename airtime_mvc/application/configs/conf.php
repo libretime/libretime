@@ -26,6 +26,7 @@ class Config {
         $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
         $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
 
+        $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
         $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
