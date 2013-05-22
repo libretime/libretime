@@ -73,12 +73,10 @@ class TelnetLiquidsoap:
 
     def queue_push(self, queue_id, media_item):
         with self.telnet_lock:
-
             if not self.__is_empty(queue_id):
                 raise QueueNotEmptyException()
 
             tn = self.__connect()
-
             annotation = create_liquidsoap_annotation(media_item)
             msg = '%s.push %s\n' % (queue_id, annotation.encode('utf-8'))
             self.logger.debug(msg)

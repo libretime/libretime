@@ -510,7 +510,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                             }
                         } elseif ($column->getType() == PropelColumnTypes::TIMESTAMP) {
                             if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_value'])) {
-                                $element->addError(_("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00)"));
+                                $element->addError(_("The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"));
                                 $isValid = false;
                             } else {
                                 $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_value']);
@@ -523,7 +523,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
                             if (isset($d['sp_criteria_extra'])) {
                                 if (!preg_match("/(\d{4})-(\d{2})-(\d{2})/", $d['sp_criteria_extra'])) {
-                                    $element->addError(_("The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00)"));
+                                    $element->addError(_("The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"));
                                     $isValid = false;
                                 } else {
                                     $result = Application_Common_DateHelper::checkDateTimeRangeForSQL($d['sp_criteria_extra']);

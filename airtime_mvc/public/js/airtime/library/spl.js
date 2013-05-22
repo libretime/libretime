@@ -12,7 +12,7 @@ var AIRTIME = (function(AIRTIME){
 		viewport,
 		$lib,
 		$pl,
-		$togglePl = $("<button id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open Playlist Editor")+"'>"+$.i18n._("Open Playlist Editor")+"</button>"),
+		$togglePl = $("<button id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open Media Builder")+"'>"+$.i18n._("Open Media Builder")+"</button>"),
 		widgetHeight,
 		resizeTimeout,
 		width;

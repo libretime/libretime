@@ -413,7 +413,7 @@ var AIRTIME = (function(AIRTIME) {
                     
                     if (ele.bVisible) {
                         advanceSearchDiv.append(
-                            "<div id='advanced_search_col_"+currentColId+" class='control-group'>" +
+                            "<div id='advanced_search_col_"+currentColId+"' class='control-group'>" +
                                 "<label class='control-label'"+labelStyle+">"+ele.sTitle+" : </label>" +
                                 "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
                             "</div>");
@@ -447,14 +447,14 @@ var AIRTIME = (function(AIRTIME) {
         function setFilterElement(iColumn, bVisible){
             var actualId = colReorderMap[iColumn];
             var selector = "div#advanced_search_col_"+actualId;
+            var $el = $(selector);
+            
             if (bVisible) {
-                $(selector).show();
+                $el.show();
             } else {
-                $(selector).hide();
+                $el.hide();
             }
         }
-        
-        var currentColOrder = new Array();
         
         oTable = $libTable.dataTable( {
             
@@ -468,7 +468,7 @@ var AIRTIME = (function(AIRTIME) {
               /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  , 
               /* Type */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
               /* Is Scheduled */  { "sTitle" : $.i18n._("Scheduled")              , "mDataProp" : "is_scheduled"        , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
-              /* Is Playlist */  { "sTitle" : $.i18n._("Playlist")              , "mDataProp" : "is_playlist"        , "bSearchable" : false                 , "sWidth"      : "70px"                  , "sClass" : "library_is_playlist"}  ,
+              /* Is Playlist */  { "sTitle" : $.i18n._("Playlist / Block")              , "mDataProp" : "is_playlist"        , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
               /* Title */  { "sTitle" : $.i18n._("Title")         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          , 
               /* Creator */  { "sTitle" : $.i18n._("Creator")       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,  
               /* Album */  { "sTitle" : $.i18n._("Album")         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          , 
@@ -618,12 +618,12 @@ var AIRTIME = (function(AIRTIME) {
                 }
 
                 if (aData.is_scheduled) {
-                    $(nRow).find("td.library_is_scheduled").html('<span class="small-icon media-item-in-use"></span>');
+                    $(nRow).find("td.library_is_scheduled").html('<span class="small-icon is_scheduled"></span>');
                 } else if (!aData.is_scheduled) {
                     $(nRow).find("td.library_is_scheduled").html('');
                 }
                 if (aData.is_playlist) {
-                    $(nRow).find("td.library_is_playlist").html('<span class="small-icon media-item-in-use"></span>');
+                    $(nRow).find("td.library_is_playlist").html('<span class="small-icon is_playlist"></span>');
                 } else if (!aData.is_playlist) {
                     $(nRow).find("td.library_is_playlist").html('');
                 }
@@ -764,7 +764,8 @@ var AIRTIME = (function(AIRTIME) {
                 "sAlign": "right",
                 "aiExclude": [0, 1, 2],
                 "sSize": "css",
-                "fnStateChange": setFilterElement
+                "fnStateChange": setFilterElement,
+                "buttonText": $.i18n._("Show / hide columns")
             },
             
             "oColReorder": {

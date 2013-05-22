@@ -817,17 +817,18 @@ var AIRTIME = (function(AIRTIME){
                 mod.checkToolBarIcons();
             },
             
+            // R = ColReorder, C = ColVis
+            "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
+            
             "oColVis": {
-                "aiExclude": [ 0, 1 ]
+                "aiExclude": [ 0, 1 ],
+                "buttonText": $.i18n._("Show / hide columns"),
             },
             
             "oColReorder": {
                 "iFixedColumns": 2
             },
-            
-            // R = ColReorderResize, C = ColVis
-            "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
-            
+             
             "sAjaxDataProp": "schedule",
             "oLanguage": datatables_dict,
             "sAjaxSource": baseUrl+"showbuilder/builder-feed"  

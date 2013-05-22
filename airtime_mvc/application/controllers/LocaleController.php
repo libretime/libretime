@@ -62,7 +62,7 @@ class LocaleController extends Zend_Controller_Action
             "Deselect all" => _("Deselect all"),
             "Are you sure you want to delete the selected item(s)?" => _("Are you sure you want to delete the selected item(s)?"),
             "Scheduled" => _("Scheduled"),
-            "Playlist" => _("Playlist"),
+            "Playlist" => _("Playlist / Block"),
             "Title" => _("Title"),
             "Creator" => _("Creator"),
             "Album" => _("Album"),
@@ -110,6 +110,7 @@ class LocaleController extends Zend_Controller_Action
             "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
                 => _("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),
             //library/spl.js
+            "Open Media Builder" => _("Open Media Builder"),
             "please put in a time '00:00:00 (.0)'" => _("please put in a time '00:00:00 (.0)'"),
             "please put in a time in seconds '00 (.0)'" => _("please put in a time in seconds '00 (.0)'"),
             "Your browser does not support playing this file type: " => _("Your browser does not support playing this file type: "),
@@ -191,6 +192,7 @@ class LocaleController extends Zend_Controller_Action
             "Specify custom authentication which will work only for this show." => _("Specify custom authentication which will work only for this show."),
             "If your live streaming client does not ask for a username, this field should be 'source'." => _("If your live streaming client does not ask for a username, this field should be 'source'."),
             "The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
+            "Warning: Shows cannot be re-linked" => _("Warning: Shows cannot be re-linked"),
             //schedule/full-calendar-functions
             //already in schedule/add-show.js
             //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
