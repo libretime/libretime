@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Airtime 2.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-21 09:20-0400\n"
-"PO-Revision-Date: 2013-05-17 14:44-0500\n"
-"Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
+"PO-Revision-Date: 2013-05-22 10:45+0100\n"
+"Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: German Localization <contact@sourcefabric.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -1553,8 +1553,8 @@ msgstr "'Länge' sollte im 00:00:00-Format sein"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:513
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:526
-msgid "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00)"
-msgstr "Der Wert sollte in Zeitstempel-Format vorliegen (z.B. 0000-00-00 oder 00-00-00 00:00:00)"
+msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgstr "Der Wert sollte in Zeitstempel-Format vorliegen (z.B. 0000-00-00 oder 0000-00-00 00:00:00)"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:540
 msgid "The value has to be numeric"
@@ -2211,7 +2211,7 @@ msgstr "Zu diesem Pfad besteht momentan kein Zugang."
 # Translated without GUI review!
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr "Einige Stream Formate erfordern weitre Einstellungen. Einzelheiten über das Aktivieren von %sAAC+ Unterstüzung%s oder %sOpus Unterstüzung%s werden bereitgestellt."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
