@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-21 09:20-0400\n"
-"PO-Revision-Date: 2013-05-17 14:45-0500\n"
-"Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
+"PO-Revision-Date: 2013-05-22 10:51+0100\n"
+"Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Korean Localization <contact@sourcefabric.org>\n"
 "Language: ko_KR\n"
 "MIME-Version: 1.0\n"
@@ -1544,8 +1544,8 @@ msgstr "길이는 00:00:00 형태로 입력하세요"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:513
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:526
-msgid "The value should be in timestamp format(eg. 0000-00-00 or 00-00-00 00:00:00)"
-msgstr "이 값은 timestamp 형태(eg. 0000-00-00 or 00-00-00 00:00:00)로 입력해주세요"
+msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgstr "이 값은 timestamp 형태 (e.g. 0000-00-00 or 0000-00-00 00:00:00) 로 입력해주세요"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:540
 msgid "The value has to be numeric"
@@ -2195,7 +2195,7 @@ msgstr "경로에 접근할수 없습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
