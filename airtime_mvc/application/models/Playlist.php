@@ -10,6 +10,10 @@ require_once 'formatters/LengthFormatter.php';
  */
 class Application_Model_Playlist implements Application_Model_LibraryEditable
 {
+	const CUE_ALL_ERROR = 0;
+	const CUE_IN_ERROR = 1;
+	const CUE_OUT_ERROR = 2;
+	
     /**
      * propel connection object.
      */
