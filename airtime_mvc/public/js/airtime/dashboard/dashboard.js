@@ -22,6 +22,13 @@ var live_dj_on_air = false;
 var scheduled_play_on_air = false;
 var scheduled_play_source = false;
 
+
+//a reference returned by setTimeout. Useful for when we want clearTimeout()
+var newSongTimeoutId = null;
+
+//a reference returned by setTimeout. Useful for when we want clearTimeout()
+var newShowTimeoutId = null;
+
 //keep track of how many UI refreshes the ON-AIR light has been off for.
 //For example, the uiUpdateInterval is every 200ms, so if onAirOffIterations
 //is 25, then that means 5 seconds have gone by.
@@ -34,6 +41,8 @@ var nextSongPrepare = true;
 var nextShowPrepare = true;
 
 function secondsTimer(){
+    /* This function constantly calls itself every 'uiUpdateInterval' 
+     * micro-seconds and is responsible for updating the UI. */
     if (localRemoteTimeOffset !== null){
         var date = new Date();
         approximateServerTime = date.getTime() - localRemoteTimeOffset;
@@ -79,9 +88,11 @@ function updateProgressBarValue(){
         var songElapsedTime = 0;
         songPercentDone = (approximateServerTime - currentSong.songStartPosixTime)/currentSong.songLengthMs*100;
         songElapsedTime = approximateServerTime - currentSong.songStartPosixTime;
-        if (songPercentDone < 0 || songPercentDone > 100){
+        if (songPercentDone < 0) {
             songPercentDone = 0;        
             //currentSong = null;
+        } else if (songPercentDone > 100) {
+            songPercentDone = 100;
         } else {
             if ((currentSong.media_item_played == true && currentShow.length > 0) || (songElapsedTime < 5000 && currentShow[0].record != 1)) {
                 scheduled_play_line_to_switch.attr("class", "line-to-switch on");
@@ -95,40 +106,13 @@ function updateProgressBarValue(){
             }
             $('#progress-show').attr("class", "progress-show");
         }
-    } else if (nextSong == null) {
+    } else {
         scheduled_play_source = false;
         scheduled_play_line_to_switch.attr("class", "line-to-switch off");
         scheduled_play_div.removeClass("ready");
         $('#progress-show').attr("class", "progress-show-error");
     }
     $('#progress-bar').attr("style", "width:"+songPercentDone+"%");
-
-    //calculate how much time left to next song if there is any
-    if (nextSong !== null && nextSongPrepare){
-        var diff = nextSong.songStartPosixTime - approximateServerTime;
-        if (diff < serverUpdateInterval){
-            
-            //sometimes the diff is negative (-100ms for example). Still looking
-            //into why this could sometimes happen.
-            if (diff < 0)
-                diff=0;
-                
-            nextSongPrepare = false;
-            setTimeout(newSongStart, diff);
-        }
-    }
-    
-    //calculate how much time left to next show if there is any
-    if (nextShow.length > 0 && nextShowPrepare){
-        var diff = nextShow[0].showStartPosixTime - approximateServerTime;
-        if (diff < serverUpdateInterval){
-            if (diff < 0)
-                diff=0;
-                
-            nextShowPrepare = false;
-            setTimeout(nextShowStart, diff);
-        }
-    }
 }
 
 function updatePlaybar(){
@@ -159,7 +143,7 @@ function updatePlaybar(){
             } else {
                 $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Live Stream")+"</span>");
             }
-        } else if (nextSong == null) {
+        } else {
             $('#current').html($.i18n._("Current")+": <span style='color:red; font-weight:bold'>"+$.i18n._("Nothing Scheduled")+"</span>");
         }
     }
@@ -223,22 +207,66 @@ function calcAdditionalShowData(show){
     }
 }
 
-function parseItems(obj){        
+function calculateTimeToNextSong() {
+    if (approximateServerTime === null) {
+        return;
+    }
+    
+    if (newSongTimeoutId !== null) {
+        /* We have a previous timeout set, let's unset it */
+        clearTimeout(newSongTimeoutId);
+        newSongTimeoutId = null;
+    } 
+
+    var diff = nextSong.songStartPosixTime - approximateServerTime;
+    if (diff < 0) diff=0;
+    nextSongPrepare = false;
+    newSongTimeoutId= setTimeout(newSongStart, diff);
+}
+
+function calculateTimeToNextShow() {
+    if (approximateServerTime === null) {
+        return;
+    }
+
+    if (newShowTimeoutId !== null) {
+        /* We have a previous timeout set, let's unset it */
+        clearTimeout(newShowTimeoutId);
+        newShowTimeoutId = null;
+    } 
+
+    var diff = nextShow[0].showStartPosixTime - approximateServerTime;
+    if (diff < 0) diff=0;
+    nextShowPrepare = false;
+    newShowTimeoutId= setTimeout(nextShowStart, diff);
+}
+
+function parseItems(obj){
     $('#time-zone').text(obj.timezone);
+
 
     previousSong = obj.previous;
     currentSong = obj.current;
     nextSong = obj.next;
 
-    if (previousSong !== null)
+    if (previousSong !== null) {
         calcAdditionalData(previousSong);
-    if (currentSong !== null)
+    }
+    if (currentSong !== null) {
         calcAdditionalData(currentSong);
-    if (nextSong !== null)
+    }
+    if (nextSong !== null) {
         calcAdditionalData(nextSong);
+        calculateTimeToNextSong();
+    }
     
-    calcAdditionalShowData(obj.currentShow);
-    calcAdditionalShowData(obj.nextShow);
+    if (obj.currentShow.length > 0) {
+        calcAdditionalShowData(obj.currentShow);
+    }
+    if (obj.nextShow.length > 0) {
+        calcAdditionalShowData(obj.nextShow);
+        calculateTimeToNextShow();
+    }
     
     currentShow = obj.currentShow;
     nextShow = obj.nextShow;
