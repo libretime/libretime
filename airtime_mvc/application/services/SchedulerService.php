@@ -155,64 +155,105 @@ class Application_Service_SchedulerService
          * any other instances with content
          */
         $instanceIds = $ccShow->getInstanceIds();
-        $ccSchedules = CcScheduleQuery::create()
-            ->filterByDbInstanceId($instanceIds, Criteria::IN)
-            ->find();
-        if (!$ccSchedules->isEmpty()) {
+        $schedule_sql = "SELECT * FROM cc_schedule ".
+            "WHERE instance_id IN (".implode($instanceIds, ",").")";
+        $ccSchedules = Application_Common_Database::prepareAndExecute(
+            $schedule_sql);
+
+        if (count($ccSchedules) > 0) {
             /* Find the show contents of just one of the instances. It doesn't
              * matter which instance we use since all the content is the same
              */
-            $ccSchedule = $ccSchedules->getFirst();
-            $showStamp = CcScheduleQuery::create()
-                ->filterByDbInstanceId($ccSchedule->getDbInstanceId())
-                ->orderByDbStarts()
-                ->find();
+            $ccSchedule = $ccSchedules[0];
+            $showStamp_sql = "SELECT * FROM cc_schedule ".
+                "WHERE instance_id = {$ccSchedule["instance_id"]} ".
+                "ORDER BY starts";
+            $showStamp = Application_Common_Database::prepareAndExecute(
+                $showStamp_sql);
 
             //get time_filled so we can update cc_show_instances
-            $timeFilled = $ccSchedule->getCcShowInstances()->getDbTimeFilled();
+            $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
+                "WHERE id = {$ccSchedule["instance_id"]}";
+            $timeFilled = Application_Common_Database::prepareAndExecute(
+                $timeFilled_sql, array(), Application_Common_Database::COLUMN);
+
+            $dropIndex_sql = "DROP INDEX cc_schedule_instance_id_idx";
+            Application_Common_Database::prepareAndExecute(
+                $dropIndex_sql, array(), Application_Common_Database::EXECUTE);
 
             //need to find out which linked instances are empty
-            foreach ($ccShow->getCcShowInstancess() as $ccShowInstance) {
-                $ccSchedules = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($ccShowInstance->getDbId())
-                    ->find();
+            $values = array();
+            foreach ($instanceIds as $id) {
+                $instanceSched_sql = "SELECT * FROM cc_schedule ".
+                    "WHERE instance_id = {$id} ".
+                    "ORDER by starts";
+                $ccSchedules = Application_Common_Database::prepareAndExecute(
+                    $instanceSched_sql);
+
                 /* If the show instance is empty OR it has different content than
-                 * the first instance, we cant to fill/replace with the show stamp
+                 * the first instance, we need to fill/replace with the show stamp
                  * (The show stamp is taken from the first show instance's content)
                  */
-                if ($ccSchedules->isEmpty() ||
-                    self::replaceInstanceContentCheck($ccShowInstance, $showStamp)) {
+                if (count($ccSchedules) < 1 || 
+                    self::replaceInstanceContentCheck($ccSchedules, $showStamp)) {
 
-                    $nextStartDT = $ccShowInstance->getDbStarts(null);
+                    //$nextStartDT = $ccShowInstance->getDbStarts(null);
+                    $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
+                        "WHERE id = {$id}";
+                    $nextStartDT = new DateTime(
+                        Application_Common_Database::prepareAndExecute(
+                            $instanceStart_sql, array(), Application_Common_Database::EXECUTE),
+                        new DateTimeZone("UTC"));
 
                     foreach ($showStamp as $item) {
-                        $endTimeDT = self::findEndTime($nextStartDT, $item->getDbClipLength());
+                        $endTimeDT = self::findEndTime($nextStartDT, $item["clip_length"]);
 
-                        $ccSchedule = new CcSchedule();
-                        $ccSchedule
-                            ->setDbStarts($nextStartDT)
-                            ->setDbEnds($endTimeDT)
-                            ->setDbFileId($item->getDbFileId())
-                            ->setDbStreamId($item->getDbStreamId())
-                            ->setDbClipLength($item->getDbClipLength())
-                            ->setDbFadeIn($item->getDbFadeIn())
-                            ->setDbFadeOut($item->getDbFadeOut())
-                            ->setDbCuein($item->getDbCueIn())
-                            ->setDbCueOut($item->getDbCueOut())
-                            ->setDbInstanceId($ccShowInstance->getDbId())
-                            ->setDbPosition($item->getDbPosition())
-                            ->save();
+                        if (is_null($item["file_id"])) {
+                            $item["file_id"] = "null";
+                        } elseif (is_null($item["stream_id"])) {
+                            $item["stream_id"] = "null";
+                        }
+
+                        $values[] = "(".
+                            "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
+                            "'{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                            "'{$item["clip_length"]}', ".
+                            "'{$item["fade_in"]}', ".
+                            "'{$item["fade_out"]}', ".
+                            "'{$item["cue_in"]}', ".
+                            "'{$item["cue_out"]}', ".
+                            "{$item["file_id"]}, ".
+                            "{$item["stream_id"]}, ".
+                            "{$id}, ".
+                            "{$item["position"]})";
 
                         $nextStartDT = $endTimeDT;
                     } //foreach show item
-
-                    //update time_filled in cc_show_instances
-                    $ccShowInstance
-                        ->setDbTimeFilled($timeFilled)
-                        ->setDbLastScheduled(gmdate("Y-m-d H:i:s"))
-                        ->save();
                 }
             } //foreach linked instance
+
+            $insert_sql = "INSERT INTO cc_schedule (starts, ends, ".
+                "clip_length, fade_in, fade_out, cue_in, cue_out, ".
+                "file_id, stream_id, instance_id, position)  VALUES ".
+                implode($values, ",");
+
+            Application_Common_Database::prepareAndExecute(
+                $insert_sql, array(), Application_Common_Database::EXECUTE);
+
+            $createIndex_sql = "CREATE INDEX cc_schedule_instance_id_idx ".
+                "ON cc_schedule USING btree(instance_id)";
+            Application_Common_Database::prepareAndExecute(
+                $createIndex_sql, array(), Application_Common_Database::EXECUTE);
+
+            //update time_filled in cc_show_instances
+            $now = gmdate("Y-m-d H:i:s");
+            $update_sql = "UPDATE cc_show_instances SET ".
+                "time_filled = '{$timeFilled}', ".
+                "last_scheduled = '{$now}' ".
+                "WHERE show_id = {$ccShow->getDbId()}";
+            Application_Common_Database::prepareAndExecute(
+                $update_sql, array(), Application_Common_Database::EXECUTE);
+
         } //if at least one linked instance has content
     }
 
@@ -259,20 +300,24 @@ class Application_Service_SchedulerService
         }
     }
 
-    private static function replaceInstanceContentCheck($ccShowInstance, $showStamp)
+    private static function replaceInstanceContentCheck($currentShowStamp, $showStamp)
     {
-        $currentShowStamp = CcScheduleQuery::create()
+        /*$currentShowStamp = CcScheduleQuery::create()
             ->filterByDbInstanceId($ccShowInstance->getDbId())
             ->orderByDbStarts()
-            ->find();
+            ->find();*/
 
         $counter = 0;
         foreach ($showStamp as $item) {
-            if ($item->getDbFileId() != $currentShowStamp[$counter]->getDbFileId() ||
-                $item->getDbStreamId() != $currentShowStamp[$counter]->getDbStreamId()) {
-                    CcScheduleQuery::create()
+            if ($item["file_id"] != $currentShowStamp[$counter]["file_id"] ||
+                $item["stream_id"] != $currentShowStamp[$counter]["stream_id"]) {
+                    /*CcScheduleQuery::create()
                         ->filterByDbInstanceId($ccShowInstance->getDbId())
-                        ->delete();
+                        ->delete();*/
+                    $delete_sql = "DELETE FROM cc_schedule ".
+                        "WHERE instance_id = {$currentShowStamp[$counter]["instance_id"]}";
+                    Application_Common_Database::prepareAndExecute(
+                        $delete_sql, array(), Application_Common_Database::EXECUTE);
                     return true;
                 }
         }

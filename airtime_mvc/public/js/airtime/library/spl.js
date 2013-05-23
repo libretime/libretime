@@ -144,7 +144,8 @@ var AIRTIME = (function(AIRTIME){
         var url = baseUrl+"Playlist/set-cue",
             lastMod = getModified(),
             type = $('#obj_type').val(),
-            li;
+            li,
+            span;
         
         if (!isTimeValid(cueIn)){
             $el.find('.cue-in-error').val($.i18n._("please put in a time '00:00:00 (.0)'")).show();
@@ -174,7 +175,27 @@ var AIRTIME = (function(AIRTIME){
 	            	return;
                 }
                 if (json.cue_error !== undefined) {
-                    showError(span, json.cue_error);
+                	
+                	li = $('#side_playlist li[unqid='+id+']');
+                	
+                	if (json.code === 0) {
+                		
+                		span = $('#spl_cue_in_'+id).find('span');
+                		showError(span, json.cue_error);
+                		span = $('#spl_cue_out_'+id).find('span');
+                		showError(span, json.cue_error);
+                	}
+                	else if (json.code === 1) {
+                		
+                		span = $('#spl_cue_in_'+id).find('span');
+                		showError(span, json.cue_error);
+                	}
+                	else if (json.code === 2) {
+                		
+                		span = $('#spl_cue_out_'+id).find('span');
+                		showError(span, json.cue_error);
+                	}
+                    
                     return;
                 }
 
