@@ -1246,7 +1246,7 @@ var AIRTIME = (function(AIRTIME){
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
-            height: dim.height - 100,
+            height: 350,
             buttons: [
                 {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
                 {text: $.i18n._("Save"), class: "btn btn-small btn-inverse", click: function() {
@@ -1263,9 +1263,11 @@ var AIRTIME = (function(AIRTIME){
                 		
                 		if (fade["type"] === "FadeOut") {
                 			fadeOut = fade["end"] - fade["start"];
+                			id2 = undefined; //incase of track decode error.
                 		}
                 		else {
                 			fadeIn = fade["end"] - fade["start"];
+                			id1 = undefined; //incase of track decode error.
                 		}
                 	}
                 	else {
@@ -1291,6 +1293,7 @@ var AIRTIME = (function(AIRTIME){
         			resolution: 15000,
         			state: "cursor",
         	        mono: true,
+        	        timescale: true,
         	        waveHeight: 80,
         	        container: $html[0],
         	        UITheme: "jQueryUI",
@@ -1301,7 +1304,10 @@ var AIRTIME = (function(AIRTIME){
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);
             },
-        	close: removeDialog
+        	close: removeDialog,
+        	resizeStop: function(event, ui) {
+        		playlistEditor.resize();
+            }
         });		
 	};
 	
@@ -1354,7 +1360,7 @@ var AIRTIME = (function(AIRTIME){
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
-            height: dim.height - 100,
+            height: 325,
             buttons: [
                 {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
                 {text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: function() {
@@ -1371,6 +1377,7 @@ var AIRTIME = (function(AIRTIME){
             	var config = new Config({
         			resolution: 15000,
         	        mono: true,
+        	        timescale: true,
         	        waveHeight: 80,
         	        container: $html[0],
         	        UITheme: "jQueryUI",
@@ -1381,7 +1388,10 @@ var AIRTIME = (function(AIRTIME){
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);	
             },
-            close: removeDialog
+            close: removeDialog,
+            resizeStop: function(event, ui) {
+            	playlistEditor.resize();
+            }
         });	
 	};
 	

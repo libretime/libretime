@@ -56,6 +56,16 @@ PlaylistEditor.prototype.init = function(tracks) {
         trackEditor.on("deactivateSelection", "onAudioDeselection", audioControls);
         trackEditor.on("changecursor", "onCursorSelection", audioControls);
         trackEditor.on("changecursor", "onSelectUpdate", this);
+
+        trackEditor.on("unregister", (function() {
+            var editor = this;
+
+            audioControls.remove("trackedit", "onTrackEdit", editor);
+            audioControls.remove("changeresolution", "onResolutionChange", editor);
+
+            that.removeTrack(editor);
+
+        }).bind(trackEditor));
     }
 
     div.innerHTML = '';
@@ -79,7 +89,27 @@ PlaylistEditor.prototype.init = function(tracks) {
     audioControls.on("trimaudio", "onTrimAudio", this);
     audioControls.on("removeaudio", "onRemoveAudio", this);
     audioControls.on("changestate", "onStateChange", this);
-    audioControls.on("changeselection", "onSelectionChange", this);  
+    audioControls.on("changeselection", "onSelectionChange", this); 
+};
+
+PlaylistEditor.prototype.removeTrack = function(trackEditor) {
+    var i, 
+        len, 
+        editor,
+        editors = this.trackEditors;
+    
+    for (i = 0, len = editors.length; i < len; i++) {
+        editor = editors[i];
+
+        if (editor === trackEditor) {
+            editors.splice(i, 1);
+            return;
+        }
+    }
+};
+
+PlaylistEditor.prototype.resize = function() {
+    this.timeScale.onResize();
 };
 
 PlaylistEditor.prototype.onTrimAudio = function() {
