@@ -597,7 +597,7 @@ class Application_Model_Scheduler
                         $linkedItem_sql = "SELECT ends FROM cc_schedule ".
                             "WHERE instance_id = {$instanceId} ".
                             "AND position = {$pos} ".
-                            "AND playout_status IS NOT -1";
+                            "AND playout_status != -1";
                         $linkedItemEnds = Application_Common_Database::prepareAndExecute(
                             $linkedItem_sql, array(), Application_Common_Database::COLUMN);
 
