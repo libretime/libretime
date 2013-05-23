@@ -424,33 +424,39 @@ class Application_Model_Scheduler
      *   This function recalculates the start/end times of items in a gapless show to
      *   account for crossfade durations.
      */
-    private function calculateCrossfades($showInstance)
+    private function calculateCrossfades($instanceId)
     {
-    	Logging::info("adjusting start, end times of scheduled items to account for crossfades show instance #".$showInstance);
-    
-    	$instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
-    	if (is_null($instance)) {
-    		throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
-    	}
-    
-    	$itemStartDT = $instance->getDbStarts(null);
-    	$itemEndDT = null;
-    
-    	$schedule = CcScheduleQuery::create()
-    		->filterByDbInstanceId($showInstance)
-    		->orderByDbStarts()
-    		->find($this->con);
-    
-    	foreach ($schedule as $item) {
-    		$itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+        Logging::info("adjusting start, end times of scheduled items to account for crossfades show instance #".$instanceId);
 
-    		$item->setDbStarts($itemStartDT)
-    			 ->setDbEnds($itemEndDT);
+        $sql = "SELECT * FROM cc_show_instances ".
+            "WHERE id = {$instanceId}";
+        $instance = Application_Common_Database::prepareAndExecute(
+            $sql, array(), Application_Common_Database::SINGLE);
 
-    		$itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
-    	}
-    
-    	$schedule->save($this->con);
+        if (is_null($instance)) {
+            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
+        }
+
+        $itemStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+        $itemEndDT = null;
+
+        $schedule_sql = "SELECT * FROM cc_schedule ".
+            "WHERE instance_id = {$instanceId} ".
+            "ORDER BY starts";
+        $schedule = Application_Common_Database::prepareAndExecute($schedule_sql);
+
+        foreach ($schedule as $item) {
+            $itemEndDT = $this->findEndTime($itemStartDT, $item["clip_length"]);
+
+            $update_sql = "UPDATE cc_schedule SET ".
+                "starts = '{$itemStartDT->format("Y-m-d H:i:s")}', ".
+                "ends = '{$itemEndDT->format("Y-m-d H:i:s")}' ".
+                "WHERE id = {$item["id"]}";
+            Application_Common_Database::prepareAndExecute(
+                $update_sql, array(), Application_Common_Database::EXECUTE);
+
+            $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
+        }
     }
 
     /*
@@ -526,7 +532,6 @@ class Application_Model_Scheduler
                 $dropIndex_sql, array(), Application_Common_Database::EXECUTE);
 
             foreach ($scheduleItems as $schedule) {
-                Logging::info($schedule);
                 $id = intval($schedule["id"]);
 
                 /* Find out if the show where the cursor position (where an item will
@@ -737,6 +742,7 @@ class Application_Model_Scheduler
                                 $update_sql, array(), Application_Common_Database::EXECUTE);
                         }
 
+                        //$nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         $nextStartDT = $endTimeDT;
                         $pos++;
 
