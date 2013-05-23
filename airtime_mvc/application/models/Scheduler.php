@@ -577,6 +577,7 @@ class Application_Model_Scheduler
                         $linkCcSchedule = CcScheduleQuery::create()
                             ->filterByDbInstanceId($instanceId)
                             ->filterByDbPosition($pos)
+                            ->filterByDbPlayoutStatus(-1, Criteria::NOT_EQUAL)
                             ->findOne();
 
                         $schedItemEndDT = $linkCcSchedule->getDbEnds(null);
