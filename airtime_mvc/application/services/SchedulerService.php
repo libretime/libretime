@@ -197,12 +197,12 @@ class Application_Service_SchedulerService
                 if (count($ccSchedules) < 1 || 
                     self::replaceInstanceContentCheck($ccSchedules, $showStamp)) {
 
-                    //$nextStartDT = $ccShowInstance->getDbStarts(null);
                     $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
-                        "WHERE id = {$id}";
+                        "WHERE id = {$id} ".
+                        "ORDER BY starts";
                     $nextStartDT = new DateTime(
                         Application_Common_Database::prepareAndExecute(
-                            $instanceStart_sql, array(), Application_Common_Database::EXECUTE),
+                            $instanceStart_sql, array(), Application_Common_Database::COLUMN),
                         new DateTimeZone("UTC"));
 
                     foreach ($showStamp as $item) {

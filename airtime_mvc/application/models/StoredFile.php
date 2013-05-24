@@ -528,8 +528,6 @@ SQL;
      */
     public function getRelativeFileUrl($baseUrl)
     {
-    	Logging::debug("Zend base url: $baseUrl");
-    	
         return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
 

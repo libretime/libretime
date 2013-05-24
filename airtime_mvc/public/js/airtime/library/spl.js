@@ -209,12 +209,11 @@ var AIRTIME = (function(AIRTIME){
     }
     
     /* used from waveform pop-up */
-    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset) {
+    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset, id) {
         
         var url = baseUrl+"Playlist/set-crossfade",
             lastMod = getModified(),
-            type = $('#obj_type').val(),
-            li, id;
+            type = $('#obj_type').val();
         
         $.post(url, 
             {format: "json", fadeIn: fadeIn, fadeOut: fadeOut, id1: id1, id2: id2, offset: offset, modified: lastMod, type: type}, 
@@ -230,10 +229,9 @@ var AIRTIME = (function(AIRTIME){
                 
                 setPlaylistContent(json);
 
-                id = id1 === undefined ? id2 : id1;
-                li = $('#side_playlist li[unqid='+id+']');
-                li.find('.crossfade').toggle();
-                highlightActive(li.find('.spl_fade_control'));
+                $li = $('#side_playlist li[unqid='+id+']');
+                $li.find('.crossfade').toggle();
+                highlightActive($li.find('.spl_fade_control'));
             });
     }
 
@@ -1179,13 +1177,16 @@ var AIRTIME = (function(AIRTIME){
 	mod.showFadesWaveform = function(e) {
 		var $el = $(e.target),
 			$parent = $el.parents("dl"),
+			$li = $el.parents("li"),
 			$fadeOut = $parent.find(".spl_fade_out"),
 			$fadeIn = $parent.find(".spl_fade_in"),
 			$html = $($("#tmpl-pl-fades").html()),
 			tracks = [],
 			dim = AIRTIME.utilities.findViewportDimensions(),
 			playlistEditor,
-			id1, id2;
+			id1, id2,
+			id = $li.attr("unqid");
+		
 		
 		function removeDialog() {
 			playlistEditor.stop();
@@ -1246,7 +1247,7 @@ var AIRTIME = (function(AIRTIME){
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
-            height: dim.height - 100,
+            height: 350,
             buttons: [
                 {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
                 {text: $.i18n._("Save"), class: "btn btn-small btn-inverse", click: function() {
@@ -1257,15 +1258,22 @@ var AIRTIME = (function(AIRTIME){
                 	
                 	playlistEditor.stop();
                 	
-                	if (json.length === 1) {
+                	if (json.length === 0)
+                	{
+                		id1 = undefined;
+                		id2 = undefined;
+                	}
+                	else if (json.length === 1) {
                 		
                 		fade = json[0]["fades"][0];
                 		
                 		if (fade["type"] === "FadeOut") {
                 			fadeOut = fade["end"] - fade["start"];
+                			id2 = undefined; //incase of track decode error.
                 		}
                 		else {
                 			fadeIn = fade["end"] - fade["start"];
+                			id1 = undefined; //incase of track decode error.
                 		}
                 	}
                 	else {
@@ -1282,7 +1290,7 @@ var AIRTIME = (function(AIRTIME){
                 	fadeIn = (fadeIn === undefined) ? undefined : fadeIn.toFixed(1);
                 	fadeOut = (fadeOut === undefined) ? undefined : fadeOut.toFixed(1);
                 	
-                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset);
+                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset, id);
                 }}
             ],
             open: function (event, ui) {
@@ -1291,6 +1299,7 @@ var AIRTIME = (function(AIRTIME){
         			resolution: 15000,
         			state: "cursor",
         	        mono: true,
+        	        timescale: true,
         	        waveHeight: 80,
         	        container: $html[0],
         	        UITheme: "jQueryUI",
@@ -1301,7 +1310,10 @@ var AIRTIME = (function(AIRTIME){
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);
             },
-        	close: removeDialog
+        	close: removeDialog,
+        	resizeStop: function(event, ui) {
+        		playlistEditor.resize();
+            }
         });		
 	};
 	
@@ -1354,7 +1366,7 @@ var AIRTIME = (function(AIRTIME){
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
-            height: dim.height - 100,
+            height: 325,
             buttons: [
                 {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
                 {text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: function() {
@@ -1371,6 +1383,7 @@ var AIRTIME = (function(AIRTIME){
             	var config = new Config({
         			resolution: 15000,
         	        mono: true,
+        	        timescale: true,
         	        waveHeight: 80,
         	        container: $html[0],
         	        UITheme: "jQueryUI",
@@ -1381,7 +1394,10 @@ var AIRTIME = (function(AIRTIME){
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);	
             },
-            close: removeDialog
+            close: removeDialog,
+            resizeStop: function(event, ui) {
+            	playlistEditor.resize();
+            }
         });	
 	};
 	

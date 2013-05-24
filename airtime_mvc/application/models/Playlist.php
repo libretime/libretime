@@ -673,6 +673,10 @@ SQL;
     {
     	$this->con->beginTransaction();
     	
+    	if (!isset($offset)) {
+    		$offset = Application_Model_Preference::GetDefaultCrossfadeDuration();	
+    	}
+    	
     	try {
     		if (isset($id1)) {
     			$this->changeFadeInfo($id1, null, $fadeOut);
