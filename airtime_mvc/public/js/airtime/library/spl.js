@@ -1258,7 +1258,12 @@ var AIRTIME = (function(AIRTIME){
                 	
                 	playlistEditor.stop();
                 	
-                	if (json.length === 1) {
+                	if (json.length === 0)
+                	{
+                		id1 = undefined;
+                		id2 = undefined;
+                	}
+                	else if (json.length === 1) {
                 		
                 		fade = json[0]["fades"][0];
                 		
