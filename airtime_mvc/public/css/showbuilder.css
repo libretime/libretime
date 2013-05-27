@@ -105,6 +105,10 @@ div.sb-timerange input#sb_date_start {
     margin-left: 30px;
 }
 
+div.sb-timerange input.error {
+    background-color: rgba(255,0,0,0.2);
+}
+
 .sb-starts,
 .sb-ends {
 	text-align: center;

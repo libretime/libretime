@@ -88,18 +88,12 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnGetScheduleRange = function(dateStart, timeStart, dateEnd, timeEnd) {
 		var iStart, 
 			iEnd, 
-			iRange,
-			DEFAULT_RANGE = 60*60*24;
+			iRange;
 		
 		iStart = AIRTIME.utilities.fnGetTimestamp(dateStart, timeStart);
 		iEnd = AIRTIME.utilities.fnGetTimestamp(dateEnd, timeEnd);
 		
 		iRange = iEnd - iStart;
-		
-		if (iEnd < iStart) {
-			iEnd = iStart + DEFAULT_RANGE;
-			iRange = DEFAULT_RANGE;
-		}
 		
 		return {
 			start: iStart,
