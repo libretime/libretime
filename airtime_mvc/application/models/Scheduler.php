@@ -620,7 +620,7 @@ class Application_Model_Scheduler
 
                         //show is empty so start position counter at 0
                         $pos = 0;
-                        $adjustSched = false;
+                        //$adjustSched = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -658,6 +658,7 @@ class Application_Model_Scheduler
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
+                            $adjustFromDT = clone $nextStartDT;
                             $doUpdate = true;
 
                             $movedItem_sql = "SELECT * FROM cc_schedule ".
@@ -693,7 +694,6 @@ class Application_Model_Scheduler
                             $file["fadein"] = $sched["fade_in"];
                             $file["fadeout"] = $sched["fade_out"];
                         } else {
-                            //$sched = new CcSchedule();
                             $doInsert = true;
                         }
 
@@ -754,7 +754,7 @@ class Application_Model_Scheduler
                             "(starts, ends, cue_in, cue_out, fade_in, fade_out, ".
                             "clip_length, position, instance_id, file_id, stream_id) VALUES ".
                             implode($values, ",");
-    
+
                         Application_Common_Database::prepareAndExecute(
                             $insert_sql, array(), Application_Common_Database::EXECUTE);
                     }
@@ -780,7 +780,7 @@ class Application_Model_Scheduler
 
                     if ($adjustSched === true) {
                         $followingItems_sql = "SELECT * FROM cc_schedule ".
-                            "WHERE starts >= '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
+                            "WHERE starts > '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
                             "AND instance_id = {$instanceId} ";
                         if (count($excludeIds) > 0) {
                             $followingItems_sql .= "AND id NOT IN (". implode($excludeIds, ",").") ";
