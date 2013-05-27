@@ -35,7 +35,8 @@ AIRTIME = (function(AIRTIME) {
         dayNamesMin: i18n_days_short,
         onClick: function(sDate, oDatePicker) {     
             $(this).datepicker( "setDate", sDate );
-        }
+        },
+        onClose: validateTimeRange
     };
     
     oBaseTimePickerSettings = {
@@ -90,32 +91,61 @@ AIRTIME = (function(AIRTIME) {
         }   
     }
     
+    function validateTimeRange() {
+    	 var oRange,
+	         inputs = $('.sb-timerange > input'),
+	         start, end;
+    	 
+    	 oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+    	 
+    	 start = oRange.start;
+         end = oRange.end;
+         
+         if (end >= start) {
+        	 inputs.removeClass('error');
+         }
+         else {
+        	 if (!inputs.hasClass('error')) {
+        		 inputs.addClass('error');  
+        	 } 
+         }
+         
+         return {
+        	 start: start,
+        	 end: end,
+        	 isValid: end >= start
+         };
+    }
+    
     function showSearchSubmit() {
         var fn,
-            oRange,
             op,
-            oTable = $('#show_builder_table').dataTable();
-            
-        //reset timestamp value since input values could have changed.
-        AIRTIME.showbuilder.resetTimestamp();
-            
-        oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
-            
-        fn = oTable.fnSettings().fnServerData;
-        fn.start = oRange.start;
-        fn.end = oRange.end;
-            
-        op = $("div.sb-advanced-options");
-        if (op.is(":visible")) {
-                
-            if (fn.ops === undefined) {
-                fn.ops = {};
-            }
-            fn.ops.showFilter = op.find("#sb_show_filter").val();
-            fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+            oTable = $('#show_builder_table').dataTable(),
+            check;
+                  
+        check = validateTimeRange();
+        
+        if (check.isValid) {
+        	
+	        //reset timestamp value since input values could have changed.
+	        AIRTIME.showbuilder.resetTimestamp();
+	            
+	        fn = oTable.fnSettings().fnServerData;
+	        fn.start = check.start;
+	        fn.end = check.end;
+	            
+	        op = $("div.sb-advanced-options");
+	        if (op.is(":visible")) {
+	                
+	            if (fn.ops === undefined) {
+	                fn.ops = {};
+	            }
+	            fn.ops.showFilter = op.find("#sb_show_filter").val();
+	            fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+	        }
+	            
+	        oTable.fnDraw();
         }
-            
-        oTable.fnDraw();
     }
 
     mod.onReady = function() {
@@ -134,10 +164,22 @@ AIRTIME = (function(AIRTIME) {
             $(this).removeClass("ui-state-hover");
         });
 
-        $builder.find(dateStartId).datepicker(oBaseDatePickerSettings);
-        $builder.find(timeStartId).timepicker(oBaseTimePickerSettings);
-        $builder.find(dateEndId).datepicker(oBaseDatePickerSettings);
-        $builder.find(timeEndId).timepicker(oBaseTimePickerSettings);
+        $builder.find(dateStartId)
+        	.datepicker(oBaseDatePickerSettings)
+        	.blur(validateTimeRange);
+        
+        $builder.find(timeStartId)
+        	.timepicker(oBaseTimePickerSettings)
+        	.blur(validateTimeRange);
+        
+        $builder.find(dateEndId)
+        	.datepicker(oBaseDatePickerSettings)
+        	.blur(validateTimeRange);
+        
+        $builder.find(timeEndId)
+        	.timepicker(oBaseTimePickerSettings)
+        	.blur(validateTimeRange);
+        
 
         oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId,
                 dateEndId, timeEndId);

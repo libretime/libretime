@@ -40,7 +40,7 @@ class Application_Model_Preference
 
             $result = Application_Common_Database::prepareAndExecute($sql, 
                     $paramMap, 
-                    'column', 
+                    Application_Common_Database::COLUMN,
                     PDO::FETCH_ASSOC, 
                     $con);
 
