@@ -686,6 +686,10 @@ SQL;
     public function createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset)
     {
     	$this->con->beginTransaction();
+    	
+    	if (!isset($offset)) {
+    		$offset = Application_Model_Preference::GetDefaultCrossfadeDuration();
+    	}
     	 
     	try {
     		if (isset($id1)) {
