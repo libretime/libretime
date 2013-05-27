@@ -1255,7 +1255,7 @@ SQL;
                 $description = $file->getDbTrackTitle();
                 $tag         = array();
                 $genre       = $file->getDbGenre();
-                $release     = $file->getDbYear();
+                $release     = $file->getDbUtime();
                 try {
                     $soundcloud     = new Application_Model_Soundcloud();
                     $soundcloud_res = $soundcloud->uploadTrack(
