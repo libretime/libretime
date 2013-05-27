@@ -1,6 +1,7 @@
 import logging
 import sys
 import time
+import traceback
 from api_clients.api_client import AirtimeApiClient
 
 def generate_liquidsoap_config(ss):
@@ -26,19 +27,21 @@ def generate_liquidsoap_config(ss):
     fh.close()
 
 logging.basicConfig(format='%(message)s')
-ac = AirtimeApiClient(logging.getLogger())
 attempts = 0
-max_attempts = 5
+max_attempts = 10
+successful = False
 
-while True:
+while not successful:
     try:
+        ac = AirtimeApiClient(logging.getLogger())
         ss = ac.get_stream_setting()
         generate_liquidsoap_config(ss)
-        break
+        successful = True
     except Exception, e:
         if attempts == max_attempts:
             print "Unable to connect to the Airtime server."
             logging.error(str(e))
+            logging.error("traceback: %s", traceback.format_exc())
             sys.exit(1)
         else:
             time.sleep(3)

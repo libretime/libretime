@@ -209,12 +209,11 @@ var AIRTIME = (function(AIRTIME){
     }
     
     /* used from waveform pop-up */
-    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset) {
+    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset, id) {
         
         var url = baseUrl+"Playlist/set-crossfade",
             lastMod = getModified(),
-            type = $('#obj_type').val(),
-            li, id;
+            type = $('#obj_type').val();
         
         $.post(url, 
             {format: "json", fadeIn: fadeIn, fadeOut: fadeOut, id1: id1, id2: id2, offset: offset, modified: lastMod, type: type}, 
@@ -230,10 +229,9 @@ var AIRTIME = (function(AIRTIME){
                 
                 setPlaylistContent(json);
 
-                id = id1 === undefined ? id2 : id1;
-                li = $('#side_playlist li[unqid='+id+']');
-                li.find('.crossfade').toggle();
-                highlightActive(li.find('.spl_fade_control'));
+                $li = $('#side_playlist li[unqid='+id+']');
+                $li.find('.crossfade').toggle();
+                highlightActive($li.find('.spl_fade_control'));
             });
     }
 
@@ -1179,13 +1177,16 @@ var AIRTIME = (function(AIRTIME){
 	mod.showFadesWaveform = function(e) {
 		var $el = $(e.target),
 			$parent = $el.parents("dl"),
+			$li = $el.parents("li"),
 			$fadeOut = $parent.find(".spl_fade_out"),
 			$fadeIn = $parent.find(".spl_fade_in"),
 			$html = $($("#tmpl-pl-fades").html()),
 			tracks = [],
 			dim = AIRTIME.utilities.findViewportDimensions(),
 			playlistEditor,
-			id1, id2;
+			id1, id2,
+			id = $li.attr("unqid");
+		
 		
 		function removeDialog() {
 			playlistEditor.stop();
@@ -1257,7 +1258,12 @@ var AIRTIME = (function(AIRTIME){
                 	
                 	playlistEditor.stop();
                 	
-                	if (json.length === 1) {
+                	if (json.length === 0)
+                	{
+                		id1 = undefined;
+                		id2 = undefined;
+                	}
+                	else if (json.length === 1) {
                 		
                 		fade = json[0]["fades"][0];
                 		
@@ -1284,7 +1290,7 @@ var AIRTIME = (function(AIRTIME){
                 	fadeIn = (fadeIn === undefined) ? undefined : fadeIn.toFixed(1);
                 	fadeOut = (fadeOut === undefined) ? undefined : fadeOut.toFixed(1);
                 	
-                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset);
+                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset, id);
                 }}
             ],
             open: function (event, ui) {

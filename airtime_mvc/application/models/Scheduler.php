@@ -591,6 +591,7 @@ class Application_Model_Scheduler
                     $instances = Application_Common_Database::prepareAndExecute(
                         $instance_sql);
                 }
+
                 foreach($instances as &$instance) {
                     $instanceId = $instance["id"];
                     if ($id !== 0) {
@@ -602,7 +603,7 @@ class Application_Model_Scheduler
                         $linkedItem_sql = "SELECT ends FROM cc_schedule ".
                             "WHERE instance_id = {$instanceId} ".
                             "AND position = {$pos} ".
-                            "AND playout_status IS NOT -1";
+                            "AND playout_status != -1";
                         $linkedItemEnds = Application_Common_Database::prepareAndExecute(
                             $linkedItem_sql, array(), Application_Common_Database::COLUMN);
 
@@ -619,6 +620,7 @@ class Application_Model_Scheduler
 
                         //show is empty so start position counter at 0
                         $pos = 0;
+                        $adjustSched = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -651,6 +653,7 @@ class Application_Model_Scheduler
                     $doInsert = false;
                     $doUpdate = false;
                     $values = array();
+
                     foreach ($filesToInsert as &$file) {
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
@@ -742,15 +745,8 @@ class Application_Model_Scheduler
                                 $update_sql, array(), Application_Common_Database::EXECUTE);
                         }
 
-                        //$nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
-                        $nextStartDT = $endTimeDT;
+                        $nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         $pos++;
-
-                        /* If we are adjusting start and end times for items
-                         * after the insert location, we need to exclude the
-                         * schedule item we just inserted because it has correct
-                         * start and end times*/
-                        //$excludeIds[] = $lastInsertId;
 
                     }//all files have been inserted/moved
                     if ($doInsert) {
@@ -807,15 +803,13 @@ class Application_Model_Scheduler
                             Application_Common_Database::prepareAndExecute(
                                 $update_sql, array(), Application_Common_Database::EXECUTE);
 
-                            $nextStartDT = $endTimeDT;
+                            $nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $pos++;
                         }
 
                         $pend = microtime(true);
                         Logging::debug("adjusting all following items.");
                         Logging::debug(floatval($pend) - floatval($pstart));
-                        
-                        $this->calculateCrossfades($instanceId);
                     }
                 }//for each instance
             }//for each schedule location

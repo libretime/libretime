@@ -138,8 +138,8 @@ class ApiRequest(object):
             content_type = f.info().getheader('Content-Type')
             response = f.read()
         except Exception, e:
-            self.logger.error('Exception: %s', e)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.error('Exception: %s', e)
+            #self.logger.error("traceback: %s", traceback.format_exc())
             raise
 
         try:
@@ -149,8 +149,8 @@ class ApiRequest(object):
             else:
                 raise InvalidContentType()
         except Exception:
-            self.logger.error(response)
-            self.logger.error("traceback: %s", traceback.format_exc())
+            #self.logger.error(response)
+            #self.logger.error("traceback: %s", traceback.format_exc())
             raise
 
     def req(self, *args, **kwargs):
