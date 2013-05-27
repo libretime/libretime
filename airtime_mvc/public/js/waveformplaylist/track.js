@@ -176,6 +176,7 @@ TrackEditor.prototype.loadBuffer = function(src) {
     var that = this,
         xhr = new XMLHttpRequest();
 
+    xhr.open('GET', src, true);
     xhr.responseType = 'arraybuffer';
 
     xhr.addEventListener('progress', function(e) {
@@ -198,7 +199,6 @@ TrackEditor.prototype.loadBuffer = function(src) {
         );
     }, false);
 
-    xhr.open('GET', src, true);
     xhr.send();
 };
 
