@@ -546,7 +546,7 @@ var AIRTIME = (function(AIRTIME){
                     cl = 'sb-footer';
                     
                     //check the show's content status.
-                    if (aData.runtime > 0) {
+                    if (aData.runtime >= 0) {
                         $node.html('<span class="ui-icon ui-icon-check"></span>');
                         cl = cl + ' ui-state-highlight';
                     }
