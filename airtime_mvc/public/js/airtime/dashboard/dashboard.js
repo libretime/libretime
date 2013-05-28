@@ -262,14 +262,14 @@ function parseItems(obj){
     
     if (obj.currentShow.length > 0) {
         calcAdditionalShowData(obj.currentShow);
+        currentShow = obj.currentShow;
     }
     if (obj.nextShow.length > 0) {
         calcAdditionalShowData(obj.nextShow);
+        nextShow = obj.nextShow;
         calculateTimeToNextShow();
     }
     
-    currentShow = obj.currentShow;
-    nextShow = obj.nextShow;
 
     var schedulePosixTime = convertDateToPosixTime(obj.schedulerTime);
     var date = new Date();
