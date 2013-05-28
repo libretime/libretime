@@ -35,9 +35,10 @@ start () {
 }
 
 stop () {
+        timeout --version >/dev/null 2>&1
+        RESULT="$?"        
+
         #send term signal after 10 seconds
-        timeout --version
-        RESULT="$?"
         if [ "$RESULT" = "0" ]; then
             timeout -s9 10s /usr/lib/airtime/airtime_virtualenv/bin/python \
                 /usr/lib/airtime/pypo/bin/liquidsoap_scripts/liquidsoap_prepare_terminate.py        
