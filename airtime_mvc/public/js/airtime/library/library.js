@@ -1126,7 +1126,6 @@ function checkLibrarySCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
-        setTimeout(checkLibrarySCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
@@ -1138,6 +1137,7 @@ function checkLibrarySCUploadStatus(){
     }
     
     $("#library_display span.progress").each(checkSCUploadStatusRequest);
+    setTimeout(checkLibrarySCUploadStatus, 5000);
 }
     
 function addQtipToSCIcons(){
