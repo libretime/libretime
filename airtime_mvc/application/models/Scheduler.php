@@ -592,6 +592,7 @@ class Application_Model_Scheduler
                         $instance_sql);
                 }
 
+                $excludePositions = array();
                 foreach($instances as &$instance) {
                     $instanceId = $instance["id"];
                     if ($id !== 0) {
@@ -618,9 +619,8 @@ class Application_Model_Scheduler
                         $showStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
                         $nextStartDT = $this->findNextStartTime($showStartDT, $instanceId);
 
-                        //show is empty so start position counter at 0
+                        //first item in show so start position counter at 0
                         $pos = 0;
-                        //$adjustSched = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -753,12 +753,15 @@ class Application_Model_Scheduler
                         $insert_sql = "INSERT INTO cc_schedule ".
                             "(starts, ends, cue_in, cue_out, fade_in, fade_out, ".
                             "clip_length, position, instance_id, file_id, stream_id) VALUES ".
-                            implode($values, ",");
+                            implode($values, ",")." RETURNING id";
 
-                        Application_Common_Database::prepareAndExecute(
-                            $insert_sql, array(), Application_Common_Database::EXECUTE);
+                        $stmt = $this->con->prepare($insert_sql);
+                        if ($stmt->execute()) {
+                            foreach ($stmt->fetchAll() as $row) {
+                                $excludeIds[] = $row["id"];
+                            }
+                        };
                     }
-
                     // update is_scheduled flag for each cc_file
                     $fileIds = array();
                     foreach ($filesToInsert as &$file) {
@@ -779,14 +782,14 @@ class Application_Model_Scheduler
                     }
 
                     if ($adjustSched === true) {
+
                         $followingItems_sql = "SELECT * FROM cc_schedule ".
-                            "WHERE starts > '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
+                            "WHERE starts >= '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
                             "AND instance_id = {$instanceId} ";
                         if (count($excludeIds) > 0) {
                             $followingItems_sql .= "AND id NOT IN (". implode($excludeIds, ",").") ";
                         }
                         $followingItems_sql .= "ORDER BY starts";
-
                         $followingSchedItems = Application_Common_Database::prepareAndExecute(
                             $followingItems_sql);
 
