@@ -600,6 +600,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = $this->getRequest()->getBaseUrl();
         $url = $file->getRelativeFileUrl($baseUrl).'download/true';
+        $menu = array();
         $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
                             'title' => _('Download'));
 
