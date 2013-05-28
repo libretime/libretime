@@ -527,10 +527,6 @@ class Application_Model_Scheduler
 
             $linked = false;
 
-            $dropIndex_sql = "DROP INDEX cc_schedule_instance_id_idx";
-            Application_Common_Database::prepareAndExecute(
-                $dropIndex_sql, array(), Application_Common_Database::EXECUTE);
-
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
 
@@ -816,11 +812,6 @@ class Application_Model_Scheduler
                     }
                 }//for each instance
             }//for each schedule location
-
-            $createIndex_sql = "CREATE INDEX cc_schedule_instance_id_idx ".
-                "ON cc_schedule USING btree(instance_id)";
-            Application_Common_Database::prepareAndExecute(
-                $createIndex_sql, array(), Application_Common_Database::EXECUTE);
 
             $endProfile = microtime(true);
             Logging::debug("finished adding scheduled items.");
