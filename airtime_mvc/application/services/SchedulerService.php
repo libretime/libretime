@@ -177,10 +177,6 @@ class Application_Service_SchedulerService
             $timeFilled = Application_Common_Database::prepareAndExecute(
                 $timeFilled_sql, array(), Application_Common_Database::COLUMN);
 
-            $dropIndex_sql = "DROP INDEX cc_schedule_instance_id_idx";
-            Application_Common_Database::prepareAndExecute(
-                $dropIndex_sql, array(), Application_Common_Database::EXECUTE);
-
             //need to find out which linked instances are empty
             $values = array();
             foreach ($instanceIds as $id) {
@@ -239,11 +235,6 @@ class Application_Service_SchedulerService
 
             Application_Common_Database::prepareAndExecute(
                 $insert_sql, array(), Application_Common_Database::EXECUTE);
-
-            $createIndex_sql = "CREATE INDEX cc_schedule_instance_id_idx ".
-                "ON cc_schedule USING btree(instance_id)";
-            Application_Common_Database::prepareAndExecute(
-                $createIndex_sql, array(), Application_Common_Database::EXECUTE);
 
             //update time_filled in cc_show_instances
             $now = gmdate("Y-m-d H:i:s");
