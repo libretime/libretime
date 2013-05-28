@@ -32,6 +32,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
         realpath($CC_CONFIG['phpDir'] . '/library')
 )));
 
+require_once($CC_CONFIG['phpDir'].'/application/common/Database.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/StoredFile.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/Preference.php');
 require_once($CC_CONFIG['phpDir'].'/application/models/MusicDir.php');
@@ -52,7 +53,8 @@ if(count($argv) != 2){
 }
 
 $id = $argv[1];
-$file = Application_Model_StoredFile::Recall($id);
+
+$file = Application_Model_StoredFile::RecallById($id);
 // set id with -2 which is indicator for processing
 $file->setSoundCloudFileId(SOUNDCLOUD_PROGRESS);
 $file->uploadToSoundCloud();
