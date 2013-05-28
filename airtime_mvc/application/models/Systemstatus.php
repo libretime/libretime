@@ -125,6 +125,7 @@ class Application_Model_Systemstatus
     public static function GetPlatformInfo()
     {
         $keys = array("release", "machine", "memory", "swap");
+        $data = array();
         foreach ($keys as $key) {
             $data[$key] = "UNKNOWN";
         }
@@ -212,7 +213,7 @@ class Application_Model_Systemstatus
 
     public static function GetDiskInfo()
     {
-        $partions = array();
+        $partitions = array();
 
         /* First lets get all the watched directories. Then we can group them
         * into the same partitions by comparing the partition sizes. */

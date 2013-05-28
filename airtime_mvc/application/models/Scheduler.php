@@ -85,6 +85,9 @@ class Application_Model_Scheduler
 
         $nowEpoch = floatval($this->nowDT->format("U.u"));
 
+        $schedInfo = array();
+        $instanceInfo = array();
+
         for ($i = 0; $i < count($items); $i++) {
             $id = $items[$i]["id"];
 
@@ -103,7 +106,7 @@ class Application_Model_Scheduler
         }
 
         $schedIds = array();
-        if (isset($schedInfo)) {
+        if (count($schedInfo) > 0) {
             $schedIds = array_keys($schedInfo);
         }
         $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
