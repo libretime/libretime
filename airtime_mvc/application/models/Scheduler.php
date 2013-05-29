@@ -733,6 +733,7 @@ class Application_Model_Scheduler
                         if ($applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,
                                 $this->crossfadeDuration);
+                            $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                             $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             /* Set it to false because the rest of the crossfades
                              * will be applied after we insert each item
