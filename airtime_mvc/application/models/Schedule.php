@@ -398,7 +398,7 @@ SQL;
             $map = array();
 
             for ($i = 0, $len = count($p_shows); $i < $len; $i++) {
-            	$holder = "show_".$i;
+            	$holder = ":show_".$i;
 
             	$params[] = $holder;
             	$map[$holder] = $p_shows[$i];
