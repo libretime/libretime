@@ -612,6 +612,11 @@ class Application_Model_Scheduler
                             $instanceId);
 
                         $pos++;
+
+                        /* Show is not empty so we need to apply crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = true;
                     }
                     //selected empty row to add after
                     else {
@@ -620,6 +625,11 @@ class Application_Model_Scheduler
 
                         //first item in show so start position counter at 0
                         $pos = 0;
+
+                        /* Show is empty so we don't need to calculate crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -712,6 +722,15 @@ class Application_Model_Scheduler
                                 $fileId = "null";
                                 break;
                             default: break;
+                        }
+
+                        if ($applyCrossfades) {
+                            $nextStartDT = $this->findTimeDifference($nextStartDT,
+                                $this->crossfadeDuration);
+                            /* Set it to false because the rest of the crossfades
+                             * will be applied after we insert each item
+                             */
+                            $applyCrossfades = false;
                         }
 
                         if ($doInsert) {
