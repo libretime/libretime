@@ -712,6 +712,7 @@ class Application_Model_Scheduler
                         }
 
                         $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                        $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
@@ -821,6 +822,7 @@ class Application_Model_Scheduler
                         //recalculate the start/end times after the inserted items.
                         foreach ($followingSchedItems as $item) {
                             $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $update_sql = "UPDATE cc_schedule SET ".
                                 "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
                                 "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
