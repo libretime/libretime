@@ -193,6 +193,7 @@ class LocaleController extends Zend_Controller_Action
             "If your live streaming client does not ask for a username, this field should be 'source'." => _("If your live streaming client does not ask for a username, this field should be 'source'."),
             "The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
             "Warning: Shows cannot be re-linked" => _("Warning: Shows cannot be re-linked"),
+            "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows" => _("By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"),
             //schedule/full-calendar-functions
             //already in schedule/add-show.js
             //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
