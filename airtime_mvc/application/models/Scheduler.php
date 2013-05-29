@@ -711,8 +711,6 @@ class Application_Model_Scheduler
                             $doInsert = true;
                         }
 
-                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
-                        $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
@@ -733,12 +731,15 @@ class Application_Model_Scheduler
                         if ($applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,
                                 $this->crossfadeDuration);
+                            $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             /* Set it to false because the rest of the crossfades
                              * will be applied after we insert each item
                              */
                             $applyCrossfades = false;
                         }
 
+                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
                             $values[] = "(".
                                 "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
