@@ -644,7 +644,12 @@ class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        $initalStartDT = clone $nextStartDT;
+                        if ($applyCrossfades) {
+                            $initalStartDT = clone $this->findTimeDifference(
+                                $nextStartDT, $this->crossfadeDuration);
+                        } else {
+                            $initalStartDT = clone $nextStartDT;
+                        }
 
                         $pend = microtime(true);
                         Logging::debug("finding all following items.");
