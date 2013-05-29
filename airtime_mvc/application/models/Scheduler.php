@@ -711,8 +711,6 @@ class Application_Model_Scheduler
                             $doInsert = true;
                         }
 
-                        //$endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
-                        //$endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
