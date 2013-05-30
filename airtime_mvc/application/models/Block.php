@@ -1361,7 +1361,12 @@ SQL;
             "is"               => _("is"),
             "is not"           => _("is not"),
             "starts with"      => _("starts with"),
-            "ends with"        => _("ends with")
+            "ends with"        => _("ends with"),
+            "is"              => _("is"),
+            "is not"          => _("is not"),
+            "is greater than" => _("is greater than"),
+            "is less than"    => _("is less than"),
+            "is in the range" => _("is in the range")
         );
 
         // Load criteria from db
@@ -1375,7 +1380,10 @@ SQL;
             $extra = $crit->getDbExtra();
 
             if ($criteria == "limit") {
-                $storedCrit["limit"] = array("value"=>$value, "modifier"=>_($modifier));
+                $storedCrit["limit"] = array(
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "display_modifier"=>_($modifier));
             } else if($criteria == "repeat_tracks") {
                 $storedCrit["repeat_tracks"] = array("value"=>$value);
             } else {

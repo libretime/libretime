@@ -593,7 +593,7 @@ var AIRTIME = (function(AIRTIME){
                                             "</li>";
                                     });
                                 }
-                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.modifier+"</span></li>";
+                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.display_modifier+"</span></li>";
                             }
                             $pl.find("#block_"+id+"_info").html($html).show();
                             mod.enableUI();
