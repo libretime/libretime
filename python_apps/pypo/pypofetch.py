@@ -441,9 +441,11 @@ class PypoFetch(Thread):
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
-                media_item['start'] = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
-                media_item['end'] = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
-                media_copy[media_item['start']] = media_item
+                media_item['start'] = datetime.strptime(media_item['start'], 
+                        "%Y-%m-%d-%H-%M-%S")
+                media_item['end'] = datetime.strptime(media_item['end'], 
+                        "%Y-%m-%d-%H-%M-%S")
+                media_copy[key] = media_item
 
 
             self.media_prepare_queue.put(copy.copy(media_filtered))
