@@ -1380,7 +1380,10 @@ SQL;
             $extra = $crit->getDbExtra();
 
             if ($criteria == "limit") {
-                $storedCrit["limit"] = array("value"=>$value, "modifier"=>_($modifier));
+                $storedCrit["limit"] = array(
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "display_modifier"=>_($modifier));
             } else if($criteria == "repeat_tracks") {
                 $storedCrit["repeat_tracks"] = array("value"=>$value);
             } else {
