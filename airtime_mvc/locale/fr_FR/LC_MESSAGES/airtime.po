@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-29 15:27-0400\n"
-"PO-Revision-Date: 2013-05-30 11:55-0500\n"
+"PO-Revision-Date: 2013-05-30 11:58-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: French Localization <albert.bruc.ab@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -2198,7 +2198,7 @@ msgstr "Ce chemin n'est pas accessible."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr "Certains types de flux nécessitent une configuration supplémentaire. Les détails sur l'activation de l' %sAAC+ Support%s ou %sOpus Support%s sont prévus."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
