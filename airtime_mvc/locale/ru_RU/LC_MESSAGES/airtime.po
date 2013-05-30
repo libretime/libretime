@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-29 15:27-0400\n"
+"POT-Creation-Date: 2013-05-30 11:13-0400\n"
 "PO-Revision-Date: 2013-05-22 10:53+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Russian Localization <contact@sourcefabric.org>\n"
@@ -2201,7 +2201,7 @@ msgstr "Этот путь в настоящий момент недоступе�
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:171

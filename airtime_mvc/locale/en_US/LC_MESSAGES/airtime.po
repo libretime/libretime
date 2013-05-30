@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-29 15:27-0400\n"
+"POT-Creation-Date: 2013-05-30 11:13-0400\n"
 "PO-Revision-Date: 2013-05-22 10:49+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: United States Localization <contact@sourcefabric.org>\n"
@@ -2199,8 +2199,8 @@ msgstr "This path is currently not accessible."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
-msgstr ""
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgstr "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Connected to the streaming server"
@@ -3645,9 +3645,6 @@ msgstr "Please select an option"
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:531
 msgid "No Records"
 msgstr "No Records"
-
-#~ msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
-#~ msgstr "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 
 #~ msgid "Default Fade (s):"
 #~ msgstr "Default Fade (s):"
