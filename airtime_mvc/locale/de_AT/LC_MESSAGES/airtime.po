@@ -7,10 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-29 15:27-0400\n"
-"PO-Revision-Date: 2013-05-30 11:20-0500\n"
+"POT-Creation-Date: 2013-05-30 13:13-0400\n"
+"PO-Revision-Date: 2013-05-30 12:03-0500\n"
 "Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
 "Language-Team: Austrian Localization <contact@sourcefabric.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2206,7 +2207,7 @@ msgstr "Dieser Pfad ist derzeit nicht erreichbar."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
 msgstr "Manche Stream-Typen erfordern zusÃ¤tzliche Konfiguration.Details zum Aktivieren von %sAAC+ Support%s oder %sOpus Support%s sind bereitgestellt."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
@@ -3684,12 +3685,8 @@ msgstr "Keine Aufzeichnungen"
 #~ msgid "Specific action is not allowed in demo version!"
 #~ msgstr "GewÃ¤hlte Funktion wird in der Demo Version nicht zugelassen."
 
-#~ msgid ""
-#~ "%sAirtime%s %s, , the open radio software for scheduling and remote "
-#~ "station management. %s"
-#~ msgstr ""
-#~ "%sAirtime%s %s, , die offene Radio Software fÃ¼r Planung und Remote-"
-#~ "Station-Management. %s"
+#~ msgid "%sAirtime%s %s, , the open radio software for scheduling and remote station management. %s"
+#~ msgstr "%sAirtime%s %s, , die offene Radio Software fÃ¼r Planung und Remote-Station-Management. %s"
 
 #~ msgid "File"
 #~ msgstr "Datei"
