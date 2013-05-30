@@ -30,7 +30,7 @@ AND file_id is not null
 SQL;
 
         $files = Application_Common_Database::prepareAndExecute( $sql, array());
-        
+
         $real_files = array();
         foreach ($files as $f) {
             $real_files[] = $f['file_id'];
@@ -48,7 +48,7 @@ WHERE ends > now() AT TIME ZONE 'UTC'
 AND stream_id is not null
 SQL;
         $streams = Application_Common_Database::prepareAndExecute( $sql, array());
-        
+
         $real_streams = array();
         foreach ($streams as $s) {
             $real_streams[] = $s['stream_id'];
@@ -322,7 +322,8 @@ SQL;
                 ft.album_title AS file_album_title,
                 ft.length AS file_length,
                 ft.file_exists AS file_exists,
-                ft.mime AS file_mime
+                ft.mime AS file_mime,
+                ft.soundcloud_id AS soundcloud_id
 SQL;
         $filesJoin = <<<SQL
        cc_schedule AS sched
@@ -357,7 +358,8 @@ SQL;
                 ws.description AS file_album_title,
                 ws.length AS file_length,
                 't'::BOOL AS file_exists,
-                ws.mime as file_mime
+                ws.mime AS file_mime,
+                (SELECT NULL::integer AS soundcloud_id)
 SQL;
         $streamJoin = <<<SQL
       cc_schedule AS sched
@@ -391,17 +393,17 @@ SQL;
 
         $showPredicate = "";
         if (count($p_shows) > 0) {
-            
+
             $params = array();
             $map = array();
-            
+
             for ($i = 0, $len = count($p_shows); $i < $len; $i++) {
-            	$holder = "show_".$i;
-            	
+            	$holder = ":show_".$i;
+
             	$params[] = $holder;
             	$map[$holder] = $p_shows[$i];
             }
-            
+
             $showPredicate = " AND show_id IN (".implode(",", $params).")";
             $paramMap = $paramMap + $map;
         } else if (count($p_show_instances) > 0) {
@@ -448,13 +450,13 @@ SQL;
         	":ts_6" => $p_end_str,
         );
         $paramMap = $paramMap + $map;
-        
+
         $rows = Application_Common_Database::prepareAndExecute(
         	$sql,
         	$paramMap,
         	Application_Common_Database::ALL
         );
-        		
+
         return $rows;
     }
 
@@ -475,7 +477,7 @@ SQL;
         $sql .= " WHERE id=:pid";
         $map = array(":pid" => $p_id);
 
-        Application_Common_Database::prepareAndExecute($sql, $map, 
+        Application_Common_Database::prepareAndExecute($sql, $map,
             Application_Common_Database::EXECUTE);
     }
 
@@ -501,9 +503,9 @@ SQL;
     {
         $sql = "SELECT count(*) as cnt FROM cc_schedule";
 
-        $res = Application_Common_Database::prepareAndExecute($sql, array(), 
+        $res = Application_Common_Database::prepareAndExecute($sql, array(),
         		Application_Common_Database::COLUMN);
-        
+
         return $res;
     }
 
@@ -706,7 +708,7 @@ SQL;
             $key = "{$time}_{$i}";
             $i++;
         }
-        
+
         $data["media"][$key] = $item;
     }
 
@@ -755,7 +757,7 @@ SQL;
 
         $replay_gain = is_null($item["replay_gain"]) ? "0": $item["replay_gain"];
         $replay_gain += Application_Model_Preference::getReplayGainModifier();
-        
+
         if ( !Application_Model_Preference::GetEnableReplayGain() ) {
             $replay_gain = 0;
         }
@@ -775,7 +777,7 @@ SQL;
             'replay_gain'       => $replay_gain,
             'independent_event' => $independent_event,
         );
-        
+
         if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
             $schedule_item['cue_in'] = $schedule_item['cue_out'];
         }
@@ -915,10 +917,10 @@ SQL;
             } else {
                 throw new Exception("Unknown schedule type: ".print_r($item, true));
             }
-             
+
         }
     }
-    
+
     /* Check if two events are less than or equal to 1 second apart
      */
     public static function areEventsLinked($event1, $event2) {
@@ -996,7 +998,7 @@ SQL;
     public static function deleteAll()
     {
         $sql = "TRUNCATE TABLE cc_schedule";
-        Application_Common_Database::prepareAndExecute($sql, array(), 
+        Application_Common_Database::prepareAndExecute($sql, array(),
             Application_Common_Database::EXECUTE);
     }
 
@@ -1279,14 +1281,14 @@ SQL;
         $update=false, $instanceId=null, $showId=null)
     {
         $overlapping = false;
-        
+
         $params = array(
             ':show_end1'  => $show_end->format('Y-m-d H:i:s'),
             ':show_end2'  => $show_end->format('Y-m-d H:i:s'),
             ':show_end3'  => $show_end->format('Y-m-d H:i:s')
         );
-        
-        
+
+
         /* If a show is being edited, exclude it from the query
          * In both cases (new and edit) we only grab shows that
          * are scheduled 2 days prior
@@ -1357,18 +1359,18 @@ SQL;
             return 'file';
         }
     }
-    
+
     public static function GetFileId($p_scheduleId)
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
 
         return $scheduledItem->getDbFileId();
     }
-    
+
     public static function GetStreamId($p_scheduleId)
     {
         $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
-    
+
         return $scheduledItem->getDbStreamId();
     }
 }

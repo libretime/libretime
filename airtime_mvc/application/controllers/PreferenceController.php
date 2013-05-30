@@ -32,6 +32,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->statusMsg = "";
 
         $form = new Application_Form_Preferences();
+        $values = array();
 
         if ($request->isPost()) {
             $params = $request->getPost();
@@ -223,6 +224,7 @@ class PreferenceController extends Zend_Controller_Action
             $s1_data = array();
             $s2_data = array();
             $s3_data = array();
+            $values = array();
             foreach($postData as $k=>$v) {
                 $v = explode('=', urldecode($v));
                 if (strpos($v[0], "s1_data") !== false) {

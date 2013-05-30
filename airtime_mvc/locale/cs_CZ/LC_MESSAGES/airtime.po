@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Airtime 2.3\n"
+"Project-Id-Version: Airtime 2.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-21 09:20-0400\n"
+"POT-Creation-Date: 2013-05-30 11:13-0400\n"
 "PO-Revision-Date: 2013-05-22 10:43+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Sourcefabric <contact@sourcefabric.org>\n"
@@ -43,7 +43,7 @@ msgid "Show Content"
 msgstr "Zobrazit obsah"
 
 #: airtime_mvc/application/services/CalendarService.php:85
-#: airtime_mvc/application/controllers/LocaleController.php:310
+#: airtime_mvc/application/controllers/LocaleController.php:311
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
 msgstr "Přidat / Odebrat obsah"
@@ -174,13 +174,13 @@ msgid "Streams"
 msgstr "Streamy"
 
 #: airtime_mvc/application/configs/navigation.php:70
-#: airtime_mvc/application/controllers/PreferenceController.php:136
+#: airtime_mvc/application/controllers/PreferenceController.php:137
 msgid "Support Feedback"
 msgstr "Technická podpora"
 
 #: airtime_mvc/application/configs/navigation.php:76
-#: airtime_mvc/application/controllers/LocaleController.php:370
 #: airtime_mvc/application/controllers/LocaleController.php:371
+#: airtime_mvc/application/controllers/LocaleController.php:372
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:8
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
 msgid "Status"
@@ -226,49 +226,49 @@ msgstr "Audio přehrávač"
 msgid "Logout"
 msgstr "Odhlásit "
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:41
-#: airtime_mvc/application/layouts/scripts/layout.phtml:66
+#: airtime_mvc/application/layouts/scripts/layout.phtml:42
+#: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
 msgstr ""
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:42
-#: airtime_mvc/application/layouts/scripts/layout.phtml:67
+#: airtime_mvc/application/layouts/scripts/layout.phtml:43
+#: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
 msgstr ""
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:46
-#: airtime_mvc/application/models/Block.php:1330
+#: airtime_mvc/application/layouts/scripts/layout.phtml:47
+#: airtime_mvc/application/models/Block.php:1334
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
-#: airtime_mvc/application/controllers/LocaleController.php:279
+#: airtime_mvc/application/controllers/LocaleController.php:280
 msgid "Cue In"
 msgstr "Cue in"
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:48
+#: airtime_mvc/application/layouts/scripts/layout.phtml:49
 msgid "Set Cue In"
 msgstr ""
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:53
-#: airtime_mvc/application/models/Block.php:1331
+#: airtime_mvc/application/layouts/scripts/layout.phtml:54
+#: airtime_mvc/application/models/Block.php:1335
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
-#: airtime_mvc/application/controllers/LocaleController.php:280
+#: airtime_mvc/application/controllers/LocaleController.php:281
 msgid "Cue Out"
 msgstr "Cue out"
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:55
+#: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
 msgstr ""
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:70
+#: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
 msgstr ""
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:71
-#: airtime_mvc/application/controllers/LocaleController.php:281
+#: airtime_mvc/application/layouts/scripts/layout.phtml:74
+#: airtime_mvc/application/controllers/LocaleController.php:282
 msgid "Fade In"
 msgstr "Pozvolné zesilování "
 
-#: airtime_mvc/application/layouts/scripts/layout.phtml:72
-#: airtime_mvc/application/controllers/LocaleController.php:282
+#: airtime_mvc/application/layouts/scripts/layout.phtml:75
+#: airtime_mvc/application/controllers/LocaleController.php:283
 msgid "Fade Out"
 msgstr "Pozvolné zeslabování"
 
@@ -277,24 +277,24 @@ msgstr "Pozvolné zeslabování"
 msgid "Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%sMaintained and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
 msgstr "Airtime Copyright &copy; Sourcefabric o.p.s. Všechna práva vyhrazena.%sSpravován a distribuován pod licencí GNU GPL v.3 od %sSourcefabric o.p.s.%s"
 
-#: airtime_mvc/application/models/StoredFile.php:972
+#: airtime_mvc/application/models/StoredFile.php:953
 msgid "Failed to create 'organize' directory."
 msgstr "Nepodařilo se vytvořit adresář 'organize'."
 
-#: airtime_mvc/application/models/StoredFile.php:985
+#: airtime_mvc/application/models/StoredFile.php:967
 #, php-format
 msgid "The file was not uploaded, there is %s MB of disk space left and the file you are uploading has a size of %s MB."
 msgstr "Soubor nebyl nahrán. Máte k dispozici %s MB volného místa na disku a soubor který jste chtěli nahrát má velikost %s MB."
 
-#: airtime_mvc/application/models/StoredFile.php:994
+#: airtime_mvc/application/models/StoredFile.php:976
 msgid "This file appears to be corrupted and will not be added to media library."
 msgstr "Tento soubor se zdá být poškozený a nebude přidán do knihovny médií."
 
-#: airtime_mvc/application/models/StoredFile.php:1033
+#: airtime_mvc/application/models/StoredFile.php:1015
 msgid "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space or the stor directory does not have correct write permissions."
 msgstr "Soubor nebyl nahrán. K této chybě může dojít, pokud na pevném disku počítače není dostatek místa nebo adresář nemá správná oprávnění pro zápis."
 
-#: airtime_mvc/application/models/Preference.php:618
+#: airtime_mvc/application/models/Preference.php:620
 msgid "Select Country"
 msgstr "Vyberte zemi"
 
@@ -334,27 +334,27 @@ msgstr "%s je již nastaven jako aktuální adresář úložiště nebo v seznam
 msgid "%s doesn't exist in the watched list."
 msgstr "%s neexistuje v seznamu sledovaných."
 
-#: airtime_mvc/application/models/Playlist.php:794
-#: airtime_mvc/application/models/Block.php:829
+#: airtime_mvc/application/models/Playlist.php:802
+#: airtime_mvc/application/models/Block.php:833
 msgid "Cue in and cue out are null."
 msgstr "Cue in a cue out jsou prázné."
 
-#: airtime_mvc/application/models/Playlist.php:824
-#: airtime_mvc/application/models/Playlist.php:847
-#: airtime_mvc/application/models/Block.php:875
-#: airtime_mvc/application/models/Block.php:896
+#: airtime_mvc/application/models/Playlist.php:833
+#: airtime_mvc/application/models/Playlist.php:858
+#: airtime_mvc/application/models/Block.php:879
+#: airtime_mvc/application/models/Block.php:900
 msgid "Can't set cue in to be larger than cue out."
 msgstr "Nelze nastavit větší cue in než cue out."
 
-#: airtime_mvc/application/models/Playlist.php:831
-#: airtime_mvc/application/models/Playlist.php:872
-#: airtime_mvc/application/models/Block.php:864
-#: airtime_mvc/application/models/Block.php:920
+#: airtime_mvc/application/models/Playlist.php:841
+#: airtime_mvc/application/models/Playlist.php:885
+#: airtime_mvc/application/models/Block.php:868
+#: airtime_mvc/application/models/Block.php:924
 msgid "Can't set cue out to be greater than file length."
 msgstr "Nelze nastavit delší cue out než je délka souboru."
 
-#: airtime_mvc/application/models/Playlist.php:865
-#: airtime_mvc/application/models/Block.php:931
+#: airtime_mvc/application/models/Playlist.php:877
+#: airtime_mvc/application/models/Block.php:935
 msgid "Can't set cue out to be smaller than cue in."
 msgstr "Nelze nastavit menší cue out než je cue in."
 
@@ -447,45 +447,45 @@ msgstr "Airtime obnovení hesla"
 msgid "Cannot move items out of linked shows"
 msgstr ""
 
-#: airtime_mvc/application/models/Scheduler.php:115
+#: airtime_mvc/application/models/Scheduler.php:118
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
 msgstr "Program, který si prohlížíte, je zastaralý!"
 
-#: airtime_mvc/application/models/Scheduler.php:120
+#: airtime_mvc/application/models/Scheduler.php:123
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
 msgstr "Program který si prohlížíte je zastaralý!"
 
-#: airtime_mvc/application/models/Scheduler.php:128
-#: airtime_mvc/application/models/Scheduler.php:433
-#: airtime_mvc/application/models/Scheduler.php:469
+#: airtime_mvc/application/models/Scheduler.php:131
+#: airtime_mvc/application/models/Scheduler.php:440
+#: airtime_mvc/application/models/Scheduler.php:478
 msgid "The schedule you're viewing is out of date!"
 msgstr "Program který si prohlížíte je zastaralý! "
 
-#: airtime_mvc/application/models/Scheduler.php:138
+#: airtime_mvc/application/models/Scheduler.php:141
 #, php-format
 msgid "You are not allowed to schedule show %s."
 msgstr "Nemáte povoleno plánovat vysílání %s ."
 
-#: airtime_mvc/application/models/Scheduler.php:142
+#: airtime_mvc/application/models/Scheduler.php:145
 msgid "You cannot add files to recording shows."
 msgstr "Nemůžete přidávat soubory do nahrávaného vysílání."
 
-#: airtime_mvc/application/models/Scheduler.php:148
+#: airtime_mvc/application/models/Scheduler.php:151
 #, php-format
 msgid "The show %s is over and cannot be scheduled."
 msgstr "Vysílání %s skončilo a nemůže být nasazeno."
 
-#: airtime_mvc/application/models/Scheduler.php:155
+#: airtime_mvc/application/models/Scheduler.php:158
 #, php-format
 msgid "The show %s has been previously updated!"
 msgstr "Vysílání %s bylo již dříve aktualizováno!"
 
-#: airtime_mvc/application/models/Scheduler.php:174
+#: airtime_mvc/application/models/Scheduler.php:177
 msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
 msgstr ""
 
-#: airtime_mvc/application/models/Scheduler.php:197
-#: airtime_mvc/application/models/Scheduler.php:283
+#: airtime_mvc/application/models/Scheduler.php:200
+#: airtime_mvc/application/models/Scheduler.php:286
 msgid "A selected File does not exist!"
 msgstr "Vybraný soubor neexistuje!"
 
@@ -494,50 +494,50 @@ msgstr "Vybraný soubor neexistuje!"
 msgid "Rebroadcast of %s from %s"
 msgstr "Znovu odvysílat %s od %s"
 
-#: airtime_mvc/application/models/Block.php:1323
+#: airtime_mvc/application/models/Block.php:1327
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:48
 msgid "Select criteria"
 msgstr "Vyberte kritéria"
 
-#: airtime_mvc/application/models/Block.php:1324
+#: airtime_mvc/application/models/Block.php:1328
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:49
 #: airtime_mvc/application/controllers/LocaleController.php:68
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:8
 msgid "Album"
 msgstr "Album"
 
-#: airtime_mvc/application/models/Block.php:1325
+#: airtime_mvc/application/models/Block.php:1329
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:50
 msgid "Bit Rate (Kbps)"
 msgstr "Kvalita (Kbps)"
 
-#: airtime_mvc/application/models/Block.php:1326
+#: airtime_mvc/application/models/Block.php:1330
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:51
 #: airtime_mvc/application/controllers/LocaleController.php:70
 msgid "BPM"
 msgstr "BPM"
 
-#: airtime_mvc/application/models/Block.php:1327
+#: airtime_mvc/application/models/Block.php:1331
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:52
 #: airtime_mvc/application/controllers/LocaleController.php:71
 #: airtime_mvc/application/controllers/LocaleController.php:156
 msgid "Composer"
 msgstr "Skladatel"
 
-#: airtime_mvc/application/models/Block.php:1328
+#: airtime_mvc/application/models/Block.php:1332
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:53
 #: airtime_mvc/application/controllers/LocaleController.php:72
 msgid "Conductor"
 msgstr "Dirigent"
 
-#: airtime_mvc/application/models/Block.php:1329
+#: airtime_mvc/application/models/Block.php:1333
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
 #: airtime_mvc/application/controllers/LocaleController.php:73
 #: airtime_mvc/application/controllers/LocaleController.php:157
 msgid "Copyright"
 msgstr "Autorská práva"
 
-#: airtime_mvc/application/models/Block.php:1332
+#: airtime_mvc/application/models/Block.php:1336
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 #: airtime_mvc/application/controllers/LocaleController.php:67
 #: airtime_mvc/application/controllers/LocaleController.php:153
@@ -545,13 +545,13 @@ msgstr "Autorská práva"
 msgid "Creator"
 msgstr "Tvůrce"
 
-#: airtime_mvc/application/models/Block.php:1333
+#: airtime_mvc/application/models/Block.php:1337
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:58
 #: airtime_mvc/application/controllers/LocaleController.php:74
 msgid "Encoded By"
 msgstr "Zakódováno"
 
-#: airtime_mvc/application/models/Block.php:1334
+#: airtime_mvc/application/models/Block.php:1338
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:132
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:59
 #: airtime_mvc/application/controllers/LocaleController.php:75
@@ -559,37 +559,37 @@ msgstr "Zakódováno"
 msgid "Genre"
 msgstr "Pohlaví"
 
-#: airtime_mvc/application/models/Block.php:1335
+#: airtime_mvc/application/models/Block.php:1339
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:60
 #: airtime_mvc/application/controllers/LocaleController.php:76
 msgid "ISRC"
 msgstr "ISRC"
 
-#: airtime_mvc/application/models/Block.php:1336
+#: airtime_mvc/application/models/Block.php:1340
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
 #: airtime_mvc/application/controllers/LocaleController.php:77
 msgid "Label"
 msgstr "Označení "
 
-#: airtime_mvc/application/models/Block.php:1337
+#: airtime_mvc/application/models/Block.php:1341
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
 #: airtime_mvc/application/controllers/LocaleController.php:78
 msgid "Language"
 msgstr "Jazyk"
 
-#: airtime_mvc/application/models/Block.php:1338
+#: airtime_mvc/application/models/Block.php:1342
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:63
 #: airtime_mvc/application/controllers/LocaleController.php:79
 msgid "Last Modified"
 msgstr "Naposledy změněno"
 
-#: airtime_mvc/application/models/Block.php:1339
+#: airtime_mvc/application/models/Block.php:1343
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:64
 #: airtime_mvc/application/controllers/LocaleController.php:80
 msgid "Last Played"
 msgstr "Naposledy vysíláno"
 
-#: airtime_mvc/application/models/Block.php:1340
+#: airtime_mvc/application/models/Block.php:1344
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 #: airtime_mvc/application/controllers/LocaleController.php:81
 #: airtime_mvc/application/controllers/LocaleController.php:155
@@ -597,36 +597,36 @@ msgstr "Naposledy vysíláno"
 msgid "Length"
 msgstr "Délka"
 
-#: airtime_mvc/application/models/Block.php:1341
+#: airtime_mvc/application/models/Block.php:1345
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:66
 #: airtime_mvc/application/controllers/LocaleController.php:82
 msgid "Mime"
 msgstr "Mime"
 
-#: airtime_mvc/application/models/Block.php:1342
+#: airtime_mvc/application/models/Block.php:1346
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
 #: airtime_mvc/application/controllers/LocaleController.php:83
 msgid "Mood"
 msgstr "Nálada"
 
-#: airtime_mvc/application/models/Block.php:1343
+#: airtime_mvc/application/models/Block.php:1347
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:68
 #: airtime_mvc/application/controllers/LocaleController.php:84
 msgid "Owner"
 msgstr "Vlastník"
 
-#: airtime_mvc/application/models/Block.php:1344
+#: airtime_mvc/application/models/Block.php:1348
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:69
 #: airtime_mvc/application/controllers/LocaleController.php:85
 msgid "Replay Gain"
 msgstr "Opakovat Gain"
 
-#: airtime_mvc/application/models/Block.php:1345
+#: airtime_mvc/application/models/Block.php:1349
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:70
 msgid "Sample Rate (kHz)"
 msgstr "Vzorkovací frekvence (kHz)"
 
-#: airtime_mvc/application/models/Block.php:1346
+#: airtime_mvc/application/models/Block.php:1350
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 #: airtime_mvc/application/controllers/LocaleController.php:66
 #: airtime_mvc/application/controllers/LocaleController.php:152
@@ -634,25 +634,25 @@ msgstr "Vzorkovací frekvence (kHz)"
 msgid "Title"
 msgstr "Název"
 
-#: airtime_mvc/application/models/Block.php:1347
+#: airtime_mvc/application/models/Block.php:1351
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:72
 #: airtime_mvc/application/controllers/LocaleController.php:87
 msgid "Track Number"
 msgstr "Číslo stopy"
 
-#: airtime_mvc/application/models/Block.php:1348
+#: airtime_mvc/application/models/Block.php:1352
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:73
 #: airtime_mvc/application/controllers/LocaleController.php:88
 msgid "Uploaded"
 msgstr "Nahráno"
 
-#: airtime_mvc/application/models/Block.php:1349
+#: airtime_mvc/application/models/Block.php:1353
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:74
 #: airtime_mvc/application/controllers/LocaleController.php:89
 msgid "Website"
 msgstr "Internetové stránky"
 
-#: airtime_mvc/application/models/Block.php:1350
+#: airtime_mvc/application/models/Block.php:1354
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
 #: airtime_mvc/application/controllers/LocaleController.php:90
 msgid "Year"
@@ -753,7 +753,7 @@ msgstr "Logo stanice:"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:112
-#: airtime_mvc/application/controllers/LocaleController.php:339
+#: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "Send support feedback"
 msgstr "Odeslat zpětnou vazbu"
 
@@ -1002,29 +1002,29 @@ msgid "User Type:"
 msgstr "Typ uživatele:"
 
 #: airtime_mvc/application/forms/AddUser.php:92
-#: airtime_mvc/application/controllers/LocaleController.php:322
+#: airtime_mvc/application/controllers/LocaleController.php:323
 msgid "Guest"
 msgstr "Host"
 
 #: airtime_mvc/application/forms/AddUser.php:93
-#: airtime_mvc/application/controllers/LocaleController.php:320
+#: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "DJ"
 msgstr "DJ"
 
 #: airtime_mvc/application/forms/AddUser.php:94
-#: airtime_mvc/application/controllers/LocaleController.php:321
+#: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Program Manager"
 msgstr "Program manager"
 
 #: airtime_mvc/application/forms/AddUser.php:95
-#: airtime_mvc/application/controllers/LocaleController.php:319
+#: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "Admin"
 msgstr "Administrátor"
 
 #: airtime_mvc/application/forms/AddUser.php:103
 #: airtime_mvc/application/forms/SupportSettings.php:158
 #: airtime_mvc/application/forms/EditAudioMD.php:134
-#: airtime_mvc/application/controllers/LocaleController.php:292
+#: airtime_mvc/application/controllers/LocaleController.php:293
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:27
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:24
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:16
@@ -1149,37 +1149,37 @@ msgid "Select Days:"
 msgstr "Vyberte dny:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:33
-#: airtime_mvc/application/controllers/LocaleController.php:254
+#: airtime_mvc/application/controllers/LocaleController.php:255
 msgid "Sun"
 msgstr "Ne"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:34
-#: airtime_mvc/application/controllers/LocaleController.php:255
+#: airtime_mvc/application/controllers/LocaleController.php:256
 msgid "Mon"
 msgstr "Po"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
-#: airtime_mvc/application/controllers/LocaleController.php:256
+#: airtime_mvc/application/controllers/LocaleController.php:257
 msgid "Tue"
 msgstr "Út"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
-#: airtime_mvc/application/controllers/LocaleController.php:257
+#: airtime_mvc/application/controllers/LocaleController.php:258
 msgid "Wed"
 msgstr "St"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
-#: airtime_mvc/application/controllers/LocaleController.php:258
+#: airtime_mvc/application/controllers/LocaleController.php:259
 msgid "Thu"
 msgstr "Čt"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
-#: airtime_mvc/application/controllers/LocaleController.php:259
+#: airtime_mvc/application/controllers/LocaleController.php:260
 msgid "Fri"
 msgstr "Pá"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
-#: airtime_mvc/application/controllers/LocaleController.php:260
+#: airtime_mvc/application/controllers/LocaleController.php:261
 msgid "Sat"
 msgstr "So"
 
@@ -1288,8 +1288,8 @@ msgstr "Obnovení hesla"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 #: airtime_mvc/application/forms/EditAudioMD.php:144
-#: airtime_mvc/application/controllers/LocaleController.php:293
-#: airtime_mvc/application/controllers/LocaleController.php:316
+#: airtime_mvc/application/controllers/LocaleController.php:294
+#: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -1647,37 +1647,37 @@ msgid "Week Starts On"
 msgstr "Týden začíná"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
-#: airtime_mvc/application/controllers/LocaleController.php:247
+#: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Sunday"
 msgstr "Neděle"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:124
-#: airtime_mvc/application/controllers/LocaleController.php:248
+#: airtime_mvc/application/controllers/LocaleController.php:249
 msgid "Monday"
 msgstr "Pondělí"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
-#: airtime_mvc/application/controllers/LocaleController.php:249
+#: airtime_mvc/application/controllers/LocaleController.php:250
 msgid "Tuesday"
 msgstr "Úterý"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-#: airtime_mvc/application/controllers/LocaleController.php:250
+#: airtime_mvc/application/controllers/LocaleController.php:251
 msgid "Wednesday"
 msgstr "Středa"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
-#: airtime_mvc/application/controllers/LocaleController.php:251
+#: airtime_mvc/application/controllers/LocaleController.php:252
 msgid "Thursday"
 msgstr "Čtvrtek"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:128
-#: airtime_mvc/application/controllers/LocaleController.php:252
+#: airtime_mvc/application/controllers/LocaleController.php:253
 msgid "Friday"
 msgstr "Pátek"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
-#: airtime_mvc/application/controllers/LocaleController.php:253
+#: airtime_mvc/application/controllers/LocaleController.php:254
 msgid "Saturday"
 msgstr "Sobota"
 
@@ -1831,23 +1831,23 @@ msgstr "E-mail se nepodařilo odeslat. Zkontrolujte nastavení poštovního serv
 msgid "Given email not found."
 msgstr "Zadaný e-mail nebyl nalezen."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:73
+#: airtime_mvc/application/controllers/PreferenceController.php:74
 msgid "Preferences updated."
 msgstr "Preference aktualizovány."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:124
+#: airtime_mvc/application/controllers/PreferenceController.php:125
 msgid "Support setting updated."
 msgstr "Podpora nastavení aktualizována."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:329
+#: airtime_mvc/application/controllers/PreferenceController.php:331
 msgid "Stream Setting Updated."
 msgstr "Nastavení streamu aktualizováno."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:362
+#: airtime_mvc/application/controllers/PreferenceController.php:364
 msgid "path should be specified"
 msgstr "cesta by měla být specifikována"
 
-#: airtime_mvc/application/controllers/PreferenceController.php:457
+#: airtime_mvc/application/controllers/PreferenceController.php:459
 msgid "Problem with Liquidsoap..."
 msgstr "Problém s Liquidsoap ..."
 
@@ -1859,15 +1859,15 @@ msgstr "Stránka nebyla nalezena"
 msgid "Application error"
 msgstr "Chyba aplikace"
 
-#: airtime_mvc/application/controllers/UserController.php:81
+#: airtime_mvc/application/controllers/UserController.php:82
 msgid "User added successfully!"
 msgstr "Uživatel byl úspěšně přidán!"
 
-#: airtime_mvc/application/controllers/UserController.php:83
+#: airtime_mvc/application/controllers/UserController.php:84
 msgid "User updated successfully!"
 msgstr "Uživatel byl úspěšně aktualizován!"
 
-#: airtime_mvc/application/controllers/UserController.php:153
+#: airtime_mvc/application/controllers/UserController.php:154
 msgid "Settings updated successfully!"
 msgstr "Nastavení úspěšně aktualizováno!"
 
@@ -2024,7 +2024,7 @@ msgid "Are you sure you want to delete the selected item?"
 msgstr "Jste si jisti, že chcete smazat vybranou položku?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:99
-#: airtime_mvc/application/controllers/LocaleController.php:207
+#: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "Uploading in progress..."
 msgstr "Probíhá nahrávání..."
 
@@ -2273,521 +2273,525 @@ msgstr "Ukázka vysílání již neexistuje!"
 msgid "Warning: Shows cannot be re-linked"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:199
+#: airtime_mvc/application/controllers/LocaleController.php:196
+msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgstr ""
+
+#: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "Show"
 msgstr "Vysílání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:200
+#: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "Show is empty"
 msgstr "Vysílání je prázdné"
 
-#: airtime_mvc/application/controllers/LocaleController.php:201
+#: airtime_mvc/application/controllers/LocaleController.php:202
 msgid "1m"
 msgstr "1m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:202
+#: airtime_mvc/application/controllers/LocaleController.php:203
 msgid "5m"
 msgstr "5m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:203
+#: airtime_mvc/application/controllers/LocaleController.php:204
 msgid "10m"
 msgstr "10m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:204
+#: airtime_mvc/application/controllers/LocaleController.php:205
 msgid "15m"
 msgstr "15m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:205
+#: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "30m"
 msgstr "30m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:206
+#: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "60m"
 msgstr "60m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:208
+#: airtime_mvc/application/controllers/LocaleController.php:209
 msgid "Retreiving data from the server..."
 msgstr "Získávání dat ze serveru ..."
 
-#: airtime_mvc/application/controllers/LocaleController.php:214
+#: airtime_mvc/application/controllers/LocaleController.php:215
 msgid "This show has no scheduled content."
 msgstr "Toto vysílání nemá naplánovaný obsah."
 
-#: airtime_mvc/application/controllers/LocaleController.php:215
+#: airtime_mvc/application/controllers/LocaleController.php:216
 msgid "This show is not completely filled with content."
 msgstr "Toto vysílání není zcela vyplněno."
 
-#: airtime_mvc/application/controllers/LocaleController.php:219
+#: airtime_mvc/application/controllers/LocaleController.php:220
 msgid "January"
 msgstr "Leden"
 
-#: airtime_mvc/application/controllers/LocaleController.php:220
+#: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "February"
 msgstr "Únor"
 
-#: airtime_mvc/application/controllers/LocaleController.php:221
+#: airtime_mvc/application/controllers/LocaleController.php:222
 msgid "March"
 msgstr "Březen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:222
+#: airtime_mvc/application/controllers/LocaleController.php:223
 msgid "April"
 msgstr "Duben"
 
-#: airtime_mvc/application/controllers/LocaleController.php:223
-#: airtime_mvc/application/controllers/LocaleController.php:235
+#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "May"
 msgstr "Květen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:224
+#: airtime_mvc/application/controllers/LocaleController.php:225
 msgid "June"
 msgstr "Červen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:225
+#: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "July"
 msgstr "Červenec"
 
-#: airtime_mvc/application/controllers/LocaleController.php:226
+#: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "August"
 msgstr "Srpen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:227
+#: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "September"
 msgstr "Září"
 
-#: airtime_mvc/application/controllers/LocaleController.php:228
+#: airtime_mvc/application/controllers/LocaleController.php:229
 msgid "October"
 msgstr "Říjen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:229
+#: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "November"
 msgstr "Listopad"
 
-#: airtime_mvc/application/controllers/LocaleController.php:230
+#: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "December"
 msgstr "Prosinec"
 
-#: airtime_mvc/application/controllers/LocaleController.php:231
+#: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "Jan"
 msgstr "Leden"
 
-#: airtime_mvc/application/controllers/LocaleController.php:232
+#: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "Feb"
 msgstr "Únor"
 
-#: airtime_mvc/application/controllers/LocaleController.php:233
+#: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "Mar"
 msgstr "Březen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:234
+#: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "Apr"
 msgstr "Duben"
 
-#: airtime_mvc/application/controllers/LocaleController.php:236
+#: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "Jun"
 msgstr "Červen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:237
+#: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Jul"
 msgstr "Červenec"
 
-#: airtime_mvc/application/controllers/LocaleController.php:238
+#: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Aug"
 msgstr "Srpen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:239
+#: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Sep"
 msgstr "Září"
 
-#: airtime_mvc/application/controllers/LocaleController.php:240
+#: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Oct"
 msgstr "Říjen"
 
-#: airtime_mvc/application/controllers/LocaleController.php:241
+#: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Nov"
 msgstr "Listopad"
 
-#: airtime_mvc/application/controllers/LocaleController.php:242
+#: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "Dec"
 msgstr "Prosinec"
 
-#: airtime_mvc/application/controllers/LocaleController.php:243
+#: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "today"
 msgstr "dnes"
 
-#: airtime_mvc/application/controllers/LocaleController.php:244
+#: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "day"
 msgstr "den"
 
-#: airtime_mvc/application/controllers/LocaleController.php:245
+#: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "week"
 msgstr "týden"
 
-#: airtime_mvc/application/controllers/LocaleController.php:246
+#: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "month"
 msgstr "měsíc"
 
-#: airtime_mvc/application/controllers/LocaleController.php:261
+#: airtime_mvc/application/controllers/LocaleController.php:262
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "Vysílání delší než naplánovaný čas bude ukončeno začátkem dalšího vysílání."
 
-#: airtime_mvc/application/controllers/LocaleController.php:262
+#: airtime_mvc/application/controllers/LocaleController.php:263
 msgid "Cancel Current Show?"
 msgstr "Zrušit aktuální vysílání?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:263
-#: airtime_mvc/application/controllers/LocaleController.php:307
+#: airtime_mvc/application/controllers/LocaleController.php:264
+#: airtime_mvc/application/controllers/LocaleController.php:308
 msgid "Stop recording current show?"
 msgstr "Zastavit nahrávání aktuálního vysílání?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:264
+#: airtime_mvc/application/controllers/LocaleController.php:265
 msgid "Ok"
 msgstr "OK"
 
-#: airtime_mvc/application/controllers/LocaleController.php:265
+#: airtime_mvc/application/controllers/LocaleController.php:266
 msgid "Contents of Show"
 msgstr "Obsah vysílání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:268
+#: airtime_mvc/application/controllers/LocaleController.php:269
 msgid "Remove all content?"
 msgstr "Odstranit veškerý obsah?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:270
+#: airtime_mvc/application/controllers/LocaleController.php:271
 msgid "Delete selected item(s)?"
 msgstr "Odstranit vybranou položku(y)?"
 
-#: airtime_mvc/application/controllers/LocaleController.php:271
+#: airtime_mvc/application/controllers/LocaleController.php:272
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
 msgstr "Začátek"
 
-#: airtime_mvc/application/controllers/LocaleController.php:272
+#: airtime_mvc/application/controllers/LocaleController.php:273
 msgid "End"
 msgstr "Konec"
 
-#: airtime_mvc/application/controllers/LocaleController.php:273
+#: airtime_mvc/application/controllers/LocaleController.php:274
 msgid "Duration"
 msgstr "Trvání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:283
+#: airtime_mvc/application/controllers/LocaleController.php:284
 msgid "Show Empty"
 msgstr "Vysílání prázdné"
 
-#: airtime_mvc/application/controllers/LocaleController.php:284
+#: airtime_mvc/application/controllers/LocaleController.php:285
 msgid "Recording From Line In"
 msgstr "Nahrávání z Line In"
 
-#: airtime_mvc/application/controllers/LocaleController.php:285
+#: airtime_mvc/application/controllers/LocaleController.php:286
 msgid "Track preview"
 msgstr "Náhled stopy"
 
-#: airtime_mvc/application/controllers/LocaleController.php:289
+#: airtime_mvc/application/controllers/LocaleController.php:290
 msgid "Cannot schedule outside a show."
 msgstr "Nelze naplánovat mimo vysílání."
 
-#: airtime_mvc/application/controllers/LocaleController.php:290
+#: airtime_mvc/application/controllers/LocaleController.php:291
 msgid "Moving 1 Item"
 msgstr "Posunutí 1 položky"
 
-#: airtime_mvc/application/controllers/LocaleController.php:291
+#: airtime_mvc/application/controllers/LocaleController.php:292
 #, php-format
 msgid "Moving %s Items"
 msgstr "Posunutí %s položek"
 
-#: airtime_mvc/application/controllers/LocaleController.php:294
+#: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Fade Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:295
+#: airtime_mvc/application/controllers/LocaleController.php:296
 msgid "Cue Editor"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:296
+#: airtime_mvc/application/controllers/LocaleController.php:297
 msgid "Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
 
-#: airtime_mvc/application/controllers/LocaleController.php:299
+#: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Select all"
 msgstr "Vybrat vše"
 
-#: airtime_mvc/application/controllers/LocaleController.php:300
+#: airtime_mvc/application/controllers/LocaleController.php:301
 msgid "Select none"
 msgstr "Nic nevybrat"
 
-#: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/controllers/LocaleController.php:302
 msgid "Remove overbooked tracks"
 msgstr "Odebrat duplicitní skladby"
 
-#: airtime_mvc/application/controllers/LocaleController.php:302
+#: airtime_mvc/application/controllers/LocaleController.php:303
 msgid "Remove selected scheduled items"
 msgstr "Odebrat vybrané naplánované položky"
 
-#: airtime_mvc/application/controllers/LocaleController.php:303
+#: airtime_mvc/application/controllers/LocaleController.php:304
 msgid "Jump to the current playing track"
 msgstr "Přejít na aktuálně přehrávanou skladbu"
 
-#: airtime_mvc/application/controllers/LocaleController.php:304
+#: airtime_mvc/application/controllers/LocaleController.php:305
 msgid "Cancel current show"
 msgstr "Zrušit aktuální vysílání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:309
+#: airtime_mvc/application/controllers/LocaleController.php:310
 msgid "Open library to add or remove content"
 msgstr "Otevřít knihovnu pro přidání nebo odebrání obsahu"
 
-#: airtime_mvc/application/controllers/LocaleController.php:312
+#: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "in use"
 msgstr "používá se"
 
-#: airtime_mvc/application/controllers/LocaleController.php:313
+#: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Disk"
 msgstr "Disk"
 
-#: airtime_mvc/application/controllers/LocaleController.php:315
+#: airtime_mvc/application/controllers/LocaleController.php:316
 msgid "Look in"
 msgstr "Podívat se"
 
-#: airtime_mvc/application/controllers/LocaleController.php:317
+#: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "Open"
 msgstr "Otevřít"
 
-#: airtime_mvc/application/controllers/LocaleController.php:323
+#: airtime_mvc/application/controllers/LocaleController.php:324
 msgid "Guests can do the following:"
 msgstr "Hosté mohou dělat následující:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:324
+#: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "View schedule"
 msgstr "Zobrazit plán"
 
-#: airtime_mvc/application/controllers/LocaleController.php:325
+#: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "View show content"
 msgstr "Zobrazit obsah vysílání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:326
+#: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "DJs can do the following:"
 msgstr "DJ může dělat následující:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:327
+#: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Manage assigned show content"
 msgstr "Spravovat přidělený obsah vysílání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:328
+#: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Import media files"
 msgstr "Import media souborů"
 
-#: airtime_mvc/application/controllers/LocaleController.php:329
+#: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Create playlists, smart blocks, and webstreams"
 msgstr "Vytvořit playlisty, smart bloky a webstreamy"
 
-#: airtime_mvc/application/controllers/LocaleController.php:330
+#: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "Manage their own library content"
 msgstr "Spravovat obsah vlastní knihovny"
 
-#: airtime_mvc/application/controllers/LocaleController.php:331
+#: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "Progam Managers can do the following:"
 msgstr "Progam Manažeři může dělat následující:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:332
+#: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "View and manage show content"
 msgstr "Zobrazit a spravovat obsah vysílání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:333
+#: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Schedule shows"
 msgstr "Plán ukazuje"
 
-#: airtime_mvc/application/controllers/LocaleController.php:334
+#: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Manage all library content"
 msgstr "Spravovat celý obsah knihovny"
 
-#: airtime_mvc/application/controllers/LocaleController.php:335
+#: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "Admins can do the following:"
 msgstr "Správci mohou provést následující:"
 
-#: airtime_mvc/application/controllers/LocaleController.php:336
+#: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "Manage preferences"
 msgstr "Správa předvoleb"
 
-#: airtime_mvc/application/controllers/LocaleController.php:337
+#: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Manage users"
 msgstr "Správa uživatelů"
 
-#: airtime_mvc/application/controllers/LocaleController.php:338
+#: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "Manage watched folders"
 msgstr "Správa sledovaných složek"
 
-#: airtime_mvc/application/controllers/LocaleController.php:340
+#: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "View system status"
 msgstr "Zobrazit stav systému"
 
-#: airtime_mvc/application/controllers/LocaleController.php:341
+#: airtime_mvc/application/controllers/LocaleController.php:342
 msgid "Access playout history"
 msgstr "Přístup playout historii"
 
-#: airtime_mvc/application/controllers/LocaleController.php:342
+#: airtime_mvc/application/controllers/LocaleController.php:343
 msgid "View listener stats"
 msgstr "Zobrazit posluchače statistiky"
 
-#: airtime_mvc/application/controllers/LocaleController.php:344
+#: airtime_mvc/application/controllers/LocaleController.php:345
 msgid "Show / hide columns"
 msgstr "Zobrazit / skrýt sloupce"
 
-#: airtime_mvc/application/controllers/LocaleController.php:346
+#: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "From {from} to {to}"
 msgstr "Z {z} do {do}"
 
-#: airtime_mvc/application/controllers/LocaleController.php:347
+#: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "kbps"
 msgstr "kbps"
 
-#: airtime_mvc/application/controllers/LocaleController.php:348
+#: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "yyyy-mm-dd"
 msgstr "rrrr-mm-dd"
 
-#: airtime_mvc/application/controllers/LocaleController.php:349
+#: airtime_mvc/application/controllers/LocaleController.php:350
 msgid "hh:mm:ss.t"
 msgstr "hh:mm:ss.t"
 
-#: airtime_mvc/application/controllers/LocaleController.php:350
+#: airtime_mvc/application/controllers/LocaleController.php:351
 msgid "kHz"
 msgstr "kHz"
 
-#: airtime_mvc/application/controllers/LocaleController.php:353
+#: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Su"
 msgstr "Ne"
 
-#: airtime_mvc/application/controllers/LocaleController.php:354
+#: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "Mo"
 msgstr "Po"
 
-#: airtime_mvc/application/controllers/LocaleController.php:355
+#: airtime_mvc/application/controllers/LocaleController.php:356
 msgid "Tu"
 msgstr "Út"
 
-#: airtime_mvc/application/controllers/LocaleController.php:356
+#: airtime_mvc/application/controllers/LocaleController.php:357
 msgid "We"
 msgstr "St"
 
-#: airtime_mvc/application/controllers/LocaleController.php:357
+#: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Th"
 msgstr "Čt"
 
-#: airtime_mvc/application/controllers/LocaleController.php:358
+#: airtime_mvc/application/controllers/LocaleController.php:359
 msgid "Fr"
 msgstr "Pá"
 
-#: airtime_mvc/application/controllers/LocaleController.php:359
+#: airtime_mvc/application/controllers/LocaleController.php:360
 msgid "Sa"
 msgstr "So"
 
-#: airtime_mvc/application/controllers/LocaleController.php:360
-#: airtime_mvc/application/controllers/LocaleController.php:388
+#: airtime_mvc/application/controllers/LocaleController.php:361
+#: airtime_mvc/application/controllers/LocaleController.php:389
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
 msgstr "Zavřít"
 
-#: airtime_mvc/application/controllers/LocaleController.php:362
+#: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Hour"
 msgstr "Hodina"
 
-#: airtime_mvc/application/controllers/LocaleController.php:363
+#: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Minute"
 msgstr "Minuta"
 
-#: airtime_mvc/application/controllers/LocaleController.php:364
+#: airtime_mvc/application/controllers/LocaleController.php:365
 msgid "Done"
 msgstr "Hotovo"
 
-#: airtime_mvc/application/controllers/LocaleController.php:367
+#: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Select files"
 msgstr "Vyberte soubory"
 
-#: airtime_mvc/application/controllers/LocaleController.php:368
 #: airtime_mvc/application/controllers/LocaleController.php:369
+#: airtime_mvc/application/controllers/LocaleController.php:370
 msgid "Add files to the upload queue and click the start button."
 msgstr "Přidejte soubory do fronty pro nahrávání a klikněte na tlačítko start."
 
-#: airtime_mvc/application/controllers/LocaleController.php:372
+#: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "Add Files"
 msgstr "Přidat soubory."
 
-#: airtime_mvc/application/controllers/LocaleController.php:373
+#: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Stop Upload"
 msgstr "Zastavit Nahrávání"
 
-#: airtime_mvc/application/controllers/LocaleController.php:374
+#: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "Start upload"
 msgstr "Začít nahrávat"
 
-#: airtime_mvc/application/controllers/LocaleController.php:375
+#: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "Add files"
 msgstr "Přidat soubory"
 
-#: airtime_mvc/application/controllers/LocaleController.php:376
+#: airtime_mvc/application/controllers/LocaleController.php:377
 #, php-format
 msgid "Uploaded %d/%d files"
 msgstr "Nahráno %d / %d souborů"
 
-#: airtime_mvc/application/controllers/LocaleController.php:377
+#: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "N/A"
 msgstr "Nedostupné"
 
-#: airtime_mvc/application/controllers/LocaleController.php:378
+#: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "Drag files here."
 msgstr "Soubory přetáhněte zde."
 
-#: airtime_mvc/application/controllers/LocaleController.php:379
+#: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "File extension error."
 msgstr "Chybná přípona souboru"
 
-#: airtime_mvc/application/controllers/LocaleController.php:380
+#: airtime_mvc/application/controllers/LocaleController.php:381
 msgid "File size error."
 msgstr "Chybná velikost souboru."
 
-#: airtime_mvc/application/controllers/LocaleController.php:381
+#: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "File count error."
 msgstr "Chybný součet souborů."
 
-#: airtime_mvc/application/controllers/LocaleController.php:382
+#: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "Init error."
 msgstr "Chyba Init."
 
-#: airtime_mvc/application/controllers/LocaleController.php:383
+#: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "HTTP Error."
 msgstr "Chyba HTTP."
 
-#: airtime_mvc/application/controllers/LocaleController.php:384
+#: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "Security error."
 msgstr "Chyba zabezpečení."
 
-#: airtime_mvc/application/controllers/LocaleController.php:385
+#: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "Generic error."
 msgstr "Obecná chyba. "
 
-#: airtime_mvc/application/controllers/LocaleController.php:386
+#: airtime_mvc/application/controllers/LocaleController.php:387
 msgid "IO error."
 msgstr "CHyba IO."
 
-#: airtime_mvc/application/controllers/LocaleController.php:387
+#: airtime_mvc/application/controllers/LocaleController.php:388
 #, php-format
 msgid "File: %s"
 msgstr "Soubor: %s"
 
-#: airtime_mvc/application/controllers/LocaleController.php:389
+#: airtime_mvc/application/controllers/LocaleController.php:390
 #, php-format
 msgid "%d files queued"
 msgstr "%d souborů ve frontě"
 
-#: airtime_mvc/application/controllers/LocaleController.php:390
+#: airtime_mvc/application/controllers/LocaleController.php:391
 msgid "File: %f, size: %s, max file size: %m"
 msgstr "Soubor: %f , velikost: %s , max. velikost souboru:% m"
 
-#: airtime_mvc/application/controllers/LocaleController.php:391
+#: airtime_mvc/application/controllers/LocaleController.php:392
 msgid "Upload URL might be wrong or doesn't exist"
 msgstr "Přidané URL může být špatné nebo neexistuje"
 
-#: airtime_mvc/application/controllers/LocaleController.php:392
+#: airtime_mvc/application/controllers/LocaleController.php:393
 msgid "Error: File too large: "
 msgstr "Chyba: Soubor je příliš velký: "
 
-#: airtime_mvc/application/controllers/LocaleController.php:393
+#: airtime_mvc/application/controllers/LocaleController.php:394
 msgid "Error: Invalid file extension: "
 msgstr "Chyba: Neplatná přípona souboru: "
 
@@ -2864,7 +2868,7 @@ msgid "Add to Smart Block"
 msgstr "Přidat do chytrého bloku"
 
 #: airtime_mvc/application/controllers/LibraryController.php:224
-#: airtime_mvc/application/controllers/ScheduleController.php:604
+#: airtime_mvc/application/controllers/ScheduleController.php:605
 msgid "Download"
 msgstr "Stáhnout"
 
@@ -2919,7 +2923,7 @@ msgstr "Playlist bez názvu"
 msgid "Untitled Smart Block"
 msgstr "Chytrý block bez názvu"
 
-#: airtime_mvc/application/controllers/PlaylistController.php:494
+#: airtime_mvc/application/controllers/PlaylistController.php:495
 msgid "Unknown Playlist"
 msgstr "Neznámý Playlist"
 
@@ -3559,12 +3563,12 @@ msgid "file meet the criteria"
 msgstr "soubor splňuje kritéria"
 
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:3
-#: airtime_mvc/application/views/scripts/library/library.phtml:2
+#: airtime_mvc/application/views/scripts/library/library.phtml:3
 msgid "File import in progress..."
 msgstr "Probíhá importování souboru ..."
 
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:5
-#: airtime_mvc/application/views/scripts/library/library.phtml:5
+#: airtime_mvc/application/views/scripts/library/library.phtml:10
 msgid "Advanced Search Options"
 msgstr "Rozšířené možnosti hledání"
 

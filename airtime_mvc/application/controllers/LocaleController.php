@@ -167,7 +167,7 @@ class LocaleController extends Zend_Controller_Action
             "Are you sure you want to remove the watched folder?" => _("Are you sure you want to remove the watched folder?"),
             "This path is currently not accessible." => _("This path is currently not accessible."),
             //preferences/streamsetting.js
-        	"Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided." => _("Some steam types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."),
+        	"Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided." => _("Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."),
             "Connected to the streaming server" => _("Connected to the streaming server"),
             "The stream is disabled" => _("The stream is disabled"),
             "Getting information from the server..." => _("Getting information from the server..."),
@@ -193,6 +193,7 @@ class LocaleController extends Zend_Controller_Action
             "If your live streaming client does not ask for a username, this field should be 'source'." => _("If your live streaming client does not ask for a username, this field should be 'source'."),
             "The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
             "Warning: Shows cannot be re-linked" => _("Warning: Shows cannot be re-linked"),
+            "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows" => _("By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"),
             //schedule/full-calendar-functions
             //already in schedule/add-show.js
             //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),

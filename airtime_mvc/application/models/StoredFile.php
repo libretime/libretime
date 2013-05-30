@@ -150,7 +150,7 @@ class Application_Model_StoredFile
                         }
                     }
                     $dbMd[constant($mdConst)] = $mdValue;
-                    
+
                 }
             }
             $this->setDbColMetadata($dbMd);
@@ -214,7 +214,7 @@ class Application_Model_StoredFile
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
                     $method       = "set$propelColumn";
-                    
+
                     /* We need to set track_number to null if it is an empty string
                      * because propel defaults empty strings to zeros */
                     if ($dbColumn == "track_number" && empty($mdValue)) $mdValue = null;
@@ -330,7 +330,7 @@ SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':file_id', $this->id, PDO::PARAM_INT);
-        
+
         if ($stmt->execute()) {
             $ids = $stmt->fetchAll();
         } else {
@@ -386,7 +386,7 @@ SQL;
         // set hidden flag to true
         $this->_file->setDbHidden(true);
         $this->_file->save();
-        
+
         // need to explicitly update any playlist's and block's length
         // that contains the file getting deleted
         $fileId = $this->_file->getDbId();
@@ -396,7 +396,7 @@ SQL;
             $pl->setDbLength($pl->computeDbLength(Propel::getConnection(CcPlaylistPeer::DATABASE_NAME)));
             $pl->save();
         }
-        
+
         $blRows = CcBlockcontentsQuery::create()->filterByDbFileId($fileId)->find();
         foreach ($blRows as $row) {
             $bl = CcBlockQuery::create()->filterByDbId($row->getDbBlockId())->findOne();
@@ -506,19 +506,19 @@ SQL;
     public function getFileUrl()
     {
     	$CC_CONFIG = Config::getConfig();
-    	
+
     	$protocol = empty($_SERVER['HTTPS']) ? "http" : "https";
-    	
+
     	$serverName = $_SERVER['SERVER_NAME'];
     	$serverPort = $_SERVER['SERVER_PORT'];
     	$subDir = $CC_CONFIG['baseDir'];
-    	
+
     	if ($subDir[0] === "/") {
     		$subDir = substr($subDir, 1, strlen($subDir) - 1);
     	}
-    	
+
     	$baseUrl = "{$protocol}://{$serverName}:{$serverPort}/{$subDir}";
-       
+
         return $this->getRelativeFileUrl($baseUrl);
     }
 
@@ -641,7 +641,7 @@ SQL;
     public static function searchLibraryFiles($datatables)
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        
+
         $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
 
         $displayColumns = self::getLibraryColumns();
@@ -796,7 +796,7 @@ SQL;
 
                 //soundcloud status
                 $file = Application_Model_StoredFile::RecallById($row['id']);
-                $row['soundcloud_status'] = $file->getSoundCloudId();
+                $row['soundcloud_id'] = $file->getSoundCloudId();
 
                 // for audio preview
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
@@ -893,7 +893,7 @@ SQL;
                     $in = fopen($_FILES['file']['tmp_name'], "rb");
 
                     if ($in) {
-                        while ($buff = fread($in, 4096))
+                        while (($buff = fread($in, 4096)))
                             fwrite($out, $buff);
                     } else
                         die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
@@ -912,7 +912,7 @@ SQL;
                 $in = fopen("php://input", "rb");
 
                 if ($in) {
-                    while ($buff = fread($in, 4096))
+                    while (($buff = fread($in, 4096)))
                         fwrite($out, $buff);
                 } else
                     die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
@@ -961,6 +961,7 @@ SQL;
         // Check if we have enough space before copying
         if (!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
             $freeSpace = disk_free_space($stor);
+            $fileSize = filesize($audio_file);
 
             return array("code" => 107,
                 "message" => sprintf(_("The file was not uploaded, there is "
@@ -1028,7 +1029,7 @@ SQL;
         $LIQUIDSOAP_ERRORS = array('TagLib: MPEG::Properties::read() -- Could not find a valid last MPEG frame in the stream.');
 
         // Ask Liquidsoap if file is playable
-        $ls_command = sprintf('/usr/bin/airtime-liquidsoap -v -c "output.dummy(audio_to_stereo(single(%s)))" 2>&1', 
+        $ls_command = sprintf('/usr/bin/airtime-liquidsoap -v -c "output.dummy(audio_to_stereo(single(%s)))" 2>&1',
             escapeshellarg($audio_file));
 
         $command = "export PATH=/usr/local/bin:/usr/bin:/bin/usr/bin/ && $ls_command";
@@ -1068,14 +1069,14 @@ SQL;
 
         $stmt = $con->prepare($sql);
         $stmt->bindParam(':dir_id', $dir_id);
-        
+
         if ($stmt->execute()) {
             $rows = $stmt->fetchAll();
         } else {
             $msg = implode(',', $stmt->errorInfo());
             throw new Exception("Error: $msg");
         }
-                
+
         $results = array();
         foreach ($rows as $row) {
             $results[] = $row["fp"];
@@ -1111,10 +1112,10 @@ SQL;
 
         return $rows;
     }
-    
+
     public static function getAllFilesWithoutSilan() {
         $con = Propel::getConnection();
-        
+
         $sql = <<<SQL
 SELECT f.id,
        m.directory || f.filepath AS fp
@@ -1124,14 +1125,14 @@ WHERE file_exists = 'TRUE'
   AND silan_check IS FALSE Limit 100
 SQL;
         $stmt = $con->prepare($sql);
-        
+
         if ($stmt->execute()) {
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             $msg = implode(',', $stmt->errorInfo());
             throw new Exception("Error: $msg");
         }
-        
+
         return $rows;
     }
 
@@ -1227,7 +1228,7 @@ SQL;
             ->save();
     }
 
-    
+
     // This method seems to be unsued everywhere so I've commented it out
     // If it's absence does not have any effect then it will be completely
     // removed soon
@@ -1255,7 +1256,7 @@ SQL;
                 $description = $file->getDbTrackTitle();
                 $tag         = array();
                 $genre       = $file->getDbGenre();
-                $release     = $file->getDbYear();
+                $release     = $file->getDbUtime();
                 try {
                     $soundcloud     = new Application_Model_Soundcloud();
                     $soundcloud_res = $soundcloud->uploadTrack(
@@ -1284,7 +1285,7 @@ SQL;
             }
         }
     }
-    
+
     public static function setIsPlaylist($p_playlistItems, $p_type, $p_status) {
         foreach ($p_playlistItems as $item) {
             $file = self::RecallById($item->getDbFileId());
@@ -1302,7 +1303,7 @@ SQL;
             }
         }
     }
-    
+
     public static function setIsScheduled($p_scheduleItem, $p_status,
         $p_fileId=null) {
 

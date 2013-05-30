@@ -1075,8 +1075,7 @@ SQL;
         $sql .= "END WHERE position IN ($currentPos) and playlist_id=:p1";
         
         Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
-        $result['result'] = 0;
-        return $result;
+        return array('result' => 0);
     }
 
     public static function getAllPlaylistFiles()

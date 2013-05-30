@@ -388,6 +388,7 @@ class Application_Model_ShowBuilder
         $outdated = false;
         $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
 
+        $include = array();
         if ($this->opts["showFilter"] !== 0) {
             $include[] = $this->opts["showFilter"];
         } elseif ($this->opts["myShows"] === 1) {

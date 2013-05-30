@@ -58,24 +58,22 @@ function confirmCancelRecordedShow(show_instance_id){
     }
 }
 
-function uploadToSoundCloud(show_instance_id){
+function uploadToSoundCloud(show_instance_id, el){
     
-    var url = baseUrl+"Schedule/upload-to-sound-cloud";
-    var span = $(window.triggerElement).find(".recording");
+    var url = baseUrl+"Schedule/upload-to-sound-cloud",
+    	$el = $(el),
+    	$span = $el.find(".soundcloud");
     
-    $.post(url,
-        {id: show_instance_id, format: "json"},
-        function(json){
-            scheduleRefetchEvents(json);
-    });
+    $.post(url, {id: show_instance_id, format: "json"});
     
-    if(span.length == 0){
-        span = $(window.triggerElement).find(".soundcloud");
-        span.removeClass("soundcloud")
-            .addClass("progress");
-    }else{
-        span.removeClass("recording")
-            .addClass("progress");
+    //first upload to soundcloud.
+    if ($span.length === 0){
+        $span = $("<span/>", {"class": "progress"});
+        
+        $el.find(".fc-event-title").after($span);
+    }
+    else {
+        $span.removeClass("soundcloud").addClass("progress");
     }
 }
 
@@ -93,8 +91,6 @@ function checkCalendarSCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
-
-        setTimeout(checkCalendarSCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
@@ -106,6 +102,7 @@ function checkCalendarSCUploadStatus(){
     }
     
     $("#schedule_calendar span.progress").each(checkSCUploadStatusRequest);
+    setTimeout(checkCalendarSCUploadStatus, 5000);
 }
 
 function findViewportDimensions() {
@@ -421,7 +418,7 @@ $(document).ready(function() {
                 if (oItems.soundcloud_upload !== undefined) {
                     
                     callback = function() {
-                        uploadToSoundCloud(data.id);
+                        uploadToSoundCloud(data.id, this.context);
                     };
                     oItems.soundcloud_upload.callback = callback;
                 }

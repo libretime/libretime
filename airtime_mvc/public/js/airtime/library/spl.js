@@ -587,7 +587,7 @@ var AIRTIME = (function(AIRTIME){
                                         var extra = (ele['extra']==null)?"":"- "+ele['extra'];
                                         $html += "<li>" +
                                             "<span class='block-item-title'>"+ele['display_name']+"</span>" +
-                                            "<span class='block-item-criteria'>"+ele['modifier']+"</span>" +
+                                            "<span class='block-item-criteria'>"+ele['display_modifier']+"</span>" +
                                             "<span class='block-item-criteria'>"+ele['value']+"</span>" +
                                             "<span class='block-item-criteria'>"+extra+"</span>" + 
                                             "</li>";

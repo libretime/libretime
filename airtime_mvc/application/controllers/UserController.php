@@ -41,6 +41,7 @@ class UserController extends Zend_Controller_Action
         if ($request->isPost()) {
             $params = $request->getPost();
             $postData = explode('&', $params['data']);
+            $formData = array();
             foreach($postData as $k=>$v) {
                 $v = explode('=', $v);
                 $formData[$v[0]] = urldecode($v[1]);

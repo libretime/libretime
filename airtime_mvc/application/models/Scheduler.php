@@ -85,6 +85,9 @@ class Application_Model_Scheduler
 
         $nowEpoch = floatval($this->nowDT->format("U.u"));
 
+        $schedInfo = array();
+        $instanceInfo = array();
+
         for ($i = 0; $i < count($items); $i++) {
             $id = $items[$i]["id"];
 
@@ -103,7 +106,7 @@ class Application_Model_Scheduler
         }
 
         $schedIds = array();
-        if (isset($schedInfo)) {
+        if (count($schedInfo) > 0) {
             $schedIds = array_keys($schedInfo);
         }
         $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
@@ -527,10 +530,6 @@ class Application_Model_Scheduler
 
             $linked = false;
 
-            $dropIndex_sql = "DROP INDEX cc_schedule_instance_id_idx";
-            Application_Common_Database::prepareAndExecute(
-                $dropIndex_sql, array(), Application_Common_Database::EXECUTE);
-
             foreach ($scheduleItems as $schedule) {
                 $id = intval($schedule["id"]);
 
@@ -592,6 +591,7 @@ class Application_Model_Scheduler
                         $instance_sql);
                 }
 
+                $excludePositions = array();
                 foreach($instances as &$instance) {
                     $instanceId = $instance["id"];
                     if ($id !== 0) {
@@ -612,15 +612,24 @@ class Application_Model_Scheduler
                             $instanceId);
 
                         $pos++;
+
+                        /* Show is not empty so we need to apply crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = true;
                     }
                     //selected empty row to add after
                     else {
                         $showStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
                         $nextStartDT = $this->findNextStartTime($showStartDT, $instanceId);
 
-                        //show is empty so start position counter at 0
+                        //first item in show so start position counter at 0
                         $pos = 0;
-                        $adjustSched = false;
+
+                        /* Show is empty so we don't need to calculate crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -635,7 +644,12 @@ class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        $initalStartDT = clone $nextStartDT;
+                        if ($applyCrossfades) {
+                            $initalStartDT = clone $this->findTimeDifference(
+                                $nextStartDT, $this->crossfadeDuration);
+                        } else {
+                            $initalStartDT = clone $nextStartDT;
+                        }
 
                         $pend = microtime(true);
                         Logging::debug("finding all following items.");
@@ -658,6 +672,7 @@ class Application_Model_Scheduler
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
+                            $adjustFromDT = clone $nextStartDT;
                             $doUpdate = true;
 
                             $movedItem_sql = "SELECT * FROM cc_schedule ".
@@ -693,11 +708,9 @@ class Application_Model_Scheduler
                             $file["fadein"] = $sched["fade_in"];
                             $file["fadeout"] = $sched["fade_out"];
                         } else {
-                            //$sched = new CcSchedule();
                             $doInsert = true;
                         }
 
-                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
@@ -715,6 +728,18 @@ class Application_Model_Scheduler
                             default: break;
                         }
 
+                        if ($applyCrossfades) {
+                            $nextStartDT = $this->findTimeDifference($nextStartDT,
+                                $this->crossfadeDuration);
+                            $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
+                            /* Set it to false because the rest of the crossfades
+                             * will be applied after we insert each item
+                             */
+                            $applyCrossfades = false;
+                        }
+
+                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
                             $values[] = "(".
                                 "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
@@ -753,12 +778,15 @@ class Application_Model_Scheduler
                         $insert_sql = "INSERT INTO cc_schedule ".
                             "(starts, ends, cue_in, cue_out, fade_in, fade_out, ".
                             "clip_length, position, instance_id, file_id, stream_id) VALUES ".
-                            implode($values, ",");
-    
-                        Application_Common_Database::prepareAndExecute(
-                            $insert_sql, array(), Application_Common_Database::EXECUTE);
-                    }
+                            implode($values, ",")." RETURNING id";
 
+                        $stmt = $this->con->prepare($insert_sql);
+                        if ($stmt->execute()) {
+                            foreach ($stmt->fetchAll() as $row) {
+                                $excludeIds[] = $row["id"];
+                            }
+                        };
+                    }
                     // update is_scheduled flag for each cc_file
                     $fileIds = array();
                     foreach ($filesToInsert as &$file) {
@@ -779,6 +807,7 @@ class Application_Model_Scheduler
                     }
 
                     if ($adjustSched === true) {
+
                         $followingItems_sql = "SELECT * FROM cc_schedule ".
                             "WHERE starts >= '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
                             "AND instance_id = {$instanceId} ";
@@ -786,7 +815,6 @@ class Application_Model_Scheduler
                             $followingItems_sql .= "AND id NOT IN (". implode($excludeIds, ",").") ";
                         }
                         $followingItems_sql .= "ORDER BY starts";
-
                         $followingSchedItems = Application_Common_Database::prepareAndExecute(
                             $followingItems_sql);
 
@@ -795,6 +823,7 @@ class Application_Model_Scheduler
                         //recalculate the start/end times after the inserted items.
                         foreach ($followingSchedItems as $item) {
                             $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $update_sql = "UPDATE cc_schedule SET ".
                                 "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
                                 "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
@@ -813,11 +842,6 @@ class Application_Model_Scheduler
                     }
                 }//for each instance
             }//for each schedule location
-
-            $createIndex_sql = "CREATE INDEX cc_schedule_instance_id_idx ".
-                "ON cc_schedule USING btree(instance_id)";
-            Application_Common_Database::prepareAndExecute(
-                $createIndex_sql, array(), Application_Common_Database::EXECUTE);
 
             $endProfile = microtime(true);
             Logging::debug("finished adding scheduled items.");

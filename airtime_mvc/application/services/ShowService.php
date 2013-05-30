@@ -999,7 +999,7 @@ SQL;
                 }
 
                 if ($this->isRebroadcast) {
-                    $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
+                    $this->createRebroadcastInstances($showDay, $start, $ccShowInstance->getDbId());
                 }
             }
             $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone, $showDay->getDbStartTime());
