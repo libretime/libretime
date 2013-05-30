@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-29 15:27-0400\n"
-"PO-Revision-Date: 2013-05-30 10:52-0500\n"
+"PO-Revision-Date: 2013-05-30 11:02-0500\n"
 "Last-Translator: Cliff Wang <cliff.wang@sourcefabric.org>\n"
 "Language-Team: Chinese Localization <contact@sourcefabric.org>\n"
 "Language: zh_CN\n"
@@ -2365,13 +2365,15 @@ msgstr "此节目已不存在"
 
 #: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Warning: Shows cannot be re-linked"
-msgstr "注意：取消链接后无法再次链接"
+msgstr "注意：节目取消绑定后无法再次绑定"
 
 #: airtime_mvc/application/controllers/LocaleController.php:196
 msgid ""
 "By linking your repeating shows any media items scheduled in any repeat show "
 "will also get scheduled in the other repeat shows"
-msgstr "链接后，所有复制节目的内容都会一模一样。"
+msgstr ""
+"系列节目勾选绑定后，所有节目的内容都会一模一样，对任何未开始节目的更改都会影"
+"响到其他节目。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "Show"
