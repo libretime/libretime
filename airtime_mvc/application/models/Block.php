@@ -330,7 +330,7 @@ SQL;
     {
         list($value, $modifier) = $this->getLimitValueAndModifier();
         if ($modifier == "items") {
-            $length = $value." ".$modifier;
+            $length = $value." "._("items");
         } else {
             $hour = "00";
             $mins = "00";
@@ -1354,6 +1354,21 @@ SQL;
             "year"         => _("Year")
         );
 
+        $modifierOptions = array(
+            "0"                => _("Select modifier"),
+            "contains"         => _("contains"),
+            "does not contain" => _("does not contain"),
+            "is"               => _("is"),
+            "is not"           => _("is not"),
+            "starts with"      => _("starts with"),
+            "ends with"        => _("ends with"),
+            "is"              => _("is"),
+            "is not"          => _("is not"),
+            "is greater than" => _("is greater than"),
+            "is less than"    => _("is less than"),
+            "is in the range" => _("is in the range")
+        );
+
         // Load criteria from db
         $out = CcBlockcriteriaQuery::create()->orderByDbCriteria()->findByDbBlockId($this->id);
         $storedCrit = array();
@@ -1365,11 +1380,20 @@ SQL;
             $extra = $crit->getDbExtra();
 
             if ($criteria == "limit") {
-                $storedCrit["limit"] = array("value"=>$value, "modifier"=>$modifier);
+                $storedCrit["limit"] = array(
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "display_modifier"=>_($modifier));
             } else if($criteria == "repeat_tracks") {
                 $storedCrit["repeat_tracks"] = array("value"=>$value);
             } else {
-                $storedCrit["crit"][$criteria][] = array("criteria"=>$criteria, "value"=>$value, "modifier"=>$modifier, "extra"=>$extra, "display_name"=>$criteriaOptions[$criteria]);
+                $storedCrit["crit"][$criteria][] = array(
+                    "criteria"=>$criteria,
+                    "value"=>$value,
+                    "modifier"=>$modifier,
+                    "extra"=>$extra,
+                    "display_name"=>$criteriaOptions[$criteria],
+                    "display_modifier"=>$modifierOptions[$modifier]);
             }
         }
 

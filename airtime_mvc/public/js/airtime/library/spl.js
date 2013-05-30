@@ -587,13 +587,13 @@ var AIRTIME = (function(AIRTIME){
                                         var extra = (ele['extra']==null)?"":"- "+ele['extra'];
                                         $html += "<li>" +
                                             "<span class='block-item-title'>"+ele['display_name']+"</span>" +
-                                            "<span class='block-item-criteria'>"+ele['modifier']+"</span>" +
+                                            "<span class='block-item-criteria'>"+ele['display_modifier']+"</span>" +
                                             "<span class='block-item-criteria'>"+ele['value']+"</span>" +
                                             "<span class='block-item-criteria'>"+extra+"</span>" + 
                                             "</li>";
                                     });
                                 }
-                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.modifier+"</span></li>";
+                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.display_modifier+"</span></li>";
                             }
                             $pl.find("#block_"+id+"_info").html($html).show();
                             mod.enableUI();
