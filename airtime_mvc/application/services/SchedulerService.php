@@ -206,7 +206,8 @@ class Application_Service_SchedulerService
 
                         if (is_null($item["file_id"])) {
                             $item["file_id"] = "null";
-                        } elseif (is_null($item["stream_id"])) {
+                        } 
+                        if (is_null($item["stream_id"])) {
                             $item["stream_id"] = "null";
                         }
 

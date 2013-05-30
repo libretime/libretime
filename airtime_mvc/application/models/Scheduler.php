@@ -85,6 +85,9 @@ class Application_Model_Scheduler
 
         $nowEpoch = floatval($this->nowDT->format("U.u"));
 
+        $schedInfo = array();
+        $instanceInfo = array();
+
         for ($i = 0; $i < count($items); $i++) {
             $id = $items[$i]["id"];
 
@@ -103,7 +106,7 @@ class Application_Model_Scheduler
         }
 
         $schedIds = array();
-        if (isset($schedInfo)) {
+        if (count($schedInfo) > 0) {
             $schedIds = array_keys($schedInfo);
         }
         $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
@@ -609,6 +612,11 @@ class Application_Model_Scheduler
                             $instanceId);
 
                         $pos++;
+
+                        /* Show is not empty so we need to apply crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = true;
                     }
                     //selected empty row to add after
                     else {
@@ -617,6 +625,11 @@ class Application_Model_Scheduler
 
                         //first item in show so start position counter at 0
                         $pos = 0;
+
+                        /* Show is empty so we don't need to calculate crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -631,7 +644,12 @@ class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        $initalStartDT = clone $nextStartDT;
+                        if ($applyCrossfades) {
+                            $initalStartDT = clone $this->findTimeDifference(
+                                $nextStartDT, $this->crossfadeDuration);
+                        } else {
+                            $initalStartDT = clone $nextStartDT;
+                        }
 
                         $pend = microtime(true);
                         Logging::debug("finding all following items.");
@@ -693,7 +711,6 @@ class Application_Model_Scheduler
                             $doInsert = true;
                         }
 
-                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
@@ -711,6 +728,18 @@ class Application_Model_Scheduler
                             default: break;
                         }
 
+                        if ($applyCrossfades) {
+                            $nextStartDT = $this->findTimeDifference($nextStartDT,
+                                $this->crossfadeDuration);
+                            $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
+                            /* Set it to false because the rest of the crossfades
+                             * will be applied after we insert each item
+                             */
+                            $applyCrossfades = false;
+                        }
+
+                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
                             $values[] = "(".
                                 "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
@@ -794,6 +823,7 @@ class Application_Model_Scheduler
                         //recalculate the start/end times after the inserted items.
                         foreach ($followingSchedItems as $item) {
                             $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $update_sql = "UPDATE cc_schedule SET ".
                                 "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
                                 "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".

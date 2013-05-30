@@ -893,7 +893,7 @@ SQL;
                     $in = fopen($_FILES['file']['tmp_name'], "rb");
 
                     if ($in) {
-                        while ($buff = fread($in, 4096))
+                        while (($buff = fread($in, 4096)))
                             fwrite($out, $buff);
                     } else
                         die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
@@ -912,7 +912,7 @@ SQL;
                 $in = fopen("php://input", "rb");
 
                 if ($in) {
-                    while ($buff = fread($in, 4096))
+                    while (($buff = fread($in, 4096)))
                         fwrite($out, $buff);
                 } else
                     die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
@@ -961,6 +961,7 @@ SQL;
         // Check if we have enough space before copying
         if (!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
             $freeSpace = disk_free_space($stor);
+            $fileSize = filesize($audio_file);
 
             return array("code" => 107,
                 "message" => sprintf(_("The file was not uploaded, there is "
