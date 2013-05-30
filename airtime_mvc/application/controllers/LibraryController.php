@@ -393,7 +393,8 @@ class LibraryController extends Zend_Controller_Action
             }
             $c[0] = $c['item_id'];
         }
-        $newPl->addAudioClips($contents, null, 'begining');
+        
+        $newPl->addAudioClips($contents, null, 'before');
         
         $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
         $newPl->setDescription($originalPl->getDescription());

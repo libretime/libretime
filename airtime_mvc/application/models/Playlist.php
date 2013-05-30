@@ -411,26 +411,38 @@ SQL;
                 || $obj instanceof CcWebstream ||
                 $obj instanceof CcBlock) {
 
-                $entry               = $this->plItem;
-                $entry["id"]         = $obj->getDbId();
-                $entry["pos"]        = $pos;
+                $entry = $this->plItem;
+                $entry["id"] = $obj->getDbId();
+                $entry["pos"] = $pos;
                 $entry["cliplength"] = $obj->getDbLength();
+                
                 if ($obj instanceof CcFiles && $obj) {
-                    $entry["cuein"]      = $obj->getDbCuein();
-                    $entry["cueout"]     = $obj->getDbCueout();
+                	
+                    $entry["cuein"] = isset($p_item['cuein']) ? 
+                    		$p_item['cuein'] : $obj->getDbCuein();
+                    
+                    $entry["cueout"] = isset($p_item['cueout']) ? 
+                    		$p_item['cueout'] : $obj->getDbCueout();
 
-                    $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
-                    $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
-                    $entry["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
-                } elseif ($obj instanceof CcWebstream && $obj) {
+                    $cue_in = isset($p_item['cueInSec']) ? 
+                    		$p_item['cueInSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                    
+                    $cue_out = isset($p_item['cueOutSec']) ? 
+                    		$p_item['cueOutSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                    
+                    $entry["cliplength"] = isset($p_item['length']) ? 
+                    		$p_item['length'] : Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
+                } 
+                elseif ($obj instanceof CcWebstream && $obj) {
                     $entry["cuein"] = "00:00:00";
                     $entry["cueout"] = $entry["cliplength"];
                 }
-                $entry["ftype"]      = $objType;
+                $entry["ftype"] = $objType;
             }
 
             return $entry;
-        } else {
+        } 
+        else {
             throw new Exception("trying to add a object that does not exist.");
         }
     }
