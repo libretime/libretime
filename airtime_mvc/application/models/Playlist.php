@@ -154,8 +154,6 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
      */
     public function getContents($filterFiles=false)
     {
-        Logging::info("Getting contents for playlist {$this->id}");
-
         $sql = <<<SQL
   SELECT *
    FROM (
@@ -438,6 +436,12 @@ SQL;
                     $entry["cueout"] = $entry["cliplength"];
                 }
                 $entry["ftype"] = $objType;
+                
+                $entry["fadein"] = isset($p_item['fadein']) ?
+                	$p_item['fadein'] : $entry["fadein"];
+                
+                $entry["fadeout"] = isset($p_item['fadeout']) ?
+                	$p_item['fadeout'] : $entry["fadeout"];
             }
 
             return $entry;
@@ -463,11 +467,10 @@ SQL;
         try {
 
             if (is_numeric($p_afterItem)) {
-                Logging::info("Finding playlist content item {$p_afterItem}");
-
+               
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::info("index is {$index}");
+
                 $pos = ($addType == 'after') ? $index + 1 : $index;
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
@@ -500,9 +503,6 @@ SQL;
 
             }
 
-            Logging::info("Adding to playlist");
-            Logging::info("at position {$pos}");
-
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
 
@@ -512,8 +512,6 @@ SQL;
                 $db_file->setDbIsPlaylist(true)->save($this->con);
                 
                 $pos = $pos + 1;
-                Logging::info("Adding $ac[1] $ac[0]");
-
             }
 
             //reset the positions of the remaining items.
@@ -745,7 +743,6 @@ SQL;
                 
                 if (!is_null($offset)) {
                 	$row->setDbTrackOffset($offset);
-                	Logging::info("Setting offset {$offset} on item {$id}");
                 	$row->save($this->con);
                 }
             }
