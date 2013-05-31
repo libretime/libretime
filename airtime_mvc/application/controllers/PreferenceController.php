@@ -194,7 +194,7 @@ class PreferenceController extends Zend_Controller_Action
         $stream_bitrates = array();
         foreach ($temp_bitrate as $type) {
             if (intval($type) <= $max_bitrate) {
-                $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
+                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
             }
         }
 
