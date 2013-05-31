@@ -168,11 +168,12 @@ class PreferenceController extends Zend_Controller_Action
             $setting[$t['keyname']] = $t['value'];
         }
 
-        $name_map = array('ogg' => 'Ogg Vorbis',
-                'aacplus' => 'AAC+',
+        $name_map = array(
+				'ogg' => 'Ogg Vorbis',
+                'fdkaac' => 'AAC+',
                 'aac' => 'AAC',
                 'opus' => 'Opus',
-                'mp3' => 'MP3'
+                'mp3' => 'MP3',
         );
 
         // get predefined type and bitrate from pref table

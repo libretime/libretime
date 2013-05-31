@@ -146,6 +146,12 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
             %include "aacplus.liq"
         end
         %endif
+
+        %ifencoder %fdkaac
+        if type == "fdkaac" then
+            %include "fdkaac.liq"
+        end
+        %endif
     else
         user_ref = ref user
         if user == "" then
