@@ -379,11 +379,11 @@ SQL;
                     }
 
                     if (count($daysRemoved) > 0) {
-                        //delete repeating show instances for the repeating
-                        //days that were removed
                         if ($this->ccShow->isLinked()) {
                             $this->preserveLinkedShowContent();
                         }
+                        //delete repeating show instances for the repeating
+                        //days that were removed
                         $this->deleteRemovedShowDayInstances($daysRemoved,
                             $ccShowDays, $showId);
                     }
@@ -430,7 +430,7 @@ SQL;
 
     private function preserveLinkedShowContent()
     {
-        /* Get show content from any linekd instance. It doesn't
+        /* Get show content from any linked instance. It doesn't
          * matter which instance since content is the same in all.
          */
         $ccShowInstance = $this->ccShow->getCcShowInstancess()->getFirst();
