@@ -208,14 +208,6 @@ class PypoFetch(Thread):
         self.logger.info("Waiting for Liquidsoap to start")
         self.pypo_liquidsoap.liquidsoap_startup_test()
 
-        try:
-            self.set_bootstrap_variables()
-            #get the most up to date schedule, which will #initiate the process
-            #of making sure Liquidsoap is playing the schedule
-            self.persistent_manual_schedule_fetch(max_attempts=5)
-        except Exception, e:
-            self.logger.error(str(e))
-
     """
     TODO: This function needs to be way shorter, and refactored :/ - MK
     """
