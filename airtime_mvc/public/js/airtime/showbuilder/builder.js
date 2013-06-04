@@ -40,8 +40,6 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.updateCalendarStatusIcon = function(json) {
-
-
         //make sure we are only executing this code on the calendar view, not
         //the Now Playing view.
         if (window.location.pathname.toLowerCase().indexOf("schedule") < 0) {
@@ -52,7 +50,7 @@ var AIRTIME = (function(AIRTIME){
         var instance_id = json.schedule[0].instance;
 
         var lastElem = json.schedule[json.schedule.length-1];
-        var $elem = $($(".fc-event-inner.fc-event-skin .fc-event-title#"+instance_id).parent());
+        var $elem = $("#fc-show-instance-"+instance_id);
         $elem.find(".small-icon").remove();
         if (json.schedule[1].empty) {
             $elem
