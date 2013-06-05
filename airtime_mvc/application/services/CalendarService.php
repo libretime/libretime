@@ -79,7 +79,7 @@ class Application_Service_CalendarService
             // the user is admin or hosting the show,
             // the show is not recorded
             if ($now < $end && ($isAdminOrPM || $isHostOfShow) &&
-            !$this->ccShowInstance->isRecorded() ) {
+                !$this->ccShowInstance->isRecorded() ) {
 
                 $menu["schedule"] = array(
                         "name"=> _("Add / Remove Content"),
@@ -117,7 +117,7 @@ class Application_Service_CalendarService
             }
 
             $isRepeating = $this->ccShow->getFirstCcShowDay()->isRepeating();
-            if (!$this->ccShowInstance->isRebroadcast()) {
+            if (!$this->ccShowInstance->isRebroadcast() && $isAdminOrPM) {
                 if ($isRepeating) {
                     $menu["edit"] = array(
                         "name" => _("Edit"),
