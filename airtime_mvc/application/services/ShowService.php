@@ -872,7 +872,9 @@ SQL;
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $utcStartDateTime = new DateTime("now");
+        $previousDate = clone $start;
         foreach ($datePeriod as $date) {
+
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*
@@ -926,6 +928,7 @@ SQL;
                     $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
                 }
             }
+            $previousDate = clone $date;
         }
 
         /* Set UTC to local time before setting the next repeat date. If we don't
@@ -933,6 +936,16 @@ SQL;
          */
         $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
         $nextDate = $utcStartDateTime->add($repeatInterval);
+        if ($repeatType == REPEAT_MONTHLY_WEEKLY) {
+            $previousMonth = ltrim($previousDate->format("m"), "0");
+            $nextMonth = ltrim($nextDate->format("m"), "0");
+            if ($nextMonth != $previousMonth+1) {
+                $repeatInterval = DateInterval::createFromDateString(
+                    "fourth ".$dayOfWeek." of next month");
+            }
+        }
+        Logging::info("PREVIOUS --- ".$previousDate->format("Y-m-d H:i:s"));
+        Logging::info("NEXT ------- ".$nextDate->format("Y-m-d H:i:s"));
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
     }
 
@@ -1018,7 +1031,6 @@ SQL;
     private function getMonthlyWeeklyRepeatInterval($showStart)
     {
         $start = clone $showStart;
-
         $dayOfMonth = $start->format("j");
         $dayOfWeek = $start->format("l");
         $yearAndMonth = $start->format("Y-m");
@@ -1047,7 +1059,7 @@ SQL;
                 $weekNumberOfMonth = "fourth";
                 break;
             case 5:
-                $weekNumberOfMonth = "last";
+                $weekNumberOfMonth = "fifth";
                 break;
         }
 
