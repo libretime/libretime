@@ -1,5 +1,6 @@
 import pyinotify
 import time
+import os
 from pydispatch import dispatcher
 
 from os.path                 import normpath
