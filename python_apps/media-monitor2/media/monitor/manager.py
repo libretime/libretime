@@ -186,13 +186,12 @@ class Manager(Loggable):
             try: mmp.create_dir(path)
             except mmp.FailedToCreateDir as e: self.unexpected_exception(e)
 
+        os.chmod(store_paths['organize'], 0775) 
+
         self.set_problem_files_path(store_paths['problem_files'])
         self.set_imported_path(store_paths['imported'])
         self.set_recorded_path(store_paths['recorded'])
         self.set_organize_path(store_paths['organize'])
-        mmp.create_dir(store)
-        for p in store_paths.values():
-            mmp.create_dir(p)
 
     def has_watch(self, path):
         """ returns true if the path is being watched or not. Any kind
