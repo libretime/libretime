@@ -39,7 +39,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('text', 'track_number', array(
             'label'      => _('Track:'),
             'class'      => 'input_text',
-            'filters'    => array('StringTrim')
+            'filters'    => array('StringTrim'),
         ));
 
         // Add genre field
@@ -50,16 +50,18 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         // Add year field
-        $this->addElement('text', 'year', array(
-            'label'      => _('Year:'),
-            'class'      => 'input_text',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
+        $year = new Zend_Form_Element_Text('year');
+        $year->class = 'input_text';
+        $year->setLabel(_('Year:'))
+            ->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                new MyValidator(),
+                new Zend_Validate_StringLength(array('max' => 10)),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD"),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM"),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY")
-            )
-        ));
+            ));
+        $this->addElement($year);
 
         // Add label field
         $this->addElement('text', 'label', array(
