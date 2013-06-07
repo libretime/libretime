@@ -840,6 +840,9 @@ class Application_Model_Scheduler
                         Logging::debug("adjusting all following items.");
                         Logging::debug(floatval($pend) - floatval($pstart));
                     }
+                    if ($moveAction) {
+                        $this->calculateCrossfades($instanceId);
+                    }
                 }//for each instance
             }//for each schedule location
 
