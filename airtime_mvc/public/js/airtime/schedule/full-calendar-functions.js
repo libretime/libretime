@@ -210,9 +210,9 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    $(element).attr("id", "fc-show-instance-"+event.id);
-    $(element).attr("show-id", event.showId);
-    $(element).attr("show-linked", event.linked);
+    $(element).attr("data-id", "fc-show-instance-"+event.id);
+    $(element).attr("data-show-id", event.showId);
+    $(element).attr("data-show-linked", event.linked);
     $(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.
