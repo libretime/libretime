@@ -51,6 +51,14 @@ var AIRTIME = (function(AIRTIME){
 
         var lastElem = json.schedule[json.schedule.length-1];
         var $elem = $("#fc-show-instance-"+instance_id);
+
+        //if the show is linked, then replace $elem to reference all linked
+        //instances
+        if ($elem.data("show-linked") == "1") {
+            var show_id = $elem.data("show-id");
+            $elem = $('*[data-show-id="'+show_id+'"]');
+        }
+
         $elem.find(".show-empty, .show-partial-filled").remove();
         if (json.schedule[1].empty) {
             $elem

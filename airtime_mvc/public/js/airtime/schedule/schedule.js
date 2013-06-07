@@ -12,7 +12,7 @@ var AIRTIME = (function(AIRTIME){
 
 var serverTimezoneOffset = 0;
 
-function closeDialog(event, ui) {
+function closeDialogCalendar(event, ui) {
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
     $(this).remove();
 }
@@ -161,7 +161,7 @@ function buildScheduleDialog (json, instance_id) {
         resizable: false,
         draggable: true,
         modal: true,
-        close: closeDialog,
+        close: closeDialogCalendar,
         buttons: [
             {
                 text: $.i18n._("Ok"),
@@ -214,7 +214,7 @@ function buildContentDialog (json){
         width: width,
         height: height,
         modal: true,
-        close: closeDialog,
+        close: closeDialogCalendar,
         buttons: [
             {
                 text: $.i18n._("Ok"),

@@ -1069,13 +1069,13 @@ function buildEditMetadataDialog (json){
         width: 460,
         height: 660,
         modal: true,
-        close: closeDialog
+        close: closeDialogLibrary
     });
 
     dialog.dialog('open');
 }
 
-function closeDialog(event, ui) {
+function closeDialogLibrary(event, ui) {
     $(this).remove();
 }
 
