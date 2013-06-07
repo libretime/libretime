@@ -207,8 +207,9 @@ class Application_Service_ShowService
                     $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
-                        null, $daysAdded);
+                    /* $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
+                        null, $daysAdded); */
+                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil);
                     break;
             }
         }
@@ -936,16 +937,6 @@ SQL;
          */
         $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
         $nextDate = $utcStartDateTime->add($repeatInterval);
-        if ($repeatType == REPEAT_MONTHLY_WEEKLY) {
-            $previousMonth = ltrim($previousDate->format("m"), "0");
-            $nextMonth = ltrim($nextDate->format("m"), "0");
-            if ($nextMonth != $previousMonth+1) {
-                $repeatInterval = DateInterval::createFromDateString(
-                    "fourth ".$dayOfWeek." of next month");
-            }
-        }
-        Logging::info("PREVIOUS --- ".$previousDate->format("Y-m-d H:i:s"));
-        Logging::info("NEXT ------- ".$nextDate->format("Y-m-d H:i:s"));
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
     }
 
@@ -1063,21 +1054,45 @@ SQL;
                 break;
         }
 
-        return DateInterval::createFromDateString(
-            $weekNumberOfMonth." ".$dayOfWeek." of next month");
+        /* return DateInterval::createFromDateString(
+            $weekNumberOfMonth." ".$dayOfWeek." of next month"); */
+        return array($weekNumberOfMonth, $dayOfWeek);
     }
 
     /**
      * 
      * Enter description here ...
-     * @param $start
+     * @param $start user's local time
      */
     private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime)
     {
         $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
-        do {
-            $dt->add(new DateInterval("P1M"));
-        } while (!checkdate($dt->format("m"), $start->format("d"), $dt->format("Y")));
+
+        if ($this->repeatType == REPEAT_MONTHLY_WEEKLY) {
+            list($weekNumberOfMonth, $dayOfWeek) = $this->getMonthlyWeeklyRepeatInterval($start);
+            $tempDT = clone $dt;
+            $keepGoing = true;
+            do {
+                $nextDT = date_create($weekNumberOfMonth." ".$dayOfWeek.
+                    " of ".$tempDT->format("F")." ".$tempDT->format("Y"));
+
+Logging::info($weekNumberOfMonth." ".$dayOfWeek." of ".$tempDT->format("F")." ".$tempDT->format("Y"));
+Logging::info($tempDT->format("Y-m-d"));
+Logging::info($nextDT->format("Y-m-d"));
+Logging::info("-----------");
+
+                if ($tempDT->format("F") == $nextDT->format("F")) {
+                    $keepGoing = false;
+                }
+                $tempDT->add(new DateInterval("P1M"));
+            } while ($keepGoing);
+            $dt = $nextDT;
+Logging::info($dt);
+        } else {
+            do {
+                $dt->add(new DateInterval("P1M"));
+            } while (!checkdate($dt->format("m"), $start->format("d"), $dt->format("Y")));
+        }
 
         $dt->setDate($dt->format("Y"), $dt->format("m"), $start->format("d"));
 
