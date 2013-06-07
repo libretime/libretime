@@ -196,19 +196,18 @@ class Application_Service_ShowService
                     $this->createNonRepeatingInstance($day, $populateUntil);
                     break;
                 case REPEAT_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_WEEKLY,
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_WEEKLY,
                         new DateInterval("P7D"), $daysAdded);
                     break;
                 case REPEAT_BI_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
                         new DateInterval("P14D"), $daysAdded);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
-                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil);
+                    $this->createMonthlyRepeatInstances($day, $populateUntil);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
-                        null, $daysAdded);
+                    $this->createMonthlyRepeatInstances($day, $populateUntil);
                     break;
             }
         }
@@ -322,7 +321,7 @@ SQL;
             $this->deleteAllRepeatInstances($currentShowDay, $showId);
             //if repeat option was checked we need to treat the current show day
             //as a new show day so the repeat instances get created properly
-            //in createRepeatingInstances()
+            //in createWeeklyRepeatInstances()
             if ($showData['add_show_repeats']) {
                 array_push($daysAdded, $currentShowDay->getDbDay());
             }
@@ -846,7 +845,7 @@ SQL;
      * @param unknown_type $repeatInterval
      * @param unknown_type $isRebroadcast
      */
-    private function createRepeatingInstances($showDay, $populateUntil,
+    private function createWeeklyRepeatInstances($showDay, $populateUntil,
         $repeatType, $repeatInterval, $daysAdded=null)
     {
         $show_id       = $showDay->getDbShowId();
@@ -872,7 +871,9 @@ SQL;
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $utcStartDateTime = new DateTime("now");
+        $previousDate = clone $start;
         foreach ($datePeriod as $date) {
+
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*
@@ -926,6 +927,7 @@ SQL;
                     $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
                 }
             }
+            $previousDate = clone $date;
         }
 
         /* Set UTC to local time before setting the next repeat date. If we don't
@@ -936,7 +938,7 @@ SQL;
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
     }
 
-    private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil)
+    private function createMonthlyRepeatInstances($showDay, $populateUntil)
     {
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
@@ -953,6 +955,13 @@ SQL;
         } else {
             $end = $populateUntil;
         }
+
+        // We will only need this if the repeat type is MONTHLY_WEEKLY
+        list($weekNumberOfMonth, $dayOfWeek) =
+            $this->getMonthlyWeeklyRepeatInterval(
+                new DateTime($first_show, new DateTimeZone($timezone)));
+
+        $this->repeatType = $showDay->getDbRepeatType();
 
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
@@ -1002,7 +1011,20 @@ SQL;
                     $this->createRebroadcastInstances($showDay, $start, $ccShowInstance->getDbId());
                 }
             }
-            $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone, $showDay->getDbStartTime());
+            if ($this->repeatType == REPEAT_MONTHLY_WEEKLY) {
+                $monthlyWeeklyStart = new DateTime($utcStartDateTime->format("Y-m"),
+                    new DateTimeZone("UTC"));
+                $monthlyWeeklyStart->add(new DateInterval("P1M"));
+                $start = $this->getNextMonthlyWeeklyRepeatDate(
+                    $monthlyWeeklyStart,
+                    $timezone,
+                    $showDay->getDbStartTime(),
+                    $weekNumberOfMonth,
+                    $dayOfWeek);
+            } else {
+                $start = $this->getNextMonthlyMonthlyRepeatDate(
+                    $start, $timezone, $showDay->getDbStartTime());
+            }
         }
         $this->setNextRepeatingShowDate($start->format("Y-m-d"), $day, $show_id);
     }
@@ -1018,7 +1040,6 @@ SQL;
     private function getMonthlyWeeklyRepeatInterval($showStart)
     {
         $start = clone $showStart;
-
         $dayOfMonth = $start->format("j");
         $dayOfWeek = $start->format("l");
         $yearAndMonth = $start->format("Y-m");
@@ -1047,27 +1068,64 @@ SQL;
                 $weekNumberOfMonth = "fourth";
                 break;
             case 5:
-                $weekNumberOfMonth = "last";
+                $weekNumberOfMonth = "fifth";
                 break;
         }
 
-        return DateInterval::createFromDateString(
-            $weekNumberOfMonth." ".$dayOfWeek." of next month");
+        /* return DateInterval::createFromDateString(
+            $weekNumberOfMonth." ".$dayOfWeek." of next month"); */
+        return array($weekNumberOfMonth, $dayOfWeek);
     }
 
     /**
      * 
      * Enter description here ...
-     * @param $start
+     * @param $start user's local time
      */
     private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime)
     {
         $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
+
         do {
             $dt->add(new DateInterval("P1M"));
         } while (!checkdate($dt->format("m"), $start->format("d"), $dt->format("Y")));
 
         $dt->setDate($dt->format("Y"), $dt->format("m"), $start->format("d"));
+
+        $startTime = explode(":", $startTime);
+        $hours = isset($startTime[0]) ? $startTime[0] : "00";
+        $minutes = isset($startTime[1]) ? $startTime[1] : "00";
+        $seconds = isset($startTime[2]) ? $startTime[2] : "00";
+        $dt->setTime($hours, $minutes, $seconds);
+        return $dt;
+    }
+
+    private function getNextMonthlyWeeklyRepeatDate(
+        $start,
+        $timezone,
+        $startTime,
+        $weekNumberOfMonth,
+        $dayOfWeek)
+    {
+        $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
+        $tempDT = clone $dt;
+        $fifthWeekExists = false;
+        do {
+            $nextDT = date_create($weekNumberOfMonth." ".$dayOfWeek.
+                " of ".$tempDT->format("F")." ".$tempDT->format("Y"));
+
+            /* We have to check if the next date is in the same month in case
+             * the repeat day is in the fifth week of the month.
+             * If it's not in the same month we know that a fifth week of
+             * the next month does not exist. So let's skip it.
+             */
+            if ($tempDT->format("F") == $nextDT->format("F")) {
+                $fifthWeekExists = true;
+            }
+            $tempDT->add(new DateInterval("P1M"));
+        } while (!$fifthWeekExists);
+
+        $dt = $nextDT;
 
         $startTime = explode(":", $startTime);
         $hours = isset($startTime[0]) ? $startTime[0] : "00";
