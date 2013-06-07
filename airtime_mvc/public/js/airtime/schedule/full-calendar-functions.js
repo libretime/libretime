@@ -210,7 +210,7 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    $(element).attr("data-id", "fc-show-instance-"+event.id);
+    $(element).attr("id", "fc-show-instance-"+event.id);
     $(element).attr("data-show-id", event.showId);
     $(element).attr("data-show-linked", event.linked);
     $(element).data("event", event);
