@@ -194,14 +194,13 @@ class Application_Model_Scheduler
 
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
-            $storedFile = new Application_Model_StoredFile($file, $this->con);
 
             if (is_null($file) || !$file->visible()) {
                 throw new Exception(_("A selected File does not exist!"));
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
-                $data["cliplength"] = $storedFile->getRealClipLength(
+                $data["cliplength"] = Application_Model_StoredFile::getRealClipLength(
                     $file->getDbCuein(),
                     $file->getDbCueout());
 
