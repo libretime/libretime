@@ -186,7 +186,7 @@ function buildScheduleDialog (json, instance_id) {
     
     //set max heights of datatables.
     dialog.find(".lib-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 155);
+        .css("max-height", height - 90 - 200);
     
     dialog.find(".sb-content .dataTables_scrolling")
         .css("max-height", height - 90 - 60);
