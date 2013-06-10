@@ -189,7 +189,7 @@ function buildScheduleDialog (json, instance_id) {
         .css("max-height", height - 90 - 200);
     
     dialog.find(".sb-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 60);
+        .css("max-height", height - 90 - 65);
     
     dialog.dialog('open');
 }
