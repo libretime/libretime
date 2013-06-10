@@ -54,7 +54,7 @@ AIRTIME = (function(AIRTIME) {
         widgetHeight = viewport.height - 180;
         screenWidth = Math.floor(viewport.width - 40);
         
-        var libTableHeight = widgetHeight - 130,
+        var libTableHeight = widgetHeight - 175,
             builderTableHeight = widgetHeight - 95,
             oTable;
         
