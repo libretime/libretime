@@ -13,7 +13,7 @@ var AIRTIME = (function(AIRTIME){
 var serverTimezoneOffset = 0;
 
 function closeDialogCalendar(event, ui) {
-    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
+    //$("#schedule_calendar").fullCalendar( 'refetchEvents' );
     $(this).remove();
 }
 
