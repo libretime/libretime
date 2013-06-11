@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from datetime import timedelta
+from configobj import ConfigObj
 
 import sys
 import time
@@ -21,7 +22,7 @@ from threading import Thread
 
 from api_clients import api_client
 from std_err_override import LogWriter
-from configobj import ConfigObj
+from timeout import ls_timeout
 
 
 # configure logging
@@ -114,25 +115,6 @@ class PypoPush(Thread):
 
         return present, future
 
-    def get_current_stream_id_from_liquidsoap(self):
-        response = "-1"
-        try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-
-            msg = 'dynamic_source.get_id\n'
-            tn.write(msg)
-            response = tn.read_until("\r\n").strip(" \r\n")
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            self.logger.error("Error connecting to Liquidsoap: %s", e)
-            response = []
-        finally:
-            self.telnet_lock.release()
-
-        return response
-
     #def is_correct_current_item(self, media_item, liquidsoap_queue_approx, liquidsoap_stream_id):
         #correct = False
         #if media_item is None:
@@ -162,6 +144,7 @@ class PypoPush(Thread):
 
         return seconds
 
+    @ls_timeout
     def stop_web_stream_all(self):
         try:
             self.telnet_lock.acquire()
