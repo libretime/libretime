@@ -40,8 +40,12 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 POLL_INTERVAL = 1800
 
 class PypoFetch(Thread):
+
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config):
         Thread.__init__(self)
+
+        #Hacky...
+        PypoFetch.ref = self
 
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q

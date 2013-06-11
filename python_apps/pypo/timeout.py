@@ -1,6 +1,8 @@
 import threading
 import logging
 
+import pypofetch
+
 def __timeout(func, timeout_duration, default, args, kwargs):
 
     class InterruptableThread(threading.Thread):
@@ -24,6 +26,7 @@ def __timeout(func, timeout_duration, default, args, kwargs):
             fails again then there is something critically wrong..."""
             if first_attempt:
                 #restart liquidsoap
+                pypofetch.PypoFetch.ref.restart_liquidsoap()
                 pass
             else:
                 raise Exception("Thread did not terminate")
