@@ -1,8 +1,12 @@
 def notify(m)
-  #current_media_id := string_of(m['schedule_table_id'])
   command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
+end
+
+def notify_queue(m)
+  queue_metadata := m
+  notify(m)
 end
 
 def notify_stream(m)
@@ -25,6 +29,10 @@ def append_title(m) =
   else
     [("title", "#{m['artist']} - #{m['title']}")]
   end
+end
+
+def queue_metadata_callback(m) =
+    append_title(!queue_metadata)
 end
 
 def crossfade_airtime(s)

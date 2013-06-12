@@ -24,6 +24,8 @@ default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
 
+queue_metadata = ref []
+
 s1_connected = ref ''
 s2_connected = ref ''
 s3_connected = ref ''
@@ -47,7 +49,7 @@ def create_source()
     # the crossfade function controls fade in/out
     l = crossfade_airtime(l)
 
-    l = on_metadata(notify, l)
+    l = on_metadata(notify_queue, l)
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
@@ -69,6 +71,8 @@ create_source()
 create_source()
 
 queue = add(!sources, normalize=false)
+
+queue = map_metadata(update=false, queue_metadata_callback, queue)
 
 output.dummy(fallible=true, queue)
 
