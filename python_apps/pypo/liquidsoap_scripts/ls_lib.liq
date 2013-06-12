@@ -5,7 +5,8 @@ def notify(m)
 end
 
 def notify_queue(m)
-  queue_metadata := m
+  f = !dynamic_metadata_callback
+  ignore(f(m))
   notify(m)
 end
 
@@ -29,10 +30,6 @@ def append_title(m) =
   else
     [("title", "#{m['artist']} - #{m['title']}")]
   end
-end
-
-def queue_metadata_callback(m) =
-    !queue_metadata
 end
 
 def crossfade_airtime(s)

@@ -24,7 +24,7 @@ default_dj_fade = ref 0.
 station_name = ref ''
 show_name = ref ''
 
-queue_metadata = ref []
+dynamic_metadata_callback = ref fun (s) -> begin () end
 
 s1_connected = ref ''
 s2_connected = ref ''
@@ -72,7 +72,11 @@ create_source()
 
 queue = add(!sources, normalize=false)
 
-queue = map_metadata(update=false, queue_metadata_callback, queue)
+pair = insert_metadata(queue)
+f = fst(pair)
+queue = snd(pair)
+
+dynamic_metadata_callback := f
 
 output.dummy(fallible=true, queue)
 
