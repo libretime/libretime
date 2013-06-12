@@ -32,7 +32,7 @@ def append_title(m) =
 end
 
 def queue_metadata_callback(m) =
-    append_title(!queue_metadata)
+    !queue_metadata
 end
 
 def crossfade_airtime(s)
