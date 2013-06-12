@@ -5,7 +5,8 @@ def notify(m)
 end
 
 def notify_queue(m)
-  queue_metadata := m
+  f = !dynamic_metadata_callback
+  ignore(f(m))
   notify(m)
 end
 
@@ -22,17 +23,20 @@ end
 # A function applied to each metadata chunk
 def append_title(m) =  
   log("Using stream_format #{!stream_metadata_type}")
-  if !stream_metadata_type == 1 then
-    [("title", "#{!show_name} - #{m['artist']} - #{m['title']}")]
-  elsif !stream_metadata_type == 2 then
-    [("title", "#{!station_name} - #{!show_name}")]
-  else
-    [("title", "#{m['artist']} - #{m['title']}")]
-  end
-end
 
-def queue_metadata_callback(m) =
-    !queue_metadata
+  if list.mem_assoc("mapped", m) then
+    #protection against applying this function twice. It shouldn't be happening
+    #and bug file with Liquidsoap.
+    m
+  else
+      if !stream_metadata_type == 1 then
+        [("title", "#{!show_name} - #{m['artist']} - #{m['title']}"), ("mapped", "true")]
+      elsif !stream_metadata_type == 2 then
+        [("title", "#{!station_name} - #{!show_name}"), ("mapped", "true")]
+      else
+        [("title", "#{m['artist']} - #{m['title']}"), ("mapped", "true")]
+      end
+  end
 end
 
 def crossfade_airtime(s)
