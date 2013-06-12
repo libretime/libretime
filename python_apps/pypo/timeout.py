@@ -1,6 +1,4 @@
 import threading
-import logging
-
 import pypofetch
 
 def __timeout(func, timeout_duration, default, args, kwargs):
@@ -19,15 +17,12 @@ def __timeout(func, timeout_duration, default, args, kwargs):
         it.start()
         it.join(timeout_duration)
 
-        logger = logging.getLogger()
-
         if it.isAlive():
             """Restart Liquidsoap and try the command one more time. If it 
             fails again then there is something critically wrong..."""
             if first_attempt:
                 #restart liquidsoap
                 pypofetch.PypoFetch.ref.restart_liquidsoap()
-                pass
             else:
                 raise Exception("Thread did not terminate")
         else:
