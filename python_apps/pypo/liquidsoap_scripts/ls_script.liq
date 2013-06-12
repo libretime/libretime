@@ -73,10 +73,8 @@ create_source()
 queue = add(!sources, normalize=false)
 
 pair = insert_metadata(queue)
-f = fst(pair)
+dynamic_metadata_callback := fst(pair)
 queue = snd(pair)
-
-dynamic_metadata_callback := f
 
 output.dummy(fallible=true, queue)
 
