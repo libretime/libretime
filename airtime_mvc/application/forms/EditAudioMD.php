@@ -55,7 +55,6 @@ class Application_Form_EditAudioMD extends Zend_Form
         $year->setLabel(_('Year:'))
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
-                new MyValidator(),
                 new Zend_Validate_StringLength(array('max' => 10)),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM-DD"),
                 Application_Form_Helper_ValidationTypes::overrrideDateValidator("YYYY-MM"),
