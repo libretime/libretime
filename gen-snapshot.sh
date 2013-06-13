@@ -6,7 +6,7 @@ VERSION=2.4.0~$(date "+%Y%m%d")
 BUILDDEST=/tmp/airtime-${VERSION}/
 DEBDIR=`pwd`/debian
 
-git checkout 2.4.x
+git checkout $(git branch | grep "^*" | cut -d' ' -f 2)
 git pull
 
 echo "cleaning up previous build..."
