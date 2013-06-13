@@ -177,6 +177,7 @@ class PypoFetch(Thread):
         commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
         self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
 
+        self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
 
     @ls_timeout
