@@ -1,4 +1,3 @@
-# Copyright (C) 2013 Sourcefabric
 # This file is distributed under the same license as the Airtime package.
 # Sourcefabric <contact@sourcefabric.org>, 2013.
 #
@@ -7,10 +6,9 @@ msgstr ""
 "Project-Id-Version: Airtime 2.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-30 11:13-0400\n"
-"PO-Revision-Date: 2013-05-22 10:50+0100\n"
+"PO-Revision-Date: 2013-06-13 16:46+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Hungarian Localization <contact@sourcefabric.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -68,7 +66,7 @@ msgstr "Műsor Szerkesztése"
 
 #: airtime_mvc/application/services/CalendarService.php:133
 msgid "Edit This Instance"
-msgstr ""
+msgstr "Szerkesztés Ebben az Esetben"
 
 #: airtime_mvc/application/services/CalendarService.php:151
 #: airtime_mvc/application/services/CalendarService.php:166
@@ -92,7 +90,7 @@ msgstr "Törlés Ebben és Minden Más Esetben"
 
 #: airtime_mvc/application/services/CalendarService.php:210
 msgid "Permission denied"
-msgstr ""
+msgstr "Engedély megtagadva"
 
 #: airtime_mvc/application/services/CalendarService.php:214
 #: airtime_mvc/application/models/ShowInstance.php:245
@@ -227,12 +225,12 @@ msgstr "Kijelentkezés"
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr ""
+msgstr "Lejátszás"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr ""
+msgstr "Leállítás"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/models/Block.php:1334
@@ -243,7 +241,7 @@ msgstr "Felkeverés"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:49
 msgid "Set Cue In"
-msgstr ""
+msgstr "Felkeverés Beállítása"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:54
 #: airtime_mvc/application/models/Block.php:1335
@@ -254,11 +252,11 @@ msgstr "Lekeverés"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr ""
+msgstr "Lekeverés Beállítása"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
-msgstr ""
+msgstr "Kurzor"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:282
@@ -272,8 +270,12 @@ msgstr "Leúsztatás"
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:16
 #, php-format
-msgid "Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%sMaintained and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
-msgstr "Airtime Szerzői & másolási jog;Sourcefabric o.p.s. Minden jog fenntartva.%sFejleszti és forgalmazza GNU GPL v.3 alatt a %sSourcefabric o.p.s%s"
+msgid ""
+"Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%sMaintained "
+"and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
+msgstr ""
+"Airtime Szerzői & másolási jog;Sourcefabric o.p.s. Minden jog fenntartva."
+"%sFejleszti és forgalmazza GNU GPL v.3 alatt a %sSourcefabric o.p.s%s"
 
 #: airtime_mvc/application/models/StoredFile.php:953
 msgid "Failed to create 'organize' directory."
@@ -281,16 +283,27 @@ msgstr "Nem sikerült létrehozni 'szervező' könyvtárat."
 
 #: airtime_mvc/application/models/StoredFile.php:967
 #, php-format
-msgid "The file was not uploaded, there is %s MB of disk space left and the file you are uploading has a size of %s MB."
-msgstr "A fájl feltöltése sikertelen, mert a szabad lemezterület már csak %s MB a feltöltött fájl mérete pedig %s MB."
+msgid ""
+"The file was not uploaded, there is %s MB of disk space left and the file "
+"you are uploading has a size of %s MB."
+msgstr ""
+"A fájl feltöltése sikertelen, mert a szabad lemezterület már csak %s MB a "
+"feltöltött fájl mérete pedig %s MB."
 
 #: airtime_mvc/application/models/StoredFile.php:976
-msgid "This file appears to be corrupted and will not be added to media library."
+msgid ""
+"This file appears to be corrupted and will not be added to media library."
 msgstr "A fájl úgy tűnik sérült, nem került be a médiatárba."
 
 #: airtime_mvc/application/models/StoredFile.php:1015
-msgid "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space or the stor directory does not have correct write permissions."
-msgstr "A fájl feltöltése sikertelen, valószínű, hogy a számítógép merevlemezén nincs elég hely, vagy a tárolási könyvtár nem rendelkezik megfelelő írási engedélyekkel."
+msgid ""
+"The file was not uploaded, this error can occur if the computer hard drive "
+"does not have enough disk space or the stor directory does not have correct "
+"write permissions."
+msgstr ""
+"A fájl feltöltése sikertelen, valószínű, hogy a számítógép merevlemezén "
+"nincs elég hely, vagy a tárolási könyvtár nem rendelkezik megfelelő írási "
+"engedélyekkel."
 
 #: airtime_mvc/application/models/Preference.php:620
 msgid "Select Country"
@@ -319,13 +332,19 @@ msgstr "%s nem létező könyvtár."
 
 #: airtime_mvc/application/models/MusicDir.php:232
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list"
-msgstr "%s már be van állítva, mint a jelenlegi tároló elérési útvonala vagy a vizsgált mappák listája"
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list"
+msgstr ""
+"%s már be van állítva, mint a jelenlegi tároló elérési útvonala vagy a "
+"vizsgált mappák listája"
 
 #: airtime_mvc/application/models/MusicDir.php:386
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list."
-msgstr "%s már be van állítva, mint jelenlegi tároló elérési útvonala vagy, a vizsgált mappák listájában."
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list."
+msgstr ""
+"%s már be van állítva, mint jelenlegi tároló elérési útvonala vagy, a "
+"vizsgált mappák listájában."
 
 #: airtime_mvc/application/models/MusicDir.php:429
 #, php-format
@@ -342,14 +361,17 @@ msgstr "A fel- és a lekeverés értékei nullák."
 #: airtime_mvc/application/models/Block.php:879
 #: airtime_mvc/application/models/Block.php:900
 msgid "Can't set cue in to be larger than cue out."
-msgstr "Nem lehet beállítani, hogy a felkeverés hosszabb legyen, mint a lekeverés."
+msgstr ""
+"Nem lehet beállítani, hogy a felkeverés hosszabb legyen, mint a lekeverés."
 
 #: airtime_mvc/application/models/Playlist.php:841
 #: airtime_mvc/application/models/Playlist.php:885
 #: airtime_mvc/application/models/Block.php:868
 #: airtime_mvc/application/models/Block.php:924
 msgid "Can't set cue out to be greater than file length."
-msgstr "Nem lehet beállítani, mert a lekeverési idő nem lehet nagyobb a fájl hosszánál."
+msgstr ""
+"Nem lehet beállítani, mert a lekeverési idő nem lehet nagyobb a fájl "
+"hosszánál."
 
 #: airtime_mvc/application/models/Playlist.php:877
 #: airtime_mvc/application/models/Block.php:935
@@ -443,7 +465,7 @@ msgstr "Airtime Jelszó Visszaállítása"
 
 #: airtime_mvc/application/models/Scheduler.php:72
 msgid "Cannot move items out of linked shows"
-msgstr ""
+msgstr "Nem tud áthelyezni elemeket a kapcsolódó műsorokból"
 
 #: airtime_mvc/application/models/Scheduler.php:118
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
@@ -479,8 +501,11 @@ msgid "The show %s has been previously updated!"
 msgstr "A műsor %s már korábban frissítve lett!"
 
 #: airtime_mvc/application/models/Scheduler.php:177
-msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
+msgid ""
+"Content in linked shows must be scheduled before or after any one is "
+"broadcasted"
 msgstr ""
+"A kapcsolódó műsorok tartalmait bármelyik adás előtt vagy után kell ütemezni"
 
 #: airtime_mvc/application/models/Scheduler.php:200
 #: airtime_mvc/application/models/Scheduler.php:286
@@ -764,7 +789,8 @@ msgstr "Az állomásom közzététele a Sourcefabric.org -on"
 #: airtime_mvc/application/forms/SupportSettings.php:148
 #, php-format
 msgid "By checking this box, I agree to Sourcefabric's %sprivacy policy%s."
-msgstr "A mező bejelölésével, elfogadom a Sourcefabric %sadatvédelmi irányelveket%s."
+msgstr ""
+"A mező bejelölésével, elfogadom a Sourcefabric %sadatvédelmi irányelveket%s."
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:166
 #: airtime_mvc/application/forms/SupportSettings.php:171
@@ -818,7 +844,8 @@ msgid "Value is required and can't be empty"
 msgstr "Adjon meg egy értéket, nem lehet üres"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:19
-msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgid ""
+"'%value%' is no valid email address in the basic format local-part@hostname"
 msgstr "'%value%' érvénytelen formátum (név@hosztnév)"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:33
@@ -1124,7 +1151,7 @@ msgstr "A csatolási pont nem lehet üres Icecast szerver esetében."
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr ""
+msgstr "Hivatkozás:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
@@ -1183,15 +1210,15 @@ msgstr "Sz"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:45
 msgid "Repeat By:"
-msgstr ""
+msgstr "Által Ismételt:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:48
 msgid "day of the month"
-msgstr ""
+msgstr "a hónap napja"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:48
 msgid "day of the week"
-msgstr ""
+msgstr "a hét napja"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:67
 msgid "No End?"
@@ -1317,7 +1344,8 @@ msgstr "Műsort nem lehet a múltban létrehozni"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:121
 msgid "Cannot modify start date/time of the show that is already started"
-msgstr "Nem lehet módosítani a műsor kezdési időpontját, ha a műsor már elindult"
+msgstr ""
+"Nem lehet módosítani a műsor kezdési időpontját, ha a műsor már elindult"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:140
 msgid "Cannot have duration 00h 00m"
@@ -1545,8 +1573,12 @@ msgstr "'Hosszúság' '00:00:00' formában lehet"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:513
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:526
-msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
-msgstr "Az értéknek az alábbi időbélyeg formátumban kell lennie (pl. 0000-00-00 vagy 0000-00-00 00:00:00)"
+msgid ""
+"The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 "
+"00:00:00)"
+msgstr ""
+"Az értéknek az alábbi időbélyeg formátumban kell lennie (pl. 0000-00-00 vagy "
+"0000-00-00 00:00:00)"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:540
 msgid "The value has to be numeric"
@@ -1603,7 +1635,7 @@ msgstr "A jelszó nem lehet üres."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Default Crossfade Duration (s):"
-msgstr ""
+msgstr "Alapértelmezett Áttünési Időtartam (s):"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
@@ -1613,16 +1645,20 @@ msgstr "adja meg másodpercben 0{0,0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr ""
+msgstr "Alapértelmezett Felúsztatás (s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr ""
+msgstr "Alapértelmezett Leúsztatás (s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
-msgid "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make front-end widgets work.)"
-msgstr "Távoli Weboldalak Engedélyezése \"Ütemzés\" Info?%s (Engedélyezi vele a front-end kütyü munkát.)"
+msgid ""
+"Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make "
+"front-end widgets work.)"
+msgstr ""
+"Távoli Weboldalak Engedélyezése \"Ütemzés\" Info?%s (Engedélyezi vele a "
+"front-end kütyü munkát.)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:90
 msgid "Disabled"
@@ -1822,8 +1858,12 @@ msgid "Wrong username or password provided. Please try again."
 msgstr "Hibás felhasználónév vagy jelszó. Kérjük, próbálja meg újra."
 
 #: airtime_mvc/application/controllers/LoginController.php:142
-msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
-msgstr "Az e-mailt nem lehetett elküldeni. Ellenőrizze a levelező kiszolgáló beállításait."
+msgid ""
+"Email could not be sent. Check your mail server settings and ensure it has "
+"been configured properly."
+msgstr ""
+"Az e-mailt nem lehetett elküldeni. Ellenőrizze a levelező kiszolgáló "
+"beállításait."
 
 #: airtime_mvc/application/controllers/LoginController.php:145
 msgid "Given email not found."
@@ -1937,7 +1977,9 @@ msgstr "Csak számokat adhat hozzá a smart block-hoz."
 #: airtime_mvc/application/controllers/LocaleController.php:50
 #: airtime_mvc/application/controllers/PlaylistController.php:163
 msgid "You can only add tracks, smart blocks, and webstreams to playlists."
-msgstr "Csak számokat, smart block-okat és adásfolyamokat adhatunk a lejátszási listákhoz."
+msgstr ""
+"Csak számokat, smart block-okat és adásfolyamokat adhatunk a lejátszási "
+"listákhoz."
 
 #: airtime_mvc/application/controllers/LocaleController.php:53
 msgid "Please select a cursor position on timeline."
@@ -1974,11 +2016,11 @@ msgstr "Biztos benne, hogy törli a kijelölt eleme(ke)t?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:64
 msgid "Scheduled"
-msgstr ""
+msgstr "Ütemezett"
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
-msgstr ""
+msgstr "Lejátszási lista / Block"
 
 #: airtime_mvc/application/controllers/LocaleController.php:69
 msgid "Bit Rate"
@@ -2064,12 +2106,16 @@ msgstr "A bemenet formája lehet: óó:pp:mm.t"
 
 #: airtime_mvc/application/controllers/LocaleController.php:111
 #, php-format
-msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
-msgstr "Ön jelenleg fájlokat tölt fel. %sHa másik ablakot nyit meg, akkor a feltöltési folyamat megszakad. %sBiztos benne, hogy elhagyja az oldalt?"
+msgid ""
+"You are currently uploading files. %sGoing to another screen will cancel the "
+"upload process. %sAre you sure you want to leave the page?"
+msgstr ""
+"Ön jelenleg fájlokat tölt fel. %sHa másik ablakot nyit meg, akkor a "
+"feltöltési folyamat megszakad. %sBiztos benne, hogy elhagyja az oldalt?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
 msgid "Open Media Builder"
-msgstr ""
+msgstr "Média Építő Megnyitása"
 
 #: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
@@ -2100,8 +2146,13 @@ msgid "Playlist shuffled"
 msgstr "Kevert lejátszási lista"
 
 #: airtime_mvc/application/controllers/LocaleController.php:122
-msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
-msgstr "Az Airtime bizonytalan a fájl állapotával kapcsolatban. Lehetséges, hogy a tárhely már nem elérhető, vagy a 'vizsgált' mappa útvonala megváltozott."
+msgid ""
+"Airtime is unsure about the status of this file. This can happen when the "
+"file is on a remote drive that is unaccessible or the file is in a directory "
+"that isn't 'watched' anymore."
+msgstr ""
+"Az Airtime bizonytalan a fájl állapotával kapcsolatban. Lehetséges, hogy a "
+"tárhely már nem elérhető, vagy a 'vizsgált' mappa útvonala megváltozott."
 
 #: airtime_mvc/application/controllers/LocaleController.php:124
 #, php-format
@@ -2126,16 +2177,34 @@ msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "A képek lehetnek: jpg, jpeg, png, vagy gif"
 
 #: airtime_mvc/application/controllers/LocaleController.php:132
-msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
-msgstr "A statikus smart block elmenti a kritériumokat és azonnal létre is hozza a block tartalmát is. Ez lehetővé teszi, hogy módosítsuk és lássuk a könyvtár tartalmát még a műsor közvetítése előtt."
+msgid ""
+"A static smart block will save the criteria and generate the block content "
+"immediately. This allows you to edit and view it in the Library before "
+"adding it to a show."
+msgstr ""
+"A statikus smart block elmenti a kritériumokat és azonnal létre is hozza a "
+"block tartalmát is. Ez lehetővé teszi, hogy módosítsuk és lássuk a könyvtár "
+"tartalmát még a műsor közvetítése előtt."
 
 #: airtime_mvc/application/controllers/LocaleController.php:134
-msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
-msgstr "A dinamikus smart block csak elmenti a kritériumokat. A block-ot szerkesztés után lehet hozzáadni a műsorhoz. Később a tartalmát sem megtekinteni, sem módosítani nem lehet."
+msgid ""
+"A dynamic smart block will only save the criteria. The block content will "
+"get generated upon adding it to a show. You will not be able to view and "
+"edit the content in the Library."
+msgstr ""
+"A dinamikus smart block csak elmenti a kritériumokat. A block-ot szerkesztés "
+"után lehet hozzáadni a műsorhoz. Később a tartalmát sem megtekinteni, sem "
+"módosítani nem lehet."
 
 #: airtime_mvc/application/controllers/LocaleController.php:136
-msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
-msgstr "A kívánt blokkhosszúság nem elérhető, mert az Airtime nem talál elég egyedi műsorszámot, ami megfelelne a kritériumoknak. Engedélyezze ezt az opciót, ha azt szeretné, hogy egyes számok ismétlődjenek."
+msgid ""
+"The desired block length will not be reached if Airtime cannot find enough "
+"unique tracks to match your criteria. Enable this option if you wish to "
+"allow tracks to be added multiple times to the smart block."
+msgstr ""
+"A kívánt blokkhosszúság nem elérhető, mert az Airtime nem talál elég egyedi "
+"műsorszámot, ami megfelelne a kritériumoknak. Engedélyezze ezt az opciót, ha "
+"azt szeretné, hogy egyes számok ismétlődjenek."
 
 #: airtime_mvc/application/controllers/LocaleController.php:137
 msgid "Smart block shuffled"
@@ -2164,8 +2233,12 @@ msgstr "Másolva %s sor%s a vágólapra"
 
 #: airtime_mvc/application/controllers/LocaleController.php:160
 #, php-format
-msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
-msgstr "%sNyomtatási előnézet%sKérjük, használja böngészője nyomtatási beállításait. Nyomja meg az Esc-t ha végzett."
+msgid ""
+"%sPrint view%sPlease use your browser's print function to print this table. "
+"Press escape when finished."
+msgstr ""
+"%sNyomtatási előnézet%sKérjük, használja böngészője nyomtatási beállításait. "
+"Nyomja meg az Esc-t ha végzett."
 
 #: airtime_mvc/application/controllers/LocaleController.php:162
 msgid "Choose Storage Folder"
@@ -2198,8 +2271,12 @@ msgstr "Ez az útvonal jelenleg nem elérhető."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid ""
+"Some stream types require extra configuration. Details about enabling %sAAC+ "
+"Support%s or %sOpus Support%s are provided."
 msgstr ""
+"Egyes patak típusokhoz extra beállítások szükségesek. További részletek: a "
+"%sAAC+ Támogatással%s vagy a %sOpus Támogatással%s kapcsolatban."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Connected to the streaming server"
@@ -2214,8 +2291,18 @@ msgid "Can not connect to the streaming server"
 msgstr "Nem lehet kapcsolódni az adásfolyam kiszolgálójához"
 
 #: airtime_mvc/application/controllers/LocaleController.php:176
-msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
-msgstr "Ha az Airtime mögött van egy router vagy egy tűzfal, akkor be kell állítani a továbbító porot, mert ezen a területen az információ helytelen lesz. Ebben az esetben manuálisan kell frissíteni ezen a területen, hogy mutassa a hosztot / portot / csatolási pontot, amelyre a DJ-k csatlakozhatnak. A megengedett tartomány 1024 és 49151 között van."
+msgid ""
+"If Airtime is behind a router or firewall, you may need to configure port "
+"forwarding and this field information will be incorrect. In this case you "
+"will need to manually update this field so it shows the correct host/port/"
+"mount that your DJ's need to connect to. The allowed range is between 1024 "
+"and 49151."
+msgstr ""
+"Ha az Airtime mögött van egy router vagy egy tűzfal, akkor be kell állítani "
+"a továbbító porot, mert ezen a területen az információ helytelen lesz. Ebben "
+"az esetben manuálisan kell frissíteni ezen a területen, hogy mutassa a "
+"hosztot / portot / csatolási pontot, amelyre a DJ-k csatlakozhatnak. A "
+"megengedett tartomány 1024 és 49151 között van."
 
 #: airtime_mvc/application/controllers/LocaleController.php:177
 #, php-format
@@ -2223,45 +2310,96 @@ msgid "For more details, please read the %sAirtime Manual%s"
 msgstr "A további részletekért, kérjük olvassa el az %sAirtime Kézikönyvét%s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:179
-msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
-msgstr "Jelölje be ezt az opciót: metaadatok engedélyezése OGG-os adásfolyamra (adatfolyam metaadatok: a műsorszám címe, előadó, műsornév, amely megjelenik egy audió lejátszóban). A VLC és mplayer lejátszóknál súlyos hibák előfordulhatnak, OGG/Vorbis adatfolyam játszásakor, amelynél a metaadatok küldése engedélyezett: ilyenkor akadozik az adatfolyam. Ha az OGG-os adatfolyam és a hallgatói nem igényelnek támogatást az ilyen jellegű audió lejátszókhoz, akkor nyugodtan engedélyezze ezt az opciót."
+msgid ""
+"Check this option to enable metadata for OGG streams (stream metadata is the "
+"track title, artist, and show name that is displayed in an audio player). "
+"VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that "
+"has metadata information enabled: they will disconnect from the stream after "
+"every song. If you are using an OGG stream and your listeners do not require "
+"support for these audio players, then feel free to enable this option."
+msgstr ""
+"Jelölje be ezt az opciót: metaadatok engedélyezése OGG-os adásfolyamra "
+"(adatfolyam metaadatok: a műsorszám címe, előadó, műsornév, amely megjelenik "
+"egy audió lejátszóban). A VLC és mplayer lejátszóknál súlyos hibák "
+"előfordulhatnak, OGG/Vorbis adatfolyam játszásakor, amelynél a metaadatok "
+"küldése engedélyezett: ilyenkor akadozik az adatfolyam. Ha az OGG-os "
+"adatfolyam és a hallgatói nem igényelnek támogatást az ilyen jellegű audió "
+"lejátszókhoz, akkor nyugodtan engedélyezze ezt az opciót."
 
 #: airtime_mvc/application/controllers/LocaleController.php:180
-msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
-msgstr "Jelölje be ezt a négyzetet, hogy automatikusan kikapcsol a Mester/Műsor a forrás megszakítása után."
+msgid ""
+"Check this box to automatically switch off Master/Show source upon source "
+"disconnection."
+msgstr ""
+"Jelölje be ezt a négyzetet, hogy automatikusan kikapcsol a Mester/Műsor a "
+"forrás megszakítása után."
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
-msgid "Check this box to automatically switch on Master/Show source upon source connection."
-msgstr "Jelölje be ezt a négyzetet, hogy automatikusan bekapcsol a Mester/Műsor a forrás csatlakozását követően."
+msgid ""
+"Check this box to automatically switch on Master/Show source upon source "
+"connection."
+msgstr ""
+"Jelölje be ezt a négyzetet, hogy automatikusan bekapcsol a Mester/Műsor a "
+"forrás csatlakozását követően."
 
 #: airtime_mvc/application/controllers/LocaleController.php:182
-msgid "If your Icecast server expects a username of 'source', this field can be left blank."
-msgstr "Lehet, hogy az Ön Icecast kiszolgálója nem igényli a 'forrás' felhasználónevét, ez a mező üresen maradhat."
+msgid ""
+"If your Icecast server expects a username of 'source', this field can be "
+"left blank."
+msgstr ""
+"Lehet, hogy az Ön Icecast kiszolgálója nem igényli a 'forrás' "
+"felhasználónevét, ez a mező üresen maradhat."
 
 #: airtime_mvc/application/controllers/LocaleController.php:183
 #: airtime_mvc/application/controllers/LocaleController.php:193
-msgid "If your live streaming client does not ask for a username, this field should be 'source'."
-msgstr "Ha az Ön élő adásfolyam kliense nem igényel felhasználónevet, akkor meg kell adnia a 'forrást'."
+msgid ""
+"If your live streaming client does not ask for a username, this field should "
+"be 'source'."
+msgstr ""
+"Ha az Ön élő adásfolyam kliense nem igényel felhasználónevet, akkor meg kell "
+"adnia a 'forrást'."
 
 #: airtime_mvc/application/controllers/LocaleController.php:185
-msgid "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
-msgstr "Ha megváltoztatja a felhasználónév vagy a jelszó értékeit, az engedélyezett adatfolyam és a lejátszási motor újraindul, és a hallgatók 5-10 másodpercig csendet fognak hallani. Módosítása az alábbi mezőket, ez NEM okoz újraindítást: Adásfolyam Címke (Általános Beállítások), és a Úsztatási Átmenet Kapcsoló, Mester Felhasználónév, Mester Jelszó (Bejövő Adatfolyam Beállítások). Ha az Airtime éppen rögzít, és ha a változás miatt újra kell indítani a lejátszási motort, akkor a vételezés megszakad."
+msgid ""
+"If you change the username or password values for an enabled stream the "
+"playout engine will be rebooted and your listeners will hear silence for "
+"5-10 seconds. Changing the following fields will NOT cause a reboot: Stream "
+"Label (Global Settings), and Switch Transition Fade(s), Master Username, and "
+"Master Password (Input Stream Settings). If Airtime is recording, and if the "
+"change causes a playout engine restart, the recording will be interrupted."
+msgstr ""
+"Ha megváltoztatja a felhasználónév vagy a jelszó értékeit, az engedélyezett "
+"adatfolyam és a lejátszási motor újraindul, és a hallgatók 5-10 másodpercig "
+"csendet fognak hallani. Módosítása az alábbi mezőket, ez NEM okoz "
+"újraindítást: Adásfolyam Címke (Általános Beállítások), és a Úsztatási "
+"Átmenet Kapcsoló, Mester Felhasználónév, Mester Jelszó (Bejövő Adatfolyam "
+"Beállítások). Ha az Airtime éppen rögzít, és ha a változás miatt újra kell "
+"indítani a lejátszási motort, akkor a vételezés megszakad."
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
-msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
-msgstr "Ez az admin felhasználónév és jelszó az Icecast/SHOUTcast hallgató statisztikához szükségesek."
+msgid ""
+"This is the admin username and password for Icecast/SHOUTcast to get "
+"listener statistics."
+msgstr ""
+"Ez az admin felhasználónév és jelszó az Icecast/SHOUTcast hallgató "
+"statisztikához szükségesek."
 
 #: airtime_mvc/application/controllers/LocaleController.php:190
 msgid "No result found"
 msgstr "Nem volt találat"
 
 #: airtime_mvc/application/controllers/LocaleController.php:191
-msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
-msgstr "Ezt követi ugyanolyan biztonsági műsor-minta: csak a hozzárendelt felhasználók csatlakozhatnak a műsorhoz."
+msgid ""
+"This follows the same security pattern for the shows: only users assigned to "
+"the show can connect."
+msgstr ""
+"Ezt követi ugyanolyan biztonsági műsor-minta: csak a hozzárendelt "
+"felhasználók csatlakozhatnak a műsorhoz."
 
 #: airtime_mvc/application/controllers/LocaleController.php:192
 msgid "Specify custom authentication which will work only for this show."
-msgstr "Adjon meg egy egyéni hitelesítéset, amely csak ennél a műsornál működik."
+msgstr ""
+"Adjon meg egy egyéni hitelesítéset, amely csak ennél a műsornál működik."
 
 #: airtime_mvc/application/controllers/LocaleController.php:194
 msgid "The show instance doesn't exist anymore!"
@@ -2269,11 +2407,15 @@ msgstr "A műsor ez esetben nem létezik többé!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Warning: Shows cannot be re-linked"
-msgstr ""
+msgstr "Figyelem: a Műsorokat nem lehet újra-linkelni"
 
 #: airtime_mvc/application/controllers/LocaleController.php:196
-msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgid ""
+"By linking your repeating shows any media items scheduled in any repeat show "
+"will also get scheduled in the other repeat shows"
 msgstr ""
+"By linking your repeating shows any media items scheduled in any repeat show "
+"will also get scheduled in the other repeat shows - fordításra vár"
 
 #: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "Show"
@@ -2429,8 +2571,11 @@ msgid "month"
 msgstr "hónap"
 
 #: airtime_mvc/application/controllers/LocaleController.php:262
-msgid "Shows longer than their scheduled time will be cut off by a following show."
-msgstr "Ha egy műsor hosszabb az ütemezett időnél, meg lesz vágva és követi azt a következő műsor."
+msgid ""
+"Shows longer than their scheduled time will be cut off by a following show."
+msgstr ""
+"Ha egy műsor hosszabb az ütemezett időnél, meg lesz vágva és követi azt a "
+"következő műsor."
 
 #: airtime_mvc/application/controllers/LocaleController.php:263
 msgid "Cancel Current Show?"
@@ -2497,15 +2642,18 @@ msgstr "%s Elemek Áthelyezése"
 
 #: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Fade Editor"
-msgstr ""
+msgstr "Úsztatási Szerkesztő"
 
 #: airtime_mvc/application/controllers/LocaleController.php:296
 msgid "Cue Editor"
-msgstr ""
+msgstr "Keverési Szerkesztő"
 
 #: airtime_mvc/application/controllers/LocaleController.php:297
-msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgid ""
+"Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
+"Hullámalak funkciók állnak rendelkezésre a böngészőben, támogatja a Web "
+"Audio API-t"
 
 #: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Select all"
@@ -2811,8 +2959,11 @@ msgid "show does not exist"
 msgstr "a műsor nem található"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
-msgid "Please make sure admin user/password is correct on System->Streams page."
-msgstr "Kérjük, győződjön meg arról, hogy az admin felhasználónév/jelszó helyes-e a Rendszer-> Streams oldalon."
+msgid ""
+"Please make sure admin user/password is correct on System->Streams page."
+msgstr ""
+"Kérjük, győződjön meg arról, hogy az admin felhasználónév/jelszó helyes-e a "
+"Rendszer-> Streams oldalon."
 
 #: airtime_mvc/application/controllers/ApiController.php:60
 #: airtime_mvc/application/controllers/ApiController.php:79
@@ -3021,12 +3172,17 @@ msgstr "Felhasználói Típus"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:5
 #, php-format
-msgid "%sAirtime%s %s, the open radio software for scheduling and remote station management. %s"
-msgstr "%sAirtime%s %s, a nyitott rádiós szoftver, az ütemezett és távoli állomás menedzsment. %s"
+msgid ""
+"%sAirtime%s %s, the open radio software for scheduling and remote station "
+"management. %s"
+msgstr ""
+"%sAirtime%s %s, a nyitott rádiós szoftver, az ütemezett és távoli állomás "
+"menedzsment. %s"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
 #, php-format
-msgid "%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"
+msgid ""
+"%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"
 msgstr "%sSourcefabric%s o.p.s. az Airtime forgalmazója %sGNU GPL v.3%s alatt"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
@@ -3052,24 +3208,46 @@ msgid "Welcome to Airtime!"
 msgstr "Üdvözöljük az Airtime-nál!"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
-msgid "Here's how you can get started using Airtime to automate your broadcasts: "
-msgstr "Itt van pár tipp, hogy hogyan is automatizálhatja adásait az Airtime segítségével:"
+msgid ""
+"Here's how you can get started using Airtime to automate your broadcasts: "
+msgstr ""
+"Itt van pár tipp, hogy hogyan is automatizálhatja adásait az Airtime "
+"segítségével:"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
-msgid "Begin by adding your files to the library using the 'Add Media' menu button. You can drag and drop your files to this window too."
-msgstr "Kezdje médiafájlok hozzáadásával a 'Média Hozzáadása' menü gombon. A hozd és vidd fájlokat ugyanebben az ablakban szerkesztheti."
+msgid ""
+"Begin by adding your files to the library using the 'Add Media' menu button. "
+"You can drag and drop your files to this window too."
+msgstr ""
+"Kezdje médiafájlok hozzáadásával a 'Média Hozzáadása' menü gombon. A hozd és "
+"vidd fájlokat ugyanebben az ablakban szerkesztheti."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:8
-msgid "Create a show by going to 'Calendar' in the menu bar, and then clicking the '+ Show' icon. This can be either a one-time or repeating show. Only admins and program managers can add shows."
-msgstr "Hozzon létre egy műsort a 'Naptár' menüsorban, majd kattintson a '+ Műsor' ikonra. Ez lehet egyszeri vagy ismétlődő műsor. Csak az adminisztrátorok és a programok vezetői adhatnak hozzá műsort."
+msgid ""
+"Create a show by going to 'Calendar' in the menu bar, and then clicking the "
+"'+ Show' icon. This can be either a one-time or repeating show. Only admins "
+"and program managers can add shows."
+msgstr ""
+"Hozzon létre egy műsort a 'Naptár' menüsorban, majd kattintson a '+ Műsor' "
+"ikonra. Ez lehet egyszeri vagy ismétlődő műsor. Csak az adminisztrátorok és "
+"a programok vezetői adhatnak hozzá műsort."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
-msgid "Add media to the show by going to your show in the Schedule calendar, left-clicking on it and selecting 'Add / Remove Content'"
-msgstr "Adjon hozzá médiát, hogy a műsora futni tudjon, az Ütemezett naptárban, bal egérgombbal kattintva, és itt válassza ki a 'Tartalom Hozzáadása/Eltávolítása' opciót"
+msgid ""
+"Add media to the show by going to your show in the Schedule calendar, left-"
+"clicking on it and selecting 'Add / Remove Content'"
+msgstr ""
+"Adjon hozzá médiát, hogy a műsora futni tudjon, az Ütemezett naptárban, bal "
+"egérgombbal kattintva, és itt válassza ki a 'Tartalom Hozzáadása/"
+"Eltávolítása' opciót"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
-msgid "Select your media from the left pane and drag them to your show in the right pane."
-msgstr "Válassza ki a média tartalmat a bal oldali panelen, és húzza azt a műsorba, a jobb oldali panelre."
+msgid ""
+"Select your media from the left pane and drag them to your show in the right "
+"pane."
+msgstr ""
+"Válassza ki a média tartalmat a bal oldali panelen, és húzza azt a műsorba, "
+"a jobb oldali panelre."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:12
 msgid "Then you're good to go!"
@@ -3099,7 +3277,7 @@ msgstr "Üres lejátszási lista"
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:3
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:3
 msgid "Show Waveform"
-msgstr ""
+msgstr "Mutasd a Hullámalakot"
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:70
@@ -3146,12 +3324,12 @@ msgstr "Új Adásfolyam"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 msgid "Empty playlist content"
-msgstr ""
+msgstr "Üres lejátszási lista tartalom"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Clear"
-msgstr ""
+msgstr "Törlés"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:24
 msgid "Shuffle playlist"
@@ -3178,7 +3356,7 @@ msgstr "Nincs megnyitott lejátszási lista"
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Empty smart block content"
-msgstr ""
+msgstr "Üres smart block tartalom"
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:90
 msgid "No open smart block"
@@ -3248,8 +3426,12 @@ msgid "Back to login screen"
 msgstr "Vissza a belépéshez"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
-msgid "Welcome to the online Airtime demo! You can log in using the username 'admin' and the password 'admin'."
-msgstr "Üdvözöljük az online Aitime demó változatában! Jelentkezzen be 'admin' felhasználónévvel és 'admin' jelszóval."
+msgid ""
+"Welcome to the online Airtime demo! You can log in using the username "
+"'admin' and the password 'admin'."
+msgstr ""
+"Üdvözöljük az online Aitime demó változatában! Jelentkezzen be 'admin' "
+"felhasználónévvel és 'admin' jelszóval."
 
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
 #: airtime_mvc/application/views/scripts/form/login.phtml:34
@@ -3257,8 +3439,12 @@ msgid "Reset password"
 msgstr "A jelszó visszaállítása"
 
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:7
-msgid "Please enter your account e-mail address. You will receive a link to create a new password via e-mail."
-msgstr "Kérjük, írja be a fiókja e-mail címét. Kap majd egy linket, új jelszó létrehozásához, e-mailen keresztül."
+msgid ""
+"Please enter your account e-mail address. You will receive a link to create "
+"a new password via e-mail."
+msgstr ""
+"Kérjük, írja be a fiókja e-mail címét. Kap majd egy linket, új jelszó "
+"létrehozásához, e-mailen keresztül."
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
@@ -3322,8 +3508,12 @@ msgstr "Frissítés Szükséges"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:70
 #, php-format
-msgid "To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."
-msgstr "A lejátszáshoz média szükséges, és frissítenie kell a böngészőjét egy újabb verzióra, vagy frissítse a %sFlash bővítményt%s."
+msgid ""
+"To play the media you will need to either update your browser to a recent "
+"version or update your %sFlash plugin%s."
+msgstr ""
+"A lejátszáshoz média szükséges, és frissítenie kell a böngészőjét egy újabb "
+"verzióra, vagy frissítse a %sFlash bővítményt%s."
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:52
 msgid "Stream URL:"
@@ -3371,8 +3561,11 @@ msgid "Additional Options"
 msgstr "További Lehetőségek"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:137
-msgid "The following info will be displayed to listeners in their media player:"
-msgstr "A következő információk megjelennek a hallgatók számára, a saját média lejátszóikban:"
+msgid ""
+"The following info will be displayed to listeners in their media player:"
+msgstr ""
+"A következő információk megjelennek a hallgatók számára, a saját média "
+"lejátszóikban:"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:170
 msgid "(Your radio station website)"
@@ -3402,8 +3595,12 @@ msgid "Add"
 msgstr "Hozzáadás"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:43
-msgid "Rescan watched directory (This is useful if it is network mount and may be out of sync with Airtime)"
-msgstr "A vizsgált mappa újraellenőrzése (Ez akkor hasznos, ha a hálózati csatolás nincs szinkronban az Airtime-al)"
+msgid ""
+"Rescan watched directory (This is useful if it is network mount and may be "
+"out of sync with Airtime)"
+msgstr ""
+"A vizsgált mappa újraellenőrzése (Ez akkor hasznos, ha a hálózati csatolás "
+"nincs szinkronban az Airtime-al)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -3428,13 +3625,27 @@ msgstr "Airtime Regisztráció"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:6
 #, php-format
-msgid "Help Airtime improve by letting us know how you are using it. This info will be collected regularly in order to enhance your user experience.%sClick 'Yes, help Airtime' and we'll make sure the features you use are constantly improving."
-msgstr "Segítsen az Airtime fejlesztésében, tudassa velünk az ötleteit. Az információk gyűjtése fokozza a felhasználás élményét.%sKlikk 'Igen, segítek az Airtime-nak' fejlesztésében, és igyekszek folyamatosan a funkciók használatának javításán fáradozni. "
+msgid ""
+"Help Airtime improve by letting us know how you are using it. This info will "
+"be collected regularly in order to enhance your user experience.%sClick "
+"'Yes, help Airtime' and we'll make sure the features you use are constantly "
+"improving."
+msgstr ""
+"Segítsen az Airtime fejlesztésében, tudassa velünk az ötleteit. Az "
+"információk gyűjtése fokozza a felhasználás élményét.%sKlikk 'Igen, segítek "
+"az Airtime-nak' fejlesztésében, és igyekszek folyamatosan a funkciók "
+"használatának javításán fáradozni. "
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:25
 #, php-format
-msgid "Click the box below to advertise your station on %sSourcefabric.org%s. In order to promote your station, 'Send support feedback' must be enabled. This data will be collected in addition to the support feedback."
-msgstr "Kattintson az alábbi mezőbe, hogy hírdetni szeretném az állomásomat a %sSourcefabric.org%s -on. Annak érdekében, hogy támogassák az Ön állomását, a 'Támogatás Visszajelzés Küldését' engedélyeznie kell."
+msgid ""
+"Click the box below to advertise your station on %sSourcefabric.org%s. In "
+"order to promote your station, 'Send support feedback' must be enabled. This "
+"data will be collected in addition to the support feedback."
+msgstr ""
+"Kattintson az alábbi mezőbe, hogy hírdetni szeretném az állomásomat a "
+"%sSourcefabric.org%s -on. Annak érdekében, hogy támogassák az Ön állomását, "
+"a 'Támogatás Visszajelzés Küldését' engedélyeznie kell."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:65
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:79
@@ -3446,7 +3657,8 @@ msgstr "(csupán ellenőrzés céljából, nem kerül közzétételre)"
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:150
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:151
 msgid "Note: Anything larger than 600x600 will be resized."
-msgstr "Megjegyzés: Bármi, ami kisebb nagyobb, mint 600x600, átméretezésre kerül."
+msgstr ""
+"Megjegyzés: Bármi, ami kisebb nagyobb, mint 600x600, átméretezésre kerül."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:164
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:164
@@ -3515,17 +3727,31 @@ msgstr "SoundCloud Beállítások"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
 #, php-format
-msgid "Help Airtime improve by letting Sourcefabric know how you are using it. This information will be collected regularly in order to enhance your user experience.%sClick the 'Send support feedback' box and we'll make sure the features you use are constantly improving."
-msgstr "Segítse az Airtime fejlesztését azáltal, hogy a Sourcefabric tudja, hogy Ön, hogyan használja azt. Információk összegyűjtése céljából, rendszerezve azokat, hogy fokozza a felhasználás élményét.%sKlikk a 'Támogatási Visszajelzés Küldése' mezőbe és győződjön meg arról, hogy a funkciók használatának minősége folyamatosan javul."
+msgid ""
+"Help Airtime improve by letting Sourcefabric know how you are using it. This "
+"information will be collected regularly in order to enhance your user "
+"experience.%sClick the 'Send support feedback' box and we'll make sure the "
+"features you use are constantly improving."
+msgstr ""
+"Segítse az Airtime fejlesztését azáltal, hogy a Sourcefabric tudja, hogy Ön, "
+"hogyan használja azt. Információk összegyűjtése céljából, rendszerezve "
+"azokat, hogy fokozza a felhasználás élményét.%sKlikk a 'Támogatási "
+"Visszajelzés Küldése' mezőbe és győződjön meg arról, hogy a funkciók "
+"használatának minősége folyamatosan javul."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:23
 #, php-format
 msgid "Click the box below to promote your station on %sSourcefabric.org%s."
-msgstr "Kattintson az alábbi mezőbe, hogy hírdesse saját állomását %sSourcefabric.org%s."
+msgstr ""
+"Kattintson az alábbi mezőbe, hogy hírdesse saját állomását %sSourcefabric.org"
+"%s."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:41
-msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
-msgstr "(Annak érdekében, hogy hírdetni tudja állomását, a 'Támogatási Visszajelzés Küldését' engedélyeznie kell.)"
+msgid ""
+"(In order to promote your station, 'Send support feedback' must be enabled)."
+msgstr ""
+"(Annak érdekében, hogy hírdetni tudja állomását, a 'Támogatási Visszajelzés "
+"Küldését' engedélyeznie kell.)"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:186
 msgid "Sourcefabric Privacy Policy"
@@ -3541,11 +3767,11 @@ msgstr "Smart Block Beállításai"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:39
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:40
 msgid "and"
-msgstr ""
+msgstr "és"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:63
 msgid " to "
