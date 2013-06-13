@@ -180,7 +180,6 @@ class PypoFetch(Thread):
         self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
 
-    @ls_timeout
     def restart_liquidsoap(self):
         try:
             """do not block - if we receive the lock then good - no other thread
