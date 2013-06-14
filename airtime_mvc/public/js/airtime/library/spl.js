@@ -1451,13 +1451,13 @@ var AIRTIME = (function(AIRTIME){
         widgetHeight = viewport.height - 185;
         width = Math.floor(viewport.width - 80);
 
-        var libTableHeight = widgetHeight - 130;
+        var libTableHeight = widgetHeight - 175;
 
         if (!$pl.is(':hidden')) {
             $lib.height(widgetHeight)
                 .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
-                .end()
+                	.css("max-height", libTableHeight)
+                	.end()
                 .width(Math.floor(width * 0.55));
 
             $pl.height(widgetHeight)
@@ -1465,8 +1465,8 @@ var AIRTIME = (function(AIRTIME){
         } else {
             $lib.height(widgetHeight)
                 .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
-                .end()
+                	.css("max-height", libTableHeight)
+                	.end()
                 .width(width + 40);
         }
 	}
@@ -1475,8 +1475,6 @@ var AIRTIME = (function(AIRTIME){
 		$lib = $("#library_content");
 		$pl = $("#side_playlist");
 
-		
-		
 		setWidgetSize();
 		
 		AIRTIME.library.libraryInit();

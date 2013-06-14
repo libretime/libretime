@@ -116,12 +116,19 @@ function dayClick(date, allDay, jsEvent, view){
             // duration in milisec
             var duration = (duration_h * 60 * 60 * 1000) + (duration_m * 60 * 1000);
 
-            var startTime_string, startTime
+            var startTime_string;
+            var startTime = 0;
             // get start time value on the form
             if(view.name === "month") {
                 startTime_string = $("#add_show_start_time").val();
                 var startTime_info = startTime_string.split(':');
-                startTime = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) + (parseInt(startTime_info[1], 10) * 60 * 1000);
+                if (startTime_info.length == 2) {
+                    var start_time_temp = (parseInt(startTime_info[0],10) * 60 * 60 * 1000) 
+                        + (parseInt(startTime_info[1], 10) * 60 * 1000);
+                    if (!isNaN(start_time_temp)) {
+                        startTime = start_time_temp;
+                    }
+                }
             }else{
                 // if in day or week view, selected has all the time info as well
                 // so we don't ahve to calculate it explicitly
@@ -210,8 +217,9 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    
-	$(element).attr("id", "fc-show-instance-"+event.id);
+    $(element).attr("id", "fc-show-instance-"+event.id);
+    $(element).attr("data-show-id", event.showId);
+    $(element).attr("data-show-linked", event.linked);
     $(element).data("event", event);
 
     //only put progress bar on shows that aren't being recorded.

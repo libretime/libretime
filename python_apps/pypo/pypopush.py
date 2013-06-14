@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from datetime import timedelta
+from configobj import ConfigObj
 
 import sys
 import time
@@ -21,7 +22,7 @@ from threading import Thread
 
 from api_clients import api_client
 from std_err_override import LogWriter
-from configobj import ConfigObj
+from timeout import ls_timeout
 
 
 # configure logging
@@ -114,44 +115,6 @@ class PypoPush(Thread):
 
         return present, future
 
-    def get_current_stream_id_from_liquidsoap(self):
-        response = "-1"
-        try:
-            self.telnet_lock.acquire()
-            tn = telnetlib.Telnet(self.config['ls_host'], self.config['ls_port'])
-
-            msg = 'dynamic_source.get_id\n'
-            tn.write(msg)
-            response = tn.read_until("\r\n").strip(" \r\n")
-            tn.write('exit\n')
-            tn.read_all()
-        except Exception, e:
-            self.logger.error("Error connecting to Liquidsoap: %s", e)
-            response = []
-        finally:
-            self.telnet_lock.release()
-
-        return response
-
-    #def is_correct_current_item(self, media_item, liquidsoap_queue_approx, liquidsoap_stream_id):
-        #correct = False
-        #if media_item is None:
-            #correct = (len(liquidsoap_queue_approx) == 0 and liquidsoap_stream_id == "-1")
-        #else:
-            #if is_file(media_item):
-                #if len(liquidsoap_queue_approx) == 0:
-                    #correct = False
-                #else:
-                    #correct = liquidsoap_queue_approx[0]['start'] == media_item['start'] and \
-                            #liquidsoap_queue_approx[0]['row_id'] == media_item['row_id'] and \
-                            #liquidsoap_queue_approx[0]['end'] == media_item['end'] and \
-                            #liquidsoap_queue_approx[0]['replay_gain'] == media_item['replay_gain']
-            #elif is_stream(media_item):
-                #correct = liquidsoap_stream_id == str(media_item['row_id'])
-
-        #self.logger.debug("Is current item correct?: %s", str(correct))
-        #return correct
-
     def date_interval_to_seconds(self, interval):
         """
         Convert timedelta object into int representing the number of seconds. If
@@ -162,6 +125,7 @@ class PypoPush(Thread):
 
         return seconds
 
+    @ls_timeout
     def stop_web_stream_all(self):
         try:
             self.telnet_lock.acquire()

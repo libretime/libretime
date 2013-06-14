@@ -34,6 +34,7 @@ from subprocess import Popen, PIPE
 
 from api_clients import api_client
 from std_err_override import LogWriter
+from timeout import ls_timeout
 
 import pure
 
@@ -55,6 +56,8 @@ class PypoFetch(Thread):
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, pypo_liquidsoap, 
             config):
         Thread.__init__(self)
+        #Hacky...
+        PypoFetch.ref = self
 
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
@@ -198,15 +201,23 @@ class PypoFetch(Thread):
         commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
         self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
 
+        self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
 
     def restart_liquidsoap(self):
-        self.logger.info("Restarting Liquidsoap")
-        subprocess.call(['/etc/init.d/airtime-liquidsoap', 'restart'])
+        self.telnet_lock.acquire(False)
 
-        #Wait here and poll Liquidsoap until it has started up
-        self.logger.info("Waiting for Liquidsoap to start")
-        self.pypo_liquidsoap.liquidsoap_startup_test()
+        try:
+            self.logger.info("Restarting Liquidsoap")
+            subprocess.call(['/etc/init.d/airtime-liquidsoap', 'restart'])
+
+            #Wait here and poll Liquidsoap until it has started up
+            self.logger.info("Waiting for Liquidsoap to start")
+            self.pypo_liquidsoap.liquidsoap_startup_test()
+        except Exception, e:
+            self.logger.error(e)
+        finally:
+            self.telnet_lock.release()
 
     """
     TODO: This function needs to be way shorter, and refactored :/ - MK
@@ -306,6 +317,7 @@ class PypoFetch(Thread):
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
 
+    @ls_timeout
     def update_liquidsoap_connection_status(self):
         """
         updates the status of Liquidsoap connection to the streaming server
@@ -332,6 +344,7 @@ class PypoFetch(Thread):
             if(status == "true"):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, 
                         str(fake_time))
+
 
     """
     Process the schedule

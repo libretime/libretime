@@ -391,7 +391,9 @@ var AIRTIME = (function(AIRTIME) {
         
         $libTable = $libContent.find("table");
         
-        var tableHeight = $libContent.height() - 130;
+        function getTableHeight() {
+        	return $libContent.height() - 175;
+        }
         
         function setColumnFilter(oTable){
             // TODO : remove this dirty hack once js is refactored
@@ -454,6 +456,13 @@ var AIRTIME = (function(AIRTIME) {
             } else {
                 $el.hide();
             }
+            
+            //resize to prevent double scroll bars.
+            var $fs = $el.parents("fieldset"),
+            	tableHeight = getTableHeight(),
+            	searchHeight = $fs.height();
+            
+            $libContent.find(".dataTables_scrolling").css("max-height", tableHeight - searchHeight);
         }
         
         oTable = $libTable.dataTable( {
@@ -784,10 +793,14 @@ var AIRTIME = (function(AIRTIME) {
 
         $libContent.on("click", "legend", function(){
             $simpleSearch = $libContent.find("#library_display_filter label");
-            var $fs = $(this).parents("fieldset");
+            var $fs = $(this).parents("fieldset"),
+            	searchHeight,
+            	tableHeight = getTableHeight(),
+            	height;
 
             if ($fs.hasClass("closed")) {
                 $fs.removeClass("closed");
+                searchHeight = $fs.height();
 
                 //keep value of simple search for when user switches back to it
                 simpleSearchText = $simpleSearch.find('input').val();
@@ -796,6 +809,10 @@ var AIRTIME = (function(AIRTIME) {
                 $(".dataTables_filter input").val("").keyup();
 
                 $simpleSearch.addClass("sp-invisible");
+                
+                //resize the library table to avoid a double scroll bar. CC-4504
+                height = tableHeight - searchHeight;
+                $libContent.find(".dataTables_scrolling").css("max-height", height);
             }
             else {
                 // clear the advanced search fields
@@ -817,9 +834,13 @@ var AIRTIME = (function(AIRTIME) {
 
                 $simpleSearch.removeClass("sp-invisible");
                 $fs.addClass("closed");
+                
+              //resize the library table to avoid a double scroll bar. CC-4504
+                $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
             }
         });
        
+        var tableHeight = getTableHeight();
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         AIRTIME.library.setupLibraryToolbar(oTable);
@@ -1069,13 +1090,13 @@ function buildEditMetadataDialog (json){
         width: 460,
         height: 660,
         modal: true,
-        close: closeDialog
+        close: closeDialogLibrary
     });
 
     dialog.dialog('open');
 }
 
-function closeDialog(event, ui) {
+function closeDialogLibrary(event, ui) {
     $(this).remove();
 }
 

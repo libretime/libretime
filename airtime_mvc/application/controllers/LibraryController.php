@@ -426,6 +426,9 @@ class LibraryController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
+
+
+
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::RecallById($file_id);
 
@@ -438,7 +441,15 @@ class LibraryController extends Zend_Controller_Action
         $form->populate($file->getDbColMetadata());
 
         if ($request->isPost()) {
-            if ($form->isValid($request->getPost())) {
+
+            $js = $this->_getParam('data');
+            $serialized = array();
+            //need to convert from serialized jQuery array.
+            foreach ($js as $j) {
+                $serialized[$j["name"]] = $j["value"];
+            }
+
+            if ($form->isValid($serialized)) {
 
                 $formValues = $this->_getParam('data', null);
                 $formdata = array();

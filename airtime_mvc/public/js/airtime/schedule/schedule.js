@@ -12,8 +12,8 @@ var AIRTIME = (function(AIRTIME){
 
 var serverTimezoneOffset = 0;
 
-function closeDialog(event, ui) {
-    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
+function closeDialogCalendar(event, ui) {
+    //$("#schedule_calendar").fullCalendar( 'refetchEvents' );
     $(this).remove();
 }
 
@@ -161,7 +161,7 @@ function buildScheduleDialog (json, instance_id) {
         resizable: false,
         draggable: true,
         modal: true,
-        close: closeDialog,
+        close: closeDialogCalendar,
         buttons: [
             {
                 text: $.i18n._("Ok"),
@@ -186,10 +186,10 @@ function buildScheduleDialog (json, instance_id) {
     
     //set max heights of datatables.
     dialog.find(".lib-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 155);
+        .css("max-height", height - 90 - 200);
     
     dialog.find(".sb-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 60);
+        .css("max-height", height - 90 - 65);
     
     dialog.dialog('open');
 }
@@ -214,7 +214,7 @@ function buildContentDialog (json){
         width: width,
         height: height,
         modal: true,
-        close: closeDialog,
+        close: closeDialogCalendar,
         buttons: [
             {
                 text: $.i18n._("Ok"),

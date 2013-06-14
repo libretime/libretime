@@ -9,6 +9,7 @@
 """
 import telnetlib
 from threading import Lock
+from timeout import ls_timeout
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that 
@@ -48,6 +49,7 @@ class TelnetLiquidsoap:
         else:
             raise Exception("Unexpected list length returned: %s" % output)
 
+    @ls_timeout
     def queue_clear_all(self):
         with self.telnet_lock:
             tn = self.__connect()
@@ -60,6 +62,7 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
+    @ls_timeout
     def queue_remove(self, queue_id):
         with self.telnet_lock:
             tn = self.__connect()
@@ -71,6 +74,7 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
+    @ls_timeout
     def queue_push(self, queue_id, media_item):
         with self.telnet_lock:
             if not self.__is_empty(queue_id):
@@ -90,6 +94,7 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
+    @ls_timeout
     def stop_web_stream_buffer(self):
         with self.telnet_lock:
             tn = self.__connect()
@@ -105,6 +110,7 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
+    @ls_timeout
     def stop_web_stream_output(self):
         with self.telnet_lock:
             tn = self.__connect()
@@ -116,6 +122,8 @@ class TelnetLiquidsoap:
             tn.write("exit\n")
             self.logger.debug(tn.read_all())
 
+
+    @ls_timeout
     def start_web_stream(self, media_item):
         with self.telnet_lock:
             tn = self.__connect()
@@ -133,6 +141,7 @@ class TelnetLiquidsoap:
 
             self.current_prebuffering_stream_id = None
         
+    @ls_timeout
     def start_web_stream_buffer(self, media_item):
         with self.telnet_lock:
             tn = self.__connect()
@@ -150,6 +159,7 @@ class TelnetLiquidsoap:
 
             self.current_prebuffering_stream_id = media_item['row_id']
 
+    @ls_timeout
     def get_current_stream_id(self):
         with self.telnet_lock:
             tn = self.__connect()
@@ -164,6 +174,7 @@ class TelnetLiquidsoap:
 
             return stream_id
 
+    @ls_timeout
     def disconnect_source(self, sourcename):
         self.logger.debug('Disconnecting source: %s', sourcename)
         command = ""
@@ -179,6 +190,7 @@ class TelnetLiquidsoap:
             tn.write('exit\n')
             tn.read_all()
 
+    @ls_timeout
     def telnet_send(self, commands):
         with self.telnet_lock:
             tn = self.__connect()
@@ -189,6 +201,7 @@ class TelnetLiquidsoap:
             tn.write('exit\n')
             tn.read_all()
 
+    @ls_timeout
     def switch_source(self, sourcename, status):
         self.logger.debug('Switching source: %s to "%s" status', sourcename, 
                 status)
@@ -207,6 +220,7 @@ class TelnetLiquidsoap:
 
         self.telnet_send([command])
 
+    @ls_timeout
     def liquidsoap_get_info(self):
         self.logger.debug("Checking to see if Liquidsoap is running")
         response = ""
@@ -219,6 +233,7 @@ class TelnetLiquidsoap:
 
         return response
 
+    @ls_timeout
     def update_liquidsoap_station_name(self, station_name):
         with self.telnet_lock:
             tn = self.__connect()
@@ -229,6 +244,7 @@ class TelnetLiquidsoap:
             tn.write('exit\n')
             tn.read_all()
 
+    @ls_timeout
     def get_liquidsoap_connection_status(self, current_time):
         output = None
         with self.telnet_lock:
@@ -249,6 +265,7 @@ class TelnetLiquidsoap:
 
         return output
 
+    @ls_timeout
     def update_liquidsoap_stream_format(self, stream_format):
         with self.telnet_lock:
             tn = self.__connect()
@@ -259,6 +276,7 @@ class TelnetLiquidsoap:
             tn.write('exit\n')
             tn.read_all()
 
+    @ls_timeout
     def update_liquidsoap_transition_fade(self, fade):
         with self.telnet_lock:
             tn = self.__connect()
@@ -278,6 +296,7 @@ class DummyTelnetLiquidsoap:
         for i in range(4):
             self.liquidsoap_mock_queues["s"+str(i)] = []
 
+    @ls_timeout
     def queue_push(self, queue_id, media_item):
         try:
             self.telnet_lock.acquire()
@@ -293,6 +312,7 @@ class DummyTelnetLiquidsoap:
         finally:
             self.telnet_lock.release()
 
+    @ls_timeout
     def queue_remove(self, queue_id):
         try:
             self.telnet_lock.acquire()

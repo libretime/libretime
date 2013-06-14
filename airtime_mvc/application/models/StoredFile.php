@@ -778,7 +778,8 @@ SQL;
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
-            $len_formatter = new LengthFormatter($row['length']);
+            $len_formatter = new LengthFormatter(
+                self::getRealClipLength($row["cuein"], $row["cueout"]));
             $row['length'] = $len_formatter->format();
 
             $cuein_formatter = new LengthFormatter($row["cuein"]);
@@ -1347,7 +1348,7 @@ SQL;
             Application_Common_Database::EXECUTE);
     }
 
-    public function getRealClipLength($p_cuein, $p_cueout) {
+    public static function getRealClipLength($p_cuein, $p_cueout) {
         $sql = "SELECT :cueout::INTERVAL - :cuein::INTERVAL";
 
         return Application_Common_Database::prepareAndExecute($sql, array(

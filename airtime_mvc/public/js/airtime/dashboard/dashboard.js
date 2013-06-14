@@ -260,10 +260,13 @@ function parseItems(obj){
         calculateTimeToNextSong();
     }
     
+    currentShow = new Array();
     if (obj.currentShow.length > 0) {
         calcAdditionalShowData(obj.currentShow);
         currentShow = obj.currentShow;
     }
+
+    nextShow = new Array();
     if (obj.nextShow.length > 0) {
         calcAdditionalShowData(obj.nextShow);
         nextShow = obj.nextShow;

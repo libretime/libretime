@@ -1,8 +1,13 @@
 def notify(m)
-  #current_media_id := string_of(m['schedule_table_id'])
   command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
+end
+
+def notify_queue(m)
+  f = !dynamic_metadata_callback
+  ignore(f(m))
+  notify(m)
 end
 
 def notify_stream(m)
@@ -18,12 +23,19 @@ end
 # A function applied to each metadata chunk
 def append_title(m) =  
   log("Using stream_format #{!stream_metadata_type}")
-  if !stream_metadata_type == 1 then
-    [("title", "#{!show_name} - #{m['artist']} - #{m['title']}")]
-  elsif !stream_metadata_type == 2 then
-    [("title", "#{!station_name} - #{!show_name}")]
+
+  if list.mem_assoc("mapped", m) then
+    #protection against applying this function twice. It shouldn't be happening
+    #and bug file with Liquidsoap.
+    m
   else
-    [("title", "#{m['artist']} - #{m['title']}")]
+      if !stream_metadata_type == 1 then
+        [("title", "#{!show_name} - #{m['artist']} - #{m['title']}"), ("mapped", "true")]
+      elsif !stream_metadata_type == 2 then
+        [("title", "#{!station_name} - #{!show_name}"), ("mapped", "true")]
+      else
+        [("title", "#{m['artist']} - #{m['title']}"), ("mapped", "true")]
+      end
   end
 end
 

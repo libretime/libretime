@@ -523,6 +523,15 @@ class ApiController extends Zend_Controller_Action
                 }
                 //Updating a metadata change.
                 else {
+                    //CC-5207 - restart media-monitor causes it to reevaluate all
+                    //files in watched directories, and reset their cue-in/cue-out
+                    //values. Since media-monitor has nothing to do with cue points
+                    //let's unset it here. Note that on mode == "create", we still
+                    //want media-monitor sending info about cue_out which by default
+                    //will be equal to length of track until silan can take over.
+                    unset($md['MDATA_KEY_CUE_IN']);
+                    unset($md['MDATA_KEY_CUE_OUT']);
+
                     $file->setMetadata($md);
                 }
             } elseif ($mode == "moved") {

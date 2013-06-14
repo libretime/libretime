@@ -365,6 +365,16 @@ def airtime_221_tar():
     do_run('tar xfz airtime-2.2.1.tar.gz')
     do_sudo('cd /home/martin/airtime-2.2.1/install_full/ubuntu && ./airtime-full-install')
 
+def airtime_230_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.3.0/airtime-2.3.0.tar.gz')
+    do_run('tar xfz airtime-2.3.0.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.3.0/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_231_tar():
+    do_run('wget http://downloads.sourceforge.net/project/airtime/2.3.1/airtime-2.3.1-ga.tar.gz')
+    do_run('tar xfz airtime-2.3.1-ga.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.3.1/install_full/ubuntu && ./airtime-full-install')
+
 
 def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)

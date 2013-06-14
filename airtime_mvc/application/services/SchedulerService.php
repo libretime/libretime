@@ -148,6 +148,24 @@ class Application_Service_SchedulerService
         return $dt;
     }
 
+    private static function findTimeDifference($p_startDT, $p_seconds)
+    {
+    	$startEpoch = $p_startDT->format("U.u");
+    	
+    	//add two float numbers to 6 subsecond precision
+    	//DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+    	$newEpoch = bcsub($startEpoch , (string) $p_seconds, 6);
+    
+    	$dt = DateTime::createFromFormat("U.u", $newEpoch, new DateTimeZone("UTC"));
+    
+    	if ($dt === false) {
+    		//PHP 5.3.2 problem
+    		$dt = DateTime::createFromFormat("U", intval($newEpoch), new DateTimeZone("UTC"));
+    	}
+    
+    	return $dt;
+    }
+
     public static function fillNewLinkedInstances($ccShow)
     {
         /* First check if any linked instances have content
@@ -224,7 +242,8 @@ class Application_Service_SchedulerService
                             "{$id}, ".
                             "{$item["position"]})";
 
-                        $nextStartDT = $endTimeDT;
+                        $nextStartDT = self::findTimeDifference($endTimeDT,
+                            Application_Model_Preference::GetDefaultCrossfadeDuration());
                     } //foreach show item
                 }
             } //foreach linked instance
@@ -281,7 +300,8 @@ class Application_Service_SchedulerService
                         ->setDbPosition($item->getDbPosition())
                         ->save();
 
-                    $nextStartDT = $endTimeDT;
+                    $nextStartDT = self::findTimeDifference($endTimeDT,
+                        Application_Model_Preference::GetDefaultCrossfadeDuration());
                 } //foreach show item
 
                 $ccShowInstance

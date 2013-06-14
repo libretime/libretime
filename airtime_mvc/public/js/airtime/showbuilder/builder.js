@@ -51,15 +51,23 @@ var AIRTIME = (function(AIRTIME){
 
         var lastElem = json.schedule[json.schedule.length-1];
         var $elem = $("#fc-show-instance-"+instance_id);
-        $elem.find(".small-icon").remove();
+
+        //if the show is linked, then replace $elem to reference all linked
+        //instances
+        if ($elem.data("show-linked") == "1") {
+            var show_id = $elem.data("show-id");
+            $elem = $('*[data-show-id="'+show_id+'"]');
+        }
+
+        $elem.find(".show-empty, .show-partial-filled").remove();
         if (json.schedule[1].empty) {
             $elem
-                .find(".fc-event-title")
-                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+                .find(".fc-event-inner")
+                .append('<span id="'+instance_id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
         } else if (lastElem["fRuntime"][0] == "-") {
             $elem
-                .find(".fc-event-title")
-                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+                .find(".fc-event-inner")
+                .append('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
         }
     }
     
