@@ -115,25 +115,6 @@ class PypoPush(Thread):
 
         return present, future
 
-    #def is_correct_current_item(self, media_item, liquidsoap_queue_approx, liquidsoap_stream_id):
-        #correct = False
-        #if media_item is None:
-            #correct = (len(liquidsoap_queue_approx) == 0 and liquidsoap_stream_id == "-1")
-        #else:
-            #if is_file(media_item):
-                #if len(liquidsoap_queue_approx) == 0:
-                    #correct = False
-                #else:
-                    #correct = liquidsoap_queue_approx[0]['start'] == media_item['start'] and \
-                            #liquidsoap_queue_approx[0]['row_id'] == media_item['row_id'] and \
-                            #liquidsoap_queue_approx[0]['end'] == media_item['end'] and \
-                            #liquidsoap_queue_approx[0]['replay_gain'] == media_item['replay_gain']
-            #elif is_stream(media_item):
-                #correct = liquidsoap_stream_id == str(media_item['row_id'])
-
-        #self.logger.debug("Is current item correct?: %s", str(correct))
-        #return correct
-
     def date_interval_to_seconds(self, interval):
         """
         Convert timedelta object into int representing the number of seconds. If
