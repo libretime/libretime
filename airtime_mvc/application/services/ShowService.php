@@ -179,9 +179,6 @@ class Application_Service_ShowService
 
         if (is_null($this->ccShow)) {
             $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
-            if (count($ccShowDays) > 0) {
-                $this->ccShow = $ccShowDays[0]->getCcShow();
-            }
         } else {
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
@@ -190,7 +187,18 @@ class Application_Service_ShowService
             $populateUntil = $end;
         }
 
+        /* In case the user is moving forward in the calendar and there are
+         * linked shows in the schedule we need to keep track of each cc_show
+         * so we know which shows need to be filled with content
+         */ 
+        $ccShows = array();
+
         foreach ($ccShowDays as $day) {
+            $this->ccShow = $day->getCcShow();
+            if (!isset($ccShows[$day->getDbShowId()])) {
+                $ccShows[$day->getDbShowId()] = $day->getccShow();
+            }
+
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
                     $this->createNonRepeatingInstance($day, $populateUntil);
@@ -212,9 +220,10 @@ class Application_Service_ShowService
             }
         }
 
-        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances) &&
-            $this->ccShow->isLinked()) {
-            Application_Service_SchedulerService::fillNewLinkedInstances($this->ccShow);
+        foreach ($ccShows as $ccShow) {
+            if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
+                Application_Service_SchedulerService::fillNewLinkedInstances($ccShow);
+            }
         }
 
         if (isset($this->linkedShowContent)) {
