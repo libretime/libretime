@@ -75,10 +75,10 @@ class Application_Service_CalendarService
             }
         } else {
             //Show content can be modified from the calendar if:
-            // the show has not ended,
+            // the show has not started,
             // the user is admin or hosting the show,
             // the show is not recorded
-            if ($now < $end && ($isAdminOrPM || $isHostOfShow) &&
+            if ($now < $start && ($isAdminOrPM || $isHostOfShow) &&
                 !$this->ccShowInstance->isRecorded() ) {
 
                 $menu["schedule"] = array(
