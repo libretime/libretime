@@ -8,7 +8,7 @@ Common Non-linked Code
    - Web site: https://github.com/torvalds/linux
    - License: GPLv2
 
- * RabbitMQ (works with version 1.7.2 and above)
+ * RabbitMQ
    - What is it: Interprocess Message Passing with Queuing
    - Web site: http://www.rabbitmq.com/
    - License: Mozilla Public License (http://www.rabbitmq.com/mpl.html)
@@ -63,11 +63,11 @@ Non-linked code:
    - Web site: http://httpd.apache.org/
    - License: Apache 2.0. See http://httpd.apache.org/docs/2.2/license.html
 
- * PostgreSQL 8.4 
+ * PostgreSQL 9.1 
    - Web site: http://www.postgresql.org/
    - License: The PostgreSQL License. See http://www.postgresql.org/about/licence
 
- * PHP 5.3 
+ * PHP 5.3
    - Web site: http://www.php.net/
    - License: The PHP License. See http://www.php.net/license/3_01.txt
 
@@ -137,7 +137,7 @@ Linked code:
    - License: MIT
 
 Non-linked code:
- * Python 2.6
+ * Python 2.7
    - Web site: http://www.python.org/
    - License: PSF License. See http://docs.python.org/license.html
 
@@ -158,11 +158,11 @@ Linked code:
    - Compatible with GPLv3? Yes. 
 
 Non-linked code:
- * Python 2.6
+ * Python 2.7
    - Web site: http://www.python.org/
    - License: PSF License. See http://docs.python.org/license.html
 
- * ecasound 2.7.2
+ * ecasound 2.8.1
    - What is it: Records audio from line-in
    - Web site: http://www.eca.cx/ecasound/
    - License: GPLv2
@@ -177,10 +177,10 @@ Linked code:
    - Compatible with GPLv3? Yes. 
 
 Non-linked code:
- * Python 2.6
+ * Python 2.7
    - Web site: http://www.python.org/
    - License: PSF License. See http://docs.python.org/license.html
 
- * Liquidsoap 1.0.1
+ * Liquidsoap 1.1.1
    - Web site: http://savonet.sourceforge.net/
    - License: GPLv2
