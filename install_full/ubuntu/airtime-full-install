@@ -131,12 +131,18 @@ else
         echo "Apache config for Airtime already exists..."
     fi
 
+    if [ ! -d /usr/share/airtime/public ]; then
+        mkdir -p /usr/share/airtime/public/
+    else
+        echo "Airtime web root already exists..."
+    fi
+
     # PHP Config File for Apache
     echo "----------------------------------------------------"
     echo "2.2 PHP Config File for Apache"
     echo "----------------------------------------------------"
     if [ ! -f /etc/php5/apache2/airtime.ini ]; then
-        cp $SCRIPTPATH/../php5/airtime.ini /etc/php5/apache2/airtime.ini
+        cp $SCRIPTPATH/../php5/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
     else
         echo "Airtime PHP config for Apache already exists..."
     fi
