@@ -154,8 +154,6 @@ class Application_Model_Playlist implements Application_Model_LibraryEditable
      */
     public function getContents($filterFiles=false)
     {
-        Logging::info("Getting contents for playlist {$this->id}");
-
         $sql = <<<SQL
   SELECT *
    FROM (
@@ -411,26 +409,44 @@ SQL;
                 || $obj instanceof CcWebstream ||
                 $obj instanceof CcBlock) {
 
-                $entry               = $this->plItem;
-                $entry["id"]         = $obj->getDbId();
-                $entry["pos"]        = $pos;
+                $entry = $this->plItem;
+                $entry["id"] = $obj->getDbId();
+                $entry["pos"] = $pos;
                 $entry["cliplength"] = $obj->getDbLength();
+                
                 if ($obj instanceof CcFiles && $obj) {
-                    $entry["cuein"]      = $obj->getDbCuein();
-                    $entry["cueout"]     = $obj->getDbCueout();
+                	
+                    $entry["cuein"] = isset($p_item['cuein']) ? 
+                    		$p_item['cuein'] : $obj->getDbCuein();
+                    
+                    $entry["cueout"] = isset($p_item['cueout']) ? 
+                    		$p_item['cueout'] : $obj->getDbCueout();
 
-                    $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
-                    $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
-                    $entry["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
-                } elseif ($obj instanceof CcWebstream && $obj) {
+                    $cue_in = isset($p_item['cueInSec']) ? 
+                    		$p_item['cueInSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cuein']);
+                    
+                    $cue_out = isset($p_item['cueOutSec']) ? 
+                    		$p_item['cueOutSec'] : Application_Common_DateHelper::calculateLengthInSeconds($entry['cueout']);
+                    
+                    $entry["cliplength"] = isset($p_item['length']) ? 
+                    		$p_item['length'] : Application_Common_DateHelper::secondsToPlaylistTime($cue_out-$cue_in);
+                } 
+                elseif ($obj instanceof CcWebstream && $obj) {
                     $entry["cuein"] = "00:00:00";
                     $entry["cueout"] = $entry["cliplength"];
                 }
-                $entry["ftype"]      = $objType;
+                $entry["ftype"] = $objType;
+                
+                $entry["fadein"] = isset($p_item['fadein']) ?
+                	$p_item['fadein'] : $entry["fadein"];
+                
+                $entry["fadeout"] = isset($p_item['fadeout']) ?
+                	$p_item['fadeout'] : $entry["fadeout"];
             }
 
             return $entry;
-        } else {
+        } 
+        else {
             throw new Exception("trying to add a object that does not exist.");
         }
     }
@@ -451,11 +467,10 @@ SQL;
         try {
 
             if (is_numeric($p_afterItem)) {
-                Logging::info("Finding playlist content item {$p_afterItem}");
-
+               
                 $afterItem = CcPlaylistcontentsQuery::create()->findPK($p_afterItem);
                 $index = $afterItem->getDbPosition();
-                Logging::info("index is {$index}");
+
                 $pos = ($addType == 'after') ? $index + 1 : $index;
 
                 $contentsToUpdate = CcPlaylistcontentsQuery::create()
@@ -488,9 +503,6 @@ SQL;
 
             }
 
-            Logging::info("Adding to playlist");
-            Logging::info("at position {$pos}");
-
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
 
@@ -500,8 +512,6 @@ SQL;
                 $db_file->setDbIsPlaylist(true)->save($this->con);
                 
                 $pos = $pos + 1;
-                Logging::info("Adding $ac[1] $ac[0]");
-
             }
 
             //reset the positions of the remaining items.
@@ -673,6 +683,10 @@ SQL;
     {
     	$this->con->beginTransaction();
     	
+    	if (!isset($offset)) {
+    		$offset = Application_Model_Preference::GetDefaultCrossfadeDuration();	
+    	}
+    	
     	try {
     		if (isset($id1)) {
     			$this->changeFadeInfo($id1, null, $fadeOut);
@@ -729,7 +743,6 @@ SQL;
                 
                 if (!is_null($offset)) {
                 	$row->setDbTrackOffset($offset);
-                	Logging::info("Setting offset {$offset} on item {$id}");
                 	$row->save($this->con);
                 }
             }
@@ -1071,8 +1084,7 @@ SQL;
         $sql .= "END WHERE position IN ($currentPos) and playlist_id=:p1";
         
         Application_Common_Database::prepareAndExecute($sql, array("p1"=>$this->id));
-        $result['result'] = 0;
-        return $result;
+        return array('result' => 0);
     }
 
     public static function getAllPlaylistFiles()

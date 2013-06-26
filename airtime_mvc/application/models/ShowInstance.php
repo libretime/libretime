@@ -352,10 +352,10 @@ SQL;
         );
 
         //only need to check overlap if show increased in size.
-        if (strtotime($new_ends) > strtotime($ends)) {
+        if (strtotime($now_ends) > strtotime($ends)) {
 
             $utcStartDateTime = new DateTime($ends, new DateTimeZone("UTC"));
-            $utcEndDateTime = new DateTime($new_ends, new DateTimeZone("UTC"));
+            $utcEndDateTime = new DateTime($now_ends, new DateTimeZone("UTC"));
 
             $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
 
@@ -381,7 +381,7 @@ SQL;
 
         }
 
-        $this->setShowEnd($new_ends);
+        $this->setShowEnd($now_ends);
         Application_Model_RabbitMq::PushSchedule();
     }
 

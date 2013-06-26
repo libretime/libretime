@@ -40,8 +40,6 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.updateCalendarStatusIcon = function(json) {
-
-
         //make sure we are only executing this code on the calendar view, not
         //the Now Playing view.
         if (window.location.pathname.toLowerCase().indexOf("schedule") < 0) {
@@ -52,16 +50,24 @@ var AIRTIME = (function(AIRTIME){
         var instance_id = json.schedule[0].instance;
 
         var lastElem = json.schedule[json.schedule.length-1];
-        var $elem = $($(".fc-event-inner.fc-event-skin .fc-event-title#"+instance_id).parent());
-        $elem.find(".small-icon").remove();
+        var $elem = $("#fc-show-instance-"+instance_id);
+
+        //if the show is linked, then replace $elem to reference all linked
+        //instances
+        if ($elem.data("show-linked") == "1") {
+            var show_id = $elem.data("show-id");
+            $elem = $('*[data-show-id="'+show_id+'"]');
+        }
+
+        $elem.find(".show-empty, .show-partial-filled").remove();
         if (json.schedule[1].empty) {
             $elem
-                .find(".fc-event-title")
-                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
+                .find(".fc-event-inner")
+                .append('<span id="'+instance_id+'" title="'+$.i18n._("Show is empty")+'" class="small-icon show-empty"></span>');
         } else if (lastElem["fRuntime"][0] == "-") {
             $elem
-                .find(".fc-event-title")
-                .after('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
+                .find(".fc-event-inner")
+                .append('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
         }
     }
     
@@ -479,7 +485,7 @@ var AIRTIME = (function(AIRTIME){
                     $image,
                     $div,
                     headerIcon;
-                
+
                 fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
                     $node = $(nRow.children[iNodeIndex]);
                     $node.html(sRowContent);
@@ -546,7 +552,7 @@ var AIRTIME = (function(AIRTIME){
                     cl = 'sb-footer';
                     
                     //check the show's content status.
-                    if (aData.runtime > 0) {
+                    if (aData.runtime >= 0) {
                         $node.html('<span class="ui-icon ui-icon-check"></span>');
                         cl = cl + ' ui-state-highlight';
                     }
@@ -614,7 +620,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     $node = $(nRow.children[0]);
-                    if (aData.allowed === true && aData.scheduled >= 1) {
+                    if (aData.allowed === true && aData.scheduled >= 1 && aData.linked_allowed) {
                         $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
                     }
                     else {
@@ -835,7 +841,7 @@ var AIRTIME = (function(AIRTIME){
         });
         
         $sbTable.find("tbody").on("click", "input:checkbox", function(ev) {
-            
+          
             var $cb = $(this),
                 $tr = $cb.parents("tr"),
                 $prev;

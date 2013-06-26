@@ -14,11 +14,36 @@
 .btn-small {
 	/*line-height: 20px;*/
 }
+
+.playlist-time-scale {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  height: 30px;
+  overflow: hidden;
+}
+
+.playlist-time-scale canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30px;
+}
+
+.playlist-time-scale div {
+  position: absolute;
+}
+
 .playlist-tracks {
-	margin: 8px 0;
+	position: relative;
+	top: 35px;
+	margin: 2px 0;
 }
 .playlist-controls {
-    margin: 0 0 16px 0;
+    margin: 40px 0 16px 0;
 }
 
 .channel-wrapper {
@@ -30,6 +55,8 @@
   margin: 0;
   padding: 0;
   background: #6e6e6e;
+  /*border-top: 1px solid #6e6e6e;*/
+  /*border-bottom: 1px solid #6e6e6e;*/
 }
 
 .state-select {
@@ -41,6 +68,12 @@
   overflow-y: hidden;
 }
 
+.playlist-tracks > .error {
+  height: 80px;
+  width: 300px;
+  background-color: rgba(255,0,0,0.5);
+}
+
 .playlist-fade {
   position: absolute;
   background-color: rgba(0,0,0,0.1);
@@ -50,7 +83,7 @@
 	margin: 12px 0 16px 0;
 }
 .set-fade {
-	margin: 0 0 0 30px;
+	margin: 40px 0 0 30px;
 }
 .set-cue input[type="text"] {
 	vertical-align: middle;

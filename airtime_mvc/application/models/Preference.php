@@ -38,9 +38,11 @@ class Application_Model_Preference
                 $paramMap[':id'] = $userId;
             }
 
+            Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
+
             $result = Application_Common_Database::prepareAndExecute($sql, 
                     $paramMap, 
-                    'column', 
+                    Application_Common_Database::COLUMN,
                     PDO::FETCH_ASSOC, 
                     $con);
 

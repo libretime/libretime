@@ -192,7 +192,8 @@ function setAddShowEvents() {
             $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: Shows cannot be re-linked")+"</li></ul>");
         }
     });
-    
+
+    form.find("#add_show_linked-label").before("<span class='show_linking_help_icon'></span>");
 
     form.find("#add_show_record").click(function(){
         $(this).blur();
@@ -315,7 +316,26 @@ function setAddShowEvents() {
             at: "right center"
         }
     });
-    
+    form.find(".show_linking_help_icon").qtip({
+        content: {
+            text: $.i18n._("By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
     function endDateVisibility(){
         if(form.find("#add_show_no_end").is(':checked')){
             form.find("#add_show_end_date").hide();

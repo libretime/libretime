@@ -57,6 +57,14 @@ class CcFiles extends BaseCcFiles {
         return $this;
     }
 
+    public function setDbTrackNumber($v)
+    {
+        $max = pow(2, 31)-1;
+        $v = ($v > $max) ? $max : $v;
+
+        return parent::setDbTrackNumber($v);
+    }
+
     // returns true if the file exists and is not hidden
     public function visible() {
         return $this->getDbFileExists() && !$this->getDbHidden();

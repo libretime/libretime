@@ -36,6 +36,7 @@
 
 <script id="tmpl-pl-cues" type="text/template">
 <div class="waveform-cues">
+  <div class="playlist-time-scale"></div>
   <div class="playlist-tracks"></div>
   <div class="playlist-controls">
 	<a class="btn btn-small btn_play"><i class="icon-play icon-white"></i><?php echo _("Play"); ?></a>
@@ -61,10 +62,12 @@
 
 <script id="tmpl-pl-fades" type="text/template">
 <div class="waveform-fades">
+  <div class="playlist-time-scale"></div>
   <div class="playlist-tracks"></div>
   <div class="playlist-controls left-floated">
     <a class="btn btn-small btn_play"><i class="icon-play icon-white"></i><?php echo _("Play"); ?></a>
     <a class="btn btn-small btn_stop"><i class="icon-stop icon-white"></i><?php echo _("Stop"); ?></a>
+	<label class="audio audio_pos">00:00:00.0</label>
   </div>
   <div class="set-fade left-floated">
      <a type="button" class="btn btn-small btn_cursor" data-state="cursor"><?php echo _("Cursor"); ?></a>

@@ -99,8 +99,9 @@ class Application_Service_ShowFormService
     public function delegateShowFormPopulation($forms)
     {
         $this->populateFormWhat($forms["what"]);
-        $this->populateFormWhen($forms["when"]);
-        $this->populateFormRepeats($forms["repeats"]);
+        //local show start DT
+        $showStart = $this->populateFormWhen($forms["when"]);
+        $this->populateFormRepeats($forms["repeats"], $showStart);
         $this->populateFormWho($forms["who"]);
         $this->populateFormStyle($forms["style"]);
         $this->populateFormLive($forms["live"]);
@@ -136,6 +137,9 @@ class Application_Service_ShowFormService
                 $form->disableStartDateAndTime();
             } else {
                 list($showStart, $showEnd) = $this->getNextFutureRepeatShowTime();
+                if ($this->hasShowStarted($showStart)) {
+                    $form->disableStartDateAndTime();
+                }
             }
         }
 
@@ -147,6 +151,8 @@ class Application_Service_ShowFormService
                 'add_show_end_time'    => $showEnd->format("H:i"),
                 'add_show_duration' => $ccShowDay->formatDuration(true),
                 'add_show_repeats' => $ccShowDay->isRepeating() ? 1 : 0));
+
+        return $showStart;
     }
 
     private function populateInstanceFormWhen($form)
@@ -179,7 +185,13 @@ class Application_Service_ShowFormService
         $form->getElement('add_show_repeats')->setOptions(array("disabled" => true));
     }
 
-    private function populateFormRepeats($form)
+    /**
+     * 
+     * Enter description here ...
+     * @param $form
+     * @param DateTime $nextFutureShowStart user's local timezone
+     */
+    private function populateFormRepeats($form, $nextFutureShowStart)
     {
         $ccShowDays = $this->ccShow->getCcShowDays();
 
@@ -217,6 +229,14 @@ class Application_Service_ShowFormService
                 'add_show_monthly_repeat_type' => $monthlyRepeatType));
 
         if (!$this->ccShow->isLinkable() || $this->ccShow->isRecorded()) {
+            $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
+        }
+
+        /* Because live editing of a linked show is disabled, we will disable
+         * the linking option if the current show is being edited. We don't
+         * want the user to suddenly not be able to edit the current show
+         */
+        if ($this->hasShowStarted($nextFutureShowStart)) {
             $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
         }
     }
@@ -293,6 +313,22 @@ class Application_Service_ShowFormService
         }
 
         $form->populate($formValues);
+    }
+
+    /**
+     * 
+     * Enter description here ...
+     * @param DateTime $showStart user's local time
+     */
+    private function hasShowStarted($p_showStart) {
+        $showStart = clone $p_showStart;
+        $showStart->setTimeZone(new DateTimeZone("UTC"));
+
+        if ($showStart->format("Y-m-d H:i:s") < gmdate("Y-m-d H:i:s")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

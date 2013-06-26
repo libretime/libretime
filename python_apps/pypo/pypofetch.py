@@ -19,6 +19,7 @@ from subprocess import Popen, PIPE
 
 from api_clients import api_client
 from std_err_override import LogWriter
+from timeout import ls_timeout
 
 
 # configure logging
@@ -38,12 +39,13 @@ signal.signal(signal.SIGINT, keyboardInterruptHandler)
 
 POLL_INTERVAL = 1800
 
-config_static = None
-
 class PypoFetch(Thread):
+
     def __init__(self, pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config):
         Thread.__init__(self)
-        global config_static
+
+        #Hacky...
+        PypoFetch.ref = self
 
         self.api_client = api_client.AirtimeApiClient()
         self.fetch_queue = pypoFetch_q
@@ -51,7 +53,6 @@ class PypoFetch(Thread):
         self.media_prepare_queue = media_q
         self.last_update_schedule_timestamp = time.time()
         self.config = config
-        config_static = config
         self.listener_timeout = POLL_INTERVAL
 
         self.telnet_lock = telnet_lock
@@ -176,11 +177,19 @@ class PypoFetch(Thread):
         commands.append(('vars.default_dj_fade %s\n' % fade).encode('utf-8'))
         self.pypo_liquidsoap.get_telnet_dispatcher().telnet_send(commands)
 
+        self.pypo_liquidsoap.clear_all_queues()
         self.pypo_liquidsoap.clear_queue_tracker()
 
     def restart_liquidsoap(self):
         try:
-            self.telnet_lock.acquire()
+            """do not block - if we receive the lock then good - no other thread
+            will try communicating with Liquidsoap. If we don't receive, it may
+            mean some thread blocked and is still holding the lock. Restarting
+            Liquidsoap will cause that thread to release the lock as an Exception
+            will be thrown."""
+            self.telnet_lock.acquire(False)
+
+
             self.logger.info("Restarting Liquidsoap")
             subprocess.call('/etc/init.d/airtime-liquidsoap restart', shell=True)
 
@@ -201,14 +210,6 @@ class PypoFetch(Thread):
             self.logger.error(e)
         finally:
             self.telnet_lock.release()
-
-        try:
-            self.set_bootstrap_variables()
-            #get the most up to date schedule, which will #initiate the process
-            #of making sure Liquidsoap is playing the schedule
-            self.persistent_manual_schedule_fetch(max_attempts=5)
-        except Exception, e:
-            self.logger.error(str(e))
 
     """
     TODO: This function needs to be way shorter, and refactored :/ - MK
@@ -307,6 +308,7 @@ class PypoFetch(Thread):
             self.logger.info("No change detected in setting...")
             self.update_liquidsoap_connection_status()
 
+    @ls_timeout
     def update_liquidsoap_connection_status(self):
         """
         updates the status of Liquidsoap connection to the streaming server
@@ -353,6 +355,7 @@ class PypoFetch(Thread):
                 self.api_client.notify_liquidsoap_status("OK", stream_id, str(fake_time))
 
 
+    @ls_timeout
     def update_liquidsoap_stream_format(self, stream_format):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
@@ -369,6 +372,7 @@ class PypoFetch(Thread):
         finally:
             self.telnet_lock.release()
 
+    @ls_timeout
     def update_liquidsoap_transition_fade(self, fade):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
@@ -385,6 +389,7 @@ class PypoFetch(Thread):
         finally:
             self.telnet_lock.release()
 
+    @ls_timeout
     def update_liquidsoap_station_name(self, station_name):
         # Push stream metadata to liquidsoap
         # TODO: THIS LIQUIDSOAP STUFF NEEDS TO BE MOVED TO PYPO-PUSH!!!
@@ -441,9 +446,11 @@ class PypoFetch(Thread):
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
-                media_item['start'] = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
-                media_item['end'] = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
-                media_copy[media_item['start']] = media_item
+                media_item['start'] = datetime.strptime(media_item['start'], 
+                        "%Y-%m-%d-%H-%M-%S")
+                media_item['end'] = datetime.strptime(media_item['end'], 
+                        "%Y-%m-%d-%H-%M-%S")
+                media_copy[key] = media_item
 
 
             self.media_prepare_queue.put(copy.copy(media_filtered))

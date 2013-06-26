@@ -61,8 +61,10 @@ class PypoLiqQueue(Thread):
                     schedule_deque.append(media_schedule[i])
 
                 if len(keys):
-                    time_until_next_play = self.date_interval_to_seconds(\
-                            keys[0] - datetime.utcnow())
+                    time_until_next_play = self.date_interval_to_seconds(
+                            media_schedule[keys[0]]['start'] - 
+                            datetime.utcnow())
+
                 else:
                     time_until_next_play = None
 

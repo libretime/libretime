@@ -17,7 +17,7 @@ class Application_Model_Scheduler
     private $epochNow;
     private $nowDT;
     private $user;
-    
+
     private $crossfadeDuration;
 
     private $checkUserPermissions = true;
@@ -40,7 +40,7 @@ class Application_Model_Scheduler
         }
 
         $this->user = Application_Model_User::getCurrentUser();
-        
+
         $this->crossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
     }
 
@@ -85,6 +85,9 @@ class Application_Model_Scheduler
 
         $nowEpoch = floatval($this->nowDT->format("U.u"));
 
+        $schedInfo = array();
+        $instanceInfo = array();
+
         for ($i = 0; $i < count($items); $i++) {
             $id = $items[$i]["id"];
 
@@ -103,7 +106,7 @@ class Application_Model_Scheduler
         }
 
         $schedIds = array();
-        if (isset($schedInfo)) {
+        if (count($schedInfo) > 0) {
             $schedIds = array_keys($schedInfo);
         }
         $schedItems = CcScheduleQuery::create()->findPKs($schedIds, $this->con);
@@ -191,16 +194,18 @@ class Application_Model_Scheduler
 
         if ($type === "audioclip") {
             $file = CcFilesQuery::create()->findPK($id, $this->con);
-            $storedFile = new Application_Model_StoredFile($file, $this->con);
 
             if (is_null($file) || !$file->visible()) {
                 throw new Exception(_("A selected File does not exist!"));
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
-                $data["cliplength"] = $storedFile->getRealClipLength(
-                    $file->getDbCuein(),
-                    $file->getDbCueout());
+
+                $cuein = Application_Common_DateHelper::playlistTimeToSeconds($file->getDbCuein());
+                $cueout = Application_Common_DateHelper::playlistTimeToSeconds($file->getDbCueout());
+                $row_length = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
+
+                $data["cliplength"] = $row_length;
 
                 $data["cuein"] = $file->getDbCuein();
                 $data["cueout"] = $file->getDbCueout();
@@ -263,11 +268,11 @@ class Application_Model_Scheduler
                                 $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
                                 $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
                                 $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-                                
+
                                 //fade is in format SS.uuuuuu
                                 $data["fadein"] = $defaultFadeIn;
                                 $data["fadeout"] = $defaultFadeOut;
-                                
+
                                 $data["type"] = 0;
                                 $files[] = $data;
                             }
@@ -322,11 +327,11 @@ class Application_Model_Scheduler
                         $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
                         $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
                         $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-                        
+
                         //fade is in format SS.uuuuuu
                 		$data["fadein"] = $defaultFadeIn;
                 		$data["fadeout"] = $defaultFadeOut;
-                		
+
                         $data["type"] = 0;
                         $files[] = $data;
                     }
@@ -336,7 +341,7 @@ class Application_Model_Scheduler
 
         return $files;
     }
-    
+
     /*
      * @param DateTime startDT in UTC
     *  @param string duration
@@ -347,18 +352,18 @@ class Application_Model_Scheduler
     private function findTimeDifference($p_startDT, $p_seconds)
     {
     	$startEpoch = $p_startDT->format("U.u");
-    	
+
     	//add two float numbers to 6 subsecond precision
     	//DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
     	$newEpoch = bcsub($startEpoch , (string) $p_seconds, 6);
-    
+
     	$dt = DateTime::createFromFormat("U.u", $newEpoch, new DateTimeZone("UTC"));
-    
+
     	if ($dt === false) {
     		//PHP 5.3.2 problem
     		$dt = DateTime::createFromFormat("U", intval($newEpoch), new DateTimeZone("UTC"));
     	}
-    
+
     	return $dt;
     }
 
@@ -388,7 +393,7 @@ class Application_Model_Scheduler
         return $dt;
     }
 
-    private function findNextStartTime($DT, $instance)
+    private function findNextStartTime($DT, $instanceId)
     {
         $sEpoch = $DT->format("U.u");
         $nEpoch = $this->epochNow;
@@ -410,7 +415,7 @@ class Application_Model_Scheduler
                 ->setDbCueIn('00:00:00')
                 ->setDbCueOut('00:00:00')
                 ->setDbPlayoutStatus(-1)
-                ->setDbInstanceId($instance->getDbId())
+                ->setDbInstanceId($instanceId)
                 ->save($this->con);
         } else {
             $nextDT = $DT;
@@ -418,39 +423,45 @@ class Application_Model_Scheduler
 
         return $nextDT;
     }
-    
+
     /*
      * @param int $showInstance
      *   This function recalculates the start/end times of items in a gapless show to
      *   account for crossfade durations.
      */
-    private function calculateCrossfades($showInstance)
+    private function calculateCrossfades($instanceId)
     {
-    	Logging::info("adjusting start, end times of scheduled items to account for crossfades show instance #".$showInstance);
-    
-    	$instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
-    	if (is_null($instance)) {
-    		throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
-    	}
-    
-    	$itemStartDT = $instance->getDbStarts(null);
-    	$itemEndDT = null;
-    
-    	$schedule = CcScheduleQuery::create()
-    		->filterByDbInstanceId($showInstance)
-    		->orderByDbStarts()
-    		->find($this->con);
-    
-    	foreach ($schedule as $item) {
-    		$itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+        Logging::info("adjusting start, end times of scheduled items to account for crossfades show instance #".$instanceId);
 
-    		$item->setDbStarts($itemStartDT)
-    			 ->setDbEnds($itemEndDT);
+        $sql = "SELECT * FROM cc_show_instances ".
+            "WHERE id = {$instanceId}";
+        $instance = Application_Common_Database::prepareAndExecute(
+            $sql, array(), Application_Common_Database::SINGLE);
 
-    		$itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
-    	}
-    
-    	$schedule->save($this->con);
+        if (is_null($instance)) {
+            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
+        }
+
+        $itemStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+        $itemEndDT = null;
+
+        $schedule_sql = "SELECT * FROM cc_schedule ".
+            "WHERE instance_id = {$instanceId} ".
+            "ORDER BY starts";
+        $schedule = Application_Common_Database::prepareAndExecute($schedule_sql);
+
+        foreach ($schedule as $item) {
+            $itemEndDT = $this->findEndTime($itemStartDT, $item["clip_length"]);
+
+            $update_sql = "UPDATE cc_schedule SET ".
+                "starts = '{$itemStartDT->format("Y-m-d H:i:s")}', ".
+                "ends = '{$itemEndDT->format("Y-m-d H:i:s")}' ".
+                "WHERE id = {$item["id"]}";
+            Application_Common_Database::prepareAndExecute(
+                $update_sql, array(), Application_Common_Database::EXECUTE);
+
+            $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
+        }
     }
 
     /*
@@ -491,7 +502,7 @@ class Application_Model_Scheduler
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param $scheduleItems
      *     cc_schedule items, where the items get inserted after
@@ -531,12 +542,18 @@ class Application_Model_Scheduler
                  * of inserted items
                  */
                 if ($id != 0) {
-                    $ccSchedule = CcScheduleQuery::create()->findPk($id);
-                    $ccShowInstance = CcShowInstancesQuery::create()->findPk($ccSchedule->getDbInstanceId());
-                    $ccShow = $ccShowInstance->getCcShow();
-                    $linked = $ccShow->isLinked();
+                    $schedule_sql = "SELECT * FROM cc_schedule WHERE id = ".$id;
+                    $ccSchedule = Application_Common_Database::prepareAndExecute(
+                        $schedule_sql, array(), Application_Common_Database::SINGLE);
+
+                    $show_sql = "SELECT * FROM cc_show WHERE id IN (".
+                        "SELECT show_id FROM cc_show_instances WHERE id = ".$ccSchedule["instance_id"].")";
+                    $ccShow = Application_Common_Database::prepareAndExecute(
+                        $show_sql, array(), Application_Common_Database::SINGLE);
+
+                    $linked = $ccShow["linked"];
                     if ($linked) {
-                        $unique = $ccShow->getDbId() . $ccSchedule->getDbPosition();
+                        $unique = $ccShow["id"] . $ccSchedule["position"];
                         if (!in_array($unique, $temp)) {
                             $temp[] = $unique;
                         } else {
@@ -544,11 +561,14 @@ class Application_Model_Scheduler
                         }
                     }
                 } else {
-                    $ccShowInstance = CcShowInstancesQuery::create()->findPk($schedule["instance"]);
-                    $ccShow = $ccShowInstance->getccShow();
-                    $linked = $ccShow->isLinked();
+                    $show_sql = "SELECT * FROM cc_show WHERE id IN (".
+                        "SELECT show_id FROM cc_show_instances WHERE id = ".$schedule["instance"].")";
+                    $ccShow = Application_Common_Database::prepareAndExecute(
+                        $show_sql, array(), Application_Common_Database::SINGLE);
+
+                    $linked = $ccShow["linked"];
                     if ($linked) {
-                        $unique = $ccShow->getDbId() . "a";
+                        $unique = $ccShow["id"] . "a";
                         if (!in_array($unique, $temp)) {
                             $temp[] = $unique;
                         } else {
@@ -562,38 +582,59 @@ class Application_Model_Scheduler
                  * to that show
                  */
                 if ($linked) {
-                    $instances = $ccShow->getCcShowInstancess();
+                    $instance_sql = "SELECT * FROM cc_show_instances ".
+                        "WHERE show_id = ".$ccShow["id"];
+                    $instances = Application_Common_Database::prepareAndExecute(
+                        $instance_sql);
                 } else {
-                    $instances = array($ccShowInstance);
+                    $instance_sql = "SELECT * FROM cc_show_instances ".
+                        "WHERE id = ".$schedule["instance"];
+                    $instances = Application_Common_Database::prepareAndExecute(
+                        $instance_sql);
                 }
+
+                $excludePositions = array();
                 foreach($instances as &$instance) {
-                    $instanceId = $instance->getDbId();
+                    $instanceId = $instance["id"];
                     if ($id !== 0) {
                         /* We use the selected cursor's position to find the same
                          * positions in every other linked instance
                          */
-                        $pos = $ccSchedule->getDbPosition();
+                        $pos = $ccSchedule["position"];
 
-                        $linkCcSchedule = CcScheduleQuery::create()
-                            ->filterByDbInstanceId($instanceId)
-                            ->filterByDbPosition($pos)
-                            ->findOne();
+                        $linkedItem_sql = "SELECT ends FROM cc_schedule ".
+                            "WHERE instance_id = {$instanceId} ".
+                            "AND position = {$pos} ".
+                            "AND playout_status != -1";
+                        $linkedItemEnds = Application_Common_Database::prepareAndExecute(
+                            $linkedItem_sql, array(), Application_Common_Database::COLUMN);
 
-                        $schedItemEndDT = $linkCcSchedule->getDbEnds(null);
-                        $nextStartDT = $this->findNextStartTime($schedItemEndDT, $instance);
+                        $nextStartDT = $this->findNextStartTime(
+                            new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
+                            $instanceId);
 
                         $pos++;
+
+                        /* Show is not empty so we need to apply crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = true;
                     }
                     //selected empty row to add after
                     else {
-                        $showStartDT = $instance->getDbStarts(null);
-                        $nextStartDT = $this->findNextStartTime($showStartDT, $instance);
+                        $showStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+                        $nextStartDT = $this->findNextStartTime($showStartDT, $instanceId);
 
-                        //show is empty so start position counter at 0
+                        //first item in show so start position counter at 0
                         $pos = 0;
+
+                        /* Show is empty so we don't need to calculate crossfades
+                         * for the first inserted item
+                         */
+                        $applyCrossfades = false;
                     }
 
-                    if (!in_array($instance->getDbId(), $affectedShowInstances)) {
+                    if (!in_array($instanceId, $affectedShowInstances)) {
                         $affectedShowInstances[] = $instanceId;
                     }
 
@@ -605,7 +646,12 @@ class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        $initalStartDT = clone $nextStartDT;
+                        if ($applyCrossfades) {
+                            $initalStartDT = clone $this->findTimeDifference(
+                                $nextStartDT, $this->crossfadeDuration);
+                        } else {
+                            $initalStartDT = clone $nextStartDT;
+                        }
 
                         $pend = microtime(true);
                         Logging::debug("finding all following items.");
@@ -620,83 +666,129 @@ class Application_Model_Scheduler
                         }
                     }
 
+                    $doInsert = false;
+                    $doUpdate = false;
+                    $values = array();
+
                     foreach ($filesToInsert as &$file) {
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
                         if (isset($file['sched_id'])) {
-                            $sched = CcScheduleQuery::create()->findPk($file["sched_id"]);
+                            $adjustFromDT = clone $nextStartDT;
+                            $doUpdate = true;
+
+                            $movedItem_sql = "SELECT * FROM cc_schedule ".
+                                "WHERE id = ".$file["sched_id"];
+                            $sched = Application_Common_Database::prepareAndExecute(
+                                $movedItem_sql, array(), Application_Common_Database::SINGLE);
 
                             /* We need to keep a record of the original positon a track
                              * is being moved from so we can use it to retrieve the correct
                              * items in linked instances
                              */
                             if (!isset($originalPosition)) {
-                                $originalPosition = $sched->getDbPosition();
+                                $originalPosition = $sched["position"];
                             }
 
                             /* If we are moving an item in a linked show we need to get
                              * the relative item to move in each instance. We know what the
                              * relative item is by its position
                              */
-                            if ($linked && $moveAction) {
-                                $sched = CcScheduleQuery::create()
-                                    ->filterByDbInstanceId($instanceId)
-                                    ->filterByDbPosition($originalPosition)
-                                    ->findOne();
-                            }
-                            $excludeIds[] = intval($sched->getDbId());
+                            if ($linked) {
+                                $movedItem_sql = "SELECT * FROM cc_schedule ".
+                                    "WHERE position = {$originalPosition} ".
+                                    "AND instance_id = {$instanceId}";
 
-                            $file["cliplength"] = $sched->getDbClipLength();
-                            $file["cuein"] = $sched->getDbCueIn();
-                            $file["cueout"] = $sched->getDbCueOut();
-                            $file["fadein"] = $sched->getDbFadeIn();
-                            $file["fadeout"] = $sched->getDbFadeOut();
+                                $sched = Application_Common_Database::prepareAndExecute(
+                                    $movedItem_sql, array(), Application_Common_Database::SINGLE);
+                            }
+                            $excludeIds[] = intval($sched["id"]);
+
+                            $file["cliplength"] = $sched["clip_length"];
+                            $file["cuein"] = $sched["cue_in"];
+                            $file["cueout"] = $sched["cue_out"];
+                            $file["fadein"] = $sched["fade_in"];
+                            $file["fadeout"] = $sched["fade_out"];
                         } else {
-                            $sched = new CcSchedule();
+                            $doInsert = true;
                         }
 
-                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         // default fades are in seconds
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
                         $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
 
-                        $sched->setDbStarts($nextStartDT)
-                            ->setDbEnds($endTimeDT)
-                            ->setDbCueIn($file['cuein'])
-                            ->setDbCueOut($file['cueout'])
-                            ->setDbFadeIn($file['fadein'])
-                            ->setDbFadeOut($file['fadeout'])
-                            ->setDbClipLength($file['cliplength'])
-                            ->setDbPosition($pos);
-
-                        if (!$moveAction) {
-                            $sched->setDbInstanceId($instanceId);
-                        }
-
                         switch ($file["type"]) {
                             case 0:
-                                $sched->setDbFileId($file['id']);
+                                $fileId = $file["id"];
+                                $streamId = "null";
                                 break;
                             case 1:
-                                $sched->setDbStreamId($file['id']);
+                                $streamId = $file["id"];
+                                $fileId = "null";
                                 break;
                             default: break;
                         }
 
-                        $sched->save($this->con);
+                        if ($applyCrossfades) {
+                            $nextStartDT = $this->findTimeDifference($nextStartDT,
+                                $this->crossfadeDuration);
+                            $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
+                            /* Set it to false because the rest of the crossfades
+                             * will be applied after we insert each item
+                             */
+                            $applyCrossfades = false;
+                        }
 
-                        $nextStartDT = $endTimeDT;
+                        $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
+                        if ($doInsert) {
+                            $values[] = "(".
+                                "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
+                                "'{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "'{$file["cuein"]}', ".
+                                "'{$file["cueout"]}', ".
+                                "'{$file["fadein"]}', ".
+                                "'{$file["fadeout"]}', ".
+                                "'{$file["cliplength"]}', ".
+                                "{$pos}, ".
+                                "{$instanceId}, ".
+                                "{$fileId}, ".
+                                "{$streamId})";
+
+                        } elseif ($doUpdate) {
+                            $update_sql = "UPDATE cc_schedule SET ".
+                                "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
+                                "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "cue_in = '{$file["cuein"]}', ".
+                                "cue_out = '{$file["cueout"]}', ".
+                                "fade_in = '{$file["fadein"]}', ".
+                                "fade_out = '{$file["fadeout"]}', ".
+                                "clip_length = '{$file["cliplength"]}', ".
+                                "position = {$pos} ".
+                                "WHERE id = {$sched["id"]}";
+
+                            Application_Common_Database::prepareAndExecute(
+                                $update_sql, array(), Application_Common_Database::EXECUTE);
+                        }
+
+                        $nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                         $pos++;
 
-                        /* If we are adjusting start and end times for items
-                         * after the insert location, we need to exclude the
-                         * schedule item we just inserted because it has correct
-                         * start and end times*/
-                        $excludeIds[] = $sched->getDbId();
-
                     }//all files have been inserted/moved
+                    if ($doInsert) {
+                        $insert_sql = "INSERT INTO cc_schedule ".
+                            "(starts, ends, cue_in, cue_out, fade_in, fade_out, ".
+                            "clip_length, position, instance_id, file_id, stream_id) VALUES ".
+                            implode($values, ",")." RETURNING id";
 
+                        $stmt = $this->con->prepare($insert_sql);
+                        if ($stmt->execute()) {
+                            foreach ($stmt->fetchAll() as $row) {
+                                $excludeIds[] = $row["id"];
+                            }
+                        };
+                    }
                     // update is_scheduled flag for each cc_file
                     $fileIds = array();
                     foreach ($filesToInsert as &$file) {
@@ -717,34 +809,43 @@ class Application_Model_Scheduler
                     }
 
                     if ($adjustSched === true) {
-                        $followingSchedItems = CcScheduleQuery::create()
-                            ->filterByDBStarts($initalStartDT->format("Y-m-d H:i:s.u"), Criteria::GREATER_EQUAL)
-                            ->filterByDbInstanceId($instance->getDbId())
-                            ->filterByDbId($excludeIds, Criteria::NOT_IN)
-                            ->orderByDbStarts()
-                            ->find($this->con);
+
+                        $followingItems_sql = "SELECT * FROM cc_schedule ".
+                            "WHERE starts >= '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
+                            "AND instance_id = {$instanceId} ";
+                        if (count($excludeIds) > 0) {
+                            $followingItems_sql .= "AND id NOT IN (". implode($excludeIds, ",").") ";
+                        }
+                        $followingItems_sql .= "ORDER BY starts";
+                        $followingSchedItems = Application_Common_Database::prepareAndExecute(
+                            $followingItems_sql);
 
                         $pstart = microtime(true);
 
                         //recalculate the start/end times after the inserted items.
                         foreach ($followingSchedItems as $item) {
-                            $endTimeDT = $this->findEndTime($nextStartDT, $item->getDbClipLength());
-                            $item->setDbStarts($nextStartDT);
-                            $item->setDbEnds($endTimeDT);
-                            $item->setDbPosition($pos);
-                            $item->save($this->con);
-                            $nextStartDT = $endTimeDT;
+                            $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
+                            $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
+                            $update_sql = "UPDATE cc_schedule SET ".
+                                "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
+                                "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "position = {$pos} ".
+                                "WHERE id = {$item["id"]}";
+                            Application_Common_Database::prepareAndExecute(
+                                $update_sql, array(), Application_Common_Database::EXECUTE);
+
+                            $nextStartDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $pos++;
                         }
 
                         $pend = microtime(true);
                         Logging::debug("adjusting all following items.");
                         Logging::debug(floatval($pend) - floatval($pstart));
-                        
-                        $this->calculateCrossfades($instance->getDbId());
+                    }
+                    if ($moveAction) {
+                        $this->calculateCrossfades($instanceId);
                     }
                 }//for each instance
-                
             }//for each schedule location
 
             $endProfile = microtime(true);
@@ -780,6 +881,11 @@ class Application_Model_Scheduler
             Logging::debug($e->getMessage());
             throw $e;
         }
+    }
+
+    private function updateMovedItem()
+    {
+
     }
 
     private function getInstances($instanceId)
@@ -999,7 +1105,7 @@ class Application_Model_Scheduler
                 } else {
                     $removedItem->delete($this->con);
                 }
-                
+
                 // update is_scheduled in cc_files but only if
                 // the file is not scheduled somewhere else
                 $fileId = $removedItem->getDbFileId();

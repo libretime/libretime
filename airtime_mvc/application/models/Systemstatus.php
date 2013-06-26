@@ -125,6 +125,7 @@ class Application_Model_Systemstatus
     public static function GetPlatformInfo()
     {
         $keys = array("release", "machine", "memory", "swap");
+        $data = array();
         foreach ($keys as $key) {
             $data[$key] = "UNKNOWN";
         }
@@ -212,7 +213,7 @@ class Application_Model_Systemstatus
 
     public static function GetDiskInfo()
     {
-        $partions = array();
+        $partitions = array();
 
         //connect to DB and find how much total space user has allocated.
         $totalSpace = Application_Model_Preference::GetDiskQuota();

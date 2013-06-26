@@ -1,3 +1,16 @@
+DELETE FROM cc_pref WHERE id IN (
+SELECT cc_pref.id	 
+FROM cc_pref
+LEFT OUTER JOIN (
+   SELECT MAX(id) as id, keystr, subjid 
+   FROM cc_pref 
+   GROUP BY keystr, subjid
+) as KeepRows ON
+   cc_pref.id = KeepRows.id
+WHERE
+   KeepRows.id IS NULL
+);
+
 DELETE FROM cc_pref WHERE keystr = 'system_version';
 INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.4.0');
 

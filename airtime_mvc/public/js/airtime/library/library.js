@@ -391,7 +391,9 @@ var AIRTIME = (function(AIRTIME) {
         
         $libTable = $libContent.find("table");
         
-        var tableHeight = $libContent.height() - 130;
+        function getTableHeight() {
+        	return $libContent.height() - 175;
+        }
         
         function setColumnFilter(oTable){
             // TODO : remove this dirty hack once js is refactored
@@ -454,6 +456,13 @@ var AIRTIME = (function(AIRTIME) {
             } else {
                 $el.hide();
             }
+            
+            //resize to prevent double scroll bars.
+            var $fs = $el.parents("fieldset"),
+            	tableHeight = getTableHeight(),
+            	searchHeight = $fs.height();
+            
+            $libContent.find(".dataTables_scrolling").css("max-height", tableHeight - searchHeight);
         }
         
         oTable = $libTable.dataTable( {
@@ -593,12 +602,12 @@ var AIRTIME = (function(AIRTIME) {
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
                 //add soundcloud icon
-                if (aData.soundcloud_status !== undefined) {
-                    if (aData.soundcloud_status === "-2") {
+                if (aData.soundcloud_id !== undefined) {
+                    if (aData.soundcloud_id === "-2") {
                         $(nRow).find("td.library_title").append('<span class="small-icon progress"/>');
-                    } else if (aData.soundcloud_status === "-3") {
+                    } else if (aData.soundcloud_id === "-3") {
                         $(nRow).find("td.library_title").append('<span class="small-icon sc-error"/>');
-                    } else if (aData.soundcloud_status !== null) {
+                    } else if (aData.soundcloud_id !== null) {
                         $(nRow).find("td.library_title").append('<span class="small-icon soundcloud"/>');
                     }
                 }
@@ -784,10 +793,14 @@ var AIRTIME = (function(AIRTIME) {
 
         $libContent.on("click", "legend", function(){
             $simpleSearch = $libContent.find("#library_display_filter label");
-            var $fs = $(this).parents("fieldset");
+            var $fs = $(this).parents("fieldset"),
+            	searchHeight,
+            	tableHeight = getTableHeight(),
+            	height;
 
             if ($fs.hasClass("closed")) {
                 $fs.removeClass("closed");
+                searchHeight = $fs.height();
 
                 //keep value of simple search for when user switches back to it
                 simpleSearchText = $simpleSearch.find('input').val();
@@ -796,6 +809,10 @@ var AIRTIME = (function(AIRTIME) {
                 $(".dataTables_filter input").val("").keyup();
 
                 $simpleSearch.addClass("sp-invisible");
+                
+                //resize the library table to avoid a double scroll bar. CC-4504
+                height = tableHeight - searchHeight;
+                $libContent.find(".dataTables_scrolling").css("max-height", height);
             }
             else {
                 // clear the advanced search fields
@@ -817,9 +834,13 @@ var AIRTIME = (function(AIRTIME) {
 
                 $simpleSearch.removeClass("sp-invisible");
                 $fs.addClass("closed");
+                
+              //resize the library table to avoid a double scroll bar. CC-4504
+                $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
             }
         });
        
+        var tableHeight = getTableHeight();
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         AIRTIME.library.setupLibraryToolbar(oTable);
@@ -1069,13 +1090,13 @@ function buildEditMetadataDialog (json){
         width: 460,
         height: 660,
         modal: true,
-        close: closeDialog
+        close: closeDialogLibrary
     });
 
     dialog.dialog('open');
 }
 
-function closeDialog(event, ui) {
+function closeDialogLibrary(event, ui) {
     $(this).remove();
 }
 
@@ -1126,7 +1147,6 @@ function checkLibrarySCUploadStatus(){
         else if (json.sc_id == "-3") {
             span.removeClass("progress").addClass("sc-error");
         }
-        setTimeout(checkLibrarySCUploadStatus, 5000);
     }
     
     function checkSCUploadStatusRequest() {
@@ -1138,12 +1158,16 @@ function checkLibrarySCUploadStatus(){
     }
     
     $("#library_display span.progress").each(checkSCUploadStatusRequest);
+    setTimeout(checkLibrarySCUploadStatus, 5000);
 }
     
-function addQtipToSCIcons(){
-    $(".progress, .soundcloud, .sc-error").live('mouseover', function(){
+function addQtipToSCIcons() {
+    $("#content")
+    	.on('mouseover', ".progress, .soundcloud, .sc-error", function() {
         
-        var id = $(this).parent().parent().data("aData").id;
+    	var aData = $(this).parents("tr").data("aData"),
+        	id = aData.id,
+        	sc_id = aData.soundcloud_id;
         
         if ($(this).hasClass("progress")){
             $(this).qtip({
@@ -1163,24 +1187,15 @@ function addQtipToSCIcons(){
                     classes: "ui-tooltip-dark file-md-long"
                 },
                 show: {
-                    ready: true // Needed to make it show on first mouseover
-                                // event
+                    ready: true // Needed to make it show on first mouseover event
                 }
             });
         }
-        else if($(this).hasClass("soundcloud")){
-            var sc_id = $(this).parent().parent().data("aData").soundcloud_id;
+        else if ($(this).hasClass("soundcloud")){
+        	
             $(this).qtip({
                 content: {
-                    text: $.i18n._("Retrieving data from the server..."),
-                    ajax: {
-                        url: baseUrl+"Library/get-upload-to-soundcloud-status",
-                        type: "post",
-                        data: ({format: "json", id : id, type: "file"}),
-                        success: function(json, status){
-                            this.set('content.text', $.i18n._("The soundcloud id for this file is: ")+json.sc_id);
-                        }
-                    }
+                    text: $.i18n._("The soundcloud id for this file is: ") + sc_id
                 },
                 position:{
                     adjust: {
@@ -1195,11 +1210,11 @@ function addQtipToSCIcons(){
                     classes: "ui-tooltip-dark file-md-long"
                 },
                 show: {
-                    ready: true // Needed to make it show on first mouseover
-                                // event
+                    ready: true // Needed to make it show on first mouseover event
                 }
             });
-        }else if($(this).hasClass("sc-error")){
+        }
+        else if ($(this).hasClass("sc-error")) {
             $(this).qtip({
                 content: {
                     text: $.i18n._("Retreiving data from the server..."),
@@ -1227,8 +1242,7 @@ function addQtipToSCIcons(){
                     classes: "ui-tooltip-dark file-md-long"
                 },
                 show: {
-                    ready: true // Needed to make it show on first mouseover
-                                // event
+                    ready: true // Needed to make it show on first mouseover event
                 }
             });
         }

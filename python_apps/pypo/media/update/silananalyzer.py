@@ -56,8 +56,8 @@ class SilanAnalyzer(Thread):
                             try: data['cueout'] = str('{0:f}'.format(info['sound'][-1][1]))
                             except: pass
                     except Exception, e:
-                        self.logger.error(str(command))
-                        self.logger.error(e)
+                        self.logger.warn(str(command))
+                        self.logger.warn(e)
                     processed_data.append((f['id'], data))
                     total += 1
                     if total % 5 == 0:

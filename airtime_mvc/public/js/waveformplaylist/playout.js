@@ -16,8 +16,6 @@ AudioPlayout.prototype.init = function(config) {
     
     this.gainNode = undefined;
     this.destination = this.ac.destination;
-    this.analyser = this.ac.createAnalyser();
-    this.analyser.connect(this.destination);
 };
 
 AudioPlayout.prototype.getBuffer = function() {
@@ -41,7 +39,7 @@ AudioPlayout.prototype.applyFades = function(fades, relPos, now, delay) {
         duration;
 
     this.gainNode && this.gainNode.disconnect();
-    this.gainNode = this.ac.createGainNode();
+    this.gainNode = this.ac.createGain();
 
     for (id in fades) {
 
@@ -83,7 +81,8 @@ AudioPlayout.prototype.loadData = function (audioData, cb) {
             cb(buffer);
         },
         function(err) { 
-            console.log("err(decodeAudioData): "+err); 
+            console.log("err(decodeAudioData): "+err);
+            cb(null, err);
         }
     );
 };
@@ -136,7 +135,7 @@ AudioPlayout.prototype.setSource = function(source) {
     this.source.buffer = this.buffer;
 
     this.source.connect(this.gainNode);
-    this.gainNode.connect(this.analyser);
+    this.gainNode.connect(this.destination);
 };
 
 /*

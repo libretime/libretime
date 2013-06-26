@@ -209,12 +209,11 @@ var AIRTIME = (function(AIRTIME){
     }
     
     /* used from waveform pop-up */
-    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset) {
+    function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset, id) {
         
         var url = baseUrl+"Playlist/set-crossfade",
             lastMod = getModified(),
-            type = $('#obj_type').val(),
-            li, id;
+            type = $('#obj_type').val();
         
         $.post(url, 
             {format: "json", fadeIn: fadeIn, fadeOut: fadeOut, id1: id1, id2: id2, offset: offset, modified: lastMod, type: type}, 
@@ -230,10 +229,9 @@ var AIRTIME = (function(AIRTIME){
                 
                 setPlaylistContent(json);
 
-                id = id1 === undefined ? id2 : id1;
-                li = $('#side_playlist li[unqid='+id+']');
-                li.find('.crossfade').toggle();
-                highlightActive(li.find('.spl_fade_control'));
+                $li = $('#side_playlist li[unqid='+id+']');
+                $li.find('.crossfade').toggle();
+                highlightActive($li.find('.spl_fade_control'));
             });
     }
 
@@ -589,13 +587,13 @@ var AIRTIME = (function(AIRTIME){
                                         var extra = (ele['extra']==null)?"":"- "+ele['extra'];
                                         $html += "<li>" +
                                             "<span class='block-item-title'>"+ele['display_name']+"</span>" +
-                                            "<span class='block-item-criteria'>"+ele['modifier']+"</span>" +
+                                            "<span class='block-item-criteria'>"+ele['display_modifier']+"</span>" +
                                             "<span class='block-item-criteria'>"+ele['value']+"</span>" +
                                             "<span class='block-item-criteria'>"+extra+"</span>" + 
                                             "</li>";
                                     });
                                 }
-                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.modifier+"</span></li>";
+                                $html += "<li><br /><span class='block-item-title'>"+$.i18n._("Limit to: ")+data.limit.value+"  "+data.limit.display_modifier+"</span></li>";
                             }
                             $pl.find("#block_"+id+"_info").html($html).show();
                             mod.enableUI();
@@ -1179,13 +1177,16 @@ var AIRTIME = (function(AIRTIME){
 	mod.showFadesWaveform = function(e) {
 		var $el = $(e.target),
 			$parent = $el.parents("dl"),
+			$li = $el.parents("li"),
 			$fadeOut = $parent.find(".spl_fade_out"),
 			$fadeIn = $parent.find(".spl_fade_in"),
 			$html = $($("#tmpl-pl-fades").html()),
 			tracks = [],
 			dim = AIRTIME.utilities.findViewportDimensions(),
 			playlistEditor,
-			id1, id2;
+			id1, id2,
+			id = $li.attr("unqid");
+		
 		
 		function removeDialog() {
 			playlistEditor.stop();
@@ -1246,7 +1247,7 @@ var AIRTIME = (function(AIRTIME){
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
-            height: dim.height - 100,
+            height: 350,
             buttons: [
                 {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
                 {text: $.i18n._("Save"), class: "btn btn-small btn-inverse", click: function() {
@@ -1257,15 +1258,22 @@ var AIRTIME = (function(AIRTIME){
                 	
                 	playlistEditor.stop();
                 	
-                	if (json.length === 1) {
+                	if (json.length === 0)
+                	{
+                		id1 = undefined;
+                		id2 = undefined;
+                	}
+                	else if (json.length === 1) {
                 		
                 		fade = json[0]["fades"][0];
                 		
                 		if (fade["type"] === "FadeOut") {
                 			fadeOut = fade["end"] - fade["start"];
+                			id2 = undefined; //incase of track decode error.
                 		}
                 		else {
                 			fadeIn = fade["end"] - fade["start"];
+                			id1 = undefined; //incase of track decode error.
                 		}
                 	}
                 	else {
@@ -1282,7 +1290,7 @@ var AIRTIME = (function(AIRTIME){
                 	fadeIn = (fadeIn === undefined) ? undefined : fadeIn.toFixed(1);
                 	fadeOut = (fadeOut === undefined) ? undefined : fadeOut.toFixed(1);
                 	
-                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset);
+                	changeCrossfade($html, id1, id2, fadeIn, fadeOut, offset, id);
                 }}
             ],
             open: function (event, ui) {
@@ -1291,6 +1299,7 @@ var AIRTIME = (function(AIRTIME){
         			resolution: 15000,
         			state: "cursor",
         	        mono: true,
+        	        timescale: true,
         	        waveHeight: 80,
         	        container: $html[0],
         	        UITheme: "jQueryUI",
@@ -1301,7 +1310,10 @@ var AIRTIME = (function(AIRTIME){
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);
             },
-        	close: removeDialog
+        	close: removeDialog,
+        	resizeStop: function(event, ui) {
+        		playlistEditor.resize();
+            }
         });		
 	};
 	
@@ -1354,7 +1366,7 @@ var AIRTIME = (function(AIRTIME){
             show: 'clip',
             hide: 'clip',
             width: dim.width - 100,
-            height: dim.height - 100,
+            height: 325,
             buttons: [
                 {text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
                 {text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: function() {
@@ -1371,6 +1383,7 @@ var AIRTIME = (function(AIRTIME){
             	var config = new Config({
         			resolution: 15000,
         	        mono: true,
+        	        timescale: true,
         	        waveHeight: 80,
         	        container: $html[0],
         	        UITheme: "jQueryUI",
@@ -1381,7 +1394,10 @@ var AIRTIME = (function(AIRTIME){
         	    playlistEditor.setConfig(config);
         	    playlistEditor.init(tracks);	
             },
-            close: removeDialog
+            close: removeDialog,
+            resizeStop: function(event, ui) {
+            	playlistEditor.resize();
+            }
         });	
 	};
 	
@@ -1435,13 +1451,13 @@ var AIRTIME = (function(AIRTIME){
         widgetHeight = viewport.height - 185;
         width = Math.floor(viewport.width - 80);
 
-        var libTableHeight = widgetHeight - 130;
+        var libTableHeight = widgetHeight - 175;
 
         if (!$pl.is(':hidden')) {
             $lib.height(widgetHeight)
                 .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
-                .end()
+                	.css("max-height", libTableHeight)
+                	.end()
                 .width(Math.floor(width * 0.55));
 
             $pl.height(widgetHeight)
@@ -1449,8 +1465,8 @@ var AIRTIME = (function(AIRTIME){
         } else {
             $lib.height(widgetHeight)
                 .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
-                .end()
+                	.css("max-height", libTableHeight)
+                	.end()
                 .width(width + 40);
         }
 	}
@@ -1459,8 +1475,6 @@ var AIRTIME = (function(AIRTIME){
 		$lib = $("#library_content");
 		$pl = $("#side_playlist");
 
-		
-		
 		setWidgetSize();
 		
 		AIRTIME.library.libraryInit();

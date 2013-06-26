@@ -179,9 +179,6 @@ class Application_Service_ShowService
 
         if (is_null($this->ccShow)) {
             $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
-            if (count($ccShowDays) > 0) {
-                $this->ccShow = $ccShowDays[0]->getCcShow();
-            }
         } else {
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
@@ -190,32 +187,43 @@ class Application_Service_ShowService
             $populateUntil = $end;
         }
 
+        /* In case the user is moving forward in the calendar and there are
+         * linked shows in the schedule we need to keep track of each cc_show
+         * so we know which shows need to be filled with content
+         */ 
+        $ccShows = array();
+
         foreach ($ccShowDays as $day) {
+            $this->ccShow = $day->getCcShow();
+            if (!isset($ccShows[$day->getDbShowId()])) {
+                $ccShows[$day->getDbShowId()] = $day->getccShow();
+            }
+
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
                     $this->createNonRepeatingInstance($day, $populateUntil);
                     break;
                 case REPEAT_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_WEEKLY,
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_WEEKLY,
                         new DateInterval("P7D"), $daysAdded);
                     break;
                 case REPEAT_BI_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
                         new DateInterval("P14D"), $daysAdded);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
-                    $this->createMonthlyMonthlyRepeatInstances($day, $populateUntil);
+                    $this->createMonthlyRepeatInstances($day, $populateUntil);
                     break;
                 case REPEAT_MONTHLY_WEEKLY:
-                    $this->createRepeatingInstances($day, $populateUntil, REPEAT_MONTHLY_WEEKLY,
-                        null, $daysAdded);
+                    $this->createMonthlyRepeatInstances($day, $populateUntil);
                     break;
             }
         }
 
-        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances) &&
-            $this->ccShow->isLinked()) {
-            Application_Service_SchedulerService::fillNewLinkedInstances($this->ccShow);
+        foreach ($ccShows as $ccShow) {
+            if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
+                Application_Service_SchedulerService::fillNewLinkedInstances($ccShow);
+            }
         }
 
         if (isset($this->linkedShowContent)) {
@@ -322,7 +330,7 @@ SQL;
             $this->deleteAllRepeatInstances($currentShowDay, $showId);
             //if repeat option was checked we need to treat the current show day
             //as a new show day so the repeat instances get created properly
-            //in createRepeatingInstances()
+            //in createWeeklyRepeatInstances()
             if ($showData['add_show_repeats']) {
                 array_push($daysAdded, $currentShowDay->getDbDay());
             }
@@ -619,29 +627,44 @@ SQL;
             ->filterByDbShowId($showId)
             ->filterByDbModifiedInstance(false)
             ->filterByDbRebroadcast(0)
+            ->orderByDbStarts()
             ->find();
 
         if ($ccShowInstances->isEmpty()) {
             return true;
         }
-        //only 1 show instance left of the show, make it non repeating.
-        else if (count($ccShowInstances) === 1) {
-            $ccShowInstance = $ccShowInstances[0];
+        /* We need to update the last_show in cc_show_days so the instances
+         * don't get recreated as the user moves forward in the calendar
+         */
+        else if (count($ccShowInstances) >= 1) {
+            $lastShowDays = array();
+            /* Creates an array where the key is the day of the week (monday,
+             * tuesday, etc.) and the value is the last show date for each
+             * day of the week. We will use this array to update the last_show
+             * for each cc_show_days entry of a cc_show
+             */
+            foreach ($ccShowInstances as $instance) {
+                $instanceStartDT = new DateTime($instance->getDbStarts(),
+                    new DateTimeZone("UTC"));
+                $lastShowDays[$instanceStartDT->format("w")] = $instanceStartDT;
+            }
 
-            $ccShowDay = CcShowDaysQuery::create()
-                ->filterByDbShowId($showId)
-                ->findOne();
-            $tz = $ccShowDay->getDbTimezone();
+            foreach ($lastShowDays as $dayOfWeek => $lastShowStartDT) {
+                $ccShowDay = CcShowDaysQuery::create()
+                    ->filterByDbShowId($showId)
+                    ->filterByDbDay($dayOfWeek)
+                    ->findOne();
 
-            $startDate = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
-            $startDate->setTimeZone(new DateTimeZone($tz));
-            $endDate = Application_Service_CalendarService::addDeltas($startDate, 1, 0);
+                $lastShowStartDT->setTimeZone(new DateTimeZone(
+                    $ccShowDay->getDbTimezone()));
+                $lastShowEndDT = Application_Service_CalendarService::addDeltas(
+                    $lastShowStartDT, 1, 0);
 
-            $ccShowDay->setDbFirstShow($startDate->format("Y-m-d"));
-            $ccShowDay->setDbLastShow($endDate->format("Y-m-d"));
-            $ccShowDay->setDbStartTime($startDate->format("H:i:s"));
-            $ccShowDay->setDbRepeatType(-1);
-            $ccShowDay->save();
+                $ccShowDay
+                    ->setDbLastShow($lastShowEndDT->format("Y-m-d"))
+                    ->save();
+                
+            }
 
             //remove the old repeating deleted instances.
             CcShowInstancesQuery::create()
@@ -846,7 +869,7 @@ SQL;
      * @param unknown_type $repeatInterval
      * @param unknown_type $isRebroadcast
      */
-    private function createRepeatingInstances($showDay, $populateUntil,
+    private function createWeeklyRepeatInstances($showDay, $populateUntil,
         $repeatType, $repeatInterval, $daysAdded=null)
     {
         $show_id       = $showDay->getDbShowId();
@@ -872,7 +895,9 @@ SQL;
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $utcStartDateTime = new DateTime("now");
+        $previousDate = clone $start;
         foreach ($datePeriod as $date) {
+
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*
@@ -926,6 +951,7 @@ SQL;
                     $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
                 }
             }
+            $previousDate = clone $date;
         }
 
         /* Set UTC to local time before setting the next repeat date. If we don't
@@ -936,7 +962,7 @@ SQL;
         $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
     }
 
-    private function createMonthlyMonthlyRepeatInstances($showDay, $populateUntil)
+    private function createMonthlyRepeatInstances($showDay, $populateUntil)
     {
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
@@ -953,6 +979,13 @@ SQL;
         } else {
             $end = $populateUntil;
         }
+
+        // We will only need this if the repeat type is MONTHLY_WEEKLY
+        list($weekNumberOfMonth, $dayOfWeek) =
+            $this->getMonthlyWeeklyRepeatInterval(
+                new DateTime($first_show, new DateTimeZone($timezone)));
+
+        $this->repeatType = $showDay->getDbRepeatType();
 
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
@@ -999,10 +1032,23 @@ SQL;
                 }
 
                 if ($this->isRebroadcast) {
-                    $this->createRebroadcastInstances($showDay, $date, $ccShowInstance->getDbId());
+                    $this->createRebroadcastInstances($showDay, $start, $ccShowInstance->getDbId());
                 }
             }
-            $start = $this->getNextMonthlyMonthlyRepeatDate($start, $timezone, $showDay->getDbStartTime());
+            if ($this->repeatType == REPEAT_MONTHLY_WEEKLY) {
+                $monthlyWeeklyStart = new DateTime($utcStartDateTime->format("Y-m"),
+                    new DateTimeZone("UTC"));
+                $monthlyWeeklyStart->add(new DateInterval("P1M"));
+                $start = $this->getNextMonthlyWeeklyRepeatDate(
+                    $monthlyWeeklyStart,
+                    $timezone,
+                    $showDay->getDbStartTime(),
+                    $weekNumberOfMonth,
+                    $dayOfWeek);
+            } else {
+                $start = $this->getNextMonthlyMonthlyRepeatDate(
+                    $start, $timezone, $showDay->getDbStartTime());
+            }
         }
         $this->setNextRepeatingShowDate($start->format("Y-m-d"), $day, $show_id);
     }
@@ -1018,7 +1064,6 @@ SQL;
     private function getMonthlyWeeklyRepeatInterval($showStart)
     {
         $start = clone $showStart;
-
         $dayOfMonth = $start->format("j");
         $dayOfWeek = $start->format("l");
         $yearAndMonth = $start->format("Y-m");
@@ -1047,27 +1092,64 @@ SQL;
                 $weekNumberOfMonth = "fourth";
                 break;
             case 5:
-                $weekNumberOfMonth = "last";
+                $weekNumberOfMonth = "fifth";
                 break;
         }
 
-        return DateInterval::createFromDateString(
-            $weekNumberOfMonth." ".$dayOfWeek." of next month");
+        /* return DateInterval::createFromDateString(
+            $weekNumberOfMonth." ".$dayOfWeek." of next month"); */
+        return array($weekNumberOfMonth, $dayOfWeek);
     }
 
     /**
      * 
      * Enter description here ...
-     * @param $start
+     * @param $start user's local time
      */
     private function getNextMonthlyMonthlyRepeatDate($start, $timezone, $startTime)
     {
         $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
+
         do {
             $dt->add(new DateInterval("P1M"));
         } while (!checkdate($dt->format("m"), $start->format("d"), $dt->format("Y")));
 
         $dt->setDate($dt->format("Y"), $dt->format("m"), $start->format("d"));
+
+        $startTime = explode(":", $startTime);
+        $hours = isset($startTime[0]) ? $startTime[0] : "00";
+        $minutes = isset($startTime[1]) ? $startTime[1] : "00";
+        $seconds = isset($startTime[2]) ? $startTime[2] : "00";
+        $dt->setTime($hours, $minutes, $seconds);
+        return $dt;
+    }
+
+    private function getNextMonthlyWeeklyRepeatDate(
+        $start,
+        $timezone,
+        $startTime,
+        $weekNumberOfMonth,
+        $dayOfWeek)
+    {
+        $dt = new DateTime($start->format("Y-m"), new DateTimeZone($timezone));
+        $tempDT = clone $dt;
+        $fifthWeekExists = false;
+        do {
+            $nextDT = date_create($weekNumberOfMonth." ".$dayOfWeek.
+                " of ".$tempDT->format("F")." ".$tempDT->format("Y"));
+
+            /* We have to check if the next date is in the same month in case
+             * the repeat day is in the fifth week of the month.
+             * If it's not in the same month we know that a fifth week of
+             * the next month does not exist. So let's skip it.
+             */
+            if ($tempDT->format("F") == $nextDT->format("F")) {
+                $fifthWeekExists = true;
+            }
+            $tempDT->add(new DateInterval("P1M"));
+        } while (!$fifthWeekExists);
+
+        $dt = $nextDT;
 
         $startTime = explode(":", $startTime);
         $hours = isset($startTime[0]) ? $startTime[0] : "00";

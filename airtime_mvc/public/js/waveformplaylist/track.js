@@ -176,6 +176,7 @@ TrackEditor.prototype.loadBuffer = function(src) {
     var that = this,
         xhr = new XMLHttpRequest();
 
+    xhr.open('GET', src, true);
     xhr.responseType = 'arraybuffer';
 
     xhr.addEventListener('progress', function(e) {
@@ -198,7 +199,6 @@ TrackEditor.prototype.loadBuffer = function(src) {
         );
     }, false);
 
-    xhr.open('GET', src, true);
     xhr.send();
 };
 
@@ -208,10 +208,19 @@ TrackEditor.prototype.drawTrack = function(buffer) {
     this.drawer.drawFades(this.fades);
 };
 
-TrackEditor.prototype.onTrackLoad = function(buffer) {
+TrackEditor.prototype.onTrackLoad = function(buffer, err) {
     var res,
         startTime,
         endTime;
+
+    if (err !== undefined) {
+        this.container.innerHTML = "";
+        this.container.classList.add("error");
+
+        this.fire('unregister');
+
+        return;
+    }
 
     if (this.cues === undefined) {
         this.setCuePoints(0, buffer.length - 1);
@@ -282,6 +291,8 @@ TrackEditor.prototype.deactivate = function() {
 /* start of state methods */
 
 TrackEditor.prototype.timeShift = function(e) {
+    e.preventDefault();
+
     var el = e.currentTarget, //want the events placed on the channel wrapper.
         startX = e.pageX, 
         diffX = 0, 
@@ -296,6 +307,8 @@ TrackEditor.prototype.timeShift = function(e) {
     
     //dynamically put an event on the element.
     el.onmousemove = function(e) {
+        e.preventDefault();
+
         var endX = e.pageX;
         
         diffX = endX - startX;
@@ -303,7 +316,9 @@ TrackEditor.prototype.timeShift = function(e) {
         editor.drawer.setTimeShift(updatedX);
         editor.leftOffset = editor.pixelsToSamples(updatedX);
     };
-    el.onmouseup = function() {
+    el.onmouseup = function(e) {
+        e.preventDefault();
+
         var delta;
 
         el.onmousemove = el.onmouseup = null;
@@ -453,6 +468,8 @@ TrackEditor.prototype.findLayerOffset = function(e) {
 };
 
 TrackEditor.prototype.selectStart = function(e) {
+    e.preventDefault();
+
     var el = e.currentTarget, //want the events placed on the channel wrapper.
         editor = this,
         startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
@@ -475,6 +492,8 @@ TrackEditor.prototype.selectStart = function(e) {
 
     //dynamically put an event on the element.
     el.onmousemove = function(e) {
+        e.preventDefault();
+
         var currentX = layerOffset + (e.layerX || e.offsetX),
             delta = currentX - prevX,
             minX = Math.min(prevX, currentX, startX),
@@ -500,6 +519,8 @@ TrackEditor.prototype.selectStart = function(e) {
         prevX = currentX;
     };
     el.onmouseup = function(e) {
+        e.preventDefault();
+
         var endX = layerOffset + (e.layerX || e.offsetX),
             minX, maxX,
             startTime, endTime;
@@ -555,6 +576,8 @@ TrackEditor.prototype.selectCursorPos = function(e) {
 };
 
 TrackEditor.prototype.selectFadeIn = function(e) {
+    e.preventDefault();
+
     var startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
         layerOffset,
         FADETYPE = "FadeIn",
@@ -572,6 +595,8 @@ TrackEditor.prototype.selectFadeIn = function(e) {
 };
 
 TrackEditor.prototype.selectFadeOut = function(e) {
+    e.preventDefault();
+
     var startX = e.layerX || e.offsetX, //relative to e.target (want the canvas).
         layerOffset,
         FADETYPE = "FadeOut",

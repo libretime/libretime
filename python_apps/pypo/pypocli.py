@@ -25,6 +25,7 @@ from recorder import Recorder
 from listenerstat import ListenerStat
 from pypomessagehandler import PypoMessageHandler
 from pypoliquidsoap import PypoLiquidsoap
+from timeout import ls_timeout
 
 from media.update.replaygainupdater import ReplayGainUpdater
 from media.update.silananalyzer import SilanAnalyzer
@@ -156,6 +157,7 @@ def keyboardInterruptHandler(signum, frame):
     logger.info('\nKeyboard Interrupt\n')
     sys.exit(0)
 
+@ls_timeout
 def liquidsoap_get_info(telnet_lock, host, port, logger):
     logger.debug("Checking to see if Liquidsoap is running")
     try:

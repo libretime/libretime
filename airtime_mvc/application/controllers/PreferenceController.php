@@ -30,6 +30,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->statusMsg = "";
 
         $form = new Application_Form_Preferences();
+        $values = array();
 
         if ($request->isPost()) {
             $params = $request->getPost();
@@ -137,11 +138,12 @@ class PreferenceController extends Zend_Controller_Action
             $setting[$t['keyname']] = $t['value'];
         }
 
-        $name_map = array('ogg' => 'Ogg Vorbis',
-                'aacplus' => 'AAC+',
+        $name_map = array(
+				'ogg' => 'Ogg Vorbis',
+                'fdkaac' => 'AAC+',
                 'aac' => 'AAC',
                 'opus' => 'Opus',
-                'mp3' => 'MP3'
+                'mp3' => 'MP3',
         );
 
         // get predefined type and bitrate from pref table
@@ -162,7 +164,7 @@ class PreferenceController extends Zend_Controller_Action
         $stream_bitrates = array();
         foreach ($temp_bitrate as $type) {
             if (intval($type) <= $max_bitrate) {
-                $stream_bitrates[trim($type)] = strtoupper(trim($type))." Kbit/s";
+                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
             }
         }
 
@@ -193,6 +195,7 @@ class PreferenceController extends Zend_Controller_Action
             $s1_data = array();
             $s2_data = array();
             $s3_data = array();
+            $values = array();
             foreach($postData as $k=>$v) {
                 $v = explode('=', urldecode($v));
                 if (strpos($v[0], "s1_data") !== false) {

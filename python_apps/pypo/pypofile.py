@@ -64,20 +64,14 @@ class PypoFile(Thread):
             try:
 
                 """
-                List file as "ready" before it starts copying because by the time
-                Liquidsoap is ready to play this file, it should have at least started
-                copying (and can continue copying while Liquidsoap reads from the beginning
-                of the file)
-                """
-                media_item['file_ready'] = True
-
-                """
                 copy will overwrite dst if it already exists
                 """
                 shutil.copy(src, dst)
 
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
+
+                media_item['file_ready'] = True
             except Exception, e:
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
