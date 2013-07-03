@@ -123,6 +123,8 @@ class CcFilesTableMap extends TableMap {
     $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcBlockcontents', 'CcBlockcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
     $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
+    $this->addRelation('CcFileTag', 'CcFileTag', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
+    $this->addRelation('CcPlayoutHistory', 'CcPlayoutHistory', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcFilesTableMap

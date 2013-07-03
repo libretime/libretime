@@ -494,6 +494,16 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $collCcSchedules;
 
 	/**
+	 * @var        array CcFileTag[] Collection to store aggregation of CcFileTag objects.
+	 */
+	protected $collCcFileTags;
+
+	/**
+	 * @var        array CcPlayoutHistory[] Collection to store aggregation of CcPlayoutHistory objects.
+	 */
+	protected $collCcPlayoutHistorys;
+
+	/**
 	 * Flag to prevent endless save loop, if this object is referenced
 	 * by another object which falls in this transaction.
 	 * @var        boolean
@@ -3109,6 +3119,10 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 			$this->collCcSchedules = null;
 
+			$this->collCcFileTags = null;
+
+			$this->collCcPlayoutHistorys = null;
+
 		} // if (deep)
 	}
 
@@ -3300,6 +3314,22 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcFileTags !== null) {
+				foreach ($this->collCcFileTags as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
+			if ($this->collCcPlayoutHistorys !== null) {
+				foreach ($this->collCcPlayoutHistorys as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			$this->alreadyInSave = false;
 
 		}
@@ -3421,6 +3451,22 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 				if ($this->collCcSchedules !== null) {
 					foreach ($this->collCcSchedules as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcFileTags !== null) {
+					foreach ($this->collCcFileTags as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
+				if ($this->collCcPlayoutHistorys !== null) {
+					foreach ($this->collCcPlayoutHistorys as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
 							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
 						}
@@ -4351,6 +4397,18 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				}
 			}
 
+			foreach ($this->getCcFileTags() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcFileTag($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcPlayoutHistorys() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcPlayoutHistory($relObj->copy($deepCopy));
+				}
+			}
+
 		} // if ($deepCopy)
 
 
@@ -5155,6 +5213,249 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcFileTags collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcFileTags()
+	 */
+	public function clearCcFileTags()
+	{
+		$this->collCcFileTags = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcFileTags collection.
+	 *
+	 * By default this just sets the collCcFileTags collection to an empty array (like clearcollCcFileTags());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcFileTags()
+	{
+		$this->collCcFileTags = new PropelObjectCollection();
+		$this->collCcFileTags->setModel('CcFileTag');
+	}
+
+	/**
+	 * Gets an array of CcFileTag objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcFiles is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcFileTag[] List of CcFileTag objects
+	 * @throws     PropelException
+	 */
+	public function getCcFileTags($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcFileTags || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFileTags) {
+				// return empty collection
+				$this->initCcFileTags();
+			} else {
+				$collCcFileTags = CcFileTagQuery::create(null, $criteria)
+					->filterByCcFiles($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcFileTags;
+				}
+				$this->collCcFileTags = $collCcFileTags;
+			}
+		}
+		return $this->collCcFileTags;
+	}
+
+	/**
+	 * Returns the number of related CcFileTag objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcFileTag objects.
+	 * @throws     PropelException
+	 */
+	public function countCcFileTags(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcFileTags || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcFileTags) {
+				return 0;
+			} else {
+				$query = CcFileTagQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcFiles($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcFileTags);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcFileTag object to this object
+	 * through the CcFileTag foreign key attribute.
+	 *
+	 * @param      CcFileTag $l CcFileTag
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcFileTag(CcFileTag $l)
+	{
+		if ($this->collCcFileTags === null) {
+			$this->initCcFileTags();
+		}
+		if (!$this->collCcFileTags->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcFileTags[]= $l;
+			$l->setCcFiles($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcFiles is new, it will return
+	 * an empty collection; or if this CcFiles has previously
+	 * been saved, it will retrieve related CcFileTags from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcFiles.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcFileTag[] List of CcFileTag objects
+	 */
+	public function getCcFileTagsJoinCcTag($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcFileTagQuery::create(null, $criteria);
+		$query->joinWith('CcTag', $join_behavior);
+
+		return $this->getCcFileTags($query, $con);
+	}
+
+	/**
+	 * Clears out the collCcPlayoutHistorys collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcPlayoutHistorys()
+	 */
+	public function clearCcPlayoutHistorys()
+	{
+		$this->collCcPlayoutHistorys = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcPlayoutHistorys collection.
+	 *
+	 * By default this just sets the collCcPlayoutHistorys collection to an empty array (like clearcollCcPlayoutHistorys());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcPlayoutHistorys()
+	{
+		$this->collCcPlayoutHistorys = new PropelObjectCollection();
+		$this->collCcPlayoutHistorys->setModel('CcPlayoutHistory');
+	}
+
+	/**
+	 * Gets an array of CcPlayoutHistory objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcFiles is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcPlayoutHistory[] List of CcPlayoutHistory objects
+	 * @throws     PropelException
+	 */
+	public function getCcPlayoutHistorys($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcPlayoutHistorys || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcPlayoutHistorys) {
+				// return empty collection
+				$this->initCcPlayoutHistorys();
+			} else {
+				$collCcPlayoutHistorys = CcPlayoutHistoryQuery::create(null, $criteria)
+					->filterByCcFiles($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcPlayoutHistorys;
+				}
+				$this->collCcPlayoutHistorys = $collCcPlayoutHistorys;
+			}
+		}
+		return $this->collCcPlayoutHistorys;
+	}
+
+	/**
+	 * Returns the number of related CcPlayoutHistory objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcPlayoutHistory objects.
+	 * @throws     PropelException
+	 */
+	public function countCcPlayoutHistorys(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcPlayoutHistorys || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcPlayoutHistorys) {
+				return 0;
+			} else {
+				$query = CcPlayoutHistoryQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcFiles($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcPlayoutHistorys);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcPlayoutHistory object to this object
+	 * through the CcPlayoutHistory foreign key attribute.
+	 *
+	 * @param      CcPlayoutHistory $l CcPlayoutHistory
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcPlayoutHistory(CcPlayoutHistory $l)
+	{
+		if ($this->collCcPlayoutHistorys === null) {
+			$this->initCcPlayoutHistorys();
+		}
+		if (!$this->collCcPlayoutHistorys->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcPlayoutHistorys[]= $l;
+			$l->setCcFiles($this);
+		}
+	}
+
+	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
@@ -5270,12 +5571,24 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcFileTags) {
+				foreach ((array) $this->collCcFileTags as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
+			if ($this->collCcPlayoutHistorys) {
+				foreach ((array) $this->collCcPlayoutHistorys as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 		} // if ($deep)
 
 		$this->collCcShowInstancess = null;
 		$this->collCcPlaylistcontentss = null;
 		$this->collCcBlockcontentss = null;
 		$this->collCcSchedules = null;
+		$this->collCcFileTags = null;
+		$this->collCcPlayoutHistorys = null;
 		$this->aFkOwner = null;
 		$this->aCcSubjsRelatedByDbEditedby = null;
 		$this->aCcMusicDirs = null;
