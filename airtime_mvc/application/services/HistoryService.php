@@ -1,14 +1,71 @@
 <?php
 
+require_once 'formatters/LengthFormatter.php';
+
 class Application_Service_HistoryService
 {
 	private $con;
 	private $timezone;
 	
+	private $mDataPropMap = array(
+			"artist"    => "artist_name",
+			"title"     => "track_title",
+			"played"    => "played",
+			"length"    => "length",
+			"composer"  => "composer",
+			"copyright" => "copyright",
+	);
+	
 	public function __construct()
 	{
 		$this->con = isset($con) ? $con : Propel::getConnection(CcPlayoutHistoryPeer::DATABASE_NAME);
-		$this->timezone    = date_default_timezone_get();
+		$this->timezone = date_default_timezone_get();
+	}
+	
+	/*
+	 * map front end mDataProp labels to proper column names for searching etc.
+	*/
+	private function translateColumns($opts)
+	{
+		for ($i = 0; $i < $opts["iColumns"]; $i++) {
+	
+			$opts["mDataProp_{$i}"] = $this->mDataPropMap[$opts["mDataProp_{$i}"]];
+		}
+	}
+	
+	public function getItems($startDT, $endDT, $opts)
+	{
+		$this->translateColumns($opts);
+	
+		$select = array(
+				"file.track_title as title",
+				"file.artist_name as artist",
+				"playout.played",
+				"playout.file_id",
+				"file.composer",
+				"file.copyright",
+				"file.length"
+		);
+	
+		$start = $startDT->format("Y-m-d H:i:s");
+		$end   = $endDT->format("Y-m-d H:i:s");
+	
+		$historyTable = "(
+			select count(history.file_id) as played, history.file_id as file_id
+			from cc_playout_history as history
+			where history.starts >= '{$start}' and history.starts < '{$end}'
+			group by history.file_id
+		) AS playout 
+		left join cc_files as file on (file.id = playout.file_id)";
+	
+		$results = Application_Model_Datatables::findEntries($this->con, $select, $historyTable, $opts, "history");
+	
+		foreach ($results["history"] as &$row) {
+			$formatter = new LengthFormatter($row['length']);
+			$row['length'] = $formatter->format();
+		}
+	
+		return $results;
 	}
 	
 	public function insertPlayedItem($schedId) {
