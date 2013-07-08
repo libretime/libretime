@@ -1,18 +1,21 @@
 function getFileName(ext){
-    var filename = $("#his_date_start").val()+"_"+$("#his_time_start").val()+"m--"+$("#his_date_end").val()+"_"+$("#his_time_end").val()+"m"
-    filename = filename.replace(/:/g,"h")
-    if(ext == "pdf"){
-        filename = filename+".pdf"
-    }else{
-        filename = filename+".csv"
+    var filename = $("#his_date_start").val()+"_"+$("#his_time_start").val()+"m--"+$("#his_date_end").val()+"_"+$("#his_time_end").val()+"m";
+    filename = filename.replace(/:/g,"h");
+    
+    if (ext == "pdf"){
+        filename = filename+".pdf";
+    }
+    else {
+        filename = filename+".csv";
     }
     return filename;
 }
 
 function setFlashFileName( nButton, oConfig, oFlash ) {
-    var filename = getFileName(oConfig.sExtends)
+    var filename = getFileName(oConfig.sExtends);
     oFlash.setFileName( filename );
-    if(oConfig.sExtends == "pdf"){
+    
+    if (oConfig.sExtends == "pdf") {
         this.fnSetText( oFlash,
             "title:"+ this.fnGetTitle(oConfig) +"\n"+
             "message:"+ oConfig.sPdfMessage +"\n"+
@@ -21,9 +24,9 @@ function setFlashFileName( nButton, oConfig, oFlash ) {
             "size:"+ oConfig.sPdfSize +"\n"+
             "--/TableToolsOpts--\n" +
             this.fnGetTableData(oConfig));
-    }else{
-        this.fnSetText( oFlash,
-                this.fnGetTableData(oConfig));
+    }
+    else {
+        this.fnSetText(oFlash, this.fnGetTableData(oConfig));
     }
 }
 
@@ -60,6 +63,16 @@ var AIRTIME = (function(AIRTIME) {
                 "data": aoData,
                 "success": fnCallback
             } );
+        },
+        
+        fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+        	var url = baseUrl+"Playouthistory/edit-aggregate-item/format/json/id/"+aData.file_id,
+        		$link = $("<a/>", {
+        			"href": url,
+        			"text": $.i18n._("Edit")
+        		});
+        	
+        	$('td.his_edit', nRow).html($link);
         };
         
         oTable = historyTableDiv.dataTable( {
@@ -70,7 +83,8 @@ var AIRTIME = (function(AIRTIME) {
                {"sTitle": $.i18n._("Played"), "mDataProp": "played", "sClass": "his_artist"}, /* times played */
                {"sTitle": $.i18n._("Length"), "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
                {"sTitle": $.i18n._("Composer"), "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
-               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
+               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"}, /* Copyright */
+               {"sTitle" : $.i18n._("Admin"), "mDataProp": "file_id", "bSearchable" : false, "sClass": "his_edit"}, /* id of history item */
             ],
                           
             "bProcessing": true,
@@ -79,6 +93,8 @@ var AIRTIME = (function(AIRTIME) {
             "sAjaxDataProp": "history",
             
             "fnServerData": fnServerData,
+            
+            "fnRowCallback": fnRowCallback,
             
             "oLanguage": datatables_dict,
             
@@ -184,6 +200,27 @@ $(document).ready(function(){
 	history_content.find(dateEndId).datepicker(oBaseDatePickerSettings);
 	history_content.find(timeEndId).timepicker(oBaseTimePickerSettings);
 	
+	history_content.on("click", "td.his_edit", function(e) {
+		var url = e.target.href;
+		
+		e.preventDefault();
+		
+		$.get(url, function(json) {
+			var dialog = $(json.dialog);
+		     
+		    dialog.dialog({
+		        autoOpen: false,
+		        title: $.i18n._("Edit History Record"),
+		        //width: 460,
+		        //height: 660,
+		        modal: true
+		        //close: closeDialogLibrary
+		    });
+
+		    dialog.dialog('open');
+			
+		}, "json");
+	});
 	
 	history_content.find("#his_submit").click(function(ev){
 		var fn,

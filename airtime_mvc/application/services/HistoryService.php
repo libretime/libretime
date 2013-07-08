@@ -7,13 +7,13 @@ class Application_Service_HistoryService
 	private $con;
 	private $timezone;
 	
-	private $mDataPropMap = array(
-			"artist"    => "artist_name",
-			"title"     => "track_title",
-			"played"    => "played",
-			"length"    => "length",
-			"composer"  => "composer",
-			"copyright" => "copyright",
+	private $mDataPropMap = array (
+		"artist" => "artist_name",
+		"title" => "track_title",
+		"played" => "played",
+		"length" => "length",
+		"composer" => "composer",
+		"copyright" => "copyright",
 	);
 	
 	public function __construct()
@@ -29,22 +29,24 @@ class Application_Service_HistoryService
 	{
 		for ($i = 0; $i < $opts["iColumns"]; $i++) {
 	
-			$opts["mDataProp_{$i}"] = $this->mDataPropMap[$opts["mDataProp_{$i}"]];
+			if ($opts["bSearchable_{$i}"] === "true") {
+				$opts["mDataProp_{$i}"] = $this->mDataPropMap[$opts["mDataProp_{$i}"]];
+			}	
 		}
 	}
 	
-	public function getItems($startDT, $endDT, $opts)
+	public function getAggregateView($startDT, $endDT, $opts)
 	{
 		$this->translateColumns($opts);
 	
-		$select = array(
-				"file.track_title as title",
-				"file.artist_name as artist",
-				"playout.played",
-				"playout.file_id",
-				"file.composer",
-				"file.copyright",
-				"file.length"
+		$select = array (
+			"file.track_title as title",
+			"file.artist_name as artist",
+			"playout.played",
+			"playout.file_id",
+			"file.composer",
+			"file.copyright",
+			"file.length"
 		);
 	
 		$start = $startDT->format("Y-m-d H:i:s");
@@ -116,6 +118,27 @@ class Application_Service_HistoryService
 			$this->con->rollback();
 			throw $e;
 		}
+	}
+	
+	public function makeHistoryItemForm() {
+			
+	}
+	
+	public function makeHistoryFileForm($id) {
+		
+		$form = new Application_Form_EditHistoryFile();
+		
+		return $form;
+	}
+	
+	/* id is an id in cc_playout_history */
+	public function editPlayedItem($id) {
+		
+	}
+	
+	/* id is an id in cc_files */
+	public function editPlayedFile($id) {
+	
 	}
 
 }

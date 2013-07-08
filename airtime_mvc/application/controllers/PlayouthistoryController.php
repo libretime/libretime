@@ -7,6 +7,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
             ->addActionContext('playout-history-feed', 'json')
+            ->addActionContext('edit-aggregate-item', 'json')
             ->initContext();
         }
 
@@ -71,12 +72,33 @@ class PlayouthistoryController extends Zend_Controller_Action
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
         $historyService = new Application_Service_HistoryService();
-        $r = $historyService->getItems($startsDT, $endsDT, $params);
+        $r = $historyService->getAggregateView($startsDT, $endsDT, $params);
         
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
         $this->view->iTotalRecords = $r["iTotalRecords"];
         $this->view->history = $r["history"];
+    }
+    
+    public function editAggregateItemAction()
+    {
+    	$file_id = $this->_getParam('id');
+    	
+    	$historyService = new Application_Service_HistoryService();
+    	$form = $historyService->makeHistoryFileForm($file_id);
+    	
+    	$this->view->form = $form;
+    	$this->view->dialog = $this->view->render('form/edit-history-file.phtml');
+    	
+    	unset($this->view->form);
+    }
+
+    public function updateAggregateItemAction()
+    {
+    	$file_id = $this->_getParam('id');
+    	
+    	$historyService = new Application_Service_HistoryService();
+    	$historyService->editPlayedFile($file_id);
     }
 
 }
