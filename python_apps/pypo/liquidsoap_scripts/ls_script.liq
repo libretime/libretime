@@ -41,9 +41,9 @@ source_id = ref 0
 
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
-    l = cue_cut(l)
 
     l = audio_to_stereo(id="queue_src", l)
+    l = cue_cut(l)
     l = amplify(1., override="replay_gain", l)
 
     # the crossfade function controls fade in/out
