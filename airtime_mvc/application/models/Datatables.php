@@ -58,43 +58,6 @@ class Application_Model_Datatables
     public static function findEntries($con, $displayColumns, $fromTable,
         $data, $dataProp = "aaData")
     {
-        $librarySetting = 
-            Application_Model_Preference::getCurrentLibraryTableColumnMap();
-        //$displayColumns[] = 'owner';
-
-        // map that maps original column position to db name
-        $current2dbname = array();
-        // array of search terms
-        $orig2searchTerm = array();
-        foreach ($data as $key => $d) {
-            if (strstr($key, "mDataProp_")) {
-                list($dump, $index) = explode("_", $key);
-                $current2dbname[$index] = $d;
-            } elseif (strstr($key, "sSearch_")) {
-                list($dump, $index) = explode("_", $key);
-                $orig2searchTerm[$index] = $d;
-            }
-        }
-
-        // map that maps dbname to searchTerm
-        $dbname2searchTerm = array();
-        foreach ($current2dbname as $currentPos => $dbname) {
-            $new_index = $librarySetting($currentPos);
-            // TODO : Fix this retarded hack later. Just a band aid for
-            // now at least we print some warnings so that we don't
-            // forget about this -- cc-4462
-            if ( array_key_exists($new_index, $orig2searchTerm) ) {
-                $dbname2searchTerm[$dbname] = $orig2searchTerm[$new_index];
-            } else {
-                Logging::warn("Trying to reorder to unknown index
-                    printing as much debugging as possible...");
-                $debug = array(
-                    '$new_index'       => $new_index,
-                    '$currentPos'      => $currentPos,
-                    '$orig2searchTerm' => $orig2searchTerm);
-                Logging::warn($debug);
-            }
-        }
 
         $where = array();
         /* Holds the parameters for binding after the statement has been
@@ -102,6 +65,45 @@ class Application_Model_Datatables
         $params = array();
 
         if (isset($data['advSearch']) && $data['advSearch'] === 'true') {
+
+            $librarySetting =
+            Application_Model_Preference::getCurrentLibraryTableColumnMap();
+            //$displayColumns[] = 'owner';
+
+            // map that maps original column position to db name
+            $current2dbname = array();
+            // array of search terms
+            $orig2searchTerm = array();
+            foreach ($data as $key => $d) {
+                if (strstr($key, "mDataProp_")) {
+                    list($dump, $index) = explode("_", $key);
+                    $current2dbname[$index] = $d;
+                } elseif (strstr($key, "sSearch_")) {
+                    list($dump, $index) = explode("_", $key);
+                    $orig2searchTerm[$index] = $d;
+                }
+            }
+
+            // map that maps dbname to searchTerm
+            $dbname2searchTerm = array();
+            foreach ($current2dbname as $currentPos => $dbname) {
+                $new_index = $librarySetting($currentPos);
+                // TODO : Fix this retarded hack later. Just a band aid for
+                // now at least we print some warnings so that we don't
+                // forget about this -- cc-4462
+                if ( array_key_exists($new_index, $orig2searchTerm) ) {
+                    $dbname2searchTerm[$dbname] = $orig2searchTerm[$new_index];
+                } else {
+                    Logging::warn("Trying to reorder to unknown index
+                            printing as much debugging as possible...");
+                    $debug = array(
+                            '$new_index'       => $new_index,
+                            '$currentPos'      => $currentPos,
+                            '$orig2searchTerm' => $orig2searchTerm);
+                    Logging::warn($debug);
+                }
+            }
+
             $advancedWhere = self::buildWhereClauseForAdvancedSearch($dbname2searchTerm);
             if (!empty($advancedWhere['clause'])) {
                 $where[] = join(" AND ", $advancedWhere['clause']);
@@ -118,7 +120,6 @@ class Application_Model_Datatables
 
         $sql = $selectorCount." FROM ".$fromTable;
         $sqlTotalRows = $sql;
-
 
         if (isset($searchTerms)) {
             $searchCols = array();
@@ -164,57 +165,47 @@ class Application_Model_Datatables
 
             $sql = $selectorRows." FROM ".$fromTable." WHERE ".$where." ORDER BY ".$orderby;
 
-            //limit the results returned.
-            if ($displayLength !== -1) {
-                $sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
-            }
-        } else {
-            $sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby;
-
-            //limit the results returned.
-            if ($displayLength !== -1) {
-                $sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
-            }
         }
+        else {
+            $sql = $selectorRows." FROM ".$fromTable." ORDER BY ".$orderby;
+        }
+
+        //limit the results returned.
+        if ($displayLength !== -1) {
+            $sql .= " OFFSET ".$data["iDisplayStart"]." LIMIT ".$displayLength;
+        }
+
         try {
-            
+
+            Logging::info($sqlTotalRows);
+
             $r = $con->query($sqlTotalRows);
             $totalRows = $r->fetchColumn(0);
 
             if (isset($sqlTotalDisplayRows)) {
+                Logging::info("sql is set");
+                Logging::info($sqlTotalDisplayRows);
                 $totalDisplayRows = Application_Common_Database::prepareAndExecute($sqlTotalDisplayRows, $params, 'column');
-            } else {
+            }
+            else {
+                Logging::info("sql is not set.");
                 $totalDisplayRows = $totalRows;
             }
 
             //TODO
             if ($needToBind) {
                 $results = Application_Common_Database::prepareAndExecute($sql, $params);
-            } else {
+            }
+            else {
                 $stmt = $con->query($sql);
                 $stmt->setFetchMode(PDO::FETCH_ASSOC);
                 $results = $stmt->fetchAll();
             }
-            
-            // we need to go over all items and fix length for playlist
-            // in case the playlist contains dynamic block
-            foreach ($results as &$r) {
-                //this function is also called for Manage Users so in
-                //this case there will be no 'ftype'
-                if (isset($r['ftype'])) {
-                    if ($r['ftype'] == 'playlist') {
-                        $pl = new Application_Model_Playlist($r['id']);
-                        $r['length'] = $pl->getLength();
-                    } elseif ($r['ftype'] == "block") {
-                        $bl = new Application_Model_Block($r['id']);
-                        $r['bl_type'] = $bl->isStatic() ? 'static' : 'dynamic';
-                        $r['length']  = $bl->getLength();
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            Logging::debug($e->getMessage());
         }
+        catch (Exception $e) {
+            Logging::info($e->getMessage());
+        }
+
         return array(
             "sEcho"                => intval($data["sEcho"]),
             "iTotalDisplayRecords" => intval($totalDisplayRows),

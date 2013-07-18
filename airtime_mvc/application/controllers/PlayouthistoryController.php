@@ -6,8 +6,11 @@ class PlayouthistoryController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
-            ->addActionContext('playout-history-feed', 'json')
+            ->addActionContext('aggregate-history-feed', 'json')
+            ->addActionContext('item-history-feed', 'json')
             ->addActionContext('edit-aggregate-item', 'json')
+            ->addActionContext('edit-list-item', 'json')
+            ->addActionContext('update-aggregate-item', 'json')
             ->initContext();
         }
 
@@ -58,7 +61,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
     }
 
-    public function playoutHistoryFeedAction()
+    public function aggregateHistoryFeedAction()
     {
         $request = $this->getRequest();
         $current_time = time();
@@ -73,32 +76,70 @@ class PlayouthistoryController extends Zend_Controller_Action
 
         $historyService = new Application_Service_HistoryService();
         $r = $historyService->getAggregateView($startsDT, $endsDT, $params);
-        
+
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
         $this->view->iTotalRecords = $r["iTotalRecords"];
         $this->view->history = $r["history"];
     }
-    
+
+    public function itemHistoryFeedAction()
+    {
+        $request = $this->getRequest();
+        $current_time = time();
+
+        $params = $request->getParams();
+
+        $starts_epoch = $request->getParam("start", $current_time - (60*60*24));
+        $ends_epoch = $request->getParam("end", $current_time);
+
+        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+
+        $historyService = new Application_Service_HistoryService();
+        $r = $historyService->getListView($startsDT, $endsDT, $params);
+
+        $this->view->sEcho = $r["sEcho"];
+        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
+        $this->view->iTotalRecords = $r["iTotalRecords"];
+        $this->view->history = $r["history"];
+    }
+
     public function editAggregateItemAction()
     {
     	$file_id = $this->_getParam('id');
-    	
+
     	$historyService = new Application_Service_HistoryService();
     	$form = $historyService->makeHistoryFileForm($file_id);
-    	
+
     	$this->view->form = $form;
     	$this->view->dialog = $this->view->render('form/edit-history-file.phtml');
-    	
+
     	unset($this->view->form);
+    }
+
+    public function editListItemAction()
+    {
+        $file_id = $this->_getParam('id');
+
+        $historyService = new Application_Service_HistoryService();
+        $form = $historyService->makeHistoryFileForm($file_id);
+
+        $this->view->form = $form;
+        $this->view->dialog = $this->view->render('form/edit-history-file.phtml');
+
+        unset($this->view->form);
     }
 
     public function updateAggregateItemAction()
     {
-    	$file_id = $this->_getParam('id');
-    	
-    	$historyService = new Application_Service_HistoryService();
-    	$historyService->editPlayedFile($file_id);
-    }
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        Logging::info($params);
 
+    	$historyService = new Application_Service_HistoryService();
+    	$json = $historyService->editPlayedFile($params);
+
+    	$this->view->data = $json;
+    }
 }
