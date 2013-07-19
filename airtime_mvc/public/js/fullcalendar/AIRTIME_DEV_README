@@ -3,14 +3,14 @@ in this file.
 
 Running a diff between the original fullcalendar.js and our modified one:
 
-martin@Thinkpad-T410:~/workspace/airtime/airtime_mvc/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js 
---- fullcalendar_orig.js	2011-04-09 17:13:15.000000000 -0400
-+++ fullcalendar.js	2011-11-18 17:03:57.000000000 -0500
+denise@denise-desktop:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js 
+--- fullcalendar_orig.js	2013-05-24 08:33:54.462735215 -0400
++++ fullcalendar.js	2013-07-19 12:42:37.274284180 -0400
 @@ -1,6 +1,6 @@
  /**
   * @preserve
-- * FullCalendar v1.5.1
-+ * FullCalendar v1.5.1-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
+- * FullCalendar v1.5.3
++ * FullCalendar v1.5.3-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
   * http://arshaw.com/fullcalendar/
   *
   * Use fullcalendar.css for basic styling.
@@ -23,7 +23,7 @@ martin@Thinkpad-T410:~/workspace/airtime/airtime_mvc/public/js/fullcalendar$ dif
  	var events = [];
  	var _dragElement;
  	
-@@ -2275,7 +2275,7 @@
+@@ -2277,7 +2277,7 @@
  	function updateCells(firstTime) {
  		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
  		var month = t.start.getMonth();
@@ -32,7 +32,7 @@ martin@Thinkpad-T410:~/workspace/airtime/airtime_mvc/public/js/fullcalendar$ dif
  		var cell;
  		var date;
  		var row;
-@@ -3108,7 +3108,7 @@
+@@ -3110,7 +3110,7 @@
  		var headCell;
  		var bodyCell;
  		var date;
@@ -41,9 +41,16 @@ martin@Thinkpad-T410:~/workspace/airtime/airtime_mvc/public/js/fullcalendar$ dif
  		for (i=0; i<colCnt; i++) {
  			date = colDate(i);
  			headCell = dayHeadCells.eq(i);
-@@ -5205,4 +5205,4 @@
- 	
- }
+@@ -3867,7 +3867,7 @@
+ 				if (seg.contentTop !== undefined && height - seg.contentTop < 10) {
+ 					// not enough room for title, put it in the time header
+ 					eventElement.find('div.fc-event-time')
+-						.text(formatDate(event.start, opt('timeFormat')) + ' - ' + event.title);
++						.text(formatDate(event.start, opt('timeFormat')) + ' - ' + formatDate(event.end, opt('timeFormat')) + ' ' + event.title);
+ 					eventElement.find('div.fc-event-title')
+ 						.remove();
+ 				}
+
  
 -})(jQuery);
 \ No newline at end of file
