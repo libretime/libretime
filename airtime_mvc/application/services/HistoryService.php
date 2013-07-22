@@ -175,8 +175,12 @@ class Application_Service_HistoryService
 		    return $form;
 	    }
 	    catch (Exception $e) {
-	        Logging::debug($e);
+	        Logging::info($e);
 	    }
+	}
+
+	public function createPlayedItem() {
+
 	}
 
 	/* id is an id in cc_playout_history */

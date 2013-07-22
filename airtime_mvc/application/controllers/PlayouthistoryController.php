@@ -9,6 +9,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->addActionContext('aggregate-history-feed', 'json')
             ->addActionContext('item-history-feed', 'json')
             ->addActionContext('edit-aggregate-item', 'json')
+            ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
             ->addActionContext('update-aggregate-item', 'json')
             ->initContext();
@@ -116,6 +117,16 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$this->view->dialog = $this->view->render('form/edit-history-file.phtml');
 
     	unset($this->view->form);
+    }
+
+    public function createListItemAction()
+    {
+        $request = $this->getRequest();
+        $params = $request->getPost();
+        Logging::info($params);
+
+        $historyService = new Application_Service_HistoryService();
+        $historyService->createPlayedItem($params);
     }
 
     public function editListItemAction()
