@@ -209,7 +209,8 @@ class PypoFetch(Thread):
         except Exception, e:
             self.logger.error(e)
         finally:
-            self.telnet_lock.release()
+            if self.telnet_lock.locked():
+                self.telnet_lock.release()
 
     """
     TODO: This function needs to be way shorter, and refactored :/ - MK
