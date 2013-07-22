@@ -41,6 +41,7 @@ class CcPlayoutHistoryTemplateTagTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('TEMPLATE_ID', 'DbTemplateId', 'INTEGER', 'cc_playout_history_template', 'ID', true, null, null);
 		$this->addForeignKey('TAG_ID', 'DbTagId', 'INTEGER', 'cc_tag', 'ID', true, null, null);
+		$this->addColumn('POSITION', 'DbTagPosition', 'INTEGER', true, null, null);
 		// validators
 	} // initialize()
 

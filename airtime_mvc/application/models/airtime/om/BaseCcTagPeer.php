@@ -26,7 +26,7 @@ abstract class BaseCcTagPeer {
 	const TM_CLASS = 'CcTagTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 2;
+	const NUM_COLUMNS = 3;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -36,6 +36,9 @@ abstract class BaseCcTagPeer {
 
 	/** the column name for the TAG_NAME field */
 	const TAG_NAME = 'cc_tag.TAG_NAME';
+
+	/** the column name for the TAG_TYPE field */
+	const TAG_TYPE = 'cc_tag.TAG_TYPE';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcTag objects.
@@ -53,12 +56,12 @@ abstract class BaseCcTagPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTagName', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTagName', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::TAG_NAME, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TAG_NAME', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'tag_name', ),
-		BasePeer::TYPE_NUM => array (0, 1, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTagName', 'DbTagType', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTagName', 'dbTagType', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::TAG_NAME, self::TAG_TYPE, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TAG_NAME', 'TAG_TYPE', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'tag_name', 'tag_type', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, )
 	);
 
 	/**
@@ -68,12 +71,12 @@ abstract class BaseCcTagPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTagName' => 1, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTagName' => 1, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TAG_NAME => 1, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TAG_NAME' => 1, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'tag_name' => 1, ),
-		BasePeer::TYPE_NUM => array (0, 1, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTagName' => 1, 'DbTagType' => 2, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTagName' => 1, 'dbTagType' => 2, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TAG_NAME => 1, self::TAG_TYPE => 2, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TAG_NAME' => 1, 'TAG_TYPE' => 2, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'tag_name' => 1, 'tag_type' => 2, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, )
 	);
 
 	/**
@@ -147,9 +150,11 @@ abstract class BaseCcTagPeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcTagPeer::ID);
 			$criteria->addSelectColumn(CcTagPeer::TAG_NAME);
+			$criteria->addSelectColumn(CcTagPeer::TAG_TYPE);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.TAG_NAME');
+			$criteria->addSelectColumn($alias . '.TAG_TYPE');
 		}
 	}
 
@@ -346,6 +351,9 @@ abstract class BaseCcTagPeer {
 		// Invalidate objects in CcFileTagPeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcFileTagPeer::clearInstancePool();
+		// Invalidate objects in CcPlayoutHistoryMetaDataPeer instance pool, 
+		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+		CcPlayoutHistoryMetaDataPeer::clearInstancePool();
 		// Invalidate objects in CcPlayoutHistoryTemplateTagPeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcPlayoutHistoryTemplateTagPeer::clearInstancePool();

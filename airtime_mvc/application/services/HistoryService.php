@@ -131,6 +131,7 @@ class Application_Service_HistoryService
 				$history->setDbStarts($item->getDbStarts(null));
 				$history->setDbEnds($item->getDbEnds(null));
 
+				/*
 				foreach ($metadata as $key => $val) {
 					$meta = new CcPlayoutHistoryMetaData();
 					$meta->setDbKey($key);
@@ -138,6 +139,7 @@ class Application_Service_HistoryService
 
 					$history->addCcPlayoutHistoryMetaData($meta);
 				}
+				*/
 
 				$history->save($this->con);
 			}
@@ -151,8 +153,20 @@ class Application_Service_HistoryService
 	}
 
 	/* id is an id in cc_playout_history */
-	public function makeHistoryItemForm($id) {
-
+	public function makeHistoryItemForm() {
+		
+		try {
+			$form = new Application_Form_EditHistoryItem();
+			$template = $this->getItemTemplate();
+			
+			$form->createFromTemplate($template);
+		
+			return $form;
+		}
+		catch (Exception $e) {
+			Logging::info($e);
+			throw $e;
+		}
 	}
 
 	/* id is an id in cc_files */
@@ -176,16 +190,51 @@ class Application_Service_HistoryService
 	    }
 	    catch (Exception $e) {
 	        Logging::info($e);
+	        throw $e;
 	    }
 	}
 
-	public function createPlayedItem() {
+	public function createPlayedItem($data) {
 
+		try {
+			$form = $this->makeHistoryItemForm();
+			
+			$json = $form->processAjax($data);
+	        Logging::info($json);
+	
+	        if ($form->isValid($data)) {
+	        	$values = $form->getElementsAndSubFormsOrdered();
+	        	Logging::info("created list item");
+	        	Logging::info($values);
+	        }
+			
+	        return $json;
+		}
+		catch (Exception $e) {
+			Logging::info($e);
+		}
 	}
 
 	/* id is an id in cc_playout_history */
 	public function editPlayedItem($id) {
 
+		try {
+			$form = $this->makeHistoryItemForm();
+				
+			$json = $form->processAjax($data);
+			Logging::info($json);
+		
+			if ($form->isValid($data)) {
+				$values = $form->getElementsAndSubFormsOrdered();
+				Logging::info("edited list item");
+				Logging::info($values);
+			}
+				
+			return $json;
+		}
+		catch (Exception $e) {
+			Logging::info($e);
+		}
 	}
 
 	/* id is an id in cc_files */
@@ -212,6 +261,38 @@ class Application_Service_HistoryService
         }
 
         return $json;
+	}
+	
+	
+	//---------------- Following code is for History Templates --------------------------//
+	
+	
+	private function defaultItemTemplate() {
+		
+		$fields = array();
+				
+		//array index is the position of the item in the history template table.
+		$fields[] = array("name" => "start", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => "end", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
+		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);	
+		
+		return $fields;
+	}
+	
+	private function getItemTemplate() {
+		
+		$template_id = Application_Model_Preference::GetHistoryItemTemplate();
+		
+		if (is_numeric($template_id)) {
+			Logging::info("template id is: $template_id");
+		}
+		else {
+			Logging::info("Using default template");
+			$template = $this->defaultItemTemplate();
+		}
+		
+		return $template;
 	}
 
 }

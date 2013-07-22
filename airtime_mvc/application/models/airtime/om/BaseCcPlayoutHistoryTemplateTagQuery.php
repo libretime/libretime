@@ -9,10 +9,12 @@
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTemplateId($order = Criteria::ASC) Order by the template_id column
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTagId($order = Criteria::ASC) Order by the tag_id column
+ * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTagPosition($order = Criteria::ASC) Order by the position column
  *
  * @method     CcPlayoutHistoryTemplateTagQuery groupByDbId() Group by the id column
  * @method     CcPlayoutHistoryTemplateTagQuery groupByDbTemplateId() Group by the template_id column
  * @method     CcPlayoutHistoryTemplateTagQuery groupByDbTagId() Group by the tag_id column
+ * @method     CcPlayoutHistoryTemplateTagQuery groupByDbTagPosition() Group by the position column
  *
  * @method     CcPlayoutHistoryTemplateTagQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlayoutHistoryTemplateTagQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -32,10 +34,12 @@
  * @method     CcPlayoutHistoryTemplateTag findOneByDbId(int $id) Return the first CcPlayoutHistoryTemplateTag filtered by the id column
  * @method     CcPlayoutHistoryTemplateTag findOneByDbTemplateId(int $template_id) Return the first CcPlayoutHistoryTemplateTag filtered by the template_id column
  * @method     CcPlayoutHistoryTemplateTag findOneByDbTagId(int $tag_id) Return the first CcPlayoutHistoryTemplateTag filtered by the tag_id column
+ * @method     CcPlayoutHistoryTemplateTag findOneByDbTagPosition(int $position) Return the first CcPlayoutHistoryTemplateTag filtered by the position column
  *
  * @method     array findByDbId(int $id) Return CcPlayoutHistoryTemplateTag objects filtered by the id column
  * @method     array findByDbTemplateId(int $template_id) Return CcPlayoutHistoryTemplateTag objects filtered by the template_id column
  * @method     array findByDbTagId(int $tag_id) Return CcPlayoutHistoryTemplateTag objects filtered by the tag_id column
+ * @method     array findByDbTagPosition(int $position) Return CcPlayoutHistoryTemplateTag objects filtered by the position column
  *
  * @package    propel.generator.airtime.om
  */
@@ -222,6 +226,37 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::TAG_ID, $dbTagId, $comparison);
+	}
+
+	/**
+	 * Filter the query on the position column
+	 * 
+	 * @param     int|array $dbTagPosition The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlayoutHistoryTemplateTagQuery The current query, for fluid interface
+	 */
+	public function filterByDbTagPosition($dbTagPosition = null, $comparison = null)
+	{
+		if (is_array($dbTagPosition)) {
+			$useMinMax = false;
+			if (isset($dbTagPosition['min'])) {
+				$this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::POSITION, $dbTagPosition['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbTagPosition['max'])) {
+				$this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::POSITION, $dbTagPosition['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::POSITION, $dbTagPosition, $comparison);
 	}
 
 	/**

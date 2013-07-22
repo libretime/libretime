@@ -43,6 +43,12 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	protected $tag_id;
 
 	/**
+	 * The value for the position field.
+	 * @var        int
+	 */
+	protected $position;
+
+	/**
 	 * @var        CcPlayoutHistoryTemplate
 	 */
 	protected $aCcPlayoutHistoryTemplate;
@@ -94,6 +100,16 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	public function getDbTagId()
 	{
 		return $this->tag_id;
+	}
+
+	/**
+	 * Get the [position] column value.
+	 * 
+	 * @return     int
+	 */
+	public function getDbTagPosition()
+	{
+		return $this->position;
 	}
 
 	/**
@@ -165,6 +181,26 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	} // setDbTagId()
 
 	/**
+	 * Set the value of [position] column.
+	 * 
+	 * @param      int $v new value
+	 * @return     CcPlayoutHistoryTemplateTag The current object (for fluent API support)
+	 */
+	public function setDbTagPosition($v)
+	{
+		if ($v !== null) {
+			$v = (int) $v;
+		}
+
+		if ($this->position !== $v) {
+			$this->position = $v;
+			$this->modifiedColumns[] = CcPlayoutHistoryTemplateTagPeer::POSITION;
+		}
+
+		return $this;
+	} // setDbTagPosition()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -199,6 +235,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->template_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->tag_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+			$this->position = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -207,7 +244,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 3; // 3 = CcPlayoutHistoryTemplateTagPeer::NUM_COLUMNS - CcPlayoutHistoryTemplateTagPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = CcPlayoutHistoryTemplateTagPeer::NUM_COLUMNS - CcPlayoutHistoryTemplateTagPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlayoutHistoryTemplateTag object", $e);
@@ -560,6 +597,9 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 			case 2:
 				return $this->getDbTagId();
 				break;
+			case 3:
+				return $this->getDbTagPosition();
+				break;
 			default:
 				return null;
 				break;
@@ -587,6 +627,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbTemplateId(),
 			$keys[2] => $this->getDbTagId(),
+			$keys[3] => $this->getDbTagPosition(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcPlayoutHistoryTemplate) {
@@ -635,6 +676,9 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 			case 2:
 				$this->setDbTagId($value);
 				break;
+			case 3:
+				$this->setDbTagPosition($value);
+				break;
 		} // switch()
 	}
 
@@ -662,6 +706,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbTemplateId($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbTagId($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbTagPosition($arr[$keys[3]]);
 	}
 
 	/**
@@ -676,6 +721,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateTagPeer::ID)) $criteria->add(CcPlayoutHistoryTemplateTagPeer::ID, $this->id);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateTagPeer::TEMPLATE_ID)) $criteria->add(CcPlayoutHistoryTemplateTagPeer::TEMPLATE_ID, $this->template_id);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateTagPeer::TAG_ID)) $criteria->add(CcPlayoutHistoryTemplateTagPeer::TAG_ID, $this->tag_id);
+		if ($this->isColumnModified(CcPlayoutHistoryTemplateTagPeer::POSITION)) $criteria->add(CcPlayoutHistoryTemplateTagPeer::POSITION, $this->position);
 
 		return $criteria;
 	}
@@ -739,6 +785,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 	{
 		$copyObj->setDbTemplateId($this->template_id);
 		$copyObj->setDbTagId($this->tag_id);
+		$copyObj->setDbTagPosition($this->position);
 
 		$copyObj->setNew(true);
 		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
@@ -888,6 +935,7 @@ abstract class BaseCcPlayoutHistoryTemplateTag extends BaseObject  implements Pe
 		$this->id = null;
 		$this->template_id = null;
 		$this->tag_id = null;
+		$this->position = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

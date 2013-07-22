@@ -40,6 +40,7 @@ class CcTagTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addColumn('TAG_NAME', 'DbTagName', 'VARCHAR', true, 128, null);
+		$this->addColumn('TAG_TYPE', 'DbTagType', 'VARCHAR', true, 128, 'boolean');
 		// validators
 	} // initialize()
 
@@ -49,6 +50,7 @@ class CcTagTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcFileTag', 'CcFileTag', RelationMap::ONE_TO_MANY, array('id' => 'tag_id', ), 'CASCADE', null);
+    $this->addRelation('CcPlayoutHistoryMetaData', 'CcPlayoutHistoryMetaData', RelationMap::ONE_TO_MANY, array('id' => 'tag_id', ), 'CASCADE', null);
     $this->addRelation('CcPlayoutHistoryTemplateTag', 'CcPlayoutHistoryTemplateTag', RelationMap::ONE_TO_MANY, array('id' => 'tag_id', ), 'CASCADE', null);
 	} // buildRelations()
 

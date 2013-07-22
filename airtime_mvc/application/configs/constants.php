@@ -38,6 +38,15 @@ define('MDATA_KEY_CUE_OUT'     , 'cueout');
 define('UI_MDATA_VALUE_FORMAT_FILE'   , 'File');
 define('UI_MDATA_VALUE_FORMAT_STREAM' , 'live stream');
 
+//Constants for playout history template fields
+define('TEMPLATE_DATE', 'date');
+define('TEMPLATE_TIME', 'time');
+define('TEMPLATE_DATETIME', 'datetime');
+define('TEMPLATE_STRING', 'string');
+define('TEMPLATE_BOOLEAN', 'boolean');
+define('TEMPLATE_INT', 'integer');
+define('TEMPLATE_FLOAT', 'float');
+
 // Session Keys
 define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');

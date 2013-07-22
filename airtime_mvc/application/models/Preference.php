@@ -1369,4 +1369,12 @@ class Application_Model_Preference
     {
         self::setValue("replay_gain_modifier", $rg_modifier, true);
     }
+    
+    public static function SetHistoryItemTemplate($value) {
+    	self::setValue("history_item_template", $value);
+    }
+    
+    public static function GetHistoryItemTemplate() {
+    	return self::getValue("history_item_template");
+    }
 }

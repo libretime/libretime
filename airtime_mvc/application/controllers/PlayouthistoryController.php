@@ -11,7 +11,13 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->addActionContext('edit-aggregate-item', 'json')
             ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
+            ->addActionContext('update-list-item', 'json')
             ->addActionContext('update-aggregate-item', 'json')
+            ->addActionContext('create-template', 'json')
+            ->addActionContext('edit-template', 'json')
+            ->addActionContext('delete-template', 'json')
+            ->addActionContext('create-template-field', 'json')
+            ->addActionContext('delete-template-field', 'json')
             ->initContext();
         }
 
@@ -134,12 +140,24 @@ class PlayouthistoryController extends Zend_Controller_Action
         $file_id = $this->_getParam('id');
 
         $historyService = new Application_Service_HistoryService();
-        $form = $historyService->makeHistoryFileForm($file_id);
+        $form = $historyService->makeHistoryItemForm($file_id);
 
         $this->view->form = $form;
-        $this->view->dialog = $this->view->render('form/edit-history-file.phtml');
+        $this->view->dialog = $this->view->render('form/edit-history-item.phtml');
 
         unset($this->view->form);
+    }
+    
+    public function updateListItemAction()
+    {
+    	$request = $this->getRequest();
+    	$params = $request->getPost();
+    	Logging::info($params);
+    
+    	$historyService = new Application_Service_HistoryService();
+    	$json = $historyService->editPlayedItem($params);
+    
+    	$this->view->data = $json;
     }
 
     public function updateAggregateItemAction()
@@ -152,5 +170,35 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$json = $historyService->editPlayedFile($params);
 
     	$this->view->data = $json;
+    }
+    
+    public function templateAction()
+    {
+    	
+    }
+    
+    public function createTemplateAction()
+    {
+    	
+    }
+    
+    public function editTemplateAction()
+    {
+    	 
+    }
+    
+    public function deleteTemplateAction()
+    {
+    	 
+    }
+    
+    public function createTemplateFieldAction()
+    {
+    	
+    }
+    
+    public function deleteTemplateFieldAction()
+    {
+    	 
     }
 }

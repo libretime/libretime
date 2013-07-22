@@ -37,9 +37,21 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	protected $tag_name;
 
 	/**
+	 * The value for the tag_type field.
+	 * Note: this column has a database default value of: 'boolean'
+	 * @var        string
+	 */
+	protected $tag_type;
+
+	/**
 	 * @var        array CcFileTag[] Collection to store aggregation of CcFileTag objects.
 	 */
 	protected $collCcFileTags;
+
+	/**
+	 * @var        array CcPlayoutHistoryMetaData[] Collection to store aggregation of CcPlayoutHistoryMetaData objects.
+	 */
+	protected $collCcPlayoutHistoryMetaDatas;
 
 	/**
 	 * @var        array CcPlayoutHistoryTemplateTag[] Collection to store aggregation of CcPlayoutHistoryTemplateTag objects.
@@ -61,6 +73,27 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	protected $alreadyInValidation = false;
 
 	/**
+	 * Applies default values to this object.
+	 * This method should be called from the object's constructor (or
+	 * equivalent initialization method).
+	 * @see        __construct()
+	 */
+	public function applyDefaultValues()
+	{
+		$this->tag_type = 'boolean';
+	}
+
+	/**
+	 * Initializes internal state of BaseCcTag object.
+	 * @see        applyDefaults()
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->applyDefaultValues();
+	}
+
+	/**
 	 * Get the [id] column value.
 	 * 
 	 * @return     int
@@ -78,6 +111,16 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	public function getDbTagName()
 	{
 		return $this->tag_name;
+	}
+
+	/**
+	 * Get the [tag_type] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbTagType()
+	{
+		return $this->tag_type;
 	}
 
 	/**
@@ -121,6 +164,26 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	} // setDbTagName()
 
 	/**
+	 * Set the value of [tag_type] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcTag The current object (for fluent API support)
+	 */
+	public function setDbTagType($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->tag_type !== $v || $this->isNew()) {
+			$this->tag_type = $v;
+			$this->modifiedColumns[] = CcTagPeer::TAG_TYPE;
+		}
+
+		return $this;
+	} // setDbTagType()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -130,6 +193,10 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	 */
 	public function hasOnlyDefaultValues()
 	{
+			if ($this->tag_type !== 'boolean') {
+				return false;
+			}
+
 		// otherwise, everything was equal, so return TRUE
 		return true;
 	} // hasOnlyDefaultValues()
@@ -154,6 +221,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->tag_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->tag_type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -162,7 +230,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 2; // 2 = CcTagPeer::NUM_COLUMNS - CcTagPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 3; // 3 = CcTagPeer::NUM_COLUMNS - CcTagPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcTag object", $e);
@@ -225,6 +293,8 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->collCcFileTags = null;
+
+			$this->collCcPlayoutHistoryMetaDatas = null;
 
 			$this->collCcPlayoutHistoryTemplateTags = null;
 
@@ -369,6 +439,14 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 				}
 			}
 
+			if ($this->collCcPlayoutHistoryMetaDatas !== null) {
+				foreach ($this->collCcPlayoutHistoryMetaDatas as $referrerFK) {
+					if (!$referrerFK->isDeleted()) {
+						$affectedRows += $referrerFK->save($con);
+					}
+				}
+			}
+
 			if ($this->collCcPlayoutHistoryTemplateTags !== null) {
 				foreach ($this->collCcPlayoutHistoryTemplateTags as $referrerFK) {
 					if (!$referrerFK->isDeleted()) {
@@ -456,6 +534,14 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 					}
 				}
 
+				if ($this->collCcPlayoutHistoryMetaDatas !== null) {
+					foreach ($this->collCcPlayoutHistoryMetaDatas as $referrerFK) {
+						if (!$referrerFK->validate($columns)) {
+							$failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+						}
+					}
+				}
+
 				if ($this->collCcPlayoutHistoryTemplateTags !== null) {
 					foreach ($this->collCcPlayoutHistoryTemplateTags as $referrerFK) {
 						if (!$referrerFK->validate($columns)) {
@@ -503,6 +589,9 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 			case 1:
 				return $this->getDbTagName();
 				break;
+			case 2:
+				return $this->getDbTagType();
+				break;
 			default:
 				return null;
 				break;
@@ -528,6 +617,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 		$result = array(
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbTagName(),
+			$keys[2] => $this->getDbTagType(),
 		);
 		return $result;
 	}
@@ -565,6 +655,9 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 			case 1:
 				$this->setDbTagName($value);
 				break;
+			case 2:
+				$this->setDbTagType($value);
+				break;
 		} // switch()
 	}
 
@@ -591,6 +684,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbTagName($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbTagType($arr[$keys[2]]);
 	}
 
 	/**
@@ -604,6 +698,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 
 		if ($this->isColumnModified(CcTagPeer::ID)) $criteria->add(CcTagPeer::ID, $this->id);
 		if ($this->isColumnModified(CcTagPeer::TAG_NAME)) $criteria->add(CcTagPeer::TAG_NAME, $this->tag_name);
+		if ($this->isColumnModified(CcTagPeer::TAG_TYPE)) $criteria->add(CcTagPeer::TAG_TYPE, $this->tag_type);
 
 		return $criteria;
 	}
@@ -666,6 +761,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 		$copyObj->setDbTagName($this->tag_name);
+		$copyObj->setDbTagType($this->tag_type);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -675,6 +771,12 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 			foreach ($this->getCcFileTags() as $relObj) {
 				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
 					$copyObj->addCcFileTag($relObj->copy($deepCopy));
+				}
+			}
+
+			foreach ($this->getCcPlayoutHistoryMetaDatas() as $relObj) {
+				if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+					$copyObj->addCcPlayoutHistoryMetaData($relObj->copy($deepCopy));
 				}
 			}
 
@@ -864,6 +966,140 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	}
 
 	/**
+	 * Clears out the collCcPlayoutHistoryMetaDatas collection
+	 *
+	 * This does not modify the database; however, it will remove any associated objects, causing
+	 * them to be refetched by subsequent calls to accessor method.
+	 *
+	 * @return     void
+	 * @see        addCcPlayoutHistoryMetaDatas()
+	 */
+	public function clearCcPlayoutHistoryMetaDatas()
+	{
+		$this->collCcPlayoutHistoryMetaDatas = null; // important to set this to NULL since that means it is uninitialized
+	}
+
+	/**
+	 * Initializes the collCcPlayoutHistoryMetaDatas collection.
+	 *
+	 * By default this just sets the collCcPlayoutHistoryMetaDatas collection to an empty array (like clearcollCcPlayoutHistoryMetaDatas());
+	 * however, you may wish to override this method in your stub class to provide setting appropriate
+	 * to your application -- for example, setting the initial array to the values stored in database.
+	 *
+	 * @return     void
+	 */
+	public function initCcPlayoutHistoryMetaDatas()
+	{
+		$this->collCcPlayoutHistoryMetaDatas = new PropelObjectCollection();
+		$this->collCcPlayoutHistoryMetaDatas->setModel('CcPlayoutHistoryMetaData');
+	}
+
+	/**
+	 * Gets an array of CcPlayoutHistoryMetaData objects which contain a foreign key that references this object.
+	 *
+	 * If the $criteria is not null, it is used to always fetch the results from the database.
+	 * Otherwise the results are fetched from the database the first time, then cached.
+	 * Next time the same method is called without $criteria, the cached collection is returned.
+	 * If this CcTag is new, it will return
+	 * an empty collection or the current collection; the criteria is ignored on a new object.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @return     PropelCollection|array CcPlayoutHistoryMetaData[] List of CcPlayoutHistoryMetaData objects
+	 * @throws     PropelException
+	 */
+	public function getCcPlayoutHistoryMetaDatas($criteria = null, PropelPDO $con = null)
+	{
+		if(null === $this->collCcPlayoutHistoryMetaDatas || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcPlayoutHistoryMetaDatas) {
+				// return empty collection
+				$this->initCcPlayoutHistoryMetaDatas();
+			} else {
+				$collCcPlayoutHistoryMetaDatas = CcPlayoutHistoryMetaDataQuery::create(null, $criteria)
+					->filterByCcTag($this)
+					->find($con);
+				if (null !== $criteria) {
+					return $collCcPlayoutHistoryMetaDatas;
+				}
+				$this->collCcPlayoutHistoryMetaDatas = $collCcPlayoutHistoryMetaDatas;
+			}
+		}
+		return $this->collCcPlayoutHistoryMetaDatas;
+	}
+
+	/**
+	 * Returns the number of related CcPlayoutHistoryMetaData objects.
+	 *
+	 * @param      Criteria $criteria
+	 * @param      boolean $distinct
+	 * @param      PropelPDO $con
+	 * @return     int Count of related CcPlayoutHistoryMetaData objects.
+	 * @throws     PropelException
+	 */
+	public function countCcPlayoutHistoryMetaDatas(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+	{
+		if(null === $this->collCcPlayoutHistoryMetaDatas || null !== $criteria) {
+			if ($this->isNew() && null === $this->collCcPlayoutHistoryMetaDatas) {
+				return 0;
+			} else {
+				$query = CcPlayoutHistoryMetaDataQuery::create(null, $criteria);
+				if($distinct) {
+					$query->distinct();
+				}
+				return $query
+					->filterByCcTag($this)
+					->count($con);
+			}
+		} else {
+			return count($this->collCcPlayoutHistoryMetaDatas);
+		}
+	}
+
+	/**
+	 * Method called to associate a CcPlayoutHistoryMetaData object to this object
+	 * through the CcPlayoutHistoryMetaData foreign key attribute.
+	 *
+	 * @param      CcPlayoutHistoryMetaData $l CcPlayoutHistoryMetaData
+	 * @return     void
+	 * @throws     PropelException
+	 */
+	public function addCcPlayoutHistoryMetaData(CcPlayoutHistoryMetaData $l)
+	{
+		if ($this->collCcPlayoutHistoryMetaDatas === null) {
+			$this->initCcPlayoutHistoryMetaDatas();
+		}
+		if (!$this->collCcPlayoutHistoryMetaDatas->contains($l)) { // only add it if the **same** object is not already associated
+			$this->collCcPlayoutHistoryMetaDatas[]= $l;
+			$l->setCcTag($this);
+		}
+	}
+
+
+	/**
+	 * If this collection has already been initialized with
+	 * an identical criteria, it returns the collection.
+	 * Otherwise if this CcTag is new, it will return
+	 * an empty collection; or if this CcTag has previously
+	 * been saved, it will retrieve related CcPlayoutHistoryMetaDatas from storage.
+	 *
+	 * This method is protected by default in order to keep the public
+	 * api reasonable.  You can provide public methods for those you
+	 * actually need in CcTag.
+	 *
+	 * @param      Criteria $criteria optional Criteria object to narrow the query
+	 * @param      PropelPDO $con optional connection object
+	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+	 * @return     PropelCollection|array CcPlayoutHistoryMetaData[] List of CcPlayoutHistoryMetaData objects
+	 */
+	public function getCcPlayoutHistoryMetaDatasJoinCcPlayoutHistory($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	{
+		$query = CcPlayoutHistoryMetaDataQuery::create(null, $criteria);
+		$query->joinWith('CcPlayoutHistory', $join_behavior);
+
+		return $this->getCcPlayoutHistoryMetaDatas($query, $con);
+	}
+
+	/**
 	 * Clears out the collCcPlayoutHistoryTemplateTags collection
 	 *
 	 * This does not modify the database; however, it will remove any associated objects, causing
@@ -1004,9 +1240,11 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 	{
 		$this->id = null;
 		$this->tag_name = null;
+		$this->tag_type = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();
+		$this->applyDefaultValues();
 		$this->resetModified();
 		$this->setNew(true);
 		$this->setDeleted(false);
@@ -1029,6 +1267,11 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 					$o->clearAllReferences($deep);
 				}
 			}
+			if ($this->collCcPlayoutHistoryMetaDatas) {
+				foreach ((array) $this->collCcPlayoutHistoryMetaDatas as $o) {
+					$o->clearAllReferences($deep);
+				}
+			}
 			if ($this->collCcPlayoutHistoryTemplateTags) {
 				foreach ((array) $this->collCcPlayoutHistoryTemplateTags as $o) {
 					$o->clearAllReferences($deep);
@@ -1037,6 +1280,7 @@ abstract class BaseCcTag extends BaseObject  implements Persistent
 		} // if ($deep)
 
 		$this->collCcFileTags = null;
+		$this->collCcPlayoutHistoryMetaDatas = null;
 		$this->collCcPlayoutHistoryTemplateTags = null;
 	}
 

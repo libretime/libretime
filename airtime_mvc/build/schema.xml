@@ -482,6 +482,7 @@
   <table name="cc_tag" phpName="CcTag">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="tag_name" phpName="DbTagName" type="VARCHAR" size="128" required="true" />
+    <column name="tag_type" phpName="DbTagType" type="VARCHAR" size="128" required="true" defaultValue="boolean" />
   </table>
   <table name="cc_file_tag" phpName="CcFileTag">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
@@ -490,7 +491,7 @@
     <foreign-key foreignTable="cc_files" name="cc_file_tag_file_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
     </foreign-key>
-    <foreign-key foreignTable="cc_tag" name="c_file_tag_tag_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_tag" name="cc_file_tag_tag_fkey" onDelete="CASCADE">
       <reference local="tag_id" foreign="id"/>
     </foreign-key>
   </table>
@@ -506,10 +507,14 @@
   <table name="cc_playout_history_metadata" phpName="CcPlayoutHistoryMetaData">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="history_id" phpName="DbHistoryId" type="INTEGER" required="true" />
+    <column name="tag_id" phpName="DbTagId" type="INTEGER" required="true" />
     <column name="key" phpName="DbKey" type="VARCHAR" size="128" required="true" />
     <column name="value" phpName="DbValue" type="VARCHAR" size="128" required="true" />
     <foreign-key foreignTable="cc_playout_history" name="cc_playout_history_metadata_entry_fkey" onDelete="CASCADE">
       <reference local="history_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="cc_tag" name="c_playout_metadata_tag_fkey" onDelete="CASCADE">
+      <reference local="tag_id" foreign="id"/>
     </foreign-key>
   </table>
   <table name="cc_playout_history_template" phpName="CcPlayoutHistoryTemplate">
@@ -520,6 +525,7 @@
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="template_id" phpName="DbTemplateId" type="INTEGER" required="true" />
     <column name="tag_id" phpName="DbTagId" type="INTEGER" required="true" />
+    <column name="position" phpName="DbTagPosition" type="INTEGER" required="true" />
     <foreign-key foreignTable="cc_playout_history_template" name="cc_playout_history_template_template_fkey" onDelete="CASCADE">
       <reference local="template_id" foreign="id"/>
     </foreign-key>

@@ -295,6 +295,30 @@ var AIRTIME = (function(AIRTIME) {
     		
     	});
     	
+    	$('body').on("click", ".his_item_save", function(e) {
+    		
+    		e.preventDefault();
+    		
+    		var $form = $(this).parents("form");
+    		var data = $form.serializeArray();
+    		
+    		var url = baseUrl+"Playouthistory/update-list-item/format/json";
+    		
+    		$.post(url, data, function(json) {
+    			
+    			//TODO put errors on form.
+    			if (json.data !== "true") {
+    				//makeHistoryDialog(json.dialog);
+    			}
+    			else {
+    				removeHistoryDialog();
+    				oTable.fnDraw();
+    			}
+    		    	
+    		}, "json");
+    		
+    	});	
+    	
     	$historyContentDiv.find("#his_submit").click(function(ev){
     		var fn,
     			oRange;

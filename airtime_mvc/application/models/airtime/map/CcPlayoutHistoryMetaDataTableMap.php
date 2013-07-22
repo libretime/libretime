@@ -40,6 +40,7 @@ class CcPlayoutHistoryMetaDataTableMap extends TableMap {
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('HISTORY_ID', 'DbHistoryId', 'INTEGER', 'cc_playout_history', 'ID', true, null, null);
+		$this->addForeignKey('TAG_ID', 'DbTagId', 'INTEGER', 'cc_tag', 'ID', true, null, null);
 		$this->addColumn('KEY', 'DbKey', 'VARCHAR', true, 128, null);
 		$this->addColumn('VALUE', 'DbValue', 'VARCHAR', true, 128, null);
 		// validators
@@ -51,6 +52,7 @@ class CcPlayoutHistoryMetaDataTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcPlayoutHistory', 'CcPlayoutHistory', RelationMap::MANY_TO_ONE, array('history_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcTag', 'CcTag', RelationMap::MANY_TO_ONE, array('tag_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcPlayoutHistoryMetaDataTableMap

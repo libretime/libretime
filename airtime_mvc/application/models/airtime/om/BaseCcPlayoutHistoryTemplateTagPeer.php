@@ -26,7 +26,7 @@ abstract class BaseCcPlayoutHistoryTemplateTagPeer {
 	const TM_CLASS = 'CcPlayoutHistoryTemplateTagTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 3;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -39,6 +39,9 @@ abstract class BaseCcPlayoutHistoryTemplateTagPeer {
 
 	/** the column name for the TAG_ID field */
 	const TAG_ID = 'cc_playout_history_template_tag.TAG_ID';
+
+	/** the column name for the POSITION field */
+	const POSITION = 'cc_playout_history_template_tag.POSITION';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcPlayoutHistoryTemplateTag objects.
@@ -56,12 +59,12 @@ abstract class BaseCcPlayoutHistoryTemplateTagPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTemplateId', 'DbTagId', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTemplateId', 'dbTagId', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::TEMPLATE_ID, self::TAG_ID, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TEMPLATE_ID', 'TAG_ID', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'template_id', 'tag_id', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTemplateId', 'DbTagId', 'DbTagPosition', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTemplateId', 'dbTagId', 'dbTagPosition', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::TEMPLATE_ID, self::TAG_ID, self::POSITION, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TEMPLATE_ID', 'TAG_ID', 'POSITION', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'template_id', 'tag_id', 'position', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -71,12 +74,12 @@ abstract class BaseCcPlayoutHistoryTemplateTagPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTemplateId' => 1, 'DbTagId' => 2, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTemplateId' => 1, 'dbTagId' => 2, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TEMPLATE_ID => 1, self::TAG_ID => 2, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TEMPLATE_ID' => 1, 'TAG_ID' => 2, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'template_id' => 1, 'tag_id' => 2, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTemplateId' => 1, 'DbTagId' => 2, 'DbTagPosition' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTemplateId' => 1, 'dbTagId' => 2, 'dbTagPosition' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TEMPLATE_ID => 1, self::TAG_ID => 2, self::POSITION => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TEMPLATE_ID' => 1, 'TAG_ID' => 2, 'POSITION' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'template_id' => 1, 'tag_id' => 2, 'position' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -151,10 +154,12 @@ abstract class BaseCcPlayoutHistoryTemplateTagPeer {
 			$criteria->addSelectColumn(CcPlayoutHistoryTemplateTagPeer::ID);
 			$criteria->addSelectColumn(CcPlayoutHistoryTemplateTagPeer::TEMPLATE_ID);
 			$criteria->addSelectColumn(CcPlayoutHistoryTemplateTagPeer::TAG_ID);
+			$criteria->addSelectColumn(CcPlayoutHistoryTemplateTagPeer::POSITION);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.TEMPLATE_ID');
 			$criteria->addSelectColumn($alias . '.TAG_ID');
+			$criteria->addSelectColumn($alias . '.POSITION');
 		}
 	}
 
