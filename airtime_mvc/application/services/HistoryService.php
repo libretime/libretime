@@ -21,7 +21,7 @@ class Application_Service_HistoryService
 	public function __construct()
 	{
 		$this->con = isset($con) ? $con : Propel::getConnection(CcPlayoutHistoryPeer::DATABASE_NAME);
-		$this->timezone = date_default_timezone_get();
+		$this->timezone = Application_Model_Preference::GetTimezone();
 	}
 
 	/*
@@ -61,6 +61,21 @@ class Application_Service_HistoryService
 	    left join cc_files as file on (file.id = playout.file_id)";
 
 	    $results = Application_Model_Datatables::findEntries($this->con, $select, $historyTable, $opts, "history");
+	    
+	    $timezoneUTC = new DateTimeZone("UTC");
+	    $timezoneLocal = new DateTimeZone($this->timezone);
+	    
+	    //need to display the results in the station's timezone.
+	    foreach ($results["history"] as $index => &$result) {
+	    	
+	    	$dateTime = new DateTime($result["starts"], $timezoneUTC);
+	    	$dateTime->setTimezone($timezoneLocal);
+	    	$result["starts"] = $dateTime->format("Y-m-d H:i:s");
+	    	
+	    	$dateTime = new DateTime($result["ends"], $timezoneUTC);
+	    	$dateTime->setTimezone($timezoneLocal);
+	    	$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+	    }
 
 	    return $results;
 	}
@@ -153,7 +168,7 @@ class Application_Service_HistoryService
 	}
 
 	/* id is an id in cc_playout_history */
-	public function makeHistoryItemForm() {
+	public function makeHistoryItemForm($id) {
 		
 		try {
 			$form = new Application_Form_EditHistoryItem();
@@ -197,18 +212,23 @@ class Application_Service_HistoryService
 	public function createPlayedItem($data) {
 
 		try {
-			$form = $this->makeHistoryItemForm();
+			$form = $this->makeHistoryItemForm(null);
+			$history_id = $form->getElement("his_item_id");
 			
-			$json = $form->processAjax($data);
-	        Logging::info($json);
-	
 	        if ($form->isValid($data)) {
-	        	$values = $form->getElementsAndSubFormsOrdered();
+	        	$history_id->setIgnore(true);
+	        	$values = $form->getValues();
+	        	
 	        	Logging::info("created list item");
 	        	Logging::info($values);
 	        }
+	        else {
+	        	Logging::info("created list item NOT VALID");
+	        }
+	        
+	        Logging::info($form->getMessages());
 			
-	        return $json;
+	        //return $json;
 		}
 		catch (Exception $e) {
 			Logging::info($e);
@@ -216,21 +236,25 @@ class Application_Service_HistoryService
 	}
 
 	/* id is an id in cc_playout_history */
-	public function editPlayedItem($id) {
+	public function editPlayedItem($data) {
 
 		try {
-			$form = $this->makeHistoryItemForm();
+			$id = $data["his_item_id"];
+			$form = $this->makeHistoryItemForm($id);
+			$history_id = $form->getElement("his_item_id");
+			$history_id->setRequired(true);
 				
-			$json = $form->processAjax($data);
-			Logging::info($json);
-		
 			if ($form->isValid($data)) {
-				$values = $form->getElementsAndSubFormsOrdered();
-				Logging::info("edited list item");
-				Logging::info($values);
-			}
-				
-			return $json;
+	        	$values = $form->getValues();
+
+	        	Logging::info("edited list item");
+	        	Logging::info($values);
+	        }
+	        else {
+	        	Logging::info("edited list item NOT VALID");
+	        }
+	        
+	        Logging::info($form->getMessages());
 		}
 		catch (Exception $e) {
 			Logging::info($e);
@@ -240,27 +264,57 @@ class Application_Service_HistoryService
 	/* id is an id in cc_files */
 	public function editPlayedFile($data) {
 
-        $form = new Application_Form_EditHistoryFile();
-
-        $json = $form->processAjax($data);
-        Logging::info($json);
-
-        if ($form->isValid($data)) {
-
-            $id = $data["his_file_id"];
-            $file = Application_Model_StoredFile::RecallById($id, $this->con);
-
-            $md = array(
-                MDATA_KEY_TITLE => $data['his_file_title'],
-                MDATA_KEY_CREATOR => $data['his_file_creator'],
-                MDATA_KEY_COMPOSER => $data['his_file_composer'],
-                MDATA_KEY_COPYRIGHT => $data['his_file_copyright']
-            );
-
-            $file->setDbColMetadata($md);
-        }
+		$this->con->beginTransaction();
+		
+		try {
+	        $form = new Application_Form_EditHistoryFile();
+	
+	        $json = $form->processAjax($data);
+	        Logging::info($json);
+	
+	        if ($form->isValid($data)) {
+	
+	            $id = $data["his_file_id"];
+	            $file = Application_Model_StoredFile::RecallById($id, $this->con);
+	
+	            $md = array(
+	                MDATA_KEY_TITLE => $data['his_file_title'],
+	                MDATA_KEY_CREATOR => $data['his_file_creator'],
+	                MDATA_KEY_COMPOSER => $data['his_file_composer'],
+	                MDATA_KEY_COPYRIGHT => $data['his_file_copyright']
+	            );
+	
+	            $file->setDbColMetadata($md);
+	        }
+	        
+	        $this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			Logging::info($e);
+			throw $e;
+		}
 
         return $json;
+	}
+	
+	/* id is an id in cc_playout_history */
+	public function deletePlayedItem($id) {
+		
+		$this->con->beginTransaction();
+		
+		try {
+			
+			$record = CcPlayoutHistoryQuery::create()->findPk($id, $this->con);
+			$record->delete($this->con);
+			
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			Logging::info($e);
+			throw $e;
+		}
 	}
 	
 	

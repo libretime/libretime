@@ -11,6 +11,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->addActionContext('edit-aggregate-item', 'json')
             ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
+            ->addActionContext('delete-list-item', 'json')
             ->addActionContext('update-list-item', 'json')
             ->addActionContext('update-aggregate-item', 'json')
             ->addActionContext('create-template', 'json')
@@ -137,15 +138,23 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     public function editListItemAction()
     {
-        $file_id = $this->_getParam('id');
+        $history_id = $this->_getParam('id', null);
 
         $historyService = new Application_Service_HistoryService();
-        $form = $historyService->makeHistoryItemForm($file_id);
+        $form = $historyService->makeHistoryItemForm($history_id);
 
         $this->view->form = $form;
         $this->view->dialog = $this->view->render('form/edit-history-item.phtml');
 
         unset($this->view->form);
+    }
+    
+    public function deleteListItemAction()
+    {
+    	$history_id = $this->_getParam('id');
+    
+    	$historyService = new Application_Service_HistoryService();
+    	$historyService->deletePlayedItem($history_id); 
     }
     
     public function updateListItemAction()

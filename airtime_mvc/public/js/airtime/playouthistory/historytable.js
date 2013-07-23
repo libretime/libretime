@@ -35,9 +35,9 @@ var AIRTIME = (function(AIRTIME) {
          ]
     };
     
-    var lengthMenu = [[50, 100, 500, -1], [50, 100, 500, $.i18n._("All")]];
+    var lengthMenu = [[10, 25, 50, 100, 500, -1], [10, 25, 50, 100, 500, $.i18n._("All")]];
     
-    var sDom = 'lf<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>';
+    var sDom = 'l<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>';
     
     function getFileName(ext){
         var filename = $("#his_date_start").val()+"_"+$("#his_time_start").val()+"m--"+$("#his_date_end").val()+"_"+$("#his_time_end").val()+"m";
@@ -98,13 +98,9 @@ var AIRTIME = (function(AIRTIME) {
         	fnRowCallback;
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        	var url = baseUrl+"Playouthistory/edit-aggregate-item/format/json/id/"+aData.file_id,
-        		$link = $("<a/>", {
-        			"href": url,
-        			"text": $.i18n._("Edit")
-        		});
-        	
-        	$('td.his_edit', nRow).html($link);
+        	var editUrl = baseUrl+"Playouthistory/edit-aggregate-item/format/json/id/"+aData.file_id;
+        		
+        	nRow.setAttribute('url-edit', editUrl);
         };
         
         oTable = $historyTableDiv.dataTable( {
@@ -115,8 +111,7 @@ var AIRTIME = (function(AIRTIME) {
                {"sTitle": $.i18n._("Played"), "mDataProp": "played", "sClass": "his_artist"}, /* times played */
                {"sTitle": $.i18n._("Length"), "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
                {"sTitle": $.i18n._("Composer"), "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
-               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"}, /* Copyright */
-               {"sTitle" : $.i18n._("Admin"), "mDataProp": "file_id", "bSearchable" : false, "sClass": "his_edit"}, /* id of history item */
+               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
             ],
                           
             "bProcessing": true,
@@ -145,13 +140,11 @@ var AIRTIME = (function(AIRTIME) {
         	fnRowCallback;
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        	var url = baseUrl+"playouthistory/edit-list-item/format/json/id/"+aData.history_id,
-        		$link = $("<a/>", {
-        			"href": url,
-        			"text": $.i18n._("Edit")
-        		});
-        	
-        	$('td.his_edit', nRow).html($link);
+        	var editUrl = baseUrl+"playouthistory/edit-list-item/format/json/id/"+aData.history_id,
+        		deleteUrl = baseUrl+"playouthistory/delete-list-item/format/json/id/"+aData.history_id;
+	
+        	nRow.setAttribute('url-edit', editUrl);
+        	nRow.setAttribute('url-delete', deleteUrl);
         };
         
         oTable = $historyTableDiv.dataTable( {
@@ -160,8 +153,7 @@ var AIRTIME = (function(AIRTIME) {
                {"sTitle": $.i18n._("Start"), "mDataProp": "starts", "sClass": "his_starts"}, /* Starts */
                {"sTitle": $.i18n._("End"), "mDataProp": "ends", "sClass": "his_ends"}, /* Ends */
                {"sTitle": $.i18n._("Title"), "mDataProp": "title", "sClass": "his_title"}, /* Title */
-               {"sTitle": $.i18n._("Creator"), "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
-               {"sTitle" : $.i18n._("Admin"), "mDataProp": "history_id", "bSearchable" : false, "sClass": "his_edit"}, /* id of history item */
+               {"sTitle": $.i18n._("Creator"), "mDataProp": "artist", "sClass": "his_artist"} /* Creator */
             ],
                           
             "bProcessing": true,
@@ -191,7 +183,8 @@ var AIRTIME = (function(AIRTIME) {
     		screenWidth = Math.floor(viewport.width - 110),
     		oBaseDatePickerSettings,
     		oBaseTimePickerSettings,
-    		oTable,
+    		oTableAgg,
+    		oTableItem,
     		dateStartId = "#his_date_start",
     		timeStartId = "#his_time_start",
     		dateEndId = "#his_date_end",
@@ -251,15 +244,72 @@ var AIRTIME = (function(AIRTIME) {
             minuteText: $.i18n._("Minute")
     	};
     	
-    	oTable = aggregateHistoryTable();
-    	itemHistoryTable();
+    	oTableItem = itemHistoryTable();
+    	oTableAgg = aggregateHistoryTable();
     	
     	$historyContentDiv.find(dateStartId).datepicker(oBaseDatePickerSettings);
     	$historyContentDiv.find(timeStartId).timepicker(oBaseTimePickerSettings);
     	$historyContentDiv.find(dateEndId).datepicker(oBaseDatePickerSettings);
     	$historyContentDiv.find(timeEndId).timepicker(oBaseTimePickerSettings);
     	
-    	$historyContentDiv.on("click", "td.his_edit", function(e) {
+    	// 'open' an information row when a row is clicked on
+    	//for create/edit/delete
+    	function openRow(oTable, tr) {
+    		var links = ['url-edit', 'url-delete'],
+    			i, len,
+    			attr, 
+    			name,
+    			$link,
+    			$div;
+    		
+    		$div = $("<div/>");
+    		
+    		for (i = 0, len = links.length; i < len; i++) {
+    			
+    			attr = links[i];
+    			
+    			if (tr.hasAttribute(attr)) {
+    				name = attr.split("-")[1];
+    				
+    				$link = $("<a/>", {
+    	    			"href": tr.getAttribute(attr),
+    	    			"text": $.i18n._(name),
+    	    			"class": "his_"+name
+    	    		});
+    				
+    				$div.append($link);
+    			}
+    		}
+    		
+    		if (oTable.fnIsOpen(tr)) {
+    		    oTable.fnClose(tr);
+    		} 
+    		else {
+    		    oTable.fnOpen(tr, $div, "his_update");
+    		} 
+    	}
+    	
+    	$historyContentDiv.on("click", "#history_table_list tr", function(ev) {
+    		openRow(oTableItem, this);
+        });
+    	
+    	$historyContentDiv.on("click", "#history_table_aggregate tr", function(ev) {
+    		openRow(oTableAgg, this);
+        });
+    	
+    	$("#his_create").click(function(e) {
+    		var url = baseUrl+"playouthistory/edit-list-item/format/json"	;
+    		
+    		e.preventDefault();
+    		
+    		$.get(url, function(json) {
+    			
+    			makeHistoryDialog(json.dialog);
+    			
+    		}, "json");
+    	});
+	    	
+    	$historyContentDiv.on("click", "a.his_edit", function(e) {
     		var url = e.target.href;
     		
     		e.preventDefault();
@@ -269,6 +319,27 @@ var AIRTIME = (function(AIRTIME) {
     			makeHistoryDialog(json.dialog);
     			
     		}, "json");
+    	});
+    	
+    	$historyContentDiv.on("click", "a.his_delete", function(e) {
+    		var url = e.target.href,
+    			doDelete;
+    		
+    		e.preventDefault();
+    		
+    		doDelete = confirm($.i18n._("Delete this history record?"));
+    		
+    		if (doDelete) {
+    			$.post(url, function(json) {
+    				oTableAgg.fnDraw();
+    				oTableItem.fnDraw();
+        			
+        		}, "json");
+    		}
+    	});
+    	
+    	$('body').on("click", ".his_file_cancel, .his_item_cancel", function(e) {
+    		removeHistoryDialog();
     	});
     	
     	$('body').on("click", ".his_file_save", function(e) {
@@ -288,7 +359,7 @@ var AIRTIME = (function(AIRTIME) {
     			}
     			else {
     				removeHistoryDialog();
-    				oTable.fnDraw();
+    				oTableAgg.fnDraw();
     			}
     		    	
     		}, "json");
@@ -299,11 +370,15 @@ var AIRTIME = (function(AIRTIME) {
     		
     		e.preventDefault();
     		
-    		var $form = $(this).parents("form");
-    		var data = $form.serializeArray();
+    		var $form = $(this).parents("form"),
+    			data = $form.serializeArray(),
+    			id = data[0].value,
+    			createUrl = baseUrl+"Playouthistory/create-list-item/format/json",
+    			updateUrl = baseUrl+"Playouthistory/update-list-item/format/json",
+    			url;
     		
-    		var url = baseUrl+"Playouthistory/update-list-item/format/json";
-    		
+    		url = (id === "") ? createUrl : updateUrl;
+    				
     		$.post(url, data, function(json) {
     			
     			//TODO put errors on form.
@@ -312,7 +387,7 @@ var AIRTIME = (function(AIRTIME) {
     			}
     			else {
     				removeHistoryDialog();
-    				oTable.fnDraw();
+    				oTableItem.fnDraw();
     			}
     		    	
     		}, "json");
@@ -325,11 +400,12 @@ var AIRTIME = (function(AIRTIME) {
     		
     		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
     		
-    	    fn = oTable.fnSettings().fnServerData;
+    		fn = fnServerData;
     	    fn.start = oRange.start;
     	    fn.end = oRange.end;
     	    
-    		oTable.fnDraw();
+    		oTableAgg.fnDraw();
+    		oTableItem.fnDraw();
     	});
     	
     	$historyContentDiv.find("#his-tabs").tabs();
