@@ -223,7 +223,7 @@ class ApiController extends Zend_Controller_Action
 
         $isItemCurrentlyScheduled = !is_null($range["current"]) && count($range["currentShow"]) > 0 ? true : false;
 
-        $isCurrentItemPlaying = !isset($range["current"]["media_item_played"]) ? true : false;
+        $isCurrentItemPlaying = $range["current"]["media_item_played"] ? true : false;
 
         if ($isItemCurrentlyScheduled ||
             Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
