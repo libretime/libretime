@@ -221,19 +221,18 @@ class ApiController extends Zend_Controller_Action
 
         $range = Application_Model_Schedule::GetPlayOrderRange();
 
-        $isItemCurrentlyPlaying = !is_null($range["current"]) &&
-             $range["current"]["media_item_played"] &&
-             count($range["currentShow"]) > 0;
+        $isItemCurrentlyScheduled = !is_null($range["current"]) && count($range["currentShow"]) > 0 ? true : false;
 
-        if ($isItemCurrentlyPlaying ||
+        $isCurrentItemPlaying = !isset($range["current"]["media_item_played"]) ? true : false;
+
+        if ($isItemCurrentlyScheduled ||
             Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
             Application_Model_Preference::GetSourceSwitchStatus("master_dj") == "on")
         {
             $result["on_air_light_expected_status"] = true;
         }
 
-        if (($isItemCurrentlyPlaying &&
-             Application_Model_Preference::GetSourceSwitchStatus("scheduled_play") == "on")||
+        if (($isItemCurrentlyScheduled && $isCurrentItemPlaying) ||
             Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
             Application_Model_Preference::GetSourceSwitchStatus("master_dj") == "on")
         {
