@@ -209,6 +209,43 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+    public function onAirLightAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $result = array();
+        $result["on_air_light"] = false;
+        $result["on_air_light_expected_status"] = false;
+        $result["station_down"] = false;
+
+        $range = Application_Model_Schedule::GetPlayOrderRange();
+
+        $isItemCurrentlyScheduled = !is_null($range["current"]) && count($range["currentShow"]) > 0 ? true : false;
+
+        $isCurrentItemPlaying = $range["current"]["media_item_played"] ? true : false;
+
+        if ($isItemCurrentlyScheduled ||
+            Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
+            Application_Model_Preference::GetSourceSwitchStatus("master_dj") == "on")
+        {
+            $result["on_air_light_expected_status"] = true;
+        }
+
+        if (($isItemCurrentlyScheduled && $isCurrentItemPlaying) ||
+            Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
+            Application_Model_Preference::GetSourceSwitchStatus("master_dj") == "on")
+        {
+            $result["on_air_light"] = true;
+        }
+
+        if ($result["on_air_light_expected_status"] != $result["on_air_light"]) {
+            $result["station_down"] = true;
+        }
+
+        echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
+    }
+
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
