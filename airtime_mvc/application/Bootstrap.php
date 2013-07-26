@@ -86,8 +86,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         
         $baseUrl = Application_Common_OsPath::getBaseDir();
                 
-        $view->headScript()->appendFile($baseUrl.'js/libs/jquery-1.7.2.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        //$view->headScript()->appendFile($baseUrl.'js/libs/jquery-1.7.2.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile('http://code.jquery.com/jquery-1.10.1.min.js','text/javascript');
+        $view->headScript()->appendFile('http://code.jquery.com/jquery-migrate-1.2.1.min.js','text/javascript');
+        
+        //$view->headScript()->appendFile($baseUrl.'js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $view->headScript()->appendFile('http://code.jquery.com/ui/1.10.3/jquery-ui.js','text/javascript');
+        
         $view->headScript()->appendFile($baseUrl.'js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');

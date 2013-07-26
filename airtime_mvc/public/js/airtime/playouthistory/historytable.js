@@ -201,10 +201,13 @@ var AIRTIME = (function(AIRTIME) {
     	
     	function makeHistoryDialog(html) {
     		$hisDialogEl = $(html);
-    	     
+    		
     		$hisDialogEl.dialog({	       
     	        title: $.i18n._("Edit History Record"),
     	        modal: true,
+    	        open: function( event, ui ) {
+    	        	$hisDialogEl.find('.date').datetimepicker();
+    	        },
     	        close: function() {
     	        	removeHistoryDialog();
     	        }

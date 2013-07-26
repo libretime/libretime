@@ -56,6 +56,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/bootstrap-datetime/bootstrap-datetimepicker.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $offset = date("Z") * -1;
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
@@ -67,6 +68,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/bootstrap-datetimepicker.min.css?'.$CC_CONFIG['airtime_version']);
     }
 
     public function aggregateHistoryFeedAction()
@@ -121,7 +123,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$form = $historyService->makeHistoryFileForm($file_id);
 
     	$this->view->form = $form;
-    	$this->view->dialog = $this->view->render('form/edit-history-file.phtml');
+    	$this->view->dialog = $this->view->render('playouthistory/dialog.phtml');
 
     	unset($this->view->form);
     }
@@ -144,7 +146,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $form = $historyService->makeHistoryItemForm($history_id);
 
         $this->view->form = $form;
-        $this->view->dialog = $this->view->render('form/edit-history-item.phtml');
+        $this->view->dialog = $this->view->render('playouthistory/dialog.phtml');
 
         unset($this->view->form);
     }

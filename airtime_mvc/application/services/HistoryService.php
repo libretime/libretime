@@ -211,21 +211,30 @@ class Application_Service_HistoryService
 
 	public function populateTemplateItem($values) {
 
-	    $template = $this->getItemTemplate();
-	    $historyRecord = new CcPlayoutHistory();
-
-	    $timezoneUTC = new DateTimeZone("UTC");
-	    $timezoneLocal = new DateTimeZone($this->timezone);
-
-    	$dateTime = new DateTime($values["starts"], $timezoneLocal);
-    	$dateTime->setTimezone($timezoneLocal);
-    	$historyRecord->setDbStarts($dateTime->format("Y-m-d H:i:s"));
-
-    	$dateTime = new DateTime($result["ends"], $timezoneUTC);
-    	$dateTime->setTimezone($timezoneUTC);
-    	$historyRecord->setDbEnds($dateTime->format("Y-m-d H:i:s"));
-
-
+		$this->con->beginTransaction();
+		
+		try {
+		    $template = $this->getItemTemplate();
+		    $historyRecord = new CcPlayoutHistory();
+	
+		    $timezoneUTC = new DateTimeZone("UTC");
+		    $timezoneLocal = new DateTimeZone($this->timezone);
+	
+	    	$dateTime = new DateTime($values["starts"], $timezoneLocal);
+	    	$dateTime->setTimezone($timezoneLocal);
+	    	$historyRecord->setDbStarts($dateTime->format("Y-m-d H:i:s"));
+	
+	    	$dateTime = new DateTime($result["ends"], $timezoneUTC);
+	    	$dateTime->setTimezone($timezoneUTC);
+	    	$historyRecord->setDbEnds($dateTime->format("Y-m-d H:i:s"));
+	
+	    	$this->con->commit();
+    	}
+    	catch (Exception $e) {
+    		$this->con->rollback();
+    		Logging::info($e);
+    		throw $e;
+    	}
 
 	}
 
@@ -347,8 +356,8 @@ class Application_Service_HistoryService
 		$fields = array();
 
 		//array index is the position of the item in the history template table.
-		$fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
-		$fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		//$fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		//$fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
 		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
 
