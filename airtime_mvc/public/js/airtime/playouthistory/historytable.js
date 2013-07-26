@@ -58,7 +58,8 @@ var AIRTIME = (function(AIRTIME) {
         
         if (oConfig.sExtends == "pdf") {
             this.fnSetText( oFlash,
-                "title:"+ this.fnGetTitle(oConfig) +"\n"+
+                //"title:"+ this.fnGetTitle(oConfig) +"\n"+
+            	"title: Testing the Title Out\n"+
                 "message:"+ oConfig.sPdfMessage +"\n"+
                 "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
                 "orientation:"+ oConfig.sPdfOrientation +"\n"+
