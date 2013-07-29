@@ -894,7 +894,6 @@ SQL;
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
-        $utcStartDateTime = new DateTime("now");
         $previousDate = clone $start;
         foreach ($datePeriod as $date) {
 
@@ -954,12 +953,19 @@ SQL;
             $previousDate = clone $date;
         }
 
-        /* Set UTC to local time before setting the next repeat date. If we don't
-         * the next repeat date might be scheduled for the following day
+        /* We need to set the next populate date for repeat shows so when a user
+         * moves forward in the calendar we know when to start generating new
+         * show instances.
+         * If $utcStartDateTime is not set then we know zero new shows were
+         * created and we shouldn't update the next populate date.
          */
-        $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
-        $nextDate = $utcStartDateTime->add($repeatInterval);
-        $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
+        if (isset($utcStartDateTime)) {
+           /* Set UTC to local time before setting the next repeat date. If we don't
+            * the next repeat date might be scheduled for the following day */
+            $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $nextDate = $utcStartDateTime->add($repeatInterval);
+            $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
+        }
     }
 
     private function createMonthlyRepeatInstances($showDay, $populateUntil)
