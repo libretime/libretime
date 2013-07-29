@@ -471,5 +471,22 @@ class Application_Service_HistoryService
 
 		return $template;
 	}
+	
+	public function createItemTemplate($fields) {
+		
+		$this->con->beginTransaction();
+		
+		try {
+		
+			$template = new CcPlayoutHistoryTemplate();
+			
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			Logging::info($e);
+			throw $e;
+		}
+	}
 
 }

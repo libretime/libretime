@@ -117,9 +117,11 @@ var AIRTIME = (function(AIRTIME) {
 			var data = {};
 			var $lis, $li;
 			var i, len;
+			var templateName;
 			
 			url = (isNaN(parseInt(template_id, 10))) ? createUrl : updateUrl;
 			
+			templateName = $("#template_name").val();
 			$lis = $templateList.children();
 			
 			for (i = 0, len = $lis.length; i < len; i++) {
@@ -128,7 +130,7 @@ var AIRTIME = (function(AIRTIME) {
 				data[i] = getFieldData($li);
 			}
 			
-			$.post(url, data, function(json) {
+			$.post(url, {name: templateName, fields: data}, function(json) {
 				var x;
 			});
     	});

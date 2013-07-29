@@ -16,9 +16,9 @@
  * @method     CcPlayoutHistoryTemplateQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method     CcPlayoutHistoryTemplateQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcPlayoutHistoryTemplateQuery leftJoinCcPlayoutHistoryTemplateTag($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
- * @method     CcPlayoutHistoryTemplateQuery rightJoinCcPlayoutHistoryTemplateTag($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
- * @method     CcPlayoutHistoryTemplateQuery innerJoinCcPlayoutHistoryTemplateTag($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
+ * @method     CcPlayoutHistoryTemplateQuery leftJoinCcPlayoutHistoryTemplateField($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlayoutHistoryTemplateField relation
+ * @method     CcPlayoutHistoryTemplateQuery rightJoinCcPlayoutHistoryTemplateField($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplateField relation
+ * @method     CcPlayoutHistoryTemplateQuery innerJoinCcPlayoutHistoryTemplateField($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplateField relation
  *
  * @method     CcPlayoutHistoryTemplate findOne(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query
  * @method     CcPlayoutHistoryTemplate findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query, or a new CcPlayoutHistoryTemplate object populated from the query conditions when no match is found
@@ -177,31 +177,31 @@ abstract class BaseCcPlayoutHistoryTemplateQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related CcPlayoutHistoryTemplateTag object
+	 * Filter the query by a related CcPlayoutHistoryTemplateField object
 	 *
-	 * @param     CcPlayoutHistoryTemplateTag $ccPlayoutHistoryTemplateTag  the related object to use as filter
+	 * @param     CcPlayoutHistoryTemplateField $ccPlayoutHistoryTemplateField  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlayoutHistoryTemplateQuery The current query, for fluid interface
 	 */
-	public function filterByCcPlayoutHistoryTemplateTag($ccPlayoutHistoryTemplateTag, $comparison = null)
+	public function filterByCcPlayoutHistoryTemplateField($ccPlayoutHistoryTemplateField, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcPlayoutHistoryTemplatePeer::ID, $ccPlayoutHistoryTemplateTag->getDbTemplateId(), $comparison);
+			->addUsingAlias(CcPlayoutHistoryTemplatePeer::ID, $ccPlayoutHistoryTemplateField->getDbTemplateId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcPlayoutHistoryTemplateTag relation
+	 * Adds a JOIN clause to the query using the CcPlayoutHistoryTemplateField relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcPlayoutHistoryTemplateQuery The current query, for fluid interface
 	 */
-	public function joinCcPlayoutHistoryTemplateTag($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function joinCcPlayoutHistoryTemplateField($relationAlias = '', $joinType = Criteria::INNER_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcPlayoutHistoryTemplateTag');
+		$relationMap = $tableMap->getRelation('CcPlayoutHistoryTemplateField');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -216,14 +216,14 @@ abstract class BaseCcPlayoutHistoryTemplateQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcPlayoutHistoryTemplateTag');
+			$this->addJoinObject($join, 'CcPlayoutHistoryTemplateField');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcPlayoutHistoryTemplateTag relation CcPlayoutHistoryTemplateTag object
+	 * Use the CcPlayoutHistoryTemplateField relation CcPlayoutHistoryTemplateField object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -231,13 +231,13 @@ abstract class BaseCcPlayoutHistoryTemplateQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    CcPlayoutHistoryTemplateTagQuery A secondary query class using the current class as primary query
+	 * @return    CcPlayoutHistoryTemplateFieldQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcPlayoutHistoryTemplateTagQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function useCcPlayoutHistoryTemplateFieldQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
 	{
 		return $this
-			->joinCcPlayoutHistoryTemplateTag($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistoryTemplateTag', 'CcPlayoutHistoryTemplateTagQuery');
+			->joinCcPlayoutHistoryTemplateField($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistoryTemplateField', 'CcPlayoutHistoryTemplateFieldQuery');
 	}
 
 	/**
