@@ -26,7 +26,7 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 	const TM_CLASS = 'CcPlayoutHistoryMetaDataTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 5;
+	const NUM_COLUMNS = 4;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -36,9 +36,6 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 
 	/** the column name for the HISTORY_ID field */
 	const HISTORY_ID = 'cc_playout_history_metadata.HISTORY_ID';
-
-	/** the column name for the TAG_ID field */
-	const TAG_ID = 'cc_playout_history_metadata.TAG_ID';
 
 	/** the column name for the KEY field */
 	const KEY = 'cc_playout_history_metadata.KEY';
@@ -62,12 +59,12 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbHistoryId', 'DbTagId', 'DbKey', 'DbValue', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbHistoryId', 'dbTagId', 'dbKey', 'dbValue', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::HISTORY_ID, self::TAG_ID, self::KEY, self::VALUE, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'HISTORY_ID', 'TAG_ID', 'KEY', 'VALUE', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'history_id', 'tag_id', 'key', 'value', ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbHistoryId', 'DbKey', 'DbValue', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbHistoryId', 'dbKey', 'dbValue', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::HISTORY_ID, self::KEY, self::VALUE, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'HISTORY_ID', 'KEY', 'VALUE', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'history_id', 'key', 'value', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -77,12 +74,12 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbHistoryId' => 1, 'DbTagId' => 2, 'DbKey' => 3, 'DbValue' => 4, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbHistoryId' => 1, 'dbTagId' => 2, 'dbKey' => 3, 'dbValue' => 4, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::HISTORY_ID => 1, self::TAG_ID => 2, self::KEY => 3, self::VALUE => 4, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'HISTORY_ID' => 1, 'TAG_ID' => 2, 'KEY' => 3, 'VALUE' => 4, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'history_id' => 1, 'tag_id' => 2, 'key' => 3, 'value' => 4, ),
-		BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbHistoryId' => 1, 'DbKey' => 2, 'DbValue' => 3, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbHistoryId' => 1, 'dbKey' => 2, 'dbValue' => 3, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::HISTORY_ID => 1, self::KEY => 2, self::VALUE => 3, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'HISTORY_ID' => 1, 'KEY' => 2, 'VALUE' => 3, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'history_id' => 1, 'key' => 2, 'value' => 3, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
 	);
 
 	/**
@@ -156,13 +153,11 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcPlayoutHistoryMetaDataPeer::ID);
 			$criteria->addSelectColumn(CcPlayoutHistoryMetaDataPeer::HISTORY_ID);
-			$criteria->addSelectColumn(CcPlayoutHistoryMetaDataPeer::TAG_ID);
 			$criteria->addSelectColumn(CcPlayoutHistoryMetaDataPeer::KEY);
 			$criteria->addSelectColumn(CcPlayoutHistoryMetaDataPeer::VALUE);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
 			$criteria->addSelectColumn($alias . '.HISTORY_ID');
-			$criteria->addSelectColumn($alias . '.TAG_ID');
 			$criteria->addSelectColumn($alias . '.KEY');
 			$criteria->addSelectColumn($alias . '.VALUE');
 		}
@@ -501,56 +496,6 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related CcTag table
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
-	 */
-	public static function doCountJoinCcTag(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		// we're going to modify criteria, so copy it first
-		$criteria = clone $criteria;
-
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlayoutHistoryMetaDataPeer::TABLE_NAME);
-
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
-		}
-
-		if (!$criteria->hasSelectClause()) {
-			CcPlayoutHistoryMetaDataPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
-
-		if ($con === null) {
-			$con = Propel::getConnection(CcPlayoutHistoryMetaDataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doCount($criteria, $con);
-
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
-		}
-		$stmt->closeCursor();
-		return $count;
-	}
-
-
-	/**
 	 * Selects a collection of CcPlayoutHistoryMetaData objects pre-filled with their CcPlayoutHistory objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -617,72 +562,6 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 
 
 	/**
-	 * Selects a collection of CcPlayoutHistoryMetaData objects pre-filled with their CcTag objects.
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlayoutHistoryMetaData objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinCcTag(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CcPlayoutHistoryMetaDataPeer::addSelectColumns($criteria);
-		$startcol = (CcPlayoutHistoryMetaDataPeer::NUM_COLUMNS - CcPlayoutHistoryMetaDataPeer::NUM_LAZY_LOAD_COLUMNS);
-		CcTagPeer::addSelectColumns($criteria);
-
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlayoutHistoryMetaDataPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlayoutHistoryMetaDataPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-
-				$cls = CcPlayoutHistoryMetaDataPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CcPlayoutHistoryMetaDataPeer::addInstanceToPool($obj1, $key1);
-			} // if $obj1 already loaded
-
-			$key2 = CcTagPeer::getPrimaryKeyHashFromRow($row, $startcol);
-			if ($key2 !== null) {
-				$obj2 = CcTagPeer::getInstanceFromPool($key2);
-				if (!$obj2) {
-
-					$cls = CcTagPeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol);
-					CcTagPeer::addInstanceToPool($obj2, $key2);
-				} // if obj2 already loaded
-
-				// Add the $obj1 (CcPlayoutHistoryMetaData) to $obj2 (CcTag)
-				$obj2->addCcPlayoutHistoryMetaData($obj1);
-
-			} // if joined row was not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
 	 * Returns the number of rows matching criteria, joining all related tables
 	 *
 	 * @param      Criteria $criteria
@@ -720,8 +599,6 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 
 		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::HISTORY_ID, CcPlayoutHistoryPeer::ID, $join_behavior);
 
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
-
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -758,12 +635,7 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 		CcPlayoutHistoryPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcPlayoutHistoryPeer::NUM_COLUMNS - CcPlayoutHistoryPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcTagPeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + (CcTagPeer::NUM_COLUMNS - CcTagPeer::NUM_LAZY_LOAD_COLUMNS);
-
 		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::HISTORY_ID, CcPlayoutHistoryPeer::ID, $join_behavior);
-
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -799,270 +671,6 @@ abstract class BaseCcPlayoutHistoryMetaDataPeer {
 				// Add the $obj1 (CcPlayoutHistoryMetaData) to the collection in $obj2 (CcPlayoutHistory)
 				$obj2->addCcPlayoutHistoryMetaData($obj1);
 			} // if joined row not null
-
-			// Add objects for joined CcTag rows
-
-			$key3 = CcTagPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-			if ($key3 !== null) {
-				$obj3 = CcTagPeer::getInstanceFromPool($key3);
-				if (!$obj3) {
-
-					$cls = CcTagPeer::getOMClass(false);
-
-					$obj3 = new $cls();
-					$obj3->hydrate($row, $startcol3);
-					CcTagPeer::addInstanceToPool($obj3, $key3);
-				} // if obj3 loaded
-
-				// Add the $obj1 (CcPlayoutHistoryMetaData) to the collection in $obj3 (CcTag)
-				$obj3->addCcPlayoutHistoryMetaData($obj1);
-			} // if joined row not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
-	 * Returns the number of rows matching criteria, joining the related CcPlayoutHistory table
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
-	 */
-	public static function doCountJoinAllExceptCcPlayoutHistory(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		// we're going to modify criteria, so copy it first
-		$criteria = clone $criteria;
-
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlayoutHistoryMetaDataPeer::TABLE_NAME);
-		
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
-		}
-
-		if (!$criteria->hasSelectClause()) {
-			CcPlayoutHistoryMetaDataPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
-
-		if ($con === null) {
-			$con = Propel::getConnection(CcPlayoutHistoryMetaDataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-	
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doCount($criteria, $con);
-
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
-		}
-		$stmt->closeCursor();
-		return $count;
-	}
-
-
-	/**
-	 * Returns the number of rows matching criteria, joining the related CcTag table
-	 *
-	 * @param      Criteria $criteria
-	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     int Number of matching rows.
-	 */
-	public static function doCountJoinAllExceptCcTag(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		// we're going to modify criteria, so copy it first
-		$criteria = clone $criteria;
-
-		// We need to set the primary table name, since in the case that there are no WHERE columns
-		// it will be impossible for the BasePeer::createSelectSql() method to determine which
-		// tables go into the FROM clause.
-		$criteria->setPrimaryTableName(CcPlayoutHistoryMetaDataPeer::TABLE_NAME);
-		
-		if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-			$criteria->setDistinct();
-		}
-
-		if (!$criteria->hasSelectClause()) {
-			CcPlayoutHistoryMetaDataPeer::addSelectColumns($criteria);
-		}
-		
-		$criteria->clearOrderByColumns(); // ORDER BY should not affect count
-		
-		// Set the correct dbName
-		$criteria->setDbName(self::DATABASE_NAME);
-
-		if ($con === null) {
-			$con = Propel::getConnection(CcPlayoutHistoryMetaDataPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-		}
-	
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::HISTORY_ID, CcPlayoutHistoryPeer::ID, $join_behavior);
-
-		$stmt = BasePeer::doCount($criteria, $con);
-
-		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$count = (int) $row[0];
-		} else {
-			$count = 0; // no rows returned; we infer that means 0 matches.
-		}
-		$stmt->closeCursor();
-		return $count;
-	}
-
-
-	/**
-	 * Selects a collection of CcPlayoutHistoryMetaData objects pre-filled with all related objects except CcPlayoutHistory.
-	 *
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlayoutHistoryMetaData objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinAllExceptCcPlayoutHistory(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		// $criteria->getDbName() will return the same object if not set to another value
-		// so == check is okay and faster
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CcPlayoutHistoryMetaDataPeer::addSelectColumns($criteria);
-		$startcol2 = (CcPlayoutHistoryMetaDataPeer::NUM_COLUMNS - CcPlayoutHistoryMetaDataPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		CcTagPeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + (CcTagPeer::NUM_COLUMNS - CcTagPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::TAG_ID, CcTagPeer::ID, $join_behavior);
-
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlayoutHistoryMetaDataPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlayoutHistoryMetaDataPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-				$cls = CcPlayoutHistoryMetaDataPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CcPlayoutHistoryMetaDataPeer::addInstanceToPool($obj1, $key1);
-			} // if obj1 already loaded
-
-				// Add objects for joined CcTag rows
-
-				$key2 = CcTagPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CcTagPeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CcTagPeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CcTagPeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (CcPlayoutHistoryMetaData) to the collection in $obj2 (CcTag)
-				$obj2->addCcPlayoutHistoryMetaData($obj1);
-
-			} // if joined row is not null
-
-			$results[] = $obj1;
-		}
-		$stmt->closeCursor();
-		return $results;
-	}
-
-
-	/**
-	 * Selects a collection of CcPlayoutHistoryMetaData objects pre-filled with all related objects except CcTag.
-	 *
-	 * @param      Criteria  $criteria
-	 * @param      PropelPDO $con
-	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-	 * @return     array Array of CcPlayoutHistoryMetaData objects.
-	 * @throws     PropelException Any exceptions caught during processing will be
-	 *		 rethrown wrapped into a PropelException.
-	 */
-	public static function doSelectJoinAllExceptCcTag(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$criteria = clone $criteria;
-
-		// Set the correct dbName if it has not been overridden
-		// $criteria->getDbName() will return the same object if not set to another value
-		// so == check is okay and faster
-		if ($criteria->getDbName() == Propel::getDefaultDB()) {
-			$criteria->setDbName(self::DATABASE_NAME);
-		}
-
-		CcPlayoutHistoryMetaDataPeer::addSelectColumns($criteria);
-		$startcol2 = (CcPlayoutHistoryMetaDataPeer::NUM_COLUMNS - CcPlayoutHistoryMetaDataPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		CcPlayoutHistoryPeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + (CcPlayoutHistoryPeer::NUM_COLUMNS - CcPlayoutHistoryPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcPlayoutHistoryMetaDataPeer::HISTORY_ID, CcPlayoutHistoryPeer::ID, $join_behavior);
-
-
-		$stmt = BasePeer::doSelect($criteria, $con);
-		$results = array();
-
-		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$key1 = CcPlayoutHistoryMetaDataPeer::getPrimaryKeyHashFromRow($row, 0);
-			if (null !== ($obj1 = CcPlayoutHistoryMetaDataPeer::getInstanceFromPool($key1))) {
-				// We no longer rehydrate the object, since this can cause data loss.
-				// See http://www.propelorm.org/ticket/509
-				// $obj1->hydrate($row, 0, true); // rehydrate
-			} else {
-				$cls = CcPlayoutHistoryMetaDataPeer::getOMClass(false);
-
-				$obj1 = new $cls();
-				$obj1->hydrate($row);
-				CcPlayoutHistoryMetaDataPeer::addInstanceToPool($obj1, $key1);
-			} // if obj1 already loaded
-
-				// Add objects for joined CcPlayoutHistory rows
-
-				$key2 = CcPlayoutHistoryPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CcPlayoutHistoryPeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CcPlayoutHistoryPeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CcPlayoutHistoryPeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (CcPlayoutHistoryMetaData) to the collection in $obj2 (CcPlayoutHistory)
-				$obj2->addCcPlayoutHistoryMetaData($obj1);
-
-			} // if joined row is not null
 
 			$results[] = $obj1;
 		}

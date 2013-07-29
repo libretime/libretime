@@ -488,13 +488,13 @@ $(document).ready(function() {
         setCurrentUserPseudoPassword();
     }
     
-    $('#current-user').live('click', function() {
+    $('body').on('click','#current-user', function() {
         $.ajax({
             url: baseUrl+'user/edit-user/format/json'
         });
     });
     
-    $('#cu_save_user').live('click', function() {
+    $('body').on('click', '#cu_save_user', function() {
         $.cookie("airtime_locale", $('#cu_locale').val(), {path: '/'});
     });
 

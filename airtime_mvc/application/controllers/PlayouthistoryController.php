@@ -189,16 +189,28 @@ class PlayouthistoryController extends Zend_Controller_Action
     }
 
     public function configureItemTemplateAction() {
+    	
+    	$CC_CONFIG = Config::getConfig();
+    	$baseUrl = Application_Common_OsPath::getBaseDir();
+    	
+    	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/template.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
+    	$template_id = $this->_getParam('id', null);
+    	
         $historyService = new Application_Service_HistoryService();
         $mandatoryFields = $historyService->mandatoryItemTemplate();
 
+        $this->view->template_id = $template_id;
+        $this->view->fileMD = $historyService->getFileMetadataTypes();
+        $this->view->fields = $historyService->getFieldTypes();
         $this->view->required = $mandatoryFields;
     }
 
     public function createTemplateAction()
     {
-
+    	$request = $this->getRequest();
+    	$params = $request->getPost();
+    	Logging::info($params);
     }
 
     public function editTemplateAction()

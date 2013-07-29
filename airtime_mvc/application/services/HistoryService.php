@@ -412,6 +412,28 @@ class Application_Service_HistoryService
 
 	    return $fields;
 	}
+	
+	public function getFileMetadataTypes() {
+		
+		$fileMD = array(
+			array("name"=> MDATA_KEY_TITLE, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_CREATOR, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_SOURCE, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_DURATION, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_GENRE, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_MOOD, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_LABEL, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_COMPOSER, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_ISRC, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_COPYRIGHT, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_YEAR, "type"=> TEMPLATE_INT),
+			array("name"=> MDATA_KEY_TRACKNUMBER, "type"=> TEMPLATE_INT),
+			array("name"=> MDATA_KEY_CONDUCTOR, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_LANGUAGE, "type"=> TEMPLATE_STRING),
+		);
+		
+		return $fileMD;
+	}
 
 	public function mandatoryItemTemplate() {
 

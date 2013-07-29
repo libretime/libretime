@@ -37,12 +37,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 	protected $history_id;
 
 	/**
-	 * The value for the tag_id field.
-	 * @var        int
-	 */
-	protected $tag_id;
-
-	/**
 	 * The value for the key field.
 	 * @var        string
 	 */
@@ -58,11 +52,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 	 * @var        CcPlayoutHistory
 	 */
 	protected $aCcPlayoutHistory;
-
-	/**
-	 * @var        CcTag
-	 */
-	protected $aCcTag;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -96,16 +85,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 	public function getDbHistoryId()
 	{
 		return $this->history_id;
-	}
-
-	/**
-	 * Get the [tag_id] column value.
-	 * 
-	 * @return     int
-	 */
-	public function getDbTagId()
-	{
-		return $this->tag_id;
 	}
 
 	/**
@@ -171,30 +150,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 
 		return $this;
 	} // setDbHistoryId()
-
-	/**
-	 * Set the value of [tag_id] column.
-	 * 
-	 * @param      int $v new value
-	 * @return     CcPlayoutHistoryMetaData The current object (for fluent API support)
-	 */
-	public function setDbTagId($v)
-	{
-		if ($v !== null) {
-			$v = (int) $v;
-		}
-
-		if ($this->tag_id !== $v) {
-			$this->tag_id = $v;
-			$this->modifiedColumns[] = CcPlayoutHistoryMetaDataPeer::TAG_ID;
-		}
-
-		if ($this->aCcTag !== null && $this->aCcTag->getDbId() !== $v) {
-			$this->aCcTag = null;
-		}
-
-		return $this;
-	} // setDbTagId()
 
 	/**
 	 * Set the value of [key] column.
@@ -270,9 +225,8 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->history_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-			$this->tag_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-			$this->key = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->value = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->key = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->value = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -281,7 +235,7 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 5; // 5 = CcPlayoutHistoryMetaDataPeer::NUM_COLUMNS - CcPlayoutHistoryMetaDataPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 4; // 4 = CcPlayoutHistoryMetaDataPeer::NUM_COLUMNS - CcPlayoutHistoryMetaDataPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlayoutHistoryMetaData object", $e);
@@ -306,9 +260,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 
 		if ($this->aCcPlayoutHistory !== null && $this->history_id !== $this->aCcPlayoutHistory->getDbId()) {
 			$this->aCcPlayoutHistory = null;
-		}
-		if ($this->aCcTag !== null && $this->tag_id !== $this->aCcTag->getDbId()) {
-			$this->aCcTag = null;
 		}
 	} // ensureConsistency
 
@@ -350,7 +301,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCcPlayoutHistory = null;
-			$this->aCcTag = null;
 		} // if (deep)
 	}
 
@@ -473,13 +423,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 				$this->setCcPlayoutHistory($this->aCcPlayoutHistory);
 			}
 
-			if ($this->aCcTag !== null) {
-				if ($this->aCcTag->isModified() || $this->aCcTag->isNew()) {
-					$affectedRows += $this->aCcTag->save($con);
-				}
-				$this->setCcTag($this->aCcTag);
-			}
-
 			if ($this->isNew() ) {
 				$this->modifiedColumns[] = CcPlayoutHistoryMetaDataPeer::ID;
 			}
@@ -580,12 +523,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 				}
 			}
 
-			if ($this->aCcTag !== null) {
-				if (!$this->aCcTag->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aCcTag->getValidationFailures());
-				}
-			}
-
 
 			if (($retval = CcPlayoutHistoryMetaDataPeer::doValidate($this, $columns)) !== true) {
 				$failureMap = array_merge($failureMap, $retval);
@@ -632,12 +569,9 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 				return $this->getDbHistoryId();
 				break;
 			case 2:
-				return $this->getDbTagId();
-				break;
-			case 3:
 				return $this->getDbKey();
 				break;
-			case 4:
+			case 3:
 				return $this->getDbValue();
 				break;
 			default:
@@ -666,16 +600,12 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 		$result = array(
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbHistoryId(),
-			$keys[2] => $this->getDbTagId(),
-			$keys[3] => $this->getDbKey(),
-			$keys[4] => $this->getDbValue(),
+			$keys[2] => $this->getDbKey(),
+			$keys[3] => $this->getDbValue(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcPlayoutHistory) {
 				$result['CcPlayoutHistory'] = $this->aCcPlayoutHistory->toArray($keyType, $includeLazyLoadColumns, true);
-			}
-			if (null !== $this->aCcTag) {
-				$result['CcTag'] = $this->aCcTag->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -715,12 +645,9 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 				$this->setDbHistoryId($value);
 				break;
 			case 2:
-				$this->setDbTagId($value);
-				break;
-			case 3:
 				$this->setDbKey($value);
 				break;
-			case 4:
+			case 3:
 				$this->setDbValue($value);
 				break;
 		} // switch()
@@ -749,9 +676,8 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbHistoryId($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setDbTagId($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbKey($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbValue($arr[$keys[4]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbKey($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbValue($arr[$keys[3]]);
 	}
 
 	/**
@@ -765,7 +691,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 
 		if ($this->isColumnModified(CcPlayoutHistoryMetaDataPeer::ID)) $criteria->add(CcPlayoutHistoryMetaDataPeer::ID, $this->id);
 		if ($this->isColumnModified(CcPlayoutHistoryMetaDataPeer::HISTORY_ID)) $criteria->add(CcPlayoutHistoryMetaDataPeer::HISTORY_ID, $this->history_id);
-		if ($this->isColumnModified(CcPlayoutHistoryMetaDataPeer::TAG_ID)) $criteria->add(CcPlayoutHistoryMetaDataPeer::TAG_ID, $this->tag_id);
 		if ($this->isColumnModified(CcPlayoutHistoryMetaDataPeer::KEY)) $criteria->add(CcPlayoutHistoryMetaDataPeer::KEY, $this->key);
 		if ($this->isColumnModified(CcPlayoutHistoryMetaDataPeer::VALUE)) $criteria->add(CcPlayoutHistoryMetaDataPeer::VALUE, $this->value);
 
@@ -830,7 +755,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 	public function copyInto($copyObj, $deepCopy = false)
 	{
 		$copyObj->setDbHistoryId($this->history_id);
-		$copyObj->setDbTagId($this->tag_id);
 		$copyObj->setDbKey($this->key);
 		$copyObj->setDbValue($this->value);
 
@@ -926,62 +850,12 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 	}
 
 	/**
-	 * Declares an association between this object and a CcTag object.
-	 *
-	 * @param      CcTag $v
-	 * @return     CcPlayoutHistoryMetaData The current object (for fluent API support)
-	 * @throws     PropelException
-	 */
-	public function setCcTag(CcTag $v = null)
-	{
-		if ($v === null) {
-			$this->setDbTagId(NULL);
-		} else {
-			$this->setDbTagId($v->getDbId());
-		}
-
-		$this->aCcTag = $v;
-
-		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the CcTag object, it will not be re-added.
-		if ($v !== null) {
-			$v->addCcPlayoutHistoryMetaData($this);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the associated CcTag object
-	 *
-	 * @param      PropelPDO Optional Connection object.
-	 * @return     CcTag The associated CcTag object.
-	 * @throws     PropelException
-	 */
-	public function getCcTag(PropelPDO $con = null)
-	{
-		if ($this->aCcTag === null && ($this->tag_id !== null)) {
-			$this->aCcTag = CcTagQuery::create()->findPk($this->tag_id, $con);
-			/* The following can be used additionally to
-			   guarantee the related object contains a reference
-			   to this object.  This level of coupling may, however, be
-			   undesirable since it could result in an only partially populated collection
-			   in the referenced object.
-			   $this->aCcTag->addCcPlayoutHistoryMetaDatas($this);
-			 */
-		}
-		return $this->aCcTag;
-	}
-
-	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
 	public function clear()
 	{
 		$this->id = null;
 		$this->history_id = null;
-		$this->tag_id = null;
 		$this->key = null;
 		$this->value = null;
 		$this->alreadyInSave = false;
@@ -1007,7 +881,6 @@ abstract class BaseCcPlayoutHistoryMetaData extends BaseObject  implements Persi
 		} // if ($deep)
 
 		$this->aCcPlayoutHistory = null;
-		$this->aCcTag = null;
 	}
 
 	/**

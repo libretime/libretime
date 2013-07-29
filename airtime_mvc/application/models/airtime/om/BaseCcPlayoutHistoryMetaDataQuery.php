@@ -8,13 +8,11 @@
  *
  * @method     CcPlayoutHistoryMetaDataQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlayoutHistoryMetaDataQuery orderByDbHistoryId($order = Criteria::ASC) Order by the history_id column
- * @method     CcPlayoutHistoryMetaDataQuery orderByDbTagId($order = Criteria::ASC) Order by the tag_id column
  * @method     CcPlayoutHistoryMetaDataQuery orderByDbKey($order = Criteria::ASC) Order by the key column
  * @method     CcPlayoutHistoryMetaDataQuery orderByDbValue($order = Criteria::ASC) Order by the value column
  *
  * @method     CcPlayoutHistoryMetaDataQuery groupByDbId() Group by the id column
  * @method     CcPlayoutHistoryMetaDataQuery groupByDbHistoryId() Group by the history_id column
- * @method     CcPlayoutHistoryMetaDataQuery groupByDbTagId() Group by the tag_id column
  * @method     CcPlayoutHistoryMetaDataQuery groupByDbKey() Group by the key column
  * @method     CcPlayoutHistoryMetaDataQuery groupByDbValue() Group by the value column
  *
@@ -26,22 +24,16 @@
  * @method     CcPlayoutHistoryMetaDataQuery rightJoinCcPlayoutHistory($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlayoutHistory relation
  * @method     CcPlayoutHistoryMetaDataQuery innerJoinCcPlayoutHistory($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlayoutHistory relation
  *
- * @method     CcPlayoutHistoryMetaDataQuery leftJoinCcTag($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcTag relation
- * @method     CcPlayoutHistoryMetaDataQuery rightJoinCcTag($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTag relation
- * @method     CcPlayoutHistoryMetaDataQuery innerJoinCcTag($relationAlias = '') Adds a INNER JOIN clause to the query using the CcTag relation
- *
  * @method     CcPlayoutHistoryMetaData findOne(PropelPDO $con = null) Return the first CcPlayoutHistoryMetaData matching the query
  * @method     CcPlayoutHistoryMetaData findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryMetaData matching the query, or a new CcPlayoutHistoryMetaData object populated from the query conditions when no match is found
  *
  * @method     CcPlayoutHistoryMetaData findOneByDbId(int $id) Return the first CcPlayoutHistoryMetaData filtered by the id column
  * @method     CcPlayoutHistoryMetaData findOneByDbHistoryId(int $history_id) Return the first CcPlayoutHistoryMetaData filtered by the history_id column
- * @method     CcPlayoutHistoryMetaData findOneByDbTagId(int $tag_id) Return the first CcPlayoutHistoryMetaData filtered by the tag_id column
  * @method     CcPlayoutHistoryMetaData findOneByDbKey(string $key) Return the first CcPlayoutHistoryMetaData filtered by the key column
  * @method     CcPlayoutHistoryMetaData findOneByDbValue(string $value) Return the first CcPlayoutHistoryMetaData filtered by the value column
  *
  * @method     array findByDbId(int $id) Return CcPlayoutHistoryMetaData objects filtered by the id column
  * @method     array findByDbHistoryId(int $history_id) Return CcPlayoutHistoryMetaData objects filtered by the history_id column
- * @method     array findByDbTagId(int $tag_id) Return CcPlayoutHistoryMetaData objects filtered by the tag_id column
  * @method     array findByDbKey(string $key) Return CcPlayoutHistoryMetaData objects filtered by the key column
  * @method     array findByDbValue(string $value) Return CcPlayoutHistoryMetaData objects filtered by the value column
  *
@@ -202,37 +194,6 @@ abstract class BaseCcPlayoutHistoryMetaDataQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the tag_id column
-	 * 
-	 * @param     int|array $dbTagId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlayoutHistoryMetaDataQuery The current query, for fluid interface
-	 */
-	public function filterByDbTagId($dbTagId = null, $comparison = null)
-	{
-		if (is_array($dbTagId)) {
-			$useMinMax = false;
-			if (isset($dbTagId['min'])) {
-				$this->addUsingAlias(CcPlayoutHistoryMetaDataPeer::TAG_ID, $dbTagId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbTagId['max'])) {
-				$this->addUsingAlias(CcPlayoutHistoryMetaDataPeer::TAG_ID, $dbTagId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
-				$comparison = Criteria::IN;
-			}
-		}
-		return $this->addUsingAlias(CcPlayoutHistoryMetaDataPeer::TAG_ID, $dbTagId, $comparison);
-	}
-
-	/**
 	 * Filter the query on the key column
 	 * 
 	 * @param     string $dbKey The value to use as filter.
@@ -338,70 +299,6 @@ abstract class BaseCcPlayoutHistoryMetaDataQuery extends ModelCriteria
 		return $this
 			->joinCcPlayoutHistory($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistory', 'CcPlayoutHistoryQuery');
-	}
-
-	/**
-	 * Filter the query by a related CcTag object
-	 *
-	 * @param     CcTag $ccTag  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlayoutHistoryMetaDataQuery The current query, for fluid interface
-	 */
-	public function filterByCcTag($ccTag, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcPlayoutHistoryMetaDataPeer::TAG_ID, $ccTag->getDbId(), $comparison);
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the CcTag relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcPlayoutHistoryMetaDataQuery The current query, for fluid interface
-	 */
-	public function joinCcTag($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcTag');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcTag');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the CcTag relation CcTag object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcTagQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcTagQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcTag($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcTag', 'CcTagQuery');
 	}
 
 	/**

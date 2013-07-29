@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_playout_history_template_tag' table.
+ * This class defines the structure of the 'cc_playout_history_template_field' table.
  *
  *
  *
@@ -31,16 +31,18 @@ class CcPlayoutHistoryTemplateTagTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_playout_history_template_tag');
+		$this->setName('cc_playout_history_template_field');
 		$this->setPhpName('CcPlayoutHistoryTemplateTag');
 		$this->setClassname('CcPlayoutHistoryTemplateTag');
 		$this->setPackage('airtime');
 		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_playout_history_template_tag_id_seq');
+		$this->setPrimaryKeyMethodInfo('cc_playout_history_template_field_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('TEMPLATE_ID', 'DbTemplateId', 'INTEGER', 'cc_playout_history_template', 'ID', true, null, null);
-		$this->addForeignKey('TAG_ID', 'DbTagId', 'INTEGER', 'cc_tag', 'ID', true, null, null);
+		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 128, null);
+		$this->addColumn('TYPE', 'DbType', 'VARCHAR', true, 128, null);
+		$this->addColumn('IS_FILE_MD', 'DbIsFileMD', 'BOOLEAN', true, null, false);
 		$this->addColumn('POSITION', 'DbTagPosition', 'INTEGER', true, null, null);
 		// validators
 	} // initialize()
@@ -51,7 +53,6 @@ class CcPlayoutHistoryTemplateTagTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcPlayoutHistoryTemplate', 'CcPlayoutHistoryTemplate', RelationMap::MANY_TO_ONE, array('template_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcTag', 'CcTag', RelationMap::MANY_TO_ONE, array('tag_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcPlayoutHistoryTemplateTagTableMap

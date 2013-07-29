@@ -695,9 +695,6 @@ abstract class BaseCcFilesPeer {
 		// Invalidate objects in CcSchedulePeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcSchedulePeer::clearInstancePool();
-		// Invalidate objects in CcFileTagPeer instance pool, 
-		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-		CcFileTagPeer::clearInstancePool();
 		// Invalidate objects in CcPlayoutHistoryPeer instance pool, 
 		// since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
 		CcPlayoutHistoryPeer::clearInstancePool();

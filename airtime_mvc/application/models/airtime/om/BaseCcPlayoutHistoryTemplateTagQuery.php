@@ -2,18 +2,22 @@
 
 
 /**
- * Base class that represents a query for the 'cc_playout_history_template_tag' table.
+ * Base class that represents a query for the 'cc_playout_history_template_field' table.
  *
  * 
  *
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTemplateId($order = Criteria::ASC) Order by the template_id column
- * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTagId($order = Criteria::ASC) Order by the tag_id column
+ * @method     CcPlayoutHistoryTemplateTagQuery orderByDbName($order = Criteria::ASC) Order by the name column
+ * @method     CcPlayoutHistoryTemplateTagQuery orderByDbType($order = Criteria::ASC) Order by the type column
+ * @method     CcPlayoutHistoryTemplateTagQuery orderByDbIsFileMD($order = Criteria::ASC) Order by the is_file_md column
  * @method     CcPlayoutHistoryTemplateTagQuery orderByDbTagPosition($order = Criteria::ASC) Order by the position column
  *
  * @method     CcPlayoutHistoryTemplateTagQuery groupByDbId() Group by the id column
  * @method     CcPlayoutHistoryTemplateTagQuery groupByDbTemplateId() Group by the template_id column
- * @method     CcPlayoutHistoryTemplateTagQuery groupByDbTagId() Group by the tag_id column
+ * @method     CcPlayoutHistoryTemplateTagQuery groupByDbName() Group by the name column
+ * @method     CcPlayoutHistoryTemplateTagQuery groupByDbType() Group by the type column
+ * @method     CcPlayoutHistoryTemplateTagQuery groupByDbIsFileMD() Group by the is_file_md column
  * @method     CcPlayoutHistoryTemplateTagQuery groupByDbTagPosition() Group by the position column
  *
  * @method     CcPlayoutHistoryTemplateTagQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -24,21 +28,21 @@
  * @method     CcPlayoutHistoryTemplateTagQuery rightJoinCcPlayoutHistoryTemplate($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplate relation
  * @method     CcPlayoutHistoryTemplateTagQuery innerJoinCcPlayoutHistoryTemplate($relationAlias = '') Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplate relation
  *
- * @method     CcPlayoutHistoryTemplateTagQuery leftJoinCcTag($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcTag relation
- * @method     CcPlayoutHistoryTemplateTagQuery rightJoinCcTag($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTag relation
- * @method     CcPlayoutHistoryTemplateTagQuery innerJoinCcTag($relationAlias = '') Adds a INNER JOIN clause to the query using the CcTag relation
- *
  * @method     CcPlayoutHistoryTemplateTag findOne(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplateTag matching the query
  * @method     CcPlayoutHistoryTemplateTag findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplateTag matching the query, or a new CcPlayoutHistoryTemplateTag object populated from the query conditions when no match is found
  *
  * @method     CcPlayoutHistoryTemplateTag findOneByDbId(int $id) Return the first CcPlayoutHistoryTemplateTag filtered by the id column
  * @method     CcPlayoutHistoryTemplateTag findOneByDbTemplateId(int $template_id) Return the first CcPlayoutHistoryTemplateTag filtered by the template_id column
- * @method     CcPlayoutHistoryTemplateTag findOneByDbTagId(int $tag_id) Return the first CcPlayoutHistoryTemplateTag filtered by the tag_id column
+ * @method     CcPlayoutHistoryTemplateTag findOneByDbName(string $name) Return the first CcPlayoutHistoryTemplateTag filtered by the name column
+ * @method     CcPlayoutHistoryTemplateTag findOneByDbType(string $type) Return the first CcPlayoutHistoryTemplateTag filtered by the type column
+ * @method     CcPlayoutHistoryTemplateTag findOneByDbIsFileMD(boolean $is_file_md) Return the first CcPlayoutHistoryTemplateTag filtered by the is_file_md column
  * @method     CcPlayoutHistoryTemplateTag findOneByDbTagPosition(int $position) Return the first CcPlayoutHistoryTemplateTag filtered by the position column
  *
  * @method     array findByDbId(int $id) Return CcPlayoutHistoryTemplateTag objects filtered by the id column
  * @method     array findByDbTemplateId(int $template_id) Return CcPlayoutHistoryTemplateTag objects filtered by the template_id column
- * @method     array findByDbTagId(int $tag_id) Return CcPlayoutHistoryTemplateTag objects filtered by the tag_id column
+ * @method     array findByDbName(string $name) Return CcPlayoutHistoryTemplateTag objects filtered by the name column
+ * @method     array findByDbType(string $type) Return CcPlayoutHistoryTemplateTag objects filtered by the type column
+ * @method     array findByDbIsFileMD(boolean $is_file_md) Return CcPlayoutHistoryTemplateTag objects filtered by the is_file_md column
  * @method     array findByDbTagPosition(int $position) Return CcPlayoutHistoryTemplateTag objects filtered by the position column
  *
  * @package    propel.generator.airtime.om
@@ -198,34 +202,64 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the tag_id column
+	 * Filter the query on the name column
 	 * 
-	 * @param     int|array $dbTagId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $dbName The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlayoutHistoryTemplateTagQuery The current query, for fluid interface
 	 */
-	public function filterByDbTagId($dbTagId = null, $comparison = null)
+	public function filterByDbName($dbName = null, $comparison = null)
 	{
-		if (is_array($dbTagId)) {
-			$useMinMax = false;
-			if (isset($dbTagId['min'])) {
-				$this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::TAG_ID, $dbTagId['min'], Criteria::GREATER_EQUAL);
-				$useMinMax = true;
-			}
-			if (isset($dbTagId['max'])) {
-				$this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::TAG_ID, $dbTagId['max'], Criteria::LESS_EQUAL);
-				$useMinMax = true;
-			}
-			if ($useMinMax) {
-				return $this;
-			}
-			if (null === $comparison) {
+		if (null === $comparison) {
+			if (is_array($dbName)) {
 				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbName)) {
+				$dbName = str_replace('*', '%', $dbName);
+				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::TAG_ID, $dbTagId, $comparison);
+		return $this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::NAME, $dbName, $comparison);
+	}
+
+	/**
+	 * Filter the query on the type column
+	 * 
+	 * @param     string $dbType The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlayoutHistoryTemplateTagQuery The current query, for fluid interface
+	 */
+	public function filterByDbType($dbType = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbType)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbType)) {
+				$dbType = str_replace('*', '%', $dbType);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::TYPE, $dbType, $comparison);
+	}
+
+	/**
+	 * Filter the query on the is_file_md column
+	 * 
+	 * @param     boolean|string $dbIsFileMD The value to use as filter.
+	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlayoutHistoryTemplateTagQuery The current query, for fluid interface
+	 */
+	public function filterByDbIsFileMD($dbIsFileMD = null, $comparison = null)
+	{
+		if (is_string($dbIsFileMD)) {
+			$is_file_md = in_array(strtolower($dbIsFileMD), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
+		}
+		return $this->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::IS_FILE_MD, $dbIsFileMD, $comparison);
 	}
 
 	/**
@@ -321,70 +355,6 @@ abstract class BaseCcPlayoutHistoryTemplateTagQuery extends ModelCriteria
 		return $this
 			->joinCcPlayoutHistoryTemplate($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistoryTemplate', 'CcPlayoutHistoryTemplateQuery');
-	}
-
-	/**
-	 * Filter the query by a related CcTag object
-	 *
-	 * @param     CcTag $ccTag  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcPlayoutHistoryTemplateTagQuery The current query, for fluid interface
-	 */
-	public function filterByCcTag($ccTag, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcPlayoutHistoryTemplateTagPeer::TAG_ID, $ccTag->getDbId(), $comparison);
-	}
-
-	/**
-	 * Adds a JOIN clause to the query using the CcTag relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcPlayoutHistoryTemplateTagQuery The current query, for fluid interface
-	 */
-	public function joinCcTag($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcTag');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcTag');
-		}
-		
-		return $this;
-	}
-
-	/**
-	 * Use the CcTag relation CcTag object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcTagQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcTagQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcTag($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcTag', 'CcTagQuery');
 	}
 
 	/**

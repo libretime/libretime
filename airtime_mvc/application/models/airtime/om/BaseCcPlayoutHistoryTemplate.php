@@ -809,31 +809,6 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		}
 	}
 
-
-	/**
-	 * If this collection has already been initialized with
-	 * an identical criteria, it returns the collection.
-	 * Otherwise if this CcPlayoutHistoryTemplate is new, it will return
-	 * an empty collection; or if this CcPlayoutHistoryTemplate has previously
-	 * been saved, it will retrieve related CcPlayoutHistoryTemplateTags from storage.
-	 *
-	 * This method is protected by default in order to keep the public
-	 * api reasonable.  You can provide public methods for those you
-	 * actually need in CcPlayoutHistoryTemplate.
-	 *
-	 * @param      Criteria $criteria optional Criteria object to narrow the query
-	 * @param      PropelPDO $con optional connection object
-	 * @param      string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-	 * @return     PropelCollection|array CcPlayoutHistoryTemplateTag[] List of CcPlayoutHistoryTemplateTag objects
-	 */
-	public function getCcPlayoutHistoryTemplateTagsJoinCcTag($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-	{
-		$query = CcPlayoutHistoryTemplateTagQuery::create(null, $criteria);
-		$query->joinWith('CcTag', $join_behavior);
-
-		return $this->getCcPlayoutHistoryTemplateTags($query, $con);
-	}
-
 	/**
 	 * Clears the current object and sets all attributes to their default values
 	 */
