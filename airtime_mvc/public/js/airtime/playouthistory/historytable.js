@@ -206,7 +206,9 @@ var AIRTIME = (function(AIRTIME) {
     	        title: $.i18n._("Edit History Record"),
     	        modal: true,
     	        open: function( event, ui ) {
-    	        	$hisDialogEl.find('.date').datetimepicker();
+    	        	$hisDialogEl.find('.date').datetimepicker({
+    	        		"pick12HourFormat": false
+    	        	});
     	        },
     	        close: function() {
     	        	removeHistoryDialog();

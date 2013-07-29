@@ -150,24 +150,24 @@ class PlayouthistoryController extends Zend_Controller_Action
 
         unset($this->view->form);
     }
-    
+
     public function deleteListItemAction()
     {
     	$history_id = $this->_getParam('id');
-    
+
     	$historyService = new Application_Service_HistoryService();
-    	$historyService->deletePlayedItem($history_id); 
+    	$historyService->deletePlayedItem($history_id);
     }
-    
+
     public function updateListItemAction()
     {
     	$request = $this->getRequest();
     	$params = $request->getPost();
     	Logging::info($params);
-    
+
     	$historyService = new Application_Service_HistoryService();
     	$json = $historyService->editPlayedItem($params);
-    
+
     	$this->view->data = $json;
     }
 
@@ -182,34 +182,42 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     	$this->view->data = $json;
     }
-    
+
     public function templateAction()
     {
-    	
+
     }
-    
+
+    public function configureItemTemplateAction() {
+
+        $historyService = new Application_Service_HistoryService();
+        $mandatoryFields = $historyService->mandatoryItemTemplate();
+
+        $this->view->required = $mandatoryFields;
+    }
+
     public function createTemplateAction()
     {
-    	
+
     }
-    
+
     public function editTemplateAction()
     {
-    	 
+
     }
-    
+
     public function deleteTemplateAction()
     {
-    	 
+
     }
-    
+
     public function createTemplateFieldAction()
     {
-    	
+
     }
-    
+
     public function deleteTemplateFieldAction()
     {
-    	 
+
     }
 }

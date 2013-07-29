@@ -212,22 +212,68 @@ class Application_Service_HistoryService
 	public function populateTemplateItem($values) {
 
 		$this->con->beginTransaction();
-		
+
 		try {
 		    $template = $this->getItemTemplate();
+		    $prefix = Application_Form_EditHistoryItem::ID_PREFIX;
 		    $historyRecord = new CcPlayoutHistory();
-	
+
 		    $timezoneUTC = new DateTimeZone("UTC");
 		    $timezoneLocal = new DateTimeZone($this->timezone);
-	
-	    	$dateTime = new DateTime($values["starts"], $timezoneLocal);
-	    	$dateTime->setTimezone($timezoneLocal);
+
+	    	$dateTime = new DateTime($values[$prefix."starts"], $timezoneLocal);
+	    	$dateTime->setTimezone($timezoneUTC);
 	    	$historyRecord->setDbStarts($dateTime->format("Y-m-d H:i:s"));
-	
-	    	$dateTime = new DateTime($result["ends"], $timezoneUTC);
+
+	    	$dateTime = new DateTime($values[$prefix."ends"], $timezoneLocal);
 	    	$dateTime->setTimezone($timezoneUTC);
 	    	$historyRecord->setDbEnds($dateTime->format("Y-m-d H:i:s"));
-	
+
+	    	$templateValues = $values[$prefix."template"];
+
+	    	$file = $historyRecord->getCcFiles();
+
+	    	$metadata = array();
+
+	    	for ($i = 0, $len = count($template); $i < $len; $i++) {
+
+	    	    $item = $template[$i];
+	    	    $key = $item["name"];
+	    	    $isFileMd = $item["isFileMd"];
+
+	    	    $entry = $templateValues[$prefix.$key];
+
+	    	    if (!$isFileMd) {
+	    	        Logging::info("adding metadata");
+	    	    }
+	    	    else if ($isFileMd && isset($file)) {
+	    	        Logging::info("adding file metadata associated to a file");
+	    	    }
+	    	    else if ($isFileMd && empty($file)) {
+                    Logging::info("adding file metadata NOT associated to a file");
+                    $metadata[$key] = $entry;
+	    	    }
+	    	    else {
+	    	        Logging::info("doing something else");
+	    	    }
+
+
+	    	}
+
+	    	if (count($metadata) > 0) {
+	    	    $meta = new CcPlayoutHistoryMetaData();
+	    	}
+
+	    	foreach ($metadata as $key => $val) {
+
+    	    	$meta->setDbKey($key);
+    	    	$meta->setDbValue($val);
+
+    	    	$historyRecord->addCcPlayoutHistoryMetaData($meta);
+	    	}
+
+	    	$historyRecord->save($this->con);
+
 	    	$this->con->commit();
     	}
     	catch (Exception $e) {
@@ -250,6 +296,8 @@ class Application_Service_HistoryService
 
 	        	Logging::info("created list item");
 	        	Logging::info($values);
+
+	        	$this->populateTemplateItem($values);
 	        }
 	        else {
 	        	Logging::info("created list item NOT VALID");
@@ -350,14 +398,37 @@ class Application_Service_HistoryService
 
 	//---------------- Following code is for History Templates --------------------------//
 
+	public function getFieldTypes() {
+
+	    $fields = array(
+    	    TEMPLATE_DATE,
+    	    TEMPLATE_TIME,
+    	    TEMPLATE_DATETIME,
+    	    TEMPLATE_STRING,
+    	    TEMPLATE_BOOLEAN,
+    	    TEMPLATE_INT,
+    	    TEMPLATE_FLOAT,
+	    );
+
+	    return $fields;
+	}
+
+	public function mandatoryItemTemplate() {
+
+	    $fields = array();
+
+	    $fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+	    $fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+
+	    return $fields;
+	}
 
 	private function defaultItemTemplate() {
 
 		$fields = array();
 
-		//array index is the position of the item in the history template table.
-		//$fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
-		//$fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
 		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
 

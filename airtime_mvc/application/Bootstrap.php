@@ -43,14 +43,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->doctype('XHTML1_STRICT');
     }
-    
+
     protected function _initGlobals()
     {
         $view = $this->getResource('view');
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        
+
         $view->headScript()->appendScript("var baseUrl = '$baseUrl'");
-                                               
+
         $user = Application_Model_User::GetCurrentUser();
         if (!is_null($user)){
             $userType = $user->getType();
@@ -58,7 +58,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
-            
+
     }
 
     protected function _initHeadLink()
@@ -68,7 +68,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        
+
         $view->headLink()->appendStylesheet($baseUrl.'css/redmond/jquery-ui-1.8.8.custom.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/pro_dropdown_3.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/qtip/jquery.qtip.min.css?'.$CC_CONFIG['airtime_version']);
@@ -83,16 +83,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $CC_CONFIG = Config::getConfig();
 
         $view = $this->getResource('view');
-        
+
         $baseUrl = Application_Common_OsPath::getBaseDir();
-                
+
         //$view->headScript()->appendFile($baseUrl.'js/libs/jquery-1.7.2.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile('http://code.jquery.com/jquery-1.10.1.min.js','text/javascript');
         $view->headScript()->appendFile('http://code.jquery.com/jquery-migrate-1.2.1.min.js','text/javascript');
-        
+
         //$view->headScript()->appendFile($baseUrl.'js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile('http://code.jquery.com/ui/1.10.3/jquery-ui.js','text/javascript');
-        
+
         $view->headScript()->appendFile($baseUrl.'js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
@@ -104,7 +104,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'locale/datatables-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendScript("$.i18n.setDictionary(general_dict)");
         $view->headScript()->appendScript("var baseUrl='$baseUrl'");
-        
+
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'js/airtime/airtime_bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/airtime/dashboard/helperfunctions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
