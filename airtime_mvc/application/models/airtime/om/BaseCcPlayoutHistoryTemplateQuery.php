@@ -7,10 +7,10 @@
  * 
  *
  * @method     CcPlayoutHistoryTemplateQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method     CcPlayoutHistoryTemplateQuery orderByDbTemplateName($order = Criteria::ASC) Order by the template_name column
+ * @method     CcPlayoutHistoryTemplateQuery orderByDbName($order = Criteria::ASC) Order by the template_name column
  *
  * @method     CcPlayoutHistoryTemplateQuery groupByDbId() Group by the id column
- * @method     CcPlayoutHistoryTemplateQuery groupByDbTemplateName() Group by the template_name column
+ * @method     CcPlayoutHistoryTemplateQuery groupByDbName() Group by the template_name column
  *
  * @method     CcPlayoutHistoryTemplateQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlayoutHistoryTemplateQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -24,10 +24,10 @@
  * @method     CcPlayoutHistoryTemplate findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistoryTemplate matching the query, or a new CcPlayoutHistoryTemplate object populated from the query conditions when no match is found
  *
  * @method     CcPlayoutHistoryTemplate findOneByDbId(int $id) Return the first CcPlayoutHistoryTemplate filtered by the id column
- * @method     CcPlayoutHistoryTemplate findOneByDbTemplateName(string $template_name) Return the first CcPlayoutHistoryTemplate filtered by the template_name column
+ * @method     CcPlayoutHistoryTemplate findOneByDbName(string $template_name) Return the first CcPlayoutHistoryTemplate filtered by the template_name column
  *
  * @method     array findByDbId(int $id) Return CcPlayoutHistoryTemplate objects filtered by the id column
- * @method     array findByDbTemplateName(string $template_name) Return CcPlayoutHistoryTemplate objects filtered by the template_name column
+ * @method     array findByDbName(string $template_name) Return CcPlayoutHistoryTemplate objects filtered by the template_name column
  *
  * @package    propel.generator.airtime.om
  */
@@ -157,23 +157,23 @@ abstract class BaseCcPlayoutHistoryTemplateQuery extends ModelCriteria
 	/**
 	 * Filter the query on the template_name column
 	 * 
-	 * @param     string $dbTemplateName The value to use as filter.
+	 * @param     string $dbName The value to use as filter.
 	 *            Accepts wildcards (* and % trigger a LIKE)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlayoutHistoryTemplateQuery The current query, for fluid interface
 	 */
-	public function filterByDbTemplateName($dbTemplateName = null, $comparison = null)
+	public function filterByDbName($dbName = null, $comparison = null)
 	{
 		if (null === $comparison) {
-			if (is_array($dbTemplateName)) {
+			if (is_array($dbName)) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbTemplateName)) {
-				$dbTemplateName = str_replace('*', '%', $dbTemplateName);
+			} elseif (preg_match('/[\%\*]/', $dbName)) {
+				$dbName = str_replace('*', '%', $dbName);
 				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcPlayoutHistoryTemplatePeer::TEMPLATE_NAME, $dbTemplateName, $comparison);
+		return $this->addUsingAlias(CcPlayoutHistoryTemplatePeer::TEMPLATE_NAME, $dbName, $comparison);
 	}
 
 	/**

@@ -65,8 +65,8 @@ abstract class BaseCcPlayoutHistoryTemplateFieldPeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTemplateId', 'DbName', 'DbType', 'DbIsFileMD', 'DbTagPosition', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTemplateId', 'dbName', 'dbType', 'dbIsFileMD', 'dbTagPosition', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTemplateId', 'DbName', 'DbType', 'DbIsFileMD', 'DbPosition', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTemplateId', 'dbName', 'dbType', 'dbIsFileMD', 'dbPosition', ),
 		BasePeer::TYPE_COLNAME => array (self::ID, self::TEMPLATE_ID, self::NAME, self::TYPE, self::IS_FILE_MD, self::POSITION, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TEMPLATE_ID', 'NAME', 'TYPE', 'IS_FILE_MD', 'POSITION', ),
 		BasePeer::TYPE_FIELDNAME => array ('id', 'template_id', 'name', 'type', 'is_file_md', 'position', ),
@@ -80,8 +80,8 @@ abstract class BaseCcPlayoutHistoryTemplateFieldPeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTemplateId' => 1, 'DbName' => 2, 'DbType' => 3, 'DbIsFileMD' => 4, 'DbTagPosition' => 5, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTemplateId' => 1, 'dbName' => 2, 'dbType' => 3, 'dbIsFileMD' => 4, 'dbTagPosition' => 5, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTemplateId' => 1, 'DbName' => 2, 'DbType' => 3, 'DbIsFileMD' => 4, 'DbPosition' => 5, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTemplateId' => 1, 'dbName' => 2, 'dbType' => 3, 'dbIsFileMD' => 4, 'dbPosition' => 5, ),
 		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TEMPLATE_ID => 1, self::NAME => 2, self::TYPE => 3, self::IS_FILE_MD => 4, self::POSITION => 5, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TEMPLATE_ID' => 1, 'NAME' => 2, 'TYPE' => 3, 'IS_FILE_MD' => 4, 'POSITION' => 5, ),
 		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'template_id' => 1, 'name' => 2, 'type' => 3, 'is_file_md' => 4, 'position' => 5, ),

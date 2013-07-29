@@ -70,7 +70,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	 * 
 	 * @return     string
 	 */
-	public function getDbTemplateName()
+	public function getDbName()
 	{
 		return $this->template_name;
 	}
@@ -101,7 +101,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	 * @param      string $v new value
 	 * @return     CcPlayoutHistoryTemplate The current object (for fluent API support)
 	 */
-	public function setDbTemplateName($v)
+	public function setDbName($v)
 	{
 		if ($v !== null) {
 			$v = (string) $v;
@@ -113,7 +113,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		}
 
 		return $this;
-	} // setDbTemplateName()
+	} // setDbName()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -478,7 +478,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getDbTemplateName();
+				return $this->getDbName();
 				break;
 			default:
 				return null;
@@ -504,7 +504,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		$keys = CcPlayoutHistoryTemplatePeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbId(),
-			$keys[1] => $this->getDbTemplateName(),
+			$keys[1] => $this->getDbName(),
 		);
 		return $result;
 	}
@@ -540,7 +540,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setDbTemplateName($value);
+				$this->setDbName($value);
 				break;
 		} // switch()
 	}
@@ -567,7 +567,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		$keys = CcPlayoutHistoryTemplatePeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setDbTemplateName($arr[$keys[1]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
 	}
 
 	/**
@@ -642,7 +642,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbTemplateName($this->template_name);
+		$copyObj->setDbName($this->template_name);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of

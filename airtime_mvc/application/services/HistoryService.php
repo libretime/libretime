@@ -472,13 +472,29 @@ class Application_Service_HistoryService
 		return $template;
 	}
 	
-	public function createItemTemplate($fields) {
+	public function createItemTemplate($config) {
 		
 		$this->con->beginTransaction();
 		
 		try {
 		
 			$template = new CcPlayoutHistoryTemplate();
+			$template->setDbName($config["name"]);
+			
+			$fields = $config["fields"];
+			
+			foreach ($fields as $index=>$field) {
+				
+				$templateField = new CcPlayoutHistoryTemplateField();
+				$templateField->setDbName($field["name"]);
+				$templateField->setDbType($field["type"]);
+				$templateField->setDbIsFileMD($field["filemd"]);
+				$templateField->setDbPosition($index);
+				
+				$template->addCcPlayoutHistoryTemplateField($templateField);
+			}
+			
+			$template->save($this->con);
 			
 			$this->con->commit();
 		}

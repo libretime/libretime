@@ -499,7 +499,7 @@
   </table>
   <table name="cc_playout_history_template" phpName="CcPlayoutHistoryTemplate">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="template_name" phpName="DbTemplateName" type="VARCHAR" size="128" required="true" />
+    <column name="template_name" phpName="DbName" type="VARCHAR" size="128" required="true" />
   </table>
   <table name="cc_playout_history_template_field" phpName="CcPlayoutHistoryTemplateField">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
@@ -507,7 +507,7 @@
     <column name="name" phpName="DbName" type="VARCHAR" size="128" required="true" />
     <column name="type" phpName="DbType" type="VARCHAR" size="128" required="true" />
     <column name="is_file_md" phpName="DbIsFileMD" type="BOOLEAN" required="true" defaultValue="false"/>
-    <column name="position" phpName="DbTagPosition" type="INTEGER" required="true" />
+    <column name="position" phpName="DbPosition" type="INTEGER" required="true" />
     <foreign-key foreignTable="cc_playout_history_template" name="cc_playout_history_template_template_fkey" onDelete="CASCADE">
       <reference local="template_id" foreign="id"/>
     </foreign-key>

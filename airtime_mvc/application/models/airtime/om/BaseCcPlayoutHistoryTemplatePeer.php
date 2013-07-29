@@ -53,8 +53,8 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTemplateName', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTemplateName', ),
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', ),
 		BasePeer::TYPE_COLNAME => array (self::ID, self::TEMPLATE_NAME, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TEMPLATE_NAME', ),
 		BasePeer::TYPE_FIELDNAME => array ('id', 'template_name', ),
@@ -68,8 +68,8 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTemplateName' => 1, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTemplateName' => 1, ),
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, ),
 		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TEMPLATE_NAME => 1, ),
 		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TEMPLATE_NAME' => 1, ),
 		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'template_name' => 1, ),

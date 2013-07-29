@@ -11,14 +11,14 @@
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbType($order = Criteria::ASC) Order by the type column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbIsFileMD($order = Criteria::ASC) Order by the is_file_md column
- * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbTagPosition($order = Criteria::ASC) Order by the position column
+ * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
  *
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbId() Group by the id column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbTemplateId() Group by the template_id column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbName() Group by the name column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbType() Group by the type column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbIsFileMD() Group by the is_file_md column
- * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbTagPosition() Group by the position column
+ * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbPosition() Group by the position column
  *
  * @method     CcPlayoutHistoryTemplateFieldQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlayoutHistoryTemplateFieldQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -36,14 +36,14 @@
  * @method     CcPlayoutHistoryTemplateField findOneByDbName(string $name) Return the first CcPlayoutHistoryTemplateField filtered by the name column
  * @method     CcPlayoutHistoryTemplateField findOneByDbType(string $type) Return the first CcPlayoutHistoryTemplateField filtered by the type column
  * @method     CcPlayoutHistoryTemplateField findOneByDbIsFileMD(boolean $is_file_md) Return the first CcPlayoutHistoryTemplateField filtered by the is_file_md column
- * @method     CcPlayoutHistoryTemplateField findOneByDbTagPosition(int $position) Return the first CcPlayoutHistoryTemplateField filtered by the position column
+ * @method     CcPlayoutHistoryTemplateField findOneByDbPosition(int $position) Return the first CcPlayoutHistoryTemplateField filtered by the position column
  *
  * @method     array findByDbId(int $id) Return CcPlayoutHistoryTemplateField objects filtered by the id column
  * @method     array findByDbTemplateId(int $template_id) Return CcPlayoutHistoryTemplateField objects filtered by the template_id column
  * @method     array findByDbName(string $name) Return CcPlayoutHistoryTemplateField objects filtered by the name column
  * @method     array findByDbType(string $type) Return CcPlayoutHistoryTemplateField objects filtered by the type column
  * @method     array findByDbIsFileMD(boolean $is_file_md) Return CcPlayoutHistoryTemplateField objects filtered by the is_file_md column
- * @method     array findByDbTagPosition(int $position) Return CcPlayoutHistoryTemplateField objects filtered by the position column
+ * @method     array findByDbPosition(int $position) Return CcPlayoutHistoryTemplateField objects filtered by the position column
  *
  * @package    propel.generator.airtime.om
  */
@@ -265,22 +265,22 @@ abstract class BaseCcPlayoutHistoryTemplateFieldQuery extends ModelCriteria
 	/**
 	 * Filter the query on the position column
 	 * 
-	 * @param     int|array $dbTagPosition The value to use as filter.
+	 * @param     int|array $dbPosition The value to use as filter.
 	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcPlayoutHistoryTemplateFieldQuery The current query, for fluid interface
 	 */
-	public function filterByDbTagPosition($dbTagPosition = null, $comparison = null)
+	public function filterByDbPosition($dbPosition = null, $comparison = null)
 	{
-		if (is_array($dbTagPosition)) {
+		if (is_array($dbPosition)) {
 			$useMinMax = false;
-			if (isset($dbTagPosition['min'])) {
-				$this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::POSITION, $dbTagPosition['min'], Criteria::GREATER_EQUAL);
+			if (isset($dbPosition['min'])) {
+				$this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::POSITION, $dbPosition['min'], Criteria::GREATER_EQUAL);
 				$useMinMax = true;
 			}
-			if (isset($dbTagPosition['max'])) {
-				$this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::POSITION, $dbTagPosition['max'], Criteria::LESS_EQUAL);
+			if (isset($dbPosition['max'])) {
+				$this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::POSITION, $dbPosition['max'], Criteria::LESS_EQUAL);
 				$useMinMax = true;
 			}
 			if ($useMinMax) {
@@ -290,7 +290,7 @@ abstract class BaseCcPlayoutHistoryTemplateFieldQuery extends ModelCriteria
 				$comparison = Criteria::IN;
 			}
 		}
-		return $this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::POSITION, $dbTagPosition, $comparison);
+		return $this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::POSITION, $dbPosition, $comparison);
 	}
 
 	/**

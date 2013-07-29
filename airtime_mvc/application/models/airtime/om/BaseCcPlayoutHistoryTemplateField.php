@@ -156,7 +156,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 	 * 
 	 * @return     int
 	 */
-	public function getDbTagPosition()
+	public function getDbPosition()
 	{
 		return $this->position;
 	}
@@ -271,7 +271,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 	 * @param      int $v new value
 	 * @return     CcPlayoutHistoryTemplateField The current object (for fluent API support)
 	 */
-	public function setDbTagPosition($v)
+	public function setDbPosition($v)
 	{
 		if ($v !== null) {
 			$v = (int) $v;
@@ -283,7 +283,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 		}
 
 		return $this;
-	} // setDbTagPosition()
+	} // setDbPosition()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -678,7 +678,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 				return $this->getDbIsFileMD();
 				break;
 			case 5:
-				return $this->getDbTagPosition();
+				return $this->getDbPosition();
 				break;
 			default:
 				return null;
@@ -709,7 +709,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 			$keys[2] => $this->getDbName(),
 			$keys[3] => $this->getDbType(),
 			$keys[4] => $this->getDbIsFileMD(),
-			$keys[5] => $this->getDbTagPosition(),
+			$keys[5] => $this->getDbPosition(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcPlayoutHistoryTemplate) {
@@ -762,7 +762,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 				$this->setDbIsFileMD($value);
 				break;
 			case 5:
-				$this->setDbTagPosition($value);
+				$this->setDbPosition($value);
 				break;
 		} // switch()
 	}
@@ -793,7 +793,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 		if (array_key_exists($keys[2], $arr)) $this->setDbName($arr[$keys[2]]);
 		if (array_key_exists($keys[3], $arr)) $this->setDbType($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setDbIsFileMD($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbTagPosition($arr[$keys[5]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbPosition($arr[$keys[5]]);
 	}
 
 	/**
@@ -876,7 +876,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 		$copyObj->setDbName($this->name);
 		$copyObj->setDbType($this->type);
 		$copyObj->setDbIsFileMD($this->is_file_md);
-		$copyObj->setDbTagPosition($this->position);
+		$copyObj->setDbPosition($this->position);
 
 		$copyObj->setNew(true);
 		$copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
