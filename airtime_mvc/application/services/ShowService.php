@@ -655,15 +655,16 @@ SQL;
                     ->filterByDbDay($dayOfWeek)
                     ->findOne();
 
-                $lastShowStartDT->setTimeZone(new DateTimeZone(
-                    $ccShowDay->getDbTimezone()));
-                $lastShowEndDT = Application_Service_CalendarService::addDeltas(
-                    $lastShowStartDT, 1, 0);
+                if (isset($ccShowDay)) {
+                    $lastShowStartDT->setTimeZone(new DateTimeZone(
+                        $ccShowDay->getDbTimezone()));
+                    $lastShowEndDT = Application_Service_CalendarService::addDeltas(
+                        $lastShowStartDT, 1, 0);
 
-                $ccShowDay
-                    ->setDbLastShow($lastShowEndDT->format("Y-m-d"))
-                    ->save();
-                
+                    $ccShowDay
+                        ->setDbLastShow($lastShowEndDT->format("Y-m-d"))
+                        ->save();
+                }
             }
 
             //remove the old repeating deleted instances.
@@ -872,6 +873,7 @@ SQL;
     private function createWeeklyRepeatInstances($showDay, $populateUntil,
         $repeatType, $repeatInterval, $daysAdded=null)
     {
+
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
         $last_show     = $showDay->getDbLastShow(); //non-UTC
@@ -894,10 +896,8 @@ SQL;
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
-        $utcStartDateTime = new DateTime("now");
         $previousDate = clone $start;
         foreach ($datePeriod as $date) {
-
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*
@@ -954,12 +954,19 @@ SQL;
             $previousDate = clone $date;
         }
 
-        /* Set UTC to local time before setting the next repeat date. If we don't
-         * the next repeat date might be scheduled for the following day
+        /* We need to set the next populate date for repeat shows so when a user
+         * moves forward in the calendar we know when to start generating new
+         * show instances.
+         * If $utcStartDateTime is not set then we know zero new shows were
+         * created and we shouldn't update the next populate date.
          */
-        $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
-        $nextDate = $utcStartDateTime->add($repeatInterval);
-        $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
+        if (isset($utcStartDateTime)) {
+           /* Set UTC to local time before setting the next repeat date. If we don't
+            * the next repeat date might be scheduled for the following day */
+            $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $nextDate = $utcStartDateTime->add($repeatInterval);
+            $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
+        }
     }
 
     private function createMonthlyRepeatInstances($showDay, $populateUntil)
