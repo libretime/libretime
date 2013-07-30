@@ -803,7 +803,8 @@ DROP TABLE "cc_playout_history_template" CASCADE;
 CREATE TABLE "cc_playout_history_template"
 (
 	"id" serial  NOT NULL,
-	"template_name" VARCHAR(128)  NOT NULL,
+	"name" VARCHAR(128)  NOT NULL,
+	"type" VARCHAR(35)  NOT NULL,
 	PRIMARY KEY ("id")
 );
 

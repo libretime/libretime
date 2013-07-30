@@ -499,7 +499,8 @@
   </table>
   <table name="cc_playout_history_template" phpName="CcPlayoutHistoryTemplate">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="template_name" phpName="DbName" type="VARCHAR" size="128" required="true" />
+    <column name="name" phpName="DbName" type="VARCHAR" size="128" required="true" />
+    <column name="type" phpName="DbType" type="VARCHAR" size="35" required="true" />
   </table>
   <table name="cc_playout_history_template_field" phpName="CcPlayoutHistoryTemplateField">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />

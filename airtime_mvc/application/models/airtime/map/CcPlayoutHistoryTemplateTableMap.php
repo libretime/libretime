@@ -39,7 +39,8 @@ class CcPlayoutHistoryTemplateTableMap extends TableMap {
 		$this->setPrimaryKeyMethodInfo('cc_playout_history_template_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('TEMPLATE_NAME', 'DbName', 'VARCHAR', true, 128, null);
+		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 128, null);
+		$this->addColumn('TYPE', 'DbType', 'VARCHAR', true, 35, null);
 		// validators
 	} // initialize()
 

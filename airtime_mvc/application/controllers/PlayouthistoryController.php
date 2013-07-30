@@ -17,8 +17,7 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->addActionContext('create-template', 'json')
             ->addActionContext('edit-template', 'json')
             ->addActionContext('delete-template', 'json')
-            ->addActionContext('create-template-field', 'json')
-            ->addActionContext('delete-template-field', 'json')
+            ->addActionContext('set-item-template-default', 'json')
             ->initContext();
         }
 
@@ -130,12 +129,18 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     public function createListItemAction()
     {
-        $request = $this->getRequest();
-        $params = $request->getPost();
-        Logging::info($params);
-
-        $historyService = new Application_Service_HistoryService();
-        $historyService->createPlayedItem($params);
+    	try {
+	        $request = $this->getRequest();
+	        $params = $request->getPost();
+	        Logging::info($params);
+	
+	        $historyService = new Application_Service_HistoryService();
+	        $historyService->createPlayedItem($params);
+    	}
+        catch (Exception $e) {
+        	Logging::info($e);
+        	Logging::info($e->getMessage());
+        }
     }
 
     public function editListItemAction()
@@ -190,20 +195,34 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     public function configureItemTemplateAction() {
     	
-    	$CC_CONFIG = Config::getConfig();
-    	$baseUrl = Application_Common_OsPath::getBaseDir();
-    	
-    	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/template.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
-    	$template_id = $this->_getParam('id', null);
-    	
-        $historyService = new Application_Service_HistoryService();
-        $mandatoryFields = $historyService->mandatoryItemTemplate();
-
-        $this->view->template_id = $template_id;
-        $this->view->fileMD = $historyService->getFileMetadataTypes();
-        $this->view->fields = $historyService->getFieldTypes();
-        $this->view->required = $mandatoryFields;
+    	$request = $this->getRequest();
+    	$params = $request->getPost();
+    	Logging::info($params);
+    	 
+    	try {
+	    	$CC_CONFIG = Config::getConfig();
+	    	$baseUrl = Application_Common_OsPath::getBaseDir();
+	    	
+	    	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/template.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+	
+	    	$template_id = $this->_getParam('id', null);
+	    	
+	        $historyService = new Application_Service_HistoryService();
+	        $mandatoryFields = $historyService->mandatoryItemFields();
+	        $template = $historyService->getItemTemplate($template_id);
+	
+	        $this->view->template_id = $template_id;
+	        $this->view->template_name = $template["name"];
+	        $this->view->template_fields = $template["fields"];
+	        $this->view->template_list = $historyService->getListItemTemplates();
+	        $this->view->fileMD = $historyService->getFileMetadataTypes();
+	        $this->view->fields = $historyService->getFieldTypes();
+	        $this->view->required_fields = $mandatoryFields;
+        }
+        catch (Exception $e) {
+        	Logging::info($e);
+        	Logging::info($e->getMessage());
+        }
     }
 
     public function createTemplateAction()
@@ -212,8 +231,36 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$params = $request->getPost();
     	Logging::info($params);
     	
-    	$historyService = new Application_Service_HistoryService();
-    	$historyService->createItemTemplate($params);
+    	try {
+    		$historyService = new Application_Service_HistoryService();
+    		$historyService->createItemTemplate($params);
+    	}
+    	catch (Exception $e) {
+    		Logging::info($e);
+    		Logging::info($e->getMessage());
+    	}
+    }
+    
+    public function setItemTemplateDefaultAction()
+    {
+    	$request = $this->getRequest();
+    	$params = $request->getPost();
+    	Logging::info($params);
+    	
+    	$template_id = $this->_getParam('id', null);
+    	
+    	if (empty($template_id)) {
+    		return;
+    	}
+    	 
+    	try {
+    		$historyService = new Application_Service_HistoryService();
+    		$historyService->setConfiguredItemTemplate($template_id);
+    	}
+    	catch (Exception $e) {
+    		Logging::info($e);
+    		Logging::info($e->getMessage());
+    	}
     }
 
     public function editTemplateAction()
@@ -222,16 +269,6 @@ class PlayouthistoryController extends Zend_Controller_Action
     }
 
     public function deleteTemplateAction()
-    {
-
-    }
-
-    public function createTemplateFieldAction()
-    {
-
-    }
-
-    public function deleteTemplateFieldAction()
     {
 
     }

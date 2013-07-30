@@ -173,13 +173,17 @@ class Application_Form_EditHistoryItem extends Zend_Form
 	    ));
 	}
 
-	public function createFromTemplate($template) {
+	public function createFromTemplate($template, $required) {
 
 		$templateSubForm = $this->getSubForm(self::ID_PREFIX.'template');
 
 		for ($i = 0, $len = count($template); $i < $len; $i++) {
 
 			$item = $template[$i];
+			//don't dynamically add this as it should be included in the init() function already.
+			if (in_array($item["name"], $required)) {
+				continue;
+			}
 
 			$formElType = $this->formElTypes[$item[self::ITEM_TYPE]];
 

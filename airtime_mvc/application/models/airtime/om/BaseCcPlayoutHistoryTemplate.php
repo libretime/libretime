@@ -31,10 +31,16 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	protected $id;
 
 	/**
-	 * The value for the template_name field.
+	 * The value for the name field.
 	 * @var        string
 	 */
-	protected $template_name;
+	protected $name;
+
+	/**
+	 * The value for the type field.
+	 * @var        string
+	 */
+	protected $type;
 
 	/**
 	 * @var        array CcPlayoutHistoryTemplateField[] Collection to store aggregation of CcPlayoutHistoryTemplateField objects.
@@ -66,13 +72,23 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	}
 
 	/**
-	 * Get the [template_name] column value.
+	 * Get the [name] column value.
 	 * 
 	 * @return     string
 	 */
 	public function getDbName()
 	{
-		return $this->template_name;
+		return $this->name;
+	}
+
+	/**
+	 * Get the [type] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbType()
+	{
+		return $this->type;
 	}
 
 	/**
@@ -96,7 +112,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	} // setDbId()
 
 	/**
-	 * Set the value of [template_name] column.
+	 * Set the value of [name] column.
 	 * 
 	 * @param      string $v new value
 	 * @return     CcPlayoutHistoryTemplate The current object (for fluent API support)
@@ -107,13 +123,33 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 			$v = (string) $v;
 		}
 
-		if ($this->template_name !== $v) {
-			$this->template_name = $v;
-			$this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::TEMPLATE_NAME;
+		if ($this->name !== $v) {
+			$this->name = $v;
+			$this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::NAME;
 		}
 
 		return $this;
 	} // setDbName()
+
+	/**
+	 * Set the value of [type] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcPlayoutHistoryTemplate The current object (for fluent API support)
+	 */
+	public function setDbType($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->type !== $v) {
+			$this->type = $v;
+			$this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::TYPE;
+		}
+
+		return $this;
+	} // setDbType()
 
 	/**
 	 * Indicates whether the columns in this object are only set to default values.
@@ -148,7 +184,8 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->template_name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -157,7 +194,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 2; // 2 = CcPlayoutHistoryTemplatePeer::NUM_COLUMNS - CcPlayoutHistoryTemplatePeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 3; // 3 = CcPlayoutHistoryTemplatePeer::NUM_COLUMNS - CcPlayoutHistoryTemplatePeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlayoutHistoryTemplate object", $e);
@@ -480,6 +517,9 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 			case 1:
 				return $this->getDbName();
 				break;
+			case 2:
+				return $this->getDbType();
+				break;
 			default:
 				return null;
 				break;
@@ -505,6 +545,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		$result = array(
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbName(),
+			$keys[2] => $this->getDbType(),
 		);
 		return $result;
 	}
@@ -542,6 +583,9 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 			case 1:
 				$this->setDbName($value);
 				break;
+			case 2:
+				$this->setDbType($value);
+				break;
 		} // switch()
 	}
 
@@ -568,6 +612,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbType($arr[$keys[2]]);
 	}
 
 	/**
@@ -580,7 +625,8 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 		$criteria = new Criteria(CcPlayoutHistoryTemplatePeer::DATABASE_NAME);
 
 		if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::ID)) $criteria->add(CcPlayoutHistoryTemplatePeer::ID, $this->id);
-		if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::TEMPLATE_NAME)) $criteria->add(CcPlayoutHistoryTemplatePeer::TEMPLATE_NAME, $this->template_name);
+		if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::NAME)) $criteria->add(CcPlayoutHistoryTemplatePeer::NAME, $this->name);
+		if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::TYPE)) $criteria->add(CcPlayoutHistoryTemplatePeer::TYPE, $this->type);
 
 		return $criteria;
 	}
@@ -642,7 +688,8 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
-		$copyObj->setDbName($this->template_name);
+		$copyObj->setDbName($this->name);
+		$copyObj->setDbType($this->type);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -815,7 +862,8 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject  implements Persi
 	public function clear()
 	{
 		$this->id = null;
-		$this->template_name = null;
+		$this->name = null;
+		$this->type = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

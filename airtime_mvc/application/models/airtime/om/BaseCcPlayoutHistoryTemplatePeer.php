@@ -26,7 +26,7 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	const TM_CLASS = 'CcPlayoutHistoryTemplateTableMap';
 	
 	/** The total number of columns. */
-	const NUM_COLUMNS = 2;
+	const NUM_COLUMNS = 3;
 
 	/** The number of lazy-loaded columns. */
 	const NUM_LAZY_LOAD_COLUMNS = 0;
@@ -34,8 +34,11 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	/** the column name for the ID field */
 	const ID = 'cc_playout_history_template.ID';
 
-	/** the column name for the TEMPLATE_NAME field */
-	const TEMPLATE_NAME = 'cc_playout_history_template.TEMPLATE_NAME';
+	/** the column name for the NAME field */
+	const NAME = 'cc_playout_history_template.NAME';
+
+	/** the column name for the TYPE field */
+	const TYPE = 'cc_playout_history_template.TYPE';
 
 	/**
 	 * An identiy map to hold any loaded instances of CcPlayoutHistoryTemplate objects.
@@ -53,12 +56,12 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	 * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
 	 */
 	private static $fieldNames = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', ),
-		BasePeer::TYPE_COLNAME => array (self::ID, self::TEMPLATE_NAME, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TEMPLATE_NAME', ),
-		BasePeer::TYPE_FIELDNAME => array ('id', 'template_name', ),
-		BasePeer::TYPE_NUM => array (0, 1, )
+		BasePeer::TYPE_PHPNAME => array ('DbId', 'DbName', 'DbType', ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbName', 'dbType', ),
+		BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::TYPE, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'TYPE', ),
+		BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'type', ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, )
 	);
 
 	/**
@@ -68,12 +71,12 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	 * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
 	 */
 	private static $fieldKeys = array (
-		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, ),
-		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, ),
-		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::TEMPLATE_NAME => 1, ),
-		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TEMPLATE_NAME' => 1, ),
-		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'template_name' => 1, ),
-		BasePeer::TYPE_NUM => array (0, 1, )
+		BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbName' => 1, 'DbType' => 2, ),
+		BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbName' => 1, 'dbType' => 2, ),
+		BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::TYPE => 2, ),
+		BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'TYPE' => 2, ),
+		BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'type' => 2, ),
+		BasePeer::TYPE_NUM => array (0, 1, 2, )
 	);
 
 	/**
@@ -146,10 +149,12 @@ abstract class BaseCcPlayoutHistoryTemplatePeer {
 	{
 		if (null === $alias) {
 			$criteria->addSelectColumn(CcPlayoutHistoryTemplatePeer::ID);
-			$criteria->addSelectColumn(CcPlayoutHistoryTemplatePeer::TEMPLATE_NAME);
+			$criteria->addSelectColumn(CcPlayoutHistoryTemplatePeer::NAME);
+			$criteria->addSelectColumn(CcPlayoutHistoryTemplatePeer::TYPE);
 		} else {
 			$criteria->addSelectColumn($alias . '.ID');
-			$criteria->addSelectColumn($alias . '.TEMPLATE_NAME');
+			$criteria->addSelectColumn($alias . '.NAME');
+			$criteria->addSelectColumn($alias . '.TYPE');
 		}
 	}
 

@@ -6,6 +6,9 @@ class Application_Service_HistoryService
 {
 	private $con;
 	private $timezone;
+	
+	const TEMPLATE_TYPE_ITEM = "item";
+	const TEMPLATE_TYPE_AGGREGATE = "aggregate";
 
 	private $mDataPropMap = array (
 		"artist" => "artist_name",
@@ -39,6 +42,43 @@ class Application_Service_HistoryService
 
 	public function getListView($startDT, $endDT, $opts)
 	{
+		/*
+
+select * from (
+
+select track_title.value as track_title, track_title.history_id 
+from (select * from cc_playout_history_metadata as phm 
+where key = 'track_title') 
+as track_title
+
+) as track_filter
+
+INNER JOIN
+
+(
+select artist_name.value as artist_name, artist_name.history_id 
+from (select * from cc_playout_history_metadata as phm 
+where key = 'artist_name') 
+as artist_name
+
+) as artist_filter
+
+USING (history_id)
+
+INNER JOIN
+
+(
+select album_title.value as album_title, album_title.history_id 
+from (select * from cc_playout_history_metadata as phm 
+where key = 'album_title') 
+as album_title
+
+) as album_filter
+
+USING (history_id)
+		 */
+		
+		
 	    $this->translateColumns($opts);
 
 	    $select = array (
@@ -172,9 +212,9 @@ class Application_Service_HistoryService
 
 		try {
 			$form = new Application_Form_EditHistoryItem();
-			$template = $this->getItemTemplate();
-
-			$form->createFromTemplate($template);
+			$template = $this->getConfiguredItemTemplate();
+			$required = $this->mandatoryItemFields();
+			$form->createFromTemplate($template["fields"], $required);
 
 			return $form;
 		}
@@ -214,7 +254,7 @@ class Application_Service_HistoryService
 		$this->con->beginTransaction();
 
 		try {
-		    $template = $this->getItemTemplate();
+		    $template = $this->getConfiguredItemTemplate();
 		    $prefix = Application_Form_EditHistoryItem::ID_PREFIX;
 		    $historyRecord = new CcPlayoutHistory();
 
@@ -233,39 +273,42 @@ class Application_Service_HistoryService
 
 	    	$file = $historyRecord->getCcFiles();
 
+	    	$md = array();
 	    	$metadata = array();
+	    	$fields = $template["fields"];
+	    	$required = $this->mandatoryItemFields();
 
-	    	for ($i = 0, $len = count($template); $i < $len; $i++) {
-
-	    	    $item = $template[$i];
-	    	    $key = $item["name"];
-	    	    $isFileMd = $item["isFileMd"];
-
+	    	for ($i = 0, $len = count($fields); $i < $len; $i++) {
+	    		
+	    	    $field = $fields[$i];
+	    	    $key = $field["name"];
+	    	    
+	    	    //required is delt with before this loop.
+	    	    if (in_array($key, $required)) {
+	    	    	continue;
+	    	    }
+	    	    
+	    	    $isFileMd = $field["isFileMd"];
 	    	    $entry = $templateValues[$prefix.$key];
-
-	    	    if (!$isFileMd) {
-	    	        Logging::info("adding metadata");
-	    	    }
-	    	    else if ($isFileMd && isset($file)) {
-	    	        Logging::info("adding file metadata associated to a file");
-	    	    }
-	    	    else if ($isFileMd && empty($file)) {
-                    Logging::info("adding file metadata NOT associated to a file");
-                    $metadata[$key] = $entry;
+	    	    
+	    	    if ($isFileMd && isset($file)) {
+	    	        Logging::info("adding metadata associated to a file for {$key}");
+	    	        $md[$key] = $entry;
 	    	    }
 	    	    else {
-	    	        Logging::info("doing something else");
+	    	    	Logging::info("adding metadata for {$key}");
+                    $metadata[$key] = $entry;
 	    	    }
-
-
 	    	}
-
-	    	if (count($metadata) > 0) {
-	    	    $meta = new CcPlayoutHistoryMetaData();
+	    	
+	    	if (count($md) > 0) {
+	    		$f = Application_Model_StoredFile::createWithFile($file, $this->con);
+	    		$f->setDbColMetadata($md);
 	    	}
 
 	    	foreach ($metadata as $key => $val) {
 
+	    		$meta = new CcPlayoutHistoryMetaData();
     	    	$meta->setDbKey($key);
     	    	$meta->setDbValue($val);
 
@@ -273,12 +316,10 @@ class Application_Service_HistoryService
 	    	}
 
 	    	$historyRecord->save($this->con);
-
 	    	$this->con->commit();
     	}
     	catch (Exception $e) {
     		$this->con->rollback();
-    		Logging::info($e);
     		throw $e;
     	}
 
@@ -301,14 +342,11 @@ class Application_Service_HistoryService
 	        }
 	        else {
 	        	Logging::info("created list item NOT VALID");
+	        	Logging::info($form->getMessages());
 	        }
-
-	        Logging::info($form->getMessages());
-
-	        //return $json;
 		}
 		catch (Exception $e) {
-			Logging::info($e);
+			throw $e;
 		}
 	}
 
@@ -435,18 +473,16 @@ class Application_Service_HistoryService
 		return $fileMD;
 	}
 
-	public function mandatoryItemTemplate() {
+	public function mandatoryItemFields() {
 
-	    $fields = array();
-
-	    $fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
-	    $fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+	    $fields = array("starts", "ends");
 
 	    return $fields;
 	}
 
 	private function defaultItemTemplate() {
 
+		$template = array();
 		$fields = array();
 
 		$fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
@@ -454,15 +490,48 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		return $fields;
+		$template["name"] = "";
+		$template["fields"] = $fields;
+		
+		return $template;
+	}
+	
+	private function loadTemplate($id) {
+
+		try {
+			$template = CcPlayoutHistoryTemplateQuery::create()->findPk($id, $this->con);
+			
+			$c = new Criteria();
+			$c->addAscendingOrderByColumn(CcPlayoutHistoryTemplateFieldPeer::POSITION);
+			$config = $template->getCcPlayoutHistoryTemplateFields($c, $this->con);
+			$fields = array();
+			
+			foreach ($config as $item) {
+				
+				$fields[] = array(
+					"name" => $item->getDbName(), 
+					"type" => $item->getDbType(),
+					"isFileMd" => $item->getDbIsFileMD(),
+					"id" => $item->getDbId()
+				);
+			}
+			
+			$data = array();
+			$data["name"] = $template->getDbName();
+			$data["fields"] = $fields;
+			
+			return $data;
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
 	}
 
-	private function getItemTemplate() {
+	public function getItemTemplate($id) {
 
-		$template_id = Application_Model_Preference::GetHistoryItemTemplate();
-
-		if (is_numeric($template_id)) {
-			Logging::info("template id is: $template_id");
+		if (is_numeric($id)) {
+			Logging::info("template id is: $id");
+			$template = $this->loadTemplate($id);
 		}
 		else {
 			Logging::info("Using default template");
@@ -470,6 +539,46 @@ class Application_Service_HistoryService
 		}
 
 		return $template;
+	}
+	
+	public function getListItemTemplates() {
+		
+		$list = array();
+		
+		try {
+			
+			$templates = CcPlayoutHistoryTemplateQuery::create()
+				->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
+				->findByDbType(self::TEMPLATE_TYPE_ITEM);
+			
+			foreach ($templates as $template) {
+				$list[$template->getDbId()] = $template->getDbName();
+			}
+			
+			return $list;
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function getConfiguredItemTemplate() {
+		try {
+			$id = Application_Model_Preference::GetHistoryItemTemplate();
+			return $this->getItemTemplate($id);
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function setConfiguredItemTemplate($id) {
+		try {
+			Application_Model_Preference::SetHistoryItemTemplate($id);
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
 	}
 	
 	public function createItemTemplate($config) {
@@ -480,15 +589,18 @@ class Application_Service_HistoryService
 		
 			$template = new CcPlayoutHistoryTemplate();
 			$template->setDbName($config["name"]);
+			$template->setDbType(self::TEMPLATE_TYPE_ITEM);
 			
 			$fields = $config["fields"];
 			
 			foreach ($fields as $index=>$field) {
 				
+				$isMd = ($field["filemd"] == 'true') ? true : false;
+				
 				$templateField = new CcPlayoutHistoryTemplateField();
 				$templateField->setDbName($field["name"]);
 				$templateField->setDbType($field["type"]);
-				$templateField->setDbIsFileMD($field["filemd"]);
+				$templateField->setDbIsFileMD($isMd);
 				$templateField->setDbPosition($index);
 				
 				$template->addCcPlayoutHistoryTemplateField($templateField);
@@ -496,13 +608,17 @@ class Application_Service_HistoryService
 			
 			$template->save($this->con);
 			
+			$doSetDefault = $config['setDefault'];
+			if (isset($doSetDefault) && $doSetDefault) {
+				$this->setConfiguredItemTemplate($template->getDbid());
+			}
+			
 			$this->con->commit();
 		}
 		catch (Exception $e) {
 			$this->con->rollback();
-			Logging::info($e);
 			throw $e;
-		}
+		}		
 	}
 
 }

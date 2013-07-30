@@ -1,5 +1,6 @@
 var AIRTIME = (function(AIRTIME) {
     var mod;
+    var $templateDiv;
     var $templateList;
     var $fileMDList;
     
@@ -44,6 +45,7 @@ var AIRTIME = (function(AIRTIME) {
     		name: $el.data("name"),
     		type: $el.data("type"),
     		filemd: $el.data("filemd"),
+    		id: $el.data("id")
     	};
     	
     }
@@ -77,12 +79,12 @@ var AIRTIME = (function(AIRTIME) {
     
     mod.onReady = function() {
     	
+    	$templateDiv = $("#configure_item_template");
     	$templateList = $(".template_item_list");
     	$fileMDList = $(".template_file_md");
     	
     	
     	$fileMDList.find("li").draggable({
-    		//helper: "clone",
     		helper: function(event, ui) {
     			var $li = $(this);
     			var name = $li.data("name");
@@ -96,11 +98,11 @@ var AIRTIME = (function(AIRTIME) {
     	
     	$templateList.sortable(fieldSortable);
     	
-    	$templateList.on("click", ".template_item_remove", function() {
+    	$templateDiv.on("click", ".template_item_remove", function() {
     		$(this).parents("li").remove();
     	});
     	
-    	$(".template_item_add").on("click", "button", function() {
+    	$templateDiv.on("click", ".template_item_add button", function() {
     		var $div = $(this).parents("div.template_item_add");
     		
     		var name = $div.find("input").val();
@@ -109,8 +111,7 @@ var AIRTIME = (function(AIRTIME) {
     		addField(name, type, false, false);
     	});
     	
-    	$("#template_item_save").click(function(){
-    		var template_id = $(this).data("template");
+    	function createUpdateTemplate(template_id, isDefault) {
     		var createUrl = baseUrl+"Playouthistory/create-template/format/json";
 			var updateUrl = baseUrl+"Playouthistory/update-template/format/json";
 			var url;
@@ -130,9 +131,46 @@ var AIRTIME = (function(AIRTIME) {
 				data[i] = getFieldData($li);
 			}
 			
-			$.post(url, {name: templateName, fields: data}, function(json) {
+			$.post(url, {'name': templateName, 'fields': data, 'setDefault': isDefault}, function(json) {
 				var x;
 			});
+    	}
+    	
+    	$templateDiv.on("click", "#template_item_save", function(){
+    		var template_id = $(this).data("template");
+    		
+    		createUpdateTemplate(template_id, false);
+    	});
+    	
+    	$templateDiv.on("click", "#template_set_default", function(){
+    		var template_id = $(this).data("template");
+    		
+    		if (isNaN(parseInt(template_id, 10))) {
+    			
+    			createUpdateTemplate(template_id, true);
+    		}
+    		else {
+    			
+    			var url = baseUrl+"Playouthistory/set-item-template-default/format/json";
+    				
+    			$.post(url, {id: template_id}, function(json) {
+    				var x;
+    			});
+    		}
+    	});
+    	
+    	$("#template_list").change(function(){
+    		var template_id = $(this).find(":selected").val(),
+    			url;
+    		
+    		if (!isNaN(parseInt(template_id, 10))) {
+    			url = baseUrl+"Playouthistory/configure-item-template/id/"+template_id;
+    		}
+    		else {
+    			url = baseUrl+"Playouthistory/configure-item-template";
+    		}
+    		
+    		window.location.href = url;
     	});
     };
     

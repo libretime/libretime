@@ -1,0 +1,43 @@
+<div>
+  <button id="template_set_default" data-template="<?php echo $this->template_id; ?>">Set Default Template</button>
+  <button id="template_item_save" data-template="<?php echo $this->template_id; ?>">Save</button>
+</div>
+
+<div><label>Name<input id="template_name" type="text" value="<?php echo $this->template_name; ?>"></label></div>
+
+<?php $i = 0; ?>
+
+<ul class="template_item_list">
+  <?php foreach ($this->template_fields as $field): ?>
+  
+  <li id="<?php echo "field_".$i?>" data-id="<?php echo isset($field["id"]) ? $field["id"] : ""; ?>" data-name="<?php echo $field["name"]?>" data-type="<?php echo $field["type"]?>" data-filemd="<?php echo var_export($field["isFileMd"], true)?>">
+    <span><?php echo $field["name"]?></span>
+    <span><?php echo $field["type"]?></span>
+    <?php if(!in_array($field["name"], $this->required_fields)): ?>
+    <span class="template_item_remove">Remove</span>
+    <?php endif; ?>
+  </li>
+  <?php $i++; ?>
+  
+  <?php endforeach; ?>
+</ul>
+
+<ul class="template_file_md">
+  <?php foreach ($this->fileMD as $md): ?>
+  
+  <li id="<?php echo "md_".$md["name"]?>" data-name="<?php echo $md["name"]?>" data-type="<?php echo $md["type"]?>"><?php echo $md["name"] ?></li>
+  <?php endforeach; ?>
+</ul>
+
+<div class="template_item_add">
+  <div>Add New Field</div>
+  <div>
+    <input type="text">
+    <select>
+      <?php foreach ($this->fields as $field): ?>
+      <option value="<?php echo $field; ?>"><?php echo $field; ?></option>
+      <?php endforeach; ?>
+    </select>
+    <button>Add</button>
+  </div>
+</div>
