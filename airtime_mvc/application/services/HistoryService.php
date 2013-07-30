@@ -141,6 +141,7 @@ USING (history_id)
 			select count(history.file_id) as played, history.file_id as file_id
 			from cc_playout_history as history
 			where history.starts >= '{$start}' and history.starts < '{$end}'
+			and history.file_id is not NULL
 			group by history.file_id
 		) AS playout
 		left join cc_files as file on (file.id = playout.file_id)";
