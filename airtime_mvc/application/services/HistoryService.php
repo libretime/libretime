@@ -39,58 +39,199 @@ class Application_Service_HistoryService
 			}
 		}
 	}
+	
+	//opts is from datatables.
+	public function getPlayedItemData($startDT, $endDT, $opts)
+	{
+		$mainSqlQuery = "";
+		$paramMap = array();
+		
+		$start = $startDT->format("Y-m-d H:i:s");
+		$end = $endDT->format("Y-m-d H:i:s");
+		$paramMap["starts"] = $start;
+		$paramMap["ends"] = $end;
+		
+		$template = $this->getConfiguredItemTemplate();
+		$fields = $template["fields"];
+		$required = $this->mandatoryItemFields();		
+		
+		$fields_filemd = array();
+		$fields_general = array();
+		
+		foreach ($fields as $index=>$field) {
+			
+			if (in_array($field["name"], $required)) {
+				continue;
+			}
+			
+			if ($field["isFileMd"]) {
+				$fields_filemd[] = $field;
+			}
+			else {
+				$fields_general[] = $field;
+			}
+		}
+		
+		$historyRange = "(".
+		"SELECT history.starts, history.ends, history.id AS history_id".
+		" FROM cc_playout_history as history".
+		" WHERE history.starts >= :starts and history.starts < :ends".
+		") AS history_range";
+				
+		$manualMeta = "(".
+		"SELECT %KEY%.value AS %KEY%, %KEY%.history_id".
+		" FROM (".
+		" SELECT * from cc_playout_history_metadata AS phm WHERE phm.key = :meta_%KEY%".
+		" ) AS %KEY%".
+		" ) AS %KEY%_filter";
+		
+		$mainSelect = array("history_range.starts", "history_range.ends", "history_range.history_id");
+		$mdFilters = array();
+		
+		$numFileMdFields = count($fields_filemd);
+		
+		if ($numFileMdFields > 0) {
+		
+			//these 3 selects are only needed if $fields_filemd has some fields.
+			$fileSelect = array("history_file.history_id");
+			$nonNullFileSelect = array("file.id as file_id");
+			$nullFileSelect = array("null_file.history_id");
+			
+			$fileMdFilters = array();
+			
+			//populate the different dynamic selects with file info.
+			for ($i = 0; $i < $numFileMdFields; $i++) {
+				
+				$field = $fields_filemd[$i];
+				$key = $field["name"];
+				
+				$fileSelect[] = "file_md.{$key}";
+				$nonNullFileSelect[] = "file.{$key}";
+				$nullFileSelect[] = "{$key}_filter.{$key}";
+				$mainSelect[] = "file_info.{$key}";
+				
+				$fileMdFilters[] = str_replace("%KEY%", $key, $manualMeta);
+				$paramMap["meta_{$key}"] = $key;
+			}
+			
+			//the files associated with scheduled playback in Airtime.
+			$historyFile = "(".
+			"SELECT history.id AS history_id, history.file_id".
+			" FROM cc_playout_history AS history".
+			" WHERE history.file_id IS NOT NULL".
+			") AS history_file";
+			
+			$fileMd = "(".
+			"SELECT %NON_NULL_FILE_SELECT%".
+			" FROM cc_files AS file".
+			") AS file_md";
+			
+			$fileMd = str_replace("%NON_NULL_FILE_SELECT%", join(", ", $nonNullFileSelect), $fileMd);
+			
+			//null files are from manually added data (filling in webstream info etc)
+			$nullFile = "(".
+			"SELECT history.id AS history_id".
+			" FROM cc_playout_history AS history".
+			" WHERE history.file_id IS NULL".
+			") AS null_file";
+			
+			
+			//----------------------------------
+			//building the file inner query
+			
+			$fileSqlQuery = 
+			"SELECT ".join(", ", $fileSelect).
+			" FROM {$historyFile}".
+			" LEFT JOIN {$fileMd} USING (file_id)".
+			" UNION".
+			" SELECT ".join(", ", $nullFileSelect).
+			" FROM {$nullFile}";
+			
+			foreach ($fileMdFilters as $filter) {
+				
+				$fileSqlQuery.=
+				" LEFT JOIN {$filter} USING(history_id)";
+			}
+				
+		}
+		
+		for ($i = 0, $len = count($fields_general); $i < $len; $i++) {
+			
+			$field = $fields_general[$i];
+			$key = $field["name"];
+			
+			$mdFilters[] = str_replace("%KEY%", $key, $manualMeta);
+			$paramMap["meta_{$key}"] = $key;
+			$mainSelect[] = "{$key}_filter.{$key}";
+		}
+		
+		$mainSqlQuery.=
+		"SELECT ".join(", ", $mainSelect).
+		" FROM {$historyRange}";
+		
+		if (isset($fileSqlQuery)) {
+			
+			$mainSqlQuery.=
+			" LEFT JOIN ( {$fileSqlQuery} ) as file_info USING(history_id)";
+		}
+		
+		foreach ($mdFilters as $filter) {
+		
+			$mainSqlQuery.=
+			" LEFT JOIN {$filter} USING(history_id)";
+		}
+		
+		Logging::info($mainSqlQuery);
+		
+		$stmt = $this->con->prepare($mainSqlQuery);
+		foreach ($paramMap as $param => $v) {
+			$stmt->bindValue($param, $v);
+		}
+		
+		$rows = array();
+		if ($stmt->execute()) {
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else {
+			$msg = implode(',', $stmt->errorInfo());
+			Logging::info($msg);
+			throw new Exception("Error: $msg");
+		}
+		
+		$totalRows = count($rows);
+		Logging::info($totalRows);
+		Logging::info($rows);
+		
+		//-----------------------------------------------------------------------
+		//processing results.
+		
+		$timezoneUTC = new DateTimeZone("UTC");
+		$timezoneLocal = new DateTimeZone($this->timezone);
+		
+		//need to display the results in the station's timezone.
+		foreach ($rows as $index => &$result) {
+		
+			$dateTime = new DateTime($result["starts"], $timezoneUTC);
+			$dateTime->setTimezone($timezoneLocal);
+			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
+		
+			$dateTime = new DateTime($result["ends"], $timezoneUTC);
+			$dateTime->setTimezone($timezoneLocal);
+			$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+		}
+		
+		return array(
+			"sEcho" => intval($opts["sEcho"]),
+			//"iTotalDisplayRecords" => intval($totalDisplayRows),
+			"iTotalDisplayRecords" => intval($totalRows),
+			"iTotalRecords" => intval($totalRows),
+			"history" => $rows
+		);
+	}
+	
 
 	public function getListView($startDT, $endDT, $opts)
 	{
-		
-/*
-
-select * from (
-
-select history.id as history_id
-from cc_playout_history as history
-where history.file_id IS NULL
-) as null_files
-
-LEFT JOIN
-
-(
-select track_title.value as track_title, track_title.history_id 
-from (select * from cc_playout_history_metadata as phm 
-where key = 'track_title') 
-as track_title
-
-) as track_filter
-
-USING (history_id)
-
-LEFT JOIN
-
-(
-select artist_name.value as artist_name, artist_name.history_id 
-from (select * from cc_playout_history_metadata as phm 
-where key = 'artist_name') 
-as artist_name
-
-) as artist_filter
-
-USING (history_id)
-
-LEFT JOIN
-
-(
-select album_title.value as album_title, album_title.history_id 
-from (select * from cc_playout_history_metadata as phm 
-where key = 'album_title') 
-as album_title
-
-) as album_filter
-
-USING (history_id)
- 
- */
-		
-		
 	    $this->translateColumns($opts);
 
 	    $select = array (
@@ -569,6 +710,33 @@ USING (history_id)
 			}
 			
 			return $list;
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function getDatatablesPlayedItemColumns() {
+		
+		try {
+			//{"sTitle": $.i18n._("Start"), "mDataProp": "starts", "sClass": "his_starts"}
+			
+			$template = $this->getConfiguredItemTemplate();
+			
+			$columns = array();
+			
+			foreach ($template["fields"] as $index=>$field) {
+				
+				$key = $field["name"];
+				
+				$columns[] = array(
+					"sTitle"=> $key,
+					"mDataProp"=> $key,
+					"sClass"=> "his_{$key}"
+				);
+			}
+			
+			return $columns;
 		}
 		catch (Exception $e) {
 			throw $e;

@@ -68,6 +68,12 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/bootstrap-datetimepicker.min.css?'.$CC_CONFIG['airtime_version']);
+        
+        //set datatables columns for display of data.
+        $historyService = new Application_Service_HistoryService();
+        $columns = json_encode($historyService->getDatatablesPlayedItemColumns());
+        $script = "localStorage.setItem( 'datatables-historyitem-aoColumns', JSON.stringify($columns) );";
+        $this->view->headScript()->appendScript($script);
     }
 
     public function aggregateHistoryFeedAction()
@@ -106,7 +112,8 @@ class PlayouthistoryController extends Zend_Controller_Action
         $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
         $historyService = new Application_Service_HistoryService();
-        $r = $historyService->getListView($startsDT, $endsDT, $params);
+        //$r = $historyService->getListView($startsDT, $endsDT, $params);
+        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params);
 
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];

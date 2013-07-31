@@ -139,6 +139,8 @@ var AIRTIME = (function(AIRTIME) {
         var oTable,
         	$historyTableDiv = $historyContentDiv.find("#history_table_list"),
         	fnRowCallback;
+        
+        var columns = JSON.parse(localStorage.getItem('datatables-historyitem-aoColumns'));
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
         	var editUrl = baseUrl+"playouthistory/edit-list-item/format/json/id/"+aData.history_id,
@@ -150,13 +152,7 @@ var AIRTIME = (function(AIRTIME) {
         
         oTable = $historyTableDiv.dataTable( {
             
-            "aoColumns": [
-               {"sTitle": $.i18n._("Start"), "mDataProp": "starts", "sClass": "his_starts"}, /* Starts */
-               {"sTitle": $.i18n._("End"), "mDataProp": "ends", "sClass": "his_ends"}, /* Ends */
-               {"sTitle": $.i18n._("Title"), "mDataProp": "title", "sClass": "his_title"}, /* Title */
-               {"sTitle": $.i18n._("Creator"), "mDataProp": "artist", "sClass": "his_artist"} /* Creator */
-            ],
-                          
+            "aoColumns": columns,             
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": baseUrl+"playouthistory/item-history-feed",
