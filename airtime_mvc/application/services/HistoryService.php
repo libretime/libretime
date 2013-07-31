@@ -42,10 +42,19 @@ class Application_Service_HistoryService
 
 	public function getListView($startDT, $endDT, $opts)
 	{
-		/*
+		
+/*
 
 select * from (
 
+select history.id as history_id
+from cc_playout_history as history
+where history.file_id IS NULL
+) as null_files
+
+LEFT JOIN
+
+(
 select track_title.value as track_title, track_title.history_id 
 from (select * from cc_playout_history_metadata as phm 
 where key = 'track_title') 
@@ -53,7 +62,9 @@ as track_title
 
 ) as track_filter
 
-INNER JOIN
+USING (history_id)
+
+LEFT JOIN
 
 (
 select artist_name.value as artist_name, artist_name.history_id 
@@ -65,7 +76,7 @@ as artist_name
 
 USING (history_id)
 
-INNER JOIN
+LEFT JOIN
 
 (
 select album_title.value as album_title, album_title.history_id 
@@ -76,7 +87,8 @@ as album_title
 ) as album_filter
 
 USING (history_id)
-		 */
+ 
+ */
 		
 		
 	    $this->translateColumns($opts);
