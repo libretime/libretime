@@ -1,3 +1,21 @@
 <div id="history_template" class="ui-widget ui-widget-content block-shadow alpha-block padded">
-  <a href="<?php echo $this->baseUrl("Playouthistory/configure-item-template"); ?>">Configure Item Template</a>
+
+  <div>
+    <div>Edit Existing</div>
+    <ul id="template_list">
+      <?php foreach ($this->template_list as $id=>$name): ?>
+        <?php if (in_array($id, $this->configured)): ?>
+        <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>" class="template_configured">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistory/configure-item-template/id/{$id}"); ?>"><?php echo $name; ?></a>
+        <?php else: ?>
+        <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistory/configure-item-template/id/{$id}"); ?>"><?php echo $name; ?></a>
+          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistory/set-item-template-default/id/{$id}"); ?>">Set Default</a>
+          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistory/delete-template/id/{$id}"); ?>">Remove</a>
+        <?php endif; ?>   
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+  <button id="new_item_template" class="btn">New Item Template</button>
 </div>

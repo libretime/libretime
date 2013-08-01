@@ -1,181 +1,93 @@
 var AIRTIME = (function(AIRTIME) {
     var mod;
-    var $templateDiv;
-    var $templateList;
-    var $fileMDList;
+    var $historyTemplate;
     
-    if (AIRTIME.historyTemplate === undefined) {
-        AIRTIME.historyTemplate = {};
+    if (AIRTIME.template === undefined) {
+        AIRTIME.template = {};
     }
-    mod = AIRTIME.historyTemplate;
+    mod = AIRTIME.template;
     
-    function createTemplateLi(name, type, filemd, required) {
+    function createItemLi(id, name, configured) {
     	
-    	var templateRequired = 
-    		"<li id='<%= id %>' data-name='<%= name %>' data-type='<%= type %>' data-filemd='<%= filemd %>'>" +
-    			"<span><%= name %></span>" +
-    			"<span><%= type %></span>" +
+    	var editUrl = baseUrl+"Playouthistory/configure-item-template/id/"+id;
+    	var defaultUrl = baseUrl+"Playouthistory/set-item-template-default/format/json/id/"+id;
+    	var removeUrl = baseUrl+"Playouthistory/delete-template/format/json/id/"+id;
+    	
+    	var itemConfigured = 
+    		"<li class='template_configured' data-template='<%= id %>' data-name='<%= name %>'>" +
+    		    "<a href='<%= editUrl %>' class='template_name'><%= name %></a>" +
     		"</li>";
     	
-    	var templateOptional = 
-    		"<li id='<%= id %>' data-name='<%= name %>' data-type='<%= type %>' data-filemd='<%= filemd %>'>" +
-    			"<span><%= name %></span>" +
-    			"<span><%= type %></span>" +
-    			"<span class='template_item_remove'>Remove</span>" +
+    	var item = 
+    		"<li data-template='<%= id %>' data-name='<%= name %>'>" +
+    			"<a href='<%= editUrl %>' class='template_name'><%= name %></a>" +
+    			"<a href='<%= defaultUrl %>' class='template_default'>Set Default</a>" +
+    			"<a href='<%= removeUrl %>' class='template_remove'>Remove</a>" +
     		"</li>";
     	
-    	var template = (required) === true ? templateRequired : templateOptional;
+    	var template = (configured) === true ? itemConfigured : item;
     	
     	var template = _.template(template);
-    	var count = $templateList.find("li").length;
-    	var id = "field_"+count;
-    	var $li = $(template({id: id, name: name, type: type, filemd: filemd}));
+    	
+    	var $li = $(template({id: id, name: name, editUrl: editUrl, defaultUrl: defaultUrl, removeUrl: removeUrl}));
     	
     	return $li;
     }
     
-    function addField(name, type, filemd, required) {
-    	
-    	$templateList.append(createTemplateLi(name, type, filemd, required));
-    }
-    
-    function getFieldData($el) {
-    	
-    	return {
-    		name: $el.data("name"),
-    		type: $el.data("type"),
-    		filemd: $el.data("filemd"),
-    		id: $el.data("id")
-    	};
-    	
-    }
-    
-    var fieldSortable = (function() {
-    	
-    	var $newLi;
-    	
-    	return {
-			receive: function( event, ui ) {
-				var name = $newLi.data("name");
-				var type = $newLi.data("type");
-				var $prev = $newLi.prev();
-				
-				$newLi.remove();
-				
-				var $li = createTemplateLi(name, type, true, false);
-				
-				if ($prev.length) {
-					$prev.after($li);
-				}
-				else {
-					$templateList.prepend($li);
-				}
-			},
-			beforeStop: function( event, ui ) {
-				$newLi = ui.item;
-			}
-    	};
-	})();
-    
     mod.onReady = function() {
     	
-    	$templateDiv = $("#configure_item_template");
-    	$templateList = $(".template_item_list");
-    	$fileMDList = $(".template_file_md");
+    	$historyTemplate = $("#history_template");
     	
+    	$historyTemplate.on("click", ".template_remove", function(ev) {
+    		
+    		ev.preventDefault();
+    		
+    		var $a = $(this);
+    		var url = $a.attr("href");
+    		$a.parents("li").remove();
+    		
+    		$.post(url, function(){
+    			var x;
+    		});
+    	});
     	
-    	$fileMDList.find("li").draggable({
-    		helper: function(event, ui) {
-    			var $li = $(this);
-    			var name = $li.data("name");
-    			var type = $li.data("type");
+    	$historyTemplate.on("click", ".template_default", function(ev) {
+    		
+    		ev.preventDefault();
+    		
+    		var $a = $(this);
+    		var url = $a.attr("href");
+    		var $oldLi, $newLi;
+    		
+    		$oldLi = $a.parents("ul").find("li.template_configured");
+    		$newLi = $a.parents("li");
+    		
+    		$oldLi.replaceWith(createItemLi($oldLi.data('template'), $oldLi.data('name'), false));
+    		$newLi.replaceWith(createItemLi($newLi.data('template'), $newLi.data('name'), true));
+    		
+    		$.post(url, function(){
+    			var x;
+    		});
+    	});
+    	
+    	$historyTemplate.on("click", "#new_item_template", function() {
+    		var createUrl = baseUrl+"Playouthistory/create-template";
+    		
+    		$.post(createUrl, {format: "json"}, function(json) {
     			
-    			return createTemplateLi(name, type, true, false);
+    			if (json.error !== undefined) {
+    				alert(json.error);
+    				return;
+    			}
     			
-    		},
-    		connectToSortable: ".template_item_list"
+    			window.location.href = json.url;
+    		});
     	});
     	
-    	$templateList.sortable(fieldSortable);
-    	
-    	$templateDiv.on("click", ".template_item_remove", function() {
-    		$(this).parents("li").remove();
-    	});
-    	
-    	$templateDiv.on("click", ".template_item_add button", function() {
-    		var $div = $(this).parents("div.template_item_add");
-    		
-    		var name = $div.find("input").val();
-    		var type = $div.find("select").val();
-    		
-    		addField(name, type, false, false);
-    	});
-    	
-    	function createUpdateTemplate(template_id, isDefault) {
-    		var createUrl = baseUrl+"Playouthistory/create-template/format/json";
-			var updateUrl = baseUrl+"Playouthistory/update-template/format/json";
-			var url;
-			var data = {};
-			var $lis, $li;
-			var i, len;
-			var templateName;
-			
-			url = (isNaN(parseInt(template_id, 10))) ? createUrl : updateUrl;
-			
-			templateName = $("#template_name").val();
-			$lis = $templateList.children();
-			
-			for (i = 0, len = $lis.length; i < len; i++) {
-				$li = $($lis[i]);
-				
-				data[i] = getFieldData($li);
-			}
-			
-			$.post(url, {'name': templateName, 'fields': data, 'setDefault': isDefault}, function(json) {
-				var x;
-			});
-    	}
-    	
-    	$templateDiv.on("click", "#template_item_save", function(){
-    		var template_id = $(this).data("template");
-    		
-    		createUpdateTemplate(template_id, false);
-    	});
-    	
-    	$templateDiv.on("click", "#template_set_default", function(){
-    		var template_id = $(this).data("template");
-    		
-    		if (isNaN(parseInt(template_id, 10))) {
-    			
-    			createUpdateTemplate(template_id, true);
-    		}
-    		else {
-    			
-    			var url = baseUrl+"Playouthistory/set-item-template-default/format/json";
-    				
-    			$.post(url, {id: template_id}, function(json) {
-    				var x;
-    			});
-    		}
-    	});
-    	
-    	$("#template_list").change(function(){
-    		var template_id = $(this).find(":selected").val(),
-    			url;
-    		
-    		if (!isNaN(parseInt(template_id, 10))) {
-    			url = baseUrl+"Playouthistory/configure-item-template/id/"+template_id;
-    		}
-    		else {
-    			url = baseUrl+"Playouthistory/configure-item-template";
-    		}
-    		
-    		window.location.href = url;
-    	});
     };
     
 return AIRTIME;
     
 }(AIRTIME || {}));
 
-$(document).ready(AIRTIME.historyTemplate.onReady);
+$(document).ready(AIRTIME.template.onReady);

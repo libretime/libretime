@@ -1,5 +1,7 @@
 <div>
+  <?php if (!in_array($this->template_id, $this->configured)): ?>
   <button id="template_set_default" data-template="<?php echo $this->template_id; ?>">Set Default Template</button>
+  <?php endif; ?>
   <button id="template_item_save" data-template="<?php echo $this->template_id; ?>">Save</button>
 </div>
 

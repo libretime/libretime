@@ -45,6 +45,7 @@ class Application_Service_HistoryService
 	{
 		$mainSqlQuery = "";
 		$paramMap = array();
+		$sqlTypes = $this->getSqlTypes();
 		
 		$start = $startDT->format("Y-m-d H:i:s");
 		$end = $endDT->format("Y-m-d H:i:s");
@@ -104,11 +105,12 @@ class Application_Service_HistoryService
 				
 				$field = $fields_filemd[$i];
 				$key = $field["name"];
+				$type = $sqlTypes[$field["type"]];
 				
-				$fileSelect[] = "file_md.{$key}";
-				$nonNullFileSelect[] = "file.{$key}";
-				$nullFileSelect[] = "{$key}_filter.{$key}";
-				$mainSelect[] = "file_info.{$key}";
+				$fileSelect[] = "file_md.{$key}::{$type}";
+				$nonNullFileSelect[] = "file.{$key}::{$type}";
+				$nullFileSelect[] = "{$key}_filter.{$key}::{$type}";
+				$mainSelect[] = "file_info.{$key}::{$type}";
 				
 				$fileMdFilters[] = str_replace("%KEY%", $key, $manualMeta);
 				$paramMap["meta_{$key}"] = $key;
@@ -159,10 +161,11 @@ class Application_Service_HistoryService
 			
 			$field = $fields_general[$i];
 			$key = $field["name"];
+			$type = $sqlTypes[$field["type"]];
 			
 			$mdFilters[] = str_replace("%KEY%", $key, $manualMeta);
 			$paramMap["meta_{$key}"] = $key;
-			$mainSelect[] = "{$key}_filter.{$key}";
+			$mainSelect[] = "{$key}_filter.{$key}::{$type}";
 		}
 		
 		$mainSqlQuery.=
@@ -228,50 +231,6 @@ class Application_Service_HistoryService
 			"history" => $rows
 		);
 	}
-	
-
-	public function getListView($startDT, $endDT, $opts)
-	{
-	    $this->translateColumns($opts);
-
-	    $select = array (
-	        "file.track_title as title",
-	        "file.artist_name as artist",
-	        "playout.starts",
-	        "playout.ends",
-	        "playout.history_id"
-	    );
-
-	    $start = $startDT->format("Y-m-d H:i:s");
-	    $end = $endDT->format("Y-m-d H:i:s");
-
-	    $historyTable = "(
-	    select history.starts as starts, history.ends as ends,
-	    history.id as history_id, history.file_id as file_id
-	    from cc_playout_history as history
-	    where history.starts >= '{$start}' and history.starts < '{$end}'
-	    ) AS playout
-	    left join cc_files as file on (file.id = playout.file_id)";
-
-	    $results = Application_Model_Datatables::findEntries($this->con, $select, $historyTable, $opts, "history");
-
-	    $timezoneUTC = new DateTimeZone("UTC");
-	    $timezoneLocal = new DateTimeZone($this->timezone);
-
-	    //need to display the results in the station's timezone.
-	    foreach ($results["history"] as $index => &$result) {
-
-	    	$dateTime = new DateTime($result["starts"], $timezoneUTC);
-	    	$dateTime->setTimezone($timezoneLocal);
-	    	$result["starts"] = $dateTime->format("Y-m-d H:i:s");
-
-	    	$dateTime = new DateTime($result["ends"], $timezoneUTC);
-	    	$dateTime->setTimezone($timezoneLocal);
-	    	$result["ends"] = $dateTime->format("Y-m-d H:i:s");
-	    }
-
-	    return $results;
-	}
 
 	public function getAggregateView($startDT, $endDT, $opts)
 	{
@@ -326,13 +285,7 @@ class Application_Service_HistoryService
 			//don't add webstreams
 			if (isset($fileId)) {
 
-				//$starts = $item->getDbStarts(null);
-				//$ends = $item->getDbEnds(null);
-
 				$metadata = array();
-				//$metadata["date"] = $starts->format('Y-m-d');
-				//$metadata["start"] = $starts->format('H:i:s');
-				//$metadata["end"] = $ends->format('H:i:s');
 				$metadata["showname"] = $show->getDbName();
 
 				$history = new CcPlayoutHistory();
@@ -340,7 +293,6 @@ class Application_Service_HistoryService
 				$history->setDbStarts($item->getDbStarts(null));
 				$history->setDbEnds($item->getDbEnds(null));
 
-				/*
 				foreach ($metadata as $key => $val) {
 					$meta = new CcPlayoutHistoryMetaData();
 					$meta->setDbKey($key);
@@ -348,7 +300,6 @@ class Application_Service_HistoryService
 
 					$history->addCcPlayoutHistoryMetaData($meta);
 				}
-				*/
 
 				$history->save($this->con);
 			}
@@ -605,10 +556,25 @@ class Application_Service_HistoryService
 	    return $fields;
 	}
 	
+	private function getSqlTypes() {
+	
+		$fields = array(
+			TEMPLATE_DATE => "date",
+			TEMPLATE_TIME => "time",
+			TEMPLATE_DATETIME => "datetime",
+			TEMPLATE_STRING => "text",
+			TEMPLATE_BOOLEAN => "boolean",
+			TEMPLATE_INT => "integer",
+			TEMPLATE_FLOAT => "float",
+		);
+	
+		return $fields;
+	}
+	
 	public function getFileMetadataTypes() {
 		
 		$fileMD = array(
-			array("name"=> MDATA_KEY_TITLE, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_TITLE, "type"=> TEMPLATE_STRING, "sql"),
 			array("name"=> MDATA_KEY_CREATOR, "type"=> TEMPLATE_STRING),
 			array("name"=> MDATA_KEY_SOURCE, "type"=> TEMPLATE_STRING),
 			array("name"=> MDATA_KEY_DURATION, "type"=> TEMPLATE_STRING),
@@ -644,7 +610,7 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		$template["name"] = "";
+		$template["name"] = "Template".date("Y-m-d H:i:s");
 		$template["fields"] = $fields;
 		
 		return $template;
@@ -719,8 +685,6 @@ class Application_Service_HistoryService
 	public function getDatatablesPlayedItemColumns() {
 		
 		try {
-			//{"sTitle": $.i18n._("Start"), "mDataProp": "starts", "sClass": "his_starts"}
-			
 			$template = $this->getConfiguredItemTemplate();
 			
 			$columns = array();
@@ -762,21 +726,38 @@ class Application_Service_HistoryService
 		}
 	}
 	
+	public function getConfiguredTemplateIds() {
+		
+		try {
+			$id = Application_Model_Preference::GetHistoryItemTemplate();
+			
+			return array($id);
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
 	public function createItemTemplate($config) {
 		
 		$this->con->beginTransaction();
 		
 		try {
+			
+			$default = $this->defaultItemTemplate();
+			
+			$name = isset($config["name"]) ? $config["name"] : $default["name"];
+			$fields = isset($config["fields"]) ? $config["fields"] : $default["fields"];
+			
+			$doSetDefault = isset($config['setDefault']) ? $config['setDefault'] : false;
 		
 			$template = new CcPlayoutHistoryTemplate();
-			$template->setDbName($config["name"]);
+			$template->setDbName($name);
 			$template->setDbType(self::TEMPLATE_TYPE_ITEM);
-			
-			$fields = $config["fields"];
-			
+
 			foreach ($fields as $index=>$field) {
 				
-				$isMd = ($field["filemd"] == 'true') ? true : false;
+				$isMd = ($field["isFileMd"] == 'true') ? true : false;
 				
 				$templateField = new CcPlayoutHistoryTemplateField();
 				$templateField->setDbName($field["name"]);
@@ -788,18 +769,78 @@ class Application_Service_HistoryService
 			}
 			
 			$template->save($this->con);
-			
-			$doSetDefault = $config['setDefault'];
-			if (isset($doSetDefault) && $doSetDefault) {
+						
+			if ($doSetDefault) {
 				$this->setConfiguredItemTemplate($template->getDbid());
 			}
 			
 			$this->con->commit();
+			
+			return $template->getDbid();
 		}
 		catch (Exception $e) {
 			$this->con->rollback();
 			throw $e;
 		}		
 	}
-
+	
+	public function updateItemTemplate($id, $name, $fields, $doSetDefault=false) {
+	
+		$this->con->beginTransaction();
+	
+		try {
+				
+			$template = CcPlayoutHistoryTemplateQuery::create()->findPk($id, $this->con);
+			$template->setDbName($name);
+			
+			if (count($fields) === 0) {
+				$t = $this->defaultItemTemplate();
+				$fields = $t["fields"]; 
+			}
+			
+			$template->getCcPlayoutHistoryTemplateFields()->delete($this->con);
+			
+			foreach ($fields as $index=>$field) {
+	
+				$isMd = ($field["isFileMd"] == 'true') ? true : false;
+	
+				$templateField = new CcPlayoutHistoryTemplateField();
+				$templateField->setDbName($field["name"]);
+				$templateField->setDbType($field["type"]);
+				$templateField->setDbIsFileMD($isMd);
+				$templateField->setDbPosition($index);
+	
+				$template->addCcPlayoutHistoryTemplateField($templateField);
+			}
+				
+			$template->save($this->con);
+	
+			if ($doSetDefault) {
+				$this->setConfiguredItemTemplate($template->getDbid());
+			}
+				
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			throw $e;
+		}
+	}
+	
+	public function deleteTemplate($id) {
+		
+		$this->con->beginTransaction();
+		
+		try {
+			
+			$template = CcPlayoutHistoryTemplateQuery::create()->findPk($id, $this->con);
+			$template->delete($this->con);
+			
+		    $this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			throw $e;
+		}
+	}
 }
