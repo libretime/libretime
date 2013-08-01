@@ -57,7 +57,9 @@ class Application_Service_HistoryService
 		$required = $this->mandatoryItemFields();		
 		
 		$fields_filemd = array();
+		$filemd_keys = array();
 		$fields_general = array();
+		$general_keys = array();
 		
 		foreach ($fields as $index=>$field) {
 			
@@ -67,9 +69,11 @@ class Application_Service_HistoryService
 			
 			if ($field["isFileMd"]) {
 				$fields_filemd[] = $field;
+				$filemd_keys[] = $field["name"];
 			}
 			else {
 				$fields_general[] = $field;
+				$general_keys[] = $field["name"];
 			}
 		}
 		
@@ -184,8 +188,43 @@ class Application_Service_HistoryService
 			" LEFT JOIN {$filter} USING(history_id)";
 		}
 		
-		Logging::info($mainSqlQuery);
+		//------------------------------------------------------------------------
+		//Using Datatables parameters to sort the data.
 		
+		$numOrderColumns = $opts["iSortingCols"];
+		$orderBys = array();
+		
+		for ($i = 0; $i < $numOrderColumns; $i++) {
+			
+			$colNum = $opts["iSortCol_".$i];
+			$key = $opts["mDataProp_".$colNum];
+			$sortDir = $opts["sSortDir_".$i];
+			
+			if (in_array($key, $required)) {
+
+				$orderBys[] = "history_range.{$key} {$sortDir}";
+			}
+			else if (in_array($key, $filemd_keys)) {
+			
+				$orderBys[] = "file_info.{$key} {$sortDir}";
+			}
+			else if (in_array($key, $general_keys)) {
+
+				$orderBys[] = "{$key}_filter.{$key} {$sortDir}";
+			}
+			else {
+				throw new Exception("Error: $key is not part of the template.");
+			}
+		}
+		
+		if ($numOrderColumns > 0) {
+			
+			$orders = join(", ", $orderBys);
+			
+			$mainSqlQuery.=
+			" ORDER BY {$orders}";
+		}
+			
 		$stmt = $this->con->prepare($mainSqlQuery);
 		foreach ($paramMap as $param => $v) {
 			$stmt->bindValue($param, $v);
@@ -202,8 +241,6 @@ class Application_Service_HistoryService
 		}
 		
 		$totalRows = count($rows);
-		Logging::info($totalRows);
-		Logging::info($rows);
 		
 		//-----------------------------------------------------------------------
 		//processing results.
