@@ -80,16 +80,12 @@ var AIRTIME = (function(AIRTIME) {
     		addField(name, type, false, false);
     	});
     	
-    	function createUpdateTemplate(template_id, isDefault) {
-    		var createUrl = baseUrl+"Playouthistory/create-template/format/json";
-			var updateUrl = baseUrl+"Playouthistory/update-template/format/json";
-			var url;
+    	function updateTemplate(template_id, isDefault) {
+			var url = baseUrl+"Playouthistory/update-template/format/json";
 			var data = {};
 			var $lis, $li;
 			var i, len;
 			var templateName;
-			
-			url = (isNaN(parseInt(template_id, 10))) ? createUrl : updateUrl;
 			
 			templateName = $("#template_name").val();
 			$lis = $templateList.children();
@@ -108,24 +104,16 @@ var AIRTIME = (function(AIRTIME) {
     	$templateDiv.on("click", "#template_item_save", function(){
     		var template_id = $(this).data("template");
     		
-    		createUpdateTemplate(template_id, false);
+    		updateTemplate(template_id, false);
     	});
     	
     	$templateDiv.on("click", "#template_set_default", function(){
-    		var template_id = $(this).data("template");
-    		
-    		if (isNaN(parseInt(template_id, 10))) {
-    			
-    			createUpdateTemplate(template_id, true);
-    		}
-    		else {
-    			
-    			var url = baseUrl+"Playouthistory/set-item-template-default/format/json";
-    				
-    			$.post(url, {id: template_id}, function(json) {
-    				var x;
-    			});
-    		}
+    		var template_id = $(this).data("template");	
+			var url = baseUrl+"Playouthistory/set-template-default/format/json";
+				
+			$.post(url, {id: template_id}, function(json) {
+				var x;
+			});
     	});
     	
     };

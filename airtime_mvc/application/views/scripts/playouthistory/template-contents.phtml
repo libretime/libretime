@@ -31,15 +31,17 @@
   <?php endforeach; ?>
 </ul>
 
-<div class="template_item_add">
-  <div>Add New Field</div>
-  <div>
-    <input type="text">
-    <select>
-      <?php foreach ($this->fields as $field): ?>
-      <option value="<?php echo $field; ?>"><?php echo $field; ?></option>
-      <?php endforeach; ?>
-    </select>
-    <button>Add</button>
-  </div>
+  <?php if ($this->template_type !== Application_Service_HistoryService::TEMPLATE_TYPE_FILE): ?>
+  <div class="template_item_add">
+    <div>Add New Field</div>
+    <div>
+      <input type="text">
+      <select>
+        <?php foreach ($this->fields as $field): ?>
+        <option value="<?php echo $field; ?>"><?php echo $field; ?></option>
+        <?php endforeach; ?>
+      </select>
+      <button>Add</button>
+    </div>
+  <?php endif; ?>
 </div>

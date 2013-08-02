@@ -177,18 +177,18 @@ class Application_Model_Datatables
 
         try {
 
-            Logging::info($sqlTotalRows);
+            //Logging::info($sqlTotalRows);
 
             $r = $con->query($sqlTotalRows);
             $totalRows = $r->fetchColumn(0);
 
             if (isset($sqlTotalDisplayRows)) {
-                Logging::info("sql is set");
-                Logging::info($sqlTotalDisplayRows);
+                //Logging::info("sql is set");
+                //Logging::info($sqlTotalDisplayRows);
                 $totalDisplayRows = Application_Common_Database::prepareAndExecute($sqlTotalDisplayRows, $params, 'column');
             }
             else {
-                Logging::info("sql is not set.");
+                //Logging::info("sql is not set.");
                 $totalDisplayRows = $totalRows;
             }
 

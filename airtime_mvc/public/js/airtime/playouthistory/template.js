@@ -9,8 +9,8 @@ var AIRTIME = (function(AIRTIME) {
     
     function createItemLi(id, name, configured) {
     	
-    	var editUrl = baseUrl+"Playouthistory/configure-item-template/id/"+id;
-    	var defaultUrl = baseUrl+"Playouthistory/set-item-template-default/format/json/id/"+id;
+    	var editUrl = baseUrl+"Playouthistory/configure-template/id/"+id;
+    	var defaultUrl = baseUrl+"Playouthistory/set-template-default/format/json/id/"+id;
     	var removeUrl = baseUrl+"Playouthistory/delete-template/format/json/id/"+id;
     	
     	var itemConfigured = 
@@ -70,10 +70,11 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
-    	$historyTemplate.on("click", "#new_item_template", function() {
+    	function createTemplate(type) {
+    		
     		var createUrl = baseUrl+"Playouthistory/create-template";
     		
-    		$.post(createUrl, {format: "json"}, function(json) {
+    		$.post(createUrl, {format: "json", type: type}, function(json) {
     			
     			if (json.error !== undefined) {
     				alert(json.error);
@@ -82,8 +83,15 @@ var AIRTIME = (function(AIRTIME) {
     			
     			window.location.href = json.url;
     		});
+    	}
+    	
+    	$historyTemplate.on("click", "#new_item_template", function() {
+    		createTemplate("item");
     	});
     	
+    	$historyTemplate.on("click", "#new_file_template", function() {
+    		createTemplate("file");
+    	});
     };
     
 return AIRTIME;

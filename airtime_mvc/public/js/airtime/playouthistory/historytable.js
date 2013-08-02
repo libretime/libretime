@@ -104,16 +104,11 @@ var AIRTIME = (function(AIRTIME) {
         	nRow.setAttribute('url-edit', editUrl);
         };
         
+        var columns = JSON.parse(localStorage.getItem('datatables-historyfile-aoColumns'));
+        
         oTable = $historyTableDiv.dataTable( {
             
-            "aoColumns": [
-               {"sTitle": $.i18n._("Title"), "mDataProp": "title", "sClass": "his_title"}, /* Title */
-               {"sTitle": $.i18n._("Creator"), "mDataProp": "artist", "sClass": "his_artist"}, /* Creator */
-               {"sTitle": $.i18n._("Played"), "mDataProp": "played", "sClass": "his_artist"}, /* times played */
-               {"sTitle": $.i18n._("Length"), "mDataProp": "length", "sClass": "his_length library_length"}, /* Length */
-               {"sTitle": $.i18n._("Composer"), "mDataProp": "composer", "sClass": "his_composer"}, /* Composer */
-               {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "sClass": "his_copyright"} /* Copyright */
-            ],
+            "aoColumns": columns,
                           
             "bProcessing": true,
             "bServerSide": true,

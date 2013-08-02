@@ -8,36 +8,17 @@ class Application_Service_HistoryService
 	private $timezone;
 	
 	const TEMPLATE_TYPE_ITEM = "item";
-	const TEMPLATE_TYPE_AGGREGATE = "aggregate";
-
-	private $mDataPropMap = array (
-		"artist" => "artist_name",
-		"title" => "track_title",
-		"played" => "played",
-		"length" => "length",
-		"composer" => "composer",
-		"copyright" => "copyright",
-	    "starts" => "starts",
-	    "ends" => "ends"
-	);
+	const TEMPLATE_TYPE_FILE = "file";
 
 	public function __construct()
 	{
 		$this->con = isset($con) ? $con : Propel::getConnection(CcPlayoutHistoryPeer::DATABASE_NAME);
 		$this->timezone = Application_Model_Preference::GetTimezone();
 	}
-
-	/*
-	 * map front end mDataProp labels to proper column names for searching etc.
-	*/
-	private function translateColumns($opts)
+	
+	public function getSupportedTemplateTypes()
 	{
-		for ($i = 0; $i < $opts["iColumns"]; $i++) {
-
-			if ($opts["bSearchable_{$i}"] === "true") {
-				$opts["mDataProp_{$i}"] = $this->mDataPropMap[$opts["mDataProp_{$i}"]];
-			}
-		}
+		return array(self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE);
 	}
 	
 	//opts is from datatables.
@@ -293,18 +274,16 @@ class Application_Service_HistoryService
 		);
 	}
 
-	public function getAggregateView($startDT, $endDT, $opts)
+	public function getFileSummaryData($startDT, $endDT, $opts)
 	{
-		$this->translateColumns($opts);
-
 		$select = array (
-			"file.track_title as title",
-			"file.artist_name as artist",
-			"playout.played as played",
+			"file.track_title",
+			"file.artist_name",
+			"playout.played",
 			"playout.file_id",
-			"file.composer as composer",
-			"file.copyright as copyright",
-			"file.length as length"
+			"file.composer",
+			"file.copyright",
+			"file.length"
 		);
 
 		$start = $startDT->format("Y-m-d H:i:s");
@@ -660,6 +639,13 @@ class Application_Service_HistoryService
 
 	    return $fields;
 	}
+	
+	public function mandatoryFileFields() {
+	
+		$fields = array("played", MDATA_KEY_TITLE, MDATA_KEY_CREATOR);
+	
+		return $fields;
+	}
 
 	private function defaultItemTemplate() {
 
@@ -671,16 +657,46 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		$template["name"] = "Template".date("Y-m-d H:i:s");
+		$template["name"] = "Log Sheet ".date("Y-m-d H:i:s")." Template";
 		$template["fields"] = $fields;
 		
 		return $template;
 	}
 	
-	private function loadTemplate($id) {
+	/*
+	 * Default File Summary Template. Taken from The Czech radio requirements (customer requested this in the past).
+	 */
+	private function defaultFileTemplate() {
+	
+		$template = array();
+		$fields = array();
+	
+		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => "played", "type" => TEMPLATE_INT, "isFileMd" => false);
+		$fields[] = array("name" => MDATA_KEY_DURATION, "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_COMPOSER, "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_COPYRIGHT, "type" => TEMPLATE_STRING, "isFileMd" => true);
+	
+		$template["name"] = "File Summary ".date("Y-m-d H:i:s")." Template";
+		$template["fields"] = $fields;
+	
+		return $template;
+	}
+	
+	public function loadTemplate($id) {
 
 		try {
+			
+			if (!is_numeric($id)) {
+				throw new Exception("Error: $id is not numeric.");
+			}
+			
 			$template = CcPlayoutHistoryTemplateQuery::create()->findPk($id, $this->con);
+			
+			if (empty($template)) {
+				throw new Exception("Error: Template $id does not exist.");
+			}
 			
 			$c = new Criteria();
 			$c->addAscendingOrderByColumn(CcPlayoutHistoryTemplateFieldPeer::POSITION);
@@ -700,6 +716,7 @@ class Application_Service_HistoryService
 			$data = array();
 			$data["name"] = $template->getDbName();
 			$data["fields"] = $fields;
+			$data["type"] = $template->getDbType();
 			
 			return $data;
 		}
@@ -722,15 +739,21 @@ class Application_Service_HistoryService
 		return $template;
 	}
 	
-	public function getListItemTemplates() {
+	public function getTemplates($type) {
 		
 		$list = array();
 		
 		try {
 			
-			$templates = CcPlayoutHistoryTemplateQuery::create()
-				->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)
-				->findByDbType(self::TEMPLATE_TYPE_ITEM);
+			$query =  CcPlayoutHistoryTemplateQuery::create()
+				->setFormatter(ModelCriteria::FORMAT_ON_DEMAND);
+			
+			if (isset($type)) {
+				$templates = $query->findByDbType($type);
+			}
+			else {
+				$templates = $query->find();
+			}
 			
 			foreach ($templates as $template) {
 				$list[$template->getDbId()] = $template->getDbName();
@@ -743,25 +766,48 @@ class Application_Service_HistoryService
 		}
 	}
 	
-	public function getDatatablesPlayedItemColumns() {
+	public function getListItemTemplates() {
+		return $this->getTemplates(self::TEMPLATE_TYPE_ITEM);
+	}
+	
+	public function getFileTemplates() {
+		return $this->getTemplates(self::TEMPLATE_TYPE_FILE);
+	}
+	
+	private function datatablesColumns($template) {
+		
+		$columns = array();
+			
+		foreach ($template["fields"] as $index=>$field) {
+		
+			$key = $field["name"];
+		
+			$columns[] = array(
+				"sTitle"=> $key,
+				"mDataProp"=> $key,
+				"sClass"=> "his_{$key}"
+			);
+		}
+			
+		return $columns;
+	}
+	
+	public function getDatatablesLogSheetColumns() {
 		
 		try {
-			$template = $this->getConfiguredItemTemplate();
-			
-			$columns = array();
-			
-			foreach ($template["fields"] as $index=>$field) {
-				
-				$key = $field["name"];
-				
-				$columns[] = array(
-					"sTitle"=> $key,
-					"mDataProp"=> $key,
-					"sClass"=> "his_{$key}"
-				);
-			}
-			
-			return $columns;
+			$template = $this->getConfiguredItemTemplate();	
+			return $this->datatablesColumns($template);
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function getDatatablesFileSummaryColumns() {
+	
+		try {
+			$template = $this->getConfiguredFileTemplate();
+			return $this->datatablesColumns($template);
 		}
 		catch (Exception $e) {
 			throw $e;
@@ -769,9 +815,17 @@ class Application_Service_HistoryService
 	}
 	
 	public function getConfiguredItemTemplate() {
+		
 		try {
 			$id = Application_Model_Preference::GetHistoryItemTemplate();
-			return $this->getItemTemplate($id);
+			
+			if (is_numeric($id)) {
+				$template = $this->loadTemplate($id);
+			}
+			else {
+				$template = $this->defaultItemTemplate();
+			}
+			return $template;
 		}
 		catch (Exception $e) {
 			throw $e;
@@ -787,25 +841,81 @@ class Application_Service_HistoryService
 		}
 	}
 	
-	public function getConfiguredTemplateIds() {
-		
+	public function getConfiguredFileTemplate() {
+	
 		try {
-			$id = Application_Model_Preference::GetHistoryItemTemplate();
-			
-			return array($id);
+			$id = Application_Model_Preference::GetHistoryFileTemplate();
+				
+			if (is_numeric($id)) {
+				$template = $this->loadTemplate($id);
+			}
+			else {
+				$template = $this->defaultFileTemplate();
+			}
+			return $template;
 		}
 		catch (Exception $e) {
 			throw $e;
 		}
 	}
 	
-	public function createItemTemplate($config) {
+	public function setConfiguredFileTemplate($id) {
+		try {
+			Application_Model_Preference::SetHistoryFileTemplate($id);
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function setConfiguredTemplate($id) {
+		try {
+			
+			$template = $this->loadTemplate($id);
+			$type = $template["type"];
+			
+			$setTemplate = "setConfigured".ucfirst($type)."Template";
+			
+			$this->$setTemplate($id);
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function getConfiguredTemplateIds() {
+		
+		try {
+			$id = Application_Model_Preference::GetHistoryItemTemplate();
+			$id2 = Application_Model_Preference::GetHistoryFileTemplate();
+			
+			$configured = array();
+			
+			if (is_numeric($id)) {
+				$configured[] = $id;
+			}
+			
+			if (is_numeric($id2)) {
+				$configured[] = $id2;
+			}
+			
+			return $configured;
+		}
+		catch (Exception $e) {
+			throw $e;
+		}
+	}
+	
+	public function createTemplate($config) {
 		
 		$this->con->beginTransaction();
 		
 		try {
 			
-			$default = $this->defaultItemTemplate();
+			$type = $config["type"];
+			
+			$method = "default".ucfirst($type)."Template";
+			$default = $this->$method();
 			
 			$name = isset($config["name"]) ? $config["name"] : $default["name"];
 			$fields = isset($config["fields"]) ? $config["fields"] : $default["fields"];
@@ -814,7 +924,7 @@ class Application_Service_HistoryService
 		
 			$template = new CcPlayoutHistoryTemplate();
 			$template->setDbName($name);
-			$template->setDbType(self::TEMPLATE_TYPE_ITEM);
+			$template->setDbType($type);
 
 			foreach ($fields as $index=>$field) {
 				
