@@ -188,6 +188,22 @@ class Application_Service_HistoryService
 			" LEFT JOIN {$filter} USING(history_id)";
 		}
 		
+		//need to count the total rows to tell Datatables.
+		$stmt = $this->con->prepare($mainSqlQuery);
+		foreach ($paramMap as $param => $v) {
+			$stmt->bindValue($param, $v);
+		}
+		
+		if ($stmt->execute()) {
+			$totalRows = $stmt->rowCount();
+			Logging::info("Total Rows {$totalRows}");
+		}
+		else {
+			$msg = implode(',', $stmt->errorInfo());
+			Logging::info($msg);
+			throw new Exception("Error: $msg");
+		}
+		
 		//------------------------------------------------------------------------
 		//Using Datatables parameters to sort the data.
 		
@@ -224,6 +240,16 @@ class Application_Service_HistoryService
 			$mainSqlQuery.=
 			" ORDER BY {$orders}";
 		}
+		
+		$displayLength = intval($opts["iDisplayLength"]);
+		//limit the results returned.
+		if ($displayLength !== -1) {
+			$mainSqlQuery.=
+			" OFFSET :offset LIMIT :limit";
+			
+			$paramMap["offset"] = $opts["iDisplayStart"];
+			$paramMap["limit"] = $displayLength;
+		}
 			
 		$stmt = $this->con->prepare($mainSqlQuery);
 		foreach ($paramMap as $param => $v) {
@@ -239,8 +265,6 @@ class Application_Service_HistoryService
 			Logging::info($msg);
 			throw new Exception("Error: $msg");
 		}
-		
-		$totalRows = count($rows);
 		
 		//-----------------------------------------------------------------------
 		//processing results.
