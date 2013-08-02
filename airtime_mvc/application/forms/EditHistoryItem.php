@@ -158,7 +158,7 @@ class Application_Form_EditHistoryItem extends Zend_Form
     		'class'    => 'btn his_item_save',
     		'label'    => _('Save'),
     		'decorators' => array(
-    				'ViewHelper'
+    			'ViewHelper'
     		)
 	    ));
 
@@ -168,7 +168,7 @@ class Application_Form_EditHistoryItem extends Zend_Form
     		'class'    => 'btn his_item_cancel',
     		'label'    => _('Cancel'),
     		'decorators' => array(
-    				'ViewHelper'
+    			'ViewHelper'
     		)
 	    ));
 	}
@@ -236,6 +236,10 @@ class Application_Form_EditHistoryItem extends Zend_Form
 
 			$el->setDecorators(array('ViewHelper'));
 			$templateSubForm->addElement($el);
-		}
+		}	
+	}
+	
+	public function fillFields() {
+			
 	}
 }

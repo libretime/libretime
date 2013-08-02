@@ -81,47 +81,59 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     public function aggregateHistoryFeedAction()
     {
-        $request = $this->getRequest();
-        $current_time = time();
-
-        $params = $request->getParams();
-
-        $starts_epoch = $request->getParam("start", $current_time - (60*60*24));
-        $ends_epoch = $request->getParam("end", $current_time);
-
-        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
-        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
-
-        $historyService = new Application_Service_HistoryService();
-        $r = $historyService->getFileSummaryData($startsDT, $endsDT, $params);
-
-        $this->view->sEcho = $r["sEcho"];
-        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
-        $this->view->iTotalRecords = $r["iTotalRecords"];
-        $this->view->history = $r["history"];
+    	try {
+	        $request = $this->getRequest();
+	        $current_time = time();
+	
+	        $params = $request->getParams();
+	
+	        $starts_epoch = $request->getParam("start", $current_time - (60*60*24));
+	        $ends_epoch = $request->getParam("end", $current_time);
+	
+	        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+	        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+	
+	        $historyService = new Application_Service_HistoryService();
+	        $r = $historyService->getFileSummaryData($startsDT, $endsDT, $params);
+	
+	        $this->view->sEcho = $r["sEcho"];
+	        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
+	        $this->view->iTotalRecords = $r["iTotalRecords"];
+	        $this->view->history = $r["history"];
+        }
+        catch (Exception $e) {
+        	Logging::info($e);
+        	Logging::info($e->getMessage());
+        }
     }
 
     public function itemHistoryFeedAction()
     {
-        $request = $this->getRequest();
-        $current_time = time();
-
-        $params = $request->getParams();
-
-        $starts_epoch = $request->getParam("start", $current_time - (60*60*24));
-        $ends_epoch = $request->getParam("end", $current_time);
-
-        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
-        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
-
-        $historyService = new Application_Service_HistoryService();
-        //$r = $historyService->getListView($startsDT, $endsDT, $params);
-        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params);
-
-        $this->view->sEcho = $r["sEcho"];
-        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
-        $this->view->iTotalRecords = $r["iTotalRecords"];
-        $this->view->history = $r["history"];
+    	try {
+	        $request = $this->getRequest();
+	        $current_time = time();
+	
+	        $params = $request->getParams();
+	
+	        $starts_epoch = $request->getParam("start", $current_time - (60*60*24));
+	        $ends_epoch = $request->getParam("end", $current_time);
+	
+	        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+	        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+	
+	        $historyService = new Application_Service_HistoryService();
+	        //$r = $historyService->getListView($startsDT, $endsDT, $params);
+	        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params);
+	
+	        $this->view->sEcho = $r["sEcho"];
+	        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
+	        $this->view->iTotalRecords = $r["iTotalRecords"];
+	        $this->view->history = $r["history"];
+    	}
+    	catch (Exception $e) {
+    		Logging::info($e);
+    		Logging::info($e->getMessage());
+    	}
     }
 
     public function editAggregateItemAction()
@@ -155,10 +167,10 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     public function editListItemAction()
     {
-        $history_id = $this->_getParam('id', null);
+        $id = $this->_getParam('id', null);
 
         $historyService = new Application_Service_HistoryService();
-        $form = $historyService->makeHistoryItemForm($history_id);
+        $form = $historyService->makeHistoryItemForm($id, true);
 
         $this->view->form = $form;
         $this->view->dialog = $this->view->render('playouthistory/dialog.phtml');

@@ -178,11 +178,9 @@ class Application_Service_HistoryService
 		
 		if ($stmt->execute()) {
 			$totalRows = $stmt->rowCount();
-			Logging::info("Total Rows {$totalRows}");
 		}
 		else {
 			$msg = implode(',', $stmt->errorInfo());
-			Logging::info($msg);
 			throw new Exception("Error: $msg");
 		}
 		
@@ -247,7 +245,6 @@ class Application_Service_HistoryService
 		}
 		else {
 			$msg = implode(',', $stmt->errorInfo());
-			Logging::info($msg);
 			throw new Exception("Error: $msg");
 		}
 		
@@ -332,11 +329,9 @@ class Application_Service_HistoryService
 		
 		if ($stmt->execute()) {
 			$totalRows = $stmt->rowCount();
-			Logging::info("Total Rows {$totalRows}");
 		}
 		else {
 			$msg = implode(',', $stmt->errorInfo());
-			Logging::info($msg);
 			throw new Exception("Error: $msg");
 		}
 		
@@ -385,7 +380,6 @@ class Application_Service_HistoryService
 		}
 		else {
 			$msg = implode(',', $stmt->errorInfo());
-			Logging::info($msg);
 			throw new Exception("Error: $msg");
 		}
 		
@@ -450,7 +444,7 @@ class Application_Service_HistoryService
 	}
 
 	/* id is an id in cc_playout_history */
-	public function makeHistoryItemForm($id) {
+	public function makeHistoryItemForm($id, $populate=false) {
 
 		try {
 			$form = new Application_Form_EditHistoryItem();
@@ -458,6 +452,58 @@ class Application_Service_HistoryService
 			$required = $this->mandatoryItemFields();
 			$form->createFromTemplate($template["fields"], $required);
 
+			if ($populate) {
+				$formValues = array();
+				
+				$historyRecord = CcPlayoutHistoryQuery::create()->findPk($id, $this->con);
+				$file = $historyRecord->getCcFiles();
+				
+				if (isset($file)) {
+					$f = Application_Model_StoredFile::createWithFile($file, $this->con);
+					$filemd = $f->getDbColMetadata();
+				}
+				$metadata = array();
+				$mds = $historyRecord->getCcPlayoutHistoryMetaDatas();
+				foreach ($mds as $md) {
+					$metadata[$md->getDbKey()] = $md->getDbValue();
+				}
+				
+				$prefix = Application_Form_EditHistoryItem::ID_PREFIX;
+				$formValues["{$prefix}id"] = $id;
+				
+				foreach($template["fields"] as $index => $field) {
+					
+					$key = $field["name"];
+					
+					if (in_array($key, $required)) {
+						
+						$method = "getDb".ucfirst($key);
+						$value = $historyRecord->$method();
+					}
+					else if (isset($filemd) && $field["isFileMd"]) {
+						
+						$value = $filemd[$key];
+					}
+					else if (isset($metadata[$key])) {
+						$value = $metadata[$key];
+					}
+					
+					//need to convert to the station's local time first.
+					if ($field["type"] == TEMPLATE_DATETIME) {
+						$timezoneUTC = new DateTimeZone("UTC");
+						$timezoneLocal = new DateTimeZone($this->timezone);
+						
+						$dateTime = new DateTime($value, $timezoneUTC);
+						$dateTime->setTimezone($timezoneLocal);
+						$value = $dateTime->format("Y-m-d H:i:s");
+					}
+					
+					$formValues["$prefix{$key}"] = $value;
+				}
+				
+				$form->populate($formValues);
+			}
+			
 			return $form;
 		}
 		catch (Exception $e) {
@@ -491,15 +537,21 @@ class Application_Service_HistoryService
 	    }
 	}
 
-	public function populateTemplateItem($values) {
+	public function populateTemplateItem($values, $id=null) {
 
 		$this->con->beginTransaction();
 
 		try {
 		    $template = $this->getConfiguredItemTemplate();
 		    $prefix = Application_Form_EditHistoryItem::ID_PREFIX;
-		    $historyRecord = new CcPlayoutHistory();
-
+		    
+		    if (isset($id)) {
+		    	$historyRecord = CcPlayoutHistoryQuery::create()->findPk($id, $this->con);
+		    }
+		    else {
+		    	$historyRecord = new CcPlayoutHistory();
+		    }
+		    
 		    $timezoneUTC = new DateTimeZone("UTC");
 		    $timezoneLocal = new DateTimeZone($this->timezone);
 
@@ -548,13 +600,24 @@ class Application_Service_HistoryService
 	    		$f->setDbColMetadata($md);
 	    	}
 
+	    	//Use this array to update existing values.
+	    	$mds = $historyRecord->getCcPlayoutHistoryMetaDatas();
+	    	foreach ($mds as $md) {
+	    		$prevmd[$md->getDbKey()] = $md;
+	    	}
 	    	foreach ($metadata as $key => $val) {
 
-	    		$meta = new CcPlayoutHistoryMetaData();
-    	    	$meta->setDbKey($key);
-    	    	$meta->setDbValue($val);
-
-    	    	$historyRecord->addCcPlayoutHistoryMetaData($meta);
+	    		if (isset($prevmd[$key])) {
+	    			$meta = $prevmd[$key];
+	    			$meta->setDbValue($val);
+	    		}
+	    		else {
+	    			$meta = new CcPlayoutHistoryMetaData();
+	    			$meta->setDbKey($key);
+	    			$meta->setDbValue($val);
+	    			
+	    			$historyRecord->addCcPlayoutHistoryMetaData($meta);
+	    		}	
 	    	}
 
 	    	$historyRecord->save($this->con);
@@ -607,6 +670,8 @@ class Application_Service_HistoryService
 
 	        	Logging::info("edited list item");
 	        	Logging::info($values);
+	        	
+	        	$this->populateTemplateItem($values, $id);
 	        }
 	        else {
 	        	Logging::info("edited list item NOT VALID");
@@ -811,6 +876,7 @@ class Application_Service_HistoryService
 			}
 			
 			$data = array();
+			$data["id"] = $template->getDbId();
 			$data["name"] = $template->getDbName();
 			$data["fields"] = $fields;
 			$data["type"] = $template->getDbType();
