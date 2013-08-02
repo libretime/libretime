@@ -169,6 +169,7 @@ class Application_Service_HistoryService
 			" LEFT JOIN {$filter} USING(history_id)";
 		}
 		
+		//----------------------------------------------------------------------
 		//need to count the total rows to tell Datatables.
 		$stmt = $this->con->prepare($mainSqlQuery);
 		foreach ($paramMap as $param => $v) {
@@ -221,6 +222,9 @@ class Application_Service_HistoryService
 			$mainSqlQuery.=
 			" ORDER BY {$orders}";
 		}
+		
+		//---------------------------------------------------------------
+		//using Datatables parameters to add limits/offsets
 		
 		$displayLength = intval($opts["iDisplayLength"]);
 		//limit the results returned.
@@ -277,35 +281,128 @@ class Application_Service_HistoryService
 	public function getFileSummaryData($startDT, $endDT, $opts)
 	{
 		$select = array (
-			"file.track_title",
-			"file.artist_name",
-			"playout.played",
-			"playout.file_id",
-			"file.composer",
-			"file.copyright",
-			"file.length"
+			"summary.played", 
+			"summary.file_id", 
+			"summary.".MDATA_KEY_TITLE,
+			"summary.".MDATA_KEY_CREATOR
 		);
-
+		
+		$mainSqlQuery = "";
+		$paramMap = array();
 		$start = $startDT->format("Y-m-d H:i:s");
 		$end = $endDT->format("Y-m-d H:i:s");
+		
+		$paramMap["starts"] = $start;
+		$paramMap["ends"] = $end;
+		
+		$template = $this->getConfiguredFileTemplate();
+		$fields = $template["fields"];
+		$required = $this->mandatoryFileFields();
 
-		$historyTable = "(
-			select count(history.file_id) as played, history.file_id as file_id
-			from cc_playout_history as history
-			where history.starts >= '{$start}' and history.starts < '{$end}'
-			and history.file_id is not NULL
-			group by history.file_id
+		foreach ($fields as $index=>$field) {
+			
+			$key = $field["name"];
+			
+			if (in_array($field["name"], $required)) {
+				continue;
+			}
+
+			$select[] = "summary.{$key}";
+		}
+
+		$fileSummaryTable = "((
+			SELECT COUNT(history.file_id) as played, history.file_id as file_id
+			FROM cc_playout_history AS history
+			WHERE history.starts >= :starts AND history.starts < :ends
+			AND history.file_id IS NOT NULL
+			GROUP BY history.file_id
 		) AS playout
-		left join cc_files as file on (file.id = playout.file_id)";
+		LEFT JOIN cc_files AS file ON (file.id = playout.file_id)) AS summary";
 
-		$results = Application_Model_Datatables::findEntries($this->con, $select, $historyTable, $opts, "history");
-
-		foreach ($results["history"] as &$row) {
+		$mainSqlQuery.=
+		"SELECT ".join(", ", $select).
+		" FROM {$fileSummaryTable}";
+		
+		//-------------------------------------------------------------------------
+		//need to count the total rows to tell Datatables.
+		$stmt = $this->con->prepare($mainSqlQuery);
+		foreach ($paramMap as $param => $v) {
+			$stmt->bindValue($param, $v);
+		}
+		
+		if ($stmt->execute()) {
+			$totalRows = $stmt->rowCount();
+			Logging::info("Total Rows {$totalRows}");
+		}
+		else {
+			$msg = implode(',', $stmt->errorInfo());
+			Logging::info($msg);
+			throw new Exception("Error: $msg");
+		}
+		
+		//------------------------------------------------------------------------
+		//Using Datatables parameters to sort the data.
+		
+		$numOrderColumns = $opts["iSortingCols"];
+		$orderBys = array();
+		
+		for ($i = 0; $i < $numOrderColumns; $i++) {
+				
+			$colNum = $opts["iSortCol_".$i];
+			$key = $opts["mDataProp_".$colNum];
+			$sortDir = $opts["sSortDir_".$i];
+				
+			$orderBys[] = "summary.{$key} {$sortDir}";
+		}
+		
+		if ($numOrderColumns > 0) {
+				
+			$orders = join(", ", $orderBys);
+				
+			$mainSqlQuery.=
+			" ORDER BY {$orders}";
+		}
+		
+		//------------------------------------------------------------
+		//using datatables params to add limits/offsets
+		$displayLength = intval($opts["iDisplayLength"]);
+		if ($displayLength !== -1) {
+			$mainSqlQuery.=
+			" OFFSET :offset LIMIT :limit";
+				
+			$paramMap["offset"] = $opts["iDisplayStart"];
+			$paramMap["limit"] = $displayLength;
+		}
+			
+		$stmt = $this->con->prepare($mainSqlQuery);
+		foreach ($paramMap as $param => $v) {
+			$stmt->bindValue($param, $v);
+		}
+		
+		$rows = array();
+		if ($stmt->execute()) {
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		}
+		else {
+			$msg = implode(',', $stmt->errorInfo());
+			Logging::info($msg);
+			throw new Exception("Error: $msg");
+		}
+		
+		//-----------------------------------------------------------------
+		//processing the results
+		foreach ($rows as &$row) {
 			$formatter = new LengthFormatter($row['length']);
 			$row['length'] = $formatter->format();
 		}
 
-		return $results;
+		return array(
+			"sEcho" => intval($opts["sEcho"]),
+			//"iTotalDisplayRecords" => intval($totalDisplayRows),
+			"iTotalDisplayRecords" => intval($totalRows),
+			"iTotalRecords" => intval($totalRows),
+			"history" => $rows
+		);
 	}
 
 	public function insertPlayedItem($schedId) {

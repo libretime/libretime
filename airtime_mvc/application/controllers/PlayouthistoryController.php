@@ -257,6 +257,9 @@ class PlayouthistoryController extends Zend_Controller_Action
     {
     	$templateType = $this->_getParam('type', null);
     	
+    	$request = $this->getRequest();
+    	$params = $request->getPost();
+    	
     	try {
     		$historyService = new Application_Service_HistoryService();
     		$supportedTypes = $historyService->getSupportedTemplateTypes();
