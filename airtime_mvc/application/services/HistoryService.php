@@ -635,6 +635,7 @@ class Application_Service_HistoryService
 		try {
 			$form = $this->makeHistoryItemForm(null);
 			$history_id = $form->getElement("his_item_id");
+			$json = array();
 
 	        if ($form->isValid($data)) {
 	        	$history_id->setIgnore(true);
@@ -647,8 +648,14 @@ class Application_Service_HistoryService
 	        }
 	        else {
 	        	Logging::info("created list item NOT VALID");
-	        	Logging::info($form->getMessages());
+	        	
+	        	$msgs = $form->getMessages();
+	        	Logging::info($msgs);
+	        	
+	        	$json["error"] = $msgs;
 	        }
+	        
+	        return $json;
 		}
 		catch (Exception $e) {
 			throw $e;
@@ -664,6 +671,9 @@ class Application_Service_HistoryService
 			$history_id = $form->getElement("his_item_id");
 			$history_id->setRequired(true);
 
+			Logging::info($data);
+			$json = array();
+			
 			if ($form->isValid($data)) {
 			    $history_id->setIgnore(true);
 	        	$values = $form->getValues();
@@ -675,12 +685,17 @@ class Application_Service_HistoryService
 	        }
 	        else {
 	        	Logging::info("edited list item NOT VALID");
+	        	
+	        	$msgs = $form->getMessages();
+	        	Logging::info($msgs);
+	        	
+	        	$json["error"] = $msgs;
 	        }
-
-	        Logging::info($form->getMessages());
+	        
+	        return $json;
 		}
 		catch (Exception $e) {
-			Logging::info($e);
+			throw $e;
 		}
 	}
 

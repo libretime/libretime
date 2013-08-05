@@ -13,6 +13,7 @@ class Application_Form_EditHistoryItem extends Zend_Form
 
 	const ITEM_TYPE = "type";
 	const ITEM_CLASS = "class";
+	const ITEM_OPTIONS = "options";
 	const ITEM_ID_SUFFIX = "name";
 
 	const TEXT_INPUT_CLASS = "input_text";
@@ -80,8 +81,13 @@ class Application_Form_EditHistoryItem extends Zend_Form
 		),
 		TEMPLATE_BOOLEAN => array(
 			"class" => "Zend_Form_Element_Checkbox",
-			"filters" => array(
-				"Boolean"
+			"validators" => array(
+				array(
+					"class" => "Zend_Validate_InArray",
+					"options" => array(
+						"haystack" => array(0,1)
+					)
+				)
 			)
 		),
 		TEMPLATE_INT => array(
@@ -93,9 +99,6 @@ class Application_Form_EditHistoryItem extends Zend_Form
 			),
 			"attrs" => array(
 				"class" => self::TEXT_INPUT_CLASS
-			),
-			"filters" => array(
-				"Int"
 			)
 		),
 		TEMPLATE_FLOAT => array(
@@ -198,7 +201,7 @@ class Application_Form_EditHistoryItem extends Zend_Form
 
 			if (isset($formElType["attrs"])) {
 
-				$attrs = $formElType["filters"];
+				$attrs = $formElType["attrs"];
 
 				foreach ($attrs as $key => $value) {
 					$el->setAttrib($key, $value);
@@ -219,7 +222,8 @@ class Application_Form_EditHistoryItem extends Zend_Form
 				$validators = $formElType["validators"];
 
 				foreach ($validators as $index => $arr) {
-					$validator = new $arr[self::ITEM_CLASS]();
+					$options = isset($arr[self::ITEM_OPTIONS]) ? $arr[self::ITEM_OPTIONS] : null;
+					$validator = new $arr[self::ITEM_CLASS]($options);
 
 					//extra validator info
 					if (isset($arr["params"])) {

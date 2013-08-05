@@ -157,7 +157,9 @@ class PlayouthistoryController extends Zend_Controller_Action
 	        Logging::info($params);
 	
 	        $historyService = new Application_Service_HistoryService();
-	        $historyService->createPlayedItem($params);
+	        $json = $historyService->createPlayedItem($params);
+	        
+	        $this->_helper->json->sendJson($json);
     	}
         catch (Exception $e) {
         	Logging::info($e);
@@ -168,9 +170,12 @@ class PlayouthistoryController extends Zend_Controller_Action
     public function editListItemAction()
     {
         $id = $this->_getParam('id', null);
+        Logging::info("Id is: $id");
+        
+        $populate = isset($id) ? true : false;
 
         $historyService = new Application_Service_HistoryService();
-        $form = $historyService->makeHistoryItemForm($id, true);
+        $form = $historyService->makeHistoryItemForm($id, $populate);
 
         $this->view->form = $form;
         $this->view->dialog = $this->view->render('playouthistory/dialog.phtml');
@@ -188,14 +193,20 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     public function updateListItemAction()
     {
-    	$request = $this->getRequest();
-    	$params = $request->getPost();
-    	Logging::info($params);
-
-    	$historyService = new Application_Service_HistoryService();
-    	$json = $historyService->editPlayedItem($params);
-
-    	$this->view->data = $json;
+    	try {
+	    	$request = $this->getRequest();
+	    	$params = $request->getPost();
+	    	Logging::info($params);
+	
+	    	$historyService = new Application_Service_HistoryService();
+	    	$json = $historyService->editPlayedItem($params);
+	
+	    	$this->_helper->json->sendJson($json);
+    	}
+    	catch (Exception $e) {
+    		Logging::info($e);
+    		Logging::info($e->getMessage());
+    	}
     }
 
     public function updateAggregateItemAction()
@@ -207,7 +218,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$historyService = new Application_Service_HistoryService();
     	$json = $historyService->editPlayedFile($params);
 
-    	$this->view->data = $json;
+    	$this->_helper->json->sendJson($json);
     }
 
     public function templateAction()

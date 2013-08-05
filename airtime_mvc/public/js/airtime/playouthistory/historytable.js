@@ -379,8 +379,8 @@ var AIRTIME = (function(AIRTIME) {
     		$.post(url, data, function(json) {
     			
     			//TODO put errors on form.
-    			if (json.data !== "true") {
-    				//makeHistoryDialog(json.dialog);
+    			if (json.error !== undefined) {
+    				
     			}
     			else {
     				removeHistoryDialog();
