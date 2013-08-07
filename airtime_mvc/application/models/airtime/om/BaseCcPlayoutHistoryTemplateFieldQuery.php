@@ -9,6 +9,7 @@
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbTemplateId($order = Criteria::ASC) Order by the template_id column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbName($order = Criteria::ASC) Order by the name column
+ * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbLabel($order = Criteria::ASC) Order by the label column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbType($order = Criteria::ASC) Order by the type column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbIsFileMD($order = Criteria::ASC) Order by the is_file_md column
  * @method     CcPlayoutHistoryTemplateFieldQuery orderByDbPosition($order = Criteria::ASC) Order by the position column
@@ -16,6 +17,7 @@
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbId() Group by the id column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbTemplateId() Group by the template_id column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbName() Group by the name column
+ * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbLabel() Group by the label column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbType() Group by the type column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbIsFileMD() Group by the is_file_md column
  * @method     CcPlayoutHistoryTemplateFieldQuery groupByDbPosition() Group by the position column
@@ -34,6 +36,7 @@
  * @method     CcPlayoutHistoryTemplateField findOneByDbId(int $id) Return the first CcPlayoutHistoryTemplateField filtered by the id column
  * @method     CcPlayoutHistoryTemplateField findOneByDbTemplateId(int $template_id) Return the first CcPlayoutHistoryTemplateField filtered by the template_id column
  * @method     CcPlayoutHistoryTemplateField findOneByDbName(string $name) Return the first CcPlayoutHistoryTemplateField filtered by the name column
+ * @method     CcPlayoutHistoryTemplateField findOneByDbLabel(string $label) Return the first CcPlayoutHistoryTemplateField filtered by the label column
  * @method     CcPlayoutHistoryTemplateField findOneByDbType(string $type) Return the first CcPlayoutHistoryTemplateField filtered by the type column
  * @method     CcPlayoutHistoryTemplateField findOneByDbIsFileMD(boolean $is_file_md) Return the first CcPlayoutHistoryTemplateField filtered by the is_file_md column
  * @method     CcPlayoutHistoryTemplateField findOneByDbPosition(int $position) Return the first CcPlayoutHistoryTemplateField filtered by the position column
@@ -41,6 +44,7 @@
  * @method     array findByDbId(int $id) Return CcPlayoutHistoryTemplateField objects filtered by the id column
  * @method     array findByDbTemplateId(int $template_id) Return CcPlayoutHistoryTemplateField objects filtered by the template_id column
  * @method     array findByDbName(string $name) Return CcPlayoutHistoryTemplateField objects filtered by the name column
+ * @method     array findByDbLabel(string $label) Return CcPlayoutHistoryTemplateField objects filtered by the label column
  * @method     array findByDbType(string $type) Return CcPlayoutHistoryTemplateField objects filtered by the type column
  * @method     array findByDbIsFileMD(boolean $is_file_md) Return CcPlayoutHistoryTemplateField objects filtered by the is_file_md column
  * @method     array findByDbPosition(int $position) Return CcPlayoutHistoryTemplateField objects filtered by the position column
@@ -221,6 +225,28 @@ abstract class BaseCcPlayoutHistoryTemplateFieldQuery extends ModelCriteria
 			}
 		}
 		return $this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::NAME, $dbName, $comparison);
+	}
+
+	/**
+	 * Filter the query on the label column
+	 * 
+	 * @param     string $dbLabel The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlayoutHistoryTemplateFieldQuery The current query, for fluid interface
+	 */
+	public function filterByDbLabel($dbLabel = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbLabel)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbLabel)) {
+				$dbLabel = str_replace('*', '%', $dbLabel);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcPlayoutHistoryTemplateFieldPeer::LABEL, $dbLabel, $comparison);
 	}
 
 	/**

@@ -9,34 +9,43 @@ var AIRTIME = (function(AIRTIME) {
     }
     mod = AIRTIME.itemTemplate;
     
-    function createTemplateLi(name, type, filemd, required) {
+    //config: name, type, filemd, required
+    function createTemplateLi(config) {
     	
     	var templateRequired = 
-    		"<li id='<%= id %>' data-name='<%= name %>' data-type='<%= type %>' data-filemd='<%= filemd %>'>" +
-    			"<span><%= name %></span>" +
+    		"<li " +
+    		  "data-name='<%= name %>' " +
+    		  "data-type='<%= type %>' " +
+    		  "data-filemd='<%= filemd %>'" +
+    		  "data-label='<%= label %>'" +
+    		 ">" +
+    			"<span><%= label %></span>" +
     			"<span><%= type %></span>" +
     		"</li>";
     	
     	var templateOptional = 
-    		"<li id='<%= id %>' data-name='<%= name %>' data-type='<%= type %>' data-filemd='<%= filemd %>'>" +
-    			"<span><%= name %></span>" +
+    		"<li " +
+    		  "data-name='<%= name %>' " +
+    		  "data-type='<%= type %>' " +
+    		  "data-filemd='<%= filemd %>'" +
+    		  "data-label='<%= label %>'" +
+    		">" +
+    			"<span><%= label %></span>" +
     			"<span><%= type %></span>" +
     			"<span class='template_item_remove'>Remove</span>" +
     		"</li>";
     	
-    	var template = (required) === true ? templateRequired : templateOptional;
-    	
-    	var template = _.template(template);
-    	var count = $templateList.find("li").length;
-    	var id = "field_"+count;
-    	var $li = $(template({id: id, name: name, type: type, filemd: filemd}));
+    	var template = (config.required) === true ? templateRequired : templateOptional;
+    
+    	template = _.template(template);
+    	var $li = $(template(config));
     	
     	return $li;
     }
     
-    function addField(name, type, filemd, required) {
+    function addField(config) {
     	
-    	$templateList.append(createTemplateLi(name, type, filemd, required));
+    	$templateList.append(createTemplateLi(config));
     }
     
     function getFieldData($el) {
@@ -44,8 +53,8 @@ var AIRTIME = (function(AIRTIME) {
     	return {
     		name: $el.data("name"),
     		type: $el.data("type"),
-    		isFileMd: $el.data("filemd"),
-    		id: $el.data("id")
+    		label: $el.data("label"),
+    		isFileMd: $el.data("filemd")
     	};
     	
     }
@@ -59,10 +68,15 @@ var AIRTIME = (function(AIRTIME) {
     	$fileMDList.on("dblclick", "li", function(){
     		
     		var $li = $(this);
-			var name = $li.data("name");
-			var type = $li.data("type");
+			var config = {
+				name: $li.data("name"), 
+				type: $li.data("type"),
+				label: $li.data("label"),
+				filemd: true, 
+				required: false
+    		};
 			
-			$templateList.append(createTemplateLi(name, type, true, false));
+			 addField(config);
     	});
     	
     	$templateList.sortable();
@@ -72,12 +86,22 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	$templateDiv.on("click", ".template_item_add button", function() {
-    		var $div = $(this).parents("div.template_item_add");
+    		var $div = $(this).parents("div.template_item_add"),
+    			label = $div.find("input").val(),
+    			name;
     		
-    		var name = $div.find("input").val();
-    		var type = $div.find("select").val();
+    		name = label.replace(" ", "");
+    		name = name.toLowerCase();
     		
-    		addField(name, type, false, false);
+    		var config = {
+				name: name,
+				label: label,
+				type: $div.find("select").val(), 
+				filemd: false, 
+				required: false
+    		};
+    		
+    		addField(config);
     	});
     	
     	function updateTemplate(template_id, isDefault) {

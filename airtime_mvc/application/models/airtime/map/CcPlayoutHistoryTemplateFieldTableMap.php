@@ -41,6 +41,7 @@ class CcPlayoutHistoryTemplateFieldTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('TEMPLATE_ID', 'DbTemplateId', 'INTEGER', 'cc_playout_history_template', 'ID', true, null, null);
 		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 128, null);
+		$this->addColumn('LABEL', 'DbLabel', 'VARCHAR', true, 128, null);
 		$this->addColumn('TYPE', 'DbType', 'VARCHAR', true, 128, null);
 		$this->addColumn('IS_FILE_MD', 'DbIsFileMD', 'BOOLEAN', true, null, false);
 		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', true, null, null);

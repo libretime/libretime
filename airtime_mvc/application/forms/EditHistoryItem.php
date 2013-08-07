@@ -193,11 +193,7 @@ class Application_Form_EditHistoryItem extends Zend_Form
 			$label = $item[self::ITEM_ID_SUFFIX];
 			$id = self::ID_PREFIX.$label;
 			$el = new $formElType[self::ITEM_CLASS]($id);
-
-			//cleaning up presentation of tag name for labels.
-			$label = implode(" ", explode("_", $label));
-			$label = ucwords($label);
-			$el->setLabel(_($label));
+			$el->setLabel($item["label"]);
 
 			if (isset($formElType["attrs"])) {
 

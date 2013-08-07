@@ -3,6 +3,9 @@
   <div>
     <div>Edit Log Sheet Template</div>
     <ul id="template_list">
+      <?php if (count($this->template_list) == 0): ?>
+        <li>No Log Sheet Templates</li>
+      <?php endif; ?>
       <?php foreach ($this->template_list as $id=>$name): ?>
         <?php if (count($this->template_list) == 0): ?>
           <li>No Log Sheet Templates</li>

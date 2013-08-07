@@ -43,6 +43,12 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 	protected $name;
 
 	/**
+	 * The value for the label field.
+	 * @var        string
+	 */
+	protected $label;
+
+	/**
 	 * The value for the type field.
 	 * @var        string
 	 */
@@ -129,6 +135,16 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 	public function getDbName()
 	{
 		return $this->name;
+	}
+
+	/**
+	 * Get the [label] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbLabel()
+	{
+		return $this->label;
 	}
 
 	/**
@@ -224,6 +240,26 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 
 		return $this;
 	} // setDbName()
+
+	/**
+	 * Set the value of [label] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcPlayoutHistoryTemplateField The current object (for fluent API support)
+	 */
+	public function setDbLabel($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->label !== $v) {
+			$this->label = $v;
+			$this->modifiedColumns[] = CcPlayoutHistoryTemplateFieldPeer::LABEL;
+		}
+
+		return $this;
+	} // setDbLabel()
 
 	/**
 	 * Set the value of [type] column.
@@ -324,9 +360,10 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
 			$this->template_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
 			$this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->type = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-			$this->is_file_md = ($row[$startcol + 4] !== null) ? (boolean) $row[$startcol + 4] : null;
-			$this->position = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+			$this->label = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->type = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+			$this->is_file_md = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
+			$this->position = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -335,7 +372,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 6; // 6 = CcPlayoutHistoryTemplateFieldPeer::NUM_COLUMNS - CcPlayoutHistoryTemplateFieldPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 7; // 7 = CcPlayoutHistoryTemplateFieldPeer::NUM_COLUMNS - CcPlayoutHistoryTemplateFieldPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcPlayoutHistoryTemplateField object", $e);
@@ -672,12 +709,15 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 				return $this->getDbName();
 				break;
 			case 3:
-				return $this->getDbType();
+				return $this->getDbLabel();
 				break;
 			case 4:
-				return $this->getDbIsFileMD();
+				return $this->getDbType();
 				break;
 			case 5:
+				return $this->getDbIsFileMD();
+				break;
+			case 6:
 				return $this->getDbPosition();
 				break;
 			default:
@@ -707,9 +747,10 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 			$keys[0] => $this->getDbId(),
 			$keys[1] => $this->getDbTemplateId(),
 			$keys[2] => $this->getDbName(),
-			$keys[3] => $this->getDbType(),
-			$keys[4] => $this->getDbIsFileMD(),
-			$keys[5] => $this->getDbPosition(),
+			$keys[3] => $this->getDbLabel(),
+			$keys[4] => $this->getDbType(),
+			$keys[5] => $this->getDbIsFileMD(),
+			$keys[6] => $this->getDbPosition(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcPlayoutHistoryTemplate) {
@@ -756,12 +797,15 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 				$this->setDbName($value);
 				break;
 			case 3:
-				$this->setDbType($value);
+				$this->setDbLabel($value);
 				break;
 			case 4:
-				$this->setDbIsFileMD($value);
+				$this->setDbType($value);
 				break;
 			case 5:
+				$this->setDbIsFileMD($value);
+				break;
+			case 6:
 				$this->setDbPosition($value);
 				break;
 		} // switch()
@@ -791,9 +835,10 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
 		if (array_key_exists($keys[1], $arr)) $this->setDbTemplateId($arr[$keys[1]]);
 		if (array_key_exists($keys[2], $arr)) $this->setDbName($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbType($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbIsFileMD($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbPosition($arr[$keys[5]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbLabel($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbType($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbIsFileMD($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbPosition($arr[$keys[6]]);
 	}
 
 	/**
@@ -808,6 +853,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::ID)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::ID, $this->id);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::TEMPLATE_ID)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::TEMPLATE_ID, $this->template_id);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::NAME)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::NAME, $this->name);
+		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::LABEL)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::LABEL, $this->label);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::TYPE)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::TYPE, $this->type);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::IS_FILE_MD)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::IS_FILE_MD, $this->is_file_md);
 		if ($this->isColumnModified(CcPlayoutHistoryTemplateFieldPeer::POSITION)) $criteria->add(CcPlayoutHistoryTemplateFieldPeer::POSITION, $this->position);
@@ -874,6 +920,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 	{
 		$copyObj->setDbTemplateId($this->template_id);
 		$copyObj->setDbName($this->name);
+		$copyObj->setDbLabel($this->label);
 		$copyObj->setDbType($this->type);
 		$copyObj->setDbIsFileMD($this->is_file_md);
 		$copyObj->setDbPosition($this->position);
@@ -977,6 +1024,7 @@ abstract class BaseCcPlayoutHistoryTemplateField extends BaseObject  implements 
 		$this->id = null;
 		$this->template_id = null;
 		$this->name = null;
+		$this->label = null;
 		$this->type = null;
 		$this->is_file_md = null;
 		$this->position = null;

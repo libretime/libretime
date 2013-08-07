@@ -791,20 +791,20 @@ class Application_Service_HistoryService
 	public function getFileMetadataTypes() {
 		
 		$fileMD = array(
-			array("name"=> MDATA_KEY_TITLE, "type"=> TEMPLATE_STRING, "sql"),
-			array("name"=> MDATA_KEY_CREATOR, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_SOURCE, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_DURATION, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_GENRE, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_MOOD, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_LABEL, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_COMPOSER, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_ISRC, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_COPYRIGHT, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_YEAR, "type"=> TEMPLATE_INT),
-			array("name"=> MDATA_KEY_TRACKNUMBER, "type"=> TEMPLATE_INT),
-			array("name"=> MDATA_KEY_CONDUCTOR, "type"=> TEMPLATE_STRING),
-			array("name"=> MDATA_KEY_LANGUAGE, "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_TITLE, "label"=> _("Title"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_CREATOR, "label"=> _("Creator"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_SOURCE, "label"=> _("Album"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_DURATION, "label"=> _("Length"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_GENRE, "label"=> _("Genre"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_MOOD, "label"=> _("Mood"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_LABEL, "label"=> _("Label"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_COMPOSER, "label"=> _("Composer"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_ISRC, "label"=> _("ISRC"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_COPYRIGHT, "label"=> _("Copyright"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_YEAR, "label"=> _("Year"), "type"=> TEMPLATE_INT),
+			array("name"=> MDATA_KEY_TRACKNUMBER, "label"=> _("Track"), "type"=> TEMPLATE_INT),
+			array("name"=> MDATA_KEY_CONDUCTOR, "label"=> _("Conductor"), "type"=> TEMPLATE_STRING),
+			array("name"=> MDATA_KEY_LANGUAGE, "label"=> _("Language"), "type"=> TEMPLATE_STRING),
 		);
 		
 		return $fileMD;
@@ -829,10 +829,10 @@ class Application_Service_HistoryService
 		$template = array();
 		$fields = array();
 
-		$fields[] = array("name" => "starts", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
-		$fields[] = array("name" => "ends", "type" => TEMPLATE_DATETIME, "isFileMd" => false);
-		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
-		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => "starts", "label"=> _("Start Time"),"type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => "ends", "label"=> _("End Time"), "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => MDATA_KEY_TITLE, "label"=> _("Title"), "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
+		$fields[] = array("name" => MDATA_KEY_CREATOR, "label"=> _("Creator"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 
 		$template["name"] = "Log Sheet ".date("Y-m-d H:i:s")." Template";
 		$template["fields"] = $fields;
@@ -848,12 +848,12 @@ class Application_Service_HistoryService
 		$template = array();
 		$fields = array();
 	
-		$fields[] = array("name" => MDATA_KEY_TITLE, "type" => TEMPLATE_STRING, "isFileMd" => true);
-		$fields[] = array("name" => MDATA_KEY_CREATOR, "type" => TEMPLATE_STRING, "isFileMd" => true);
-		$fields[] = array("name" => "played", "type" => TEMPLATE_INT, "isFileMd" => false);
-		$fields[] = array("name" => MDATA_KEY_DURATION, "type" => TEMPLATE_STRING, "isFileMd" => true);
-		$fields[] = array("name" => MDATA_KEY_COMPOSER, "type" => TEMPLATE_STRING, "isFileMd" => true);
-		$fields[] = array("name" => MDATA_KEY_COPYRIGHT, "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_TITLE, "label"=> _("Title"), "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_CREATOR, "label"=> _("Creator"), "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => "played", "label"=> _("Played"), "type" => TEMPLATE_INT, "isFileMd" => false);
+		$fields[] = array("name" => MDATA_KEY_DURATION, "label"=> _("Length"), "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_COMPOSER, "label"=> _("Composer"), "type" => TEMPLATE_STRING, "isFileMd" => true);
+		$fields[] = array("name" => MDATA_KEY_COPYRIGHT, "label"=> _("Copyright"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 	
 		$template["name"] = "File Summary ".date("Y-m-d H:i:s")." Template";
 		$template["fields"] = $fields;
@@ -883,7 +883,8 @@ class Application_Service_HistoryService
 			foreach ($config as $item) {
 				
 				$fields[] = array(
-					"name" => $item->getDbName(), 
+					"name" => $item->getDbName(),
+					"label" => $item->getDbLabel(),
 					"type" => $item->getDbType(),
 					"isFileMd" => $item->getDbIsFileMD(),
 					"id" => $item->getDbId()
@@ -958,10 +959,11 @@ class Application_Service_HistoryService
 			
 		foreach ($template["fields"] as $index=>$field) {
 		
+			$label = $field["label"];
 			$key = $field["name"];
 		
 			$columns[] = array(
-				"sTitle"=> $key,
+				"sTitle"=> $label,
 				"mDataProp"=> $key,
 				"sClass"=> "his_{$key}"
 			);
@@ -1110,6 +1112,7 @@ class Application_Service_HistoryService
 				
 				$templateField = new CcPlayoutHistoryTemplateField();
 				$templateField->setDbName($field["name"]);
+				$templateField->setDbLabel($field["label"]);
 				$templateField->setDbType($field["type"]);
 				$templateField->setDbIsFileMD($isMd);
 				$templateField->setDbPosition($index);
@@ -1156,6 +1159,7 @@ class Application_Service_HistoryService
 				$templateField = new CcPlayoutHistoryTemplateField();
 				$templateField->setDbName($field["name"]);
 				$templateField->setDbType($field["type"]);
+				$templateField->setDbLabel($field["label"]);
 				$templateField->setDbIsFileMD($isMd);
 				$templateField->setDbPosition($index);
 	

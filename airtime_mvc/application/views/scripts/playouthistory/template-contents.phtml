@@ -12,8 +12,13 @@
 <ul class="template_item_list">
   <?php foreach ($this->template_fields as $field): ?>
   
-  <li id="<?php echo "field_".$i?>" data-id="<?php echo isset($field["id"]) ? $field["id"] : ""; ?>" data-name="<?php echo $field["name"]?>" data-type="<?php echo $field["type"]?>" data-filemd="<?php echo var_export($field["isFileMd"], true)?>">
-    <span><?php echo $field["name"]?></span>
+  <li id="<?php echo "field_".$i?>" 
+  	data-id="<?php echo isset($field["id"]) ? $field["id"] : ""; ?>" 
+  	data-name="<?php echo $field["name"]?>"
+  	data-label="<?php echo $field["label"]?>" 
+  	data-type="<?php echo $field["type"]?>" 
+  	data-filemd="<?php echo var_export($field["isFileMd"], true)?>">
+    <span><?php echo $field["label"]?></span>
     <span><?php echo $field["type"]?></span>
     <?php if(!in_array($field["name"], $this->required_fields)): ?>
     <span class="template_item_remove">Remove</span>
@@ -27,7 +32,12 @@
 <ul class="template_file_md">
   <?php foreach ($this->fileMD as $md): ?>
   
-  <li id="<?php echo "md_".$md["name"]?>" data-name="<?php echo $md["name"]?>" data-type="<?php echo $md["type"]?>"><?php echo $md["name"] ?></li>
+  <li id="<?php echo "md_".$md["name"]?>" 
+  	data-name="<?php echo $md["name"]?>" 
+  	data-type="<?php echo $md["type"]?>"
+  	data-label="<?php echo $md["label"]?>">
+  	<?php echo $md["label"] ?>
+  </li>
   <?php endforeach; ?>
 </ul>
 

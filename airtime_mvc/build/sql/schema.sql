@@ -824,6 +824,7 @@ CREATE TABLE "cc_playout_history_template_field"
 	"id" serial  NOT NULL,
 	"template_id" INTEGER  NOT NULL,
 	"name" VARCHAR(128)  NOT NULL,
+	"label" VARCHAR(128)  NOT NULL,
 	"type" VARCHAR(128)  NOT NULL,
 	"is_file_md" BOOLEAN default 'f' NOT NULL,
 	"position" INTEGER  NOT NULL,
