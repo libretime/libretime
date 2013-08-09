@@ -92,7 +92,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //$view->headScript()->appendFile('http://code.jquery.com/jquery-migrate-1.2.1.js','text/javascript');
 
         //$view->headScript()->appendFile($baseUrl.'js/libs/jquery-ui-1.8.18.custom.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile('http://code.jquery.com/ui/1.10.3/jquery-ui.js','text/javascript');
+        $view->headScript()->appendFile('http://code.jquery.com/ui/1.8.24/jquery-ui.js','text/javascript');
         
         $view->headScript()->appendFile($baseUrl.'js/libs/underscore-min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
