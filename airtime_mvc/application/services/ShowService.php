@@ -179,9 +179,6 @@ class Application_Service_ShowService
 
         if (is_null($this->ccShow)) {
             $ccShowDays = $this->getShowDaysInRange($populateUntil, $end);
-            if (count($ccShowDays) > 0) {
-                $this->ccShow = $ccShowDays[0]->getCcShow();
-            }
         } else {
             $ccShowDays = $this->ccShow->getCcShowDays();
         }
@@ -190,7 +187,18 @@ class Application_Service_ShowService
             $populateUntil = $end;
         }
 
+        /* In case the user is moving forward in the calendar and there are
+         * linked shows in the schedule we need to keep track of each cc_show
+         * so we know which shows need to be filled with content
+         */ 
+        $ccShows = array();
+
         foreach ($ccShowDays as $day) {
+            $this->ccShow = $day->getCcShow();
+            if (!isset($ccShows[$day->getDbShowId()])) {
+                $ccShows[$day->getDbShowId()] = $day->getccShow();
+            }
+
             switch ($day->getDbRepeatType()) {
                 case NO_REPEAT:
                     $this->createNonRepeatingInstance($day, $populateUntil);
@@ -212,9 +220,10 @@ class Application_Service_ShowService
             }
         }
 
-        if (isset($this->ccShow) && ($this->isUpdate || $fillInstances) &&
-            $this->ccShow->isLinked()) {
-            Application_Service_SchedulerService::fillNewLinkedInstances($this->ccShow);
+        foreach ($ccShows as $ccShow) {
+            if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
+                Application_Service_SchedulerService::fillNewLinkedInstances($ccShow);
+            }
         }
 
         if (isset($this->linkedShowContent)) {
@@ -618,29 +627,45 @@ SQL;
             ->filterByDbShowId($showId)
             ->filterByDbModifiedInstance(false)
             ->filterByDbRebroadcast(0)
+            ->orderByDbStarts()
             ->find();
 
         if ($ccShowInstances->isEmpty()) {
             return true;
         }
-        //only 1 show instance left of the show, make it non repeating.
-        else if (count($ccShowInstances) === 1) {
-            $ccShowInstance = $ccShowInstances[0];
+        /* We need to update the last_show in cc_show_days so the instances
+         * don't get recreated as the user moves forward in the calendar
+         */
+        else if (count($ccShowInstances) >= 1) {
+            $lastShowDays = array();
+            /* Creates an array where the key is the day of the week (monday,
+             * tuesday, etc.) and the value is the last show date for each
+             * day of the week. We will use this array to update the last_show
+             * for each cc_show_days entry of a cc_show
+             */
+            foreach ($ccShowInstances as $instance) {
+                $instanceStartDT = new DateTime($instance->getDbStarts(),
+                    new DateTimeZone("UTC"));
+                $lastShowDays[$instanceStartDT->format("w")] = $instanceStartDT;
+            }
 
-            $ccShowDay = CcShowDaysQuery::create()
-                ->filterByDbShowId($showId)
-                ->findOne();
-            $tz = $ccShowDay->getDbTimezone();
+            foreach ($lastShowDays as $dayOfWeek => $lastShowStartDT) {
+                $ccShowDay = CcShowDaysQuery::create()
+                    ->filterByDbShowId($showId)
+                    ->filterByDbDay($dayOfWeek)
+                    ->findOne();
 
-            $startDate = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
-            $startDate->setTimeZone(new DateTimeZone($tz));
-            $endDate = Application_Service_CalendarService::addDeltas($startDate, 1, 0);
+                if (isset($ccShowDay)) {
+                    $lastShowStartDT->setTimeZone(new DateTimeZone(
+                        $ccShowDay->getDbTimezone()));
+                    $lastShowEndDT = Application_Service_CalendarService::addDeltas(
+                        $lastShowStartDT, 1, 0);
 
-            $ccShowDay->setDbFirstShow($startDate->format("Y-m-d"));
-            $ccShowDay->setDbLastShow($endDate->format("Y-m-d"));
-            $ccShowDay->setDbStartTime($startDate->format("H:i:s"));
-            $ccShowDay->setDbRepeatType(-1);
-            $ccShowDay->save();
+                    $ccShowDay
+                        ->setDbLastShow($lastShowEndDT->format("Y-m-d"))
+                        ->save();
+                }
+            }
 
             //remove the old repeating deleted instances.
             CcShowInstancesQuery::create()
@@ -848,6 +873,7 @@ SQL;
     private function createWeeklyRepeatInstances($showDay, $populateUntil,
         $repeatType, $repeatInterval, $daysAdded=null)
     {
+
         $show_id       = $showDay->getDbShowId();
         $first_show    = $showDay->getDbFirstShow(); //non-UTC
         $last_show     = $showDay->getDbLastShow(); //non-UTC
@@ -870,10 +896,9 @@ SQL;
         $utcLastShowDateTime = $last_show ?
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
-        $utcStartDateTime = new DateTime("now");
         $previousDate = clone $start;
-        foreach ($datePeriod as $date) {
 
+        foreach ($datePeriod as $date) {
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
             /*
@@ -887,6 +912,7 @@ SQL;
                ( is_null($utcLastShowDateTime) ||
                  $utcStartDateTime->format("Y-m-d H:i:s") < $utcLastShowDateTime->format("Y-m-d H:i:s")) ) {
 
+                 $lastCreatedShow = clone $utcStartDateTime;
                 /* There may not always be an instance when editing a show
                  * This will be the case when we are adding a new show day to
                  * a repeating show
@@ -930,12 +956,19 @@ SQL;
             $previousDate = clone $date;
         }
 
-        /* Set UTC to local time before setting the next repeat date. If we don't
-         * the next repeat date might be scheduled for the following day
+        /* We need to set the next populate date for repeat shows so when a user
+         * moves forward in the calendar we know when to start generating new
+         * show instances.
+         * If $utcStartDateTime is not set then we know zero new shows were
+         * created and we shouldn't update the next populate date.
          */
-        $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
-        $nextDate = $utcStartDateTime->add($repeatInterval);
-        $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
+        if (isset($lastCreatedShow)) {
+           /* Set UTC to local time before setting the next repeat date. If we don't
+            * the next repeat date might be scheduled for the following day */
+            $lastCreatedShow->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $nextDate = $lastCreatedShow->add($repeatInterval);
+            $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
+        }
     }
 
     private function createMonthlyRepeatInstances($showDay, $populateUntil)
@@ -977,6 +1010,7 @@ SQL;
                ( is_null($utcLastShowDateTime) ||
                  $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
 
+                 $lastCreatedShow = clone $utcStartDateTime;
                 /* There may not always be an instance when editing a show
                  * This will be the case when we are adding a new show day to
                  * a repeating show

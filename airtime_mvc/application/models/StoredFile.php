@@ -778,17 +778,18 @@ SQL;
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
-            $len_formatter = new LengthFormatter(
-                self::getRealClipLength($row["cuein"], $row["cueout"]));
-            $row['length'] = $len_formatter->format();
-
-            $cuein_formatter = new LengthFormatter($row["cuein"]);
-            $row["cuein"] = $cuein_formatter->format();
-
-            $cueout_formatter = new LengthFormatter($row["cueout"]);
-            $row["cueout"] = $cueout_formatter->format();
-
             if ($row['ftype'] === "audioclip") {
+
+                $cuein_formatter = new LengthFormatter($row["cuein"]);
+                $row["cuein"] = $cuein_formatter->format();
+
+                $cueout_formatter = new LengthFormatter($row["cueout"]);
+                $row["cueout"] = $cueout_formatter->format();
+
+                $cuein = Application_Common_DateHelper::playlistTimeToSeconds($row["cuein"]);
+                $cueout = Application_Common_DateHelper::playlistTimeToSeconds($row["cueout"]);
+                $row_length = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
+
                 $formatter = new SamplerateFormatter($row['sample_rate']);
                 $row['sample_rate'] = $formatter->format();
 
@@ -801,9 +802,16 @@ SQL;
 
                 // for audio preview
                 $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
-            } else {
-                $row['audioFile'] = $row['id'];
+
             }
+            else {
+
+                $row['audioFile'] = $row['id'];
+                $row_length = $row['length'];
+            }
+
+            $len_formatter = new LengthFormatter($row_length);
+            $row['length'] = $len_formatter->format();
 
             //convert mtime and utime to localtime
             $row['mtime'] = new DateTime($row['mtime'], new DateTimeZone('UTC'));
@@ -1346,14 +1354,6 @@ AND id NOT IN (
 SQL;
         Application_Common_Database::prepareAndExecute($sql, array(),
             Application_Common_Database::EXECUTE);
-    }
-
-    public static function getRealClipLength($p_cuein, $p_cueout) {
-        $sql = "SELECT :cueout::INTERVAL - :cuein::INTERVAL";
-
-        return Application_Common_Database::prepareAndExecute($sql, array(
-            ':cueout' => $p_cueout,
-            ':cuein' => $p_cuein), 'column');
     }
 }
 

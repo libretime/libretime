@@ -5,7 +5,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     private $stringCriteriaOptions;
     private $numericCriteriaOptions;
     private $limitOptions;
-    
+
     /* We need to know if the criteria value will be a string
      * or numeric value in order to populate the modifier
      * select list
@@ -40,7 +40,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         "info_url"     => "s",
         "year"         => "n"
     );
-    
+
     private function getCriteriaOptions($option = null)
     {
         if (!isset($this->criteriaOptions)) {
@@ -75,7 +75,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 "year"         => _("Year")
             );
         }
-        
+
         if (is_null($option)) return $this->criteriaOptions;
         else return $this->criteriaOptions[$option];
     }
@@ -122,7 +122,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
         return $this->limitOptions;
     }
-        
+
 
     public function init()
     {
@@ -259,7 +259,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                 $repeatTracks->setChecked($storedCrit["repeat_tracks"]["value"] == 1?true:false);
         }
         $this->addElement($repeatTracks);
-        
+
         $limit = new Zend_Form_Element_Select('sp_limit_options');
         $limit->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
@@ -268,7 +268,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
             $limit->setValue($storedCrit["limit"]["modifier"]);
         }
         $this->addElement($limit);
-        
+
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
         $limitValue->setAttrib('class', 'sp_input_text_limit')
                    ->setLabel(_('Limit to'))
@@ -541,7 +541,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
                                 $isValid = false;
                             }
                             // length check
-                            if (intval($d['sp_criteria_value']) >= pow(2,31)) {
+                            if ($d['sp_criteria_value'] >= pow(2,31)) {
                                 $element->addError(_("The value should be less then 2147483648"));
                                 $isValid = false;
                             }
