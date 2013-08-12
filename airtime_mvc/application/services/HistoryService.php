@@ -264,6 +264,15 @@ class Application_Service_HistoryService
 			$dateTime = new DateTime($result["ends"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
 			$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+			
+			if (isset($result[MDATA_KEY_DURATION])) {
+				$formatter = new LengthFormatter($result[MDATA_KEY_DURATION]);
+				$result[MDATA_KEY_DURATION] = $formatter->format();
+			}
+			
+			//$unicodeChar = '\u2612';
+			//$result["new"] = json_decode('"'.$unicodeChar.'"');
+			//$result["new"] = "U+2612";
 		}
 		
 		return array(

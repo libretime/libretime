@@ -9,7 +9,7 @@ var AIRTIME = (function(AIRTIME) {
     var $historyContentDiv;
     
     var oTableTools = {
-        "sSwfPath": baseUrl+"js/datatables/plugin/TableTools/swf/copy_cvs_xls_pdf.swf",
+        "sSwfPath": baseUrl+"js/datatables/plugin/TableTools-2.1.5/swf/copy_csv_xls_pdf.swf",
         "aButtons": [
              {
                  "sExtends": "copy",
