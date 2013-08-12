@@ -99,7 +99,7 @@ var AIRTIME = (function(AIRTIME) {
         	fnRowCallback;
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        	var editUrl = baseUrl+"Playouthistory/edit-aggregate-item/format/json/id/"+aData.file_id;
+        	var editUrl = baseUrl+"Playouthistory/edit-file-item/format/json/id/"+aData.file_id;
         		
         	nRow.setAttribute('url-edit', editUrl);
         };
@@ -112,7 +112,7 @@ var AIRTIME = (function(AIRTIME) {
                           
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": baseUrl+"playouthistory/aggregate-history-feed",
+            "sAjaxSource": baseUrl+"playouthistory/file-history-feed",
             "sAjaxDataProp": "history",
             "fnServerData": fnServerData,
             "fnRowCallback": fnRowCallback,
@@ -346,12 +346,12 @@ var AIRTIME = (function(AIRTIME) {
     		var $form = $(this).parents("form");
     		var data = $form.serializeArray();
     		
-    		var url = baseUrl+"Playouthistory/update-aggregate-item/format/json";
+    		var url = baseUrl+"Playouthistory/update-file-item/format/json";
     		
     		$.post(url, data, function(json) {
     			
     			//TODO put errors on form.
-    			if (json.data !== "true") {
+    			if (json.error !== undefined) {
     				//makeHistoryDialog(json.dialog);
     			}
     			else {

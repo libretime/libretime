@@ -6,14 +6,14 @@ class PlayouthistoryController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
-            ->addActionContext('aggregate-history-feed', 'json')
+            ->addActionContext('file-history-feed', 'json')
             ->addActionContext('item-history-feed', 'json')
-            ->addActionContext('edit-aggregate-item', 'json')
+            ->addActionContext('edit-file-item', 'json')
             ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
             ->addActionContext('delete-list-item', 'json')
             ->addActionContext('update-list-item', 'json')
-            ->addActionContext('update-aggregate-item', 'json')
+            ->addActionContext('update-file-item', 'json')
             ->addActionContext('create-template', 'json')
             ->addActionContext('update-template', 'json')
             ->addActionContext('delete-template', 'json')
@@ -79,7 +79,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendScript($script);
     }
 
-    public function aggregateHistoryFeedAction()
+    public function fileHistoryFeedAction()
     {
     	try {
 	        $request = $this->getRequest();
@@ -136,7 +136,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     	}
     }
 
-    public function editAggregateItemAction()
+    public function editFileItemAction()
     {
     	$file_id = $this->_getParam('id');
 
@@ -209,7 +209,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     	}
     }
 
-    public function updateAggregateItemAction()
+    public function updateFileItemAction()
     {
         $request = $this->getRequest();
         $params = $request->getPost();

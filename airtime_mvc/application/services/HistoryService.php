@@ -517,17 +517,30 @@ class Application_Service_HistoryService
 
 	    try {
 		    $form = new Application_Form_EditHistoryFile();
+			$template = $this->getConfiguredFileTemplate();
+			$required = $this->mandatoryFileFields();
+			$form->createFromTemplate($template["fields"], $required);
 
 		    $file = Application_Model_StoredFile::RecallById($id, $this->con);
 		    $md = $file->getDbColMetadata();
-
-		    $form->populate(array(
-		        'his_file_id' => $id,
-		        'his_file_title' => $md[MDATA_KEY_TITLE],
-		        'his_file_creator' => $md[MDATA_KEY_CREATOR],
-		        'his_file_composer' => $md[MDATA_KEY_COMPOSER],
-		        'his_file_copyright' => $md[MDATA_KEY_COPYRIGHT]
-		    ));
+		    
+		    $prefix = Application_Form_EditHistoryFile::ID_PREFIX;
+		    $formValues = array();
+		    $formValues["{$prefix}id"] = $id;
+		    
+		    foreach($template["fields"] as $index => $field) {
+		    		
+		    	$key = $field["name"];
+		    	
+		    	if (in_array($key, $required)) {
+		    		continue;
+		    	}
+		    	
+		    	$value = $md[$key];	
+		    	$formValues["$prefix{$key}"] = $value;  	
+		    }
+		    
+		    $form->populate($formValues);
 
 		    return $form;
 	    }
@@ -535,6 +548,35 @@ class Application_Service_HistoryService
 	        Logging::info($e);
 	        throw $e;
 	    }
+	}
+	
+	public function populateTemplateFile($values, $id) {
+		
+		$this->con->beginTransaction();
+		
+		try {
+			
+			$file = Application_Model_StoredFile::RecallById($id, $this->con);
+			
+			$prefix = Application_Form_EditHistoryFile::ID_PREFIX;
+			$prefix_len = strlen($prefix);
+			$templateValues = $values[$prefix."template"];
+			
+			$md = array();
+			
+			foreach ($templateValues as $index => $value) {
+				
+				$key = substr($index, $prefix_len);
+				$md[$key] = $value;
+			}
+			
+			$file->setDbColMetadata($md);
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+    		$this->con->rollback();
+    		throw $e;
+    	}	
 	}
 
 	public function populateTemplateItem($values, $id=null) {
@@ -627,7 +669,6 @@ class Application_Service_HistoryService
     		$this->con->rollback();
     		throw $e;
     	}
-
 	}
 
 	public function createPlayedItem($data) {
@@ -702,28 +743,32 @@ class Application_Service_HistoryService
 	/* id is an id in cc_files */
 	public function editPlayedFile($data) {
 
-		$this->con->beginTransaction();
-
 		try {
-	        $form = new Application_Form_EditHistoryFile();
+			$id = $data["his_file_id"];
+	        $form = $form = $this->makeHistoryFileForm($id);
+	        $history_id = $form->getElement("his_file_id");
+	        $history_id->setRequired(true);
 
-	        $json = $form->processAjax($data);
-	        Logging::info($json);
+	        Logging::info($data);
+			$json = array();
 
 	        if ($form->isValid($data)) {
+	        	$history_id->setIgnore(true);
+	        	$values = $form->getValues();
 
-	            $id = $data["his_file_id"];
-	            $file = Application_Model_StoredFile::RecallById($id, $this->con);
-
-	            $md = array(
-	                MDATA_KEY_TITLE => $data['his_file_title'],
-	                MDATA_KEY_CREATOR => $data['his_file_creator'],
-	                MDATA_KEY_COMPOSER => $data['his_file_composer'],
-	                MDATA_KEY_COPYRIGHT => $data['his_file_copyright']
-	            );
-
-	            $file->setDbColMetadata($md);
+	            Logging::info("edited list item");
+	            Logging::info($values);
+	            
+	            $this->populateTemplateFile($values, $id);
 	        }
+	        else {
+	        	$msgs = $form->getMessages();
+	        	Logging::info($msgs);
+	        	
+	        	$json["error"] = $msgs;
+	        }
+	        
+	        return $json;
 
 	        $this->con->commit();
 		}
@@ -819,7 +864,7 @@ class Application_Service_HistoryService
 	
 	public function mandatoryFileFields() {
 	
-		$fields = array("played", MDATA_KEY_TITLE, MDATA_KEY_CREATOR);
+		$fields = array("played");
 	
 		return $fields;
 	}
