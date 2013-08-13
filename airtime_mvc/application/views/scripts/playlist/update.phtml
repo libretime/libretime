@@ -8,6 +8,7 @@ $nextFileUrl = null;
 if ($item['type'] == 2) {
     $bl= new Application_Model_Block($item['item_id']);
     $staticBlock = $bl->isStatic();
+    $fileUrl = null;
 }
 else if ($item['type'] == 0) {
 	$audiofile = Application_Model_StoredFile::RecallById($item['item_id']);
