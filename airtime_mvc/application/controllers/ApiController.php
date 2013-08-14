@@ -1006,23 +1006,30 @@ class ApiController extends Zend_Controller_Action
             //calculated with silan by actually scanning the entire file. This
             //process takes a really long time, and so we only do it in the background
             //after the file has already been imported -MK
-            $length = $file->getDbLength();
-            if (isset($info['length'])) {
-                $length = $info['length'];
-                //length decimal number in seconds. Need to convert it to format
-                //HH:mm:ss to get around silly PHP limitations.
-                $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
+            try {
+                $length = $file->getDbLength();
+                if (isset($info['length'])) {
+                    $length = $info['length'];
+                    //length decimal number in seconds. Need to convert it to format
+                    //HH:mm:ss to get around silly PHP limitations.
+                    $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
+                    $file->setDbLength($length);
+                }
 
-                $file->setDbLength($length);
+                $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
+                $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
+
+                $file->setDbCuein($cuein);
+                $file->setDbCueout($cueout);
+                $file->setDbSilanCheck(true);
+                $file->save();
+            } catch (Exception $e) {
+                Logging::info("Failed to update silan values for ".$file->getDbTrackTitle());
+                Logging::info("File length analyzed by Silan is: ".$length);
+                //set silan_check to true so we don't attempt to re-anaylze again
+                $file->setDbSilanCheck(true);
+                $file->save();
             }
-
-            $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
-            $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
-
-            $file->setDbCuein($cuein);
-            $file->setDbCueout($cueout);
-            $file->setDbSilanCheck(true);
-            $file->save();
         }
 
         $this->_helper->json->sendJson(array());
