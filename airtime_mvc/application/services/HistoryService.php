@@ -254,8 +254,20 @@ class Application_Service_HistoryService
 		$timezoneUTC = new DateTimeZone("UTC");
 		$timezoneLocal = new DateTimeZone($this->timezone);
 		
+		$boolCast = array();
+		foreach ($fields as $index=>$field) {
+		
+			if ($field["type"] == TEMPLATE_BOOLEAN) {
+				$boolCast[] = $field["name"];
+			}
+		}
+		
 		//need to display the results in the station's timezone.
 		foreach ($rows as $index => &$result) {
+			
+			foreach ($boolCast as $name) {
+				$result[$name] = (bool) $result[$name];
+			}
 		
 			$dateTime = new DateTime($result["starts"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
@@ -1019,7 +1031,8 @@ class Application_Service_HistoryService
 			$columns[] = array(
 				"sTitle"=> $label,
 				"mDataProp"=> $key,
-				"sClass"=> "his_{$key}"
+				"sClass"=> "his_{$key}",
+				"sDataType"=> $field["type"]
 			);
 		}
 			

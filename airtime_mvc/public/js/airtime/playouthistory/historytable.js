@@ -96,6 +96,7 @@ var AIRTIME = (function(AIRTIME) {
     function aggregateHistoryTable() {
         var oTable,
         	$historyTableDiv = $historyContentDiv.find("#history_table_aggregate"),
+        	columns,
         	fnRowCallback;
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
@@ -104,7 +105,7 @@ var AIRTIME = (function(AIRTIME) {
         	nRow.setAttribute('url-edit', editUrl);
         };
         
-        var columns = JSON.parse(localStorage.getItem('datatables-historyfile-aoColumns'));
+        columns = JSON.parse(localStorage.getItem('datatables-historyfile-aoColumns'));
         
         oTable = $historyTableDiv.dataTable( {
             
@@ -133,18 +134,42 @@ var AIRTIME = (function(AIRTIME) {
     function itemHistoryTable() {
         var oTable,
         	$historyTableDiv = $historyContentDiv.find("#history_table_list"),
-        	fnRowCallback;
+        	columns,
+        	fnRowCallback,
+        	booleans = {},
+        	i, c;
         
-        var columns = JSON.parse(localStorage.getItem('datatables-historyitem-aoColumns'));
+        columns = JSON.parse(localStorage.getItem('datatables-historyitem-aoColumns'));
+        
+        for (i in columns) {
+        	
+        	c = columns[i];
+        	if (c["sDataType"] === "boolean") {
+        		booleans[c["mDataProp"]] = c["sTitle"];
+        	}
+        }
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
         	var editUrl = baseUrl+"playouthistory/edit-list-item/format/json/id/"+aData.history_id,
-        		deleteUrl = baseUrl+"playouthistory/delete-list-item/format/json/id/"+aData.history_id;
+        		deleteUrl = baseUrl+"playouthistory/delete-list-item/format/json/id/"+aData.history_id,
+        		emptyCheckBox = String.fromCharCode(parseInt(2610, 16)),
+        		checkedCheckBox = String.fromCharCode(parseInt(2612, 16)),
+        		b, 
+        		text,
+        		$nRow = $(nRow);
 	
         	nRow.setAttribute('url-edit', editUrl);
         	nRow.setAttribute('url-delete', deleteUrl);
+        	
+        	for (b in booleans) {
+            	
+            	text = aData[b] ? checkedCheckBox : emptyCheckBox;
+            	text = text + " " + booleans[b];
+            	
+            	$nRow.find(".his_"+b).html(text);
+            }
         };
-        
+        	
         oTable = $historyTableDiv.dataTable( {
             
             "aoColumns": columns,             
