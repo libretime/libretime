@@ -220,11 +220,13 @@ var AIRTIME = (function(AIRTIME) {
     		
     		$hisDialogEl.dialog({	       
     	        title: $.i18n._("Edit History Record"),
-    	        modal: true,
+    	        modal: false,
     	        open: function( event, ui ) {
-    	        	$hisDialogEl.find('.date').datetimepicker({
-    	        		"pick12HourFormat": false
-    	        	});
+    	        	$hisDialogEl.find('.datepicker').datetimepicker({
+    	        		dateFormat: 'yy-mm-dd',
+    	        		timeFormat: 'HH:mm:ss'
+    	        	})
+    	        	.blur();
     	        },
     	        close: function() {
     	        	removeHistoryDialog();

@@ -5,7 +5,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	const ID_PREFIX = "his_item_";
 
 	public function init() {
-		
+
 		parent::init();
 
 		$this->setDecorators(array(
@@ -17,7 +17,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $starts->setValidators(array(
 	    	new Zend_Validate_Date(self::VALIDATE_DATETIME_FORMAT)
 	    ));
-	    $starts->setAttrib('class', self::TEXT_INPUT_CLASS);
+	    $starts->setAttrib('class', self::TEXT_INPUT_CLASS." datepicker");
 	    $starts->setAttrib('data-format', self::TIMEPICKER_DATETIME_FORMAT);
 	    $starts->addFilter('StringTrim');
 	    $starts->setLabel(_('Start Time'));
@@ -29,7 +29,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $ends->setValidators(array(
 	    	new Zend_Validate_Date(self::VALIDATE_DATETIME_FORMAT)
 	    ));
-	    $ends->setAttrib('class', self::TEXT_INPUT_CLASS);
+	    $ends->setAttrib('class', self::TEXT_INPUT_CLASS." datepicker");
 	    $ends->setAttrib('data-format', self::TIMEPICKER_DATETIME_FORMAT);
 	    $ends->addFilter('StringTrim');
 	    $ends->setLabel(_('End Time'));
@@ -37,9 +37,9 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $ends->setRequired(true);
 	    $this->addElement($ends);
 	}
-	
+
 	public function createFromTemplate($template, $required) {
-		
+
 		parent::createFromTemplate($template, $required);
 	}
 }

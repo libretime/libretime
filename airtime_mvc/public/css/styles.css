@@ -1552,9 +1552,6 @@ button, input {
 	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
 }
 
-
-#ui-datepicker-div { z-index: 10 !important }
-
 .button-bar-top {
 	text-align:right;
 	height:38px;
