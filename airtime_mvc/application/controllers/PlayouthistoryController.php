@@ -125,7 +125,6 @@ class PlayouthistoryController extends Zend_Controller_Action
 	        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
 	        $historyService = new Application_Service_HistoryService();
-	        //$r = $historyService->getListView($startsDT, $endsDT, $params);
 	        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params);
 
 	        $this->view->sEcho = $r["sEcho"];

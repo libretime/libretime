@@ -485,12 +485,13 @@ var AIRTIME = (function(AIRTIME) {
             build: function($el, e) {
                 var items = {}, 
                 	callback, 
-                	$tr;
+                	$tr,
+                	editUrl,
+                	deleteUrl;
                 
                 $tr = $el.parents("tr");
-                
-                var editUrl = $tr.data("url-edit");
-                var deleteUrl = $tr.data("url-delete");
+                editUrl = $tr.data("url-edit");
+                deleteUrl = $tr.data("url-delete");
                 
                 if (editUrl !== undefined) {
                 	

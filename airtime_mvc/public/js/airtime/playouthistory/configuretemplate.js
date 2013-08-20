@@ -90,8 +90,7 @@ var AIRTIME = (function(AIRTIME) {
     			label = $div.find("input").val(),
     			name;
     		
-    		name = label.replace(" ", "");
-    		name = name.toLowerCase();
+    		name = label.toLowerCase().replace(/[^a-z0-9]+/g, "");
     		
     		var config = {
 				name: name,
