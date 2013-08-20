@@ -498,6 +498,7 @@ class Application_Service_HistoryService
 				foreach($template["fields"] as $index => $field) {
 
 					$key = $field["name"];
+					$value = "";
 
 					if (in_array($key, $required)) {
 
